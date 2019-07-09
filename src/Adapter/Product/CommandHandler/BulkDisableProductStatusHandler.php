@@ -6,6 +6,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDisableProductStatusCo
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\BulkDisableProductStatusHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDisableProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopException;
 use Product;
 
@@ -17,6 +19,19 @@ use Product;
 final class BulkDisableProductStatusHandler implements BulkDisableProductStatusHandlerInterface
 {
     /**
+     * @var HookDispatcherInterface
+     */
+    private $hookDispatcher;
+
+    /**
+     * @param HookDispatcherInterface $hookDispatcher
+     */
+    public function __construct(HookDispatcherInterface $hookDispatcher)
+    {
+        $this->hookDispatcher = $hookDispatcher;
+    }
+
+    /**
      * {@inheritdoc}
      *
      * @throws ProductNotFoundException
@@ -24,6 +39,13 @@ final class BulkDisableProductStatusHandler implements BulkDisableProductStatusH
      */
     public function handle(BulkDisableProductStatusCommand $command)
     {
+        $ids = array_map(static function (ProductId $item) { return $item->getValue(); }, $command->getProductIds());
+
+        $hookParameters = ['product_list_id' => $ids];
+
+        $this->hookDispatcher->dispatchWithParameters('actionAdminDeactivateBefore', $hookParameters);
+        $this->hookDispatcher->dispatchWithParameters('actionAdminProductsControllerDeactivateBefore', $hookParameters);
+
         foreach ($command->getProductIds() as $productId) {
             $entity = new Product($productId->getValue());
 
@@ -56,5 +78,8 @@ final class BulkDisableProductStatusHandler implements BulkDisableProductStatusH
                 );
             }
         }
+
+        $this->hookDispatcher->dispatchWithParameters('actionAdminDeactivateAfter', $hookParameters);
+        $this->hookDispatcher->dispatchWithParameters('actionAdminProductsControllerDeactivateAfter', $hookParameters);
     }
 }
