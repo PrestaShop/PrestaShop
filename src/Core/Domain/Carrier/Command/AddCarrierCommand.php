@@ -41,12 +41,12 @@ final class AddCarrierCommand
     /**
      * @var string[]
      */
-    private $localizedName;
+    private $localizedNames;
 
     /**
      * @var string[]
      */
-    private $localizedDelay;
+    private $localizedDelays;
 
     /**
      * @var SpeedGrade
@@ -114,8 +114,8 @@ final class AddCarrierCommand
     private $associatedShopIds;
 
     /**
-     * @param string[] $localizedName
-     * @param string[] $localizedDelay
+     * @param string[] $localizedNames
+     * @param string[] $localizedDelays
      * @param int $speedGrade
      * @param string $trackingUrl
      * @param bool $shippingCostIncluded
@@ -133,8 +133,8 @@ final class AddCarrierCommand
      * @throws CarrierConstraintException
      */
     public function __construct(
-        array $localizedName,
-        array $localizedDelay,
+        array $localizedNames,
+        array $localizedDelays,
         $speedGrade,
         $trackingUrl,
         $shippingCostIncluded,
@@ -158,8 +158,8 @@ final class AddCarrierCommand
         $this->shippingMethod = new ShippingMethod($shippingMethod);
         $this->setShippingRanges($shippingRanges);
         $this->outOfRangeBehavior = $outOfRangeBehavior;
-        $this->localizedName = $localizedName;
-        $this->localizedDelay = $localizedDelay;
+        $this->localizedNames = $localizedNames;
+        $this->localizedDelays = $localizedDelays;
         $this->trackingUrl = $trackingUrl;
         $this->shippingCostIncluded = $shippingCostIncluded;
         $this->taxRulesGroupId = $taxRulesGroupId;
@@ -170,17 +170,17 @@ final class AddCarrierCommand
     /**
      * @return string[]
      */
-    public function getLocalizedName()
+    public function getLocalizedNames()
     {
-        return $this->localizedName;
+        return $this->localizedNames;
     }
 
     /**
      * @return string[]
      */
-    public function getLocalizedDelay()
+    public function getLocalizedDelays()
     {
-        return $this->localizedDelay;
+        return $this->localizedDelays;
     }
 
     /**
