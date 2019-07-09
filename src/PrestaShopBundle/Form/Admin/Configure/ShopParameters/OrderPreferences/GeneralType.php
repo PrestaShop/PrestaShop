@@ -91,8 +91,7 @@ class GeneralType extends TranslatorAwareType
             ->add('enable_tos', SwitchType::class)
             ->add('tos_cms_id', ChoiceType::class, [
                 'placeholder' => $this->trans('None', 'Admin.Global'),
-                'choices' => $this->tosCmsChoices,
-            ])
+                'choices' => $this->tosCmsChoices,            
             ])
             ->add('order_stats_column_id', ChoiceType::class, [                
                 'choices' => ['Invoice Date' => 0, 'Delivery Date' => 1, 'Order Added Date'  => 2, 'Order Updated Date' => 3],
