@@ -26,11 +26,13 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Carrier\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\PackageSizeMeasure;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\PackageWeightMeasure;
-use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\ShippingPrice;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\ShippingMethod;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\ShippingRange;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\SpeedGrade;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Adds new carrier
@@ -63,9 +65,14 @@ final class AddCarrierCommand
     private $includeShippingCost;
 
     /**
-     * @var ShippingPrice[]
+     * @var ShippingMethod
      */
-    private $shippingPrices;
+    private $shippingMethod;
+
+    /**
+     * @var ShippingRange[]
+     */
+    private $shippingRanges;
 
     /**
      * @var int
@@ -76,7 +83,6 @@ final class AddCarrierCommand
      * @var bool
      */
     private $outOfRangeBehavior;
-
 
     /**
      * @var PackageSizeMeasure
@@ -117,13 +123,15 @@ final class AddCarrierCommand
      * @param int $shippingMethod
      * @param int $taxId
      * @param bool $outOfRangeBehavior
-     * @param array $rangeZonePrices
+     * @param array $shippingRanges
      * @param int $maxPackageWidth
      * @param int $maxPackageHeight
      * @param int $maxPackageDepth
      * @param float $maxPackageWeight
      * @param int[] $associatedGroupIds
      * @param int[]|null $associatedShopIds
+     *
+     * @throws CarrierConstraintException
      */
     public function __construct(
         array $localizedName,
@@ -134,7 +142,7 @@ final class AddCarrierCommand
         $shippingMethod,
         $taxId,
         $outOfRangeBehavior,
-        array $rangeZonePrices,
+        array $shippingRanges,
         $maxPackageWidth,
         $maxPackageHeight,
         $maxPackageDepth,
@@ -147,7 +155,8 @@ final class AddCarrierCommand
         $this->grade = new SpeedGrade($grade);
         $this->trackingUrl = $trackingUrl;
         $this->includeShippingCost = $includeShippingCost;
-        $this->shippingPrices = $this->fillShippingRanges($shippingMethod);
+        $this->shippingMethod = new ShippingMethod($shippingMethod);
+        $this->setShippingRanges($shippingRanges);
         $this->taxId = $taxId;
         $this->outOfRangeBehavior = $outOfRangeBehavior;
         $this->maxPackageWidth = new PackageSizeMeasure($maxPackageWidth);
@@ -158,15 +167,37 @@ final class AddCarrierCommand
         $this->associatedShopIds = $associatedShopIds;
     }
 
-    private function fillShippingPrices(
-        $shippingMethod,
-        $rangeZonePrices
-    ) {
-        foreach ($rangeZonePrices as $range => $zonePrices) {
-            $this->shippingPrices = new ShippingPrice(
-                $shippingMethod,
-                $rangeZonePrices
+    /**
+     * @param array $shippingRanges
+     */
+    private function setShippingRanges(array $shippingRanges)
+    {
+        foreach ($shippingRanges as $range) {
+            $resolvedRange = $this->resolveRangeParams($range);
+            $this->shippingRanges[] = new ShippingRange(
+                $resolvedRange['from'],
+                $resolvedRange['to'],
+                $resolvedRange['prices_by_zone_id']
             );
         }
+    }
+
+    /**
+     * Resolves array parameters to contain valid structure
+     *
+     * @param array $params
+     *
+     * @return array
+     */
+    private function resolveRangeParams(array $params)
+    {
+        $resolver = new OptionsResolver();
+
+        $resolver->setRequired(['from', 'to', 'prices_by_zone_id']);
+        $resolver->setAllowedTypes('from', 'int');
+        $resolver->setAllowedTypes('to', 'int');
+        $resolver->setAllowedTypes('prices_by_zone_id', 'array');
+
+        return $resolver->resolve($params);
     }
 }
