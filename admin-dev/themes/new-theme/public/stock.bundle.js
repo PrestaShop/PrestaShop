@@ -77,7 +77,7 @@ var T=function(t){function e(){var t=this.$options;t.store?this.$store="function
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-e.default={computed:{thumbnail:function(){return"N/A"!==this.product.combination_thumbnail?window.data.baseUrl+"/"+this.product.combination_thumbnail:"N/A"!==this.product.product_thumbnail?window.data.baseUrl+"/"+this.product.product_thumbnail:null},combinationName:function(){var t=this.product.combination_name.split(","),e="";return t.forEach(function(t){var n=t.split("-");e+=e.length?" - "+n[1]:n[1]}),e},hasCombination:function(){return!!this.product.combination_id}}}},function(t,e,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0});/**
+e.default={computed:{thumbnail:function(){return"N/A"!==this.product.combination_thumbnail?""+this.product.combination_thumbnail:"N/A"!==this.product.product_thumbnail?""+this.product.product_thumbnail:null},combinationName:function(){var t=this.product.combination_name.split(","),e="";return t.forEach(function(t){var n=t.split("-");e+=e.length?" - "+n[1]:n[1]}),e},hasCombination:function(){return!!this.product.combination_id}}}},function(t,e,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0});/**
  * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
