@@ -103,7 +103,7 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
 
         try {
             $this->createCmsPageUsingCommand($reference, $data);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->latestException = $e;
         }
     }
@@ -301,7 +301,7 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertExceptionWasThrown($message)
     {
-        if ($this->latestException instanceof \Exception) {
+        if ($this->latestException instanceof Exception) {
             if ($this->latestException->getMessage() !== $message) {
                 throw new RuntimeException(sprintf(
                     'Got error message "%s", but expected %s', $this->latestException->getMessage(), $message)
