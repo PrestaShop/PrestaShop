@@ -880,5 +880,11 @@ services:
         public: true
         calls:
           - { method: setTranslator, arguments: ['@translator'] }
+
+    form.type.category_choice_tree_button:
+        class: 'PrestaShopBundle\Form\Admin\Type\CategoryChoiceTreeButtonType'
+        public: true
+        arguments:
+            - '@=service("prestashop.adapter.form.choice_provider.category_tree_choice_provider").getChoices()'
         tags:
           - { name: form.type }

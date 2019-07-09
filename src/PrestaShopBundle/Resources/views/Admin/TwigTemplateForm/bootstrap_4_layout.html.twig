@@ -781,6 +781,7 @@
   </small>
 {% endblock text_with_recommended_length_widget %}
 
+
 {% block integer_min_max_filter_widget %}
   {{ form_widget(form['min_field'], { attr: {class: 'min-field'}}) }}
   {{ form_widget(form['max_field'], { attr: {class: 'max-field'}}) }}
@@ -789,4 +790,10 @@
 {% block number_min_max_filter_widget %}
   {{ form_widget(form['min_field'], { attr: {class: 'min-field'}}) }}
   {{ form_widget(form['max_field'], { attr: {class: 'max-field'}}) }}
+{% endblock %}
+
+{% block category_choice_tree_button_widget %}
+  <button>
+    hello world!
+  </button>
 {% endblock %}
