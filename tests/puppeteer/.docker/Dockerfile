@@ -24,7 +24,6 @@ RUN  apt-get update \
 #    PASSWD='prestashop_demo' \
 #    HEADLESS=true;
 # Install Puppeteer under /node_modules so it's available system-wide
-#WORKDIR /var/www/html/tests/E2E-Puppeteer
 COPY ["./package.json", "./test/linkchecker.js","./"]
 COPY ["./.docker/prestashop/wait-for-it.sh", "/tmp/"]
 RUN npm install

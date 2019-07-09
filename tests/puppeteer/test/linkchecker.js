@@ -47,7 +47,7 @@ const interceptRequestAndResponse = async (page) => {
     const status = response.status().toString();
     numberRequests[office] += 1;
     if (status.startsWith('4') || status.startsWith('5')) {
-      console.log(` * Failed response in ${office} from ${curHref}: ${url} (${status})`);
+      console.log(` !! Failed response : ${url} (${status})`);
       object[office].failed.push({page: curHref, URL: url, status});
     } else {
       responses.push({url, status});
@@ -101,7 +101,7 @@ const run = async () => {
   office = 'BO';
   object.BO.totalLinks = urlList.length;
   await checkStatusUrls(page, urlList);
-  console.log('End testing BO');
+  console.log('\nEnd testing BO\n');
   // End testing BO
 
   // Start testing FO
@@ -112,7 +112,7 @@ const run = async () => {
   office = 'FO';
   object.FO.totalLinks = urlList.length;
   await checkStatusUrls(page, urlList);
-  console.log('End testing FO');
+  console.log('\nEnd testing FO');
   // End testing FO
 
   browser.close();
@@ -150,4 +150,4 @@ const outputSameLine = async (message) => {
 run()
   .then(() => {
     console.log('--------the end--------');
-  }).catch(e => console.log(`error: ${e}`));
+  }).catch(e => console.log(`${e}`));
