@@ -1344,17 +1344,20 @@ class AdminImportControllerCore extends AdminController
             }
 
             $info = AdminImportController::getMaskedRow($line);
-
-            $this->categoryImportOne(
-                $info,
-                $default_language_id,
-                $id_lang,
-                $force_ids,
-                $regenerate,
-                $shop_is_feature_active,
-                $cat_moved, // by ref
-                $validateOnly
-            );
+            try {
+                $this->categoryImportOne(
+                    $info,
+                    $default_language_id,
+                    $id_lang,
+                    $force_ids,
+                    $regenerate,
+                    $shop_is_feature_active,
+                    $cat_moved, // by ref
+                    $validateOnly
+                );
+            } catch (Exception $exc) {
+                $this->errors[] = $exc->getMessage();
+            }
         }
 
         $this->closeCsvFile($handle);
