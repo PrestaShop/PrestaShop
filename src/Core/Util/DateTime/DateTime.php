@@ -44,9 +44,8 @@ final class DateTime
     public function __construct()
     {
         throw new RuntimeException(sprintf(
-            'This class purpose is to define constants only. You might have mistaken the namespace with "%s"',
-                \DateTime::class
-            )
-        );
+            'This class purpose is to define constants only. You might have mistaken it with "%s"',
+            \DateTime::class
+        ));
     }
 }
