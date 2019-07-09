@@ -34,6 +34,16 @@ use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierConstraintExcepti
 final class ShippingRange
 {
     /**
+     * When out of range, the shipping costs applies according to to highest defined range
+     */
+    const WHEN_OUT_OF_RANGE_APPLY_HIGHEST = 1;
+
+    /**
+     * When out of range, the carrier is disabled
+     */
+    const WHEN_OUT_OF_RANGE_DISABLE_CARRIER = 0;
+
+    /**
      * @var int
      */
     private $from;
@@ -86,6 +96,24 @@ final class ShippingRange
     public function getPricesByZoneId()
     {
         return $this->pricesByZoneId;
+    }
+
+    /**
+     * @param array $range
+     *
+     * @return ShippingRange
+     *
+     * @throws CarrierConstraintException
+     */
+    public static function buildFromArray(array $range)
+    {
+        if (!isset($range['from'], $range['to'], $range['prices_by_zone_id'])) {
+            throw new CarrierConstraintException(
+                'Invalid data provided for shipping ranges. Array must contain keys: "from", "to", "prices_by_zone_id"'
+            );
+        }
+
+        return new self($range['from'], $range['to'], $range['prices_by_zone_id']);
     }
 
     /**
