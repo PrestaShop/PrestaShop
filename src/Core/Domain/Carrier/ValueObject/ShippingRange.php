@@ -26,56 +26,59 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject;
 
+/**
+ * Provides shipping range and its prices by zone
+ */
 final class ShippingRange
 {
     /**
-     * @var float
+     * @var int
      */
-    private $valueFrom;
+    private $minValue;
 
     /**
-     * @var float
+     * @var int
      */
-    private $valueTo;
+    private $maxValue;
 
     /**
      * @var array
      */
-    private $priceByZone;
+    private $pricesByZoneId;
 
     /**
-     * @param float $valueFrom
-     * @param float $valueTo
-     * @param array $priceByZone
+     * @param int $minValue
+     * @param int $maxValue
+     * @param array $pricesByZoneId
      */
-    public function __construct($valueFrom, $valueTo, $priceByZone)
+    public function __construct($minValue, $maxValue, array $pricesByZoneId)
     {
-        $this->valueFrom = $valueFrom;
-        $this->valueTo = $valueTo;
-        $this->priceByZone = $priceByZone;
+        $this->minValue = $minValue;
+        $this->maxValue = $maxValue;
+        $this->pricesByZoneId = $pricesByZoneId;
     }
 
     /**
-     * @return float
+     * @return int
      */
-    public function getValueFrom()
+    public function getMinValue()
     {
-        return $this->valueFrom;
+        return $this->minValue;
     }
 
     /**
-     * @return float
+     * @return int
      */
-    public function getValueTo()
+    public function getMaxValue()
     {
-        return $this->valueTo;
+        return $this->maxValue;
     }
 
     /**
      * @return array
      */
-    public function getPriceByZone()
+    public function getPricesByZoneId()
     {
-        return $this->priceByZone;
+        return $this->pricesByZoneId;
     }
 }

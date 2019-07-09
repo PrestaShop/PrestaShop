@@ -45,4 +45,9 @@ class CarrierConstraintException extends CarrierException
      * When carrier speed grade contains invalid value
      */
     const INVALID_SPEED_GRADE = 3;
+
+    /**
+     * When carrier shipping method value is invalid
+     */
+    const INVALID_SHIPPING_METHOD = 4;
 }

@@ -26,18 +26,13 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject;
 
-/**
- * Provides valid values for shipping range
- */
-final class ShippingPrice
-{
-    /**
-     * Default shipping method is only used for backwards compatibility.
-     *
-     * @deprecated 1.5.5
-     */
-    const SHIPPING_METHOD_DEFAULT = 0;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierConstraintException;
 
+/**
+ * Provides valid values for shipping method
+ */
+final class ShippingMethod
+{
     /**
      * Represents shipping method when the shipping price depends from total package weight
      */
@@ -56,39 +51,46 @@ final class ShippingPrice
     /**
      * @var int
      */
-    private $shippingMethod;
+    private $value;
 
     /**
-     * @var ShippingRange
+     * @param int $value
+     *
+     * @throws CarrierConstraintException
      */
-    private $shippingRange;
-
-    /**
-     * @param int $shippingMethod
-     * @param array $rangeZonePrices
-     */
-    public function __construct($shippingMethod, array $rangeZonePrices)
+    public function __construct($value)
     {
-        $this->shippingMethod = $shippingMethod;
-        foreach ($rangeZonePrices as $range => $zonePrices) {
-
-        }
+        $this->assertValueIsDefinedShippingMethod($value);
+        $this->value = $value;
     }
 
     /**
      * @return int
      */
-    public function getShippingMethod()
+    public function getValue()
     {
-        return $this->shippingMethod;
+        return $this->value;
     }
 
     /**
-     * @return ShippingRange
+     * @param int $value
+     *
+     * @throws CarrierConstraintException
      */
-    public function getShippingRanges()
+    private function assertValueIsDefinedShippingMethod($value)
     {
-        return $this->shippingRange;
-    }
+        $definedMethods = [
+            self::SHIPPING_METHOD_PRICE,
+            self::SHIPPING_METHOD_WEIGHT,
+        ];
 
+        if (!in_array($value, $definedMethods, true)) {
+            throw new CarrierConstraintException(sprintf(
+                'Invalid shipping method "%s". Defined methods are: %s',
+                var_export($value, true),
+                implode(', ', $definedMethods)),
+                CarrierConstraintException::INVALID_SHIPPING_METHOD
+            );
+        }
+    }
 }
