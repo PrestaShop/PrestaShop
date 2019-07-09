@@ -27,9 +27,12 @@
   <h2 class="h2 products-section-title text-uppercase">
     {l s='On sale' d='Shop.Theme.Catalog'}
   </h2>
-  <div class="products">
-    {foreach from=$products item="product"}
-      {include file="catalog/_partials/miniatures/product.tpl" product=$product}
+  <div class="products" itemscope itemtype="http://schema.org/ItemList">
+    {foreach from=$products item="product" key="position"}
+      <div itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+        <meta itemprop="position" content="{$position}" />
+        {include file="catalog/_partials/miniatures/product.tpl" product=$product}
+      </div>
     {/foreach}
   </div>
   <a class="all-product-link float-xs-left float-md-right h4" href="{$allSpecialProductsLink}">

@@ -24,9 +24,12 @@
  *}
 <section class="featured-products clearfix mt-3">
   <h2>{l s='Viewed products' d='Shop.Theme.Catalog'}</h2>
-  <div class="products">
-    {foreach from=$products item="product"}
-      {include file="catalog/_partials/miniatures/product.tpl" product=$product}
+  <div class="products" itemscope itemtype="http://schema.org/ItemList">
+    {foreach from=$products item="product" key="position"}
+      <div itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+        <meta itemprop="position" content="{$position}" />
+        {include file="catalog/_partials/miniatures/product.tpl" product=$product}
+      </div>
     {/foreach}
   </div>
 </section>
