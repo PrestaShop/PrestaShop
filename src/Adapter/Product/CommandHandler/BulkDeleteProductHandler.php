@@ -5,6 +5,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDeleteProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\BulkDeleteProductHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDeleteProductException;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopException;
 use Product;
 
@@ -16,6 +17,19 @@ use Product;
 final class BulkDeleteProductHandler implements BulkDeleteProductHandlerInterface
 {
     /**
+     * @var HookDispatcherInterface
+     */
+    private $hookDispatcher;
+
+    /**
+     * @param HookDispatcherInterface $hookDispatcher
+     */
+    public function __construct(HookDispatcherInterface $hookDispatcher)
+    {
+        $this->hookDispatcher = $hookDispatcher;
+    }
+
+    /**
      * {@inheritdoc}
      *
      * @throws CannotDeleteProductException
@@ -26,6 +40,11 @@ final class BulkDeleteProductHandler implements BulkDeleteProductHandlerInterfac
         foreach ($command->getProductIds() as $productId) {
             $productIds[] = $productId->getValue();
         }
+
+        $hookParameters = ['product_list_id' => $productIds];
+
+        $this->hookDispatcher->dispatchWithParameters('actionAdminDeleteBefore', $hookParameters);
+        $this->hookDispatcher->dispatchWithParameters('actionAdminProductsControllerDeleteBefore', $hookParameters);
 
         try {
             $result = (new Product())->deleteSelection($productIds);
@@ -48,5 +67,8 @@ final class BulkDeleteProductHandler implements BulkDeleteProductHandlerInterfac
                 $exception
             );
         }
+
+        $this->hookDispatcher->dispatchWithParameters('actionAdminDeleteAfter', $hookParameters);
+        $this->hookDispatcher->dispatchWithParameters('actionAdminProductsControllerDeleteAfter', $hookParameters);
     }
 }

@@ -6,6 +6,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkEnableProductStatusCom
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\BulkEnableProductStatusHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotEnableProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopException;
 use Product;
 
@@ -17,6 +19,19 @@ use Product;
 final class BulkEnableProductStatusHandler implements BulkEnableProductStatusHandlerInterface
 {
     /**
+     * @var HookDispatcherInterface
+     */
+    private $hookDispatcher;
+
+    /**
+     * @param HookDispatcherInterface $hookDispatcher
+     */
+    public function __construct(HookDispatcherInterface $hookDispatcher)
+    {
+        $this->hookDispatcher = $hookDispatcher;
+    }
+
+    /**
      * {@inheritdoc}
      *
      * @throws ProductNotFoundException
@@ -24,6 +39,13 @@ final class BulkEnableProductStatusHandler implements BulkEnableProductStatusHan
      */
     public function handle(BulkEnableProductStatusCommand $command)
     {
+        $ids = array_map(static function (ProductId $item) { return $item->getValue(); }, $command->getProductIds());
+
+        $hookParameters = ['product_list_id' => $ids];
+
+        $this->hookDispatcher->dispatchWithParameters('actionAdminActivateBefore', $hookParameters);
+        $this->hookDispatcher->dispatchWithParameters('actionAdminProductsControllerActivateBefore', $hookParameters);
+
         foreach ($command->getProductIds() as $productId) {
             $entity = new Product($productId->getValue());
 
@@ -56,5 +78,8 @@ final class BulkEnableProductStatusHandler implements BulkEnableProductStatusHan
                 );
             }
         }
+
+        $this->hookDispatcher->dispatchWithParameters('actionAdminActivateAfter', $hookParameters);
+        $this->hookDispatcher->dispatchWithParameters('actionAdminProductsControllerActivateAfter', $hookParameters);
     }
 }
