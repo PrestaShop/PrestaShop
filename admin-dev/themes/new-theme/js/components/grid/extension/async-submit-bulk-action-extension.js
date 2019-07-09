@@ -43,6 +43,11 @@ export default class AsyncSubmitBulkActionExtension {
     });
   }
 
+  /**
+   * Collects required data and submits the form.
+   * @param event
+   * @param grid
+   */
   submit(event, grid) {
     const $submitBtn = $(event.currentTarget);
     const confirmMessage = $submitBtn.data('confirm-message');
@@ -65,6 +70,12 @@ export default class AsyncSubmitBulkActionExtension {
       return;
     }
 
+    /**
+     * Async submit action which repeats itself in recursive order.
+     * @param items
+     * @param successCallback
+     * @param errorCallback
+     */
     const asyncSubmit = (items, successCallback, errorCallback) => {
       if (items.length === 0) {
         return;
@@ -107,18 +118,39 @@ export default class AsyncSubmitBulkActionExtension {
       });
   }
 
+  /**
+   * Gets the only checked inputs.
+   * @param $form
+   * @return {*}
+   */
   getCheckedInputs($form) {
     return $form.find('.js-bulk-action-checkbox:checked');
   }
 
+  /**
+   * From checked inputs it returns input values
+   * @param $inputs
+   * @return {*}
+   */
   getCheckedIds($inputs) {
     return $inputs.map((index, el) => parseInt($(el).val(), 10));
   }
 
+  /**
+   * Since bulk action has same name we can return single name from all.
+   * @param $inputs
+   * @return {*}
+   */
   getInputName($inputs) {
     return $inputs.attr('name').replace('[]', '');
   }
 
+  /**
+   * Divides results by chunk size.
+   * @param array
+   * @param chunkSize
+   * @return {Array}
+   */
   chunkArray(array, chunkSize) {
     const results = [];
     while (array.length) {
