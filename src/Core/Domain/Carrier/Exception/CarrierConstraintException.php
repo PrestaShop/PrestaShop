@@ -50,4 +50,9 @@ class CarrierConstraintException extends CarrierException
      * When carrier shipping method value is invalid
      */
     const INVALID_SHIPPING_METHOD = 4;
+
+    /**
+     * When shipping range contains invalid values
+     */
+    const INVALID_SHIPPING_RANGE = 5;
 }

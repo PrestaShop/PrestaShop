@@ -56,7 +56,7 @@ final class SpeedGrade
      */
     private function assertValueIsNonNegativeIntegerLessThanTen($value)
     {
-        if (!is_int($value) || 0 > $value || 9 > $value) {
+        if (!is_int($value) || 0 > $value || 9 < $value) {
             throw new CarrierConstraintException(sprintf(
                 'Shipping grade "%s" is invalid. It must be integer from 0 to 9', var_export($value, true)),
                 CarrierConstraintException::INVALID_SPEED_GRADE

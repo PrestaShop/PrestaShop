@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject;
 
+use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierConstraintException;
+
 /**
  * Provides shipping range and its prices by zone
  */
@@ -34,12 +36,12 @@ final class ShippingRange
     /**
      * @var int
      */
-    private $minValue;
+    private $from;
 
     /**
      * @var int
      */
-    private $maxValue;
+    private $to;
 
     /**
      * @var array
@@ -47,31 +49,35 @@ final class ShippingRange
     private $pricesByZoneId;
 
     /**
-     * @param int $minValue
-     * @param int $maxValue
+     * @param int $from
+     * @param int $to
      * @param array $pricesByZoneId
+     *
+     * @throws CarrierConstraintException
      */
-    public function __construct($minValue, $maxValue, array $pricesByZoneId)
+    public function __construct($from, $to, array $pricesByZoneId)
     {
-        $this->minValue = $minValue;
-        $this->maxValue = $maxValue;
+        $this->assertRangeIsValid($from, $to);
+        $this->assertPricesByZoneArrayIsNotEmpty($pricesByZoneId);
+        $this->from = $from;
+        $this->to = $to;
         $this->pricesByZoneId = $pricesByZoneId;
     }
 
     /**
      * @return int
      */
-    public function getMinValue()
+    public function getFrom()
     {
-        return $this->minValue;
+        return $this->from;
     }
 
     /**
      * @return int
      */
-    public function getMaxValue()
+    public function getTo()
     {
-        return $this->maxValue;
+        return $this->to;
     }
 
     /**
@@ -80,5 +86,55 @@ final class ShippingRange
     public function getPricesByZoneId()
     {
         return $this->pricesByZoneId;
+    }
+
+    /**
+     * @param int $from
+     * @param int $to
+     *
+     * @throws CarrierConstraintException
+     */
+    private function assertRangeIsValid($from, $to)
+    {
+        $this->assertValueIsNonNegativeInteger($from);
+        $this->assertValueIsNonNegativeInteger($to);
+
+        if ($from >= $to) {
+            throw new CarrierConstraintException(sprintf(
+                'Invalid shipping range "%s - %s". Range to must be higher than range from.', $from, $to),
+                CarrierConstraintException::INVALID_SHIPPING_RANGE
+            );
+        }
+    }
+
+    /**
+     * @param int $value
+     *
+     * @throws CarrierConstraintException
+     */
+    private function assertValueIsNonNegativeInteger($value)
+    {
+        if (!is_int($value) || 0 > $value) {
+            throw new CarrierConstraintException(sprintf(
+                'Shipping range "%s" is invalid. It should be non-negative integer.',
+                var_export($value, true)),
+                CarrierConstraintException::INVALID_SHIPPING_RANGE
+            );
+        }
+    }
+
+    /**
+     * @param array $pricesByZone
+     *
+     * @throws CarrierConstraintException
+     */
+    private function assertPricesByZoneArrayIsNotEmpty(array $pricesByZone)
+    {
+        if (empty($pricesByZone)) {
+            throw new CarrierConstraintException(sprintf(
+                'Shipping prices should be provided at least for one zone in shipping range'),
+                CarrierConstraintException::INVALID_SHIPPING_RANGE
+            );
+        }
     }
 }

@@ -56,11 +56,11 @@ final class PackageWeightMeasure
      */
     private function assertValueIsNonNegativeFloat($value)
     {
-        if (!is_float($value) || 0 < $value) {
+        if (!is_float($value) || 0 > $value) {
             throw new CarrierConstraintException(sprintf(
-                'Carrier package size "%s" is invalid. It must be non-negative float.',
+                'Carrier package weight "%s" is invalid. It must be non-negative float.',
                 var_export($value, true)),
-                CarrierConstraintException::INVALID_SIZE_MEASURE
+                CarrierConstraintException::INVALID_WEIGHT_MEASURE
             );
         }
     }

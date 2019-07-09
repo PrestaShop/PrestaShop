@@ -24,44 +24,32 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject;
+namespace Tests\Unit\Core\Domain\Carrier\ValueObject;
 
+use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\PackageSizeMeasure;
 
-/**
- * Provides valid measure for carrier package size
- */
-final class PackageSizeMeasure
+class PackageSizeMeasureTest extends TestCase
 {
     /**
-     * @var int
+     * @dataProvider getInvalidValue
      */
-    private $value;
-
-    /**
-     * @param int $value
-     *
-     * @throws CarrierConstraintException
-     */
-    public function __construct($value)
+    public function testItThrowsExceptionWhenWrongValueIsGiven($invalidValue)
     {
-        $this->assertValueIsNonNegativeInteger($value);
-        $this->value = $value;
+        $this->expectException(CarrierConstraintException::class);
+        $this->expectExceptionCode(CarrierConstraintException::INVALID_SIZE_MEASURE);
+
+        new PackageSizeMeasure($invalidValue);
     }
 
-    /**
-     * @param int $value
-     *
-     * @throws CarrierConstraintException
-     */
-    private function assertValueIsNonNegativeInteger($value)
+    public function getInvalidValue()
     {
-        if (!is_int($value) || 0 > $value) {
-            throw new CarrierConstraintException(sprintf(
-                'Carrier package size "%s" is invalid. It should be non-negative integer.',
-                var_export($value, true)),
-                CarrierConstraintException::INVALID_SIZE_MEASURE
-            );
-        }
+        yield [-1];
+        yield ['1'];
+        yield [[]];
+        yield [10.5];
+        yield [null];
+        yield [false];
     }
 }
