@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\DeleteProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\DeleteProductHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopException;
 use Product;
 
@@ -41,6 +42,19 @@ use Product;
 final class DeleteProductHandler implements DeleteProductHandlerInterface
 {
     /**
+     * @var HookDispatcherInterface
+     */
+    private $hookDispatcher;
+
+    /**
+     * @param HookDispatcherInterface $hookDispatcher
+     */
+    public function __construct(HookDispatcherInterface $hookDispatcher)
+    {
+        $this->hookDispatcher = $hookDispatcher;
+    }
+
+    /**
      * {@inheritdoc}
      *
      * @throws CannotDeleteProductException
@@ -48,7 +62,19 @@ final class DeleteProductHandler implements DeleteProductHandlerInterface
      */
     public function handle(DeleteProductCommand $command)
     {
+        $hookParameters = ['product_id' => $command->getProductId()->getValue()];
+
         $product = new Product($command->getProductId()->getValue());
+
+        $this->hookDispatcher->dispatchWithParameters(
+            'actionAdminDeleteBefore',
+            $hookParameters
+        );
+
+        $this->hookDispatcher->dispatchWithParameters(
+            'actionAdminProductsControllerDeleteBefore',
+            $hookParameters
+        );
 
         if (0 >= $product->id) {
             throw new ProductNotFoundException(
@@ -72,5 +98,15 @@ final class DeleteProductHandler implements DeleteProductHandlerInterface
                 $exception
             );
         }
+
+        $this->hookDispatcher->dispatchWithParameters(
+            'actionAdminDeleteAfter',
+            $hookParameters
+        );
+
+        $this->hookDispatcher->dispatchWithParameters(
+            'actionAdminProductsControllerDeleteAfter',
+            $hookParameters
+        );
     }
 }
