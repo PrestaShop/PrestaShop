@@ -32,7 +32,6 @@ use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\PackageWeightMeasure;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\ShippingMethod;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\ShippingRange;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\SpeedGrade;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Adds new carrier
@@ -50,9 +49,9 @@ final class AddCarrierCommand
     private $localizedDelay;
 
     /**
-     * @var int
+     * @var SpeedGrade
      */
-    private $grade;
+    private $speedGrade;
 
     /**
      * @var string
@@ -62,7 +61,7 @@ final class AddCarrierCommand
     /**
      * @var bool
      */
-    private $includeShippingCost;
+    private $shippingCostIncluded;
 
     /**
      * @var ShippingMethod
@@ -80,7 +79,7 @@ final class AddCarrierCommand
     private $taxId;
 
     /**
-     * @var bool
+     * @var int
      */
     private $outOfRangeBehavior;
 
@@ -117,12 +116,12 @@ final class AddCarrierCommand
     /**
      * @param string[] $localizedName
      * @param string[] $localizedDelay
-     * @param int $grade
+     * @param int $speedGrade
      * @param string $trackingUrl
-     * @param bool $includeShippingCost
+     * @param bool $shippingCostIncluded
      * @param int $shippingMethod
      * @param int $taxId
-     * @param bool $outOfRangeBehavior
+     * @param int $outOfRangeBehavior
      * @param array $shippingRanges
      * @param int $maxPackageWidth
      * @param int $maxPackageHeight
@@ -136,9 +135,9 @@ final class AddCarrierCommand
     public function __construct(
         array $localizedName,
         array $localizedDelay,
-        $grade,
+        $speedGrade,
         $trackingUrl,
-        $includeShippingCost,
+        $shippingCostIncluded,
         $shippingMethod,
         $taxId,
         $outOfRangeBehavior,
@@ -150,54 +149,174 @@ final class AddCarrierCommand
         array $associatedGroupIds,
         array $associatedShopIds
     ) {
-        $this->localizedName = $localizedName;
-        $this->localizedDelay = $localizedDelay;
-        $this->grade = new SpeedGrade($grade);
-        $this->trackingUrl = $trackingUrl;
-        $this->includeShippingCost = $includeShippingCost;
-        $this->shippingMethod = new ShippingMethod($shippingMethod);
-        $this->setShippingRanges($shippingRanges);
-        $this->taxId = $taxId;
-        $this->outOfRangeBehavior = $outOfRangeBehavior;
+        $this->assertOutOfRangeBehaviorValueIsValid($outOfRangeBehavior);
         $this->maxPackageWidth = new PackageSizeMeasure($maxPackageWidth);
         $this->maxPackageHeight = new PackageSizeMeasure($maxPackageHeight);
         $this->maxPackageDepth = new PackageSizeMeasure($maxPackageDepth);
         $this->maxPackageWeight = new PackageWeightMeasure($maxPackageWeight);
+        $this->speedGrade = new SpeedGrade($speedGrade);
+        $this->shippingMethod = new ShippingMethod($shippingMethod);
+        $this->setShippingRanges($shippingRanges);
+        $this->outOfRangeBehavior = $outOfRangeBehavior;
+        $this->localizedName = $localizedName;
+        $this->localizedDelay = $localizedDelay;
+        $this->trackingUrl = $trackingUrl;
+        $this->shippingCostIncluded = $shippingCostIncluded;
+        $this->taxId = $taxId;
         $this->associatedGroupIds = $associatedGroupIds;
         $this->associatedShopIds = $associatedShopIds;
     }
 
     /**
+     * @return string[]
+     */
+    public function getLocalizedName()
+    {
+        return $this->localizedName;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getLocalizedDelay()
+    {
+        return $this->localizedDelay;
+    }
+
+    /**
+     * @return SpeedGrade
+     */
+    public function getSpeedGrade()
+    {
+        return $this->speedGrade;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTrackingUrl()
+    {
+        return $this->trackingUrl;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isShippingCostIncluded()
+    {
+        return $this->shippingCostIncluded;
+    }
+
+    /**
+     * @return ShippingMethod
+     */
+    public function getShippingMethod()
+    {
+        return $this->shippingMethod;
+    }
+
+    /**
+     * @return ShippingRange[]
+     */
+    public function getShippingRanges()
+    {
+        return $this->shippingRanges;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTaxId()
+    {
+        return $this->taxId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getOutOfRangeBehavior()
+    {
+        return $this->outOfRangeBehavior;
+    }
+
+    /**
+     * @return PackageSizeMeasure
+     */
+    public function getMaxPackageWidth()
+    {
+        return $this->maxPackageWidth;
+    }
+
+    /**
+     * @return PackageSizeMeasure
+     */
+    public function getMaxPackageHeight()
+    {
+        return $this->maxPackageHeight;
+    }
+
+    /**
+     * @return PackageSizeMeasure
+     */
+    public function getMaxPackageDepth()
+    {
+        return $this->maxPackageDepth;
+    }
+
+    /**
+     * @return PackageWeightMeasure
+     */
+    public function getMaxPackageWeight()
+    {
+        return $this->maxPackageWeight;
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getAssociatedGroupIds()
+    {
+        return $this->associatedGroupIds;
+    }
+
+    /**
+     * @return int[]|null
+     */
+    public function getAssociatedShopIds()
+    {
+        return $this->associatedShopIds;
+    }
+
+    /**
      * @param array $shippingRanges
+     *
+     * @throws CarrierConstraintException
      */
     private function setShippingRanges(array $shippingRanges)
     {
         foreach ($shippingRanges as $range) {
-            $resolvedRange = $this->resolveRangeParams($range);
-            $this->shippingRanges[] = new ShippingRange(
-                $resolvedRange['from'],
-                $resolvedRange['to'],
-                $resolvedRange['prices_by_zone_id']
-            );
+            $this->shippingRanges[] = ShippingRange::buildFromArray($range);
         }
     }
 
     /**
-     * Resolves array parameters to contain valid structure
+     * @param int $value
      *
-     * @param array $params
-     *
-     * @return array
+     * @throws CarrierConstraintException
      */
-    private function resolveRangeParams(array $params)
+    private function assertOutOfRangeBehaviorValueIsValid($value)
     {
-        $resolver = new OptionsResolver();
+        $definedValues = [
+            ShippingRange::WHEN_OUT_OF_RANGE_APPLY_HIGHEST,
+            ShippingRange::WHEN_OUT_OF_RANGE_DISABLE_CARRIER,
+        ];
 
-        $resolver->setRequired(['from', 'to', 'prices_by_zone_id']);
-        $resolver->setAllowedTypes('from', 'int');
-        $resolver->setAllowedTypes('to', 'int');
-        $resolver->setAllowedTypes('prices_by_zone_id', 'array');
-
-        return $resolver->resolve($params);
+        if (!in_array($value, $definedValues, true)) {
+            throw new CarrierConstraintException(sprintf(
+                'Invalid out of range behavior value "%s". Defined values are: %s',
+                var_export($value, true),
+                implode(', ', $definedValues)
+            ));
+        }
     }
 }
