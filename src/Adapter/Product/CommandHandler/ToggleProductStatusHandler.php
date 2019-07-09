@@ -6,6 +6,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\ToggleProductStatusCommand
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\ToggleProductStatusHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotToggleProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopException;
 use Product;
 
@@ -16,6 +17,19 @@ use Product;
  */
 final class ToggleProductStatusHandler implements ToggleProductStatusHandlerInterface
 {
+    /**
+     * @var HookDispatcherInterface
+     */
+    private $hookDispatcher;
+
+    /**
+     * @param HookDispatcherInterface $hookDispatcher
+     */
+    public function __construct(HookDispatcherInterface $hookDispatcher)
+    {
+        $this->hookDispatcher = $hookDispatcher;
+    }
+
     /**
      * {@inheritdoc}
      *
@@ -32,8 +46,12 @@ final class ToggleProductStatusHandler implements ToggleProductStatusHandlerInte
             );
         }
 
+        $status = (bool) !$entity->active;
+
+        $this->dispatchBeforeHooks($status, $command->getProductId()->getValue());
+
         $entity->setFieldsToUpdate(['active' => true]);
-        $entity->active = (bool) !$entity->active;
+        $entity->active = $status;
 
         try {
             if (false === $entity->update()) {
@@ -54,5 +72,47 @@ final class ToggleProductStatusHandler implements ToggleProductStatusHandlerInte
                 $exception
             );
         }
+
+        $this->dispatchAfterHooks($status, $command->getProductId()->getValue());
+    }
+
+    /**
+     * Dispatches before status change hooks.
+     *
+     * @param bool $status
+     * @param int $productId
+     */
+    private function dispatchBeforeHooks($status, $productId)
+    {
+        $parameters = [
+            'product_id' => $productId,
+        ];
+
+        $hookAdminBefore = $status ? 'actionAdminActivateBefore' : 'actionAdminDeactivateBefore';
+        $hookProductController =
+            $status ? 'actionAdminProductsControllerActivateBefore' : 'actionAdminProductsControllerDeactivateBefore';
+
+        $this->hookDispatcher->dispatchWithParameters($hookAdminBefore, $parameters);
+        $this->hookDispatcher->dispatchWithParameters($hookProductController, $parameters);
+    }
+
+    /**
+     * Dispatches after status change hooks.
+     *
+     * @param bool $status
+     * @param int $productId
+     */
+    private function dispatchAfterHooks($status, $productId)
+    {
+        $parameters = [
+            'product_id' => $productId,
+        ];
+
+        $hookAdminAfter = $status ? 'actionAdminActivateAfter' : 'actionAdminDeactivateAfter';
+        $hookProductControllerAfter =
+            $status ? 'actionAdminProductsControllerActivateAfter' : 'actionAdminProductsControllerDeactivateAfter';
+
+        $this->hookDispatcher->dispatchWithParameters($hookAdminAfter, $parameters);
+        $this->hookDispatcher->dispatchWithParameters($hookProductControllerAfter, $parameters);
     }
 }
