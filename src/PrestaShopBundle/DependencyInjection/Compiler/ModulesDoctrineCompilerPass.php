@@ -113,7 +113,7 @@ class ModulesDoctrineCompilerPass implements CompilerPassInterface
         $driverDefinition = new Definition('Doctrine\ORM\Mapping\Driver\AnnotationDriver', [$reader, [$moduleEntityDirectory]]);
         $indexFile = $moduleEntityDirectory . '/index.php';
         if (file_exists($indexFile)) {
-            $driverDefinition->addMethodCall('addExcludePaths', [[$moduleEntityDirectory . '/index.php']]);
+            $driverDefinition->addMethodCall('addExcludePaths', [[$indexFile]]);
         }
 
         return new DoctrineOrmMappingsPass($driverDefinition, [$moduleNamespace], [], false, [$modulePrefix => $moduleNamespace]);
