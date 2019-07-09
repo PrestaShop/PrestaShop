@@ -76,7 +76,7 @@ final class AddCarrierCommand
     /**
      * @var int
      */
-    private $taxId;
+    private $taxRulesGroupId;
 
     /**
      * @var int
@@ -120,7 +120,7 @@ final class AddCarrierCommand
      * @param string $trackingUrl
      * @param bool $shippingCostIncluded
      * @param int $shippingMethod
-     * @param int $taxId
+     * @param int $taxRulesGroupId
      * @param int $outOfRangeBehavior
      * @param array $shippingRanges
      * @param int $maxPackageWidth
@@ -139,7 +139,7 @@ final class AddCarrierCommand
         $trackingUrl,
         $shippingCostIncluded,
         $shippingMethod,
-        $taxId,
+        $taxRulesGroupId,
         $outOfRangeBehavior,
         array $shippingRanges,
         $maxPackageWidth,
@@ -162,7 +162,7 @@ final class AddCarrierCommand
         $this->localizedDelay = $localizedDelay;
         $this->trackingUrl = $trackingUrl;
         $this->shippingCostIncluded = $shippingCostIncluded;
-        $this->taxId = $taxId;
+        $this->taxRulesGroupId = $taxRulesGroupId;
         $this->associatedGroupIds = $associatedGroupIds;
         $this->associatedShopIds = $associatedShopIds;
     }
@@ -226,9 +226,9 @@ final class AddCarrierCommand
     /**
      * @return int
      */
-    public function getTaxId()
+    public function getTaxRulesGroupId()
     {
-        return $this->taxId;
+        return $this->taxRulesGroupId;
     }
 
     /**
