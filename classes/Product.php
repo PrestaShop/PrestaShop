@@ -4444,6 +4444,30 @@ class ProductCore extends ObjectModel
         return Db::getInstance()->insert('product_tag', $data);
     }
 
+    public static function duplicateTaxes($id_product_old, $id_product_new)
+    {
+        $query = new DbQuery();
+        $query->select('id_tax_rules_group, id_shop');
+        $query->from('product_shop');
+        $query->where('`id_product` = ' . (int) $id_product_old);
+
+        $results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query->build());
+
+        if (!empty($results)) {
+            foreach ($results as $result) {
+                if (!Db::getInstance()->update(
+                    'product_shop',
+                    array('id_tax_rules_group' => (int) $result['id_tax_rules_group']),
+                    'id_product=' . (int) $id_product_new . ' AND id_shop = ' . (int) $result['id_shop']
+                )) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
     public static function duplicateDownload($id_product_old, $id_product_new)
     {
         $sql = 'SELECT `display_filename`, `filename`, `date_add`, `date_expiration`, `nb_days_accessible`, `nb_downloadable`, `active`, `is_shareable`

@@ -216,6 +216,7 @@ class AdminProductDataUpdater implements ProductInterface
             && Pack::duplicate($id_product_old, $product->id)
             && Product::duplicateCustomizationFields($id_product_old, $product->id)
             && Product::duplicateTags($id_product_old, $product->id)
+            && Product::duplicateTaxes($id_product_old, $product->id)
             && Product::duplicateDownload($id_product_old, $product->id)) {
             if ($product->hasAttributes()) {
                 Product::updateDefaultAttribute($product->id);
@@ -232,6 +233,9 @@ class AdminProductDataUpdater implements ProductInterface
                 return $product->id;
             }
         } else {
+            if ($product->id !== null) {
+                $product->delete();
+            }
             throw new \Exception('An error occurred while creating an object.', 5009);
         }
     }
