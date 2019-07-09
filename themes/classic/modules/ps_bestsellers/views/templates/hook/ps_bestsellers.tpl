@@ -28,10 +28,7 @@
   </h2>
   <div class="products" itemscope itemtype="http://schema.org/ItemList">
     {foreach from=$products item="product" key="position"}
-      <div itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
-        <meta itemprop="position" content="{$position}" />
-        {include file="catalog/_partials/miniatures/product.tpl" product=$product}
-      </div>
+      {include file="catalog/_partials/miniatures/product.tpl" product=$product position=$position}
     {/foreach}
   </div>
   <a class="all-product-link float-xs-left float-md-right h4" href="{$allBestSellers}">
