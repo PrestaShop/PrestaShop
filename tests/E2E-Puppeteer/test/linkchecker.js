@@ -13,7 +13,7 @@ let responses = [];
 const numberRequests = {BO: 0, FO: 0};
 const selectorBO = 'nav.nav-bar.d-none.d-md-block ul li a.link[href]';
 const selectorFO = 'a[href]';
-let office = 'BO';
+let office = null;
 let curHref = null;
 const object = {
   stats: {
@@ -57,6 +57,7 @@ const interceptRequestAndResponse = async (page) => {
 
 const checkStatusUrls = async (page, hrefs) => {
   // check urls
+  let i = 1;
   // eslint-disable-next-line
   for (const href of hrefs) {
     curHref = href;
@@ -65,9 +66,11 @@ const checkStatusUrls = async (page, hrefs) => {
     if (!href.includes('mailto:') && href.includes(URL_FO)) {
       // eslint-disable-next-line
       await page.goto(href, {waitUntil: 'domcontentloaded'});
+      outputSameLine(` - ${i}/${hrefs.length} checked (${href})`);
     }
 
     responses = [];
+    i += 1;
   }
 
   object[office].totalRequests = numberRequests[office];
@@ -136,6 +139,12 @@ const run = async () => {
     }
     throw new Error(`Errors caught : ${errorMessage}`);
   }
+};
+
+const outputSameLine = async (message) => {
+  process.stdout.clearLine();
+  process.stdout.cursorTo(0);
+  process.stdout.write(message);
 };
 
 run()
