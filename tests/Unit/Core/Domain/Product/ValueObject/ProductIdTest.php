@@ -24,50 +24,31 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject;
+namespace Tests\Unit\Core\Domain\Product\ValueObject;
 
+use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
-/**
- * Product identity.
- */
-class ProductId
+class ProductIdTest extends TestCase
 {
     /**
-     * @var int
+     * @dataProvider getInvalidValue
      */
-    private $productId;
-
-    /**
-     * @param int $productId
-     */
-    public function __construct($productId)
+    public function testItThrowsExceptionWhenWrongValueIsGiven($invalidValue)
     {
-        $this->assertIntegerIsGreaterThanZero($productId);
+        $this->expectException(ProductException::class);
 
-        $this->productId = $productId;
+        new ProductId($invalidValue);
     }
 
-    /**
-     * @return int
-     */
-    public function getValue()
+    public function getInvalidValue()
     {
-        return $this->productId;
-    }
-
-    /**
-     * @param int $productId
-     */
-    private function assertIntegerIsGreaterThanZero($productId)
-    {
-        if (!is_int($productId) || 0 > $productId) {
-            throw new ProductException(
-                sprintf(
-                    'Product id %s is invalid. Product id must be number that is greater than zero.',
-                    var_export($productId, true)
-                )
-            );
-        }
+        yield [-1];
+        yield ['1'];
+        yield [[]];
+        yield [10.5];
+        yield [null];
+        yield [false];
     }
 }
