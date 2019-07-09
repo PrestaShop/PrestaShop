@@ -23,7 +23,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  *}
 {block name='product_miniature_item'}
-<article class="product-miniature js-product-miniature" data-id-product="{$product.id_product}" data-id-product-attribute="{$product.id_product_attribute}" itemprop="item" itemscope itemtype="http://schema.org/Product">
+<div itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+  <meta itemprop="position" content="{$position}" />
+  <article class="product-miniature js-product-miniature" data-id-product="{$product.id_product}" data-id-product-attribute="{$product.id_product_attribute}" itemprop="item" itemscope itemtype="http://schema.org/Product">
     <div class="thumbnail-container">
       {block name='product_thumbnail'}
         {if $product.cover}
@@ -103,4 +105,5 @@
       </div>
     </div>
   </article>
+</div>
 {/block}
