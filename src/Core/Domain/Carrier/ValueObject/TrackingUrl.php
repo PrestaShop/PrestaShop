@@ -24,50 +24,52 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Carrier\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject;
+
+use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierConstraintException;
 
 /**
- * Is thrown when carrier constraints are violated
+ * Provides valid tracking url
  */
-class CarrierConstraintException extends CarrierException
+final class TrackingUrl
 {
     /**
-     * When carrier package size measure contains invalid value
+     * @var string
      */
-    const INVALID_SIZE_MEASURE = 1;
+    private $value;
 
     /**
-     * When carrier weight measure contains invalid value
+     * @param string $value
+     *
+     * @throws CarrierConstraintException
      */
-    const INVALID_WEIGHT_MEASURE = 2;
+    public function __construct(string $value)
+    {
+        $this->assertValueIsAbsoluteUrl($value);
+        $this->value = $value;
+    }
 
     /**
-     * When carrier speed grade contains invalid value
+     * @return string
      */
-    const INVALID_SPEED_GRADE = 3;
+    public function getValue(): string
+    {
+        return $this->value;
+    }
 
     /**
-     * When carrier shipping method value is invalid
+     * @param string $value
+     *
+     * @throws CarrierConstraintException
      */
-    const INVALID_SHIPPING_METHOD = 4;
-
-    /**
-     * When shipping range contains invalid values
-     */
-    const INVALID_SHIPPING_RANGE = 5;
-
-    /**
-     * When carrier name constraints are violated
-     */
-    const INVALID_CARRIER_NAME = 6;
-
-    /**
-     * When carrier shipping delay constraints are violated
-     */
-    const INVALID_SHIPPING_DELAY = 7;
-
-    /**
-     * When carrier tracking url constraints are violated
-     */
-    const INVALID_TRACKING_URL = 8;
+    private function assertValueIsAbsoluteUrl(string $value)
+    {
+        if (!preg_match('/^(https?:)?\/\/[$~:;#,%&_=\(\)\[\]\.\? \+\-@\/a-zA-Z0-9]+$/', $value)) {
+            throw new CarrierConstraintException(sprintf(
+                'Tracking url "%s" is invalid.',
+                $value),
+                CarrierConstraintException::INVALID_TRACKING_URL
+            );
+        }
+    }
 }
