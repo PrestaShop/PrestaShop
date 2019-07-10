@@ -36,12 +36,10 @@ const object = {
 
 const getAllUrls = async (page, selector) => {
   const listUrls = await page.$$eval(selector, as => as.map(a => a.href));
-  //first check: remove perfect duplicates
-  await listUrls.filter(function(elem, pos) {
-    return listUrls.indexOf(elem) == pos;
-  });
+  // remove perfect duplicates
+  await listUrls.filter((elem, pos) => listUrls.indexOf(elem) === pos);
   return listUrls;
-}
+};
 
 const interceptRequestAndResponse = async (page) => {
   await page.setRequestInterception(true);
@@ -127,7 +125,9 @@ const run = async () => {
 
   object.stats.end = new Date().getTime();
 
-  const filename = `report_${new Date().toJSON().slice(0, 10)}.json`;
+  const curDate = new Date();
+
+  const filename = `report_${curDate.toJSON().slice(0, 10)}_${curDate.getHours()}${curDate.getMinutes()}${curDate.getSeconds()}.json`;
   fs.writeFile(reportPath + filename, JSON.stringify(object), (err) => {
     if (err) {
       return console.log(err);
