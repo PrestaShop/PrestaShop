@@ -623,6 +623,8 @@ class AdminOrdersControllerCore extends AdminController
                             $customer_thread->add();
                         } else {
                             $customer_thread = new CustomerThread((int) $id_customer_thread);
+                            $customer_thread->status = $customer_thread::closedStatus;
+                            $customer_thread->update();
                         }
 
                         $customer_message = new CustomerMessage();

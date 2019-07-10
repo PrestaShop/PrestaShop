@@ -25,6 +25,11 @@
  */
 class CustomerThreadCore extends ObjectModel
 {
+    const openStatus = 'open';
+    const closedStatus = 'closed';
+    const pending1Status = 'pending1';
+    const pending2Status = 'pending2';
+
     public $id;
     public $id_shop;
     public $id_lang;
