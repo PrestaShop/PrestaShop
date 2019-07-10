@@ -21,7 +21,7 @@ npm i
 | PASSWD              | PASSWD of your PrestaShop website (default to **prestashop_demo**) |
 
 ### Launch script
-If you want to run the Linkchecker test you can run the script **test/linkchecker.js**
+If you want to run the links checker test you can run the script **test/linkchecker.js**
 
 #### With default values
 
