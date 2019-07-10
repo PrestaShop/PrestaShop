@@ -17,12 +17,6 @@ RUN  apt-get update \
      && apt-get install -y google-chrome-unstable --no-install-recommends \
      && rm -rf /var/lib/apt/lists/*
 
-# instantiate args
-#ENV URL_BO='http://localhost:8080/admin-dev/' \
-#    URL_FO='http://localhost:8080/' \
-#    EMAIL='demo@prestashop.com' \
-#    PASSWD='prestashop_demo' \
-#    HEADLESS=true;
 # Install Puppeteer under /node_modules so it's available system-wide
 COPY ["./package.json", "./test/linkchecker.js","./"]
 COPY ["./.docker/prestashop/wait-for-it.sh", "/tmp/"]
