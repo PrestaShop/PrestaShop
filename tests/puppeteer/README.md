@@ -7,7 +7,7 @@ This script will prevent the 400 and 500 http error code, by crawling your back 
 
 ```bash
 git clone https://github.com/PrestaShop/PrestaShop/
-cd tests/E2E-puppeteer/
+cd tests/puppeteer/
 npm i
 ```
 
