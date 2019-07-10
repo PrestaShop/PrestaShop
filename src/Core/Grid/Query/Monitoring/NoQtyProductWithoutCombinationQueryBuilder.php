@@ -80,11 +80,11 @@ final class NoQtyProductWithoutCombinationQueryBuilder extends AbstractProductQu
         $subQuery->select('1')
             ->from($this->dbPrefix . 'stock_available', 'stock')
             ->andWhere('p.id_product = stock.id_product')
-            ->andWhere('EXISTS(' . $attrSubQuery->getSQL() . ')')
+            ->andWhere('NOT EXISTS(' . $attrSubQuery->getSQL() . ')')
             ->andWhere('IFNULL(stock.quantity, 0) <= 0')
         ;
 
-        $qb->andWhere('NOT EXISTS(' . $subQuery->getSQL() . ')');
+        $qb->andWhere('EXISTS(' . $subQuery->getSQL() . ')');
 
         return $qb;
     }
