@@ -1,13 +1,13 @@
-# PrestaShop Functional Tests with puppeteer
+# PrestaShop Tests with Puppeteer
 
-## prestashop_linkchecker (our first test)
-This script will prevent the 400 and 500 http error code, by crawling your back office and front office
+## LinkChecker
+This script will detect not found and erroneous pages, by crawling your back office and front office
 
 ### How to install your environment
 
 ```bash
 git clone https://github.com/PrestaShop/PrestaShop/
-cd tests/E2E-puppeteer/
+cd tests/puppeteer/
 npm i
 ```
 
@@ -21,16 +21,24 @@ npm i
 | PASSWD              | PASSWD of your PrestaShop website (default to **prestashop_demo**) |
 
 ### Launch script
-If you want to run the Install test you can run the script **check_url_status.js**
+If you want to run the links checker test you can run the script **test/linkchecker.js**
+
 #### With default values
-```
-node check_url_status.js
-```
-#### With custom values
+
 ```bash
-URL_BO="Your_Shop_URL_BO" URL_FO="Your_Shop_URL_FO" LOGIN="Your_Login" PASSWD="Your_Password" node check_url_status.js
+cd test/
+node linkchecker.js
 ```
+
+#### With custom values
+
+```bash
+cd test/
+URL_BO="Your_Shop_URL_BO" URL_FO="Your_Shop_URL_FO" LOGIN="Your_Login" PASSWD="Your_Password" node linkchecker.js
+```
+
 #### Run with docker
+
 ```bash
 #Build image
 docker build -t puppeteer_linkchecker -f .docker/Dockerfile .
@@ -39,8 +47,10 @@ docker run -e URL_BO="Your_Shop_URL_BO" -e URL_FO="Your_Shop_URL_FO" -e LOGIN="Y
 ```
 
 #### Run with docker-compose
+
 ```bash
 #Create Shop and running test
 docker-compose up --build
 ```
+
 Enjoy :wink: :v:
