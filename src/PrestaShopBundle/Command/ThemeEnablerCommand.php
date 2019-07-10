@@ -34,6 +34,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Context;
 use Employee;
 use Validate;
+use Shop;
 
 final class ThemeEnablerCommand extends ContainerAwareCommand
 {
@@ -80,7 +81,7 @@ final class ThemeEnablerCommand extends ContainerAwareCommand
         $shop = $input->getArgument('shop');
         $this->init($input, $output);
 
-        if ($shop !== NULL) {
+        if ($shop !== null) {
             if (Validate::isLoadedObject(new Shop($shop))) {
                 Context::getContext()->shop = new Shop($shop);
             } else {
@@ -106,4 +107,3 @@ final class ThemeEnablerCommand extends ContainerAwareCommand
         $io->success(sprintf('Theme "%s" enabled with success.', $theme));
     }
 }
-
