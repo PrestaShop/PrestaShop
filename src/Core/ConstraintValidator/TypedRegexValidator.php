@@ -80,12 +80,12 @@ class TypedRegexValidator extends ConstraintValidator
         $typePatterns = [
             'name' => $this->cleanNonUnicodeSupport('/^[^0-9!<>,;?=+()@#"°{}_$%:¤|]*$/u'),
             'catalog_name' => $this->cleanNonUnicodeSupport('/^[^<>;=#{}]*$/u'),
-            'generic_name' => $this->cleanNonUnicodeSupport(RegexPattern::GENERIC_NAME),
+            'generic_name' => $this->cleanNonUnicodeSupport(RegexPattern::PATTERN_GENERIC_NAME),
             'city_name' => $this->cleanNonUnicodeSupport('/^[^!<>;?=+@#"°{}_$%]*$/u'),
             'address' => $this->cleanNonUnicodeSupport('/^[^!<>?=+@{}_$%]*$/u'),
             'post_code' => '/^[a-zA-Z 0-9-]+$/',
             'phone_number' => '/^[+0-9. ()\/-]*$/',
-            'message' => '/[<>{}]/i',
+            'message' => RegexPattern::INVERSE_PATTERN_MESSAGE,
             'language_iso_code' => IsoCode::PATTERN,
             'language_code' => '/^[a-zA-Z]{2}(-[a-zA-Z]{2})?$/',
         ];

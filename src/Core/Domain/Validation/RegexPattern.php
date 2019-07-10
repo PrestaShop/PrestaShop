@@ -34,5 +34,7 @@ final class RegexPattern
     /**
      * Pattern for valid generic names
      */
-    const GENERIC_NAME = '/^[^<>={}]*$/u';
+    const PATTERN_GENERIC_NAME = '/^[^<>={}]*$/u';
+
+    const INVERSE_PATTERN_MESSAGE = '/[<>{}]/i';
 }

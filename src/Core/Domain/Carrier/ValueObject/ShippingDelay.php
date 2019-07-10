@@ -51,7 +51,7 @@ final class ShippingDelay
      */
     private function assertIsValidValue($value)
     {
-        if (!preg_match(RegexPattern::GENERIC_NAME, $value)) {
+        if (!preg_match(RegexPattern::PATTERN_GENERIC_NAME, $value)) {
             //throw exception.
         }
     }
