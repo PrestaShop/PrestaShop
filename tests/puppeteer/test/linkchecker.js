@@ -52,7 +52,7 @@ const interceptRequestAndResponse = async (page) => {
     const status = response.status().toString();
     numberRequests[office] += 1;
     if (status.startsWith('4') || status.startsWith('5')) {
-      console.log(` !! Failed response : ${url} (${status})`);
+      console.warn(` !! Failed response : ${url} (${status})`);
       object[office].failed.push({page: curHref, URL: url, status});
     } else {
       responses.push({url, status});
@@ -130,7 +130,7 @@ const run = async () => {
   const filename = `report_${curDate.toJSON().slice(0, 10)}_${curDate.getHours()}${curDate.getMinutes()}${curDate.getSeconds()}.json`;
   fs.writeFile(reportPath + filename, JSON.stringify(object), (err) => {
     if (err) {
-      return console.log(err);
+      return console.error(err);
     }
     return console.log(`File ${reportPath}${filename} saved!`);
   });
@@ -157,4 +157,4 @@ const outputSameLine = async (message) => {
 run()
   .then(() => {
     console.log('--------the end--------');
-  }).catch(e => console.log(`${e}`));
+  }).catch(e => console.error(`${e}`));
