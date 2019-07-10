@@ -30,9 +30,12 @@ use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierConstraintExcepti
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierName;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\PackageSizeMeasure;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\PackageWeightMeasure;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\ShippingDelay;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\ShippingMethod;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\ShippingRange;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\SpeedGrade;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\TrackingUrl;
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 
 /**
  * Adds new carrier
@@ -42,12 +45,12 @@ final class AddCarrierCommand
     /**
      * @var CarrierName[]
      */
-    private $localizedNames;
+    private $localizedCarrierNames;
 
     /**
-     * @var string[]
+     * @var ShippingDelay[]
      */
-    private $localizedDelays;
+    private $localizedShippingDelays;
 
     /**
      * @var SpeedGrade
@@ -55,7 +58,7 @@ final class AddCarrierCommand
     private $speedGrade;
 
     /**
-     * @var string
+     * @var TrackingUrl
      */
     private $trackingUrl;
 
@@ -115,8 +118,8 @@ final class AddCarrierCommand
     private $associatedShopIds;
 
     /**
-     * @param string[] $localizedNames
-     * @param string[] $localizedDelays
+     * @param string[] $localizedCarrierNames
+     * @param string[] $localizedShippingDelays
      * @param int $speedGrade
      * @param string $trackingUrl
      * @param bool $shippingCostIncluded
@@ -134,8 +137,8 @@ final class AddCarrierCommand
      * @throws CarrierConstraintException
      */
     public function __construct(
-        array $localizedNames,
-        array $localizedDelays,
+        array $localizedCarrierNames,
+        array $localizedShippingDelays,
         $speedGrade,
         $trackingUrl,
         $shippingCostIncluded,
@@ -151,7 +154,8 @@ final class AddCarrierCommand
         array $associatedShopIds
     ) {
         $this->assertOutOfRangeBehaviorValueIsValid($outOfRangeBehavior);
-        $this->setLocalizedNames($localizedNames);
+        $this->setLocalizedCarrierNames($localizedCarrierNames);
+        $this->setLocalizedShippingDelays($localizedShippingDelays);
         $this->maxPackageWidth = new PackageSizeMeasure($maxPackageWidth);
         $this->maxPackageHeight = new PackageSizeMeasure($maxPackageHeight);
         $this->maxPackageDepth = new PackageSizeMeasure($maxPackageDepth);
@@ -160,8 +164,7 @@ final class AddCarrierCommand
         $this->shippingMethod = new ShippingMethod($shippingMethod);
         $this->setShippingRanges($shippingRanges);
         $this->outOfRangeBehavior = $outOfRangeBehavior;
-        $this->localizedDelays = $localizedDelays;
-        $this->trackingUrl = $trackingUrl;
+        $this->trackingUrl = new TrackingUrl($trackingUrl);
         $this->shippingCostIncluded = $shippingCostIncluded;
         $this->taxRulesGroupId = $taxRulesGroupId;
         $this->associatedGroupIds = $associatedGroupIds;
@@ -171,17 +174,17 @@ final class AddCarrierCommand
     /**
      * @return CarrierName[]
      */
-    public function getLocalizedNames()
+    public function getLocalizedCarrierNames()
     {
-        return $this->localizedNames;
+        return $this->localizedCarrierNames;
     }
 
     /**
-     * @return string[]
+     * @return ShippingDelay[]
      */
-    public function getLocalizedDelays()
+    public function getLocalizedShippingDelays()
     {
-        return $this->localizedDelays;
+        return $this->localizedShippingDelays;
     }
 
     /**
@@ -193,7 +196,7 @@ final class AddCarrierCommand
     }
 
     /**
-     * @return string
+     * @return TrackingUrl
      */
     public function getTrackingUrl()
     {
@@ -301,14 +304,26 @@ final class AddCarrierCommand
     }
 
     /**
-     * @param array $localizedNames
+     * @param array $localizedCarrierNames
      *
      * @throws CarrierConstraintException
      */
-    private function setLocalizedNames(array $localizedNames)
+    private function setLocalizedCarrierNames(array $localizedCarrierNames)
     {
-        foreach ($localizedNames as $name) {
-            $this->localizedNames[] = new CarrierName($name);
+        foreach ($localizedCarrierNames as $langId => $name) {
+            $this->localizedCarrierNames[(new LanguageId($langId))->getValue()] = new CarrierName($name);
+        }
+    }
+
+    /**
+     * @param array $localizedShippingDelays
+     *
+     * @throws CarrierConstraintException
+     */
+    private function setLocalizedShippingDelays(array $localizedShippingDelays)
+    {
+        foreach ($localizedShippingDelays as $langId => $delay) {
+            $this->localizedShippingDelays[(new LanguageId($langId))->getValue()] = new ShippingDelay($delay);
         }
     }
 
