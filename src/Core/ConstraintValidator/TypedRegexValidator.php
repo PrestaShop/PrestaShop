@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Core\ConstraintValidator;
 
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\IsoCode;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
+use PrestaShop\PrestaShop\Core\Domain\Validation\RegexPattern;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\InvalidArgumentException;
@@ -79,7 +80,7 @@ class TypedRegexValidator extends ConstraintValidator
         $typePatterns = [
             'name' => $this->cleanNonUnicodeSupport('/^[^0-9!<>,;?=+()@#"°{}_$%:¤|]*$/u'),
             'catalog_name' => $this->cleanNonUnicodeSupport('/^[^<>;=#{}]*$/u'),
-            'generic_name' => $this->cleanNonUnicodeSupport('/^[^<>={}]*$/u'),
+            'generic_name' => $this->cleanNonUnicodeSupport(RegexPattern::GENERIC_NAME),
             'city_name' => $this->cleanNonUnicodeSupport('/^[^!<>;?=+@#"°{}_$%]*$/u'),
             'address' => $this->cleanNonUnicodeSupport('/^[^!<>?=+@{}_$%]*$/u'),
             'post_code' => '/^[a-zA-Z 0-9-]+$/',

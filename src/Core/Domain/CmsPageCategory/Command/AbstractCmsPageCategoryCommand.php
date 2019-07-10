@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Validation\RegexPattern;
 
 /**
  * Class AbstractCmsPageCategoryCommand
@@ -73,7 +74,7 @@ abstract class AbstractCmsPageCategoryCommand
                 sprintf(
                     'Given meta title "%s" does not match pattern "%s"',
                     $assertionResult,
-                    self::GENERIC_NAME_REGEX_PATTERN
+                    RegexPattern::GENERIC_NAME
                 ),
                 CmsPageCategoryConstraintException::INVALID_META_TITLE
             );
@@ -94,7 +95,7 @@ abstract class AbstractCmsPageCategoryCommand
                 sprintf(
                     'Given meta description "%s" does not match pattern "%s"',
                     $assertionResult,
-                    self::GENERIC_NAME_REGEX_PATTERN
+                    RegexPattern::GENERIC_NAME
                 ),
                 CmsPageCategoryConstraintException::INVALID_META_DESCRIPTION
             );
@@ -115,7 +116,7 @@ abstract class AbstractCmsPageCategoryCommand
                 sprintf(
                     'Given meta keyword "%s" does not match pattern "%s"',
                     $assertionResult,
-                    self::GENERIC_NAME_REGEX_PATTERN
+                    RegexPattern::GENERIC_NAME
                 ),
                 CmsPageCategoryConstraintException::INVALID_META_KEYWORDS
             );
