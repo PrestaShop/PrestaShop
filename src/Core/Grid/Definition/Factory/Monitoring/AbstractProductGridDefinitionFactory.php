@@ -173,7 +173,7 @@ abstract class AbstractProductGridDefinitionFactory extends AbstractGridDefiniti
     /**
      * @return RowActionCollection
      */
-    private function getRowActions()
+    protected function getRowActions()
     {
         return (new RowActionCollection())
             ->add(
