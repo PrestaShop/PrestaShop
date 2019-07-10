@@ -28,15 +28,39 @@ namespace Tests\Unit\Core\Domain\Carrier\Command;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Command\AddCarrierCommand;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\ShippingMethod;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\ShippingRange;
 
 class TestAddCarrierCommand extends TestCase
 {
-    public function testCommandIsCreatedSuccessfullyWhenValidPropertiesAreGiven()
+    public function testCommandIsCreatedSuccessfullyWhenValidArgumentsAreGiven()
     {
-        $validDataArray = $this->getValidDataForCommandCreation();
-        $this->createCommandFromArray($validDataArray);
+        $this->createCommandFromArray($this->getValidDataForCommandCreation());
+    }
+
+    /**
+     * @dataProvider getInvalidCarrierNames
+     */
+    public function testItThrowsExceptionWhenInvalidCarrierNameIsGiven($invalidName)
+    {
+        $this->expectException(CarrierConstraintException::class);
+        $this->expectExceptionCode(CarrierConstraintException::INVALID_CARRIER_NAME);
+        $data = $this->getValidDataForCommandCreation();
+        $data['localized_names'][1] = $invalidName;
+
+        $this->createCommandFromArray($data);
+    }
+
+    public function getInvalidCarrierNames()
+    {
+        yield ['abc#'];
+        yield [1];
+        yield ['>'];
+        yield [''];
+        yield ['='];
+        yield ['{'];
+        yield [str_repeat('a', 65)];
     }
 
     private function getValidDataForCommandCreation()

@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Carrier\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierName;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\PackageSizeMeasure;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\PackageWeightMeasure;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\ShippingMethod;
@@ -39,7 +40,7 @@ use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\SpeedGrade;
 final class AddCarrierCommand
 {
     /**
-     * @var string[]
+     * @var CarrierName[]
      */
     private $localizedNames;
 
@@ -150,6 +151,7 @@ final class AddCarrierCommand
         array $associatedShopIds
     ) {
         $this->assertOutOfRangeBehaviorValueIsValid($outOfRangeBehavior);
+        $this->setLocalizedNames($localizedNames);
         $this->maxPackageWidth = new PackageSizeMeasure($maxPackageWidth);
         $this->maxPackageHeight = new PackageSizeMeasure($maxPackageHeight);
         $this->maxPackageDepth = new PackageSizeMeasure($maxPackageDepth);
@@ -158,7 +160,6 @@ final class AddCarrierCommand
         $this->shippingMethod = new ShippingMethod($shippingMethod);
         $this->setShippingRanges($shippingRanges);
         $this->outOfRangeBehavior = $outOfRangeBehavior;
-        $this->localizedNames = $localizedNames;
         $this->localizedDelays = $localizedDelays;
         $this->trackingUrl = $trackingUrl;
         $this->shippingCostIncluded = $shippingCostIncluded;
@@ -168,7 +169,7 @@ final class AddCarrierCommand
     }
 
     /**
-     * @return string[]
+     * @return CarrierName[]
      */
     public function getLocalizedNames()
     {
@@ -296,6 +297,18 @@ final class AddCarrierCommand
     {
         foreach ($shippingRanges as $range) {
             $this->shippingRanges[] = ShippingRange::buildFromArray($range);
+        }
+    }
+
+    /**
+     * @param array $localizedNames
+     *
+     * @throws CarrierConstraintException
+     */
+    private function setLocalizedNames(array $localizedNames)
+    {
+        foreach ($localizedNames as $name) {
+            $this->localizedNames[] = new CarrierName($name);
         }
     }
 

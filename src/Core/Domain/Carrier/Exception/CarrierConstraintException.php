@@ -55,4 +55,9 @@ class CarrierConstraintException extends CarrierException
      * When shipping range contains invalid values
      */
     const INVALID_SHIPPING_RANGE = 5;
+
+    /**
+     * When carrier name constraints are violated (e.g invalid length or symbols)
+     */
+    const INVALID_CARRIER_NAME = 6;
 }
