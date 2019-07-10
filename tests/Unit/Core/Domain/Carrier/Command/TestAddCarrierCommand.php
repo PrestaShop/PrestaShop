@@ -67,13 +67,12 @@ class TestAddCarrierCommand extends TestCase
                         5 => 1,
                     ],
                 ],
-
             ],
             'width' => 15,
             'height' => 10,
             'depth' => 20,
             'weight' => 20.1,
-            'associated_group_ids' => [1,2],
+            'associated_group_ids' => [1, 2],
             'associated_shop_ids' => [1],
         ];
     }
