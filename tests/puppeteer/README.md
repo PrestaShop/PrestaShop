@@ -1,6 +1,6 @@
 # PrestaShop Functional Tests with puppeteer
 
-## prestashop_linkchecker (our first test)
+## Le linkchecker (our first test)
 This script will prevent the 400 and 500 http error code, by crawling your back office and front office
 
 ### How to install your environment
@@ -21,7 +21,7 @@ npm i
 | PASSWD              | PASSWD of your PrestaShop website (default to **prestashop_demo**) |
 
 ### Launch script
-If you want to run the Install test you can run the script **test/linkchecker.js**
+If you want to run the Linkchecker test you can run the script **test/linkchecker.js**
 
 #### With default values
 
