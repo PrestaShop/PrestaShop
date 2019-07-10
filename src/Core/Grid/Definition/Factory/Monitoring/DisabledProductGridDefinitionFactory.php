@@ -50,6 +50,9 @@ final class DisabledProductGridDefinitionFactory extends AbstractProductGridDefi
         return $this->trans('List of disabled products', [], 'Admin.Catalog.Feature');
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function getColumns()
     {
         return (new ColumnCollection())
