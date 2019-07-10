@@ -76,6 +76,10 @@
                       {{ form_widget(generalForm.enable_offers) }}
                     </div>
                 </div>
+
+                {% block customer_general_preferences_form_rest %}
+                  {{ form_rest(generalForm) }}
+                {% endblock %}
             </div>
         </div>
         <div class="card-footer">

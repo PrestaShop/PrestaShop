@@ -26,10 +26,10 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
+use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 use PrestaShop\PrestaShop\Core\Search\Filters\ContactFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -136,7 +136,7 @@ class ContactsController extends FrameworkBundleAdminController
 
                 return $this->redirectToRoute('admin_contacts_index');
             }
-        } catch (DomainException $exception) {
+        } catch (Exception $exception) {
             $this->addFlash(
                 'error',
                 $this->getErrorMessageForException($exception, $this->getErrorMessages($exception))
@@ -178,7 +178,7 @@ class ContactsController extends FrameworkBundleAdminController
 
                 return $this->redirectToRoute('admin_contacts_index');
             }
-        } catch (DomainException $exception) {
+        } catch (Exception $exception) {
             $this->addFlash(
                 'error',
                 $this->getErrorMessageForException($exception, $this->getErrorMessages($exception))
@@ -254,11 +254,11 @@ class ContactsController extends FrameworkBundleAdminController
     }
 
     /**
-     * @param DomainException $e
+     * @param Exception $e
      *
      * @return array
      */
-    private function getErrorMessages(DomainException $e)
+    private function getErrorMessages(Exception $e)
     {
         return [
             ContactNotFoundException::class => $this->trans(

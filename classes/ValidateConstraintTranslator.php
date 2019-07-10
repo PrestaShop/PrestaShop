@@ -49,9 +49,27 @@ class ValidateConstraintTranslatorCore
      */
     public function translate($validator)
     {
-        if ($validator === 'isName' || $validator === 'isCustomerName') {
+        if ($validator === 'isName') {
             return $this->translator->trans(
                 'Invalid name',
+                [],
+                'Shop.Forms.Errors'
+            );
+        }
+
+        if ($validator === 'isCustomerName') {
+            return $this->translator->trans(
+                'Invalid name',
+                [],
+                'Shop.Forms.Errors'
+            ) . PHP_EOL .
+            $this->translator->trans(
+                'Invalid characters: 0-9!<>,;?=+()@#"°{}_$%/\^*`',
+                [],
+                'Shop.Forms.Errors'
+            ) . PHP_EOL .
+            $this->translator->trans(
+                'A space is required after "." and "。"',
                 [],
                 'Shop.Forms.Errors'
             );

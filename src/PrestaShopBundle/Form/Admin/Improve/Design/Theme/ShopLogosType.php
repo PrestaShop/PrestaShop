@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\Design\Theme;
 
+use PrestaShop\PrestaShop\Core\Domain\Shop\DTO\ShopLogoSettings;
 use PrestaShop\PrestaShop\Core\Form\DTO\ShopRestriction;
 use PrestaShop\PrestaShop\Core\Form\DTO\ShopRestrictionField;
 use PrestaShopBundle\Form\Admin\Type\ShopRestrictionCheckboxType;
@@ -77,18 +78,34 @@ class ShopLogosType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $shopLogoSettings = new ShopLogoSettings();
+
+        $availableLogoFileTypes = implode(',', $shopLogoSettings->getLogoImageExtensionsWithDot());
+
         $builder
             ->add('header_logo', FileType::class, [
                 'required' => false,
+                'attr' => [
+                    'accept' => $availableLogoFileTypes,
+                ],
             ])
             ->add('mail_logo', FileType::class, [
                 'required' => false,
+                'attr' => [
+                    'accept' => $availableLogoFileTypes,
+                ],
             ])
             ->add('invoice_logo', FileType::class, [
                 'required' => false,
+                'attr' => [
+                    'accept' => $availableLogoFileTypes,
+                ],
             ])
             ->add('favicon', FileType::class, [
                 'required' => false,
+                'attr' => [
+                    'accept' => $shopLogoSettings->getIconImageExtensionWithDot(),
+                ],
             ])
         ;
 

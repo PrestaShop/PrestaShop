@@ -31,9 +31,13 @@ function ps_1760_update_tabs()
 {
     // STEP 1: Add new sub menus for modules (tab may exist but we need authorization roles to be added as well)
     $moduleTabsToBeAdded = array(
-        'AdminMailTheme' => [
+        'AdminMailThemeParent' => [
             'translations' => 'en:Email Themes',
             'parent' => 'AdminParentThemes',
+        ],
+        'AdminMailTheme' => [
+            'translations' => 'en:Email Themes',
+            'parent' => 'AdminMailThemeParent',
         ],
         'AdminModulesUpdates' => array(
             'translations' => 'en:Updates|fr:Mises à jour|es:Actualizaciones|de:Aktualisierung|it:Aggiornamenti',

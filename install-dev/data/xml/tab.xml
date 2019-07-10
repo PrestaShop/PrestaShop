@@ -204,9 +204,13 @@
                 <tab id="Themes_Catalog" id_parent="Look_feel" active="1" hide_host_mode="0" icon="">
                     <class_name>AdminThemesCatalog</class_name>
                 </tab>
-                <tab id="Mail_Theme" id_parent="Look_feel" active="1" hide_host_mode="0" icon="">
-                  <class_name>AdminMailTheme</class_name>
+                <tab id="Mail_Theme_Parent" id_parent="Look_feel" active="1" hide_host_mode="0" icon="">
+                  <class_name>AdminMailThemeParent</class_name>
                 </tab>
+                    <tab id="Mail_Theme" id_parent="Mail_Theme_Parent" active="1" hide_host_mode="0" icon="">
+                      <class_name>AdminMailTheme</class_name>
+                    </tab>
+
                 <tab id="Pages" id_parent="Look_feel" active="1" hide_host_mode="0" icon="">
                     <class_name>AdminCmsContent</class_name>
                 </tab>

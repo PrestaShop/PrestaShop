@@ -55,6 +55,10 @@
             {{ form_widget(paginationForm.default_order_way) }}
           </div>
         </div>
+
+        {% block product_pagination_preferences_form_rest %}
+          {{ form_rest(paginationForm) }}
+        {% endblock %}
       </div>
     </div>
     <div class="card-footer">

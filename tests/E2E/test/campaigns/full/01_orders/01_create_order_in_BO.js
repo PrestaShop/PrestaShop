@@ -236,12 +236,11 @@ scenario('Create order in the Back Office', () => {
     test('should set the product combination', () => client.waitAndSelectByValue(CreateOrder.product_combination, global.combinationId));
     test('should set the product "Quantity" input', () => client.waitAndSetValue(CreateOrder.quantity_input.replace('%NUMBER', 1), '4'));
     test('should click on "Add to cart" button', () => client.scrollWaitForExistAndClick(CreateOrder.add_to_cart_button));
-    test('should click on arrow up button to increase quantity', () => client.waitForExistAndClick(CreateOrder.quantity_arrow_up_button));
-    test('should click on arrow down button to decrease quantity', () => client.waitForExistAndClick(CreateOrder.quantity_arrow_down_button));
-    test('should get the price for product', () => {
-      return promise
-        .then(() => client.getTextInVar(CreateOrder.price_product_column, 'price_product'))
-        .then(() => client.pause(2000));
+    test('should click on arrow up button to increase quantity', async () => await client.waitForExistAndClick(CreateOrder.quantity_arrow_up_button));
+    test('should click on arrow down button to decrease quantity', async () => await client.waitForExistAndClick(CreateOrder.quantity_arrow_down_button));
+    test('should get the price for product', async () => {
+        await client.pause(500);
+        await client.getTextInVar(CreateOrder.price_product_column, 'price_product');
     });
     test('should choose "British Pound Sterling" from currency list', () => {
       return promise

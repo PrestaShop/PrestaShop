@@ -33,6 +33,8 @@
   </h3>
   <div class="card-block row">
     <div class="card-text">
+      {{ form_errors(categoryForm) }}
+
       {{ ps.form_group_row(categoryForm.name, {}, {
         'label': 'Name'|trans({}, 'Admin.Global'),
         'help': 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}'
@@ -43,7 +45,7 @@
         <div class="col-sm">
           {{ form_widget(categoryForm.active) }}
           <small class="form-text">
-            {{ 'If you want a category to appear in the menu of your shop, go to [1]Modules > Module Manager[/1]. Then, configure your menu module.'|trans({
+            {{ 'If you want a category to appear in the menu of your shop, go to [1]Modules > Module Manager[/1] and configure your menu module.'|trans({
               '[1]': '<a href="' ~ path('admin_module_manage') ~ '" class="_blank">',
               '[/1]': '</a>'
             }, 'Admin.Catalog.Help')|raw }}
@@ -125,9 +127,12 @@
 
       {% block category_tool_serp %}
         <div class="form-group row">
-          <label class="form-control-label"></label>
+          <label class="form-control-label">{{ 'SEO preview'|trans({}, 'Admin.Global') }}</label>
           <div class="col-sm">
             <div id="serp-app" data-category-url="{{ categoryUrl }}"></div>
+            <small class="form-text">
+              {{ 'Here is a preview of how your page will appear in search engine results.'|trans({}, 'Admin.Global') }}
+            </small>
           </div>
         </div>
       {% endblock %}

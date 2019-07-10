@@ -43,9 +43,12 @@ class CategoryType extends AbstractCategoryType
         parent::buildForm($builder, $options);
 
         // Root category is always disabled
-        $disabledCategories = [
-            $this->getConfiguration()->getInt('PS_ROOT_CATEGORY'),
-        ];
+        $disabledCategories = array_merge(
+            [
+                $this->getConfiguration()->getInt('PS_ROOT_CATEGORY'),
+            ],
+            $options['subcategories']
+        );
 
         if (null !== $options['id_category']) {
             // when using CategoryType to edit category
@@ -68,7 +71,9 @@ class CategoryType extends AbstractCategoryType
         $resolver
             ->setDefaults([
                 'id_category' => null,
+                'subcategories' => [],
             ])
+            ->setAllowedTypes('subcategories', ['array'])
             ->setAllowedTypes('id_category', ['int', 'null']);
     }
 }

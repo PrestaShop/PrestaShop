@@ -27,6 +27,7 @@
 namespace Tests\Integration\Behaviour\Features\Context;
 
 use Configuration;
+use Exception;
 use LegacyTests\Unit\Core\Cart\CartToOrder\PaymentModuleFake;
 use Order;
 use OrderCartRule;
@@ -50,7 +51,7 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
                 $paymentModule = new PaymentModuleFake();
                 break;
             default:
-                throw new \Exception(sprintf('Invalid payment module: %s' . $paymentModuleName));
+                throw new Exception(sprintf('Invalid payment module: %s' . $paymentModuleName));
         }
 
         // need to boot kernel for usage in $paymentModule->validateOrder()
@@ -163,7 +164,7 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
         $order = $this->getCurrentCartOrder();
         $orderCartRulesData = $order->getCartRules();
         if (!isset($orderCartRulesData[$position - 1]['id_order_cart_rule'])) {
-            throw new \Exception(
+            throw new Exception(
                 sprintf('Undefined order cart rule on position #%s', $position)
             );
         }
@@ -188,11 +189,66 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
         }
     }
 
+    /**
+     * @Then order :reference should have :quantity products in total
+     */
+    public function assertOrderProductsQuantity($reference, $quantity)
+    {
+        $order = SharedStorage::getStorage()->get($reference);
+        $orderProducts = $order->getProductsDetail();
+
+        $totalQuantity = 0;
+
+        foreach ($orderProducts as $orderProduct) {
+            $totalQuantity += (int) $orderProduct['product_quantity'];
+        }
+
+        if ($totalQuantity !== (int) $quantity) {
+            throw new Exception(sprintf(
+                'Order should have "%d" products, but has "%d".',
+                $totalQuantity,
+                $quantity
+            ));
+        }
+    }
+
+    /**
+     * @Then order :reference should have free shipping
+     */
+    public function createdOrderShouldHaveFreeShipping($reference)
+    {
+        $order = SharedStorage::getStorage()->get($reference);
+
+        foreach ($order->getCartRules() as $cartRule) {
+            if ($cartRule['free_shipping']) {
+                return;
+            }
+        }
+
+        throw new Exception('Order should have free shipping.');
+    }
+
+    /**
+     * @Then order :reference should have :paymentModuleName payment method
+     */
+    public function createdOrderShouldHavePaymentMethod($reference, $paymentModuleName)
+    {
+        $order = SharedStorage::getStorage()->get($reference);
+
+        if ($order->module !== $paymentModuleName) {
+            throw new Exception(sprintf(
+                'Order should have "%s" payment method, but has "%s" instead.',
+                $paymentModuleName,
+                $order->payment
+            ));
+        }
+    }
+
     protected function getCurrentCartOrder()
     {
         $cart = $this->getCurrentCart();
         if (null === $cart) {
-            throw new \Exception('Current cart was not initialized');
+            throw new Exception('Current cart was not initialized');
         }
         $order = Order::getByCartId($cart->id);
 

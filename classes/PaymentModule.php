@@ -569,13 +569,14 @@ abstract class PaymentModuleCore extends Module
                         $delivery = new Address((int) $order->id_address_delivery);
                         $delivery_state = $delivery->id_state ? new State((int) $delivery->id_state) : false;
                         $invoice_state = $invoice->id_state ? new State((int) $invoice->id_state) : false;
+                        $carrier = $order->id_carrier ? new Carrier($order->id_carrier) : false;
 
                         $data = array(
                             '{firstname}' => $this->context->customer->firstname,
                             '{lastname}' => $this->context->customer->lastname,
                             '{email}' => $this->context->customer->email,
-                            '{delivery_block_txt}' => $this->_getFormatedAddress($delivery, "\n"),
-                            '{invoice_block_txt}' => $this->_getFormatedAddress($invoice, "\n"),
+                            '{delivery_block_txt}' => $this->_getFormatedAddress($delivery, AddressFormat::FORMAT_NEW_LINE),
+                            '{invoice_block_txt}' => $this->_getFormatedAddress($invoice, AddressFormat::FORMAT_NEW_LINE),
                             '{delivery_block_html}' => $this->_getFormatedAddress($delivery, '<br />', array(
                                 'firstname' => '<span style="font-weight:bold;">%s</span>',
                                 'lastname' => '<span style="font-weight:bold;">%s</span>',
@@ -749,7 +750,7 @@ abstract class PaymentModuleCore extends Module
             $r_values[] = implode(' ', $tmp_values);
         }
 
-        $out = implode("\n", $r_values);
+        $out = implode(AddressFormat::FORMAT_NEW_LINE, $r_values);
 
         return $out;
     }

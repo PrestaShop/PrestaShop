@@ -4,6 +4,9 @@ let path = require('path');
 let fs = require('fs');
 let pdfUtil = require('pdf-to-text');
 const exec = require('child_process').exec;
+let chai = require('chai');
+let chai_http = require('chai-http');
+chai.use(chai_http);
 
 global.tab = [];
 global.isOpen = false;
@@ -120,16 +123,36 @@ class CommonClient {
       .waitForExistAndClick(option.replace('%LANG', language).replace('%ID', id))
   }
 
-  open() {
+  async open() {
     if (headless !== 'undefined' && headless) {
-      return this.client.init().windowHandleSize({width: 1280, height: 899});
+      let headless_client = await this.client.init().windowHandleSize({width: 1280, height: 899});
+      await this.enableDownloadForHeadlessMode();
+      return headless_client;
     } else {
       return this.client.init().windowHandleSize({width: 1280, height: 1024});
     }
   }
 
+  /**
+   * Enable download in headless mode
+   */
+  async enableDownloadForHeadlessMode(){
+    let sessionId = await this.client.requestHandler.sessionID;
+    let params = {
+      'cmd': 'Page.setDownloadBehavior',
+      'params': {
+        'behavior': 'allow', 'downloadPath': global.downloadsFolderPath
+      }
+    };
+    let selenium_hostURL= 'http://' + global.selenium_host + ':' + global.selenium_port;
+    let selenium_requestURL = '/wd/hub/session/' + sessionId + '/chromium/send_command' ;
+    await chai.request(selenium_hostURL)
+              .post(selenium_requestURL)
+              .send(params);
+  }
+
   close() {
-    return this.client.end();
+    return this.client.endAll();
   }
 
   closeWindow(id) {
@@ -580,6 +603,11 @@ class CommonClient {
       .refresh();
   }
 
+  deleteCookieWithoutRefresh() {
+    return this.client
+      .deleteCookie()
+  }
+
   middleClick(selector, globalVisibility = true, pause = 2000) {
     if (globalVisibility) {
       return this.client
@@ -884,6 +912,37 @@ class CommonClient {
             document.querySelector(selector).contentWindow.document.body.innerHTML = '<p>' + value + '</p>';
           }
         }, selector, value, isXpath);
+  }
+
+  /**
+   * remove attribute from selector
+   * @param selector, xpath or css selector of the element
+   * @param attributeName, attribute to remove
+   * @param isXpath, true if selector is xpath, false if css selector
+   */
+  removeAttribute(selector, attributeName, isXpath = true) {
+    return this.client
+      .execute(function (selector, attributeName, isXpath) {
+        if(isXpath) document.evaluate(selector,document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.removeAttribute(attributeName);
+        else document.querySelector(selector).removeAttribute(attributeName);
+      }, selector, attributeName, isXpath);
+  }
+
+  /**
+   * Select/unselect all options in link Widget creation test
+   * @param selectorList, selector to click on
+   * @param i, position if the options
+   * @return {Promise<*>}
+   */
+  async selectAllOptionsLinkWidget(selectorList, i = 1) {
+    return this.client
+      .isVisible(selectorList.replace('%POS', i))
+      .then(async (isVisible) => {
+        if (isVisible) {
+          await this.scrollWaitForExistAndClick(selectorList.replace('%POS', i));
+          await this.selectAllOptionsLinkWidget(selectorList, i + 1)
+        }
+      });
   }
 }
 

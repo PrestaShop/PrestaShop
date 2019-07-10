@@ -26,10 +26,10 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
+use Exception;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaException;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaNotFoundException;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
@@ -171,7 +171,7 @@ class MetaController extends FrameworkBundleAdminController
 
                 return $this->redirectToRoute('admin_metas_index');
             }
-        } catch (MetaException $exception) {
+        } catch (Exception $exception) {
             $this->addFlash('error', $this->handleException($exception));
         }
 
@@ -204,7 +204,7 @@ class MetaController extends FrameworkBundleAdminController
 
                 return $this->redirectToRoute('admin_metas_index');
             }
-        } catch (MetaException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->handleException($e));
 
             return $this->redirectToRoute('admin_metas_index');
@@ -363,11 +363,13 @@ class MetaController extends FrameworkBundleAdminController
     /**
      * Handles exception by its type and status code or by its type only and returns error message.
      *
-     * @param MetaException $exception
+     * @param Exception $exception
      *
      * @return string
+     *
+     * @todo use FrameworkAdminBundleController::getErrorMessageForException() instead
      */
-    private function handleException(MetaException $exception)
+    private function handleException(Exception $exception)
     {
         if (0 !== $exception->getCode()) {
             return $this->getExceptionByClassAndErrorCode($exception);
@@ -379,11 +381,11 @@ class MetaController extends FrameworkBundleAdminController
     /**
      * Gets exception by class and error code.
      *
-     * @param MetaException $exception
+     * @param Exception $exception
      *
      * @return string
      */
-    private function getExceptionByClassAndErrorCode(MetaException $exception)
+    private function getExceptionByClassAndErrorCode(Exception $exception)
     {
         $exceptionDictionary = [
             MetaConstraintException::class => [
@@ -452,11 +454,11 @@ class MetaController extends FrameworkBundleAdminController
     /**
      * Gets exception by class type.
      *
-     * @param MetaException $exception
+     * @param Exception $exception
      *
      * @return string
      */
-    private function getExceptionByType(MetaException $exception)
+    private function getExceptionByType(Exception $exception)
     {
         $exceptionDictionary = [
             MetaNotFoundException::class => $this->trans(

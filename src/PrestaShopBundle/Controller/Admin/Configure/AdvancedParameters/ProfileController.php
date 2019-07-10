@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
+use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Command\BulkDeleteProfileCommand;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Command\DeleteProfileCommand;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\CannotDeleteSuperAdminProfileException;
@@ -130,7 +131,7 @@ class ProfileController extends FrameworkBundleAdminController
 
                 return $this->redirectToRoute('admin_profiles_index');
             }
-        } catch (ProfileException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
@@ -172,7 +173,7 @@ class ProfileController extends FrameworkBundleAdminController
 
                 return $this->redirectToRoute('admin_profiles_index');
             }
-        } catch (ProfileException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
 
             if ($e instanceof ProfileNotFoundException) {

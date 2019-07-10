@@ -785,7 +785,10 @@ class LinkCore
                     break;
                 }
 
-                $routeName = 'admin_international_translations_show_settings';
+                // When params are empty or only token exists we want to use default translations route.
+                if (empty($params) || 1 === count($params) && isset($params['token'])) {
+                    $routeName = 'admin_international_translations_show_settings';
+                }
 
                 break;
 

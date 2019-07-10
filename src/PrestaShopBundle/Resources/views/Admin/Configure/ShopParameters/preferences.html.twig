@@ -165,6 +165,9 @@
                                     {{ form_widget(generalForm.shop_activity) }}
                                 </div>
                             </div>
+                            {% block shop_preferences_form_rest %}
+                              {{ form_rest(form) }}
+                            {% endblock %}
                         </div>
                     </div>
                     <div class="card-footer">

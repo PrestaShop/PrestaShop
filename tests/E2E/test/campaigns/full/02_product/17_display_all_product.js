@@ -59,7 +59,7 @@ scenario('Display all product', () => {
     });
     test('should get the pagination Products per page value and check the created product in the Front Office', async () => {
       await client.getAttributeInVar(ProductSettings.Pagination.products_per_page_input, "value", "pagination");
-      global.pagination = await Number(Math.trunc(Number(global.productsNumber) / Number(global.tab['pagination'])));
+      global.pagination = await Number(Math.ceil(Number(global.productsNumber) / Number(global.tab['pagination'])));
       await commonScenarios.checkAllProduct(AccessPageFO, productPage, client);
     });
   }, 'product/product');

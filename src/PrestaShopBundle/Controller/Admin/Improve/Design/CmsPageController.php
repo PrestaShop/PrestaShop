@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 
+use Exception;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\BulkDeleteCmsPageCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\BulkDisableCmsPageCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\BulkEnableCmsPageCommand;
@@ -52,7 +53,6 @@ use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryE
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Query\GetCmsPageParentCategoryIdForRedirection;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
@@ -213,7 +213,7 @@ class CmsPageController extends FrameworkBundleAdminController
                     'open_preview' => 1,
                 ]);
             }
-        } catch (DomainException $e) {
+        } catch (Exception $e) {
             $this->addFlash(
                 'error',
                 $this->getErrorMessageForException($e, $this->getErrorMessages())
@@ -278,7 +278,7 @@ class CmsPageController extends FrameworkBundleAdminController
             /** @var EditableCmsPage $editableCmsPage */
             $editableCmsPage = $this->getQueryBus()->handle(new GetCmsPageForEditing($cmsPageId));
             $previewUrl = $editableCmsPage->getPreviewUrl();
-        } catch (DomainException $e) {
+        } catch (Exception $e) {
             $this->addFlash(
                 'error',
                 $this->getErrorMessageForException($e, $this->getErrorMessages())

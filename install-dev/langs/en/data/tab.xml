@@ -64,6 +64,7 @@
     <tab id="Logs" name="Logs" />
     <tab id="Look_feel" name="Design" />
     <tab id="Mail_Theme" name="Email Theme" />
+    <tab id="Mail_Theme_Parent" name="Email Theme" />
     <tab id="Maintenance" name="Maintenance" />
     <tab id="Manufacturers_and_suppliers" name="Brands &amp; Suppliers" />
     <tab id="Manufacturers" name="Brands" />

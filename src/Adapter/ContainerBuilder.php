@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter;
 
+use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\ORM\Tools\Setup;
 use LegacyCompilerPass;
 use PrestaShop\PrestaShop\Adapter\Container\ContainerBuilderExtensionInterface;
@@ -189,7 +190,8 @@ class ContainerBuilder
      */
     private function loadDoctrineAnnotationMetadata()
     {
-        Setup::createAnnotationMetadataConfiguration([]);
+        //IMPORTANT: we need to provide a cache because doctrine tries to init a connection on redis, memcached, ... on its own
+        Setup::createAnnotationMetadataConfiguration([], $this->environment->isDebug(), null, new ArrayCache());
     }
 
     /**

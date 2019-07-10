@@ -33,3 +33,32 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\CarrierFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CustomerFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\OrderFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
+        order:
+            paths:
+                features: Features/Scenario/Order
+            contexts:
+                - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\CustomerFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\EmployeeFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\ModuleFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\OrderFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Configuration\EmailConfigurationFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\CartFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\OrderFeatureContext
+        currency:
+            paths:
+                features: Features/Scenario/Currency
+            contexts:
+                - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\CurrencyFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\CurrencyFeatureContext
+        webservice:
+            paths:
+                features: Features/Scenario/Webservice
+            contexts:
+                - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\WebserviceKeyFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\WebserviceKeyFeatureContext

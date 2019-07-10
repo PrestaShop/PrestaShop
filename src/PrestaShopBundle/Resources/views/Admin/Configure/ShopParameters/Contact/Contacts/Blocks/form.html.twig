@@ -34,6 +34,8 @@
       </h3>
       <div class="card-block row">
         <div class="card-text">
+          {{ form_errors(contactForm) }}
+
           {{ ps.form_group_row(contactForm.title, {}, {
             'label': 'Title'|trans({}, 'Admin.Global'),
             'help': 'Contact name (e.g. Customer Support).'|trans({}, 'Admin.Shopparameters.Help')

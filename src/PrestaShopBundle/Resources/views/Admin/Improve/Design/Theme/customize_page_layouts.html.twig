@@ -55,6 +55,10 @@
                     {% endfor %}
                   </tbody>
                 </table>
+
+                {% block page_layout_customization_form_rest %}
+                  {{ form_rest(pageLayoutCustomizationForm) }}
+                {% endblock %}
               </div>
               <div class="card-footer">
                 <div class="d-flex justify-content-end">

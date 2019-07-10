@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
+use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmailAlreadyUsedException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\InvalidProfileException;
@@ -157,24 +158,52 @@ class EmployeeController extends FrameworkBundleAdminController
     }
 
     /**
-     * Update status for employees in bulk action.
+     * Bulk enables employee status action.
      *
      * @DemoRestricted(redirectRoute="admin_employees_index")
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
      *
      * @param Request $request
-     * @param string $newStatus
      *
      * @return RedirectResponse
      */
-    public function bulkStatusUpdateAction(Request $request, $newStatus)
+    public function bulkStatusEnableAction(Request $request)
     {
         $employeeIds = $request->request->get('employee_employee_bulk');
-        $isEnabled = $newStatus === 'enabled';
 
         try {
             $this->getCommandBus()->handle(
-                new BulkUpdateEmployeeStatusCommand($employeeIds, $isEnabled)
+                new BulkUpdateEmployeeStatusCommand($employeeIds, true)
+            );
+
+            $this->addFlash(
+                'success',
+                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+            );
+        } catch (EmployeeException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirectToRoute('admin_employees_index');
+    }
+
+    /**
+     * Bulk disables employee status action.
+     *
+     * @DemoRestricted(redirectRoute="admin_employees_index")
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function bulkStatusDisableAction(Request $request)
+    {
+        $employeeIds = $request->request->get('employee_employee_bulk');
+
+        try {
+            $this->getCommandBus()->handle(
+                new BulkUpdateEmployeeStatusCommand($employeeIds, false)
             );
 
             $this->addFlash(
@@ -262,7 +291,7 @@ class EmployeeController extends FrameworkBundleAdminController
 
                 return $this->redirectToRoute('admin_employees_index');
             }
-        } catch (EmployeeException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
@@ -337,7 +366,7 @@ class EmployeeController extends FrameworkBundleAdminController
                     'employeeId' => $result->getIdentifiableObjectId(),
                 ]);
             }
-        } catch (EmployeeException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
@@ -436,11 +465,11 @@ class EmployeeController extends FrameworkBundleAdminController
     /**
      * Get human readable error messages.
      *
-     * @param EmployeeException $e
+     * @param Exception $e
      *
      * @return array
      */
-    protected function getErrorMessages($e)
+    protected function getErrorMessages(Exception $e)
     {
         return [
             InvalidEmployeeIdException::class => $this->trans(

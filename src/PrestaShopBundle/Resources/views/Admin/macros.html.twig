@@ -113,8 +113,10 @@
 
   {{ form_widget(form, vars) }}
 
-  {% if extraVars.help is defined %}
-    <small class="form-text">{{ extraVars.help }}</small>
+  {% if extraVars.help is defined and extraVars.help%}
+      <small class="form-text">{{ extraVars.help }}</small>
+    {% elseif form.vars.help is defined and form.vars.help %}
+      <small class="form-text">{{ form.vars.help }}</small>
   {% endif %}
 
   {{ self.form_error_with_popover(form) }}

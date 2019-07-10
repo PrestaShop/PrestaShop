@@ -26,6 +26,8 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
+use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierException;
+use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Command\BulkDeleteSupplierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Command\BulkDisableSupplierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Command\BulkEnableSupplierCommand;
@@ -35,9 +37,9 @@ use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\CannotDeleteSupplierExc
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\CannotToggleSupplierStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\CannotUpdateSupplierStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\Query\GetSupplierForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\QueryResult\ViewableSupplier;
 use PrestaShop\PrestaShop\Core\Search\Filters\SupplierFilters;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -337,18 +339,33 @@ class SupplierController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
+     * @param Request $request
      * @param int $supplierId
      *
      * @return RedirectResponse
      */
-    public function viewAction($supplierId)
+    public function viewAction(Request $request, $supplierId)
     {
-        $legacyLink = $this->getAdminLink('AdminSuppliers', [
-            'id_supplier' => $supplierId,
-            'viewsupplier' => 1,
-        ]);
+        try {
+            /** @var ViewableSupplier $viewableSupplier */
+            $viewableSupplier = $this->getQueryBus()->handle(new GetSupplierForViewing(
+                (int) $supplierId,
+                (int) $this->getContextLangId()
+            ));
+        } catch (SupplierException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
 
-        return $this->redirect($legacyLink);
+            return $this->redirectToRoute('admin_suppliers_index');
+        }
+
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Suppliers/view.html.twig', [
+            'layoutTitle' => $viewableSupplier->getName(),
+            'viewableSupplier' => $viewableSupplier,
+            'isStockManagementEnabled' => $this->configuration->get('PS_STOCK_MANAGEMENT'),
+            'isAllShopContext' => $this->get('prestashop.adapter.shop.context')->isAllShopContext(),
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'enableSidebar' => true,
+        ]);
     }
 
     /**
@@ -393,11 +410,13 @@ class SupplierController extends FrameworkBundleAdminController
     /**
      * Gets error by exception type.
      *
-     * @param SupplierException $exception
+     * @param Exception $exception
      *
      * @return string
+     *
+     * @todo use FrameworkAdminBundleController::getErrorMessageForException() instead
      */
-    private function handleException(SupplierException $exception)
+    private function handleException(Exception $exception)
     {
         if (0 !== $exception->getCode()) {
             return $this->getExceptionMessageByExceptionCode($exception);
@@ -409,11 +428,11 @@ class SupplierController extends FrameworkBundleAdminController
     /**
      * Gets by exception type
      *
-     * @param SupplierException $exception
+     * @param Exception $exception
      *
      * @return string
      */
-    private function getExceptionMessageByType(SupplierException $exception)
+    private function getExceptionMessageByType(Exception $exception)
     {
         $exceptionTypeDictionary = [
             SupplierNotFoundException::class => $this->trans(
@@ -451,11 +470,11 @@ class SupplierController extends FrameworkBundleAdminController
     /**
      * Gets exception message by exception code.
      *
-     * @param SupplierException $exception
+     * @param Exception $exception
      *
      * @return string
      */
-    private function getExceptionMessageByExceptionCode(SupplierException $exception)
+    private function getExceptionMessageByExceptionCode(Exception $exception)
     {
         $exceptionConstraintDictionary = [
             SupplierConstraintException::class => [

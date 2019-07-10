@@ -310,10 +310,6 @@ scenario('Create order by a guest from the Front Office', client => {
       await client.waitForVisible(Menu.Configure.AdvancedParameters.advanced_parameters_menu);
       await client.goToSubtabMenuPage(Menu.Configure.AdvancedParameters.advanced_parameters_menu, Menu.Configure.AdvancedParameters.team_submenu);
     });
-    test('should get  the Employee "Name" and "Last Name"', async () => {
-      await client.getTextInVar(Employee.employee_column_information.replace('%COL', 4), 'employee_last_name');
-      await client.getTextInVar(Employee.employee_column_information.replace('%COL', 3), 'employee_first_name');
-    });
     test('should go to "Stocks" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.stocks_submenu));
     stockCommonScenarios.checkMovementHistory(client, Menu, Movement, 1, '300', '-', 'Customer Order', productData[0].reference, dateSystem, productData[0].name + date_time, true);
   }, 'stocks');

@@ -23,6 +23,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+var currencyFormatter;
+var numberFormatter;
+
 var Tools = {
 
   /**
@@ -108,11 +111,7 @@ function formatedNumberToFloat(price, currencyFormat, currencySign)
  */
 function formatNumber(value, numberOfDecimal, thousenSeparator, virgule)
 {
-	var globalize = cldrForNumber();
-	return globalize.numberFormatter({
-			minimumFractionDigits: 2,
-			maximumFractionDigits: numberOfDecimal
-	})(value);
+	return getNumberFormatter(numberOfDecimal).format(value);
 }
 
 /**
@@ -124,15 +123,7 @@ function formatNumber(value, numberOfDecimal, thousenSeparator, virgule)
  * @param numberOfDecimal Size of fractionnal part in the number
  */
 function formatNumberCldr(value, callback, numberOfDecimal) {
-	if (typeof numberOfDecimal === 'undefined') numberOfDecimal = 2;
-
-	cldrForNumber(function(globalize) {
-		var result = globalize.numberFormatter({
-			minimumFractionDigits: 2,
-			maximumFractionDigits: numberOfDecimal
-		})(value);
-		callback(result);
-	});
+  callback(getNumberFormatter(numberOfDecimal).format(value));
 }
 
 /**
@@ -173,12 +164,40 @@ function formatCurrency(price, currencyFormat, currencySign, currencyBlank)
  * @param callback The function to call with the resulting formatted price as unique parameter
  */
 function formatCurrencyCldr(price, callback) {
-	cldrForCurrencyFormatterWrapper(function(formatter) {
-		callback(formatter(price));
-	}, {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: typeof priceDisplayPrecision != 'undefined' ? priceDisplayPrecision : 2,
-  });
+	callback(getCurrencyFormatter().format(price));
+}
+
+/**
+ * Simple function to generate global NumberFormatter
+ * with a price specification
+ * based one global currency_specifications
+ */
+function getCurrencyFormatter() {
+	if (currencyFormatter === undefined) {
+		currencyFormatter = window.cldr.NumberFormatter.build(currency_specifications);
+	}
+
+	return currencyFormatter;
+}
+
+/**
+ * Simple function to generate global NumberFormatter
+ * based one global currency_specifications
+ * @param numberOfDecimal Size of fractionnal part in the number
+ */
+function getNumberFormatter(numberOfDecimal) {
+  if (numberFormatter === undefined) {
+    numberFormatter = window.cldr.NumberFormatter.build(number_specifications);
+  }
+
+  if (numberOfDecimal === undefined) {
+    numberOfDecimal = 2;
+  }
+
+  numberFormatter.numberSpecification.maxFractionDigits = numberOfDecimal;
+  numberFormatter.numberSpecification.minFractionDigits = numberOfDecimal;
+
+  return numberFormatter;
 }
 
 function ps_round_helper(value, mode)

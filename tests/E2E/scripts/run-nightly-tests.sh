@@ -19,7 +19,7 @@ if [ ! -d $DIR_PATH ]; then
 fi
 
 echo "Clear docker..."
-docker system prune -f
+docker system prune -a -f
 docker image prune -f
 docker volume prune -f
 
@@ -40,8 +40,8 @@ for test_directory in test/campaigns/full/*; do
   echo "Wait for docker-compose..."
   sleep 10
 
-  TEST_PATH="${test_directory/test\\/campaigns\\//}/*"
-  docker-compose exec -T -e TEST_PATH=$TEST_PATH tests /tmp/wait-for-it.sh --timeout=720 --strict prestashop-web:80 -- bash /tmp/run-tests.sh
+  TEST_PATH=${test_directory/test\/campaigns\//}
+  docker-compose exec -T -e TEST_PATH="${TEST_PATH}/*" tests /tmp/wait-for-it.sh --timeout=720 --strict prestashop-web:80 -- bash /tmp/run-tests.sh
 
   if [ -f "mochawesome-report/mochawesome.json" ]; then
     cp mochawesome-report/mochawesome.json "${REPORT_PATH}/${TEST_PATH//\//-}.json"

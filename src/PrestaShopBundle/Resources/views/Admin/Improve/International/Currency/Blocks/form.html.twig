@@ -34,6 +34,7 @@
     </div>
     <div class="card-block row">
       <div class="card-text">
+        {{ form_errors(currencyForm) }}
 
         {{ ps.form_group_row(currencyForm.iso_code, {}, {
           'label': 'Currency'|trans({}, 'Admin.Global'),
@@ -58,6 +59,10 @@
             'label': 'Shop association'|trans({}, 'Admin.Global'),
           }) }}
         {% endif %}
+
+        {% block currency_form_rest %}
+          {{ form_rest(currencyForm) }}
+        {% endblock %}
       </div>
     </div>
 
@@ -73,6 +78,5 @@
     </div>
 
   </div>
-  {{ form_rest(currencyForm) }}
   {{ form_end(currencyForm) }}
 {% endblock %}

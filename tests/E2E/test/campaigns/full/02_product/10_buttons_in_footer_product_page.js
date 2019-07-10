@@ -67,12 +67,8 @@ scenario('Check product page buttons', () => {
   scenario('Testing "Delete" button', () => {
     scenario('Check when clicking on "No" of the delete confirmation modal', client => {
       test('should click on "Delete" icon', () => client.waitForExistAndClick(AddProductPage.delete_button));
-      test('should click on "No" of the confirmation modal', () => client.waitForVisibleAndClick(AddProductPage.delete_confirmation_button.replace('%BUTTON', 'No')));
-      test('should go to "Catalog - products" page', () => {
-        return promise
-          .then(() => client.pause(2000))
-          .then(() => client.waitForVisibleAndClick(Menu.Sell.Catalog.products_submenu));
-      });
+      test('should click on "No" of the confirmation modal', () => client.waitForVisibleAndClick(AddProductPage.delete_confirmation_button.replace('%BUTTON', 'No'), 2000));
+      test('should go to "Catalog - products" page', () => client.waitForVisibleAndClick(Menu.Sell.Catalog.products_submenu, 2000));
       test('should search for product by name', () => client.searchProductByName("copy of " + firstProductData.name + date_time));
       test('should click on the product name', () => client.waitForExistAndClick(AddProductPage.catalog_product_name));
     }, 'product/check_product');
@@ -123,7 +119,6 @@ scenario('Check product page buttons', () => {
     test('should check that the success alert message is well displayed', () => client.waitForExistAndClick(AddProductPage.close_validation_button));
     test('should click on "Preview" button', () => client.waitForExistAndClick(AddProductPage.preview_buttons));
     test('should switch to the Preview page in the Front Office', () => client.switchWindow(2));
-    common_scenarios.clickOnPreviewLink(client, AddProductPage.preview_link, productPage.product_name);
     test('should check the offline warning message', () => client.checkTextValue(productPage.offline_warning_message, "This product is not visible to your customers.", "contain"));
     test('should go back to the Back Office', () => client.switchWindow(0));
     test('should set the product "Online"', () => client.waitForExistAndClick(AddProductPage.product_online_toggle));
@@ -135,7 +130,7 @@ scenario('Check product page buttons', () => {
     test('should go back to the Back office', () => client.switchWindow(0));
     test('should go to "Products" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.products_submenu));
     test('should click on "Reset" button', () => client.waitForExistAndClick(CatalogPage.reset_button));
-    }, 'product/product');
+  }, 'product/product');
 
   scenario('Logout from the Back Office', client => {
     test('should logout successfully from Back Office', () => client.signOutBO());

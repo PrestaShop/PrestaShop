@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Catalog\Category;
 
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\Domain\Category\SeoSettings;
@@ -62,21 +63,29 @@ abstract class AbstractCategoryType extends TranslatorAwareType
     private $multistoreFeature;
 
     /**
+     * @var ConfigurationInterface
+     */
+    private $configuration;
+
+    /**
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param array $customerGroupChoices
      * @param FeatureInterface $multistoreFeature
+     * @param ConfigurationInterface $configuration
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
         array $customerGroupChoices,
-        FeatureInterface $multistoreFeature
+        FeatureInterface $multistoreFeature,
+        ConfigurationInterface $configuration
     ) {
         parent::__construct($translator, $locales);
 
         $this->customerGroupChoices = $customerGroupChoices;
         $this->multistoreFeature = $multistoreFeature;
+        $this->configuration = $configuration;
     }
 
     /**
@@ -212,7 +221,7 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                 'options' => [
                     'constraints' => [
                         new Regex([
-                            'pattern' => '/^[_a-zA-Z0-9\-]+$/',
+                            'pattern' => (bool) $this->configuration->get('PS_ALLOW_ACCENTED_CHARS_URL') ? '/^[_a-zA-Z0-9\x{0600}-\x{06FF}\pL\pS-]+$/u' : '/^[^<>={}]*$/u',
                             'message' => $this->trans('%s is invalid.', 'Admin.Notifications.Error'),
                         ]),
                     ],

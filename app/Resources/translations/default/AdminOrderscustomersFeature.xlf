@@ -722,12 +722,12 @@
       <trans-unit id="4b6c6cda10a23d1bdc920f2e47e5f46f">
         <source>Add a product</source>
         <target>Add a product</target>
-        <note>Line: 980</note>
+        <note>Line: 983</note>
       </trans-unit>
       <trans-unit id="77fd2b4393b379bedd30efcd5df02090">
         <source>Partial refund</source>
         <target>Partial refund</target>
-        <note>Line: 1242</note>
+        <note>Line: 1245</note>
       </trans-unit>
       <trans-unit id="4f68183551e5dbd7c341347ffe308682">
         <source>SIRET</source>
@@ -742,7 +742,7 @@
       <trans-unit id="cb8fe83175bea4ba19d633b1dc6ea656">
         <source>View order</source>
         <target>View order</target>
-        <note>Line: 1310</note>
+        <note>Line: 1313</note>
       </trans-unit>
       <trans-unit id="01abfc750a0c942167651c40d088531d">
         <source>#</source>
@@ -842,7 +842,7 @@
       <trans-unit id="f4ec5f57bd4d31b803312d873be40da9">
         <source>Change</source>
         <target>Change</target>
-        <note>Line: 752</note>
+        <note>Line: 755</note>
       </trans-unit>
       <trans-unit id="6fe50cb3c0bf60f28ac9049ae6cb8c26">
         <source>This order has been placed by a guest.</source>
@@ -877,182 +877,182 @@
       <trans-unit id="0c458988127eb2150776881e2ef3f0c4">
         <source>Shipping address</source>
         <target>Shipping address</target>
-        <note>Line: 676</note>
+        <note>Line: 679</note>
       </trans-unit>
       <trans-unit id="601d8c4b9f72fc1862013c19b677a499">
         <source>Invoice address</source>
         <target>Invoice address</target>
-        <note>Line: 728</note>
+        <note>Line: 731</note>
       </trans-unit>
       <trans-unit id="47f9082fc380ca62d531096aa1d110f1">
         <source>Private</source>
         <target>Private</target>
-        <note>Line: 807</note>
+        <note>Line: 810</note>
       </trans-unit>
       <trans-unit id="2ab74fb771ac34b95b1657895282d5d9">
         <source>Choose a standard message</source>
         <target>Choose a standard message</target>
-        <note>Line: 827</note>
+        <note>Line: 830</note>
       </trans-unit>
       <trans-unit id="a76e7775f5454953c7152f5160e75182">
         <source>Configure predefined messages</source>
         <target>Configure predefined messages</target>
-        <note>Line: 837</note>
+        <note>Line: 840</note>
       </trans-unit>
       <trans-unit id="b7623e931f082f027293f27dbfe7a8ea">
         <source>Display to customer?</source>
         <target>Display to customer?</target>
-        <note>Line: 845</note>
+        <note>Line: 848</note>
       </trans-unit>
       <trans-unit id="747c6a3564774149c989884e0c581d53">
         <source>Send message</source>
         <target>Send message</target>
-        <note>Line: 873</note>
+        <note>Line: 876</note>
       </trans-unit>
       <trans-unit id="a2eda4e1c4dfc9bade7150b878c57a46">
         <source>Show all messages</source>
         <target>Show all messages</target>
-        <note>Line: 876</note>
+        <note>Line: 879</note>
       </trans-unit>
       <trans-unit id="fdfac28b5ad628f25649d9c2eb4fc62e">
         <source>Returned</source>
         <target>Returned</target>
-        <note>Line: 933</note>
+        <note>Line: 936</note>
       </trans-unit>
       <trans-unit id="cdba184783a0253218efd734da81a9da">
         <source>Stock location</source>
         <target>Stock location</target>
-        <note>Line: 935</note>
+        <note>Line: 938</note>
       </trans-unit>
       <trans-unit id="988fd738de9c6d177440c5dcf69e73ce">
         <source>Return</source>
         <target>Return</target>
-        <note>Line: 946</note>
+        <note>Line: 949</note>
       </trans-unit>
       <trans-unit id="76f0ed934de85cc7131910b32ede7714">
         <source>Refund</source>
         <target>Refund</target>
-        <note>Line: 948</note>
+        <note>Line: 951</note>
       </trans-unit>
       <trans-unit id="4320b10eab24c2b8ee337355e7deb4c6">
         <source>Add a new discount</source>
         <target>Add a new discount</target>
-        <note>Line: 985</note>
+        <note>Line: 988</note>
       </trans-unit>
       <trans-unit id="f14b582c1b0eab88ed5904fb781568c0">
         <source>Discount name</source>
         <target>Discount name</target>
-        <note>Line: 1017</note>
+        <note>Line: 1020</note>
       </trans-unit>
       <trans-unit id="689202409e48743b914713f96d93947c">
         <source>Value</source>
         <target>Value</target>
-        <note>Line: 1022</note>
+        <note>Line: 1025</note>
       </trans-unit>
       <trans-unit id="c990c4027126c39a93fcaaafb68732b3">
         <source>Delete voucher</source>
         <target>Delete voucher</target>
-        <note>Line: 1044</note>
+        <note>Line: 1047</note>
       </trans-unit>
       <trans-unit id="b52b44c9d23e141b067d7e83b44bb556">
         <source>Products:</source>
         <target>Products:</target>
-        <note>Line: 1076</note>
+        <note>Line: 1079</note>
       </trans-unit>
       <trans-unit id="9d5bf15117441a1b52eb1f0808e4aad3">
         <source>Discounts</source>
         <target>Discounts</target>
-        <note>Line: 1083</note>
+        <note>Line: 1086</note>
       </trans-unit>
       <trans-unit id="ba794350deb07c0c96fe73bd12239059">
         <source>Wrapping</source>
         <target>Wrapping</target>
-        <note>Line: 1090</note>
+        <note>Line: 1093</note>
       </trans-unit>
       <trans-unit id="7fc63f077cf04742cf02e7c589b428e9">
         <source>(Max %s %s)</source>
         <target>(Max %s %s)</target>
-        <note>Line: 1108</note>
+        <note>Line: 1111</note>
       </trans-unit>
       <trans-unit id="1067f7778added234b6064bc8aa0765d">
         <source>Re-stock products</source>
         <target>Re-stock products</target>
-        <note>Line: 1204</note>
+        <note>Line: 1207</note>
       </trans-unit>
       <trans-unit id="e413f403aa8d5253b487d09fc84e47a0">
         <source>Generate a credit slip</source>
         <target>Generate a credit slip</target>
-        <note>Line: 1150</note>
+        <note>Line: 1153</note>
       </trans-unit>
       <trans-unit id="400264c3cd8f2e65b9f19375230b59b8">
         <source>Generate a voucher</source>
         <target>Generate a voucher</target>
-        <note>Line: 1210</note>
+        <note>Line: 1213</note>
       </trans-unit>
       <trans-unit id="711cb64729ed5b666cf97c01691f5806">
         <source>Repay shipping costs</source>
         <target>Repay shipping costs</target>
-        <note>Line: 1162</note>
+        <note>Line: 1165</note>
       </trans-unit>
       <trans-unit id="d68a1671669f7e55d73dd78c22d52dfa">
         <source>This order has been partially paid by voucher. Choose the amount you want to refund:</source>
         <target>This order has been partially paid by voucher. Choose the amount you want to refund:</target>
-        <note>Line: 1166</note>
+        <note>Line: 1169</note>
       </trans-unit>
       <trans-unit id="6188ffe19286d3bf694160609cf15e82">
         <source>Include amount of initial voucher: </source>
         <target>Include amount of initial voucher: </target>
-        <note>Line: 1170</note>
+        <note>Line: 1173</note>
       </trans-unit>
       <trans-unit id="b9313ee2094019f4ee5212f784f45d65">
         <source>Exclude amount of initial voucher: </source>
         <target>Exclude amount of initial voucher: </target>
-        <note>Line: 1176</note>
+        <note>Line: 1179</note>
       </trans-unit>
       <trans-unit id="7731388b0fae4c0d7214f6a1f6f1771f">
         <source>Amount of your choice: </source>
         <target>Amount of your choice: </target>
-        <note>Line: 1229</note>
+        <note>Line: 1232</note>
       </trans-unit>
       <trans-unit id="67dd576afa3b807903e847f6ebb11f22">
         <source>This order has been partially paid by voucher. Choose the amount you want to refund: </source>
         <target>This order has been partially paid by voucher. Choose the amount you want to refund: </target>
-        <note>Line: 1214</note>
+        <note>Line: 1217</note>
       </trans-unit>
       <trans-unit id="8e0398b929d533c18fff7f5e21e8fcbd">
         <source>Product(s) price: </source>
         <target>Product(s) price: </target>
-        <note>Line: 1218</note>
+        <note>Line: 1221</note>
       </trans-unit>
       <trans-unit id="34623cd7893be21da4239d08f79aec9a">
         <source>Product(s) price, excluding amount of initial voucher: </source>
         <target>Product(s) price, excluding amount of initial voucher: </target>
-        <note>Line: 1224</note>
+        <note>Line: 1227</note>
       </trans-unit>
       <trans-unit id="fb61758d0f0fda4ba867c3d5a46c16a7">
         <source>Sources</source>
         <target>Sources</target>
-        <note>Line: 1257</note>
+        <note>Line: 1260</note>
       </trans-unit>
       <trans-unit id="5da618e8e4b89c66fe86e32cdafde142">
         <source>From</source>
         <target>From</target>
-        <note>Line: 1263</note>
+        <note>Line: 1266</note>
       </trans-unit>
       <trans-unit id="e12167aa0a7698e6ebc92b4ce3909b53">
         <source>To</source>
         <target>To</target>
-        <note>Line: 1264</note>
+        <note>Line: 1267</note>
       </trans-unit>
       <trans-unit id="010cd82f1f972dc6b720536adb555533">
         <source>Linked orders</source>
         <target>Linked orders</target>
-        <note>Line: 1277</note>
+        <note>Line: 1280</note>
       </trans-unit>
       <trans-unit id="0da6a00e3eb2132d5cf97463a099c49f">
         <source>Order no. </source>
         <target>Order no. </target>
-        <note>Line: 1284</note>
+        <note>Line: 1287</note>
       </trans-unit>
     </body>
   </file>
@@ -1821,37 +1821,37 @@ Best regards,</target>
       <trans-unit id="aac772216aecbeca0e86d06671fe985a">
         <source>Birthday</source>
         <target>Birthday</target>
-        <note>Line: 65</note>
+        <note>Line: 67</note>
       </trans-unit>
       <trans-unit id="920bd1fb6d54c93fca528ce941464225">
         <source>Group access</source>
         <target>Group access</target>
-        <note>Line: 79</note>
+        <note>Line: 81</note>
       </trans-unit>
       <trans-unit id="a3858e268ef19d7ec44b4e849a189a69">
         <source>Default customer group</source>
         <target>Default customer group</target>
-        <note>Line: 84</note>
+        <note>Line: 86</note>
       </trans-unit>
       <trans-unit id="15bbb9d0bbf25e8d2978de1168c749dc">
         <source>Website</source>
         <target>Website</target>
-        <note>Line: 102</note>
+        <note>Line: 104</note>
       </trans-unit>
       <trans-unit id="6e55ad8db6699476d8901b3d439963cb">
         <source>Allowed outstanding amount</source>
         <target>Allowed outstanding amount</target>
-        <note>Line: 106</note>
+        <note>Line: 108</note>
       </trans-unit>
       <trans-unit id="a7f50f36de1e47026a07b40670b50e1a">
         <source>Maximum number of payment days</source>
         <target>Maximum number of payment days</target>
-        <note>Line: 111</note>
+        <note>Line: 113</note>
       </trans-unit>
       <trans-unit id="b5228365ac1cae42b64aa5aecee6cf25">
         <source>Risk rating</source>
         <target>Risk rating</target>
-        <note>Line: 116</note>
+        <note>Line: 118</note>
       </trans-unit>
     </body>
   </file>

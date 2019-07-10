@@ -34,9 +34,6 @@ export default class TopMenu extends DropDown {
         return;
       }
       if (elmId !== $(e.currentTarget).attr('id')) {
-        if ($(e.target).data('depth') === 0) {
-          $(`#${elmId} .js-sub-menu`).hide();
-        }
         elmId = $(e.currentTarget).attr('id');
       }
       if (elmId && $(e.target).data('depth') === 0) {

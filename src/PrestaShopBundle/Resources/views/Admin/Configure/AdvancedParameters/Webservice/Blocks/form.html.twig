@@ -33,6 +33,8 @@
     </h3>
     <div class="card-block row">
       <div class="card-text">
+        {{ form_errors(webserviceKeyForm) }}
+
         {{ ps.form_group_row(webserviceKeyForm.key, {}, {
           'label': 'Key'|trans({}, 'Admin.Advparameters.Feature'),
           'help': 'Webservice account key.'|trans({}, 'Admin.Advparameters.Feature')
@@ -67,11 +69,11 @@
             'label': 'Shop association'|trans({}, 'Admin.Global')
           }) }}
         {% endif %}
-      </div>
 
-      {% block webservice_key_form_rest %}
-        {{ form_rest(webserviceKeyForm) }}
-      {% endblock %}
+        {% block webservice_key_form_rest %}
+          {{ form_rest(webserviceKeyForm) }}
+        {% endblock %}
+      </div>
     </div>
     <div class="card-footer">
       <a href="{{ path('admin_webservice_keys_index') }}" class="btn btn-outline-secondary">

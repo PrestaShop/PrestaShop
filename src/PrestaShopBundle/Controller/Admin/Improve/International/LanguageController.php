@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
+use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Language\Command\BulkDeleteLanguagesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Language\Command\BulkToggleLanguagesStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Language\Command\DeleteLanguageCommand;
@@ -123,7 +124,7 @@ class LanguageController extends FrameworkBundleAdminController
 
                 return $this->redirectToRoute('admin_languages_index');
             }
-        } catch (LanguageException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
@@ -162,7 +163,7 @@ class LanguageController extends FrameworkBundleAdminController
 
                 return $this->redirectToRoute('admin_languages_index');
             }
-        } catch (LanguageException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
 
             if ($e instanceof LanguageNotFoundException) {
@@ -298,11 +299,11 @@ class LanguageController extends FrameworkBundleAdminController
     }
 
     /**
-     * @param LanguageException $e
+     * @param Exception $e
      *
      * @return array
      */
-    private function getErrorMessages(LanguageException $e)
+    private function getErrorMessages(Exception $e)
     {
         return [
             LanguageNotFoundException::class => $this->trans(

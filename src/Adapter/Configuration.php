@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter;
 use Combination;
 use Configuration as ConfigurationLegacy;
 use Feature;
+use Language;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShopBundle\Exception\NotImplementedException;
 use Shop;
@@ -107,9 +108,8 @@ class Configuration extends ParameterBag implements ConfigurationInterface
         }
 
         // if the key is multi lang related, we return an array with the value per language.
-        // getInt() meaning probably getInternational()
         if (ConfigurationLegacy::isLangKey($key)) {
-            return ConfigurationLegacy::getInt($key);
+            return $this->getLocalized($key);
         }
 
         if (ConfigurationLegacy::hasKey($key)) {
@@ -246,5 +246,23 @@ class Configuration extends ParameterBag implements ConfigurationInterface
     public function restrictUpdatesTo(Shop $shop)
     {
         $this->shop = $shop;
+    }
+
+    /**
+     * Get localized configuration in all languages
+     *
+     * @param string $key
+     *
+     * @return array Array of langId => localizedConfiguration
+     */
+    private function getLocalized($key)
+    {
+        $configuration = [];
+
+        foreach (Language::getIDs(false) as $langId) {
+            $configuration[$langId] = ConfigurationLegacy::get($key, $langId);
+        }
+
+        return $configuration;
     }
 }

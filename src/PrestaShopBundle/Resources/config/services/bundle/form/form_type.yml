@@ -567,7 +567,8 @@ services:
         parent: 'form.type.translatable.aware'
         arguments:
             - '@=service("prestashop.core.form.choice_provider.group_by_id").getChoices()'
-            - '@prestashop.adapter.multistore_feature'
+            - '@prestashop.adapter.feature.multistore'
+            - '@prestashop.adapter.legacy.configuration'
         public: true
 
     form.type.category.delete_categories:
@@ -646,7 +647,7 @@ services:
     form.type.common.translatable:
         class: 'PrestaShopBundle\Form\Admin\Type\TranslatableType'
         arguments:
-            - "@=service('prestashop.adapter.legacy.context').getLanguages()"
+            - "@=service('prestashop.adapter.legacy.context').getAvailableLanguages()"
             - '@router.default'
             - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_BO_ALLOW_EMPLOYEE_FORM_LANG')"
             - "@=service('prestashop.adapter.legacy.context').getContext().cookie.employee_form_lang"

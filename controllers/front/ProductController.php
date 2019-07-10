@@ -429,6 +429,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             'product_add_to_cart' => $this->render('catalog/_partials/product-add-to-cart'),
             'product_additional_info' => $this->render('catalog/_partials/product-additional-info'),
             'product_images_modal' => $this->render('catalog/_partials/product-images-modal'),
+            'product_flags' => $this->render('catalog/_partials/product-flags'),
             'product_url' => $this->context->link->getProductLink(
                 $product['id_product'],
                 null,
@@ -1006,13 +1007,15 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     private function tryToGetAvailableIdProductAttribute($checkedIdProductAttribute)
     {
         if (!Configuration::get('PS_DISP_UNAVAILABLE_ATTR')) {
-            $availableProductAttributes = array_filter(
-                $this->product->getAttributeCombinations(),
-                function ($elem) {
-                    return $elem['quantity'] > 0;
-                }
-            );
-
+            $availableProductAttributes = $this->product->getAttributeCombinations();
+            if (!Product::isAvailableWhenOutOfStock($this->product->out_of_stock)) {
+                $availableProductAttributes = array_filter(
+                    $availableProductAttributes,
+                    function ($elem) {
+                        return $elem['quantity'] > 0;
+                    }
+                );
+            }
             $availableProductAttribute = array_filter(
                 $availableProductAttributes,
                 function ($elem) use ($checkedIdProductAttribute) {

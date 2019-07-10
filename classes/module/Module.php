@@ -2451,6 +2451,9 @@ abstract class ModuleCore implements ModuleInterface
         if ($cache_id !== null) {
             Tools::enableCache();
         }
+        if ($compile_id === null) {
+            $compile_id = Context::getContext()->shop->theme->getName();
+        }
 
         $template = $this->context->smarty->createTemplate(
             $templatePath,
@@ -2748,7 +2751,7 @@ abstract class ModuleCore implements ModuleInterface
      * Check employee permission for module (static method).
      *
      * @param int $id_module
-     * @param array $variable (action)
+     * @param string $variable (action)
      * @param Employee $employee
      *
      * @return bool if module can be transplanted on hook

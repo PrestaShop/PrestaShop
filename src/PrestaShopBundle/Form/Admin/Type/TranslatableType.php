@@ -32,6 +32,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormErrorIterator;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
+use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -42,9 +43,14 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class TranslatableType extends AbstractType
 {
     /**
-     * @var array
+     * @var array List of enabled locales
      */
-    private $locales;
+    private $enabledLocales;
+
+    /**
+     * @var array List of all available locales
+     */
+    private $availableLocales;
 
     /**
      * @var UrlGeneratorInterface
@@ -67,20 +73,21 @@ class TranslatableType extends AbstractType
     private $defaultShopLanguageId;
 
     /**
-     * @param array $locales
+     * @param array $availableLocales
      * @param UrlGeneratorInterface $urlGenerator
      * @param bool $saveFormLocaleChoice
      * @param int $defaultFormLanguageId
      * @param int $defaultShopLanguageId
      */
     public function __construct(
-        array $locales,
+        array $availableLocales,
         UrlGeneratorInterface $urlGenerator,
         $saveFormLocaleChoice,
         $defaultFormLanguageId,
         $defaultShopLanguageId
     ) {
-        $this->locales = $locales;
+        $this->enabledLocales = $this->filterEnableLocales($availableLocales);
+        $this->availableLocales = $availableLocales;
         $this->urlGenerator = $urlGenerator;
         $this->saveFormLocaleChoice = $saveFormLocaleChoice;
         $this->defaultFormLanguageId = $defaultFormLanguageId;
@@ -130,8 +137,14 @@ class TranslatableType extends AbstractType
         $resolver->setDefaults([
             'type' => TextType::class,
             'options' => [],
-            'locales' => $this->locales,
             'error_bubbling' => false,
+            'only_enabled_locales' => false,
+            'locales' => function (Options $options) {
+                return $options['only_enabled_locales'] ?
+                    $this->enabledLocales :
+                    $this->availableLocales
+                ;
+            },
         ]);
 
         $resolver->setAllowedTypes('locales', 'array');
@@ -314,5 +327,25 @@ class TranslatableType extends AbstractType
         }
 
         return reset($locales);
+    }
+
+    /**
+     * Filters only enabled locales
+     *
+     * @param array $availableLocales
+     *
+     * @return array
+     */
+    private function filterEnableLocales(array $availableLocales)
+    {
+        $enabledLocales = [];
+
+        foreach ($availableLocales as $locale) {
+            if ($locale['active']) {
+                $enabledLocales[] = $locale;
+            }
+        }
+
+        return $enabledLocales;
     }
 }

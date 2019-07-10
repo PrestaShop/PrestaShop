@@ -28,7 +28,7 @@
       <trans-unit id="4c473ee3c2de78ecaf8a5f6ce24d9b24">
         <source>No address has been found for this brand.</source>
         <target>No address has been found for this brand.</target>
-        <note>Line: 32</note>
+        <note>Line: 36</note>
       </trans-unit>
     </body>
   </file>
@@ -60,12 +60,12 @@
       <trans-unit id="fc2c8663d58c42bc29edd45a79b4358c">
         <source>The discount was successfully generated.</source>
         <target>The discount was successfully generated.</target>
-        <note>Line: 483</note>
+        <note>Line: 500</note>
       </trans-unit>
       <trans-unit id="801982917ddd7afd63f9e103ba4699bd">
         <source>The root category of the shop %shop% is not associated with the current shop. You can't access this page. Please change the root category of the shop.</source>
         <target>The root category of the shop %shop% is not associated with the current shop. You can't access this page. Please change the root category of the shop.</target>
-        <note>Line: 489</note>
+        <note>Line: 506</note>
       </trans-unit>
     </body>
   </file>
@@ -567,7 +567,7 @@
       <trans-unit id="cf4f33891a4f0566c7afed3776d55446">
         <source>List of products without available quantities for sale are not displayed because stock management is disabled.</source>
         <target>List of products without available quantities for sale are not displayed because stock management is disabled.</target>
-        <note>Line: 65</note>
+        <note>Line: 66</note>
       </trans-unit>
     </body>
   </file>
@@ -596,6 +596,11 @@
         <source>Missing block_name value for language %s</source>
         <target>Missing block_name value for language %s</target>
         <note>Line: 241</note>
+      </trans-unit>
+      <trans-unit id="ba88eb1dd9466f0be32b7dc7a82297ad">
+        <source>Missing %s value in custom [%s] for language %s</source>
+        <target>Missing %s value in custom [%s] for language %s</target>
+        <note>Line: 251</note>
       </trans-unit>
       <trans-unit id="504ca7ea96dde692360e88a97e98fc91">
         <source>Missing %s value in custom[%s] for language %s</source>
@@ -754,12 +759,12 @@
       <trans-unit id="b50f440e3c9f14988bd0086683e77095">
         <source>You cannot remove this category because one of your shops uses it as a root category.</source>
         <target>You cannot remove this category because one of your shops uses it as a root category.</target>
-        <note>Line: 731</note>
+        <note>Line: 750</note>
       </trans-unit>
       <trans-unit id="a874ef298164bbd4d00d55901225cd87">
         <source>An error occurred while uploading the image:</source>
         <target>An error occurred while uploading the image:</target>
-        <note>Line: 740</note>
+        <note>Line: 759</note>
       </trans-unit>
     </body>
   </file>
@@ -1009,7 +1014,7 @@
       <trans-unit id="3fcbe6bd34e9279ec2c7b13adf7e4095">
         <source>You have reached the limit (%s) of files to upload, please remove files to continue uploading</source>
         <target>You have reached the limit (%s) of files to upload, please remove files to continue uploading</target>
-        <note>Line: 114</note>
+        <note>Line: 116</note>
       </trans-unit>
     </body>
   </file>

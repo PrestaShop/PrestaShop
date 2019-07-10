@@ -23,6 +23,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  *}
 
+{**
+ * @deprecated since 1.7.6, to be removed in the next minor
+ *}
+
 <script type="text/javascript">
 	var come_from = 'AdminModulesPositions';
 </script>

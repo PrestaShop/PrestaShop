@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Number\Formatter as NumberFormatter;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecification;
 use PrestaShop\PrestaShop\Core\Localization\Specification\NumberCollection as PriceSpecificationMap;
+use PrestaShop\PrestaShop\Core\Localization\Specification\Price as PriceSpecification;
 
 /**
  * Locale entity.
@@ -149,6 +150,21 @@ class Locale implements LocaleInterface
      */
     public function formatPrice($number, $currencyCode)
     {
+        return $this->numberFormatter->format(
+            $number,
+            $this->getPriceSpecification($currencyCode)
+        );
+    }
+
+    /**
+     * Get price specification
+     *
+     * @param string $currencyCode Currency of the price
+     *
+     * @return PriceSpecification
+     */
+    public function getPriceSpecification($currencyCode)
+    {
         $currencyCode = (string) $currencyCode;
         $priceSpec = $this->priceSpecifications->get($currencyCode);
         if (null === $priceSpec) {
@@ -157,9 +173,16 @@ class Locale implements LocaleInterface
             );
         }
 
-        return $this->numberFormatter->format(
-            $number,
-            $priceSpec
-        );
+        return $priceSpec;
+    }
+
+    /**
+     * Get number specification
+     *
+     * @return NumberSpecification
+     */
+    public function getNumberSpecification()
+    {
+        return $this->numberSpecification;
     }
 }

@@ -99,6 +99,10 @@
                       {{ form_widget(generalForm.tos_cms_id) }}
                     </div>
                 </div>
+
+                {% block order_general_preferences_form_rest %}
+                  {{ form_rest(generalForm) }}
+                {% endblock %}
             </div>
         </div>
         <div class="card-footer">

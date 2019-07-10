@@ -57,7 +57,9 @@ final class EditCmsPageHandler extends AbstractCmsPageHandler implements EditCms
                     sprintf('Failed to update cms page with id %s', $command->getCmsPageId()->getValue())
                 );
             }
-            $this->associateWithShops($cms, $command->getShopAssociation());
+            if (null !== $command->getShopAssociation()) {
+                $this->associateWithShops($cms, $command->getShopAssociation());
+            }
         } catch (PrestaShopException $e) {
             throw new CmsPageException(
                 sprintf(

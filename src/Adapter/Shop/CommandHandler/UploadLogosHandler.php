@@ -27,10 +27,14 @@
 namespace PrestaShop\PrestaShop\Adapter\Shop\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Domain\Exception\FileUploadException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Command\UploadLogosCommand;
 use PrestaShop\PrestaShop\Core\Domain\Shop\CommandHandler\UploadLogosHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Shop\DTO\ShopLogoSettings;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Shop\LogoUploader;
+use PrestaShopException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
@@ -70,25 +74,36 @@ final class UploadLogosHandler implements UploadLogosHandlerInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @throws ShopException
+     * @throws FileUploadException
      */
     public function handle(UploadLogosCommand $command)
     {
         $this->configuration->set('PS_IMG_UPDATE_TIME', time());
 
-        if (null !== $command->getUploadedHeaderLogo()) {
-            $this->uploadHeaderLogo($command->getUploadedHeaderLogo());
-        }
+        try {
+            if (null !== $command->getUploadedHeaderLogo()) {
+                $this->uploadHeaderLogo($command->getUploadedHeaderLogo());
+            }
 
-        if (null !== $command->getUploadedMailLogo()) {
-            $this->uploadMailLogo($command->getUploadedMailLogo());
-        }
+            if (null !== $command->getUploadedMailLogo()) {
+                $this->uploadMailLogo($command->getUploadedMailLogo());
+            }
 
-        if (null !== $command->getUploadedInvoiceLogo()) {
-            $this->uploadInvoiceLogo($command->getUploadedInvoiceLogo());
-        }
+            if (null !== $command->getUploadedInvoiceLogo()) {
+                $this->uploadInvoiceLogo($command->getUploadedInvoiceLogo());
+            }
 
-        if (null !== $command->getUploadedFavicon()) {
-            $this->uploadFavicon($command->getUploadedFavicon());
+            if (null !== $command->getUploadedFavicon()) {
+                $this->uploadFavicon($command->getUploadedFavicon());
+            }
+        } catch (PrestaShopException $exception) {
+            throw new ShopException(
+                'An unexpected error occurred when uploading image',
+                0,
+                $exception
+            );
         }
 
         $this->hookDispatcher->dispatchWithParameters('actionAdminThemesControllerUpdate_optionsAfter');
@@ -99,7 +114,8 @@ final class UploadLogosHandler implements UploadLogosHandlerInterface
      */
     private function uploadHeaderLogo(UploadedFile $uploadedFile)
     {
-        $this->setUploadedFileToBeCompatibleWithLegacyUploader('PS_LOGO', $uploadedFile);
+        $this->setUploadedFileToBeCompatibleWithLegacyUploader(ShopLogoSettings::HEADER_LOGO_FILE_NAME, $uploadedFile);
+
         $this->logoUploader->updateHeader();
     }
 
@@ -108,7 +124,7 @@ final class UploadLogosHandler implements UploadLogosHandlerInterface
      */
     private function uploadMailLogo(UploadedFile $uploadedFile)
     {
-        $this->setUploadedFileToBeCompatibleWithLegacyUploader('PS_LOGO_MAIL', $uploadedFile);
+        $this->setUploadedFileToBeCompatibleWithLegacyUploader(ShopLogoSettings::MAIL_LOGO_FILE_NAME, $uploadedFile);
 
         $this->logoUploader->updateMail();
     }
@@ -118,7 +134,7 @@ final class UploadLogosHandler implements UploadLogosHandlerInterface
      */
     private function uploadInvoiceLogo(UploadedFile $uploadedHeaderLogo)
     {
-        $this->setUploadedFileToBeCompatibleWithLegacyUploader('PS_LOGO_INVOICE', $uploadedHeaderLogo);
+        $this->setUploadedFileToBeCompatibleWithLegacyUploader(ShopLogoSettings::INVOICE_LOGO_FILE_NAME, $uploadedHeaderLogo);
 
         $this->logoUploader->updateInvoice();
     }
@@ -128,7 +144,7 @@ final class UploadLogosHandler implements UploadLogosHandlerInterface
      */
     private function uploadFavicon(UploadedFile $uploadedHeaderLogo)
     {
-        $this->setUploadedFileToBeCompatibleWithLegacyUploader('PS_FAVICON', $uploadedHeaderLogo);
+        $this->setUploadedFileToBeCompatibleWithLegacyUploader(ShopLogoSettings::FAVICON_FILE_NAME, $uploadedHeaderLogo);
 
         $this->logoUploader->updateFavicon();
     }
@@ -136,6 +152,8 @@ final class UploadLogosHandler implements UploadLogosHandlerInterface
     /**
      * @param string $legacyFileName
      * @param UploadedFile $uploadedFile
+     *
+     * @return array
      */
     private function setUploadedFileToBeCompatibleWithLegacyUploader($legacyFileName, UploadedFile $uploadedFile)
     {
@@ -146,5 +164,7 @@ final class UploadLogosHandler implements UploadLogosHandlerInterface
             'error' => $uploadedFile->getError(),
             'size' => $uploadedFile->getSize(),
         ];
+
+        return $_FILES;
     }
 }

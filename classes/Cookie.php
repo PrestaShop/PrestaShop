@@ -76,10 +76,10 @@ class CookieCore
         $this->_domain = $this->getDomain($shared_urls);
         $this->_name = 'PrestaShop-' . md5(($this->_standalone ? '' : _PS_VERSION_) . $name . $this->_domain);
         $this->_allow_writing = true;
-        $this->_salt = $this->_standalone ? str_pad('', 8, md5('ps' . __FILE__)) : _COOKIE_IV_;
+        $this->_salt = $this->_standalone ? str_pad('', 32, md5('ps' . __FILE__)) : _COOKIE_IV_;
 
         if ($this->_standalone) {
-            $asciiSafeString = \Defuse\Crypto\Encoding::saveBytesToChecksummedAsciiSafeString(Key::KEY_CURRENT_VERSION, str_pad($name, Key::KEY_BYTE_SIZE, __FILE__));
+            $asciiSafeString = \Defuse\Crypto\Encoding::saveBytesToChecksummedAsciiSafeString(Key::KEY_CURRENT_VERSION, str_pad($name, Key::KEY_BYTE_SIZE, md5(__FILE__)));
             $this->cipherTool = new PhpEncryption($asciiSafeString);
         } else {
             $this->cipherTool = new PhpEncryption(_NEW_COOKIE_KEY_);
@@ -298,9 +298,10 @@ class CookieCore
 
             /* Get cookie checksum */
             $tmpTab = explode('¤', $content);
+            // remove the checksum which is the last element
             array_pop($tmpTab);
             $content_for_checksum = implode('¤', $tmpTab) . '¤';
-            $checksum = crc32($this->_salt . $content_for_checksum);
+            $checksum = hash('sha256', $this->_salt . $content_for_checksum);
             //printf("\$checksum = %s<br />", $checksum);
 
             /* Unserialize cookie content */
@@ -386,10 +387,11 @@ class CookieCore
             return;
         }
 
-        $cookie = '';
+        $previousChecksum = $cookie = '';
 
         /* Serialize cookie content */
         if (isset($this->_content['checksum'])) {
+            $previousChecksum = $this->_content['checksum'];
             unset($this->_content['checksum']);
         }
         foreach ($this->_content as $key => $value) {
@@ -397,7 +399,12 @@ class CookieCore
         }
 
         /* Add checksum to cookie */
-        $cookie .= 'checksum|' . crc32($this->_salt . $cookie);
+        $newChecksum = hash('sha256', $this->_salt . $cookie);
+        // do not set cookie if the checksum is the same: it means the content has not changed!
+        if ($previousChecksum === $newChecksum) {
+            return;
+        }
+        $cookie .= 'checksum|' . $newChecksum;
         $this->_modified = false;
         /* Cookies are encrypted for evident security reasons */
         return $this->encryptAndSetCookie($cookie);

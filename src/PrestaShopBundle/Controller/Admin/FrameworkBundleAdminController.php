@@ -31,6 +31,7 @@ use Exception;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridInterface;
+use PrestaShop\PrestaShop\Core\Module\Exception\ModuleErrorInterface;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -462,6 +463,10 @@ class FrameworkBundleAdminController extends Controller
      */
     protected function getErrorMessageForException(Exception $e, array $messages)
     {
+        if ($e instanceof ModuleErrorInterface) {
+            return $e->getMessage();
+        }
+
         $exceptionType = get_class($e);
         $exceptionCode = $e->getCode();
 

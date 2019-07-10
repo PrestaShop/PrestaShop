@@ -237,10 +237,10 @@ class CmsPageType extends TranslatorAwareType
                     new NotBlank([
                         'message' => $this->trans(
                             'The %s field is required.',
+                            'Admin.Notifications.Error',
                             [
                                 sprintf('"%s"', $this->trans('Shop association', 'Admin.Global')),
-                            ],
-                            'Admin.Notifications.Error'
+                            ]
                         ),
                     ]),
                 ],

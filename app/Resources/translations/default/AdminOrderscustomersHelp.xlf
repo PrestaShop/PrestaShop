@@ -154,31 +154,12 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/Core/Grid/Definition/Factory/CustomerGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="e98936d7a5973d99a4b50b1f43400494">
-        <source>Search first name</source>
-        <target>Search first name</target>
-        <note>Line: 299</note>
-      </trans-unit>
-      <trans-unit id="402456650e9401a17e766d619ef691ec">
-        <source>Search last name</source>
-        <target>Search last name</target>
-        <note>Line: 309</note>
-      </trans-unit>
-      <trans-unit id="159b53bd16ff77184a5603620e54f761">
-        <source>Search company</source>
-        <target>Search company</target>
-        <note>Line: 362</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Sell/Customer/CustomerController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="f6916f4f1a268d4d0014ce47a2dfc3e4">
         <source>Password should be at least %length% characters long.</source>
         <target>Password should be at least %length% characters long.</target>
-        <note>Line: 745</note>
+        <note>Line: 755</note>
       </trans-unit>
     </body>
   </file>
@@ -219,32 +200,32 @@
       <trans-unit id="6010127763b917fdc47eb0c50a86a6f6">
         <source>Enable or disable customer login.</source>
         <target>Enable or disable customer login.</target>
-        <note>Line: 70</note>
+        <note>Line: 72</note>
       </trans-unit>
       <trans-unit id="8c7a8f24423b8519d38fb3ff380e020f">
         <source>This customer will receive your ads via email.</source>
         <target>This customer will receive your ads via email.</target>
-        <note>Line: 75</note>
+        <note>Line: 77</note>
       </trans-unit>
       <trans-unit id="e7608efcc5a10b78e3a98c438c2a1b7f">
         <source>Select all the groups that you would like to apply to this customer.</source>
         <target>Select all the groups that you would like to apply to this customer.</target>
-        <note>Line: 80</note>
+        <note>Line: 82</note>
       </trans-unit>
       <trans-unit id="395b64636636e968c756f7514313f760">
         <source>This group will be the user's default group.</source>
         <target>This group will be the user's default group.</target>
-        <note>Line: 85</note>
+        <note>Line: 87</note>
       </trans-unit>
       <trans-unit id="8b7fc06b213f4fb343c72af878e5c64b">
         <source>Only the discount for the selected group will be applied to this customer.</source>
         <target>Only the discount for the selected group will be applied to this customer.</target>
-        <note>Line: 85</note>
+        <note>Line: 87</note>
       </trans-unit>
       <trans-unit id="75bf7b6b951d3183f7c8f96bdb4fa74c">
         <source>Valid characters:</source>
         <target>Valid characters:</target>
-        <note>Line: 112</note>
+        <note>Line: 114</note>
       </trans-unit>
     </body>
   </file>

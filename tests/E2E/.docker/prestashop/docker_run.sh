@@ -10,7 +10,7 @@ fi
 cp -n -R /tmp/data-ps/prestashop/* /var/www/html
 
 if [ -f /var/www/html/config/settings.inc.php -o -f /var/www/html/app/config/parameters.php ]; then
-  echo "\n* Remove PrestaShop configuraiton files...";
+  echo "\n* Remove PrestaShop configuration files...";
   rm -f /var/www/html/config/settings.inc.php
   rm -f /var/www/html/app/config/parameters.php
   rm -f /var/www/html/app/config/parameters.yml
@@ -20,6 +20,9 @@ fi
 if [ $PS_DEV_MODE -ne 0 ]; then
   echo "\n* Enabling DEV mode ...";
   sed -ie "s/define('_PS_MODE_DEV_', false);/define('_PS_MODE_DEV_',\ true);/g" /var/www/html/config/defines.inc.php
+else
+  echo "\n* Disabling DEV mode ...";
+  sed -ie "s/define('_PS_MODE_DEV_', true);/define('_PS_MODE_DEV_',\ false);/g" /var/www/html/config/defines.inc.php
 fi
 
 if [ $PS_HOST_MODE -ne 0 -a ! $(grep "define('_PS_HOST_MODE_', true);" /var/www/html/config/defines.inc.php) ]; then

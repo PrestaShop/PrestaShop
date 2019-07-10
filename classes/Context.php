@@ -236,6 +236,14 @@ class ContextCore
     }
 
     /**
+     * @return Locale
+     */
+    public function getCurrentLocale()
+    {
+        return $this->currentLocale;
+    }
+
+    /**
      * Checks if mobile context is possible.
      *
      * @return bool

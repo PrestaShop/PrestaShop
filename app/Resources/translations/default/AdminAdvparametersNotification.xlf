@@ -141,7 +141,7 @@
       <trans-unit id="0fe194d9bb812c48dfe35a3cf6d0af52">
         <source>Please choose a MySQL table</source>
         <target>Please choose a MySQL table</target>
-        <note>Line: 49</note>
+        <note>Line: 53</note>
       </trans-unit>
     </body>
   </file>
@@ -150,7 +150,7 @@
       <trans-unit id="3be751fc7ab3f3ced8007796fe8bde7d">
         <source>This SQL query has no result.</source>
         <target>This SQL query has no result.</target>
-        <note>Line: 32</note>
+        <note>Line: 36</note>
       </trans-unit>
     </body>
   </file>
@@ -429,7 +429,7 @@
       <trans-unit id="c232ec1eb797989616b3ab59a5777b69">
         <source>The file is too large and cannot be downloaded. Please use the LIMIT clause in this query.</source>
         <target>The file is too large and cannot be downloaded. Please use the LIMIT clause in this query.</target>
-        <note>Line: 368</note>
+        <note>Line: 376</note>
       </trans-unit>
     </body>
   </file>
@@ -1012,32 +1012,32 @@
       <trans-unit id="a375d9230fd61b4a70ac109ab7b11082">
         <source>You cannot edit the SuperAdmin profile.</source>
         <target>You cannot edit the SuperAdmin profile.</target>
-        <note>Line: 314</note>
+        <note>Line: 342</note>
       </trans-unit>
       <trans-unit id="cd34716bc68eb08479ddf16f17b2580e">
         <source>The provided profile is invalid</source>
         <target>The provided profile is invalid</target>
-        <note>Line: 478</note>
+        <note>Line: 506</note>
       </trans-unit>
       <trans-unit id="f5d44b60e38b28d19549bb7a107654ca">
         <source>You cannot disable or delete your own account.</source>
         <target>You cannot disable or delete your own account.</target>
-        <note>Line: 462</note>
+        <note>Line: 490</note>
       </trans-unit>
       <trans-unit id="2450228823b8e17792cf687b8543b59d">
         <source>You cannot disable or delete the administrator account.</source>
         <target>You cannot disable or delete the administrator account.</target>
-        <note>Line: 456</note>
+        <note>Line: 484</note>
       </trans-unit>
       <trans-unit id="4220fb02fdc65e838a02a3b51c6f737f">
         <source>Your current password is invalid.</source>
         <target>Your current password is invalid.</target>
-        <note>Line: 506</note>
+        <note>Line: 534</note>
       </trans-unit>
       <trans-unit id="cfe45dd92c1b71a640ea19767578f38c">
         <source>The employee must be associated with at least one shop.</source>
         <target>The employee must be associated with at least one shop.</target>
-        <note>Line: 474</note>
+        <note>Line: 502</note>
       </trans-unit>
     </body>
   </file>

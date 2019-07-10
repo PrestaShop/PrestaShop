@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
+use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\DeleteCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\ToggleCurrencyStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\RefreshExchangeRatesCommand;
@@ -131,7 +132,7 @@ class CurrencyController extends FrameworkBundleAdminController
 
                 return $this->redirectToRoute('admin_currencies_index');
             }
-        } catch (CurrencyException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
@@ -171,7 +172,7 @@ class CurrencyController extends FrameworkBundleAdminController
 
                 return $this->redirectToRoute('admin_currencies_index');
             }
-        } catch (CurrencyException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
@@ -358,11 +359,11 @@ class CurrencyController extends FrameworkBundleAdminController
     /**
      * Gets an error by exception class and its code.
      *
-     * @param CurrencyException $e
+     * @param Exception $e
      *
      * @return array
      */
-    private function getErrorMessages(CurrencyException $e)
+    private function getErrorMessages(Exception $e)
     {
         return [
             CurrencyConstraintException::class => [
