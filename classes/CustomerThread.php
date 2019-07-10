@@ -25,6 +25,8 @@
  */
 class CustomerThreadCore extends ObjectModel
 {
+    // TODO: remove those constants, they will be implemented in CustomerThreadStatus class
+    // in an incoming pull request (https://github.com/PrestaShop/PrestaShop/pull/14288/files)
     const openStatus = 'open';
     const closedStatus = 'closed';
     const pending1Status = 'pending1';

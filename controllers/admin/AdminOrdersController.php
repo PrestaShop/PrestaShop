@@ -623,6 +623,8 @@ class AdminOrdersControllerCore extends AdminController
                             $customer_thread->add();
                         } else {
                             $customer_thread = new CustomerThread((int) $id_customer_thread);
+                            // TODO: use statuses from CustomerThreadStatus instead, once
+                            // this PR will be merged: https://github.com/PrestaShop/PrestaShop/pull/14288/files
                             $customer_thread->status = $customer_thread::closedStatus;
                             $customer_thread->update();
                         }
