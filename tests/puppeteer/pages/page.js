@@ -7,4 +7,8 @@ module.exports = class Page {
     return this.page.title();
   }
 
+  async goTo(URL) {
+    await global.page.goto(URL);
+  }
+
 };
