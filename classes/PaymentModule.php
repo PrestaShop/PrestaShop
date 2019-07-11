@@ -24,6 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 use PrestaShop\PrestaShop\Adapter\StockManager;
+use PrestaShop\PrestaShop\Adapter\MailTemplate\MailPartialTemplateRenderer;
 
 abstract class PaymentModuleCore extends Module
 {
@@ -895,22 +896,9 @@ abstract class PaymentModuleCore extends Module
             return '';
         }
 
-        $pathToFindEmail = array(
-            _PS_THEME_DIR_ . 'mails' . DIRECTORY_SEPARATOR . $this->context->language->iso_code . DIRECTORY_SEPARATOR . $template_name,
-            _PS_THEME_DIR_ . 'mails' . DIRECTORY_SEPARATOR . 'en' . DIRECTORY_SEPARATOR . $template_name,
-            _PS_MAIL_DIR_ . $this->context->language->iso_code . DIRECTORY_SEPARATOR . $template_name,
-            _PS_MAIL_DIR_ . 'en' . DIRECTORY_SEPARATOR . $template_name,
-        );
+        $partialRenderer = new MailPartialTemplateRenderer($this->context);
 
-        foreach ($pathToFindEmail as $path) {
-            if (Tools::file_exists_cache($path)) {
-                $this->context->smarty->assign('list', $var);
-
-                return $this->context->smarty->fetch($path);
-            }
-        }
-
-        return '';
+        return $partialRenderer->render($template_name, $var);
     }
 
     protected function createOrderFromCart(
