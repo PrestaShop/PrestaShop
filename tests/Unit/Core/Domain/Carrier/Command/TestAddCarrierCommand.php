@@ -40,27 +40,33 @@ class TestAddCarrierCommand extends TestCase
     }
 
     /**
-     * @dataProvider getInvalidCarrierNames
+     * @dataProvider getInvalidMeasures
+     *
+     * @param int $width
+     * @param int $height
+     * @param int $depth
+     * @param float $weight
      */
-    public function testItThrowsExceptionWhenInvalidCarrierNameIsGiven($invalidName)
+    public function testItThrowsExceptionWhenInvalidMeasuresAreGiven(int $width, int $height, int $depth, float $weight)
     {
         $this->expectException(CarrierConstraintException::class);
-        $this->expectExceptionCode(CarrierConstraintException::INVALID_CARRIER_NAME);
+        $this->expectExceptionCode(CarrierConstraintException::INVALID_PACKAGE_MEASURE);
         $data = $this->getValidDataForCommandCreation();
-        $data['localized_names'][1] = $invalidName;
+        $data['width'] = $width;
+        $data['height'] = $height;
+        $data['depth'] = $depth;
+        $data['weight'] = $weight;
 
         $this->createCommandFromArray($data);
     }
 
-    public function getInvalidCarrierNames()
+    public function getInvalidMeasures()
     {
-        yield ['abc#'];
-        yield [1];
-        yield ['>'];
-        yield [''];
-        yield ['='];
-        yield ['{'];
-        yield [str_repeat('a', 65)];
+        yield [-1, 0, 0, 0.0];
+        yield [0, -1, 0, 0.0];
+        yield [0, 0, -1, 0.0];
+        yield [0, 0, 0, -0.1];
+        yield [-1, -2, -3, -5.5];
     }
 
     private function getValidDataForCommandCreation()

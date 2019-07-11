@@ -40,6 +40,13 @@ class CarrierNameTest extends TestCase
         new CarrierName($validName);
     }
 
+    public function testItReturnsCorrectValue()
+    {
+        $carrierName = new CarrierName('my carrier');
+
+        $this->assertEquals('my carrier', $carrierName->getValue());
+    }
+
     /**
      * @dataProvider getInvalidNames
      */
@@ -63,7 +70,6 @@ class CarrierNameTest extends TestCase
     public function getInvalidNames()
     {
         yield ['abc#'];
-        yield [1];
         yield ['>'];
         yield [''];
         yield ['='];

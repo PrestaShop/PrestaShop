@@ -32,42 +32,37 @@ namespace PrestaShop\PrestaShop\Core\Domain\Carrier\Exception;
 class CarrierConstraintException extends CarrierException
 {
     /**
-     * When carrier package size measure contains invalid value
-     */
-    const INVALID_SIZE_MEASURE = 1;
-
-    /**
-     * When carrier weight measure contains invalid value
-     */
-    const INVALID_WEIGHT_MEASURE = 2;
-
-    /**
-     * When carrier speed grade contains invalid value
-     */
-    const INVALID_SPEED_GRADE = 3;
-
-    /**
-     * When carrier shipping method value is invalid
-     */
-    const INVALID_SHIPPING_METHOD = 4;
-
-    /**
-     * When shipping range contains invalid values
-     */
-    const INVALID_SHIPPING_RANGE = 5;
-
-    /**
      * When carrier name constraints are violated
      */
-    const INVALID_CARRIER_NAME = 6;
+    const INVALID_CARRIER_NAME = 1;
 
     /**
      * When carrier shipping delay constraints are violated
      */
-    const INVALID_SHIPPING_DELAY = 7;
+    const INVALID_SHIPPING_DELAY = 2;
+
+    /**
+     * When carrier shipping method value is invalid
+     */
+    const INVALID_SHIPPING_METHOD = 3;
+
+    /**
+     * When shipping range contains invalid values
+     */
+    const INVALID_SHIPPING_RANGE = 4;
+
+    /**
+     * When carrier package size measure contains invalid value
+     */
+    const INVALID_PACKAGE_MEASURE = 5;
+
+    /**
+     * When carrier speed grade contains invalid value
+     */
+    const INVALID_SPEED_GRADE = 6;
 
     /**
      * When carrier tracking url constraints are violated
      */
-    const INVALID_TRACKING_URL = 8;
+    const INVALID_TRACKING_URL = 7;
 }
