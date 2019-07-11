@@ -56,8 +56,8 @@ class NewsFetcherCore
     private $isoCode;
 
     /**
-    * @param string $isoCode
-    */
+     * @param string $isoCode
+     */
     public function __construct(
         string $isoCode
     ) {
@@ -88,6 +88,7 @@ class NewsFetcherCore
 
     /**
      * @return array
+     *
      * @throws PrestaShopException
      */
     public function getData() {
@@ -107,8 +108,8 @@ class NewsFetcherCore
 
         $articles_limit = self::NUM_ARTICLES;
 
-        $shop_default_country_id = (int)Configuration::get('PS_COUNTRY_DEFAULT');
-        $shop_default_iso_country = (string)Tools::strtoupper(Country::getIsoById($shop_default_country_id));
+        $shop_default_country_id = (int) Configuration::get('PS_COUNTRY_DEFAULT');
+        $shop_default_iso_country = (string) Tools::strtoupper(Country::getIsoById($shop_default_country_id));
         $analytics_params = [
             'utm_source' => 'back-office',
             'utm_medium' => 'rss',
@@ -117,8 +118,8 @@ class NewsFetcherCore
 
         foreach ($rss->channel->item as $item) {
             if ($articles_limit == 0
-                || !Validate::isCleanHtml((string)$item->title)
-                || !Validate::isCleanHtml((string)$item->description)
+                || !Validate::isCleanHtml((string) $item->title)
+                || !Validate::isCleanHtml((string) $item->description)
                 || !isset($item->link, $item->title)) {
                 break;
             }
@@ -126,26 +127,27 @@ class NewsFetcherCore
             if (in_array($this->context->mode, array(Context::MODE_HOST, Context::MODE_HOST_CONTRIB))) {
                 $analytics_params['utm_content'] = 'cloud';
             }
-            $article_link = (string)$item->link . '?' . http_build_query($analytics_params);
+            $article_link = (string) $item->link . '?' . http_build_query($analytics_params);
 
             $url_query = parse_url($item->link, PHP_URL_QUERY);
             parse_str($url_query, $link_query_params);
             if ($link_query_params) {
                 $full_url_params = array_merge($link_query_params, $analytics_params);
-                $base_url = explode('?', (string)$item->link);
-                $base_url = (string)$base_url[0];
+                $base_url = explode('?', (string) $item->link);
+                $base_url = (string) $base_url[0];
                 $article_link = $base_url . '?' . http_build_query($full_url_params);
             }
 
             $data['rss'][] = [
-                'date' => Tools::displayDate(date('Y-m-d', strtotime((string)$item->pubDate))),
-                'title' => (string)Tools::htmlentitiesUTF8($item->title),
-                'short_desc' => Tools::truncateString(strip_tags((string)$item->description), 150),
-                'link' => (string)$article_link,
+                'date' => Tools::displayDate(date('Y-m-d', strtotime((string) $item->pubDate))),
+                'title' => (string) Tools::htmlentitiesUTF8($item->title),
+                'short_desc' => Tools::truncateString(strip_tags((string) $item->description), 150),
+                'link' => (string) $article_link,
             ];
             --$articles_limit;
         }
         $data['has_errors'] = false;
+
         return $data;
     }
 }
