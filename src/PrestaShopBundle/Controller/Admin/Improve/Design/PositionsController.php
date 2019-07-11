@@ -27,10 +27,9 @@
 namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 
 use Hook;
-use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -47,7 +46,6 @@ class PositionsController extends FrameworkBundleAdminController
     /**
      * Display hooks positions.
      *
-     * @Template("@PrestaShop/Admin/Improve/Design/positions.html.twig")
      * @AdminSecurity("is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller')~'_')", message="Access denied.")
      *
      * @param Request $request
@@ -114,7 +112,7 @@ class PositionsController extends FrameworkBundleAdminController
         }
         $saveUrl = $legacyContextService->getAdminLink('AdminModulesPositions', true, $saveUrlParams);
 
-        return [
+        return $this->render('PrestaShopBundle:Admin/Improve/Design/Position:index.html.twig', [
             'layoutHeaderToolbarBtn' => [
                 'save' => [
                     'href' => $saveUrl,
@@ -132,7 +130,7 @@ class PositionsController extends FrameworkBundleAdminController
             'hooks' => $hooks,
             'modules' => $modules,
             'canMove' => $this->get('prestashop.adapter.shop.context')->isSingleShopContext(),
-        ];
+        ]);
     }
 
     /**
@@ -230,5 +228,33 @@ class PositionsController extends FrameworkBundleAdminController
                 $messages[$messageId]
             );
         }
+    }
+
+    /**
+     * Renders and processes form to add module to a hook
+     *
+     * @param Request $request
+     */
+    public function addToHookAction(Request $request)
+    {
+        $moduleHookForm = $this->get('prestashop.admin.module_hook.form_handler')->getForm();
+
+        return $this->render('PrestaShopBundle:Admin/Improve/Design/Position:add_to_hook.html.twig', [
+            'moduleHookForm' => $moduleHookForm->createView(),
+        ]);
+    }
+
+    /**
+     * Renders and processes form for editing module-hook relation
+     *
+     * @param int $moduleId
+     * @param int $hookId
+     *
+     * @return RedirectResponse
+     */
+    public function editAction($moduleId, $hookId)
+    {
+        //@todo:implement
+        return $this->redirectToRoute('admin_modules_positions_add_to_hook');
     }
 }

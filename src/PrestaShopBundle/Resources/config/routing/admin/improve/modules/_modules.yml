@@ -120,3 +120,13 @@ admin_module_addons_store:
         _controller: 'PrestaShopBundle:Admin\Improve\Modules\AddonsStore:index'
         _legacy_controller: AdminAddonsCatalog
         _legacy_link: AdminAddonsCatalog
+
+admin_module_hooks:
+    path: /module-hooks
+    methods: [GET]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Improve\Modules\ModuleHooks:getModuleHooks'
+        _legacy_controller: AdminModulesPositionsController
+        _legacy_link: AdminModulesPositionsController:ajaxProcessGetHookableList
+
+
