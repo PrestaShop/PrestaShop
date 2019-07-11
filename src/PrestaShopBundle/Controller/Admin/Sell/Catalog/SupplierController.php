@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
-use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierException;
+use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Query\GetSupplierForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\QueryResult\EditableSupplier;
@@ -41,7 +41,6 @@ use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\CannotUpdateSupplierSta
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Query\GetSupplierForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\QueryResult\ViewableSupplier;
-use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageOptimizationException;
@@ -140,7 +139,7 @@ class SupplierController extends FrameworkBundleAdminController
 
                 return $this->redirectToRoute('admin_suppliers_index');
             }
-        } catch (CoreException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
@@ -174,7 +173,7 @@ class SupplierController extends FrameworkBundleAdminController
                 'success',
                 $this->trans('Successful deletion.', 'Admin.Notifications.Success')
             );
-        } catch (SupplierException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
@@ -214,7 +213,7 @@ class SupplierController extends FrameworkBundleAdminController
                 'success',
                 $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
             );
-        } catch (SupplierException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
@@ -253,7 +252,7 @@ class SupplierController extends FrameworkBundleAdminController
                 'success',
                 $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
             );
-        } catch (SupplierException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
@@ -292,7 +291,7 @@ class SupplierController extends FrameworkBundleAdminController
                 'success',
                 $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
             );
-        } catch (SupplierException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
@@ -312,8 +311,6 @@ class SupplierController extends FrameworkBundleAdminController
      * @param int $supplierId
      *
      * @return Response
-     *
-     * @throws SupplierException
      */
     public function editAction(Request $request, $supplierId)
     {
@@ -333,7 +330,7 @@ class SupplierController extends FrameworkBundleAdminController
 
                 return $this->redirectToRoute('admin_suppliers_index');
             }
-        } catch (CoreException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
 
             if ($e instanceof SupplierNotFoundException) {
@@ -375,7 +372,7 @@ class SupplierController extends FrameworkBundleAdminController
                 'success',
                 $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
             );
-        } catch (SupplierException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
@@ -400,7 +397,7 @@ class SupplierController extends FrameworkBundleAdminController
                 (int) $supplierId,
                 (int) $this->getContextLangId()
             ));
-        } catch (SupplierException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
 
             return $this->redirectToRoute('admin_suppliers_index');
