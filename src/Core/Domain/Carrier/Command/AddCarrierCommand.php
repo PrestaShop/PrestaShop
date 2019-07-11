@@ -146,25 +146,22 @@ final class AddCarrierCommand
         $taxRulesGroupId,
         $outOfRangeBehavior,
         array $shippingRanges,
-        $maxPackageWidth,
-        $maxPackageHeight,
-        $maxPackageDepth,
-        $maxPackageWeight,
+        int $maxPackageWidth,
+        int $maxPackageHeight,
+        int $maxPackageDepth,
+        float $maxPackageWeight,
         array $associatedGroupIds,
         array $associatedShopIds
     ) {
         $this->assertOutOfRangeBehaviorValueIsValid($outOfRangeBehavior);
         $this->setLocalizedCarrierNames($localizedCarrierNames);
         $this->setLocalizedShippingDelays($localizedShippingDelays);
-        $this->maxPackageWidth = new PackageSizeMeasure($maxPackageWidth);
-        $this->maxPackageHeight = new PackageSizeMeasure($maxPackageHeight);
-        $this->maxPackageDepth = new PackageSizeMeasure($maxPackageDepth);
-        $this->maxPackageWeight = new PackageWeightMeasure($maxPackageWeight);
+        $this->setMeasures($maxPackageWidth, $maxPackageHeight, $maxPackageDepth, $maxPackageWeight);
+        $this->setShippingRanges($shippingRanges);
         $this->speedGrade = new SpeedGrade($speedGrade);
         $this->shippingMethod = new ShippingMethod($shippingMethod);
-        $this->setShippingRanges($shippingRanges);
-        $this->outOfRangeBehavior = $outOfRangeBehavior;
         $this->trackingUrl = new TrackingUrl($trackingUrl);
+        $this->outOfRangeBehavior = $outOfRangeBehavior;
         $this->shippingCostIncluded = $shippingCostIncluded;
         $this->taxRulesGroupId = $taxRulesGroupId;
         $this->associatedGroupIds = $associatedGroupIds;
@@ -328,6 +325,26 @@ final class AddCarrierCommand
     }
 
     /**
+     * @param int $width
+     * @param int $height
+     * @param int $depth
+     * @param float $weight
+     *
+     * @throws CarrierConstraintException
+     */
+    private function setMeasures(int $width, int $height, int $depth, float $weight)
+    {
+        foreach ([$width, $height, $depth, $weight] as $measure) {
+            $this->assertMeasureIsNonNegative($measure);
+        }
+
+        $this->maxPackageWidth = $width;
+        $this->maxPackageHeight = $height;
+        $this->maxPackageDepth = $depth;
+        $this->maxPackageWeight = $weight;
+    }
+
+    /**
      * @param int $value
      *
      * @throws CarrierConstraintException
@@ -345,6 +362,22 @@ final class AddCarrierCommand
                 var_export($value, true),
                 implode(', ', $definedValues)
             ));
+        }
+    }
+
+    /**
+     * @param int|float $measure
+     *
+     * @throws CarrierConstraintException
+     */
+    private function assertMeasureIsNonNegative($measure)
+    {
+        if (0 > $measure) {
+            throw new CarrierConstraintException(sprintf(
+                'Carrier package measure "%s" is invalid. It cannot be negative.',
+                $measure),
+                CarrierConstraintException::INVALID_PACKAGE_MEASURE
+            );
         }
     }
 }

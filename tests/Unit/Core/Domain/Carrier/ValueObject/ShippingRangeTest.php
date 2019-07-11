@@ -33,14 +33,22 @@ use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\ShippingRange;
 class ShippingRangeTest extends TestCase
 {
     /**
-     * @dataProvider getDataWithWrongRangeValueFrom
+     * @dataProvider getValidRangeValues
      */
-    public function testItThrowsAnExceptionWhenWrongRangeFromValueIsGiven($wrongValueFrom, $valueTo, $prices)
+    public function testItIsCreatedSuccessfullyWhenValidRangeValuesAreGiven($valueFrom, $valueTo)
+    {
+        new ShippingRange($valueFrom, $valueTo, [3 => 5]);
+    }
+
+    /**
+     * @dataProvider getInvalidRangeValues
+     */
+    public function testItThrowsAnExceptionWhenInvalidRangeValuesAreGiven($valueFrom, $valueTo)
     {
         $this->expectException(CarrierConstraintException::class);
         $this->expectExceptionCode(CarrierConstraintException::INVALID_SHIPPING_RANGE);
 
-        new ShippingRange($wrongValueFrom, $valueTo, $prices);
+        new ShippingRange($valueFrom, $valueTo, [3 => 5]);
     }
 
     public function testItThrowsAnExceptionWhenEmptyPricesByZoneArrayIsGiven()
@@ -51,37 +59,18 @@ class ShippingRangeTest extends TestCase
         new ShippingRange(1, 2, []);
     }
 
-    public function getDataWithWrongRangeValueFrom()
+    public function getValidRangeValues()
     {
-        yield [
-            '',
-            2,
-            [3 => 5],
-        ];
-        yield [
-            -1,
-            2,
-            [3 => 5],
-        ];
-        yield [
-            '',
-            2,
-            [],
-        ];
-        yield [
-            null,
-            2,
-            [3 => 5],
-        ];
-        yield [
-            false,
-            2,
-            [3 => 5],
-        ];
-        yield [
-            [],
-            2,
-            [3 => 5],
-        ];
+        yield [1, 2];
+        yield [2, 5];
+        yield [0, 2];
+    }
+
+    public function getInvalidRangeValues()
+    {
+        yield [2, 2];
+        yield [-1, 2];
+        yield [3, 1];
+        yield [0, 0];
     }
 }

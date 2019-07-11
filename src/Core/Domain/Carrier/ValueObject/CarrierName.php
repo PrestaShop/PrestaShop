@@ -53,11 +53,19 @@ final class CarrierName
      *
      * @throws CarrierConstraintException
      */
-    public function __construct($value)
+    public function __construct(string $value)
     {
-        $this->assertIsValidLengthString($value);
+        $this->assertIsValidLength($value);
         $this->assertValueMatchesPattern($value);
         $this->value = $value;
+    }
+
+    /**
+     * @return string
+     */
+    public function getValue(): string
+    {
+        return $this->value;
     }
 
     /**
@@ -65,13 +73,13 @@ final class CarrierName
      *
      * @throws CarrierConstraintException
      */
-    private function assertIsValidLengthString($value)
+    private function assertIsValidLength(string $value)
     {
-        if (!is_string($value) || 0 === strlen($value) || self::MAX_LENGTH < strlen($value)) {
+        if (0 === strlen($value) || self::MAX_LENGTH < strlen($value)) {
             throw new CarrierConstraintException(sprintf(
-                'Carrier name "%s" is invalid. It must be 1 - %s characters long string',
+                'Carrier name "%s" is invalid. It must be 1 - %s characters long.',
                 self::MAX_LENGTH,
-                var_export($value, true)),
+                $value),
                 CarrierConstraintException::INVALID_CARRIER_NAME
             );
         }
@@ -82,12 +90,12 @@ final class CarrierName
      *
      * @throws CarrierConstraintException
      */
-    private function assertValueMatchesPattern($value)
+    private function assertValueMatchesPattern(string $value)
     {
         if (!preg_match(self::VALID_PATTERN, $value)) {
             throw new CarrierConstraintException(sprintf(
                 'Carrier name "%s" is invalid. It must match "%s" pattern.',
-                var_export($value, true),
+                $value,
                 self::VALID_PATTERN),
                 CarrierConstraintException::INVALID_CARRIER_NAME
             );

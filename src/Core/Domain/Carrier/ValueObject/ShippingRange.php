@@ -65,7 +65,7 @@ final class ShippingRange
      *
      * @throws CarrierConstraintException
      */
-    public function __construct($from, $to, array $pricesByZoneId)
+    public function __construct(int $from, int $to, array $pricesByZoneId)
     {
         $this->assertRangeIsValid($from, $to);
         $this->assertPricesByZoneArrayIsNotEmpty($pricesByZoneId);
@@ -122,10 +122,10 @@ final class ShippingRange
      *
      * @throws CarrierConstraintException
      */
-    private function assertRangeIsValid($from, $to)
+    private function assertRangeIsValid(int $from, int $to)
     {
-        $this->assertValueIsNonNegativeInteger($from);
-        $this->assertValueIsNonNegativeInteger($to);
+        $this->assertIsNonNegativeInteger($from);
+        $this->assertIsNonNegativeInteger($to);
 
         if ($from >= $to) {
             throw new CarrierConstraintException(sprintf(
@@ -140,12 +140,12 @@ final class ShippingRange
      *
      * @throws CarrierConstraintException
      */
-    private function assertValueIsNonNegativeInteger($value)
+    private function assertIsNonNegativeInteger(int $value)
     {
-        if (!is_int($value) || 0 > $value) {
+        if (0 > $value) {
             throw new CarrierConstraintException(sprintf(
                 'Shipping range "%s" is invalid. It should be non-negative integer.',
-                var_export($value, true)),
+                $value),
                 CarrierConstraintException::INVALID_SHIPPING_RANGE
             );
         }

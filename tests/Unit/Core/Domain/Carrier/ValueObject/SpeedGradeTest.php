@@ -43,15 +43,17 @@ class SpeedGradeTest extends TestCase
         new SpeedGrade($invalidValue);
     }
 
+    public function testItReturnsCorrectValue()
+    {
+        $speedGrade = new SpeedGrade(5);
+
+        $this->assertEquals(5, $speedGrade->getValue());
+    }
+
     public function getInvalidValue()
     {
         yield [-1];
-        yield ['1'];
-        yield [[]];
-        yield ['best grade'];
         yield [10];
-        yield [1.5];
-        yield [null];
-        yield [false];
+        yield [100];
     }
 }

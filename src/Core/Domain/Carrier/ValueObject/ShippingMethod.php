@@ -58,7 +58,7 @@ final class ShippingMethod
      *
      * @throws CarrierConstraintException
      */
-    public function __construct($value)
+    public function __construct(int $value)
     {
         $this->assertValueIsDefinedShippingMethod($value);
         $this->value = $value;
@@ -77,7 +77,7 @@ final class ShippingMethod
      *
      * @throws CarrierConstraintException
      */
-    private function assertValueIsDefinedShippingMethod($value)
+    private function assertValueIsDefinedShippingMethod(int $value)
     {
         $definedMethods = [
             self::SHIPPING_METHOD_PRICE,
@@ -86,8 +86,8 @@ final class ShippingMethod
 
         if (!in_array($value, $definedMethods, true)) {
             throw new CarrierConstraintException(sprintf(
-                'Invalid shipping method "%s". Defined methods are: %s',
-                var_export($value, true),
+                'Invalid shipping method value "%s". Defined values are: %s',
+                $value,
                 implode(', ', $definedMethods)),
                 CarrierConstraintException::INVALID_SHIPPING_METHOD
             );

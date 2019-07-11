@@ -45,16 +45,12 @@ class ShippingMethodTest extends TestCase
 
     public function getUndefinedMethods()
     {
-        yield [''];
-        yield ['1'];
         yield [5];
-        yield ['method'];
-        yield [null];
-        yield [false];
-        yield [[]];
+        yield [100];
+        yield [-12];
     }
 
-    public function testItReturnsRightMethodValue()
+    public function testItReturnsCorrectMethodValue()
     {
         $shippingMethod = new ShippingMethod(ShippingMethod::SHIPPING_METHOD_PRICE);
 

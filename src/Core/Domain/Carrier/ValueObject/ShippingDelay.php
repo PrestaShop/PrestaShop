@@ -49,13 +49,13 @@ final class ShippingDelay
     private $value;
 
     /**
-     * @param $value
+     * @param string $value
      *
      * @throws CarrierConstraintException
      */
-    public function __construct(int $value)
+    public function __construct(string $value)
     {
-        $this->assertIsValidStringLength($value);
+        $this->assertIsValidLength($value);
         $this->assertValueMatchesPattern($value);
         $this->value = $value;
     }
@@ -73,12 +73,12 @@ final class ShippingDelay
      *
      * @throws CarrierConstraintException
      */
-    private function assertIsValidStringLength($value)
+    private function assertIsValidLength(string $value)
     {
-        if (!is_string($value) || self::MAX_ALLOWED_LENGTH < strlen($value)) {
+        if (self::MAX_ALLOWED_LENGTH < strlen($value)) {
             throw new CarrierConstraintException(sprintf(
-                'Carrier shipping delay "%s" is invalid. It must be string with length of 1 - %s characters',
-                var_export($value, true),
+                'Carrier shipping delay "%s" is invalid. It must be 1 - %s characters long.',
+                $value,
                 self::MAX_ALLOWED_LENGTH),
                 CarrierConstraintException::INVALID_SHIPPING_DELAY
             );
@@ -90,7 +90,7 @@ final class ShippingDelay
      *
      * @throws CarrierConstraintException
      */
-    private function assertValueMatchesPattern($value)
+    private function assertValueMatchesPattern(string $value)
     {
         if (!preg_match('/^[^<>={}]*$/u', $value)) {
             throw new CarrierConstraintException(sprintf(

@@ -43,10 +43,18 @@ final class SpeedGrade
      *
      * @throws CarrierConstraintException
      */
-    public function __construct($value)
+    public function __construct(int $value)
     {
         $this->assertValueIsNonNegativeIntegerLessThanTen($value);
         $this->value = $value;
+    }
+
+    /**
+     * @return int
+     */
+    public function getValue(): int
+    {
+        return $this->value;
     }
 
     /**
@@ -54,11 +62,11 @@ final class SpeedGrade
      *
      * @throws CarrierConstraintException
      */
-    private function assertValueIsNonNegativeIntegerLessThanTen($value)
+    private function assertValueIsNonNegativeIntegerLessThanTen(int $value)
     {
-        if (!is_int($value) || 0 > $value || 9 < $value) {
+        if (0 > $value || 9 < $value) {
             throw new CarrierConstraintException(sprintf(
-                'Shipping grade "%s" is invalid. It must be integer from 0 to 9', var_export($value, true)),
+                'Shipping grade "%s" is invalid. It must be integer from 0 to 9', $value),
                 CarrierConstraintException::INVALID_SPEED_GRADE
             );
         }
