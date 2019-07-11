@@ -91,7 +91,8 @@ class NewsFetcherCore
      *
      * @throws PrestaShopException
      */
-    public function getData() {
+    public function getData()
+    {
         $data = ['has_errors' => true, 'rss' => []];
 
         $circuitBreaker = $this->factory->create($this->blogSettings);
