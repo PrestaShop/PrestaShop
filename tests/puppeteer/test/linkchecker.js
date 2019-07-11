@@ -9,6 +9,8 @@ const URL_BO = process.env.URL_BO || 'http://localhost:8080/admin-dev/';
 const EMAIL = process.env.LOGIN || 'demo@prestashop.com';
 const PASSWD = process.env.PASSWD || 'prestashop_demo';
 const HEADLESS = process.env.HEADLESS || true;
+const LOG_PASSED = process.env.LOG_PASSED || false;
+
 let responses = [];
 const numberRequests = {BO: 0, FO: 0};
 const selectorBO = 'nav.nav-bar.d-none.d-md-block ul li a.link[href]';
@@ -66,7 +68,9 @@ const checkStatusUrls = async (page, hrefs) => {
   // eslint-disable-next-line
   for (const href of hrefs) {
     curHref = href;
-    object[office].passed.push({url: href, date: new Date().getTime(), responses});
+    if (LOG_PASSED == true) {
+      object[office].passed.push({url: href, date: new Date().getTime(), responses});
+    }
 
     if (href.includes(URL_FO)) {
       // eslint-disable-next-line
