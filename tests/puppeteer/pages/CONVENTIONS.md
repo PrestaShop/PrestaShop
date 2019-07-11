@@ -62,8 +62,8 @@ const BO_LOGIN = new BO_login();
 
 ...
 
-async login => {
-  await BO_LOGIN.setCredentials(EMAIL, PASSWD);
-  await BO_LOGIN.login();
-}
+test('should login in the BO', () => {
+  BO_LOGIN.setCredentials(EMAIL, PASSWD);
+  BO_LOGIN.login();
+});
 ```
