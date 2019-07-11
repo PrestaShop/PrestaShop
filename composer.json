@@ -38,6 +38,7 @@
         "pelago/emogrifier": "^2.1",
         "phpoffice/phpspreadsheet": "~1.5",
         "prestashop/blockreassurance": "^3",
+        "prestashop/circuit-breaker": "^3.0",
         "prestashop/contactform": "^4",
         "prestashop/dashactivity": "^2",
         "prestashop/dashgoals": "^2",
