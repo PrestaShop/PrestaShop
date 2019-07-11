@@ -57,6 +57,11 @@ class CarrierCore extends ObjectModel
     /** @var string Name */
     public $name;
 
+    /**
+     * @var array of names where key represents language id
+     */
+    public $localized_name;
+
     /** @var string URL with a '@' for */
     public $url;
 
@@ -143,6 +148,7 @@ class CarrierCore extends ObjectModel
 
             /* Lang fields */
             'delay' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 512),
+            'localized_name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCarrierName', 'required' => false, 'size' => 64]
         ),
     );
 
