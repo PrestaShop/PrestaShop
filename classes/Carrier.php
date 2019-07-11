@@ -624,7 +624,7 @@ class CarrierCore extends ObjectModel
 			LEFT JOIN `' . _DB_PREFIX_ . 'country_lang` cl ON (c.`id_country` = cl.`id_country` AND cl.`id_lang` = ' . (int) $id_lang . ')
 			INNER JOIN (`' . _DB_PREFIX_ . 'carrier_zone` cz INNER JOIN `' . _DB_PREFIX_ . 'carrier` cr ON ( cr.id_carrier = cz.id_carrier AND cr.deleted = 0 ' .
             ($active_carriers ? 'AND cr.active = 1) ' : ') ') .
- 			Shop::addSqlAssociation('carrier', 'cr') . '
+            Shop::addSqlAssociation('carrier', 'cr') . '
 			LEFT JOIN `' . _DB_PREFIX_ . 'zone` zz ON cz.id_zone = zz.id_zone) ON zz.`id_zone` = c.`id_zone`
 			WHERE 1
 			' . ($active_countries ? 'AND c.active = 1' : '') . '
