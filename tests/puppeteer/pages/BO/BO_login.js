@@ -5,7 +5,7 @@ module.exports = class BO_login extends Page {
   constructor() {
     super();
 
-    this.title = 'Dashboard • PrestaShop';
+    this.BO_login_pageTitle = 'Dashboard • PrestaShop';
 
     this.BO_login_email_input = "#email";
     this.BO_login_password_input = "#passwd";
@@ -28,9 +28,8 @@ module.exports = class BO_login extends Page {
     await global.page.waitForNavigation();
   }
 
-  async checkPageTitle() {
-    let currentTitle = await global.page.title();
-    await expect(currentTitle).to.equal(this.title);
+  async getPageTitle() {
+    return await global.page.title();
   }
 
 };
