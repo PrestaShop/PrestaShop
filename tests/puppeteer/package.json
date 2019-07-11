@@ -7,7 +7,8 @@
   },
   "scripts": {
     "test": "node test/linkchecker.js",
-    "lint": "eslint  --fix --ignore-path .gitignore ."
+    "lint": "eslint  --fix --ignore-path .gitignore .",
+    "specific-test": "node_modules/mocha/bin/mocha"
   },
   "repository": {
     "type": "git",
@@ -23,7 +24,10 @@
   },
   "homepage": "https://github.com/PrestaShop/PrestaShop#readme",
   "dependencies": {
+    "chai": "^4.2.0",
+    "chai-string": "^1.5.0",
     "eslint-config-prestashop": "0.0.2",
+    "mocha": "^6.1.4",
     "puppeteer": "^1.18.1"
   },
   "devDependencies": {
