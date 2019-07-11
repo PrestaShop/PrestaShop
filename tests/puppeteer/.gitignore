@@ -1,0 +1,5 @@
+### Node & Puppeteer specific rules ###
+
+node_modules
+*/node_modules
+test/reports/*
