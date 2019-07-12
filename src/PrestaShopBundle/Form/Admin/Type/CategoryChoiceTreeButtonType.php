@@ -33,6 +33,7 @@ class CategoryChoiceTreeButtonType extends AbstractType
             'choices_tree' => $this->categoryTreeChoices,
             'choice_label' => 'name',
             'choice_value' => 'id_category',
+            'display_unselect_all' => true,
         ]);
     }
 
