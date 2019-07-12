@@ -137,8 +137,6 @@ class CurrencyTest extends TestCase
         );
     }
 
-    /**
-     */
     public function testGetSymbolsWithInvalidSymbolType()
     {
         $this->setExpectedException(LocalizationException::class);
