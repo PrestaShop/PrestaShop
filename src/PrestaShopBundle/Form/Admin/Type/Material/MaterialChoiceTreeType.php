@@ -50,6 +50,7 @@ class MaterialChoiceTreeType extends AbstractType
         $view->vars['choice_children'] = $options['choice_children'];
         $view->vars['disabled_values'] = $options['disabled_values'];
         $view->vars['selected_values'] = $selectedData;
+        $view->vars['display_unselect_all'] = $options['display_unselect_all'];
     }
 
     /**
@@ -67,6 +68,7 @@ class MaterialChoiceTreeType extends AbstractType
                 'disabled' => false,
                 'multiple' => false,
                 'compound' => false,
+                'display_unselect_all' => false,
             ])
             ->setAllowedTypes('choices_tree', 'array')
             ->setAllowedTypes('multiple', 'bool')
@@ -75,6 +77,7 @@ class MaterialChoiceTreeType extends AbstractType
             ->setAllowedTypes('choice_children', 'string')
             ->setAllowedTypes('disabled_values', 'array')
             ->setAllowedTypes('disabled', 'bool')
+            ->setAllowedTypes('display_unselect_all', 'bool')
             ->addAllowedValues('compound', false);
     }
 

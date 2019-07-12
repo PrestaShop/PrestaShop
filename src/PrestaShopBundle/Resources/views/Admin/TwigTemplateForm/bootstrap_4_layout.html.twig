@@ -801,7 +801,7 @@
       aria-haspopup="true"
       aria-expanded="false"
     >
-      {{ label }}
+      {{ label ? label : form.vars.label }}
     </button>
     <div class="dropdown-menu" aria-labelledby="{{ form.vars.id }}_container">
       {{ form_widget(form) }}
