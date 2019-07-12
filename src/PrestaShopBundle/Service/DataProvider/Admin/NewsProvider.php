@@ -24,20 +24,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-use Doctrine\Common\Cache\FilesystemCache;
-use GuzzleHttp\Message\Request;
-use GuzzleHttp\Subscriber\Cache\CacheStorage;
-use GuzzleHttp\Subscriber\Cache\CacheSubscriber;
-use PrestaShop\CircuitBreaker\AdvancedCircuitBreakerFactory;
-use PrestaShop\CircuitBreaker\Contract\FactoryInterface;
-use PrestaShop\CircuitBreaker\FactorySettings;
-use PrestaShop\CircuitBreaker\Storage\DoctrineCache;
+namespace PrestaShopBundle\Service\DataProvider\Admin;
 
-class NewsFetcherCore
+use PrestaShop\CircuitBreaker\Contract\CircuitBreakerInterface;
+use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShop\PrestaShop\Adapter\Country\CountryDataProvider;
+use PrestaShop\PrestaShop\Adapter\Tools;
+use PrestaShop\PrestaShop\Adapter\Validate;
+
+/**
+ * Provide the news from https://www.prestashop.com/blog/
+ */
+class NewsProvider
 {
     const NUM_ARTICLES = 2;
-
-    const CACHE_DURATION = 86400; // 24 hours
 
     const CLOSED_ALLOWED_FAILURES = 3;
     const CLOSED_TIMEOUT_SECONDS = 3;
@@ -46,57 +46,65 @@ class NewsFetcherCore
     const OPEN_TIMEOUT_SECONDS = 3;
     const OPEN_THRESHOLD_SECONDS = 86400; // 24 hours
 
-    /** @var array */
-    private $blogSettings;
-
-    /** @var FactoryInterface */
-    private $factory;
-
     /** @var string */
     private $isoCode;
 
     /**
-     * @param string $isoCode
+     * @var CircuitBreakerInterface
      */
+    private $circuitBreaker;
+
+    /**
+     * @var Configuration
+     */
+    private $configuration;
+
+    /**
+     * @var Validate
+     */
+    private $contextMode;
+
+    /**
+     * @var CountryDataProvider
+     */
+    private $countryDataProvider;
+
+    /**
+     * @var Tools
+     */
+    private $tools;
+
+    /**
+     * @var Validate
+     */
+    private $validate;
+
     public function __construct(
-        string $isoCode
+        CircuitBreakerInterface $circuitBreaker,
+        CountryDataProvider $countryDataProvider,
+        Tools $tools,
+        Configuration $configuration,
+        Validate $validate,
+        int $contextMode
     ) {
-        $this->isoCode = $isoCode;
-
-        // Doctrine cache used for Guzzle and CircuitBreaker storage
-        $doctrineCache = new FilesystemCache(_PS_CACHE_DIR_ . '/dashboard_news');
-
-        // Init Guzzle cache
-        $cacheStorage = new CacheStorage($doctrineCache, null, self::CACHE_DURATION);
-        $cacheSubscriber = new CacheSubscriber($cacheStorage, function (Request $request) { return true; });
-
-        // Init circuit breaker factory
-        $storage = new DoctrineCache($doctrineCache);
-        $this->blogSettings = new FactorySettings(self::CLOSED_ALLOWED_FAILURES, self::CLOSED_TIMEOUT_SECONDS, 0);
-        $this->blogSettings
-            ->setThreshold(self::OPEN_THRESHOLD_SECONDS)
-            ->setStrippedFailures(self::OPEN_ALLOWED_FAILURES)
-            ->setStrippedTimeout(self::OPEN_TIMEOUT_SECONDS)
-            ->setStorage($storage)
-            ->setClientOptions([
-                'method' => 'GET',
-                'subscribers' => [$cacheSubscriber],
-            ])
-        ;
-        $this->factory = new AdvancedCircuitBreakerFactory();
+        $this->circuitBreaker = $circuitBreaker;
+        $this->configuration = $configuration;
+        $this->contextMode = $contextMode;
+        $this->countryDataProvider = $countryDataProvider;
+        $this->tools = $tools;
+        $this->validate = $validate;
     }
 
     /**
      * @return array
      *
-     * @throws PrestaShopException
+     * @throws \PrestaShopException
      */
     public function getData()
     {
         $data = ['has_errors' => true, 'rss' => []];
 
-        $circuitBreaker = $this->factory->create($this->blogSettings);
-        $blogXMLResponse = $circuitBreaker->call(_PS_API_URL_ . '/rss/blog/blog-' . $this->isoCode . '.xml');
+        $blogXMLResponse = $this->circuitBreaker->call(_PS_API_URL_ . '/rss/blog/blog-' . $this->isoCode . '.xml');
 
         if (empty($blogXMLResponse)) {
             return $data;
@@ -109,8 +117,8 @@ class NewsFetcherCore
 
         $articles_limit = self::NUM_ARTICLES;
 
-        $shop_default_country_id = (int) Configuration::get('PS_COUNTRY_DEFAULT');
-        $shop_default_iso_country = (string) Tools::strtoupper(Country::getIsoById($shop_default_country_id));
+        $shop_default_country_id = (int) $this->configuration->get('PS_COUNTRY_DEFAULT');
+        $shop_default_iso_country = (string) $this->tools->strtoupper($this->countryDataProvider->getIsoCodebyId($shop_default_country_id));
         $analytics_params = [
             'utm_source' => 'back-office',
             'utm_medium' => 'rss',
@@ -119,13 +127,13 @@ class NewsFetcherCore
 
         foreach ($rss->channel->item as $item) {
             if ($articles_limit == 0
-                || !Validate::isCleanHtml((string) $item->title)
-                || !Validate::isCleanHtml((string) $item->description)
+                || !$this->validate->isCleanHtml((string) $item->title)
+                || !$this->validate->isCleanHtml((string) $item->description)
                 || !isset($item->link, $item->title)) {
                 break;
             }
             $analytics_params['utm_content'] = 'download';
-            if (in_array($this->context->mode, array(Context::MODE_HOST, Context::MODE_HOST_CONTRIB))) {
+            if (in_array($this->contextMode, array(\ContextCore::MODE_HOST, \ContextCore::MODE_HOST_CONTRIB))) {
                 $analytics_params['utm_content'] = 'cloud';
             }
             $article_link = (string) $item->link . '?' . http_build_query($analytics_params);
@@ -140,9 +148,9 @@ class NewsFetcherCore
             }
 
             $data['rss'][] = [
-                'date' => Tools::displayDate(date('Y-m-d', strtotime((string) $item->pubDate))),
-                'title' => (string) Tools::htmlentitiesUTF8($item->title),
-                'short_desc' => Tools::truncateString(strip_tags((string) $item->description), 150),
+                'date' => $this->tools->displayDate(date('Y-m-d', strtotime((string) $item->pubDate))),
+                'title' => (string) $this->tools->htmlentitiesUTF8($item->title),
+                'short_desc' => $this->tools->truncateString(strip_tags((string) $item->description), 150),
                 'link' => (string) $article_link,
             ];
             --$articles_limit;
@@ -150,5 +158,25 @@ class NewsFetcherCore
         $data['has_errors'] = false;
 
         return $data;
+    }
+
+    /**
+     * @return string
+     */
+    public function getIsoCode()
+    {
+        return $this->isoCode;
+    }
+
+    /**
+     * @param string $isoCode
+     *
+     * @return NewsProvider
+     */
+    public function setIsoCode($isoCode)
+    {
+        $this->isoCode = $isoCode;
+
+        return $this;
     }
 }
