@@ -78,7 +78,7 @@ class BestSalesControllerCore extends ProductListingFrontController
     {
         return $this->getTranslator()->trans('Best sellers', array(), 'Shop.Theme.Catalog');
     }
-    
+
     public function getBreadcrumbLinks()
     {
         $breadcrumb = parent::getBreadcrumbLinks();
