@@ -22,7 +22,7 @@ They should be named following this convention:
 
 \*office\*\_\*pagename\*
 
-For example, the order page in the BO should be named `BO_login`.
+For example, the login page in the BO should be named `BO_login`.
 
 It's *critical* that the page name allow us to find immediately what application page it refers to.
 
