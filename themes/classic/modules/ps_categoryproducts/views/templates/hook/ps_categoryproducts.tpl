@@ -30,9 +30,5 @@
       {l s='%s other products in the same category:' sprintf=[$products|@count] d='Shop.Theme.Catalog'}
     {/if}
   </h2>
-  <div class="products" itemscope itemtype="http://schema.org/ItemList">
-    {foreach from=$products item="product" key="position"}
-      {include file="catalog/_partials/miniatures/product.tpl" product=$product position=$position}
-    {/foreach}
-  </div>
+  {include file="catalog/_partials/productlist.tpl" products=$products}
 </section>
