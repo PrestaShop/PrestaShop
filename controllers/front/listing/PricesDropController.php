@@ -66,7 +66,7 @@ class PricesDropControllerCore extends ProductListingFrontController
             'Shop.Theme.Catalog'
         );
     }
-    
+
     public function getBreadcrumbLinks()
     {
         $breadcrumb = parent::getBreadcrumbLinks();
