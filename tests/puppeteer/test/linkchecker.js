@@ -1,14 +1,10 @@
 require('events').EventEmitter.defaultMaxListeners = Infinity;
 const puppeteer = require('puppeteer');
 const fs = require('fs');
+require('./utils/globals');
 
 const reportPath = './reports/';
 // maybe add tracing option : https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#class-tracing
-const URL_FO = process.env.URL_FO || 'http://localhost:8080/';
-const URL_BO = process.env.URL_BO || 'http://localhost:8080/admin-dev/';
-const EMAIL = process.env.LOGIN || 'demo@prestashop.com';
-const PASSWD = process.env.PASSWD || 'prestashop_demo';
-const HEADLESS = process.env.HEADLESS || true;
 const LOG_PASSED = process.env.LOG_PASSED || false;
 
 let responses = [];
