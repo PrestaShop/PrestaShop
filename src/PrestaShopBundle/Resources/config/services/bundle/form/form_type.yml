@@ -866,3 +866,19 @@ services:
             - '@=service("prestashop.core.form.choice_provider.mail_themes").getChoices()'
         tags:
             - { name: form.type }
+
+    form.type.integer_min_max_filter:
+        class: 'PrestaShopBundle\Form\Admin\Type\IntegerMinMaxFilterType'
+        public: true
+        calls:
+          - { method: setTranslator, arguments: ['@translator'] }
+        tags:
+          - { name: form.type }
+
+    form.type.number_min_max_filter:
+        class: 'PrestaShopBundle\Form\Admin\Type\NumberMinMaxFilterType'
+        public: true
+        calls:
+          - { method: setTranslator, arguments: ['@translator'] }
+        tags:
+          - { name: form.type }
