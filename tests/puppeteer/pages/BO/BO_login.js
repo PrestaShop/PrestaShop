@@ -28,8 +28,4 @@ module.exports = class BO_login extends Page {
     await global.page.waitForNavigation();
   }
 
-  async getPageTitle() {
-    return await global.page.title();
-  }
-
 };

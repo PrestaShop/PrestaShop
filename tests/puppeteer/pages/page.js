@@ -3,8 +3,8 @@ module.exports = class Page {
   constructor(page) {
   }
 
-  async getTitle() {
-    return this.page.title();
+  async getPageTitle() {
+    return global.page.title();
   }
 
   async goTo(URL) {
