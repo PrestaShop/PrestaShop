@@ -26,15 +26,13 @@ If you want to run the links checker test you can run the script **test/linkchec
 #### With default values
 
 ```bash
-cd test/
-node linkchecker.js
+npm run linkchecker
 ```
 
 #### With custom values
 
 ```bash
-cd test/
-URL_BO="Your_Shop_URL_BO" URL_FO="Your_Shop_URL_FO" LOGIN="Your_Login" PASSWD="Your_Password" node linkchecker.js
+URL_BO="Your_Shop_URL_BO" URL_FO="Your_Shop_URL_FO" LOGIN="Your_Login" PASSWD="Your_Password" npm run linkchecker
 ```
 
 #### Run with docker
