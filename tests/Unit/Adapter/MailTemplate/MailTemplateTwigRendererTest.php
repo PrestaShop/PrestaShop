@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateRendererInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\Transformation\TransformationCollectionInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\Transformation\TransformationInterface;
+use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use Symfony\Component\Templating\EngineInterface;
 
 class MailTemplateTwigRendererTest extends TestCase
@@ -63,7 +64,7 @@ class MailTemplateTwigRendererTest extends TestCase
 
     public function testFileNotFound()
     {
-        $this->setExpectedException(\PrestaShop\PrestaShop\Core\Exception\FileNotFoundException::class);
+        $this->setExpectedException(FileNotFoundException::class);
 
         $templatePaths = [
             MailTemplateInterface::HTML_TYPE => 'path/to/non_existent_template.html.twig',
