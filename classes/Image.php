@@ -595,6 +595,8 @@ class ImageCore extends ObjectModel
         $filesToDelete[] = $this->image_dir . $this->getExistingImgPath() . '-watermark.' . $this->image_format;
         // delete index.php
         $filesToDelete[] = $this->image_dir . $this->getImgFolder() . 'index.php';
+        // delete fileType
+        $filesToDelete[] = $this->image_dir . $this->getImgFolder() . 'fileType';
         // Delete tmp images
         $filesToDelete[] = _PS_TMP_IMG_DIR_ . 'product_' . $this->id_product . '.' . $this->image_format;
         $filesToDelete[] = _PS_TMP_IMG_DIR_ . 'product_mini_' . $this->id_product . '.' . $this->image_format;
