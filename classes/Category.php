@@ -121,8 +121,8 @@ class CategoryCore extends ObjectModel
                 'size' => 128,
                 'ws_modifier' => array(
                     'http_method' => WebserviceRequest::HTTP_POST,
-                    'modifier' => 'modifierWsLinkRewrite'
-                )
+                    'modifier' => 'modifierWsLinkRewrite',
+                ),
             ),
             'description' => array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'),
             'meta_title' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
