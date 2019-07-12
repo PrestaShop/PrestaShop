@@ -14,7 +14,6 @@ global.scenario = (name, tests, close = false) =>
     before(async () => {
       global.browser = await puppeteer.launch({
         headless: global.HEADLESS,
-        //slowMo: 100,
         timeout: 0,
         args: ['--start-maximized', '--window-size=1920,1040', '--no-sandbox']
       });
