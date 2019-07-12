@@ -793,7 +793,18 @@
 {% endblock %}
 
 {% block category_choice_tree_button_widget %}
-  <button>
-    hello world!
-  </button>
+  <div class="dropdown category-dropdown-button dropdown-clickable" id="{{ form.vars.id }}_container">
+    <button
+      class="btn btn-outline-secondary dropdown-toggle"
+      type="button"
+      data-toggle="dropdown"
+      aria-haspopup="true"
+      aria-expanded="false"
+    >
+      {{ label }}
+    </button>
+    <div class="dropdown-menu" aria-labelledby="{{ form.vars.id }}_container">
+      {{ form_widget(form) }}
+    </div>
+  </div>
 {% endblock %}
