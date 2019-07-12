@@ -29,6 +29,7 @@ const $ = window.$;
  * Handles UI interactions of choice tree
  */
 export default class ChoiceTree {
+
   /**
    * @param {String} treeSelector
    */
@@ -51,11 +52,14 @@ export default class ChoiceTree {
       enableAutoCheckChildren: () => this.enableAutoCheckChildren(),
       enableAllInputs: () => this.enableAllInputs(),
       disableAllInputs: () => this.disableAllInputs(),
+      enableInstantSubmit: () => this.enableInstantSubmit(),
     };
   }
 
   /**
    * Enable automatic check/uncheck of clicked item's children.
+   *
+   * @return {ChoiceTree}
    */
   enableAutoCheckChildren() {
     this.$container.on('change', 'input[type="checkbox"]', (event) => {
@@ -66,20 +70,44 @@ export default class ChoiceTree {
         .find('ul input[type="checkbox"]')
         .prop('checked', $clickedCheckbox.is(':checked'));
     });
+
+    return this;
+  }
+
+  /**
+   * If the tree is in form then it will trigger form submit if change input action is triggered.
+   *
+   * @return {ChoiceTree}
+   */
+  enableInstantSubmit() {
+    this.$container.on('change', '.js-input-wrapper input', (event) => {
+      const $input = $(event.currentTarget);
+      $input.closest('form').submit();
+    });
+
+    return this;
   }
 
   /**
    * Enable all inputs in the choice tree.
+   *
+   * @return {ChoiceTree}
    */
   enableAllInputs() {
     this.$container.find('input').removeAttr('disabled');
+
+    return this;
   }
 
   /**
    * Disable all inputs in the choice tree.
+   *
+   * @return {ChoiceTree}
    */
   disableAllInputs() {
     this.$container.find('input').attr('disabled', 'disabled');
+
+    return this;
   }
 
   /**
@@ -139,14 +167,14 @@ export default class ChoiceTree {
       icon: {
         expand: 'collapsed-icon',
         collapse: 'expanded-icon',
-      }
+      },
     };
 
     $parentContainer.find('li').each((index, item) => {
       const $item = $(item);
 
       if ($item.hasClass(config.removeClass[action])) {
-          $item.removeClass(config.removeClass[action])
+        $item.removeClass(config.removeClass[action])
             .addClass(config.addClass[action]);
       }
     });
