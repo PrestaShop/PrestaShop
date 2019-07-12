@@ -35,20 +35,12 @@ npm run linkchecker
 URL_BO="Your_Shop_URL_BO" URL_FO="Your_Shop_URL_FO" LOGIN="Your_Login" PASSWD="Your_Password" npm run linkchecker
 ```
 
-#### Run with docker
-
-```bash
-#Build image
-docker build -t puppeteer_linkchecker -f .docker/Dockerfile .
-#Run test
-docker run -e URL_BO="Your_Shop_URL_BO" -e URL_FO="Your_Shop_URL_FO" -e LOGIN="Your_Login" -e PASSWD="Your_Password" --network="host" puppeteer_linkchecker
-```
-
 #### Run with docker-compose
 
 ```bash
 #Create Shop and running test
 docker-compose up --build
+docker-compose exec -e COMMAND="linkchecker" tests bash /tmp/run-tests.sh
 ```
 
 Enjoy :wink: :v:
