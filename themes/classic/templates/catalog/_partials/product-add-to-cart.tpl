@@ -86,7 +86,7 @@
     {block name='product_contact_us'}
       <a
       role="button"
-      class="btn btn-primary btn-lg btn-block active"
+      class="btn btn-primary btn-lg active"
       href="{url entity='contact' params=['message' => {$page.meta.title}]}"
       aria-pressed="true"
       >
