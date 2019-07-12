@@ -125,6 +125,7 @@ class LocaleTest extends TestCase
      * Given an invalid number (not numeric)
      * When asking the locale to format it
      * Then an exception should be raised
+     *
      * For more formatting cases, @see \Tests\Unit\Core\Localization\Number\FormatterTest
      */
     public function testFormatNumberWithInvalidRawNumber()
