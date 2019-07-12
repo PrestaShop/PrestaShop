@@ -1,7 +1,10 @@
+//importing pages
 const BO_login = require('../../pages/BO/BO_login');
 
+//creating pages objects
 const BO_LOGIN = new BO_login();
 
+//test scenario
 scenario('should go to the BO', async () => {
   test('should open the BO login page', async () => {
     await BO_LOGIN.goTo(global.URL_BO);
