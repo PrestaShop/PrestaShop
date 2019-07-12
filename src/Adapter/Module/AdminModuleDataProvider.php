@@ -53,14 +53,9 @@ class AdminModuleDataProvider implements ModuleInterface
     const _DAY_IN_SECONDS_ = 86400; /* Cache for One Day */
 
     /**
-     * @var array of defined and callable module actions
+     * @const array giving a translation domain key for each module action
      */
-    protected $moduleActions = array('install', 'uninstall', 'enable', 'disable', 'enable_mobile', 'disable_mobile', 'reset', 'upgrade');
-
-    /**
-     * @var array giving a translation domain key for each module action
-     */
-    protected $actionsTranslationDomains = array(
+    const _ACTIONS_TRANSLATION_DOMAINS_ = array(
         'install' => 'Admin.Actions',
         'uninstall' => 'Admin.Actions',
         'enable' => 'Admin.Actions',
@@ -71,6 +66,11 @@ class AdminModuleDataProvider implements ModuleInterface
         'upgrade' => 'Admin.Actions',
         'configure' => 'Admin.Actions',
     );
+
+    /**
+     * @var array of defined and callable module actions
+     */
+    protected $moduleActions = array('install', 'uninstall', 'enable', 'disable', 'enable_mobile', 'disable_mobile', 'reset', 'upgrade');
 
     /**
      * @var int
@@ -346,7 +346,7 @@ class AdminModuleDataProvider implements ModuleInterface
 
             $urls = $this->filterAllowedActions($urls, $addon->attributes->get('name'));
             $addon->attributes->set('urls', $urls);
-            $addon->attributes->set('actionTranslationDomains', $this->actionsTranslationDomains);
+            $addon->attributes->set('actionTranslationDomains', self::_ACTIONS_TRANSLATION_DOMAINS_);
             if ($specific_action && array_key_exists($specific_action, $urls)) {
                 $addon->attributes->set('url_active', $specific_action);
             } elseif ($url_active === 'buy' || array_key_exists($url_active, $urls)) {
