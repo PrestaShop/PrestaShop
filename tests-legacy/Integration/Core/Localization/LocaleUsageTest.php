@@ -125,7 +125,7 @@ class LocaleUsageTest extends SymfonyIntegrationTestCase
             'France' => [
                 'localeCode' => 'fr-FR',
                 'rawNumber' => 1234568.12345,
-                'formattedNumber' => '1 234 568,123',
+                'formattedNumber' => '1 234 568,123',
             ],
             'India (Hindi)' => [
                 'localeCode' => 'hi-IN',
