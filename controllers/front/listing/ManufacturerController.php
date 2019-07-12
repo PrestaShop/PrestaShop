@@ -214,7 +214,7 @@ class ManufacturerControllerCore extends ProductListingFrontController
 
         return $breadcrumb;
     }
-    
+
     public function getBreadcrumbLinks()
     {
         $breadcrumb = parent::getBreadcrumbLinks();
