@@ -48,11 +48,21 @@ export default class ChoiceTree {
       this._toggleTree($action);
     });
 
+    this.$container.on('click', '.js-unselect-all', (event) => {
+      event.preventDefault();
+
+      const hasCheckedElement = this.$container.find('.js-input-wrapper input:checked').length > 0;
+
+      if (hasCheckedElement) {
+        this._unselectAll();
+      }
+    });
+
     return {
       enableAutoCheckChildren: () => this.enableAutoCheckChildren(),
       enableAllInputs: () => this.enableAllInputs(),
       disableAllInputs: () => this.disableAllInputs(),
-      enableInstantSubmit: () => this.enableInstantSubmit(),
+      enableRadioInputInstantSubmit: () => this.enableRadioInputInstantSubmit(),
     };
   }
 
@@ -79,11 +89,8 @@ export default class ChoiceTree {
    *
    * @return {ChoiceTree}
    */
-  enableInstantSubmit() {
-    this.$container.on('change', '.js-input-wrapper input', (event) => {
-      const $input = $(event.currentTarget);
-      $input.closest('form').submit();
-    });
+  enableRadioInputInstantSubmit() {
+    this.$container.on('change', '.js-input-wrapper input[type="radio"]', event => event.currentTarget.form.submit());
 
     return this;
   }
@@ -182,5 +189,13 @@ export default class ChoiceTree {
     $action.data('action', config.nextAction[action]);
     $action.find('.material-icons').text($action.data(config.icon[action]));
     $action.find('.js-toggle-text').text($action.data(config.text[action]));
+  }
+
+  /**
+   * Unselects all inputs.
+   * @private
+   */
+  _unselectAll() {
+    this.$container.find('.js-input-wrapper input').prop('checked', false);
   }
 }
