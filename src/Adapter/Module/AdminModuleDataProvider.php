@@ -58,6 +58,21 @@ class AdminModuleDataProvider implements ModuleInterface
     protected $moduleActions = array('install', 'uninstall', 'enable', 'disable', 'enable_mobile', 'disable_mobile', 'reset', 'upgrade');
 
     /**
+     * @var array giving a translation domain key for each module action
+     */
+    protected $actionsTranslationDomains = array(
+        'install' => 'Admin.Actions',
+        'uninstall' => 'Admin.Actions',
+        'enable' => 'Admin.Actions',
+        'disable' => 'Admin.Actions',
+        'enable_mobile' => 'Admin.Modules.Feature',
+        'disable_mobile' => 'Admin.Modules.Feature',
+        'reset' => 'Admin.Actions',
+        'upgrade' => 'Admin.Actions',
+        'configure' => 'Admin.Actions',
+    );
+
+    /**
      * @var int
      */
     private $languageISO;
@@ -331,6 +346,7 @@ class AdminModuleDataProvider implements ModuleInterface
 
             $urls = $this->filterAllowedActions($urls, $addon->attributes->get('name'));
             $addon->attributes->set('urls', $urls);
+            $addon->attributes->set('actionTranslationDomains', $this->actionsTranslationDomains);
             if ($specific_action && array_key_exists($specific_action, $urls)) {
                 $addon->attributes->set('url_active', $specific_action);
             } elseif ($url_active === 'buy' || array_key_exists($url_active, $urls)) {
