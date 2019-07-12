@@ -199,7 +199,7 @@ class SupplierControllerCore extends ProductListingFrontController
     {
         return $this->label;
     }
-    
+
     public function getBreadcrumbLinks()
     {
         $breadcrumb = parent::getBreadcrumbLinks();
