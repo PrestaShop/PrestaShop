@@ -286,7 +286,6 @@ class LocaleTest extends TestCase
      * Given a valid CLDR Locale object and an invalid numbering system
      * When asking for currency (price formatting) pattern of this system
      * Then an exception should be raised
-     *
      */
     public function testGetCurrencyPatternWithUnknownNumberingSystem()
     {
