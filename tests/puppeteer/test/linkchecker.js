@@ -128,7 +128,7 @@ const run = async () => {
   const curDate = new Date();
 
   const filename = `report_${curDate.toJSON().slice(0, 10)}_${curDate.getHours()}${curDate.getMinutes()}${curDate.getSeconds()}.json`;
-  // Create folder reports in not exist
+  // Create folder reports if not exist
   if (!fs.existsSync(reportPath)) {
     fs.mkdirSync(reportPath);
   }
