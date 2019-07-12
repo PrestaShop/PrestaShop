@@ -193,7 +193,6 @@ class LocaleTest extends TestCase
      * Given a valid CLDR Locale object and an invalid numbering system
      * When asking for the number symbols of this system
      * Then an exception should be raised
-     *
      */
     public function testGetNumberSymbolsByNumberingSystemWithUnknownNumberingSystem()
     {
