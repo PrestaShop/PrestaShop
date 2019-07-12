@@ -22,7 +22,7 @@
   "bugs": {
     "url": "https://github.com/PrestaShop/PrestaShop/issues"
   },
-  "homepage": "https://github.com/PrestaShop/PrestaShop#readme",
+  "homepage": "https://github.com/PrestaShop/PrestaShop/tree/develop/tests/puppeteer#readme",
   "dependencies": {
     "chai": "^4.2.0",
     "chai-string": "^1.5.0",
