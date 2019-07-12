@@ -126,7 +126,6 @@ class LocaleTest extends TestCase
      * When asking the locale to format it
      * Then an exception should be raised
      * For more formatting cases, @see \Tests\Unit\Core\Localization\Number\FormatterTest
-     *
      */
     public function testFormatNumberWithInvalidRawNumber()
     {
@@ -211,7 +210,6 @@ class LocaleTest extends TestCase
      *  Potentially invalid currency
      *
      * @dataProvider provideInvalidPriceData
-     *
      */
     public function testFormatNumberWithInvalidPriceData($number, $currency)
     {
