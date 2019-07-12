@@ -1544,7 +1544,7 @@ function checkLangPack(token){
 
 function redirect(new_page) { window.location = new_page; }
 
-function saveCustomerNote(){
+function saveCustomerNote() {
   var $customerNoteForm = $('#customer_note');
 	var noteContent = $('#noteContent').val();
 
@@ -1553,7 +1553,7 @@ function saveCustomerNote(){
 		url: $customerNoteForm.attr('action'),
 		data: {
 		  'private_note': {
-		    'note': encodeURIComponent(noteContent)
+		    'note': noteContent
       }
     },
 		async : true,
