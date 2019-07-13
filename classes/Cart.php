@@ -3253,7 +3253,7 @@ class CartCore extends ObjectModel
         if (null === $delivery_option) {
             $delivery_option = $this->getDeliveryOption($default_country, false, false);
         }
-        $delivery_option_list = $this->getDeliveryOptionList($default_country)
+        $delivery_option_list = $this->getDeliveryOptionList($default_country);
         $_total_shipping = 0.0;
 
         foreach ($delivery_option as $id_address => $key) {
