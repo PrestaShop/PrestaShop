@@ -31,6 +31,7 @@ use Order;
 use PDF;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\PDF\PDFGeneratorInterface;
+use RuntimeException;
 use Symfony\Component\Translation\TranslatorInterface;
 use Validate;
 
@@ -69,7 +70,7 @@ final class DeliverySlipPdfGenerator implements PDFGeneratorInterface
         $order = new Order((int) $orderId);
 
         if (!Validate::isLoadedObject($order)) {
-            die($this->translator->trans(
+            throw new RuntimeException($this->translator->trans(
                 'The order cannot be found within your database.',
                 [],
                 'Admin.Orderscustomers.Notification'

@@ -243,7 +243,7 @@ services:
         - '@prestashop.core.grid.query_builder.order'
         - '@prestashop.core.hook.dispatcher'
         - '@prestashop.core.grid.query.doctrine_query_parser'
-        - '!php/const PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderGridDefinitionFactory::GRID_ID'
+        - 'order'
 
     prestashop.core.grid.data.factory.order_decorator:
       class: 'PrestaShop\PrestaShop\Core\Grid\Data\Factory\OrderGridDataFactory'

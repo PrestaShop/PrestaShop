@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
+use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\BulkChangeOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\ChangeOrderStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
@@ -109,7 +110,7 @@ class OrderController extends FrameworkBundleAdminController
 
         // When using legacy generator,
         // we want to be sure that displaying PDF is the last thing this controller will do
-        die;
+        die();
     }
 
     /**
@@ -125,7 +126,7 @@ class OrderController extends FrameworkBundleAdminController
 
         // When using legacy generator,
         // we want to be sure that displaying PDF is the last thing this controller will do
-        die;
+        die();
     }
 
     /**
@@ -150,7 +151,7 @@ class OrderController extends FrameworkBundleAdminController
             $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
         } catch (ChangeOrderStatusException $e) {
             $this->handleChangeOrderStatusException($e);
-        } catch (OrderException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
