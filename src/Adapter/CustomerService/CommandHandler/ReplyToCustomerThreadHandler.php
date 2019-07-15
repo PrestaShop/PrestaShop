@@ -77,12 +77,12 @@ final class ReplyToCustomerThreadHandler implements ReplyToCustomerThreadHandler
 
         ShopUrl::cacheMainDomainForShop((int) $customerThread->id_shop);
 
-        $this->createCustomerMessage(
+        $customerMessage = $this->createCustomerMessage(
             $customerThread,
             $command->getReplyMessage()
         );
 
-        $replyWasSent = $this->sendReplyEmail($customerThread, $command);
+        $replyWasSent = $this->sendReplyEmail($customerThread, $customerMessage);
 
         if ($replyWasSent) {
             $customerThread->status = CustomerThreadStatus::CLOSED;
@@ -117,16 +117,16 @@ final class ReplyToCustomerThreadHandler implements ReplyToCustomerThreadHandler
 
     /**
      * @param CustomerThread $customerThread
-     * @param ReplyToCustomerThreadCommand $command
+     * @param CustomerMessage $customerMessage
      *
      * @return bool
      */
-    private function sendReplyEmail(CustomerThread $customerThread, ReplyToCustomerThreadCommand $command)
+    private function sendReplyEmail(CustomerThread $customerThread, CustomerMessage $customerMessage)
     {
         $customer = new Customer($customerThread->id_customer);
 
         $params = [
-            '{reply}' => Tools::nl2br($command->getReplyMessage()),
+            '{reply}' => Tools::nl2br($customerMessage->message),
             '{link}' => Tools::url(
                 $this->context->link->getPageLink('contact', true, null, null, false, $customerThread->id_shop),
                 'id_customer_thread=' . (int) $customerThread->id . '&token=' . $customerThread->token

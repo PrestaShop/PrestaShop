@@ -54,7 +54,9 @@ class CustomerThreadController extends FrameworkBundleAdminController
     public function viewAction(Request $request, $customerThreadId)
     {
         /** @var CustomerThreadView $customerThreadView */
-        $customerThreadView = $this->getQueryBus()->handle(new GetCustomerThreadForViewing((int) $customerThreadId));
+        $customerThreadView = $this->getQueryBus()->handle(
+            new GetCustomerThreadForViewing((int) $customerThreadId)
+        );
 
         /** @var string $customerServiceSignature */
         $customerServiceSignature = $this->getQueryBus()->handle(
