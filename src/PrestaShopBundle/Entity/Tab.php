@@ -69,9 +69,16 @@ class Tab
     /**
      * @var string
      *
-     * @ORM\Column(name="class_name", type="string", length=64, nullable=true)
+     * @ORM\Column(name="class_name", type="string", length=64)
      */
     private $className;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="route_name", type="string", length=256, nullable=true)
+     */
+    private $routeName;
 
     /**
      * @var bool
@@ -154,6 +161,26 @@ class Tab
     public function setActive($active)
     {
         $this->active = $active;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRouteName()
+    {
+        return $this->routeName;
+    }
+
+    /**
+     * @param string $routeName
+     *
+     * @return Tab
+     */
+    public function setRouteName($routeName)
+    {
+        $this->routeName = $routeName;
 
         return $this;
     }
