@@ -100,6 +100,9 @@ class CategoryFeatureContext extends AbstractPrestaShopFeatureContext
         $propertiesKey = sprintf('%s_properties', $reference);
         $properties = SharedStorage::getStorage()->getWithDefault($propertiesKey, []);
 
+        // Test database is loaded with fixtures
+        // which have 3 customer groups
+        // that are defined below
         $groupsMap = [
             'Visitor' => 1,
             'Guest' => 2,
