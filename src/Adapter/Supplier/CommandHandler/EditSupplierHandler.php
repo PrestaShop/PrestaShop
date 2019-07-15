@@ -56,9 +56,6 @@ final class EditSupplierHandler extends AbstractSupplierHandler implements EditS
         try {
             $this->validateFields($supplier, $address);
 
-            if (null !== $command->getAssociatedShops()) {
-                $this->associateWithShops($supplier, $command->getAssociatedShops());
-            }
             if (false === $supplier->update()) {
                 throw new SupplierException(
                     sprintf('Cannot update supplier with id "%s"', $supplier->id)
@@ -68,6 +65,9 @@ final class EditSupplierHandler extends AbstractSupplierHandler implements EditS
                 throw new SupplierException(
                     sprintf('Cannot update supplier address with id "%s"', $address->id)
                 );
+            }
+            if (null !== $command->getAssociatedShops()) {
+                $this->associateWithShops($supplier, $command->getAssociatedShops());
             }
         } catch (PrestaShopException $e) {
             throw new SupplierException(
