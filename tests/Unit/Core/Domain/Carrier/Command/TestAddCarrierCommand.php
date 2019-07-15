@@ -29,8 +29,8 @@ namespace Tests\Unit\Core\Domain\Carrier\Command;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Command\AddCarrierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\OutOfRangeBehavior;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\ShippingMethod;
-use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\ShippingRange;
 
 class TestAddCarrierCommand extends TestCase
 {
@@ -79,7 +79,7 @@ class TestAddCarrierCommand extends TestCase
             'shipping_cost_included' => true,
             'shipping_method' => ShippingMethod::SHIPPING_METHOD_PRICE,
             'tax_rules_group' => 1,
-            'out_of_range_behavior' => ShippingRange::WHEN_OUT_OF_RANGE_APPLY_HIGHEST,
+            'out_of_range_behavior' => OutOfRangeBehavior::APPLY_HIGHEST_RANGE,
             'shipping_ranges' => [
                 [
                     'from' => 1,

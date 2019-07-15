@@ -34,16 +34,6 @@ use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierConstraintExcepti
 final class ShippingRange
 {
     /**
-     * When out of range, the shipping costs applies according to to highest defined range
-     */
-    const WHEN_OUT_OF_RANGE_APPLY_HIGHEST = 1;
-
-    /**
-     * When out of range, the carrier is disabled
-     */
-    const WHEN_OUT_OF_RANGE_DISABLE_CARRIER = 0;
-
-    /**
      * @var int
      */
     private $from;
