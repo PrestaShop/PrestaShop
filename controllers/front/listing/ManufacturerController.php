@@ -71,7 +71,7 @@ class ManufacturerControllerCore extends ProductListingFrontController
      */
     public function initContent()
     {
-        if (Configuration::get('PS_DISPLAY_SUPPLIERS')) {
+        if (Configuration::get('PS_DISPLAY_MANUFACTURERS')) {
             parent::initContent();
 
             if (Validate::isLoadedObject($this->manufacturer) && $this->manufacturer->active && $this->manufacturer->isAssociatedToShop()) {
