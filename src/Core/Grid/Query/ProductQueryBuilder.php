@@ -179,7 +179,7 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
 
             $qb->setParameter('id_shop_group', $this->contextShopGroupId);
         }
-        //todo: eq state
+
         $sqlFilters = new SqlFilters();
         $sqlFilters->addFilter(
             'id_product',
