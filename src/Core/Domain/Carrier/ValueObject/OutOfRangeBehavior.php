@@ -83,8 +83,9 @@ final class OutOfRangeBehavior
             throw new CarrierConstraintException(sprintf(
                 'Invalid out of range behavior value "%s". Defined values are: %s',
                 $value,
-                implode(', ', $definedValues)
-            ));
+                implode(', ', $definedValues)),
+                CarrierConstraintException::INVALID_OUT_OF_RANGE_BEHAVIOR
+            );
         }
     }
 }
