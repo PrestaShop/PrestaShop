@@ -120,7 +120,6 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
             'reference',
             'category',
             'active',
-            'id_product',
         ];
 
         $qb = $this->connection
@@ -181,11 +180,18 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
         }
 
         $sqlFilters = new SqlFilters();
-        $sqlFilters->addFilter(
+        $sqlFilters
+            ->addFilter(
             'id_product',
             'p.`id_product`',
             SqlFilters::MIN_MAX
-        );
+            )
+            ->addFilter(
+                'price_tax_excluded',
+                'ps.`price`',
+                SqlFilters::MIN_MAX
+            )
+        ;
 
         $this->filterApplicator->apply($qb, $sqlFilters, $filterValues);
 

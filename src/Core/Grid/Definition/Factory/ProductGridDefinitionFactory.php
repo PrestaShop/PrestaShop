@@ -23,6 +23,7 @@ use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Form\Admin\Type\IntegerMinMaxFilterType;
+use PrestaShopBundle\Form\Admin\Type\NumberMinMaxFilterType;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -258,6 +259,13 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                         ],
                     ])
                     ->setAssociatedColumn('category')
+            )
+            ->add(
+                (new Filter('price_tax_excluded', NumberMinMaxFilterType::class))
+                    ->setTypeOptions([
+                        'required' => false,
+                    ])
+                    ->setAssociatedColumn('price_tax_excluded')
             )
             ->add((new Filter('active', YesAndNoChoiceType::class))
                 ->setAssociatedColumn('active')
