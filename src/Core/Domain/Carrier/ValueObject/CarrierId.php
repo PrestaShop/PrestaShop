@@ -24,55 +24,51 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Carrier\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject;
+
+use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierConstraintException;
 
 /**
- * Is thrown when carrier constraints are violated
+ * Provides valid carrier identification data
  */
-class CarrierConstraintException extends CarrierException
+final class CarrierId
 {
     /**
-     * When carrier id constraints are violated
+     * @var int
      */
-    const INVALID_CARRIER_ID = 1;
+    private $value;
 
     /**
-     * When carrier name constraints are violated
+     * @param int $value
+     *
+     * @throws CarrierConstraintException
      */
-    const INVALID_CARRIER_NAME = 2;
+    public function __construct(int $value)
+    {
+        $this->assertIsIntegerGreaterThanZero($value);
+        $this->value = $value;
+    }
 
     /**
-     * When carrier shipping delay constraints are violated
+     * @return int
      */
-    const INVALID_SHIPPING_DELAY = 3;
+    public function getValue(): int
+    {
+        return $this->value;
+    }
 
     /**
-     * When carrier shipping method value is invalid
+     * @param $value
+     *
+     * @throws CarrierConstraintException
      */
-    const INVALID_SHIPPING_METHOD = 4;
-
-    /**
-     * When shipping range contains invalid values
-     */
-    const INVALID_SHIPPING_RANGE = 5;
-
-    /**
-     * When carrier package size measure contains invalid value
-     */
-    const INVALID_PACKAGE_MEASURE = 6;
-
-    /**
-     * When carrier speed grade contains invalid value
-     */
-    const INVALID_SPEED_GRADE = 7;
-
-    /**
-     * When carrier tracking url constraints are violated
-     */
-    const INVALID_TRACKING_URL = 8;
-
-    /**
-     * When out of range behavior value is invalid
-     */
-    const INVALID_OUT_OF_RANGE_BEHAVIOR = 9;
+    private function assertIsIntegerGreaterThanZero(int $value)
+    {
+        if (0 >= $value) {
+            throw new CarrierConstraintException(
+                sprintf('Invalid carrier id "%s".', $value),
+                CarrierConstraintException::INVALID_CARRIER_ID
+            );
+        }
+    }
 }
