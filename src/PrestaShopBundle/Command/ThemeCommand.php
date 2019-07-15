@@ -36,6 +36,9 @@ use Employee;
 use Shop;
 use Validate;
 
+/**
+ * Class ThemeCommand run command actions in CLI
+ */
 class ThemeCommand extends ContainerAwareCommand
 {
     private $allowedActions = array(
