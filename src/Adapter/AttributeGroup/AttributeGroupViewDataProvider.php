@@ -61,7 +61,7 @@ final class AttributeGroupViewDataProvider
     {
         $attributeGroup = $this->getAttributeGroupById($attributeGroupId);
 
-        return $attributeGroup->is_color_group;
+        return (bool) $attributeGroup->is_color_group;
     }
 
     /**
