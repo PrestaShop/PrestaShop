@@ -39,7 +39,6 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
      */
     public function addCategoryWithSpecifiedProperties($reference)
     {
-
         $properties = SharedStorage::getStorage()->get(sprintf('%s_properties', $reference));
         $defaultLanguageId = Configuration::get('PS_LANG_DEFAULT');
 
