@@ -156,7 +156,7 @@ class ThemeManager implements AddonManagerInterface
      *
      * @param string $name
      * @param string $version the version you want to up upgrade to
-     * @param string $source  if the upgrade is not coming from addons, you need to specify the path to the zipball
+     * @param string $source if the upgrade is not coming from addons, you need to specify the path to the zipball
      *
      * @return bool true for success
      */
@@ -171,8 +171,8 @@ class ThemeManager implements AddonManagerInterface
      *    - update configuration
      *    - enable/disable modules.
      *
-     * @param string $name  The theme name to enable
-     * @param bool   $force bypass user privilege checks
+     * @param string $name The theme name to enable
+     * @param bool $force bypass user privilege checks
      *
      * @return bool True for success
      */
@@ -541,7 +541,7 @@ class ThemeManager implements AddonManagerInterface
     /**
      * Get all default domain from catalog.
      *
-     * @param string                                               $locale
+     * @param string $locale
      * @param \PrestaShopBundle\Translation\Provider\ThemeProvider $themeProvider
      *
      * @return array
@@ -575,12 +575,12 @@ class ThemeManager implements AddonManagerInterface
     }
 
     /**
-     * @param TranslationService            $translationService
-     * @param MessageCatalogue              $messageCatalog
-     * @param array                         $allDomains
+     * @param TranslationService $translationService
+     * @param MessageCatalogue $messageCatalog
+     * @param array $allDomains
      * @param \PrestaShopBundle\Entity\Lang $lang
-     * @param string                        $locale
-     * @param string                        $themeName
+     * @param string $locale
+     * @param string $themeName
      */
     private function handleImport(TranslationService $translationService, MessageCatalogue $messageCatalog, $allDomains, $lang, $locale, $themeName)
     {
