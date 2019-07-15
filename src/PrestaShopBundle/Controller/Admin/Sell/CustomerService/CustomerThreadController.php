@@ -26,13 +26,13 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\CustomerService;
 
+use Exception;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\ForwardCustomerThreadCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\ReplyToCustomerThreadCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\UpdateCustomerThreadStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerServiceSignature;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerThreadForViewing;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerThreadView;
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\CustomerService\CustomerThread\ForwardCustomerThreadType;
 use PrestaShopBundle\Form\Admin\Sell\CustomerService\ReplyToCustomerThreadType;
@@ -137,7 +137,7 @@ class CustomerThreadController extends FrameworkBundleAdminController
                     'Admin.Orderscustomers.Notification'
                 )
             );
-        } catch (DomainException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, []));
         }
 
@@ -171,7 +171,7 @@ class CustomerThreadController extends FrameworkBundleAdminController
                 'success',
                 $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
             );
-        } catch (DomainException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, []));
         }
 
@@ -241,7 +241,7 @@ class CustomerThreadController extends FrameworkBundleAdminController
             $this->getCommandBus()->handle($command);
 
             $this->addFlash('success', $this->trans('Message forwarded to', 'Admin.Catalog.Feature'));
-        } catch (DomainException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, []));
         }
 
