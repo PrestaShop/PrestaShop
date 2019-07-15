@@ -222,7 +222,7 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getFilters()
     {
-        return (new FilterCollection())
+        $filters = (new FilterCollection())
             ->add(
                 (new Filter('id_product', IntegerMinMaxFilterType::class))
                     ->setTypeOptions([
@@ -283,6 +283,20 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setAssociatedColumn('actions')
             )
         ;
+
+        if ($this->isStockManagementEnabled) {
+            $filters
+                ->add(
+                    (new Filter('quantity', IntegerMinMaxFilterType::class))
+                        ->setTypeOptions([
+                            'required' => false,
+                        ])
+                        ->setAssociatedColumn('quantity')
+                )
+            ;
+        }
+
+        return $filters;
     }
 
     /**
