@@ -193,6 +193,16 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
             )
         ;
 
+        if ($this->isStockManagementEnabled) {
+            $sqlFilters
+                ->addFilter(
+                    'quantity',
+                    'sa.`quantity`',
+                    SqlFilters::MIN_MAX
+                )
+            ;
+        }
+
         $this->filterApplicator->apply($qb, $sqlFilters, $filterValues);
 
         $qb->setParameter('id_shop', $this->contextShopId);
