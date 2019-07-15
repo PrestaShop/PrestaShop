@@ -199,12 +199,12 @@ final class ForwardCustomerThreadHandler implements ForwardCustomerThreadHandler
     }
 
     /**
-     * @param $message
-     * @param null $id_employee
+     * @param array $message
+     * @param int|null $id_employee
      *
      * @return string
      */
-    protected function renderMessage($message, $id_employee = null)
+    protected function renderMessage(array $message, $id_employee = null)
     {
         $tpl = $this->context->smarty->createTemplate(
             $this->context->smarty->getTemplateDir(0) . 'message.tpl',
@@ -234,15 +234,7 @@ final class ForwardCustomerThreadHandler implements ForwardCustomerThreadHandler
 
         $message['date_add'] = Tools::displayDate($message['date_add'], null, true);
         $message['user_agent'] = strip_tags($message['user_agent']);
-        $message['message'] = preg_replace(
-            '/(https?:\/\/[a-z0-9#%&_=\(\)\.\? \+\-@\/]{6,1000})([\s\n<])/Uui',
-            '<a href="\1">\1</a>\2',
-            html_entity_decode(
-                $message['message'],
-                ENT_QUOTES,
-                'UTF-8'
-            )
-        );
+        $message['message'] = $this->replaceUrlsWithTags($message['message']);
 
         $isValidOrderId = true;
         $order = new Order((int) $message['id_order']);
@@ -317,5 +309,25 @@ final class ForwardCustomerThreadHandler implements ForwardCustomerThreadHandler
         }
 
         return $customerMessage;
+    }
+
+    /**
+     * Replaces URLs with <a> tags in string.
+     *
+     * @param string $text
+     *
+     * @return string
+     */
+    private function replaceUrlsWithTags($text)
+    {
+        return preg_replace(
+            '/(https?:\/\/[a-z0-9#%&_=\(\)\.\? \+\-@\/]{6,1000})([\s\n<])/Uui',
+            '<a href="\1">\1</a>\2',
+            html_entity_decode(
+                $text,
+                ENT_QUOTES,
+                'UTF-8'
+            )
+        );
     }
 }
