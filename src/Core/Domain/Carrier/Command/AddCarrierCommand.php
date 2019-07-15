@@ -28,8 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Carrier\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierName;
-use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\PackageSizeMeasure;
-use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\PackageWeightMeasure;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\OutOfRangeBehavior;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\ShippingDelay;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\ShippingMethod;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\ShippingRange;
@@ -83,27 +82,27 @@ final class AddCarrierCommand
     private $taxRulesGroupId;
 
     /**
-     * @var int
+     * @var OutOfRangeBehavior
      */
     private $outOfRangeBehavior;
 
     /**
-     * @var PackageSizeMeasure
+     * @var int
      */
     private $maxPackageWidth;
 
     /**
-     * @var PackageSizeMeasure
+     * @var int
      */
     private $maxPackageHeight;
 
     /**
-     * @var PackageSizeMeasure
+     * @var int
      */
     private $maxPackageDepth;
 
     /**
-     * @var PackageWeightMeasure
+     * @var float
      */
     private $maxPackageWeight;
 
@@ -144,7 +143,7 @@ final class AddCarrierCommand
         $shippingCostIncluded,
         $shippingMethod,
         $taxRulesGroupId,
-        $outOfRangeBehavior,
+        int $outOfRangeBehavior,
         array $shippingRanges,
         int $maxPackageWidth,
         int $maxPackageHeight,
@@ -153,7 +152,6 @@ final class AddCarrierCommand
         array $associatedGroupIds,
         array $associatedShopIds
     ) {
-        $this->assertOutOfRangeBehaviorValueIsValid($outOfRangeBehavior);
         $this->setLocalizedCarrierNames($localizedCarrierNames);
         $this->setLocalizedShippingDelays($localizedShippingDelays);
         $this->setMeasures($maxPackageWidth, $maxPackageHeight, $maxPackageDepth, $maxPackageWeight);
@@ -161,9 +159,9 @@ final class AddCarrierCommand
         $this->speedGrade = new SpeedGrade($speedGrade);
         $this->shippingMethod = new ShippingMethod($shippingMethod);
         $this->trackingUrl = new TrackingUrl($trackingUrl);
-        $this->outOfRangeBehavior = $outOfRangeBehavior;
-        $this->shippingCostIncluded = $shippingCostIncluded;
+        $this->outOfRangeBehavior = new OutOfRangeBehavior($outOfRangeBehavior);
         $this->taxRulesGroupId = $taxRulesGroupId;
+        $this->shippingCostIncluded = $shippingCostIncluded;
         $this->associatedGroupIds = $associatedGroupIds;
         $this->associatedShopIds = $associatedShopIds;
     }
@@ -171,7 +169,7 @@ final class AddCarrierCommand
     /**
      * @return CarrierName[]
      */
-    public function getLocalizedCarrierNames()
+    public function getLocalizedCarrierNames(): array
     {
         return $this->localizedCarrierNames;
     }
@@ -179,7 +177,7 @@ final class AddCarrierCommand
     /**
      * @return ShippingDelay[]
      */
-    public function getLocalizedShippingDelays()
+    public function getLocalizedShippingDelays(): array
     {
         return $this->localizedShippingDelays;
     }
@@ -187,7 +185,7 @@ final class AddCarrierCommand
     /**
      * @return SpeedGrade
      */
-    public function getSpeedGrade()
+    public function getSpeedGrade(): SpeedGrade
     {
         return $this->speedGrade;
     }
@@ -195,7 +193,7 @@ final class AddCarrierCommand
     /**
      * @return TrackingUrl
      */
-    public function getTrackingUrl()
+    public function getTrackingUrl(): TrackingUrl
     {
         return $this->trackingUrl;
     }
@@ -203,7 +201,7 @@ final class AddCarrierCommand
     /**
      * @return bool
      */
-    public function isShippingCostIncluded()
+    public function isShippingCostIncluded(): bool
     {
         return $this->shippingCostIncluded;
     }
@@ -211,7 +209,7 @@ final class AddCarrierCommand
     /**
      * @return ShippingMethod
      */
-    public function getShippingMethod()
+    public function getShippingMethod(): ShippingMethod
     {
         return $this->shippingMethod;
     }
@@ -219,7 +217,7 @@ final class AddCarrierCommand
     /**
      * @return ShippingRange[]
      */
-    public function getShippingRanges()
+    public function getShippingRanges(): array
     {
         return $this->shippingRanges;
     }
@@ -227,47 +225,47 @@ final class AddCarrierCommand
     /**
      * @return int
      */
-    public function getTaxRulesGroupId()
+    public function getTaxRulesGroupId(): int
     {
         return $this->taxRulesGroupId;
     }
 
     /**
-     * @return int
+     * @return OutOfRangeBehavior
      */
-    public function getOutOfRangeBehavior()
+    public function getOutOfRangeBehavior(): OutOfRangeBehavior
     {
         return $this->outOfRangeBehavior;
     }
 
     /**
-     * @return PackageSizeMeasure
+     * @return int
      */
-    public function getMaxPackageWidth()
+    public function getMaxPackageWidth(): int
     {
         return $this->maxPackageWidth;
     }
 
     /**
-     * @return PackageSizeMeasure
+     * @return int
      */
-    public function getMaxPackageHeight()
+    public function getMaxPackageHeight(): int
     {
         return $this->maxPackageHeight;
     }
 
     /**
-     * @return PackageSizeMeasure
+     * @return int
      */
-    public function getMaxPackageDepth()
+    public function getMaxPackageDepth(): int
     {
         return $this->maxPackageDepth;
     }
 
     /**
-     * @return PackageWeightMeasure
+     * @return float
      */
-    public function getMaxPackageWeight()
+    public function getMaxPackageWeight(): float
     {
         return $this->maxPackageWeight;
     }
@@ -275,7 +273,7 @@ final class AddCarrierCommand
     /**
      * @return int[]
      */
-    public function getAssociatedGroupIds()
+    public function getAssociatedGroupIds(): array
     {
         return $this->associatedGroupIds;
     }
@@ -283,7 +281,7 @@ final class AddCarrierCommand
     /**
      * @return int[]
      */
-    public function getAssociatedShopIds()
+    public function getAssociatedShopIds(): array
     {
         return $this->associatedShopIds;
     }
@@ -342,27 +340,6 @@ final class AddCarrierCommand
         $this->maxPackageHeight = $height;
         $this->maxPackageDepth = $depth;
         $this->maxPackageWeight = $weight;
-    }
-
-    /**
-     * @param int $value
-     *
-     * @throws CarrierConstraintException
-     */
-    private function assertOutOfRangeBehaviorValueIsValid($value)
-    {
-        $definedValues = [
-            ShippingRange::WHEN_OUT_OF_RANGE_APPLY_HIGHEST,
-            ShippingRange::WHEN_OUT_OF_RANGE_DISABLE_CARRIER,
-        ];
-
-        if (!in_array($value, $definedValues, true)) {
-            throw new CarrierConstraintException(sprintf(
-                'Invalid out of range behavior value "%s". Defined values are: %s',
-                var_export($value, true),
-                implode(', ', $definedValues)
-            ));
-        }
     }
 
     /**
