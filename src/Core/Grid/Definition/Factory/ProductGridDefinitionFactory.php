@@ -22,6 +22,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use PrestaShopBundle\Form\Admin\Type\IntegerMinMaxFilterType;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -221,6 +222,13 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
     protected function getFilters()
     {
         return (new FilterCollection())
+            ->add(
+                (new Filter('id_product', IntegerMinMaxFilterType::class))
+                    ->setTypeOptions([
+                        'required' => false,
+                    ])
+                ->setAssociatedColumn('id_product')
+            )
             ->add(
                 (new Filter('name', TextType::class))
                     ->setTypeOptions([
