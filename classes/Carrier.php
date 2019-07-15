@@ -148,7 +148,7 @@ class CarrierCore extends ObjectModel
 
             /* Lang fields */
             'delay' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 512),
-            'localized_name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCarrierName', 'required' => false, 'size' => 64]
+            'localized_name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCarrierName', 'required' => false, 'size' => 64],
         ),
     );
 
