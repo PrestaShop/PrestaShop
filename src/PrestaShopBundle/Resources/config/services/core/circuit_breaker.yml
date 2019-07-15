@@ -1,5 +1,8 @@
 # circuit_breaker.yml
 services:
+  _defaults:
+    public: true
+
   prestashop.core.circuit_breaker.doctrine_cache:
     class: Doctrine\Common\Cache\FilesystemCache
     arguments:

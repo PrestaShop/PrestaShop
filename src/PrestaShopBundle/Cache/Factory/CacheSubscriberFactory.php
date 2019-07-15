@@ -31,8 +31,16 @@ use GuzzleHttp\Message\Request;
 use GuzzleHttp\Subscriber\Cache\CacheStorageInterface;
 use GuzzleHttp\Subscriber\Cache\CacheSubscriber;
 
-class CacheSubscriberFactory
+/**
+ * Instanciate a CacheSubscriber for Guzzle
+ */
+final class CacheSubscriberFactory
 {
+    /**
+     * @param CacheStorageInterface $storage
+     *
+     * @return CacheSubscriber
+     */
     public function create(CacheStorageInterface $storage)
     {
         return new CacheSubscriber($storage, function (Request $request) { return true; });

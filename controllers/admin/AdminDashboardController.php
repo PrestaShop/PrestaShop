@@ -448,9 +448,8 @@ class AdminDashboardControllerCore extends AdminController
 
     public function ajaxProcessGetBlogRss()
     {
-        $newsFetcher = $this->get('prestashop.core.news.provider');
-        $newsFetcher->setIsoCode($this->context->language->iso_code);
-        $return = $newsFetcher->getData();
+        $newsFetcher = $this->get('prestashop.adapter.news.provider');
+        $return = $newsFetcher->getData($this->context->language->iso_code);
 
         // Response
         header('Content-Type: application/json');

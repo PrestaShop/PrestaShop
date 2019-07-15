@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Service\DataProvider\Admin;
+namespace PrestaShop\PrestaShop\Adapter\News;
 
 use PrestaShop\CircuitBreaker\Contract\CircuitBreakerInterface;
 use PrestaShop\PrestaShop\Adapter\Configuration;
@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Adapter\Validate;
 /**
  * Provide the news from https://www.prestashop.com/blog/
  */
-class NewsProvider
+class NewsDataProvider
 {
     const NUM_ARTICLES = 2;
 
@@ -45,9 +45,6 @@ class NewsProvider
     const OPEN_ALLOWED_FAILURES = 3;
     const OPEN_TIMEOUT_SECONDS = 3;
     const OPEN_THRESHOLD_SECONDS = 86400; // 24 hours
-
-    /** @var string */
-    private $isoCode;
 
     /**
      * @var CircuitBreakerInterface
@@ -60,7 +57,7 @@ class NewsProvider
     private $configuration;
 
     /**
-     * @var Validate
+     * @var int
      */
     private $contextMode;
 
@@ -100,11 +97,11 @@ class NewsProvider
      *
      * @throws \PrestaShopException
      */
-    public function getData()
+    public function getData(string $isoCode)
     {
         $data = ['has_errors' => true, 'rss' => []];
 
-        $blogXMLResponse = $this->circuitBreaker->call(_PS_API_URL_ . '/rss/blog/blog-' . $this->isoCode . '.xml');
+        $blogXMLResponse = $this->circuitBreaker->call(_PS_API_URL_ . '/rss/blog/blog-' . $isoCode . '.xml');
 
         if (empty($blogXMLResponse)) {
             return $data;
@@ -118,7 +115,7 @@ class NewsProvider
         $articles_limit = self::NUM_ARTICLES;
 
         $shop_default_country_id = (int) $this->configuration->get('PS_COUNTRY_DEFAULT');
-        $shop_default_iso_country = (string) $this->tools->strtoupper($this->countryDataProvider->getIsoCodebyId($shop_default_country_id));
+        $shop_default_iso_country = mb_strtoupper($this->countryDataProvider->getIsoCodebyId($shop_default_country_id), 'utf-8');
         $analytics_params = [
             'utm_source' => 'back-office',
             'utm_medium' => 'rss',
@@ -149,7 +146,7 @@ class NewsProvider
 
             $data['rss'][] = [
                 'date' => $this->tools->displayDate(date('Y-m-d', strtotime((string) $item->pubDate))),
-                'title' => (string) $this->tools->htmlentitiesUTF8($item->title),
+                'title' => htmlentities($item->title, ENT_QUOTES, 'utf-8'),
                 'short_desc' => $this->tools->truncateString(strip_tags((string) $item->description), 150),
                 'link' => (string) $article_link,
             ];
@@ -158,25 +155,5 @@ class NewsProvider
         $data['has_errors'] = false;
 
         return $data;
-    }
-
-    /**
-     * @return string
-     */
-    public function getIsoCode()
-    {
-        return $this->isoCode;
-    }
-
-    /**
-     * @param string $isoCode
-     *
-     * @return NewsProvider
-     */
-    public function setIsoCode($isoCode)
-    {
-        $this->isoCode = $isoCode;
-
-        return $this;
     }
 }

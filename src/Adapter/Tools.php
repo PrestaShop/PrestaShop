@@ -258,26 +258,6 @@ class Tools
     }
 
     /**
-     * @see LegacyTools::htmlentitiesUTF8()
-     *
-     * @return string
-     */
-    public function htmlentitiesUTF8($string, $type = ENT_QUOTES)
-    {
-        return LegacyTools::htmlentitiesUTF8($string, $type);
-    }
-
-    /**
-     * @see LegacyTools::strtoupper()
-     *
-     * @return string
-     */
-    public function strtoupper($str)
-    {
-        return LegacyTools::strtoupper($str);
-    }
-
-    /**
      * @see LegacyTools::truncateString()
      *
      * @return bool|string
