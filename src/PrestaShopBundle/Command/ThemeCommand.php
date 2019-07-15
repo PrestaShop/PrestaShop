@@ -42,7 +42,7 @@ class ThemeCommand extends ContainerAwareCommand
         'install',
         'enable',
         'export',
-        'uninstall'
+        'uninstall',
     );
 
     /**
@@ -78,11 +78,12 @@ class ThemeCommand extends ContainerAwareCommand
         Context::getContext()->employee = new Employee(1);
 
         $shopId = $input->getArgument('shop');
-        if ($shopId !== NULL) {
+        if ($shopId !== null) {
             if (Validate::isLoadedObject($shop = new Shop($shopId))) {
                 Context::getContext()->shop = $shop;
             } else {
                 $this->io->error(sprintf('The selected shop id "%s" is invalid', $shop));
+
                 return self::RETURN_CODE_FAILED;
             }
         }
@@ -100,6 +101,7 @@ class ThemeCommand extends ContainerAwareCommand
 
         if (!in_array($action, $this->allowedActions)) {
             $this->io->error(sprintf('Unknown theme action. It must be one of these values: "%s"', implode(' / ', $this->allowedActions)));
+
             return self::RETURN_CODE_FAILED;
         }
 
@@ -111,6 +113,7 @@ class ThemeCommand extends ContainerAwareCommand
                 if (!filter_var($theme, FILTER_VALIDATE_URL)
                     && !file_exists($theme)) {
                     $this->io->error('Zip file doesn\'t exist or url is not valid');
+
                     return self::RETURN_CODE_FAILED;
                 }
                 $this->executeGenericThemeAction($action, $theme);
@@ -137,6 +140,7 @@ class ThemeCommand extends ContainerAwareCommand
 
         if (false === $path) {
             $this->io->error(sprintf('Error occured during theme export'));
+
             return self::RETURN_CODE_FAILED;
         }
         $this->io->success(sprintf('Your theme has been correctly exported: "%s".', $path));
@@ -153,6 +157,7 @@ class ThemeCommand extends ContainerAwareCommand
         ;
         if (false === $themeActionSuccess) {
             $this->io->error(sprintf('%1$s action on theme failed.', ucfirst($action)));
+
             return self::RETURN_CODE_FAILED;
         }
         $this->io->success(sprintf('%1$s action on theme succeeded.', ucfirst($action)));

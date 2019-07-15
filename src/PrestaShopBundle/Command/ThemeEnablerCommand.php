@@ -86,6 +86,7 @@ final class ThemeEnablerCommand extends ContainerAwareCommand
                 Context::getContext()->shop = new Shop($shop);
             } else {
                 $io->error(sprintf('The selected shop id "%s" is invalid', $shop));
+
                 return self::RETURN_CODE_FAILED;
             }
         }
