@@ -187,6 +187,8 @@ class CategoriesProvider
             foreach ($parentCategory->categories as $childCategory) {
                 if ($childCategory->name === $categoryName) {
                     return $parentCategory->name;
+                } elseif (isset($childCategory->tab) && $childCategory->tab === $categoryName) {
+                    return $parentCategory->name;
                 }
             }
         }
@@ -235,10 +237,13 @@ class CategoriesProvider
      *
      * @param ApiModule $installedProduct Installed product
      * @param array $categories Available categories
+     * @return string
      */
     private function findModuleCategory(ApiModule $installedProduct, array $categories)
     {
-        $moduleCategoryParent = $installedProduct->attributes->get('categoryParentEnglishName');
+        $moduleCategory = $installedProduct->attributes->get('tab');
+        $moduleCategoryParent = $this->getParentCategory($moduleCategory);
+
         if (!isset($categories['categories']->subMenu[$moduleCategoryParent])) {
             if (in_array($installedProduct->attributes->get('name'), $this->modulesTheme)) {
                 $moduleCategoryParent = self::CATEGORY_THEME;
