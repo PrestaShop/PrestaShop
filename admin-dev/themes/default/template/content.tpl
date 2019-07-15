@@ -28,6 +28,11 @@
 
 
 <div class="row">
+	{if isset($alertInfo)}
+		<div class="alert alert-info">
+			{$alertInfo}
+		</div>
+	{/if}
 	<div class="col-lg-12">
 		{if isset($content)}
 			{$content}

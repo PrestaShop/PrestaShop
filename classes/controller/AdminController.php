@@ -4882,4 +4882,19 @@ class AdminControllerCore extends Controller
             $numberSpecification->toArray()
         );
     }
+
+    /**
+     * Using this method will display the given message as an "alert info" message at the top of the current
+     * administration page.
+     *
+     * @see admin-dev/themes/default/template/content.tpl
+     *
+     * @param string $message
+     *
+     * @return void
+     */
+    protected function setTopAlertInfoMessage($message)
+    {
+        $this->context->smarty->assign('alertInfo', $message);
+    }
 }
