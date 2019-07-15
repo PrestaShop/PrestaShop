@@ -35,6 +35,9 @@ class TabCore extends ObjectModel
     /** @var string Class and file name */
     public $class_name;
 
+    /** @var string Route name for Symfony */
+    public $route_name;
+
     public $module;
 
     /** @var int parent ID */
@@ -66,6 +69,7 @@ class TabCore extends ObjectModel
             'position' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
             'module' => array('type' => self::TYPE_STRING, 'validate' => 'isTabName', 'size' => 64),
             'class_name' => array('type' => self::TYPE_STRING, 'required' => true, 'size' => 64),
+            'route_name' => array('type' => self::TYPE_STRING, 'required' => false, 'size' => 256),
             'active' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'hide_host_mode' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'icon' => array('type' => self::TYPE_STRING, 'size' => 64),
@@ -137,11 +141,14 @@ class TabCore extends ObjectModel
         $slug = 'ROLE_MOD_TAB_' . strtoupper(self::getClassNameById($idTab));
 
         foreach (array('CREATE', 'READ', 'UPDATE', 'DELETE') as $action) {
-            Db::getInstance()->execute('INSERT INTO `' . _DB_PREFIX_ . 'authorization_role` (`slug`) VALUES ("' . $slug . '_' . $action . '")');
+            //Check if authorization role does not exist (this can happen if you want to create several tabs with the same class_name or route_name)
+            $idAuthorizationRole = Db::getInstance()->getValue('SELECT id_authorization_role FROM `' . _DB_PREFIX_ . 'authorization_role` WHERE `slug` = "' . $slug . '_' . $action . '"');
+            if (empty($idAuthorizationRole)) {
+                Db::getInstance()->execute('INSERT INTO `' . _DB_PREFIX_ . 'authorization_role` (`slug`) VALUES ("' . $slug . '_' . $action . '")');
+            }
         }
 
         $access = new Access();
-
         foreach (array('view', 'add', 'edit', 'delete') as $action) {
             $access->updateLgcAccess('1', $idTab, $action, true);
 
