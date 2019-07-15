@@ -54,6 +54,14 @@
               }) }}
             </div>
           </div>
+
+          <div class="d-none">
+            {{ form_widget(forwardCustomerThreadForm._token) }}
+          </div>
+
+          {% block forward_customer_thread_form_rest %}
+            {{ form_rest(forwardCustomerThreadForm) }}
+          {% endblock %}
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">
