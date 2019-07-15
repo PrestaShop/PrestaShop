@@ -41,6 +41,7 @@
 
 {% block content %}
   {% block manufacturers_listing %}
+    {{ ps.infotip(alertInfoMessage) }}
     <div class="row">
       <div class="col">
         {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': manufacturerGrid} %}
