@@ -26,12 +26,11 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
+use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\Command\BulkDeleteAttributeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\Command\DeleteAttributeCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\Exception\AttributeException;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\Exception\AttributeNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\Exception\DeleteAttributeException;
-use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Exception\AttributeGroupException;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Exception\AttributeGroupNotFoundException;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AttributeGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\AttributeFilters;
@@ -66,7 +65,7 @@ class AttributeController extends FrameworkBundleAdminController
         try {
             $attributeGridFactory = $this->get('prestashop.core.grid.factory.attribute');
             $attributeGrid = $attributeGridFactory->getGrid($attributeFilters);
-        } catch (AttributeGroupException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
 
             return $this->redirectToRoute('admin_attribute_groups_index');
@@ -143,7 +142,7 @@ class AttributeController extends FrameworkBundleAdminController
                 'success',
                 $this->trans('Successful deletion.', 'Admin.Notifications.Success')
             );
-        } catch (AttributeException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
@@ -175,7 +174,7 @@ class AttributeController extends FrameworkBundleAdminController
                 'success',
                 $this->trans('Successful deletion.', 'Admin.Notifications.Success')
             );
-        } catch (AttributeException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
