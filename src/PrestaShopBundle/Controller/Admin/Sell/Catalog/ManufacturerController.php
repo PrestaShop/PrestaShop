@@ -100,6 +100,7 @@ class ManufacturerController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'manufacturerGrid' => $this->presentGrid($manufacturerGrid),
             'manufacturerAddressGrid' => $this->presentGrid($manufacturerAddressGrid),
+            'alertInfoMessage' => $this->getAlertInfoMessage(),
         ]);
     }
 
@@ -783,5 +784,15 @@ class ManufacturerController extends FrameworkBundleAdminController
     private function getAddressFormHandler()
     {
         return $this->get('prestashop.core.form.identifiable_object.handler.manufacturer_address_form_handler');
+    }
+
+    private function getAlertInfoMessage()
+    {
+        $message = sprintf(
+            'The display of your brands is %s on your store. Go to Shop Parameters > General to edit settings.',
+            $this->configuration->get('PS_DISPLAY_MANUFACTURERS') ? 'enabled' : 'disabled'
+        );
+
+        return $this->trans($message, 'Admin.Catalog.Notification');
     }
 }
