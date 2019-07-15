@@ -49,6 +49,10 @@
       <div class="d-none">
         {{ form_widget(replyToCustomerThreadForm._token) }}
       </div>
+
+      {% block reply_to_customer_form_rest %}
+        {{ form_rest(replyToCustomerThreadForm) }}
+      {% endblock %}
     </div>
 
     <div class="card-footer">
