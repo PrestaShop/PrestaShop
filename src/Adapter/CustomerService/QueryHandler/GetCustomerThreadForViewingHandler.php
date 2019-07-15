@@ -113,7 +113,10 @@ final class GetCustomerThreadForViewingHandler implements GetCustomerThreadForVi
 
             $attachmentFile = null;
 
-            if (isset($message['file_name']) && $message['file_name'] != '') {
+            if (isset($message['file_name'])
+                && $message['file_name'] !== ''
+                && file_exists(_THEME_PROD_PIC_DIR_ . $message['file_name'])
+            ) {
                 $attachmentFile = _THEME_PROD_PIC_DIR_ . $message['file_name'];
             }
 
@@ -272,7 +275,7 @@ final class GetCustomerThreadForViewingHandler implements GetCustomerThreadForVi
     {
         $actions = [];
 
-        if ($thread->status !== 'closed') {
+        if ($thread->status !== CustomerThreadStatus::CLOSED) {
             $actions[CustomerThreadStatus::CLOSED] = [
                 'label' => $this->translator->trans('Mark as "handled"', [], 'Admin.Catalog.Feature'),
                 'value' => CustomerThreadStatus::CLOSED,
@@ -284,7 +287,7 @@ final class GetCustomerThreadForViewingHandler implements GetCustomerThreadForVi
             ];
         }
 
-        if ($thread->status !== 'pending1') {
+        if ($thread->status !== CustomerThreadStatus::PENDING_1) {
             $actions[CustomerThreadStatus::PENDING_1] = [
                 'label' => $this->translator->trans(
                     'Mark as "pending 1" (will be answered later)',
@@ -300,7 +303,7 @@ final class GetCustomerThreadForViewingHandler implements GetCustomerThreadForVi
             ];
         }
 
-        if ($thread->status !== 'pending2') {
+        if ($thread->status !== CustomerThreadStatus::PENDING_2) {
             $actions[CustomerThreadStatus::PENDING_2] = [
                 'label' => $this->translator->trans(
                     'Mark as "pending 2" (will be answered later)',
@@ -371,16 +374,12 @@ final class GetCustomerThreadForViewingHandler implements GetCustomerThreadForVi
     {
         $contacts = Contact::getContacts($this->context->language->id);
 
-        $contact = null;
-
-        foreach ($contacts as $c) {
-            if ($c['id_contact'] == $thread->id_contact) {
-                $contact = $c['name'];
-
-                break;
+        foreach ($contacts as $contact) {
+            if ((int) $contact['id_contact'] === (int) $thread->id_contact) {
+                return $contact['name'];
             }
         }
 
-        return $contact;
+        return null;
     }
 }
