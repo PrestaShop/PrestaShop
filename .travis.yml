@@ -76,7 +76,7 @@ before_install:
   # PrestaShop configuration
   - cp tests-legacy/parameters.yml.travis app/config/parameters.yml
 
-before_script:
+install:
   - composer install --no-suggest --ansi --prefer-dist --no-interaction --no-progress --quiet;
   - bash travis-scripts/install-prestashop;
 
