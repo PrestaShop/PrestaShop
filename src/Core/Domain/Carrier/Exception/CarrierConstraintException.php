@@ -65,4 +65,9 @@ class CarrierConstraintException extends CarrierException
      * When carrier tracking url constraints are violated
      */
     const INVALID_TRACKING_URL = 7;
+
+    /**
+     * When out of range behavior value is invalid
+     */
+    const INVALID_OUT_OF_RANGE_BEHAVIOR = 8;
 }
