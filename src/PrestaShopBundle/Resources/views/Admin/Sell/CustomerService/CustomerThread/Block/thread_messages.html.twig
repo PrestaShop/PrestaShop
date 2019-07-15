@@ -44,7 +44,7 @@
             <h4 class="mt-0 mb-1">
               <i class="material-icons text-muted">reply</i>
 
-              {% if message.type == 'customer' %}
+              {% if message.type == constant('PrestaShop\\PrestaShop\\Core\\Domain\\CustomerService\\ValueObject\\CustomerThreadMessageType::CUSTOMER') %}
                 {{ message.customerName }}
               {% else %}
                 {{ message.employeeName }}

@@ -43,6 +43,7 @@ use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerThread
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerThreadTimelineItem;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerThreadView;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerThreadId;
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerThreadMessageType;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerThreadStatus;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use Product;
@@ -132,7 +133,9 @@ final class GetCustomerThreadForViewingHandler implements GetCustomerThreadForVi
                 }
             }
 
-            $type = $message['id_employee'] ? 'employee' : 'customer';
+            $type = $message['id_employee'] ?
+                CustomerThreadMessageType::EMPLOYEE :
+                CustomerThreadMessageType::CUSTOMER;
 
             $threadMessages[] = new CustomerThreadMessage(
                 $type,
