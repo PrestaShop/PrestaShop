@@ -164,7 +164,7 @@ class SitemapControllerCore extends FrontController
             );
         }
 
-        if (Configuration::get('PS_DISPLAY_SUPPLIERS')) {
+        if (Configuration::get('PS_DISPLAY_MANUFACTURERS')) {
             $manufacturers = Manufacturer::getLiteManufacturersList($this->context->language->id, 'sitemap');
             $links[] = array(
                 'id' => 'manufacturer-page',
@@ -172,7 +172,9 @@ class SitemapControllerCore extends FrontController
                 'url' => $this->context->link->getPageLink('manufacturer'),
                 'children' => $manufacturers,
             );
+        }
 
+        if (Configuration::get('PS_DISPLAY_SUPPLIERS')) {
             $suppliers = Supplier::getLiteSuppliersList($this->context->language->id, 'sitemap');
             $links[] = array(
                 'id' => 'supplier-page',

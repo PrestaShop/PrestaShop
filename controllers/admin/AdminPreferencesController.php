@@ -194,6 +194,13 @@ class AdminPreferencesControllerCore extends AdminController
                     'cast' => 'intval',
                     'type' => 'bool',
                 ),
+                'PS_DISPLAY_MANUFACTURERS' => array(
+                    'title' => $this->trans('Display brands', array(), 'Admin.Shopparameters.Feature'),
+                    'desc' => $this->trans('Enable brands page on your front office even when its module are disabled.', array(), 'Admin.Shopparameters.Help'),
+                    'validation' => 'isBool',
+                    'cast' => 'intval',
+                    'type' => 'bool',
+                ),
                 'PS_DISPLAY_BEST_SELLERS' => array(
                     'title' => $this->trans('Display best sellers', array(), 'Admin.Shopparameters.Feature'),
                     'desc' => $this->trans('Enable best sellers page on your front office even when its respective module is disabled.', array(), 'Admin.Shopparameters.Help'),

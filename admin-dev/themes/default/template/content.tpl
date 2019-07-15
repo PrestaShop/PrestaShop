@@ -28,6 +28,13 @@
 
 
 <div class="row">
+	{foreach from=$topAlertMessages key=namespace item=value}
+		<div class="alert alert-{$namespace}">
+			{foreach $topAlertMessages.{$namespace} item=message}
+				<p>{$message}</p>
+			{/foreach}
+		</div>
+	{/foreach}
 	<div class="col-lg-12">
 		{if isset($content)}
 			{$content}
