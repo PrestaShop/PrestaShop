@@ -4,6 +4,8 @@ namespace PrestaShop\PrestaShop\Core\Grid\Query;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
+use PrestaShop\PrestaShop\Core\Grid\Query\Filter\DoctrineFilterApplicatorInterface;
+use PrestaShop\PrestaShop\Core\Grid\Query\Filter\SqlFilters;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
@@ -41,6 +43,11 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     private $contextShopGroupId;
 
+    /**
+     * @var DoctrineFilterApplicatorInterface
+     */
+    private $filterApplicator;
+
     public function __construct(
         Connection $connection,
         $dbPrefix,
@@ -49,7 +56,8 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
         $contextShopId,
         $contextShopGroupId,
         $isStockManagementEnabled,
-        $isStockSharingBetweenShopGroupEnabled
+        $isStockSharingBetweenShopGroupEnabled,
+        DoctrineFilterApplicatorInterface $filterApplicator
     ) {
         parent::__construct($connection, $dbPrefix);
         $this->searchCriteriaApplicator = $searchCriteriaApplicator;
@@ -58,6 +66,7 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
         $this->isStockManagementEnabled = $isStockManagementEnabled;
         $this->isStockSharingBetweenShopGroupEnabled = $isStockSharingBetweenShopGroupEnabled;
         $this->contextShopGroupId = $contextShopGroupId;
+        $this->filterApplicator = $filterApplicator;
     }
 
     /**
@@ -100,17 +109,18 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
     /**
      * Gets query builder.
      *
-     * @param array $filters
+     * @param array $filterValues
      *
      * @return QueryBuilder
      */
-    private function getQueryBuilder(array $filters)
+    private function getQueryBuilder(array $filterValues)
     {
         $availableFilters = [
             'name',
             'reference',
             'category',
             'active',
+            'id_product',
         ];
 
         $qb = $this->connection
@@ -169,14 +179,20 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
 
             $qb->setParameter('id_shop_group', $this->contextShopGroupId);
         }
+        //todo: eq state
+        $sqlFilters = new SqlFilters();
+        $sqlFilters->addFilter(
+            'id_product',
+            'p.`id_product`',
+            SqlFilters::MIN_MAX
+        );
 
-        /** todo: raise a discussion here with shop association. maybe we should pass an array of shop ids when we are
-         *   n all shop context we will see all products from all shops. Although we need shop association form in such case
-        */
+        $this->filterApplicator->apply($qb, $sqlFilters, $filterValues);
+
         $qb->setParameter('id_shop', $this->contextShopId);
         $qb->setParameter('id_lang', $this->contextLanguageId);
 
-        foreach ($filters as $filterName => $filter) {
+        foreach ($filterValues as $filterName => $filter) {
             if (!in_array($filterName, $availableFilters, true)) {
                 continue;
             }

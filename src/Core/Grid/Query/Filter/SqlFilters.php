@@ -35,6 +35,7 @@ final class SqlFilters
     const WHERE_LIKE = 2;
     const HAVING_LIKE = 3;
     const WHERE_DATE = 4;
+    const MIN_MAX = 5;
 
     /** @var array */
     private $filters = [];

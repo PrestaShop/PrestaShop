@@ -81,6 +81,34 @@ final class DoctrineFilterApplicator implements DoctrineFilterApplicatorInterfac
                     }
 
                     break;
+                case SqlFilters::MIN_MAX:
+                    $minFieldExists = isset($value['min_field']);
+                    $maxFieldExists = isset($value['max_field']);
+
+                    if (!$minFieldExists && !$maxFieldExists) {
+                        break;
+                    }
+
+                    $bothFieldsExist = $minFieldExists && $maxFieldExists;
+                    $minFieldExistsOnly = $minFieldExists && !$maxFieldExists;
+                    $maxFieldExistsOnly = $maxFieldExists && !$minFieldExists;
+
+                    $minFieldSqlCondition = "$sqlField >= :{$filterName}_min";
+                    $maxFieldSqlCondition = "$sqlField <= :{$filterName}_max";
+
+                    if ($bothFieldsExist) {
+                        $qb->andWhere("$minFieldSqlCondition AND $maxFieldSqlCondition");
+                        $qb->setParameter("{$filterName}_min", $value['min_field']);
+                        $qb->setParameter("{$filterName}_max", $value['max_field']);
+                    } elseif ($minFieldExistsOnly) {
+                        $qb->andWhere($minFieldSqlCondition);
+                        $qb->setParameter("{$filterName}_min", $value['min_field']);
+                    } elseif ($maxFieldExistsOnly) {
+                        $qb->andWhere($maxFieldSqlCondition);
+                        $qb->setParameter("{$filterName}_max", $value['max_field']);
+                    }
+
+                    break;
             }
         }
     }
