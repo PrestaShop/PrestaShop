@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\News;
 
+use ContextCore;
 use PrestaShop\CircuitBreaker\Contract\CircuitBreakerInterface;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Country\CountryDataProvider;
@@ -100,8 +101,9 @@ class NewsDataProvider
     public function getData(string $isoCode)
     {
         $data = ['has_errors' => true, 'rss' => []];
+        $apiUrl = $this->configuration->get('_PS_API_URL_');
 
-        $blogXMLResponse = $this->circuitBreaker->call(_PS_API_URL_ . '/rss/blog/blog-' . $isoCode . '.xml');
+        $blogXMLResponse = $this->circuitBreaker->call($apiUrl . '/rss/blog/blog-' . $isoCode . '.xml');
 
         if (empty($blogXMLResponse)) {
             return $data;
@@ -130,7 +132,7 @@ class NewsDataProvider
                 break;
             }
             $analytics_params['utm_content'] = 'download';
-            if (in_array($this->contextMode, array(\ContextCore::MODE_HOST, \ContextCore::MODE_HOST_CONTRIB))) {
+            if (in_array($this->contextMode, array(ContextCore::MODE_HOST, ContextCore::MODE_HOST_CONTRIB))) {
                 $analytics_params['utm_content'] = 'cloud';
             }
             $article_link = (string) $item->link . '?' . http_build_query($analytics_params);
