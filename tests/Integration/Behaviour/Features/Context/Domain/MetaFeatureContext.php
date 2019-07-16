@@ -2,9 +2,12 @@
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
+use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Gherkin\Node\TableNode;
+use Exception;
 use Meta;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Command\AddMetaCommand;
+use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Meta\ValueObject\MetaId;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
@@ -44,6 +47,29 @@ class MetaFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @When /^I add meta "([^"]*)" with specified properties without default language$/
+     */
+    public function addMetaWithSpecifiedPropertiesWithoutDefaultLanguage($reference)
+    {
+        $propertiesKey = sprintf('%s_properties', $reference);
+
+        $data = SharedStorage::getStorage()->get($propertiesKey);
+        $data = $this->getWithDefaultLanguage($data);
+
+        $command = (new AddMetaCommand($data['page_name']))
+            ->setLocalisedRewriteUrls([0 => $data['localized_rewrite_urls']])
+        ;
+
+        try {
+            /** @var MetaId $metaId */
+            $metaId = $this->getCommandBus()->handle($command);
+        } catch (Exception $exception) {
+            $this->lastException = $exception;
+            $this->lastErrorCode = $exception->getCode();
+        }
+    }
+
+    /**
      * @param array $data
      *
      * @return array
@@ -70,5 +96,14 @@ class MetaFeatureContext extends AbstractDomainFeatureContext
         }
 
         return $data;
+    }
+
+    /**
+     * @Then /^I should get error that default language is missing for url rewrite$/
+     */
+    public function assertItShouldGetErrorThatDefaultLanguageIsMissingForUrlRewrite()
+    {
+        $this->assertLastErrorIs(MetaConstraintException::class);
+        $this->assertLastErrorCodeIs(MetaConstraintException::INVALID_URL_REWRITE);
     }
 }
