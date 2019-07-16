@@ -1,5 +1,28 @@
 <?php
-
+/**
+ * 2007-2019 PrestaShop and Contributors
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 
 namespace Tests\Unit\Adapter\News;
 
@@ -45,7 +68,7 @@ class NewsDataProviderTest extends TestCase
         $this->assertTrue($expectedJson['has_errors']);
         $this->assertArrayHasKey('rss', $expectedJson);
         $this->assertInternalType('array', $expectedJson['rss']);
-        $this->assertEmpty( $expectedJson['rss']);
+        $this->assertEmpty($expectedJson['rss']);
     }
 
     public function testDataRssInvalid()
@@ -66,7 +89,7 @@ class NewsDataProviderTest extends TestCase
         $this->assertTrue($expectedJson['has_errors']);
         $this->assertArrayHasKey('rss', $expectedJson);
         $this->assertInternalType('array', $expectedJson['rss']);
-        $this->assertEmpty( $expectedJson['rss']);
+        $this->assertEmpty($expectedJson['rss']);
     }
 
     public function testData()
@@ -88,12 +111,13 @@ class NewsDataProviderTest extends TestCase
         $this->assertFalse($expectedJson['has_errors']);
         $this->assertArrayHasKey('rss', $expectedJson);
         $this->assertInternalType('array', $expectedJson['rss']);
-        $this->assertCount(NewsDataProvider::NUM_ARTICLES,  $expectedJson['rss']);
+        $this->assertCount(NewsDataProvider::NUM_ARTICLES, $expectedJson['rss']);
     }
 
     /**
      * @param string|null $locale
      * @param string|null $returnData
+     *
      * @return \PHPUnit_Framework_MockObject_MockObject|CircuitBreakerInterface
      */
     private function createCircuitBreakerMock($locale = null, $returnData = null)
@@ -151,6 +175,7 @@ class NewsDataProviderTest extends TestCase
 
     /**
      * @param bool|null $isCleanHtml
+     *
      * @return \PHPUnit_Framework_MockObject_MockObject|Validate
      */
     private function createValidateMock($isCleanHtml = null)
@@ -165,6 +190,7 @@ class NewsDataProviderTest extends TestCase
                 ->willReturn($isCleanHtml)
             ;
         }
+
         return $validateMock;
     }
 }
