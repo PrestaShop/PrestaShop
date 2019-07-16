@@ -30,6 +30,7 @@ use Behat\Gherkin\Node\TableNode;
 use Carrier;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Command\AddCarrierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
+use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
@@ -75,6 +76,125 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
         $carrierId = $this->getCommandBus()->handle($command);
 
         SharedStorage::getStorage()->set($reference, new Carrier($carrierId->getValue()));
+    }
+
+    /**
+     * @Then Carrier :reference name in default language should be :value
+     */
+    public function assertLocalizedName($reference, $value)
+    {
+        /** @var Carrier $carrier */
+        $carrier = SharedStorage::getStorage()->get($reference);
+
+        if (!isset($carrier->localized_name[$this->defaultLangId])) {
+            throw new RuntimeException(sprintf(
+                'Carrier "%s" name in default language is not set, "%s" was expected.',
+                $reference,
+                $value
+            ));
+        }
+        if ($carrier->localized_name[$this->defaultLangId] !== $value) {
+            throw new RuntimeException(sprintf(
+                'Carrier "%s" name in default language is "%s", but "%s" was expected.',
+                $reference,
+                $carrier->localized_name[$this->defaultLangId],
+                $value
+            ));
+        }
+    }
+
+    /**
+     * @Then Carrier :reference shipping delay in default language should be :value
+     */
+    public function assertShippingDelay($reference, $value)
+    {
+        /** @var Carrier $carrier */
+        $carrier = SharedStorage::getStorage()->get($reference);
+
+        if (!isset($carrier->delay[$this->defaultLangId])) {
+            throw new RuntimeException(sprintf(
+                'Carrier "%s" shipping delay in default language is not set, but "%s" was expected.',
+                $reference,
+                $value
+            ));
+        }
+        if ($value !== $carrier->delay[$this->defaultLangId]) {
+            throw new RuntimeException(sprintf(
+                'Carrier "%s" shipping delay in default language is "%s", but "%s" was expected.',
+                $reference,
+                $carrier->localized_name[$this->defaultLangId],
+                $value
+            ));
+        }
+    }
+
+    /**
+     * @Then Carrier :reference :field should be :value
+     */
+    public function assertFieldValue($reference, $field, $value)
+    {
+        /** @var Carrier $carrier */
+        $carrier = SharedStorage::getStorage()->get($reference);
+        $propertyName = $this->getObjectPropertyMappedByFieldName($field);
+
+        if ($value !== $carrier->{$propertyName}) {
+            throw new RuntimeException(sprintf(
+                'Carrier "%s" "%s" is "%s", but "%s" was expected.',
+                $reference,
+                $field,
+                $carrier->{$propertyName},
+                $value
+            ));
+        }
+    }
+
+    /**
+     * @Then /^the shipping of "(.*)" should be (free of charge|priced)?$/
+     */
+    public function assertShippingIsFree($reference, $condition)
+    {
+        /** @var Carrier $carrier */
+        $carrier = SharedStorage::getStorage()->get($reference);
+
+        $isFree = true;
+        if ('priced' === $condition) {
+            $isFree = false;
+        }
+        if ($isFree !== (bool) $carrier->is_free) {
+            throw new RuntimeException(sprintf(
+                'Carrier "%s" shipping is "%s", but it expected to be "%s".',
+                $reference,
+                $carrier->is_free ? 'free of charge' : 'priced',
+                $condition
+            ));
+        }
+    }
+
+    /**
+     * Maps user friendly field name to a corresponding property of object model
+     *
+     * @param string $fieldName
+     *
+     * @return string
+     */
+    private function getObjectPropertyMappedByFieldName(string $fieldName)
+    {
+        $objectProperyByFieldNameMap = [
+            'speed grade' => 'grade',
+            'tracking url' => 'url',
+            'shipping method' => 'shipping_method',
+            'out of range behavior' => 'range_behavior',
+            'max package width' => 'max_width',
+            'max package height' => 'max_height',
+            'max package depth' => 'max_depth',
+            'max package weight' => 'max_weight',
+        ];
+
+        if (array_key_exists($fieldName, $objectProperyByFieldNameMap)) {
+            return $objectProperyByFieldNameMap[$fieldName];
+        }
+
+        return $fieldName;
     }
 
     private function formatShippingRanges(string $rangesFrom, string $rangesTo, string $zoneIds, string $prices)
