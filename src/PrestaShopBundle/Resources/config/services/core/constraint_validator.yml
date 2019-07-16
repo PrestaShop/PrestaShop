@@ -5,7 +5,7 @@ services:
   prestashop.core.constraint_validator.is_url_rewrite_validator:
     class: 'PrestaShop\PrestaShop\Core\ConstraintValidator\IsUrlRewriteValidator'
     arguments:
-      - '@=service("prestashop.adapter.legacy.configuration").get("PS_ALLOW_ACCENTED_CHARS_URL")'
+      - '@prestashop.adapter.legacy.configuration'
     tags:
       - { name: validator.constraint_validator }
 
