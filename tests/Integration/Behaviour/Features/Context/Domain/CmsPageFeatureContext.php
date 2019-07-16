@@ -28,7 +28,6 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
 use CMS;
-use Configuration;
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\AddCmsPageCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\DeleteCmsPageCommand;
@@ -40,6 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryN
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Query\GetCmsPageCategoryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
 use RuntimeException;
+use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpectedException;
 
@@ -65,8 +65,9 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
 
     public function __construct()
     {
-        $this->defaultLangId = Configuration::get('PS_LANG_DEFAULT');
-        $this->defaultShopId = Configuration::get('PS_SHOP_DEFAULT');
+        $configuration = CommonFeatureContext::getContainer()->get('prestashop.adapter.legacy.configuration');
+        $this->defaultLangId = $configuration->get('PS_LANG_DEFAULT');
+        $this->defaultShopId = $configuration->get('PS_SHOP_DEFAULT');
     }
 
     /**
