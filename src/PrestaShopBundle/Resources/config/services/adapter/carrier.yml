@@ -4,5 +4,8 @@ services:
 
     prestashop.adapter.currency.command_handler.add_carrier:
         class: 'PrestaShop\PrestaShop\Adapter\Carrier\CommandHandler\AddCarrierHandler'
+        arguments:
+            - "@=service('prestashop.adapter.legacy.configuration').get('PS_LANG_DEFAULT')"
+            - "@=service('prestashop.adapter.legacy.configuration').get('PS_SHIPPING_METHOD')"
         tags:
             - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Carrier\Command\AddCarrierCommand' }
