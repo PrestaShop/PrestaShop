@@ -1,4 +1,4 @@
-module.exports = class Page {
+module.exports = class CommonPage {
 
   constructor(page) {
     this.page = page;
