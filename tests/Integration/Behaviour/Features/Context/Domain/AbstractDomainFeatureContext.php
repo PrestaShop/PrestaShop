@@ -39,6 +39,11 @@ abstract class AbstractDomainFeatureContext implements Context
     protected $lastException;
 
     /**
+     * @var int
+     */
+    protected $lastErrorCode;
+
+    /**
      * @return CommandBusInterface
      */
     protected function getCommandBus()
@@ -65,6 +70,19 @@ abstract class AbstractDomainFeatureContext implements Context
                 $expectedError,
                 $this->lastException ? get_class($this->lastException) : 'null'
             ));
+        }
+    }
+
+    protected function assertLastErrorCodeIs($errorCode)
+    {
+        if ($this->lastErrorCode !== $errorCode) {
+            throw new RuntimeException(
+                sprintf(
+                    'Last error code should be "%s" but got "%s"',
+                    var_export($this->lastErrorCode, true),
+                    var_export($errorCode, true)
+                )
+            );
         }
     }
 }

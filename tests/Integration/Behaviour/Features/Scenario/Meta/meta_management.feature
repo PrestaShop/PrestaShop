@@ -20,3 +20,10 @@ Feature: Meta management (Traffic & Seo)
     And meta "meta1" field "description" for default language should be "meta description in default language"
     And meta "meta1" field "keywords" for default language should be "meta keywords in default language"
     And meta "meta1" field "url_rewrite" for default language should be "rewrite-url-default"
+
+  Scenario: Creating new metadata without default language for url rewrite should not be allowed
+    Given I specify following properties for new meta "meta2":
+      | page_name                          | pdf-invoice                             |
+      | localized_rewrite_urls             | rewrite-url                             |
+    When I add meta "meta2" with specified properties without default language
+    Then I should get error that default language is missing for url rewrite
