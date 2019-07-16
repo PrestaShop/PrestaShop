@@ -156,9 +156,6 @@ final class AddCarrierHandler extends AbstractObjectModelHandler implements AddC
         if ($methodValue === ShippingMethod::SHIPPING_METHOD_PRICE) {
             foreach ($shippingRanges as $shippingRange) {
                 $range = new RangePrice();
-                $range->id_carrier = $carrierId;
-                $range->delimiter1 = $shippingRange->getFrom();
-                $range->delimiter2 = $shippingRange->getTo();
                 $this->addRange($range, $carrierId, $shippingRange);
                 $this->addDeliveryPrice($shippingRange, $shippingMethod, $carrier, (int) $range->id);
             }
@@ -169,9 +166,6 @@ final class AddCarrierHandler extends AbstractObjectModelHandler implements AddC
         if ($methodValue === ShippingMethod::SHIPPING_METHOD_WEIGHT) {
             foreach ($shippingRanges as $shippingRange) {
                 $range = new RangeWeight();
-                $range->id_carrier = $carrierId;
-                $range->delimiter1 = $shippingRange->getFrom();
-                $range->delimiter2 = $shippingRange->getTo();
                 $this->addRange($range, $carrierId, $shippingRange);
                 $this->addDeliveryPrice($shippingRange, $shippingMethod, $carrier, (int) $range->id);
             }
@@ -190,6 +184,10 @@ final class AddCarrierHandler extends AbstractObjectModelHandler implements AddC
      */
     private function addRange(ObjectModel $range, int $carrierId, ShippingRange $shippingRange)
     {
+        $range->id_carrier = $carrierId;
+        $range->delimiter1 = $shippingRange->getFrom();
+        $range->delimiter2 = $shippingRange->getTo();
+
         if (false === $range->add()) {
             throw new CarrierException(sprintf(
                 'Failed to create range "%s - %s" for carrier with id "%s"',
