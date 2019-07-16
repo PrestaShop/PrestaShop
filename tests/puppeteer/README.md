@@ -26,24 +26,13 @@ If you want to run the links checker test you can run the script **test/linkchec
 #### With default values
 
 ```bash
-cd test/
-node linkchecker.js
+npm run linkchecker
 ```
 
 #### With custom values
 
 ```bash
-cd test/
-URL_BO="Your_Shop_URL_BO" URL_FO="Your_Shop_URL_FO" LOGIN="Your_Login" PASSWD="Your_Password" node linkchecker.js
-```
-
-#### Run with docker
-
-```bash
-#Build image
-docker build -t puppeteer_linkchecker -f .docker/Dockerfile .
-#Run test
-docker run -e URL_BO="Your_Shop_URL_BO" -e URL_FO="Your_Shop_URL_FO" -e LOGIN="Your_Login" -e PASSWD="Your_Password" --network="host" puppeteer_linkchecker
+URL_BO="Your_Shop_URL_BO" URL_FO="Your_Shop_URL_FO" LOGIN="Your_Login" PASSWD="Your_Password" npm run linkchecker
 ```
 
 #### Run with docker-compose
@@ -51,6 +40,7 @@ docker run -e URL_BO="Your_Shop_URL_BO" -e URL_FO="Your_Shop_URL_FO" -e LOGIN="Y
 ```bash
 #Create Shop and running test
 docker-compose up --build
+docker-compose exec -e COMMAND="linkchecker" tests bash /tmp/run-tests.sh
 ```
 
 Enjoy :wink: :v:

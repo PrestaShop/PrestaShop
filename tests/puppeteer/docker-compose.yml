@@ -13,12 +13,11 @@ services:
       HEADLESS: "true"
     depends_on:
       - "prestashop"
-    command: bash -c "/tmp/wait-for-it.sh --timeout=360 --strict prestashop-web:80 && node linkchecker.js"
+    command: ["/tmp/wait-for-it.sh", "--timeout=360", "--strict", "prestashop-web:80", "--", "/bin/bash"]
     tty: true
     volumes:
       - .docker:/tmp/docker
-      - ../../:/var/www/html/
-      - ./test/reports:/reports
+      - ./reports:/tests/reports
     networks:
       - default
 
