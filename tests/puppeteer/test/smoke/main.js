@@ -4,7 +4,7 @@ const BO_login = require('../../pages/BO/BO_login');
 let page;
 let BO_LOGIN;
 //creating pages objects in a function
-const beforeFunc = async () => {
+const init = async () => {
   page = await global.browser.newPage();
   BO_LOGIN = await (new BO_login(page));
 };
@@ -23,4 +23,4 @@ scenario('should go to the BO', async () => {
     await expect(pageTitle).to.equal(BO_LOGIN.pageTitle);
 
   });
-}, beforeFunc, true);
+}, init, true);
