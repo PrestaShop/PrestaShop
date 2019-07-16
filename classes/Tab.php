@@ -49,6 +49,9 @@ class TabCore extends ObjectModel
     /** @var bool active */
     public $active = true;
 
+    /** @var bool enabled */
+    public $enabled = true;
+
     /** @var int hide_host_mode */
     public $hide_host_mode = false;
 
@@ -71,6 +74,7 @@ class TabCore extends ObjectModel
             'class_name' => array('type' => self::TYPE_STRING, 'required' => true, 'size' => 64),
             'route_name' => array('type' => self::TYPE_STRING, 'required' => false, 'size' => 256),
             'active' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+            'enabled' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'hide_host_mode' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'icon' => array('type' => self::TYPE_STRING, 'size' => 64),
             /* Lang fields */

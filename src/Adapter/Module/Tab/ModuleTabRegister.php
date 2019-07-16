@@ -122,6 +122,14 @@ class ModuleTabRegister
     }
 
     /**
+     * @param Module $module
+     */
+    public function enableTabs(Module $module)
+    {
+        $this->tabRepository->changeEnabledByModuleName($module->get('name'), true);
+    }
+
+    /**
      * Looks for ModuleAdminControllers not declared as Tab and
      * add them to the list to register.
      *
@@ -282,6 +290,7 @@ class ModuleTabRegister
          */
         $tab = new Tab();
         $tab->active = $tabDetails->getBoolean('visible', true);
+        $tab->enabled = true;
         $tab->class_name = $tabDetails->get('class_name');
         $tab->route_name = $tabDetails->get('route_name');
         $tab->module = $module->get('name');

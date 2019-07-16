@@ -834,6 +834,7 @@ class LinkCore
      * @param array $tab
      *
      * @return string
+     *
      * @throws PrestaShopException
      */
     public function getTabLink(array $tab)
