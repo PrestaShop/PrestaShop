@@ -4,4 +4,3 @@ global.EMAIL = process.env.LOGIN || 'demo@prestashop.com';
 global.PASSWD = process.env.PASSWD || 'prestashop_demo';
 global.HEADLESS = process.env.HEADLESS || true;
 global.browser = null;
-global.page = null;

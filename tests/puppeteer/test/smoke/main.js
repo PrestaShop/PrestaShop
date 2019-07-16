@@ -1,8 +1,14 @@
 //importing pages
 const BO_login = require('../../pages/BO/BO_login');
 
-//creating pages objects
-const BO_LOGIN = new BO_login();
+let page;
+let BO_LOGIN;
+//creating pages objects in a function
+const beforeFunc = async () => {
+  page = await global.browser.newPage();
+  BO_LOGIN = await (new BO_login(page));
+};
+
 
 //test scenario
 scenario('should go to the BO', async () => {
@@ -14,7 +20,7 @@ scenario('should go to the BO', async () => {
   });
   test('should be on the dashboard', async() => {
     let pageTitle = await BO_LOGIN.getPageTitle();
-    await expect(pageTitle).to.equal(BO_LOGIN.BO_login_pageTitle);
+    await expect(pageTitle).to.equal(BO_LOGIN.pageTitle);
 
   });
-}, true);
+}, beforeFunc, true);

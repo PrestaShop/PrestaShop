@@ -2,19 +2,19 @@ const Page = require('../page');
 
 module.exports = class BO_login extends Page {
 
-  constructor() {
-    super();
+  constructor(page) {
+    super(page);
 
-    this.BO_login_pageTitle = 'Dashboard • PrestaShop';
+    this.pageTitle = 'Dashboard • PrestaShop';
 
-    this.BO_login_email_input = "#email";
-    this.BO_login_password_input = "#passwd";
-    this.BO_login_submitLogin_button = "#submit_login";
-    this.BO_login_stayLoggedIn_checkbox = "#stay_logged_in";
+    this.emailInput = "#email";
+    this.passwordInput = "#passwd";
+    this.submitLoginButton = "#submit_login";
+    this.stayLoggedInCheckbox = "#stay_logged_in";
 
-    this.BO_login_forgotPassword_link = "#a.show-forgot-password";
-    this.BO_login_emailForgot_input = "#email_forgot";
-    this.BO_login_sendResetLink_button = "#button[name=submitLogin].btn-default";
+    this.forgotPasswordLink = "#a.show-forgot-password";
+    this.emailForgotInput = "#email_forgot";
+    this.sendResetLinkButton = "#button[name=submitLogin].btn-default";
   }
 
   /*
@@ -22,10 +22,10 @@ module.exports = class BO_login extends Page {
    */
 
   async login(email, passwd) {
-    await global.page.type(this.BO_login_email_input, email);
-    await global.page.type(this.BO_login_password_input, passwd);
-    await global.page.click(this.BO_login_submitLogin_button);
-    await global.page.waitForNavigation();
+    await this.page.type(this.emailInput, email);
+    await this.page.type(this.passwordInput, passwd);
+    await this.page.click(this.submitLoginButton);
+    await this.page.waitForNavigation();
   }
 
 };
