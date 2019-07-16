@@ -44,11 +44,6 @@ final class ShippingMethod
     const SHIPPING_METHOD_PRICE = 2;
 
     /**
-     * Represents shipping method when the shipping is free of charge
-     */
-    const SHIPPING_METHOD_FREE = 3;
-
-    /**
      * @var int
      */
     private $value;

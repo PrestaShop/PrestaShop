@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Carrier\CommandHandler;
 use Carrier;
 use ObjectModel;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Command\AddCarrierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\CommandHandler\AddCarrierHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierException;
@@ -45,25 +46,17 @@ use RangeWeight;
 final class AddCarrierHandler extends AbstractObjectModelHandler implements AddCarrierHandlerInterface
 {
     /**
-     * @var int
+     * @var ConfigurationInterface
      */
-    private $defaultLangId;
+    private $configuration;
 
     /**
-     * @var int
-     */
-    private $defaultShippingMethod;
-
-    /**
-     * @param int $defaultLangId
-     * @param int $defaultShippingMethod
+     * @param ConfigurationInterface $configuration
      */
     public function __construct(
-        int $defaultLangId,
-        int $defaultShippingMethod
+        ConfigurationInterface $configuration
     ) {
-        $this->defaultLangId = $defaultLangId;
-        $this->defaultShippingMethod = $defaultShippingMethod;
+        $this->configuration = $configuration;
     }
 
     /**
@@ -91,7 +84,7 @@ final class AddCarrierHandler extends AbstractObjectModelHandler implements AddC
             $this->associateWithShops($carrier, $command->getAssociatedShopIds());
             $carrier->setTaxRulesGroup($command->getTaxRulesGroupId());
             $carrier->setGroups($command->getAssociatedGroupIds());
-            $this->handleRanges($carrier, $command->getShippingMethod(), $command->getShippingRanges());
+            $this->addShippingRanges($carrier, $command->getShippingMethod(), $command->getShippingRanges());
         } catch (PrestaShopException $e) {
             throw new CarrierException(
                 sprintf('An error occurred when trying to add new carrier')
@@ -114,17 +107,17 @@ final class AddCarrierHandler extends AbstractObjectModelHandler implements AddC
          * SHIPPING_METHOD_DEFAULT @deprecated 1.5.5
          */
         if (Carrier::SHIPPING_METHOD_DEFAULT === $shippingMethod) {
-            $shippingMethod = $this->defaultShippingMethod ?
+            $shippingMethod = $this->configuration->get('PS_SHIPPING_METHOD') ?
                 ShippingMethod::SHIPPING_METHOD_WEIGHT : ShippingMethod::SHIPPING_METHOD_PRICE;
         }
+        $carrier->is_free = $command->isFreeShipping();
         $carrier->shipping_method = $shippingMethod;
-        $carrier->is_free = ShippingMethod::SHIPPING_METHOD_FREE === $shippingMethod ? true : false;
 
         $localizedNames = $command->getLocalizedCarrierNames();
         foreach ($localizedNames as $langId => $carrierName) {
             $carrier->localized_name[$langId] = $carrierName->getValue();
         }
-        $carrier->name = $localizedNames[$this->defaultLangId]->getValue();
+        $carrier->name = $localizedNames[$this->configuration->get('PS_LANG_DEFAULT')]->getValue();
 
         foreach ($command->getLocalizedShippingDelays() as $langId => $shippingDelay) {
             $carrier->delay[$langId] = $shippingDelay->getValue();
@@ -146,31 +139,20 @@ final class AddCarrierHandler extends AbstractObjectModelHandler implements AddC
      *
      * @throws CarrierException
      * @throws PrestaShopException
-     * @throws \PrestaShopDatabaseException
      */
-    private function handleRanges(Carrier $carrier, ShippingMethod $shippingMethod, array $shippingRanges): void
+    private function addShippingRanges(Carrier $carrier, ShippingMethod $shippingMethod, array $shippingRanges): void
     {
         $methodValue = $shippingMethod->getValue();
         $carrierId = (int) $carrier->id;
-
-        if ($methodValue === ShippingMethod::SHIPPING_METHOD_PRICE) {
-            foreach ($shippingRanges as $shippingRange) {
-                $range = new RangePrice();
-                $this->addRange($range, $carrierId, $shippingRange);
-                $this->addDeliveryPrice($shippingRange, $shippingMethod, $carrier, (int) $range->id);
-            }
-
-            return;
-        }
+        $range = new RangePrice();
 
         if ($methodValue === ShippingMethod::SHIPPING_METHOD_WEIGHT) {
-            foreach ($shippingRanges as $shippingRange) {
-                $range = new RangeWeight();
-                $this->addRange($range, $carrierId, $shippingRange);
-                $this->addDeliveryPrice($shippingRange, $shippingMethod, $carrier, (int) $range->id);
-            }
+            $range = new RangeWeight();
+        }
 
-            return;
+        foreach ($shippingRanges as $shippingRange) {
+            $this->addRange($range, $carrierId, $shippingRange);
+            $this->addDeliveryPrice($shippingRange, $shippingMethod, $carrier, (int) $range->id);
         }
     }
 
