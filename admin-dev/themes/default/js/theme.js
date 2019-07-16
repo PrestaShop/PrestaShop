@@ -24,3 +24,10 @@
  */
 import '../sass/font.scss';
 import '../sass/admin-theme.sass';
+import '../node_modules/perfect-scrollbar/css/perfect-scrollbar.css';
+
+import PerfectScrollBar from 'perfect-scrollbar';
+
+$(document).ready(function() {
+  new PerfectScrollBar('.nav-bar');
+});
