@@ -59,8 +59,9 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
 
     public function __construct()
     {
-        $this->defaultLangId = CommonFeatureContext::getContainer()->get('prestashop.adapter.legacy.configuration')->get('PS_LANG_DEFAULT');
-        $this->defaultShopId = CommonFeatureContext::getContainer()->get('prestashop.adapter.legacy.configuration')->get('PS_SHOP_DEFAULT');
+        $configuration = CommonFeatureContext::getContainer()->get('prestashop.adapter.legacy.configuration');
+        $this->defaultLangId = $configuration->get('PS_LANG_DEFAULT');
+        $this->defaultShopId = $configuration->get('PS_SHOP_DEFAULT');
     }
 
     /**
