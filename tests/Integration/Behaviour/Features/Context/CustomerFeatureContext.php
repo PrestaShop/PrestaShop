@@ -32,6 +32,7 @@ use Country;
 use Customer;
 use Exception;
 use PrestaShop\PrestaShop\Adapter\Validate;
+use RuntimeException;
 
 class CustomerFeatureContext extends AbstractPrestaShopFeatureContext
 {
@@ -100,6 +101,40 @@ class CustomerFeatureContext extends AbstractPrestaShopFeatureContext
     {
         $this->checkCustomerWithNameExists($customerName);
         Context::getContext()->updateCustomer($this->customers[$customerName]);
+    }
+
+    /**
+     * @Given private note is not set about customer :reference
+     */
+    public function assertPrivateNoteIsNotSetAboutCustomer($reference)
+    {
+        /** @var Customer $customer */
+        $customer = SharedStorage::getStorage()->get($reference);
+
+        if ($customer->note) {
+            throw new RuntimeException(sprintf(
+                'It was expected that customer "%s" should not have private note.',
+                $reference
+            ));
+        }
+    }
+
+    /**
+     * @Then customer :reference private note should be :privateNote
+     */
+    public function assertPrivateNoteAboutCustomer($reference, $privateNote)
+    {
+        /** @var Customer $customer */
+        $customer = SharedStorage::getStorage()->get($reference);
+
+        if ($customer->note !== $privateNote) {
+            throw new RuntimeException(sprintf(
+                'It was expected that customer "%s" private note should be "%s", but actually is "%s".',
+                $reference,
+                $privateNote,
+                $customer->note
+            ));
+        }
     }
 
     /**

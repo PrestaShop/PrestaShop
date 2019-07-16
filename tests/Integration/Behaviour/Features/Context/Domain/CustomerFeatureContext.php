@@ -26,6 +26,8 @@
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
+use Customer;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SetPrivateNoteAboutCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SetRequiredFieldsForCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetRequiredFieldsForCustomer;
 use RuntimeException;
@@ -73,6 +75,19 @@ class CustomerFeatureContext extends AbstractDomainFeatureContext
         $requiredFields = $this->getSharedStorage()->get('customer_required_fields');
 
         $this->getCommandBus()->handle(new SetRequiredFieldsForCustomerCommand($requiredFields));
+    }
+
+    /**
+     * @When I set :privateNote private note about customer :reference
+     */
+    public function setPrivateNoteAboutCustomer($privateNote, $reference)
+    {
+        /** @var Customer $customer */
+        $customer = $this->getSharedStorage()->get($reference);
+
+        $this->getCommandBus()->handle(new SetPrivateNoteAboutCustomerCommand((int) $customer->id, $privateNote));
+
+        $this->getSharedStorage()->set($reference, new Customer($customer->id));
     }
 
     /**
