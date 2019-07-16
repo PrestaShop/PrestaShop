@@ -26,4 +26,24 @@ Feature: Meta management (Traffic & Seo)
       | page_name                          | pdf-invoice                             |
       | localized_rewrite_urls             | rewrite-url                             |
     When I add meta "meta2" with specified properties without default language
-    Then I should get error that default language is missing for url rewrite
+    Then I should get error that url rewrite value is incorrect
+#    todo: in update check index page that it should have empty value ( exception)
+#  todo: non existing page name
+
+  Scenario: Creating new metadata with invalid url rewrite should not be allowed when ascended chars setting is turned off
+    Given I specify following properties for new meta "meta3":
+      | page_name                          | order-return                            |
+      | localized_rewrite_urls             | i-got-char-š                            |
+    And shop configuration for "PS_ALLOW_ACCENTED_CHARS_URL" is set to 0
+    When I add meta "meta3" with specified properties
+    Then I should get error that url rewrite value is incorrect
+
+  Scenario: Creating new metadata with invalid url rewrite should be allowed when ascended chars setting is turned on
+    Given I specify following properties for new meta "meta4":
+      | page_name                          | newproducts                            |
+      | localized_rewrite_urls             | i-got-char-š                           |
+    And shop configuration for "PS_ALLOW_ACCENTED_CHARS_URL" is set to 1
+    When I add meta "meta4" with specified properties
+    Then meta "meta4" page should be "newproducts"
+    And meta "meta4" field "url_rewrite" for default language should be "i-got-char-š"
+#  todo: make sure above two tests not work when scalar value is used in IsUrlRewriteValidator

@@ -34,16 +34,29 @@ class MetaFeatureContext extends AbstractDomainFeatureContext
         $data = $this->getWithDefaultLanguage($data);
 
         $command = (new AddMetaCommand($data['page_name']))
-            ->setLocalisedPageTitle($data['localized_page_title'])
-            ->setLocalisedMetaDescription($data['localized_meta_description'])
-            ->setLocalisedMetaKeywords($data['localized_meta_keywords'])
-            ->setLocalisedRewriteUrls($data['localized_rewrite_urls'])
+            ->setLocalisedPageTitle(
+                isset($data['localized_page_title']) ? $data['localized_page_title'] : []
+            )
+            ->setLocalisedMetaDescription(
+                isset($data['localized_meta_description']) ? $data['localized_meta_description'] : []
+            )
+            ->setLocalisedMetaKeywords(
+                isset($data['localized_meta_keywords']) ? $data['localized_meta_keywords'] : []
+            )
+            ->setLocalisedRewriteUrls(
+                isset($data['localized_rewrite_urls']) ? $data['localized_rewrite_urls'] : []
+            )
         ;
 
-        /** @var MetaId $metaId */
-        $metaId = $this->getCommandBus()->handle($command);
+        try {
+            /** @var MetaId $metaId */
+            $metaId = $this->getCommandBus()->handle($command);
 
-        SharedStorage::getStorage()->set($reference, new Meta($metaId->getValue()));
+            SharedStorage::getStorage()->set($reference, new Meta($metaId->getValue()));
+        } catch (Exception $exception) {
+            $this->lastException = $exception;
+            $this->lastErrorCode = $exception->getCode();
+        }
     }
 
     /**
@@ -99,7 +112,7 @@ class MetaFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then /^I should get error that default language is missing for url rewrite$/
+     * @Then /^I should get error that url rewrite value is incorrect$/
      */
     public function assertItShouldGetErrorThatDefaultLanguageIsMissingForUrlRewrite()
     {

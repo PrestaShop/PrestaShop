@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\ConstraintValidator;
 
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\IsUrlRewrite;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 use Symfony\Component\Validator\Constraint;
@@ -38,16 +39,16 @@ use Symfony\Component\Validator\ConstraintValidator;
 class IsUrlRewriteValidator extends ConstraintValidator
 {
     /**
-     * @var bool
+     * @var ConfigurationInterface
      */
-    private $isAscendedCharsAllowed;
+    private $configuration;
 
     /**
-     * @param bool $isAscendedCharsAllowed
+     * @param ConfigurationInterface $configuration
      */
-    public function __construct($isAscendedCharsAllowed)
+    public function __construct(ConfigurationInterface $configuration)
     {
-        $this->isAscendedCharsAllowed = $isAscendedCharsAllowed;
+        $this->configuration = $configuration;
     }
 
     /**
@@ -87,7 +88,7 @@ class IsUrlRewriteValidator extends ConstraintValidator
     {
         $pattern = '/^[_a-zA-Z0-9\-]+$/';
 
-        if ($this->isAscendedCharsAllowed) {
+        if ($this->configuration->get('PS_ALLOW_ACCENTED_CHARS_URL')) {
             $pattern = '/^[_a-zA-Z0-9\pL\pS-]+$/u';
         }
 
