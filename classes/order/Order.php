@@ -514,19 +514,19 @@ class OrderCore extends ObjectModel
         $paid = false;
         $shipped = false;
         if ($filters > 0) {
-            if ($filters & OrderState::FLAG_NO_HIDDEN) {
+            if ($filters && OrderState::FLAG_NO_HIDDEN) {
                 $no_hidden = true;
             }
-            if ($filters & OrderState::FLAG_DELIVERY) {
+            if ($filters && OrderState::FLAG_DELIVERY) {
                 $delivery = true;
             }
-            if ($filters & OrderState::FLAG_LOGABLE) {
+            if ($filters && OrderState::FLAG_LOGABLE) {
                 $logable = true;
             }
-            if ($filters & OrderState::FLAG_PAID) {
+            if ($filters && OrderState::FLAG_PAID) {
                 $paid = true;
             }
-            if ($filters & OrderState::FLAG_SHIPPED) {
+            if ($filters && OrderState::FLAG_SHIPPED) {
                 $shipped = true;
             }
         }
