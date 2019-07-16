@@ -115,9 +115,20 @@ final class AddCarrierCommand
      * @var int[]
      */
     private $associatedShopIds;
+    /**
+     * @var bool
+     */
+    private $freeShipping;
 
     /**
-     * @param string[] $localizedCarrierNames
+     * This class should be initialized using static factories
+     */
+    public function __construct()
+    {
+    }
+
+    /**
+     * @param string[] $localizedNames
      * @param string[] $localizedShippingDelays
      * @param int $speedGrade
      * @param string $trackingUrl
@@ -133,10 +144,12 @@ final class AddCarrierCommand
      * @param int[] $associatedGroupIds
      * @param int[] $associatedShopIds
      *
+     * @return AddCarrierCommand
+     *
      * @throws CarrierConstraintException
      */
-    public function __construct(
-        array $localizedCarrierNames,
+    public static function create(
+        array $localizedNames,
         array $localizedShippingDelays,
         int $speedGrade,
         string $trackingUrl,
@@ -152,18 +165,82 @@ final class AddCarrierCommand
         array $associatedGroupIds,
         array $associatedShopIds
     ) {
-        $this->setLocalizedCarrierNames($localizedCarrierNames);
-        $this->setLocalizedShippingDelays($localizedShippingDelays);
-        $this->setMeasures($maxPackageWidth, $maxPackageHeight, $maxPackageDepth, $maxPackageWeight);
-        $this->setShippingRanges($shippingRanges);
-        $this->speedGrade = new SpeedGrade($speedGrade);
-        $this->shippingMethod = new ShippingMethod($shippingMethod);
-        $this->trackingUrl = new TrackingUrl($trackingUrl);
-        $this->outOfRangeBehavior = new OutOfRangeBehavior($outOfRangeBehavior);
-        $this->taxRulesGroupId = $taxRulesGroupId;
-        $this->shippingCostIncluded = $shippingCostIncluded;
-        $this->associatedGroupIds = $associatedGroupIds;
-        $this->associatedShopIds = $associatedShopIds;
+        $command = new self();
+        $command->setLocalizedNames($localizedNames);
+        $command->setLocalizedShippingDelays($localizedShippingDelays);
+        $command->setMeasures($maxPackageWidth, $maxPackageHeight, $maxPackageDepth, $maxPackageWeight);
+        $command->setShippingRanges($shippingRanges);
+        $command->speedGrade = new SpeedGrade($speedGrade);
+        $command->shippingMethod = new ShippingMethod($shippingMethod);
+        $command->trackingUrl = new TrackingUrl($trackingUrl);
+        $command->outOfRangeBehavior = new OutOfRangeBehavior($outOfRangeBehavior);
+        $command->freeShipping = false;
+        $command->shippingCostIncluded = $shippingCostIncluded;
+        $command->taxRulesGroupId = $taxRulesGroupId;
+        $command->associatedGroupIds = $associatedGroupIds;
+        $command->associatedShopIds = $associatedShopIds;
+
+        return $command;
+    }
+
+    /**
+     * @param string[] $localizedNames
+     * @param string[] $localizedShippingDelays
+     * @param int $speedGrade
+     * @param string $trackingUrl
+     * @param int $taxRulesGroupId
+     * @param int $outOfRangeBehavior
+     * @param int $maxPackageWidth
+     * @param int $maxPackageHeight
+     * @param int $maxPackageDepth
+     * @param float $maxPackageWeight
+     * @param int[] $associatedGroupIds
+     * @param int[] $associatedShopIds
+     *
+     * @return AddCarrierCommand
+     *
+     * @throws CarrierConstraintException
+     */
+    public static function createWithFreeShipping(
+        array $localizedNames,
+        array $localizedShippingDelays,
+        int $speedGrade,
+        string $trackingUrl,
+        int $taxRulesGroupId,
+        int $outOfRangeBehavior,
+        int $maxPackageWidth,
+        int $maxPackageHeight,
+        int $maxPackageDepth,
+        float $maxPackageWeight,
+        array $associatedGroupIds,
+        array $associatedShopIds
+    ) {
+        $command = new self();
+        $command->setLocalizedNames($localizedNames);
+        $command->setLocalizedShippingDelays($localizedShippingDelays);
+        $command->setMeasures($maxPackageWidth, $maxPackageHeight, $maxPackageDepth, $maxPackageWeight);
+        $command->speedGrade = new SpeedGrade($speedGrade);
+        $command->trackingUrl = new TrackingUrl($trackingUrl);
+
+        //@todo: check if out of range behavior is needed when free shipping
+        $command->outOfRangeBehavior = new OutOfRangeBehavior($outOfRangeBehavior);
+        $command->shippingMethod = new ShippingMethod(ShippingMethod::SHIPPING_METHOD_WEIGHT);
+        $command->freeShipping = true;
+        $command->shippingCostIncluded = false;
+        $command->shippingRanges = [];
+        $command->taxRulesGroupId = $taxRulesGroupId;
+        $command->associatedGroupIds = $associatedGroupIds;
+        $command->associatedShopIds = $associatedShopIds;
+
+        return $command;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isFreeShipping(): bool
+    {
+        return $this->freeShipping;
     }
 
     /**
@@ -299,13 +376,13 @@ final class AddCarrierCommand
     }
 
     /**
-     * @param array $localizedCarrierNames
+     * @param array $localizedNames
      *
      * @throws CarrierConstraintException
      */
-    private function setLocalizedCarrierNames(array $localizedCarrierNames)
+    private function setLocalizedNames(array $localizedNames)
     {
-        foreach ($localizedCarrierNames as $langId => $name) {
+        foreach ($localizedNames as $langId => $name) {
             $this->localizedCarrierNames[(new LanguageId($langId))->getValue()] = new CarrierName($name);
         }
     }

@@ -54,7 +54,7 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
     {
         $data = $node->getRowsHash();
 
-        $command = new AddCarrierCommand(
+        $command = AddCarrierCommand::create(
             [$this->defaultLangId => $data['carrier_name']],
             [$this->defaultLangId => $data['shipping_delay']],
             (int) $data['speed_grade'],

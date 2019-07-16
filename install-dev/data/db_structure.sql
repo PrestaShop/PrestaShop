@@ -96,7 +96,7 @@ CREATE TABLE `PREFIX_carrier` (
   `id_carrier` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `id_reference` int(10) unsigned NOT NULL,
   `id_tax_rules_group` int(10) unsigned DEFAULT '0',
-  `name` varchar(64) NOT NULL, /* deprecated since 1.7.7.0 , use carrier_lang.localized_name instead */
+  `name` varchar(64) NOT NULL,
   `url` varchar(255) DEFAULT NULL,
   `active` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `deleted` tinyint(1) unsigned NOT NULL DEFAULT '0',
