@@ -22,12 +22,20 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
+import PerfectScrollbar from 'perfect-scrollbar';
+import '../node_modules/perfect-scrollbar/css/perfect-scrollbar.css';
+
 const $ = window.$;
 
 export default class NavBar {
   constructor() {
+
     $(() => {
-      $('.nav-bar').find('.link-levelone').hover(
+      const $navBar = $('.nav-bar');
+      new PerfectScrollbar($navBar.get(0));
+
+      $navBar.find('.link-levelone').hover(
         function onMouseEnter() {
           $(this).addClass('-hover');
         },
@@ -78,7 +86,7 @@ export default class NavBar {
           $submenu.find('i.material-icons.sub-tabs-arrow').text('keyboard_arrow_up');
         });
 
-      $('.nav-bar').on(
+      $navBar.on(
         'click',
         '.menu-collapse',
         function onNavBarClick() {
