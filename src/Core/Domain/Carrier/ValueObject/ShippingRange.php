@@ -117,9 +117,9 @@ final class ShippingRange
         $this->assertIsNonNegativeInteger($from);
         $this->assertIsNonNegativeInteger($to);
 
-        if ($from >= $to) {
+        if ($from > $to) {
             throw new CarrierConstraintException(sprintf(
-                'Invalid shipping range "%s - %s". Range to must be higher than range from.', $from, $to),
+                'Invalid shipping range "%s - %s". Range to must be higher or equal to range from.', $from, $to),
                 CarrierConstraintException::INVALID_SHIPPING_RANGE
             );
         }
