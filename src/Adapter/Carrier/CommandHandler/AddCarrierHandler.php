@@ -46,6 +46,28 @@ use RangeWeight;
 final class AddCarrierHandler extends AbstractObjectModelHandler implements AddCarrierHandlerInterface
 {
     /**
+     * @var int
+     */
+    private $defaultLangId;
+
+    /**
+     * @var int
+     */
+    private $defaultShippingMethod;
+
+    /**
+     * @param int $defaultLangId
+     * @param int $defaultShippingMethod
+     */
+    public function __construct(
+        int $defaultLangId,
+        int $defaultShippingMethod
+    ) {
+        $this->defaultLangId = $defaultLangId;
+        $this->defaultShippingMethod = $defaultShippingMethod;
+    }
+
+    /**
      * @param AddCarrierCommand $command
      *
      * @return CarrierId
@@ -68,6 +90,8 @@ final class AddCarrierHandler extends AbstractObjectModelHandler implements AddC
                 );
             }
             $this->associateWithShops($carrier, $command->getAssociatedShopIds());
+            $carrier->setTaxRulesGroup($command->getTaxRulesGroupId());
+            $carrier->setGroups($command->getAssociatedGroupIds());
             $this->handleRanges($carrier, $command->getShippingMethod(), $command->getShippingRanges());
         } catch (PrestaShopException $e) {
             throw new CarrierException(
@@ -91,16 +115,21 @@ final class AddCarrierHandler extends AbstractObjectModelHandler implements AddC
          * SHIPPING_METHOD_DEFAULT @deprecated 1.5.5
          */
         if (Carrier::SHIPPING_METHOD_DEFAULT === $shippingMethod) {
-            $shippingMethod = ((int) Configuration::get('PS_SHIPPING_METHOD') ?
-                ShippingMethod::SHIPPING_METHOD_WEIGHT : ShippingMethod::SHIPPING_METHOD_PRICE);
+            $shippingMethod = $this->defaultShippingMethod ?
+                ShippingMethod::SHIPPING_METHOD_WEIGHT : ShippingMethod::SHIPPING_METHOD_PRICE;
         }
         $carrier->shipping_method = $shippingMethod;
+        $carrier->is_free = ShippingMethod::SHIPPING_METHOD_FREE === $shippingMethod ? true : false;
 
-        foreach ($command->getLocalizedCarrierNames() as $langId => $carrierName) {
-            $carrier->localized_name[$langId] = $carrierName;
+        $localizedNames = $command->getLocalizedCarrierNames();
+        foreach ($localizedNames as $langId => $carrierName) {
+            $carrier->localized_name[$langId] = $carrierName->getValue();
         }
+        //@todo: inject configuration service instead
+        $carrier->name = $localizedNames[$this->defaultLangId]->getValue();
+
         foreach ($command->getLocalizedShippingDelays() as $langId => $shippingDelay) {
-            $carrier->delay[$langId] = $shippingDelay;
+            $carrier->delay[$langId] = $shippingDelay->getValue();
         }
         $carrier->grade = $command->getSpeedGrade()->getValue();
         $carrier->url = $command->getTrackingUrl()->getValue();
@@ -110,8 +139,6 @@ final class AddCarrierHandler extends AbstractObjectModelHandler implements AddC
         $carrier->max_height = $command->getMaxPackageHeight();
         $carrier->max_depth = $command->getMaxPackageDepth();
         $carrier->max_weight = $command->getMaxPackageWeight();
-        $carrier->setTaxRulesGroup($command->getTaxRulesGroupId());
-        $carrier->setGroups($command->getAssociatedGroupIds());
     }
 
     /**
