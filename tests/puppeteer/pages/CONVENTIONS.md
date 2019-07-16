@@ -3,9 +3,9 @@
 ### Selectors
 Selectors are used in every page and are stored as attributes of the class. They should be named following this convention :
 
-\*page\*\_\*name\*\_\*type\*
+*nametype\* in `camelCase`.
 
-For example, a button used to submit the main form in the order page should be named: `order_submitMainForm_button`.
+For example, a button used to submit the main form in the order page should be named: `submitMainFormButton`.
 
 ### Methods
 Methods are used in a POM class to execute some logic inherent to the page, to add a level of abstraction and to make tests themselves agnostic. This organization lets us have tests that don't reference anything page-level and just use lambda methods names (like `login()` or `submitForm()`).
