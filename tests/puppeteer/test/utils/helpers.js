@@ -9,7 +9,7 @@ global.test = (name, instructions) => it(name, () => {
   return instructions().catch();
 });
 
-global.scenario = (name, tests, beforeFunc, close = false) =>
+global.scenario = (name, tests, init, close = false) =>
   describe(name, async () => {
     before(async () => {
       global.browser = await puppeteer.launch({
@@ -17,7 +17,7 @@ global.scenario = (name, tests, beforeFunc, close = false) =>
         timeout: 0,
         args: ['--start-maximized', '--window-size=1920,1040', '--no-sandbox']
       });
-      await beforeFunc();
+      await init();
     });
 
     await tests();
