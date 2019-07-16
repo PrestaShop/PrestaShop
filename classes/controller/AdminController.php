@@ -789,11 +789,11 @@ class AdminControllerCore extends Controller
         }
 
         $token = Tools::getValue('token');
-        if (!empty($token) && $token === $this->token) {
+        if ($token === $this->token) {
             return true;
         }
 
-        if (count($_POST) || !isset($_GET['controller']) || !Validate::isControllerName($_GET['controller']) || $token) {
+        if (count($_POST) || !isset($_GET['controller']) || !Validate::isControllerName($_GET['controller']) || !$token) {
             return false;
         }
 
