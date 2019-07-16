@@ -30,6 +30,7 @@ use Behat\Behat\Context\Context;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
+use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
 abstract class AbstractDomainFeatureContext implements Context
 {
@@ -52,6 +53,14 @@ abstract class AbstractDomainFeatureContext implements Context
     protected function getQueryBus()
     {
         return CommonFeatureContext::getContainer()->get('prestashop.core.query_bus');
+    }
+
+    /**
+     * @return SharedStorage
+     */
+    protected function getSharedStorage()
+    {
+        return SharedStorage::getStorage();
     }
 
     /**
