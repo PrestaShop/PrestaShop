@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Adapter\Carrier\CommandHandler;
 
 use Carrier;
-use Configuration;
 use ObjectModel;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Command\AddCarrierCommand;
@@ -125,7 +124,6 @@ final class AddCarrierHandler extends AbstractObjectModelHandler implements AddC
         foreach ($localizedNames as $langId => $carrierName) {
             $carrier->localized_name[$langId] = $carrierName->getValue();
         }
-        //@todo: inject configuration service instead
         $carrier->name = $localizedNames[$this->defaultLangId]->getValue();
 
         foreach ($command->getLocalizedShippingDelays() as $langId => $shippingDelay) {
@@ -213,7 +211,8 @@ final class AddCarrierHandler extends AbstractObjectModelHandler implements AddC
     private function addDeliveryPrice(
         ShippingRange $shippingRange,
         ShippingMethod $shippingMethod,
-        Carrier $carrier, int $rangeId
+        Carrier $carrier,
+        int $rangeId
     ) {
         $rangePriceId = $rangeId;
         $rangeWeightId = null;
