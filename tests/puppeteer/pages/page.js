@@ -1,14 +1,14 @@
 module.exports = class Page {
 
   constructor(page) {
+    this.page = page;
   }
 
   async getPageTitle() {
-    return global.page.title();
+    return await this.page.title();
   }
 
   async goTo(URL) {
-    await global.page.goto(URL);
+    await this.page.goto(URL);
   }
-
 };
