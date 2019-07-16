@@ -62,3 +62,13 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\WebserviceKeyFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\WebserviceKeyFeatureContext
+
+        meta:
+            paths:
+              features: Features/Scenario/Meta
+            contexts:
+              - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+              - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
+              - Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext
+              - Tests\Integration\Behaviour\Features\Context\Domain\MetaFeatureContext
+              - Tests\Integration\Behaviour\Features\Context\MetaFeatureContext
