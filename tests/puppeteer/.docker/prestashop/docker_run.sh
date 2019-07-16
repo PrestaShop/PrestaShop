@@ -71,7 +71,7 @@ if [ $PS_INSTALL_AUTO = 1 ]; then
 
   cd /var/www/html
   echo "\n* Install Dependencies...";
-  /usr/bin/composer install --no-suggest --ansi --prefer-dist --no-interaction --no-progress --quiet
+  /usr/bin/composer install --no-suggest --ansi --prefer-dist --no-interaction --no-progress --quiet --no-dev
 
   echo "\n* Install PrestaShop...";
   php /var/www/html/$PS_FOLDER_INSTALL/index_cli.php --domain="$PS_DOMAIN" --db_server=$DB_SERVER:$DB_PORT --db_name="$DB_NAME" --db_user=$DB_USER \
