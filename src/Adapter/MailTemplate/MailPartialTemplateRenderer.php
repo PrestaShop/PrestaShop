@@ -26,7 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Adapter\MailTemplate;
 
-use Context as LegacyContext;
+use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
+use Smarty;
 use Tools;
 
 /**
@@ -35,15 +36,15 @@ use Tools;
  */
 class MailPartialTemplateRenderer
 {
-    /** @var LegacyContext */
-    private $context;
+    /** @var Smarty */
+    private $smarty;
 
     /**
-     * @param LegacyContext $context
+     * @param Smarty $smarty
      */
-    public function __construct(LegacyContext $context)
+    public function __construct(Smarty $smarty)
     {
-        $this->context = $context;
+        $this->smarty = $smarty;
     }
 
     /**
@@ -52,25 +53,26 @@ class MailPartialTemplateRenderer
      * mails/current_iso_lang.
      *
      * @param string $partialTemplateName template name with extension
+     * @param LanguageInterface $language
      * @param array $variables sent to smarty as 'list'
      *
      * @return string
      */
-    public function render($partialTemplateName, array $variables)
+    public function render($partialTemplateName, LanguageInterface $language, array $variables = [])
     {
         $potentialPaths = array(
-            _PS_THEME_DIR_ . 'mails' . DIRECTORY_SEPARATOR . $this->context->language->iso_code . DIRECTORY_SEPARATOR . $partialTemplateName,
+            _PS_THEME_DIR_ . 'mails' . DIRECTORY_SEPARATOR . $language->getIsoCode() . DIRECTORY_SEPARATOR . $partialTemplateName,
+            _PS_MAIL_DIR_ . $language->getIsoCode() . DIRECTORY_SEPARATOR . $partialTemplateName,
             _PS_THEME_DIR_ . 'mails' . DIRECTORY_SEPARATOR . 'en' . DIRECTORY_SEPARATOR . $partialTemplateName,
-            _PS_MAIL_DIR_ . $this->context->language->iso_code . DIRECTORY_SEPARATOR . $partialTemplateName,
             _PS_MAIL_DIR_ . 'en' . DIRECTORY_SEPARATOR . $partialTemplateName,
             _PS_MAIL_DIR_ . '_partials' . DIRECTORY_SEPARATOR . $partialTemplateName,
         );
 
         foreach ($potentialPaths as $path) {
             if (Tools::file_exists_cache($path)) {
-                $this->context->smarty->assign('list', $variables);
+                $this->smarty->assign('list', $variables);
 
-                return $this->context->smarty->fetch($path);
+                return $this->smarty->fetch($path);
             }
         }
 

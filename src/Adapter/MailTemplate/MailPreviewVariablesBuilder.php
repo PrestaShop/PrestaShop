@@ -133,15 +133,15 @@ final class MailPreviewVariablesBuilder
 
         if (self::ORDER_CONFIRMATION == $mailLayout->getName()) {
             $productTemplateList = $this->getProductList($order);
-            $productListTxt = $this->mailPartialTemplateRenderer->render('order_conf_product_list.txt', $productTemplateList);
-            $productListHtml = $this->mailPartialTemplateRenderer->render('order_conf_product_list.tpl', $productTemplateList);
+            $productListTxt = $this->mailPartialTemplateRenderer->render('order_conf_product_list.txt', $this->context->language, $productTemplateList);
+            $productListHtml = $this->mailPartialTemplateRenderer->render('order_conf_product_list.tpl', $this->context->language, $productTemplateList);
 
             $cartRulesList[] = array(
                 'voucher_name' => 'Promo code',
                 'voucher_reduction' => '-' . Tools::displayPrice(5, $this->context->currency, false),
             );
-            $cartRulesListTxt = $this->mailPartialTemplateRenderer->render('order_conf_cart_rules.txt', $cartRulesList);
-            $cartRulesListHtml = $this->mailPartialTemplateRenderer->render('order_conf_cart_rules.tpl', $cartRulesList);
+            $cartRulesListTxt = $this->mailPartialTemplateRenderer->render('order_conf_cart_rules.txt', $this->context->language, $cartRulesList);
+            $cartRulesListHtml = $this->mailPartialTemplateRenderer->render('order_conf_cart_rules.tpl', $this->context->language, $cartRulesList);
 
             $productVariables = [
                 '{products}' => $productListHtml,

@@ -28,8 +28,7 @@ namespace Tests\Unit\Adapter\MailTemplate;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\MailTemplate\MailPartialTemplateRenderer;
-use Context;
-use Language;
+use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use Smarty;
 
 class MailPartialTemplateRendererTest extends TestCase
@@ -53,37 +52,27 @@ class MailPartialTemplateRendererTest extends TestCase
 
     public function testUnknownTemplate()
     {
-        $contextMock = $this->buildContextMock();
+        $smartyMock = $this->buildSmartyMock();
 
-        $renderer = new MailPartialTemplateRenderer($contextMock);
-        $this->assertEquals('', $renderer->render('unknown_template.tpl', []));
+        $renderer = new MailPartialTemplateRenderer($smartyMock);
+        $this->assertEquals('', $renderer->render('unknown_template.tpl', $this->buildLanguageMock(), []));
+        $this->assertEquals('', $renderer->render('unknown_template.tpl', $this->buildLanguageMock()));
     }
 
     public function testOrderConfTemplate()
     {
-        $contextMock = $this->buildContextMock('order_conf_template');
+        $smartyMock = $this->buildSmartyMock('order_conf_template');
 
-        $renderer = new MailPartialTemplateRenderer($contextMock);
-        $this->assertEquals('order_conf_template', $renderer->render('order_conf_product_list.tpl', []));
+        $renderer = new MailPartialTemplateRenderer($smartyMock);
+        $this->assertEquals('order_conf_template', $renderer->render('order_conf_product_list.tpl', $this->buildLanguageMock(), []));
+        $this->assertEquals('order_conf_template', $renderer->render('order_conf_product_list.tpl', $this->buildLanguageMock()));
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|Context
+     * @return \PHPUnit_Framework_MockObject_MockObject|Smarty
      */
-    private function buildContextMock($template = '')
+    private function buildSmartyMock($template = '')
     {
-        $contextMock = $this->getMockBuilder(Context::class)
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
-
-        $languageMock = $this->getMockBuilder(Language::class)
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
-        $languageMock->iso_code = 'en';
-        $contextMock->language = $languageMock;
-
         $smartyMock = $this->getMockBuilder(Smarty::class)
             ->disableOriginalConstructor()
             ->getMock()
@@ -96,14 +85,30 @@ class MailPartialTemplateRendererTest extends TestCase
             ;
         } else {
             $smartyMock
-                ->expects($this->once())
+                ->expects($this->exactly(2))
                 ->method('fetch')
                 ->willReturn($template)
             ;
         }
 
-        $contextMock->smarty = $smartyMock;
+        return $smartyMock;
+    }
 
-        return $contextMock;
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject|LanguageInterface
+     */
+    private function buildLanguageMock()
+    {
+        $languageMock = $this->getMockBuilder(LanguageInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+        $languageMock
+            ->expects($this->exactly(2))
+            ->method('getIsoCode')
+            ->willReturn('en')
+        ;
+
+        return $languageMock;
     }
 }

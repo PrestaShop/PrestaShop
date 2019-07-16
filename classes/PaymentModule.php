@@ -36,6 +36,9 @@ abstract class PaymentModuleCore extends Module
 
     const DEBUG_MODE = false;
 
+    /** @var MailPartialTemplateRenderer */
+    protected $partialRenderer;
+
     public function install()
     {
         if (!parent::install()) {
@@ -879,6 +882,18 @@ abstract class PaymentModuleCore extends Module
     }
 
     /**
+     * @return MailPartialTemplateRenderer
+     */
+    protected function getPartialRenderer()
+    {
+        if (!$this->partialRenderer) {
+            $this->partialRenderer = new MailPartialTemplateRenderer($this->context->smarty);
+        }
+
+        return $this->partialRenderer;
+    }
+
+    /**
      * Fetch the content of $template_name inside the folder
      * current_theme/mails/current_iso_lang/ if found, otherwise in
      * mails/current_iso_lang.
@@ -896,9 +911,7 @@ abstract class PaymentModuleCore extends Module
             return '';
         }
 
-        $partialRenderer = new MailPartialTemplateRenderer($this->context);
-
-        return $partialRenderer->render($template_name, $var);
+        return $this->getPartialRenderer()->render($template_name, $this->context->language, $var);
     }
 
     protected function createOrderFromCart(

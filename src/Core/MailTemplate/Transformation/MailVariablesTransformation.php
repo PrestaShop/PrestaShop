@@ -61,7 +61,7 @@ class MailVariablesTransformation extends AbstractTransformation
     {
         $replaceVariables = $this->replaceVariables;
         if (!empty($templateVariables['templateVars'])) {
-            $replaceVariables = array_merge(
+            $replaceVariables = array_merge_recursive(
                 $replaceVariables,
                 $templateVariables['templateVars']
             );
