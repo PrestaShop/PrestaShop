@@ -23,4 +23,46 @@ class MetaFeatureContext extends AbstractPrestaShopFeatureContext
             );
         }
     }
+
+    /**
+     * @Given /^meta "([^"]*)" page title for default language should be "([^"]*)"$/
+     */
+    public function AssertMetaPageTitleForDefaultLanguageShouldBe($reference, $expectedTitle)
+    {
+        $defaultLanguageId = SharedStorage::getStorage()->get('default_language_id');
+        /** @var Meta $meta */
+        $meta = SharedStorage::getStorage()->get($reference);
+
+        if ($meta->title[$defaultLanguageId] !== $expectedTitle) {
+            throw new RuntimeException(
+                sprintf(
+                    'Expected title "%s" did not matched given %s for language %s',
+                    $expectedTitle,
+                    $meta->title[$defaultLanguageId],
+                    $defaultLanguageId
+                )
+            );
+        }
+    }
+
+    /**
+     * @Given /^meta "([^"]*)" field "([^"]*)" for default language should be "([^"]*)"$/
+     */
+    public function metaFieldForDefaultLanguageShouldBe($reference, $field, $expectedValue)
+    {
+        $defaultLanguageId = SharedStorage::getStorage()->get('default_language_id');
+        /** @var Meta $meta */
+        $meta = SharedStorage::getStorage()->get($reference);
+
+        if ($meta->{$field}[$defaultLanguageId] !== $expectedValue) {
+            throw new RuntimeException(
+                sprintf(
+                    'Expected value "%s" did not matched given %s for language %s',
+                    $expectedValue,
+                    $meta->{$field}[$defaultLanguageId],
+                    $defaultLanguageId
+                )
+            );
+        }
+    }
 }
