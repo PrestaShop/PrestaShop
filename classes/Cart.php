@@ -4281,14 +4281,6 @@ class CartCore extends ObjectModel
         $success = true;
         $products = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT * FROM `' . _DB_PREFIX_ . 'cart_product` WHERE `id_cart` = ' . (int) $this->id);
 
-        foreach ($products as $key => $product) {
-            $currentProduct = new Product();
-            $currentProduct->hydrate($product);
-            if ($currentProduct->hasAttributes() && $product['id_product_attribute'] === 0) {
-                unset($products[$key]);
-            }
-        }
-        
         $orderId = Order::getIdByCartId((int) $this->id);
         $product_gift = array();
         if ($orderId) {
@@ -4833,6 +4825,23 @@ class CartCore extends ObjectModel
             FROM `' . _DB_PREFIX_ . 'customer` cu
             LEFT JOIN `' . _DB_PREFIX_ . 'cart` ca ON (ca.`id_customer` = cu.`id_customer`)
             WHERE ca.`id_cart` = ' . (int) $id_cart);
+    }
+
+    /**
+     * Are all products of the Cart still exist?
+     *
+     * @return bool False if not all products in the cart still exist
+     */
+    public function isAllProductsStillExist()
+    {
+        foreach ($this->getProducts(false, false, null, false) as $product) {
+            $currentProduct = new Product();
+            $currentProduct->hydrate($product);
+
+            if ($currentProduct->hasAttributes() && $product['id_product_attribute'] === '0') {
+                return false;
+            }
+        }
     }
 
     /**
