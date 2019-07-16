@@ -29,6 +29,9 @@ namespace PrestaShop\PrestaShop\Core\Grid\Column\Type;
 use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * Allows adding Preview functionality to grid rows
+ */
 final class PreviewColumn extends AbstractColumn
 {
     /**
