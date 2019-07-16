@@ -104,11 +104,13 @@ class NewsDataProvider
     }
 
     /**
+     * @param string $isoCode
+     *
      * @return array
      *
      * @throws \PrestaShopException
      */
-    public function getData(string $isoCode)
+    public function getData($isoCode)
     {
         $data = ['has_errors' => true, 'rss' => []];
         $apiUrl = $this->configuration->get('_PS_API_URL_');
