@@ -90,6 +90,13 @@ class Tab
     /**
      * @var bool
      *
+     * @ORM\Column(name="enabled", type="boolean")
+     */
+    private $enabled = true;
+
+    /**
+     * @var bool
+     *
      * @ORM\Column(name="hide_host_mode", type="boolean")
      */
     private $hideHostMode;
@@ -181,6 +188,26 @@ class Tab
     public function setRouteName($routeName)
     {
         $this->routeName = $routeName;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEnabled()
+    {
+        return $this->enabled;
+    }
+
+    /**
+     * @param bool $enabled
+     *
+     * @return Tab
+     */
+    public function setEnabled($enabled)
+    {
+        $this->enabled = $enabled;
 
         return $this;
     }

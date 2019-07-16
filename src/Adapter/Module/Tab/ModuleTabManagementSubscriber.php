@@ -58,6 +58,8 @@ class ModuleTabManagementSubscriber implements EventSubscriberInterface
         return [
             ModuleManagementEvent::INSTALL => 'onModuleInstall',
             ModuleManagementEvent::UNINSTALL => 'onModuleUninstall',
+            ModuleManagementEvent::ENABLE => 'onModuleEnable',
+            ModuleManagementEvent::DISABLE => 'onModuleDisable',
         ];
     }
 
@@ -75,5 +77,21 @@ class ModuleTabManagementSubscriber implements EventSubscriberInterface
     public function onModuleUninstall(ModuleManagementEvent $event)
     {
         $this->moduleTabUnregister->unregisterTabs($event->getModule());
+    }
+
+    /**
+     * @param ModuleManagementEvent $event
+     */
+    public function onModuleEnable(ModuleManagementEvent $event)
+    {
+        $this->moduleTabRegister->enableTabs($event->getModule());
+    }
+
+    /**
+     * @param ModuleManagementEvent $event
+     */
+    public function onModuleDisable(ModuleManagementEvent $event)
+    {
+        $this->moduleTabUnregister->disableTabs($event->getModule());
     }
 }

@@ -87,6 +87,14 @@ class ModuleTabUnregister
     }
 
     /**
+     * @param Module $module
+     */
+    public function disableTabs(Module $module)
+    {
+        $this->tabRepository->changeEnabledByModuleName($module->get('name'), false);
+    }
+
+    /**
      * Uninstalls a tab given its defined structure.
      *
      * @param Tab $tab the instance of entity tab
