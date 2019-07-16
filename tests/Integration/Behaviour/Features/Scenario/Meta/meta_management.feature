@@ -5,8 +5,7 @@ Feature: Meta management (Traffic & Seo)
   As a BO user I must be able to create, edit, delete and update meta data.
 
   Background:
-    Given shop "shop1" with name "test_shop" exists
-    And language with iso code "en" is the default one
+    Given language with iso code "en" is the default one
 
   Scenario: Create new metadata
     Given I specify following properties for new meta "meta1":
@@ -17,3 +16,7 @@ Feature: Meta management (Traffic & Seo)
       | localized_rewrite_urls           | rewrite-url-default                   |
     When I add meta "meta1" with specified properties
     Then meta "meta1" page should be "pdf-order-return"
+    And meta "meta1" field "title" for default language should be "page title in default language"
+    And meta "meta1" field "description" for default language should be "meta description in default language"
+    And meta "meta1" field "keywords" for default language should be "meta keywords in default language"
+    And meta "meta1" field "url_rewrite" for default language should be "rewrite-url-default"
