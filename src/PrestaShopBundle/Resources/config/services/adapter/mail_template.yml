@@ -19,7 +19,7 @@ services:
   prestashop.adapter.mail_template.partial_template_renderer:
     class: 'PrestaShop\PrestaShop\Adapter\MailTemplate\MailPartialTemplateRenderer'
     arguments:
-      - "@=service('prestashop.adapter.legacy.context').getContext()"
+      - "@=service('prestashop.adapter.legacy.context').getSmarty()"
 
   prestashop.adapter.mail_template.preview_variables_builder:
     class: 'PrestaShop\PrestaShop\Adapter\MailTemplate\MailPreviewVariablesBuilder'
