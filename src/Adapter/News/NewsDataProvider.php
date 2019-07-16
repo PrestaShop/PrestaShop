@@ -77,13 +77,23 @@ class NewsDataProvider
      */
     private $validate;
 
+    /**
+     * NewsDataProvider constructor.
+     *
+     * @param CircuitBreakerInterface $circuitBreaker
+     * @param CountryDataProvider $countryDataProvider
+     * @param Tools $tools
+     * @param Configuration $configuration
+     * @param Validate $validate
+     * @param int $contextMode
+     */
     public function __construct(
         CircuitBreakerInterface $circuitBreaker,
         CountryDataProvider $countryDataProvider,
         Tools $tools,
         Configuration $configuration,
         Validate $validate,
-        int $contextMode
+        $contextMode
     ) {
         $this->circuitBreaker = $circuitBreaker;
         $this->configuration = $configuration;
