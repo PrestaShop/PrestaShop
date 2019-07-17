@@ -27,7 +27,7 @@
 function ps_1770_copy_name_from_carrier_to_carrier_lang()
 {
     Db::getInstance()->execute(
-        "UPDATE " . _DB_PREFIX_ . " carrier_lang cl
+        "UPDATE " . _DB_PREFIX_ . "carrier_lang cl
         LEFT JOIN " . _DB_PREFIX_ . "carrier c ON c.id_carrier = cl.id_carrier
         SET cl.localized_name = c.name"
     );

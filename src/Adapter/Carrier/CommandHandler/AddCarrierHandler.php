@@ -77,18 +77,14 @@ final class AddCarrierHandler extends AbstractObjectModelHandler implements AddC
             }
 
             if (false === $carrier->add()) {
-                throw new CarrierException(
-                    sprintf('Failed to add new carrier')
-                );
+                throw new CarrierException('Failed to add new carrier');
             }
             $this->associateWithShops($carrier, $command->getAssociatedShopIds());
             $carrier->setTaxRulesGroup($command->getTaxRulesGroupId());
             $carrier->setGroups($command->getAssociatedGroupIds());
             $this->addShippingRanges($carrier, $command->getShippingMethod(), $command->getShippingRanges());
         } catch (PrestaShopException $e) {
-            throw new CarrierException(
-                sprintf('An error occurred when trying to add new carrier')
-            );
+            throw new CarrierException('An error occurred when trying to add new carrier');
         }
 
         return new CarrierId((int) $carrier->id);

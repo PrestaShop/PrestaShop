@@ -192,24 +192,6 @@ class TestAddCarrierCommand extends TestCase
 
     private function createCommandFromArray(array $data, bool $freeShipping)
     {
-        $command = AddCarrierCommand::withPricedShipping(
-            $data['localized_names'],
-            $data['localized_delays'],
-            $data['speed_grade'],
-            $data['tracking_url'],
-            $data['shipping_cost_included'],
-            $data['shipping_method'],
-            $data['tax_rules_group'],
-            $data['out_of_range_behavior'],
-            $data['shipping_ranges'],
-            $data['width'],
-            $data['height'],
-            $data['depth'],
-            $data['weight'],
-            $data['associated_group_ids'],
-            $data['associated_shop_ids']
-        );
-
         if ($freeShipping) {
             $command = AddCarrierCommand::withFreeShipping(
                 $data['localized_names'],
@@ -217,6 +199,24 @@ class TestAddCarrierCommand extends TestCase
                 $data['speed_grade'],
                 $data['tracking_url'],
                 $data['tax_rules_group'],
+                $data['width'],
+                $data['height'],
+                $data['depth'],
+                $data['weight'],
+                $data['associated_group_ids'],
+                $data['associated_shop_ids']
+            );
+        } else {
+            $command = AddCarrierCommand::withPricedShipping(
+                $data['localized_names'],
+                $data['localized_delays'],
+                $data['speed_grade'],
+                $data['tracking_url'],
+                $data['shipping_cost_included'],
+                $data['shipping_method'],
+                $data['tax_rules_group'],
+                $data['out_of_range_behavior'],
+                $data['shipping_ranges'],
                 $data['width'],
                 $data['height'],
                 $data['depth'],

@@ -75,11 +75,14 @@ final class CarrierName
      */
     private function assertIsValidLength(string $value)
     {
-        if (0 === strlen($value) || self::MAX_LENGTH < strlen($value)) {
-            throw new CarrierConstraintException(sprintf(
-                'Carrier name "%s" is invalid. It must be 1 - %s characters long.',
-                self::MAX_LENGTH,
-                $value),
+        $length = strlen($value);
+
+        if (0 === $length || self::MAX_LENGTH < $length) {
+            throw new CarrierConstraintException(
+                sprintf('Carrier name "%s" is invalid. It must be 1 - %s characters long.',
+                    $value,
+                    self::MAX_LENGTH
+                ),
                 CarrierConstraintException::INVALID_CARRIER_NAME
             );
         }
@@ -93,10 +96,12 @@ final class CarrierName
     private function assertValueMatchesPattern(string $value)
     {
         if (!preg_match(self::VALID_PATTERN, $value)) {
-            throw new CarrierConstraintException(sprintf(
-                'Carrier name "%s" is invalid. It must match "%s" pattern.',
-                $value,
-                self::VALID_PATTERN),
+            throw new CarrierConstraintException(
+                sprintf(
+                    'Carrier name "%s" is invalid. It must match "%s" pattern.',
+                    $value,
+                    self::VALID_PATTERN
+                ),
                 CarrierConstraintException::INVALID_CARRIER_NAME
             );
         }
