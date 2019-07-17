@@ -24,20 +24,42 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction;
+
+use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\GiftProduct;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\PercentageDiscount;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\MoneyAmount;
 
 /**
- * Class DomainConstraintException is responsible for holding exception codes which can be raised in reusable way.
+ * Describes a cart rule action.
  */
-class DomainConstraintException extends DomainException
+interface CartRuleActionInterface
 {
     /**
-     * @var int - raised when native php email validation fails. E.g filter_var($email, FILTER_VALIDATE_EMAIL)
+     * Check if this cart rule is giving free shipping.
+     *
+     * @return bool
      */
-    const INVALID_EMAIL = 1;
+    public function isFreeShipping(): bool;
 
     /**
-     * Used when invalid money amount is provided
+     * Get the amount discount, which this cart rule action is giving.
+     *
+     * @return MoneyAmount|null
      */
-    const INVALID_MONEY_AMOUNT = 2;
+    public function getAmountDiscount(): ?MoneyAmount;
+
+    /**
+     * Get the percentage discount, which this cart rule action is giving.
+     *
+     * @return PercentageDiscount|null
+     */
+    public function getPercentageDiscount(): ?PercentageDiscount;
+
+    /**
+     * Get the gift product, which this cart rule action is giving.
+     *
+     * @return GiftProduct|null returns null when not applicable
+     */
+    public function getGiftProduct(): ?GiftProduct;
 }
