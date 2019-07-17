@@ -242,7 +242,7 @@ final class AddCarrierCommand
     /**
      * @return CarrierName[]
      */
-    public function getLocalizedCarrierNames(): array
+    public function getLocalizedNames(): array
     {
         return $this->localizedCarrierNames;
     }
