@@ -2636,16 +2636,6 @@
         <target>Enable this module for all shops</target>
         <note>Line: 4395</note>
       </trans-unit>
-      <trans-unit id="bcfaccebf745acfd5e75351095a5394a">
-        <source>Disable</source>
-        <target>Disable</target>
-        <note>Line: 4396</note>
-      </trans-unit>
-      <trans-unit id="2faec1f9f8cc7f8f40d521c4dd574f49">
-        <source>Enable</source>
-        <target>Enable</target>
-        <note>Line: 4397</note>
-      </trans-unit>
       <trans-unit id="112b842b7d5dda8d3fed05c0e5aaf983">
         <source>Disable on mobiles</source>
         <target>Disable on mobiles</target>
@@ -2675,11 +2665,6 @@
         <source>Display on computers</source>
         <target>Display on computers</target>
         <note>Line: 4403</note>
-      </trans-unit>
-      <trans-unit id="f1206f9fadc5ce41694f69129aecac26">
-        <source>Configure</source>
-        <target>Configure</target>
-        <note>Line: 4405</note>
       </trans-unit>
       <trans-unit id="f2a6c498fb90ee345d997f888fce3b18">
         <source>Delete</source>
@@ -2957,6 +2942,207 @@ Comment: $this->list_modules_categories['search_filter']['name'] = $this->l('Sea
         <source>Disable selection</source>
         <target>Disable selection</target>
         <note>Line: 307</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailsubscription/ps_emailsubscription.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="2df860f82be52de57fc5e3f7ecac9431">
+        <source>Newsletter subscription: Unable to delete customer using email.</source>
+        <target>Newsletter subscription: Unable to delete customer using email.</target>
+        <note>Line: 1267</note>
+      </trans-unit>
+      <trans-unit id="0b6664aa3bb3e3130368b120a8adfa91">
+        <source>Newsletter subscription: Unable to export customer using email.</source>
+        <target>Newsletter subscription: Unable to export customer using email.</target>
+        <note>Line: 1277</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_themecusto/controllers/admin/AdminPsThemeCustoAdvanced.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1bdd228669c9dd995eb664737e60786e">
+        <source>You do not have permission to edit this.</source>
+        <target>You do not have permission to edit this.</target>
+        <note>Line: 537</note>
+      </trans-unit>
+      <trans-unit id="c7e728f436eee2692d6c6f756621a70e">
+        <source>An error occured, please check your zip file</source>
+        <target>An error occured, please check your zip file</target>
+        <note>Line: 65</note>
+      </trans-unit>
+      <trans-unit id="7bdb8c4b5d9ade9ec5b5b84c0486fafa">
+        <source>The file is not valid.</source>
+        <target>The file is not valid.</target>
+        <note>Line: 66</note>
+      </trans-unit>
+      <trans-unit id="8389b4fb9a4f4e8cde019f0b1ee4b7f1">
+        <source>Make sure you zip your edited theme files directly to the root of your child theme's folder before uploading it.</source>
+        <target>Make sure you zip your edited theme files directly to the root of your child theme's folder before uploading it.</target>
+        <note>Line: 196</note>
+      </trans-unit>
+      <trans-unit id="25e1f8db54571babe546ace313723927">
+        <source>Only CSS, YML and PNG files are accepted in the ZIP</source>
+        <target>Only CSS, YML and PNG files are accepted in the ZIP</target>
+        <note>Line: 205</note>
+      </trans-unit>
+      <trans-unit id="b132585b3eaed4cfca783ccabbb12bb1">
+        <source>There is some PHP files in your ZIP</source>
+        <target>There is some PHP files in your ZIP</target>
+        <note>Line: 207</note>
+      </trans-unit>
+      <trans-unit id="6b39dec7aaea7436f961638f45b9b38f">
+        <source>The theme already exists or the parent name in the config file is wrong</source>
+        <target>The theme already exists or the parent name in the config file is wrong</target>
+        <note>Line: 224</note>
+      </trans-unit>
+      <trans-unit id="77983919a6fbfc68624b1365066c2fed">
+        <source>You must enter the parent theme name in the theme.yml file. Furthermore, the parent name must be the current parent theme.</source>
+        <target>You must enter the parent theme name in the theme.yml file. Furthermore, the parent name must be the current parent theme.</target>
+        <note>Line: 233</note>
+      </trans-unit>
+      <trans-unit id="7e46d7414693424b67f64eb9a804e95d">
+        <source>The child theme has been added successfully.</source>
+        <target>The child theme has been added successfully.</target>
+        <note>Line: 240</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_themecusto/controllers/admin/AdminPsThemeCustoConfiguration.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="bcfaccebf745acfd5e75351095a5394a">
+        <source>Disable</source>
+        <target>Disable</target>
+        <note>Line: 42</note>
+      </trans-unit>
+      <trans-unit id="2faec1f9f8cc7f8f40d521c4dd574f49">
+        <source>Enable</source>
+        <target>Enable</target>
+        <note>Line: 41</note>
+      </trans-unit>
+      <trans-unit id="f1206f9fadc5ce41694f69129aecac26">
+        <source>Configure</source>
+        <target>Configure</target>
+        <note>Line: 282</note>
+      </trans-unit>
+      <trans-unit id="038bd38b5172a9ba90468070bdc4d4f3">
+        <source>Disable Mobile</source>
+        <target>Disable Mobile</target>
+        <note>Line: 43</note>
+      </trans-unit>
+      <trans-unit id="8b1a3613ac33a07ab788b2656755110c">
+        <source>Enable Mobile</source>
+        <target>Enable Mobile</target>
+        <note>Line: 44</note>
+      </trans-unit>
+      <trans-unit id="b61541208db7fa7dba42c85224405911">
+        <source>Menu</source>
+        <target>Menu</target>
+        <note>Line: 48</note>
+      </trans-unit>
+      <trans-unit id="2d9b9a764fb0be4be10e1b2fce63f561">
+        <source>Slider</source>
+        <target>Slider</target>
+        <note>Line: 49</note>
+      </trans-unit>
+      <trans-unit id="4c9a5b9683fc96c83f62635c954e808a">
+        <source>Home Products</source>
+        <target>Home Products</target>
+        <note>Line: 50</note>
+      </trans-unit>
+      <trans-unit id="7ef25f7b93adc8bf024ed532d722f697">
+        <source>Text block</source>
+        <target>Text block</target>
+        <note>Line: 51</note>
+      </trans-unit>
+      <trans-unit id="6ff29916f99fff9d2494d28e721ae77e">
+        <source>Banner</source>
+        <target>Banner</target>
+        <note>Line: 52</note>
+      </trans-unit>
+      <trans-unit id="189b43cdd11a8e8db346c4d4885c7fed">
+        <source><![CDATA[Social &  Newsletter]]></source>
+        <target><![CDATA[Social &  Newsletter]]></target>
+        <note>Line: 53</note>
+      </trans-unit>
+      <trans-unit id="ded40f2a77c30efc6062db0cbd857746">
+        <source>Footer</source>
+        <target>Footer</target>
+        <note>Line: 54</note>
+      </trans-unit>
+      <trans-unit id="a39a7bb20b87c1e818ff2d321d612c23">
+        <source>Create and manage Product Categories</source>
+        <target>Create and manage Product Categories</target>
+        <note>Line: 70</note>
+      </trans-unit>
+      <trans-unit id="60328687faec0cab8613aa9d796cc0fe">
+        <source>Create here a full range of categories and subcategories to classify your products and manage your catalog easily.</source>
+        <target>Create here a full range of categories and subcategories to classify your products and manage your catalog easily.</target>
+        <note>Line: 71</note>
+      </trans-unit>
+      <trans-unit id="a03facafa0612fe501fc66292d6510d7">
+        <source>Create content pages</source>
+        <target>Create content pages</target>
+        <note>Line: 74</note>
+      </trans-unit>
+      <trans-unit id="81b5e93faa3b91bac0e79fda6865f8f3">
+        <source>Add and manage your content pages (CMS pages: Terms and conditions of use, Our stores, About us, etc.) as you want.</source>
+        <target>Add and manage your content pages (CMS pages: Terms and conditions of use, Our stores, About us, etc.) as you want.</target>
+        <note>Line: 75</note>
+      </trans-unit>
+      <trans-unit id="c5a358d061895cc982600e71b9947a2e">
+        <source>Create Brands and Suppliers pages</source>
+        <target>Create Brands and Suppliers pages</target>
+        <note>Line: 78</note>
+      </trans-unit>
+      <trans-unit id="60daf439ec64a846c2b5d13e6e7b1dda">
+        <source>This page allows you to create and manage your Brands and/or Suppliers pages.</source>
+        <target>This page allows you to create and manage your Brands and/or Suppliers pages.</target>
+        <note>Line: 79</note>
+      </trans-unit>
+      <trans-unit id="7cd5fa3f9e9e911c6b60b9044436d227">
+        <source>Shop details</source>
+        <target>Shop details</target>
+        <note>Line: 119</note>
+      </trans-unit>
+      <trans-unit id="c15614439ecc7d478eec1e4e12edc85b">
+        <source>Display additional information about your store or how to contact you to make it easy for your customers to reach you.</source>
+        <target>Display additional information about your store or how to contact you to make it easy for your customers to reach you.</target>
+        <note>Line: 120</note>
+      </trans-unit>
+      <trans-unit id="4b8a74f166975e0d8c67e68e0590ce10">
+        <source>Action on the module successfully completed</source>
+        <target>Action on the module successfully completed</target>
+        <note>Line: 171</note>
+      </trans-unit>
+      <trans-unit id="80149ff14c961109480be108c06e80e9">
+        <source>Action on module failed</source>
+        <target>Action on module failed</target>
+        <note>Line: 172</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_themecusto/ps_themecusto.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="95db0d5190e9cdbed521ecf6ea2373ca">
+        <source>Theme Customization</source>
+        <target>Theme Customization</target>
+        <note>Line: 69</note>
+      </trans-unit>
+      <trans-unit id="c3db892b3555ae0538402754d0c375d0">
+        <source><![CDATA[Easily configure and customize your homepage’s theme and main native modules. Feature available on Design > Theme & Logo page.]]></source>
+        <target><![CDATA[Easily configure and customize your homepage’s theme and main native modules. Feature available on Design > Theme & Logo page.]]></target>
+        <note>Line: 70</note>
+      </trans-unit>
+      <trans-unit id="f87b9438e8de65a83e7a3ef56a9d23fb">
+        <source>There was an error during the installation. Please contact us through Addons website</source>
+        <target>There was an error during the installation. Please contact us through Addons website</target>
+        <note>Line: 95</note>
+      </trans-unit>
+      <trans-unit id="483e3e074a5d95afb68e454b8f675ddb">
+        <source>There was an error during the uninstall. Please contact us through Addons website</source>
+        <target>There was an error during the uninstall. Please contact us through Addons website</target>
+        <note>Line: 113</note>
       </trans-unit>
     </body>
   </file>
