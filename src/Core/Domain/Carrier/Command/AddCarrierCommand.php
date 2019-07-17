@@ -148,7 +148,7 @@ final class AddCarrierCommand
      *
      * @throws CarrierConstraintException
      */
-    public static function create(
+    public static function createWithPricedShipping(
         array $localizedNames,
         array $localizedShippingDelays,
         int $speedGrade,
@@ -366,8 +366,74 @@ final class AddCarrierCommand
      */
     private function setShippingRanges(array $shippingRanges)
     {
-        foreach ($shippingRanges as $range) {
-            $this->shippingRanges[] = ShippingRange::buildFromArray($range);
+        $this->assertShippingRangesIsNotEmptySequentialArray($shippingRanges);
+
+        foreach ($shippingRanges as $i => $range) {
+            $this->assertShippingRangeArrayKeysExists($range);
+
+            if (isset($shippingRanges[$i - 1])) {
+                $this->assertRangesSequence($range, $shippingRanges[$i - 1]);
+            }
+            $this->shippingRanges[] = new ShippingRange($range['from'], $range['to'], $range['prices_by_zone_id']);
+        }
+    }
+
+    /**
+     * Checks whether the provided array is not empty and contains sequential keys (is not associative)
+     *
+     * @param array $shippingRanges
+     *
+     * @throws CarrierConstraintException
+     */
+    private function assertShippingRangesIsNotEmptySequentialArray(array $shippingRanges)
+    {
+        if (empty($shippingRanges) || array_keys($shippingRanges) !== range(0, count($shippingRanges) - 1)) {
+            throw new CarrierConstraintException(
+                'Invalid carrier shipping ranges. The shipping ranges array cannot be empty or associative',
+                CarrierConstraintException::INVALID_SHIPPING_RANGE
+            );
+        }
+    }
+
+    /**
+     * Checks whether the provided array of single range contains required keys
+     *
+     * @param array $range
+     *
+     * @throws CarrierConstraintException
+     */
+    private function assertShippingRangeArrayKeysExists(array $range)
+    {
+        if (!isset($range['from'], $range['to'], $range['prices_by_zone_id'])) {
+            throw new CarrierConstraintException(sprintf(
+                'Invalid data provided for shipping ranges. Each range must contain keys: %s',
+                'from, to, prices_by_zone_id.'),
+                CarrierConstraintException::INVALID_SHIPPING_RANGE
+            );
+        }
+    }
+
+    /**
+     * Checks whether the sequence of ranges is correct.
+     * The previously provided 'range to' value cannot be greater than current 'range from' value
+     * as this way ranges would overlap each other.
+     *
+     * @param array $currentRange
+     * @param array $previousRange
+     *
+     * @throws CarrierConstraintException
+     */
+    private function assertRangesSequence(array $currentRange, array $previousRange)
+    {
+        if ($currentRange['from'] < $previousRange['to']) {
+            throw new CarrierConstraintException(sprintf(
+                'Shipping ranges %s - %s and %s - %s are overlapping.',
+                $previousRange['from'],
+                $previousRange['to'],
+                $currentRange['from'],
+                $currentRange['to']),
+                CarrierConstraintException::INVALID_SHIPPING_RANGE
+            );
         }
     }
 
