@@ -148,7 +148,7 @@ final class AddCarrierCommand
      *
      * @throws CarrierConstraintException
      */
-    public static function createWithPricedShipping(
+    public static function withPricedShipping(
         array $localizedNames,
         array $localizedShippingDelays,
         int $speedGrade,
@@ -200,7 +200,7 @@ final class AddCarrierCommand
      *
      * @throws CarrierConstraintException
      */
-    public static function createWithFreeShipping(
+    public static function withFreeShipping(
         array $localizedNames,
         array $localizedShippingDelays,
         int $speedGrade,

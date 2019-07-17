@@ -92,6 +92,16 @@ class TestAddCarrierCommand extends TestCase
     {
         yield [[]];
         yield [[
+            'assoc' => [
+                'from' => 1,
+                'to' => 2,
+                'prices_by_zone_id' => [
+                    3 => 1,
+                    4 => 2,
+                ],
+            ],
+        ]];
+        yield [[
             [
                 'to' => 2,
                 'prices_by_zone_id' => [
@@ -120,6 +130,24 @@ class TestAddCarrierCommand extends TestCase
                 'from' => 2,
                 'to' => 3,
                 'prices_by_zone_id' => [],
+            ],
+        ]];
+        yield [[
+            [
+                'from' => 1,
+                'to' => 3,
+                'prices_by_zone_id' => [
+                    1 => 3,
+                    4 => 5,
+                ],
+            ],
+            [
+                'from' => 2,
+                'to' => 5,
+                'prices_by_zone_id' => [
+                    1 => 2,
+                    4 => 5,
+                ],
             ],
         ]];
     }
@@ -164,7 +192,7 @@ class TestAddCarrierCommand extends TestCase
 
     private function createCommandFromArray(array $data, bool $freeShipping)
     {
-        $command = AddCarrierCommand::createWithPricedShipping(
+        $command = AddCarrierCommand::withPricedShipping(
             $data['localized_names'],
             $data['localized_delays'],
             $data['speed_grade'],
@@ -183,7 +211,7 @@ class TestAddCarrierCommand extends TestCase
         );
 
         if ($freeShipping) {
-            $command = AddCarrierCommand::createWithFreeShipping(
+            $command = AddCarrierCommand::withFreeShipping(
                 $data['localized_names'],
                 $data['localized_delays'],
                 $data['speed_grade'],
