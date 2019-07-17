@@ -189,7 +189,6 @@ final class AddCarrierCommand
      * @param int $speedGrade
      * @param string $trackingUrl
      * @param int $taxRulesGroupId
-     * @param int $outOfRangeBehavior
      * @param int $maxPackageWidth
      * @param int $maxPackageHeight
      * @param int $maxPackageDepth
@@ -207,7 +206,6 @@ final class AddCarrierCommand
         int $speedGrade,
         string $trackingUrl,
         int $taxRulesGroupId,
-        int $outOfRangeBehavior,
         int $maxPackageWidth,
         int $maxPackageHeight,
         int $maxPackageDepth,
@@ -221,9 +219,7 @@ final class AddCarrierCommand
         $command->setMeasures($maxPackageWidth, $maxPackageHeight, $maxPackageDepth, $maxPackageWeight);
         $command->speedGrade = new SpeedGrade($speedGrade);
         $command->trackingUrl = new TrackingUrl($trackingUrl);
-
-        //@todo: check if out of range behavior is needed when free shipping
-        $command->outOfRangeBehavior = new OutOfRangeBehavior($outOfRangeBehavior);
+        $command->outOfRangeBehavior = new OutOfRangeBehavior(OutOfRangeBehavior::APPLY_HIGHEST_RANGE);
         $command->shippingMethod = new ShippingMethod(ShippingMethod::SHIPPING_METHOD_WEIGHT);
         $command->freeShipping = true;
         $command->shippingCostIncluded = false;
