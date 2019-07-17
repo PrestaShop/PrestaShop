@@ -557,12 +557,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
         $filterQueue = $filter->getQueue();
 		foreach ($filterQueue as $productSearchFilter) {
 			if ($productSearchFilter instanceof PrestaShop\PrestaShop\Core\Filter\FrontEndObject\SearchResultProductFilter) {
-				$productSearchFilter->whitelist(
-                    array(
-                        'category_name',
-                        'manufacturer_name'
-                    )
-                );
+				$productSearchFilter->whitelist(array('category_name','manufacturer_name'));
 			}
 		}
         
