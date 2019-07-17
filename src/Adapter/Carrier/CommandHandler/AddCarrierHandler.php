@@ -113,7 +113,7 @@ final class AddCarrierHandler extends AbstractObjectModelHandler implements AddC
         $carrier->is_free = $command->isFreeShipping();
         $carrier->shipping_method = $shippingMethod;
 
-        $localizedNames = $command->getLocalizedCarrierNames();
+        $localizedNames = $command->getLocalizedNames();
         foreach ($localizedNames as $langId => $carrierName) {
             $carrier->localized_name[$langId] = $carrierName->getValue();
         }
