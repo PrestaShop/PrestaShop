@@ -79,6 +79,33 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @When I add new carrier :reference with free shipping and following properties:
+     */
+    public function addFreeShippingCarrier($reference, TableNode $node)
+    {
+        $data = $node->getRowsHash();
+
+        $command = AddCarrierCommand::createWithFreeShipping(
+            [$this->defaultLangId => $data['carrier_name']],
+            [$this->defaultLangId => $data['shipping_delay']],
+            (int) $data['speed_grade'],
+            $data['tracking_url'],
+            (int) $data['tax_rules_group_id'],
+            (int) $data['max_width'],
+            (int) $data['max_height'],
+            (int) $data['max_depth'],
+            (float) $data['max_weight'],
+            explode(',', $data['group_ids']),
+            explode(',', $data['shop_ids'])
+        );
+
+        /** @var CarrierId $carrierId */
+        $carrierId = $this->getCommandBus()->handle($command);
+
+        SharedStorage::getStorage()->set($reference, new Carrier($carrierId->getValue()));
+    }
+
+    /**
      * @Then Carrier :reference name in default language should be :value
      */
     public function assertLocalizedName($reference, $value)

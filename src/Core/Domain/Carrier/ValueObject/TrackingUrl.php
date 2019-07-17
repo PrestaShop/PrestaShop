@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierConstraintExcepti
  */
 final class TrackingUrl
 {
+    const VALID_PATTERN = '/^(https?:)?\/\/[$~:;#,%&_=\(\)\[\]\.\? \+\-@\/a-zA-Z0-9]+$/';
     /**
      * @var string
      */
@@ -64,7 +65,7 @@ final class TrackingUrl
      */
     private function assertValueIsAbsoluteUrl(string $value)
     {
-        if (!preg_match('/^(https?:)?\/\/[$~:;#,%&_=\(\)\[\]\.\? \+\-@\/a-zA-Z0-9]+$/', $value)) {
+        if (!preg_match(self::VALID_PATTERN, $value)) {
             throw new CarrierConstraintException(sprintf(
                 'Tracking url "%s" is invalid.',
                 $value),
