@@ -89,24 +89,6 @@ final class ShippingRange
     }
 
     /**
-     * @param array $range
-     *
-     * @return ShippingRange
-     *
-     * @throws CarrierConstraintException
-     */
-    public static function buildFromArray(array $range)
-    {
-        if (!isset($range['from'], $range['to'], $range['prices_by_zone_id'])) {
-            throw new CarrierConstraintException(
-                'Invalid data provided for shipping ranges. Array must contain keys: "from", "to", "prices_by_zone_id"'
-            );
-        }
-
-        return new self($range['from'], $range['to'], $range['prices_by_zone_id']);
-    }
-
-    /**
      * @param int $from
      * @param int $to
      *
@@ -117,7 +99,7 @@ final class ShippingRange
         $this->assertIsNonNegativeInteger($from);
         $this->assertIsNonNegativeInteger($to);
 
-        if ($from > $to) {
+        if ($from >= $to) {
             throw new CarrierConstraintException(sprintf(
                 'Invalid shipping range "%s - %s". Range to must be higher or equal to range from.', $from, $to),
                 CarrierConstraintException::INVALID_SHIPPING_RANGE

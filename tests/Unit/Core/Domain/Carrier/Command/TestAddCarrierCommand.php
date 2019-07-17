@@ -34,9 +34,27 @@ use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\ShippingMethod;
 
 class TestAddCarrierCommand extends TestCase
 {
-    public function testCommandIsCreatedSuccessfullyWhenValidArgumentsAreGiven()
+    public function testCommandForAddingCarrierWithPricedShippingIsCreatedSuccessfullyWhenValidArgumentsAreGiven()
     {
-        $this->createCommandFromArray($this->getValidDataForCommandCreation());
+        $this->createCommandFromArray($this->getValidDataForCommandCreation(), false);
+    }
+
+    public function testCommandForAddingCarrierWithFreeShippingIsCreatedSuccessfullyWhenValidArgumentsAreGiven()
+    {
+        $this->createCommandFromArray($this->getValidDataForCommandCreation(), true);
+    }
+
+    /**
+     * @dataProvider getInvalidRanges
+     */
+    public function testItThrowsExceptionWhenInvalidRangesAreGivenForCommandCreationWithPricedShipping($invalidRange)
+    {
+        $this->expectException(CarrierConstraintException::class);
+        $this->expectExceptionCode(CarrierConstraintException::INVALID_SHIPPING_RANGE);
+        $data = $this->getValidDataForCommandCreation();
+        $data['shipping_ranges'] = $invalidRange;
+
+        $this->createCommandFromArray($data, false);
     }
 
     /**
@@ -51,13 +69,14 @@ class TestAddCarrierCommand extends TestCase
     {
         $this->expectException(CarrierConstraintException::class);
         $this->expectExceptionCode(CarrierConstraintException::INVALID_PACKAGE_MEASURE);
+
         $data = $this->getValidDataForCommandCreation();
         $data['width'] = $width;
         $data['height'] = $height;
         $data['depth'] = $depth;
         $data['weight'] = $weight;
 
-        $this->createCommandFromArray($data);
+        $this->createCommandFromArray($data, true);
     }
 
     public function getInvalidMeasures()
@@ -67,6 +86,42 @@ class TestAddCarrierCommand extends TestCase
         yield [0, 0, -1, 0.0];
         yield [0, 0, 0, -0.1];
         yield [-1, -2, -3, -5.5];
+    }
+
+    public function getInvalidRanges()
+    {
+        yield [[]];
+        yield [[
+            [
+                'to' => 2,
+                'prices_by_zone_id' => [
+                    3 => 1,
+                    4 => 2,
+                ],
+            ],
+        ]];
+        yield [[
+            [
+                'from' => 2,
+                'prices_by_zone_id' => [
+                    3 => 2,
+                    5 => 1,
+                ],
+            ],
+        ]];
+        yield [[
+            [
+                'from' => 1,
+                'to' => 2,
+            ],
+        ]];
+        yield [[
+            [
+                'from' => 2,
+                'to' => 3,
+                'prices_by_zone_id' => [],
+            ],
+        ]];
     }
 
     private function getValidDataForCommandCreation()
@@ -107,9 +162,9 @@ class TestAddCarrierCommand extends TestCase
         ];
     }
 
-    private function createCommandFromArray(array $data)
+    private function createCommandFromArray(array $data, bool $freeShipping)
     {
-        return new AddCarrierCommand(
+        $command = AddCarrierCommand::createWithPricedShipping(
             $data['localized_names'],
             $data['localized_delays'],
             $data['speed_grade'],
@@ -126,5 +181,23 @@ class TestAddCarrierCommand extends TestCase
             $data['associated_group_ids'],
             $data['associated_shop_ids']
         );
+
+        if ($freeShipping) {
+            $command = AddCarrierCommand::createWithFreeShipping(
+                $data['localized_names'],
+                $data['localized_delays'],
+                $data['speed_grade'],
+                $data['tracking_url'],
+                $data['tax_rules_group'],
+                $data['width'],
+                $data['height'],
+                $data['depth'],
+                $data['weight'],
+                $data['associated_group_ids'],
+                $data['associated_shop_ids']
+            );
+        }
+
+        return $command;
     }
 }
