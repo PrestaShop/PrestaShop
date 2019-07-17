@@ -29,10 +29,10 @@ namespace PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\GiftProduct;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\PercentageDiscount;
-use PrestaShop\PrestaShop\Core\Domain\ValueObject\FreeShippingAction;
-use PrestaShop\PrestaShop\Core\Domain\ValueObject\GiftProductAction;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\FreeShippingAction;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\GiftProductAction;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\PercentageDiscountAction;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\MoneyAmount;
-use PrestaShop\PrestaShop\Core\Domain\ValueObject\PercentageDiscountAction;
 
 /**
  * Builds cart rule actions.
