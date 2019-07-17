@@ -36,7 +36,7 @@ export default class SubmitGridActionExtension {
   }
 
   extend(grid) {
-    grid.getContainer().on('click', '.js-grid-action-submit-btn', (event) => {
+    grid.getHeaderContainer().on('click', '.js-grid-action-submit-btn', (event) => {
       this.handleSubmit(event, grid);
     });
   }
