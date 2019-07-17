@@ -1,20 +1,14 @@
 const CommonPage = require('../commonPage');
 
-module.exports = class BO_login extends CommonPage {
-
+module.exports = class BO_LOGIN extends CommonPage {
   constructor(page) {
     super(page);
 
     this.pageTitle = 'Dashboard • PrestaShop';
 
-    this.emailInput = "#email";
-    this.passwordInput = "#passwd";
-    this.submitLoginButton = "#submit_login";
-    this.stayLoggedInCheckbox = "#stay_logged_in";
-
-    this.forgotPasswordLink = "#a.show-forgot-password";
-    this.emailForgotInput = "#email_forgot";
-    this.sendResetLinkButton = "#button[name=submitLogin].btn-default";
+    this.emailInput = '#email';
+    this.passwordInput = '#passwd';
+    this.submitLoginButton = '#submit_login';
   }
 
   /*
@@ -27,5 +21,4 @@ module.exports = class BO_login extends CommonPage {
     await this.page.click(this.submitLoginButton);
     await this.page.waitForNavigation();
   }
-
 };
