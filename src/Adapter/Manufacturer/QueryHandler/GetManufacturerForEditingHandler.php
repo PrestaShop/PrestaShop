@@ -68,7 +68,7 @@ final class GetManufacturerForEditingHandler extends AbstractManufacturerHandler
         return new EditableManufacturer(
             $manufacturerId,
             $manufacturer->name,
-            $manufacturer->active,
+            (bool) $manufacturer->active,
             $manufacturer->short_description,
             $manufacturer->description,
             $manufacturer->meta_title,
