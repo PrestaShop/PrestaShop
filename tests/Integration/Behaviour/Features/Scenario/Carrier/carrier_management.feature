@@ -16,7 +16,7 @@ Feature: Carrier Management
       | tax_rules_group_id        | 1                                                 |
       | out_of_range_behavior     | 1                                                 |
       | ranges_from               | 1, 2, 3                                           |
-      | ranges_to                 | 2, 2, 4                                           |
+      | ranges_to                 | 2, 3, 4                                           |
       | zone_ids                  | 1, 2, 3                                           |
       | prices                    | 5, 6, 7                                           |
       | max_width                 | 10                                                |
