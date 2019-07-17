@@ -67,7 +67,7 @@ class MoneyAmountCondition
     /**
      * @return MoneyAmount
      */
-    public function getAmount(): MoneyAmount
+    public function getMoneyAmount(): MoneyAmount
     {
         return $this->amount;
     }

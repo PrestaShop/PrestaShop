@@ -83,4 +83,12 @@ class DiscountApplicationType
 
         $this->type = $type;
     }
+
+    /**
+     * @return string
+     */
+    public function getValue(): string
+    {
+        return $this->type;
+    }
 }
