@@ -65,6 +65,6 @@ final class ImageTagSourceParser implements ImageTagSourceParserInterface
             return null;
         }
 
-        return sprintf('%s%s', $this->shopRootUri, $path[1]);
+        return sprintf('/%s', $path[1]);
     }
 }
