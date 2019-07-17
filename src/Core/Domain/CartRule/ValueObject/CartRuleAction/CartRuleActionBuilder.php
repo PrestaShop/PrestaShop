@@ -28,11 +28,8 @@ namespace PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction;
 
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\GiftProduct;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\MoneyAmountCondition;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\PercentageDiscount;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\FreeShippingAction;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\GiftProductAction;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\PercentageDiscountAction;
-use PrestaShop\PrestaShop\Core\Domain\ValueObject\MoneyAmount;
 
 /**
  * Builds cart rule actions.
@@ -50,7 +47,7 @@ final class CartRuleActionBuilder implements CartRuleActionBuilderInterface
     private $percentageDiscount;
 
     /**
-     * @var MoneyAmount|null
+     * @var MoneyAmountCondition|null
      */
     private $amountDiscount;
 
@@ -82,7 +79,7 @@ final class CartRuleActionBuilder implements CartRuleActionBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function setAmountDiscount(MoneyAmount $amount): CartRuleActionBuilderInterface
+    public function setAmountDiscount(MoneyAmountCondition $amount): CartRuleActionBuilderInterface
     {
         $this->amountDiscount = $amount;
 

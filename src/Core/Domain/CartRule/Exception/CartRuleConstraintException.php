@@ -86,4 +86,9 @@ class CartRuleConstraintException extends CartRuleException
      * Used when cart rule is missing an action.
      */
     const MISSING_ACTION = 11;
+
+    /**
+     * Used when discount is applied to specific product, but that product is not set.
+     */
+    const MISSING_DISCOUNT_APPLICATION_PRODUCT = 12;
 }

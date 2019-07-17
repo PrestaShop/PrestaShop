@@ -56,6 +56,22 @@ class GiftProduct
     }
 
     /**
+     * @return ProductId
+     */
+    public function getProductId(): ProductId
+    {
+        return $this->productId;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getProductAttributeId(): ?int
+    {
+        return $this->productAttributeId;
+    }
+
+    /**
      * @param ProductId|null $productId
      * @param int|null $productAttributeId
      *

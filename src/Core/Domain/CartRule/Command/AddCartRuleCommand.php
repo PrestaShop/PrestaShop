@@ -29,9 +29,11 @@ namespace PrestaShop\PrestaShop\Core\Domain\CartRule\Command;
 use DateTime;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRuleActionInterface;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\DiscountApplicationType;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\MoneyAmountCondition;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
  * Adds new cart rule
@@ -54,7 +56,7 @@ class AddCartRuleCommand
     private $minimumAmount;
 
     /**
-     * @var CustomerId
+     * @var CustomerId|null
      */
     private $customerId;
 
@@ -139,6 +141,21 @@ class AddCartRuleCommand
     private $cartRuleAction;
 
     /**
+     * Discount application type indicates what the discount should be applied to.
+     * E.g. to whole order, to a specific product, to cheapest product.
+     *
+     * @var DiscountApplicationType
+     */
+    private $discountApplicationType;
+
+    /**
+     * This is the product to which discount is applied, when discount application type is "specific product".
+     *
+     * @var ProductId|null
+     */
+    private $discountProductId;
+
+    /**
      * @param array $localizedNames
      * @param bool $highlightInCart
      * @param bool $allowPartialUse
@@ -178,6 +195,48 @@ class AddCartRuleCommand
     }
 
     /**
+     * @return DiscountApplicationType
+     */
+    public function getDiscountApplicationType(): DiscountApplicationType
+    {
+        return $this->discountApplicationType;
+    }
+
+    /**
+     * @param string $discountApplicationType
+     *
+     * @return AddCartRuleCommand
+     *
+     * @throws CartRuleConstraintException
+     */
+    public function setDiscountApplicationType(string $discountApplicationType): AddCartRuleCommand
+    {
+        $this->discountApplicationType = new DiscountApplicationType($discountApplicationType);
+
+        return $this;
+    }
+
+    /**
+     * @return ProductId|null
+     */
+    public function getDiscountProductId(): ?ProductId
+    {
+        return $this->discountProductId;
+    }
+
+    /**
+     * @param ProductId|null $discountProductId
+     *
+     * @return AddCartRuleCommand
+     */
+    public function setDiscountProductId(?ProductId $discountProductId): AddCartRuleCommand
+    {
+        $this->discountProductId = $discountProductId;
+
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getDescription(): string
@@ -202,9 +261,9 @@ class AddCartRuleCommand
     }
 
     /**
-     * @return CustomerId
+     * @return CustomerId|null
      */
-    public function getCustomerId(): CustomerId
+    public function getCustomerId(): ?CustomerId
     {
         return $this->customerId;
     }

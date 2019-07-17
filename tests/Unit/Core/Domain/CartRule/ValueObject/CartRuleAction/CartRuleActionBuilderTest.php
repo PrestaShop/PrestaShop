@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\FreeSh
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\GiftProductAction;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\PercentageDiscountAction;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\GiftProduct;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\MoneyAmountCondition;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\PercentageDiscount;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\MoneyAmount;
@@ -50,7 +51,7 @@ class CartRuleActionBuilderTest extends TestCase
         $this->expectExceptionCode(CartRuleConstraintException::INCOMPATIBLE_CART_RULE_ACTIONS);
 
         (new CartRuleActionBuilder())
-            ->setAmountDiscount(new MoneyAmount(0, 1))
+            ->setAmountDiscount(new MoneyAmountCondition(0, 1, true))
             ->setPercentageDiscount(new PercentageDiscount(10, true))
             ->build();
     }
@@ -66,7 +67,7 @@ class CartRuleActionBuilderTest extends TestCase
     public function testItCorrectlyBuildsAmountDiscountAction()
     {
         $action = (new CartRuleActionBuilder())
-            ->setAmountDiscount(new MoneyAmount(10, 1))
+            ->setAmountDiscount(new MoneyAmountCondition(10, 1, true))
             ->build();
 
         $this->assertInstanceOf(AmountDiscountAction::class, $action);
@@ -103,7 +104,7 @@ class CartRuleActionBuilderTest extends TestCase
      * @dataProvider validActionsProvider
      */
     public function testItCorrectlyBuildsVariousValidActions(
-        ?MoneyAmount $moneyAmount,
+        ?MoneyAmountCondition $moneyAmount,
         ?PercentageDiscount $percentage,
         bool $isFreeShipping,
         ?GiftProduct $giftProduct,
@@ -129,7 +130,7 @@ class CartRuleActionBuilderTest extends TestCase
 
     public function validActionsProvider()
     {
-        $moneyAmount = new MoneyAmount(100, 1);
+        $moneyAmount = new MoneyAmountCondition(100, 1, true);
         $percentage = new PercentageDiscount(30.5, true);
         $giftProduct = new GiftProduct(new ProductId(1));
 
