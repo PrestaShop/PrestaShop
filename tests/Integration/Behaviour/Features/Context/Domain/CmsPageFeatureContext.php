@@ -30,8 +30,11 @@ use Behat\Gherkin\Node\TableNode;
 use CMS;
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\AddCmsPageCommand;
+use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\BulkDisableCmsPageCommand;
+use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\BulkEnableCmsPageCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\DeleteCmsPageCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\EditCmsPageCommand;
+use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\ToggleCmsPageStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Query\GetCmsPageForEditing;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\ValueObject\CmsPageId;
@@ -148,30 +151,52 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I edit CMS page :reference providing illegal content value :value
+     * @When /^I (enable|disable) CMS pages: "(.*)" in bulk action?$/
      */
-    public function editCmsPageProvidingIllegalContent($reference, $value)
+    public function bulkToggleDisplayStatus($action, $references)
     {
-        try {
-            $this->editCmsPage($reference, new TableNode([
-                ['content', $value],
-            ]));
-        } catch (Exception $e) {
-            $this->latestException = $e;
+        $idsByReferences = [];
+        $references = explode(',', $references);
+
+        foreach ($references as $reference) {
+            $cms = SharedStorage::getStorage()->get($reference);
+            $idsByReferences[$reference] = (int) $cms->id;
+        }
+
+        if ('enable' === $action) {
+            $this->getQueryBus()->handle(new BulkEnableCmsPageCommand($idsByReferences));
+        } else {
+            $this->getQueryBus()->handle(new BulkDisableCmsPageCommand($idsByReferences));
+        }
+
+        foreach ($idsByReferences as $reference => $id) {
+            SharedStorage::getStorage()->set($reference, new CMS($id));
         }
     }
 
     /**
-     * @When I edit CMS page :reference providing empty title
+     * @When I toggle CMS page :reference display status
      */
-    public function editCmsPageProvidingEmptyTitle($reference)
+    public function toggleDisplayStatus($reference)
     {
-        try {
-            $this->editCmsPage($reference, new TableNode([
-                ['meta_title', ''],
-            ]));
-        } catch (Exception $e) {
-            $this->latestException = $e;
+        /** @var CMS $cms */
+        $cms = SharedStorage::getStorage()->get($reference);
+        $cmsId = (int) $cms->id;
+        $this->getCommandBus()->handle(new ToggleCmsPageStatusCommand($cmsId));
+
+        SharedStorage::getStorage()->set($reference, new CMS($cmsId));
+    }
+
+    /**
+     * @Given CMS pages: :references exists
+     */
+    public function createMultipleCmsPages($references)
+    {
+        $references = explode(',', $references);
+
+        foreach ($references as $ref) {
+            $data = $this->getValidDataForCmsPageCreation();
+            $this->createCmsPageUsingCommand($ref, $data);
         }
     }
 
@@ -241,6 +266,16 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
                 $cmsPage->indexation ? 'enabled' : 'disabled',
                 $status
             ));
+        }
+    }
+
+    /**
+     * @Then /^CMS pages: "(.*)" should be (displayed|not displayed)?$/
+     */
+    public function assertMultipleCmsPagesDisplayStatus($references, $status)
+    {
+        foreach (explode(',', $references) as $reference) {
+            $this->assertDisplayStatus($reference, $status);
         }
     }
 
