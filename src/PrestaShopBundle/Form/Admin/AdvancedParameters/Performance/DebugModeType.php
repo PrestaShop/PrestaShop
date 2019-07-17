@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Form\Admin\AdvancedParameters\Performance;
 
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
+use PrestaShopBundle\Form\Admin\Type\IpAddressType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -50,6 +51,13 @@ class DebugModeType extends CommonAbstractType
             ])
             ->add('debug_mode', SwitchType::class, [
                 'required' => true,
+            ])
+            ->add('debug_mode_ips', IpAddressType::class, [
+                'required' => false,
+                'empty_data' => '',
+                'attr' => [
+                    'class' => 'col-md-5',
+                ],
             ]);
     }
 

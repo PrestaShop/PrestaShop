@@ -118,6 +118,15 @@
                   {{ form_widget(debugModeForm.debug_mode) }}
                 </div>
               </div>
+
+              <div class="form-group row">
+                <label class="form-control-label">{{ 'Debug mode IPs'|trans({}, 'Admin.Advparameters.Feature') }}</label>
+                <div class="col-sm">
+                  {{ form_errors(debugModeForm.debug_mode_ips) }}
+                  {{ form_widget(debugModeForm.debug_mode_ips, { 'currentIp': ''}) }}
+                  <small class="form-text">{{ 'Enable debug mode for configured IPs only.'|trans({}, 'Admin.Advparameters.Help') }}</small>
+                </div>
+              </div>
               {{ form_rest(debugModeForm) }}
             </div>
           </div>

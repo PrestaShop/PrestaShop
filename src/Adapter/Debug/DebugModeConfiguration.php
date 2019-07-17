@@ -67,6 +67,7 @@ class DebugModeConfiguration implements DataConfigurationInterface
             'disable_non_native_modules' => $this->configuration->getBoolean('PS_DISABLE_NON_NATIVE_MODULE'),
             'disable_overrides' => $this->configuration->getBoolean('PS_DISABLE_OVERRIDES'),
             'debug_mode' => $this->debugMode->isDebugModeEnabled(),
+            'debug_mode_ips' => $this->getDebugIps(),
         );
     }
 
@@ -121,6 +122,8 @@ class DebugModeConfiguration implements DataConfigurationInterface
                 default:
                     break;
             }
+
+            $this->persistDebugIps($configuration['debug_mode_ips']);
         }
 
         return $errors;
@@ -152,5 +155,27 @@ class DebugModeConfiguration implements DataConfigurationInterface
         if ($enableStatus !== $currentDebugMode) {
             return (true === $enableStatus) ? $this->debugMode->enable() : $this->debugMode->disable();
         }
+    }
+
+    // @todo: should be extracted
+    private function persistDebugIps($debugIps)
+    {
+        if (!empty($debugIps)) {
+            $ips = explode(',', $debugIps);
+
+            $code = '<?php return ' . var_export($ips, true) . ';';
+        } else {
+            $code = '<?php return [];';
+        }
+
+        file_put_contents(__DIR__.'/../../../config/debug_ip.php', $code);
+    }
+
+    // @todo: should be extracted
+    private function getDebugIps()
+    {
+        $debugIps = require __DIR__.'/../../../config/debug_ip.php';
+
+        return implode(',', $debugIps);
     }
 }

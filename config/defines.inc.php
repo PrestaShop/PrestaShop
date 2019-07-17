@@ -24,9 +24,15 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+$debugIps = require __DIR__.DIRECTORY_SEPARATOR.'debug_ip.php';
+
 /* Debug only */
 if (!defined('_PS_MODE_DEV_')) {
-    define('_PS_MODE_DEV_', true);
+    if (in_array($_SERVER['REMOTE_ADDR'], $debugIps)) {
+        define($debugConfigName = '_PS_MODE_DEV_', true);
+    } else {
+        define('_PS_MODE_DEV_', false);
+    }
 }
 /* Compatibility warning */
 define('_PS_DISPLAY_COMPATIBILITY_WARNING_', true);
