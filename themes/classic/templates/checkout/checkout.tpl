@@ -55,7 +55,7 @@
         <section id="content">
           <div class="row">
             <div class="cart-grid-body col-xs-12 col-lg-8">
-              {block name='cart_summary'}
+              {block name='checkout_process'}
                 {render file='checkout/checkout-process.tpl' ui=$checkout_process}
               {/block}
             </div>

@@ -135,7 +135,7 @@ class WebserviceOutputXMLCore implements WebserviceOutputInterface
                 $ret .= ' read_only="true"';
             }
 
-            if ($field['value'] != '') {
+            if ($field['value'] !== '') {
                 $node_content .= '<![CDATA[' . $field['value'] . ']]>';
             }
         }

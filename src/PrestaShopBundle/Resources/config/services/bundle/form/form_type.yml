@@ -28,6 +28,11 @@ services:
     form.type.product.translate:
         class: 'PrestaShopBundle\Form\Admin\Type\TranslateType'
         parent: 'form.type.common_type'
+        arguments:
+            - '@router.default'
+            - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_BO_ALLOW_EMPLOYEE_FORM_LANG')"
+            - "@=service('prestashop.adapter.legacy.context').getContext().cookie.employee_form_lang"
+            - "@=service('prestashop.adapter.legacy.configuration').getInt('PS_LANG_DEFAULT')"
         public: true
         tags:
             - { name: form.type }
@@ -567,7 +572,8 @@ services:
         parent: 'form.type.translatable.aware'
         arguments:
             - '@=service("prestashop.core.form.choice_provider.group_by_id").getChoices()'
-            - '@prestashop.adapter.multistore_feature'
+            - '@prestashop.adapter.feature.multistore'
+            - '@prestashop.adapter.legacy.configuration'
         public: true
 
     form.type.category.delete_categories:
@@ -865,3 +871,19 @@ services:
             - '@=service("prestashop.core.form.choice_provider.mail_themes").getChoices()'
         tags:
             - { name: form.type }
+
+    form.type.integer_min_max_filter:
+        class: 'PrestaShopBundle\Form\Admin\Type\IntegerMinMaxFilterType'
+        public: true
+        calls:
+          - { method: setTranslator, arguments: ['@translator'] }
+        tags:
+          - { name: form.type }
+
+    form.type.number_min_max_filter:
+        class: 'PrestaShopBundle\Form\Admin\Type\NumberMinMaxFilterType'
+        public: true
+        calls:
+          - { method: setTranslator, arguments: ['@translator'] }
+        tags:
+          - { name: form.type }

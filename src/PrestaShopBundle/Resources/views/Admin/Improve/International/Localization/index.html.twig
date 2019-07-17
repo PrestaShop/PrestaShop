@@ -46,11 +46,12 @@
       <div class="col-xl-10">
         {% include '@PrestaShop/Admin/Improve/International/Localization/Blocks/advanced_configuration.html.twig' %}
       </div>
-
-      {% block localization_settings_form_rest %}
-        {{ form_rest(localizationForm) }}
-      {% endblock %}
     </div>
+
+    {% block localization_settings_form_rest %}
+      {{ form_rest(localizationForm) }}
+    {% endblock %}
+
   {{ form_end(localizationForm) }}
 {% endblock %}
 

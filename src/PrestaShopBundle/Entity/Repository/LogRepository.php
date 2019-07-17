@@ -212,6 +212,18 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
      */
     private function buildGridQuery(SearchCriteriaInterface $searchCriteria)
     {
+        $allowedFilters = [
+            'id_log',
+            'firstname',
+            'lastname',
+            'severity',
+            'message',
+            'object_type',
+            'object_id',
+            'error_code',
+            'date_add',
+        ];
+
         $employeeTable = $this->databasePrefix . 'employee';
 
         $qb = $this->connection
@@ -226,6 +238,9 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
         $filters = $searchCriteria->getFilters();
         foreach ($filters as $filterName => $filterValue) {
             if (empty($filterValue)) {
+                continue;
+            }
+            if (!in_array($filterName, $allowedFilters)) {
                 continue;
             }
 

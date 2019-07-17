@@ -33,7 +33,40 @@ const init = function initDatePickers() {
   $('.datepicker input[type="text"]').datetimepicker({
     locale: global.full_language_code,
     format: 'YYYY-MM-DD',
-  });
+  })
+  .on('dp.show', replaceDatePicker)
+  .on('dp.hide', function() {
+    $(window).off('resize', replaceDatePicker);
+  })
+  ;
+
+  function replaceDatePicker() {
+    const datepicker = $('body').find('.bootstrap-datetimepicker-widget:last');
+    if (datepicker.length <= 0) {
+      return;
+    }
+
+    const position = datepicker.offset(),
+      originalHeight = datepicker.outerHeight(),
+      margin = (datepicker.outerHeight(true) - datepicker.outerHeight()) / 2
+    ;
+
+    // Move datepicker to the exact same place it was but attached to body
+    datepicker.appendTo('body');
+
+    //Height changed because the css from column-filters is not applied any more
+    const top = position.top + originalHeight - margin - datepicker.outerHeight();
+
+    datepicker.css({
+      position: 'absolute',
+      top: top,
+      bottom: 'auto',
+      left: position.left,
+      right: 'auto'
+    });
+    
+    $(window).on('resize', replaceDatePicker);
+  }
 };
 
 export default init;

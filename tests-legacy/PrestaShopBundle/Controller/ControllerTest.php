@@ -178,7 +178,7 @@ class ControllerTest extends TestCase
             define('_DB_PREFIX_', $configuration['parameters']['database_prefix']);
         }
         if (!defined('_COOKIE_KEY_')) {
-            define('_COOKIE_KEY_', Tools::passwdGen(56));
+            define('_COOKIE_KEY_', Tools::passwdGen(64));
         }
         if (!defined('_PS_VERSION_')) {
             define('_PS_VERSION_', '1.7');
@@ -282,6 +282,9 @@ class ControllerTest extends TestCase
         $translatorProphecy = $this->prophesizeTranslator();
         $contextProphecy->getTranslator()->willReturn($translatorProphecy->reveal());
         $contextProphecy->getDevice()->willReturn(null);
+        $contextProphecy->getCurrentLocale()->willReturn(
+            $this->prophesizeLocale()->reveal()
+        );
 
         $templateEngineProphecy = $this->prophesizeTemplateEngine();
 
@@ -339,10 +342,15 @@ class ControllerTest extends TestCase
         Tools::resetRequest();
     }
 
+    protected function prophesizeLocale()
+    {
+        return $this->prophesize(Locale::class);
+    }
+
     protected function prophesizeLocaleRepository()
     {
         $localeRepositoryProphecy = $this->prophesize(LocaleRepository::class);
-        $localeProphecy           = $this->prophesize(Locale::class);
+        $localeProphecy = $this->prophesizeLocale();
         $localeRepositoryProphecy
             ->getLocale(Argument::any())
             ->willReturn($localeProphecy->reveal());

@@ -41,7 +41,7 @@ services:
           - prestashop-web
 
   selenium-chrome:
-    image: selenium/standalone-chrome
+    image: selenium/standalone-chrome:3.141.5
     user: "root:root"
     depends_on:
       - "prestashop"

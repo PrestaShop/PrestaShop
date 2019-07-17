@@ -19,6 +19,7 @@ const {productPage} = require('../../../selectors/FO/product_page');
 const {OrderPage} = require('../../../selectors/BO/order');
 const {HomePage} = require('../../../selectors/FO/home_page');
 const {OnBoarding} = require('../../../selectors/BO/onboarding');
+const welcomeScenarios = require('../../common_scenarios/welcome');
 let data = require('../../../datas/product-data');
 let common = require('../../../common.webdriverio');
 let promise = Promise.resolve();
@@ -56,6 +57,7 @@ scenario('Create virtual Product in the Back Office', () => {
     test('should open browser', () => client.open());
     test('should log in successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'common_client');
+  welcomeScenarios.findAndCloseWelcomeModal();
   scenario('Test1: create "Currency"', () => {
     commonCurrencySenarios.accessToCurrencies();
     commonCurrencySenarios.createCurrency('Successful creation.', currencyData);
@@ -80,10 +82,6 @@ scenario('Create virtual Product in the Back Office', () => {
       scenario('Search for the created product', client => {
         test('should go to "Catalog" page', () => client.waitForExistAndClick(Menu.Sell.Catalog.products_submenu, 2000));
         test('should search for the created product', () => client.searchProductByName('copy of ' + data.virtual.name + date_time));
-        test('should click on "Dropdown toggle" button', () => client.waitForExistAndClick(ProductList.dropdown_button.replace('%POS', '1')));
-        test('should click on "Delete" action', () => client.waitForExistAndClick(ProductList.action_delete_button.replace('%POS', '1')));
-        test('should click on "Delete now" modal button', () => client.waitForVisibleAndClick(ProductList.delete_now_modal_button, 1000));
-        test('should verify the appearance of the green validation', () => client.checkTextValue(AddProductPage.success_panel, 'Product successfully deleted.'));
         test('should set the search the created product', () => client.waitAndSetValue(CatalogPage.name_search_input, data.virtual.name + date_time));
         test('should click on "Search" button', () => client.waitForExistAndClick(CatalogPage.search_button));
         test('should click on the product name', () => client.waitForExistAndClick(AddProductPage.catalog_product_name));
