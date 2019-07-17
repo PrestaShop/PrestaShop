@@ -112,6 +112,17 @@ class NewsDataProviderTest extends TestCase
         $this->assertArrayHasKey('rss', $expectedJson);
         $this->assertInternalType('array', $expectedJson['rss']);
         $this->assertCount(NewsDataProvider::NUM_ARTICLES, $expectedJson['rss']);
+        foreach ($expectedJson['rss'] as $expectedJsonRssItem) {
+            $this->assertArrayHasKey('date', $expectedJsonRssItem);
+            $this->assertStringMatchesFormat('%i-%i-%i', $expectedJsonRssItem['date']);
+            $this->assertArrayHasKey('title', $expectedJsonRssItem);
+            $this->assertNotEmpty($expectedJsonRssItem['title']);
+            $this->assertArrayHasKey('short_desc', $expectedJsonRssItem);
+            $this->assertLessThanOrEqual(150, mb_strlen($expectedJsonRssItem['short_desc']));
+            $this->assertArrayHasKey('link', $expectedJsonRssItem);
+            $this->assertNotFalse(filter_var($expectedJsonRssItem['link'], FILTER_VALIDATE_URL));
+            $this->assertContains('utm_content=download', $expectedJsonRssItem['link']);
+        }
     }
 
     /**
@@ -168,9 +179,15 @@ class NewsDataProviderTest extends TestCase
      */
     private function createToolsMock()
     {
-        return $this->getMockBuilder(Tools::class)
+        $toolsMock = $this->getMockBuilder(Tools::class)
             ->disableOriginalConstructor()
             ->getMock();
+
+        $toolsMock
+            ->method('displayDate')
+            ->willReturn('2019-07-17');
+
+        return $toolsMock;
     }
 
     /**

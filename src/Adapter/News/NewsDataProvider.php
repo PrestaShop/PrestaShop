@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\News;
 
-use ContextCore;
+use Context;
 use PrestaShop\CircuitBreaker\Contract\CircuitBreakerInterface;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Country\CountryDataProvider;
@@ -140,26 +140,23 @@ class NewsDataProvider
             if ($articles_limit == 0
                 || !$this->validate->isCleanHtml((string) $item->title)
                 || !$this->validate->isCleanHtml((string) $item->description)
-                || !isset($item->link, $item->title)) {
-                break;
+                || empty($item->link)
+                || empty($item->title)) {
+                continue;
             }
             $analytics_params['utm_content'] = 'download';
-            if (in_array($this->contextMode, array(ContextCore::MODE_HOST, ContextCore::MODE_HOST_CONTRIB))) {
+            if (in_array($this->contextMode, array(Context::MODE_HOST, Context::MODE_HOST_CONTRIB))) {
                 $analytics_params['utm_content'] = 'cloud';
             }
-            $article_link = (string) $item->link . '?' . http_build_query($analytics_params);
 
             $url_query = parse_url($item->link, PHP_URL_QUERY);
             parse_str($url_query, $link_query_params);
-            if ($link_query_params) {
-                $full_url_params = array_merge($link_query_params, $analytics_params);
-                $base_url = explode('?', (string) $item->link);
-                $base_url = (string) $base_url[0];
-                $article_link = $base_url . '?' . http_build_query($full_url_params);
-            }
-
+            $full_url_params = array_merge($link_query_params, $analytics_params);
+            $base_url = explode('?', (string) $item->link);
+            $base_url = (string) $base_url[0];
+            $article_link = $base_url . '?' . http_build_query($full_url_params);
             $data['rss'][] = [
-                'date' => $this->tools->displayDate(date('Y-m-d', strtotime((string) $item->pubDate))),
+                'date' => $this->tools->displayDate($item->pubDate, null, false),
                 'title' => htmlentities($item->title, ENT_QUOTES, 'utf-8'),
                 'short_desc' => $this->tools->truncateString(strip_tags((string) $item->description), 150),
                 'link' => (string) $article_link,
