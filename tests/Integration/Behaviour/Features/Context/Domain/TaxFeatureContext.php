@@ -27,7 +27,6 @@
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
-use Configuration;
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\AddTaxCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\BulkDeleteTaxCommand;
