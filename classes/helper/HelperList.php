@@ -269,6 +269,12 @@ class HelperListCore extends Helper
                 }
             }
 
+            if (in_array('view', $this->actions)) {
+                $this->_list[$index]['onclick'] = $this->getViewLink($this->token, $id);
+            } else {
+                $this->_list[$index]['onclick'] = $this->getEditLink($this->token, $id);
+            }
+
             // @todo skip action for bulk actions
             // $this->_list[$index]['has_bulk_actions'] = true;
             foreach ($this->fields_list as $key => $params) {
@@ -473,8 +479,9 @@ class HelperListCore extends Helper
             self::$cache_lang['View'] = Context::getContext()->getTranslator()->trans('View', array(), 'Admin.Actions');
         }
 
+        $href = $this->getViewLink($token, $id);
         $tpl->assign(array(
-            'href' => $this->currentIndex . '&' . $this->identifier . '=' . $id . '&view' . $this->table . '&token=' . ($token != null ? $token : $this->token),
+            'href' => $href,
             'action' => self::$cache_lang['View'],
         ));
 
@@ -491,22 +498,7 @@ class HelperListCore extends Helper
             self::$cache_lang['Edit'] = Context::getContext()->getTranslator()->trans('Edit', array(), 'Admin.Actions');
         }
 
-        $href = $this->currentIndex . '&' . $this->identifier . '=' . $id . '&update' . $this->table . ($this->page && $this->page > 1 ? '&page=' . (int) $this->page : '') . '&token=' . ($token != null ? $token : $this->token);
-
-        switch ($this->currentIndex) {
-            case 'index.php?controller=AdminProducts':
-            case 'index.php?tab=AdminProducts':
-                // New architecture modification: temporary behavior to switch between old and new controllers.
-                $pagePreference = SymfonyContainer::getInstance()->get('prestashop.core.admin.page_preference_interface');
-                $redirectLegacy = $pagePreference->getTemporaryShouldUseLegacyPage('product');
-                if (!$redirectLegacy && $this->identifier == 'id_product') {
-                    $href = Context::getContext()->link->getAdminLink('AdminProducts', true, ['id_product' => $id, 'updateproduct' => 1]);
-                }
-
-                break;
-            default:
-        }
-
+        $href = $this->getEditLink($token, $id);
         $tpl->assign(array(
             'href' => $href,
             'action' => self::$cache_lang['Edit'],
@@ -825,5 +817,65 @@ class HelperListCore extends Helper
         )));
 
         return $this->footer_tpl->fetch();
+    }
+
+    /**
+     * @param string $token
+     * @param int $id
+     *
+     * @return string
+     *
+     * @throws PrestaShopException
+     */
+    protected function getViewLink($token, $id)
+    {
+        switch ($this->table) {
+            case 'customer':
+                $updateAction = 'view' . $this->table;
+                $href = Context::getContext()->link->getAdminLink('AdminCustomers', true, ['id_customer' => $id, $updateAction => 1]);
+                break;
+            default:
+                $href = $this->currentIndex . '&' . $this->identifier . '=' . $id . '&view' . $this->table . '&token=' . ($token != null ? $token : $this->token);
+                break;
+        }
+
+        return $href;
+    }
+
+    /**
+     * @param string $token
+     * @param int $id
+     *
+     * @return string
+     *
+     * @throws PrestaShopException
+     */
+    protected function getEditLink($token, $id)
+    {
+        switch ($this->table) {
+            case 'customer':
+                $updateAction = 'update' . $this->table;
+                $href = Context::getContext()->link->getAdminLink('AdminCustomers', true, ['id_customer' => $id, $updateAction => 1]);
+                break;
+            default:
+                $href = $this->currentIndex . '&' . $this->identifier . '=' . $id . '&update' . $this->table . ($this->page && $this->page > 1 ? '&page=' . (int) $this->page : '') . '&token=' . ($token != null ? $token : $this->token);
+
+                switch ($this->currentIndex) {
+                    case 'index.php?controller=AdminProducts':
+                    case 'index.php?tab=AdminProducts':
+                        // New architecture modification: temporary behavior to switch between old and new controllers.
+                        $pagePreference = SymfonyContainer::getInstance()->get('prestashop.core.admin.page_preference_interface');
+                        $redirectLegacy = $pagePreference->getTemporaryShouldUseLegacyPage('product');
+                        if (!$redirectLegacy && $this->identifier == 'id_product') {
+                            $href = Context::getContext()->link->getAdminLink('AdminProducts', true, ['id_product' => $id, 'updateproduct' => 1]);
+                        }
+
+                        break;
+                    default:
+                }
+                break;
+        }
+
+        return $href;
     }
 }
