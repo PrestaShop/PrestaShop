@@ -28,6 +28,7 @@
     "chai-string": "^1.5.0",
     "eslint-config-prestashop": "0.0.2",
     "mocha": "^6.1.4",
+    "mochawesome": "^4.0.1",
     "puppeteer": "^1.18.1"
   },
   "devDependencies": {
