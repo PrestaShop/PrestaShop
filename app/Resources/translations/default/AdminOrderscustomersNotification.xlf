@@ -863,7 +863,7 @@
       <trans-unit id="9e2dcf2660b82a0204f668565417010a">
         <source>An account already exists for this email address:</source>
         <target>An account already exists for this email address:</target>
-        <note>Line: 512</note>
+        <note>Line: 513</note>
       </trans-unit>
     </body>
   </file>
@@ -872,22 +872,22 @@
       <trans-unit id="c0498039cc042a1109b53933dc33b2e7">
         <source>A default customer group must be selected in group box.</source>
         <target>A default customer group must be selected in group box.</target>
-        <note>Line: 750</note>
+        <note>Line: 751</note>
       </trans-unit>
       <trans-unit id="8562db06e3931e51ac8c456b56088b02">
         <source>This customer does not exist.</source>
         <target>This customer does not exist.</target>
-        <note>Line: 741</note>
+        <note>Line: 742</note>
       </trans-unit>
       <trans-unit id="4383b950a18d0fd893e237148f5f58ca">
         <source>This customer already exists as a non-guest.</source>
         <target>This customer already exists as a non-guest.</target>
-        <note>Line: 787</note>
+        <note>Line: 788</note>
       </trans-unit>
       <trans-unit id="beaa75cbedc3443661b894ed66c76b13">
         <source>An error occurred while updating customer information.</source>
         <target>An error occurred while updating customer information.</target>
-        <note>Line: 791</note>
+        <note>Line: 792</note>
       </trans-unit>
     </body>
   </file>

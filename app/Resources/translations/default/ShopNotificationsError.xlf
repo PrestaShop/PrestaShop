@@ -488,7 +488,7 @@
       <trans-unit id="dd6b089a49908d671c3e9cc8dc5899ae">
         <source>Invalid message</source>
         <target>Invalid message</target>
-        <note>Line: 862</note>
+        <note>Line: 863</note>
       </trans-unit>
       <trans-unit id="91e6cde963af2000218553722fc7a093">
         <source>This product is no longer available.</source>
@@ -508,7 +508,7 @@
       <trans-unit id="7cc92687130ea12abb80556681538001">
         <source>An error occurred during the image upload process.</source>
         <target>An error occurred during the image upload process.</target>
-        <note>Line: 834</note>
+        <note>Line: 835</note>
       </trans-unit>
     </body>
   </file>
