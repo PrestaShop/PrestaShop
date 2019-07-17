@@ -82,6 +82,12 @@ default:
             paths:
                 features: Features/Scenario/Manufacturer
             contexts:
-              - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
-              - Tests\Integration\Behaviour\Features\Context\Domain\ManufacturerFeatureContext
-
+                - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\ManufacturerFeatureContext
+        cart_rule:
+            paths:
+                features: Features/Scenario/CartRule
+            contexts:
+                - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\CartRuleFeatureContext
