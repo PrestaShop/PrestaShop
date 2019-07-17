@@ -33,7 +33,28 @@ Feature: Manage tax
     And tax "tax-1" rate should be 0.150
     And tax "tax-1" should be disabled
 
+  Scenario: Toggling tax status
+    Given tax "tax-1" should be disabled
+    When I toggle tax "tax-1" status
+    Then tax "tax-1" should be enabled
+
+  Scenario: Disabling taxes status in bulk action
+    Given taxes with ids: "1,2,3" exists
+    And taxes with ids: "1,2,3" should be enabled
+    When I disable taxes with ids: "1,2,3"
+    Then taxes with ids: "1,2,3" should be disabled
+
+  Scenario: Enabling taxes status in bulk action
+    And taxes with ids: "1,2,3" should be disabled
+    When I enable taxes with ids: "1,2,3"
+    Then taxes with ids: "1,2,3" should be enabled
+
   Scenario: Deleting tax
-    Given Tax with id "2" exists
+    Given tax with id "2" exists
     When I delete tax with id "2"
-    Then Tax with id "2" should not exist
+    Then tax with id "2" should not be found
+
+  Scenario: Deleting taxes in bulk action
+    Given taxes with ids: "3,4,5" exists
+    When I delete taxes with ids: "3,4,5" in bulk action
+    Then taxes with ids: "3,4,5" should not be found

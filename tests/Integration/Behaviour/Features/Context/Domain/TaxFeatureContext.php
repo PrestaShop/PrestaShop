@@ -30,8 +30,11 @@ use Behat\Gherkin\Node\TableNode;
 use Configuration;
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\AddTaxCommand;
+use PrestaShop\PrestaShop\Core\Domain\Tax\Command\BulkDeleteTaxCommand;
+use PrestaShop\PrestaShop\Core\Domain\Tax\Command\BulkToggleTaxStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\DeleteTaxCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\EditTaxCommand;
+use PrestaShop\PrestaShop\Core\Domain\Tax\Command\ToggleTaxStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxException;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Query\GetTaxForEditing;
@@ -114,13 +117,48 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @When I toggle tax :taxReference status
+     */
+    public function toggleStatus($taxReference)
+    {
+        /** @var Tax $tax */
+        $tax = SharedStorage::getStorage()->get($taxReference);
+        $taxId = (int) $tax->id;
+        $expectedStatus = !(bool) $tax->active;
+
+        $this->getCommandBus()->handle(new ToggleTaxStatusCommand($taxId, $expectedStatus));
+        SharedStorage::getStorage()->set($taxReference, new Tax($taxId));
+    }
+
+    /**
+     * @When I :action taxes with ids: :ids
+     */
+    public function bulkToggleStatusByIds($action, $ids)
+    {
+        $expectedStatus = 'enable' === $action ? true : false;
+
+        $this->getCommandBus()->handle(new BulkToggleTaxStatusCommand(
+            array_map('intval', explode(',', $ids)),
+            $expectedStatus
+        ));
+    }
+
+    /**
      * @When I delete tax with id :id
      */
-    public function deleteTaxUsingCommand($id)
+    public function deleteTaxById($id)
     {
-        $command = new DeleteTaxCommand((int) $id);
+        $this->getCommandBus()->handle(new DeleteTaxCommand((int) $id));
+    }
 
-        $this->getCommandBus()->handle($command);
+    /**
+     * @When I delete taxes with ids: :ids in bulk action
+     */
+    public function bulkDeleteTaxesByIds($ids)
+    {
+        $this->getCommandBus()->handle(
+            new BulkDeleteTaxCommand(array_map('intval', explode(',', $ids)))
+        );
     }
 
     /**
@@ -160,9 +198,38 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then Tax with id :id should not exist
+     * @Then taxes with ids: :ids should be :status
      */
-    public function assertTaxByIdShouldNotExist($id)
+    public function assertStatusByIds($ids, $status)
+    {
+        $isEnabled = 'enabled' === $status ? true : false;
+        foreach (array_map('intval', explode(',', $ids)) as $id) {
+            $editableTax = $this->getQueryBus()->handle(new GetTaxForEditing($id));
+            if ($isEnabled !== $editableTax->isActive()) {
+                throw new RuntimeException(sprintf(
+                    'Tax with id "%s" is %s, but expected to be %s',
+                    $id,
+                    $editableTax->isActive ? 'enabled' : 'disabled',
+                    $status
+                ));
+            }
+        }
+    }
+
+    /**
+     * @Then taxes with ids: :ids should not be found
+     */
+    public function assertTaxesByIdsShouldNotBeFound($ids)
+    {
+        foreach (explode(',', $ids) as $id) {
+            $this->assertTaxByIdShouldNotBeFound($id);
+        }
+    }
+
+    /**
+     * @Then tax with id :id should not be found
+     */
+    public function assertTaxByIdShouldNotBeFound($id)
     {
         try {
             $query = new GetTaxForEditing((int) $id);
@@ -174,7 +241,17 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Given Tax with id :id exists
+     * @Given taxes with ids: :ids exists
+     */
+    public function assertTaxesExistsByIds($ids)
+    {
+        foreach (explode(',', $ids) as $id) {
+            $this->assertTaxExistsById($id);
+        }
+    }
+
+    /**
+     * @Given tax with id :id exists
      */
     public function assertTaxExistsById($id)
     {
