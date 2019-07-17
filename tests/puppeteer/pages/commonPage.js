@@ -1,11 +1,10 @@
 module.exports = class CommonPage {
-
   constructor(page) {
     this.page = page;
   }
 
   async getPageTitle() {
-    return await this.page.title();
+    return this.page.title();
   }
 
   async goTo(URL) {
