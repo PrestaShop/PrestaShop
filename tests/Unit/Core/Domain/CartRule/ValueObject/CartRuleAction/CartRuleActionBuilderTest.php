@@ -30,6 +30,7 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\AmountDiscountAction;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRuleActionBuilder;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRuleActionInterface;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\FreeShippingAction;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\GiftProductAction;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\PercentageDiscountAction;
@@ -96,5 +97,49 @@ class CartRuleActionBuilderTest extends TestCase
             ->build();
 
         $this->assertInstanceOf(GiftProductAction::class, $action);
+    }
+
+    /**
+     * @dataProvider validActionsProvider
+     */
+    public function testItCorrectlyBuildsVariousValidActions(
+        ?MoneyAmount $moneyAmount,
+        ?PercentageDiscount $percentage,
+        bool $isFreeShipping,
+        ?GiftProduct $giftProduct,
+        CartRuleActionInterface $expectedAction
+    ) {
+        $builder = (new CartRuleActionBuilder())
+            ->setFreeShipping($isFreeShipping);
+
+        if (null !== $moneyAmount) {
+            $builder->setAmountDiscount($moneyAmount);
+        }
+
+        if (null !== $percentage) {
+            $builder->setPercentageDiscount($percentage);
+        }
+
+        if (null !== $giftProduct) {
+            $builder->setGiftProduct($giftProduct);
+        }
+
+        $this->assertEquals($expectedAction, $builder->build());
+    }
+
+    public function validActionsProvider()
+    {
+        $moneyAmount = new MoneyAmount(100, 1);
+        $percentage = new PercentageDiscount(30.5, true);
+        $giftProduct = new GiftProduct(new ProductId(1));
+
+        // [Amount, Percentage, Is free shipping, Expected result]
+        yield [$moneyAmount, null, true, $giftProduct, new AmountDiscountAction($moneyAmount, true, $giftProduct)];
+        yield [$moneyAmount, null, false, null, new AmountDiscountAction($moneyAmount, false)];
+        yield [null, $percentage, false, $giftProduct, new PercentageDiscountAction($percentage, false, $giftProduct)];
+        yield [null, $percentage, true, null, new PercentageDiscountAction($percentage, true)];
+        yield [null, null, true, null, new FreeShippingAction()];
+        yield [null, null, true, $giftProduct, new FreeShippingAction($giftProduct)];
+        yield [null, null, false, $giftProduct, new GiftProductAction($giftProduct)];
     }
 }
