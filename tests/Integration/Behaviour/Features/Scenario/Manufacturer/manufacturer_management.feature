@@ -21,10 +21,6 @@ Feature: Manufacturer management
     And manufacturer "manufacturer-3" "meta_keywords" in default language should be "Boots, shoes, slippers"
     And manufacturer "manufacturer-3" should be enabled
 
-  Scenario: Adding manufacturer with empty name should not be allowed
-    When I add new manufacturer "manufacturer-4" with empty name
-    Then I should get error message 'Manufacturer contains invalid field values'
-
   Scenario: Editing manufacturer
     When I edit manufacturer "manufacturer-3" with following properties:
       | name             | worst-shoes                                |
@@ -41,16 +37,26 @@ Feature: Manufacturer management
     And manufacturer "manufacturer-3" "meta_keywords" in default language should be "Boots, shoes, slippers"
     And manufacturer "manufacturer-3" should be disabled
 
-  Scenario: Toggling manufacturer status
+  Scenario: Enable manufacturer status by toggling it
     Given manufacturer "manufacturer-3" should be disabled
     When I toggle manufacturer "manufacturer-3" status
     Then manufacturer "manufacturer-3" should be enabled
 
-  Scenario: Bulk toggling manufacturer status
-    Given manufacturers with ids: "1,2,3" exists
-    And manufacturers with ids: "1,2,3" should be enabled
-    When I disable manufacturers with ids: "1,2,3" in bulk action
-    Then manufacturers with ids: "1,2,3" should be disabled
+  Scenario: Disable manufacturer status by toggling it
+    Given manufacturer "manufacturer-3" should be enabled
+    When I toggle manufacturer "manufacturer-3" status
+    Then manufacturer "manufacturer-3" should be disabled
+
+  Scenario: Bulk disabling manufacturer status
+    Given manufacturers with ids: "1,2" exists
+    And manufacturers with ids: "1,2" should be enabled
+    When I disable manufacturers with ids: "1,2" in bulk action
+    Then manufacturers with ids: "1,2" should be disabled
+
+  Scenario: Bulk enabling manufacturer status
+    Given manufacturers with ids: "1,2" should be disabled
+    When I enable manufacturers with ids: "1,2" in bulk action
+    Then manufacturers with ids: "1,2" should be enabled
 
   Scenario: Deleting manufacturer
     Given manufacturer with id "3" exists
