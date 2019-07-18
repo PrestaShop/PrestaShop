@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Command;
 use DateTime;
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\CatalogPriceRuleConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 
 /**
@@ -102,18 +103,20 @@ class AddCatalogPriceRuleCommand
      * @param int $shopId
      * @param bool $includeTax
      * @param float $price
+     *
+     * @throws DomainConstraintException
      */
     public function __construct(
-        $name,
-        $currencyId,
-        $countryId,
-        $groupId,
-        $fromQuantity,
-        $reductionType,
-        $reductionValue,
-        $shopId,
-        $includeTax,
-        $price
+        string $name,
+        int $currencyId,
+        int $countryId,
+        int $groupId,
+        int $fromQuantity,
+        string $reductionType,
+        float $reductionValue,
+        int $shopId,
+        bool $includeTax,
+        float $price
     ) {
         $this->name = $name;
         $this->currencyId = $currencyId;
@@ -129,7 +132,7 @@ class AddCatalogPriceRuleCommand
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -137,7 +140,7 @@ class AddCatalogPriceRuleCommand
     /**
      * @return int
      */
-    public function getShopId()
+    public function getShopId(): int
     {
         return $this->shopId;
     }
@@ -145,7 +148,7 @@ class AddCatalogPriceRuleCommand
     /**
      * @return int
      */
-    public function getCurrencyId()
+    public function getCurrencyId(): int
     {
         return $this->currencyId;
     }
@@ -153,7 +156,7 @@ class AddCatalogPriceRuleCommand
     /**
      * @return int
      */
-    public function getCountryId()
+    public function getCountryId(): int
     {
         return $this->countryId;
     }
@@ -161,7 +164,7 @@ class AddCatalogPriceRuleCommand
     /**
      * @return int
      */
-    public function getGroupId()
+    public function getGroupId(): int
     {
         return $this->groupId;
     }
@@ -169,7 +172,7 @@ class AddCatalogPriceRuleCommand
     /**
      * @return int
      */
-    public function getFromQuantity()
+    public function getFromQuantity(): int
     {
         return $this->fromQuantity;
     }
@@ -177,7 +180,7 @@ class AddCatalogPriceRuleCommand
     /**
      * @return Reduction
      */
-    public function getReduction()
+    public function getReduction(): Reduction
     {
         return $this->reduction;
     }
@@ -185,7 +188,7 @@ class AddCatalogPriceRuleCommand
     /**
      * @return float
      */
-    public function getPrice()
+    public function getPrice(): float
     {
         return $this->price;
     }
@@ -193,7 +196,7 @@ class AddCatalogPriceRuleCommand
     /**
      * @return DateTime|null
      */
-    public function getDateTimeFrom()
+    public function getDateTimeFrom(): ?DateTime
     {
         return $this->dateTimeFrom;
     }
@@ -201,7 +204,7 @@ class AddCatalogPriceRuleCommand
     /**
      * @return DateTime|null
      */
-    public function getDateTimeTo()
+    public function getDateTimeTo(): ?DateTime
     {
         return $this->dateTimeTo;
     }
@@ -209,7 +212,7 @@ class AddCatalogPriceRuleCommand
     /**
      * @return bool
      */
-    public function isTaxIncluded()
+    public function isTaxIncluded(): bool
     {
         return $this->includeTax;
     }
@@ -219,7 +222,7 @@ class AddCatalogPriceRuleCommand
      *
      * @throws CatalogPriceRuleConstraintException
      */
-    public function setDateTimeFrom($dateTimeFrom)
+    public function setDateTimeFrom(string $dateTimeFrom)
     {
         $this->dateTimeFrom = $this->createDateTime($dateTimeFrom);
     }
@@ -229,7 +232,7 @@ class AddCatalogPriceRuleCommand
      *
      * @throws CatalogPriceRuleConstraintException
      */
-    public function setDateTimeTo($dateTimeTo)
+    public function setDateTimeTo(string $dateTimeTo)
     {
         $this->dateTimeTo = $this->createDateTime($dateTimeTo);
     }
@@ -241,7 +244,7 @@ class AddCatalogPriceRuleCommand
      *
      * @throws CatalogPriceRuleConstraintException
      */
-    private function createDateTime($dateTime)
+    private function createDateTime($dateTime): DateTime
     {
         try {
             return new DateTime($dateTime);
