@@ -137,8 +137,10 @@ class NewsDataProvider
         ];
 
         foreach ($rss->channel->item as $item) {
-            if ($articles_limit == 0
-                || !$this->validate->isCleanHtml((string) $item->title)
+            if ($articles_limit == 0) {
+                break;
+            }
+            if (!$this->validate->isCleanHtml((string) $item->title)
                 || !$this->validate->isCleanHtml((string) $item->description)
                 || empty($item->link)
                 || empty($item->title)) {
