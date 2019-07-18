@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\LinkGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\CartTotalColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\HighlightedColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DateTimeColumn;
@@ -127,11 +127,11 @@ final class CartGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'field' => 'customer_name',
                 ])
             )
-            ->add((new CartTotalColumn('cart_total'))
+            ->add((new HighlightedColumn('cart_total'))
                 ->setName($this->trans('Total', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'cart_total',
-                    'is_order_placed_field' => 'is_order_placed',
+                    'is_highlighted_field' => 'is_order_placed',
                 ])
             )
             ->add((new DataColumn('carrier_name'))
