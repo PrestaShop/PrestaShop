@@ -202,19 +202,6 @@ final class CatalogPriceRuleQueryBuilder extends AbstractDoctrineQueryBuilder
 
                 continue;
             }
-//
-//            if ('to' === $filterName) {
-//                if (isset($value['from'])) {
-//                    $qb->andWhere($allowedFiltersAliasMap[$filterName] . ' >= :end_from');
-//                    $qb->setParameter('end_from', $value['from']);
-//                }
-//                if (isset($value['to'])) {
-//                    $qb->andWhere($allowedFiltersAliasMap[$filterName] . ' <= :end_to');
-//                    $qb->setParameter('end_to', $value['to']);
-//                }
-//
-//                continue;
-//            }
 
             $qb->andWhere($allowedFiltersAliasMap[$filterName] . ' LIKE :value');
             $qb->setParameter('value', "%$value%");
