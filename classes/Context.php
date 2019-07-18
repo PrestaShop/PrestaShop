@@ -332,12 +332,13 @@ class ContextCore
         $customer->logged = 1;
         $this->cookie->email = $customer->email;
         $this->cookie->is_guest = $customer->isGuest();
-        $this->cart->secure_key = $customer->secure_key;
 
         if (Configuration::get('PS_CART_FOLLOWING') && (empty($this->cookie->id_cart) || Cart::getNbProducts($this->cookie->id_cart) == 0) && $idCart = (int) Cart::lastNoneOrderedCart($this->customer->id)) {
             $this->cart = new Cart($idCart);
+            $this->cart->secure_key = $customer->secure_key;
         } else {
             $idCarrier = (int) $this->cart->id_carrier;
+            $this->cart->secure_key = $customer->secure_key;
             $this->cart->id_carrier = 0;
             $this->cart->setDeliveryOption(null);
             $this->cart->updateAddressId($this->cart->id_address_delivery, (int) Address::getFirstCustomerAddressId((int) ($customer->id)));
