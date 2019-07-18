@@ -333,7 +333,7 @@ final class GetCustomerThreadForViewingHandler implements GetCustomerThreadForVi
     private function getCustomerInformation(CustomerThread $thread)
     {
         if (!$thread->id_customer) {
-            return new CustomerInformation(null, null, null, $thread->email, null, null, null);
+            return CustomerInformation::withEmailOnly($thread->email);
         }
 
         $customer = new Customer($thread->id_customer);

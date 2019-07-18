@@ -67,12 +67,23 @@ class CustomerInformation
     private $customerSinceDate;
 
     /**
+     * @param string $email
+     *
+     * @return self
+     */
+    public static function withEmailOnly($email)
+    {
+        return new self(null, null, null, $email, null, null, null);
+    }
+
+    /**
      * @param int|null $customerId
      * @param string|null $firstName
      * @param string|null $lastName
      * @param string $email
      * @param int $validatedOrdersCount
      * @param string $validatedOrdersAmount
+     * @param string $customerSinceDate
      */
     public function __construct(
         $customerId,
