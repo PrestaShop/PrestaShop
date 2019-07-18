@@ -18,5 +18,5 @@ exclude_files:
   - node_modules
   - vendor
   - tools
-  - mails/[a-zA-Z][a-zA-Z]/
+  - mails/[a-zA-Z]{2}/
   - js

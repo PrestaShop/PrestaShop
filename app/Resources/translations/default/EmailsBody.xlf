@@ -1118,6 +1118,11 @@
         <target><![CDATA[<span class="warning">WARNING:</span> you have received a new log alert in your back office.]]></target>
         <note>Line: 247</note>
       </trans-unit>
+      <trans-unit id="7a8c7e3e6d8180830205ea53c0a0ee82">
+        <source><![CDATA[You can check for it in the <span class="label">"Advanced Parameters" > "Logs"</span> section of your back office.]]></source>
+        <target><![CDATA[You can check for it in the <span class="label">"Advanced Parameters" > "Logs"</span> section of your back office.]]></target>
+        <note>Line: 254</note>
+      </trans-unit>
       <trans-unit id="ce22480666f263db8d4fafc5b1496480">
         <source><![CDATA[You can check for it in the <span class="label">"Advanced Parameters" > "Logs"</span> section of your back office.]]></source>
         <target><![CDATA[You can check for it in the <span class="label">"Advanced Parameters" > "Logs"</span> section of your back office.]]></target>
@@ -1785,6 +1790,11 @@
         <source><![CDATA[There are now less than <span class="label">{last_qty}</span> items in stock.]]></source>
         <target><![CDATA[There are now less than <span class="label">{last_qty}</span> items in stock.]]></target>
         <note>Line: 245</note>
+      </trans-unit>
+      <trans-unit id="8e4a23148dd66ec8a6c999996b855ba5">
+        <source><![CDATA[Replenish your inventory, go to the <span class="label">"Catalog" > "Stocks"</span> section of your back office to manage your stock.]]></source>
+        <target><![CDATA[Replenish your inventory, go to the <span class="label">"Catalog" > "Stocks"</span> section of your back office to manage your stock.]]></target>
+        <note>Line: 258</note>
       </trans-unit>
       <trans-unit id="1a1c978d585883ad44a1807fd308adfd">
         <source><![CDATA[Replenish your inventory, go to the <span class="label">"Catalog" > "Stocks"</span> section of your back office to manage your stock.]]></source>
