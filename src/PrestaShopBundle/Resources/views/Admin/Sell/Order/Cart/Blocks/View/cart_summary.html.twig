@@ -165,6 +165,40 @@
       </tbody>
     </table>
 
+    {% if cartView.cartSummary.cart_rules is not empty %}
+      <table class="table">
+        <thead>
+        <tr>
+          <th>{{ 'ID'|trans({}, 'Admin.Global') }}</th>
+          <th>{{ 'Discount name'|trans({}, 'Admin.Orderscustomers.Feature') }}</th>
+          <th class="text-right">{{ 'Value'|trans({}, 'Admin.Global') }}</th>
+        </tr>
+        </thead>
+        <tbody>
+          {% for cartRule in cartView.cartSummary.cart_rules %}
+            <tr>
+              <td>{{ cartRule.id }}</td>
+              <td>
+                <a href="{{ getAdminLink('AdminCartRules', true, {
+                  id_cart_rule: cartRule.id,
+                  updatecart_rule: 1
+                }) }}">
+                  {{ cartRule.name }}
+                </a>
+              </td>
+              <td class="text-right">
+                {% if cartRule.is_free_shipping %}
+                  {{ 'Free shipping'|trans({}, 'Admin.Shipping.Feature') }}
+                {% else %}
+                  - {{ cartRule.formatted_value }}
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% endif %}
+
     <div class="alert alert-warning" role="alert">
       <p class="alert-text">
         {{ 'For this particular customer group, prices are displayed as:'|trans({}, 'Admin.Orderscustomers.Notification') }}
