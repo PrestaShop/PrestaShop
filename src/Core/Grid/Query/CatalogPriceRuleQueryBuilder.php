@@ -192,16 +192,29 @@ final class CatalogPriceRuleQueryBuilder extends AbstractDoctrineQueryBuilder
 
             if ('from' === $filterName || 'to' === $filterName) {
                 if (isset($value['from'])) {
-                    $qb->andWhere($allowedFiltersAliasMap[$filterName] . ' >= :date_from');
-                    $qb->setParameter('date_from', sprintf('%s 0:0:0', $value['from']));
+                    $qb->andWhere($allowedFiltersAliasMap[$filterName] . ' >= :' . $filterName . '_from');
+                    $qb->setParameter($filterName . '_from', $value['from']);
                 }
                 if (isset($value['to'])) {
-                    $qb->andWhere($allowedFiltersAliasMap[$filterName] . ' <= :date_to');
-                    $qb->setParameter('date_to', sprintf('%s 23:59:59', $value['to']));
+                    $qb->andWhere($allowedFiltersAliasMap[$filterName] . ' <= :' . $filterName . '_to');
+                    $qb->setParameter($filterName . '_to', $value['to']);
                 }
 
                 continue;
             }
+//
+//            if ('to' === $filterName) {
+//                if (isset($value['from'])) {
+//                    $qb->andWhere($allowedFiltersAliasMap[$filterName] . ' >= :end_from');
+//                    $qb->setParameter('end_from', $value['from']);
+//                }
+//                if (isset($value['to'])) {
+//                    $qb->andWhere($allowedFiltersAliasMap[$filterName] . ' <= :end_to');
+//                    $qb->setParameter('end_to', $value['to']);
+//                }
+//
+//                continue;
+//            }
 
             $qb->andWhere($allowedFiltersAliasMap[$filterName] . ' LIKE :value');
             $qb->setParameter('value', "%$value%");
