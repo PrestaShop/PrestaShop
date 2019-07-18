@@ -102,7 +102,7 @@ class EditCatalogPriceRuleCommand
      *
      * @throws CatalogPriceRuleConstraintException
      */
-    public function __construct($catalogPriceRuleId)
+    public function __construct(int $catalogPriceRuleId)
     {
         $this->catalogPriceRuleId = new CatalogPriceRuleId($catalogPriceRuleId);
     }
@@ -110,7 +110,7 @@ class EditCatalogPriceRuleCommand
     /**
      * @return CatalogPriceRuleId
      */
-    public function getCatalogPriceRuleId()
+    public function getCatalogPriceRuleId(): CatalogPriceRuleId
     {
         return $this->catalogPriceRuleId;
     }
@@ -118,15 +118,15 @@ class EditCatalogPriceRuleCommand
     /**
      * @return string|null
      */
-    public function getName()
+    public function getName(): ?string
     {
         return $this->name;
     }
 
     /**
-     * @param string|null $name
+     * @param string $name
      */
-    public function setName($name)
+    public function setName(string $name)
     {
         $this->name = $name;
     }
@@ -134,15 +134,15 @@ class EditCatalogPriceRuleCommand
     /**
      * @return int|null
      */
-    public function getShopId()
+    public function getShopId(): ?int
     {
         return $this->shopId;
     }
 
     /**
-     * @param int|null $shopId
+     * @param int $shopId
      */
-    public function setShopId($shopId)
+    public function setShopId(int $shopId)
     {
         $this->shopId = $shopId;
     }
@@ -150,15 +150,15 @@ class EditCatalogPriceRuleCommand
     /**
      * @return int|null
      */
-    public function getCurrencyId()
+    public function getCurrencyId(): ?int
     {
         return $this->currencyId;
     }
 
     /**
-     * @param int|null $currencyId
+     * @param int $currencyId
      */
-    public function setCurrencyId($currencyId)
+    public function setCurrencyId(int $currencyId)
     {
         $this->currencyId = $currencyId;
     }
@@ -166,15 +166,15 @@ class EditCatalogPriceRuleCommand
     /**
      * @return int|null
      */
-    public function getCountryId()
+    public function getCountryId(): ?int
     {
         return $this->countryId;
     }
 
     /**
-     * @param int|null $countryId
+     * @param int $countryId
      */
-    public function setCountryId($countryId)
+    public function setCountryId(int $countryId)
     {
         $this->countryId = $countryId;
     }
@@ -182,15 +182,15 @@ class EditCatalogPriceRuleCommand
     /**
      * @return int|null
      */
-    public function getGroupId()
+    public function getGroupId(): ?int
     {
         return $this->groupId;
     }
 
     /**
-     * @param int|null $groupId
+     * @param int $groupId
      */
-    public function setGroupId($groupId)
+    public function setGroupId(int $groupId)
     {
         $this->groupId = $groupId;
     }
@@ -198,15 +198,15 @@ class EditCatalogPriceRuleCommand
     /**
      * @return int|null
      */
-    public function getFromQuantity()
+    public function getFromQuantity(): ?int
     {
         return $this->fromQuantity;
     }
 
     /**
-     * @param int|null $fromQuantity
+     * @param int $fromQuantity
      */
-    public function setFromQuantity($fromQuantity)
+    public function setFromQuantity(int $fromQuantity)
     {
         $this->fromQuantity = $fromQuantity;
     }
@@ -214,15 +214,15 @@ class EditCatalogPriceRuleCommand
     /**
      * @return float|null
      */
-    public function getPrice()
+    public function getPrice(): ?float
     {
         return $this->price;
     }
 
     /**
-     * @param float|null $price
+     * @param float $price
      */
-    public function setPrice($price)
+    public function setPrice(float $price)
     {
         $this->price = $price;
     }
@@ -230,7 +230,7 @@ class EditCatalogPriceRuleCommand
     /**
      * @return DateTime|null
      */
-    public function getDateTimeFrom()
+    public function getDateTimeFrom(): ?DateTime
     {
         return $this->dateTimeFrom;
     }
@@ -240,7 +240,7 @@ class EditCatalogPriceRuleCommand
      *
      * @throws CatalogPriceRuleConstraintException
      */
-    public function setDateTimeFrom($dateTimeFrom)
+    public function setDateTimeFrom(string $dateTimeFrom)
     {
         $this->dateTimeFrom = $this->createDateTime($dateTimeFrom);
     }
@@ -248,7 +248,7 @@ class EditCatalogPriceRuleCommand
     /**
      * @return DateTime|null
      */
-    public function getDateTimeTo()
+    public function getDateTimeTo(): ?DateTime
     {
         return $this->dateTimeTo;
     }
@@ -258,7 +258,7 @@ class EditCatalogPriceRuleCommand
      *
      * @throws CatalogPriceRuleConstraintException
      */
-    public function setDateTimeTo($dateTimeTo)
+    public function setDateTimeTo(string $dateTimeTo)
     {
         $this->dateTimeTo = $this->createDateTime($dateTimeTo);
     }
@@ -266,15 +266,15 @@ class EditCatalogPriceRuleCommand
     /**
      * @return bool|null
      */
-    public function isTaxIncluded()
+    public function isTaxIncluded(): ?bool
     {
         return $this->includeTax;
     }
 
     /**
-     * @param bool|null $includeTax
+     * @param bool $includeTax
      */
-    public function setIncludeTax($includeTax)
+    public function setIncludeTax(bool $includeTax)
     {
         $this->includeTax = $includeTax;
     }
@@ -282,26 +282,26 @@ class EditCatalogPriceRuleCommand
     /**
      * @return Reduction|null
      */
-    public function getReduction()
+    public function getReduction(): ?Reduction
     {
         return $this->reduction;
     }
 
     /**
-     * @param $type
-     * @param $value
+     * @param string $type
+     * @param float $value
      */
-    public function setReduction($type, $value)
+    public function setReduction(string $type, float $value)
     {
         $this->reduction = new Reduction($type, $value);
     }
 
     /**
-     * @param $dateTime
+     * @param string $dateTime
      *
      * @return DateTime
      */
-    private function createDateTime($dateTime)
+    private function createDateTime(string $dateTime)
     {
         try {
             return new DateTime($dateTime);
