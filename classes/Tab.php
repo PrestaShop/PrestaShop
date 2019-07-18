@@ -145,10 +145,19 @@ class TabCore extends ObjectModel
         $slug = 'ROLE_MOD_TAB_' . strtoupper(self::getClassNameById($idTab));
 
         foreach (array('CREATE', 'READ', 'UPDATE', 'DELETE') as $action) {
-            //Check if authorization role does not exist (this can happen if you want to create several tabs with the same class_name or route_name)
-            $idAuthorizationRole = Db::getInstance()->getValue('SELECT id_authorization_role FROM `' . _DB_PREFIX_ . 'authorization_role` WHERE `slug` = "' . $slug . '_' . $action . '"');
-            if (empty($idAuthorizationRole)) {
-                Db::getInstance()->execute('INSERT INTO `' . _DB_PREFIX_ . 'authorization_role` (`slug`) VALUES ("' . $slug . '_' . $action . '")');
+            /*
+             * Check if authorization role does not exist.
+             * This can happen if you want to create several tabs with the same class_name or route_name
+             */
+            $actionSlug = pSQL($slug . '_' . $action);
+            $authorizationRoleExists = Db::getInstance()->numRows(
+                'SELECT 1 FROM `' . _DB_PREFIX_ . 'authorization_role` ' .
+                'WHERE `slug` = "' . $actionSlug . '"'
+            );
+            if (!$authorizationRoleExists) {
+                Db::getInstance()->execute(
+                    'INSERT INTO `' . _DB_PREFIX_ . 'authorization_role` (`slug`) VALUES ("' . $actionSlug . '")'
+                );
             }
         }
 
