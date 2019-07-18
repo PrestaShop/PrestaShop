@@ -67,8 +67,17 @@ Feature: CmsPage Management
     When I disable CMS pages: "cmspage-2,cmspage-3,cms-page-4" in bulk action
     Then CMS pages: "cmspage-2,cmspage-3,cms-page-4" should be not displayed
 
+  Scenario: Enabling cms pages status in bulk action
+    And CMS pages: "cmspage-2,cmspage-3,cms-page-4" should be not displayed
+    When I enable CMS pages: "cmspage-2,cmspage-3,cms-page-4" in bulk action
+    Then CMS pages: "cmspage-2,cmspage-3,cms-page-4" should be displayed
+
+
+  Scenario: Deleting cms pages in bulk action
+    When I bulk delete CMS pages: "cmspage-2,cmspage-3,cms-page-4"
+    Then CMS pages: "cmspage-2,cmspage-3,cms-page-4" should not be found
+
   Scenario: Deleting cms page
     Given CMS page with id "1" exists
     When I delete CMS page with id "1"
     Then CMS page with id "1" should not exist
-

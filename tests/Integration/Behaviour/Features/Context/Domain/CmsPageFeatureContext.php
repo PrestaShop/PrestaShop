@@ -30,6 +30,7 @@ use Behat\Gherkin\Node\TableNode;
 use CMS;
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\AddCmsPageCommand;
+use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\BulkDeleteCmsPageCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\BulkDisableCmsPageCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\BulkEnableCmsPageCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\DeleteCmsPageCommand;
@@ -80,21 +81,6 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
     {
         $data = $node->getRowsHash();
         $this->createCmsPageUsingCommand($reference, $data);
-    }
-
-    /**
-     * @When I add new CMS page :reference with empty title
-     */
-    public function createCmsPageWithEmptyTitle($reference)
-    {
-        $data = $this->getValidDataForCmsPageCreation();
-        $data['meta_title'] = '';
-
-        try {
-            $this->createCmsPageUsingCommand($reference, $data);
-        } catch (Exception $e) {
-            $this->latestException = $e;
-        }
     }
 
     /**
@@ -210,6 +196,32 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @When I bulk delete CMS pages: :references
+     */
+    public function bulkDeleteCmsPages($references)
+    {
+        $idsByReferences = [];
+        $references = explode(',', $references);
+
+        foreach ($references as $reference) {
+            $cms = SharedStorage::getStorage()->get($reference);
+            $idsByReferences[$reference] = (int) $cms->id;
+        }
+        $this->getCommandBus()->handle(new BulkDeleteCmsPageCommand($idsByReferences));
+    }
+
+    /**
+     * @Then CMS pages: :references should not be found
+     */
+    public function assertMultipleCmsPagesNotFound($references)
+    {
+        foreach (explode(',', $references) as $reference) {
+            $cms = SharedStorage::getStorage()->get($reference);
+            $this->assertCmsPageDoesNotExistById($cms->id);
+        }
+    }
+
+    /**
      * @Given CMS page with id :id exists
      */
     public function assertCmsPageExistsById($id)
@@ -228,26 +240,11 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
         try {
             $this->getQueryBus()->handle($query);
 
-            throw new NoExceptionAlthoughExpectedException('Cms page exists. Expected it to be deleted');
+            throw new NoExceptionAlthoughExpectedException(sprintf(
+                'Cms page with id "%s" exists. Expected it to be deleted',
+                $id
+            ));
         } catch (CmsPageNotFoundException $e) {
-        }
-    }
-
-    /**
-     * @Then CMS page :reference does not exist
-     */
-    public function assertCmsPageDoesNotExistByReference($reference)
-    {
-        try {
-            $cms = SharedStorage::getStorage()->get($reference);
-            $query = new GetCmsPageForEditing((int) $cms->id);
-            $this->getQueryBus()->handle($query);
-
-            throw new NoExceptionAlthoughExpectedException('Cms page exists. Expected it to not exist');
-        } catch (Exception $e) {
-            if ($e instanceof NoExceptionAlthoughExpectedException) {
-                throw $e;
-            }
         }
     }
 
