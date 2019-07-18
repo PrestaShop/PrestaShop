@@ -64,7 +64,7 @@ class Reduction
      *
      * @throws DomainConstraintException
      */
-    public function __construct($type, $value)
+    public function __construct(string $type, float $value)
     {
         $this->assertIsAllowedType($type);
         $this->assertIsValidValue($type, $value);
@@ -75,7 +75,7 @@ class Reduction
     /**
      * @return string
      */
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
@@ -83,7 +83,7 @@ class Reduction
     /**
      * @return float
      */
-    public function getValue()
+    public function getValue(): float
     {
         return $this->value;
     }
@@ -93,12 +93,12 @@ class Reduction
      *
      * @throws DomainConstraintException
      */
-    private function assertIsAllowedType($type)
+    private function assertIsAllowedType(string $type)
     {
         if ($type !== self::TYPE_AMOUNT && $type !== self::TYPE_PERCENTAGE) {
             throw new DomainConstraintException(sprintf(
                 'The reduction type "%s" is invalid. Valid types are: "%s", "%s".',
-                var_export($type, true),
+                $type,
                     self::TYPE_AMOUNT,
                     self::TYPE_PERCENTAGE
                 ),
@@ -113,10 +113,10 @@ class Reduction
      *
      * @throws DomainConstraintException
      */
-    private function assertIsValidValue($type, $value)
+    private function assertIsValidValue(string $type, float $value)
     {
         if (self::TYPE_PERCENTAGE === $type) {
-            if (!$this->assertIsNotNegativeNumber($value) || self::MAX_ALLOWED_PERCENTAGE < $value) {
+            if (!$this->assertIsNotNegative($value) || self::MAX_ALLOWED_PERCENTAGE < $value) {
                 throw new DomainConstraintException(sprintf(
                     'Invalid reduction percentage "%s". It must be from 0 to %s%%',
                     $value,
@@ -126,7 +126,7 @@ class Reduction
             }
         }
 
-        if (!$this->assertIsNotNegativeNumber($value)) {
+        if (!$this->assertIsNotNegative($value)) {
             throw new DomainConstraintException(sprintf(
                 'Invalid reduction amount "%s". It cannot be less than 0',
                 $value),
@@ -136,12 +136,12 @@ class Reduction
     }
 
     /**
-     * @param $value
+     * @param float $value
      *
      * @return bool
      */
-    private function assertIsNotNegativeNumber($value)
+    private function assertIsNotNegative(float $value)
     {
-        return is_numeric($value) && 0 <= $value;
+        return 0 <= $value;
     }
 }
