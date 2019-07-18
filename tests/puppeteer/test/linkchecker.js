@@ -1,14 +1,12 @@
 require('events').EventEmitter.defaultMaxListeners = Infinity;
 const puppeteer = require('puppeteer');
 const fs = require('fs');
+require('./utils/globals');
 
 const reportPath = './reports/';
 // maybe add tracing option : https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#class-tracing
-const URL_FO = process.env.URL_FO || 'http://localhost:8080/';
-const URL_BO = process.env.URL_BO || 'http://localhost:8080/admin-dev/';
-const EMAIL = process.env.LOGIN || 'demo@prestashop.com';
-const PASSWD = process.env.PASSWD || 'prestashop_demo';
-const HEADLESS = process.env.HEADLESS || true;
+const LOG_PASSED = process.env.LOG_PASSED || false;
+
 let responses = [];
 const numberRequests = {BO: 0, FO: 0};
 const selectorBO = 'nav.nav-bar.d-none.d-md-block ul li a.link[href]';
@@ -66,9 +64,11 @@ const checkStatusUrls = async (page, hrefs) => {
   // eslint-disable-next-line
   for (const href of hrefs) {
     curHref = href;
-    object[office].passed.push({url: href, date: new Date().getTime(), responses});
+    if (LOG_PASSED === true) {
+      object[office].passed.push({url: href, date: new Date().getTime(), responses});
+    }
 
-    if (href.includes(URL_FO)) {
+    if (href.includes(global.URL_FO)) {
       // eslint-disable-next-line
       await page.goto(href, {waitUntil: 'domcontentloaded'});
       outputSameLine(` - ${i}/${hrefs.length} checked (${href})`);
@@ -82,15 +82,15 @@ const checkStatusUrls = async (page, hrefs) => {
 };
 
 const loginBO = async (page) => {
-  await page.type('#email', EMAIL);
-  await page.type('#passwd', PASSWD);
+  await page.type('#email', global.EMAIL);
+  await page.type('#passwd', global.PASSWD);
   await page.click('#submit_login');
   await page.waitForNavigation({waitUntil: 'domcontentloaded'});
 };
 
 const run = async () => {
   const browser = await puppeteer.launch({
-    headless: HEADLESS,
+    headless: global.HEADLESS,
     args: ['--no-sandbox'],
   });
   const page = await browser.newPage();
@@ -99,7 +99,7 @@ const run = async () => {
 
   // Start testing BO
   console.log('Begin testing BO');
-  await page.goto(URL_BO, {waitUntil: 'networkidle0'});
+  await page.goto(global.URL_BO, {waitUntil: 'networkidle0'});
   await loginBO(page);
   let urlList = await getAllUrls(page, selectorBO);
   await console.log(` - ${urlList.length} URL to crawl`);
@@ -111,7 +111,7 @@ const run = async () => {
 
   // Start testing FO
   console.log('Begin testing FO');
-  await page.goto(URL_FO, {waitUntil: 'networkidle0'});
+  await page.goto(global.URL_FO, {waitUntil: 'networkidle0'});
   urlList = await getAllUrls(page, selectorFO);
   console.log(` - ${urlList.length} URL to crawl`);
   office = 'FO';
