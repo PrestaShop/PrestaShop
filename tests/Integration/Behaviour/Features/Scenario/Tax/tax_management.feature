@@ -13,10 +13,6 @@ Feature: Manage tax
     And tax "tax-1" rate should be 0.500
     And tax "tax-1" should be enabled
 
-  Scenario: Adding new tax with empty name should not be allowed
-    When I add new tax "tax-2" with empty name
-    Then I should get error message 'Tax contains invalid field values'
-
   Scenario: Editing tax
     When I edit tax "tax-1" with following properties:
       | name         | my custom tax 300 |

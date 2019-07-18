@@ -27,16 +27,15 @@
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
-use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\AddTaxCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\BulkDeleteTaxCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\BulkToggleTaxStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\DeleteTaxCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\EditTaxCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\ToggleTaxStatusCommand;
-use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxException;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Query\GetTaxForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Tax\QueryResult\EditableTax;
 use PrestaShop\PrestaShop\Core\Domain\Tax\ValueObject\TaxId;
 use RuntimeException;
 use Tax;
@@ -47,21 +46,15 @@ use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpecte
 class TaxFeatureContext extends AbstractDomainFeatureContext
 {
     /**
-     * "When" steps perform actions, and some of them store the latest exception
-     * in this variable so that "Then" action can check it
-     *
-     * @var mixed
-     */
-    private $latestException;
-
-    /**
      * @var int default language id from configuration
      */
     private $defaultLangId;
 
     public function __construct()
     {
-        $this->defaultLangId = CommonFeatureContext::getContainer()->get('prestashop.adapter.legacy.configuration')->get('PS_LANG_DEFAULT');
+        $this->defaultLangId = CommonFeatureContext::getContainer()
+            ->get('prestashop.adapter.legacy.configuration')
+            ->get('PS_LANG_DEFAULT');
     }
 
     /**
@@ -72,21 +65,6 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
         $data = $table->getRowsHash();
 
         $this->createTaxUsingCommand($taxReference, $data);
-    }
-
-    /**
-     * @When I add new tax :taxReference with empty name
-     */
-    public function createTaxWithEmptyName($taxReference)
-    {
-        $data = $this->getValidDataForTaxCreation();
-        $data['name'] = '';
-
-        try {
-            $this->createTaxUsingCommand($taxReference, $data);
-        } catch (TaxException $e) {
-            $this->latestException = $e;
-        }
     }
 
     /**
@@ -130,7 +108,7 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I :action taxes with ids: :ids
+     * @When /^I (enable|disable)? taxes with ids: "(.*)"$/
      */
     public function bulkToggleStatusByIds($action, $ids)
     {
@@ -197,25 +175,6 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then taxes with ids: :ids should be :status
-     */
-    public function assertStatusByIds($ids, $status)
-    {
-        $isEnabled = 'enabled' === $status ? true : false;
-        foreach (array_map('intval', explode(',', $ids)) as $id) {
-            $editableTax = $this->getQueryBus()->handle(new GetTaxForEditing($id));
-            if ($isEnabled !== $editableTax->isActive()) {
-                throw new RuntimeException(sprintf(
-                    'Tax with id "%s" is %s, but expected to be %s',
-                    $id,
-                    $editableTax->isActive ? 'enabled' : 'disabled',
-                    $status
-                ));
-            }
-        }
-    }
-
-    /**
      * @Then taxes with ids: :ids should not be found
      */
     public function assertTaxesByIdsShouldNotBeFound($ids)
@@ -260,42 +219,46 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then /^tax "(.*)" should be (enabled|disabled)?$/
+     * @Then /^taxes with ids: "(.*)" should be (enabled|disabled)?$/
      */
-    public function assertTaxStatus($taxReference, $status)
+    public function assertTaxesStatusByIds($ids, $status)
     {
-        /**
-         * @var Tax
-         */
-        $tax = SharedStorage::getStorage()->get($taxReference);
+        $ids = array_map('intval', explode(',', $ids));
 
-        $isEnabled = $status === 'enabled' ? true : false;
-        if ($isEnabled !== (bool) $tax->active) {
-            throw new RuntimeException(sprintf(
-                'Tax "%s" is %s, but it was expected to be %s',
-                $taxReference,
-                $tax->active ? 'enabled' : 'disabled',
-                $status
-            ));
+        foreach ($ids as $id) {
+            $this->assertStatusById($id, $status);
         }
     }
 
     /**
-     * @Then /^I should get error message '(.+)'$/
+     * @Then /^tax "(.*)" should be (enabled|disabled)?$/
      */
-    public function assertExceptionMessage($message)
+    public function assertTaxStatus($taxReference, $status)
     {
-        if ($this->latestException instanceof Exception) {
-            if ($this->latestException->getMessage() !== $message) {
-                throw new RuntimeException(sprintf(
-                        'Got error message "%s", but expected "%s"', $this->latestException->getMessage(), $message)
-                );
-            }
+        /** @var Tax $tax */
+        $tax = SharedStorage::getStorage()->get($taxReference);
+        $this->assertStatusById((int) $tax->id, $status);
+    }
 
-            return true;
+    /**
+     * @param int $id
+     * @param string $status 'enabled'|'disabled'
+     */
+    private function assertStatusById($id, $status)
+    {
+        /** @var EditableTax $editableTax */
+        $editableTax = $this->getQueryBus()->handle(new GetTaxForEditing($id));
+        $isEnabled = $status === 'enabled' ? true : false;
+        $actualStatus = $editableTax->isActive();
+
+        if ($isEnabled !== $actualStatus) {
+            throw new RuntimeException(sprintf(
+                'Tax with id "%s" is %s, but it was expected to be %s',
+                $id,
+                $actualStatus ? 'enabled' : 'disabled',
+                $status
+            ));
         }
-
-        throw new NoExceptionAlthoughExpectedException('No exception was thrown in latest result');
     }
 
     /**
@@ -314,19 +277,5 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
         $taxId = $this->getCommandBus()->handle($command);
 
         SharedStorage::getStorage()->set($taxReference, new Tax($taxId->getValue()));
-    }
-
-    /**
-     * Provides valid data for tax creation.
-     *
-     * @return array
-     */
-    private function getValidDataForTaxCreation()
-    {
-        return [
-            'name' => 'my custom tax 500',
-            'rate' => 0.5,
-            'is_enabled' => 1,
-        ];
     }
 }
