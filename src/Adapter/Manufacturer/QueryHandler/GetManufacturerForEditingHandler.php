@@ -44,17 +44,10 @@ final class GetManufacturerForEditingHandler extends AbstractManufacturerHandler
      */
     private $imageTagSourceParser;
 
-    /**
-     * @var int
-     */
-    private $contextShopId;
-
     public function __construct(
-        ImageTagSourceParserInterface $imageTagSourceParser,
-        $contextShopId
+        ImageTagSourceParserInterface $imageTagSourceParser
     ) {
         $this->imageTagSourceParser = $imageTagSourceParser;
-        $this->contextShopId = $contextShopId;
     }
 
     /**
@@ -89,7 +82,7 @@ final class GetManufacturerForEditingHandler extends AbstractManufacturerHandler
         $pathToImage = _PS_MANU_IMG_DIR_ . $manufacturerId->getValue() . '.jpg';
         $imageTag = ImageManager::thumbnail(
             $pathToImage,
-            'manufacturer_' . $manufacturerId->getValue() . '_' . $this->contextShopId . '.jpg',
+            'manufacturer_' . $manufacturerId->getValue() . '.jpg',
             350,
             'jpg',
             true,
