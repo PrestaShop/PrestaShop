@@ -281,6 +281,7 @@ final class CatalogPriceRuleGridDefinitionFactory extends AbstractGridDefinition
                     'attr' => [
                         'placeholder' => $this->trans('Beginning', [], 'Admin.Catalog.Feature'),
                     ],
+                    'date_format' => 'YYYY-MM-DD HH:mm:ss',
                 ])
                 ->setAssociatedColumn('from')
             )
@@ -290,6 +291,7 @@ final class CatalogPriceRuleGridDefinitionFactory extends AbstractGridDefinition
                     'attr' => [
                         'placeholder' => $this->trans('End', [], 'Admin.Catalog.Feature'),
                     ],
+                    'date_format' => 'YYYY-MM-DD HH:mm:ss',
                 ])
                 ->setAssociatedColumn('to')
             )
