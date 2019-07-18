@@ -30,16 +30,16 @@ use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Defines column that displays cart total price
+ * Displays data with highlighted column
  */
-final class CartTotalColumn extends AbstractColumn
+final class HighlightedColumn extends AbstractColumn
 {
     /**
      * {@inheritdoc}
      */
     public function getType()
     {
-        return 'cart_total';
+        return 'highlighted';
     }
 
     /**
@@ -50,10 +50,10 @@ final class CartTotalColumn extends AbstractColumn
         $resolver
             ->setRequired([
                 'field',
-                'is_order_placed_field',
+                'is_highlighted_field',
             ])
             ->setAllowedTypes('field', 'string')
-            ->setAllowedTypes('is_order_placed_field', 'string')
+            ->setAllowedTypes('is_highlighted_field', 'string')
         ;
     }
 }
