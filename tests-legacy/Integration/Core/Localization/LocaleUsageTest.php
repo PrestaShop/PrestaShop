@@ -28,6 +28,7 @@
 namespace LegacyTests\Integration\Core\Localization;
 
 use Currency;
+use Language;
 use PrestaShop\PrestaShop\Adapter\Entity\LocalizationPack;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
@@ -237,30 +238,31 @@ class LocaleUsageTest extends SymfonyIntegrationTestCase
     protected static function installTestedLanguagePacks()
     {
         $countries = [
-            'us',
-            'jp',
-            'gb',
-            'de',
-            'fr',
-            'in',
-            'es',
-            'ca',
-            'cn',
-            'au',
-            'br',
-            'mx',
-            'ru',
-            'it',
-            'pl',
-            'bg',
-            'az',
+            'us' => 'en',
+            'jp' => 'ja',
+            'gb' => 'en',
+            'de' => 'de',
+            'fr' => 'fr',
+            'in' => 'hi',
+            'es' => 'es',
+            'ca' => 'ca',
+            'cn' => 'ug',
+            'au' => 'en',
+            'br' => 'pt',
+            'mx' => 'es',
+            'ru' => 'ru',
+            'it' => 'it',
+            'pl' => 'pl',
+            'bg' => 'bg',
+            'az' => 'az',
         ];
         $cacheDir = _PS_CACHE_DIR_ . 'sandbox' . DIRECTORY_SEPARATOR;
 
-        foreach ($countries as $country) {
+        foreach ($countries as $country => $iso) {
             $xmlContent = (new LocalizationWarmer(_PS_VERSION_, $country))
                 ->warmUp($cacheDir);
 
+            Language::checkAndAddLanguage($iso);
             $localizationPack = new LocalizationPack();
             $localizationPack->loadLocalisationPack($xmlContent, false, true);
             $localizationPack->loadLocalisationPack($xmlContent, ['languages']);
@@ -298,7 +300,7 @@ class LocaleUsageTest extends SymfonyIntegrationTestCase
                 'localeCode' => 'fr-FR',
                 'rawNumber' => 1234568.12345,
                 'currencyCode' => 'EUR',
-                'formattedPrice' => '1 234 568,12 €',
+                'formattedPrice' => '1 234 568,12 €',
             ],
             'India' => [
                 'localeCode' => 'ta-IN',
@@ -384,7 +386,7 @@ class LocaleUsageTest extends SymfonyIntegrationTestCase
                 'localeCode' => 'az-AZ',
                 'rawNumber' => 1234568.12345,
                 'currencyCode' => 'AZN',
-                'formattedPrice' => '₼ 1.234.568,12',
+                'formattedPrice' => '1.234.568,12 ₼',
             ],
             // BGN does not have a symbol in en-US
             'United States AZN' => [
