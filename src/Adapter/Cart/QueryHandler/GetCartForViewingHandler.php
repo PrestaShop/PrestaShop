@@ -165,6 +165,7 @@ final class GetCartForViewingHandler implements GetCartForViewingHandlerInterfac
 
         $cartSummary = [
             'products' => $products,
+            'cart_rules' => $this->getCartRulesForView($cart),
             'total_products' => $total_products,
             'total_products_formatted' => Tools::displayPrice($total_products, $currency),
             'total_discounts' => $total_discounts,
@@ -270,5 +271,32 @@ final class GetCartForViewingHandler implements GetCartForViewingHandlerInterfac
         }
 
         return $formattedProducts;
+    }
+
+    /**
+     * @param Cart $cart
+     *
+     * @return array
+     */
+    private function getCartRulesForView(Cart $cart)
+    {
+        $cartRules = $cart->getCartRules();
+        $cartRulesView = [];
+
+        $cartCurrency = new Currency($cart->id_currency);
+
+        foreach ($cartRules as $cartRule) {
+            $cartRulesView[] = [
+                'id' => $cartRule['id_cart_rule'],
+                'name' => $cartRule['name'],
+                'is_free_shipping' => !$cartRule['value_real'] && $cartRule['free_shipping'],
+                'formatted_value' => Tools::displayPrice(
+                    $cartRule['value_real'],
+                    $cartCurrency
+                ),
+            ];
+        }
+
+        return $cartRulesView;
     }
 }
