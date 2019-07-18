@@ -205,6 +205,6 @@ services:
         parent: 'prestashop.core.grid.abstract_query_builder'
         arguments:
             - '@prestashop.core.query.doctrine_search_criteria_applicator'
-            - '@=service("prestashop.adapter.shop.context").getContextListShopID()'
+            - '@=service("prestashop.adapter.shop.context").getShops(true, true)'
             - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
         public: true
