@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
+use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForViewing;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -55,7 +56,7 @@ class CartController extends FrameworkBundleAdminController
     {
         try {
             $cartView = $this->getQueryBus()->handle(new GetCartForViewing((int) $cartId));
-        } catch (CartNotFoundException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
 
             return $this->redirectToRoute('admin_carts_index');
