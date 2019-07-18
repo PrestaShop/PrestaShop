@@ -11,7 +11,7 @@ global.test = (name, instructions) => it(name, () => instructions().catch());
 global.scenario = (name, tests, init, close = false) => describe(name, async () => {
   before(async () => {
     global.browser = await puppeteer.launch({
-      headless: global.HEADLESS,
+      headless: JSON.parse(global.HEADLESS),
       timeout: 0,
       args: ['--start-maximized', '--no-sandbox'],
       defaultViewport: {
