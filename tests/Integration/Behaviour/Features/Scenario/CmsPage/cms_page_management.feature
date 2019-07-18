@@ -71,8 +71,7 @@ Feature: CmsPage Management
     And CMS pages: "cmspage-2,cmspage-3,cms-page-4" should be not displayed
     When I enable CMS pages: "cmspage-2,cmspage-3,cms-page-4" in bulk action
     Then CMS pages: "cmspage-2,cmspage-3,cms-page-4" should be displayed
-
-
+    
   Scenario: Deleting cms pages in bulk action
     When I bulk delete CMS pages: "cmspage-2,cmspage-3,cms-page-4"
     Then CMS pages: "cmspage-2,cmspage-3,cms-page-4" should not be found
