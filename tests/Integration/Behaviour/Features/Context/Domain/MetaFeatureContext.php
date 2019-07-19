@@ -9,6 +9,9 @@ use Meta;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Command\AddMetaCommand;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Command\EditMetaCommand;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Meta\Query\GetMetaForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Meta\QueryResult\EditableMeta;
 use PrestaShop\PrestaShop\Core\Domain\Meta\ValueObject\MetaId;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
@@ -54,6 +57,27 @@ class MetaFeatureContext extends AbstractDomainFeatureContext
             $metaId = $this->getCommandBus()->handle($command);
 
             SharedStorage::getStorage()->set($reference, new Meta($metaId->getValue()));
+        } catch (Exception $exception) {
+            $this->lastException = $exception;
+            $this->lastErrorCode = $exception->getCode();
+        }
+    }
+
+    /**
+     * @When /^I get meta "([^"]*)" with specified properties$/
+     */
+    public function getMetaWithSpecifiedProperties($reference)
+    {
+        $propertiesKey = sprintf('%s_properties', $reference);
+        $data = SharedStorage::getStorage()->get($propertiesKey);
+
+        $queryCommand = new GetMetaForEditing((int) $data['meta_id']);
+
+        try {
+            /** @var EditableMeta $editableMeta */
+            $editableMeta = $this->getQueryBus()->handle($queryCommand);
+
+            SharedStorage::getStorage()->set("editable_{$reference}", $editableMeta);
         } catch (Exception $exception) {
             $this->lastException = $exception;
             $this->lastErrorCode = $exception->getCode();
@@ -165,6 +189,51 @@ class MetaFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then /^meta "([^"]*)" editable form field "([^"]*)" should be equal to "([^"]*)"$/
+     */
+    public function assertMetaEditableFormFieldShouldBeEqualTo($reference, $field, $value)
+    {
+        /** @var EditableMeta $editableMeta */
+        $editableMeta = SharedStorage::getStorage()->get("editable_{$reference}");
+        $defaultLanguageId = SharedStorage::getStorage()->get('default_language_id');
+        $actualValue = null;
+
+        switch ($field) {
+            case 'page':
+                $actualValue = $editableMeta->getPageName()->getValue();
+
+                break;
+            case 'title':
+                $actualValue = $editableMeta->getLocalisedPageTitles()[$defaultLanguageId];
+
+                break;
+            case 'description':
+                $actualValue = $editableMeta->getLocalisedMetaDescriptions()[$defaultLanguageId];
+
+                break;
+            case 'keywords':
+                $actualValue = $editableMeta->getLocalisedMetaKeywords()[$defaultLanguageId];
+
+                break;
+            case 'url_rewrite':
+                $actualValue = $editableMeta->getLocalisedUrlRewrites()[$defaultLanguageId];
+
+                break;
+        }
+
+        if ($actualValue !== $value) {
+            throw new RuntimeException(
+                sprintf(
+                    'For given field "%s" expected value "%s" did not matched given value "%s"',
+                    $field,
+                    $value,
+                    $actualValue
+                )
+            );
+        }
+    }
+
+    /**
      * @Then /^I should get error that url rewrite value is incorrect$/
      */
     public function assertItShouldGetErrorThatDefaultLanguageIsMissingForUrlRewrite()
@@ -180,5 +249,13 @@ class MetaFeatureContext extends AbstractDomainFeatureContext
     {
         $this->assertLastErrorIs(MetaConstraintException::class);
         $this->assertLastErrorCodeIs(MetaConstraintException::INVALID_PAGE_NAME);
+    }
+
+    /**
+     * @Then /^I should get error that meta entity is not found$/
+     */
+    public function assertItShouldGetErrorThatMetaEntityIsNotFound()
+    {
+        $this->assertLastErrorIs(MetaNotFoundException::class);
     }
 }

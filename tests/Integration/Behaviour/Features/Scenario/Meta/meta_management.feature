@@ -117,3 +117,25 @@ Feature: Meta management (Traffic & Seo)
       | page_name                          |  	pagenotfound                  |
     When I update meta "meta11" with specified properties
     Then I should get error that page name value is incorrect
+
+  Scenario: Get non existing meta for editing it raises an error
+    Given I specify following properties for new meta "meta12":
+      | meta_id                            | 9999                             |
+    When I get meta "meta12" with specified properties
+    Then I should get error that meta entity is not found
+
+  Scenario: Get existing meta for editing
+    Given I specify following properties for new meta "meta13":
+      | meta_id                          | 4                                     |
+      | page_name                        | index                                 |
+      | localized_page_title             | page title in default language        |
+      | localized_meta_description       | meta description in default language  |
+      | localized_meta_keywords          | meta keywords in default language     |
+      | localized_rewrite_urls           | rewrite-url-default                   |
+    When I update meta "meta13" with specified properties
+    When I get meta "meta13" with specified properties
+    Then meta "meta13" editable form field "page" should be equal to "index"
+    And meta "meta13" editable form field "title" should be equal to "page title in default language"
+    And meta "meta13" editable form field "description" should be equal to "meta description in default language"
+    And meta "meta13" editable form field "keywords" should be equal to "meta keywords in default language"
+    And meta "meta13" editable form field "url_rewrite" should be equal to "rewrite-url-default"
