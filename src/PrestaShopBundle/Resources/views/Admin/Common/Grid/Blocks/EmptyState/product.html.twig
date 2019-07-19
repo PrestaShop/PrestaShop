@@ -1,0 +1,50 @@
+{#**
+ * 2007-2019 PrestaShop and Contributors
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+
+<div class="text-center showcase-list-card">
+  <img class="img-responsive mt-3 img-rtl" src="{{ asset('themes/new-theme/img/empty_state/catalog.png') }}">
+
+  <p class="mt-4 showcase-list-card__header">
+    {{ "Let's start building your catalog!"|trans({}, 'Admin.Catalog.Feature') }}
+  </p>
+
+  <p class="mx-auto showcase-list-card__message">
+    {{ 'Building your catalog is the key step; present your brand here and make visitors feel like shopping on your store. Our advice? Pay extra attention to your product photography, neat pictures could increase your conversion rate by 35%!'|trans({}, 'Admin.Catalog.Feature') }}
+  </p>
+
+  <div class="mt-4">
+    <a href="{{ documentation_link('catalog') }}" target="_blank" class="btn btn-outline-secondary mr-1">
+      {{ 'Learn how to manage your catalog'|trans({}, 'Admin.Catalog.Feature') }}
+    </a>
+
+    <a href="{{ path('admin_product_new') }}" class="btn btn-primary ml-1">
+      {{ 'Add your first product'|trans({}, 'Admin.Catalog.Feature') }}
+    </a>
+
+    <a href="">
+      Import a list of products (filetypes: .csv, .xls, .xlsx, .xlst, .0ds, .ots).
+    </a>
+  </div>
+</div>
