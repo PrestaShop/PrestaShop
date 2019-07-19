@@ -46,4 +46,3 @@ Feature: Meta management (Traffic & Seo)
     When I add meta "meta4" with specified properties
     Then meta "meta4" page should be "newproducts"
     And meta "meta4" field "url_rewrite" for default language should be "i-got-char-š"
-#  todo: make sure above two tests not work when scalar value is used in IsUrlRewriteValidator
