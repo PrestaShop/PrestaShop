@@ -50,14 +50,16 @@ final class AddSupplierHandler extends AbstractSupplierHandler implements AddSup
     {
         $supplier = new Supplier();
         $this->fillSupplierWithData($supplier, $command);
+        $address = $this->fetchSupplierAddressFromCommand($command);
 
         try {
-            if (false === $supplier->validateFields(false)) {
-                throw new SupplierException('Supplier contains invalid field values');
-            }
+            $this->validateFields($supplier, $address);
 
-            $address = $this->createSupplierAddressFromCommand($command);
-            $this->saveSupplierAddress($address);
+            if (!$address->add()) {
+                throw new SupplierException(
+                    sprintf('Failed to add new supplier address "%s"', $address->address1)
+                );
+            }
 
             if (!$supplier->add()) {
                 throw new SupplierException(
@@ -112,34 +114,13 @@ final class AddSupplierHandler extends AbstractSupplierHandler implements AddSup
     }
 
     /**
-     * Validates legacy address and saves to database
-     *
-     * @param Address $address
-     *
-     * @throws PrestaShopException
-     * @throws SupplierException
-     */
-    private function saveSupplierAddress(Address $address)
-    {
-        if (false === $address->validateFields(false)) {
-            throw new SupplierException('Supplier address contains invalid field values');
-        }
-
-        if (!$address->add()) {
-            throw new SupplierException(
-                sprintf('Failed to add new supplier address "%s"', $address->address1)
-            );
-        }
-    }
-
-    /**
      * Creates legacy address from given command data
      *
      * @param AddSupplierCommand $command
      *
      * @return Address
      */
-    private function createSupplierAddressFromCommand(AddSupplierCommand $command)
+    private function fetchSupplierAddressFromCommand(AddSupplierCommand $command)
     {
         $address = new Address();
         $address->alias = 'supplier';

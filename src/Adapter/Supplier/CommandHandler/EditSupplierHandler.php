@@ -138,22 +138,4 @@ final class EditSupplierHandler extends AbstractSupplierHandler implements EditS
             $address->id_state = $command->getStateId();
         }
     }
-
-    /**
-     * @param Supplier $supplier
-     * @param Address $address
-     *
-     * @throws PrestaShopException
-     * @throws SupplierException
-     */
-    private function validateFields(Supplier $supplier, Address $address)
-    {
-        if (false === $supplier->validateFields(false) || false === $supplier->validateFieldsLang(false)) {
-            throw new SupplierException('Supplier contains invalid field values');
-        }
-
-        if (false === $address->validateFields(false) || false === $address->validateFieldsLang(false)) {
-            throw new SupplierException('Supplier address contains invalid field values');
-        }
-    }
 }
