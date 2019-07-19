@@ -27,10 +27,12 @@ global.scenario('Install Prestashop', async () => {
   test('should agree to terms and conditions and go to step \'System compatibility\'', async () => {
     await INSTALL.agreeToTermsAndConditions();
     await INSTALL.nextStep();
+    if (!INSTALL.elementVisible(INSTALL.stepFinishedLeftMenu)) {
+      await INSTALL.checkStepTitle(INSTALL.thirdStepPageTitle, INSTALL.thirdStepEnTitle);
+    }
   });
   test('should click on next and go to step \'shop Information\'', async () => {
     if (!INSTALL.elementVisible(INSTALL.stepFinishedLeftMenu)) {
-      await INSTALL.checkStepTitle(INSTALL.thirdStepPageTitle, INSTALL.thirdStepEnTitle);
       await INSTALL.nextStep();
     }
     await INSTALL.checkStepTitle(INSTALL.fourthStepPageTitle, INSTALL.fourthStepEnTitle);
