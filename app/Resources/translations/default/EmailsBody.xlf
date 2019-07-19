@@ -2,10 +2,24 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file original="mails/themes/classic/components/footer.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="e1c65ac2c128f4835c77d0c7aefccb7e">
-        <source><![CDATA[<a href="{shop_url}">{shop_name}</a> powered by <a href="http://www.prestashop.com/">PrestaShop™</a>]]></source>
-        <target><![CDATA[<a href="{shop_url}">{shop_name}</a> powered by <a href="http://www.prestashop.com/">PrestaShop™</a>]]></target>
+      <trans-unit id="c0afa3f20604ddbe1f4b493618a597e4">
+        <source><![CDATA[<a href="{shop_url}">{shop_name}</a> powered by <a href="https://www.prestashop.com/?utm_source=marchandprestashop&utm_medium=e-mail=utm_campaign=footer_1-7">PrestaShop™</a>]]></source>
+        <target><![CDATA[<a href="{shop_url}">{shop_name}</a> powered by <a href="https://www.prestashop.com/?utm_source=marchandprestashop&utm_medium=e-mail=utm_campaign=footer_1-7">PrestaShop™</a>]]></target>
         <note>Line: 6</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/classic/core/account.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="2498c963bfc06e8fca88007ec322b769">
+        <source>Your login email address on {shop_name}</source>
+        <target>Your login email address on {shop_name}</target>
+        <note>Line: 25</note>
+      </trans-unit>
+      <trans-unit id="7cfb9d536fcd7aa70c333e8e73b287e2">
+        <source>Here is your login email address:</source>
+        <target>Here is your login email address:</target>
+        <note>Line: 30</note>
       </trans-unit>
     </body>
   </file>
@@ -229,9 +243,9 @@
         <target><![CDATA[<span><strong>Warning:</strong></span> you have received a new log alert in your Back Office.]]></target>
         <note>Line: 29</note>
       </trans-unit>
-      <trans-unit id="32ef0cc5af8577c12e075c3cb285a786">
-        <source><![CDATA[You can check for it in the <span><strong>"Tools" > "Logs"</strong></span> section of your Back Office.]]></source>
-        <target><![CDATA[You can check for it in the <span><strong>"Tools" > "Logs"</strong></span> section of your Back Office.]]></target>
+      <trans-unit id="0efe157c8a85108b103702b3e81c77eb">
+        <source><![CDATA[You can check for it in the <span><strong>Advanced Parameters > Logs</strong></span> section of your Back Office.]]></source>
+        <target><![CDATA[You can check for it in the <span><strong>Advanced Parameters > Logs</strong></span> section of your Back Office.]]></target>
         <note>Line: 30</note>
       </trans-unit>
     </body>
@@ -598,9 +612,9 @@
         <target>The remaining stock is now less than the specified minimum of</target>
         <note>Line: 29</note>
       </trans-unit>
-      <trans-unit id="b58c10d12a21b3d48f1a6bba1a29a8ca">
-        <source>You are advised to open the product's admin Product Page in order to replenish your inventory.</source>
-        <target>You are advised to open the product's admin Product Page in order to replenish your inventory.</target>
+      <trans-unit id="9abd3797cc8645d9a66bf6ae8f5ed865">
+        <source><![CDATA[Replenish your inventory, go to the <span><strong>Catalog > Stocks</span></strong> section of your back office to manage your stock.]]></source>
+        <target><![CDATA[Replenish your inventory, go to the <span><strong>Catalog > Stocks</span></strong> section of your back office to manage your stock.]]></target>
         <note>Line: 31</note>
       </trans-unit>
     </body>
@@ -1118,14 +1132,9 @@
         <target><![CDATA[<span class="warning">WARNING:</span> you have received a new log alert in your back office.]]></target>
         <note>Line: 247</note>
       </trans-unit>
-      <trans-unit id="7a8c7e3e6d8180830205ea53c0a0ee82">
-        <source><![CDATA[You can check for it in the <span class="label">"Advanced Parameters" > "Logs"</span> section of your back office.]]></source>
-        <target><![CDATA[You can check for it in the <span class="label">"Advanced Parameters" > "Logs"</span> section of your back office.]]></target>
-        <note>Line: 254</note>
-      </trans-unit>
-      <trans-unit id="ce22480666f263db8d4fafc5b1496480">
-        <source><![CDATA[You can check for it in the <span class="label">"Advanced Parameters" > "Logs"</span> section of your back office.]]></source>
-        <target><![CDATA[You can check for it in the <span class="label">"Advanced Parameters" > "Logs"</span> section of your back office.]]></target>
+      <trans-unit id="42fc1c88ac700ad8b6dec8de70eb4348">
+        <source><![CDATA[You can check for it in the <span class="label">Advanced Parameters > Logs</span> section of your back office.]]></source>
+        <target><![CDATA[You can check for it in the <span class="label">Advanced Parameters > Logs</span> section of your back office.]]></target>
         <note>Line: 254</note>
       </trans-unit>
     </body>
@@ -1796,11 +1805,6 @@
         <target><![CDATA[Replenish your inventory, go to the <span class="label">"Catalog" > "Stocks"</span> section of your back office to manage your stock.]]></target>
         <note>Line: 258</note>
       </trans-unit>
-      <trans-unit id="1a1c978d585883ad44a1807fd308adfd">
-        <source><![CDATA[Replenish your inventory, go to the <span class="label">"Catalog" > "Stocks"</span> section of your back office to manage your stock.]]></source>
-        <target><![CDATA[Replenish your inventory, go to the <span class="label">"Catalog" > "Stocks"</span> section of your back office to manage your stock.]]></target>
-        <note>Line: 258</note>
-      </trans-unit>
     </body>
   </file>
   <file original="mails/themes/modern/modules/ps_emailalerts/return_slip.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
@@ -1886,11 +1890,6 @@
         <target>Congratulations!</target>
         <note>Line: 44</note>
       </trans-unit>
-      <trans-unit id="754672fcb960ad41f2b12474db6b96f0">
-        <source>Refferalprogram Congratulations</source>
-        <target>Refferalprogram Congratulations</target>
-        <note>Line: 3</note>
-      </trans-unit>
       <trans-unit id="7b1153c05b32abdfd5bfaac46a296133">
         <source><![CDATA[Your referred friend <span class="label">{sponsored_firstname}</span> <span class="label">{sponsored_lastname}</span> has placed his/her first order on <a href="{shop_url}">{shop_name}</a>!]]></source>
         <target><![CDATA[Your referred friend <span class="label">{sponsored_firstname}</span> <span class="label">{sponsored_lastname}</span> has placed his/her first order on <a href="{shop_url}">{shop_name}</a>!]]></target>
@@ -1901,6 +1900,11 @@
         <target><![CDATA[We are pleased to offer you a voucher worth <span class="label">{discount_display}</span> (VOUCHER # <span class="label">{discount_name}</span>) that you can use on your next order.]]></target>
         <note>Line: 187</note>
       </trans-unit>
+      <trans-unit id="680ac1cb2fca9067c46fc2a52d726f86">
+        <source>Refferal program Congratulations</source>
+        <target>Refferal program Congratulations</target>
+        <note>Line: 3</note>
+      </trans-unit>
     </body>
   </file>
   <file original="mails/themes/modern/modules/referralprogram/referralprogram-invitation.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
@@ -1909,11 +1913,6 @@
         <source>Best regards,</source>
         <target>Best regards,</target>
         <note>Line: 311</note>
-      </trans-unit>
-      <trans-unit id="cfc9833b1a62ccf9dffd044ccd02aacb">
-        <source>Refferalprogram Invitation</source>
-        <target>Refferalprogram Invitation</target>
-        <note>Line: 3</note>
       </trans-unit>
       <trans-unit id="814fd45dff3fa38cc8114bc0d6c9020a">
         <source>Join us!</source>
@@ -1945,6 +1944,11 @@
         <target>When signing up, don't forget to provide the email address of your referring friend:</target>
         <note>Line: 253</note>
       </trans-unit>
+      <trans-unit id="3faf1da2d00adbfbf0813d2b776ff26e">
+        <source>Refferal program Invitation</source>
+        <target>Refferal program Invitation</target>
+        <note>Line: 3</note>
+      </trans-unit>
     </body>
   </file>
   <file original="mails/themes/modern/modules/referralprogram/referralprogram-voucher.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
@@ -1974,25 +1978,15 @@
         <target>, with an amount of</target>
         <note>Line: 248</note>
       </trans-unit>
-      <trans-unit id="2c66d0848f6286eb05923d8053ea06b0">
-        <source>Refferalprogram Voucher</source>
-        <target>Refferalprogram Voucher</target>
-        <note>Line: 3</note>
-      </trans-unit>
       <trans-unit id="cb3374f4e7a0afb61e63d0ee694ad501">
         <source>Sponsorship Program</source>
         <target>Sponsorship Program</target>
         <note>Line: 180</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="modules/ps_emailgenerator/templates/core/log_alert.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="ba00a1816b599684def5ff1d312ef5ed">
-        <source><![CDATA[You can check for it in the <span><strong>"Tools" > "Logs"</strong></span> section of your Back Office.]]></source>
-        <target><![CDATA[You can check for it in the <span><strong>"Tools" > "Logs"</strong></span> section of your Back Office.]]></target>
-        <note>Context:
-File: modules/ps_emailgenerator/templates/core/log_alert.php:25</note>
+      <trans-unit id="4ad352fa59706c15c3134e72b13b1d42">
+        <source>Refferal program Voucher</source>
+        <target>Refferal program Voucher</target>
+        <note>Line: 3</note>
       </trans-unit>
     </body>
   </file>
