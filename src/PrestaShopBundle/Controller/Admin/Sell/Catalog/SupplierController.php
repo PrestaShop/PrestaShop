@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Query\GetSupplierForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\QueryResult\EditableSupplier;
@@ -333,7 +334,7 @@ class SupplierController extends FrameworkBundleAdminController
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
 
-            if ($e instanceof SupplierNotFoundException) {
+            if ($e instanceof SupplierNotFoundException || $e instanceof AddressNotFoundException) {
                 return $this->redirectToRoute('admin_suppliers_index');
             }
         }
@@ -464,6 +465,10 @@ class SupplierController extends FrameworkBundleAdminController
         return [
             SupplierNotFoundException::class => $this->trans(
                 'The object cannot be loaded (or found)',
+                'Admin.Notifications.Error'
+            ),
+            AddressNotFoundException::class => $this->trans(
+                'The supplier address for this supplier have been deleted',
                 'Admin.Notifications.Error'
             ),
             CannotToggleSupplierStatusException::class => $this->trans(
