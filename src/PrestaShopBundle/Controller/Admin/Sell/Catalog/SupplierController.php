@@ -468,7 +468,7 @@ class SupplierController extends FrameworkBundleAdminController
                 'Admin.Notifications.Error'
             ),
             AddressNotFoundException::class => $this->trans(
-                'The supplier address for this supplier have been deleted',
+                'The address for this supplier have been deleted',
                 'Admin.Notifications.Error'
             ),
             CannotToggleSupplierStatusException::class => $this->trans(
