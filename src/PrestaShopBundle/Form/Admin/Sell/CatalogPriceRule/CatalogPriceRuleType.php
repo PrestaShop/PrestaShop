@@ -38,6 +38,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction as ReductionVO;
 
 /**
  * Defines catalog price rule form for create/edit actions
@@ -167,7 +168,18 @@ class CatalogPriceRuleType extends AbstractType
             ])
             ->add('reduction', ReductionType::class, [
                 'constraints' => [
-                    new Reduction(),
+                    new Reduction([
+                        'invalidPercentageValueMessage' => $this->translator->trans(
+                            'Reduction cannot be higher than %max_reduction%',
+                            ['%max_reduction%' => ReductionVO::MAX_ALLOWED_PERCENTAGE . '%'],
+                            'Admin.Notifications.Error'
+                        ),
+                        'invalidAmountValueMessage' => $this->translator->trans(
+                            'Reduction cannot be less than %max_reduction%',
+                            ['%max_reduction%' => 0],
+                            'Admin.Notifications.Error'
+                        ),
+                    ]),
                 ],
             ])
         ;
