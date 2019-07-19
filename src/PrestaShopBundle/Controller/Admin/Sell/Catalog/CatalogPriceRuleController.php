@@ -26,11 +26,11 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
+use Exception;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\CatalogPriceRuleNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\UpdateCatalogPriceRuleException;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Query\GetCatalogPriceRuleForEditing;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\QueryResult\EditableCatalogPriceRule;
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -52,7 +52,7 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    public function createAction(Request $request)
+    public function createAction(Request $request): Response
     {
         try {
             $catalogPriceRuleForm = $this->getFormBuilder()->getForm();
@@ -65,7 +65,7 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
 
                 return $this->redirectToRoute('admin_catalog_price_rules_index');
             }
-        } catch (DomainConstraintException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
@@ -86,7 +86,7 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    public function editAction(Request $request, $catalogPriceRuleId)
+    public function editAction(Request $request, int $catalogPriceRuleId): Response
     {
         $catalogPriceRuleId = (int) $catalogPriceRuleId;
 
@@ -101,7 +101,7 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
 
                 return $this->redirectToRoute('admin_catalog_price_rules_index');
             }
-        } catch (DomainConstraintException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
 
             if ($e instanceof CatalogPriceRuleNotFoundException) {
@@ -125,7 +125,7 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
      *
      * @return array
      */
-    private function getErrorMessages()
+    private function getErrorMessages(): array
     {
         return [
             UpdateCatalogPriceRuleException::class => $this->trans(
@@ -142,7 +142,7 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
     /**
      * @return FormHandlerInterface
      */
-    private function getFormHandler()
+    private function getFormHandler(): FormHandlerInterface
     {
         return $this->get('prestashop.core.form.identifiable_object.handler.catalog_price_rule_form_handler');
     }
@@ -150,7 +150,7 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
     /**
      * @return FormBuilderInterface
      */
-    private function getFormBuilder()
+    private function getFormBuilder(): FormBuilderInterface
     {
         return $this->get('prestashop.core.form.identifiable_object.builder.catalog_price_rule_form_builder');
     }
