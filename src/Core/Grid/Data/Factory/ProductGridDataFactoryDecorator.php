@@ -46,8 +46,8 @@ final class ProductGridDataFactoryDecorator implements GridDataFactoryInterface
         );
 
         return new GridData(
-            new RecordCollection($modifiedRecords),
-            $productData->getRecordsTotal(),
+            new RecordCollection([]),
+            0,
             $productData->getQuery()
         );
     }
