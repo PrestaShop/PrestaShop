@@ -1160,11 +1160,6 @@ Comment: check if some ids are in list_skip_actions and forbid deletion</note>
   </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Improve/International/LanguageController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="3452da55a90ccedd184c7ba264b2afd5">
-        <source>Due to memory limit restrictions, this image cannot be loaded. Please increase your memory_limit value via your server's configuration settings. </source>
-        <target>Due to memory limit restrictions, this image cannot be loaded. Please increase your memory_limit value via your server's configuration settings.</target>
-        <note>Line: 333</note>
-      </trans-unit>
       <trans-unit id="b05c3c0bfce943b86e286e8e8103b6e5">
         <source>An error occurred while uploading the image.</source>
         <target>An error occurred while uploading the image.</target>
@@ -1174,6 +1169,11 @@ Comment: check if some ids are in list_skip_actions and forbid deletion</note>
         <source>The object cannot be loaded (or found)</source>
         <target>The object cannot be loaded (or found)</target>
         <note>Line: 310</note>
+      </trans-unit>
+      <trans-unit id="66042fc205784775b028ba4ac7acebf3">
+        <source>Due to memory limit restrictions, this image cannot be loaded. Please increase your memory_limit value via your server's configuration settings.</source>
+        <target>Due to memory limit restrictions, this image cannot be loaded. Please increase your memory_limit value via your server's configuration settings.</target>
+        <note>Line: 333</note>
       </trans-unit>
     </body>
   </file>
