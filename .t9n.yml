@@ -20,3 +20,4 @@ exclude_files:
   - tools
   - mails/[a-zA-Z]{2}/
   - js
+  - modules/ps_themecusto
