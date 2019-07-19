@@ -54,6 +54,8 @@ module.exports = class INSTALL extends CommonPage {
 
     // Selectors in FO
     this.FOLogo = '#_desktop_logo';
+    this.userInfoHeaderIcon = '#_desktop_user_info';
+    this.cartHeaderIcon = '#_desktop_cart';
   }
 
   /**
@@ -141,8 +143,11 @@ module.exports = class INSTALL extends CommonPage {
    * Go to FO after Installation and check that Prestashop logo exist
    */
   async goAndCheckFOAfterInstall() {
+    await this.page.waitForSelector(this.discoverFoButton, {visible: true});
     const FOPage = await this.openLinkWithTargetBlank(this.page, this.discoverFoButton);
     await FOPage.bringToFront();
     await FOPage.waitForSelector(this.FOLogo, {visible: true});
+    await FOPage.waitForSelector(this.userInfoHeaderIcon, {visible: true});
+    await FOPage.waitForSelector(this.cartHeaderIcon, {visible: true});
   }
 };
