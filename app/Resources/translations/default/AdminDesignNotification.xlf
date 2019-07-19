@@ -139,20 +139,6 @@
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_themecusto/controllers/admin/AdminPsThemeCustoAdvanced.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="6e9550e40cc317663fbe81e759d098e8">
-        <source>The uploaded file is too large.</source>
-        <target>The uploaded file is too large.</target>
-        <note>Line: 264</note>
-      </trans-unit>
-      <trans-unit id="d4c8009943f24c4318bef97058cc6ffa">
-        <source>Failed to move uploaded file.</source>
-        <target>Failed to move uploaded file.</target>
-        <note>Line: 298</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="src/Core/Addon/Theme/ThemeManager.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="412b4a82ba6153e19f17f490b5f1aa88">
