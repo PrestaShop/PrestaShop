@@ -11,45 +11,71 @@ Feature: Add cart rule
     Given there is a currency named "currency2" with iso code "CHF" and exchange rate of 1.25
     Given currency "currency1" is the default one
 
-  Scenario: Create cart rule
-    When I create cart rule "cart rule 1" with specified properties:
-      | name                                | Cart rule 1               |
-      | description                         | Cart rule description     |
-      | valid_from                          | 2019-01-01 11:05:00       |
-      | valid_to                            | 2019-12-01 00:00:00       |
-      | quantity                            | 10                        |
-      | quantity_per_user                   | 1                         |
-      | priority                            | 2                         |
-      | is_partial_use_enabled              | no                        |
-      | is_active                           | yes                       |
-      | highlight_in_cart                   | no                        |
-      | code                                | TEST_CODE                 |
-      | minimum_amount                      | 10                        |
-      | minimum_amount_currency_iso_code    | CHF                       |
-      | minimum_amount_tax_excluded         | 1                         |
-      | minimum_amount_shipping_excluded    | 0                         |
-      | is_free_shipping                    | no                        |
-      | reduction_amount                    | 15                        |
-      | reduction_currency_iso_code         | USD                       |
-      | is_reduction_tax_excluded           | no                        |
-      | reduction_type                      | order_without_shipping    |
-    Then cart rule "cart rule 1" name field should be "Cart rule 1"
-    And cart rule "cart rule 1" description should be "Cart rule description"
-    And cart rule "cart rule 1" valid from date should be "2019-01-01 11:05:00"
-    And cart rule "cart rule 1" valid to date should be "2019-12-01 00:00:00"
-    And cart rule "cart rule 1" quantity should be "10"
-    And cart rule "cart rule 1" quantity per user should be "1"
-    And cart rule "cart rule 1" priority should be "2"
-    And cart rule "cart rule 1" partial use should be "disabled"
-    And cart rule "cart rule 1" status should be "enabled"
-    And cart rule "cart rule 1" highlighting in cart should be "disabled"
-    And cart rule "cart rule 1" code should be "TEST_CODE"
-    And cart rule "cart rule 1" minimum amount should be "10"
-    And cart rule "cart rule 1" minimum amount currency iso code should be "CHF"
-    And cart rule "cart rule 1" minimum amount tax should be "excluded"
-    And cart rule "cart rule 1" minimum amount shipping should be "included"
-    And cart rule "cart rule 1" free shipping should be "disabled"
-    And cart rule "cart rule 1" reduction amount should be "15"
-    And cart rule "cart rule 1" reduction currency iso code should be "USD"
-    And cart rule "cart rule 1" reduction tax should be "included"
-    And cart rule "cart rule 1" reduction should apply to order without shipping
+  Scenario: Create a cart rule with amount discount
+    When I want to create a cart rule named "Promotion"
+    And I specify its "description" as "Promotion for holidays"
+    And I specify that its active from "2019-01-01 11:05:00"
+    And I specify that its active until "2019-12-01 00:00:00"
+    And I specify that its "quantity" is "10"
+    And I specify that its "quantity per user" is "1"
+    And I specify that its "priority" is "2"
+    And I specify that partial use is disabled for it
+    And I specify its status as enabled
+    And I specify that it should not be highlighted in cart
+    And I specify its "code" as "PROMO_2019"
+    And its minimum purchase amount in currency "CHF" is "10"
+    And its minimum purchase amount is tax excluded
+    And its minimum purchase amount is shipping included
+    And it gives free shipping
+    And it gives a reduction amount of "15" in currency "USD" which is tax included and applies to order without shipping
+    When I successfully save it
+    Then its name in default language should be "Promotion"
+    And its "description" should be "Promotion for holidays"
+    And it should be active from "2019-01-01 11:05:00"
+    And it should be active until "2019-12-01 00:00:00"
+    And its "quantity" should be "10"
+    And its "quantity per user" should be "1"
+    And its "priority" should be "2"
+    And its "partial use" should be "disabled"
+    And its "status" should be "enabled"
+    And it should not be highlighted in cart
+    And its "code" should be "PROMO_2019"
+    And it should have minimum purchase amount of "10" in currency "CHF"
+    And its minimum purchase amount should be tax excluded
+    And its minimum purchase amount should be shipping included
+    And it should give free shipping
+    And it should give a reduction of "15" in currency "USD" which is tax included and applies to order without shipping
+
+  Scenario: Create a cart rule with percentage discount
+    When I want to create a cart rule named "50% off promo"
+    And I specify its "description" as "Discount for whole catalog for one hour"
+    And I specify that its active from "2019-01-01 11:00:00"
+    And I specify that its active until "2019-01-01 12:00:00"
+    And I specify that its "quantity" is "10"
+    And I specify that its "quantity per user" is "2"
+    And I specify that its "priority" is "1"
+    And I specify that partial use is enabled for it
+    And I specify its status as disabled
+    And I specify that it should be highlighted in cart
+    And I specify its "code" as "HAPPY_HOUR"
+    And its minimum purchase amount in currency "USD" is "99.99"
+    And its minimum purchase amount is tax included
+    And its minimum purchase amount is shipping excluded
+    And it gives a percentage reduction of "50" which excludes discounted products and applies to cheapest product
+    When I successfully save it
+    Then its name in default language should be "50% off promo"
+    And its "description" should be "Discount for whole catalog for one hour"
+    And it should be active from "2019-01-01 11:00:00"
+    And it should be active until "2019-01-01 12:00:00"
+    And its "quantity" should be "10"
+    And its "quantity per user" should be "2"
+    And its "priority" should be "1"
+    And its "partial use" should be "enabled"
+    And its "status" should be "disabled"
+    And it should be highlighted in cart
+    And its "code" should be "HAPPY_HOUR"
+    And it should have minimum purchase amount of "99.99" in currency "USD"
+    And its minimum purchase amount should be tax included
+    And its minimum purchase amount should be shipping excluded
+    And it should give a percentage reduction of "50" which excludes discounted products and applies to cheapest product
+

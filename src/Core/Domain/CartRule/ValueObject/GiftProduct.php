@@ -44,14 +44,16 @@ class GiftProduct
     private $productAttributeId;
 
     /**
-     * @param ProductId $productId
+     * @param int $productId
      * @param int|null $productAttributeId
+     *
+     * @throws CartRuleConstraintException
      */
-    public function __construct(ProductId $productId, int $productAttributeId = null)
+    public function __construct(int $productId, int $productAttributeId = null)
     {
         $this->assertGiftProductIsValid($productId, $productAttributeId);
 
-        $this->productId = $productId;
+        $this->productId = new ProductId($productId);
         $this->productAttributeId = $productAttributeId;
     }
 
@@ -72,14 +74,14 @@ class GiftProduct
     }
 
     /**
-     * @param ProductId|null $productId
+     * @param int $productId
      * @param int|null $productAttributeId
      *
      * @throws CartRuleConstraintException
      */
-    private function assertGiftProductIsValid(ProductId $productId, ?int $productAttributeId): void
+    private function assertGiftProductIsValid(int $productId, ?int $productAttributeId): void
     {
-        if (0 >= $productId->getValue()) {
+        if (0 >= $productId) {
             throw new CartRuleConstraintException(
                 'Gift product ID must be a positive integer',
                 CartRuleConstraintException::INVALID_GIFT_PRODUCT

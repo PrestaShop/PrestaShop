@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRu
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\DiscountApplicationType;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\MoneyAmountCondition;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
@@ -63,32 +64,32 @@ class AddCartRuleCommand
     /**
      * @var bool
      */
-    private $hasCountryRestriction;
+    private $hasCountryRestriction = false;
 
     /**
      * @var bool
      */
-    private $hasCarrierRestriction;
+    private $hasCarrierRestriction = false;
 
     /**
      * @var bool
      */
-    private $hasGroupRestriction;
+    private $hasGroupRestriction = false;
 
     /**
      * @var bool
      */
-    private $hasCartRuleRestriction;
+    private $hasCartRuleRestriction = false;
 
     /**
      * @var bool
      */
-    private $hasProductRestriction;
+    private $hasProductRestriction = false;
 
     /**
      * @var bool
      */
-    private $hasShopRestriction;
+    private $hasShopRestriction = false;
 
     /**
      * @var array
@@ -144,7 +145,7 @@ class AddCartRuleCommand
      * Discount application type indicates what the discount should be applied to.
      * E.g. to whole order, to a specific product, to cheapest product.
      *
-     * @var DiscountApplicationType
+     * @var DiscountApplicationType|null
      */
     private $discountApplicationType;
 
@@ -166,8 +167,13 @@ class AddCartRuleCommand
      * @param int $totalQuantity
      * @param int $quantityPerUser
      * @param CartRuleActionInterface $cartRuleAction
+     * @param float $minimumAmount
+     * @param int $minimumAmountCurrencyId
+     * @param bool $isMinimumAmountTaxExcluded
+     * @param bool $isMinimumAmountShippingExcluded
      *
      * @throws CartRuleConstraintException
+     * @throws DomainConstraintException
      */
     public function __construct(
         array $localizedNames,
@@ -179,13 +185,23 @@ class AddCartRuleCommand
         DateTime $validTo,
         int $totalQuantity,
         int $quantityPerUser,
-        CartRuleActionInterface $cartRuleAction
+        CartRuleActionInterface $cartRuleAction,
+        float $minimumAmount,
+        int $minimumAmountCurrencyId,
+        bool $isMinimumAmountTaxExcluded,
+        bool $isMinimumAmountShippingExcluded
     ) {
         $this->assertDateRangeIsValid($validFrom, $validTo);
         $this->setLocalizedNames($localizedNames);
         $this->setPriority($priority);
         $this->setTotalQuantity($totalQuantity);
         $this->setQuantityPerUser($quantityPerUser);
+        $this->minimumAmount = new MoneyAmountCondition(
+            $minimumAmount,
+            $minimumAmountCurrencyId,
+            $isMinimumAmountTaxExcluded,
+            $isMinimumAmountShippingExcluded
+        );
         $this->highlightInCart = $highlightInCart;
         $this->allowPartialUse = $allowPartialUse;
         $this->isActive = $isActive;
@@ -195,9 +211,9 @@ class AddCartRuleCommand
     }
 
     /**
-     * @return DiscountApplicationType
+     * @return DiscountApplicationType|null
      */
-    public function getDiscountApplicationType(): DiscountApplicationType
+    public function getDiscountApplicationType(): ?DiscountApplicationType
     {
         return $this->discountApplicationType;
     }
@@ -225,13 +241,13 @@ class AddCartRuleCommand
     }
 
     /**
-     * @param ProductId|null $discountProductId
+     * @param int $discountProductId
      *
      * @return AddCartRuleCommand
      */
-    public function setDiscountProductId(?ProductId $discountProductId): AddCartRuleCommand
+    public function setDiscountProductId(int $discountProductId): AddCartRuleCommand
     {
-        $this->discountProductId = $discountProductId;
+        $this->discountProductId = new ProductId($discountProductId);
 
         return $this;
     }
@@ -410,16 +426,6 @@ class AddCartRuleCommand
     public function setCode(string $code): void
     {
         $this->code = $code;
-    }
-
-    /**
-     * @param float $amount
-     * @param int $currencyId
-     * @param bool $taxExcluded
-     */
-    public function setMinimumAmount(float $amount, int $currencyId, bool $taxExcluded): void
-    {
-        $this->minimumAmount = new MoneyAmountCondition($amount, $currencyId, $taxExcluded);
     }
 
     /**

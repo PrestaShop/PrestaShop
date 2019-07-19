@@ -94,7 +94,7 @@ class CartRuleActionBuilderTest extends TestCase
     public function testItCorrectlyBuildsGiftProductAction()
     {
         $action = (new CartRuleActionBuilder())
-            ->setGiftProduct(new GiftProduct(new ProductId(1)))
+            ->setGiftProduct(new GiftProduct(1))
             ->build();
 
         $this->assertInstanceOf(GiftProductAction::class, $action);
@@ -132,7 +132,7 @@ class CartRuleActionBuilderTest extends TestCase
     {
         $moneyAmount = new MoneyAmountCondition(100, 1, true);
         $percentage = new PercentageDiscount(30.5, true);
-        $giftProduct = new GiftProduct(new ProductId(1));
+        $giftProduct = new GiftProduct(1);
 
         // [Amount, Percentage, Is free shipping, Expected result]
         yield [$moneyAmount, null, true, $giftProduct, new AmountDiscountAction($moneyAmount, true, $giftProduct)];
