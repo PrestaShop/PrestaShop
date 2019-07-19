@@ -4,6 +4,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Query;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Grid\Query\Filter\DoctrineFilterApplicatorInterface;
 use PrestaShop\PrestaShop\Core\Grid\Query\Filter\SqlFilters;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
@@ -31,11 +32,6 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
     /**
      * @var bool
      */
-    private $isStockManagementEnabled;
-
-    /**
-     * @var bool
-     */
     private $isStockSharingBetweenShopGroupEnabled;
 
     /**
@@ -47,6 +43,10 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
      * @var DoctrineFilterApplicatorInterface
      */
     private $filterApplicator;
+    /**
+     * @var ConfigurationInterface
+     */
+    private $configuration;
 
     public function __construct(
         Connection $connection,
@@ -55,18 +55,18 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
         $contextLanguageId,
         $contextShopId,
         $contextShopGroupId,
-        $isStockManagementEnabled,
         $isStockSharingBetweenShopGroupEnabled,
-        DoctrineFilterApplicatorInterface $filterApplicator
+        DoctrineFilterApplicatorInterface $filterApplicator,
+        ConfigurationInterface $configuration
     ) {
         parent::__construct($connection, $dbPrefix);
         $this->searchCriteriaApplicator = $searchCriteriaApplicator;
         $this->contextLanguageId = $contextLanguageId;
         $this->contextShopId = $contextShopId;
-        $this->isStockManagementEnabled = $isStockManagementEnabled;
         $this->isStockSharingBetweenShopGroupEnabled = $isStockSharingBetweenShopGroupEnabled;
         $this->contextShopGroupId = $contextShopGroupId;
         $this->filterApplicator = $filterApplicator;
+        $this->configuration = $configuration;
     }
 
     /**
@@ -83,7 +83,7 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
             ->addSelect('img_shop.`id_image`')
         ;
 
-        if ($this->isStockManagementEnabled) {
+        if ($this->configuration->get('PS_STOCK_MANAGEMENT')) {
             $qb->addSelect('sa.`quantity`');
         }
 
@@ -152,8 +152,9 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
             ->andWhere('p.`state`=1')
         ;
 
-        if ($this->isStockManagementEnabled) {
-            // todo: test
+        $isStockManagementEnabled = $this->configuration->get('PS_STOCK_MANAGEMENT');
+
+        if ($isStockManagementEnabled) {
             $stockOnCondition =
                 'sa.`id_product` = p.`id_product` 
                     AND sa.`id_product_attribute` = 0
@@ -193,7 +194,7 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
             )
         ;
 
-        if ($this->isStockManagementEnabled) {
+        if ($isStockManagementEnabled) {
             $sqlFilters
                 ->addFilter(
                     'quantity',

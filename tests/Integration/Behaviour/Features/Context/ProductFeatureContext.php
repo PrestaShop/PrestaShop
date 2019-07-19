@@ -2,6 +2,7 @@
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
+use Behat\Behat\Tester\Exception\PendingException;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ProductGridDefinitionFactory;
 use RuntimeException;
 
@@ -42,6 +43,30 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
             throw new RuntimeException(
                 sprintf(
                     'For grid definition "%s"  columnId "%s" exists',
+                    $gridDefinitionId,
+                    $columnId
+                )
+            );
+        }
+    }
+
+    /**
+     * @Then /^product grid in BO should contain column "([^"]*)"$/
+     */
+    public function productGridInBOShouldContainColumn($columnId)
+    {
+        $gridDefinitionId = 'prestashop.core.grid.definition.product';
+        /** @var ProductGridDefinitionFactory $gridDefinition */
+        $gridDefinition = CommonFeatureContext::getContainer()->get($gridDefinitionId);
+
+        /** @var array $columns */
+        $columns = $gridDefinition->getDefinition()->getColumns()->toArray();
+        $columnIds = array_column($columns, 'id');
+
+        if (!in_array($columnId, $columnIds, true)) {
+            throw new RuntimeException(
+                sprintf(
+                    'For grid definition "%s"  columnId "%s" does not exist',
                     $gridDefinitionId,
                     $columnId
                 )

@@ -2,8 +2,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
-use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\Catalog\Category\DeleteCategoriesBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
@@ -34,20 +34,21 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
     /**
-     * @var bool
+     * @var ConfigurationInterface
      */
-    private $isStockManagementEnabled;
+    private $configuration;
 
     /**
      * @param HookDispatcherInterface $hookDispatcher
-     * @param bool $isStockManagementEnabled
+     * @param ConfigurationInterface $configuration
      */
     public function __construct(
         HookDispatcherInterface $hookDispatcher,
-        $isStockManagementEnabled
+        ConfigurationInterface $configuration
     ) {
         parent::__construct($hookDispatcher);
-        $this->isStockManagementEnabled = $isStockManagementEnabled;
+
+        $this->configuration = $configuration;
     }
 
     /**
@@ -197,7 +198,7 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
             )
         ;
 
-        if ($this->isStockManagementEnabled) {
+        if ($this->configuration->get('PS_STOCK_MANAGEMENT')) {
             $columns->addAfter(
                 'price_tax_included',
                 (new LinkColumn('quantity'))
@@ -284,7 +285,7 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
             )
         ;
 
-        if ($this->isStockManagementEnabled) {
+        if ($this->configuration->get('PS_STOCK_MANAGEMENT')) {
             $filters
                 ->add(
                     (new Filter('quantity', IntegerMinMaxFilterType::class))
