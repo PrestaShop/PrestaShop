@@ -5,8 +5,8 @@ module.exports = class INSTALL extends CommonPage {
     super(page);
 
     // Define Step Titles
-    this.firstStepFrTitle = 'Bienvenue sur l\'installateur de PrestaShop 1.7.7.0';
-    this.firstStepEnTitle = 'Welcome to the PrestaShop 1.7.7.0 Installer';
+    this.firstStepFrTitle = 'Bienvenue sur l\'installateur de PrestaShop';
+    this.firstStepEnTitle = 'Welcome to the PrestaShop';
     this.secondStepEnTitle = 'License Agreements';
     this.thirdStepEnTitle = 'We are currently checking PrestaShop compatibility with your system environment';
     this.fourthStepEnTitle = 'Information about your Store';
@@ -63,7 +63,7 @@ module.exports = class INSTALL extends CommonPage {
    */
   async checkStepTitle(selector, pageTitle) {
     const title = await this.getTextContent(selector);
-    await global.expect(title).to.equal(pageTitle);
+    await global.expect(title).to.contains(pageTitle);
   }
 
   /**
