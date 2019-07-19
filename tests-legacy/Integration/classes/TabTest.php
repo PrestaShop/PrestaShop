@@ -62,6 +62,14 @@ class TabTest extends IntegrationTestCase
 
     public function testAddTabWithClassName()
     {
+        $expectedRoles = [
+            'ROLE_MOD_TAB_ADMINCLASSNAMETEST_CREATE',
+            'ROLE_MOD_TAB_ADMINCLASSNAMETEST_READ',
+            'ROLE_MOD_TAB_ADMINCLASSNAMETEST_UPDATE',
+            'ROLE_MOD_TAB_ADMINCLASSNAMETEST_DELETE',
+        ];
+        $this->checkUnexpectedRoles($expectedRoles);
+
         $classNameTab = new Tab();
         $classNameTab->active = 1;
         $classNameTab->class_name = 'AdminClassNameTest';
@@ -73,12 +81,6 @@ class TabTest extends IntegrationTestCase
         $classNameTab->module = 'module_test_tab';
         $classNameTab->add();
 
-        $expectedRoles = [
-            'ROLE_MOD_TAB_ADMINCLASSNAMETEST_CREATE',
-            'ROLE_MOD_TAB_ADMINCLASSNAMETEST_READ',
-            'ROLE_MOD_TAB_ADMINCLASSNAMETEST_UPDATE',
-            'ROLE_MOD_TAB_ADMINCLASSNAMETEST_DELETE',
-        ];
         $this->checkExpectedRoles($expectedRoles);
     }
 
@@ -87,11 +89,25 @@ class TabTest extends IntegrationTestCase
      */
     public function testDeleteTabWithClassName()
     {
+        $unexpectedRoles = [
+            'ROLE_MOD_TAB_ADMINCLASSNAMETEST_CREATE',
+            'ROLE_MOD_TAB_ADMINCLASSNAMETEST_READ',
+            'ROLE_MOD_TAB_ADMINCLASSNAMETEST_UPDATE',
+            'ROLE_MOD_TAB_ADMINCLASSNAMETEST_DELETE',
+        ];
+        $this->checkExpectedRoles($unexpectedRoles);
+
         $tab = new Tab(Tab::getIdFromClassName('AdminClassNameTest'));
         $this->assertNotFalse($tab->id);
         $this->assertEquals('AdminClassNameTest', $tab->class_name);
         $tab->delete();
 
+        $this->checkUnexpectedRoles($unexpectedRoles);
+    }
+
+    public function testAddMultipleTabsWithClassName()
+    {
+        $this->removeTestTabs();
         $unexpectedRoles = [
             'ROLE_MOD_TAB_ADMINCLASSNAMETEST_CREATE',
             'ROLE_MOD_TAB_ADMINCLASSNAMETEST_READ',
@@ -99,11 +115,7 @@ class TabTest extends IntegrationTestCase
             'ROLE_MOD_TAB_ADMINCLASSNAMETEST_DELETE',
         ];
         $this->checkUnexpectedRoles($unexpectedRoles);
-    }
 
-    public function testAddMultipleTabsWithClassName()
-    {
-        $this->removeTestTabs();
         for ($i = 0; $i < 3; $i++) {
             $classNameTab = new Tab();
             $classNameTab->active = 1;
@@ -128,6 +140,15 @@ class TabTest extends IntegrationTestCase
 
     public function testAddTabWithRouteName()
     {
+        $this->removeTestTabs();
+        $unexpectedRoles = [
+            'ROLE_MOD_TAB_ADMINCLASSNAMETEST_CREATE',
+            'ROLE_MOD_TAB_ADMINCLASSNAMETEST_READ',
+            'ROLE_MOD_TAB_ADMINCLASSNAMETEST_UPDATE',
+            'ROLE_MOD_TAB_ADMINCLASSNAMETEST_DELETE',
+        ];
+        $this->checkUnexpectedRoles($unexpectedRoles);
+
         $routeNameTab = new Tab();
         $routeNameTab->active = 1;
         $routeNameTab->class_name = 'AdminClassNameTest';
@@ -161,17 +182,19 @@ class TabTest extends IntegrationTestCase
         );
         $this->assertNotEmpty($result);
 
-        $tab = new Tab($result[0]['id_tab']);
-        $this->assertNotFalse($tab->id);
-        $this->assertEquals('admin_route_name_test', $tab->route_name);
-        $tab->delete();
-
         $unexpectedRoles = [
             'ROLE_MOD_TAB_ADMINCLASSNAMETEST_CREATE',
             'ROLE_MOD_TAB_ADMINCLASSNAMETEST_READ',
             'ROLE_MOD_TAB_ADMINCLASSNAMETEST_UPDATE',
             'ROLE_MOD_TAB_ADMINCLASSNAMETEST_DELETE',
         ];
+        $this->checkExpectedRoles($unexpectedRoles);
+
+        $tab = new Tab($result[0]['id_tab']);
+        $this->assertNotFalse($tab->id);
+        $this->assertEquals('admin_route_name_test', $tab->route_name);
+        $tab->delete();
+
         $this->checkUnexpectedRoles($unexpectedRoles);
     }
 

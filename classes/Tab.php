@@ -150,11 +150,11 @@ class TabCore extends ObjectModel
              * This can happen if you want to create several tabs with the same class_name or route_name
              */
             $actionSlug = pSQL($slug . '_' . $action);
-            $authorizationRoleExists = Db::getInstance()->numRows(
-                'SELECT 1 FROM `' . _DB_PREFIX_ . 'authorization_role` ' .
+            $authorizationRole = Db::getInstance()->getRow(
+                'SELECT slug FROM `' . _DB_PREFIX_ . 'authorization_role` ' .
                 'WHERE `slug` = "' . $actionSlug . '"'
             );
-            if (!$authorizationRoleExists) {
+            if (empty($authorizationRole)) {
                 Db::getInstance()->execute(
                     'INSERT INTO `' . _DB_PREFIX_ . 'authorization_role` (`slug`) VALUES ("' . $actionSlug . '")'
                 );
