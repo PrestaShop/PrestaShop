@@ -44,7 +44,7 @@ abstract class AbstractCatalogPriceRuleHandler
      *
      * @return SpecificPriceRule
      */
-    protected function getSpecificPriceRule(CatalogPriceRuleId $catalogPriceRuleId)
+    protected function getSpecificPriceRule(CatalogPriceRuleId $catalogPriceRuleId): SpecificPriceRule
     {
         try {
             $specificPriceRule = new SpecificPriceRule($catalogPriceRuleId->getValue());
