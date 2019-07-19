@@ -49,6 +49,9 @@ final class GetCatalogPriceRuleForEditingHandler extends AbstractCatalogPriceRul
         $catalogPriceRuleId = $query->getCatalogPriceRuleId();
         $specificPriceRule = $this->getSpecificPriceRule($catalogPriceRuleId);
 
+        $from = $specificPriceRule->from;
+        $to = $specificPriceRule->to;
+
         return new EditableCatalogPriceRule(
             new CatalogPriceRuleId((int) $specificPriceRule->id),
             $specificPriceRule->name,
@@ -58,10 +61,11 @@ final class GetCatalogPriceRuleForEditingHandler extends AbstractCatalogPriceRul
             (int) $specificPriceRule->id_group,
             (int) $specificPriceRule->from_quantity,
             (float) $specificPriceRule->price,
-            new DateTime($specificPriceRule->from),
-            new DateTime($specificPriceRule->to),
             new Reduction($specificPriceRule->reduction_type, (float) $specificPriceRule->reduction),
-            (bool) $specificPriceRule->reduction_tax
+            (bool) $specificPriceRule->reduction_tax,
+            //@todo: Use Utils/DateTime from PR #13584
+            $from !== '0000-00-00 00:00:00' ? new DateTime($from) : null,
+            $to !== '0000-00-00 00:00:00' ? new DateTime($to) : null
         );
     }
 }

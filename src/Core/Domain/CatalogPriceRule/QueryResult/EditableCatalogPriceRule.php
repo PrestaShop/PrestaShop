@@ -76,12 +76,12 @@ class EditableCatalogPriceRule
     private $price;
 
     /**
-     * @var DateTime
+     * @var ?DateTime
      */
     private $from;
 
     /**
-     * @var DateTime
+     * @var ?DateTime
      */
     private $to;
 
@@ -104,10 +104,10 @@ class EditableCatalogPriceRule
      * @param int $groupId
      * @param int $fromQuantity
      * @param float $price
-     * @param DateTime $from
-     * @param DateTime $to
      * @param Reduction $reduction
      * @param bool $includeTax
+     * @param DateTime|null $from
+     * @param DateTime|null $to
      */
     public function __construct(
         CatalogPriceRuleId $catalogPriceRuleId,
@@ -118,10 +118,10 @@ class EditableCatalogPriceRule
         int $groupId,
         int $fromQuantity,
         float $price,
-        DateTime $from,
-        DateTime $to,
         Reduction $reduction,
-        bool $includeTax
+        bool $includeTax,
+        ?DateTime $from,
+        ?DateTime $to
     ) {
         $this->catalogPriceRuleId = $catalogPriceRuleId;
         $this->name = $name;
@@ -202,17 +202,17 @@ class EditableCatalogPriceRule
     }
 
     /**
-     * @return DateTime
+     * @return DateTime|null
      */
-    public function getFrom(): DateTime
+    public function getFrom(): ?DateTime
     {
         return $this->from;
     }
 
     /**
-     * @return DateTime
+     * @return DateTime|null
      */
-    public function getTo(): DateTime
+    public function getTo(): ?DateTime
     {
         return $this->to;
     }
