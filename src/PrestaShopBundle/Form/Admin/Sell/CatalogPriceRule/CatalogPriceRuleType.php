@@ -81,7 +81,7 @@ class CatalogPriceRuleType extends AbstractType
 
     /**
      * @param TranslatorInterface $translator
-     * @param $isMultishopEnabled
+     * @param bool $isMultishopEnabled
      * @param array $currencyByIdChoices
      * @param array $countryByIdChoices
      * @param array $groupByIdChoices
@@ -90,7 +90,7 @@ class CatalogPriceRuleType extends AbstractType
      */
     public function __construct(
         TranslatorInterface $translator,
-        $isMultishopEnabled,
+        bool $isMultishopEnabled,
         array $currencyByIdChoices,
         array $countryByIdChoices,
         array $groupByIdChoices,
@@ -186,7 +186,7 @@ class CatalogPriceRuleType extends AbstractType
      *
      * @return array
      */
-    private function getModifiedCurrencyChoices()
+    private function getModifiedCurrencyChoices(): array
     {
         return array_merge(
             [$this->translator->trans('All currencies', [], 'Admin.Global') => 0],
@@ -199,7 +199,7 @@ class CatalogPriceRuleType extends AbstractType
      *
      * @return array
      */
-    private function getModifiedCountryChoices()
+    private function getModifiedCountryChoices(): array
     {
         return array_merge(
             [$this->translator->trans('All countries', [], 'Admin.Global') => 0],
@@ -212,7 +212,7 @@ class CatalogPriceRuleType extends AbstractType
      *
      * @return array
      */
-    private function getModifiedGroupChoices()
+    private function getModifiedGroupChoices(): array
     {
         return array_merge(
             [$this->translator->trans('All groups', [], 'Admin.Global') => 0],

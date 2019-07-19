@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\CatalogPriceRule\QueryHandler;
 
+use DateTime;
 use PrestaShop\PrestaShop\Adapter\CatalogPriceRule\AbstractCatalogPriceRuleHandler;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Query\GetCatalogPriceRuleForEditing;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\QueryHandler\GetCatalogPriceRuleForEditingHandlerInterface;
@@ -43,7 +44,7 @@ final class GetCatalogPriceRuleForEditingHandler extends AbstractCatalogPriceRul
      *
      * @return EditableCatalogPriceRule
      */
-    public function handle(GetCatalogPriceRuleForEditing $query)
+    public function handle(GetCatalogPriceRuleForEditing $query): EditableCatalogPriceRule
     {
         $catalogPriceRuleId = $query->getCatalogPriceRuleId();
         $specificPriceRule = $this->getSpecificPriceRule($catalogPriceRuleId);
@@ -57,8 +58,8 @@ final class GetCatalogPriceRuleForEditingHandler extends AbstractCatalogPriceRul
             (int) $specificPriceRule->id_group,
             (int) $specificPriceRule->from_quantity,
             (float) $specificPriceRule->price,
-            $specificPriceRule->from,
-            $specificPriceRule->to,
+            new DateTime($specificPriceRule->from),
+            new DateTime($specificPriceRule->to),
             new Reduction($specificPriceRule->reduction_type, (float) $specificPriceRule->reduction),
             (bool) $specificPriceRule->reduction_tax
         );

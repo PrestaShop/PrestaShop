@@ -39,5 +39,5 @@ interface AddCatalogPriceRuleHandlerInterface
      *
      * @return CatalogPriceRuleId
      */
-    public function handle(AddCatalogPriceRuleCommand $command);
+    public function handle(AddCatalogPriceRuleCommand $command): CatalogPriceRuleId;
 }
