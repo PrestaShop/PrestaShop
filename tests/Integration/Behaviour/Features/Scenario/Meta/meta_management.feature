@@ -27,7 +27,6 @@ Feature: Meta management (Traffic & Seo)
       | localized_rewrite_urls             | rewrite-url                             |
     When I add meta "meta2" with specified properties without default language
     Then I should get error that url rewrite value is incorrect
-#    todo: in update check index page that it should have empty value ( exception)
 
   Scenario: Creating new metadata with invalid url rewrite should not be allowed when ascended chars setting is turned off
     Given I specify following properties for new meta "meta3":
@@ -80,3 +79,27 @@ Feature: Meta management (Traffic & Seo)
       | meta_id                          | 4                                     |
     When I update meta "meta8" with specified properties
     And meta "meta8" field "url_rewrite" for default language should be ""
+
+  Scenario: Updating metadata without default language for url rewrite should not be allowed
+    Given I specify following properties for new meta "meta9":
+      | page_name                          | pagenotfound                             |
+      | localized_rewrite_urls             | rewrite-url                              |
+    When I add meta "meta9" with specified properties without default language
+    Then I should get error that url rewrite value is incorrect
+
+  Scenario: Updating metadata with invalid url rewrite should not be allowed when ascended chars setting is turned off
+    Given I specify following properties for new meta "meta10":
+      | meta_id                            | 4                                |
+      | localized_rewrite_urls             | i-got-char-š                     |
+    And shop configuration for "PS_ALLOW_ACCENTED_CHARS_URL" is set to 0
+    When I update meta "meta10" with specified properties
+    Then I should get error that url rewrite value is incorrect
+
+  Scenario: Updating metadata with invalid url rewrite should be allowed when ascended chars setting is turned on
+    Given I specify following properties for new meta "meta11":
+      | meta_id                            | 4                                |
+      | localized_rewrite_urls             | i-got-char-š                     |
+    And shop configuration for "PS_ALLOW_ACCENTED_CHARS_URL" is set to 1
+    When I update meta "meta11" with specified properties
+    Then meta "meta11" page should be "index"
+    And meta "meta11" field "url_rewrite" for default language should be "i-got-char-š"
