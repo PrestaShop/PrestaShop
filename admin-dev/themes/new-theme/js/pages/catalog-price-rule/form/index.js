@@ -28,10 +28,17 @@ import PriceFieldAvailabilityHandler
 
 import IncludeTaxFieldVisibilityHandler
   from './include-tax-field-visibility-handler';
+import CatalogPriceRuleFormMap from './catalog-price-rule-form-map';
 
 const $ = window.$;
 
 $(() => {
-  new PriceFieldAvailabilityHandler('#catalog_price_rule_leave_initial_price', '#catalog_price_rule_price');
-  new IncludeTaxFieldVisibilityHandler('.js-reduction-type-source', '.js-include-tax-target');
+  new PriceFieldAvailabilityHandler(
+    CatalogPriceRuleFormMap.initialPrice,
+    CatalogPriceRuleFormMap.price
+  );
+  new IncludeTaxFieldVisibilityHandler(
+    CatalogPriceRuleFormMap.reductionType,
+    CatalogPriceRuleFormMap.includeTax
+  );
 });
