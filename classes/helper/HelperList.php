@@ -269,11 +269,7 @@ class HelperListCore extends Helper
                 }
             }
 
-            if (in_array('view', $this->actions)) {
-                $this->_list[$index]['onclick'] = $this->getViewLink($this->token, $id);
-            } else {
-                $this->_list[$index]['onclick'] = $this->getEditLink($this->token, $id);
-            }
+            $this->_list[$index]['onclick'] = in_array('view', $this->actions) ? $this->getViewLink($this->token, $id) : $this->getEditLink($this->token, $id);
 
             // @todo skip action for bulk actions
             // $this->_list[$index]['has_bulk_actions'] = true;
