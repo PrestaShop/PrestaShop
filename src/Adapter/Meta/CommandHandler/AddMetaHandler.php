@@ -94,7 +94,7 @@ final class AddMetaHandler implements AddMetaHandlerInterface
     {
         $this->assertUrlRewriteHasDefaultLanguage($command);
         $this->assertIsUrlRewriteValid($command);
-        $this->assertDoesPageExists($command);
+        $this->assertIsValidPageName($command);
 
         try {
             $entity = new Meta();
@@ -179,7 +179,7 @@ final class AddMetaHandler implements AddMetaHandlerInterface
      *
      * @throws MetaConstraintException
      */
-    private function assertDoesPageExists(AddMetaCommand $command)
+    private function assertIsValidPageName(AddMetaCommand $command)
     {
         if (!in_array($command->getPageName()->getValue(), $this->availablePages, true)) {
             throw new MetaConstraintException(

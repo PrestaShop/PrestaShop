@@ -49,13 +49,21 @@ final class EditMetaHandler implements EditMetaHandlerInterface
      * @var ValidatorInterface
      */
     private $validator;
+    /**
+     * @var array
+     */
+    private $availablePages;
 
     /**
      * @param ValidatorInterface $validator
+     * @param array $availablePages
      */
-    public function __construct(ValidatorInterface $validator)
-    {
+    public function __construct(
+        ValidatorInterface $validator,
+        array $availablePages
+    ) {
         $this->validator = $validator;
+        $this->availablePages = $availablePages;
     }
 
     /**
@@ -75,6 +83,7 @@ final class EditMetaHandler implements EditMetaHandlerInterface
             }
 
             if (null !== $command->getPageName()) {
+                $this->assertIsValidPageName($entity->page, $command);
                 $entity->page = $command->getPageName()->getValue();
             }
 
@@ -157,6 +166,30 @@ final class EditMetaHandler implements EditMetaHandlerInterface
                     MetaConstraintException::INVALID_URL_REWRITE
                 );
             }
+        }
+    }
+
+    /**
+     * @param $alreadyExistingPage
+     * @param EditMetaCommand $command
+     *
+     * @throws MetaConstraintException
+     */
+    private function assertIsValidPageName($alreadyExistingPage, EditMetaCommand $command)
+    {
+        if ($command->getPageName()->getValue() === $alreadyExistingPage) {
+            return;
+        }
+
+        if (!in_array($command->getPageName()->getValue(), $this->availablePages, true)) {
+            throw new MetaConstraintException(
+                sprintf(
+                    'Given page name %s is not available. Available values are %s',
+                    $command->getPageName()->getValue(),
+                    var_export($this->availablePages, true)
+                ),
+                MetaConstraintException::INVALID_PAGE_NAME
+            );
         }
     }
 }
