@@ -230,8 +230,6 @@ class TranslateCore
                 ) {
                     $string = Translate::checkAndReplaceArgs($string, $sprintf);
                 }
-
-                $ret = str_replace('"', '&quot;', $string);
             }
 
             $currentKey = strtolower('<{' . $name . '}' . _THEME_NAME_ . '>' . $source) . '_' . $key;
