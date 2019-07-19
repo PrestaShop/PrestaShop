@@ -25,6 +25,7 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\Meta\CommandHandler\EditMetaHandler'
         arguments:
           - '@validator'
+          - '@=service("prestashop.adapter.meta.data_provider").getAvailablePages()'
         tags:
             - name: 'tactician.handler'
               command: 'PrestaShop\PrestaShop\Core\Domain\Meta\Command\EditMetaCommand'

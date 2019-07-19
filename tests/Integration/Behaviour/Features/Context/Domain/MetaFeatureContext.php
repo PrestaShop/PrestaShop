@@ -106,8 +106,29 @@ class MetaFeatureContext extends AbstractDomainFeatureContext
         ;
 
         try {
-            /** @var MetaId $metaId */
-            $metaId = $this->getCommandBus()->handle($command);
+            $this->getCommandBus()->handle($command);
+        } catch (Exception $exception) {
+            $this->lastException = $exception;
+            $this->lastErrorCode = $exception->getCode();
+        }
+    }
+
+    /**
+     * @When /^I update meta "([^"]*)" with specified properties without default language$/
+     */
+    public function updateMetaWithSpecifiedPropertiesWithoutDefaultLanguage($reference)
+    {
+        $propertiesKey = sprintf('%s_properties', $reference);
+
+        $data = SharedStorage::getStorage()->get($propertiesKey);
+        $data = $this->getWithDefaultLanguage($data);
+
+        $command = (new EditMetaCommand((int) $data['meta_id']))
+            ->setLocalisedRewriteUrls([0 => $data['localized_rewrite_urls']])
+        ;
+
+        try {
+            $this->getCommandBus()->handle($command);
         } catch (Exception $exception) {
             $this->lastException = $exception;
             $this->lastErrorCode = $exception->getCode();

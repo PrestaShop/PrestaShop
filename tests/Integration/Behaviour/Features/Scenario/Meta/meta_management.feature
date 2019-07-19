@@ -82,9 +82,9 @@ Feature: Meta management (Traffic & Seo)
 
   Scenario: Updating metadata without default language for url rewrite should not be allowed
     Given I specify following properties for new meta "meta9":
-      | page_name                          | pagenotfound                             |
+      | meta_id                            | 1                                        |
       | localized_rewrite_urls             | rewrite-url                              |
-    When I add meta "meta9" with specified properties without default language
+    When I update meta "meta9" with specified properties without default language
     Then I should get error that url rewrite value is incorrect
 
   Scenario: Updating metadata with invalid url rewrite should not be allowed when ascended chars setting is turned off
@@ -103,3 +103,17 @@ Feature: Meta management (Traffic & Seo)
     When I update meta "meta11" with specified properties
     Then meta "meta11" page should be "index"
     And meta "meta11" field "url_rewrite" for default language should be "i-got-char-š"
+
+  Scenario: Updating metadata with non existing page name
+    Given I specify following properties for new meta "meta11":
+      | meta_id                            | 4                                |
+      | page_name                          | i-dont-exist                     |
+    When I update meta "meta11" with specified properties
+    Then I should get error that page name value is incorrect
+
+  Scenario: Updating metadata with already existing page name
+    Given I specify following properties for new meta "meta12":
+      | meta_id                            | 4                                |
+      | page_name                          |  	pagenotfound                  |
+    When I update meta "meta11" with specified properties
+    Then I should get error that page name value is incorrect
