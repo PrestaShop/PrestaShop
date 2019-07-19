@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Controller\Admin;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddCategoryToProductCommand;
 use PrestaShopBundle\Form\Admin\Category\SimpleCategory;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -92,12 +93,12 @@ class CategoryController extends FrameworkBundleAdminController
                             ],
                         ]
                     );
-
                     if ($request->query->has('id_product')) {
-                        $productAdapter = $this->get('prestashop.adapter.data_provider.product');
-                        $product = $productAdapter->getProduct($request->query->get('id_product'));
-                        $product->addToCategories($categoryId->getValue());
-                        $product->save();
+                        $addCategoryToProductCommand = new AddCategoryToProductCommand(
+                            $categoryId->getValue(),
+                            $request->query->get('id_product')
+                        );
+                        $commandBus->handle($addCategoryToProductCommand);
                     }
                 }
             } catch (CategoryException $e) {

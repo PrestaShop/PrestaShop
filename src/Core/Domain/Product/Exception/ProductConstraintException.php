@@ -24,50 +24,15 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Category\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Exception;
 
 /**
- * Class CategoryConstraintException.
+ * Class ProductConstraintException.
  */
-class CategoryConstraintException extends CategoryException
+class ProductConstraintException extends ProductException
 {
-    /**
-     * Code is used when category does not have name.
-     */
-    const EMPTY_NAME = 1;
-
-    /**
-     * Code is used when category does not have link rewrite.
-     */
-    const EMPTY_LINK_REWRITE = 2;
-
-    /**
-     * Code is used when invalid status is set to category.
-     */
-    const INVALID_STATUS = 4;
-
-    /**
-     * Code is used when invalid delete mode is used to delete a category.
-     */
-    const INVALID_DELETE_MODE = 5;
-
-    /**
-     * Code is used when invalid parent id is supplied.
-     */
-    const INVALID_PARENT_ID = 6;
-
-    /**
-     * Code is used when too many menu thumbnails is being set for category.
-     */
-    const TOO_MANY_MENU_THUMBNAILS = 8;
-
     /**
      * Code is used when invalid id is supplied.
      */
     const INVALID_ID = 10;
-
-    /**
-     * Code is used when performing bulk delete of categories with empty data.
-     */
-    const EMPTY_BULK_DELETE_DATA = 12;
 }
