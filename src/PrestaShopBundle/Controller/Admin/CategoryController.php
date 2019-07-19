@@ -29,6 +29,9 @@ namespace PrestaShopBundle\Controller\Admin;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\AssignProductToCategoryCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotAssignProductToCategoryException;
 use PrestaShopBundle\Form\Admin\Category\SimpleCategory;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -92,16 +95,22 @@ class CategoryController extends FrameworkBundleAdminController
                             ],
                         ]
                     );
-
                     if ($request->query->has('id_product')) {
-                        $productAdapter = $this->get('prestashop.adapter.data_provider.product');
-                        $product = $productAdapter->getProduct($request->query->get('id_product'));
-                        $product->addToCategories($categoryId->getValue());
-                        $product->save();
+                        $assignProductToCategoryCommand = new AssignProductToCategoryCommand(
+                            $categoryId->getValue(),
+                            $request->query->get('id_product')
+                        );
+                        $commandBus->handle($assignProductToCategoryCommand);
                     }
                 }
             } catch (CategoryException $e) {
-                // @todo error handling should be implemented.
+                // TODO: do some frontend work to display this error message from ajax query
+                $response->setStatusCode(400);
+                $response->setData(['error' => $this->getErrorMessageForException($e, $this->getErrorMessages($data['category']['name']))]);
+            } catch (ProductException $e) {
+                // TODO: do some frontend work to display this error message from ajax query
+                $response->setStatusCode(400);
+                $response->setData(['error' => $this->getErrorMessageForException($e, $this->getErrorMessages($data['category']['name']))]);
             }
         } else {
             $response->setStatusCode(400);
@@ -128,5 +137,26 @@ class CategoryController extends FrameworkBundleAdminController
         return new JsonResponse(
             $this->get('prestashop.adapter.data_provider.category')->getAjaxCategories($request->get('query'), $limit, true)
         );
+    }
+
+    /**
+     * @param string $categoryName
+     *
+     * @return array
+     */
+    private function getErrorMessages($categoryName)
+    {
+        return [
+            CategoryException::class => $this->trans(
+                'Category "%s" could not be created.',
+                'Admin.Notifications.Error',
+                [$categoryName]
+            ),
+            CannotAssignProductToCategoryException::class => $this->trans(
+                'This product could not be assigned to category "%s".',
+                'Admin.Notifications.Error',
+                [$categoryName]
+            ),
+        ];
     }
 }
