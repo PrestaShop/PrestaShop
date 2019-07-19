@@ -26,12 +26,12 @@
 
 namespace PrestaShop\PrestaShop\Adapter\CatalogPriceRule\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Entity\SpecificPriceRule;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Command\AddCatalogPriceRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\CommandHandler\AddCatalogPriceRuleHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\CatalogPriceRuleException;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\ValueObject\CatalogPriceRuleId;
 use PrestaShopException;
+use SpecificPriceRule;
 
 /**
  * Handles adding new catalog price rule using legacy object model
@@ -41,10 +41,10 @@ final class AddCatalogPriceRuleHandler implements AddCatalogPriceRuleHandlerInte
     /**
      * {@inheritdoc}
      */
-    public function handle(AddCatalogPriceRuleCommand $command)
+    public function handle(AddCatalogPriceRuleCommand $command): CatalogPriceRuleId
     {
         try {
-            $specificPriceRule = $this->createSpecificPriceRuleFromCommand($command);
+            $specificPriceRule = $this->fetchSpecificPriceRuleFromCommand($command);
 
             if (false === $specificPriceRule->validateFields(false)) {
                 throw new CatalogPriceRuleException('Specific price rule contains invalid field values');
@@ -75,7 +75,7 @@ final class AddCatalogPriceRuleHandler implements AddCatalogPriceRuleHandlerInte
      *
      * @throws PrestaShopException
      */
-    private function createSpecificPriceRuleFromCommand(AddCatalogPriceRuleCommand $command)
+    private function fetchSpecificPriceRuleFromCommand(AddCatalogPriceRuleCommand $command): SpecificPriceRule
     {
         $specificPriceRule = new SpecificPriceRule();
         $specificPriceRule->name = $command->getName();

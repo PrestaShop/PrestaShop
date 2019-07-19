@@ -44,7 +44,7 @@ final class EditCatalogPriceRuleHandler implements EditCatalogPriceRuleHandlerIn
     public function handle(EditCatalogPriceRuleCommand $command)
     {
         try {
-            $specificPriceRule = $this->createSpecificPriceRuleFromCommand($command);
+            $specificPriceRule = $this->fetchSpecificPriceRuleFromCommand($command);
 
             if (false === $specificPriceRule->validateFields(false)) {
                 throw new CatalogPriceRuleException('Specific price rule contains invalid field values');
@@ -78,7 +78,7 @@ final class EditCatalogPriceRuleHandler implements EditCatalogPriceRuleHandlerIn
      *
      * @throws PrestaShopException
      */
-    private function createSpecificPriceRuleFromCommand(EditCatalogPriceRuleCommand $command)
+    private function fetchSpecificPriceRuleFromCommand(EditCatalogPriceRuleCommand $command): SpecificPriceRule
     {
         $specificPriceRule = new SpecificPriceRule($command->getCatalogPriceRuleId()->getValue());
 
