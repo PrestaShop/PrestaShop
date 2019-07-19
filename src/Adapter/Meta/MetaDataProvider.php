@@ -59,9 +59,9 @@ class MetaDataProvider implements MetaDataProviderInterface
     /**
      * @return array
      */
-    public function getAllPages()
+    public function getAvailablePages()
     {
-        return Meta::getPages();
+        return Meta::getPages(true);
     }
 
     /**

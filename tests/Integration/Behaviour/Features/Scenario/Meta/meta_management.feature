@@ -52,3 +52,31 @@ Feature: Meta management (Traffic & Seo)
       | localized_rewrite_urls             | test-page-unknown                               |
     When I add meta "meta5" with specified properties
     Then I should get error that page name value is incorrect
+
+  Scenario: Creating new metadata with already created page name
+    Given I specify following properties for new meta "meta6":
+      | page_name                          | index                                           |
+      | localized_rewrite_urls             | index                                           |
+    When I add meta "meta6" with specified properties
+    Then I should get error that page name value is incorrect
+
+  Scenario: Update existing metadata
+    Given I specify following properties for new meta "meta7":
+      | meta_id                          | 4                                     |
+      | page_name                        | index                                 |
+      | localized_page_title             | page title in default language        |
+      | localized_meta_description       | meta description in default language  |
+      | localized_meta_keywords          | meta keywords in default language     |
+      | localized_rewrite_urls           | rewrite-url-default                   |
+    When I update meta "meta7" with specified properties
+    Then meta "meta7" page should be "index"
+    And meta "meta7" field "title" for default language should be "page title in default language"
+    And meta "meta7" field "description" for default language should be "meta description in default language"
+    And meta "meta7" field "keywords" for default language should be "meta keywords in default language"
+    And meta "meta7" field "url_rewrite" for default language should be "rewrite-url-default"
+
+  Scenario: Update index page allows to have empty rewrite url
+    Given I specify following properties for new meta "meta8":
+      | meta_id                          | 4                                     |
+    When I update meta "meta8" with specified properties
+    And meta "meta8" field "url_rewrite" for default language should be ""

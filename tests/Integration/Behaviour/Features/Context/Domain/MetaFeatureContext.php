@@ -7,6 +7,7 @@ use Behat\Gherkin\Node\TableNode;
 use Exception;
 use Meta;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Command\AddMetaCommand;
+use PrestaShop\PrestaShop\Core\Domain\Meta\Command\EditMetaCommand;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Meta\ValueObject\MetaId;
 use RuntimeException;
@@ -53,6 +54,37 @@ class MetaFeatureContext extends AbstractDomainFeatureContext
             $metaId = $this->getCommandBus()->handle($command);
 
             SharedStorage::getStorage()->set($reference, new Meta($metaId->getValue()));
+        } catch (Exception $exception) {
+            $this->lastException = $exception;
+            $this->lastErrorCode = $exception->getCode();
+        }
+    }
+
+    /**
+     * @When /^I update meta "([^"]*)" with specified properties$/
+     */
+    public function updateMetaWithSpecifiedProperties($reference)
+    {
+        $propertiesKey = sprintf('%s_properties', $reference);
+
+        $data = SharedStorage::getStorage()->get($propertiesKey);
+        $data = $this->getWithDefaultLanguage($data);
+
+        $command = (new EditMetaCommand((int) $data['meta_id']))
+            ->setLocalisedPageTitles(isset($data['localized_page_title']) ? $data['localized_page_title'] : [])
+            ->setLocalisedMetaDescriptions(isset($data['localized_meta_description']) ? $data['localized_meta_description'] : [])
+            ->setLocalisedMetaKeywords(isset($data['localized_meta_keywords']) ? $data['localized_meta_keywords'] : [])
+            ->setLocalisedRewriteUrls(isset($data['localized_rewrite_urls']) ? $data['localized_rewrite_urls'] : [])
+        ;
+
+        if (isset($data['page_name'])) {
+            $command->setPageName($data['page_name']);
+        }
+
+        try {
+            $this->getCommandBus()->handle($command);
+
+            SharedStorage::getStorage()->set($reference, new Meta((int) $data['meta_id']));
         } catch (Exception $exception) {
             $this->lastException = $exception;
             $this->lastErrorCode = $exception->getCode();
