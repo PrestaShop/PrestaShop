@@ -1,0 +1,6 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.core.domain.cart_rule.value_object.cart_rule_action.cart_rule_action_builder:
+    class: PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRuleActionBuilder

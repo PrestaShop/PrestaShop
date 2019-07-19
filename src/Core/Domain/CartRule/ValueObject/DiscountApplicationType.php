@@ -75,7 +75,7 @@ class DiscountApplicationType
                 sprintf(
                     'Invalid cart rule discount application type %s. Available types are: %s',
                     var_export($type, true),
-                    implode(',', self::AVAILABLE_TYPES)
+                    implode(', ', self::AVAILABLE_TYPES)
                 ),
                 CartRuleConstraintException::INVALID_DISCOUNT_APPLICATION_TYPE
             );

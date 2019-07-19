@@ -34,7 +34,6 @@ use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRuleActionInterface;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleId;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\DiscountApplicationType;
-use PrestaShopDatabaseException;
 use PrestaShopException;
 
 /**
@@ -104,8 +103,8 @@ final class AddCartRuleHandler implements AddCartRuleHandlerInterface
         $minimumAmount = $command->getMinimumAmount();
         $cartRule->minimum_amount = $minimumAmount->getMoneyAmount()->getAmount();
         $cartRule->minimum_amount_currency = $minimumAmount->getMoneyAmount()->getCurrencyId()->getValue();
-        $cartRule->minimum_amount_shipping = $minimumAmount->isShippingExcluded();
-        $cartRule->minimum_amount_tax = $minimumAmount->isTaxExcluded();
+        $cartRule->minimum_amount_shipping = !$minimumAmount->isShippingExcluded();
+        $cartRule->minimum_amount_tax = !$minimumAmount->isTaxExcluded();
 
         $cartRule->quantity = $command->getTotalQuantity();
         $cartRule->quantity_per_user = $command->getQuantityPerUser();
