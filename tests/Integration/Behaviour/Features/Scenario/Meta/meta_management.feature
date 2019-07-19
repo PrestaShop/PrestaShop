@@ -139,3 +139,12 @@ Feature: Meta management (Traffic & Seo)
     And meta "meta13" editable form field "description" should be equal to "meta description in default language"
     And meta "meta13" editable form field "keywords" should be equal to "meta keywords in default language"
     And meta "meta13" editable form field "url_rewrite" should be equal to "rewrite-url-default"
+
+  Scenario: Get created page for customization layout
+    Given I specify following properties for new meta "meta14":
+      | page_name                        | pdf-order-slip                        |
+      | localized_rewrite_urls           | rewrite-url-default                   |
+    When I add meta "meta14" with specified properties
+    When I get pages for customization layout
+    Then page "index" should exist in customization layout pages
+    And page "pdf-order-slip" should exist in customization layout pages

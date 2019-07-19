@@ -11,7 +11,9 @@ use PrestaShop\PrestaShop\Core\Domain\Meta\Command\EditMetaCommand;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Query\GetMetaForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Meta\Query\GetPagesForLayoutCustomization;
 use PrestaShop\PrestaShop\Core\Domain\Meta\QueryResult\EditableMeta;
+use PrestaShop\PrestaShop\Core\Domain\Meta\QueryResult\LayoutCustomizationPage;
 use PrestaShop\PrestaShop\Core\Domain\Meta\ValueObject\MetaId;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
@@ -189,6 +191,19 @@ class MetaFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @When /^I get pages for customization layout$/
+     */
+    public function getPagesForCustomizationLayout()
+    {
+        /** @var LayoutCustomizationPage[] $layoutCustomizationPages */
+        $layoutCustomizationPages = $this->getQueryBus()->handle(
+            new GetPagesForLayoutCustomization()
+        );
+
+        SharedStorage::getStorage()->set('meta_customization_pages', $layoutCustomizationPages);
+    }
+
+    /**
      * @Then /^meta "([^"]*)" editable form field "([^"]*)" should be equal to "([^"]*)"$/
      */
     public function assertMetaEditableFormFieldShouldBeEqualTo($reference, $field, $value)
@@ -257,5 +272,29 @@ class MetaFeatureContext extends AbstractDomainFeatureContext
     public function assertItShouldGetErrorThatMetaEntityIsNotFound()
     {
         $this->assertLastErrorIs(MetaNotFoundException::class);
+    }
+
+    /**
+     * @Then /^page "([^"]*)" should exist in customization layout pages$/
+     */
+    public function assertPageShouldExistInCustomizationLayoutPages($pageName)
+    {
+        /** @var LayoutCustomizationPage[] $layoutCustomizationPages */
+        $layoutCustomizationPages = SharedStorage::getStorage()->get('meta_customization_pages');
+
+        $pageNames = array_map(
+            static function (LayoutCustomizationPage $item) { return $item->getPage(); },
+            $layoutCustomizationPages)
+        ;
+
+        if (!in_array($pageName, $pageNames, true)) {
+            throw new RuntimeException(
+                sprintf(
+                    'Page name "%s" not found in available customization layout pages "%s"',
+                    $pageName,
+                    var_export($pageNames, true)
+                )
+            );
+        }
     }
 }
