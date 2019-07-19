@@ -57,8 +57,11 @@ final class CatalogPriceRuleFormDataProvider implements FormDataProviderInterfac
         /** @var editableCatalogPriceRule $editableCatalogPriceRule */
         $editableCatalogPriceRule = $this->queryBus->handle(new GetCatalogPriceRuleForEditing((int) $catalogPriceRuleId));
 
+        $dateTimeFormat = 'Y-m-d H:i:s';
         $price = $editableCatalogPriceRule->getPrice();
         $leaveInitialPrice = false;
+        $from = $editableCatalogPriceRule->getFrom();
+        $to = $editableCatalogPriceRule->getTo();
 
         if (0 >= $price) {
             $price = null;
@@ -74,8 +77,8 @@ final class CatalogPriceRuleFormDataProvider implements FormDataProviderInterfac
             'from_quantity' => $editableCatalogPriceRule->getFromQuantity(),
             'price' => $price,
             'leave_initial_price' => $leaveInitialPrice,
-            'from' => $editableCatalogPriceRule->getFrom(),
-            'to' => $editableCatalogPriceRule->getTo(),
+            'from' => $from ? $from->format($dateTimeFormat) : '',
+            'to' => $to ? $to->format($dateTimeFormat) : '',
             'include_tax' => $editableCatalogPriceRule->isTaxIncluded(),
             'reduction' => [
                 'type' => $editableCatalogPriceRule->getReduction()->getType(),

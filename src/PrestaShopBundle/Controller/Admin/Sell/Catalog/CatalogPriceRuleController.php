@@ -158,7 +158,7 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    public function createAction(Request $request)
+    public function createAction(Request $request): Response
     {
         try {
             $catalogPriceRuleForm = $this->getFormBuilder()->getForm();
@@ -192,7 +192,7 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    public function editAction(Request $request, $catalogPriceRuleId)
+    public function editAction(Request $request, int $catalogPriceRuleId): Response
     {
         $catalogPriceRuleId = (int) $catalogPriceRuleId;
 
@@ -231,7 +231,7 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
      *
      * @return array
      */
-    private function getErrorMessages()
+    private function getErrorMessages(): array
     {
         return [
             DeleteCatalogPriceRuleException::class => [
@@ -280,7 +280,7 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
     /**
      * @return FormHandlerInterface
      */
-    private function getFormHandler()
+    private function getFormHandler(): FormHandlerInterface
     {
         return $this->get('prestashop.core.form.identifiable_object.handler.catalog_price_rule_form_handler');
     }
@@ -288,7 +288,7 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
     /**
      * @return FormBuilderInterface
      */
-    private function getFormBuilder()
+    private function getFormBuilder(): FormBuilderInterface
     {
         return $this->get('prestashop.core.form.identifiable_object.builder.catalog_price_rule_form_builder');
     }
