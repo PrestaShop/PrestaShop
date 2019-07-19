@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\QueryResult;
 
+use DateTime;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\ValueObject\CatalogPriceRuleId;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 
@@ -75,12 +76,12 @@ class EditableCatalogPriceRule
     private $price;
 
     /**
-     * @var string
+     * @var DateTime
      */
     private $from;
 
     /**
-     * @var string
+     * @var DateTime
      */
     private $to;
 
@@ -103,24 +104,24 @@ class EditableCatalogPriceRule
      * @param int $groupId
      * @param int $fromQuantity
      * @param float $price
-     * @param string $from
-     * @param string $to
+     * @param DateTime $from
+     * @param DateTime $to
      * @param Reduction $reduction
      * @param bool $includeTax
      */
     public function __construct(
         CatalogPriceRuleId $catalogPriceRuleId,
-        $name,
-        $shopId,
-        $currencyId,
-        $countryId,
-        $groupId,
-        $fromQuantity,
-        $price,
-        $from,
-        $to,
-        $reduction,
-        $includeTax
+        string $name,
+        int $shopId,
+        int $currencyId,
+        int $countryId,
+        int $groupId,
+        int $fromQuantity,
+        float $price,
+        DateTime $from,
+        DateTime $to,
+        Reduction $reduction,
+        bool $includeTax
     ) {
         $this->catalogPriceRuleId = $catalogPriceRuleId;
         $this->name = $name;
@@ -139,7 +140,7 @@ class EditableCatalogPriceRule
     /**
      * @return CatalogPriceRuleId
      */
-    public function getCatalogPriceRuleId()
+    public function getCatalogPriceRuleId(): CatalogPriceRuleId
     {
         return $this->catalogPriceRuleId;
     }
@@ -147,7 +148,7 @@ class EditableCatalogPriceRule
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -155,7 +156,7 @@ class EditableCatalogPriceRule
     /**
      * @return int
      */
-    public function getShopId()
+    public function getShopId(): int
     {
         return $this->shopId;
     }
@@ -163,7 +164,7 @@ class EditableCatalogPriceRule
     /**
      * @return int
      */
-    public function getCurrencyId()
+    public function getCurrencyId(): int
     {
         return $this->currencyId;
     }
@@ -171,7 +172,7 @@ class EditableCatalogPriceRule
     /**
      * @return int
      */
-    public function getCountryId()
+    public function getCountryId(): int
     {
         return $this->countryId;
     }
@@ -179,7 +180,7 @@ class EditableCatalogPriceRule
     /**
      * @return int
      */
-    public function getGroupId()
+    public function getGroupId(): int
     {
         return $this->groupId;
     }
@@ -187,7 +188,7 @@ class EditableCatalogPriceRule
     /**
      * @return int
      */
-    public function getFromQuantity()
+    public function getFromQuantity(): int
     {
         return $this->fromQuantity;
     }
@@ -195,23 +196,23 @@ class EditableCatalogPriceRule
     /**
      * @return float
      */
-    public function getPrice()
+    public function getPrice(): float
     {
         return $this->price;
     }
 
     /**
-     * @return string
+     * @return DateTime
      */
-    public function getFrom()
+    public function getFrom(): DateTime
     {
         return $this->from;
     }
 
     /**
-     * @return string
+     * @return DateTime
      */
-    public function getTo()
+    public function getTo(): DateTime
     {
         return $this->to;
     }
@@ -219,7 +220,7 @@ class EditableCatalogPriceRule
     /**
      * @return Reduction
      */
-    public function getReduction()
+    public function getReduction(): Reduction
     {
         return $this->reduction;
     }
@@ -227,7 +228,7 @@ class EditableCatalogPriceRule
     /**
      * @return bool
      */
-    public function isTaxIncluded()
+    public function isTaxIncluded(): bool
     {
         return $this->includeTax;
     }

@@ -52,7 +52,7 @@ class GetCatalogPriceRuleForEditing
     /**
      * @return CatalogPriceRuleId
      */
-    public function getCatalogPriceRuleId()
+    public function getCatalogPriceRuleId(): CatalogPriceRuleId
     {
         return $this->catalogPriceRuleId;
     }

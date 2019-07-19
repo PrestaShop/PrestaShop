@@ -59,8 +59,8 @@ final class CatalogPriceRuleFormDataHandler implements FormDataHandlerInterface
      */
     public function __construct(
         CommandBusInterface $commandBus,
-        $isMultishopEnabled,
-        $contextShopId
+        bool $isMultishopEnabled,
+        int $contextShopId
     ) {
         $this->commandBus = $commandBus;
         $this->contextShopId = $contextShopId;
@@ -70,7 +70,7 @@ final class CatalogPriceRuleFormDataHandler implements FormDataHandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function create(array $data)
+    public function create(array $data): int
     {
         if (!$this->isMultishopEnabled) {
             $data['id_shop'] = $this->contextShopId;
