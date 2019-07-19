@@ -16,6 +16,7 @@ services:
             - '@prestashop.core.hook.dispatcher'
             - '@validator'
             - '@=service("prestashop.adapter.legacy.configuration").get("PS_LANG_DEFAULT")'
+            - '@=service("prestashop.adapter.meta.data_provider").getAllPages()'
         tags:
             - name: 'tactician.handler'
               command: 'PrestaShop\PrestaShop\Core\Domain\Meta\Command\AddMetaCommand'

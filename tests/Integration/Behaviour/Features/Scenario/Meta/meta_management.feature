@@ -28,7 +28,6 @@ Feature: Meta management (Traffic & Seo)
     When I add meta "meta2" with specified properties without default language
     Then I should get error that url rewrite value is incorrect
 #    todo: in update check index page that it should have empty value ( exception)
-#  todo: non existing page name
 
   Scenario: Creating new metadata with invalid url rewrite should not be allowed when ascended chars setting is turned off
     Given I specify following properties for new meta "meta3":
@@ -46,3 +45,10 @@ Feature: Meta management (Traffic & Seo)
     When I add meta "meta4" with specified properties
     Then meta "meta4" page should be "newproducts"
     And meta "meta4" field "url_rewrite" for default language should be "i-got-char-š"
+
+  Scenario: Creating new metadata with unknown page name
+    Given I specify following properties for new meta "meta5":
+      | page_name                          | test-unknown                                    |
+      | localized_rewrite_urls             | test-page-unknown                               |
+    When I add meta "meta5" with specified properties
+    Then I should get error that page name value is incorrect

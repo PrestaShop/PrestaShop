@@ -119,4 +119,13 @@ class MetaFeatureContext extends AbstractDomainFeatureContext
         $this->assertLastErrorIs(MetaConstraintException::class);
         $this->assertLastErrorCodeIs(MetaConstraintException::INVALID_URL_REWRITE);
     }
+
+    /**
+     * @Then /^I should get error that page name value is incorrect$/
+     */
+    public function assertItShouldGetErrorThatPageNameValueIsIncorrect()
+    {
+        $this->assertLastErrorIs(MetaConstraintException::class);
+        $this->assertLastErrorCodeIs(MetaConstraintException::INVALID_PAGE_NAME);
+    }
 }
