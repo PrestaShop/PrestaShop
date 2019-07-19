@@ -244,13 +244,13 @@ class AddCatalogPriceRuleCommand
      *
      * @throws CatalogPriceRuleConstraintException
      */
-    private function createDateTime($dateTime): DateTime
+    private function createDateTime(string $dateTime): DateTime
     {
         try {
             return new DateTime($dateTime);
         } catch (Exception $e) {
             throw new CatalogPriceRuleConstraintException(
-                'Invalid date time format',
+                'An error occured when creating DateTime object for catalog price rule',
                 CatalogPriceRuleConstraintException::INVALID_DATETIME,
                 $e
             );
