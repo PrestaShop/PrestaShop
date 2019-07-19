@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Supplier;
 
 use Address;
+use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressNotFoundException;
 use Supplier;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierException;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
@@ -74,13 +75,23 @@ abstract class AbstractSupplierHandler extends AbstractObjectModelHandler
      */
     protected function getSupplierAddress(SupplierId $supplierId)
     {
+        $supplierIdValue = $supplierId->getValue();
         try {
-            $addressId = Address::getAddressIdBySupplierId($supplierId->getValue());
+            $addressId = Address::getAddressIdBySupplierId($supplierIdValue);
 
-            return new Address($addressId);
+            $address = new Address($addressId);
+
+            if (null === $address->id_supplier) {
+                throw new AddressNotFoundException(sprintf(
+                    'Address for supplier with id "%s" was not found',
+                    $supplierIdValue
+                ));
+            }
         } catch (PrestaShopException $e) {
             throw new SupplierException('Failed to get supplier address', 0, $e);
         }
+
+        return $address;
     }
 
     protected function removeSupplier(SupplierId $supplierId)
