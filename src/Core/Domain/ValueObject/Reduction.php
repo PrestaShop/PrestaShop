@@ -95,7 +95,7 @@ class Reduction
      */
     private function assertIsAllowedType(string $type)
     {
-        if ($type !== self::TYPE_AMOUNT && $type !== self::TYPE_PERCENTAGE) {
+        if (!in_array($type, [self::TYPE_PERCENTAGE, self::TYPE_AMOUNT], true)) {
             throw new DomainConstraintException(sprintf(
                 'The reduction type "%s" is invalid. Valid types are: "%s", "%s".',
                 $type,
