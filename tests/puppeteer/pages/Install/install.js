@@ -62,7 +62,6 @@ module.exports = class INSTALL extends CommonPage {
    * @param pageTitle, expected title
    */
   async checkStepTitle(selector, pageTitle) {
-    await this.page.screenshot({path: 'test.png'});
     const title = await this.getTextContent(selector);
     await global.expect(title).to.equal(pageTitle);
   }
