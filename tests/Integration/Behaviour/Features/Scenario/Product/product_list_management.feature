@@ -8,3 +8,7 @@ Feature: Product list management
   Scenario: Product list quantity column is not visible
     Given shop configuration for "PS_STOCK_MANAGEMENT" is set to 0
     Then product grid in BO should not contain column "quantity"
+
+  Scenario: Product list quantity column is visible
+    Given shop configuration for "PS_STOCK_MANAGEMENT" is set to 1
+    Then product grid in BO should contain column "quantity"

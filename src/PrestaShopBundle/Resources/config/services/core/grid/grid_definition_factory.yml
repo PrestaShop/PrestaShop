@@ -256,5 +256,5 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ProductGridDefinitionFactory'
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
         arguments:
-          - '@=service("prestashop.adapter.legacy.configuration").get("PS_STOCK_MANAGEMENT")'
+          -  '@prestashop.adapter.legacy.configuration'
         public: true
