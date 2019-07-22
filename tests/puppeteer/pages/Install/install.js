@@ -124,7 +124,7 @@ module.exports = class INSTALL extends CommonPage {
   async checkDatabaseConnected() {
     await this.page.click(this.testDbConnectionButton);
     // Create database 'prestashop' if not exist
-    if (await this.elementVisible(this.createDbButton)) {
+    if (await this.elementVisible(this.createDbButton, 3000)) {
       await this.page.click(this.createDbButton);
     }
     await this.page.waitForSelector(this.dbResultCheckOk);
