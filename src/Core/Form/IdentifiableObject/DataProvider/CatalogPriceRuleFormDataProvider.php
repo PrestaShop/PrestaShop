@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
+use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Query\GetCatalogPriceRuleForEditing;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\QueryResult\editableCatalogPriceRule;
@@ -63,7 +64,7 @@ final class CatalogPriceRuleFormDataProvider implements FormDataProviderInterfac
         $from = $editableCatalogPriceRule->getFrom();
         $to = $editableCatalogPriceRule->getTo();
 
-        if (0 >= $price) {
+        if ($price->isLowerOrEqualThan(new Number('0'))) {
             $price = null;
             $leaveInitialPrice = true;
         }
@@ -75,14 +76,14 @@ final class CatalogPriceRuleFormDataProvider implements FormDataProviderInterfac
             'id_country' => $editableCatalogPriceRule->getCountryId(),
             'id_group' => $editableCatalogPriceRule->getGroupId(),
             'from_quantity' => $editableCatalogPriceRule->getFromQuantity(),
-            'price' => $price,
+            'price' => null === $price ? $price : (string) $price,
             'leave_initial_price' => $leaveInitialPrice,
             'from' => $from ? $from->format($dateTimeFormat) : '',
             'to' => $to ? $to->format($dateTimeFormat) : '',
             'include_tax' => $editableCatalogPriceRule->isTaxIncluded(),
             'reduction' => [
                 'type' => $editableCatalogPriceRule->getReduction()->getType(),
-                'value' => $editableCatalogPriceRule->getReduction()->getValue(),
+                'value' => (string) $editableCatalogPriceRule->getReduction()->getValue(),
             ],
         ];
 

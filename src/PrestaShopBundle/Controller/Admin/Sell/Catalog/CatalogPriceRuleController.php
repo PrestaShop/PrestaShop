@@ -197,26 +197,24 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
         $catalogPriceRuleId = (int) $catalogPriceRuleId;
 
         try {
+            /** @var EditableCatalogPriceRule $editableCatalogPriceRule */
+            $editableCatalogPriceRule = $this->getQueryBus()->handle(new GetCatalogPriceRuleForEditing($catalogPriceRuleId));
+
             $catalogPriceRuleForm = $this->getFormBuilder()->getFormFor($catalogPriceRuleId);
             $catalogPriceRuleForm->handleRequest($request);
 
             $result = $this->getFormHandler()->handleFor($catalogPriceRuleId, $catalogPriceRuleForm);
-
-            if ($result->isSubmitted() && $result->isValid()) {
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
-
-                return $this->redirectToRoute('admin_catalog_price_rules_index');
-            }
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
 
-            if ($e instanceof CatalogPriceRuleNotFoundException) {
-                return $this->redirectToRoute('admin_catalog_price_rules_index');
-            }
+            return $this->redirectToRoute('admin_catalog_price_rules_index');
         }
 
-        /** @var EditableCatalogPriceRule $editableCatalogPriceRule */
-        $editableCatalogPriceRule = $this->getQueryBus()->handle(new GetCatalogPriceRuleForEditing($catalogPriceRuleId));
+        if ($result->isSubmitted() && $result->isValid()) {
+            $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+
+            return $this->redirectToRoute('admin_catalog_price_rules_index');
+        }
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/CatalogPriceRule/edit.html.twig', [
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),

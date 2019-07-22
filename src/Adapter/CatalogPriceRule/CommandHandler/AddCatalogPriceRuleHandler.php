@@ -86,7 +86,7 @@ final class AddCatalogPriceRuleHandler implements AddCatalogPriceRuleHandlerInte
         $specificPriceRule->from_quantity = $command->getFromQuantity();
         $specificPriceRule->price = $command->getPrice();
         $specificPriceRule->reduction_type = $command->getReduction()->getType();
-        $specificPriceRule->reduction = $command->getReduction()->getValue();
+        $specificPriceRule->reduction = (string) $command->getReduction()->getValue();
         $specificPriceRule->reduction_tax = $command->isTaxIncluded();
 
         if ($command->getDateTimeFrom()) {
