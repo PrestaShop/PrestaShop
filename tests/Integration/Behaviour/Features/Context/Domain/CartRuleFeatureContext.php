@@ -30,6 +30,7 @@ use CartRule;
 use Configuration;
 use Currency;
 use DateTime;
+use ObjectModel;
 use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\AddCartRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
@@ -240,6 +241,8 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
             $properties['discount_application_type'] ?? null,
             $properties['discount_product_id'] ?? null
         );
+
+        ObjectModel::resetStaticCache();
 
         SharedStorage::getStorage()->set(
             sprintf('cart_rule_object_%s', $properties['name']),
