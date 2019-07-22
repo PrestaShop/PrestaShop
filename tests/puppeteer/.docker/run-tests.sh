@@ -1,4 +1,4 @@
 #!/bin/sh
 
 echo "Run tests"
-npm run $COMMAND
+TEST_PATH=$TEST_PATH npm run $COMMAND
