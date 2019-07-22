@@ -6,12 +6,12 @@ module.exports = class BO_COMMONPAGE extends CommonPage {
 
     this.pageTitle = 'Dashboard •';
 
-    //top navbar
+    // top navbar
     this.headerLogoImage = '#header_logo';
     this.userProfileIcon = '#employee_infos';
     this.userProfileLogoutLink = 'a#header_logout';
 
-    //left navbar
+    // left navbar
     // SELL
     this.ordersParentLink = 'li#subtab-AdminParentOrders';
     this.ordersLink = '#subtab-AdminOrders>a';
@@ -22,7 +22,7 @@ module.exports = class BO_COMMONPAGE extends CommonPage {
     this.customersParentLink = 'li#subtab-AdminParentCustomer';
     this.customersLink = '#subtab-AdminCustomers>a';
 
-    //welcome module
+    // welcome module
     this.onboardingCloseButton = 'button.onboarding-button-shut-down';
     this.onboardingStopButton = 'a.onboarding-button-stop';
   }
@@ -39,13 +39,13 @@ module.exports = class BO_COMMONPAGE extends CommonPage {
    */
   async goToSubMenu(parentSelector, linkSelector) {
     if (await this.elementVisible(linkSelector)) {
-        await this.page.click(linkSelector);
-      } else {
-        //open the block
-        await this.page.click(parentSelector);
-        await this.page.waitForSelector(parentSelector + '.open', {visible: true});
-        await this.page.click(linkSelector);
-      }
+      await this.page.click(linkSelector);
+    } else {
+      // open the block
+      await this.page.click(parentSelector);
+      await this.page.waitForSelector(`${parentSelector}.open`, {visible: true});
+      await this.page.click(linkSelector);
+    }
     this.page.waitFor(500);
   }
 
@@ -66,7 +66,7 @@ module.exports = class BO_COMMONPAGE extends CommonPage {
    * @returns {Promise<void>}
    */
   async closeOnboardingModal() {
-    if (await this.elementVisible(this.onboardingCloseButton,1000)) {
+    if (await this.elementVisible(this.onboardingCloseButton, 1000)) {
       await this.page.click(this.onboardingCloseButton);
       await this.page.waitForSelector(this.onboardingStopButton, {visible: true});
       await this.page.click(this.onboardingStopButton);
