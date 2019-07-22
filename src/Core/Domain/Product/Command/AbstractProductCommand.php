@@ -2,17 +2,23 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductName;
+
 abstract class AbstractProductCommand
 {
     /**
-     * @var array|string[]
+     * @var ProductName[]
      */
     private $localisedProductNames;
+    
     /**
      * @var array
      */
     private $images;
 
+    /**
+     * @var null;
+     */
     private $pricing;
 
     /**
@@ -65,12 +71,24 @@ abstract class AbstractProductCommand
      */
     private $friendlyUrl;
 
+    /**
+     * @var null
+     */
     private $redirectionPage;
 
+    /**
+     * @var null
+     */
     private $visibility;
 
+    /**
+     * @var null
+     */
     private $condition;
 
+    /**
+     * @var null
+     */
     private $references;
 
     /**
@@ -92,9 +110,9 @@ abstract class AbstractProductCommand
     }
 
     /**
-     * @return array|string[]
+     * @return ProductName[]
      */
-    public function getLocalisedProductNames()
+    public function getLocalisedProductNames(): array
     {
         return $this->localisedProductNames;
     }
@@ -102,7 +120,7 @@ abstract class AbstractProductCommand
     /**
      * @return array
      */
-    public function getImages(): array
+    public function getImages(): ?array
     {
         return $this->images;
     }
@@ -112,14 +130,15 @@ abstract class AbstractProductCommand
      *
      * @return self
      */
-    public function setImages(array $images): void
+    public function setImages(array $images): self
     {
         $this->images = $images;
+
         return $this;
     }
 
     /**
-     * @return mixed
+     * @return null
      */
     public function getPricing()
     {
@@ -127,20 +146,21 @@ abstract class AbstractProductCommand
     }
 
     /**
-     * @param mixed $pricing
+     * @param null $pricing
      *
      * @return self
      */
-    public function setPricing($pricing): void
+    public function setPricing($pricing): self
     {
         $this->pricing = $pricing;
+
         return $this;
     }
 
     /**
      * @return array|string[]
      */
-    public function getLocalisedSummary()
+    public function getLocalisedSummary(): ?array
     {
         return $this->localisedSummary;
     }
@@ -150,16 +170,17 @@ abstract class AbstractProductCommand
      *
      * @return self
      */
-    public function setLocalisedSummary($localisedSummary): void
+    public function setLocalisedSummary($localisedSummary): self
     {
         $this->localisedSummary = $localisedSummary;
+
         return $this;
     }
 
     /**
      * @return array|string[]
      */
-    public function getLocalisedDescription()
+    public function getLocalisedDescription(): array
     {
         return $this->localisedDescription;
     }
@@ -169,9 +190,10 @@ abstract class AbstractProductCommand
      *
      * @return self
      */
-    public function setLocalisedDescription($localisedDescription): void
+    public function setLocalisedDescription($localisedDescription): self
     {
         $this->localisedDescription = $localisedDescription;
+
         return $this;
     }
 
@@ -207,16 +229,17 @@ abstract class AbstractProductCommand
      *
      * @return self
      */
-    public function setBrandId(int $brandId): void
+    public function setBrandId(int $brandId): self
     {
         $this->brandId = $brandId;
+
         return $this;
     }
 
     /**
      * @return array|int[]
      */
-    public function getRelatedProductIds()
+    public function getRelatedProductIds(): ?array
     {
         return $this->relatedProductIds;
     }
@@ -226,16 +249,17 @@ abstract class AbstractProductCommand
      *
      * @return self
      */
-    public function setRelatedProductIds($relatedProductIds): void
+    public function setRelatedProductIds($relatedProductIds): self
     {
         $this->relatedProductIds = $relatedProductIds;
+
         return $this;
     }
 
     /**
      * @return array
      */
-    public function getCategories(): array
+    public function getCategories(): ?array
     {
         return $this->categories;
     }
@@ -245,16 +269,17 @@ abstract class AbstractProductCommand
      *
      * @return self
      */
-    public function setCategories(array $categories): void
+    public function setCategories(array $categories): self
     {
         $this->categories = $categories;
+
         return $this;
     }
 
     /**
      * @return array
      */
-    public function getMetaTitle(): array
+    public function getMetaTitle(): ?array
     {
         return $this->metaTitle;
     }
@@ -264,16 +289,17 @@ abstract class AbstractProductCommand
      *
      * @return self
      */
-    public function setMetaTitle(array $metaTitle): void
+    public function setMetaTitle(array $metaTitle): self
     {
         $this->metaTitle = $metaTitle;
+
         return $this;
     }
 
     /**
      * @return array
      */
-    public function getMetaDescription(): array
+    public function getMetaDescription(): ?array
     {
         return $this->metaDescription;
     }
@@ -283,16 +309,17 @@ abstract class AbstractProductCommand
      *
      * @return self
      */
-    public function setMetaDescription(array $metaDescription): void
+    public function setMetaDescription(array $metaDescription): self
     {
         $this->metaDescription = $metaDescription;
+
         return $this;
     }
 
     /**
      * @return array
      */
-    public function getMetaTags(): array
+    public function getMetaTags(): ?array
     {
         return $this->metaTags;
     }
@@ -302,7 +329,7 @@ abstract class AbstractProductCommand
      *
      * @return self
      */
-    public function setMetaTags(array $metaTags): void
+    public function setMetaTags(array $metaTags): self
     {
         $this->metaTags = $metaTags;
         return $this;
@@ -311,7 +338,7 @@ abstract class AbstractProductCommand
     /**
      * @return array
      */
-    public function getFriendlyUrl(): array
+    public function getFriendlyUrl(): ?array
     {
         return $this->friendlyUrl;
     }
@@ -321,14 +348,15 @@ abstract class AbstractProductCommand
      *
      * @return self
      */
-    public function setFriendlyUrl(array $friendlyUrl): void
+    public function setFriendlyUrl(array $friendlyUrl): self
     {
         $this->friendlyUrl = $friendlyUrl;
+
         return $this;
     }
 
     /**
-     * @return mixed
+     * @return null
      */
     public function getRedirectionPage()
     {
@@ -336,18 +364,19 @@ abstract class AbstractProductCommand
     }
 
     /**
-     * @param mixed $redirectionPage
+     * @param null $redirectionPage
      *
      * @return self
      */
-    public function setRedirectionPage($redirectionPage): void
+    public function setRedirectionPage($redirectionPage): self
     {
         $this->redirectionPage = $redirectionPage;
+
         return $this;
     }
 
     /**
-     * @return mixed
+     * @return null
      */
     public function getVisibility()
     {
@@ -355,18 +384,19 @@ abstract class AbstractProductCommand
     }
 
     /**
-     * @param mixed $visibility
+     * @param null $visibility
      *
      * @return self
      */
-    public function setVisibility($visibility): void
+    public function setVisibility($visibility): self
     {
         $this->visibility = $visibility;
+
         return $this;
     }
 
     /**
-     * @return mixed
+     * @return null
      */
     public function getCondition()
     {
@@ -374,18 +404,19 @@ abstract class AbstractProductCommand
     }
 
     /**
-     * @param mixed $condition
+     * @param null $condition
      *
      * @return self
      */
-    public function setCondition($condition): void
+    public function setCondition($condition): self
     {
         $this->condition = $condition;
+
         return $this;
     }
 
     /**
-     * @return mixed
+     * @return null
      */
     public function getReferences()
     {
@@ -393,20 +424,21 @@ abstract class AbstractProductCommand
     }
 
     /**
-     * @param mixed $references
+     * @param null $references
      *
      * @return self
      */
-    public function setReferences($references): void
+    public function setReferences($references): self
     {
         $this->references = $references;
+
         return $this;
     }
 
     /**
      * @return array
      */
-    public function getCustomizationFields(): array
+    public function getCustomizationFields(): ?array
     {
         return $this->customizationFields;
     }
@@ -425,7 +457,7 @@ abstract class AbstractProductCommand
     /**
      * @return array
      */
-    public function getAttachments(): array
+    public function getAttachments(): ?array
     {
         return $this->attachments;
     }
@@ -435,14 +467,20 @@ abstract class AbstractProductCommand
      *
      * @return self
      */
-    public function setAttachments(array $attachments): void
+    public function setAttachments(array $attachments): self
     {
         $this->attachments = $attachments;
+
         return $this;
     }
 
-    private function setLocalisedProductNames(array $productNames): void
+
+    private function setLocalisedProductNames(array $productNames): self
     {
-        $this->localisedProductNames = $productNames;
+        foreach ($productNames as $productName) {
+            $this->localisedProductNames[] = new ProductName($productName);
+        }
+        
+        return $this;
     }
 }
