@@ -8,7 +8,8 @@
   "scripts": {
     "linkchecker": "node test/linkchecker.js",
     "lint": "eslint  --fix --ignore-path .gitignore .",
-    "specific-test": "node_modules/mocha/bin/mocha"
+    "specific-test": "./node_modules/mocha/bin/mocha test/$TEST_PATH",
+    "smoke-tests": "./node_modules/mocha/bin/mocha test/smoke/*"
   },
   "repository": {
     "type": "git",
