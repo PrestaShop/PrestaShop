@@ -17,10 +17,10 @@ module.exports = class FO_PRODUCT extends CommonPage {
    * To check the product information (Product name, price, quantity, description)
    */
   async checkProduct(productData) {
-    await this.checkTextValue(this.productName, productData.name);
+    await this.checkTextValue(this.productName, productData.name_fr);
     await this.checkAttributeValue(this.productPrice, 'content', productData.price);
     await this.checkAttributeValue(this.productQuantity, 'value', productData.quantity);
-    await this.checkTextValue(this.productDescription, productData.description, 'contain');
+    await this.checkTextValue(this.productDescription, productData.description_fr, 'contain');
   }
 
   /**
