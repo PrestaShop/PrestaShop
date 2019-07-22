@@ -45,7 +45,7 @@ module.exports = class INSTALL extends CommonPage {
     this.tablePrefixInput = '#db_prefix';
     this.testDbConnectionButton = '#btTestDB';
     this.createDbButton = '#btCreateDB';
-    this.dbResultCheckOk = '#dbResultCheck.okBlock';
+    this.dbResultCheckOkBlock = '#dbResultCheck.okBlock';
 
     // Selectors for Final step
     this.finalStepPageTitle = '#install_process_success h2';
@@ -126,7 +126,7 @@ module.exports = class INSTALL extends CommonPage {
     if (await this.elementVisible(this.createDbButton, 3000)) {
       await this.page.click(this.createDbButton);
     }
-    await this.page.waitForSelector(this.dbResultCheckOk);
+    await this.page.waitForSelector(this.dbResultCheckOkBlock);
   }
 
   /**
