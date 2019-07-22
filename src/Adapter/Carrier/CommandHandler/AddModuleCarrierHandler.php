@@ -27,25 +27,21 @@
 namespace PrestaShop\PrestaShop\Adapter\Carrier\CommandHandler;
 
 use Carrier;
-use PrestaShop\PrestaShop\Core\Domain\Carrier\Command\AddCarrierCommand;
-use PrestaShop\PrestaShop\Core\Domain\Carrier\CommandHandler\AddCarrierHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\Command\AddModuleCarrierCommand;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\CommandHandler\AddModuleCarrierHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierException;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
 use PrestaShopException;
 
 /**
- * Handles AddCarrierCommand using legacy object model
+ * Handles AddModuleCarrierCommand using legacy object model
  */
-final class AddCarrierHandler extends AbstractAddCarrierHandler implements AddCarrierHandlerInterface
+final class AddModuleCarrierHandler extends AbstractAddCarrierHandler implements AddModuleCarrierHandlerInterface
 {
     /**
-     * @param AddCarrierCommand $command
-     *
-     * @return CarrierId
-     *
-     * @throws CarrierException
+     * {@inheritdoc}
      */
-    public function handle(AddCarrierCommand $command): CarrierId
+    public function handle(AddModuleCarrierCommand $command): CarrierId
     {
         $carrier = new Carrier();
         $this->fillCarrierWithData($carrier, $command);
@@ -62,7 +58,7 @@ final class AddCarrierHandler extends AbstractAddCarrierHandler implements AddCa
             $carrier->setGroups($command->getAssociatedGroupIds());
             $this->addShippingRanges($carrier, $command->getShippingMethod(), $command->getShippingRanges());
         } catch (PrestaShopException $e) {
-            throw new CarrierException('An error occurred when trying to add new carrier');
+            throw new CarrierException('An error occurred when trying to add new carrier with module');
         }
 
         return new CarrierId((int) $carrier->id);
@@ -70,14 +66,14 @@ final class AddCarrierHandler extends AbstractAddCarrierHandler implements AddCa
 
     /**
      * @param Carrier $carrier
-     * @param AddCarrierCommand $command
+     * @param AddModuleCarrierCommand $command
      */
-    private function fillCarrierWithData(Carrier $carrier, AddCarrierCommand $command)
+    private function fillCarrierWithData(Carrier $carrier, AddModuleCarrierCommand $command)
     {
         $this->fillCarrierCommonFieldsWithData($carrier, $command);
-        $carrier->is_module = false;
-        $carrier->external_module_name = null;
-        $carrier->shipping_external = false;
-        $carrier->need_range = false;
+        $carrier->is_module = true;
+        $carrier->external_module_name = $command->getModuleName();
+        $carrier->shipping_external = $command->doModuleCalculateShippingPrice();
+        $carrier->need_range = $command->doModuleNeedCoreShippingPrice();
     }
 }

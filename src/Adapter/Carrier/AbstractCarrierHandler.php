@@ -24,15 +24,28 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Carrier\CommandHandler;
+namespace PrestaShop\PrestaShop\Adapter\Carrier;
 
-use PrestaShop\PrestaShop\Core\Domain\Carrier\Command\AddCarrierCommand;
-use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
+use Carrier;
+use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierException;
+use PrestaShopException;
 
 /**
- * Interface for handling AddCarrierCommand
+ * Provides reusable methods for Carrier handlers
  */
-interface AddCarrierHandlerInterface
+abstract class AbstractCarrierHandler extends AbstractObjectModelHandler
 {
-    public function handle(AddCarrierCommand $command): CarrierId;
+    /**
+     * @param Carrier $carrier
+     *
+     * @throws CarrierException
+     * @throws PrestaShopException
+     */
+    public function validateFields(Carrier $carrier)
+    {
+        if (false === $carrier->validateFields(false) || false === $carrier->validateFieldsLang(false)) {
+            throw new CarrierException('Carrier contains invalid field values');
+        }
+    }
 }

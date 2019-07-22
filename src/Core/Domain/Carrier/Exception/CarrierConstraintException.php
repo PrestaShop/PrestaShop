@@ -75,4 +75,9 @@ class CarrierConstraintException extends CarrierException
      * When out of range behavior value is invalid
      */
     const INVALID_OUT_OF_RANGE_BEHAVIOR = 9;
+
+    /**
+     * When module name provided for carrier is invalid
+     */
+    const INVALID_MODULE_NAME = 10;
 }

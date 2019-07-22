@@ -32,11 +32,23 @@ use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\ShippingMethod;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\SpeedGrade;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\TrackingUrl;
 
-/**
- * Adds new carrier
- */
-final class AddCarrierCommand extends AbstractAddCarrierCommand
+final class AddModuleCarrierCommand extends AbstractAddCarrierCommand
 {
+    /**
+     * @var string
+     */
+    private $moduleName;
+
+    /**
+     * @var bool
+     */
+    private $moduleCalculatesShippingPrice;
+
+    /**
+     * @var bool
+     */
+    private $moduleNeedsCoreShippingPrice;
+
     /**
      * This class should be initialized using static factories
      */
@@ -60,12 +72,13 @@ final class AddCarrierCommand extends AbstractAddCarrierCommand
      * @param float $maxPackageWeight
      * @param int[] $associatedGroupIds
      * @param int[] $associatedShopIds
+     * @param string $moduleName
      *
-     * @return AddCarrierCommand
+     * @return AddModuleCarrierCommand
      *
      * @throws CarrierConstraintException
      */
-    public static function withPricedShipping(
+    public static function withCoreShippingPrice(
         array $localizedNames,
         array $localizedShippingDelays,
         int $speedGrade,
@@ -80,13 +93,16 @@ final class AddCarrierCommand extends AbstractAddCarrierCommand
         int $maxPackageDepth,
         float $maxPackageWeight,
         array $associatedGroupIds,
-        array $associatedShopIds
+        array $associatedShopIds,
+        string $moduleName
     ) {
         $command = new self();
         $command->setLocalizedNames($localizedNames);
         $command->setLocalizedShippingDelays($localizedShippingDelays);
         $command->setMeasures($maxPackageWidth, $maxPackageHeight, $maxPackageDepth, $maxPackageWeight);
         $command->setShippingRanges($shippingRanges);
+        $command->assertModuleName($moduleName);
+        $command->moduleName = $moduleName;
         $command->speedGrade = new SpeedGrade($speedGrade);
         $command->shippingMethod = new ShippingMethod($shippingMethod);
         $command->trackingUrl = new TrackingUrl($trackingUrl);
@@ -97,6 +113,72 @@ final class AddCarrierCommand extends AbstractAddCarrierCommand
         $command->associatedShopIds = $associatedShopIds;
 
         $command->freeShipping = false;
+        $command->moduleCalculatesShippingPrice = false;
+        $command->moduleNeedsCoreShippingPrice = false;
+
+        return $command;
+    }
+
+    /**
+     * @param string[] $localizedNames
+     * @param string[] $localizedShippingDelays
+     * @param int $speedGrade
+     * @param string $trackingUrl
+     * @param bool $shippingCostIncluded
+     * @param int $shippingMethod
+     * @param int $taxRulesGroupId
+     * @param int $outOfRangeBehavior
+     * @param array $shippingRanges
+     * @param int $maxPackageWidth
+     * @param int $maxPackageHeight
+     * @param int $maxPackageDepth
+     * @param float $maxPackageWeight
+     * @param int[] $associatedGroupIds
+     * @param int[] $associatedShopIds
+     * @param string $moduleName
+     * @param bool $moduleNeedsCoreShippingPrice
+     *
+     * @return AddModuleCarrierCommand
+     *
+     * @throws CarrierConstraintException
+     */
+    public static function withModuleShippingPrice(
+        array $localizedNames,
+        array $localizedShippingDelays,
+        int $speedGrade,
+        string $trackingUrl,
+        bool $shippingCostIncluded,
+        int $shippingMethod,
+        int $taxRulesGroupId,
+        int $outOfRangeBehavior,
+        array $shippingRanges,
+        int $maxPackageWidth,
+        int $maxPackageHeight,
+        int $maxPackageDepth,
+        float $maxPackageWeight,
+        array $associatedGroupIds,
+        array $associatedShopIds,
+        string $moduleName,
+        bool $moduleNeedsCoreShippingPrice
+    ) {
+        $command = new self();
+        $command->setLocalizedNames($localizedNames);
+        $command->setLocalizedShippingDelays($localizedShippingDelays);
+        $command->setMeasures($maxPackageWidth, $maxPackageHeight, $maxPackageDepth, $maxPackageWeight);
+        $command->setShippingRanges($shippingRanges);
+        $command->assertModuleName($moduleName);
+        $command->moduleName = $moduleName;
+        $command->speedGrade = new SpeedGrade($speedGrade);
+        $command->shippingMethod = new ShippingMethod($shippingMethod);
+        $command->trackingUrl = new TrackingUrl($trackingUrl);
+        $command->outOfRangeBehavior = new OutOfRangeBehavior($outOfRangeBehavior);
+        $command->freeShipping = false;
+        $command->shippingCostIncluded = $shippingCostIncluded;
+        $command->taxRulesGroupId = $taxRulesGroupId;
+        $command->associatedGroupIds = $associatedGroupIds;
+        $command->associatedShopIds = $associatedShopIds;
+        $command->moduleCalculatesShippingPrice = true;
+        $command->moduleNeedsCoreShippingPrice = $moduleNeedsCoreShippingPrice;
 
         return $command;
     }
@@ -113,8 +195,9 @@ final class AddCarrierCommand extends AbstractAddCarrierCommand
      * @param float $maxPackageWeight
      * @param int[] $associatedGroupIds
      * @param int[] $associatedShopIds
+     * @param string $moduleName
      *
-     * @return AddCarrierCommand
+     * @return AddModuleCarrierCommand
      *
      * @throws CarrierConstraintException
      */
@@ -129,12 +212,15 @@ final class AddCarrierCommand extends AbstractAddCarrierCommand
         int $maxPackageDepth,
         float $maxPackageWeight,
         array $associatedGroupIds,
-        array $associatedShopIds
+        array $associatedShopIds,
+        string $moduleName
     ) {
         $command = new self();
         $command->setLocalizedNames($localizedNames);
         $command->setLocalizedShippingDelays($localizedShippingDelays);
         $command->setMeasures($maxPackageWidth, $maxPackageHeight, $maxPackageDepth, $maxPackageWeight);
+        $command->assertModuleName($moduleName);
+        $command->moduleName = $moduleName;
         $command->speedGrade = new SpeedGrade($speedGrade);
         $command->trackingUrl = new TrackingUrl($trackingUrl);
         $command->outOfRangeBehavior = new OutOfRangeBehavior(OutOfRangeBehavior::APPLY_HIGHEST_RANGE);
@@ -146,7 +232,50 @@ final class AddCarrierCommand extends AbstractAddCarrierCommand
         $command->shippingRanges = [];
         $command->freeShipping = true;
         $command->shippingCostIncluded = false;
+        $command->moduleCalculatesShippingPrice = false;
+        $command->moduleNeedsCoreShippingPrice = false;
 
         return $command;
+    }
+
+    /**
+     * @return string
+     */
+    public function getModuleName(): string
+    {
+        return $this->moduleName;
+    }
+
+    /**
+     * @return bool
+     */
+    public function doModuleCalculateShippingPrice(): bool
+    {
+        return $this->moduleCalculatesShippingPrice;
+    }
+
+    /**
+     * @return bool
+     */
+    public function doModuleNeedCoreShippingPrice(): bool
+    {
+        return $this->moduleNeedsCoreShippingPrice;
+    }
+
+    /**
+     * @param string $name
+     *
+     * @throws CarrierConstraintException
+     */
+    private function assertModuleName(string $name)
+    {
+        $maxLength = 64;
+
+        if ('' === $name || $maxLength < strlen($name)) {
+            throw new CarrierConstraintException(
+                sprintf('Carrier module name length is invalid. It must be 1 - %s characters long', $maxLength),
+                CarrierConstraintException::INVALID_MODULE_NAME
+            );
+        }
     }
 }

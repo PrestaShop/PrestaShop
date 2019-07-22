@@ -26,13 +26,13 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Carrier\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Carrier\Command\AddCarrierCommand;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\Command\AddModuleCarrierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
 
 /**
- * Interface for handling AddCarrierCommand
+ * Interface for handling AddModuleCarrier command
  */
-interface AddCarrierHandlerInterface
+interface AddModuleCarrierHandlerInterface
 {
-    public function handle(AddCarrierCommand $command): CarrierId;
+    public function handle(AddModuleCarrierCommand $command): CarrierId;
 }
