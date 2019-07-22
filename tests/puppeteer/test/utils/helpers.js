@@ -16,7 +16,7 @@ global.scenario = (name, tests, init, close = false) => describe(name, async () 
       args: ['--start-maximized', '--no-sandbox'],
       defaultViewport: {
         width: 1270,
-        height: 899
+        height: 899,
       },
     });
     await init();

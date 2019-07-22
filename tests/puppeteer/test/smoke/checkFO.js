@@ -1,7 +1,7 @@
 // Importing pages
 const FO_PAGE = require('../../pages/FO/FO_home');
-const FO_PRODUCT_Page = require('../../pages/FO/FO_product');
-const FO_CART_Page = require('../../pages/FO/FO_cart');
+const FO_PRODUCT_PAGE = require('../../pages/FO/FO_product');
+const FO_CART_PAGE = require('../../pages/FO/FO_cart');
 const productData = require('../data/FO/product');
 const cartData = require('../data/FO/cart');
 
@@ -14,15 +14,15 @@ let FO_CART;
 const init = async () => {
   page = await global.browser.newPage();
   FO_HOME = await (new FO_PAGE(page));
-  FO_PRODUCT = await (new FO_PRODUCT_Page(page));
-  FO_CART = await (new FO_CART_Page(page));
+  FO_PRODUCT = await (new FO_PRODUCT_PAGE(page));
+  FO_CART = await (new FO_CART_PAGE(page));
 };
 
 // Scenario
 global.scenario('Check the Front Office', () => {
   test('should open the shop page', async () => {
     await FO_HOME.goTo(global.URL_FO);
-    await FO_HOME.checkHomePage()
+    await FO_HOME.checkHomePage();
   });
   test('should go to the first product page', () => FO_HOME.goToProductPage('1'));
   test('should check the product page', () => FO_PRODUCT.checkProduct(productData.firstProductData));
