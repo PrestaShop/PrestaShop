@@ -46,6 +46,8 @@ use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Improve\Design\MailTheme\GenerateMailsType;
 use PrestaShopBundle\Form\Admin\Improve\Design\MailTheme\TranslateMailsBodyType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Service\Hook\HookEvent;
+use PrestaShopBundle\Service\TranslationService;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -377,10 +379,16 @@ class MailThemeController extends FrameworkBundleAdminController
 
             return $this->redirectToRoute('admin_mail_theme_index');
         }
+
         $translateData = $translateMailsBodyForm->getData();
+        $language = $translateData['language'];
+        /** @var TranslationService $translationService */
+        $translationService = $this->get('prestashop.service.translation');
+        $locale = $translationService->langToLocale($language);
 
         return $this->redirectToRoute('admin_international_translation_overview', [
-            'lang' => $translateData['language'],
+            'lang' => $language,
+            'locale' => $locale,
             'type' => 'mails_body',
             'selected' => 'body',
         ]);
