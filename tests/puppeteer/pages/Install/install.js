@@ -26,7 +26,7 @@ module.exports = class INSTALL extends CommonPage {
 
     // Selectors for step 3
     this.thirdStepPageTitle = '#sheet_system h2';
-    this.stepFinishedLeftMenu = '#leftpannel #tabs li.finished:nth-child(3)';
+    this.thirdStepFinishedListItem = '#leftpannel #tabs li.finished:nth-child(3)';
 
     // Selectors for step 4
     this.fourthStepPageTitle = '#infosShopBlock h2';
@@ -42,7 +42,6 @@ module.exports = class INSTALL extends CommonPage {
     this.fifthStepPageTitle = '#dbPart h2';
     this.dbLoginInput = '#dbLogin';
     this.dbPasswordInput = '#dbPassword';
-    this.tablePrefixInput = '#db_prefix';
     this.testDbConnectionButton = '#btTestDB';
     this.createDbButton = '#btCreateDB';
     this.dbResultCheckOkBlock = '#dbResultCheck.okBlock';
