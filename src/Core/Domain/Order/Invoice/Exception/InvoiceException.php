@@ -24,50 +24,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Exception;
 
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 
 /**
- * Product identity.
+ * Base exception for Invoice subdomain
  */
-class ProductId
+class InvoiceException extends OrderException
 {
-    /**
-     * @var int
-     */
-    private $productId;
-
-    /**
-     * @param int $productId
-     */
-    public function __construct($productId)
-    {
-        $this->assertIntegerIsGreaterThanZero($productId);
-
-        $this->productId = $productId;
-    }
-
-    /**
-     * @return int
-     */
-    public function getValue()
-    {
-        return $this->productId;
-    }
-
-    /**
-     * @param int $productId
-     */
-    private function assertIntegerIsGreaterThanZero($productId)
-    {
-        if (!is_int($productId) || 0 > $productId) {
-            throw new OrderException(
-                sprintf(
-                    'Product id %s is invalid. Product id must be number that is greater than zero.',
-                    var_export($productId, true)
-                )
-            );
-        }
-    }
 }

@@ -24,50 +24,35 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject;
+namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
+use OrderInvoice;
+use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Command\UpdateInvoiceNoteCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\CommandHandler\UpdateInvoiceNoteHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Exception\InvoiceException;
+use Validate;
 
 /**
- * Product identity.
+ * @internal
  */
-class ProductId
+final class UpdateInvoiceNoteHandler implements UpdateInvoiceNoteHandlerInterface
 {
     /**
-     * @var int
+     * {@inheritdoc}
      */
-    private $productId;
-
-    /**
-     * @param int $productId
-     */
-    public function __construct($productId)
+    public function handle(UpdateInvoiceNoteCommand $command)
     {
-        $this->assertIntegerIsGreaterThanZero($productId);
+        $note = $command->getNote();
+        $orderInvoice = new OrderInvoice($command->getOrderInvoiceId());
 
-        $this->productId = $productId;
-    }
+        if (Validate::isLoadedObject($orderInvoice) && Validate::isCleanHtml($note)) {
+            throw new InvoiceException('Failed to upload the invoice and edit its note.');
+        }
 
-    /**
-     * @return int
-     */
-    public function getValue()
-    {
-        return $this->productId;
-    }
+        $orderInvoice->note = $note;
 
-    /**
-     * @param int $productId
-     */
-    private function assertIntegerIsGreaterThanZero($productId)
-    {
-        if (!is_int($productId) || 0 > $productId) {
-            throw new OrderException(
-                sprintf(
-                    'Product id %s is invalid. Product id must be number that is greater than zero.',
-                    var_export($productId, true)
-                )
-            );
+        if (!$orderInvoice->save()) {
+            throw new InvoiceException('The invoice note was not saved.');
         }
     }
 }

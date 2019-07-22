@@ -52,6 +52,7 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\OrderFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Configuration\EmailConfigurationFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\CartFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\ProductFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\OrderFeatureContext
         currency:
             paths:

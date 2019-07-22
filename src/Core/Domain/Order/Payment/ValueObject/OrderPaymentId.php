@@ -24,28 +24,30 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Order\Payment\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Payment\Exception\PaymentException;
 
 /**
- * Product identity.
+ * Order payment identity
  */
-class ProductId
+class OrderPaymentId
 {
     /**
      * @var int
      */
-    private $productId;
+    private $orderPaymentId;
 
     /**
-     * @param int $productId
+     * @param int $orderPaymentId
      */
-    public function __construct($productId)
+    public function __construct($orderPaymentId)
     {
-        $this->assertIntegerIsGreaterThanZero($productId);
+        if (!is_int($orderPaymentId) || 0 >= $orderPaymentId) {
+            throw new PaymentException('Invalid order payment id supplied.');
+        }
 
-        $this->productId = $productId;
+        $this->orderPaymentId = $orderPaymentId;
     }
 
     /**
@@ -53,21 +55,6 @@ class ProductId
      */
     public function getValue()
     {
-        return $this->productId;
-    }
-
-    /**
-     * @param int $productId
-     */
-    private function assertIntegerIsGreaterThanZero($productId)
-    {
-        if (!is_int($productId) || 0 > $productId) {
-            throw new OrderException(
-                sprintf(
-                    'Product id %s is invalid. Product id must be number that is greater than zero.',
-                    var_export($productId, true)
-                )
-            );
-        }
+        return $this->orderPaymentId;
     }
 }

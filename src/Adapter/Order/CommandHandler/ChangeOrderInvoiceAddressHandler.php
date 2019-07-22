@@ -24,50 +24,40 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject;
+namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 
+use Address;
+use Cart;
+use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderInvoiceAddressCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\ChangeOrderInvoiceAddressHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
+use Validate;
 
 /**
- * Product identity.
+ * @internal
  */
-class ProductId
+final class ChangeOrderInvoiceAddressHandler extends AbstractOrderHandler implements ChangeOrderInvoiceAddressHandlerInterface
 {
     /**
-     * @var int
+     * {@inheritdoc}
      */
-    private $productId;
-
-    /**
-     * @param int $productId
-     */
-    public function __construct($productId)
+    public function handle(ChangeOrderInvoiceAddressCommand $command)
     {
-        $this->assertIntegerIsGreaterThanZero($productId);
+        $order = $this->getOrderObject($command->getOrderId());
+        $address = new Address($command->getNewInvoiceAddressId()->getValue());
 
-        $this->productId = $productId;
-    }
+        $cart = Cart::getCartByOrderId($order->id);
 
-    /**
-     * @return int
-     */
-    public function getValue()
-    {
-        return $this->productId;
-    }
-
-    /**
-     * @param int $productId
-     */
-    private function assertIntegerIsGreaterThanZero($productId)
-    {
-        if (!is_int($productId) || 0 > $productId) {
-            throw new OrderException(
-                sprintf(
-                    'Product id %s is invalid. Product id must be number that is greater than zero.',
-                    var_export($productId, true)
-                )
-            );
+        if (!Validate::isLoadedObject($address)) {
+            throw new OrderException('New invoice address is not valid');
         }
+
+        $order->id_address_invoice = $address->id;
+        $cart->id_address_invoice = $address->id;
+
+        $order->update();
+        $order->refreshShippingCost();
+        $cart->update();
     }
 }

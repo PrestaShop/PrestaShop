@@ -24,50 +24,25 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject;
-
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
+namespace PrestaShop\PrestaShop\Core\Domain\Order;
 
 /**
- * Product identity.
+ * Discount types that can be added to an order
  */
-class ProductId
+final class OrderDiscountType
 {
     /**
-     * @var int
+     * Discount type with percent (%) amount
      */
-    private $productId;
+    const DISCOUNT_PERCENT = 1;
 
     /**
-     * @param int $productId
+     * Discount type with money (EUR, USD & etc) amount
      */
-    public function __construct($productId)
-    {
-        $this->assertIntegerIsGreaterThanZero($productId);
-
-        $this->productId = $productId;
-    }
+    const DISCOUNT_AMOUNT = 2;
 
     /**
-     * @return int
+     * Discount type with free shipping
      */
-    public function getValue()
-    {
-        return $this->productId;
-    }
-
-    /**
-     * @param int $productId
-     */
-    private function assertIntegerIsGreaterThanZero($productId)
-    {
-        if (!is_int($productId) || 0 > $productId) {
-            throw new OrderException(
-                sprintf(
-                    'Product id %s is invalid. Product id must be number that is greater than zero.',
-                    var_export($productId, true)
-                )
-            );
-        }
-    }
+    const FREE_SHIPPING = 3;
 }
