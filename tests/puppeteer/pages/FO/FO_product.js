@@ -5,8 +5,8 @@ module.exports = class FO_PRODUCT extends CommonPage {
     super(page);
 
     //Selectors for product page
-    this.productName = '#main h1[itemprop="name"]:nth-child(1)';
-    this.productPrice = '#main span[itemprop="price"]:nth-child(1)';
+    this.productName = '#main h1[itemprop="name"]';
+    this.productPrice = '#main span[itemprop="price"]';
     this.productQuantity = '#quantity_wanted';
     this.productDescription = '#description';
     this.addToCartButton = '#add-to-cart-or-refresh button[data-button-action="add-to-cart"]';
@@ -28,6 +28,6 @@ module.exports = class FO_PRODUCT extends CommonPage {
    */
   async addProductToTheCart() {
     await this.waitForSelectorAndClick(this.addToCartButton);
-    await this.waitForSelectorAndClick(this.proceedToCheckoutButton);
+    await this.waitForSelectorAndClick(this.proceedToCheckoutButton, 5000);
   }
 };
