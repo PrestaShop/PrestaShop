@@ -60,6 +60,8 @@ final class AddModuleCarrierCommand extends AbstractAddCarrierCommand
     }
 
     /**
+     * Adds module carrier with a priced shipping when the module itself does not calculate the carrier shipping price
+     *
      * @param string[] $localizedNames
      * @param string[] $localizedShippingDelays
      * @param int $speedGrade
@@ -123,6 +125,8 @@ final class AddModuleCarrierCommand extends AbstractAddCarrierCommand
     }
 
     /**
+     * Adds module carrier with a priced shipping when the module itself calculates the carrier shipping price
+     *
      * @param string[] $localizedNames
      * @param string[] $localizedShippingDelays
      * @param int $speedGrade
@@ -187,6 +191,8 @@ final class AddModuleCarrierCommand extends AbstractAddCarrierCommand
     }
 
     /**
+     * Adds module carrier with a free shipping
+     *
      * @param string[] $localizedNames
      * @param string[] $localizedShippingDelays
      * @param int $speedGrade

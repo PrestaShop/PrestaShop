@@ -38,6 +38,9 @@ use PrestaShopException;
 use RangePrice;
 use RangeWeight;
 
+/**
+ * Provides reusable methods for AddCarrier handlers
+ */
 abstract class AbstractAddCarrierHandler extends AbstractCarrierHandler
 {
     /**
@@ -54,6 +57,10 @@ abstract class AbstractAddCarrierHandler extends AbstractCarrierHandler
         $this->configuration = $configuration;
     }
 
+    /**
+     * @param Carrier $carrier
+     * @param AbstractAddCarrierCommand $command
+     */
     protected function fillCarrierCommonFieldsWithData(Carrier $carrier, AbstractAddCarrierCommand $command)
     {
         $shippingMethod = $command->getShippingMethod()->getValue();

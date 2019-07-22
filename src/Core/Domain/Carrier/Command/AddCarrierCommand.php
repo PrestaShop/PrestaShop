@@ -45,6 +45,8 @@ final class AddCarrierCommand extends AbstractAddCarrierCommand
     }
 
     /**
+     * Adds carrier with shipping costs
+     *
      * @param string[] $localizedNames
      * @param string[] $localizedShippingDelays
      * @param int $speedGrade
@@ -102,6 +104,8 @@ final class AddCarrierCommand extends AbstractAddCarrierCommand
     }
 
     /**
+     * Adds carrier with free of charge shipping
+     *
      * @param string[] $localizedNames
      * @param string[] $localizedShippingDelays
      * @param int $speedGrade

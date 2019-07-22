@@ -37,7 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\TrackingUrl;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 
 /**
- * Provides reusable methods for AddCarrierCommands
+ * Provides reusable properties/methods for AddCarrierCommands
  */
 abstract class AbstractAddCarrierCommand
 {
