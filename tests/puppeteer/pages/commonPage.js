@@ -16,7 +16,7 @@ module.exports = class CommonPage {
    * @param selector, element to check
    * @return boolean, true if text exist, false if not
    */
-  async waitForSelectorAndClick(selector, timeout = 5000) {
+  async waitForSelectorAndClick(selector, timeout = 10) {
     await this.page.waitForSelector(selector, {visible: true, timeout: timeout});
     await this.page.click(selector)
   }
