@@ -256,8 +256,9 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
 
         if ($cartRule->name[$defaultLanguageId] !== $value) {
             throw new RuntimeException(sprintf(
-                'Invalid cart rule name in default language: "%s"',
-                $value
+                'Invalid cart rule name in default language: got "%s", expected "%s"',
+                $value,
+                $cartRule->name[$defaultLanguageId]
             ));
         }
     }
