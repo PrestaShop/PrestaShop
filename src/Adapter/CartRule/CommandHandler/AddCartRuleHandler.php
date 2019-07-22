@@ -205,7 +205,7 @@ final class AddCartRuleHandler implements AddCartRuleHandlerInterface
             case DiscountApplicationType::SPECIFIC_PRODUCT:
                 if (!$hasPercentageDiscount && !$hasAmountDiscount) {
                     throw new CartRuleConstraintException(
-                        'Cart rule, which is applied to a specific product, '.
+                        'Cart rule, which is applied to a specific product, ' .
                         'must have percentage or amount application type.',
                         CartRuleConstraintException::INCOMPATIBLE_CART_RULE_ACTIONS
                     );
@@ -225,7 +225,7 @@ final class AddCartRuleHandler implements AddCartRuleHandlerInterface
             case DiscountApplicationType::ORDER_WITHOUT_SHIPPING:
                 if (!$hasAmountDiscount && !$hasPercentageDiscount) {
                     throw new CartRuleConstraintException(
-                        'Cart rule, which is applied to whole order without shipping, '.
+                        'Cart rule, which is applied to whole order without shipping, ' .
                         'must have percentage or amount application type.',
                         CartRuleConstraintException::INCOMPATIBLE_CART_RULE_ACTIONS
                     );
