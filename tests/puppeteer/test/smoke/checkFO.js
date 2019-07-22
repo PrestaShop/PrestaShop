@@ -10,7 +10,7 @@ let FO_CART;
 
 let productData = {
   name: 'T-SHIRT IMPRIMÉ COLIBRI',
-  quantity: "1",
+  quantity: '1',
   price: '22.94',
   description: 'Symbole de légèreté et de délicatesse',
 };
@@ -38,6 +38,6 @@ global.scenario('Check the Front Office', () => {
   test('should go to the first product page', () => FO_HOME.goToProductPage('1'));
   test('should check the product page', () => FO_PRODUCT.checkProduct(productData));
   test('should add product to the cart', () => FO_PRODUCT.addProductToTheCart());
-  test('should check the cart details', () => FO_CART.checkCartDetails(cartData));
+  test('should check the cart details', () => FO_CART.checkCartDetails(cartData, '1'));
   test('should checkout a product', () => FO_CART.clickOnProceedToCheckout());
 }, init, true);

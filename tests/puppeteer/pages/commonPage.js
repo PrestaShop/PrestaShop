@@ -16,8 +16,8 @@ module.exports = class CommonPage {
    * @param selector, element to check
    * @return boolean, true if text exist, false if not
    */
-  async waitForSelectorAndClick(selector) {
-    await this.page.waitForSelector(selector, {visible: true, timeout: 10000});
+  async waitForSelectorAndClick(selector, timeout = 5000) {
+    await this.page.waitForSelector(selector, {visible: true, timeout: timeout});
     await this.page.click(selector)
   }
 
@@ -31,16 +31,16 @@ module.exports = class CommonPage {
   async checkTextValue(selector, textToCheckWith, parameter = 'equal') {
     switch (parameter) {
       case "equal":
-        await this.page.waitFor(selector);
+        await this.page.waitForSelector(selector);
         await this.page.$eval(selector, el => el.innerText).then((text) => {
           if (text.indexOf('\t') != -1) {
-            text = text.replace("\t", "");
+            text = text.replace('\t', '');
           }
           expect(text.trim()).to.equal(textToCheckWith)
         });
         break;
       case "contain":
-        await this.page.waitFor(selector);
+        await this.page.waitForSelector(selector);
         await this.page.$eval(selector, el => el.innerText).then((text) => expect(text).to.contain(textToCheckWith));
         break;
     }
@@ -54,11 +54,8 @@ module.exports = class CommonPage {
    * @return boolean, true if text in attribute is equal to textToCheckWith, false if not
    */
   async checkAttributeValue(selector, attribute, textToCheckWith) {
-    await this.page.waitFor(selector);
-    let value = await this.page.evaluate((selector, attribute) => {
-      let elem = document.querySelector(selector);
-      return elem.getAttribute(attribute);
-    }, selector, attribute);
+    await this.page.waitForSelector(selector);
+    let value = await this.page.$eval(selector, (el, attribute) => el.getAttribute(attribute), attribute);
     expect(value).to.be.equal(textToCheckWith);
   }
 
