@@ -47,7 +47,7 @@ docker-compose exec -e COMMAND="linkchecker" tests bash /tmp/run-tests.sh
 This campaign includes a non-exhaustive set of tests and it will ensure that the most important functions work.
 
 ### Launch all scripts
-If you want to run the links checker test you can run the script **test/smoke/***
+If you want to run all smoke tests, you can run the script **test/smoke/***
 
 #### With default values
 
