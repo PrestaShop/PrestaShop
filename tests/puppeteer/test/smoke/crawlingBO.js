@@ -53,7 +53,7 @@ global.scenario('Crawl into BO et check a few key pages', async () => {
   });
 
   test('should logout from the BO', async () => {
-    //await BO_LOGIN.goTo(global.URL_BO);
+    // await BO_LOGIN.goTo(global.URL_BO);
     await BO_COMMON.logoutBO();
     const pageTitle = await BO_DASHBOARD.getPageTitle();
     await global.expect(pageTitle).to.contains(BO_DASHBOARD.pageTitle);
