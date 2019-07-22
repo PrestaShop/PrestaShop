@@ -906,3 +906,10 @@ services:
             - '@=service("prestashop.adapter.multistore_feature").isActive()'
         tags:
             - { name: form.type }
+
+    form.type.localization.translate_mails_body:
+      class: 'PrestaShopBundle\Form\Admin\Improve\Design\MailTheme\TranslateMailsBodyType'
+      parent: 'form.type.translatable.aware'
+      public: true
+      tags:
+        - { name: form.type }
