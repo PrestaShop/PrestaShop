@@ -46,6 +46,7 @@ use PrestaShop\PrestaShop\Core\MailTemplate\ThemeInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\Transformation\MailVariablesTransformation;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Improve\Design\MailTheme\GenerateMailsType;
+use PrestaShopBundle\Form\Admin\Improve\Design\MailTheme\TranslateMailsBodyType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Service\Hook\HookEvent;
 use Symfony\Component\Form\Form;
@@ -75,6 +76,7 @@ class MailThemeController extends FrameworkBundleAdminController
     {
         $legacyController = $request->attributes->get('_legacy_controller');
         $generateThemeMailsForm = $this->createForm(GenerateMailsType::class);
+        $translateMailsBodyForm = $this->createForm(TranslateMailsBodyType::class);
         /** @var ThemeCatalogInterface $themeCatalog */
         $themeCatalog = $this->get('prestashop.core.mail_template.theme_catalog');
         $mailThemes = $themeCatalog->listThemes();
@@ -86,6 +88,7 @@ class MailThemeController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink($legacyController),
             'mailThemeConfigurationForm' => $this->getMailThemeFormHandler()->getForm()->createView(),
             'generateMailsForm' => $generateThemeMailsForm->createView(),
+            'translateMailsBodyForm' => $translateMailsBodyForm->createView(),
             'mailThemes' => $mailThemes,
         ]);
     }
@@ -354,6 +357,36 @@ class MailThemeController extends FrameworkBundleAdminController
         }
 
         return $this->redirectToRoute('admin_mail_theme_preview', ['theme' => $theme]);
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function translateBodyAction(Request $request)
+    {
+        $translateMailsBodyForm = $this->createForm(TranslateMailsBodyType::class);
+        $translateMailsBodyForm->handleRequest($request);
+
+        if (!$translateMailsBodyForm->isSubmitted() || !$translateMailsBodyForm->isValid()) {
+            $this->addFlash(
+                'error',
+                $this->trans(
+                    'Cannot send translate body contents for e-mail',
+                    'Admin.Notifications.Error'
+                )
+            );
+
+            return $this->redirectToRoute('admin_mail_theme_index');
+        }
+        $translateData = $translateMailsBodyForm->getData();
+
+        return $this->redirectToRoute('admin_international_translation_overview', [
+            'lang' => $translateData['language'],
+            'type' => 'mails_body',
+            'selected' => 'body',
+        ]);
     }
 
     /**

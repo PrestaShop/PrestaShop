@@ -81,3 +81,11 @@ admin_mail_theme_send_test_module_mail:
     _controller: PrestaShopBundle:Admin\Improve\Design\MailTheme:sendTestMail
     _legacy_link: AdminMailTheme:rawModuleLayout
     _legacy_controller: AdminMailTheme
+
+admin_mail_theme_translate_body:
+  path: /translateBody
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Improve\Design\MailTheme:translateBody
+    _legacy_controller: AdminMailTheme
+    _legacy_link: AdminMailTheme:translateBody
