@@ -35,7 +35,7 @@
   </p>
 
   <div class="mt-4">
-    <a href="#" target="_blank" class="btn btn-outline-secondary mr-1">
+    <a href="{{ documentation_link('product') }}" target="_blank" class="btn btn-outline-secondary mr-1">
       {{ 'Learn how to manage your catalog'|trans({}, 'Admin.Catalog.Feature') }}
     </a>
 
@@ -44,11 +44,10 @@
     </a>
   </div>
   <div class="mt-4">
-    <a href="#">
+    <a href="{{ path('admin_import', {'import_type': 'products'}) }}">
       {% set fileTypes = ['.csv', '.xls', '.xlsx', '.xlst', '.0ds', '.ots'] %}
 
       {{ 'Import a list of products (filetypes: %fileTypes%).'|trans({'%fileTypes%' : fileTypes|join(', ')}, 'Admin.Catalog.Feature') }}
-
     </a>
   </div>
 </div>

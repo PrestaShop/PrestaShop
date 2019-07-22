@@ -71,3 +71,9 @@ services:
           'es': 'https://doc.prestashop.com/display/PS17/Facturas+por+abono'
           'it': 'https://doc.prestashop.com/display/PS17/Note+di+credito'
           '_fallback': 'https://doc.prestashop.com/display/PS17/Credit+Slips'
+        'product':
+          'en': 'http://doc.prestashop.com/display/PS17/Managing+your+Product+Catalog'
+          'fr': 'http://doc.prestashop.com/pages/viewpage.action?pageId=51185407'
+          'es': 'http://doc.prestashop.com/pages/viewpage.action?pageId=54264031'
+          'it': 'http://doc.prestashop.com/display/PS17/Gestire+il+Catalogo+Prodotti'
+          '_fallback': 'http://doc.prestashop.com/display/PS17/Managing+your+Product+Catalog'
