@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\AttributeGroup;
 
 use AttributeGroup;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Exception\AttributeGroupException;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Exception\AttributeGroupNotFoundException;
 use PrestaShopException;
@@ -42,11 +43,18 @@ final class AttributeGroupViewDataProvider
     private $contextLangId;
 
     /**
-     * @param int $contextLangId
+     * @var ConfigurationInterface
      */
-    public function __construct($contextLangId)
+    private $configuration;
+
+    /**
+     * @param int $contextLangId
+     * @param ConfigurationInterface $configuration
+     */
+    public function __construct($contextLangId, ConfigurationInterface $configuration)
     {
         $this->contextLangId = $contextLangId;
+        $this->configuration = $configuration;
     }
 
     /**
@@ -77,6 +85,10 @@ final class AttributeGroupViewDataProvider
     public function getAttributeGroupNameById($attributeGroupId)
     {
         $attributeGroup = $this->getAttributeGroupById($attributeGroupId);
+
+        if (!isset($attributeGroup->public_name[$this->contextLangId])) {
+            return $attributeGroup->public_name[$this->configuration->get('PS_LANG_DEFAULT')];
+        }
 
         return $attributeGroup->public_name[$this->contextLangId];
     }

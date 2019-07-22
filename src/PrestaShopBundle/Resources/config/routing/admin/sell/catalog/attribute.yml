@@ -15,14 +15,14 @@ admin_attributes_index:
             attributeGroupId: \d+
 
 admin_attributes_search:
-      path: /
-      methods: POST
-      defaults:
-          _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Attribute:search'
-          _legacy_controller: AdminAttributesGroups
+    path: /
+    methods: POST
+    defaults:
+        _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Attribute:search'
+        _legacy_controller: AdminAttributesGroups
 #          _legacy_link: AdminAttributesGroups:submitFilterattribute_values
-          redirectQueryParamsToKeep:
-              - 'attributeGroupId'
+        redirectQueryParamsToKeep:
+            - 'attributeGroupId'
 
 admin_attributes_create:
     path: /new
