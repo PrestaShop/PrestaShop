@@ -24,50 +24,49 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Order\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
+use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 
 /**
- * Product identity.
+ * Changes currency for given order.
  */
-class ProductId
+class ChangeOrderCurrencyCommand
 {
     /**
-     * @var int
+     * @var OrderId
      */
-    private $productId;
+    private $orderId;
 
     /**
-     * @param int $productId
+     * @var CurrencyId
      */
-    public function __construct($productId)
-    {
-        $this->assertIntegerIsGreaterThanZero($productId);
+    private $newCurrencyId;
 
-        $this->productId = $productId;
+    /**
+     * @param int $orderId
+     * @param int $newCurrencyId
+     */
+    public function __construct($orderId, $newCurrencyId)
+    {
+        $this->orderId = $orderId;
+        $this->newCurrencyId = $newCurrencyId;
     }
 
     /**
-     * @return int
+     * @return OrderId
      */
-    public function getValue()
+    public function getOrderId()
     {
-        return $this->productId;
+        return $this->orderId;
     }
 
     /**
-     * @param int $productId
+     * @return CurrencyId
      */
-    private function assertIntegerIsGreaterThanZero($productId)
+    public function getNewCurrencyId()
     {
-        if (!is_int($productId) || 0 > $productId) {
-            throw new OrderException(
-                sprintf(
-                    'Product id %s is invalid. Product id must be number that is greater than zero.',
-                    var_export($productId, true)
-                )
-            );
-        }
+        return $this->newCurrencyId;
     }
 }

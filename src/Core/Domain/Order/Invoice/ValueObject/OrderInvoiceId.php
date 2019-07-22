@@ -24,28 +24,30 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Order\Invoice\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Exception\InvoiceException;
 
 /**
- * Product identity.
+ * Order invoice identity
  */
-class ProductId
+class OrderInvoiceId
 {
     /**
      * @var int
      */
-    private $productId;
+    private $orderInvoiceId;
 
     /**
-     * @param int $productId
+     * @param int $orderInvoiceId
      */
-    public function __construct($productId)
+    public function __construct($orderInvoiceId)
     {
-        $this->assertIntegerIsGreaterThanZero($productId);
+        if (!is_int($orderInvoiceId) || 0 >= $orderInvoiceId) {
+            throw new InvoiceException('Invalid order invoice id supplied.');
+        }
 
-        $this->productId = $productId;
+        $this->orderInvoiceId = $orderInvoiceId;
     }
 
     /**
@@ -53,21 +55,6 @@ class ProductId
      */
     public function getValue()
     {
-        return $this->productId;
-    }
-
-    /**
-     * @param int $productId
-     */
-    private function assertIntegerIsGreaterThanZero($productId)
-    {
-        if (!is_int($productId) || 0 > $productId) {
-            throw new OrderException(
-                sprintf(
-                    'Product id %s is invalid. Product id must be number that is greater than zero.',
-                    var_export($productId, true)
-                )
-            );
-        }
+        return $this->orderInvoiceId;
     }
 }

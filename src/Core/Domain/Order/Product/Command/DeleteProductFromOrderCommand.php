@@ -24,50 +24,48 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Order\Product\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
+use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 
 /**
- * Product identity.
+ * Deletes product from given order.
  */
-class ProductId
+class DeleteProductFromOrderCommand
 {
+    /**
+     * @var OrderId
+     */
+    private $orderId;
+
     /**
      * @var int
      */
-    private $productId;
+    private $orderDetailId;
 
     /**
-     * @param int $productId
+     * @param int $orderId
+     * @param int $orderDetailId
      */
-    public function __construct($productId)
+    public function __construct($orderId, $orderDetailId)
     {
-        $this->assertIntegerIsGreaterThanZero($productId);
+        $this->orderId = new OrderId($orderId);
+        $this->orderDetailId = $orderDetailId;
+    }
 
-        $this->productId = $productId;
+    /**
+     * @return OrderId
+     */
+    public function getOrderId()
+    {
+        return $this->orderId;
     }
 
     /**
      * @return int
      */
-    public function getValue()
+    public function getOrderDetailId()
     {
-        return $this->productId;
-    }
-
-    /**
-     * @param int $productId
-     */
-    private function assertIntegerIsGreaterThanZero($productId)
-    {
-        if (!is_int($productId) || 0 > $productId) {
-            throw new OrderException(
-                sprintf(
-                    'Product id %s is invalid. Product id must be number that is greater than zero.',
-                    var_export($productId, true)
-                )
-            );
-        }
+        return $this->orderDetailId;
     }
 }

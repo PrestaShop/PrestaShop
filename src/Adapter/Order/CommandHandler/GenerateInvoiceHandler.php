@@ -24,50 +24,34 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject;
+namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 
+use Configuration;
+use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Command\GenerateInvoiceCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\CommandHandler\GenerateOrderInvoiceHandlerInterface;
 
 /**
- * Product identity.
+ * @internal
  */
-class ProductId
+final class GenerateInvoiceHandler extends AbstractOrderHandler implements GenerateOrderInvoiceHandlerInterface
 {
     /**
-     * @var int
+     * {@inheritdoc}
      */
-    private $productId;
-
-    /**
-     * @param int $productId
-     */
-    public function __construct($productId)
+    public function handle(GenerateInvoiceCommand $command)
     {
-        $this->assertIntegerIsGreaterThanZero($productId);
+        $order = $this->getOrderObject($command->getOrderId());
 
-        $this->productId = $productId;
-    }
-
-    /**
-     * @return int
-     */
-    public function getValue()
-    {
-        return $this->productId;
-    }
-
-    /**
-     * @param int $productId
-     */
-    private function assertIntegerIsGreaterThanZero($productId)
-    {
-        if (!is_int($productId) || 0 > $productId) {
-            throw new OrderException(
-                sprintf(
-                    'Product id %s is invalid. Product id must be number that is greater than zero.',
-                    var_export($productId, true)
-                )
-            );
+        if (!Configuration::get('PS_INVOICE', null, null, $order->id_shop)) {
+            throw new OrderException('Invoice management has been disabled.');
         }
+
+        if ($order->hasInvoice()) {
+            throw new OrderException('This order already has an invoice.');
+        }
+
+        $order->setInvoice(true);
     }
 }

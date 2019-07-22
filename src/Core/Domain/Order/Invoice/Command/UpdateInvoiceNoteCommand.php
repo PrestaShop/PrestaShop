@@ -24,50 +24,46 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject;
-
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
+namespace PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Command;
 
 /**
- * Product identity.
+ * Adds note for given invoice.
  */
-class ProductId
+class UpdateInvoiceNoteCommand
 {
     /**
      * @var int
      */
-    private $productId;
+    private $orderInvoiceId;
 
     /**
-     * @param int $productId
+     * @var string
      */
-    public function __construct($productId)
-    {
-        $this->assertIntegerIsGreaterThanZero($productId);
+    private $note;
 
-        $this->productId = $productId;
+    /**
+     * @param int $orderInvoiceId
+     * @param string $note
+     */
+    public function __construct($orderInvoiceId, $note)
+    {
+        $this->orderInvoiceId = $orderInvoiceId;
+        $this->note = $note;
     }
 
     /**
      * @return int
      */
-    public function getValue()
+    public function getOrderInvoiceId()
     {
-        return $this->productId;
+        return $this->orderInvoiceId;
     }
 
     /**
-     * @param int $productId
+     * @return string
      */
-    private function assertIntegerIsGreaterThanZero($productId)
+    public function getNote()
     {
-        if (!is_int($productId) || 0 > $productId) {
-            throw new OrderException(
-                sprintf(
-                    'Product id %s is invalid. Product id must be number that is greater than zero.',
-                    var_export($productId, true)
-                )
-            );
-        }
+        return $this->note;
     }
 }
