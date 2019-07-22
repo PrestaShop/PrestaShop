@@ -32,6 +32,9 @@ use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\ShippingMethod;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\SpeedGrade;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\TrackingUrl;
 
+/**
+ * Responsible for adding a carrier via module
+ */
 final class AddModuleCarrierCommand extends AbstractAddCarrierCommand
 {
     /**
