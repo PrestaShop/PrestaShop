@@ -13,14 +13,18 @@ module.exports = class BO_COMMONPAGE extends CommonPage {
 
     //left navbar
     // SELL
-    this.ordersParentLink = 'li#subtab-AdminParentOrders>a';
+    this.ordersParentLink = 'li#subtab-AdminParentOrders';
     this.ordersLink = '#subtab-AdminOrders>a';
 
-    this.productsParentLink = 'li#subtab-AdminCatalog>a';
+    this.productsParentLink = 'li#subtab-AdminCatalog';
     this.productsLink = '#subtab-AdminProducts>a';
 
-    this.customersParentLink = 'li#subtab-AdminParentCustomer>a';
+    this.customersParentLink = 'li#subtab-AdminParentCustomer';
     this.customersLink = '#subtab-AdminCustomers>a';
+
+    //welcome module
+    this.onboardingCloseButton = 'button.onboarding-button-shut-down';
+    this.onboardingStopButton = 'a.onboarding-button-stop';
   }
 
   /*
@@ -34,14 +38,15 @@ module.exports = class BO_COMMONPAGE extends CommonPage {
    * @returns {Promise<void>}
    */
   async goToSubMenu(parentSelector, linkSelector) {
-    if (this.page.elementVisible(linkSelector)) {
+    if (await this.elementVisible(linkSelector)) {
         await this.page.click(linkSelector);
       } else {
         //open the block
         await this.page.click(parentSelector);
-        await this.page.waitForSelector(linkSelector);
+        await this.page.waitForSelector(parentSelector + '.open', {visible: true});
         await this.page.click(linkSelector);
       }
+    this.page.waitFor(500);
   }
 
   /**
@@ -61,6 +66,10 @@ module.exports = class BO_COMMONPAGE extends CommonPage {
    * @returns {Promise<void>}
    */
   async closeOnboardingModal() {
-    //await
+    if (await this.elementVisible(this.onboardingCloseButton,1000)) {
+      await this.page.click(this.onboardingCloseButton);
+      await this.page.waitForSelector(this.onboardingStopButton, {visible: true});
+      await this.page.click(this.onboardingStopButton);
+    }
   }
 };
