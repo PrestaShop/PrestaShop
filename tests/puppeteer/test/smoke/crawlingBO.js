@@ -31,6 +31,7 @@ global.scenario('Crawl into BO et check a few key pages', async () => {
     await BO_LOGIN.login(global.EMAIL, global.PASSWD);
     const pageTitle = await BO_DASHBOARD.getPageTitle();
     await global.expect(pageTitle).to.contains(BO_DASHBOARD.pageTitle);
+    await BO_COMMON.closeOnboardingModal();
   });
 
   test('should visit the Orders page', async () => {
@@ -45,7 +46,7 @@ global.scenario('Crawl into BO et check a few key pages', async () => {
     await global.expect(pageTitle).to.contains(BO_PRODUCTS.pageTitle);
   });
 
-  test('should visit the CustomegoToSubMenurs page', async () => {
+  test('should visit the Customers page', async () => {
     await BO_COMMON.goToSubMenu(BO_COMMON.customersParentLink, BO_COMMON.customersLink);
     const pageTitle = await BO_CUSTOMERS.getPageTitle();
     await global.expect(pageTitle).to.contains(BO_CUSTOMERS.pageTitle);
