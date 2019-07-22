@@ -4,7 +4,7 @@ module.exports = class FO_PRODUCT extends CommonPage {
   constructor(page) {
     super(page);
 
-    //Selectors for product page
+    // Selectors for product page
     this.productName = '#main h1[itemprop="name"]';
     this.productPrice = '#main span[itemprop="price"]';
     this.productQuantity = '#quantity_wanted';

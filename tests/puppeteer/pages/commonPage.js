@@ -17,8 +17,8 @@ module.exports = class CommonPage {
    * @return boolean, true if text exist, false if not
    */
   async waitForSelectorAndClick(selector, timeout = 10) {
-    await this.page.waitForSelector(selector, {visible: true, timeout: timeout});
-    await this.page.click(selector)
+    await this.page.waitForSelector(selector, {visible: true, timeout});
+    await this.page.click(selector);
   }
 
   /**
@@ -29,22 +29,20 @@ module.exports = class CommonPage {
    * @return boolean, true when the result of parameter(textToCheckWith) is true, false if not
    */
   async checkTextValue(selector, textToCheckWith, parameter = 'equal') {
+    await this.page.waitForSelector(selector);
     switch (parameter) {
-      case "equal":
-        await this.page.waitForSelector(selector);
-        await this.page.$eval(selector, el => el.innerText).then((text) => {
-          if (text.indexOf('\t') != -1) {
-            text = text.replace('\t', '');
-          }
-          expect(text.trim()).to.equal(textToCheckWith)
-        });
+      case 'equal':
+        await this.page.$eval(selector, el => el.innerText)
+          .then(text => expect(text.replace(/\s+/g, ' ').trim()).to.equal(textToCheckWith));
         break;
-      case "contain":
-        await this.page.waitForSelector(selector);
-        await this.page.$eval(selector, el => el.innerText).then((text) => expect(text).to.contain(textToCheckWith));
+      case 'contain':
+        await this.page.$eval(selector, el => el.innerText)
+          .then(text => expect(text).to.contain(textToCheckWith));
         break;
+      default:
+      // do nothing
     }
-  };
+  }
 
   /**
    * Check attribute value
@@ -55,7 +53,8 @@ module.exports = class CommonPage {
    */
   async checkAttributeValue(selector, attribute, textToCheckWith) {
     await this.page.waitForSelector(selector);
-    let value = await this.page.$eval(selector, (el, attribute) => el.getAttribute(attribute), attribute);
+    const value = await this.page.$eval(selector, (el, attribute) => el
+      .getAttribute(attribute), attribute);
     expect(value).to.be.equal(textToCheckWith);
   }
 
