@@ -34,9 +34,9 @@ module.exports = class CommonPage {
    * @param selector, element to check
    * @return boolean, true if visible, false if not
    */
-  async elementVisible(selector) {
+  async elementVisible(selector, timeout = 10) {
     try {
-      await this.page.waitForSelector(selector, {visible: true, timeout: 10});
+      await this.page.waitForSelector(selector, {visible: true, timeout: timeout});
       return true;
     } catch (error) {
       return false;
