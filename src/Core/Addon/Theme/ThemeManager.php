@@ -142,7 +142,7 @@ class ThemeManager implements AddonManagerInterface
     public function isThemeUsed($name)
     {
         foreach (Shop::getShops() as $shop) {
-            if ($shop['theme_name'] == $name) {
+            if ($shop['theme_name'] === $name) {
                 return true;
             }
         }
