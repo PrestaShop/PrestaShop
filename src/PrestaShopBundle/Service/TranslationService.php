@@ -187,10 +187,13 @@ class TranslationService
         }
 
         $xliffCatalog = current($translationProvider->getXliffCatalogue()->all());
-        if ('EmailsSubject' === $domain) {
-            $theme = 'subject';
-        } elseif ('EmailsBody' === $domain) {
-            $theme = 'body';
+        switch ($domain) {
+            case 'EmailsSubject':
+                $theme = 'subject';
+                break;
+            case 'EmailsBody':
+                $theme = 'body';
+                break;
         }
         $dbCatalog = current($translationProvider->getDatabaseCatalogue($theme)->all());
 
