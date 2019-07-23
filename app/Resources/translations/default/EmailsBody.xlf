@@ -2,9 +2,9 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file original="mails/themes/classic/components/footer.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="c0afa3f20604ddbe1f4b493618a597e4">
-        <source><![CDATA[<a href="{shop_url}">{shop_name}</a> powered by <a href="https://www.prestashop.com/?utm_source=marchandprestashop&utm_medium=e-mail=utm_campaign=footer_1-7">PrestaShop™</a>]]></source>
-        <target><![CDATA[<a href="{shop_url}">{shop_name}</a> powered by <a href="https://www.prestashop.com/?utm_source=marchandprestashop&utm_medium=e-mail=utm_campaign=footer_1-7">PrestaShop™</a>]]></target>
+      <trans-unit id="96dad7f0d711c3408786ba1ee05402b3">
+        <source><![CDATA[<a href="{shop_url}">{shop_name}</a> powered by <a href="{prestashop_url}">PrestaShop™</a>]]></source>
+        <target><![CDATA[<a href="{shop_url}">{shop_name}</a> powered by <a href="{prestashop_url}">PrestaShop™</a>]]></target>
         <note>Line: 6</note>
       </trans-unit>
     </body>
@@ -243,9 +243,9 @@
         <target><![CDATA[<span><strong>Warning:</strong></span> you have received a new log alert in your Back Office.]]></target>
         <note>Line: 29</note>
       </trans-unit>
-      <trans-unit id="0efe157c8a85108b103702b3e81c77eb">
-        <source><![CDATA[You can check for it in the <span><strong>Advanced Parameters > Logs</strong></span> section of your Back Office.]]></source>
-        <target><![CDATA[You can check for it in the <span><strong>Advanced Parameters > Logs</strong></span> section of your Back Office.]]></target>
+      <trans-unit id="ce04222975547d8cdddb1dadc05b5652">
+        <source><![CDATA[You can check for it in the <span><strong>Advanced Parameters > Logs</strong></span> section of your back office.]]></source>
+        <target><![CDATA[You can check for it in the <span><strong>Advanced Parameters > Logs</strong></span> section of your back office.]]></target>
         <note>Line: 30</note>
       </trans-unit>
     </body>
@@ -1132,7 +1132,7 @@
         <target><![CDATA[<span class="warning">WARNING:</span> you have received a new log alert in your back office.]]></target>
         <note>Line: 247</note>
       </trans-unit>
-      <trans-unit id="42fc1c88ac700ad8b6dec8de70eb4348">
+      <trans-unit id="3a3a0af8ea431fb76f7ed2fe0100fecb">
         <source><![CDATA[You can check for it in the <span class="label">Advanced Parameters > Logs</span> section of your back office.]]></source>
         <target><![CDATA[You can check for it in the <span class="label">Advanced Parameters > Logs</span> section of your back office.]]></target>
         <note>Line: 254</note>
@@ -1800,9 +1800,9 @@
         <target><![CDATA[There are now less than <span class="label">{last_qty}</span> items in stock.]]></target>
         <note>Line: 245</note>
       </trans-unit>
-      <trans-unit id="8e4a23148dd66ec8a6c999996b855ba5">
-        <source><![CDATA[Replenish your inventory, go to the <span class="label">"Catalog" > "Stocks"</span> section of your back office to manage your stock.]]></source>
-        <target><![CDATA[Replenish your inventory, go to the <span class="label">"Catalog" > "Stocks"</span> section of your back office to manage your stock.]]></target>
+      <trans-unit id="1605baa583478fb4eefbb377757cc87a">
+        <source><![CDATA[Replenish your inventory, go to the <span class="label">Catalog > Stocks</span> section of your back office to manage your stock.]]></source>
+        <target><![CDATA[Replenish your inventory, go to the <span class="label">Catalog > Stocks</span> section of your back office to manage your stock.]]></target>
         <note>Line: 258</note>
       </trans-unit>
     </body>
