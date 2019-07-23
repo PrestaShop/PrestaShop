@@ -372,7 +372,7 @@ class MailThemeController extends FrameworkBundleAdminController
             $this->addFlash(
                 'error',
                 $this->trans(
-                    'Cannot send translate body contents for e-mail',
+                    'Cannot translate body contents for e-mail',
                     'Admin.Notifications.Error'
                 )
             );
