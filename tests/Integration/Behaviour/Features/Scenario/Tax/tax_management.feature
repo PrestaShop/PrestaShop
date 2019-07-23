@@ -33,10 +33,14 @@ Feature: Manage tax
     Given tax "sales-tax" should be disabled
     When I toggle tax "sales-tax" status
     Then tax "sales-tax" should be enabled
+
+  Scenario: Deleting tax right after toggling its status
     When I toggle tax "sales-tax" status
     Then tax "sales-tax" should be disabled
+    When I delete tax "sales-tax"
+    Then tax "sales-tax" should be deleted
 
-  Scenario: Enabling and disabling taxes status in bulk action
+  Scenario: Disabling multiple taxes status in bulk action
     When I add new tax "beard-tax" with following properties:
       | name         | Beard tax         |
       | rate         | 0.1               |
@@ -48,14 +52,14 @@ Feature: Manage tax
     And I add new tax "pvm-tax" with following properties:
       | name         | PVM               |
       | rate         | 99.9              |
-      | is_enabled   | true              |
+      | is_enabled   | false             |
     When I disable taxes: "beard-tax, state-tax, pvm-tax"
-    Then taxes: "beard-tax, state-tax, pvm-tax" should be disabled
+    Then taxes: "beard-tax, state-tax" should be disabled
+    And tax "pvm-tax" should be disabled
+
+  Scenario: Deleting multiple taxes right after their status was enabled
     When I enable taxes: "beard-tax, state-tax, pvm-tax"
     Then taxes: "beard-tax, state-tax, pvm-tax" should be enabled
-
-  Scenario: Deleting taxes
-    When I delete tax "sales-tax"
-    Then tax "sales-tax" should be deleted
     When I delete taxes: "beard-tax, state-tax, pvm-tax" in bulk action
     Then taxes: "beard-tax, state-tax, pvm-tax" should be deleted
+
