@@ -28,11 +28,15 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-class translation_test extends Module
+if (file_exists(__DIR__ . '/vendor/autoload.php')) {
+    require_once __DIR__ . '/vendor/autoload.php';
+}
+
+class translationtest extends Module
 {
     public function __construct()
     {
-        $this->name = 'translation_test';
+        $this->name = 'translationtest';
         $this->version = '1.0';
         $this->author = 'PrestaShop';
         $this->need_instance = 0;
