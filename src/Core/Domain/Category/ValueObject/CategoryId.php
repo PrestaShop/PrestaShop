@@ -40,6 +40,8 @@ class CategoryId
 
     /**
      * @param int $categoryId
+     *
+     * @throws CategoryException
      */
     public function __construct($categoryId)
     {

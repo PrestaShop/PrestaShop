@@ -6,6 +6,7 @@ use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerConstra
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Product\DTO\FeatureCollection;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Category;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\CostPrice;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Image;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
@@ -73,7 +74,7 @@ abstract class AbstractProductCommand
     private $relatedProductIds;
 
     /**
-     * @var array
+     * @var Category[]
      */
     private $categories;
 
@@ -93,6 +94,9 @@ abstract class AbstractProductCommand
     private $metaTags;
 
     /**
+     * @todo: check if I am required in default language or I am set by product name etc... If so validate
+     * @todo: I need link rewrite validation
+     *
      * @var array
      */
     private $friendlyUrl;
@@ -336,7 +340,7 @@ abstract class AbstractProductCommand
     }
 
     /**
-     * @return array
+     * @return Category[]
      */
     public function getCategories(): ?array
     {
@@ -344,7 +348,7 @@ abstract class AbstractProductCommand
     }
 
     /**
-     * @param array $categories
+     * @param Category[] $categories
      *
      * @return self
      */
