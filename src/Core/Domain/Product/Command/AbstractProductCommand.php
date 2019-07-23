@@ -8,6 +8,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\DTO\FeatureCollection;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Category;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\CostPrice;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\FriendlyUrl;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Image;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\MetaDescription;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\MetaKeywords;
@@ -100,9 +101,9 @@ abstract class AbstractProductCommand
      * @todo: check if I am required in default language or I am set by product name etc... If so validate
      * @todo: I need link rewrite validation
      *
-     * @var array
+     * @var FriendlyUrl[]
      */
-    private $friendlyUrl;
+    private $friendlyUrls;
 
     /**
      * @var null
@@ -429,21 +430,25 @@ abstract class AbstractProductCommand
     }
 
     /**
-     * @return array
+     * @return FriendlyUrl[]
      */
-    public function getFriendlyUrl(): ?array
+    public function getFriendlyUrls(): ?array
     {
-        return $this->friendlyUrl;
+        return $this->friendlyUrls;
     }
 
     /**
-     * @param array $friendlyUrl
+     * @param string[] $friendlyUrls
      *
      * @return self
+     *
+     * @throws ProductConstraintException
      */
-    public function setFriendlyUrl(array $friendlyUrl): self
+    public function setFriendlyUrls(array $friendlyUrls): self
     {
-        $this->friendlyUrl = $friendlyUrl;
+        foreach ($friendlyUrls as $languageId => $value) {
+            $this->friendlyUrls[$languageId] = new FriendlyUrl($value);
+        }
 
         return $this;
     }

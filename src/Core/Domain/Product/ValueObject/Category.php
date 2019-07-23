@@ -8,7 +8,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 /**
  * Holds information about product category.
  */
-class Category
+final class Category
 {
     /**
      * @var bool
