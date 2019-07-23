@@ -35,13 +35,13 @@ use PrestaShop\PrestaShop\Core\Domain\Tax\Command\EditTaxCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\ToggleTaxStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Query\GetTaxForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Tax\QueryResult\EditableTax;
 use PrestaShop\PrestaShop\Core\Domain\Tax\ValueObject\TaxId;
 use RuntimeException;
 use Tax;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpectedException;
+use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class TaxFeatureContext extends AbstractDomainFeatureContext
 {
@@ -108,16 +108,27 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When /^I (enable|disable)? taxes with ids: "(.*)"$/
+     * @When /^I (enable|disable)? taxes: "([^"]*)"$/
      */
-    public function bulkToggleStatusByIds($action, $ids)
+    public function bulkToggleStatus($action, $references)
     {
+        $references = PrimitiveUtils::castStringArrayIntoArray($references);
         $expectedStatus = 'enable' === $action ? true : false;
 
+        $idsByReference = [];
+        foreach ($references as $reference) {
+            $tax = SharedStorage::getStorage()->get($reference);
+            $idsByReference[$reference] = (int) $tax->id;
+        }
+
         $this->getCommandBus()->handle(new BulkToggleTaxStatusCommand(
-            array_map('intval', explode(',', $ids)),
+            $idsByReference,
             $expectedStatus
         ));
+
+        foreach ($references as $reference => $id) {
+            SharedStorage::getStorage()->set($reference, new Tax($id));
+        }
     }
 
     /**
@@ -219,14 +230,14 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then /^taxes with ids: "(.*)" should be (enabled|disabled)?$/
+     * @Then /^taxes: "(.*)" should be (enabled|disabled)?$/
      */
-    public function assertTaxesStatusByIds($ids, $status)
+    public function assertTaxesStatus($taxReferences, $status)
     {
-        $ids = array_map('intval', explode(',', $ids));
+        $taxReferences = PrimitiveUtils::castStringArrayIntoArray($taxReferences);
 
-        foreach ($ids as $id) {
-            $this->assertStatusById($id, $status);
+        foreach ($taxReferences as $reference) {
+            $this->assertTaxStatus($reference, $status);
         }
     }
 
@@ -237,24 +248,13 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
     {
         /** @var Tax $tax */
         $tax = SharedStorage::getStorage()->get($taxReference);
-        $this->assertStatusById((int) $tax->id, $status);
-    }
-
-    /**
-     * @param int $id
-     * @param string $status 'enabled'|'disabled'
-     */
-    private function assertStatusById($id, $status)
-    {
-        /** @var EditableTax $editableTax */
-        $editableTax = $this->getQueryBus()->handle(new GetTaxForEditing($id));
         $isEnabled = $status === 'enabled' ? true : false;
-        $actualStatus = $editableTax->isActive();
+        $actualStatus = (bool) $tax->active;
 
         if ($isEnabled !== $actualStatus) {
             throw new RuntimeException(sprintf(
-                'Tax with id "%s" is %s, but it was expected to be %s',
-                $id,
+                'Tax "%s" is %s, but it was expected to be %s',
+                $taxReference,
                 $actualStatus ? 'enabled' : 'disabled',
                 $status
             ));
@@ -270,7 +270,7 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
         $command = new AddTaxCommand(
             [$this->defaultLangId => $data['name']],
             $data['rate'],
-            $data['is_enabled']
+            PrimitiveUtils::castStringBooleanIntoBoolean($data['is_enabled'])
         );
 
         /** @var TaxId $taxId */
