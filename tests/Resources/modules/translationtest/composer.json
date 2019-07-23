@@ -8,7 +8,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "TranslationsTest\\": "src/"
+            "PrestaShop\\Module\\TranslationTest\\": "src/"
         }
     },
     "license": "MIT",
