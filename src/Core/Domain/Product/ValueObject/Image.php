@@ -6,7 +6,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintExcepti
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
- * Holds products image and all related information with it.
+ * Holds products image.
  */
 final class Image
 {
@@ -18,101 +18,24 @@ final class Image
     ];
 
     /**
-     * @var ImageId
-     */
-    private $imageId;
-
-    /**
-     * @var int
-     */
-    private $position;
-
-    /**
-     * @var bool
-     */
-    private $isCover;
-
-    /**
-     * @var array
-     */
-    private $localizedCaptions;
-
-    /**
      * @var UploadedFile
      */
     private $file;
 
     /**
      * @param UploadedFile $file
-     * @param int $position
-     * @param bool $isCover
-     * @param array $localizedCaptions
      *
      * @throws ProductConstraintException
      */
     public function __construct(
-        UploadedFile $file,
-        int $position,
-        bool $isCover,
-        array $localizedCaptions
+        UploadedFile $file
     ) {
         $this->assertIsValidFile($file);
 
-        $this->position = $position;
-        $this->isCover = $isCover;
-        $this->localizedCaptions = $localizedCaptions;
         $this->file = $file;
     }
 
-    /**
-     * todo: not a value object - think of different appraoch
-     * @param int $imageId
-     *
-     * @return self
-     */
-    public function setImageId(int $imageId): self
-    {
-        $this->imageId = new ImageId($imageId);
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getImageId()
-    {
-        return $this->imageId;
-    }
-
-    /**
-     * @return int
-     */
-    public function getPosition(): int
-    {
-        return $this->position;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isCover(): bool
-    {
-        return $this->isCover;
-    }
-
-    /**
-     * @return array
-     */
-    public function getLocalizedCaptions(): array
-    {
-        return $this->localizedCaptions;
-    }
-
-    /**
-     * @return UploadedFile
-     */
-    public function getFile(): UploadedFile
+    public function getValue(): UploadedFile
     {
         return $this->file;
     }

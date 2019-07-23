@@ -7,6 +7,7 @@ use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Product\DTO\FeatureCollection;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Category;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ConfigurableImageInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\CostPrice;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\FriendlyUrl;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Image;
@@ -31,7 +32,7 @@ abstract class AbstractProductCommand
     private $localisedProductNames;
     
     /**
-     * @var Image[]
+     * @var ConfigurableImageInterface[]
      */
     private $images;
 
@@ -160,7 +161,7 @@ abstract class AbstractProductCommand
     }
 
     /**
-     * @return Image[]
+     * @return ConfigurableImageInterface[]
      */
     public function getImages(): ?array
     {
@@ -168,7 +169,7 @@ abstract class AbstractProductCommand
     }
 
     /**
-     * @param array Image[]
+     * @param array ConfigurableImageInterface[]
      *
      * @return self
      */
