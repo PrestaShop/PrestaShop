@@ -28,7 +28,6 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\AddTaxCommand;
-use PrestaShop\PrestaShop\Core\Domain\Tax\Command\BulkDeleteTaxCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\BulkToggleTaxStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\DeleteTaxCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\EditTaxCommand;
@@ -86,7 +85,7 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
         }
 
         if (isset($data['is_enabled'])) {
-            $command->setEnabled($data['is_enabled']);
+            $command->setEnabled(PrimitiveUtils::castStringBooleanIntoBoolean($data['is_enabled']));
         }
         $this->getCommandBus()->handle($command);
 
@@ -110,13 +109,13 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
     /**
      * @When /^I (enable|disable)? taxes: "([^"]*)"$/
      */
-    public function bulkToggleStatus($action, $references)
+    public function bulkToggleStatus($action, $taxReferences)
     {
-        $references = PrimitiveUtils::castStringArrayIntoArray($references);
+        $taxReferences = PrimitiveUtils::castStringArrayIntoArray($taxReferences);
         $expectedStatus = 'enable' === $action;
 
         $idsByReference = [];
-        foreach ($references as $reference) {
+        foreach ($taxReferences as $reference) {
             $tax = SharedStorage::getStorage()->get($reference);
             $idsByReference[$reference] = (int) $tax->id;
         }
@@ -132,21 +131,53 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I delete tax with id :id
+     * @When I delete tax :taxReference
      */
-    public function deleteTaxById($id)
+    public function deleteTax($taxReference)
     {
-        $this->getCommandBus()->handle(new DeleteTaxCommand((int) $id));
+        $tax = SharedStorage::getStorage()->get($taxReference);
+        $taxId = (int) $tax->id;
+
+        $this->getCommandBus()->handle(new DeleteTaxCommand($taxId));
     }
 
     /**
-     * @When I delete taxes with ids: :ids in bulk action
+     * @When I delete taxes: :taxReferences in bulk action
      */
-    public function bulkDeleteTaxesByIds($ids)
+    public function bulkDeleteTax($taxReferences)
     {
-        $this->getCommandBus()->handle(
-            new BulkDeleteTaxCommand(array_map('intval', explode(',', $ids)))
-        );
+        foreach (PrimitiveUtils::castStringArrayIntoArray($taxReferences) as $taxReference) {
+            $this->deleteTax($taxReference);
+        }
+    }
+
+    /**
+     * @Then taxes: :taxReferences should be deleted
+     */
+    public function assertTaxesAreDeleted($taxReferences)
+    {
+        foreach (PrimitiveUtils::castStringArrayIntoArray($taxReferences) as $taxReference) {
+            $this->assertTaxisDeleted($taxReference);
+        }
+    }
+
+    /**
+     * @Then tax :taxReference should be deleted
+     */
+    public function assertTaxisDeleted($taxReference)
+    {
+        $tax = SharedStorage::getStorage()->get($taxReference);
+        $taxId = (int) $tax->id;
+        try {
+            $this->getQueryBus()->handle(new GetTaxForEditing($taxId));
+
+            throw new NoExceptionAlthoughExpectedException(sprintf(
+                'Tax %s expected to be deleted, but it was found',
+                    $taxReference
+            ));
+        } catch (TaxNotFoundException $e) {
+            SharedStorage::getStorage()->clear($taxReference);
+        }
     }
 
     /**
@@ -182,30 +213,6 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
                 $tax->rate,
                 $rate
             ));
-        }
-    }
-
-    /**
-     * @Then taxes with ids: :ids should not be found
-     */
-    public function assertTaxesByIdsShouldNotBeFound($ids)
-    {
-        foreach (explode(',', $ids) as $id) {
-            $this->assertTaxByIdShouldNotBeFound($id);
-        }
-    }
-
-    /**
-     * @Then tax with id :id should not be found
-     */
-    public function assertTaxByIdShouldNotBeFound($id)
-    {
-        try {
-            $query = new GetTaxForEditing((int) $id);
-            $this->getQueryBus()->handle($query);
-
-            throw new NoExceptionAlthoughExpectedException();
-        } catch (TaxNotFoundException $e) {
         }
     }
 

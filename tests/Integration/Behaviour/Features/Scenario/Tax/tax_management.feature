@@ -22,21 +22,21 @@ Feature: Manage tax
     And tax "sales-tax" rate should be 0.150
     And tax "sales-tax" should be disabled
 
-  Scenario: It is possible to modify only the name of a tax, nothing else
+  Scenario: It is possible to modify only the name of a tax, without modifying anything else
     When I edit tax "sales-tax" with following properties:
       | name        | tax for fun       |
     Then tax "sales-tax" name in default language should be "tax for fun"
     And tax "sales-tax" rate should be 0.150
     And tax "sales-tax" should be disabled
 
-  Scenario: Toggling tax status back and forth
+  Scenario: Toggling tax status
     Given tax "sales-tax" should be disabled
     When I toggle tax "sales-tax" status
     Then tax "sales-tax" should be enabled
     When I toggle tax "sales-tax" status
     Then tax "sales-tax" should be disabled
 
-  Scenario: Disabling taxes status in bulk action
+  Scenario: Enabling and disabling taxes status in bulk action
     When I add new tax "beard-tax" with following properties:
       | name         | Beard tax         |
       | rate         | 0.1               |
@@ -51,17 +51,11 @@ Feature: Manage tax
       | is_enabled   | true              |
     When I disable taxes: "beard-tax, state-tax, pvm-tax"
     Then taxes: "beard-tax, state-tax, pvm-tax" should be disabled
-
-  Scenario: Enabling taxes status in bulk action
     When I enable taxes: "beard-tax, state-tax, pvm-tax"
     Then taxes: "beard-tax, state-tax, pvm-tax" should be enabled
 
-  Scenario: Deleting tax
-    Given tax with id "2" exists
-    When I delete tax with id "2"
-    Then tax with id "2" should not be found
-
-  Scenario: Deleting taxes in bulk action
-    Given taxes with ids: "3,4,5" exists
-    When I delete taxes with ids: "3,4,5" in bulk action
-    Then taxes with ids: "3,4,5" should not be found
+  Scenario: Deleting taxes
+    When I delete tax "sales-tax"
+    Then tax "sales-tax" should be deleted
+    When I delete taxes: "beard-tax, state-tax, pvm-tax" in bulk action
+    Then taxes: "beard-tax, state-tax, pvm-tax" should be deleted
