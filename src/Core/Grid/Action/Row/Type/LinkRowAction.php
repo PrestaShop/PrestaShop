@@ -54,6 +54,8 @@ final class LinkRowAction extends AbstractRowAction
             ->setDefaults([
                 'confirm_message' => '',
                 'accessibility_checker' => null,
+                //pass extra_route_params in case one param is not enough.
+                //route_param_name and route_param_field becomes redundant, but it cannot be removed due to BC break
                 'extra_route_params' => [],
             ])
             ->setAllowedTypes('route', 'string')
