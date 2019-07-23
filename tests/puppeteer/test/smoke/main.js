@@ -1,12 +1,16 @@
 // importing pages
 const BO_LOGIN_PAGE = require('../../pages/BO/BO_login');
+const BO_DASHBOARD_PAGE = require('../../pages/BO/BO_dashboard');
 
 let page;
 let BO_LOGIN;
+let BO_DASHBOARD;
+
 // creating pages objects in a function
 const init = async () => {
   page = await global.browser.newPage();
   BO_LOGIN = await (new BO_LOGIN_PAGE(page));
+  BO_DASHBOARD = await (new BO_DASHBOARD_PAGE(page));
 };
 
 
@@ -19,7 +23,7 @@ global.scenario('should go to the BO', async () => {
     await BO_LOGIN.login(global.EMAIL, global.PASSWD);
   });
   test('should be on the dashboard', async () => {
-    const pageTitle = await BO_LOGIN.getPageTitle();
-    await global.expect(pageTitle).to.equal(BO_LOGIN.pageTitle);
+    const pageTitle = await BO_DASHBOARD.getPageTitle();
+    await global.expect(pageTitle).to.equal(BO_DASHBOARD.pageTitle);
   });
 }, init, true);
