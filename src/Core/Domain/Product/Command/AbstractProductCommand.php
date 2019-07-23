@@ -9,6 +9,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintExcepti
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Category;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\CostPrice;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Image;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\MetaDescription;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\MetaKeywords;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\MetaTitle;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductName;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RetailPrice;
@@ -79,19 +82,19 @@ abstract class AbstractProductCommand
     private $categories;
 
     /**
-     * @var array
+     * @var MetaTitle[]
      */
     private $metaTitle;
 
     /**
-     * @var array
+     * @var MetaDescription[]
      */
     private $metaDescription;
 
     /**
-     * @var array
+     * @var MetaKeywords[]
      */
-    private $metaTags;
+    private $metaKeywords;
 
     /**
      * @todo: check if I am required in default language or I am set by product name etc... If so validate
@@ -360,7 +363,7 @@ abstract class AbstractProductCommand
     }
 
     /**
-     * @return array
+     * @return MetaTitle[]
      */
     public function getMetaTitle(): ?array
     {
@@ -368,19 +371,21 @@ abstract class AbstractProductCommand
     }
 
     /**
-     * @param array $metaTitle
+     * @param string[] $metaTitle
      *
      * @return self
      */
     public function setMetaTitle(array $metaTitle): self
     {
-        $this->metaTitle = $metaTitle;
+        foreach ($metaTitle as $languageId => $value) {
+            $this->metaTitle[$languageId] = new MetaTitle($value);
+        }
 
         return $this;
     }
 
     /**
-     * @return array
+     * @return MetaDescription[]
      */
     public function getMetaDescription(): ?array
     {
@@ -394,27 +399,32 @@ abstract class AbstractProductCommand
      */
     public function setMetaDescription(array $metaDescription): self
     {
-        $this->metaDescription = $metaDescription;
+        foreach ($metaDescription as $languageId => $value) {
+            $this->metaDescription[$languageId] = new MetaDescription($value);
+        }
 
         return $this;
     }
 
     /**
-     * @return array
+     * @return MetaKeywords[]
      */
-    public function getMetaTags(): ?array
+    public function getMetaKeywords(): ?array
     {
-        return $this->metaTags;
+        return $this->metaKeywords;
     }
 
     /**
-     * @param array $metaTags
+     * @param string[] $metaKeywords
      *
      * @return self
      */
-    public function setMetaTags(array $metaTags): self
+    public function setMetaKeywords(array $metaKeywords): self
     {
-        $this->metaTags = $metaTags;
+        foreach ($metaKeywords as $languageId => $value) {
+            $this->metaKeywords[$languageId] = new MetaKeywords($value);
+        }
+
         return $this;
     }
 

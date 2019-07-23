@@ -5,6 +5,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 
+/**
+ * Holds information about product category.
+ */
 class Category
 {
     /**

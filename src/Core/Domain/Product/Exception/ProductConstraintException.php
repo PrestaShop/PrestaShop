@@ -12,4 +12,10 @@ class ProductConstraintException extends ProductException
     public const INVALID_COST_PRICE = 6;
     public const INVALID_CUSTOMIZABLE_FEATURE_VALUE = 7;
     public const CUSTOMIZABLE_FEATURE_VALUE_TOO_LONG = 8;
+    public const INVALID_META_TITLE = 9;
+    public const META_TITLE_NAME_TOO_LONG = 10;
+    public const INVALID_META_KEYWORDS = 11;
+    public const META_KEYWORDS_NAME_TOO_LONG = 12;
+    public const INVALID_META_DESCRIPTION = 13;
+    public const META_DESCRIPTION_NAME_TOO_LONG = 14;
 }
