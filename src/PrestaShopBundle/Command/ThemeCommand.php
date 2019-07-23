@@ -31,6 +31,9 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManager;
+use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository;
+use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeExporter;
 use Context;
 use Employee;
 use Shop;
@@ -49,7 +52,7 @@ class ThemeCommand extends ContainerAwareCommand
     );
 
     /**
-     * @var \Symfony\Component\Console\Style\SymfonyStyle
+     * @var SymfonyStyle
      */
     protected $io;
 
@@ -129,13 +132,18 @@ class ThemeCommand extends ContainerAwareCommand
 
     protected function executeExportThemeAction($themeName)
     {
+        /**
+         * @var ThemeRepository
+         */
         $theme = $this->getContainer()
             ->get('prestashop.core.addon.theme.repository')
             ->getInstanceByName(
                 $themeName
             )
         ;
-
+        /**
+         * @var ThemeExporter
+         */
         $path = $this->getContainer()
             ->get('prestashop.core.addon.theme.exporter')
             ->export($theme)
@@ -152,7 +160,7 @@ class ThemeCommand extends ContainerAwareCommand
     protected function executeGenericThemeAction($action, $argument)
     {
         /**
-         * @var \PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManager
+         * @var ThemeManager
          */
         $themeActionSuccess = $this->getContainer()
             ->get('prestashop.core.addon.theme.theme_manager')
