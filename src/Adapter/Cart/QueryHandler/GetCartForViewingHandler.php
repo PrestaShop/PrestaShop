@@ -176,7 +176,7 @@ final class GetCartForViewingHandler implements GetCartForViewingHandlerInterfac
             'total_shipping_formatted' => Tools::displayPrice($total_shipping, $currency),
             'total' => $total_price,
             'total_formatted' => Tools::displayPrice($total_price, $currency),
-            'is_tax_included' => $tax_calculation_method === PS_TAX_INC,
+            'is_tax_included' => $tax_calculation_method == PS_TAX_INC,
         ];
 
         return new CartView($cart->id, $cart->id_currency, $customerInformation, $orderInformation, $cartSummary);
