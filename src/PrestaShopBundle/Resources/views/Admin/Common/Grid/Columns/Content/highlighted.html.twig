@@ -25,7 +25,7 @@
 
 <div class="text-right">
   {% if record[column.options.is_highlighted_field]%}
-    <span class="badge badge-success rounded">
+    <span class="badge badge-{{ column.options.highlight_type }} rounded">
       {{ record[column.options.field] }}
     </span>
   {% else %}

@@ -52,8 +52,12 @@ final class HighlightedColumn extends AbstractColumn
                 'field',
                 'is_highlighted_field',
             ])
+            ->setDefaults([
+                'highlight_type' => 'success',
+            ])
             ->setAllowedTypes('field', 'string')
             ->setAllowedTypes('is_highlighted_field', 'string')
+            ->setAllowedValues('highlight_type', ['success', 'danger', 'warning', 'info'])
         ;
     }
 }
