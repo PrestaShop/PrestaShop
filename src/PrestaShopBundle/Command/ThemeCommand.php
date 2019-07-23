@@ -41,7 +41,7 @@ use Validate;
  */
 class ThemeCommand extends ContainerAwareCommand
 {
-    private $allowedActions = array(
+    const ALLOWED_ACTIONS = array(
         'install',
         'enable',
         'export',
@@ -66,7 +66,7 @@ class ThemeCommand extends ContainerAwareCommand
         $this
             ->setName('prestashop:theme')
             ->setDescription('Manage your theme via command line')
-            ->addArgument('action', InputArgument::REQUIRED, sprintf('Action to execute (Allowed actions: %s).', implode(' / ', $this->allowedActions)))
+            ->addArgument('action', InputArgument::REQUIRED, sprintf('Action to execute (Allowed actions: %s).', implode(' / ', self::ALLOWED_ACTIONS)))
             ->addArgument('theme', InputArgument::REQUIRED, 'Theme or path to zip on which the action will be executed')
             ->addArgument('shop', InputArgument::OPTIONAL, 'Shop id on which the action will be executed');
     }
@@ -102,8 +102,8 @@ class ThemeCommand extends ContainerAwareCommand
         $theme = $input->getArgument('theme');
         $this->init($input, $output);
 
-        if (!in_array($action, $this->allowedActions)) {
-            $this->io->error(sprintf('Unknown theme action. It must be one of these values: "%s"', implode(' / ', $this->allowedActions)));
+        if (!in_array($action, self::ALLOWED_ACTIONS)) {
+            $this->io->error(sprintf('Unknown theme action. It must be one of these values: "%s"', implode(' / ', self::ALLOWED_ACTIONS)));
 
             return self::RETURN_CODE_FAILED;
         }
