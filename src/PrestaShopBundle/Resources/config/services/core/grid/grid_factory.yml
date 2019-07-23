@@ -222,7 +222,7 @@ services:
             - '@prestashop.core.grid.data.factory.order_decorator'
             - '@prestashop.core.grid.filter.form_factory'
             - '@prestashop.core.hook.dispatcher'
-            -
+
     prestashop.core.grid.grid_factory.catalog_price_rule:
         class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
         arguments:
@@ -236,5 +236,13 @@ services:
       arguments:
         - '@prestashop.core.grid.definition.factory.order_message'
         - '@prestashop.core.grid.data.factory.order_message'
+        - '@prestashop.core.grid.filter.form_factory'
+        - '@prestashop.core.hook.dispatcher'
+
+    prestashop.core.grid.factory.file:
+      class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+      arguments:
+        - '@prestashop.core.grid.definition.factory.file'
+        - '@prestashop.core.grid.data_factory.file'
         - '@prestashop.core.grid.filter.form_factory'
         - '@prestashop.core.hook.dispatcher'
