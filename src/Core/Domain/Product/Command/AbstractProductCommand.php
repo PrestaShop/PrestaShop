@@ -2,9 +2,16 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\CostPrice;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Image;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductName;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RetailPrice;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\UnitPrice;
 
+/**
+ * Holds the abstraction of common product data which does not depend from product type.
+ */
 abstract class AbstractProductCommand
 {
     /**
@@ -18,9 +25,19 @@ abstract class AbstractProductCommand
     private $images;
 
     /**
-     * @var null;
+     * @var CostPrice
      */
-    private $pricing;
+    private $costPrice;
+
+    /**
+     * @var RetailPrice
+     */
+    private $retailPrice;
+
+    /**
+     * @var UnitPrice
+     */
+    private $unitPrice;
 
     /**
      * @var array|string[]
@@ -103,7 +120,14 @@ abstract class AbstractProductCommand
     private $attachments;
 
     /**
+     * @var int[]
+     */
+    private $shopAssociation;
+
+    /**
      * @param string[] $localisedProductNames
+     *
+     * @throws ProductConstraintException
      */
     public function __construct(array $localisedProductNames)
     {
@@ -119,7 +143,7 @@ abstract class AbstractProductCommand
     }
 
     /**
-     * @return array
+     * @return Image[]
      */
     public function getImages(): ?array
     {
@@ -127,7 +151,7 @@ abstract class AbstractProductCommand
     }
 
     /**
-     * @param array $images
+     * @param array Image[]
      *
      * @return self
      */
@@ -139,21 +163,61 @@ abstract class AbstractProductCommand
     }
 
     /**
-     * @return null
+     * @return CostPrice
      */
-    public function getPricing()
+    public function getCostPrice(): CostPrice
     {
-        return $this->pricing;
+        return $this->costPrice;
     }
 
     /**
-     * @param null $pricing
+     * @param CostPrice $costPrice
      *
      * @return self
      */
-    public function setPricing($pricing): self
+    public function setCostPrice(CostPrice $costPrice): self
     {
-        $this->pricing = $pricing;
+        $this->costPrice = $costPrice;
+
+        return $this;
+    }
+
+    /**
+     * @return RetailPrice
+     */
+    public function getRetailPrice(): RetailPrice
+    {
+        return $this->retailPrice;
+    }
+
+    /**
+     * @param RetailPrice $retailPrice
+     *
+     * @return self
+     */
+    public function setRetailPrice(RetailPrice $retailPrice): self
+    {
+        $this->retailPrice = $retailPrice;
+
+        return $this;
+    }
+
+    /**
+     * @return UnitPrice
+     */
+    public function getUnitPrice(): UnitPrice
+    {
+        return $this->unitPrice;
+    }
+
+    /**
+     * @param UnitPrice $unitPrice
+     *
+     * @return self
+     */
+    public function setUnitPrice(UnitPrice $unitPrice): self
+    {
+        $this->unitPrice = $unitPrice;
 
         return $this;
     }
@@ -475,13 +539,38 @@ abstract class AbstractProductCommand
         return $this;
     }
 
-
+    /**
+     * @param array $productNames
+     * @return AbstractProductCommand
+     *
+     * @throws ProductConstraintException
+     */
     private function setLocalisedProductNames(array $productNames): self
     {
         foreach ($productNames as $productName) {
             $this->localisedProductNames[] = new ProductName($productName);
         }
         
+        return $this;
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getShopAssociation(): array
+    {
+        return $this->shopAssociation;
+    }
+
+    /**
+     * @param int[] $shopAssociation
+     *
+     * @return self
+     */
+    public function setShopAssociation(array $shopAssociation): self
+    {
+        $this->shopAssociation = $shopAssociation;
+
         return $this;
     }
 }

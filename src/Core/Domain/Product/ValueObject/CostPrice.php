@@ -8,9 +8,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintExcepti
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Price;
 
 /**
- * Price per unit - e.g 10 per kilo.
+ * The price that the product actually costs - used for margin calculation etc...
  */
-final class UnitPrice
+final class CostPrice
 {
     /**
      * @var Number
@@ -18,44 +18,30 @@ final class UnitPrice
     private $price;
 
     /**
-     * @var string
-     */
-    private $unit;
-
-    /**
      * @param float $price
-     * @param string $unit
      *
      * @throws ProductConstraintException
      */
-    public function __construct(float $price, string $unit)
+    public function __construct(float $price)
     {
         try {
-            $this->price = (new Price($price))->getValue();
+            $numberPrice = (new Price($price))->getValue();
         } catch (DomainConstraintException $e) {
             throw new ProductConstraintException(
-                'Invalid products unit price',
-                ProductConstraintException::INVALID_UNIT_PRICE,
+                'invalid cost price',
+                ProductConstraintException::INVALID_COST_PRICE,
                 $e
             );
         }
 
-        $this->unit = $unit;
+        $this->price = $numberPrice;
     }
 
     /**
      * @return Number
      */
-    public function getPrice(): Number
+    public function getValue(): Number
     {
         return $this->price;
-    }
-
-    /**
-     * @return string
-     */
-    public function getUnit(): string
-    {
-        return $this->unit;
     }
 }

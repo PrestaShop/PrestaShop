@@ -4,20 +4,21 @@ namespace Tests\Unit\Core\Domain\Product\ValueObject;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\UnitPrice;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\CostPrice;
 
-class UnitPriceTest extends TestCase
+class CostPriceTest extends TestCase
 {
     public function testItDoesNotAllowNegativeValues(): void
     {
         $this->expectException(ProductConstraintException::class);
-        $this->expectExceptionCode(ProductConstraintException::INVALID_UNIT_PRICE);
+        $this->expectExceptionCode(ProductConstraintException::INVALID_COST_PRICE);
 
         $negativeValue = -0.1;
 
-        new UnitPrice(
+        new CostPrice(
             $negativeValue,
-            'per kilo'
+            1,
+            false
         );
     }
 }
