@@ -5,6 +5,6 @@ services:
   prestashop.adapter.twig.locale_extension:
     class: PrestaShop\PrestaShop\Adapter\Twig\LocaleExtension
     arguments:
-      - '@=service("prestashop.adapter.legacy.context").getContext().language'
+      - '@=service("prestashop.adapter.legacy.context").getContext().language.date_format_lite'
     tags:
       - { name: twig.extension }

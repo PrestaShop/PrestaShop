@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Adapter\Twig;
 
 use DateTime;
-use Language;
 use Twig\Extension\AbstractExtension;
 use Twig_SimpleFunction;
 
@@ -37,16 +36,16 @@ use Twig_SimpleFunction;
 final class LocaleExtension extends AbstractExtension
 {
     /**
-     * @var Language
+     * @var string
      */
-    private $contextLanguage;
+    private $contextDateFormatLite;
 
     /**
-     * @param Language $contextLanguage
+     * @param string $contextDateFormatLite
      */
-    public function __construct(Language $contextLanguage)
+    public function __construct($contextDateFormatLite)
     {
-        $this->contextLanguage = $contextLanguage;
+        $this->contextDateFormatLite = $contextDateFormatLite;
     }
 
     /**
@@ -58,7 +57,7 @@ final class LocaleExtension extends AbstractExtension
             new Twig_SimpleFunction(
                 'format_date',
                 function ($date) {
-                    return (new DateTime($date))->format($this->contextLanguage->date_format_lite);
+                    return (new DateTime($date))->format($this->contextDateFormatLite);
                 }
             ),
         ];
