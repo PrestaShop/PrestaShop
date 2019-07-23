@@ -48,6 +48,7 @@ class TypedRegex extends Constraint
     const TYPE_LANGUAGE_ISO_CODE = 'language_iso_code';
     const TYPE_LANGUAGE_CODE = 'language_code';
     const TYPE_CURRENCY_ISO_CODE = 'currency_iso_code';
+    const TYPE_FILE_NAME = 'file_name';
 
     /**
      * @var string

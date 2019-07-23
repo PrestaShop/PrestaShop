@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Order\CreditSlip;
 
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -53,6 +54,19 @@ final class CreditSlipOptionsType extends CommonAbstractType
     {
         $builder->add('slip_prefix', TranslatableType::class, [
             'required' => false,
+            'error_bubbling' => true,
+            'options' => [
+                'constraints' => [
+                    new TypedRegex([
+                        'type' => 'file_name',
+                        'message' => $this->translator->trans(
+                            '%s is invalid.',
+                            [],
+                            'Admin.Notifications.Error'
+                        ),
+                    ]),
+                ],
+            ],
         ]);
     }
 }

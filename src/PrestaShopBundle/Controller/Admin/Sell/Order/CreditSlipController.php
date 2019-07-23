@@ -50,7 +50,7 @@ use Symfony\Component\HttpFoundation\Response;
 class CreditSlipController extends FrameworkBundleAdminController
 {
     /**
-     * Show manufacturers listing page.
+     * Show credit slips listing page.
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
@@ -65,7 +65,10 @@ class CreditSlipController extends FrameworkBundleAdminController
     ) {
         $creditSlipGridFactory = $this->get('prestashop.core.grid.factory.credit_slip');
         $creditSlipGrid = $creditSlipGridFactory->getGrid($creditSlipFilters);
+
         $creditSlipOptionsForm = $this->getSlipOptionsFormHandler()->getForm();
+        $creditSlipOptionsForm->handleRequest($request);
+
         $pdfByDateForm = $this->createForm(GeneratePdfByDateType::class, [], [
             'method' => Request::METHOD_GET,
         ]);
@@ -168,7 +171,7 @@ class CreditSlipController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
-     * @return RedirectResponse
+     * @return Response
      */
     public function processOptionsAction(Request $request)
     {
@@ -177,7 +180,7 @@ class CreditSlipController extends FrameworkBundleAdminController
         $creditSlipOptionsForm = $creditSlipOptionsFormHandler->getForm();
         $creditSlipOptionsForm->handleRequest($request);
 
-        if ($creditSlipOptionsForm->isSubmitted()) {
+        if ($creditSlipOptionsForm->isSubmitted() && $creditSlipOptionsForm->isValid()) {
             $errors = $creditSlipOptionsFormHandler->save($creditSlipOptionsForm->getData());
 
             if (empty($errors)) {
@@ -189,7 +192,9 @@ class CreditSlipController extends FrameworkBundleAdminController
             $this->flashErrors($errors);
         }
 
-        return $this->redirectToRoute('admin_credit_slips_index');
+        return $this->forward('PrestaShopBundle:Admin/Sell/Order/CreditSlip:index', [
+            '_legacy_controller' => $request->get('_legacy_controller'),
+        ]);
     }
 
     /**
