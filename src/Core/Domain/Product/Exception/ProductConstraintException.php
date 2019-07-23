@@ -10,4 +10,6 @@ class ProductConstraintException extends ProductException
     public const INVALID_IMAGE_ID = 4;
     public const INVALID_RETAIL_PRICE = 5;
     public const INVALID_COST_PRICE = 6;
+    public const INVALID_CUSTOMIZABLE_FEATURE_VALUE = 7;
+    public const CUSTOMIZABLE_FEATURE_VALUE_TOO_LONG = 8;
 }

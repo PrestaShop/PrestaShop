@@ -2,6 +2,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\DTO\FeatureCollection;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\CostPrice;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Image;
@@ -15,6 +16,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\UnitPrice;
 abstract class AbstractProductCommand
 {
     /**
+     * @todo: I need defaultLanguage validation in handler
      * @var ProductName[]
      */
     private $localisedProductNames;
@@ -40,17 +42,20 @@ abstract class AbstractProductCommand
     private $unitPrice;
 
     /**
+     * @todo: I need cleanHtml validation in handler
      * @var array|string[]
      */
     private $localisedSummary;
 
     /**
+     * @todo: I need cleanHtml validation in handler
+     *
      * @var array|string[]
      */
     private $localisedDescription;
 
     /**
-     * @var array
+     * @var FeatureCollection
      */
     private $features;
 
@@ -263,21 +268,22 @@ abstract class AbstractProductCommand
     }
 
     /**
-     * @return array
+     * @return FeatureCollection
      */
-    public function getFeatures(): array
+    public function getFeatures(): FeatureCollection
     {
         return $this->features;
     }
 
     /**
-     * @param array $features
+     * @param FeatureCollection $features
      *
      * @return self
      */
-    public function setFeatures(array $features): void
+    public function setFeatures(FeatureCollection $features): void
     {
         $this->features = $features;
+
         return $this;
     }
 
