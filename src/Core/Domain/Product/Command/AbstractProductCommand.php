@@ -2,6 +2,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Image;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductName;
 
 abstract class AbstractProductCommand
@@ -12,7 +13,7 @@ abstract class AbstractProductCommand
     private $localisedProductNames;
     
     /**
-     * @var array
+     * @var Image[]
      */
     private $images;
 

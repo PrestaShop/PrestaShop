@@ -5,12 +5,16 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
+/**
+ * Holds products image and all related information with it.
+ */
 final class Image
 {
     public const ALLOWED_MIME_TYPES = [
         'image/gif',
         'image/png',
-        'image/jpeg', //todo: webp?
+        'image/jpeg',
+        'image/jpg',
     ];
 
     /**
@@ -124,7 +128,7 @@ final class Image
                 sprintf(
                     'Invalid image mime type "%s" detected. Available values are "%s"',
                     $file->getMimeType(),
-                    self::ALLOWED_MIME_TYPES
+                    implode(',', self::ALLOWED_MIME_TYPES)
                 )
             );
         }
