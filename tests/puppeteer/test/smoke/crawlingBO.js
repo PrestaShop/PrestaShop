@@ -24,7 +24,11 @@ const init = async () => {
   BO_CUSTOMERS = await (new BO_CUSTOMERS_PAGE(page));
 };
 
-// connect to the BO
+/*
+  Connect to the BO
+  Crawl a few key pages
+  Logout from the BO
+ */
 global.scenario('Crawl into BO et check a few key pages', async () => {
   test('should login into BO', async () => {
     await BO_LOGIN.goTo(global.URL_BO);
@@ -55,7 +59,7 @@ global.scenario('Crawl into BO et check a few key pages', async () => {
   test('should logout from the BO', async () => {
     // await BO_LOGIN.goTo(global.URL_BO);
     await BO_COMMON.logoutBO();
-    const pageTitle = await BO_DASHBOARD.getPageTitle();
-    await global.expect(pageTitle).to.contains(BO_DASHBOARD.pageTitle);
+    const pageTitle = await BO_LOGIN.getPageTitle();
+    await global.expect(pageTitle).to.contains(BO_LOGIN.pageTitle);
   });
 }, init, true);
