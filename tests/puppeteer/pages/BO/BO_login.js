@@ -4,7 +4,7 @@ module.exports = class BO_LOGIN extends CommonPage {
   constructor(page) {
     super(page);
 
-    this.pageTitle = 'Dashboard • PrestaShop';
+    this.pageTitle = 'PrestaShop';
 
     this.emailInput = '#email';
     this.passwordInput = '#passwd';

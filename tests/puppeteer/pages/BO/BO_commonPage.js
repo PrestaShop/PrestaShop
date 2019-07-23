@@ -4,8 +4,6 @@ module.exports = class BO_COMMONPAGE extends CommonPage {
   constructor(page) {
     super(page);
 
-    this.pageTitle = 'Dashboard •';
-
     // top navbar
     this.headerLogoImage = '#header_logo';
     this.userProfileIcon = '#employee_infos';
@@ -14,13 +12,13 @@ module.exports = class BO_COMMONPAGE extends CommonPage {
     // left navbar
     // SELL
     this.ordersParentLink = 'li#subtab-AdminParentOrders';
-    this.ordersLink = '#subtab-AdminOrders>a';
+    this.ordersLink = '#subtab-AdminOrders';
 
     this.productsParentLink = 'li#subtab-AdminCatalog';
-    this.productsLink = '#subtab-AdminProducts>a';
+    this.productsLink = '#subtab-AdminProducts';
 
     this.customersParentLink = 'li#subtab-AdminParentCustomer';
-    this.customersLink = '#subtab-AdminCustomers>a';
+    this.customersLink = '#subtab-AdminCustomers';
 
     // welcome module
     this.onboardingCloseButton = 'button.onboarding-button-shut-down';
@@ -32,7 +30,6 @@ module.exports = class BO_COMMONPAGE extends CommonPage {
    */
   /**
    * Open a subMenu if closed and click on a sublink
-   * @param blockSelector
    * @param parentSelector
    * @param linkSelector
    * @returns {Promise<void>}
@@ -46,7 +43,7 @@ module.exports = class BO_COMMONPAGE extends CommonPage {
       await this.page.waitForSelector(`${parentSelector}.open`, {visible: true});
       await this.page.click(linkSelector);
     }
-    this.page.waitFor(500);
+    await this.page.waitForSelector(`${linkSelector}.-active`, {visible: true});
   }
 
   /**
