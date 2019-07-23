@@ -6,3 +6,7 @@ The related tests can be executed this using Behat:
 ``
 ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml --name "Legacy Translation System"
 ``
+
+You can access the module controller in the following route:
+
+/admin-dev/index.php/modules/translations
