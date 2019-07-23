@@ -113,7 +113,7 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
     public function bulkToggleStatus($action, $references)
     {
         $references = PrimitiveUtils::castStringArrayIntoArray($references);
-        $expectedStatus = 'enable' === $action ? true : false;
+        $expectedStatus = 'enable' === $action;
 
         $idsByReference = [];
         foreach ($references as $reference) {
@@ -126,7 +126,7 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
             $expectedStatus
         ));
 
-        foreach ($references as $reference => $id) {
+        foreach ($idsByReference as $reference => $id) {
             SharedStorage::getStorage()->set($reference, new Tax($id));
         }
     }
@@ -248,7 +248,7 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
     {
         /** @var Tax $tax */
         $tax = SharedStorage::getStorage()->get($taxReference);
-        $isEnabled = $status === 'enabled' ? true : false;
+        $isEnabled = $status === 'enabled';
         $actualStatus = (bool) $tax->active;
 
         if ($isEnabled !== $actualStatus) {
