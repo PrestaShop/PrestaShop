@@ -199,3 +199,11 @@ services:
       class: 'PrestaShop\PrestaShop\Core\Grid\Query\Monitoring\ProductWithoutPriceQueryBuilder'
       parent: 'prestashop.core.grid.query_builder.monitoring.abstract_product_query_builder'
       public: true
+
+    prestashop.core.grid.query_builder.file:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Query\FileQueryBuilder'
+      parent: 'prestashop.core.grid.abstract_query_builder'
+      arguments:
+        - '@prestashop.core.query.doctrine_search_criteria_applicator'
+        - "@=service('prestashop.adapter.legacy.context').getContext().employee.id_lang"
+      public: true
