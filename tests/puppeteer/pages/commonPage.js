@@ -36,7 +36,7 @@ module.exports = class CommonPage {
    */
   async elementVisible(selector, timeout = 10) {
     try {
-      await this.page.waitForSelector(selector, {visible: true, timeout: timeout});
+      await this.page.waitForSelector(selector, {visible: true, timeout});
       return true;
     } catch (error) {
       return false;
