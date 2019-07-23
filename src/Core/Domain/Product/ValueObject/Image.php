@@ -65,6 +65,7 @@ final class Image
     }
 
     /**
+     * todo: not a value object - think of different appraoch
      * @param int $imageId
      *
      * @return self

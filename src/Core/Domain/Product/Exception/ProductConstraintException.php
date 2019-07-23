@@ -19,4 +19,5 @@ class ProductConstraintException extends ProductException
     public const INVALID_META_DESCRIPTION = 13;
     public const META_DESCRIPTION_NAME_TOO_LONG = 14;
     public const FRIENDLY_URL_TOO_LONG = 15;
+    public const INVALID_RESPONSE_CODE = 16;
 }
