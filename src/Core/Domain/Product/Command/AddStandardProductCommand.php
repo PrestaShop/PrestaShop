@@ -7,4 +7,5 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
  */
 class AddStandardProductCommand extends AbstractProductCommand
 {
+    //todo: here will appear only standard product getters and setters.
 }

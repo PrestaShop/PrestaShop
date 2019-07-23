@@ -2,10 +2,13 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Product\DTO\FeatureCollection;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\CostPrice;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Image;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductName;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RetailPrice;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\UnitPrice;
@@ -60,12 +63,12 @@ abstract class AbstractProductCommand
     private $features;
 
     /**
-     * @var int
+     * @var ManufacturerId
      */
-    private $brandId;
+    private $manufacturerId;
 
     /**
-     * @var array|int[]
+     * @var ProductId[]
      */
     private $relatedProductIds;
 
@@ -288,27 +291,29 @@ abstract class AbstractProductCommand
     }
 
     /**
-     * @return int
+     * @return ManufacturerId
      */
-    public function getBrandId(): int
+    public function getManufacturerId(): ManufacturerId
     {
-        return $this->brandId;
+        return $this->manufacturerId;
     }
 
     /**
-     * @param int $brandId
+     * @param int $manufacturerId
      *
      * @return self
+     *
+     * @throws ManufacturerConstraintException
      */
-    public function setBrandId(int $brandId): self
+    public function setManufacturerId(int $manufacturerId): self
     {
-        $this->brandId = $brandId;
+        $this->manufacturerId = new ManufacturerId($manufacturerId);
 
         return $this;
     }
 
     /**
-     * @return array|int[]
+     * @return ProductId[]
      */
     public function getRelatedProductIds(): ?array
     {
@@ -322,7 +327,10 @@ abstract class AbstractProductCommand
      */
     public function setRelatedProductIds($relatedProductIds): self
     {
-        $this->relatedProductIds = $relatedProductIds;
+        $this->relatedProductIds = array_map(
+            static function ($item) { return new ProductId($item); },
+            $relatedProductIds
+        );
 
         return $this;
     }
