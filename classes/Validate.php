@@ -23,6 +23,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+use PrestaShop\PrestaShop\Core\ConstraintValidator\CustomerNameValidator;
+
 class ValidateCore
 {
     const ADMIN_PASSWORD_LENGTH = 8;
@@ -166,10 +168,15 @@ class ValidateCore
     public static function isCustomerName($name)
     {
         $validityPattern = Tools::cleanNonUnicodeSupport(
-            '/^(?:[^0-9!<>,;?=+()\/\\@#"°*`{}_^$%:¤\[\]|\.。]|[\.。](?:\s|$))*$/u'
+            CustomerNameValidator::PATTERN_NAME
         );
 
-        return preg_match($validityPattern, $name);
+        $valid = preg_match($validityPattern, $name);
+        if ($valid && strpos($name, '。') !== false) {
+            $valid = 0;
+        }
+
+        return $valid;
     }
 
     /**
