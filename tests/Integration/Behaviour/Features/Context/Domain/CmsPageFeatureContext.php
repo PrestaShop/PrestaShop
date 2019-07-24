@@ -46,6 +46,7 @@ use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpectedException;
+use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class CmsPageFeatureContext extends AbstractDomainFeatureContext
 {
@@ -75,35 +76,35 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I add new CMS page :reference with following properties:
+     * @When I add new CMS page :cmsPageReference with following properties:
      */
-    public function createCmsPage($reference, TableNode $node)
+    public function createCmsPage($cmsPageReference, TableNode $node)
     {
         $data = $node->getRowsHash();
-        $this->createCmsPageUsingCommand($reference, $data);
+        $this->createCmsPageUsingCommand($cmsPageReference, $data);
     }
 
     /**
-     * @When I create CMS page :reference with cms category id :id
+     * @When I create CMS page :cmsPageReference with cms category id :id
      */
-    public function createCmsPageWithProvidedCategoryId($reference, $id)
+    public function createCmsPageWithProvidedCategoryId($cmsPageReference, $id)
     {
         $data = $this->getValidDataForCmsPageCreation();
         $data['id_cms_category'] = (int) $id;
 
         try {
-            $this->createCmsPageUsingCommand($reference, $data);
+            $this->createCmsPageUsingCommand($cmsPageReference, $data);
         } catch (Exception $e) {
             $this->latestException = $e;
         }
     }
 
     /**
-     * @When I edit CMS page :reference with following properties:
+     * @When I edit CMS page :cmsPageReference with following properties:
      */
-    public function editCmsPage($reference, TableNode $node)
+    public function editCmsPage($cmsPageReference, TableNode $node)
     {
-        $cmsId = (int) SharedStorage::getStorage()->get($reference)->id;
+        $cmsId = (int) SharedStorage::getStorage()->get($cmsPageReference)->id;
         $command = new EditCmsPageCommand($cmsId);
         $data = $node->getRowsHash();
 
@@ -126,27 +127,26 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
             $command->setLocalizedContent([$this->defaultLangId => $data['content']]);
         }
         if (isset($data['indexation'])) {
-            $command->setIsIndexedForSearch((bool) $data['indexation']);
+            $command->setIsIndexedForSearch(PrimitiveUtils::castStringBooleanIntoBoolean($data['indexation']));
         }
         if (isset($data['active'])) {
-            $command->setIsDisplayed((bool) $data['active']);
+            $command->setIsDisplayed(PrimitiveUtils::castStringBooleanIntoBoolean($data['active']));
         }
 
         $this->getCommandBus()->handle($command);
-        SharedStorage::getStorage()->set($reference, new CMS($cmsId));
+        SharedStorage::getStorage()->set($cmsPageReference, new CMS($cmsId));
     }
 
     /**
      * @When /^I (enable|disable) CMS pages: "(.*)" in bulk action?$/
      */
-    public function bulkToggleDisplayStatus($action, $references)
+    public function bulkToggleDisplayStatus($action, $cmsPageReferences)
     {
         $idsByReferences = [];
-        $references = explode(',', $references);
 
-        foreach ($references as $reference) {
-            $cms = SharedStorage::getStorage()->get($reference);
-            $idsByReferences[$reference] = (int) $cms->id;
+        foreach (PrimitiveUtils::castStringArrayIntoArray($cmsPageReferences) as $cmsPageReference) {
+            $cms = SharedStorage::getStorage()->get($cmsPageReference);
+            $idsByReferences[$cmsPageReference] = (int) $cms->id;
         }
 
         if ('enable' === $action) {
@@ -155,111 +155,102 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
             $this->getQueryBus()->handle(new BulkDisableCmsPageCommand($idsByReferences));
         }
 
-        foreach ($idsByReferences as $reference => $id) {
-            SharedStorage::getStorage()->set($reference, new CMS($id));
+        foreach ($idsByReferences as $cmsPageReference => $id) {
+            SharedStorage::getStorage()->set($cmsPageReference, new CMS($id));
         }
     }
 
     /**
-     * @When I toggle CMS page :reference display status
+     * @When I toggle CMS page :cmsPageReference display status
      */
-    public function toggleDisplayStatus($reference)
+    public function toggleDisplayStatus($cmsPageReference)
     {
         /** @var CMS $cms */
-        $cms = SharedStorage::getStorage()->get($reference);
+        $cms = SharedStorage::getStorage()->get($cmsPageReference);
         $cmsId = (int) $cms->id;
         $this->getCommandBus()->handle(new ToggleCmsPageStatusCommand($cmsId));
 
-        SharedStorage::getStorage()->set($reference, new CMS($cmsId));
+        SharedStorage::getStorage()->set($cmsPageReference, new CMS($cmsId));
     }
 
     /**
-     * @Given CMS pages: :references exists
+     * @Given CMS pages: :cmsPageReferences exists
      */
-    public function createMultipleCmsPages($references)
+    public function createMultipleCmsPages($cmsPageReferences)
     {
-        $references = explode(',', $references);
+        $cmsPageReferences = explode(',', $cmsPageReferences);
 
-        foreach ($references as $ref) {
+        foreach ($cmsPageReferences as $ref) {
             $data = $this->getValidDataForCmsPageCreation();
+            $data['active'] = false;
             $this->createCmsPageUsingCommand($ref, $data);
         }
     }
 
     /**
-     * @When I delete CMS page with id :id
+     * @When I delete CMS page :cmsPageReference
      */
-    public function deleteCmsPageById($id)
+    public function deleteCmsPage($cmsPageReference)
     {
-        $command = new DeleteCmsPageCommand((int) $id);
-        $this->getCommandBus()->handle($command);
+        $cmsPageId = (int) SharedStorage::getStorage()->get($cmsPageReference)->id;
+
+        $this->getCommandBus()->handle(new DeleteCmsPageCommand($cmsPageId));
     }
 
     /**
-     * @When I bulk delete CMS pages: :references
+     * @When I delete CMS pages: :cmsPageReferences using bulk action
      */
-    public function bulkDeleteCmsPages($references)
+    public function bulkDeleteCmsPages($cmsPageReferences)
     {
         $idsByReferences = [];
-        $references = explode(',', $references);
 
-        foreach ($references as $reference) {
-            $cms = SharedStorage::getStorage()->get($reference);
-            $idsByReferences[$reference] = (int) $cms->id;
+        foreach (PrimitiveUtils::castStringArrayIntoArray($cmsPageReferences) as $cmsPageReference) {
+            $cms = SharedStorage::getStorage()->get($cmsPageReference);
+            $idsByReferences[$cmsPageReference] = (int) $cms->id;
         }
         $this->getCommandBus()->handle(new BulkDeleteCmsPageCommand($idsByReferences));
     }
 
     /**
-     * @Then CMS pages: :references should not be found
+     * @Then CMS pages: :cmsPageReferences should be deleted
      */
-    public function assertMultipleCmsPagesNotFound($references)
+    public function assertCmsPagesAreDeleted($cmsPageReferences)
     {
-        foreach (explode(',', $references) as $reference) {
-            $cms = SharedStorage::getStorage()->get($reference);
-            $this->assertCmsPageDoesNotExistById($cms->id);
+        foreach (PrimitiveUtils::castStringArrayIntoArray($cmsPageReferences) as $cmsPageReference) {
+            $this->assertCmsPageIsDeleted($cmsPageReference);
         }
     }
 
     /**
-     * @Given CMS page with id :id exists
+     * @Then CMS page :cmsPageReference should be deleted
      */
-    public function assertCmsPageExistsById($id)
+    public function assertCmsPageIsDeleted($cmsPageReference)
     {
-        $query = new GetCmsPageForEditing((int) $id);
-        $this->getQueryBus()->handle($query);
-    }
-
-    /**
-     * @Given CMS page with id :id should not exist
-     */
-    public function assertCmsPageDoesNotExistById($id)
-    {
-        $query = new GetCmsPageForEditing((int) $id);
+        $cmsPageId = (int) SharedStorage::getStorage()->get($cmsPageReference)->id;
 
         try {
-            $this->getQueryBus()->handle($query);
-
+            $this->getQueryBus()->handle(new GetCmsPageForEditing($cmsPageId));
             throw new NoExceptionAlthoughExpectedException(sprintf(
-                'Cms page with id "%s" exists. Expected it to be deleted',
-                $id
+                'CMS page "%s" was found, but it was expected to be deleted',
+                    $cmsPageReference
             ));
         } catch (CmsPageNotFoundException $e) {
+            //todo: rebase and use SharedStorage::clear
         }
     }
 
     /**
      * @Then /^CMS page "(.*)" indexation for search engines should be (enabled|disabled)?$/
      */
-    public function assertIndexationStatus($reference, $status)
+    public function assertIndexationStatus($cmsPageReference, $status)
     {
         /** @var CMS $cmsPage */
-        $cmsPage = SharedStorage::getStorage()->get($reference);
-        $isEnabled = $status === 'enabled' ? true : false;
+        $cmsPage = SharedStorage::getStorage()->get($cmsPageReference);
+        $isEnabled = $status === 'enabled';
         if ($isEnabled !== (bool) $cmsPage->indexation) {
             throw new RuntimeException(sprintf(
                 'Cms page "%s" indexation is %s, but it was expected to be %s',
-                $reference,
+                $cmsPageReference,
                 $cmsPage->indexation ? 'enabled' : 'disabled',
                 $status
             ));
@@ -269,25 +260,25 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
     /**
      * @Then /^CMS pages: "(.*)" should be (displayed|not displayed)?$/
      */
-    public function assertMultipleCmsPagesDisplayStatus($references, $status)
+    public function assertMultipleCmsPagesDisplayStatus($cmsPageReferences, $status)
     {
-        foreach (explode(',', $references) as $reference) {
-            $this->assertDisplayStatus($reference, $status);
+        foreach (PrimitiveUtils::castStringArrayIntoArray($cmsPageReferences) as $cmsPageReference) {
+            $this->assertDisplayStatus($cmsPageReference, $status);
         }
     }
 
     /**
      * @Then /^CMS page "(.*)" should be (displayed|not displayed)?$/
      */
-    public function assertDisplayStatus($reference, $status)
+    public function assertDisplayStatus($cmsPageReference, $status)
     {
         /** @var CMS $cmsPage */
-        $cmsPage = SharedStorage::getStorage()->get($reference);
-        $isEnabled = $status === 'displayed' ? true : false;
+        $cmsPage = SharedStorage::getStorage()->get($cmsPageReference);
+        $isEnabled = $status === 'displayed';
         if ($isEnabled !== (bool) $cmsPage->active) {
             throw new RuntimeException(sprintf(
                 'Cms page "%s" is %s, but it was expected to be %s',
-                $reference,
+                $cmsPageReference,
                 $cmsPage->active ? 'displayed' : 'not displayed',
                 $status
             ));
@@ -297,14 +288,14 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
     /**
      * @Then /^CMS page "(.+)" "(.+)" in default language should be '([^']+)'$/
      */
-    public function assertFieldValue($reference, $field, $value)
+    public function assertFieldValue($cmsPageReference, $field, $value)
     {
         /** @var CMS $cmsPage */
-        $cmsPage = SharedStorage::getStorage()->get($reference);
+        $cmsPage = SharedStorage::getStorage()->get($cmsPageReference);
         if ($cmsPage->$field[$this->defaultLangId] !== $value) {
             throw new RuntimeException(sprintf(
                 'Cms page "%s" has "%s" %s, but "%s" was expected.',
-                $reference,
+                $cmsPageReference,
                 $cmsPage->$field[$this->defaultLangId],
                 $field,
                 $value
@@ -313,16 +304,16 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then CMS page :reference :field field in default language should be empty
+     * @Then CMS page :cmsPageReference :field field in default language should be empty
      */
-    public function assertFieldIsEmpty($reference, $field)
+    public function assertFieldIsEmpty($cmsPageReference, $field)
     {
         /** @var CMS $cmsPage */
-        $cmsPage = SharedStorage::getStorage()->get($reference);
+        $cmsPage = SharedStorage::getStorage()->get($cmsPageReference);
         if ($cmsPage->$field[$this->defaultLangId] !== '') {
             throw new RuntimeException(sprintf(
                 'Cms page "%s" has "%s" %s, but it was expected to be empty',
-                $reference,
+                $cmsPageReference,
                 $cmsPage->$field[$this->defaultLangId],
                 $field
             ));
@@ -364,10 +355,10 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @param string $reference
+     * @param string $cmsPageReference
      * @param array $data
      */
-    private function createCmsPageUsingCommand($reference, array $data)
+    private function createCmsPageUsingCommand($cmsPageReference, array $data)
     {
         $command = new AddCmsPageCommand(
             (int) $data['id_cms_category'],
@@ -377,15 +368,15 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
             [$this->defaultLangId => $data['meta_keywords']],
             [$this->defaultLangId => $data['link_rewrite']],
             [$this->defaultLangId => $data['content']],
-            (bool) $data['indexation'],
-            (bool) $data['active'],
+            PrimitiveUtils::castStringBooleanIntoBoolean($data['indexation']),
+            PrimitiveUtils::castStringBooleanIntoBoolean($data['active']),
             [$this->defaultShopId]
         );
 
         /** @var CmsPageId $cmsPageId */
         $cmsPageId = $this->getCommandBus()->handle($command);
 
-        SharedStorage::getStorage()->set($reference, new \CMS($cmsPageId->getValue()));
+        SharedStorage::getStorage()->set($cmsPageReference, new \CMS($cmsPageId->getValue()));
     }
 
     /**
@@ -403,8 +394,8 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
             'meta_keywords' => 'delivery,configure,special',
             'link_rewrite' => 'delivery-options',
             'content' => '<div> <h5> Delivery <img src="../delivery/options.jpg" alt="" /></h5> </div>',
-            'indexation' => 1,
-            'active' => 1,
+            'indexation' => true,
+            'active' => true,
         ];
     }
 }

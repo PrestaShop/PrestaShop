@@ -14,8 +14,8 @@ Feature: CmsPage Management
       | meta_keywords        | delivery,configure,special               |
       | link_rewrite         | delivery-options                         |
       | content              | <div> <h5> Delivery <img src="../delivery/options.jpg" alt="" /></h5> </div>|
-      | indexation           | 1                                        |
-      | active               | 1                                        |
+      | indexation           | true                                     |
+      | active               | true                                     |
     Then CMS page "cmspage-1" "meta_title" in default language should be 'Special delivery options'
     And CMS page "cmspage-1" "head_seo_title" in default language should be 'delivery options'
     And CMS page "cmspage-1" "meta_description" in default language should be 'Our special delivery options'
@@ -36,7 +36,7 @@ Feature: CmsPage Management
       | meta_description     | Our unusual delivery options          |
       | meta_keywords        | delivery,configure,special,unusual    |
       | content              |                                       |
-      | active               | 0                                     |
+      | active               | false                                 |
     Then CMS page "cmspage-1" "meta_title" in default language should be 'Unusual delivery options'
     And CMS page "cmspage-1" "head_seo_title" in default language should be 'delivery options'
     And CMS page "cmspage-1" "meta_description" in default language should be 'Our unusual delivery options'
@@ -51,32 +51,24 @@ Feature: CmsPage Management
       | content              | <span style="color:#0000FF;"> <a href="www.special.test">Check options</a></span> |
     Then CMS page "cmspage-1" "content" in default language should be '<span style="color:#0000FF;"> <a href="www.special.test">Check options</a></span>'
 
-  Scenario: Enabling CMS page status
+  Scenario: Toggling CMS page display status
     Given CMS page "cmspage-1" should be not displayed
     When I toggle CMS page "cmspage-1" display status
     Then CMS page "cmspage-1" should be displayed
-
-  Scenario: Disabling CMS page status
-    Given CMS page "cmspage-1" should be displayed
     When I toggle CMS page "cmspage-1" display status
     Then CMS page "cmspage-1" should be not displayed
 
-  Scenario: Disabling cms pages status in bulk action
+  Scenario: Enabling and disabling cms pages in bulk action
     Given CMS pages: "cmspage-2,cmspage-3,cms-page-4" exists
-    And CMS pages: "cmspage-2,cmspage-3,cms-page-4" should be displayed
-    When I disable CMS pages: "cmspage-2,cmspage-3,cms-page-4" in bulk action
     Then CMS pages: "cmspage-2,cmspage-3,cms-page-4" should be not displayed
-
-  Scenario: Enabling cms pages status in bulk action
-    And CMS pages: "cmspage-2,cmspage-3,cms-page-4" should be not displayed
     When I enable CMS pages: "cmspage-2,cmspage-3,cms-page-4" in bulk action
     Then CMS pages: "cmspage-2,cmspage-3,cms-page-4" should be displayed
-    
-  Scenario: Deleting cms pages in bulk action
-    When I bulk delete CMS pages: "cmspage-2,cmspage-3,cms-page-4"
-    Then CMS pages: "cmspage-2,cmspage-3,cms-page-4" should not be found
+    And CMS pages: "cmspage-2,cmspage-3,cms-page-4" should be displayed
+    When I disable CMS pages: "cmspage-2,cmspage-3,cms-page-4" in bulk action
 
-  Scenario: Deleting cms page
-    Given CMS page with id "1" exists
-    When I delete CMS page with id "1"
-    Then CMS page with id "1" should not exist
+  Scenario: Deleting cms pages
+    When I delete CMS page "cmspage-1"
+    Then CMS page "cmspage-1" should be deleted
+    When I delete CMS pages: "cmspage-2,cmspage-3,cms-page-4" using bulk action
+    Then CMS pages: "cmspage-2,cmspage-3,cms-page-4" should be deleted
+
