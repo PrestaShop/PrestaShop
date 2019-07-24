@@ -40,10 +40,6 @@ class ForgotPasswordType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('email', EmailType::class, [
-            'attr' => [
-                'placeholder' => 'login@prestashop.com',
-            ],
-        ]);
+        $builder->add('email', EmailType::class);
     }
 }
