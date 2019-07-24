@@ -27,18 +27,27 @@
 
 {{ form_start(loginForm, { action: path('_admin_login') }) }}
 
+{% set inputIds = {
+  email: 'email',
+  password: 'passwd',
+  stay_logged_in: 'stay_logged_in',
+  submit_login: 'submit_login'
+} %}
+
 <p class="text-center">{{ shopName }}</p>
 <div class="form-group">
   <div class="row">
     <div class="col-sm">
-      <label for="{{ loginForm.email.vars.id }}" class="form-control-label">
+      <label for="{{ inputIds.email }}" class="form-control-label">
         {{ 'Email address'|trans({}, 'Admin.Global') }}
       </label>
     </div>
   </div>
   <div class="row">
     <div class="col-sm">
-      {{ ps.form_widget_with_error(loginForm.email) }}
+      {{ ps.form_widget_with_error(loginForm.email, {
+        id: inputIds.email
+      }) }}
     </div>
   </div>
 </div>
@@ -46,14 +55,16 @@
 <div class="form-group">
   <div class="row">
     <div class="col-sm">
-      <label for="{{ loginForm.password.vars.id }}" class="form-control-label">
+      <label for="{{ inputIds.password }}" class="form-control-label">
         {{ 'Password'|trans({}, 'Admin.Global') }}
       </label>
     </div>
   </div>
   <div class="row">
     <div class="col-sm">
-      {{ ps.form_widget_with_error(loginForm.password) }}
+      {{ ps.form_widget_with_error(loginForm.password, {
+        id: inputIds.password
+      }) }}
     </div>
   </div>
 </div>
@@ -62,7 +73,7 @@
 {{ form_widget(loginForm._token) }}
 
 <div class="form-group-row mt-4">
-  <button class="btn btn-primary w-100 text-uppercase js-hover-preston-wink">
+  <button id="{{ inputIds.submit_login }}" class="btn btn-primary w-100 text-uppercase js-hover-preston-wink">
     {{ 'Log in'|trans({}, 'Admin.Login.Feature') }}
   </button>
 </div>
@@ -72,12 +83,13 @@
       <label>
         {{ form_widget(loginForm.stay_logged_in, {
           material_design: true,
-          label: 'Stay logged in'|trans({}, 'Admin.Login.Feature')
+          label: 'Stay logged in'|trans({}, 'Admin.Login.Feature'),
+          id: inputIds.stay_logged_in
         }) }}
       </label>
   </div>
   <div class="col text-right">
-    <a href="#" class="js-forgot-password">
+    <a href="#" class="js-forgot-password show-forgot-password">
       {{ 'I forgot my password'|trans({}, 'Admin.Login.Feature') }}
     </a>
   </div>
