@@ -26,7 +26,11 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\Attachment\DeleteAttachmentBulkAction;
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\AccessibilityCheckerInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
@@ -37,17 +41,61 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
+use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-class FileGridDefinitionFactory extends AbstractGridDefinitionFactory
+class AttachmentGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
+    /**
+     * @var string
+     */
+    private $resetActionUrl;
+
+    /**
+     * @var string
+     */
+    private $redirectActionUrl;
+
+    /**
+     * @var AccessibilityCheckerInterface
+     */
+    private $categoryForViewAccessibilityChecker;
+
+    /**
+     * @var MultistoreContextCheckerInterface
+     */
+    private $multistoreContextChecker;
+
+    /**
+     * @param HookDispatcherInterface $hookDispatcher
+     * @param string $resetActionUrl
+     * @param string $redirectActionUrl
+     * @param MultistoreContextCheckerInterface $multistoreContextChecker
+     * @param AccessibilityCheckerInterface $categoryForViewAccessibilityChecker
+     */
+    public function __construct(
+        HookDispatcherInterface $hookDispatcher,
+        $resetActionUrl,
+        $redirectActionUrl,
+        MultistoreContextCheckerInterface $multistoreContextChecker,
+        AccessibilityCheckerInterface $categoryForViewAccessibilityChecker
+    ) {
+        parent::__construct($hookDispatcher);
+        $this->resetActionUrl = $resetActionUrl;
+        $this->redirectActionUrl = $redirectActionUrl;
+        $this->categoryForViewAccessibilityChecker = $categoryForViewAccessibilityChecker;
+        $this->multistoreContextChecker = $multistoreContextChecker;
+    }
+
     /**
      * {@inheritdoc}
      */
     protected function getId()
     {
-        return 'file';
+        return 'attachment';
     }
 
     /**
@@ -98,6 +146,13 @@ class FileGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'field' => 'file_size',
                     ])
             )
+            ->add(
+                (new DataColumn('products'))
+                    ->setName($this->trans('Size', [], 'Admin.Global'))
+                    ->setOptions([
+                        'field' => 'products',
+                    ])
+            )
             ->add((new ActionColumn('actions'))
                 ->setName($this->trans('Actions', [], 'Admin.Global'))
                 ->setOptions([
@@ -107,7 +162,7 @@ class FileGridDefinitionFactory extends AbstractGridDefinitionFactory
                                 ->setName($this->trans('Edit', [], 'Admin.Actions'))
                                 ->setIcon('edit')
                                 ->setOptions([
-                                    'route' => 'admin_file_edit',
+                                    'route' => 'admin_attachment_edit',
                                     'route_param_name' => 'attachmentId',
                                     'route_param_field' => 'id_attachment',
                                 ])
@@ -117,7 +172,7 @@ class FileGridDefinitionFactory extends AbstractGridDefinitionFactory
                                 ->setName($this->trans('View', [], 'Admin.Actions'))
                                 ->setIcon('zoom_in')
                                 ->setOptions([
-                                    'route' => 'admin_file_view',
+                                    'route' => 'admin_attachment_view',
                                     'route_param_name' => 'attachmentId',
                                     'route_param_field' => 'id_attachment',
                                 ])
@@ -126,7 +181,7 @@ class FileGridDefinitionFactory extends AbstractGridDefinitionFactory
                             ->setName($this->trans('Delete', [], 'Admin.Actions'))
                             ->setIcon('delete')
                             ->setOptions([
-                                'route' => 'admin_file_delete',
+                                'route' => 'admin_attachment_delete',
                                 'route_param_name' => 'attachmentId',
                                 'route_param_field' => 'id_attachment',
                             ])
@@ -172,6 +227,26 @@ class FileGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'required' => false,
                     ])
                     ->setAssociatedColumn('file_size')
+            )
+            ->add(
+                (new Filter('products', NumberType::class))
+                    ->setTypeOptions([
+                        'attr' => [
+                            'placeholder' => $this->trans('Search file size', [], 'Admin.Actions'),
+                        ],
+                        'required' => false,
+                    ])
+                    ->setAssociatedColumn('products')
+            )
+            ->add(
+                (new Filter('actions', SearchAndResetType::class))
+                    ->setAssociatedColumn('actions')
+                    ->setTypeOptions([
+                        'attr' => [
+                            'data-url' => $this->resetActionUrl,
+                            'data-redirect' => $this->redirectActionUrl,
+                        ],
+                    ])
             );
 
         return $filters;
@@ -200,17 +275,19 @@ class FileGridDefinitionFactory extends AbstractGridDefinitionFactory
             );
     }
 
-//    /**
-//     * {@inheritdoc}
-//     */
-//    protected function getBulkActions()
-//    {
-//        return (new BulkActionCollection())
-//            ->add((new DeleteFileBulkAction('delete_selection'))
-//                ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
-//                ->setOptions([
-//                    'files_bulk_delete_route' => 'admin_files_delete_bulk',
-//                ])
-//            );
-//    }
+    /**
+     * {@inheritdoc}
+     */
+    protected function getBulkActions()
+    {
+        return (new BulkActionCollection())
+            ->add(
+                (new SubmitBulkAction('delete_selection'))
+                    ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
+                    ->setOptions([
+                        'submit_route' => 'admin_attachments_delete_bulk',
+                        'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
+                    ])
+            );
+    }
 }
