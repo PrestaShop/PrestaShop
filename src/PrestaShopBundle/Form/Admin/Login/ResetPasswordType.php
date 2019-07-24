@@ -62,9 +62,6 @@ class ResetPasswordType extends AbstractType
                     'Admin.Login.Notification'
                 ),
                 'first_options' => [
-                    'attr' => [
-                        'placeholder' => $this->trans('Password', [], 'Admin.Global'),
-                    ],
                     'constraints' => [
                         new Length([
                             'min' => 5,
@@ -72,11 +69,6 @@ class ResetPasswordType extends AbstractType
                             'minMessage' => $lengthMessage,
                             'maxMessage' => $lengthMessage,
                         ]),
-                    ],
-                ],
-                'second_options' => [
-                    'attr' => [
-                        'placeholder' => $this->trans('Confirm password', [], 'Admin.Login.Feature'),
                     ],
                 ],
             ])

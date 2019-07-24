@@ -51,7 +51,7 @@
       <div class="text-center">
         <img src="{{ imgDir }}prestashop@2x.png" alt="PrestaShop">
       </div>
-      <div class="text-center text-white">
+      <div class="text-center text-white mt-2 version-text">
         {{ prestashopVersion }}
       </div>
 
@@ -68,7 +68,7 @@
     {% if showLoginForm or showForgotPasswordForm or showResetPasswordForm %}
       <div class="card login-card flip-card-inner">
         <div class="card-block">
-          <div class="card-text pb-3 mx-auto flip-card-back">
+          <div class="card-text mx-auto flip-card-back">
             {% if showResetPasswordForm %}
               {% include '@PrestaShop/Admin/Login/Blocks/reset_password_form.html.twig' %}
             {% else %}
@@ -86,9 +86,13 @@
 
     {{ renderhook('displayAdminLogin') }}
 
-    <div class="row mt-5">
+    <div class="row text-center mt-4">
+      <img src="{{ imgDir }}puffin.png" alt="">
+    </div>
+
+    <div class="row mt-3">
       <div class="col text-center">
-        <a class="text-white" href="http://www.prestashop.com/" target="_blank">
+        <a class="text-white copyright-text" href="http://www.prestashop.com/" target="_blank">
           &copy; PrestaShop&#8482; 2007-{{ currentYear }} - All rights reserved
         </a>
       </div>
