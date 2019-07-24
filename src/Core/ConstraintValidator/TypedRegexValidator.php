@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\ConstraintValidator;
 
+use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\IsoCode;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use Symfony\Component\Validator\Constraint;
@@ -38,6 +39,19 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
  */
 class TypedRegexValidator extends ConstraintValidator
 {
+    /**
+     * @var Tools
+     */
+    private $tools;
+
+    /**
+     * @param Tools $tools
+     */
+    public function __construct(Tools $tools)
+    {
+        $this->tools = $tools;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -77,11 +91,11 @@ class TypedRegexValidator extends ConstraintValidator
     private function getPattern($type)
     {
         $typePatterns = [
-            'name' => $this->cleanNonUnicodeSupport('/^[^0-9!<>,;?=+()@#"°{}_$%:¤|]*$/u'),
-            'catalog_name' => $this->cleanNonUnicodeSupport('/^[^<>;=#{}]*$/u'),
-            'generic_name' => $this->cleanNonUnicodeSupport('/^[^<>={}]*$/u'),
-            'city_name' => $this->cleanNonUnicodeSupport('/^[^!<>;?=+@#"°{}_$%]*$/u'),
-            'address' => $this->cleanNonUnicodeSupport('/^[^!<>?=+@{}_$%]*$/u'),
+            'name' => $this->tools->cleanNonUnicodeSupport('/^[^0-9!<>,;?=+()@#"°{}_$%:¤|]*$/u'),
+            'catalog_name' => $this->tools->cleanNonUnicodeSupport('/^[^<>;=#{}]*$/u'),
+            'generic_name' => $this->tools->cleanNonUnicodeSupport('/^[^<>={}]*$/u'),
+            'city_name' => $this->tools->cleanNonUnicodeSupport('/^[^!<>;?=+@#"°{}_$%]*$/u'),
+            'address' => $this->tools->cleanNonUnicodeSupport('/^[^!<>?=+@{}_$%]*$/u'),
             'post_code' => '/^[a-zA-Z 0-9-]+$/',
             'phone_number' => '/^[+0-9. ()\/-]*$/',
             'message' => '/[<>{}]/i',
@@ -98,23 +112,6 @@ class TypedRegexValidator extends ConstraintValidator
             $type,
             implode(',', array_keys($typePatterns))
         ));
-    }
-
-    /**
-     * Delete unicode class from regular expression patterns.
-     * Cleaning non unicode is optional. Refer to legacy Validate to see if it's needed.
-     *
-     * @param string $pattern
-     *
-     * @return string pattern
-     */
-    private function cleanNonUnicodeSupport($pattern)
-    {
-        if (!defined('PREG_BAD_UTF8_OFFSET')) {
-            return $pattern;
-        }
-
-        return preg_replace('/\\\[px]\{[a-z]{1,2}\}|(\/[a-z]*)u([a-z]*)$/i', '$1$2', $pattern);
     }
 
     /**
