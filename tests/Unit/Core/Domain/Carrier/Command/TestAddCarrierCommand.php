@@ -29,19 +29,17 @@ namespace Tests\Unit\Core\Domain\Carrier\Command;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Command\AddCarrierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\OutOfRangeBehavior;
-use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\ShippingMethod;
 
 class TestAddCarrierCommand extends TestCase
 {
-    public function testCommandForAddingCarrierWithPricedShippingIsCreatedSuccessfullyWhenValidArgumentsAreGiven()
+    public function testAddCarrierCommandWithPricedShippingCanBeCreated()
     {
-        $this->createCommandFromArray($this->getValidDataForCommandCreation(), false);
+        $this->createCommandFromArray(ValidDataProviderForCommandCreation::getData(), false);
     }
 
-    public function testCommandForAddingCarrierWithFreeShippingIsCreatedSuccessfullyWhenValidArgumentsAreGiven()
+    public function testAddCarrierCommandWithFreeShippingCanBeCreated()
     {
-        $this->createCommandFromArray($this->getValidDataForCommandCreation(), true);
+        $this->createCommandFromArray(ValidDataProviderForCommandCreation::getData(), true);
     }
 
     /**
@@ -51,7 +49,7 @@ class TestAddCarrierCommand extends TestCase
     {
         $this->expectException(CarrierConstraintException::class);
         $this->expectExceptionCode(CarrierConstraintException::INVALID_SHIPPING_RANGE);
-        $data = $this->getValidDataForCommandCreation();
+        $data = ValidDataProviderForCommandCreation::getData();
         $data['shipping_ranges'] = $invalidRange;
 
         $this->createCommandFromArray($data, false);
@@ -70,7 +68,7 @@ class TestAddCarrierCommand extends TestCase
         $this->expectException(CarrierConstraintException::class);
         $this->expectExceptionCode(CarrierConstraintException::INVALID_PACKAGE_MEASURE);
 
-        $data = $this->getValidDataForCommandCreation();
+        $data = ValidDataProviderForCommandCreation::getData();
         $data['width'] = $width;
         $data['height'] = $height;
         $data['depth'] = $depth;
@@ -150,44 +148,6 @@ class TestAddCarrierCommand extends TestCase
                 ],
             ],
         ]];
-    }
-
-    private function getValidDataForCommandCreation()
-    {
-        return [
-            'localized_names' => [1 => 'My carrier'],
-            'localized_delays' => [1 => 'pickup in store'],
-            'speed_grade' => 0,
-            'tracking_url' => 'http://example.com/track.php?num=@',
-            'shipping_cost_included' => true,
-            'shipping_method' => ShippingMethod::SHIPPING_METHOD_PRICE,
-            'tax_rules_group' => 1,
-            'out_of_range_behavior' => OutOfRangeBehavior::APPLY_HIGHEST_RANGE,
-            'shipping_ranges' => [
-                [
-                    'from' => 1,
-                    'to' => 2,
-                    'prices_by_zone_id' => [
-                        3 => 1,
-                        4 => 2,
-                    ],
-                ],
-                [
-                    'from' => 2,
-                    'to' => 3,
-                    'prices_by_zone_id' => [
-                        3 => 2,
-                        5 => 1,
-                    ],
-                ],
-            ],
-            'width' => 15,
-            'height' => 10,
-            'depth' => 20,
-            'weight' => 20.1,
-            'associated_group_ids' => [1, 2],
-            'associated_shop_ids' => [1],
-        ];
     }
 
     private function createCommandFromArray(array $data, bool $freeShipping)
