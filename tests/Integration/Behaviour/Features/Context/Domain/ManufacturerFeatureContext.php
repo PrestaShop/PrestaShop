@@ -36,12 +36,12 @@ use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\EditManufacturerComma
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\ToggleManufacturerStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Query\GetManufacturerForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\QueryResult\EditableManufacturer;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpectedException;
+use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class ManufacturerFeatureContext extends AbstractDomainFeatureContext
 {
@@ -86,7 +86,7 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
             $command->setName($data['name']);
         }
         if (isset($data['enabled'])) {
-            $command->setEnabled((bool) $data['enabled']);
+            $command->setEnabled(PrimitiveUtils::castStringBooleanIntoBoolean($data['enabled']));
         }
         if (isset($data['short_description'])) {
             [$this->defaultLangId => $command->setLocalizedShortDescriptions($data['short_description'])];
@@ -110,12 +110,37 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I delete manufacturer with id :id
+     * @When I delete manufacturer :manufacturerReference
      */
-    public function deleteManufacturerById($id)
+    public function deleteManufacturer($manufacturerReference)
     {
-        $command = new DeleteManufacturerCommand((int) $id);
-        $this->getCommandBus()->handle($command);
+        /** @var Manufacturer $manufacturer */
+        $manufacturer = SharedStorage::getStorage()->get($manufacturerReference);
+
+        $this->getCommandBus()->handle(new DeleteManufacturerCommand((int) $manufacturer->id));
+    }
+
+    /**
+     * @When I delete manufacturers: :manufacturerReferences using bulk action
+     */
+    public function bulkDeleteManufacturers($manufacturerReferences)
+    {
+        $manufacturerIds = [];
+        foreach (PrimitiveUtils::castStringArrayIntoArray($manufacturerReferences) as $manufacturerReference) {
+            $manufacturerIds[] = (int) SharedStorage::getStorage()->get($manufacturerReference)->id;
+        }
+
+        $this->getCommandBus()->handle(new BulkDeleteManufacturerCommand($manufacturerIds));
+    }
+
+    /**
+     * @Then manufacturers: :manufacturerReferences should be deleted
+     */
+    public function assertManufacturersAreDeleted($manufacturerReferences)
+    {
+        foreach (PrimitiveUtils::castStringArrayIntoArray($manufacturerReferences) as $manufacturerReference) {
+            $this->assertManufacturerIsDeleted($manufacturerReference);
+        }
     }
 
     /**
@@ -172,14 +197,15 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I toggle manufacturer :reference status
+     * @When /^I (enable|disable)? manufacturer "(.*)"$/
      */
-    public function toggleStatus($reference)
+    public function toggleStatus($action, $reference)
     {
+        $expectedStatus = 'enable' === $action;
+
         /** @var Manufacturer $manufacturer */
         $manufacturer = SharedStorage::getStorage()->get($reference);
         $manufacturerId = (int) $manufacturer->id;
-        $expectedStatus = !(bool) $manufacturer->active;
 
         $this->getCommandBus()->handle(new ToggleManufacturerStatusCommand($manufacturerId, $expectedStatus));
 
@@ -187,87 +213,77 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I :action manufacturers with ids: :ids in bulk action
+     * @When /^I (enable|disable) multiple manufacturers: "(.+)" using bulk action$/
      */
-    public function bulkToggleStatusByIds($action, $ids)
+    public function bulkToggleStatus($action, $manufacturerReferences)
     {
-        $expectedStatus = 'enable' === $action ? true : false;
+        $expectedStatus = 'enable' === $action;
+        $manufacturerIdsByReference = [];
 
-        $ids = array_map('intval', explode(',', $ids));
+        foreach (PrimitiveUtils::castStringArrayIntoArray($manufacturerReferences) as $manufacturerReference) {
+            $manufacturer = SharedStorage::getStorage()->get($manufacturerReference);
+            $manufacturerIdsByReference[$manufacturerReference] = (int) $manufacturer->id;
+        }
 
-        $this->getQueryBus()->handle(new BulkToggleManufacturerStatusCommand($ids, $expectedStatus));
-    }
+        $this->getQueryBus()->handle(new BulkToggleManufacturerStatusCommand(
+            $manufacturerIdsByReference,
+            $expectedStatus
+        ));
 
-    /**
-     * @Given manufacturers with ids: :ids exists
-     */
-    public function assertManufacturersWithIdsExists($ids)
-    {
-        foreach (explode(',', $ids) as $id) {
-            $this->assertManufacturerExistsById($id);
+        foreach ($manufacturerIdsByReference as $reference => $id) {
+            SharedStorage::getStorage()->set($reference, new Manufacturer($id));
         }
     }
 
     /**
-     * @Then manufacturers with ids: :ids should not be found
+     * @Given /^manufacturers: "(.+)" should be (enabled|disabled)$/
      */
-    public function assertManufacturersNotFoundByIds($ids)
+    public function assertMultipleManufacturersStatus($manufacturerReferences, $expectedStatus)
     {
-        foreach (explode(',', $ids) as $id) {
-            $this->assertManufacturerNotFoundById($id);
+        foreach (PrimitiveUtils::castStringArrayIntoArray($manufacturerReferences) as $manufacturerReference) {
+            $this->assertStatus($manufacturerReference, $expectedStatus);
         }
-    }
-
-    /**
-     * @Given /^manufacturers with ids: "(.+)" should be (enabled|disabled)$/
-     */
-    public function assertManufacturersStatusByIds($ids, $expectedStatus)
-    {
-        $ids = array_map('intval', explode(',', $ids));
-
-        foreach ($ids as $id) {
-            $this->assertStatusById($id, $expectedStatus);
-        }
-    }
-
-    /**
-     * @When I bulk delete manufacturers with ids: :ids
-     */
-    public function deleteManufacturersByIds($ids)
-    {
-        $ids = array_map('intval', explode(',', $ids));
-        $this->getQueryBus()->handle(new BulkDeleteManufacturerCommand($ids));
     }
 
     /**
      * @Then /^manufacturer "(.*)" should be (enabled|disabled)?$/
      */
-    public function assertStatus($reference, $expectedStatus)
+    public function assertStatus($manufacturerReference, $expectedStatus)
     {
         /** @var Manufacturer $manufacturer */
-        $manufacturer = SharedStorage::getStorage()->get($reference);
-        $this->assertStatusById((int) $manufacturer->id, $expectedStatus);
+        $manufacturer = SharedStorage::getStorage()->get($manufacturerReference);
+
+        $isEnabled = 'enabled' === $expectedStatus;
+        $actualStatus = (bool) $manufacturer->active;
+
+        if ($actualStatus !== $isEnabled) {
+            throw new RuntimeException(sprintf(
+                'Manufacturer "%s" is %s, but it was expected to be %s',
+                $manufacturerReference,
+                $actualStatus ? 'enabled' : 'disabled',
+                $expectedStatus
+            ));
+        }
     }
 
     /**
-     * @Given manufacturer with id :id exists
+     * @Then manufacturer :manufacturerReference should be deleted
      */
-    public function assertManufacturerExistsById($id)
+    public function assertManufacturerIsDeleted($manufacturerReference)
     {
-        $this->getQueryBus()->handle(new GetManufacturerForEditing((int) $id));
-    }
+        /** @var Manufacturer $manufacturer */
+        $manufacturer = SharedStorage::getStorage()->get($manufacturerReference);
 
-    /**
-     * @Then manufacturer with id :id should not be found
-     */
-    public function assertManufacturerNotFoundById($id)
-    {
         try {
-            $query = new GetManufacturerForEditing((int) $id);
+            $query = new GetManufacturerForEditing((int) $manufacturer->id);
             $this->getQueryBus()->handle($query);
 
-            throw new NoExceptionAlthoughExpectedException(sprintf('Manufacturer with id %s exists', $id));
+            throw new NoExceptionAlthoughExpectedException(sprintf(
+                'Manufacturer %s exists, but it was expected to be deleted',
+                $manufacturerReference
+            ));
         } catch (ManufacturerNotFoundException $e) {
+            SharedStorage::getStorage()->clear($manufacturerReference);
         }
     }
 
@@ -279,7 +295,7 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
     {
         $command = new AddManufacturerCommand(
             $data['name'],
-            $data['enabled'],
+            PrimitiveUtils::castStringBooleanIntoBoolean($data['enabled']),
             [$this->defaultLangId => $data['short_description']],
             [$this->defaultLangId => $data['description']],
             [$this->defaultLangId => $data['meta_title']],
@@ -294,26 +310,5 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
         $manufacturerId = $this->getCommandBus()->handle($command);
 
         SharedStorage::getStorage()->set($reference, new Manufacturer($manufacturerId->getValue()));
-    }
-
-    /**
-     * @param int $id
-     * @param string $expectedStatus 'enabled'|'disabled'
-     */
-    private function assertStatusById($id, $expectedStatus)
-    {
-        /** @var EditableManufacturer $editableManufacturer */
-        $editableManufacturer = $this->getQueryBus()->handle(new GetManufacturerForEditing($id));
-        $isEnabled = 'enabled' === $expectedStatus ? true : false;
-        $actualStatus = $editableManufacturer->isEnabled();
-
-        if ($actualStatus !== $isEnabled) {
-            throw new RuntimeException(sprintf(
-                'Manufacturer with id "%s" is %s, but it was expected to be %s',
-                $id,
-                $actualStatus ? 'enabled' : 'disabled',
-                $expectedStatus
-            ));
-        }
     }
 }

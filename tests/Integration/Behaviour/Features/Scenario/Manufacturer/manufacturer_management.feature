@@ -5,65 +5,74 @@ Feature: Manufacturer management
   I must be able to correctly add, edit and delete manufacturer
 
   Scenario: Adding new manufacturer
-    When I add new manufacturer "manufacturer-3" with following properties:
+    When I add new manufacturer "shoeman" with following properties:
       | name             | best-shoes                         |
       | short_description| Makes best shoes in Europe         |
       | description      | Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi at nulla id mi gravida blandit a non erat. Mauris nec lorem vel odio sagittis ornare.|
       | meta_title       | Perfect quality shoes              |
       | meta_description |                                    |
       | meta_keywords    | Boots, shoes, slippers             |
-      | enabled          | 1                                  |
-    Then manufacturer "manufacturer-3" name should be "best-shoes"
-    And manufacturer "manufacturer-3" "short_description" in default language should be "Makes best shoes in Europe"
-    And manufacturer "manufacturer-3" "description" in default language should be "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi at nulla id mi gravida blandit a non erat. Mauris nec lorem vel odio sagittis ornare."
-    And manufacturer "manufacturer-3" "meta_title" in default language should be "Perfect quality shoes"
-    And manufacturer "manufacturer-3" "meta_description" field in default language should be empty
-    And manufacturer "manufacturer-3" "meta_keywords" in default language should be "Boots, shoes, slippers"
-    And manufacturer "manufacturer-3" should be enabled
+      | enabled          | true                               |
+    Then manufacturer "shoeman" name should be "best-shoes"
+    And manufacturer "shoeman" "short_description" in default language should be "Makes best shoes in Europe"
+    And manufacturer "shoeman" "description" in default language should be "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi at nulla id mi gravida blandit a non erat. Mauris nec lorem vel odio sagittis ornare."
+    And manufacturer "shoeman" "meta_title" in default language should be "Perfect quality shoes"
+    And manufacturer "shoeman" "meta_description" field in default language should be empty
+    And manufacturer "shoeman" "meta_keywords" in default language should be "Boots, shoes, slippers"
+    And manufacturer "shoeman" should be enabled
 
   Scenario: Editing manufacturer
-    When I edit manufacturer "manufacturer-3" with following properties:
+    When I edit manufacturer "shoeman" with following properties:
       | name             | worst-shoes                                |
       | short_description| Worst slippers in EU                       |
       | meta_title       | Worst quality shoes                        |
       | description      |                                            |
       | meta_description | You'd better walk bare foot                |
-      | enabled          | 0                                          |
-    Then manufacturer "manufacturer-3" name should be "worst-shoes"
-    And manufacturer "manufacturer-3" "short_description" in default language should be "Worst slippers in EU"
-    And manufacturer "manufacturer-3" "description" field in default language should be empty
-    And manufacturer "manufacturer-3" "meta_title" in default language should be "Worst quality shoes"
-    And manufacturer "manufacturer-3" "meta_description" in default language should be "You'd better walk bare foot"
-    And manufacturer "manufacturer-3" "meta_keywords" in default language should be "Boots, shoes, slippers"
-    And manufacturer "manufacturer-3" should be disabled
+      | enabled          | false                                      |
+    Then manufacturer "shoeman" name should be "worst-shoes"
+    And manufacturer "shoeman" "short_description" in default language should be "Worst slippers in EU"
+    And manufacturer "shoeman" "description" field in default language should be empty
+    And manufacturer "shoeman" "meta_title" in default language should be "Worst quality shoes"
+    And manufacturer "shoeman" "meta_description" in default language should be "You'd better walk bare foot"
+    And manufacturer "shoeman" "meta_keywords" in default language should be "Boots, shoes, slippers"
+    And manufacturer "shoeman" should be disabled
 
-  Scenario: Enable manufacturer status by toggling it
-    Given manufacturer "manufacturer-3" should be disabled
-    When I toggle manufacturer "manufacturer-3" status
-    Then manufacturer "manufacturer-3" should be enabled
+  Scenario: Enable and disable manufacturer status
+    Given manufacturer "shoeman" should be disabled
+    When I enable manufacturer "shoeman"
+    Then manufacturer "shoeman" should be enabled
+    When I disable manufacturer "shoeman"
+    Then manufacturer "shoeman" should be disabled
 
-  Scenario: Disable manufacturer status by toggling it
-    Given manufacturer "manufacturer-3" should be enabled
-    When I toggle manufacturer "manufacturer-3" status
-    Then manufacturer "manufacturer-3" should be disabled
+  Scenario: Enabling multiple manufacturers in bulk action
+    When I add new manufacturer "baller" with following properties:
+      | name             | Baller                             |
+      | short_description| Makes big balls                    |
+      | description      | consectetur adipiscing elit. Morbi at nulla id mi gravida blandit a non erat. Mauris nec lorem vel odio sagittis ornare.|
+      | meta_title       | Have some balls                    |
+      | meta_description |                                    |
+      | meta_keywords    | Balls, basketball, football        |
+      | enabled          | false                              |
+    And I add new manufacturer "rocket" with following properties:
+      | name             | Rocket                             |
+      | short_description| Cigarettes manufacturer            |
+      | description      | Morbi at nulla id mi gravida blandit a non erat. Mauris nec lorem vel odio sagittis ornare.|
+      | meta_title       | You smoke - you die!               |
+      | meta_description | The sun is shining and the weather is sweet|
+      | meta_keywords    | Cigarettes, smoke                  |
+      | enabled          | true                               |
+    When I enable multiple manufacturers: "baller, rocket" using bulk action
+    Then manufacturers: "baller, rocket" should be enabled
+    When I disable multiple manufacturers: "baller, rocket" using bulk action
+    Then manufacturers: "baller, rocket" should be disabled
 
-  Scenario: Bulk disabling manufacturer status
-    Given manufacturers with ids: "1,2" exists
-    And manufacturers with ids: "1,2" should be enabled
-    When I disable manufacturers with ids: "1,2" in bulk action
-    Then manufacturers with ids: "1,2" should be disabled
+  Scenario: Deleting manufacturer right after changing its name
+    When I edit manufacturer "shoeman" with following properties:
+      | name             | Shoeman              |
+    Then manufacturer "shoeman" name should be "Shoeman"
+    When I delete manufacturer "shoeman"
+    Then manufacturer "shoeman" should be deleted
 
-  Scenario: Bulk enabling manufacturer status
-    Given manufacturers with ids: "1,2" should be disabled
-    When I enable manufacturers with ids: "1,2" in bulk action
-    Then manufacturers with ids: "1,2" should be enabled
-
-  Scenario: Deleting manufacturer
-    Given manufacturer with id "3" exists
-    When I delete manufacturer with id "3"
-    Then manufacturer with id "3" should not be found
-
-  Scenario: Bulk deleting manufacturers
-    Given manufacturers with ids: "1,2" exists
-    When I bulk delete manufacturers with ids: "1,2"
-    Then manufacturers with ids: "1,2" should not be found
+  Scenario: Deleting multiple manufacturers in bulk action
+    When I delete manufacturers: "baller, rocket" using bulk action
+    Then manufacturers: "baller, rocket" should be deleted
