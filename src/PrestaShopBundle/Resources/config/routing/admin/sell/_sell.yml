@@ -17,6 +17,6 @@ _stocks:
     resource: "stocks.yml"
     prefix: /stocks/
 
-_file:
-  resource: "catalog/files.yml"
-  prefix: /files/
+_attachment:
+  resource: "catalog/attachment.yml"
+  prefix: /attachments/
