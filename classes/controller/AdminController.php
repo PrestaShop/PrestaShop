@@ -25,26 +25,12 @@
  */
 use PrestaShop\PrestaShop\Adapter\ContainerBuilder;
 use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
+use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Price as PriceSpecification;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecification;
 
 class AdminControllerCore extends Controller
 {
-    /** @var array */
-    const DEFAULT_SPECIFICATION_SYMBOL = [
-        '.',
-        ',',
-        ';',
-        '%',
-        '-',
-        '+',
-        'E',
-        '×',
-        '‰',
-        '∞',
-        'NaN',
-    ];
-
     /** @var string */
     public $path;
 
@@ -4816,7 +4802,7 @@ class AdminControllerCore extends Controller
         }
 
         return array_merge(
-            ['symbol' => self::DEFAULT_SPECIFICATION_SYMBOL],
+            ['symbol' => $priceSpecification->getSymbolsByNumberingSystem(Locale::NUMBERING_SYSTEM_LATIN)->toArray()],
             $priceSpecification->toArray()
         );
     }
@@ -4837,7 +4823,7 @@ class AdminControllerCore extends Controller
         }
 
         return array_merge(
-            ['symbol' => self::DEFAULT_SPECIFICATION_SYMBOL],
+            ['symbol' => $numberSpecification->getSymbolsByNumberingSystem(Locale::NUMBERING_SYSTEM_LATIN)->toArray()],
             $numberSpecification->toArray()
         );
     }
