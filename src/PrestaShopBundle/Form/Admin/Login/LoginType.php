@@ -47,16 +47,8 @@ class LoginType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('email', EmailType::class, [
-                'attr' => [
-                    'placeholder' => 'login@prestashop.com',
-                ],
-            ])
-            ->add('password', PasswordType::class, [
-                'attr' => [
-                    'placeholder' => $this->trans('Password', [], 'Admin.Global'),
-                ],
-            ])
+            ->add('email', EmailType::class)
+            ->add('password', PasswordType::class)
             ->add('stay_logged_in', CheckboxType::class, [
                 'required' => false,
             ])

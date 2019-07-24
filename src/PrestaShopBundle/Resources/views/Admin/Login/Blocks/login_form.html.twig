@@ -72,13 +72,13 @@
 {{ form_widget(loginForm.redirect_url) }}
 {{ form_widget(loginForm._token) }}
 
-<div class="form-group-row mt-4">
-  <button id="{{ inputIds.submit_login }}" class="btn btn-primary w-100 text-uppercase">
+<div class="form-group-row form-actions-row">
+  <button id="{{ inputIds.submit_login }}" class="btn btn-primary w-100">
     {{ 'Log in'|trans({}, 'Admin.Login.Feature') }}
   </button>
 </div>
 
-<div class="form-group row mt-3">
+<div class="form-group row">
   <div class="col">
       <label>
         {{ form_widget(loginForm.stay_logged_in, {

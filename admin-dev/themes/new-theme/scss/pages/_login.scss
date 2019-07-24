@@ -1,20 +1,41 @@
+// @todo change to a variable when this color is introduced to the UI kit
+$temporaryColor: #011638;
+
 html > body {
-  // @todo change to a variable when this color is introduced to the UI kit
-  background-color: #011638;
+  background-color: $temporaryColor;
   background-image: url('../../../../img/login-background-shape.png');
   background-repeat: no-repeat;
-  background-position: 50%;
+  background-position: 50% 115%;
 }
 
 .login-card {
   z-index: 1;
-  padding-top: 37px;
-  margin-top: -50px;
+  padding-top: 20px;
   width: 500px;
   min-height: 250px;
 
+  input[type=password],
+  input[type=email],
+  button {
+    border-radius: 4px;
+  }
+
   @include media-breakpoint-down(xs) {
     width: 90%;
+  }
+
+  .form-actions-row {
+    margin-top: 35px;
+    margin-bottom: 29px;
+  }
+
+  .card-text {
+    padding-bottom: 11px;
+  }
+
+  .show-forgot-password {
+    color: $temporaryColor;
+    text-decoration: underline;
   }
 }
 
@@ -24,8 +45,8 @@ html > body {
 
   .flip-card-inner {
     .flip-card-back {
-      padding-left: 30px;
-      padding-right: 30px;
+      padding-left: 31px;
+      padding-right: 31px;
     }
 
     &.flipped {
@@ -49,11 +70,11 @@ html > body {
 }
 
 .title-row {
-  margin-bottom: 30px;
-  margin-top: 45px;
+  margin-bottom: 45px;
+  margin-top: 77px;
+}
 
-  img {
-    width: 123px;
-    height: 24px;
-  }
+.version-text,
+.copyright-text {
+  font-size: 0.7rem;
 }
