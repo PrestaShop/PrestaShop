@@ -235,6 +235,7 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @Then /^tax "(.*)" should be (enabled|disabled)?$/
+     * @Given /^tax "(.*)" is (enabled|disabled)?$/
      */
     public function assertTaxStatus($taxReference, $status)
     {

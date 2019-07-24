@@ -1,8 +1,8 @@
 @reset-database-before-feature
 #./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s tax
 Feature: Manage tax
-  As a employee
-  I must be able to correctly add, edit and delete tax
+  As an employee
+  I must be able to add, edit and delete taxes
 
   Scenario: Adding new tax
     When I add new tax "sales-tax" with following properties:
@@ -30,7 +30,7 @@ Feature: Manage tax
     And tax "sales-tax" should be disabled
 
   Scenario: Enabling tax status
-    Given tax "sales-tax" should be disabled
+    Given tax "sales-tax" is disabled
     When I enable tax "sales-tax"
     Then tax "sales-tax" should be enabled
 
@@ -40,7 +40,7 @@ Feature: Manage tax
     When I delete tax "sales-tax"
     Then tax "sales-tax" should be deleted
 
-  Scenario: Disabling multiple taxes status in bulk action
+  Scenario: Disabling multiple taxes in bulk action
     When I add new tax "beard-tax" with following properties:
       | name         | Beard tax         |
       | rate         | 0.1               |
