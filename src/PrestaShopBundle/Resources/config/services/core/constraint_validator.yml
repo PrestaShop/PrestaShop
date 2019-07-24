@@ -15,3 +15,17 @@ services:
       - '@=service("prestashop.adapter.legacy.configuration").get("PS_LANG_DEFAULT")'
     tags:
       - { name: validator.constraint_validator }
+
+  prestashop.core.constraint_validator.customer_name_validator:
+    class: 'PrestaShop\PrestaShop\Core\ConstraintValidator\CustomerNameValidator'
+    arguments:
+      - '@prestashop.adapter.tools'
+    tags:
+      - { name: validator.constraint_validator }
+
+  prestashop.core.constraint_validator.typed_regex_validator:
+    class: 'PrestaShop\PrestaShop\Core\ConstraintValidator\TypedRegexValidator'
+    arguments:
+      - '@prestashop.adapter.tools'
+    tags:
+      - { name: validator.constraint_validator }

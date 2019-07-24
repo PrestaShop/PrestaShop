@@ -244,4 +244,16 @@ class Tools
     {
         return LegacyTools::getAdminImageUrl($fileName, $escapeHtmlEntities);
     }
+
+    /**
+     * Delete unicode class from regular expression patterns.
+     *
+     * @param string $pattern
+     *
+     * @return string pattern
+     */
+    public function cleanNonUnicodeSupport($pattern)
+    {
+        return LegacyTools::cleanNonUnicodeSupport($pattern);
+    }
 }
