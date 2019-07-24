@@ -43,8 +43,6 @@ export default class LoginPage {
    * @private
    */
   _initEvents() {
-    $(document).on('mouseover mouseout', loginPageMap.prestonWinkControl, this._prestonWink);
-
     $(document).on('click', loginPageMap.forgotPasswordButton, (event) => {
       event.preventDefault();
 
@@ -62,18 +60,5 @@ export default class LoginPage {
         $(loginPageMap.loginFormContainer).removeClass('d-none');
       }, 200);
     });
-  }
-
-  /**
-   * Makes preston image wink.
-   *
-   * @private
-   */
-  _prestonWink() {
-    const $preston = $(loginPageMap.prestonImage);
-    const tmpSrc = $preston.attr('src');
-
-    $preston.attr('src', $preston.data('hover-src'));
-    $preston.data('hover-src', tmpSrc);
   }
 }

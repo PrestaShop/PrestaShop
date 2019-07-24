@@ -27,11 +27,6 @@
  * This map defines all selectors that are available in the login page.
  */
 export default {
-  prestonImage: '.js-preston-img',
-
-  // These selectors will make preston image "wink" when hovered
-  prestonWinkControl: '.js-hover-preston-wink',
-
   // Container that wraps login form
   loginFormContainer: '.js-login-form-container',
 
