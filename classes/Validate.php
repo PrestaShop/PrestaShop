@@ -23,7 +23,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-use PrestaShop\PrestaShop\Core\ConstraintValidator\CustomerNameValidator;
+use PrestaShop\PrestaShop\Adapter\Tools as AdapterTools;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CustomerName;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Factory\CustomerNameValidatorFactory;
+use Symfony\Component\Validator\Validation;
 
 class ValidateCore
 {
@@ -167,16 +170,16 @@ class ValidateCore
      */
     public static function isCustomerName($name)
     {
-        $validityPattern = Tools::cleanNonUnicodeSupport(
-            CustomerNameValidator::PATTERN_NAME
+        $validatorBuilder = Validation::createValidatorBuilder();
+        $validatorBuilder->setConstraintValidatorFactory(
+            new CustomerNameValidatorFactory(new AdapterTools())
         );
+        $validator = $validatorBuilder->getValidator();
+        $violations = $validator->validate($name, [
+            new CustomerName(),
+        ]);
 
-        $valid = preg_match($validityPattern, $name);
-        if ($valid && strpos($name, '。') !== false) {
-            $valid = 0;
-        }
-
-        return $valid;
+        return (count($violations) !== 0) ? 0 : 1;
     }
 
     /**

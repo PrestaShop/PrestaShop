@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\ConstraintValidator;
 
+use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CustomerName;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 use Symfony\Component\Validator\Constraint;
@@ -37,6 +38,19 @@ use Symfony\Component\Validator\ConstraintValidator;
 class CustomerNameValidator extends ConstraintValidator
 {
     const PATTERN_NAME = '/^(?:[^0-9!<>,;?=+()\/\\\\@#"°*`{}_^$%:¤\[\]|\.]|[\.](?:\s|$))*$/u';
+
+    /**
+     * @var Tools
+     */
+    private $tools;
+
+    /**
+     * @param Tools $tools
+     */
+    public function __construct(Tools $tools)
+    {
+        $this->tools = $tools;
+    }
 
     /**
      * {@inheritdoc}
@@ -67,7 +81,7 @@ class CustomerNameValidator extends ConstraintValidator
      */
     private function isNameValid($name)
     {
-        $pattern = preg_replace('/\\\[px]\{[a-z]{1,2}\}|(\/[a-z]*)u([a-z]*)$/i', '$1$2', self::PATTERN_NAME);
+        $pattern = $this->tools->cleanNonUnicodeSupport(self::PATTERN_NAME);
 
         return preg_match($pattern, $name);
     }
@@ -81,11 +95,13 @@ class CustomerNameValidator extends ConstraintValidator
      */
     private function isPointSpacedValid($name)
     {
-        if (strpos($name, '.') === false && strpos($name, '。') === false) {
+        $lastCharPos = strlen($name) - 1;
+        if ((strpos($name, '.') === false || strpos($name, '.') === $lastCharPos)
+            && (strpos($name, '。') === false || strpos($name, '。') === $lastCharPos)) {
             return true;
         }
 
         return (strpos($name, '. ') !== false || strpos($name, '。 ') !== false)
-            && (strpos($name, '.  ') === false && strpos($name, '。  ') === false);
+            && strpos($name, '.  ') === false && strpos($name, '。  ') === false;
     }
 }

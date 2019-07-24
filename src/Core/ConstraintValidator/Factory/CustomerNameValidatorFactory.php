@@ -24,23 +24,38 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints;
+namespace PrestaShop\PrestaShop\Core\ConstraintValidator\Factory;
 
+use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\CustomerNameValidator;
+use Symfony\Component\Validator\ConstraintValidatorFactoryInterface;
 use Symfony\Component\Validator\Constraint;
+use Symfony\Component\Validator\ConstraintValidatorInterface;
 
-/**
- * Class CustomerName is responsible of validating customer name according to several patterns.
- */
-final class CustomerName extends Constraint
+class CustomerNameValidatorFactory implements ConstraintValidatorFactoryInterface
 {
-    public $message = 'The %s field is invalid.';
+    /**
+     * @var Tools
+     */
+    private $tools;
 
     /**
-     * {@inheritdoc}
+     * CustomerNameValidatorFactory constructor.
+     *
+     * @param Tools $tools
      */
-    public function validatedBy()
+    public function __construct(Tools $tools)
     {
-        return CustomerNameValidator::class;
+        $this->tools = $tools;
+    }
+
+    /**
+     * @param Constraint $constraint
+     *
+     * @return ConstraintValidatorInterface
+     */
+    public function getInstance(Constraint $constraint)
+    {
+        return new CustomerNameValidator($this->tools);
     }
 }
