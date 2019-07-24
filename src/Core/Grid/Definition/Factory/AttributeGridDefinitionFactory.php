@@ -27,8 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Adapter\AttributeGroup\AttributeGroupViewDataProvider;
-use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Exception\AttributeGroupException;
-use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Exception\AttributeGroupNotFoundException;
+use PrestaShop\PrestaShop\Core\AttributeGroup\AttributeGroupViewDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
@@ -61,19 +60,19 @@ final class AttributeGridDefinitionFactory extends AbstractGridDefinitionFactory
     private $attributeGroupId;
 
     /**
-     * @var AttributeGroupViewDataProvider
+     * @var AttributeGroupViewDataProviderInterface
      */
     private $attributeGroupViewDataProvider;
 
     /**
      * @param HookDispatcherInterface $hookDispatcher
      * @param int $attributeGroupId
-     * @param AttributeGroupViewDataProvider $attributeGroupViewDataProvider
+     * @param AttributeGroupViewDataProviderInterface $attributeGroupViewDataProvider
      */
     public function __construct(
         HookDispatcherInterface $hookDispatcher,
         $attributeGroupId,
-        $attributeGroupViewDataProvider
+        AttributeGroupViewDataProviderInterface $attributeGroupViewDataProvider
     ) {
         parent::__construct($hookDispatcher);
         $this->attributeGroupId = $attributeGroupId;
@@ -98,9 +97,6 @@ final class AttributeGridDefinitionFactory extends AbstractGridDefinitionFactory
 
     /**
      * {@inheritdoc}
-     *
-     * @throws AttributeGroupException
-     * @throws AttributeGroupNotFoundException
      */
     protected function getColumns()
     {

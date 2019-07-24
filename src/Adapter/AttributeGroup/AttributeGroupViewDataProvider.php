@@ -27,15 +27,16 @@
 namespace PrestaShop\PrestaShop\Adapter\AttributeGroup;
 
 use AttributeGroup;
+use PrestaShop\PrestaShop\Core\AttributeGroup\AttributeGroupViewDataProviderInterface;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Exception\AttributeGroupException;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Exception\AttributeGroupNotFoundException;
 use PrestaShopException;
 
 /**
- * Provides data required for attribute group view action
+ * Provides data required for attribute group view action using legacy object models
  */
-final class AttributeGroupViewDataProvider
+final class AttributeGroupViewDataProvider implements AttributeGroupViewDataProviderInterface
 {
     /**
      * @var int
@@ -58,12 +59,7 @@ final class AttributeGroupViewDataProvider
     }
 
     /**
-     * @param int $attributeGroupId
-     *
-     * @return bool
-     *
-     * @throws AttributeGroupException
-     * @throws AttributeGroupNotFoundException
+     * {@inheritdoc}
      */
     public function isColorGroup($attributeGroupId)
     {
@@ -73,14 +69,7 @@ final class AttributeGroupViewDataProvider
     }
 
     /**
-     * Provides the name of attribute group by its id
-     *
-     * @param int $attributeGroupId
-     *
-     * @return string
-     *
-     * @throws AttributeGroupException
-     * @throws AttributeGroupNotFoundException
+     * {@inheritdoc}
      */
     public function getAttributeGroupNameById($attributeGroupId)
     {
