@@ -238,34 +238,33 @@ class LocaleUsageTest extends SymfonyIntegrationTestCase
     protected static function installTestedLanguagePacks()
     {
         $countries = [
-            'us' => 'en',
-            'jp' => 'ja',
-            'gb' => 'en',
-            'de' => 'de',
-            'fr' => 'fr',
-            'in' => 'hi',
-            'es' => 'es',
-            'ca' => 'ca',
-            'cn' => 'ug',
-            'au' => 'en',
-            'br' => 'pt',
-            'mx' => 'es',
-            'ru' => 'ru',
-            'it' => 'it',
-            'pl' => 'pl',
-            'bg' => 'bg',
-            'az' => 'az',
+            'us',
+            'jp',
+            'gb',
+            'de',
+            'fr',
+            'in',
+            'es',
+            'ca',
+            'cn',
+            'au',
+            'br',
+            'mx',
+            'ru',
+            'it',
+            'pl',
+            'bg',
+            'az',
         ];
         $cacheDir = _PS_CACHE_DIR_ . 'sandbox' . DIRECTORY_SEPARATOR;
 
-        foreach ($countries as $country => $iso) {
+        foreach ($countries as $country) {
             $xmlContent = (new LocalizationWarmer(_PS_VERSION_, $country))
                 ->warmUp($cacheDir);
 
-            Language::checkAndAddLanguage($iso);
             $localizationPack = new LocalizationPack();
             $localizationPack->loadLocalisationPack($xmlContent, false, true);
-            $localizationPack->loadLocalisationPack($xmlContent, ['languages']);
+            $localizationPack->loadLocalisationPack($xmlContent, ['languages'], true);
         }
     }
 
