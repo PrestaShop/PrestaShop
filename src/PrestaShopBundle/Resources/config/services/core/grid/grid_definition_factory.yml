@@ -188,7 +188,7 @@ services:
       class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AttachmentGridDefinitionFactory'
       parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
       arguments:
-        - "@=service('router').generate('admin_common_reset_search', {'controller': 'file', 'action': 'index'})"
+        - "@=service('router').generate('admin_common_reset_search', {'controller': 'attachment', 'action': 'index'})"
         - "@=service('router').generate('admin_attachments_index')"
         - '@prestashop.adapter.shop.context'
         - '@prestashop.adapter.grid.action.row.accessibility_checker.category_for_view'
