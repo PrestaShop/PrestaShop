@@ -77,7 +77,9 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
      */
     public function editManufacturerWithDefaultLang($reference, TableNode $node)
     {
+        /** @var Manufacturer $manufacturer */
         $manufacturer = SharedStorage::getStorage()->get($reference);
+
         $manufacturerId = (int) $manufacturer->id;
         $data = $node->getRowsHash();
         $command = new EditManufacturerCommand($manufacturerId);
@@ -246,6 +248,7 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Given /^manufacturer "(.*)" is (enabled|disabled)?$/
      * @Then /^manufacturer "(.*)" should be (enabled|disabled)?$/
      */
     public function assertStatus($manufacturerReference, $expectedStatus)

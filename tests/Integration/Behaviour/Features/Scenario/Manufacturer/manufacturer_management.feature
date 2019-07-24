@@ -1,8 +1,8 @@
 @reset-database-before-feature
 #./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s manufacturer
 Feature: Manufacturer management
-  As a employee
-  I must be able to correctly add, edit and delete manufacturer
+  As an employee
+  I must be able to add, edit and delete manufacturers
 
   Scenario: Adding new manufacturer
     When I add new manufacturer "shoeman" with following properties:
@@ -38,13 +38,13 @@ Feature: Manufacturer management
     And manufacturer "shoeman" should be disabled
 
   Scenario: Enable and disable manufacturer status
-    Given manufacturer "shoeman" should be disabled
+    Given manufacturer "shoeman" is disabled
     When I enable manufacturer "shoeman"
     Then manufacturer "shoeman" should be enabled
     When I disable manufacturer "shoeman"
     Then manufacturer "shoeman" should be disabled
 
-  Scenario: Enabling multiple manufacturers in bulk action
+  Scenario: Enabling and disabling multiple manufacturers in bulk action
     When I add new manufacturer "baller" with following properties:
       | name             | Baller                             |
       | short_description| Makes big balls                    |
