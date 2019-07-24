@@ -36,7 +36,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class FileController extends FrameworkBundleAdminController
+class AttachmentController extends FrameworkBundleAdminController
 {
     /**
      * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
@@ -48,12 +48,12 @@ class FileController extends FrameworkBundleAdminController
      */
     public function indexAction(Request $request, FileFilters $filters)
     {
-        $fileGridFactory = $this->get('prestashop.core.grid.factory.file');
-        $customerGrid = $fileGridFactory->getGrid($filters);
+        $attachmentGridFactory = $this->get('prestashop.core.grid.factory.file');
+        $customerGrid = $attachmentGridFactory->getGrid($filters);
 
-        return $this->render('@PrestaShop/Admin/Sell/Catalog/File/index.html.twig', [
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Attachment/index.html.twig', [
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
-            'fileGrid' => $this->presentGrid($customerGrid),
+            'attachmentGrid' => $this->presentGrid($customerGrid),
             'enableSidebar' => true,
         ]);
     }
@@ -63,7 +63,7 @@ class FileController extends FrameworkBundleAdminController
      *
      * @AdminSecurity(
      *     "is_granted('delete', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_files_index",
+     *     redirectRoute="admin_attachments_index",
      *     message="You do not have permission to delete this."
      * )
      *
@@ -99,6 +99,6 @@ class FileController extends FrameworkBundleAdminController
             }
         }
 
-        return $this->redirectToRoute('admin_files_index');
+        return $this->redirectToRoute('admin_attachments_index');
     }
 }

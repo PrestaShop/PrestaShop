@@ -1,20 +1,20 @@
-admin_files_index:
+admin_attachments_index:
   path: /
   methods: GET
   defaults:
-    _controller: PrestaShopBundle:Admin/Sell/Catalog/File:index
+    _controller: PrestaShopBundle:Admin/Sell/Catalog/Attachment:index
     _legacy_controller: AdminAttachments
     _legacy_link: AdminAttachments
 
-#admin_files_filter:
-#  path: /
-#  methods: [POST]
-#  defaults:
-#    _controller: PrestaShopBundle:Admin\Common:searchGrid
-#    _legacy_controller: AdminAttachments
-#    gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.file
-#    redirectRoute: admin_files_index
-#    _legacy_link: AdminAttachments:submitFilterattachment
+admin_attachments_filter:
+  path: /
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Common:searchGrid
+    _legacy_controller: AdminAttachments
+    gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.attachment
+    redirectRoute: admin_attachments_index
+    _legacy_link: AdminAttachments:submitFilterattachment
 #
 #admin_files_create:
 #  path: /new
@@ -24,11 +24,11 @@ admin_files_index:
 #    _legacy_controller: AdminAttachments
 #    _legacy_link: AdminAttachments:addattachment
 #
-admin_file_edit:
+admin_attachment_edit:
   path: /{attachmentId}/edit
   methods: [GET, POST]
   defaults:
-    _controller: PrestaShopBundle:Admin/Sell/Catalog/File:edit
+    _controller: PrestaShopBundle:Admin/Sell/Catalog/Attachment:edit
     _legacy_controller: AdminAttachments
     _legacy_link: AdminAttachments:updateattachment
     _legacy_parameters:
@@ -36,11 +36,11 @@ admin_file_edit:
   requirements:
     attachmentId: \d+
 #
-admin_file_view:
+admin_attachment_view:
   path: /{attachmentId}/view
   methods: [GET, POST]
   defaults:
-    _controller: PrestaShopBundle:Admin/Sell/Catalog/File:view
+    _controller: PrestaShopBundle:Admin/Sell/Catalog/Attachment:view
     _legacy_controller: AdminAttachments
     _legacy_link: AdminAttachments:viewcustomer
     _legacy_parameters:
@@ -48,19 +48,19 @@ admin_file_view:
   requirements:
     attachmentId: \d+
 
-#admin_files_delete_bulk:
-#  path: /delete-bulk
-#  methods: [POST]
-#  defaults:
-#    _controller: PrestaShopBundle:Admin/Sell/Catalog/File:deleteBulk
-#    _legacy_controller: AdminAttachments
-#    _legacy_link: AdminAttachments:submitBulkdeletecustomer
-#
-admin_file_delete:
+admin_attachments_delete_bulk:
+  path: /delete-bulk
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Catalog/Attachment:deleteBulk
+    _legacy_controller: AdminAttachments
+    _legacy_link: AdminAttachments:submitBulkdeletecustomer
+
+admin_attachment_delete:
   path: /delete
   methods: [POST]
   defaults:
-    _controller: PrestaShopBundle:Admin/Sell/Catalog/File:delete
+    _controller: PrestaShopBundle:Admin/Sell/Catalog/Attachment:delete
     _legacy_controller: AdminAttachments
     _legacy_link: AdminAttachments:deletecustomer
 

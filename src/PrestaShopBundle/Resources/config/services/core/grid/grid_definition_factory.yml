@@ -206,7 +206,12 @@ services:
             - '@=service("prestashop.adapter.multistore_feature").isUsed()'
         public: true
 
-    prestashop.core.grid.definition.factory.file:
-      class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\FileGridDefinitionFactory'
+    prestashop.core.grid.definition.factory.attachment:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AttachmentGridDefinitionFactory'
       parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+      arguments:
+        - "@=service('router').generate('admin_common_reset_search', {'controller': 'file', 'action': 'index'})"
+        - "@=service('router').generate('admin_attachments_index')"
+        - '@prestashop.adapter.shop.context'
+        - '@prestashop.adapter.grid.action.row.accessibility_checker.category_for_view'
       public: true

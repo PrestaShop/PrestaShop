@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 /**
  * Class TaxQueryBuilder builds search & count queries for taxes grid.
  */
-final class FileQueryBuilder extends AbstractDoctrineQueryBuilder
+final class AttachmentQueryBuilder extends AbstractDoctrineQueryBuilder
 {
     /**
      * @var DoctrineSearchCriteriaApplicatorInterface
@@ -71,7 +71,7 @@ final class FileQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
 
         $qb
-            ->select('a.`id_attachment`, al.`name`, a.`file`, a.`file_size`')
+            ->select('a.`id_attachment`, al.`name`, a.`file`, a.`file_size`, COALESCE(virtual_product_attachment.`product_count`, 0) AS products')
         ;
 
         $this->searchCriteriaApplicator
@@ -112,8 +112,19 @@ final class FileQueryBuilder extends AbstractDoctrineQueryBuilder
                 'al',
                 'a.`id_attachment` = al.`id_attachment`'
             );
-        $qb->andWhere('al.`id_lang` = :employee_id_lang');
 
+        $productCountQb = $this->connection
+            ->createQueryBuilder()
+            ->from($this->dbPrefix . 'product_attachment', 'pa')
+            ->select('pa.`id_attachment`, COUNT(*) as product_count')
+            ->groupBy('id_attachment');
+
+        $qb->leftJoin('a',
+            '(' . $productCountQb->getSQL() . ')',
+            'virtual_product_attachment',
+            'a.`id_attachment` = virtual_product_attachment.`id_attachment`');
+
+        $qb->andWhere('al.`id_lang` = :employee_id_lang');
         $qb->setParameter('employee_id_lang', $this->employeeIdLang);
         $this->applyFilters($qb, $filters);
 
@@ -126,6 +137,7 @@ final class FileQueryBuilder extends AbstractDoctrineQueryBuilder
             'id_attachment' => 'a.id_attachment',
             'name' => 'al.name',
             'file_size' => 'a.file_size',
+            'products' => 'virtual_product_attachment.product_count',
         ];
 
         foreach ($filters as $filterName => $value) {
@@ -133,8 +145,16 @@ final class FileQueryBuilder extends AbstractDoctrineQueryBuilder
                 continue;
             }
 
-            if ('id_tax' === $filterName) {
+            if ('id_attachment' === $filterName) {
                 $qb->andWhere($allowedFiltersMap[$filterName] . ' = :' . $filterName);
+                $qb->setParameter($filterName, $value);
+
+                continue;
+            }
+
+            if ('products' === $filterName && $value === '0') {
+                $qb->andWhere($allowedFiltersMap[$filterName] . ' IS NULL');
+
                 $qb->setParameter($filterName, $value);
 
                 continue;
