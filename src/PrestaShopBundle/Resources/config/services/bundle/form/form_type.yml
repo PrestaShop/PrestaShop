@@ -28,6 +28,11 @@ services:
     form.type.product.translate:
         class: 'PrestaShopBundle\Form\Admin\Type\TranslateType'
         parent: 'form.type.common_type'
+        arguments:
+            - '@router.default'
+            - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_BO_ALLOW_EMPLOYEE_FORM_LANG')"
+            - "@=service('prestashop.adapter.legacy.context').getContext().cookie.employee_form_lang"
+            - "@=service('prestashop.adapter.legacy.configuration').getInt('PS_LANG_DEFAULT')"
         public: true
         tags:
             - { name: form.type }
@@ -567,7 +572,8 @@ services:
         parent: 'form.type.translatable.aware'
         arguments:
             - '@=service("prestashop.core.form.choice_provider.group_by_id").getChoices()'
-            - '@prestashop.adapter.multistore_feature'
+            - '@prestashop.adapter.feature.multistore'
+            - '@prestashop.adapter.legacy.configuration'
         public: true
 
     form.type.category.delete_categories:
@@ -646,7 +652,7 @@ services:
     form.type.common.translatable:
         class: 'PrestaShopBundle\Form\Admin\Type\TranslatableType'
         arguments:
-            - "@=service('prestashop.adapter.legacy.context').getLanguages()"
+            - "@=service('prestashop.adapter.legacy.context').getAvailableLanguages()"
             - '@router.default'
             - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_BO_ALLOW_EMPLOYEE_FORM_LANG')"
             - "@=service('prestashop.adapter.legacy.context').getContext().cookie.employee_form_lang"
@@ -783,8 +789,9 @@ services:
 
     form.type.sell.manufacturer:
         class: 'PrestaShopBundle\Form\Admin\Sell\Manufacturer\ManufacturerType'
+        parent: 'form.type.translatable.aware'
+        public: true
         arguments:
-            - '@translator'
             - '@=service("prestashop.adapter.multistore_feature").isActive()'
         tags:
             - { name: form.type }
@@ -819,8 +826,9 @@ services:
 
     form.type.cms_page:
         class: 'PrestaShopBundle\Form\Admin\Improve\Design\Pages\CmsPageType'
+        parent: 'form.type.translatable.aware'
+        public: true
         arguments:
-            - '@translator'
             - '@=service("prestashop.core.form.choice_provider.cms_categories").getChoices()'
             - '@=service("prestashop.adapter.multistore_feature").isUsed()'
         tags:
@@ -852,7 +860,7 @@ services:
         public: true
         arguments:
             - '@=service("prestashop.core.form.choice_provider.mail_themes").getChoices()'
-            - '@=service("prestashop.core.form.choice_provider.theme_by_name").getChoices()'
+            - '@=service("prestashop.core.form.choice_provider.theme_by_name_with_emails").getChoices()'
         tags:
             - { name: form.type }
 
@@ -863,3 +871,19 @@ services:
             - '@=service("prestashop.core.form.choice_provider.mail_themes").getChoices()'
         tags:
             - { name: form.type }
+
+    form.type.integer_min_max_filter:
+        class: 'PrestaShopBundle\Form\Admin\Type\IntegerMinMaxFilterType'
+        public: true
+        calls:
+          - { method: setTranslator, arguments: ['@translator'] }
+        tags:
+          - { name: form.type }
+
+    form.type.number_min_max_filter:
+        class: 'PrestaShopBundle\Form\Admin\Type\NumberMinMaxFilterType'
+        public: true
+        calls:
+          - { method: setTranslator, arguments: ['@translator'] }
+        tags:
+          - { name: form.type }

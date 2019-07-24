@@ -445,14 +445,23 @@ class ProductLazyArray extends AbstractLazyArray
             );
         }
 
-        if ($show_price
-            && $this->product['reduction']
-            && !$this->settings->catalog_mode
-            && !$this->product['on_sale']) {
-            $flags['discount'] = array(
-                'type' => 'discount',
-                'label' => $this->translator->trans('Reduced price', array(), 'Shop.Theme.Catalog'),
-            );
+        if ($show_price && $this->product['reduction']) {
+            if ($this->product['discount_type'] === 'percentage') {
+                $flags['discount'] = array(
+                    'type' => 'discount',
+                    'label' => $this->product['discount_percentage'],
+                );
+            } elseif ($this->product['discount_type'] === 'amount') {
+                $flags['discount'] = array(
+                    'type' => 'discount',
+                    'label' => $this->product['discount_amount_to_display'],
+                );
+            } else {
+                $flags['discount'] = array(
+                    'type' => 'discount',
+                    'label' => $this->translator->trans('Reduced price', array(), 'Shop.Theme.Catalog'),
+                );
+            }
         }
 
         if ($this->product['new']) {
@@ -734,7 +743,7 @@ class ProductLazyArray extends AbstractLazyArray
             $ean13,
             $language->id,
             null,
-            $canonical ? null : $product['id_product_attribute'],
+            !$canonical && $product['id_product_attribute'] > 0 ? $product['id_product_attribute'] : null,
             false,
             false,
             true

@@ -34,7 +34,8 @@ use PrestaShop\PrestaShop\Core\Grid\Search\Factory\DecoratedSearchCriteriaFactor
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteria;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
-use Tools;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Class SearchCriteriaWithCategoryParentIdFilterFactory.
@@ -69,24 +70,32 @@ final class SearchCriteriaWithCategoryParentIdFilterFactory implements Decorated
     private $contextShopCategoryId;
 
     /**
+     * @var RequestStack
+     */
+    private $requestStack;
+
+    /**
      * @param Configuration $configuration
      * @param Context $shopContext
      * @param FeatureInterface $multistoreFeature
      * @param MultistoreContextCheckerInterface $multistoreContextChecker
      * @param int $contextShopCategoryId
+     * @param RequestStack $requestStack
      */
     public function __construct(
         Configuration $configuration,
         Context $shopContext,
         FeatureInterface $multistoreFeature,
         MultistoreContextCheckerInterface $multistoreContextChecker,
-        $contextShopCategoryId
+        $contextShopCategoryId,
+        RequestStack $requestStack
     ) {
         $this->configuration = $configuration;
         $this->shopContext = $shopContext;
         $this->multistoreFeature = $multistoreFeature;
         $this->multistoreContextChecker = $multistoreContextChecker;
         $this->contextShopCategoryId = $contextShopCategoryId;
+        $this->requestStack = $requestStack;
     }
 
     /**
@@ -115,8 +124,10 @@ final class SearchCriteriaWithCategoryParentIdFilterFactory implements Decorated
      */
     private function resolveCategoryParentId()
     {
-        if (Tools::isSubmit('id_category')) {
-            return (int) Tools::getValue('id_category');
+        /** @var Request $request */
+        $request = $this->requestStack->getCurrentRequest();
+        if (!empty($request->attributes->get('categoryId'))) {
+            return (int) $request->attributes->get('categoryId');
         }
 
         $categoriesCountWithoutParent = count(Category::getCategoriesWithoutParent());

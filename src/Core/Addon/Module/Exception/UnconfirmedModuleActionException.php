@@ -26,13 +26,13 @@
 
 namespace PrestaShop\PrestaShop\Core\Addon\Module\Exception;
 
-use Exception;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 
 /**
  * This class is used for the module page, which allows to ask for a confirmation from the employee.
  */
-class UnconfirmedModuleActionException extends Exception
+class UnconfirmedModuleActionException extends CoreException
 {
     /**
      * Concerned module by the exception.

@@ -15,14 +15,14 @@ Feature: Cart calculation with carriers specific cart rules: carrier changes
     Given there is an address named "address1" with postcode "1" in state "state1"
     Given there is an address named "address2" with postcode "1" in state "state2"
     Given there is a carrier named "carrier1"
-    Given carrier "carrier1" applies shipping fees of 3.1 in zone "zone1" for quantities between 0 and 10000
-    Given carrier "carrier1" applies shipping fees of 4.3 in zone "zone2" for quantities between 0 and 10000
+    Given carrier "carrier1" applies shipping fees of 3.1 in zone "zone1" for price between 0 and 10000
+    Given carrier "carrier1" applies shipping fees of 4.3 in zone "zone2" for price between 0 and 10000
     Given there is a carrier named "carrier2"
-    Given carrier "carrier2" applies shipping fees of 5.7 in zone "zone1" for quantities between 0 and 10000
-    Given carrier "carrier2" applies shipping fees of 6.2 in zone "zone2" for quantities between 0 and 10000
+    Given carrier "carrier2" applies shipping fees of 5.7 in zone "zone1" for price between 0 and 10000
+    Given carrier "carrier2" applies shipping fees of 6.2 in zone "zone2" for price between 0 and 10000
     Given there is a carrier named "carrier3"
-    Given carrier "carrier3" applies shipping fees of 5.7 in zone "zone1" for quantities between 0 and 10000
-    Given carrier "carrier3" applies shipping fees of 6.2 in zone "zone2" for quantities between 0 and 10000
+    Given carrier "carrier3" applies shipping fees of 5.7 in zone "zone1" for price between 0 and 10000
+    Given carrier "carrier3" applies shipping fees of 6.2 in zone "zone2" for price between 0 and 10000
     Given there is a cart rule named "cartrule1" that applies a percent discount of 50.0% with priority 1, quantity of 1000 and quantity per user 1000
     Given cart rule "cartrule1" has a discount code "foo"
     Given cart rule "cartrule1" is restricted to carrier "carrier2"
@@ -48,14 +48,14 @@ Feature: Cart calculation with carriers specific cart rules: carrier changes
     Given there is an address named "address1" with postcode "1" in state "state1"
     Given there is an address named "address2" with postcode "1" in state "state2"
     Given there is a carrier named "carrier1"
-    Given carrier "carrier1" applies shipping fees of 3.1 in zone "zone1" for quantities between 0 and 10000
-    Given carrier "carrier1" applies shipping fees of 4.3 in zone "zone2" for quantities between 0 and 10000
+    Given carrier "carrier1" applies shipping fees of 3.1 in zone "zone1" for price between 0 and 10000
+    Given carrier "carrier1" applies shipping fees of 4.3 in zone "zone2" for price between 0 and 10000
     Given there is a carrier named "carrier2"
-    Given carrier "carrier2" applies shipping fees of 5.7 in zone "zone1" for quantities between 0 and 10000
-    Given carrier "carrier2" applies shipping fees of 6.2 in zone "zone2" for quantities between 0 and 10000
+    Given carrier "carrier2" applies shipping fees of 5.7 in zone "zone1" for price between 0 and 10000
+    Given carrier "carrier2" applies shipping fees of 6.2 in zone "zone2" for price between 0 and 10000
     Given there is a carrier named "carrier3"
-    Given carrier "carrier3" applies shipping fees of 5.7 in zone "zone1" for quantities between 0 and 10000
-    Given carrier "carrier3" applies shipping fees of 6.2 in zone "zone2" for quantities between 0 and 10000
+    Given carrier "carrier3" applies shipping fees of 5.7 in zone "zone1" for price between 0 and 10000
+    Given carrier "carrier3" applies shipping fees of 6.2 in zone "zone2" for price between 0 and 10000
     Given there is a cart rule named "cartrule1" that applies a percent discount of 50.0% with priority 1, quantity of 1000 and quantity per user 1000
     Given cart rule "cartrule1" has a discount code "foo"
     Given cart rule "cartrule1" is restricted to carrier "carrier2"
@@ -86,14 +86,14 @@ Feature: Cart calculation with carriers specific cart rules: carrier changes
     Given there is an address named "address1" with postcode "1" in state "state1"
     Given there is an address named "address2" with postcode "1" in state "state2"
     Given there is a carrier named "carrier1"
-    Given carrier "carrier1" applies shipping fees of 3.1 in zone "zone1" for quantities between 0 and 10000
-    Given carrier "carrier1" applies shipping fees of 4.3 in zone "zone2" for quantities between 0 and 10000
+    Given carrier "carrier1" applies shipping fees of 3.1 in zone "zone1" for price between 0 and 10000
+    Given carrier "carrier1" applies shipping fees of 4.3 in zone "zone2" for price between 0 and 10000
     Given there is a carrier named "carrier2"
-    Given carrier "carrier2" applies shipping fees of 5.7 in zone "zone1" for quantities between 0 and 10000
-    Given carrier "carrier2" applies shipping fees of 6.2 in zone "zone2" for quantities between 0 and 10000
+    Given carrier "carrier2" applies shipping fees of 5.7 in zone "zone1" for price between 0 and 10000
+    Given carrier "carrier2" applies shipping fees of 6.2 in zone "zone2" for price between 0 and 10000
     Given there is a carrier named "carrier3"
-    Given carrier "carrier3" applies shipping fees of 5.7 in zone "zone1" for quantities between 0 and 10000
-    Given carrier "carrier3" applies shipping fees of 6.2 in zone "zone2" for quantities between 0 and 10000
+    Given carrier "carrier3" applies shipping fees of 5.7 in zone "zone1" for price between 0 and 10000
+    Given carrier "carrier3" applies shipping fees of 6.2 in zone "zone2" for price between 0 and 10000
     Given there is a cart rule named "cartrule1" that applies a percent discount of 50.0% with priority 1, quantity of 1000 and quantity per user 1000
     Given cart rule "cartrule1" has a discount code "foo"
     Given cart rule "cartrule1" is restricted to carrier "carrier2"
@@ -125,14 +125,14 @@ Feature: Cart calculation with carriers specific cart rules: carrier changes
     Given there is an address named "address1" with postcode "1" in state "state1"
     Given there is an address named "address2" with postcode "1" in state "state2"
     Given there is a carrier named "carrier1"
-    Given carrier "carrier1" applies shipping fees of 3.1 in zone "zone1" for quantities between 0 and 10000
-    Given carrier "carrier1" applies shipping fees of 4.3 in zone "zone2" for quantities between 0 and 10000
+    Given carrier "carrier1" applies shipping fees of 3.1 in zone "zone1" for price between 0 and 10000
+    Given carrier "carrier1" applies shipping fees of 4.3 in zone "zone2" for price between 0 and 10000
     Given there is a carrier named "carrier2"
-    Given carrier "carrier2" applies shipping fees of 5.7 in zone "zone1" for quantities between 0 and 10000
-    Given carrier "carrier2" applies shipping fees of 6.2 in zone "zone2" for quantities between 0 and 10000
+    Given carrier "carrier2" applies shipping fees of 5.7 in zone "zone1" for price between 0 and 10000
+    Given carrier "carrier2" applies shipping fees of 6.2 in zone "zone2" for price between 0 and 10000
     Given there is a carrier named "carrier3"
-    Given carrier "carrier3" applies shipping fees of 5.7 in zone "zone1" for quantities between 0 and 10000
-    Given carrier "carrier3" applies shipping fees of 6.2 in zone "zone2" for quantities between 0 and 10000
+    Given carrier "carrier3" applies shipping fees of 5.7 in zone "zone1" for price between 0 and 10000
+    Given carrier "carrier3" applies shipping fees of 6.2 in zone "zone2" for price between 0 and 10000
     Given there is a cart rule named "cartrule1" that applies a percent discount of 50.0% with priority 1, quantity of 1000 and quantity per user 1000
     Given cart rule "cartrule1" has a discount code "foo"
     Given cart rule "cartrule1" is restricted to carrier "carrier2"

@@ -110,6 +110,11 @@ class EditableCategory
     private $isRootCategory;
 
     /**
+     * @var array
+     */
+    private $subCategories;
+
+    /**
      * @param CategoryId $id
      * @param string[] $name
      * @param bool $isActive
@@ -125,6 +130,7 @@ class EditableCategory
      * @param mixed $coverImage
      * @param mixed $thumbnailImage
      * @param array $menuThumbnailImages
+     * @param array $subCategories
      */
     public function __construct(
         CategoryId $id,
@@ -141,7 +147,8 @@ class EditableCategory
         $isRootCategory,
         $coverImage = null,
         $thumbnailImage = null,
-        array $menuThumbnailImages = []
+        array $menuThumbnailImages = [],
+        array $subCategories = []
     ) {
         $this->id = $id;
         $this->name = $name;
@@ -158,6 +165,7 @@ class EditableCategory
         $this->coverImage = $coverImage;
         $this->menuThumbnailImages = $menuThumbnailImages;
         $this->isRootCategory = $isRootCategory;
+        $this->subCategories = $subCategories;
     }
 
     /**
@@ -286,5 +294,13 @@ class EditableCategory
     public function canContainMoreMenuThumbnails()
     {
         return count($this->getMenuThumbnailImages()) < count(MenuThumbnailId::ALLOWED_ID_VALUES);
+    }
+
+    /**
+     * @return array
+     */
+    public function getSubCategories()
+    {
+        return $this->subCategories;
     }
 }

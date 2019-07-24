@@ -100,7 +100,7 @@ class ImageManagerCore
         $cacheParam = $disableCache ? '?time=' . time() : '';
 
         if (Context::getContext()->controller->controller_type == 'admin') {
-            return '../img/tmp/' . $cacheImage . $cacheParam;
+            return __PS_BASE_URI__ . 'img/tmp/' . $cacheImage . $cacheParam;
         }
 
         return _PS_TMP_IMG_ . $cacheImage . $cacheParam;

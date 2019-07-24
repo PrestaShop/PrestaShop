@@ -50,4 +50,25 @@ interface LayoutCollectionInterface extends \IteratorAggregate, \Countable
      * @param LayoutInterface $layout
      */
     public function remove($layout);
+
+    /**
+     * @param LayoutInterface $oldLayout
+     * @param LayoutInterface $newLayout
+     *
+     * @return bool
+     */
+    public function replace(LayoutInterface $oldLayout, LayoutInterface $newLayout);
+
+    /**
+     * @param string $layoutName
+     * @param string $moduleName
+     *
+     * @return LayoutInterface|null
+     */
+    public function getLayout($layoutName, $moduleName);
+
+    /**
+     * @param LayoutCollectionInterface $collection
+     */
+    public function merge(LayoutCollectionInterface $collection);
 }

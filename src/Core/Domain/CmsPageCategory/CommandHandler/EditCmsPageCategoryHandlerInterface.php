@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\EditCmsPageCategoryCommand;
-use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
 
 /**
  * Defines contract for EditCmsPageCategoryHandler.
@@ -36,8 +35,6 @@ interface EditCmsPageCategoryHandlerInterface
 {
     /**
      * @param EditCmsPageCategoryCommand $command
-     *
-     * @return CmsPageCategoryId
      */
     public function handle(EditCmsPageCategoryCommand $command);
 }

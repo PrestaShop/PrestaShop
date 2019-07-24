@@ -273,6 +273,18 @@ class Calculator
     }
 
     /**
+     * calculate only cart rules (rows and fees have to be calculated first), but don't process free-shipping discount
+     * (avoid loop on shipping calculation)
+     */
+    public function calculateCartRulesWithoutFreeShipping()
+    {
+        $this->cartRuleCalculator->setCartRules($this->cartRules)
+            ->setCartRows($this->cartRows)
+            ->setCalculator($this)
+            ->applyCartRulesWithoutFreeShipping();
+    }
+
+    /**
      * calculate wrapping and shipping fees (rows have to be calculated first).
      *
      * @param int $computePrecision

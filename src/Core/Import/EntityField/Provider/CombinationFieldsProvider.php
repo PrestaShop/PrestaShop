@@ -54,48 +54,48 @@ final class CombinationFieldsProvider implements EntityFieldsProviderInterface
     public function getCollection()
     {
         $fields = [
-            new EntityField('id_product', $this->trans('Product ID')),
-            new EntityField('product_reference', $this->trans('Product Reference')),
-            new EntityField('group', $this->trans('Attribute (Name:Type:Position)'), '', true),
-            new EntityField('attribute', $this->trans('Value (Value:Position)'), '', true),
-            new EntityField('supplier_reference', $this->trans('Supplier reference')),
+            new EntityField('id_product', $this->trans('Product ID', 'Admin.Advparameters.Feature')),
+            new EntityField('product_reference', $this->trans('Product reference', 'Admin.Advparameters.Feature')),
+            new EntityField('group', $this->trans('Attribute (Name:Type:Position)', 'Admin.Advparameters.Feature'), '', true),
+            new EntityField('attribute', $this->trans('Value (Value:Position)', 'Admin.Advparameters.Feature'), '', true),
+            new EntityField('supplier_reference', $this->trans('Supplier reference', 'Admin.Advparameters.Feature')),
             new EntityField('reference', $this->trans('Reference', 'Admin.Global')),
-            new EntityField('ean13', $this->trans('EAN13')),
-            new EntityField('upc', $this->trans('UPC')),
+            new EntityField('ean13', $this->trans('EAN13', 'Admin.Advparameters.Feature')),
+            new EntityField('upc', $this->trans('UPC', 'Admin.Advparameters.Feature')),
             new EntityField('wholesale_price', $this->trans('Cost price', 'Admin.Catalog.Feature')),
             new EntityField('price', $this->trans('Impact on price', 'Admin.Catalog.Feature')),
             new EntityField('ecotax', $this->trans('Ecotax', 'Admin.Catalog.Feature')),
             new EntityField('quantity', $this->trans('Quantity', 'Admin.Global')),
-            new EntityField('minimal_quantity', $this->trans('Minimal quantity')),
+            new EntityField('minimal_quantity', $this->trans('Minimal quantity', 'Admin.Advparameters.Feature')),
             new EntityField('low_stock_threshold', $this->trans('Low stock level', 'Admin.Catalog.Feature')),
             new EntityField(
                 'low_stock_alert',
                 $this->trans('Send me an email when the quantity is under this level', 'Admin.Catalog.Feature')
             ),
             new EntityField('weight', $this->trans('Impact on weight', 'Admin.Catalog.Feature')),
-            new EntityField('default_on', $this->trans('Default (0 = No, 1 = Yes)')),
-            new EntityField('available_date', $this->trans('Combination availability date')),
-            new EntityField('image_position', $this->trans('Choose among product images by position (1,2,3...)')),
-            new EntityField('image_url', $this->trans('Image URLs (x,y,z...)')),
-            new EntityField('image_alt', $this->trans('Image alt texts (x,y,z...)')),
+            new EntityField('default_on', $this->trans('Default (0 = No, 1 = Yes)', 'Admin.Advparameters.Feature')),
+            new EntityField('available_date', $this->trans('Combination availability date', 'Admin.Advparameters.Feature')),
+            new EntityField('image_position', $this->trans('Choose among product images by position (1,2,3...)', 'Admin.Advparameters.Feature')),
+            new EntityField('image_url', $this->trans('Image URLs (x,y,z...)', 'Admin.Advparameters.Feature')),
+            new EntityField('image_alt', $this->trans('Image alt texts (x,y,z...)', 'Admin.Advparameters.Feature')),
             new EntityField(
                 'shop',
-                $this->trans('ID / Name of shop'),
+                $this->trans('ID / Name of shop', 'Admin.Advparameters.Feature'),
                 $this->trans('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, the default shop will be used.', 'Admin.Advparameters.Help')
             ),
             new EntityField(
                 'advanced_stock_management',
-                $this->trans('Advanced Stock Management'),
+                $this->trans('Advanced Stock Management', 'Admin.Advparameters.Feature'),
                 $this->trans('Enable Advanced Stock Management on product (0 = No, 1 = Yes)', 'Admin.Advparameters.Help')
             ),
             new EntityField(
                 'depends_on_stock',
-                $this->trans('Depends on stock'),
+                $this->trans('Depends on stock', 'Admin.Advparameters.Feature'),
                 $this->trans('0 = Use quantity set in product, 1 = Use quantity from warehouse.', 'Admin.Advparameters.Help')
             ),
             new EntityField(
                 'warehouse',
-                $this->trans('Warehouse'),
+                $this->trans('Warehouse', 'Admin.Advparameters.Feature'),
                 $this->trans('ID of the warehouse to set as storage.', 'Admin.Advparameters.Help')
             ),
         ];

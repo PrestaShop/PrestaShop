@@ -26,7 +26,13 @@
 
 namespace PrestaShop\PrestaShop\Core\Export\Exception;
 
+/**
+ * Is thrown when cannot export due to lacking write permissions
+ */
 class FileWritingException extends ExportException
 {
+    /**
+     * When file cannot be opened for writing
+     */
     const CANNOT_OPEN_FILE_FOR_WRITING = 10;
 }

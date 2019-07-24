@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Employee\Exception;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
 
 /**
- * Class CannotDeleteEmployeeException
+ * Is thrown when employee cannot be deleted
  */
 class CannotDeleteEmployeeException extends EmployeeException
 {

@@ -326,7 +326,7 @@ class CartPresenter implements PresenterInterface
         $productsTotalExcludingTax = $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
         $total_excluding_tax = $cart->getOrderTotal(false);
         $total_including_tax = $cart->getOrderTotal(true);
-        $total_discount = $cart->getDiscountSubtotalWithoutGifts();
+        $total_discount = $cart->getDiscountSubtotalWithoutGifts($this->includeTaxes());
         $totalCartAmount = $cart->getOrderTotal($this->includeTaxes(), Cart::ONLY_PRODUCTS);
 
         $subtotals['products'] = array(
@@ -504,7 +504,22 @@ class CartPresenter implements PresenterInterface
             if (isset($cartVoucher['reduction_percent']) && $cartVoucher['reduction_amount'] == '0.00') {
                 $cartVoucher['reduction_formatted'] = $cartVoucher['reduction_percent'] . '%';
             } elseif (isset($cartVoucher['reduction_amount']) && $cartVoucher['reduction_amount'] > 0) {
-                $cartVoucher['reduction_formatted'] = $this->priceFormatter->convertAndFormat($cartVoucher['reduction_amount']);
+                $value = $this->includeTaxes() ? $cartVoucher['reduction_amount'] : $cartVoucher['value_tax_exc'];
+                $currencyFrom = new \Currency($cartVoucher['reduction_currency']);
+                $currencyTo = new \Currency($cart->id_currency);
+                if ($currencyFrom->conversion_rate == 0) {
+                    $value = 0;
+                } else {
+                    // convert to default currency
+                    $defaultCurrencyId = (int) Configuration::get('PS_CURRENCY_DEFAULT');
+                    $value /= $currencyFrom->conversion_rate;
+                    if ($defaultCurrencyId == $currencyTo->id) {
+                        // convert to destination currency
+                        $value *= $currencyTo->conversion_rate;
+                    }
+                }
+                // following will do currency conversion to current one
+                $cartVoucher['reduction_formatted'] = $this->priceFormatter->convertAndFormat($value);
             }
 
             $vouchers[$cartVoucher['id_cart_rule']]['reduction_formatted'] = '-' . $cartVoucher['reduction_formatted'];

@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Employee\Exception;
 
 /**
- * Class CannotDeleteWarehouseManagerException.
+ * Is thrown when warehouse manager cannot be deleted
  */
 class CannotDeleteWarehouseManagerException extends EmployeeException
 {

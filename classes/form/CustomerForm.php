@@ -115,9 +115,10 @@ class CustomerFormCore extends AbstractForm
             ));
         }
 
-        // birthday is from input type text..., so we need to convert to a valid date
+        // check birthdayField against null case is mandatory.
         $birthdayField = $this->getField('birthday');
-        if (!empty($birthdayField->getValue()) &&
+        if (!empty($birthdayField) &&
+            !empty($birthdayField->getValue()) &&
             Validate::isBirthDate($birthdayField->getValue(), Context::getContext()->language->date_format_lite)
         ) {
             $dateBuilt = DateTime::createFromFormat(
@@ -126,7 +127,6 @@ class CustomerFormCore extends AbstractForm
             );
             $birthdayField->setValue($dateBuilt->format('Y-m-d'));
         }
-
         $this->validateFieldsLengths();
         $this->validateByModules();
 

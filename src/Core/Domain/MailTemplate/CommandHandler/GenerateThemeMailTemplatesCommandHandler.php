@@ -33,6 +33,8 @@ use PrestaShop\PrestaShop\Core\Language\LanguageRepositoryInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateGenerator;
 use PrestaShop\PrestaShop\Core\MailTemplate\ThemeCatalogInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\ThemeInterface;
+use Symfony\Component\Translation\Loader\ArrayLoader;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class GenerateThemeMailTemplatesCommandHandler generates email templates with parameters provided
@@ -50,6 +52,9 @@ class GenerateThemeMailTemplatesCommandHandler implements GenerateThemeMailTempl
     /** @var MailTemplateGenerator */
     private $generator;
 
+    /** @var TranslatorInterface */
+    private $translator;
+
     /** @var string */
     private $defaultCoreMailsFolder;
 
@@ -60,6 +65,7 @@ class GenerateThemeMailTemplatesCommandHandler implements GenerateThemeMailTempl
      * @param LanguageRepositoryInterface $languageRepository
      * @param ThemeCatalogInterface $themeCatalog
      * @param MailTemplateGenerator $generator
+     * @param TranslatorInterface $translator
      * @param string $defaultCoreMailsFolder
      * @param string $defaultModulesMailFolder
      */
@@ -67,12 +73,14 @@ class GenerateThemeMailTemplatesCommandHandler implements GenerateThemeMailTempl
         LanguageRepositoryInterface $languageRepository,
         ThemeCatalogInterface $themeCatalog,
         MailTemplateGenerator $generator,
+        TranslatorInterface $translator,
         $defaultCoreMailsFolder,
         $defaultModulesMailFolder
     ) {
         $this->languageRepository = $languageRepository;
         $this->themeCatalog = $themeCatalog;
         $this->generator = $generator;
+        $this->translator = $translator;
         $this->defaultCoreMailsFolder = $defaultCoreMailsFolder;
         $this->defaultModulesMailFolder = $defaultModulesMailFolder;
     }
@@ -91,9 +99,34 @@ class GenerateThemeMailTemplatesCommandHandler implements GenerateThemeMailTempl
         /** @var ThemeInterface $theme */
         $theme = $this->themeCatalog->getByName($command->getThemeName());
 
+        $this->cleanTranslatorLocaleCache($command->getLanguage());
+
         $coreMailsFolder = $command->getCoreMailsFolder() ?: $this->defaultCoreMailsFolder;
         $modulesMailFolder = $command->getModulesMailFolder() ?: $this->defaultModulesMailFolder;
 
         $this->generator->generateTemplates($theme, $language, $coreMailsFolder, $modulesMailFolder, $command->overwriteTemplates());
+    }
+
+    /**
+     * When installing a new Language, if it's a new one the Translator component can't manage it because its cache is
+     * already filled with the default one as fallback. We force the component to update its cache by adding a fake
+     * resource for this locale (this is the only way clean its local cache)
+     *
+     * @param string $locale
+     */
+    private function cleanTranslatorLocaleCache($locale)
+    {
+        if (!method_exists($this->translator, 'addLoader')
+            || !method_exists($this->translator, 'addResource')
+        ) {
+            return;
+        }
+
+        $this->translator->addLoader('array', new ArrayLoader());
+        $this->translator->addResource(
+            'array',
+            ['Fake clean cache message' => 'Fake clean cache message'],
+            $locale
+        );
     }
 }

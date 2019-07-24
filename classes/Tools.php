@@ -787,7 +787,7 @@ class ToolsCore
      */
     protected static function getContextLocale(Context $context)
     {
-        $locale = $context->currentLocale;
+        $locale = $context->getCurrentLocale();
         if (null !== $locale) {
             return $locale;
         }
@@ -3309,7 +3309,7 @@ exit;
     {
         header('HTTP/1.1 404 Not Found');
         header('Status: 404 Not Found');
-        include dirname(__FILE__) . '/../404.php';
+        include __DIR__ . '/../404.php';
         die;
     }
 
@@ -3355,7 +3355,7 @@ exit;
      */
     public static function nl2br($str)
     {
-        return str_replace(array("\r\n", "\r", "\n"), '<br />', $str);
+        return str_replace(array("\r\n", "\r", "\n", AddressFormat::FORMAT_NEW_LINE, PHP_EOL), '<br />', $str);
     }
 
     /**
@@ -4298,9 +4298,9 @@ exit;
 
     public static function redirectToInstall()
     {
-        if (file_exists(dirname(__FILE__) . '/../install')) {
+        if (file_exists(__DIR__ . '/../install')) {
             header('Location: install/');
-        } elseif (file_exists(dirname(__FILE__) . '/../install-dev')) {
+        } elseif (file_exists(__DIR__ . '/../install-dev')) {
             header('Location: install-dev/');
         } else {
             die('Error: "install" directory is missing');

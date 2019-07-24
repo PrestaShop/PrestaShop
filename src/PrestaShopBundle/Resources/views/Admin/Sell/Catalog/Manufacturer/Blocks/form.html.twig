@@ -33,6 +33,8 @@
   </h3>
   <div class="card-block row">
     <div class="card-text">
+      {{ form_errors(manufacturerForm) }}
+
       {% set invalidCatalogNameHint %}
         {{ 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}' }}
       {% endset %}
@@ -83,7 +85,7 @@
       }) }}
 
       {% set keywordHint %}
-        {{ 'To add "tags", click inside the field, write something, and then press "Enter".'|trans({}, 'Admin.Catalog.Help') }}
+        {{ 'To add tags, click in the field, write something, and then press the "Enter" key.'|trans({}, 'Admin.Shopparameters.Help') }}
         {{ invalidGenericNameHint }}
       {% endset %}
 

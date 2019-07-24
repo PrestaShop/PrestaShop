@@ -26,13 +26,13 @@
 
 namespace PrestaShop\PrestaShop\Core\Foundation\Exception;
 
-use Exception;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 
 /**
  * This exception will be thrown if an invalid Shop version name is used
  * in the application.
  */
-class InvalidVersionException extends Exception
+class InvalidVersionException extends CoreException
 {
     /**
      * Construct.

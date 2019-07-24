@@ -34,8 +34,10 @@ use PrestaShopBundle\Entity\ProductIdentity;
 use PrestaShopBundle\Entity\Repository\StockRepository;
 use PrestaShopBundle\Exception\InvalidPaginationParamsException;
 use PrestaShopBundle\Exception\ProductNotFoundException;
+use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class StockController extends ApiController
@@ -86,6 +88,10 @@ class StockController extends ApiController
      */
     public function editProductAction(Request $request)
     {
+        if (!$this->isGranted([PageVoter::UPDATE], $request->get('_legacy_controller'))) {
+            return new JsonResponse(null, Response::HTTP_FORBIDDEN);
+        }
+
         try {
             $this->guardAgainstMissingDeltaParameter($request);
             $delta = $request->request->getInt('delta');
@@ -115,6 +121,10 @@ class StockController extends ApiController
      */
     public function bulkEditProductsAction(Request $request)
     {
+        if (!$this->isGranted([PageVoter::UPDATE], $request->get('_legacy_controller'))) {
+            return new JsonResponse(null, Response::HTTP_FORBIDDEN);
+        }
+
         try {
             $this->guardAgainstInvalidBulkEditionRequest($request);
             $stockMovementsParams = json_decode($request->getContent(), true);

@@ -111,9 +111,6 @@ final class LanguageFormDataHandler implements FormDataHandlerInterface
             $command->setShopAssociation($shopAssociation);
         }
 
-        /** @var LanguageId $languageId */
-        $languageId = $this->bus->handle($command);
-
-        return $languageId->getValue();
+        $this->bus->handle($command);
     }
 }

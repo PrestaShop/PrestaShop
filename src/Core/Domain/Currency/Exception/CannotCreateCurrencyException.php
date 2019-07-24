@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Currency\Exception;
 
 /**
- * Class CannotCreateCurrencyException
+ * Is thrown when new currency cannot be created
  */
 class CannotCreateCurrencyException extends CurrencyException
 {

@@ -374,7 +374,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
                 (int) Configuration::get('PS_PRICE_DISPLAY_PRECISION'),
                 null,
                 false,
-                true,
+                false,
                 1,
                 true,
                 null,

@@ -26,12 +26,13 @@
 
 namespace Tests\TestCase;
 
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Bundle\FrameworkBundle\Client;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use LegacyTests\Unit\ContextMocker;
 use LegacyTests\PrestaShopBundle\Utils\DatabaseCreator as Database;
 
-class SymfonyIntegrationTestCase extends KernelTestCase
+class SymfonyIntegrationTestCase extends WebTestCase
 {
     /**
      * @var ContextMocker
@@ -43,13 +44,21 @@ class SymfonyIntegrationTestCase extends KernelTestCase
      */
     protected $container;
 
+    /**
+     * @var Client
+     */
+    protected $client;
+
     protected function setUp()
     {
         parent::setUp();
         $this->contextMocker = new ContextMocker();
         $this->contextMocker->mockContext();
 
-        $this->bootKernel();
+        $this->client = self::createClient();
+
+        //createClient already creates the kernel
+        //$this->bootKernel();
         $this->container = self::$kernel->getContainer();
 
         // Global var for SymfonyContainer

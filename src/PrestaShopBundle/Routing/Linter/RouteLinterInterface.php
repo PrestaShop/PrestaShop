@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Routing\Linter;
 
+use PrestaShopBundle\Routing\Linter\Exception\LinterException;
 use Symfony\Component\Routing\Route;
 
 /**
@@ -36,7 +37,7 @@ interface RouteLinterInterface
     /**
      * @param Route $route
      *
-     * @return bool True if route passes linter or False otherwise
+     * @throws LinterException when linting error occurs
      */
-    public function lint(Route $route);
+    public function lint($routeName, Route $route);
 }

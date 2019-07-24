@@ -27,8 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Exception;
 
 /**
- * Class CoreException, this is the default base class of every
- * Exception classes from prestaShop.
+ * Base class for PrestaShop core exceptions
  */
 class CoreException extends \Exception
 {

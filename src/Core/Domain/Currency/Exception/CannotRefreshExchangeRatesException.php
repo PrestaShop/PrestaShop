@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Currency\Exception;
 
 /**
- * Class CannotRefreshExchangeRatesException
+ * Is thrown when refreshing currency exchange rates fails
  */
 class CannotRefreshExchangeRatesException extends CurrencyException
 {

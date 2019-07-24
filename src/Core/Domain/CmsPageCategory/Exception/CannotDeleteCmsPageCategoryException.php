@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception;
 
 /**
- * Class CannotDeleteCmsPageCategoryException
+ * Is thrown on failure when deleting a cms page category
  */
 class CannotDeleteCmsPageCategoryException extends CmsPageCategoryException
 {

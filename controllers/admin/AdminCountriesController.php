@@ -180,7 +180,7 @@ class AdminCountriesControllerCore extends AdminController
         ];
 
         foreach ($default_layout_tab as $line) {
-            $default_layout .= implode(' ', $line) . "\r\n";
+            $default_layout .= implode(' ', $line) . AddressFormat::FORMAT_NEW_LINE;
         }
 
         $this->fields_form = array(
@@ -206,9 +206,9 @@ class AdminCountriesControllerCore extends AdminController
                     'required' => true,
                     'hint' => $this->trans('Two -- or three -- letter ISO code (e.g. "us" for United States).', array(), 'Admin.International.Help'),
                     /* @TODO - add two lines for the hint? */
-                    /*'desc' => $this->l('Two -- or three -- letter ISO code (e.g. U.S. for United States)').'.
+                    /*'desc' => $this->trans('Two -- or three -- letter ISO code (e.g. U.S. for United States)', [], 'Admin.International.Help').'.
                             <a href="http://www.iso.org/iso/country_codes/iso_3166_code_lists/country_names_and_code_elements.htm" target="_blank">'.
-                                $this->l('Official list here').'
+                                $this->trans('Official list here', [], 'Admin.International.Feature').'
                             </a>.'*/
                 ),
                 array(
@@ -481,10 +481,10 @@ class AdminCountriesControllerCore extends AdminController
     {
         /* The following translations are needed later - don't remove the comments!
         $this->trans('Customer', array(), 'Admin.Global');
-        $this->l('Warehouse');
+        $this->trans('Warehouse', [], 'Admin.Global');
         $this->trans('Country', array(), 'Admin.Global');
-        $this->l('State');
-        $this->l('Address');
+        $this->trans('State', [], 'Admin.Global');
+        $this->trans('Address', [], 'Admin.Global');
         */
 
         $html_tabnav = '<ul class="nav nav-tabs" id="custom-address-fields">';

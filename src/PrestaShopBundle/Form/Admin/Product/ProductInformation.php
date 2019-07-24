@@ -143,7 +143,7 @@ class ProductInformation extends CommonAbstractType
             'required' => true,
         ])
             ->add('inputPackItems', TypeaheadProductPackCollectionType::class, [
-                'remote_url' => $this->context->getLegacyAdminLink('AdminProducts', true, [], ['ajax' => 1, 'action' => 'productsList', 'forceJson' => 1, 'excludeVirtuals' => 1, 'limit' => 20]) . '&q=%QUERY',
+                'remote_url' => $this->context->getLegacyAdminLink('AdminProducts', true, ['ajax' => 1, 'action' => 'productsList', 'forceJson' => 1, 'excludeVirtuals' => 1, 'limit' => 20]) . '&q=%QUERY',
                 'mapping_value' => 'id',
                 'mapping_name' => 'name',
                 'placeholder' => $this->translator->trans('Search for a product', [], 'Admin.Catalog.Help'),

@@ -33,8 +33,16 @@ class AdminManufacturersControllerCore extends AdminController
     /** @var array countries list */
     protected $countries_array = array();
 
+    /**
+     * @deprecated since 1.7.6, to be removed in the next minor
+     */
     public function __construct()
     {
+        @trigger_error(
+            'The AdminManufacturersController is deprecated and will be removed in the next minor',
+            E_USER_DEPRECATED
+        );
+
         $this->table = 'manufacturer';
         $this->className = 'Manufacturer';
         $this->lang = false;

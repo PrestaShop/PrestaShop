@@ -45,13 +45,13 @@ class DeleteCustomerCommand
     private $deleteMethod;
 
     /**
-     * @param CustomerId $customerId
-     * @param CustomerDeleteMethod $deleteMethod
+     * @param int $customerId
+     * @param string $deleteMethod
      */
-    public function __construct(CustomerId $customerId, CustomerDeleteMethod $deleteMethod)
+    public function __construct($customerId, $deleteMethod)
     {
-        $this->customerId = $customerId;
-        $this->deleteMethod = $deleteMethod;
+        $this->customerId = new CustomerId($customerId);
+        $this->deleteMethod = new CustomerDeleteMethod($deleteMethod);
     }
 
     /**

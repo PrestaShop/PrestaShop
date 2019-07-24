@@ -41,7 +41,9 @@ class ModuleFeatureContext extends AbstractPrestaShopFeatureContext
         $fs->mirror(self::MODULES_DIRECTORY . '/' . $module, _PS_MODULE_DIR_ . '/' . $module);
 
         // enable the module
-        Module::enableByName($module);
-        Cache::clear();
+        if (!Module::isEnabled($module)) {
+            Module::enableByName($module);
+            Cache::clear();
+        }
     }
 }

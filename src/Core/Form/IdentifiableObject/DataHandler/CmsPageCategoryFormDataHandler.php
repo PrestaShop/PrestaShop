@@ -99,9 +99,6 @@ final class CmsPageCategoryFormDataHandler implements FormDataHandlerInterface
             ->setShopAssociation(is_array($data['shop_association']) ? $data['shop_association'] : [])
         ;
 
-        /** @var CmsPageCategoryId $result */
-        $result = $this->commandBus->handle($editCmsPageCategoryCommand);
-
-        return $result->getValue();
+        $this->commandBus->handle($editCmsPageCategoryCommand);
     }
 }

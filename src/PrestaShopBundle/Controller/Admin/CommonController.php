@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinitionInterface;
 use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowInterface;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Service\DataProvider\Admin\RecommendedModules;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -279,17 +280,22 @@ class CommonController extends FrameworkBundleAdminController
     public function resetSearchAction($controller = '', $action = '', $filterId = '')
     {
         $adminFiltersRepository = $this->get('prestashop.core.admin.admin_filter.repository');
+        $employeeId = $this->getUser()->getId();
+        $shopId = $this->getContext()->shop->id;
 
         // for compatibility when $controller and $action are used
         if (!empty($controller) && !empty($action)) {
-            $employeeId = $this->getUser()->getId();
-            $shopId = $this->getContext()->shop->id;
-
-            $adminFiltersRepository->removeByEmployeeAndRouteParams($employeeId, $shopId, $controller, $action);
+            $adminFilter = $adminFiltersRepository->findByEmployeeAndRouteParams(
+                $employeeId, $shopId, $controller, $action
+            );
         }
 
         if (!empty($filterId)) {
-            $adminFiltersRepository->removeByFilterId($filterId);
+            $adminFilter = $adminFiltersRepository->findByEmployeeAndFilterId($employeeId, $shopId, $filterId);
+        }
+
+        if (isset($adminFilter)) {
+            $adminFiltersRepository->unsetFilters($adminFilter);
         }
 
         return new JsonResponse();
@@ -329,6 +335,8 @@ class CommonController extends FrameworkBundleAdminController
      * @param string $gridDefinitionFactoryServiceId
      * @param string $redirectRoute
      * @param array $redirectQueryParamsToKeep
+     *
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
      *
      * @return RedirectResponse
      */

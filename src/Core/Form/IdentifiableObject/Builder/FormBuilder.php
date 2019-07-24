@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder;
 
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\FormDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 
@@ -118,7 +119,7 @@ final class FormBuilder implements FormBuilderInterface
     {
         $formBuilder = $this->formFactory->createBuilder($formType, $data, $options);
 
-        $this->hookDispatcher->dispatchWithParameters('action' . $formBuilder->getName() . 'FormBuilderModifier', [
+        $this->hookDispatcher->dispatchWithParameters('action' . Container::camelize($formBuilder->getName()) . 'FormBuilderModifier', [
             'form_builder' => $formBuilder,
             'data' => &$data,
             'id' => $id,

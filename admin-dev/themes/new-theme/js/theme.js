@@ -60,7 +60,9 @@ new NavBar();
 new Header();
 
 import initDatePickers from './app/utils/datepicker';
+import initInvalidFields from './app/utils/fields';
 
 $(() => {
   initDatePickers();
+  initInvalidFields();
 });

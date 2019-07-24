@@ -35,7 +35,6 @@ use PrestaShop\PrestaShop\Core\Domain\Language\Exception\CannotDisableDefaultLan
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageException;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\IsoCode;
-use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 
 /**
  * Handles command which edits language using legacy object model
@@ -61,8 +60,6 @@ final class EditLanguageHandler extends AbstractLanguageHandler implements EditL
         $this->updateLanguageWithCommandData($language, $command);
         $this->updateShopAssociationIfChanged($language, $command);
         $this->uploadFlagImageIfChanged($language, $command);
-
-        return new LanguageId((int) $language->id);
     }
 
     /**
@@ -79,6 +76,9 @@ final class EditLanguageHandler extends AbstractLanguageHandler implements EditL
 
         if (null !== $command->getIsoCode()) {
             $language->iso_code = $command->getIsoCode()->getValue();
+            if (false !== ($languageDetails = Language::getLangDetails($command->getIsoCode()->getValue()))) {
+                $language->locale = $languageDetails['locale'];
+            }
         }
 
         if (null !== $command->getTagIETF()) {

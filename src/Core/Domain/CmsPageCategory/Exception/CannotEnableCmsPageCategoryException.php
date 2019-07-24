@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception;
 
 /**
- * Class CannotEnableCmsPageCategoryException
+ * Is thrown when cms page category cannot be enabled
  */
 class CannotEnableCmsPageCategoryException extends CmsPageCategoryException
 {

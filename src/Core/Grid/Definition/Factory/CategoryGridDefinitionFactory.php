@@ -103,7 +103,7 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getId()
     {
-        return 'categories';
+        return 'category';
     }
 
     /**
@@ -135,7 +135,7 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setOptions([
                     'field' => 'name',
                     'route' => 'admin_categories_index',
-                    'route_param_name' => 'id_category',
+                    'route_param_name' => 'categoryId',
                     'route_param_field' => 'id_category',
                 ])
             )
@@ -335,7 +335,7 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setIcon('zoom_in')
                 ->setOptions([
                     'route' => 'admin_categories_index',
-                    'route_param_name' => 'id_category',
+                    'route_param_name' => 'categoryId',
                     'route_param_field' => 'id_category',
                     'accessibility_checker' => $this->categoryForViewAccessibilityChecker,
                 ])

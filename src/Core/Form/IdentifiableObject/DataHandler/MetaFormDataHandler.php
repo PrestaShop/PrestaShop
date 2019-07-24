@@ -85,9 +85,6 @@ final class MetaFormDataHandler implements FormDataHandlerInterface
             ->setLocalisedRewriteUrls($data['url_rewrite'])
         ;
 
-        /** @var MetaId $metaId */
-        $metaId = $this->commandBus->handle($editMetaCommand);
-
-        return $metaId->getValue();
+        $this->commandBus->handle($editMetaCommand);
     }
 }

@@ -3,7 +3,7 @@ module.exports = {
     add_new_feature: '//*[@id="page-header-desc-feature-new_feature"]',
     name_input: '//*[@id="name_1"]',
     save_button: '//*[@id="feature_form_submit_btn"]',
-    search_input: '//*[@id="table-feature"]//th//input[@name="featureFilter_%SEARCHBY"]',
+    search_input: '//*[@id="table-feature"]//th//input[@name="featureFilter_b!name" or @name="feature_valueFilter_b!name"]',
     search_button: '//*[@id="submitFilterButtonfeature"]',
     selected_feature: '//*[@id="table-feature"]//a[@title="View"]',
     feature_select: '//*[@id="id_feature"]',

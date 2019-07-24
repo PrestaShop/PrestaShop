@@ -79,3 +79,13 @@ services:
         translator: "@translator"
       tags:
         - { name: twig.extension }
+
+    prestashop.twig.extension.path_with_back_url_extension:
+      class: PrestaShopBundle\Twig\Extension\PathWithBackUrlExtension
+      arguments:
+        - '@twig.extension.routing'
+        - '@prestashop.core.uti.back_url_provider'
+        - '@=service("request_stack") ? service("request_stack") : null'
+      public: true
+      tags:
+        - { name: twig.extension }

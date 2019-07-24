@@ -35,8 +35,16 @@ class AdminCmsControllerCore extends AdminController
 
     protected $position_identifier = 'id_cms';
 
+    /**
+     * @deprecated since 1.7.6, to be removed in the next minor
+     */
     public function __construct()
     {
+        @trigger_error(
+            'The AdminCmsController is deprecated and will be removed in the next minor',
+            E_USER_DEPRECATED
+        );
+
         $this->bootstrap = true;
         $this->table = 'cms';
         $this->list_id = 'cms';
@@ -197,7 +205,7 @@ class AdminCmsControllerCore extends AdminController
                     'name' => 'meta_keywords',
                     'lang' => true,
                     'hint' => array(
-                        $this->trans('To add "tags" click in the field, write something, and then press "Enter."', array(), 'Admin.Design.Help'),
+                        $this->trans('To add tags, click in the field, write something, and then press the "Enter" key.', array(), 'Admin.Shopparameters.Help'),
                         $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
                     ),
                 ),

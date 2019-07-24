@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Foundation\Filesystem;
 
-class Exception extends \Exception
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
+
+class Exception extends CoreException
 {
 }

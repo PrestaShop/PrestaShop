@@ -27,25 +27,7 @@ import $ from 'jquery';
 export default class ProductMinitature {
   init() {
     $('.js-product-miniature').each((index, element) => {
-      const FLAG_MARGIN = 10;
-      const discountElems = $(element).find('.discount-product');
-      const onSaleElems =  $(element).find('.on-sale');
-      const newElems = $(element).find('.new');
-
-      if (discountElems.length) {
-        newElems.css('top', discountElems.height() * 3 + FLAG_MARGIN);
-        discountElems.css('top', -$(element).find('.thumbnail-container').height() + $(element).find('.product-description').height() + FLAG_MARGIN);
-
-        if ($(element).find('.pack').length) {
-          $(element).find('.pack').css('top', discountElems.height() * 3 + FLAG_MARGIN);
-        }
-      }
-
-      if (onSaleElems.length) {
-        discountElems.css('top', parseFloat(discountElems.css('top')) + onSaleElems.height() + FLAG_MARGIN);
-        newElems.css('top', (discountElems.height() * 3 + onSaleElems.height()) + FLAG_MARGIN * 3);
-      }
-
+      //Limit number of shown colors
       if ($(element).find('.color').length > 5) {
         let count = 0;
 

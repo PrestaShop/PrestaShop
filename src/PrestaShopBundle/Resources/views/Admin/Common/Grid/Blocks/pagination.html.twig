@@ -32,7 +32,8 @@
           'offset': grid.pagination.offset,
           'total': grid.data.records_total,
           'prefix': grid.form_prefix,
-          'caller_route': app.request.attributes.get('_route')
+          'caller_route': app.request.attributes.get('_route'),
+          'caller_parameters': app.request.attributes.get('_route_params')
         })) }}
       </div>
     </div>

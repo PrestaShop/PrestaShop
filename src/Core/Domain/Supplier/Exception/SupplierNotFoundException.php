@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Supplier\Exception;
 
 /**
- * Class SupplierNotFoundException
+ * Is thrown when required supplier cannot be found
  */
 class SupplierNotFoundException extends SupplierException
 {

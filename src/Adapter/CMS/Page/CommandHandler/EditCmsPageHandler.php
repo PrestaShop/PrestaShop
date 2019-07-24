@@ -32,7 +32,6 @@ use PrestaShop\PrestaShop\Core\Domain\CmsPage\CommandHandler\EditCmsPageHandlerI
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CannotEditCmsPageException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\CmsPage\ValueObject\CmsPageId;
 use PrestaShopException;
 
 /**
@@ -58,7 +57,9 @@ final class EditCmsPageHandler extends AbstractCmsPageHandler implements EditCms
                     sprintf('Failed to update cms page with id %s', $command->getCmsPageId()->getValue())
                 );
             }
-            $this->associateWithShops($cms, $command->getShopAssociation());
+            if (null !== $command->getShopAssociation()) {
+                $this->associateWithShops($cms, $command->getShopAssociation());
+            }
         } catch (PrestaShopException $e) {
             throw new CmsPageException(
                 sprintf(
@@ -69,8 +70,6 @@ final class EditCmsPageHandler extends AbstractCmsPageHandler implements EditCms
                 $e
             );
         }
-
-        return new CmsPageId((int) $cms->id);
     }
 
     /**

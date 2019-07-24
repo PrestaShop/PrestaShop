@@ -22,6 +22,7 @@ services:
         arguments:
             - '@prestashop.core.query.doctrine_search_criteria_applicator'
             - '@=service("prestashop.adapter.shop.context").getContextListShopID()'
+            - '@prestashop.core.grid.query.filter.doctrine_filter_applicator'
         public: true
 
     prestashop.core.grid.query_builder.meta:
@@ -33,17 +34,8 @@ services:
             - "@=service('prestashop.adapter.legacy.context').getContext().shop.id"
         public: true
 
-    prestashop.core.grid.query_builder.webservice:
-        class: 'PrestaShop\PrestaShop\Core\Grid\Query\WebserviceKeyQueryBuilder'
-        parent: 'prestashop.core.grid.abstract_query_builder'
-        arguments:
-            - '@prestashop.core.query.doctrine_search_criteria_applicator'
-            - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
-            - "@=service('prestashop.adapter.legacy.context').getContext().shop.id"
-        public: true
-
     prestashop.core.grid.query_builder.employee:
-        class: 'PrestaShop\PrestaShop\Core\Grid\Query\Builder\EmployeeQueryBuilder'
+        class: 'PrestaShop\PrestaShop\Core\Grid\Query\EmployeeQueryBuilder'
         parent: 'prestashop.core.grid.abstract_query_builder'
         arguments:
             - '@prestashop.core.query.doctrine_search_criteria_applicator'
@@ -51,8 +43,8 @@ services:
             - "@=service('prestashop.adapter.legacy.context').getContext().shop.getContextListShopID()"
         public: true
 
-    prestashop.core.grid.query_builder.contacts:
-        class: 'PrestaShop\PrestaShop\Core\Grid\Query\ContactsQueryBuilder'
+    prestashop.core.grid.query_builder.contact:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Query\ContactQueryBuilder'
         parent: 'prestashop.core.grid.abstract_query_builder'
         public: true
         arguments:
@@ -61,7 +53,7 @@ services:
             - "@=service('prestashop.adapter.shop.context').getContextListShopID()"
 
     prestashop.core.grid.query_builder.customer:
-        class: 'PrestaShop\PrestaShop\Core\Grid\Query\Builder\CustomerQueryBuilder'
+        class: 'PrestaShop\PrestaShop\Core\Grid\Query\CustomerQueryBuilder'
         parent: 'prestashop.core.grid.abstract_query_builder'
         arguments:
             - '@prestashop.core.query.doctrine_search_criteria_applicator'
@@ -70,7 +62,7 @@ services:
         public: true
 
     prestashop.core.grid.quer_.builder.language:
-        class: 'PrestaShop\PrestaShop\Core\Grid\Query\Builder\LanguageQueryBuilder'
+        class: 'PrestaShop\PrestaShop\Core\Grid\Query\LanguageQueryBuilder'
         parent: 'prestashop.core.grid.abstract_query_builder'
         arguments:
             - '@prestashop.core.query.doctrine_search_criteria_applicator'
@@ -94,8 +86,8 @@ services:
         - "@=service('prestashop.adapter.shop.context').getContextListShopID()"
       public: true
 
-    prestashop.core.grid.query_builder.profiles:
-        class: 'PrestaShop\PrestaShop\Core\Grid\Query\ProfilesQueryBuilder'
+    prestashop.core.grid.query_builder.profile:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Query\ProfileQueryBuilder'
         parent: 'prestashop.core.grid.abstract_query_builder'
         arguments:
             - '@prestashop.core.query.doctrine_search_criteria_applicator'
@@ -153,4 +145,57 @@ services:
         - '@prestashop.core.query.doctrine_search_criteria_applicator'
         - '@=service("prestashop.adapter.shop.context").getContextListShopID()'
         - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
+      public: true
+
+    prestashop.core.grid.query_builder.monitoring.empty_category:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Query\Monitoring\EmptyCategoryQueryBuilder'
+      parent: 'prestashop.core.grid.abstract_query_builder'
+      arguments:
+        - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
+        - "@=service('prestashop.adapter.legacy.context').getContext().shop.id"
+        - '@prestashop.core.query.doctrine_search_criteria_applicator'
+        - '@prestashop.adapter.shop.context'
+        - '@prestashop.adapter.feature.multistore'
+        - "@=service('prestashop.adapter.legacy.configuration').get('PS_ROOT_CATEGORY')"
+      public: true
+
+    prestashop.core.grid.query_builder.monitoring.abstract_product_query_builder:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Query\Monitoring\AbstractProductQueryBuilder'
+      parent: 'prestashop.core.grid.abstract_query_builder'
+      arguments:
+        - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
+        - "@=service('prestashop.adapter.legacy.context').getContext().shop.id"
+        - '@prestashop.core.query.doctrine_search_criteria_applicator'
+        - '@prestashop.adapter.shop.context'
+        - '@prestashop.adapter.feature.multistore'
+      public: true
+
+    prestashop.core.grid.query_builder.monitoring.no_qty_product_with_combination:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Query\Monitoring\NoQtyProductWithCombinationQueryBuilder'
+      parent: 'prestashop.core.grid.query_builder.monitoring.abstract_product_query_builder'
+      public: true
+
+    prestashop.core.grid.query_builder.monitoring.no_qty_product_without_combination:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Query\Monitoring\NoQtyProductWithoutCombinationQueryBuilder'
+      parent: 'prestashop.core.grid.query_builder.monitoring.abstract_product_query_builder'
+      public: true
+
+    prestashop.core.grid.query_builder.monitoring.disabled_product:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Query\Monitoring\DisabledProductQueryBuilder'
+      parent: 'prestashop.core.grid.query_builder.monitoring.abstract_product_query_builder'
+      public: true
+
+    prestashop.core.grid.query_builder.monitoring.product_without_image:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Query\Monitoring\ProductWithoutImageQueryBuilder'
+      parent: 'prestashop.core.grid.query_builder.monitoring.abstract_product_query_builder'
+      public: true
+
+    prestashop.core.grid.query_builder.monitoring.product_without_description:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Query\Monitoring\ProductWithoutDescriptionQueryBuilder'
+      parent: 'prestashop.core.grid.query_builder.monitoring.abstract_product_query_builder'
+      public: true
+
+    prestashop.core.grid.query_builder.monitoring.product_without_price:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Query\Monitoring\ProductWithoutPriceQueryBuilder'
+      parent: 'prestashop.core.grid.query_builder.monitoring.abstract_product_query_builder'
       public: true

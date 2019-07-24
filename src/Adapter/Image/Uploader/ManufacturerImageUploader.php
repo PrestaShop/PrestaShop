@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Adapter\Image\Uploader;
 
 use Configuration;
-use Context;
 use ImageManager;
 use ImageType;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageOptimizationException;
@@ -46,6 +45,7 @@ final class ManufacturerImageUploader extends AbstractImageUploader
      */
     public function upload($manufacturerId, UploadedFile $image)
     {
+        $this->checkImageIsAllowedForUpload($image);
         $temporaryImageName = tempnam(_PS_TMP_IMG_DIR_, 'PS');
 
         if (!$temporaryImageName) {
@@ -112,11 +112,7 @@ final class ManufacturerImageUploader extends AbstractImageUploader
                     }
                 }
 
-                $currentLogo = _PS_TMP_IMG_DIR_ . 'manufacturer_mini_' . $manufacturerId .
-                    '_' .
-                    Context::getContext()->shop->id .
-                    '.jpg'
-                ;
+                $currentLogo = _PS_TMP_IMG_DIR_ . 'manufacturer_mini_' . $manufacturerId . '.jpg';
 
                 if ($resized && file_exists($currentLogo)) {
                     unlink($currentLogo);

@@ -129,7 +129,7 @@ class Product extends CommonClient {
   selectFeature(addProductPage, name, value, number) {
     return this.client
       .scrollWaitForExistAndClick(addProductPage.feature_select.replace('%NUMBER', number + 1))
-      .waitAndSetValue(addProductPage.select_feature_created, name)
+      .selectByVisibleText(addProductPage.select_feature_created.replace('%ID', number), name)
       .waitForVisibleAndClick(addProductPage.result_feature_select.replace('%ID', number))
       .pause(4000)
       .selectByVisibleText(addProductPage.feature_value_select.replace('%ID', number).replace('%V', 'not(@disabled)'), value);
@@ -138,7 +138,7 @@ class Product extends CommonClient {
   selectFeatureCustomizedValue(addProductPage, name, customizedValue, number) {
     return this.client
       .scrollWaitForExistAndClick(addProductPage.feature_select.replace('%NUMBER', number + 1))
-      .waitAndSetValue(addProductPage.select_feature_created, name)
+      .selectByVisibleText(addProductPage.select_feature_created.replace('%ID', number), name)
       .waitForVisibleAndClick(addProductPage.result_feature_select.replace('%ID', number))
       .waitAndSetValue(addProductPage.customized_value_input.replace('%ID', number), customizedValue)
   }
@@ -239,7 +239,7 @@ class Product extends CommonClient {
 
   checkProductCategory(i) {
     return this.client
-      .scrollWaitForExistAndClick(AddProductPage.catalog_product_name.replace("%ID", global.positionTable[i - 1], 50000))
+      .scrollWaitForExistAndClick(AddProductPage.catalog_product_name.replace("%ID", global.positionTable[i - 1], 50, 50000))
       .waitForVisible(AddProductPage.product_name_input)
   }
 

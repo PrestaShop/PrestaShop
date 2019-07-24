@@ -19,9 +19,13 @@
         <td width="10">&nbsp;</td>
         <td>
           <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
-            <p data-html-only="1" style="border-bottom:1px solid #D6D4D4;">
-              {{ 'Product(s) now available for download'|trans({}, 'Emails.Body', locale)|raw }}
-            </p>
+            {% if templateType == 'html' %}
+
+              <p style="border-bottom:1px solid #D6D4D4;">
+                {{ 'Product(s) now available for download'|trans({}, 'Emails.Body', locale)|raw }}
+              </p>
+            
+{% endif %}
             <span>
               {{ 'You have <span><strong>{nbProducts}</strong></span> product(s) now available for download using the following link(s):'|trans({}, 'Emails.Body', locale)|raw }}<br/><br/>
               {virtualProducts}

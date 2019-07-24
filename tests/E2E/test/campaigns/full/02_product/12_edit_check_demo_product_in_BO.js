@@ -6,6 +6,7 @@
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const commonScenarios = require('../../common_scenarios/product');
+const welcomeScenarios = require('../../common_scenarios/welcome');
 
 let productData = [
   {
@@ -91,7 +92,7 @@ scenario('Check the basic information of demo product in the Back Office', () =>
     test('should open the browser', () => client.open());
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'product/product');
-
+  welcomeScenarios.findAndCloseWelcomeModal();
   for(let i = 0; i < productData.length; i++) {
     commonScenarios.checkDemoProductBO(AddProductPage, productData[i]);
   }

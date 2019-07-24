@@ -193,7 +193,7 @@ module.exports = {
        * https://github.com/PrestaShop/PrestaShop/issues/12560
        */
       test('should check that the current step has started', () => client.checkAttributeValue(OnBoarding.welcomeSteps.tutorial_step.replace("%P", '1'), 'class', 'id -done', 'equal', 2000));
-      test('should click on "Next" button', () => client.scrollWaitForExistAndClick(OnBoarding.welcomeSteps.next_button, 2000));
+      test('should click on "Next" button', () => client.scrollWaitForExistAndClick(OnBoarding.welcomeSteps.next_button, 50, 2000));
       test('should close the symfony toolbar', () => client.waitForSymfonyToolbar(AddProductPage, 2000));
       test('should click on "Continue" button not on "Next Button" because of issue here #12560', () => client.waitForExistAndClick(OnBoarding.welcomeSteps.continue_button, 6000));
     }, 'common_client');

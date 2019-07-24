@@ -331,7 +331,7 @@ class ShopCore extends ObjectModel
         if (!($id_shop = Tools::getValue('id_shop')) || defined('_PS_ADMIN_DIR_')) {
             $found_uri = '';
             $is_main_uri = false;
-            $host = Tools::getHttpHost();
+            $host = Tools::getHttpHost(false, false, true);
             $request_uri = rawurldecode($_SERVER['REQUEST_URI']);
 
             $sql = 'SELECT s.id_shop, CONCAT(su.physical_uri, su.virtual_uri) AS uri, su.domain, su.main

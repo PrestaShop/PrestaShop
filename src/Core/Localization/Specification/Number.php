@@ -333,4 +333,22 @@ class Number implements NumberInterface
     {
         $this->maxFractionDigits = $maxFractionDigits;
     }
+
+    /**
+     * To array function
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        return [
+            'positivePattern' => $this->getPositivePattern(),
+            'negativePattern' => $this->getNegativePattern(),
+            'maxFractionDigits' => $this->getMaxFractionDigits(),
+            'minFractionDigits' => $this->getMinFractionDigits(),
+            'groupingUsed' => $this->isGroupingUsed(),
+            'primaryGroupSize' => $this->getPrimaryGroupSize(),
+            'secondaryGroupSize' => $this->getSecondaryGroupSize(),
+        ];
+    }
 }

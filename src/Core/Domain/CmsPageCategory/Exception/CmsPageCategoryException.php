@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 
 /**
- * Class CmsPageCategoryException
+ * Base exception for CmsPageCategory sub-domain
  */
 class CmsPageCategoryException extends DomainException
 {

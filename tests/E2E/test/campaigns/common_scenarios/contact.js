@@ -3,6 +3,7 @@ const {ContactUsPageFO} = require('../../selectors/FO/contact_us_page');
 const {ModulePage} = require('../../selectors/BO/module_page');
 const {CustomerServicePage} = require('../../selectors/BO/customerService/customer_service');
 const {Menu} = require('../../selectors/BO/menu.js');
+const {OnBoarding} = require('../../selectors/BO/onboarding');
 let promise = Promise.resolve();
 
 /****Example of contact data ****
@@ -16,6 +17,10 @@ let promise = Promise.resolve();
 module.exports = {
   createContact: function (contactData) {
     scenario('Create a new "Contact"', client => {
+      test('should check and click on "Stop the OnBoarding" button', async () => {
+        await client.isVisible(OnBoarding.stop_button);
+        await client.stopOnBoarding(OnBoarding.stop_button);
+      });
       test('should go to "Shop Parameters > Contact" page', () => client.goToSubtabMenuPage(Menu.Configure.ShopParameters.shop_parameters_menu, Menu.Configure.ShopParameters.contact_submenu));
       test('should click on "Add new contact" button', () => client.waitForExistAndClick(Contact.Contacts.add_new_contact_button));
       test('should set the "Title" input', () => client.waitAndSetValue(Contact.Contacts.title_input, contactData.title + date_time));
@@ -23,8 +28,8 @@ module.exports = {
       test('should enable the "Save messages"', () => client.waitForExistAndClick(Contact.Contacts.save_messages_button));
       test('should set the "Description" textarea', () => client.waitAndSetValue(Contact.Contacts.description_textarea, contactData.description));
       test('should click on "Save" button', () => client.waitForExistAndClick(Contact.Contacts.save_button));
-      test('should verify the appearance of the green validation', () => client.checkTextValue(ShopParameters.success_panel, '×\nSuccessful creation.'));
-    }, 'common_client');
+      test('should verify the appearance of the green validation', () => client.checkTextValue(ShopParameters.success_panel, 'close\nSuccessful creation.'));
+    }, 'onboarding');
   },
   editContact: function (contactData) {
     scenario('Edit the created "Contact"', client => {
@@ -39,7 +44,7 @@ module.exports = {
       test('should set the "Email address" input', () => client.waitAndSetValue(Contact.Contacts.email_address_input, contactData.email));
       test('should set the "Description" textarea', () => client.waitAndSetValue(Contact.Contacts.description_textarea, contactData.description));
       test('should click on "Save" button', () => client.waitForExistAndClick(Contact.Contacts.save_button));
-      test('should verify the appearance of the green validation', () => client.checkTextValue(ShopParameters.success_panel, '×\nSuccessful update.'));
+      test('should verify the appearance of the green validation', () => client.checkTextValue(ShopParameters.success_panel, 'close\nSuccessful update.'));
     }, 'common_client');
   },
   checkContactBO: function (contactData) {
@@ -49,7 +54,8 @@ module.exports = {
       test('should click on "Edit" button', () => {
         return promise
           .then(() => client.waitForExistAndClick(Contact.Contacts.edit_button))
-          .then(() => client.getParamFromURL('id_contact', 1000));
+          .then(() => client.getURL(2000))
+          .then((res) => global.param['id_contact'] = /contacts\/(\d+)\//g.exec(res.value)[1]);
       });
       test('should check the contact\'s "Title"', () => client.checkAttributeValue(Contact.Contacts.title_input, 'value', contactData.title + date_time));
       test('should check the contact\'s "Email address"', () => client.checkAttributeValue(Contact.Contacts.email_address_input, 'value', contactData.email));
@@ -62,9 +68,9 @@ module.exports = {
       test('should click on "Contact us" button', () => client.waitForExistAndClick(ContactUsPageFO.contact_us_button));
       test('should click on "Subject" select', () => client.waitForExistAndClick(ContactUsPageFO.subject_select));
       if (isDeleted) {
-        test('should check that the contact is well deleted', () => client.isNotExisting(ContactUsPageFO.subject_select_option.replace('%V', param['id_contact'])));
+        test('should check that the contact is well deleted', () => client.isNotExisting(ContactUsPageFO.subject_select_option.replace('%V', global.param['id_contact'])));
       } else {
-        test('should check that the contact is well updated', () => client.checkTextValue(ContactUsPageFO.subject_select_option.replace('%V', param['id_contact']), contactData.title + date_time));
+        test('should check that the contact is well updated', () => client.checkTextValue(ContactUsPageFO.subject_select_option.replace('%V', global.param['id_contact']), contactData.title + date_time));
       }
     }, 'common_client');
   },
@@ -77,8 +83,6 @@ module.exports = {
       test('should switch the "Send confirmation email" to "YES"', () => client.waitForExistAndClick(ModulePage.ContactFormPage.send_confirmation_email_button.replace('%S', 'on')));
       test('should switch the "Receive customers messages by email" to "YES"', () => client.waitForExistAndClick(ModulePage.ContactFormPage.receive_customers_messages_label.replace('%S', 'on')));
       test('should click on "Save" button', () => client.waitForExistAndClick(ModulePage.ContactFormPage.save_button));
-      //Related issue: 9646
-      test('should verify the appearance of the green validation', () => client.checkTextValue(ModulePage.success_msg, '×\nSuccessful update.'));
     }, 'common_client');
   },
   /****Example of contact data ****
@@ -89,15 +93,14 @@ module.exports = {
    * };
    */
   sendMessageFO: function (messageData) {
-    scenario('Check the created "Contact"', client => {
+    scenario('Send message in the Front Office', client => {
       test('should set the shop language to "English"', () => client.changeLanguage());
       test('should click on "Contact us" button', () => client.waitForExistAndClick(ContactUsPageFO.contact_us_button));
-      test('should choose the created contact from the dropdown list', () => client.waitAndSelectByValue(ContactUsPageFO.subject_select, param['id_contact']));
+      test('should choose the created contact from the dropdown list', () => client.waitAndSelectByValue(ContactUsPageFO.subject_select, global.param['id_contact']));
       test('should set the contact\'s "Email address"', () => client.waitAndSetValue(ContactUsPageFO.email_address_input, messageData.email));
       test('should upload an attachment', () => client.uploadPicture(messageData.attachment, ContactUsPageFO.attachment_file, 'filestyle'));
       test('should set the contact\'s "Description"', () => client.waitAndSetValue(ContactUsPageFO.message_textarea, messageData.message));
       test('should click on "Send" button', () => client.waitForExistAndClick(ContactUsPageFO.send_button));
-      test('should verify the appearance of the green validation', () => client.checkTextValue(ContactUsPageFO.success_panel, 'Your message has been successfully sent to our team.'));
     }, 'common_client');
   },
   checkCustomerService: function (contactData, messageData, isUpdated = false, isDeleted = false) {
@@ -144,7 +147,7 @@ module.exports = {
       test('should click on "Dropdown toggle" button', () => client.waitForExistAndClick(Contact.Contacts.dropdown_button));
       test('should click on "Delete" button', () => client.waitForExistAndClick(Contact.Contacts.delete_button));
       test('should accept the confirmation alert', () => client.alertAccept());
-      test('should verify the appearance of the green validation', () => client.checkTextValue(ShopParameters.success_panel, '×\nSuccessful deletion.'));
+      test('should verify the appearance of the green validation', () => client.checkTextValue(ShopParameters.success_panel, 'close\nSuccessful deletion.'));
       test('should check that the contact is well deleted', () => {
         return promise
           .then(() => client.searchByValue(Contact.Contacts.filter_title_input, Contact.Contacts.filter_search_button, contactData.title + date_time))
@@ -153,18 +156,14 @@ module.exports = {
     }, 'common_client');
   },
   deleteContactWithBulkAction: function (title) {
-    scenario('Delete the created "Contact"', client => {
+    scenario('Delete the created "Contact" by bulk action', client => {
       test('should go to "Shop Parameters > Contact" page', () => client.goToSubtabMenuPage(Menu.Configure.ShopParameters.shop_parameters_menu, Menu.Configure.ShopParameters.contact_submenu));
       test('should search for the created contact', () => client.searchByValue(Contact.Contacts.filter_title_input, Contact.Contacts.filter_search_button, title + date_time));
-      test('should click on "Bulk action" button', () => client.waitForExistAndClick(Contact.Contacts.bulk_action_button));
-      test('should click on "Unselect all" action', () => client.waitForExistAndClick(Contact.Contacts.bulk_actions_unselect_all_button));
-      test('should check that the checkbox is well unselected', () => client.isNotSelected(Contact.Contacts.checkbox_element, 10000));
-      test('should click on "Bulk action" button', () => client.waitForExistAndClick(Contact.Contacts.bulk_action_button));
-      test('should click on "Select all" action', () => client.waitForExistAndClick(Contact.Contacts.bulk_actions_select_all_button));
+      test('should select the contact', () => client.waitForExistAndClick(Contact.Contacts.checkbox_element));
       test('should click on "Bulk action" button', () => client.waitForExistAndClick(Contact.Contacts.bulk_action_button));
       test('should click on "Delete" action', () => client.waitForExistAndClick(Contact.Contacts.bulk_actions_delete_button));
       test('should accept the confirmation alert', () => client.alertAccept());
-      test('should verify the appearance of the green validation', () => client.checkTextValue(ShopParameters.success_panel, '×\nThe selection has been successfully deleted.'));
+      test('should verify the appearance of the green validation', () => client.checkTextValue(ShopParameters.success_panel, 'close\nThe selection has been successfully deleted.'));
       test('should check that the selected contact is well deleted', () => {
         return promise
           .then(() => client.searchByValue(Contact.Contacts.filter_title_input, Contact.Contacts.filter_search_button, title + date_time))

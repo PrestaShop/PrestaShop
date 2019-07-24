@@ -18,13 +18,17 @@
         <td width="10">&nbsp;</td>
         <td>
           <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
-            <p data-html-only="1" style="border-bottom:1px solid #D6D4D4;">
-              {{ '{product} is nearly out of stock.'|trans({}, 'Emails.Body', locale) }}
-            </p>
+            {% if templateType == 'html' %}
+
+              <p style="border-bottom:1px solid #D6D4D4;">
+                {{ '{product} is nearly out of stock.'|trans({}, 'Emails.Body', locale) }}
+              </p>
+            
+{% endif %}
             <span>
-              {{ 'The remaining stock is now less than the specified minimum of'|trans({}, 'Emails.Body', locale)|raw }} <strong><span>{last_qty}.</span></strong><br /><br />
+              {{ 'The remaining stock is now less than the specified minimum of'|trans({}, 'Emails.Body', locale)|raw }} <strong><span>{last_qty}.</span></strong><br/><br/>
               <strong><span>{{ 'Remaining stock:'|trans({}, 'Emails.Body', locale)|raw }}</span></strong> {qty}<br/><br/>
-              {{ 'You are advised to open the product&#039;s admin Product Page in order to replenish your inventory.'|trans({}, 'Emails.Body', locale)|raw }}
+              {{ 'You are advised to open the product\'s admin Product Page in order to replenish your inventory.'|trans({}, 'Emails.Body', locale)|raw }}
             </span>
           </font>
         </td>

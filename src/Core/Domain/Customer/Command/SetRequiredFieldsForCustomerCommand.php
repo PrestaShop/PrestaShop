@@ -68,15 +68,11 @@ class SetRequiredFieldsForCustomerCommand
             return;
         }
 
-        $allowedRequiredFields = [
-            RequiredField::PARTNER_OFFERS,
-        ];
-
-        if (!empty(array_diff($requiredFields, $allowedRequiredFields))) {
+        if (!empty(array_diff($requiredFields, RequiredField::ALLOWED_REQUIRED_FIELDS))) {
             throw new InvalidCustomerRequiredFieldsException(
                 sprintf(
                     'Invalid customer required fields provided. Allowed fields are: %s',
-                    implode(',', $allowedRequiredFields)
+                    implode(',', RequiredField::ALLOWED_REQUIRED_FIELDS)
                 )
             );
         }

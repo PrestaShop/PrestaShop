@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin;
 
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 /**
@@ -36,6 +37,8 @@ class StockController extends FrameworkBundleAdminController
     protected $layoutTitle = 'Stock';
 
     /**
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     *
      * @Template("@PrestaShop/Admin/Stock/overview.html.twig")
      */
     public function overviewAction()

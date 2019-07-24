@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Address\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\EditManufacturerAddressCommand;
-use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
 
 /**
  * Interface for services that handles command which edits manufacturer address
@@ -36,8 +35,6 @@ interface EditManufacturerAddressHandlerInterface
 {
     /**
      * @param EditManufacturerAddressCommand $command
-     *
-     * @return AddressId
      */
     public function handle(EditManufacturerAddressCommand $command);
 }

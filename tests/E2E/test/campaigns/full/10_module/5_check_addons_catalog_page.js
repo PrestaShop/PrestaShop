@@ -7,6 +7,7 @@ const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {Menu} = require('../../../selectors/BO/menu');
 const {ModulesCatalogPage} = require('../../../selectors/BO/addons_catalog_page');
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
+const welcomeScenarios = require('../../common_scenarios/welcome');
 
 let promise = Promise.resolve();
 
@@ -15,6 +16,7 @@ scenario('Check the addons catalog page in the Back Office', () => {
     test('should open the browser', () => client.open());
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'common_client');
+  welcomeScenarios.findAndCloseWelcomeModal();
   scenario('Check the addons catalog page', client => {
     test('should go to "Modules Catalog" page', () => client.goToSubtabMenuPage(Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_catalog_submenu));
     test('should click on "Modules Selections" tab', () => client.waitForExistAndClick(Menu.Improve.Modules.modules_selections_submenu));
@@ -56,7 +58,8 @@ scenario('Check the addons catalog page in the Back Office', () => {
     test('should search for the modules on the prestashop addons', () => {
       return promise
         .then(() => client.waitAndSetValue(ModulesCatalogPage.search_addons_input, 'minimal'))
-        .then(() => client.keys('Enter'));
+        .then(() => client.keys('Enter'))
+        .then(() => client.pause(1000));
     });
     test('should check that the page is well opened', () => {
       return promise

@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Currency\Exception;
 
 /**
- * Class CannotUpdateCurrencyException
+ * Is thrown when currency cannot be updated
  */
 class CannotUpdateCurrencyException extends CurrencyException
 {

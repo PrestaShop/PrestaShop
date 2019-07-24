@@ -12,6 +12,8 @@ const {Invoices} = require('../../../selectors/BO/order');
 const commonOrder = require('../../common_scenarios/order');
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
 const {OnBoarding} = require('../../../selectors/BO/onboarding');
+const welcomeScenarios = require('../../common_scenarios/welcome');
+
 let promise = Promise.resolve();
 global.orderInfo = [];
 
@@ -30,8 +32,11 @@ scenario('Generate a PDF by date', () => {
   }, 'order');
 
   scenario('Generate a PDF by date', () => {
-    scenario('Change the Customer Group tax parameter', client => {
+    scenario('Open the browser and login successfully in the Back Office ', client => {
       test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
+    }, 'common_client');
+    welcomeScenarios.findAndCloseWelcomeModal();
+    scenario('Change the Customer Group tax parameter', client => {
       test('should go to "Product settings" page', () => client.goToSubtabMenuPage(Menu.Configure.ShopParameters.shop_parameters_menu, Menu.Configure.ShopParameters.customer_settings_submenu));
       test('should click on "Group" tab', () => client.waitForExistAndClick(CustomerSettings.groups.group_button));
       test('should click on customer "Edit" button', () => client.waitForExistAndClick(CustomerSettings.groups.customer_edit_button));
@@ -43,6 +48,10 @@ scenario('Generate a PDF by date', () => {
       for (let i = 1; i <= 2; i++) {
         test('should go the order n°' + i, () => client.waitForExistAndClick(OrderPage.order_view_button.replace("%ORDERNumber", i)));
         test('should change order state to "payment accepted"', () => client.changeOrderState(OrderPage, 'Payment accepted'));
+        /**
+         * should refresh the page, to pass the error
+         */
+        test('should refresh the page', () => client.refresh());
         test('should get all order information', () => {
           return promise
             .then(() => client.getTextInVar(OrderPage.order_date, "invoiceDate"))
@@ -142,8 +151,8 @@ scenario('Generate a PDF by date', () => {
     }, 'order');
   }, 'order');
   scenario('Change the date', client => {
-    test('should set the "From" date', () => client.waitAndSetValue(Invoices.from_input, '2020-08-04'));
-    test('should set the "To" date', () => client.waitAndSetValue(Invoices.from_input, '2020-08-10'));
+    test('should set the "From" date', () => client.setInputValue(Invoices.from_input, '2020-08-04'));
+    test('should set the "To" date', () => client.setInputValue(Invoices.from_input, '2020-08-10'));
     test('should click on "Generate PDF file by date"', () => client.waitForExistAndClick(Invoices.generate_pdf_button));
     test('should check that no invoice has been found', () => client.checkTextValue(Invoices.no_invoice_alert, 'No invoice has been found for this period.', 'contain'));
   }, 'order');

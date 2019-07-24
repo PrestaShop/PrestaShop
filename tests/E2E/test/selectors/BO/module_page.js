@@ -61,8 +61,8 @@ module.exports = {
     //List of modules in notifications tab
     configure_module: '//*[@id="modules-list-container-notification"]//button[@data-confirm_modal="module-modal-confirm-%moduleTechName-configure"]',
     modules_number_to_configure: '//*[@id="module-short-list-configure"]/span[1]',
-    notification_number: '//*[@id="subtab-AdminModulesNotifications"]//span[@class="notification-counter"]',
-    update_notification_number_span: '//*[@id="subtab-AdminModulesUpdates"]//span[@class="notification-counter"]',
+    notification_number: '//*[@id="subtab-AdminModulesNotifications"]//span[@class="notification-counter" and string-length(text())>0]',
+    update_notification_number_span: '//*[@id="subtab-AdminModulesUpdates"]//span[@class="notification-counter" and string-length(text())>0]',
     selection_tab: '//*[@id="head_tabs"]/a[1]',
     discover_amazon_module_button: '//*[@id="modules-list-container-all"]//a[contains(@href,"amazon-market-place")]',
     ModuleBankTransferPage: {
@@ -109,12 +109,13 @@ module.exports = {
     see_more_by_category_link: '//*[@id="main-div"]//button[@data-category="%ID" and contains(@class,"see-more")]',
     module_list_container_bloc: '#modules-list-container-%ID',
     module_list_container_empty_bloc: '//*[@id="main-div"]//div[contains(@class,"module-list-empty") and @data-name="%ID"]',
-    first_module_bloc: '(//*[@id="main-div"]//div[contains(@class,"module-short-list")])[2]/div/div[1]',
+    first_module_bloc: '(//div[contains(@class,"module-item")])[1]',
     module_action_link: '(//div[@data-tech-name="%moduleTechName"]//div[contains(@class,"module-actions")]/a) |  (//div[@data-tech-name="%moduleTechName"]//form/button[@data-confirm_modal="module-modal-confirm-%moduleTechName-disable"])',
     status_list: '//*[@id="module-status-dropdown"]',
     status_option_link: '//*[@id="main-div"]//ul[contains(@class,"module-status-selector")]/li[@data-status-ref="%ID"]/a',
     price_module_span: '(//*[@id="modules-list-container-all"]/div[@data-type="module" or @data-type="service"])[%I]//div[contains(@class,"module-price")]//span',
-    category_price_module_span: '(//*[@id="modules-list-container-all"]/div[@data-type="module" and @data-categories="%IND"])[%I]//div[contains(@class,"module-price")]//span',
+    price_module_div: '(//*[@id="modules-list-container-all"]/div[@data-type="module" or @data-type="service"])[%I]//div[contains(@class,"module-price")]',
+    category_price_module_span: '(//*[@id="modules-list-container-all"]/div[@data-type="module" and @data-categories="%IND"])[%I]//div[contains(@class,"module-price")]',
     category_module_list: '(//*[@id="modules-list-container-all"]/div[(@data-type="module" or @data-type="service") and @data-categories="%IND"])[%I]',
   }
 };

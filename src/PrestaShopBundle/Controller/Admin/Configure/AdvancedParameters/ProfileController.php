@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
+use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Command\BulkDeleteProfileCommand;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Command\DeleteProfileCommand;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\CannotDeleteSuperAdminProfileException;
@@ -82,6 +83,8 @@ class ProfileController extends FrameworkBundleAdminController
     /**
      * Used for applying filtering actions.
      *
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     *
      * @param Request $request
      *
      * @return RedirectResponse
@@ -128,7 +131,7 @@ class ProfileController extends FrameworkBundleAdminController
 
                 return $this->redirectToRoute('admin_profiles_index');
             }
-        } catch (ProfileException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
@@ -165,12 +168,12 @@ class ProfileController extends FrameworkBundleAdminController
 
             $handlerResult = $formHandler->handleFor((int) $profileId, $form);
 
-            if (null !== $handlerResult->getIdentifiableObjectId()) {
+            if ($handlerResult->isSubmitted() && $handlerResult->isValid()) {
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_profiles_index');
             }
-        } catch (ProfileException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
 
             if ($e instanceof ProfileNotFoundException) {
@@ -269,10 +272,20 @@ class ProfileController extends FrameworkBundleAdminController
                 'For security reasons, you cannot delete the Administrator\'s profile.',
                 'Admin.Advparameters.Notification'
             ),
-            FailedToDeleteProfileException::class => $this->trans(
-                'An error occurred while deleting the object.',
-                'Admin.Notifications.Error'
-            ),
+            FailedToDeleteProfileException::class => [
+                FailedToDeleteProfileException::UNEXPECTED_ERROR => $this->trans(
+                    'An error occurred while deleting the object.',
+                    'Admin.Notifications.Error'
+                ),
+                FailedToDeleteProfileException::PROFILE_IS_ASSIGNED_TO_EMPLOYEE => $this->trans(
+                    'Profile(s) assigned to employee cannot be deleted',
+                    'Admin.Notifications.Error'
+                ),
+                FailedToDeleteProfileException::PROFILE_IS_ASSIGNED_TO_CONTEXT_EMPLOYEE => $this->trans(
+                    'You cannot delete your own profile',
+                    'Admin.Notifications.Error'
+                ),
+            ],
         ];
     }
 }

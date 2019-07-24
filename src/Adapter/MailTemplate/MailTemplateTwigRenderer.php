@@ -120,6 +120,7 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
         $templateType
     ) {
         $layoutVariables = $this->variablesBuilder->buildVariables($layout, $language);
+        $layoutVariables['templateType'] = $templateType;
         if (MailTemplateInterface::HTML_TYPE === $templateType) {
             $layoutPath = !empty($layout->getHtmlPath()) ? $layout->getHtmlPath() : $layout->getTxtPath();
         } else {

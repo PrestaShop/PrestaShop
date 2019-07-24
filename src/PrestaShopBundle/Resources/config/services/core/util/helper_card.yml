@@ -29,3 +29,21 @@ services:
           'es': 'http://doc.prestashop.com/display/PS17/Gestionar+Proveedores'
           'it': 'http://doc.prestashop.com/display/PS17/Gestire+Fornitori'
           '_fallback': 'http://doc.prestashop.com/display/PS17/Managing+Suppliers'
+        'category':
+          'en': 'http://doc.prestashop.com/display/PS17/Managing+Categories'
+          'fr': 'http://doc.prestashop.com/display/PS17/Gerer+les+categories'
+          'es': 'http://doc.prestashop.com/display/PS17/Gestionar+las+categorias'
+          'it': 'http://doc.prestashop.com/display/PS17/Gestire+Categorie'
+          '_fallback': 'http://doc.prestashop.com/display/PS17/Managing+Categories'
+        'cms_pages':
+          'en': 'http://doc.prestashop.com/display/PS17/Pages+-+Managing+Static+Content'
+          'fr': 'http://doc.prestashop.com/display/PS17/Gerer+votre+contenu+statique+grace+aux+pages'
+          'es': 'http://doc.prestashop.com/display/PS17/Paginas+-+Gestionar+el+Contenido+Estatico'
+          'it': 'http://doc.prestashop.com/display/PS17/Pagine+-+Gestione+Contenuti+Statici'
+          '_fallback': 'http://doc.prestashop.com/display/PS17/Pages+-+Managing+Static+Content'
+        'debug_mode':
+          'en': 'http://doc.prestashop.com/display/PS17/Performance#Performance-Debugmode'
+          'fr': 'http://doc.prestashop.com/pages/viewpage.action?pageId=51840325#Param%%C3%%A8tresdeperformances-Modedebug'
+          'it': 'http://doc.prestashop.com/pages/viewpage.action?pageId=54266514'
+          'es': 'http://doc.prestashop.com/display/PS17/Rendimiento#Rendimiento-ModoDepuraci%%C3%%B3n'
+          '_fallback': 'http://doc.prestashop.com/display/PS17/Performance#Performance-Debugmode'

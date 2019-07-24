@@ -4,6 +4,8 @@
   position: relative;
   margin: auto;
   margin-bottom: 17px;
+  display: flex;
+  flex-direction: row;
 
   &__left, &__right {
     height: 100%;
@@ -16,9 +18,17 @@
     background-image: url('img/helper-card/wave-shape-background.png');
   }
 
+  &__category {
+    background-image: url('img/helper-card/seo-background@3x.png');
+  }
+
   &__left {
     width: 320px;
     animation: showcase-img-appearance 1s;
+
+    @include media-breakpoint-down(md) {
+      display: none;
+    }
 
     img {
       animation: showcase-img-appearance 1.5s;
@@ -33,8 +43,12 @@
 
   &__right {
     width: 480px;
-    padding: 45px 55px 45px 20px;
+    padding: 45px 55px 0 20px;
     font-size: 14px;
+
+    @include media-breakpoint-down(md) {
+      padding: 3.438rem 1.25rem;
+    }
 
     h2 {
       font-size: 18px;

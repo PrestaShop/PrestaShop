@@ -54,8 +54,6 @@ final class Converter
      */
     public function toLegacyLocale($locale)
     {
-        $mappingLocales = $this->getLangToLocalesMapping();
-
         return array_search($locale, $this->getLangToLocalesMapping());
     }
 

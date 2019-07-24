@@ -116,7 +116,7 @@ class SurvivalTest extends WebTestCase
     public function getDataProvider()
     {
         return [
-            'administration_page' => ['Administration', 'admin_administration'],
+            'admin_administration' => ['Administration', 'admin_administration'],
             'admin_performance' => ['Performance', 'admin_performance'],
             'admin_import' => ['Import', 'admin_import'],
             'admin_preferences' => ['Preferences', 'admin_preferences'],
@@ -142,6 +142,7 @@ class SurvivalTest extends WebTestCase
             'admin_modules_positions' => ['Positions', 'admin_modules_positions'],
             'admin_backups_index' => ['DB Backup', 'admin_backups_index'],
             'admin_currencies_index' => ['Currencies', 'admin_currencies_index'],
+            'admin_currencies_create' => ['Add new currency', 'admin_currencies_create'],
             'admin_webservice_keys_index' => ['Webservice', 'admin_webservice_keys_index'],
             'admin_webservice_keys_create' => ['Webservice', 'admin_webservice_keys_create'],
             'admin_languages_index' => ['Languages', 'admin_languages_index'],
@@ -154,10 +155,25 @@ class SurvivalTest extends WebTestCase
             'admin_employees_create' => ['Add new employee', 'admin_employees_create'],
             'admin_cms_pages_index' => ['Cms page', 'admin_cms_pages_index'],
             'admin_cms_pages_category_create' => ['Add new cms category page', 'admin_cms_pages_category_create'],
+            'admin_cms_pages_create' => ['Add new cms page', 'admin_cms_pages_create'],
             'admin_profiles_index' => ['Profiles', 'admin_profiles_index'],
             'admin_profiles_create' => ['Add new profile', 'admin_profiles_create'],
             'admin_taxes_index' => ['Taxes', 'admin_taxes_index'],
             'admin_taxes_create' => ['Add new tax', 'admin_taxes_create'],
+            'admin_manufacturers_index' => ['Brands', 'admin_manufacturers_index'],
+            'admin_manufacturers_create' => ['Add new brand', 'admin_manufacturers_create'],
+            'admin_sql_requests_index' => ['SQL Manager', 'admin_sql_requests_index'],
+            'admin_sql_requests_create' => ['Add new SQL query', 'admin_sql_requests_create'],
+            'admin_customers_index' => ['Customers', 'admin_customers_index'],
+            'admin_customers_create' => ['Add new customer', 'admin_customers_create'],
+            'admin_order_invoices' => ['Invoices', 'admin_order_invoices'],
+            'admin_categories_index' => ['Categories', 'admin_categories_index'],
+            'admin_categories_create' => ['Add new category', 'admin_categories_create'],
+            'admin_categories_create_root' => ['Add new root category', 'admin_categories_create_root'],
+            'admin_themes_index' => ['Theme & logo', 'admin_themes_index'],
+            'admin_themes_import' => ['Add new theme', 'admin_themes_import'],
+            'admin_mail_theme_index' => ['Email Theme', 'admin_mail_theme_index'],
+            'admin_emails_index' => ['Advanced parameters E-mail', 'admin_emails_index'],
         ];
     }
 

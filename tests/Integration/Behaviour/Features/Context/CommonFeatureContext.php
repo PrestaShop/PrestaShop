@@ -49,6 +49,12 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
 
         self::$kernel = new AppKernel('test', true);
         self::$kernel->boot();
+
+        global $kernel;
+        $kernel = self::$kernel;
+
+        $employee = new \Employee();
+        \Context::getContext()->employee = $employee->getByEmail('test@prestashop.com');
     }
 
     /**
@@ -70,6 +76,7 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     public function cleanDatabaseHardPrepare()
     {
         DatabaseCreator::restoreTestDB();
+        require_once _PS_ROOT_DIR_ . '/config/config.inc.php';
     }
 
     /**

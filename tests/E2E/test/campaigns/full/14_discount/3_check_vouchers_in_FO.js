@@ -6,6 +6,7 @@ const {SearchProductPage} = require('../../../selectors/FO/search_product_page')
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
 const commonDiscountScenarios = require('../../common_scenarios/discount');
 const commonScenarios = require('../../common_scenarios/product');
+const welcomeScenarios = require('../../common_scenarios/welcome');
 let promise = Promise.resolve();
 
 let cartRuleData = [
@@ -45,6 +46,7 @@ scenario('Create a new "Cart Rule" in the Back Office', () => {
     test('should open the browser', () => client.open());
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'discount');
+  welcomeScenarios.findAndCloseWelcomeModal();
   for (let i = 0; i < cartRuleData.length; i++) {
     commonDiscountScenarios.createCartRule(cartRuleData[i], 'codePromo' + (i + 1));
     commonDiscountScenarios.checkCartRule(cartRuleData[i], 'codePromo' + (i + 1));
@@ -82,9 +84,9 @@ scenario('Check the total price after applying vouchers in the Front Office', ()
     test('should set the "Quantity" input', () => client.waitAndSetValue(productPage.first_product_quantity, 3));
     test('should click on "ADD TO CART" button', () => client.waitForExistAndClick(CheckoutOrderPage.add_to_cart_button));
     test('should click on "PROCEED TO CHECKOUT" modal button', () => client.waitForVisibleAndClick(CheckoutOrderPage.proceed_to_checkout_modal_button));
-    test('should click on "Have a promo code?" link', () => client.waitForExistAndClick(CheckoutOrderPage.promo_code_link,4000));
+    test('should click on "Have a promo code?" link', () => client.waitForExistAndClick(CheckoutOrderPage.promo_code_link, 4000));
     test('should set the "Promo code" input', () => client.setPromoCode(CheckoutOrderPage.promo_code_input, CheckoutOrderPage.promo_code_add_button, 'codePromo1'));
-    test('should click on "Have a promo code?" link', () => client.waitForExistAndClick(CheckoutOrderPage.promo_code_link,4000));
+    test('should click on "Have a promo code?" link', () => client.waitForExistAndClick(CheckoutOrderPage.promo_code_link, 4000));
     test('should set the "Promo code" input', () => client.setPromoCode(CheckoutOrderPage.promo_code_input, CheckoutOrderPage.promo_code_add_button, 'codePromo2'));
     test('should check the total price after reduction', () => {
       return promise
@@ -93,7 +95,7 @@ scenario('Check the total price after applying vouchers in the Front Office', ()
         .then(() => client.checkTotalPrice(CheckoutOrderPage.cart_total));
     });
     test('should click on "Remove voucher" button', () => client.waitForExistAndClick(CheckoutOrderPage.remove_voucher_button));
-    test('should click on "Have a promo code?" link', () => client.waitForExistAndClick(CheckoutOrderPage.promo_code_link,4000));
+    test('should click on "Have a promo code?" link', () => client.waitForExistAndClick(CheckoutOrderPage.promo_code_link, 4000));
     test('should set the "Promo code" input', () => client.setPromoCode(CheckoutOrderPage.promo_code_input, CheckoutOrderPage.promo_code_add_button, 'codePromo3'));
     test('should check the total price after reduction (BOOM-2518)', () => {
       return promise

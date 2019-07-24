@@ -30,12 +30,13 @@ use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\IsUrlRewrite;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
+use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
 use PrestaShopBundle\Form\Admin\Type\Material\MaterialChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use PrestaShopBundle\Form\Admin\Type\TranslateType;
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -45,13 +46,8 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 /**
  * Defines Improve > Design > Pages cms page form
  */
-class CmsPageType extends AbstractType
+class CmsPageType extends TranslatorAwareType
 {
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
     /**
      * @var array
      */
@@ -64,12 +60,18 @@ class CmsPageType extends AbstractType
 
     /**
      * @param TranslatorInterface $translator
+     * @param array $locales
      * @param array $allCmsCategories
      * @param $isMultiShopEnabled
      */
-    public function __construct(TranslatorInterface $translator, array $allCmsCategories, $isMultiShopEnabled)
+    public function __construct(
+        TranslatorInterface $translator,
+        array $locales,
+        array $allCmsCategories,
+        $isMultiShopEnabled)
     {
-        $this->translator = $translator;
+        parent::__construct($translator, $locales);
+
         $this->allCmsCategories = $allCmsCategories;
         $this->isMultiShopEnabled = $isMultiShopEnabled;
     }
@@ -88,15 +90,15 @@ class CmsPageType extends AbstractType
             ->add('title', TranslatableType::class, [
                 'constraints' => [
                     new DefaultLanguage([
-                        'message' => $this->translator->trans(
+                        'message' => $this->trans(
                             'The field %field_name% is required at least in your default language.',
+                            'Admin.Notifications.Error',
                             [
                                 '%field_name%' => sprintf(
                                     '"%s"',
-                                    $this->translator->trans('Title', [], 'Admin.Global')
+                                    $this->trans('Title', 'Admin.Global')
                                 ),
-                            ],
-                            'Admin.Notifications.Error'
+                            ]
                         ),
                     ]),
                 ],
@@ -110,10 +112,10 @@ class CmsPageType extends AbstractType
                         ]),
                         new Length([
                             'max' => 255,
-                            'maxMessage' => $this->translator->trans(
+                            'maxMessage' => $this->trans(
                                 'This field cannot be longer than %limit% characters',
-                                ['%limit%' => 255],
-                                'Admin.Notifications.Error'
+                                'Admin.Notifications.Error',
+                                ['%limit%' => 255]
                             ),
                         ]),
                     ],
@@ -128,10 +130,10 @@ class CmsPageType extends AbstractType
                         ]),
                         new Length([
                             'max' => 255,
-                            'maxMessage' => $this->translator->trans(
+                            'maxMessage' => $this->trans(
                                 'This field cannot be longer than %limit% characters',
-                                ['%limit%' => 255],
-                                'Admin.Notifications.Error'
+                                'Admin.Notifications.Error',
+                                ['%limit%' => 255]
                             ),
                         ]),
                     ],
@@ -153,7 +155,7 @@ class CmsPageType extends AbstractType
                 'options' => [
                     'attr' => [
                         'class' => 'js-taggable-field',
-                        'placeholder' => $this->translator->trans('Add tag', [], 'Admin.Actions'),
+                        'placeholder' => $this->trans('Add tag', 'Admin.Actions'),
                     ],
                     'constraints' => [
                         new TypedRegex([
@@ -161,10 +163,10 @@ class CmsPageType extends AbstractType
                         ]),
                         new Length([
                             'max' => 512,
-                            'maxMessage' => $this->translator->trans(
+                            'maxMessage' => $this->trans(
                                 'This field cannot be longer than %limit% characters',
-                                ['%limit%' => 512],
-                                'Admin.Notifications.Error'
+                                'Admin.Notifications.Error',
+                                ['%limit%' => 512]
                             ),
                         ]),
                     ],
@@ -173,15 +175,15 @@ class CmsPageType extends AbstractType
             ->add('friendly_url', TranslatableType::class, [
                 'constraints' => [
                     new DefaultLanguage([
-                        'message' => $this->translator->trans(
+                        'message' => $this->trans(
                             'The field %field_name% is required at least in your default language.',
+                            'Admin.Notifications.Error',
                             [
                                 '%field_name%' => sprintf(
                                     '"%s"',
-                                    $this->translator->trans('Friendly URL', [], 'Admin.Global')
+                                    $this->trans('Friendly URL', 'Admin.Global')
                                 ),
-                            ],
-                            'Admin.Notifications.Error'
+                            ]
                         ),
                     ]),
                 ],
@@ -193,24 +195,25 @@ class CmsPageType extends AbstractType
                         new IsUrlRewrite(),
                         new Length([
                             'max' => 128,
-                            'maxMessage' => $this->translator->trans(
+                            'maxMessage' => $this->trans(
                                 'This field cannot be longer than %limit% characters',
-                                ['%limit%' => 128],
-                                'Admin.Notifications.Error'
+                                'Admin.Notifications.Error',
+                                ['%limit%' => 128]
                             ),
                         ]),
                     ],
                 ],
             ])
-            ->add('content', TranslatableType::class, [
-                'type' => TextareaType::class,
+            ->add('content', TranslateType::class, [
+                'type' => FormattedTextareaType::class,
+                'locales' => $this->locales,
+                'hideTabs' => false,
                 'required' => false,
                 'options' => [
                     'constraints' => [
                         new CleanHtml([
-                            'message' => $this->translator->trans(
+                            'message' => $this->trans(
                                 '%s is invalid.',
-                                [],
                                 'Admin.Notifications.Error'
                             ),
                         ]),
@@ -222,8 +225,7 @@ class CmsPageType extends AbstractType
             ])
             ->add('is_displayed', SwitchType::class, [
                 'required' => false,
-            ])
-        ;
+            ]);
 
         if ($this->isMultiShopEnabled) {
             $builder->add('shop_association', ShopChoiceTreeType::class, [
@@ -233,12 +235,12 @@ class CmsPageType extends AbstractType
                 ],
                 'constraints' => [
                     new NotBlank([
-                        'message' => $this->translator->trans(
+                        'message' => $this->trans(
                             'The %s field is required.',
+                            'Admin.Notifications.Error',
                             [
-                                sprintf('"%s"', $this->translator->trans('Shop association', [], 'Admin.Global')),
-                            ],
-                            'Admin.Notifications.Error'
+                                sprintf('"%s"', $this->trans('Shop association', 'Admin.Global')),
+                            ]
                         ),
                     ]),
                 ],

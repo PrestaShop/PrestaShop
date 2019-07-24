@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\CommandHandler\EditCustomerHandle
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerDefaultGroupAccessException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\DuplicateCustomerEmailException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\RequiredField;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
 
 /**
@@ -77,13 +78,19 @@ final class EditCustomerHandler extends AbstractCustomerHandler implements EditC
 
         $this->updateCustomerWithCommandData($customer, $command);
 
+        // validateFieldsRequiredDatabase() below is using $_POST
+        // to check if required fields are set
+        $_POST[RequiredField::PARTNER_OFFERS] = $command->isPartnerOffersSubscribed();
+
+        $this->assertRequiredFieldsAreNotMissing($customer);
+
         if (false === $customer->validateFields(false)) {
             throw new CustomerException('Customer contains invalid field values');
         }
 
-        $customer->update();
-
-        return $customerId;
+        if (false === $customer->update()) {
+            throw new CustomerException('Failed to update customer');
+        }
     }
 
     /**

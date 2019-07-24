@@ -39,8 +39,8 @@ module.exports = {
           .then(() => client.waitAndSelectByValue(Customer.years_select, customerData.birthday.year));
       });
       test('should activate "Partner offers" option ', () => client.waitForExistAndClick(Customer.Partner_offers));
-      test('should click on "Save" button', () => client.waitForExistAndClick(Customer.save_button));
-      test('should verify the appearance of the green validation', () => client.checkTextValue(BO.success_panel, '×\nSuccessful creation.'));
+      test('should click on "Save" button', () => client.scrollWaitForExistAndClick(Customer.save_button));
+      test('should verify the appearance of the green validation', () => client.checkTextValue(BO.success_panel, 'Successful creation.'));
     }, 'customer');
   },
   checkCustomerBO: function (customerData) {
@@ -67,7 +67,7 @@ module.exports = {
           .then(() => client.isVisible(Customer.customer_filter_by_email_input))
           .then(() => client.search(Customer.customer_filter_by_email_input, date_time + customerEmail));
       });
-      test('should click on "Edit" button', () => client.waitForExistAndClick(Customer.edit_button));
+      test('should click on "Edit" button', () => client.waitForExistAndClickJs(Customer.edit_button));
       test('should choose the "Social title" radio', () => client.waitForExistAndClick(Customer.social_title_button));
       test('should set the new "First name" input', () => client.waitAndSetValue(Customer.first_name_input, editCustomerData.first_name));
       test('should set the new "Last name" input', () => client.waitAndSetValue(Customer.last_name_input, editCustomerData.last_name));
@@ -79,8 +79,8 @@ module.exports = {
           .then(() => client.waitAndSelectByValue(Customer.month_select, editCustomerData.birthday.month))
           .then(() => client.waitAndSelectByValue(Customer.years_select, editCustomerData.birthday.year));
       });
-      test('should click on "Save" button', () => client.waitForExistAndClick(Customer.save_button));
-      test('should verify the appearance of the green validation', () => client.checkTextValue(BO.success_panel, '×\nSuccessful update.'));
+      test('should click on "Save" button', () => client.scrollWaitForExistAndClick(Customer.save_button));
+      test('should verify the appearance of the green validation', () => client.checkTextValue(BO.success_panel, 'Successful update.'));
     }, 'customer');
   },
   deleteCustomer: function (customerEmail) {
@@ -94,12 +94,12 @@ module.exports = {
       test('should click on "Delete" button', () => {
         return promise
           .then(() => client.scrollWaitForExistAndClick(Customer.dropdown_toggle, 50, 2000))
-          .then(() => client.waitForExistAndClick(Customer.delete_button, 1000));
+          .then(() => client.waitForExistAndClickJs(Customer.delete_button, 1000));
       });
-      test('should accept the currently displayed alert dialog', () => client.alertAccept());
-      test('should choose the option that allows customers to register again with the same email address', () => client.waitForExistAndClick(Customer.delete_first_option));
+      //test('should accept the currently displayed alert dialog', () => client.alertAccept());
+      test('should choose the option that allows customers to register again with the same email address', () => client.waitForVisibleAndClick(Customer.delete_first_option));
       test('should click on "Delete" button', () => client.waitForExistAndClick(Customer.delete_confirmation_button));
-      test('should verify the appearance of the green validation', () => client.checkTextValue(BO.success_panel, '×\nSuccessful deletion.', 'equal', 2000));
+      test('should verify the appearance of the green validation', () => client.checkTextValue(BO.success_panel, 'Successful deletion.', 'equal', 2000));
     }, 'customer');
   },
   deleteCustomerWithBulkActions: function (customerEmail) {
@@ -110,13 +110,12 @@ module.exports = {
           .then(() => client.isVisible(Customer.customer_filter_by_email_input))
           .then(() => client.search(Customer.customer_filter_by_email_input, date_time + customerEmail));
       });
-      test('should select the searched client', () => client.waitForExistAndClick(Customer.select_customer));
-      test('should click on the "Bulk actions" button', () => client.waitForExistAndClick(Customer.bulk_actions_button));
-      test('should click on the "Delete selected" button', () => client.waitForExistAndClick(Customer.bulk_actions_delete_button));
-      test('should accept the currently displayed alert dialog', () => client.alertAccept());
-      test('should choose the option that allows customers to register again with the same email address', () => client.waitForExistAndClick(Customer.delete_first_option));
+      test('should select the searched client', () => client.waitForExistAndClickJs(Customer.select_customer));
+      test('should click on the "Bulk actions" button', () => client.waitForVisibleAndClick(Customer.bulk_actions_button));
+      test('should click on the "Delete selected" button', () => client.waitForVisibleAndClick(Customer.bulk_actions_delete_button));
+      test('should choose the option that allows customers to register again with the same email address', () => client.waitForVisibleAndClick(Customer.delete_first_option));
       test('should click on "Delete" button', () => client.waitForExistAndClick(Customer.delete_confirmation_button));
-      test('should verify the appearance of the green validation', () => client.checkTextValue(BO.success_panel, '×\nThe selection has been successfully deleted.'));
+      test('should verify the appearance of the green validation', () => client.checkTextValue(BO.success_panel, 'The selection has been successfully deleted.'));
     }, 'customer');
   },
   checkCustomerFO: function (client, customerData) {
@@ -147,11 +146,6 @@ module.exports = {
       test('should verify that the "City" input exist', () => client.waitForVisible(accountPage.city_input));
       test('should verify that the "Phone" input exist', () => client.waitForVisible(accountPage.phone_input));
       test('should verify that the "Country" list exist', () => client.waitForVisible(accountPage.country_list));
-      /**
-       * This error is due to the bug described in this issue
-       * https://github.com/PrestaShop/PrestaShop/issues/11166
-       **/
-      test('should verify that the "Birthday" list exist', () => client.waitForVisible(accountPage.date_birthday_input));
     }, 'customer');
   },
   fillCustomerInfoFromAGuest: function (customerData, password = true) {

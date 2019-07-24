@@ -26,11 +26,11 @@
 
 namespace PrestaShop\PrestaShop\Core\Backup\Exception;
 
-use Exception;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 
 /**
  * Class BackupException is thrown whenever backup fails.
  */
-class BackupException extends Exception implements ExceptionInterface
+class BackupException extends CoreException
 {
 }

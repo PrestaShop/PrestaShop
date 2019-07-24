@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Currency\Exception;
 
 /**
- * Class CannotDeleteDefaultCurrencyException.
+ * Is thrown when currency cannot be deleted because it is default
  */
 class CannotDeleteDefaultCurrencyException extends CurrencyException
 {

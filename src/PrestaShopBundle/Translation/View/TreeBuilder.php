@@ -52,40 +52,38 @@ class TreeBuilder
         $provider->setLocale($this->locale);
 
         if ('theme' === $provider->getIdentifier()) {
-            $translations = $provider->getMessageCatalogue()->all();
+            $defaultCatalogue = $provider->getMessageCatalogue();
         } else {
-            $translations = $provider->getDefaultCatalogue()->all();
+            $defaultCatalogue = $provider->getDefaultCatalogue();
         }
 
-        $xliffCatalog = $provider->getXliffCatalogue()->all();
-        $databaseCatalogue = $provider->getDatabaseCatalogue($this->theme)->all();
+        $xliffCatalogue = $provider->getXliffCatalogue();
+        $databaseCatalogue = $provider->getDatabaseCatalogue($this->theme);
 
-        foreach ($translations as $domain => $messages) {
+        $translations = [];
+
+        foreach ($defaultCatalogue->all() as $domain => $messages) {
             $missingTranslations = 0;
-            $domainDatabase = str_replace('.' . $provider->getLocale(), '', $domain);
 
             foreach ($messages as $translationKey => $translationValue) {
                 $data = array(
-                    'xlf' => (array_key_exists($domain, $xliffCatalog) &&
-                    array_key_exists($translationKey, $xliffCatalog[$domain]) ?
-                        $xliffCatalog[$domain][$translationKey] : null),
-                    'db' => (array_key_exists($domainDatabase, $databaseCatalogue) &&
-                    array_key_exists($translationKey, $databaseCatalogue[$domainDatabase]) ?
-                        $databaseCatalogue[$domainDatabase][$translationKey] : null),
+                    'xlf' => $xliffCatalogue->defines($translationKey, $domain)
+                        ? $xliffCatalogue->get($translationKey, $domain)
+                        : null,
+                    'db' => $databaseCatalogue->defines($translationKey, $domain)
+                        ? $databaseCatalogue->get($translationKey, $domain)
+                        : null,
                 );
 
                 // if search is empty or is in catalog default|xlf|database
                 if (empty($search) || $this->dataContainsSearchWord($search, array_merge(array('default' => $translationKey), $data))) {
                     $translations[$domain][$translationKey] = $data;
 
-                    if (
-                        empty($data['xlf']) &&
-                        empty($data['db'])
+                    if (empty($data['xlf'])
+                        && empty($data['db'])
                     ) {
                         ++$missingTranslations;
                     }
-                } else {
-                    unset($translations[$domain][$translationKey]);
                 }
             }
 
@@ -139,8 +137,7 @@ class TreeBuilder
 
         foreach ($catalogue as $domain => $messages) {
             $tableisedDomain = Inflector::tableize($domain);
-            list($basename) = explode('.', $tableisedDomain);
-            $parts = array_reverse(explode('_', $basename));
+            $parts = array_reverse(explode('_', $tableisedDomain));
             $subtree = &$translationsTree;
 
             while (count($parts) > 0) {

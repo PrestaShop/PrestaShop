@@ -14,7 +14,11 @@ module.exports = {
   accessToCurrencies() {
     scenario('Access to "Currencies" page', client => {
       test('should go to "Localization" page', () => client.goToSubtabMenuPage(Menu.Improve.International.international_menu, Menu.Improve.International.localization_submenu));
-      test('should click on "Currencies" subtab', () => client.waitForExistAndClick(Menu.Improve.International.currencies_tab));
+      test('should click on "Currencies" subtab', () => {
+        return promise
+          .then(() => client.waitForExistAndClick(Menu.Improve.International.currencies_tab))
+          .then(() => client.waitForVisible(Menu.Improve.International.active_currencies_tab));
+      });
     }, 'common_client');
   },
 
@@ -99,7 +103,7 @@ module.exports = {
         await client.waitAndSelectByValue(Localization.Currencies.enabled_select, '0')
       });
       test('should click on Search button', () => client.waitForExistAndClick(Localization.Currencies.search_button));
-      test('should check that currencies are not existing', () => client.checkTextValue(Localization.Currencies.search_no_results, 'No records found', 'contain'));
+      test('should check that currencies are not existing', () => client.checkTextValue(Localization.Currencies.search_no_results, 'No records found'));
       test('should click on reset button', () => client.waitForExistAndClick(Localization.Currencies.reset_button));
     }, 'currency');
   },
@@ -158,7 +162,7 @@ module.exports = {
     scenario('Live exchange rate', client => {
       test('should click on "Live exchange rates" toggle button', () => client.waitForExistAndClick(Localization.Currencies.live_exchange_rate_toggle_button.replace('%ID', 1)));
       test('should click on update exchange rates', () => client.waitForExistAndClick(Localization.Currencies.update_exchange_rate_button));
-      test('should verify the appearance of the green validation', () => client.checkTextValue(Localization.Currencies.success_danger_panel.replace('%B', 'success'), 'close\nSuccessful update.'));
+      test('should verify the appearance of the green validation', () => client.checkTextValue(Localization.Currencies.success_danger_panel.replace('%B', 'success'), 'Successful update.'));
     }, 'common_client');
   },
 

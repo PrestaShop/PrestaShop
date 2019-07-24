@@ -26,6 +26,11 @@
 
 namespace PrestaShop\PrestaShop\Core\Localization\RTL\Exception;
 
-class GenerationException extends \Exception
+use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
+
+/**
+ * Is thrown when unable to generate RTL files
+ */
+class GenerationException extends LocalizationException
 {
 }

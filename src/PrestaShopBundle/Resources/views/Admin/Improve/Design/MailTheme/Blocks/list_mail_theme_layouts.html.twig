@@ -63,11 +63,14 @@
                         {% set previewUrl = path('admin_mail_theme_preview_layout', {locale: app.request.locale, theme: mailTheme.name, layout: mailLayout.name, type: 'html'}) %}
                         {% set rawUrl = path('admin_mail_theme_raw_layout', {locale: app.request.locale, theme: mailTheme.name, layout: mailLayout.name, type: 'html'}) %}
                         {% set txtUrl = path('admin_mail_theme_raw_layout', {locale: app.request.locale, theme: mailTheme.name, layout: mailLayout.name, type: 'txt'}) %}
+                        {% set mailUrl = path('admin_mail_theme_send_test_mail', {locale: app.request.locale, theme: mailTheme.name, layout: mailLayout.name}) %}
                       {% else %}
                         {% set previewUrl = path('admin_mail_theme_preview_module_layout', {locale: app.request.locale, theme: mailTheme.name, module: mailLayout.moduleName, layout: mailLayout.name, type: 'html'}) %}
                         {% set rawUrl = path('admin_mail_theme_raw_module_layout', {locale: app.request.locale, theme: mailTheme.name, module: mailLayout.moduleName, layout: mailLayout.name, type: 'html'}) %}
                         {% set txtUrl = path('admin_mail_theme_raw_module_layout', {locale: app.request.locale, theme: mailTheme.name, module: mailLayout.moduleName, layout: mailLayout.name, type: 'txt'}) %}
+                        {% set mailUrl = path('admin_mail_theme_send_test_module_mail', {locale: app.request.locale, theme: mailTheme.name, module: mailLayout.moduleName, layout: mailLayout.name}) %}
                       {% endif %}
+
                       <div class="btn-group-action text-right">
                         <div class="btn-group">
                           <a target="_blank" class="btn tooltip-link dropdown-item" href="{{ previewUrl }}">
@@ -89,6 +92,10 @@
                             <a target="_blank" class="btn tooltip-link dropdown-item" href="{{ txtUrl }}">
                               <i class="material-icons">subject</i>
                               {{ 'Text'|trans({}, 'Admin.Design.Feature') }}
+                            </a>
+                            <a class="btn tooltip-link dropdown-item" href="{{ mailUrl }}">
+                              <i class="material-icons">email</i>
+                              {{ 'Send a test email'|trans({}, 'Admin.Advparameters.Feature') }}
                             </a>
                           </div>
                         </div>

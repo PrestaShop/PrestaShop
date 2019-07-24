@@ -103,13 +103,6 @@ final class TaxQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     private function getQueryBuilder(array $filters)
     {
-        $allowedFilters = [
-            'id_tax',
-            'name',
-            'rate',
-            'active',
-        ];
-
         $qb = $this->connection
             ->createQueryBuilder()
             ->from($this->dbPrefix . 'tax', 't')
@@ -118,34 +111,39 @@ final class TaxQueryBuilder extends AbstractDoctrineQueryBuilder
                 $this->dbPrefix . 'tax_lang',
                 'tl',
                 't.`id_tax` = tl.`id_tax`'
-        );
+            );
         $qb->andWhere('tl.`id_lang` = :employee_id_lang');
         $qb->andWhere('t.`deleted` = 0');
 
         $qb->setParameter('employee_id_lang', $this->employeeIdLang);
-
-        foreach ($filters as $filterName => $value) {
-            if (!in_array($filterName, $allowedFilters, true)) {
-                continue;
-            }
-
-            if ('active' === $filterName) {
-                $qb->andWhere('t.`active` = :active');
-                $qb->setParameter('active', $value);
-
-                continue;
-            }
-
-            if ('name' === $filterName) {
-                $qb->andWhere('tl.`name` LIKE :' . $filterName)
-                    ->setParameter($filterName, '%' . $value . '%');
-                continue;
-            }
-
-            $qb->andWhere('t.`' . $filterName . '` LIKE :' . $filterName)
-                ->setParameter($filterName, '%' . $value . '%');
-        }
+        $this->applyFilters($qb, $filters);
 
         return $qb;
+    }
+
+    private function applyFilters(QueryBuilder $qb, array $filters)
+    {
+        $allowedFiltersMap = [
+            'id_tax' => 't.id_tax',
+            'name' => 'tl.name',
+            'rate' => 't.rate',
+            'active' => 't.active',
+        ];
+
+        foreach ($filters as $filterName => $value) {
+            if (!array_key_exists($filterName, $allowedFiltersMap)) {
+                continue;
+            }
+
+            if ('active' === $filterName || 'id_tax' === $filterName) {
+                $qb->andWhere($allowedFiltersMap[$filterName] . ' = :' . $filterName);
+                $qb->setParameter($filterName, $value);
+
+                continue;
+            }
+
+            $qb->andWhere($allowedFiltersMap[$filterName] . ' LIKE :' . $filterName)
+                ->setParameter($filterName, '%' . $value . '%');
+        }
     }
 }

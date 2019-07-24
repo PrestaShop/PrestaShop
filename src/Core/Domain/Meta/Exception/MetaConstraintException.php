@@ -27,13 +27,32 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Meta\Exception;
 
 /**
- * Class MetaConstraintException
+ * Is thrown when meta constraints are violated
  */
 class MetaConstraintException extends MetaException
 {
+    /**
+     * When meta page name is invalid
+     */
     const INVALID_PAGE_NAME = 1;
+
+    /**
+     * When meta url_rewrite is invalid
+     */
     const INVALID_URL_REWRITE = 2;
+
+    /**
+     * When meta page title is invalid
+     */
     const INVALID_PAGE_TITLE = 3;
+
+    /**
+     * When meta description is invalid
+     */
     const INVALID_META_DESCRIPTION = 4;
+
+    /**
+     * When meta keywords is invalids
+     */
     const INVALID_META_KEYWORDS = 5;
 }

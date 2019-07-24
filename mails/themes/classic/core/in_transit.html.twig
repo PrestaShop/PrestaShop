@@ -17,8 +17,8 @@
       <tr>
         <td width="10">&nbsp;</td>
         <td>
-          <div itemscope itemtype="https://schema.org/ParcelDelivery">
-            <div itemprop="deliveryAddress" itemscope itemtype="https://schema.org/PostalAddress">
+          <div itemscope="" itemtype="https://schema.org/ParcelDelivery">
+            <div itemprop="deliveryAddress" itemscope="" itemtype="https://schema.org/PostalAddress">
               <meta itemprop="streetAddress" content="{address1}"/>
               <meta itemprop="addressLocality" content="{city}"/>
               <meta itemprop="addressRegion" content="{city}"/>
@@ -27,15 +27,15 @@
             </div>
 
             <link itemprop="trackingUrl" href="{followup}"/>
-            <div itemprop="carrier" itemscope itemtype="https://schema.org/Organization">
+            <div itemprop="carrier" itemscope="" itemtype="https://schema.org/Organization">
               <meta itemprop="name" content="{carrier}"/>
             </div>
 
             {meta_products}
 
-            <div itemprop="partOfOrder" itemscope itemtype="https://schema.org/Order">
+            <div itemprop="partOfOrder" itemscope="" itemtype="https://schema.org/Order">
               <meta itemprop="orderNumber" content="{order_name}"/>
-              <div itemprop="merchant" itemscope itemtype="https://schema.org/Organization">
+              <div itemprop="merchant" itemscope="" itemtype="https://schema.org/Organization">
                 <meta itemprop="name" content="{shop_name}"/>
               </div>
               <link itemprop="orderStatus" href="https://schema.org/OrderInTransit"/>
@@ -43,11 +43,15 @@
           </div>
 
           <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
-            <p data-html-only="1" style="border-bottom:1px solid #D6D4D4;">
-              {{ 'Order {order_name}'|trans({}, 'Emails.Body', locale) }}&nbsp;-&nbsp;{{ 'In transit'|trans({}, 'Emails.Body', locale)|raw }}
-            </p>
+            {% if templateType == 'html' %}
+
+              <p style="border-bottom:1px solid #D6D4D4;">
+                {{ 'Order {order_name}'|trans({}, 'Emails.Body', locale) }}&nbsp;-&nbsp;{{ 'In transit'|trans({}, 'Emails.Body', locale)|raw }}
+              </p>
+            
+{% endif %}
             <span>
-              {{ 'Your order with the reference <span><strong>{order_name}</strong></span> is currently in transit.'|trans({}, 'Emails.Body', locale)|raw }} <br /><br />
+              {{ 'Your order with the reference <span><strong>{order_name}</strong></span> is currently in transit.'|trans({}, 'Emails.Body', locale)|raw }} <br/><br/>
               {{ 'You can track your package using the following link:'|trans({}, 'Emails.Body', locale)|raw }} <a href="{followup}">{{ '{followup}'|trans({}, 'Emails.Body', locale) }}</a>
             </span>
           </font>

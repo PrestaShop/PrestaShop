@@ -69,12 +69,7 @@ final class TaxFormDataHandler implements FormDataHandlerInterface
     }
 
     /**
-     * Update object with form data.
-     *
-     * @param int $id
-     * @param array $data
-     *
-     * @return int ID of identifiable object
+     * {@inheritdoc}
      *
      * @throws TaxException
      */
@@ -86,9 +81,6 @@ final class TaxFormDataHandler implements FormDataHandlerInterface
             ->setEnabled((bool) $data['is_enabled'])
         ;
 
-        /** @var TaxId $taxId */
-        $taxId = $this->commandBus->handle($command);
-
-        return $taxId->getValue();
+        $this->commandBus->handle($command);
     }
 }

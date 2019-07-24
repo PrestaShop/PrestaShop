@@ -130,13 +130,13 @@ module.exports = {
       for (let i = 0; i < (parseInt(tab['modules_number'])); i++) {
         if (installedMbo && attribute === 'data-price') {
           if (byCategory === 1) {
-            await client.getModulePrice(ModulePage.category_price_module_span.replace('%IND', tab['categoryRef']), attribute, i, false);
+            await client.getModulePrice(ModulePage.category_price_module_span.replace('%IND', global.tab['categoryRef']), attribute, i, false);
           } else {
-            await client.getModulePrice(ModulePage.price_module_span, attribute, i, false);
+            await client.getModulePrice(ModulePage.price_module_div, attribute, i, false);
           }
         } else {
           if (byCategory === 1) {
-            await client.getModuleField(ModulePage.category_module_list.replace('%IND', tab['categoryRef']), attribute, i, false);
+            await client.getModuleField(ModulePage.category_module_list.replace('%IND', global.tab['categoryRef']), attribute, i, false);
           } else {
             await client.getModuleField(ModulePage.module_list, attribute, i, false);
           }
@@ -150,7 +150,7 @@ module.exports = {
           if (byCategory === 1) {
             await client.getModulePrice(ModulePage.category_price_module_span.replace('%IND', tab['categoryRef']), attribute, i, true);
           } else {
-            await client.getModulePrice(ModulePage.price_module_span, attribute, i, true);
+            await client.getModulePrice(ModulePage.price_module_div, attribute, i, true);
           }
         } else {
           if (byCategory === 1) {
@@ -209,8 +209,8 @@ module.exports = {
   DisableEnableModule: async function (client, ModulePage) {
     test('should click on "Disable" button for the first module', async () => {
       await client.getAttributeInVar(ModulePage.first_module_bloc, 'data-tech-name', 'moduleTechName');
-      await client.getModuleButtonName(ModulePage, tab['moduleTechName'], ModulePage.module_action_link);
-      await client.clickOnDisableModuleButton(ModulePage, tab['moduleTechName']);
+      await client.getModuleButtonName(ModulePage, global.tab['moduleTechName'], ModulePage.module_action_link);
+      await client.clickOnDisableModuleButton(ModulePage, global.tab['moduleTechName']);
       await client.waitForVisibleAndClick(ModulePage.confirmation_disable_module);
       await client.waitForExistAndClick(AddProductPage.close_validation_button);
       await client.refresh(); //To verify
@@ -219,14 +219,14 @@ module.exports = {
       await client.waitForExistAndClick(ModulePage.status_list);
       await client.waitForExistAndClick(ModulePage.status_option_link.replace('%ID', 0));
     });
-    test('should search for the module "' + tab['moduleTechName'] + '"', async () => {
-      await client.waitAndSetValue(ModulePage.module_selection_input, tab['moduleTechName']);
+    test('should search for the module "' + global.tab['moduleTechName'] + '"', async () => {
+      await client.waitAndSetValue(ModulePage.module_selection_input, global.tab['moduleTechName']);
       await client.waitForExistAndClick(ModulePage.selection_search_button);
     });
-    test('should check if the disabled  module is displayed', () => client.isVisible(ModulePage.installed_module_div.replace('%moduleTechName', tab['moduleTechName']), 2000));
+    test('should check if the disabled  module is displayed', () => client.isVisible(ModulePage.installed_module_div.replace('%moduleTechName', global.tab['moduleTechName']), 2000));
     test('should click on "Enable" button', async () => {
-      await client.getModuleButtonName(ModulePage, tab['moduleTechName']);
-      await client.clickOnEnableModuleButton(ModulePage, tab['moduleTechName']);
+      await client.getModuleButtonName(ModulePage, global.tab['moduleTechName']);
+      await client.clickOnEnableModuleButton(ModulePage, global.tab['moduleTechName']);
       await client.waitForExistAndClick(AddProductPage.close_validation_button);
       await client.refresh(); //To verify
     });
@@ -234,7 +234,7 @@ module.exports = {
       await client.waitForExistAndClick(ModulePage.status_list);
       await client.waitForExistAndClick(ModulePage.status_option_link.replace('%ID', 1));
     });
-    test('should search for the module "' + tab['moduleTechName'] + '"', async () => {
+    test('should search for the module "' + global.tab['moduleTechName'] + '"', async () => {
       await client.waitAndSetValue(ModulePage.module_selection_input, tab['moduleTechName']);
       await client.waitForExistAndClick(ModulePage.selection_search_button);
     });
@@ -336,9 +336,9 @@ module.exports = {
     test('should click on "Discover" button', () => client.waitForExistAndClick(ModulePage.discover_amazon_module_button));
     test('should verify it opens the addons Amazon market place product page in a new tab', () => {
       return promise
-        .then(() => client.switchWindow(id))
+        .then(() => client.switchWindow(id, 1000))
         .then(() => client.refresh()) /**Adding refreshing page because sometimes is not well opened we have to refresh it before */
-        .then(() => client.checkTextValue(ModulePage.module_name, "Amazon Market Place Module", 'contain'))
+        .then(() => client.checkTextValue(ModulePage.module_name, "Amazon Market Place", 'contain'))
         .then(() => client.switchWindow(0));
     });
   },
@@ -346,9 +346,8 @@ module.exports = {
     test('should go to "Modules > Module Manager" page', () => client.goToSubtabMenuPage(Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_manager_submenu));
     test('should click on "Alerts" tab', () => {
       return promise
-        .then(() => client.pause(4000))
+        .then(() => client.waitForVisible(ModulePage.notification_number))
         .then(() => client.getTextInVar(ModulePage.notification_number, 'notification'))
-        .then(() => client.pause(4000))
         .then(() => client.waitForExistAndClick(Menu.Improve.Modules.alerts_subTab))
     });
     test('should click on "Configure" button for "' + moduleTechName + '"', () => client.waitForExistAndClick(ModulePage.configure_link.replace('%moduleTechName', moduleTechName), 2000));
@@ -358,16 +357,19 @@ module.exports = {
     test('should click on "Save" button', () => client.waitForExistAndClick(ModulePage.ModuleBankTransferPage.save_button));
     test('should go to "Modules > Module Manager" page', () => client.goToSubtabMenuPage(Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_manager_submenu));
     test('should click on "Alerts" tab', () => client.waitForExistAndClick(Menu.Improve.Modules.alerts_subTab));
-    test('should check that the "Alerts number" is decremented with 1', () => client.checkTextValue(ModulePage.notification_number, (tab['notification'] - 1).toString(), 'equal', 1000));
+    test('should check that the "Alerts number" is decremented with 1', () => {
+      return promise
+        .then(() => client.waitForVisible(ModulePage.notification_number))
+        .then(() => client.checkTextValue(ModulePage.notification_number, (tab['notification'] - 1).toString(), 'equal'));
+    });
     test('should check that the configured module is not visible in the "Alerts" tab', () => client.checkIsNotVisible(ModulePage.configure_module.replace('%moduleTechName', moduleTechName)));
   },
   upgradeModule: function (client, ModulePage) {
     test('should go to "Modules > Module Manager" page', () => client.goToSubtabMenuPage(Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_manager_submenu));
     test('should click on "Updates" tab', () => {
       return promise
-        .then(() => client.pause(4000))
+        .then(() => client.waitForVisible(ModulePage.update_notification_number_span))
         .then(() => client.getTextInVar(ModulePage.update_notification_number_span, 'notification_update'))
-        .then(() => client.pause(4000))
         .then(() => client.waitForExistAndClick(Menu.Improve.Modules.updates_subTab))
     });
     test('should click on "Upgrade" button for the first module if there is at least one module to update', async () => {
@@ -383,13 +385,6 @@ module.exports = {
       if (tab['notification_update'] > 0) {
         await client.checkIsNotVisible(ModulePage.upgrade_module_button.replace('%moduleTechName', tab['dataTechNameModule']));
         await client.refresh();
-      } else {
-        await client.pause(0);
-      }
-    });
-    test('should check that the "Updates number" is decremented with 1 if there is at least one module to update', async () => {
-      if (tab['notification_update'] > 0) {
-        await client.checkTextValue(ModulePage.update_notification_number_span, (tab['notification_update'] - 1).toString(), 'equal', 1000);
       } else {
         await client.pause(0);
       }
@@ -425,6 +420,6 @@ module.exports = {
     test('should click on "Modules Catalog" tab', () => client.waitForExistAndClick(Menu.Improve.Modules.modules_catalog_submenu));
     test('should set the name of the module in the search input', () => client.waitAndSetValue(ModulePage.module_selection_input, moduleTechName));
     test('should click on "Search" button', () => client.waitForExistAndClick(ModulePage.selection_search_button, 2000));
-    test('should check that the ' + moduleTechName + ' module existence on the "Catalog" page', () => client.isExisting(ModulePage.installed_module_div.replace("%moduleTechName", moduleTechName)));
+    test('should check that the ' + moduleTechName + ' module exist on the "Catalog" page', () => client.isExisting(ModulePage.installed_module_div.replace("%moduleTechName", moduleTechName)));
   }
 };

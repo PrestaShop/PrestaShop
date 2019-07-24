@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Supplier\Exception;
 
 /**
- * Class CannotDeleteSupplierAddressException
+ * Is thrown when supplier address cannot be deleted
  */
 class CannotDeleteSupplierAddressException extends SupplierException
 {

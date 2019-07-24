@@ -26,6 +26,11 @@
 
 namespace PrestaShop\PrestaShop\Core\Localization\Exception;
 
-class LocalizationException extends \Exception
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
+
+/**
+ * Base class for core localization exceptions
+ */
+class LocalizationException extends CoreException
 {
 }

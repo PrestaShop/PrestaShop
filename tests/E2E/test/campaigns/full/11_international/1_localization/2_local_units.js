@@ -7,6 +7,7 @@ const {AccessPageBO} = require('../../../../selectors/BO/access_page');
 const commonLocalization = require('../../../common_scenarios/localization');
 const {OnBoarding} = require('../../../../selectors/BO/onboarding');
 const {AddProductPage} = require('../../../../selectors/BO/add_product_page');
+const welcomeScenarios = require('../../../common_scenarios/welcome');
 let firstLocalUnitsData = {
     weight: 'kg',
     distance: 'km',
@@ -26,6 +27,7 @@ scenario('"Local units"', () => {
     test('should open the browser', () => client.open());
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'common_client');
+  welcomeScenarios.findAndCloseWelcomeModal();
   commonLocalization.localUnits(firstLocalUnitsData, 'cm', 'kg');
   scenario('Close symfony toolbar then click on "Stop the OnBoarding" button', client => {
     test('should close symfony toolbar', () => {

@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Command;
 
-use PrestaShopBundle\Routing\Linter\LinterException;
+use PrestaShopBundle\Routing\Linter\Exception\LinterException;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -39,7 +39,7 @@ use Symfony\Component\Routing\Route;
 final class SecurityAnnotationLinterCommand extends ContainerAwareCommand
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function configure()
     {
@@ -63,7 +63,7 @@ final class SecurityAnnotationLinterCommand extends ContainerAwareCommand
         /** @var Route $route */
         foreach ($adminRouteProvider->getRoutes() as $routeName => $route) {
             try {
-                $securityAnnotationLinter->lint($route);
+                $securityAnnotationLinter->lint($routeName, $route);
             } catch (LinterException $e) {
                 $notConfiguredRoutes[] = $routeName;
             }

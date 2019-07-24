@@ -37,9 +37,11 @@ import PositionExtension from '../../components/grid/extension/position-extensio
 import ChoiceTree from '../../components/form/choice-tree';
 import TranslatableInput from '../../components/translatable-input';
 import textToLinkRewriteCopier from '../../components/text-to-link-rewrite-copier';
-import TaggableField from "../../components/taggable-field";
 import FiltersSubmitButtonEnablerExtension
   from '../../components/grid/extension/filters-submit-button-enabler-extension';
+import TaggableField from '../../components/taggable-field';
+import ShowcaseCard from '../../components/showcase-card/showcase-card';
+import ShowcaseCardCloseExtension from '../../components/showcase-card/extension/showcase-card-close-extension';
 
 const $ = window.$;
 
@@ -58,9 +60,11 @@ $(() => {
   cmsCategory.addExtension(new PositionExtension());
   cmsCategory.addExtension(new FiltersSubmitButtonEnablerExtension());
 
+  const translatorInput = new TranslatableInput();
+
   textToLinkRewriteCopier({
     sourceElementSelector: 'input[name^="cms_page_category[name]"]',
-    destinationElementSelector: 'input[name^="cms_page_category[friendly_url]"]',
+    destinationElementSelector: `${translatorInput.localeInputSelector}:not(.d-none) input[name^="cms_page_category[friendly_url]"]`,
   });
 
   new ChoiceTree('#cms_page_category_parent_category');
@@ -68,7 +72,6 @@ $(() => {
   const shopChoiceTree = new ChoiceTree('#cms_page_category_shop_association');
   shopChoiceTree.enableAutoCheckChildren();
 
-  new TranslatableInput();
 
   new TaggableField({
     tokenFieldSelector: 'input[name^="cms_page_category[meta_keywords]"]',
@@ -88,4 +91,7 @@ $(() => {
   cmsGrid.addExtension(new SubmitRowActionExtension());
   cmsGrid.addExtension(new PositionExtension());
   cmsGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
+
+  const helperBlock = new ShowcaseCard('cms-pages-showcase-card');
+  helperBlock.addExtension(new ShowcaseCardCloseExtension());
 });

@@ -190,4 +190,20 @@ abstract class ApiController
 
         return new JsonResponse($response, $status, $headers);
     }
+
+    /**
+     * Checks if access is granted.
+     *
+     * @param string $controller name of the controller
+     * @param array $accessLevel
+     *
+     * @return bool
+     */
+    protected function isGranted(array $accessLevel, $controller)
+    {
+        return $this->container->get('security.authorization_checker')->isGranted(
+            $accessLevel,
+            $controller . '_'
+        );
+    }
 }

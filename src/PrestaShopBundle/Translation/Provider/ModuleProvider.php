@@ -26,6 +26,8 @@
 
 namespace PrestaShopBundle\Translation\Provider;
 
+use PrestaShop\TranslationToolsBundle\Translation\Helper\DomainHelper;
+
 /**
  * Translation provider for a specific native module (maintained by the core team)
  * Used mainly for the display in the Translations Manager of the Back Office.
@@ -42,7 +44,7 @@ class ModuleProvider extends AbstractProvider implements SearchProviderInterface
      */
     public function getTranslationDomains()
     {
-        return ['^Modules' . $this->getModuleDomain() . '*'];
+        return ['^' . preg_quote(DomainHelper::buildModuleBaseDomain($this->moduleName)) . '([A-Z]|$)'];
     }
 
     /**
@@ -50,7 +52,7 @@ class ModuleProvider extends AbstractProvider implements SearchProviderInterface
      */
     public function getFilters()
     {
-        return ['#^Modules' . $this->getModuleDomain() . '*#i'];
+        return ['#^' . preg_quote(DomainHelper::buildModuleBaseDomain($this->moduleName)) . '([A-Z]|\.|$)#'];
     }
 
     /**
@@ -77,13 +79,5 @@ class ModuleProvider extends AbstractProvider implements SearchProviderInterface
     public function getDefaultResourceDirectory()
     {
         return $this->resourceDirectory . DIRECTORY_SEPARATOR . 'default';
-    }
-
-    /**
-     * @return string
-     */
-    private function getModuleDomain()
-    {
-        return preg_replace('/^ps_(\w+)/', '$1', $this->moduleName);
     }
 }

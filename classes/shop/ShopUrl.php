@@ -166,6 +166,15 @@ class ShopUrlCore extends ObjectModel
     public static function cacheMainDomainForShop($id_shop)
     {
         if (!isset(self::$main_domain_ssl[(int) $id_shop]) || !isset(self::$main_domain[(int) $id_shop])) {
+            // May be called while the context is not instanciated yet
+            // For instance in first step of the installer
+            if ($id_shop === null && !isset(Context::getContext()->shop)) {
+                self::$main_domain[(int) $id_shop] = null;
+                self::$main_domain_ssl[(int) $id_shop] = null;
+
+                return;
+            }
+
             $row = Db::getInstance()->getRow('
             SELECT domain, domain_ssl
             FROM ' . _DB_PREFIX_ . 'shop_url

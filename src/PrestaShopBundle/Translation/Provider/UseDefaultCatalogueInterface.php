@@ -35,7 +35,7 @@ use Symfony\Component\Translation\MessageCatalogueInterface;
 interface UseDefaultCatalogueInterface
 {
     /**
-     * Get the default catalogue
+     * Get the default (aka untranslated) catalogue
      *
      * @param bool $empty if true, empty the catalogue values (keep the keys)
      *

@@ -50,26 +50,41 @@
 }
 .block-social {
   text-align: right;
-}
-.block-social li {
-  height: 2.5rem;
-  width: 2.5rem;
-  background-color: $gray-light;
-  background-repeat: no-repeat;
-  display: inline-block;
-  margin: 0.125rem;
-  cursor: pointer;
-  &:hover {
-    background-color: $brand-primary;
-  }
-  a {
-    display: block;
-    height: 100%;
-    white-space: nowrap;
-    text-indent: 100%;
-    overflow: hidden;
-    &:hover {
-      color: transparent;
+  ul {
+    display: flex;
+    @include media-breakpoint-down(sm) { 
+      flex-flow: wrap;
+    }
+    li {
+      height: 2.5rem;
+      width: 2.5rem;
+      background-color: $gray-light;
+      background-repeat: no-repeat;
+      display: inline-block;
+      margin: 0.125rem;
+      cursor: pointer;
+
+      @include media-breakpoint-down(sm) {  
+        height: 2rem;
+        width: 2rem;
+        margin-right: 1.3rem;
+        margin-bottom: 1.3rem;
+        background-size: contain;
+      }
+      
+      &:hover {
+        background-color: $brand-primary;
+      }
+      a {
+        display: block;
+        height: 100%;
+        white-space: nowrap;
+        text-indent: 100%;
+        overflow: hidden;
+        &:hover {
+          color: transparent;
+        }
+      }
     }
   }
 }

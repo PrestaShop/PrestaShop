@@ -18,12 +18,16 @@
         <td width="10">&nbsp;</td>
         <td>
           <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
-            <p data-html-only="1" style="border-bottom:1px solid #D6D4D4;">
-              {{ 'You have received a new log alert'|trans({}, 'Emails.Body', locale)|raw }}
-            </p>
+            {% if templateType == 'html' %}
+
+              <p style="border-bottom:1px solid #D6D4D4;">
+                {{ 'You have received a new log alert'|trans({}, 'Emails.Body', locale)|raw }}
+              </p>
+            
+{% endif %}
             <span>
-              {{ '<span><strong>Warning:</strong></span> you have received a new log alert in your Back Office.'|trans({}, 'Emails.Body', locale)|raw }}<br /><br />
-              {{ 'You can check for it in the <span><strong>"Tools" > "Logs"</strong></span> section of your Back Office.'|trans({}, 'Emails.Body', locale)|raw }}
+              {{ '<span><strong>Warning:</strong></span> you have received a new log alert in your Back Office.'|trans({}, 'Emails.Body', locale)|raw }}<br/><br/>
+              {{ 'You can check for it in the <span><strong>"Tools" &gt; "Logs"</strong></span> section of your Back Office.'|trans({}, 'Emails.Body', locale)|raw }}
             </span>
           </font>
         </td>

@@ -32,7 +32,7 @@ module.exports = {
       test('should go to "Category" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.category_submenu));
       test('should click on "Add new category" button', () => client.waitForExistAndClick(CategorySubMenu.new_category_button));
       test('should set the "Name" input', () => client.waitAndSetValue(CategorySubMenu.name_input, categoryData.name + date_time));
-      test('should set the "Description" textarea', () => client.setEditorText(CategorySubMenu.description_textarea, categoryData.description + date_time));
+      test('should set the "Description" textarea', () => client.setiFrameContent(CategorySubMenu.description_textarea, categoryData.description + date_time,false));
       test('should upload the picture', () => client.uploadPicture(categoryData.picture, CategorySubMenu.picture, 'image'));
       test('should upload the thumb picture', () => client.uploadPicture(categoryData.thumb_picture, CategorySubMenu.thumb_picture, 'image'));
       test('should set the "Meta title" input', () => client.waitAndSetValue(CategorySubMenu.title, categoryData.meta_title));
@@ -48,9 +48,10 @@ module.exports = {
       test('should click on "Save" button', () => {
         return promise
           .then(() => client.scrollWaitForExistAndClick(CategorySubMenu.save_button, 50))
-          .then(() => client.getTextInVar(CategorySubMenu.category_number_span, "number_category"));
+          .then(() => client.getTextInVar(CategorySubMenu.category_number_span, "number_category"))
+          .then(() => tab['number_category'] = tab['number_category'].match(/\d+/g)[0]);
       });
-      test('should verify the appearance of the green validation', () => client.checkTextValue(CatalogPage.success_panel, '×\nSuccessful creation.'));
+      test('should verify the appearance of the green validation', () => client.checkTextValue(CatalogPage.green_validation, 'Successful creation.','contain'));
     }, 'category');
   },
   configureMainMenu() {
@@ -70,9 +71,9 @@ module.exports = {
     scenario('Update the created "Category"', client => {
       test('should go to "Category" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.category_submenu));
       test('should search for category ', () => client.searchByValue(CategorySubMenu.search_input, CategorySubMenu.search_button, categoryData.name + date_time));
-      test('should click on "Edit" action', () => client.clickOnAction(CategorySubMenu.update_button));
+      test('should click on "Edit" action', () => client.waitForExistAndClickJs(CategorySubMenu.update_button));
       test('should set the "Name" input', () => client.waitAndSetValue(CategorySubMenu.name_input, editedCategoryData.name + date_time));
-      test('should set the "Description" textarea', () => client.setEditorText(CategorySubMenu.description_textarea, editedCategoryData.description + date_time));
+      test('should set the "Description" textarea', () => client.setiFrameContent(CategorySubMenu.description_textarea, editedCategoryData.description + date_time,false));
       test('should set the "Meta title" input', () => client.waitAndSetValue(CategorySubMenu.title, editedCategoryData.meta_title));
       test('should set the "Meta description" input', () => client.waitAndSetValue(CategorySubMenu.meta_description, editedCategoryData.meta_description));
       for (let j in categoryData.meta_keywords) {
@@ -86,9 +87,9 @@ module.exports = {
         });
       });
       test('should set the "Friendly url" input', () => client.waitAndSetValue(CategorySubMenu.simplify_URL_input, editedCategoryData.friendly_url + date_time));
-      test('should click on "Save" button', () => client.waitForExistAndClick(CategorySubMenu.save_button));
-      test('should verify the appearance of the green validation', () => client.checkTextValue(CatalogPage.success_panel, '×\nSuccessful update.'));
-      test('should click on "Reset" button', () => client.waitForExistAndClick(CategorySubMenu.reset_button));
+      test('should click on "Save" button', () => client.scrollWaitForExistAndClick(CategorySubMenu.save_button));
+      test('should verify the appearance of the green validation', () => client.checkTextValue(CatalogPage.green_validation, 'Successful update.','contain'));
+      test('should click on "Reset" button', () => client.scrollWaitForExistAndClick(CategorySubMenu.reset_button));
     }, 'category');
   },
   editParentCategory(categoryData, parentCategory) {
@@ -113,8 +114,9 @@ module.exports = {
       test('should search for category ', () => client.searchByValue(CategorySubMenu.search_input, CategorySubMenu.search_button, categoryData.name + date_time));
       test('should click on "Edit" action', () => {
         return promise
-          .then(() => client.clickOnAction(CategorySubMenu.update_button))
-          .then(() => client.getParamFromURL('id_category', 2000));
+          .then(() => client.waitForExistAndClickJs(CategorySubMenu.update_button))
+          .then(() => client.getURL(2000))
+          .then((res) => global.param['id_category'] = /categories\/(\d+)\//g.exec(res.value)[1]);
       });
       test('should check the category name', () => client.checkAttributeValue(CategorySubMenu.name_input, 'value', categoryData.name + date_time));
       test('should check that the image is well displayed', () => client.checkImage(CategorySubMenu.image_link));
@@ -122,8 +124,14 @@ module.exports = {
       test('should check the category title', () => client.checkAttributeValue(CategorySubMenu.title, 'value', categoryData.meta_title));
       test('should check the category meta description', () => client.checkAttributeValue(CategorySubMenu.meta_description, 'value', categoryData.meta_description));
       test('should check the category friendly url', () => client.checkAttributeValue(CategorySubMenu.simplify_URL_input, 'value', categoryData.friendly_url + date_time));
-      test('should click on "Save" button', () => client.waitForExistAndClick(CategorySubMenu.save_button));
-      test('should click on "Reset" button', () => client.waitForExistAndClick(CategorySubMenu.reset_button));
+      test('should click on "Save" button', () => client.scrollWaitForExistAndClick(CategorySubMenu.save_button));
+      test('should verify the appearance of the green validation', () => client.checkTextValue(CatalogPage.green_validation, 'Successful update.','contain'));
+      test('should click on "Reset" button', () => {
+        return promise
+          .then(() => client.pause(1000))
+          .then(() => client.scrollWaitForExistAndClick(CategorySubMenu.reset_button));
+      });
+      test('should wait for load',() => client.pause(1500));
     }, 'category');
   },
   deleteCategoryWithDeleteMode(categoryData, parentCategory = '', deleteMode = 'linkanddisable') {
@@ -138,8 +146,9 @@ module.exports = {
         });
       }
       test('should search for category ', () => client.searchByValue(CategorySubMenu.search_input, CategorySubMenu.search_button, categoryData.name + date_time));
-      test('should click on "Dropdown toggle" button', () => client.waitForExistAndClick(CategorySubMenu.action_button, 1000));
-      test('should click on "Delete" action', () => client.waitForExistAndClick(CategorySubMenu.delete_button));
+      test('should click on "Dropdown toggle" button', () => client.waitForExistAndClickJs(CategorySubMenu.action_button, 1000));
+      test('should click on "Delete" action', () => client.waitForExistAndClickJs(CategorySubMenu.delete_button));
+      test('should wait for modal to exist', () => client.waitForVisible(CategorySubMenu.mode_delete_radio));
       if (deleteMode === 'delete') {
         test('should choose the delete mode radio button', () => client.scrollWaitForExistAndClick(CategorySubMenu.mode_delete_radio));
       } else if (deleteMode === 'link') {
@@ -148,20 +157,22 @@ module.exports = {
         test('should choose the delete mode radio button', () => client.scrollWaitForExistAndClick(CategorySubMenu.mode_link_disable_radio));
       }
       test('should delete category', () => client.scrollWaitForExistAndClick(CategorySubMenu.second_delete_button));
-      test('should verify the appearance of the green validation', () => client.checkTextValue(CatalogPage.success_panel, '×\nSuccessful deletion.'));
+      test('should wait for Successful message to appear',() => client.waitForVisible(CatalogPage.success_panel));
+      test('should verify the appearance of the green validation', () => client.checkTextValue(CatalogPage.success_panel, 'Successful deletion.','contain',1000));
       test('should search for category ', () => client.searchByValue(CategorySubMenu.search_input, CategorySubMenu.search_button, categoryData.name + date_time));
       test('should check that the product is not existing', () => client.checkTextValue(CategorySubMenu.search_no_results, 'No records found', 'contain'));
-      test('should click on "Reset" button', () => client.waitForExistAndClick(CategorySubMenu.reset_button));
+      test('should click on "Reset" button', () => client.scrollWaitForExistAndClick(CategorySubMenu.reset_button));
     }, 'category');
   },
   deleteCategoryWithBulkAction(categoryData) {
     scenario('Delete category with action group', client => {
       test('should go to "Category" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.category_submenu));
       test('should search for category ', () => client.searchByValue(CategorySubMenu.search_input, CategorySubMenu.search_button, categoryData.name + date_time));
-      test('should select the category to delete', () => client.waitForExistAndClick(CategorySubMenu.select_category, 2000));
-      test('should click on "Delete selected" action', () => client.clickOnAction(CategorySubMenu.delete_action_group_button, CategorySubMenu.action_group_button, 'delete', true));
+      test('should select the category to delete', () => client.scrollWaitForVisibleAndClick(CategorySubMenu.select_category, 2000));
+      test('should click on "Delete selected" action', () => client.clickOnAction(CategorySubMenu.delete_action_group_button, CategorySubMenu.action_group_button, 'delete'));
+      test('should wait for modal to exist', () => client.waitForVisible(CategorySubMenu.mode_delete_radio));
       test('should click on "Delete" button', () => client.waitForExistAndClick(CategorySubMenu.second_delete_button));
-      test('should verify the appearance of the green validation', () => client.checkTextValue(CatalogPage.success_panel, '×\nThe selection has been successfully deleted.'));
+      test('should verify the appearance of the green validation', () => client.checkTextValue(CatalogPage.success_panel, 'The selection has been successfully deleted.','contain'));
       test('should search for category ', () => client.searchByValue(CategorySubMenu.search_input, CategorySubMenu.search_button, categoryData.name + date_time));
       test('should check that the product does not exist', () => client.checkTextValue(CategorySubMenu.search_no_results, 'No records found', 'contain'));
       test('should click on "Reset" button', () => client.waitForExistAndClick(CategorySubMenu.reset_button));
@@ -182,6 +193,7 @@ module.exports = {
         test('should check the breadcrumb of the created category', () => client.checkBreadcrumbInFo(CategoryPageFO.breadcrumb_path, "Accessories", categoryData.name));
       } else {
         test('should check the existence of the created category', () => {
+          client.waitForVisible(AccessPageFO.categories_list);
           for (let i = 1; i < (parseInt(tab["number_category"]) + 1); i++) {
             promise = client.getCategoriesName(AccessPageFO.categories_list, i);
           }

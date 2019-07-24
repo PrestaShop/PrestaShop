@@ -23,39 +23,57 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+import {EventEmitter} from './event-emitter';
+
 const $ = window.$;
 
+/**
+ * This class is used to automatically toggle translated inputs (displayed with one
+ * input and a language selector using the TranslatableType Symfony form type).
+ * Also compatible with TranslatableField changes.
+ */
 class TranslatableInput {
-    constructor(options) {
-        options = options || {};
+  constructor(options) {
+    options = options || {};
 
-        this.localeItemSelector = options.localeItemSelector || '.js-locale-item';
-        this.localeButtonSelector = options.localeButtonSelector || '.js-locale-btn';
-        this.localeInputSelector = options.localeInputSelector || '.js-locale-input';
+    this.localeItemSelector = options.localeItemSelector || '.js-locale-item';
+    this.localeButtonSelector = options.localeButtonSelector || '.js-locale-btn';
+    this.localeInputSelector = options.localeInputSelector || '.js-locale-input';
 
-        $('body').on('click', this.localeItemSelector, this.toggleInputs.bind(this));
+    $('body').on('click', this.localeItemSelector, this.toggleLanguage.bind(this));
+    EventEmitter.on('languageSelected', this.toggleInputs.bind(this));
+  }
+
+  /**
+   * Dispatch event on language selection to update inputs and other components which depend on the locale.
+   *
+   * @param event
+   */
+  toggleLanguage(event) {
+    const localeItem = $(event.target);
+    const form = localeItem.closest('form');
+    EventEmitter.emit('languageSelected', {selectedLocale: localeItem.data('locale'), form: form});
+  }
+
+  /**
+   * Toggle all translatable inputs in form in which locale was changed
+   *
+   * @param {Event} event
+   */
+  toggleInputs(event) {
+    const form = event.form;
+    const selectedLocale = event.selectedLocale;
+    const localeButton = form.find(this.localeButtonSelector);
+    const changeLanguageUrl = localeButton.data('change-language-url');
+
+    localeButton.text(selectedLocale);
+    form.find(this.localeInputSelector).addClass('d-none');
+    form.find(`${this.localeInputSelector}.js-locale-${selectedLocale}`).removeClass('d-none');
+
+    if (changeLanguageUrl) {
+      this._saveSelectedLanguage(changeLanguageUrl, selectedLocale);
     }
-
-    /**
-     * Toggle all translatable inputs in form in which locale was changed
-     *
-     * @param {Event} event
-     */
-    toggleInputs(event) {
-        const localeItem = $(event.target);
-        const form = localeItem.closest('form');
-        const selectedLocale = localeItem.data('locale');
-        const localeButton = form.find(this.localeButtonSelector);
-        const changeLanguageUrl = localeButton.data('change-language-url');
-
-        localeButton.text(selectedLocale);
-        form.find(this.localeInputSelector).addClass('d-none');
-        form.find(this.localeInputSelector+'.js-locale-' + selectedLocale).removeClass('d-none');
-
-        if (changeLanguageUrl) {
-          this._saveSelectedLanguage(changeLanguageUrl, selectedLocale);
-        }
-    }
+  }
 
   /**
    * Save language choice for employee forms.
@@ -65,14 +83,14 @@ class TranslatableInput {
    *
    * @private
    */
-    _saveSelectedLanguage(changeLanguageUrl, selectedLocale) {
-      $.post({
-        url: changeLanguageUrl,
-        data: {
-          language_iso_code: selectedLocale
-        },
-      });
-    }
+  _saveSelectedLanguage(changeLanguageUrl, selectedLocale) {
+    $.post({
+      url: changeLanguageUrl,
+      data: {
+        language_iso_code: selectedLocale
+      },
+    });
+  }
 }
 
 export default TranslatableInput;

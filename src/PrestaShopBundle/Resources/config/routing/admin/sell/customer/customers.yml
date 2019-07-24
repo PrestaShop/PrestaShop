@@ -48,13 +48,17 @@ admin_customers_view:
   requirements:
     customerId: \d+
 
-admin_customers_save_private_note:
-  path: /{customerId}/save-private-note
+admin_customers_set_private_note:
+  path: /{customerId}/set-private-note
   methods: [POST]
   defaults:
-    _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:savePrivateNote
+    _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:setPrivateNote
     _legacy_controller: AdminCustomers
     _legacy_link: AdminCustomers:updateCustomerNote
+    _legacy_parameters:
+      id_customer: customerId
+  requirements:
+    customerId: \d+
 
 admin_customers_toggle_status:
   path: /{customerId}/toggle-status

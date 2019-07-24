@@ -82,9 +82,6 @@ final class CurrencyFormDataHandler implements FormDataHandlerInterface
             ->setShopIds(is_array($data['shop_association']) ? $data['shop_association'] : [])
         ;
 
-        /** @var CurrencyId $currencyId */
-        $currencyId = $this->commandBus->handle($command);
-
-        return $currencyId->getValue();
+        $this->commandBus->handle($command);
     }
 }

@@ -70,16 +70,26 @@
       <trans-unit id="32d2e6cd4bb1719c572ef470a3a525b6">
         <source>My template %s</source>
         <target>My template %s</target>
-        <note>Line: 2677</note>
+        <note>Line: 2675</note>
       </trans-unit>
     </body>
   </file>
   <file original="modules/ps_facetedsearch/views/templates/admin/add.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="51e17eed0057675de4bde1b34206bb12">
-        <source>New filters template</source>
-        <target>New filters template</target>
-        <note>Line: 3</note>
+      <trans-unit id="5d9632c49fb1586eed7123afe2bd806f">
+        <source>Categories used for this template:</source>
+        <target>Categories used for this template:</target>
+        <note>Line: 14</note>
+      </trans-unit>
+      <trans-unit id="78587049e12fb4f6b12e2bb045f2880a">
+        <source>Categories selection is disabled because you have no categories or you are in a "all shops" context.</source>
+        <target>Categories selection is disabled because you have no categories or you are in a "all shops" context.</target>
+        <note>Line: 20</note>
+      </trans-unit>
+      <trans-unit id="dc3f85827350641490287c65c0c4ddf8">
+        <source>You must select at least one filter</source>
+        <target>You must select at least one filter</target>
+        <note>Line: 409</note>
       </trans-unit>
       <trans-unit id="f8263d99054a4cdb3428196f078fa212">
         <source>Template name:</source>
@@ -91,20 +101,45 @@
         <target>Only as a reminder</target>
         <note>Line: 10</note>
       </trans-unit>
-      <trans-unit id="5d9632c49fb1586eed7123afe2bd806f">
-        <source>Categories used for this template:</source>
-        <target>Categories used for this template:</target>
-        <note>Line: 14</note>
-      </trans-unit>
-      <trans-unit id="78587049e12fb4f6b12e2bb045f2880a">
-        <source>Categories selection is disabled because you have no categories or you are in a "all shops" context.</source>
-        <target>Categories selection is disabled because you have no categories or you are in a "all shops" context.</target>
-        <note>Line: 20</note>
-      </trans-unit>
       <trans-unit id="c2d0bf5ad42279c519cdcb4a94eb46b6">
         <source>Choose shop association:</source>
         <target>Choose shop association:</target>
         <note>Line: 27</note>
+      </trans-unit>
+      <trans-unit id="cfbc982f8fb7a0cc3abb3c85c795ab41">
+        <source>Sub-categories filter</source>
+        <target>Sub-categories filter</target>
+        <note>Line: 61</note>
+      </trans-unit>
+      <trans-unit id="cd50ff1c5332f9920acf8173c4aab425">
+        <source>Product stock filter</source>
+        <target>Product stock filter</target>
+        <note>Line: 98</note>
+      </trans-unit>
+      <trans-unit id="048c1728a0a6cf36f56c9dcdd23d8a14">
+        <source>Product condition filter</source>
+        <target>Product condition filter</target>
+        <note>Line: 135</note>
+      </trans-unit>
+      <trans-unit id="e581c019fe5c1b2aa8dfa18d93f88d13">
+        <source>Product brand filter</source>
+        <target>Product brand filter</target>
+        <note>Line: 172</note>
+      </trans-unit>
+      <trans-unit id="cc72ed9534a489b5d2e5882735bf1364">
+        <source>Product weight filter (slider)</source>
+        <target>Product weight filter (slider)</target>
+        <note>Line: 209</note>
+      </trans-unit>
+      <trans-unit id="0649bb392812f99ff6b0e2ba160675fa">
+        <source>Product price filter (slider)</source>
+        <target>Product price filter (slider)</target>
+        <note>Line: 243</note>
+      </trans-unit>
+      <trans-unit id="51e17eed0057675de4bde1b34206bb12">
+        <source>New filters template</source>
+        <target>New filters template</target>
+        <note>Line: 3</note>
       </trans-unit>
       <trans-unit id="88ec58dbbe7a8b727200696cfca4df3d">
         <source>You can drag and drop filters to adjust position</source>
@@ -120,11 +155,6 @@
         <source>Total filters: %s</source>
         <target>Total filters: %s</target>
         <note>Line: 40</note>
-      </trans-unit>
-      <trans-unit id="cfbc982f8fb7a0cc3abb3c85c795ab41">
-        <source>Sub-categories filter</source>
-        <target>Sub-categories filter</target>
-        <note>Line: 61</note>
       </trans-unit>
       <trans-unit id="379d3973e10dfd90c475060f31b9ae74">
         <source>Filter result limit:</source>
@@ -156,35 +186,10 @@
         <target>Drop-down list</target>
         <note>Line: 384</note>
       </trans-unit>
-      <trans-unit id="cd50ff1c5332f9920acf8173c4aab425">
-        <source>Product stock filter</source>
-        <target>Product stock filter</target>
-        <note>Line: 98</note>
-      </trans-unit>
-      <trans-unit id="048c1728a0a6cf36f56c9dcdd23d8a14">
-        <source>Product condition filter</source>
-        <target>Product condition filter</target>
-        <note>Line: 135</note>
-      </trans-unit>
-      <trans-unit id="e581c019fe5c1b2aa8dfa18d93f88d13">
-        <source>Product brand filter</source>
-        <target>Product brand filter</target>
-        <note>Line: 172</note>
-      </trans-unit>
-      <trans-unit id="cc72ed9534a489b5d2e5882735bf1364">
-        <source>Product weight filter (slider)</source>
-        <target>Product weight filter (slider)</target>
-        <note>Line: 209</note>
-      </trans-unit>
       <trans-unit id="ce9bd6e7a7bfa2fa2d9e43bc4fcfeb8a">
         <source>List of ranges</source>
         <target>List of ranges</target>
         <note>Line: 261</note>
-      </trans-unit>
-      <trans-unit id="0649bb392812f99ff6b0e2ba160675fa">
-        <source>Product price filter (slider)</source>
-        <target>Product price filter (slider)</target>
-        <note>Line: 243</note>
       </trans-unit>
       <trans-unit id="db6b86d05039c4f657a28647f8eb5140">
         <source>Attribute group: %name% (%count% attributes)</source>
@@ -211,10 +216,14 @@
         <target>Feature: %name% (%count% value)</target>
         <note>Line: 355</note>
       </trans-unit>
-      <trans-unit id="dc3f85827350641490287c65c0c4ddf8">
-        <source>You must select at least one filter</source>
-        <target>You must select at least one filter</target>
-        <note>Line: 409</note>
+    </body>
+  </file>
+  <file original="modules/ps_facetedsearch/views/templates/admin/manage.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="79c0d6cba080dc90b01c887064c9fc2f">
+        <source>Clear cache</source>
+        <target>Clear cache</target>
+        <note>Line: 37</note>
       </trans-unit>
     </body>
   </file>

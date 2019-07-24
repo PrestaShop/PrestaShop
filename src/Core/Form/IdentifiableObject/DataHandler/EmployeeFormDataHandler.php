@@ -158,10 +158,7 @@ final class EmployeeFormDataHandler implements FormDataHandlerInterface
             );
         }
 
-        /** @var EmployeeId $employeeId */
-        $employeeId = $this->bus->handle($command);
-
-        return $employeeId->getValue();
+        $this->bus->handle($command);
     }
 
     /**

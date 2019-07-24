@@ -11,6 +11,7 @@ const {productPage} = require('../../../selectors/FO/product_page');
 const {Menu} = require('../../../selectors/BO/menu.js');
 const commonScenarios = require('../../common_scenarios/product');
 let promise = Promise.resolve();
+const welcomeScenarios = require('../../common_scenarios/welcome');
 
 let productData = {
   name: 'PH',
@@ -33,7 +34,7 @@ scenario('Check that the buttons in header product page works successfully', () 
     test('should open the browser', () => client.open());
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'product/product');
-
+  welcomeScenarios.findAndCloseWelcomeModal();
   commonScenarios.createProduct(AddProductPage, productData);
 
   scenario('Check that "Type of product" select works successfully', client => {
@@ -64,24 +65,11 @@ scenario('Check that the buttons in header product page works successfully', () 
     test('should check that the "Product name" input exists', () => client.isExisting(AddProductPage.product_name_fr_input, 2000));
     test('should set the "Product name" input', () => client.waitAndSetValue(AddProductPage.product_name_fr_input, 'produit' + date_time));
     test('should click on "Save" button', () => client.waitForExistAndClick(AddProductPage.save_product_button, 2000));
-    test('should go to the Front Office', () => {
-      return promise
-        .then(() => client.waitForExistAndClick(AccessPageBO.shopname))
-        .then(() => client.switchWindow(1));
-    });
-    test('should switch the front office language to French', () => client.changeLanguage('fr'));
-    test('should search for the product', () => client.searchByValue(SearchProductPage.search_input, SearchProductPage.search_button, 'produit' + date_time));
-    test('should go to the product page', () => client.waitForExistAndClick(SearchProductPage.product_result_name));
-    test('should check that the "Product name" is in french language', () => client.checkTextValue(productPage.product_name, ('produit' + date_time).toUpperCase()));
-    test('should switch the front office language to English', () => client.changeLanguage());
-    test('should check that the "Product name" is in English language', () => client.checkTextValue(productPage.product_name, productData.name + date_time));
+    commonScenarios.clickOnPreviewLink(client, AddProductPage.preview_link, productPage.product_name);
     test('should go back to the Back Office', () => client.switchWindow(0));
-    test('should select the "English" language from the list', () => client.waitAndSelectByValue(AddProductPage.product_language, 'en'));
-    test('should check that the "Product name" exists in English language', () => client.isExisting(AddProductPage.product_name_fr_input, 2000));
   }, 'product/product');
 
   scenario('Check that "Sales" button works successfully', client => {
-    test('should click on "Sales" button', () => client.waitForExistAndClick(AddProductPage.sales_button));
     test('should check that "Product details" block is displayed in stats page', () => {
       return promise
         .then(() => client.switchWindow(2))
@@ -90,27 +78,7 @@ scenario('Check that the buttons in header product page works successfully', () 
     });
   }, 'product/product');
 
-  scenario('Check that "Product list" button works successfully', client => {
-    test('should open the "Quick navigation" sidebar', () => client.waitForExistAndClick(AddProductPage.product_list_button));
-    test('should check that the "Quick navigation" sidebar is opened', () => client.isExisting(AddProductPage.right_sidebar, 2000)); //Quick navigation sidebar
-    test('should close the "Quick navigation" sidebar', () => client.waitForExistAndClick(AddProductPage.product_list_button));
-  }, 'product/product');
-
-  scenario('Check that "Help" button works successfully', client => {
-    test('should open the "Help" sidebar', () => client.waitForExistAndClick(AddProductPage.help_button));
-    test('should check that the "Help" sidebar is opened', () => client.isExisting(AddProductPage.right_sidebar, 2000)); //Help sidebar
-    test('should close the "Help" sidebar', () => client.waitForExistAndClick(AddProductPage.help_button));
-  }, 'product/product');
-
-  scenario('Check that "Tooltip" button works successfully', client => {
-    test('should open the "Tooltip" box', () => client.waitForExistAndClick(AddProductPage.tooltip_button));
-    test('should check that the "Tooltip" box is opened', () => client.checkTextValue(AddProductPage.tooltip_box_content, 'Is the product a pack (a combination of at least two existing products), a virtual product (downloadable file, service, etc.), or simply a standard, physical product?'));
-    test('should close the "Tooltip" box', () => client.waitForExistAndClick(AddProductPage.tooltip_button));
-  }, 'product/check_product');
-
   scenario('Save the created product', client => {
-    test('should click on "Save" button', () => client.waitForExistAndClick(AddProductPage.save_product_button, 2000));
-    test('should verify the appearance of the green validation', () => client.checkTextValue(AddProductPage.validation_msg, 'Settings updated.'));
     test('should go to "Catalog" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.products_submenu));
     test('should click on "Reset" button', () => client.waitForExistAndClick(AddProductPage.catalog_reset_filter));
   }, 'product/product');

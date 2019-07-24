@@ -126,7 +126,7 @@ if ($lastParametersModificationTime) {
         define('_COOKIE_IV_', $config['parameters']['cookie_iv']);
     } else {
         // Define cookie IV if missing to prevent failure in composer post-install script
-        define('_COOKIE_IV_', Tools::passwdGen(8));
+        define('_COOKIE_IV_', Tools::passwdGen(32));
     }
 
     // New cookie

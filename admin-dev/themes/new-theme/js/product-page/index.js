@@ -31,6 +31,8 @@ import nestedCategory from './nested-categories';
 import combination from './combination';
 import Serp from '../app/utils/serp/index';
 
+const $ = window.$;
+
 $(() => {
   productHeader();
   productSearchAutocomplete();
@@ -40,30 +42,26 @@ $(() => {
   bulkCombination().init();
   nestedCategory().init();
 
-  const serpComp = new Serp();
-  if (serpComp.isActive()) {
-    serpComp.vm.$refs.serp.setUrl($('#product_form_preview_btn').data('redirect'));
-
-    const watchedMetaUrl = $('.serp-watched-url:input');
-    const initialValue = watchedMetaUrl.val();
-
-    // Because the url is in a data attribute never updated, we need a custom update
-    watchedMetaUrl.on('keyup change', (e) => {
-      serpComp.vm.$refs.serp.setUrl(
-        $('#product_form_preview_btn').data('redirect').replace(
-          initialValue, watchedMetaUrl.val()
-        )
-      );
-    });
-  }
+  new Serp(
+    {
+      container: '#serp-app',
+      defaultTitle: '.serp-default-title:input',
+      watchedTitle: '.serp-watched-title:input',
+      defaultDescription: '.serp-default-description',
+      watchedDescription: '.serp-watched-description',
+      watchedMetaUrl: '.serp-watched-url:input',
+    },
+    $('#product_form_preview_btn').data('seo-url')
+  );
 
   // This is the only script for the module page so there is no specific file for it.
-  $('.modules-list-select').on("change", (e) => {
+  $('.modules-list-select').on('change', (e) => {
     $('.module-render-container').hide();
     $(`.${e.target.value}`).show();
   });
-  $('.modules-list-button').on("click", (e) => {
-    let target = $(e.target).data('target');
+
+  $('.modules-list-button').on('click', (e) => {
+    const target = $(e.target).data('target');
     $('.module-selection').show();
     $('.modules-list-select').val(target).trigger('change');
     return false;

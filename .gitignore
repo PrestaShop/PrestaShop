@@ -77,6 +77,11 @@ npm-debug.log.*
 *.hot-update.js
 *.hot-update.json
 
+tests-legacy/resources/modules/followup/
+tests-legacy/resources/modules/ps_emailalerts/
+tests-legacy/resources/modules/ps_emailsubscription/mails/
+tests-legacy/resources/modules/referralprogram/
+
 /admin-dev/autoupgrade/*
 !/admin-dev/autoupgrade/index.php
 !/admin-dev/autoupgrade/backup/index.php
@@ -127,7 +132,6 @@ php-cs-fixer
 
 translations/*
 mails/*
-!mails/en/
 !mails/themes/
 themes/default-bootstrap/lang/*
 themes/default-bootstrap/modules/*/translations/*.php

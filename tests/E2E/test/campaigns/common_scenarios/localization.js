@@ -4,7 +4,6 @@ const {CheckoutOrderPage} = require('../../selectors/FO/order_page');
 const {Localization} = require('../../selectors/BO/international/localization');
 const {Menu} = require('../../selectors/BO/menu.js');
 const {ThemeAndLogo} = require('../../selectors/BO/design/theme_and_logo');
-const Design = require('../../selectors/BO/design/index');
 const {languageFO} = require('../../selectors/FO/index');
 const {AddProductPage} = require('../../selectors/BO/add_product_page');
 const {AccessPageBO} = require('../../selectors/BO/access_page');
@@ -79,7 +78,7 @@ module.exports = {
     }, 'common_client');
   },
   configureLocalization(defaultConfiguration = false, toggleButton = false, currencyEuro = 'Euro') {
-    scenario('Configuration', client => {
+    scenario('Configure localization', client => {
       if (defaultConfiguration === true) {
         test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
       }
@@ -292,9 +291,9 @@ module.exports = {
           .then(() => client.waitForVisibleAndClick(Menu.Improve.Design.design_menu, 1000))
           .then(() => client.waitForExistAndClick(Menu.Improve.Design.theme_logo_submenu, 1000));
       });
-      test('should switch the "Generate RTL stylesheet" to "YES"', () => client.waitForExistAndClick(ThemeAndLogo.generate_rtl_stylesheet_button.replace('%S', 'on')));
+      test('should switch the "Generate RTL stylesheet" to "YES"', () => client.waitForExistAndClick(ThemeAndLogo.generate_rtl_stylesheet_button.replace('%S', '1')));
       test('should click on "Save" button', () => client.waitForExistAndClick(ThemeAndLogo.save_button));
-      test('should verify the appearance of the green validation', () => client.checkTextValue(Design.success_panel, 'Your RTL stylesheets has been generated successfully'));
+      test('should verify the appearance of the green validation', () => client.checkTextValue(ThemeAndLogo.success_panel, 'close\nYour RTL stylesheets has been generated successfully'));
     }, 'common_client');
   },
   updateAdvancedData(advancedData) {

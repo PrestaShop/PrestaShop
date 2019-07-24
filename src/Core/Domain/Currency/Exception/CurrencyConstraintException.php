@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Currency\Exception;
 
 /**
- * Class CurrencyConstraintException
+ * Is thrown when currency constraints are violated
  */
 class CurrencyConstraintException extends CurrencyException
 {

@@ -1,4 +1,3 @@
-@current
 @reset-database-before-feature
 Feature: Cart rule (amount) calculation with one cart rule
   As a customer

@@ -41,25 +41,20 @@ function handleCheckoutStepChange() {
 
   let currentStepClass = 'js-current-step';
   let currentStepSelector = '.' + currentStepClass;
-  let stepsAfterPersonalInformation = $('#checkout-personal-information-step').nextAll();
 
-  $(currentStepSelector).prevAll().add(stepsAfterPersonalInformation).on(
+  $(currentStepSelector).prevAll().on(
     'click',
     (event) => {
-      let $nextStep = $(event.target).closest('.checkout-step');
-      if (!$nextStep.hasClass('-unreachable')) {
+      const $clickedStep = $(event.target).closest('.checkout-step');
+      if (!$clickedStep.hasClass('-unreachable')) {
         $(currentStepSelector + ', .-current').removeClass(currentStepClass + ' -current');
-        $nextStep.toggleClass('-current');
-        $nextStep.toggleClass(currentStepClass);
-      }
-      prestashop.emit('changedCheckoutStep', {event: event});
-    }
-  );
+        $clickedStep.toggleClass('-current');
+        $clickedStep.toggleClass(currentStepClass);
 
-  $(currentStepSelector + ':not(#checkout-personal-information-step)').nextAll().on(
-    'click',
-    (event) => {
-      $(currentStepSelector + ' button.continue').click();
+        const $nextSteps = $clickedStep.nextAll();
+        $nextSteps.addClass('-unreachable').removeClass('-complete');
+        $('.step-title', $nextSteps).addClass('not-allowed');
+      }
       prestashop.emit('changedCheckoutStep', {event: event});
     }
   );

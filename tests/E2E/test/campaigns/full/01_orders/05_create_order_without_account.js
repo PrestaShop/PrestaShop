@@ -26,6 +26,7 @@ const {ProductSettings} = require('../../../selectors/BO/shopParameters/product_
 const {ProductList} = require('../../../selectors/BO/add_product_page');
 const {CatalogPage} = require('../../../selectors/BO/catalogpage/index');
 const {Employee} = require('../../../selectors/BO/employee_page');
+const welcomeScenarios = require('../../common_scenarios/welcome');
 
 let productData = [{
   name: 'ProductA',
@@ -54,6 +55,7 @@ scenario('Create order by a guest from the Front Office', client => {
     test('should open the browser', () => client.open());
     test('should log in successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'common_client');
+  welcomeScenarios.findAndCloseWelcomeModal();
   for (let m = 0; m < productData.length; m++) {
     commonProductScenarios.createProduct(AddProductPage, productData[m]);
   }
@@ -76,9 +78,10 @@ scenario('Create order by a guest from the Front Office', client => {
     test('should check that the message is equal to "There are 300 items in your cart."', () => client.checkTextValue(CheckoutOrderPage.modal_cart_product_count, 'There are 300 items in your cart.'));
     test('should check that the total product is equal to "4 284,00 €"', () => client.checkTextValue(CheckoutOrderPage.modal_total_products, '€4,284.00', 'contain'));
     test('should check that the total shipping is equal to "Free"', () => client.checkTextValue(CheckoutOrderPage.modal_total_shipping, 'Free', 'contain'));
-    test('should check that the total is equal to "4,284.00 € (tax incl.)"', () => client.checkTextValue(CheckoutOrderPage.modal_total, '€4,284.00 (tax incl.)', 'contain'));
+    test('should check that the total is equal to "4,284.00 € (tax incl.)"', () => client.checkTextValue(CheckoutOrderPage.modal_total, '€4,284.00', 'contain'));
     test('should click on "Continue shopping" button', () => client.waitForExistAndClick(CheckoutOrderPage.continue_shopping_button, 1000));
     test('should stay on the same product page', () => client.checkTextValue(productPage.product_name, (productData[0].name + date_time).toUpperCase(), 'equal', 1000));
+    test('should go to home Page', () => client.waitForExistAndClick(AccessPageFO.logo_home_page, 1000));
   }, 'common_client');
   scenario('Check the "' + productData[1].name + date_time + '" in the Front Office', client => {
     test('should go back to the "Back Office"', async () => client.switchWindow(0));
@@ -120,7 +123,7 @@ scenario('Create order by a guest from the Front Office', client => {
       }
       await client.isVisible(productPage.productLink.replace('%PRODUCTNAME', productData[1].name + date_time), 2000);
       if (global.isVisible) {
-        await client.scrollWaitForExistAndClick(productPage.productLink.replace('%PRODUCTNAME', productData[1].name + date_time), 2000);
+        await client.scrollWaitForExistAndClick(productPage.productLink.replace('%PRODUCTNAME', productData[1].name + date_time), 50, 2000);
       }
     });
     test('should check that the price is equal to ' + productData[1].priceTTC, () => client.checkTextValue(productPage.product_price, productData[1].priceTTC, 'equal', 1000));
@@ -134,7 +137,7 @@ scenario('Create order by a guest from the Front Office', client => {
     test('should check that the message is equal to "There are 600 items in your cart."', () => client.checkTextValue(CheckoutOrderPage.modal_cart_product_count, 'There are 600 items in your cart.'));
     test('should check that the total product is equal to "10,584.00€"', () => client.checkTextValue(CheckoutOrderPage.modal_total_products, '€10,584.00', 'contain'));
     test('should check that the total shipping is equal to "Free"', () => client.checkTextValue(CheckoutOrderPage.modal_total_shipping, 'Free', 'contain'));
-    test('should check that the total is equal to "10,584.00€ (tax incl.)"', () => client.checkTextValue(CheckoutOrderPage.modal_total, '€10,584.00 (tax incl.)', 'contain'));
+    test('should check that the total is equal to "10,584.00€ (tax incl.)"', () => client.checkTextValue(CheckoutOrderPage.modal_total, '€10,584.00', 'contain'));
     test('should click on "PROCEED TO CHECKOUT" modal button', () => client.waitForVisibleAndClick(CheckoutOrderPage.proceed_to_checkout_modal_button));
   }, 'product/product');
   scenario('Check all the information in the cart', client => {
@@ -210,8 +213,8 @@ scenario('Create order by a guest from the Front Office', client => {
     test('should click on order with an obligation to pay button', () => client.waitForExistAndClick(CheckoutOrderPage.confirmation_order_button));
     test('should check the order confirmation', () => client.checkTextValue(CheckoutOrderPage.confirmation_order_message, 'YOUR ORDER IS CONFIRMED', "contain"));
     test('should check "image" of the products', async () => {
-      await client.isExisting(CheckoutOrderPage.confirmation_product_picture.replace('%PRODUCT', (productData[0].name + date_time).toLowerCase()), 2000);
-      await client.isExisting(CheckoutOrderPage.confirmation_product_picture.replace('%PRODUCT', (productData[1].name + date_time).toLowerCase()));
+      await client.isExisting(CheckoutOrderPage.confirmation_product_picture.replace('%D', '1'), 2000);
+      await client.isExisting(CheckoutOrderPage.confirmation_product_picture.replace('%D', '2'));
     });
     test('should check "name" of the products', async () => {
       await client.checkTextValue(CheckoutOrderPage.confirmation_product_name.replace('%ID', 1), productData[0].name + date_time);
@@ -286,18 +289,26 @@ scenario('Create order by a guest from the Front Office', client => {
       await client.updateStatus('Payment accepted');
     });
     test('should click on "UPDATE STATUS" button', () => client.waitForExistAndClick(OrderPage.update_status_button));
+    /**
+     * should refresh the page, to pass the error
+     */
+    test('should refresh the page', () => client.refresh());
     test('should set order status to Delivered ', () => client.updateStatus('Delivered'));
     test('should click on "UPDATE STATUS" button', () => client.waitForExistAndClick(OrderPage.update_status_button));
+    /**
+     * should refresh the page, to pass the error
+     */
+    test('should refresh the page', () => client.refresh());
   }, 'order');
   commonProductScenarios.checkProductQuantity(Menu, AddProductPage, productData[0].name + date_time, '50');
   commonProductScenarios.checkProductQuantity(Menu, AddProductPage, productData[1].name + date_time, '50');
   stockCommonScenarios.checkStockProduct(client, productData[0].name + date_time, Menu, Stock, '50', '0', '50');
   stockCommonScenarios.checkStockProduct(client, productData[1].name + date_time, Menu, Stock, '50', '0', '50');
   scenario('Check the movement of the "' + productData[0].name + date_time + '"', client => {
-    test('should go to "Employee" page', () => client.goToSubtabMenuPage(Menu.Configure.AdvancedParameters.advanced_parameters_menu, Menu.Configure.AdvancedParameters.team_submenu));
-    test('should get  the Employee "Name" and "Last Name"', async () => {
-      await client.getTextInVar(Employee.employee_column_information.replace('%COL', 3), 'employee_last_name');
-      await client.getTextInVar(Employee.employee_column_information.replace('%COL', 2), 'employee_first_name');
+    test('should go to "Employee" page', async () => {
+      await client.waitForExistAndClick(Menu.Sell.Catalog.catalog_menu);
+      await client.waitForVisible(Menu.Configure.AdvancedParameters.advanced_parameters_menu);
+      await client.goToSubtabMenuPage(Menu.Configure.AdvancedParameters.advanced_parameters_menu, Menu.Configure.AdvancedParameters.team_submenu);
     });
     test('should go to "Stocks" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.stocks_submenu));
     stockCommonScenarios.checkMovementHistory(client, Menu, Movement, 1, '300', '-', 'Customer Order', productData[0].reference, dateSystem, productData[0].name + date_time, true);

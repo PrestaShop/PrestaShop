@@ -111,8 +111,6 @@ final class EditContactHandler extends AbstractObjectModelHandler implements Edi
                 $e
             );
         }
-
-        return new ContactId((int) $entity->id);
     }
 
     /**

@@ -61,8 +61,6 @@ final class EditManufacturerAddressHandler extends AbstractManufacturerAddressHa
                 sprintf('Cannot update address with id "%s"', $address->id)
             );
         }
-
-        return $addressId;
     }
 
     /**

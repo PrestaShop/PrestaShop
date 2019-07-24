@@ -33,6 +33,13 @@ namespace PrestaShop\PrestaShop\Core\Language;
 interface LanguageInterface
 {
     /**
+     * Database id
+     *
+     * @return string
+     */
+    public function getId();
+
+    /**
      * Explicit name of the language
      *
      * @return string

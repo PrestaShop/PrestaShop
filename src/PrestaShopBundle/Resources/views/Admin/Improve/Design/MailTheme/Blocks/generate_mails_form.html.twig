@@ -65,6 +65,9 @@
             <div class="col-sm">
               {{ form_errors(generateMailsForm.theme) }}
               {{ form_widget(generateMailsForm.theme) }}
+              {% if generateMailsForm.theme.vars.disabled %}
+              <small class="form-text">{{ 'No emails were detected in any theme folder so this field is disabled.'|trans({}, 'Admin.Design.Help') }}</small>
+              {% endif %}
             </div>
           </div>
 

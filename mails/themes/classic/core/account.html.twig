@@ -19,11 +19,15 @@
         <td width="10">&nbsp;</td>
         <td>
           <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
-            <p data-html-only="1" style="border-bottom:1px solid #D6D4D4;">
-              {{ 'Your {shop_name} login details'|trans({}, 'Emails.Body', locale) }}
-            </p>
+            {% if templateType == 'html' %}
+
+              <p style="border-bottom:1px solid #D6D4D4;">
+                {{ 'Your {shop_name} login details'|trans({}, 'Emails.Body', locale) }}
+              </p>
+            
+{% endif %}
             <span>
-              {{ 'Here are your login details:'|trans({}, 'Emails.Body', locale)|raw }}<br />
+              {{ 'Here are your login details:'|trans({}, 'Emails.Body', locale)|raw }}<br/>
               <span><strong>{{ 'E-mail address:'|trans({}, 'Emails.Body', locale)|raw }} <a href="mailto:{email}">{email}</a></strong></span>
             </span>
           </font>

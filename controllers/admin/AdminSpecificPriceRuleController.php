@@ -38,7 +38,6 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
         $this->className = 'SpecificPriceRule';
         $this->lang = false;
         $this->multishop_context = Shop::CONTEXT_ALL;
-        $this->cldr = Tools::getCldr(Context::getContext());
 
         parent::__construct();
 
@@ -155,8 +154,8 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 
         foreach ($this->_list as $k => $list) {
             if (null !== $this->_list[$k]['currency_iso_code']) {
-                $currency = $this->cldr->getCurrency($this->_list[$k]['currency_iso_code']);
-                $this->_list[$k]['currency_name'] = ucfirst($currency['name']);
+                $currency = new Currency(Currency::getIdByIsoCode($this->_list[$k]['currency_iso_code']));
+                $this->_list[$k]['currency_name'] = $currency->name;
             }
 
             if ($list['reduction_type'] == 'amount') {

@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Currency\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\EditCurrencyCommand;
-use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 
 /**
  * Interface EditCurrencyHandlerInterface defines contract for UpdateCurrencyHandler.
@@ -36,8 +35,6 @@ interface EditCurrencyHandlerInterface
 {
     /**
      * @param EditCurrencyCommand $command
-     *
-     * @return CurrencyId
      */
     public function handle(EditCurrencyCommand $command);
 }

@@ -71,6 +71,9 @@ $product-description-height: 70px;
     color: $gray-darker;
     font-weight: 700;
     text-align: center;
+    .discount-product {
+      display: none;
+    }
   }
   .variant-links {
     position: relative;
@@ -112,48 +115,13 @@ $product-description-height: 70px;
 
   .product-miniature {
     margin: 0 .8125rem;
-    .discount {
-      display: none;
-    }
-    .product-flags .new,
-    .online-only,
-    .on-sale,
-    .discount-percentage,
-    .discount-amount,
-    .pack {
-      display: block;
-      position: absolute;
-      left: -0.4375rem;
-      padding: 0.3125rem 0.4375rem;
-      color: white;
-      background: $brand-primary;
-      text-transform: uppercase;
-      min-width: 3.125rem;
-      min-height: 1.875rem;
-      font-size: $base-font-size;
-      font-weight: 600;
-      @include box-shadow-light;
-      &.discount-percentage,
-      &.discount-amount {
-        z-index: 2;
-        background: $brand-secondary;
-      }
-      &.on-sale{
-        background: $brand-secondary;
-        width: 100%;
-        text-align: center;
-        left:0;
-        top:0;
-      }
-      &.online-only {
-        font-size: $font-size-xs;
-        top: 13rem;
-        left: inherit;
-        &::before{
-          content:"\E30A";
-          font-family: 'Material Icons';
-          vertical-align: middle;
-          margin: 0.3125rem;
+    .product-flags {
+      li.product-flag {
+        min-width: 3.125rem;
+        min-height: 1.875rem;
+        font-weight: 600;
+        &.online-only {
+          top: 13.1rem;
         }
       }
     }

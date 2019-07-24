@@ -23,6 +23,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  *}
 
+{**
+ * @deprecated since 1.7.6, to be removed in the next minor
+ *}
+
 <div class="leadin">{block name="leadin"}{/block}</div>
 
 <form action="{$url_submit|escape:'html':'UTF-8'}" id="{$table}_form" method="post" class="form-horizontal">

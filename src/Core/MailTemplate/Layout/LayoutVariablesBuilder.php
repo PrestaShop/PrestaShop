@@ -48,10 +48,7 @@ class LayoutVariablesBuilder implements LayoutVariablesBuilderInterface
     /**
      * @var LanguageDefaultFontsCatalog
      */
-    private $languageDefaultFonts = array(
-        'fa' => 'Tahoma',
-        'ar' => 'Tahoma',
-    );
+    private $languageDefaultFonts;
 
     /**
      * @param HookDispatcherInterface $hookDispatcher
@@ -88,7 +85,7 @@ class LayoutVariablesBuilder implements LayoutVariablesBuilderInterface
 
         //This hook allows to change the variables of a layout
         $this->hookDispatcher->dispatchWithParameters(
-            LayoutVariablesBuilderInterface::BUILD_LAYOUT_VARIABLES_HOOK,
+            LayoutVariablesBuilderInterface::BUILD_MAIL_LAYOUT_VARIABLES_HOOK,
             [
                 'mailLayout' => $mailLayout,
                 'mailLayoutVariables' => &$mailLayoutVariables,

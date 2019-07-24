@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Manufacturer\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\EditManufacturerCommand;
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 
 /**
  * Defines contract for EditManufacturerHandler
@@ -36,8 +35,6 @@ interface EditManufacturerHandlerInterface
 {
     /**
      * @param EditManufacturerCommand $command
-     *
-     * @return ManufacturerId
      */
     public function handle(EditManufacturerCommand $command);
 }

@@ -33,7 +33,6 @@ use PrestaShop\PrestaShop\Core\Domain\Category\CommandHandler\EditCategoryHandle
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotEditCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 
 /**
  * Class EditCategoryHandler.
@@ -60,8 +59,6 @@ final class EditCategoryHandler extends AbstractObjectModelHandler implements Ed
         }
 
         $this->updateCategoryFromCommandData($category, $command);
-
-        return new CategoryId((int) $category->id);
     }
 
     /**
@@ -108,10 +105,6 @@ final class EditCategoryHandler extends AbstractObjectModelHandler implements Ed
             $category->groupBox = $command->getAssociatedGroupIds();
         }
 
-        if ($command->getAssociatedShopIds()) {
-            $this->associateWithShops($category, $command->getAssociatedShopIds());
-        }
-
         if (false === $category->validateFields(false)) {
             throw new CategoryException('Invalid data when updating category');
         }
@@ -124,6 +117,10 @@ final class EditCategoryHandler extends AbstractObjectModelHandler implements Ed
             throw new CannotEditCategoryException(
                 sprintf('Failed to edit Category with id "%s".', $category->id)
             );
+        }
+
+        if ($command->getAssociatedShopIds()) {
+            $this->associateWithShops($category, $command->getAssociatedShopIds());
         }
     }
 }

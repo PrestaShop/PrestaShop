@@ -52,26 +52,48 @@ class ValidateConstraintTranslatorCore
         if ($validator === 'isName') {
             return $this->translator->trans(
                 'Invalid name',
-                array(),
+                [],
                 'Shop.Forms.Errors'
             );
-        } elseif ($validator === 'isBirthDate') {
+        }
+
+        if ($validator === 'isCustomerName') {
+            return $this->translator->trans(
+                'Invalid name',
+                [],
+                'Shop.Forms.Errors'
+            ) . PHP_EOL .
+            $this->translator->trans(
+                'Invalid characters: 0-9!<>,;?=+()@#"°{}_$%/\^*`',
+                [],
+                'Shop.Forms.Errors'
+            ) . PHP_EOL .
+            $this->translator->trans(
+                'A space is required after "." and "。"',
+                [],
+                'Shop.Forms.Errors'
+            );
+        }
+
+        if ($validator === 'isBirthDate') {
             return $this->translator->trans(
                 'Format should be %s.',
-                array(Tools::formatDateStr('31 May 1970')),
+                [Tools::formatDateStr('31 May 1970')],
                 'Shop.Forms.Errors'
             );
-        } elseif ($validator === 'required') {
+        }
+
+        if ($validator === 'required') {
             return $this->translator->trans(
                 'Required field',
-                array(),
+                [],
                 'Shop.Forms.Errors'
             );
         }
 
         return $this->translator->trans(
             'Invalid format.',
-            array(),
+            [],
             'Shop.Forms.Errors'
         );
     }

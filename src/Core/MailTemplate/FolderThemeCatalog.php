@@ -30,36 +30,36 @@ use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Exception\TypeException;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
-use PrestaShop\PrestaShop\Core\MailTemplate\Layout\Layout;
-use PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutCollection;
-use PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutCollectionInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
 /**
  * This is a basic mail layouts catalog, not a lot of intelligence it is based
  * simply on existing files on the $mailThemesFolder (no database, or config files).
- * If a module includes its own theme folder it can override the default one through
- * the hook:
- *  FolderThemeCatalog::GET_MAIL_THEME_FOLDER_HOOK => actionGetMailThemeFolder
  */
-class FolderThemeCatalog implements ThemeCatalogInterface
+final class FolderThemeCatalog implements ThemeCatalogInterface
 {
-    const GET_MAIL_THEME_FOLDER_HOOK = 'actionGetMailThemeFolder';
-
     /** @var string */
     private $mailThemesFolder;
 
     /** @var HookDispatcherInterface */
     private $hookDispatcher;
 
+    /** @var FolderThemeScanner */
+    private $scanner;
+
     /**
      * @param string $mailThemesFolder
+     * @param FolderThemeScanner $scanner
      * @param HookDispatcherInterface $hookDispatcher
      */
-    public function __construct($mailThemesFolder, HookDispatcherInterface $hookDispatcher)
-    {
+    public function __construct(
+        $mailThemesFolder,
+        FolderThemeScanner $scanner,
+        HookDispatcherInterface $hookDispatcher
+    ) {
         $this->mailThemesFolder = $mailThemesFolder;
+        $this->scanner = $scanner;
         $this->hookDispatcher = $hookDispatcher;
     }
 
@@ -81,12 +81,8 @@ class FolderThemeCatalog implements ThemeCatalogInterface
         $mailThemes = new ThemeCollection();
         /** @var SplFileInfo $mailThemeFolder */
         foreach ($finder as $mailThemeFolder) {
-            $dirFinder = new Finder();
-            $dirFinder->files()->in($mailThemeFolder->getRealPath());
-            if ($dirFinder->count() > 0) {
-                $mailTheme = new Theme($mailThemeFolder->getFilename());
-                $layouts = $this->findThemeLayouts($mailTheme->getName());
-                $mailTheme->setLayouts($layouts);
+            $mailTheme = $this->scanner->scan($mailThemeFolder->getRealPath());
+            if ($mailTheme->getLayouts()->count() > 0) {
                 $mailThemes[] = $mailTheme;
             }
         }
@@ -130,129 +126,6 @@ class FolderThemeCatalog implements ThemeCatalogInterface
     }
 
     /**
-     * @param string $mailTheme
-     *
-     * @throws FileNotFoundException
-     * @throws TypeException
-     *
-     * @return LayoutCollectionInterface
-     */
-    private function findThemeLayouts($mailTheme)
-    {
-        $mailThemeFolder = implode(DIRECTORY_SEPARATOR, [$this->mailThemesFolder, $mailTheme]);
-        //This hook allows to change the mail them folder
-        $this->hookDispatcher->dispatchWithParameters(
-            static::GET_MAIL_THEME_FOLDER_HOOK,
-            [
-                'mailTheme' => $mailTheme,
-                'mailThemeFolder' => &$mailThemeFolder,
-            ]
-        );
-        $this->checkThemeFolder($mailThemeFolder);
-
-        $mailThemeLayouts = new LayoutCollection();
-        $this->addCoreLayouts($mailThemeLayouts, $mailThemeFolder);
-        $this->addModulesLayouts($mailThemeLayouts, $mailThemeFolder);
-
-        return $mailThemeLayouts;
-    }
-
-    /**
-     * @param LayoutCollectionInterface $collection
-     * @param string $mailThemeFolder
-     */
-    private function addCoreLayouts(LayoutCollectionInterface $collection, $mailThemeFolder)
-    {
-        $coreLayoutsFolder = implode(DIRECTORY_SEPARATOR, [
-            $mailThemeFolder,
-            MailTemplateInterface::CORE_CATEGORY,
-        ]);
-        if (!is_dir($coreLayoutsFolder)) {
-            return;
-        }
-
-        $this->addLayoutsFromFolder($collection, $coreLayoutsFolder);
-    }
-
-    /**
-     * @param LayoutCollectionInterface $collection
-     * @param string $mailThemeFolder
-     */
-    private function addModulesLayouts(LayoutCollectionInterface $collection, $mailThemeFolder)
-    {
-        $moduleLayoutsFolder = implode(DIRECTORY_SEPARATOR, [
-            $mailThemeFolder,
-            MailTemplateInterface::MODULES_CATEGORY,
-        ]);
-        if (!is_dir($moduleLayoutsFolder)) {
-            return;
-        }
-
-        $moduleFinder = new Finder();
-        $moduleFinder->directories()->in($moduleLayoutsFolder)->depth(0);
-
-        /* @var SplFileInfo $fileInfo */
-        foreach ($moduleFinder as $moduleFileInfo) {
-            $moduleName = $moduleFileInfo->getFilename();
-            $moduleFolder = implode(DIRECTORY_SEPARATOR, [$moduleLayoutsFolder, $moduleName]);
-            $this->addLayoutsFromFolder($collection, $moduleFolder, $moduleName);
-        }
-    }
-
-    /**
-     * @param LayoutCollectionInterface $collection
-     * @param string $folder
-     * @param string $moduleName
-     */
-    private function addLayoutsFromFolder(
-        LayoutCollectionInterface $collection,
-        $folder,
-        $moduleName = ''
-    ) {
-        $layoutFiles = [];
-        $finder = new Finder();
-        $finder->files()->in($folder)->sortByName();
-        /** @var SplFileInfo $fileInfo */
-        foreach ($finder as $fileInfo) {
-            //Get filename without any extension (ex: account.html.twig -> account)
-            $layoutName = preg_replace('/\..+/', '', $fileInfo->getBasename());
-            if (!isset($layoutFiles[$layoutName])) {
-                $layoutFiles[$layoutName] = [
-                    MailTemplateInterface::HTML_TYPE => '',
-                    MailTemplateInterface::TXT_TYPE => '',
-                ];
-            }
-            $templateType = $this->getTemplateType($fileInfo);
-            $layoutFiles[$layoutName][$templateType] = $fileInfo->getRealPath();
-        }
-
-        foreach ($layoutFiles as $layoutName => $layouts) {
-            $collection->add(new Layout(
-                $layoutName,
-                $layouts[MailTemplateInterface::HTML_TYPE],
-                $layouts[MailTemplateInterface::TXT_TYPE],
-                $moduleName
-            ));
-        }
-    }
-
-    /**
-     * @param SplFileInfo $fileInfo
-     *
-     * @return string
-     */
-    private function getTemplateType(SplFileInfo $fileInfo)
-    {
-        $ext = !empty($fileInfo->getExtension()) ? '.' . $fileInfo->getExtension() : '';
-        $htmlTypeRegexp = sprintf('/.+\.%s%s/', MailTemplateInterface::HTML_TYPE, $ext);
-        if (preg_match($htmlTypeRegexp, $fileInfo->getFilename())) {
-            return MailTemplateInterface::HTML_TYPE;
-        }
-
-        return MailTemplateInterface::TXT_TYPE;
-    }
-
-    /**
      * @throws FileNotFoundException
      */
     private function checkThemesFolder()
@@ -261,19 +134,6 @@ class FolderThemeCatalog implements ThemeCatalogInterface
             throw new FileNotFoundException(sprintf(
                 'Invalid mail themes folder "%s": no such directory',
                 $this->mailThemesFolder
-            ));
-        }
-    }
-
-    /**
-     * @throws FileNotFoundException
-     */
-    private function checkThemeFolder($mailThemeFolder)
-    {
-        if (!is_dir($mailThemeFolder)) {
-            throw new FileNotFoundException(sprintf(
-                'Invalid mail theme folder "%s": no such directory',
-                $mailThemeFolder
             ));
         }
     }

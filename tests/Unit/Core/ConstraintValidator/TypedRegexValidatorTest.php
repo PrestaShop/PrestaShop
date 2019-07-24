@@ -74,7 +74,6 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
         ;
     }
 
-
     public function testItSucceedsForGenericNameTypeWhenValidCharactersGiven()
     {
         $value = 'good generic name /';
@@ -95,7 +94,6 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
             ->assertRaised()
         ;
     }
-
 
     public function testItSucceedsForCityNameTypeWhenValidCharactersGiven()
     {
@@ -261,7 +259,7 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
     public function getInvalidCharactersForCatalogNameType()
     {
         return [
-            ['<'], ['>'], [';'], ['='], ['#'], ['{'], ['}']
+            ['<'], ['>'], [';'], ['='], ['#'], ['{'], ['}'],
         ];
     }
 
@@ -271,7 +269,7 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
     public function getInvalidCharactersForGenericNameType()
     {
         return [
-            ['<'], ['>'], ['='], ['{'], ['}']
+            ['<'], ['>'], ['='], ['{'], ['}'],
         ];
     }
 
@@ -303,7 +301,7 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
     {
         return [
             ['<'], ['>'], ['?'], ['#'], ['%'], [','], [';'], ['+'], ['¤'], [':'], ['!'], ['='], ['#'],
-            ['"'], ['$'], ['}'], ['{'], ['@'], ['|'], ['ž'], ['Š']
+            ['"'], ['$'], ['}'], ['{'], ['@'], ['|'], ['ž'], ['Š'],
         ];
     }
 
@@ -314,7 +312,7 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
     {
         return [
             ['<'], ['>'], ['?'], ['#'], ['%'], [','], [';'], ['¤'], [':'], ['!'], ['='], ['#'],
-            ['"'], ['$'], ['}'], ['{'], ['@'], ['|'], ['ž'], ['Š'], ['r']
+            ['"'], ['$'], ['}'], ['{'], ['@'], ['|'], ['ž'], ['Š'], ['r'],
         ];
     }
 
@@ -328,14 +326,14 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
     public function getInvalidCharactersForLanguageIsoCodeType()
     {
         return [
-            ['a'], ['ž'], ['abcd'], ['2'], ['26'], ['ABCE']
+            ['a'], ['ž'], ['abcd'], ['2'], ['26'], ['ABCE'],
         ];
     }
 
     public function getInvalidCharactersForLanguageCodeType()
     {
         return [
-            ['az-acc'], ['1'], ['12-22'], ['ži-as']
+            ['az-acc'], ['1'], ['12-22'], ['ži-as'],
         ];
     }
 

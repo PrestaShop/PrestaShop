@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception;
 
 /**
- * Class CmsPageCategoryConstraintException
+ * Is thrown when cms page category constraints are violated
  */
 class CmsPageCategoryConstraintException extends CmsPageCategoryException
 {

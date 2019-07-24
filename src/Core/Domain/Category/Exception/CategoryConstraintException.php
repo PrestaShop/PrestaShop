@@ -47,6 +47,11 @@ class CategoryConstraintException extends CategoryException
     const INVALID_STATUS = 4;
 
     /**
+     * Code is used when invalid delete mode is used to delete a category.
+     */
+    const INVALID_DELETE_MODE = 5;
+
+    /**
      * Code is used when invalid parent id is supplied.
      */
     const INVALID_PARENT_ID = 6;

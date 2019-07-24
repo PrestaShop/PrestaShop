@@ -35,7 +35,6 @@ use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmailAlreadyUsedExcepti
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\InvalidProfileException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\MissingShopAssociationException;
-use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
 use PrestaShop\PrestaShop\Core\Employee\Access\ProfileAccessCheckerInterface;
 use PrestaShop\PrestaShop\Core\Employee\ContextEmployeeProviderInterface;
 use Shop;
@@ -108,8 +107,6 @@ final class EditEmployeeHandler extends AbstractEmployeeHandler implements EditE
         if (null !== $command->getPlainPassword() && $employee->id == $this->contextEmployeeProvider->getId()) {
             $this->updatePasswordInCookie($employee);
         }
-
-        return new EmployeeId((int) $employee->id);
     }
 
     /**

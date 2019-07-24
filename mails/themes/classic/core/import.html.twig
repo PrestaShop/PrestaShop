@@ -18,11 +18,15 @@
         <td width="10">&nbsp;</td>
         <td>
           <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
-            <p data-html-only="1" style="border-bottom:1px solid #D6D4D4;">
-              {{ 'Import complete'|trans({}, 'Emails.Body', locale)|raw }}
-            </p>
+            {% if templateType == 'html' %}
+
+              <p style="border-bottom:1px solid #D6D4D4;">
+                {{ 'Import complete'|trans({}, 'Emails.Body', locale)|raw }}
+              </p>
+            
+{% endif %}
             <span>
-              {{ 'The file {filename} has been successfully imported to your shop.'|trans({}, 'Emails.Body', locale) }}</a>
+              {{ 'The file {filename} has been successfully imported to your shop.'|trans({}, 'Emails.Body', locale) }}
             </span>
           </font>
         </td>

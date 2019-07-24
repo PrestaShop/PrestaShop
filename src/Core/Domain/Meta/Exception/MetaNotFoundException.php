@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Meta\Exception;
 
 /**
- * Class MetaNotFoundException
+ * Is thrown when required meta cannot be found
  */
 class MetaNotFoundException extends MetaException
 {

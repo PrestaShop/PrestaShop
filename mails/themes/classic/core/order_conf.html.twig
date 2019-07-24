@@ -19,11 +19,15 @@
         <td width="10">&nbsp;</td>
         <td>
           <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
-            <p data-html-only="1" style="border-bottom:1px solid #D6D4D4;">
-              {{ 'Order details'|trans({}, 'Emails.Body', locale)|raw }}
-            </p>
+            {% if templateType == 'html' %}
+
+              <p style="border-bottom:1px solid #D6D4D4;">
+                {{ 'Order details'|trans({}, 'Emails.Body', locale)|raw }}
+              </p>
+            
+{% endif %}
             <span>
-              <span><strong>{{ 'Order:'|trans({}, 'Emails.Body', locale)|raw }}</strong></span> {order_name} {{ 'Placed on'|trans({}, 'Emails.Body', locale)|raw }} {date}<br /><br />
+              <span><strong>{{ 'Order:'|trans({}, 'Emails.Body', locale)|raw }}</strong></span> {order_name} {{ 'Placed on'|trans({}, 'Emails.Body', locale)|raw }} {date}<br/><br/>
               <span><strong>{{ 'Payment:'|trans({}, 'Emails.Body', locale)|raw }}</strong></span> {payment}
             </span>
           </font>
@@ -44,16 +48,20 @@
           <th bgcolor="#f8f8f8" style="border:1px solid #D6D4D4;background-color: #fbfbfb;color: #333;font-family: Arial;font-size: 13px;padding: 10px;">{{ 'Quantity'|trans({}, 'Emails.Body', locale)|raw }}</th>
           <th bgcolor="#f8f8f8" style="border:1px solid #D6D4D4;background-color: #fbfbfb;color: #333;font-family: Arial;font-size: 13px;padding: 10px;" width="17%">{{ 'Total price'|trans({}, 'Emails.Body', locale)|raw }}</th>
         </tr>
-        <tr>
-          <td colspan="5" style="border:1px solid #D6D4D4; text-align: center">
-            &nbsp;&nbsp;<html-only>{products}</html-only> <span data-text-only="1">{products_txt}</span>
-          </td>
-        </tr>
-        <tr>
-          <td colspan="5" style="border:1px solid #D6D4D4;text-align: center">
-            &nbsp;&nbsp;{discounts}
-          </td>
-        </tr>
+        {% if templateType == 'html' %}
+{products}
+{% endif %}
+        {% if templateType == 'txt' %}
+{products_txt}
+{% endif %}
+
+        {% if templateType == 'html' %}
+{discounts}
+{% endif %}
+        {% if templateType == 'txt' %}
+{discounts_txt}
+{% endif %}
+
         <tr class="conf_body">
           <td bgcolor="#f8f8f8" colspan="4" style="border:1px solid #D6D4D4;">
             <table class="table">
@@ -222,7 +230,7 @@
             </table>
           </td>
         </tr>
-        </tbody>
+        
       </table>
     </font>
   </td>
@@ -234,11 +242,15 @@
         <td width="10">&nbsp;</td>
         <td>
           <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
-            <p data-html-only="1" style="border-bottom:1px solid #D6D4D4;">
-              {{ 'Shipping'|trans({}, 'Emails.Body', locale)|raw }}
-            </p>
+            {% if templateType == 'html' %}
+
+              <p style="border-bottom:1px solid #D6D4D4;">
+                {{ 'Shipping'|trans({}, 'Emails.Body', locale)|raw }}
+              </p>
+            
+{% endif %}
             <span>
-              <span><strong>{{ 'Carrier:'|trans({}, 'Emails.Body', locale)|raw }}</strong></span> {carrier}<br /><br />
+              <span><strong>{{ 'Carrier:'|trans({}, 'Emails.Body', locale)|raw }}</strong></span> {carrier}<br/><br/>
               <span><strong>{{ 'Payment:'|trans({}, 'Emails.Body', locale)|raw }}</strong></span> {payment}
             </span>
           </font>
@@ -261,12 +273,16 @@
               <td width="10">&nbsp;</td>
               <td>
                 <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
-                  <p data-html-only="1" style="border-bottom:1px solid #D6D4D4;">
-                    {{ 'Delivery address'|trans({}, 'Emails.Body', locale)|raw }}
-                  </p>
-                  <span data-html-only="1">
-                    {delivery_block_html}
-                  </span>
+                  {% if templateType == 'html' %}
+
+                    <p style="border-bottom:1px solid #D6D4D4;">
+                      {{ 'Delivery address'|trans({}, 'Emails.Body', locale)|raw }}
+                    </p>
+                    <span>
+                      {delivery_block_html}
+                    </span>
+                  
+{% endif %}
                   <span data-text-only="1">
                     {delivery_block_txt}
                   </span>
@@ -283,12 +299,16 @@
               <td width="10">&nbsp;</td>
               <td>
                 <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
-                  <p data-html-only="1" style="border-bottom:1px solid #D6D4D4;">
-                    {{ 'Billing address'|trans({}, 'Emails.Body', locale)|raw }}
-                  </p>
-                  <span data-html-only="1">
-                    {invoice_block_html}
-                  </span>
+                  {% if templateType == 'html' %}
+
+                    <p style="border-bottom:1px solid #D6D4D4;">
+                      {{ 'Billing address'|trans({}, 'Emails.Body', locale)|raw }}
+                    </p>
+                    <span>
+                      {invoice_block_html}
+                    </span>
+                  
+{% endif %}
                   <span data-text-only="1">
                     {invoice_block_txt}
                   </span>

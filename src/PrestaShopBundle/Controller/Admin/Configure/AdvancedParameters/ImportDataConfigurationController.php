@@ -152,6 +152,11 @@ class ImportDataConfigurationController extends FrameworkBundleAdminController
     /**
      * Get import data match configuration.
      *
+     * @AdminSecurity(
+     *     "is_granted('read', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_import"
+     * )
+     *
      * @param Request $request
      *
      * @return JsonResponse

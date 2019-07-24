@@ -11,6 +11,8 @@ admin_employees_search:
   methods: [POST]
   defaults:
     _controller: 'PrestaShopBundle:Admin\Common:searchGrid'
+    _legacy_controller: AdminEmployees
+    _legacy_link: AdminEmployees:submitFilteremployee
     gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.employee
     redirectRoute: admin_employees_index
 
@@ -20,6 +22,7 @@ admin_employees_save_options:
   defaults:
     _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Employee:saveOptions'
     _legacy_controller: AdminEmployees
+    _legacy_link: AdminEmployees:submitOptionsemployee
 
 admin_employees_toggle_status:
   path: /{employeeId}/toggle-status
@@ -27,15 +30,25 @@ admin_employees_toggle_status:
   defaults:
     _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Employee:toggleStatus'
     _legacy_controller: AdminEmployees
+    _legacy_link: AdminEmployees:statusemployee
+    _legacy_parameters:
+      id_employee: employeeId
 
-admin_employees_bulk_update_status:
-  path: /bulk-update-status/{newStatus}
+admin_employees_bulk_enable_status:
+  path: /bulk-enable-status
   methods: [POST]
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Employee:bulkStatusUpdate'
+    _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Employee:bulkStatusEnable'
     _legacy_controller: AdminEmployees
-  requirements:
-    newStatus: enabled|disabled
+    _legacy_link: AdminEmployees:submitBulkenableSelectionemployee
+
+admin_employees_bulk_disable_status:
+  path: /bulk-disable-status
+  methods: [POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Employee:bulkStatusDisable'
+    _legacy_controller: AdminEmployees
+    _legacy_link: AdminEmployees:submitBulkdisableSelectionemployee
 
 admin_employees_delete:
   path: /{employeeId}/delete
@@ -43,6 +56,9 @@ admin_employees_delete:
   defaults:
     _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Employee:delete'
     _legacy_controller: AdminEmployees
+    _legacy_link: AdminEmployees:deleteemployee
+    _legacy_parameters:
+      id_employee: employeeId
 
 admin_employees_bulk_delete:
   path: /bulk-delete
@@ -50,6 +66,7 @@ admin_employees_bulk_delete:
   defaults:
     _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Employee:bulkDelete'
     _legacy_controller: AdminEmployees
+    _legacy_link: AdminEmployees:submitBulkdeleteemployee
 
 admin_employees_create:
   path: /new

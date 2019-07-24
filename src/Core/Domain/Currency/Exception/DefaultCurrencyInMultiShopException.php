@@ -27,11 +27,19 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Currency\Exception;
 
 /**
- * Class DefaultCurrencyInMultiShopException
+ * Is thrown when action associated with currency is done from multi-shop context
+ * and that action cannot be done because the currency is set as default in one of shops
  */
 class DefaultCurrencyInMultiShopException extends CurrencyException
 {
+    /**
+     * When trying to remove default currency in multi-shop context
+     */
     const CANNOT_REMOVE_CURRENCY = 1;
+
+    /**
+     * When trying to disable default currency in multi-shop context
+     */
     const CANNOT_DISABLE_CURRENCY = 2;
 
     /**

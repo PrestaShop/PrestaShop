@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Core\Domain\CmsPage\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\EditCmsPageCommand;
-use PrestaShop\PrestaShop\Core\Domain\CmsPage\ValueObject\CmsPageId;
 
 /**
  * Defines contract for EditCmsPageHandler.
@@ -36,8 +35,6 @@ interface EditCmsPageHandlerInterface
 {
     /**
      * @param EditCmsPageCommand $command
-     *
-     * @return CmsPageId
      */
     public function handle(EditCmsPageCommand $command);
 }

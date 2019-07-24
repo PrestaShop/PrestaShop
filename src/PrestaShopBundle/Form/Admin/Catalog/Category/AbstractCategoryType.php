@@ -26,20 +26,24 @@
 
 namespace PrestaShopBundle\Form\Admin\Catalog\Category;
 
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
+use PrestaShop\PrestaShop\Core\Domain\Category\SeoSettings;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
+use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
 use PrestaShopBundle\Form\Admin\Type\Material\MaterialChoiceTableType;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
-use PrestaShopBundle\Form\Admin\Type\TextWithLengthCounterType;
+use PrestaShopBundle\Form\Admin\Type\TextWithRecommendedLengthType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
+use PrestaShopBundle\Form\Admin\Type\TranslateType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
 
@@ -59,21 +63,29 @@ abstract class AbstractCategoryType extends TranslatorAwareType
     private $multistoreFeature;
 
     /**
+     * @var ConfigurationInterface
+     */
+    private $configuration;
+
+    /**
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param array $customerGroupChoices
      * @param FeatureInterface $multistoreFeature
+     * @param ConfigurationInterface $configuration
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
         array $customerGroupChoices,
-        FeatureInterface $multistoreFeature
+        FeatureInterface $multistoreFeature,
+        ConfigurationInterface $configuration
     ) {
         parent::__construct($translator, $locales);
 
         $this->customerGroupChoices = $customerGroupChoices;
         $this->multistoreFeature = $multistoreFeature;
+        $this->configuration = $configuration;
     }
 
     /**
@@ -96,8 +108,10 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                     ],
                 ],
             ])
-            ->add('description', TranslatableType::class, [
-                'type' => TextareaType::class,
+            ->add('description', TranslateType::class, [
+                'type' => FormattedTextareaType::class,
+                'locales' => $this->locales,
+                'hideTabs' => false,
                 'required' => false,
                 'options' => [
                     'constraints' => [
@@ -121,29 +135,64 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                 'required' => false,
             ])
             ->add('meta_title', TranslatableType::class, [
-                'type' => TextWithLengthCounterType::class,
+                'type' => TextWithRecommendedLengthType::class,
                 'required' => false,
                 'options' => [
-                    'max_length' => 255,
+                    'recommended_length' => SeoSettings::RECOMMENDED_TITLE_LENGTH,
+                    'attr' => [
+                        'maxlength' => SeoSettings::MAX_TITLE_LENGTH,
+                        'placeholder' => $this->trans(
+                            'To have a different title from the category name, enter it here.',
+                            'Admin.Catalog.Help'
+                        ),
+                    ],
                     'constraints' => [
                         new Regex([
                             'pattern' => '/^[^<>={}]*$/u',
                             'message' => $this->trans('%s is invalid.', 'Admin.Notifications.Error'),
+                        ]),
+                        new Length([
+                            'max' => SeoSettings::MAX_TITLE_LENGTH,
+                            'maxMessage' => $this->trans(
+                                'This field cannot be longer than %limit% characters',
+                                'Admin.Notifications.Error',
+                                [
+                                    '%limit%' => SeoSettings::MAX_TITLE_LENGTH,
+                                ]
+                            ),
                         ]),
                     ],
                 ],
             ])
             ->add('meta_description', TranslatableType::class, [
                 'required' => false,
-                'type' => TextWithLengthCounterType::class,
+                'type' => TextWithRecommendedLengthType::class,
                 'options' => [
                     'required' => false,
-                    'input' => 'textarea',
-                    'max_length' => 512,
+                    'input_type' => 'textarea',
+                    'recommended_length' => SeoSettings::RECOMMENDED_DESCRIPTION_LENGTH,
+                    'attr' => [
+                        'maxlength' => SeoSettings::MAX_DESCRIPTION_LENGTH,
+                        'rows' => 3,
+                        'placeholder' => $this->trans(
+                            'To have a different description than your category summary in search results page, write it here.',
+                            'Admin.Catalog.Help'
+                        ),
+                    ],
                     'constraints' => [
                         new Regex([
                             'pattern' => '/^[^<>={}]*$/u',
                             'message' => $this->trans('%s is invalid.', 'Admin.Notifications.Error'),
+                        ]),
+                        new Length([
+                            'max' => SeoSettings::MAX_DESCRIPTION_LENGTH,
+                            'maxMessage' => $this->trans(
+                                'This field cannot be longer than %limit% characters',
+                                'Admin.Notifications.Error',
+                                [
+                                    '%limit%' => SeoSettings::MAX_DESCRIPTION_LENGTH,
+                                ]
+                            ),
                         ]),
                     ],
                 ],
@@ -172,7 +221,7 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                 'options' => [
                     'constraints' => [
                         new Regex([
-                            'pattern' => '/^[_a-zA-Z0-9\-]+$/',
+                            'pattern' => (bool) $this->configuration->get('PS_ALLOW_ACCENTED_CHARS_URL') ? '/^[_a-zA-Z0-9\x{0600}-\x{06FF}\pL\pS-]+$/u' : '/^[^<>={}]*$/u',
                             'message' => $this->trans('%s is invalid.', 'Admin.Notifications.Error'),
                         ]),
                     ],

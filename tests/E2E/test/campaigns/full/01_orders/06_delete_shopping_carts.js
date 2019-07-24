@@ -11,6 +11,7 @@ const {CheckoutOrderPage} = require('../../../selectors/FO/order_page');
 const {OrderPage, ShoppingCart} = require('../../../selectors/BO/order');
 const {CatalogPage} = require('../../../selectors/BO/catalogpage/index');
 const commonOrder = require('../../common_scenarios/order');
+const welcomeScenarios = require('../../common_scenarios/welcome');
 let promise = Promise.resolve();
 
 scenario('Delete shopping carts', () => {
@@ -18,6 +19,7 @@ scenario('Delete shopping carts', () => {
     test('should open the browser', () => client.open());
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'order');
+  welcomeScenarios.findAndCloseWelcomeModal();
   scenario('Add products to the cart in the Front Office', () => {
     scenario('Go to the Front Office', client => {
       test('should go to the "Front Office"', () => {
@@ -72,7 +74,7 @@ scenario('Delete shopping carts', () => {
         .then(() => client.refresh())
     });
     test('should go to "Shopping cart" page', () => client.goToSubtabMenuPage(Menu.Sell.Orders.orders_menu, Menu.Sell.Orders.shopping_carts_submenu));
-    test('should check that th "Dropdown" button does not exist', () => client.isNotExisting(OrderPage.first_dropdown_button, 2000));
-    test('should check that th "CheckBox" does not exist', () => client.isNotExisting(OrderPage.first_shopping_cart_checkbox, 2000));
+    test('should check that the "Dropdown" button does not exist', () => client.isNotExisting(OrderPage.first_dropdown_button, 2000));
+    test('should check that the "CheckBox" does not exist', () => client.isNotExisting(OrderPage.first_shopping_cart_checkbox, 2000));
   }, 'order');
 }, 'order', true);

@@ -36,12 +36,19 @@
 <script>
   export default {
     name: 'serp',
-    data() {
-      return {
-        title: '',
-        url: 'http://example.com/',
-        description: '',
-      };
+    props: {
+      url: {
+        type: String,
+        default: 'https://www.example.com/',
+      },
+      description: {
+        type: String,
+        default: '',
+      },
+      title: {
+        type: String,
+        default: '',
+      },
     },
     computed: {
       displayedTitle() {
@@ -57,17 +64,6 @@
         }
 
         return this.description;
-      },
-    },
-    methods: {
-      setTitle(title) {
-        this.title = title;
-      },
-      setUrl(url) {
-        this.url = url;
-      },
-      setDescription(description) {
-        this.description = description;
       },
     },
   };

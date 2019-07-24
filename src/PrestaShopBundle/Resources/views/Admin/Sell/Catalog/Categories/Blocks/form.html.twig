@@ -33,8 +33,10 @@
   </h3>
   <div class="card-block row">
     <div class="card-text">
+      {{ form_errors(categoryForm) }}
+
       {{ ps.form_group_row(categoryForm.name, {}, {
-        'label': 'Name'|trans({}, 'Admin.Actions'),
+        'label': 'Name'|trans({}, 'Admin.Global'),
         'help': 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}'
       }) }}
 
@@ -43,7 +45,7 @@
         <div class="col-sm">
           {{ form_widget(categoryForm.active) }}
           <small class="form-text">
-            {{ 'If you want a category to appear in the menu of your shop, go to [1]Modules > Module Manager[/1]. Then, configure your menu module.'|trans({
+            {{ 'If you want a category to appear in the menu of your shop, go to [1]Modules > Module Manager[/1] and configure your menu module.'|trans({
               '[1]': '<a href="' ~ path('admin_module_manage') ~ '" class="_blank">',
               '[/1]': '</a>'
             }, 'Admin.Catalog.Help')|raw }}
@@ -123,15 +125,31 @@
 
       {{ renderhook('displayBackOfficeCategory') }}
 
-      {{ ps.form_group_row(categoryForm.meta_title, {}, {
-        'label': 'Meta title'|trans({}, 'Admin.Global'),
-        'help': 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}'
-      }) }}
+      {% block category_tool_serp %}
+        <div class="form-group row">
+          <label class="form-control-label">{{ 'SEO preview'|trans({}, 'Admin.Global') }}</label>
+          <div class="col-sm">
+            <div id="serp-app" data-category-url="{{ categoryUrl }}"></div>
+            <small class="form-text">
+              {{ 'Here is a preview of how your page will appear in search engine results.'|trans({}, 'Admin.Global') }}
+            </small>
+          </div>
+        </div>
+      {% endblock %}
 
-      {{ ps.form_group_row(categoryForm.meta_description, {}, {
-        'label': 'Meta description'|trans({}, 'Admin.Global'),
-        'help': 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}'
-      }) }}
+      <div class="form-group row">
+        {{ ps.label_with_help(('Meta title'|trans({}, 'Admin.Global')), ('Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}')) }}
+        <div class="col-sm">
+          {{ form_widget(categoryForm.meta_title) }}
+        </div>
+      </div>
+
+      <div class="form-group row">
+        {{ ps.label_with_help(('Meta description'|trans({}, 'Admin.Global')), ('Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}')) }}
+        <div class="col-sm">
+          {{ form_widget(categoryForm.meta_description) }}
+        </div>
+      </div>
 
       {% set metaKeywordHelp %}
         {{ 'To add tags, click in the field, write something, and then press the "Enter" key.'|trans({}, 'Admin.Shopparameters.Help') }}

@@ -55,17 +55,17 @@ final class SupplierFieldsProvider implements EntityFieldsProviderInterface
     {
         $fields = [
             new EntityField('id', $this->trans('ID', 'Admin.Global')),
-            new EntityField('active', $this->trans('Active (0/1)')),
+            new EntityField('active', $this->trans('Active (0/1)', 'Admin.Advparameters.Feature')),
             new EntityField('name', $this->trans('Name', 'Admin.Global')),
             new EntityField('description', $this->trans('Description', 'Admin.Global')),
             new EntityField('short_description', $this->trans('Short description', 'Admin.Catalog.Feature')),
             new EntityField('meta_title', $this->trans('Meta title', 'Admin.Global')),
             new EntityField('meta_keywords', $this->trans('Meta keywords', 'Admin.Global')),
             new EntityField('meta_description', $this->trans('Meta description', 'Admin.Global')),
-            new EntityField('image', $this->trans('Image URL')),
+            new EntityField('image', $this->trans('Image URL', 'Admin.Advparameters.Feature')),
             new EntityField(
                 'shop',
-                $this->trans('ID / Name of group shop'),
+                $this->trans('ID / Name of group shop', 'Admin.Advparameters.Feature'),
                 $this->trans('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, the default shop will be used.', 'Admin.Advparameters.Help')
             ),
         ];

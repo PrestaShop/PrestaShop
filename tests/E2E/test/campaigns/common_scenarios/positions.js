@@ -42,7 +42,7 @@ module.exports = {
       });
       test('should click on "View my shop" button then go to the Front Office', () => {
         return promise
-          .then(() => client.waitForExistAndClick(AccessPageBO.shopname))
+          .then(() => client.waitForExistAndClickJs(AccessPageBO.shopname))
           .then(() => client.switchWindow(2));
       });
       test('should verify the changed position in Front Office', () => client.waitForVisible(Positions.footer_information.replace("%O", 3)));

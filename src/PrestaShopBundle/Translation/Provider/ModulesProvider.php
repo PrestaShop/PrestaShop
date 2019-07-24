@@ -37,7 +37,7 @@ class ModulesProvider extends AbstractProvider implements UseDefaultCatalogueInt
      */
     public function getTranslationDomains()
     {
-        return ['^Modules*'];
+        return ['^Modules[A-Z]'];
     }
 
     /**
@@ -45,7 +45,7 @@ class ModulesProvider extends AbstractProvider implements UseDefaultCatalogueInt
      */
     public function getFilters()
     {
-        return ['#^Modules*#'];
+        return ['#^Modules[A-Z]#'];
     }
 
     /**

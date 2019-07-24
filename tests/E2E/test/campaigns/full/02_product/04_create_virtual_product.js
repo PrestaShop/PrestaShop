@@ -19,7 +19,8 @@ const {productPage} = require('../../../selectors/FO/product_page');
 const {OrderPage} = require('../../../selectors/BO/order');
 const {HomePage} = require('../../../selectors/FO/home_page');
 const {OnBoarding} = require('../../../selectors/BO/onboarding');
-let data = require('./../../../datas/product-data');
+const welcomeScenarios = require('../../common_scenarios/welcome');
+let data = require('../../../datas/product-data');
 let common = require('../../../common.webdriverio');
 let promise = Promise.resolve();
 
@@ -56,9 +57,10 @@ scenario('Create virtual Product in the Back Office', () => {
     test('should open browser', () => client.open());
     test('should log in successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'common_client');
+  welcomeScenarios.findAndCloseWelcomeModal();
   scenario('Test1: create "Currency"', () => {
     commonCurrencySenarios.accessToCurrencies();
-    commonCurrencySenarios.createCurrency('close\nSuccessful creation.', currencyData);
+    commonCurrencySenarios.createCurrency('Successful creation.', currencyData);
     commonCurrencySenarios.checkCurrencyByIsoCode(currencyData);
     scenario('Enable currency', client => {
       test('should click on "Enable icon"', () => client.waitForExistAndClick(Localization.Currencies.check_icon.replace('%ID', 1).replace('%ICON', 'not-valid')));
@@ -77,13 +79,9 @@ scenario('Create virtual Product in the Back Office', () => {
       commonProductScenarios.CheckButtonsInFooterProduct('virtual', data.virtual, client);
     }, 'product/check_product');
     scenario('Check basic settings tab (Image, summary description,  feature, brand, related product)', () => {
-      scenario('Search the for created product', client => {
+      scenario('Search for the created product', client => {
         test('should go to "Catalog" page', () => client.waitForExistAndClick(Menu.Sell.Catalog.products_submenu, 2000));
         test('should search for the created product', () => client.searchProductByName('copy of ' + data.virtual.name + date_time));
-        test('should click on "Dropdown toggle" button', () => client.waitForExistAndClick(ProductList.dropdown_button.replace('%POS', '1')));
-        test('should click on "Delete" action', () => client.waitForExistAndClick(ProductList.action_delete_button.replace('%POS', '1')));
-        test('should click on "Delete now" modal button', () => client.waitForVisibleAndClick(ProductList.delete_now_modal_button, 1000));
-        test('should verify the appearance of the green validation', () => client.checkTextValue(AddProductPage.success_panel, 'Product successfully deleted.'));
         test('should set the search the created product', () => client.waitAndSetValue(CatalogPage.name_search_input, data.virtual.name + date_time));
         test('should click on "Search" button', () => client.waitForExistAndClick(CatalogPage.search_button));
         test('should click on the product name', () => client.waitForExistAndClick(AddProductPage.catalog_product_name));
@@ -95,7 +93,8 @@ scenario('Create virtual Product in the Back Office', () => {
       test('should go to "Categories" page', () => client.waitForExistAndClick(Menu.Sell.Catalog.category_submenu, 2000));
       test('should search for category', () => client.searchByValue(CategorySubMenu.search_input, CategorySubMenu.search_button, 'Clothes'));
       test('should get "ID" of the Clothes category', () => client.getTextInVar(CategorySubMenu.category_id_column.replace('%ID', 1), 'categeoryID'));
-      test('should go to "Catalog > Products" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.products_submenu));
+      test('should click on reset button', () => client.waitForExistAndClick(CategorySubMenu.reset_button));
+      test('should go to "Catalog > Products" page', () => client.waitForExistAndClick(Menu.Sell.Catalog.products_submenu, 4000));
       test('should set the search the created product', () => client.waitAndSetValue(CatalogPage.name_search_input, data.virtual.name + date_time));
       test('should click on "Search" button', () => client.waitForExistAndClick(CatalogPage.search_button));
       test('should click on the product name', () => client.waitForExistAndClick(AddProductPage.catalog_product_name));
@@ -180,7 +179,6 @@ scenario('Create virtual Product in the Back Office', () => {
           test('should set the product "quantity"', () => client.waitAndSetValue(productPage.first_product_quantity, '4'));
           test('should click on "Add to cart" button ', () => client.waitForExistAndClick(CheckoutOrderPage.add_to_cart_button, 3000));
           test('should click on proceed to checkout button 1', () => client.waitForVisibleAndClick(CheckoutOrderPage.proceed_to_checkout_modal_button));
-          test('should set the quantity to "4" using the keyboard', () => client.waitAndSetValue(CheckoutOrderPage.quantity_input.replace('%NUMBER', 1), '4'));
           test('should click on proceed to checkout button 2', () => client.waitForExistAndClick(CheckoutOrderPage.proceed_to_checkout_button));
           scenario('Create new account', client => {
             test('should choose a "Social title"', () => client.waitForExistAndClick(accountPage.gender_radio_button));
@@ -331,7 +329,7 @@ scenario('Create virtual Product in the Back Office', () => {
     scenario('Delete the created currency', () => {
       commonCurrencySenarios.accessToCurrencies();
       commonCurrencySenarios.checkCurrencyByIsoCode(currencyData);
-      commonCurrencySenarios.deleteCurrency(true, 'close\nSuccessful deletion.');
+      commonCurrencySenarios.deleteCurrency(true, 'Successful deletion.');
       scenario('Click on Reset button', client => {
         test('should click on "Reset" button', () => client.waitForExistAndClick(Localization.Currencies.reset_button));
       }, 'common_client');

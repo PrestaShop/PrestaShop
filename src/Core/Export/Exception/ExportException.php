@@ -26,8 +26,11 @@
 
 namespace PrestaShop\PrestaShop\Core\Export\Exception;
 
-use Exception;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 
-class ExportException extends Exception
+/**
+ * Base class for PrestaShop core file export exceptions
+ */
+class ExportException extends CoreException
 {
 }

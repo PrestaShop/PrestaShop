@@ -24,8 +24,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
+
 function ps_1760_copy_data_from_currency_to_currency_lang()
 {
+    // Force cache reset of languages (load locale column)
+    ObjectModel::disableCache();
+
     $languages = Language::getLanguages();
     foreach ($languages as $language) {
         Db::getInstance()->execute(
@@ -33,8 +39,24 @@ function ps_1760_copy_data_from_currency_to_currency_lang()
             SELECT `id_currency`, " . (int) $language['id_lang'] . " as id_lang , `name`
             FROM `" . _DB_PREFIX_ . "currency`
             ON DUPLICATE KEY UPDATE
-            `name` = `" . _DB_PREFIX_ . "currency`.`name`,
+            `name` = `" . _DB_PREFIX_ . "currency`.`name`
             "
         );
     }
+    /** @var Currency[] $currencies */
+    $currencies = Currency::getCurrencies(true, false);
+    $context = Context::getContext();
+    $container = isset($context->controller) ? $context->controller->getContainer() : null;
+    if (null === $container) {
+        $container = SymfonyContainer::getInstance();
+    }
+
+    /** @var LocaleRepository $localeRepoCLDR */
+    $localeRepoCLDR = $container->get('prestashop.core.localization.cldr.locale_repository');
+    foreach ($currencies as $currency) {
+        $currency->refreshLocalizedCurrencyData($languages, $localeRepoCLDR);
+        $currency->save();
+    }
+
+    ObjectModel::enableCache();
 }

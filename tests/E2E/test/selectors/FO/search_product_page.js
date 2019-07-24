@@ -3,7 +3,7 @@ module.exports = {
     search_input: '.ui-autocomplete-input',
     search_button: '.material-icons.search',
     product_result_name: '.h3.product-title > a',
-    product_result_discount: '//*[@id="js-product-list"]//span[contains(@class, "discount-percentage")]',
+    product_result_discount: '.products article .discount',
     attribute_name: '//*[@id="add-to-cart-or-refresh"]//div[contains (@class, "product-variants-item")]/span',
     feature_name: '//*[@id="product-details"]/section/dl/dt[@class="name"]',
     feature_value: '//*[@id="product-details"]/section/dl/dd',

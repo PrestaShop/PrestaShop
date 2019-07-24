@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Currency\Exception;
 
 /**
- * Class AutomateExchangeRatesUpdateException
+ * Thrown on currency exchange rates automatic update failure
  */
 class AutomateExchangeRatesUpdateException extends CurrencyException
 {

@@ -25,8 +25,6 @@
  */
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 use PrestaShop\PrestaShop\Core\Localization\RTL\Processor as RtlStylesheetProcessor;
-use Symfony\Component\Filesystem\Filesystem;
-use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem as PsFileSystem;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Domain\MailTemplate\Command\GenerateThemeMailTemplatesCommand;
@@ -1075,13 +1073,8 @@ class LanguageCore extends ObjectModel
         if (Language::downloadLanguagePack($iso, $version, $errors)) {
             if ($install) {
                 Language::installLanguagePack($iso, $params, $errors);
-                Language::updateMultilangTable($iso);
             } else {
-                $lang_pack = self::getLangDetails($iso);
-                if (!empty($lang_pack['locale'])) {
-                    self::installSfLanguagePack($lang_pack['locale'], $errors);
-                    self::generateEmailsLanguagePack($lang_pack, $errors);
-                }
+                Language::updateLanguagePack($iso, $errors);
             }
         }
 
@@ -1145,8 +1138,9 @@ class LanguageCore extends ObjectModel
     /**
      * @param array $langPack
      * @param array $errors
+     * @param bool $overwriteTemplates
      */
-    private static function generateEmailsLanguagePack($langPack, &$errors = array())
+    private static function generateEmailsLanguagePack($langPack, &$errors = array(), $overwriteTemplates = false)
     {
         $locale = $langPack['locale'];
         $sfContainer = SymfonyContainer::getInstance();
@@ -1160,12 +1154,12 @@ class LanguageCore extends ObjectModel
             return;
         }
 
-        $mailTheme = Configuration::get('PS_MAIL_THEME');
+        $mailTheme = Configuration::get('PS_MAIL_THEME', null, null, null, 'modern');
         /** @var GenerateThemeMailTemplatesCommand $generateCommand */
         $generateCommand = new GenerateThemeMailTemplatesCommand(
             $mailTheme,
             $locale,
-            false
+            $overwriteTemplates
         );
         /** @var CommandBusInterface $commandBus */
         $commandBus = $sfContainer->get('prestashop.core.command_bus');
@@ -1188,50 +1182,12 @@ class LanguageCore extends ObjectModel
      */
     public static function installEmailsLanguagePack($lang_pack, &$errors = array())
     {
-        $folder = _PS_TRANSLATIONS_DIR_ . 'emails-' . $lang_pack['locale'];
-        $fileSystem = new Filesystem();
-        $finder = new \Symfony\Component\Finder\Finder();
+        @trigger_error(
+            'Language::installEmailsLanguagePack() is deprecated since version 1.7.6.0 Use GenerateThemeMailsCommand instead.',
+            E_USER_DEPRECATED
+        );
 
-        if (!file_exists($folder . '.zip')) {
-            // @todo Throw exception
-            $errors[] = Context::getContext()->getTranslator()->trans('Language pack unavailable.', array(), 'Admin.International.Notification');
-        } else {
-            $zipArchive = new ZipArchive();
-            $zipArchive->open($folder . '.zip');
-            $zipArchive->extractTo($folder);
-            $zipArchive->close();
-
-            $coreDestPath = _PS_ROOT_DIR_ . '/mails/' . $lang_pack['iso_code'];
-            $fileSystem->mkdir($coreDestPath, PsFileSystem::DEFAULT_MODE_FOLDER);
-
-            if ($fileSystem->exists($folder . '/core')) {
-                foreach ($finder->files()->in($folder . '/core') as $coreEmail) {
-                    $fileSystem->rename(
-                        $coreEmail->getRealpath(),
-                        $coreDestPath . '/' . $coreEmail->getFileName(),
-                        true
-                    );
-                }
-            }
-
-            if ($fileSystem->exists($folder . '/modules')) {
-                foreach ($finder->directories()->in($folder . '/modules') as $moduleDirectory) {
-                    $moduleDestPath = _PS_ROOT_DIR_ . '/modules/' . $moduleDirectory->getFileName() . '/mails/' . $lang_pack['iso_code'];
-                    $fileSystem->mkdir($moduleDestPath, PsFileSystem::DEFAULT_MODE_FOLDER);
-
-                    $findEmails = new \Symfony\Component\Finder\Finder();
-                    foreach ($findEmails->files()->in($moduleDirectory->getRealPath()) as $moduleEmail) {
-                        $fileSystem->rename(
-                            $moduleEmail->getRealpath(),
-                            $moduleDestPath . '/' . $moduleEmail->getFileName(),
-                            true
-                        );
-                    }
-                }
-            }
-
-            Tools::deleteDirectory($folder);
-        }
+        self::generateEmailsLanguagePack($lang_pack, $errors, true);
     }
 
     public static function installLanguagePack($iso, $params, &$errors = array())
@@ -1248,9 +1204,27 @@ class LanguageCore extends ObjectModel
 
         $lang_pack = self::getLangDetails($iso);
         self::installSfLanguagePack(self::getLocaleByIso($iso), $errors);
-        self::generateEmailsLanguagePack($lang_pack, $errors);
+        self::updateMultilangTable($iso);
+        self::generateEmailsLanguagePack($lang_pack, $errors, true);
 
         return count($errors) ? $errors : true;
+    }
+
+    public static function updateLanguagePack($iso, &$errors = array())
+    {
+        $lang_pack = self::getLangDetails($iso);
+        if (!empty($lang_pack['locale'])) {
+            //Update locale field if empty (manually created, or imported without it)
+            $language = new Language(Language::getIdByIso($iso));
+            if ($language->id && empty($language->locale)) {
+                $language->locale = $lang_pack['locale'];
+                $language->save();
+            }
+
+            self::installSfLanguagePack($lang_pack['locale'], $errors);
+            Language::updateMultilangTable($iso);
+            self::generateEmailsLanguagePack($lang_pack, $errors, false);
+        }
     }
 
     /**

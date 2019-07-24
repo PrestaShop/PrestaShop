@@ -163,7 +163,7 @@ scenario('Create order in the Back Office', () => {
     });
   }, 'onboarding');
   commonCurrency.accessToCurrencies();
-  commonCurrency.createCurrency('close\nSuccessful creation.', firstCurrencyData, false, true, true);
+  commonCurrency.createCurrency('Successful creation.', firstCurrencyData, false, true, true);
   commonCurrency.checkCurrencyByIsoCode(firstCurrencyData);
   scenario('Enable currency', client => {
     test('should click on "Enable icon"', () => client.waitForExistAndClick(Localization.Currencies.check_icon.replace('%ID', 1).replace('%ICON', "not-valid")));
@@ -176,8 +176,8 @@ scenario('Create order in the Back Office', () => {
         .then(() => client.goToFrame(1))
         .then(() => client.pause(2000));
     });
-    test('should check the "First name" and the "Last name" of the created customer', () => client.checkTextValue(CreateOrder.customer_details_header_bloc, secondCustomerData.first_name.toUpperCase() + ' ' + secondCustomerData.last_name.toUpperCase(), 'contain'));
-    test('should check the "Email" of the created customer', () => client.checkTextValue(CreateOrder.customer_details_email_link, secondCustomerData.email_address.toUpperCase(), 'contain'));
+    test('should check the "First name" and the "Last name" of the created customer', () => client.checkTextValue(CreateOrder.customer_details_header_bloc, secondCustomerData.first_name + ' ' + secondCustomerData.last_name, 'contain'));
+    test('should check the "Email" of the created customer', () => client.checkTextValue(CreateOrder.customer_details_email_link, secondCustomerData.email_address, 'contain'));
     test('should close details of the customer', () => {
       return promise
         .then(() => client.closeFrame())
@@ -236,26 +236,25 @@ scenario('Create order in the Back Office', () => {
     test('should set the product combination', () => client.waitAndSelectByValue(CreateOrder.product_combination, global.combinationId));
     test('should set the product "Quantity" input', () => client.waitAndSetValue(CreateOrder.quantity_input.replace('%NUMBER', 1), '4'));
     test('should click on "Add to cart" button', () => client.scrollWaitForExistAndClick(CreateOrder.add_to_cart_button));
-    test('should click on arrow up button to increase quantity', () => client.waitForExistAndClick(CreateOrder.quantity_arrow_up_button));
-    test('should click on arrow down button to decrease quantity', () => client.waitForExistAndClick(CreateOrder.quantity_arrow_down_button));
-    test('should get the price for product', () => {
-      return promise
-        .then(() => client.getTextInVar(CreateOrder.price_product_column, 'price_product'))
-        .then(() => client.pause(2000));
+    test('should click on arrow up button to increase quantity', async () => await client.waitForExistAndClick(CreateOrder.quantity_arrow_up_button));
+    test('should click on arrow down button to decrease quantity', async () => await client.waitForExistAndClick(CreateOrder.quantity_arrow_down_button));
+    test('should get the price for product', async () => {
+        await client.pause(500);
+        await client.getTextInVar(CreateOrder.price_product_column, 'price_product');
     });
     test('should choose "British Pound Sterling" from currency list', () => {
       return promise
-        .then(() => client.waitAndSelectByValue(CreateOrder.currency_select, '2'))
+        .then(() => client.selectByVisibleText(CreateOrder.currency_select, 'British Pound'))
         .then(() => client.pause(2000));
     });
     test('should verify that the price is changed', () => client.checkTextValue(CreateOrder.price_product_column, global.tab['price_product'], 'notequal'));
     test('should choose "Euro" from currency list', () => {
       return promise
-        .then(() => client.waitAndSelectByValue(CreateOrder.currency_select, '1'))
+        .then(() => client.selectByVisibleText(CreateOrder.currency_select, 'Euro'))
         .then(() => client.pause(2000));
     });
     test('should verify that the price is changed', () => client.checkTextValue(CreateOrder.price_product_column, global.tab['price_product'], 'equal'));
-    test('should set the language "Frensh"', () => client.waitAndSelectByValue(CreateOrder.language_select, '2'));
+    test('should set the language "French"', () => client.waitAndSelectByValue(CreateOrder.language_select, '2'));
     test('should search for a voucher by name', () => {
       return promise
         .then(() => client.waitAndSetValue(CreateOrder.voucher_input, global.tab["firstCartRuleCode"]))
@@ -402,7 +401,7 @@ scenario('Create order in the Back Office', () => {
   }, 'common_client');
   commonCurrency.accessToCurrencies();
   commonCurrency.checkCurrencyByIsoCode(firstCurrencyData);
-  commonCurrency.deleteCurrency(true, 'close\nSuccessful deletion.');
+  commonCurrency.deleteCurrency(true, 'Successful deletion.');
   scenario('Click on "Reset" button', client => {
     test('should click on reset button', () => client.waitForExistAndClick(Localization.Currencies.reset_button));
   }, 'common_client');

@@ -6,6 +6,7 @@
 const {AccessPageBO} = require('../../../../selectors/BO/access_page');
 const {Menu} = require('../../../../selectors/BO/menu.js');
 const commonLocalization = require('../../../common_scenarios/localization');
+const welcomeScenarios = require('../../../common_scenarios/welcome');
 
 let firstAdvancedData = {
     languageIdentifier: 'fr',
@@ -25,6 +26,7 @@ scenario('"Advanced"', () => {
     test('should open the browser', () => client.open());
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'common_client');
+  welcomeScenarios.findAndCloseWelcomeModal();
   scenario('Access to "International > Localization" page', client => {
     test('should go to International > Localization" page', () => client.goToSubtabMenuPage(Menu.Improve.International.international_menu, Menu.Improve.International.localization_submenu));
   }, 'common_client');

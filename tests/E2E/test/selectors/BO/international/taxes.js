@@ -17,11 +17,11 @@ module.exports = {
       tax_field_column: '//*[@id="table-tax_rules_group"]//tr[%L]//td[%C]'
     },
     taxes: {
-      filter_name_input: '//*[@id="table-tax"]//input[@name="taxFilter_name"]',
-      filter_search_button: '//*[@id="submitFilterButtontax"]',
-      tax_field_column: '//*[@id="table-tax"]//tr[%L]//td[%C]',
-      display_tax: '//*[@id="conf_id_PS_TAX_DISPLAY"]//label[@for="PS_TAX_DISPLAY_%D"]',
-      save_button: '//*[@id="tax_fieldset_general"]/div[3]/button',
+      filter_name_input: '//input[@id="tax_name"]',
+      filter_search_button: '//button[@name="tax[actions][search]"]',
+      tax_field_column: '//*[@id="tax_grid_table"]//tr[%L]//td[%C]',
+      display_tax: '//*[@id="form_options_display_tax_in_cart_%D"]',
+      save_button: '.card .card-footer button',
 
     }
   }
