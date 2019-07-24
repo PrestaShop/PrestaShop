@@ -49,7 +49,7 @@ class LoginType extends AbstractType
         $builder
             ->add('email', EmailType::class, [
                 'attr' => [
-                    'placeholder' => 'test@example.com',
+                    'placeholder' => 'login@prestashop.com',
                 ],
             ])
             ->add('password', PasswordType::class, [

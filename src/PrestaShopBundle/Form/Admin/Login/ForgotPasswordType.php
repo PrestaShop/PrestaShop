@@ -42,7 +42,7 @@ class ForgotPasswordType extends AbstractType
     {
         $builder->add('email', EmailType::class, [
             'attr' => [
-                'placeholder' => 'test@example.com',
+                'placeholder' => 'login@prestashop.com',
             ],
         ]);
     }
