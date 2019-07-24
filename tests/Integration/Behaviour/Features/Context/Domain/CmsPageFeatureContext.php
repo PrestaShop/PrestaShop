@@ -235,7 +235,7 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
                     $cmsPageReference
             ));
         } catch (CmsPageNotFoundException $e) {
-            //todo: rebase and use SharedStorage::clear
+            SharedStorage::getStorage()->clear($cmsPageReference);
         }
     }
 
