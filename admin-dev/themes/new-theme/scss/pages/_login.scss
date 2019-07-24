@@ -6,15 +6,6 @@ html > body {
   background-position: 50%;
 }
 
-.shop-image-container {
-  > img {
-    width: 69.5px;
-    height: 118.5px;
-  }
-
-  z-index: 2;
-}
-
 .login-card {
   z-index: 1;
   padding-top: 37px;
@@ -64,15 +55,5 @@ html > body {
   img {
     width: 123px;
     height: 24px;
-  }
-}
-
-.social-link {
-  &:hover {
-    text-decoration: none;
-  }
-
-  > img {
-    width: 24px;
   }
 }
