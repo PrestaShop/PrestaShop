@@ -28,6 +28,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\AddTaxCommand;
+use PrestaShop\PrestaShop\Core\Domain\Tax\Command\BulkDeleteTaxCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\BulkToggleTaxStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\DeleteTaxCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\EditTaxCommand;
@@ -93,14 +94,15 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I toggle tax :taxReference status
+     * @When /^I (enable|disable)? tax "(.*)"$/
      */
-    public function toggleStatus($taxReference)
+    public function toggleStatus($action, $taxReference)
     {
+        $expectedStatus = 'enable' === $action;
+
         /** @var Tax $tax */
         $tax = SharedStorage::getStorage()->get($taxReference);
         $taxId = (int) $tax->id;
-        $expectedStatus = !(bool) $tax->active;
 
         $this->getCommandBus()->handle(new ToggleTaxStatusCommand($taxId, $expectedStatus));
         SharedStorage::getStorage()->set($taxReference, new Tax($taxId));
@@ -147,8 +149,11 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
     public function bulkDeleteTax($taxReferences)
     {
         foreach (PrimitiveUtils::castStringArrayIntoArray($taxReferences) as $taxReference) {
-            $this->deleteTax($taxReference);
+            $tax = SharedStorage::getStorage()->get($taxReference);
+            $taxIds[] = (int) $tax->id;
         }
+
+        $this->getCommandBus()->handle(new BulkDeleteTaxCommand($taxIds));
     }
 
     /**
@@ -157,14 +162,14 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
     public function assertTaxesAreDeleted($taxReferences)
     {
         foreach (PrimitiveUtils::castStringArrayIntoArray($taxReferences) as $taxReference) {
-            $this->assertTaxisDeleted($taxReference);
+            $this->assertTaxIsDeleted($taxReference);
         }
     }
 
     /**
      * @Then tax :taxReference should be deleted
      */
-    public function assertTaxisDeleted($taxReference)
+    public function assertTaxIsDeleted($taxReference)
     {
         $tax = SharedStorage::getStorage()->get($taxReference);
         $taxId = (int) $tax->id;
@@ -214,26 +219,6 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
                 $rate
             ));
         }
-    }
-
-    /**
-     * @Given taxes with ids: :ids exists
-     */
-    public function assertTaxesExistsByIds($ids)
-    {
-        foreach (explode(',', $ids) as $id) {
-            $this->assertTaxExistsById($id);
-        }
-    }
-
-    /**
-     * @Given tax with id :id exists
-     */
-    public function assertTaxExistsById($id)
-    {
-        $query = new GetTaxForEditing((int) $id);
-
-        $this->getQueryBus()->handle($query);
     }
 
     /**

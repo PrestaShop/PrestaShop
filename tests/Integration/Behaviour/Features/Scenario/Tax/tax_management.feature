@@ -29,13 +29,13 @@ Feature: Manage tax
     And tax "sales-tax" rate should be 0.150
     And tax "sales-tax" should be disabled
 
-  Scenario: Toggling tax status
+  Scenario: Enabling tax status
     Given tax "sales-tax" should be disabled
-    When I toggle tax "sales-tax" status
+    When I enable tax "sales-tax"
     Then tax "sales-tax" should be enabled
 
-  Scenario: Deleting tax right after toggling its status
-    When I toggle tax "sales-tax" status
+  Scenario: Deleting tax right after disabling its status
+    When I disable tax "sales-tax"
     Then tax "sales-tax" should be disabled
     When I delete tax "sales-tax"
     Then tax "sales-tax" should be deleted
@@ -55,7 +55,6 @@ Feature: Manage tax
       | is_enabled   | false             |
     When I disable taxes: "beard-tax, state-tax, pvm-tax"
     Then taxes: "beard-tax, state-tax" should be disabled
-    And tax "pvm-tax" should be disabled
 
   Scenario: Deleting multiple taxes right after their status was enabled
     When I enable taxes: "beard-tax, state-tax, pvm-tax"
