@@ -118,8 +118,7 @@ class LocalizationPackCore
             }
         } else {
             foreach ($selection as $selected) {
-                // No need to specify the install_mode because if the selection mode is used, then it's not the install
-                $res &= Validate::isLocalizationPackSelection($selected) ? $this->{'_install' . $selected}($xml) : false;
+                $res &= Validate::isLocalizationPackSelection($selected) ? $this->{'_install' . $selected}($xml, $install_mode) : false;
             }
         }
 
