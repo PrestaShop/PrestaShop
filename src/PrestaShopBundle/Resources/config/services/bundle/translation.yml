@@ -2,6 +2,12 @@ services:
     _defaults:
         public: true
 
+    # override symfony translator
+    prestashop.translator:
+        class: PrestaShopBundle\Translation\ContextTranslator
+        decorates: translator
+        arguments: ['@prestashop.adapter.legacy.context']
+
     #TRANSLATIONS FACTORIES
     prestashop.translation.translations_factory:
         class: PrestaShopBundle\Translation\Factory\TranslationsFactory

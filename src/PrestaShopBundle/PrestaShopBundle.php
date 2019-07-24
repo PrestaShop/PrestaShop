@@ -60,7 +60,7 @@ class PrestaShopBundle extends Bundle
         $container->addCompilerPass(new LoadServicesFromModulesPass('admin'), PassConfig::TYPE_BEFORE_OPTIMIZATION, 1);
         $container->addCompilerPass(new RemoveXmlCompiledContainerPass(), PassConfig::TYPE_AFTER_REMOVING);
         $container->addCompilerPass(new RouterPass(), PassConfig::TYPE_AFTER_REMOVING);
-        $container->addCompilerPass(new OverrideTranslatorServiceCompilerPass());
+        //$container->addCompilerPass(new OverrideTranslatorServiceCompilerPass());
         $container->addCompilerPass(new OverrideTwigServiceCompilerPass());
         $container->addCompilerPass(new ModulesDoctrineCompilerPass());
     }
