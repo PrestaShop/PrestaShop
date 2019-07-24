@@ -1,3 +1,11 @@
+html > body {
+  // @todo change to a variable when this color is introduced to the UI kit
+  background-color: #011638;
+  background-image: url('../../../../img/login-background-shape.png');
+  background-repeat: no-repeat;
+  background-position: 50%;
+}
+
 .shop-image-container {
   > img {
     width: 69.5px;
