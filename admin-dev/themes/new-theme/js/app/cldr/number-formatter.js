@@ -215,6 +215,13 @@ class NumberFormatter {
   /**
    * strtr() for JavaScript
    * Translate characters or replace substrings
+   *
+   * @param str
+   *  String to parse
+   * @param pairs
+   *  Hash of ('from' => 'to', ...).
+   *
+   * @return string
    */
   strtr(str, pairs) {
     const substrs = Object.keys(pairs).map(escapeRE);
