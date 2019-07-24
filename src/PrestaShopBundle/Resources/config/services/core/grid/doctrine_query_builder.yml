@@ -236,7 +236,7 @@ services:
       public: true
 
     prestashop.core.grid.query_builder.file:
-      class: 'PrestaShop\PrestaShop\Core\Grid\Query\FileQueryBuilder'
+      class: 'PrestaShop\PrestaShop\Core\Grid\Query\AttachmentQueryBuilder'
       parent: 'prestashop.core.grid.abstract_query_builder'
       arguments:
         - '@prestashop.core.query.doctrine_search_criteria_applicator'
