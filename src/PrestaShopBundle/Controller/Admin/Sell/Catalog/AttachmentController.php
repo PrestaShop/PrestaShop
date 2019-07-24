@@ -26,79 +26,129 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
-use PrestaShop\PrestaShop\Core\Domain\Customer\Command\BulkDeleteCustomerCommand;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
-use PrestaShop\PrestaShop\Core\Search\Filters\FileFilters;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\DeleteAttachmentCommand;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentException;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\DeleteAttachmentException;
+use PrestaShop\PrestaShop\Core\Search\Filters\AttachmentFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Form\Admin\Sell\Customer\DeleteCustomersType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Class AttachmentController
+ */
 class AttachmentController extends FrameworkBundleAdminController
 {
     /**
      * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
      *
      * @param Request $request
-     * @param FileFilters $filters
+     * @param AttachmentFilters $filters
      *
      * @return Response
      */
-    public function indexAction(Request $request, FileFilters $filters)
+    public function indexAction(Request $request, AttachmentFilters $filters)
     {
-        $attachmentGridFactory = $this->get('prestashop.core.grid.factory.file');
-        $customerGrid = $attachmentGridFactory->getGrid($filters);
+        $attachmentGridFactory = $this->get('prestashop.core.grid.factory.attachment');
+        $attachmentGrid = $attachmentGridFactory->getGrid($filters);
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Attachment/index.html.twig', [
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
-            'attachmentGrid' => $this->presentGrid($customerGrid),
+            'attachmentGrid' => $this->presentGrid($attachmentGrid),
             'enableSidebar' => true,
         ]);
     }
 
     /**
-     * Delete customers in bulk action.
+     * Deletes attachment
      *
-     * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_attachments_index",
-     *     message="You do not have permission to delete this."
-     * )
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_attachments_index")
+     * @DemoRestricted(redirectRoute="admin_attachments_index")
      *
-     * @param Request $request
+     * @param $attachmentId
      *
      * @return RedirectResponse
      */
-    public function deleteBulkAction(Request $request)
+    public function deleteAction($attachmentId)
     {
-        $form = $this->createForm(DeleteCustomersType::class);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted()) {
-            $data = $form->getData();
-
-            $fileIds = array_map(function ($customerId) {
-                return (int) $customerId;
-            }, $data['files_to_delete']);
-
-            try {
-                $command = new BulkDeleteCustomerCommand(
-                    $fileIds,
-                    $data['delete_method']
-                );
-
-                $this->getCommandBus()->handle($command);
-                $this->addFlash(
-                    'success',
-                    $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
-                );
-            } catch (CustomerException $e) {
-                $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
-            }
+        try {
+            $this->getCommandBus()->handle(new DeleteAttachmentCommand((int) $attachmentId));
+            $this->addFlash(
+                'success',
+                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+            );
+        } catch (AttachmentException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
         return $this->redirectToRoute('admin_attachments_index');
+    }
+
+//    /**
+//     * Delete attachments in bulk action.
+//     *
+//     * @AdminSecurity(
+//     *     "is_granted('delete', request.get('_legacy_controller'))",
+//     *     redirectRoute="admin_attachments_index",
+//     *     message="You do not have permission to delete this."
+//     * )
+//     *
+//     * @param Request $request
+//     *
+//     * @return RedirectResponse
+//     */
+//    public function deleteBulkAction(Request $request)
+//    {
+//        $manufacturerIds = $this->getBulkAttachmentsFromRequest($request);
+//
+//        try {
+//            $this->getCommandBus()->handle(new BulkDeleteAttachmentCommand($manufacturerIds));
+//            $this->addFlash(
+//                'success',
+//                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+//            );
+//        } catch (AttachmentException $e) {
+//            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+//        }
+//
+//        return $this->redirectToRoute('admin_attachments_index');
+//    }
+
+    /**
+     * Provides error messages for exceptions
+     *
+     * @return array
+     */
+    private function getErrorMessages()
+    {
+        return [
+            DeleteAttachmentException::class => $this->trans(
+                'An error occurred while deleting the object.',
+                'Admin.Notifications.Error'
+            ),
+        ];
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return array
+     */
+    private function getBulkAttachmentsFromRequest(Request $request)
+    {
+        $attachmentIds = $request->request->get('attachment_bulk');
+
+        if (!is_array($attachmentIds)) {
+            return [];
+        }
+
+        foreach ($attachmentIds as $i => $attachmentId) {
+            $attachmentIds[$i] = (int) $attachmentId;
+        }
+
+        return $attachmentId;
     }
 }

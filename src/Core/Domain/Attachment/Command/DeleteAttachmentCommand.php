@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,23 +22,38 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
+namespace PrestaShop\PrestaShop\Core\Domain\Attachment\Command;
 
-{% block content %}
-  {% block attachments_listing %}
-    <div class="row">
-      <div class="col">
-        {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': attachmentGrid} %}
-      </div>
-    </div>
-  {% endblock %}
-{% endblock %}
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\ValueObject\AttachmentId;
 
-{% block javascripts %}
-  {{ parent() }}
+/**
+ * Class DeleteAttachmentCommand is responsible for deleting Attachment
+ */
+class DeleteAttachmentCommand
+{
+    /**
+     * @var AttachmentId
+     */
+    private $attachmentId;
 
-  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
-  <script src="{{ asset('themes/new-theme/public/attachment.bundle.js') }}"></script>
-{% endblock %}
+    /**
+     * @param int $attachmentId
+     *
+     * @throws AttachmentConstraintException
+     */
+    public function __construct($attachmentId)
+    {
+        $this->attachmentId = new AttachmentId($attachmentId);
+    }
+
+    /**
+     * @return AttachmentId
+     */
+    public function getAttachmentId()
+    {
+        return $this->attachmentId;
+    }
+}

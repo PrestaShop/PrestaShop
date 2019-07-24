@@ -42,7 +42,7 @@ admin_attachment_view:
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Catalog/Attachment:view
     _legacy_controller: AdminAttachments
-    _legacy_link: AdminAttachments:viewcustomer
+    _legacy_link: AdminAttachments:viewattachment
     _legacy_parameters:
       id_attachment: attachmentId
   requirements:
@@ -54,13 +54,17 @@ admin_attachments_delete_bulk:
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Catalog/Attachment:deleteBulk
     _legacy_controller: AdminAttachments
-    _legacy_link: AdminAttachments:submitBulkdeletecustomer
+    _legacy_link: AdminAttachments:submitBulkdeleteattachment
 
 admin_attachment_delete:
-  path: /delete
+  path: /{attachmentId}/delete
   methods: [POST]
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Catalog/Attachment:delete
     _legacy_controller: AdminAttachments
-    _legacy_link: AdminAttachments:deletecustomer
+    _legacy_link: AdminAttachments:deleteattachment
+    _legacy_parameters:
+      id_attachment: attachmentId
+  requirements:
+    attachmentId: \d+
 

@@ -27,13 +27,12 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
-use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\Attachment\DeleteAttachmentBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\AccessibilityCheckerInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\Attachment\DeleteAttachmentRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
-use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
@@ -47,7 +46,7 @@ use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-class AttachmentGridDefinitionFactory extends AbstractGridDefinitionFactory
+final class AttachmentGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
     /**
      * @var string
@@ -78,8 +77,8 @@ class AttachmentGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     public function __construct(
         HookDispatcherInterface $hookDispatcher,
-        $resetActionUrl,
-        $redirectActionUrl,
+        string $resetActionUrl,
+        string $redirectActionUrl,
         MultistoreContextCheckerInterface $multistoreContextChecker,
         AccessibilityCheckerInterface $categoryForViewAccessibilityChecker
     ) {
@@ -177,13 +176,20 @@ class AttachmentGridDefinitionFactory extends AbstractGridDefinitionFactory
                                     'route_param_field' => 'id_attachment',
                                 ])
                         )
-                        ->add((new SubmitRowAction('delete'))
+                        ->add((new DeleteAttachmentRowAction('delete'))
                             ->setName($this->trans('Delete', [], 'Admin.Actions'))
                             ->setIcon('delete')
                             ->setOptions([
                                 'route' => 'admin_attachment_delete',
                                 'route_param_name' => 'attachmentId',
                                 'route_param_field' => 'id_attachment',
+                                'confirm_message' => $this->trans(
+                                    'Delete selected item?',
+                                    [],
+                                    'Admin.Notifications.Warning'
+                                ),
+                                'confirm_message_type' => DeleteAttachmentRowAction::MESSAGE_TYPE_DYNAMIC,
+                                'dynamic_message_field' => 'dynamic_message',
                             ])
                         ),
                 ])

@@ -231,10 +231,10 @@ services:
             - '@prestashop.core.grid.filter.form_factory'
             - '@prestashop.core.hook.dispatcher'
 
-    prestashop.core.grid.factory.file:
+    prestashop.core.grid.factory.attachment:
       class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
       arguments:
         - '@prestashop.core.grid.definition.factory.attachment'
-        - '@prestashop.core.grid.data_factory.attachment'
+        - '@prestashop.core.grid.data_factory.attachment_decorator'
         - '@prestashop.core.grid.filter.form_factory'
         - '@prestashop.core.hook.dispatcher'
