@@ -24,23 +24,35 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Search\Filters;
+namespace PrestaShop\PrestaShop\Adapter\Attachment\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Search\Filters;
+use PrestaShopException;
+use Attachment;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentException;
 
-class FileFilters extends Filters
+/**
+ * Class AbstractAttachmentCommandHandler
+ */
+abstract class AbstractAttachmentCommandHandler
 {
     /**
-     * {@inheritdoc}
+     * Deletes legacy Attachment
+     *
+     * @param Attachment $attachment
+     *
+     * @return bool
+     *
+     * @throws AttachmentException
      */
-    public static function getDefaults()
+    protected function deleteAttachment(Attachment $attachment)
     {
-        return [
-            'limit' => 50,
-            'offset' => 0,
-            'orderBy' => 'id_attachment',
-            'sortOrder' => 'asc',
-            'filters' => [],
-        ];
+        try {
+            return $attachment->delete();
+        } catch (PrestaShopException $e) {
+            throw new AttachmentException(
+                'An error occurred when deleting Attachment object with id "%s".',
+                $attachment->id
+            );
+        }
     }
 }
