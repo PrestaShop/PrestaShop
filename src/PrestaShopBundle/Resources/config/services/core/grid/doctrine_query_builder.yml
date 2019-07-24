@@ -227,7 +227,7 @@ services:
         - '@prestashop.core.grid.query.filter.doctrine_filter_applicator'
         - '@prestashop.core.query.doctrine_search_criteria_applicator'
 
-    prestashop.core.grid.query_builder.file:
+    prestashop.core.grid.query_builder.attachment:
       class: 'PrestaShop\PrestaShop\Core\Grid\Query\AttachmentQueryBuilder'
       parent: 'prestashop.core.grid.abstract_query_builder'
       arguments:

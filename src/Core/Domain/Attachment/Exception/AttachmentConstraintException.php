@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,23 +22,13 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
+namespace PrestaShop\PrestaShop\Core\Domain\Attachment\Exception;
 
-{% block content %}
-  {% block attachments_listing %}
-    <div class="row">
-      <div class="col">
-        {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': attachmentGrid} %}
-      </div>
-    </div>
-  {% endblock %}
-{% endblock %}
-
-{% block javascripts %}
-  {{ parent() }}
-
-  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
-  <script src="{{ asset('themes/new-theme/public/attachment.bundle.js') }}"></script>
-{% endblock %}
+/**
+ * Class AttachmentConstraintException is thrown when Attachment constraint is violated
+ */
+class AttachmentConstraintException extends AttachmentException
+{
+}

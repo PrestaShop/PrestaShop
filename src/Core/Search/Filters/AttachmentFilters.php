@@ -28,7 +28,10 @@ namespace PrestaShop\PrestaShop\Core\Search\Filters;
 
 use PrestaShop\PrestaShop\Core\Search\Filters;
 
-class FileFilters extends Filters
+/**
+ * Class AttachmentFilters defines default filters for Attachments grid.
+ */
+final class AttachmentFilters extends Filters
 {
     /**
      * {@inheritdoc}

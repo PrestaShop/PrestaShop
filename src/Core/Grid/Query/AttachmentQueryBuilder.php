@@ -31,7 +31,7 @@ use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
- * Class TaxQueryBuilder builds search & count queries for taxes grid.
+ * Class AttachmentQueryBuilder builds search & count queries for attachment grid.
  */
 final class AttachmentQueryBuilder extends AbstractDoctrineQueryBuilder
 {
@@ -71,7 +71,8 @@ final class AttachmentQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
 
         $qb
-            ->select('a.`id_attachment`, al.`name`, a.`file`, a.`file_size`, COALESCE(virtual_product_attachment.`product_count`, 0) AS products')
+            ->select('a.`id_attachment`, al.`name`, a.`file`, a.`file_size`')
+            ->addSelect('COALESCE(virtual_product_attachment.`product_count`, 0) AS products')
         ;
 
         $this->searchCriteriaApplicator
@@ -131,6 +132,12 @@ final class AttachmentQueryBuilder extends AbstractDoctrineQueryBuilder
         return $qb;
     }
 
+    /**
+     * Apply filters to attachments query builder.
+     *
+     * @param array $filters
+     * @param QueryBuilder $qb
+     */
     private function applyFilters(QueryBuilder $qb, array $filters)
     {
         $allowedFiltersMap = [
