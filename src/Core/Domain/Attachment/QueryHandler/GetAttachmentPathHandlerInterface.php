@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\AttachmentPath;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\Attachment;
 
 /**
- * Defines contract for AttachmentPathProvider
+ * Defines contract for GetAttachmentPathHandler
  */
 interface GetAttachmentPathHandlerInterface
 {

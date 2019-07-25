@@ -32,14 +32,14 @@ use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryHandler\GetAttachmentPathH
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\Attachment;
 
 /**
- * Class AttachmentPathProvider provides path and original file name of attachment
+ * Class GetAttachmentPathHandler provides path and original file name of attachment
  */
 class GetAttachmentPathHandler extends AbstractAttachmentHandler implements GetAttachmentPathHandlerInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function handle(AttachmentPath $query)
+    public function handle(AttachmentPath $query): Attachment
     {
         $attachment = $this->getAttachment($query->getAttachmentId());
 
