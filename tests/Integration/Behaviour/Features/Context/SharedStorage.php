@@ -69,7 +69,7 @@ class SharedStorage
      */
     public function get($key)
     {
-        if (!isset($this->storage[$key])) {
+        if (!$this->exists($key)) {
             throw new RuntimeException(sprintf('Item with key "%s" does not exist', $key));
         }
 
@@ -87,11 +87,21 @@ class SharedStorage
     }
 
     /**
+     * @param $key
+     *
+     * @return bool
+     */
+    public function exists($key): bool
+    {
+        return isset($this->storage[$key]);
+    }
+
+    /**
      * @param string $key
      */
     public function clear($key)
     {
-        if (isset($this->storage[$key])) {
+        if ($this->exists($key)) {
             unset($this->storage[$key]);
         }
     }

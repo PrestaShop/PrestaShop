@@ -56,6 +56,8 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
     use StringToBooleanTransform;
     use CurrencyTransform;
 
+    private $cartRuleStorageProperty = 'add_cart_rule';
+
     /**
      * @Transform /^active from "([^"]+)"$/
      * @Transform /^active until "([^"]+)"$/
@@ -81,25 +83,30 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When /^I want to create a cart rule named "([^"]+)"$/
+     * @When /^I want to create a new cart rule$/
      */
-    public function createCartRuleWithName(string $name)
+    public function prepareCartRuleCreation()
     {
-        $key = sprintf('cart_rule_%s', $name);
-
-        SharedStorage::getStorage()->set($key, [
-            'name' => $name,
-        ]);
+        $this->setCartRuleProperties([]);
     }
 
     /**
-     * @Given /^I specify (its) "([^"]+)" as "([^"]+)"$/
+     * @When /^I specify (its) name in default language as "([^"]+)"$/
+     */
+    public function createCartRuleWithName(array $properties, string $nameInDefaultLanguage)
+    {
+        $properties['name'] = $nameInDefaultLanguage;
+        $this->setCartRuleProperties($properties);
+    }
+
+    /**
+     * @Given /^I specify (cart rule|its) "([^"]+)" as "([^"]+)"$/
      * @Given /^I specify that (its) "([^"]+)" is "([^"]+)"$/
      */
     public function specifyCartRuleProperty(array $properties, string $property, string $value)
     {
         $properties[$property] = $value;
-        SharedStorage::getStorage()->setLatestResource($properties);
+        $this->setCartRuleProperties($properties);
     }
 
     /**
@@ -108,7 +115,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
     public function specifyCartRuleActiveFromOrUntil(array $properties, DateTime $date, string $property)
     {
         $properties[$property] = $date;
-        SharedStorage::getStorage()->setLatestResource($properties);
+        $this->setCartRuleProperties($properties);
     }
 
     /**
@@ -117,7 +124,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
     public function specifyCartRulePartialUse(bool $isPartialUseEnabled, array $properties)
     {
         $properties['partial_use'] = $isPartialUseEnabled;
-        SharedStorage::getStorage()->setLatestResource($properties);
+        $this->setCartRuleProperties($properties);
     }
 
     /**
@@ -126,7 +133,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
     public function specifyCartRuleStatus(array $properties, bool $isEnabled)
     {
         $properties['active'] = $isEnabled;
-        SharedStorage::getStorage()->setLatestResource($properties);
+        $this->setCartRuleProperties($properties);
     }
 
     /**
@@ -135,7 +142,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
     public function specifyCartRuleHighlightedInCart(array $properties, bool $highlightInCart)
     {
         $properties['highlight'] = $highlightInCart;
-        SharedStorage::getStorage()->setLatestResource($properties);
+        $this->setCartRuleProperties($properties);
     }
 
     /**
@@ -145,7 +152,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
     {
         $properties['minimum_amount'] = (float) $amount;
         $properties['minimum_amount_currency'] = $currency->id;
-        SharedStorage::getStorage()->setLatestResource($properties);
+        $this->setCartRuleProperties($properties);
     }
 
     /**
@@ -154,7 +161,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
     public function specifyIfMinimumPurchaseAmountIsTaxIncluded(array $properties, bool $isTaxIncluded)
     {
         $properties['minimum_amount_tax'] = $isTaxIncluded;
-        SharedStorage::getStorage()->setLatestResource($properties);
+        $this->setCartRuleProperties($properties);
     }
 
     /**
@@ -163,7 +170,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
     public function specifyIfMinimumPurchaseAmountIsShippingIncluded(array $properties, bool $isShippingIncluded)
     {
         $properties['minimum_amount_shipping'] = $isShippingIncluded;
-        SharedStorage::getStorage()->setLatestResource($properties);
+        $this->setCartRuleProperties($properties);
     }
 
     /**
@@ -172,7 +179,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
     public function specifyCartRuleGivesFreeShipping(array $properties)
     {
         $properties['free_shipping'] = true;
-        SharedStorage::getStorage()->setLatestResource($properties);
+        $this->setCartRuleProperties($properties);
     }
 
     /**
@@ -189,7 +196,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
         $properties['reduction_currency'] = $currency->id;
         $properties['reduction_tax'] = $isTaxIncluded;
         $properties['discount_application_type'] = $discountApplicationType;
-        SharedStorage::getStorage()->setLatestResource($properties);
+        $this->setCartRuleProperties($properties);
     }
 
     /**
@@ -204,7 +211,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
         $properties['reduction_percentage'] = (float) $percentage;
         $properties['reduction_applies_to_discounted_products'] = $includesDiscountedProducts;
         $properties['discount_application_type'] = $discountApplicationType;
-        SharedStorage::getStorage()->setLatestResource($properties);
+        $this->setCartRuleProperties($properties);
     }
 
     /**
@@ -252,6 +259,8 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
         );
 
         ObjectModel::enableCache();
+
+        SharedStorage::getStorage()->clear($this->cartRuleStorageProperty);
     }
 
     /**
@@ -641,5 +650,15 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
         $number1 = new Number((string) $number1);
 
         return $number1->equals(new Number((string) $number2));
+    }
+
+    /**
+     * Sets given properties into shared storage under common key.
+     *
+     * @param array $properties
+     */
+    private function setCartRuleProperties(array $properties): void
+    {
+        SharedStorage::getStorage()->set($this->cartRuleStorageProperty, $properties);
     }
 }
