@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject;
 
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Validation\RegexPattern;
 
 /**
  * Stores customer's last name
@@ -69,7 +70,7 @@ class LastName
      */
     private function assertLastNameIsValid($lastName)
     {
-        $matchesLastNamePattern = preg_match('/^[^0-9!<>,;?=+()@#"°{}_$%:¤|]*$/u', stripslashes($lastName));
+        $matchesLastNamePattern = preg_match(RegexPattern::NAME, stripslashes($lastName));
 
         if (!$matchesLastNamePattern) {
             throw new CustomerConstraintException(

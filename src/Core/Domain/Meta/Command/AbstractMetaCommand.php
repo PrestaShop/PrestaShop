@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Meta\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Validation\RegexPattern;
 
 /**
  * Class AbstractMetaCommand is responsible for defining the abstraction for AddMetaCommand and EditMetaCommand.
@@ -42,15 +43,13 @@ abstract class AbstractMetaCommand
      */
     protected function assertNameMatchesRegexPattern($languageId, $value, $constraintErrorCode)
     {
-        $regex = '/^[^<>={}]*$/u';
-
-        if ($value && !preg_match($regex, $value)) {
+        if ($value && !preg_match(RegexPattern::GENERIC_NAME, $value)) {
             throw new MetaConstraintException(
                 sprintf(
                     'Value "%s" for language id %s did not passed the regex expression: %s',
                     $value,
                     $languageId,
-                    $regex
+                    RegexPattern::GENERIC_NAME
                 ),
                 $constraintErrorCode
             );

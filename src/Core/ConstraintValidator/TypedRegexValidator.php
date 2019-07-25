@@ -59,7 +59,7 @@ class TypedRegexValidator extends ConstraintValidator
         $pattern = $this->getPattern($constraint->type);
         $value = $this->sanitize($value, $constraint->type);
 
-        if (!$this->match($pattern, $constraint->type, $value)) {
+        if (!$this->match($pattern, $value)) {
             $this->context->buildViolation($constraint->message)
                 ->setTranslationDomain('Admin.Notifications.Error')
                 ->setParameter('%s', $this->formatValue($value))
@@ -78,16 +78,16 @@ class TypedRegexValidator extends ConstraintValidator
     private function getPattern($type)
     {
         $typePatterns = [
-            'name' => $this->cleanNonUnicodeSupport('/^[^0-9!<>,;?=+()@#"°{}_$%:¤|]*$/u'),
-            'catalog_name' => $this->cleanNonUnicodeSupport('/^[^<>;=#{}]*$/u'),
-            'generic_name' => $this->cleanNonUnicodeSupport(RegexPattern::PATTERN_GENERIC_NAME),
-            'city_name' => $this->cleanNonUnicodeSupport('/^[^!<>;?=+@#"°{}_$%]*$/u'),
-            'address' => $this->cleanNonUnicodeSupport('/^[^!<>?=+@{}_$%]*$/u'),
-            'post_code' => '/^[a-zA-Z 0-9-]+$/',
-            'phone_number' => '/^[+0-9. ()\/-]*$/',
-            'message' => RegexPattern::INVERSE_PATTERN_MESSAGE,
+            'name' => $this->cleanNonUnicodeSupport(RegexPattern::NAME),
+            'catalog_name' => $this->cleanNonUnicodeSupport(RegexPattern::CATALOG_NAME),
+            'generic_name' => $this->cleanNonUnicodeSupport(RegexPattern::GENERIC_NAME),
+            'city_name' => $this->cleanNonUnicodeSupport(RegexPattern::CITY_NAME),
+            'address' => $this->cleanNonUnicodeSupport(RegexPattern::ADDRESS),
+            'post_code' => RegexPattern::POST_CODE,
+            'phone_number' => RegexPattern::PHONE_NUMBER,
+            'message' => RegexPattern::MESSAGE,
             'language_iso_code' => IsoCode::PATTERN,
-            'language_code' => '/^[a-zA-Z]{2}(-[a-zA-Z]{2})?$/',
+            'language_code' => RegexPattern::LANG_CODE,
         ];
 
         if (isset($typePatterns[$type])) {
@@ -142,19 +142,12 @@ class TypedRegexValidator extends ConstraintValidator
      * if an error occurred.
      *
      * @param $pattern
-     * @param $type
      * @param $value
      *
      * @return false|int
      */
-    private function match($pattern, $type, $value)
+    private function match($pattern, $value)
     {
-        $typesToInverseMatching = ['message'];
-
-        if (in_array($type, $typesToInverseMatching, true)) {
-            return !preg_match($pattern, $value);
-        }
-
         return preg_match($pattern, $value);
     }
 }

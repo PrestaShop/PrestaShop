@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Order\Command;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
+use PrestaShop\PrestaShop\Core\Domain\Validation\RegexPattern;
 
 /**
  * Adds new order from given cart.
@@ -126,7 +127,7 @@ class AddOrderFromBackOfficeCommand
      */
     private function assertIsModuleName($moduleName)
     {
-        if (!is_string($moduleName) || !preg_match('/^[a-zA-Z0-9_-]+$/', $moduleName)) {
+        if (!is_string($moduleName) || !preg_match(RegexPattern::MODULE_NAME, $moduleName)) {
             throw new OrderException('Payment module name is invalid');
         }
     }

@@ -31,10 +31,25 @@ namespace PrestaShop\PrestaShop\Core\Domain\Validation;
  */
 final class RegexPattern
 {
-    /**
-     * Pattern for valid generic names
-     */
-    const PATTERN_GENERIC_NAME = '/^[^<>={}]*$/u';
+    const NAME = '/^[^0-9!<>,;?=+()@#"°{}_$%:¤|]*$/u';
 
-    const INVERSE_PATTERN_MESSAGE = '/[<>{}]/i';
+    const CATALOG_NAME = '/^[^<>;=#{}]*$/u';
+
+    const GENERIC_NAME = '/^[^<>={}]*$/u';
+
+    const CITY_NAME = '/^[^!<>;?=+@#"°{}_$%]*$/u';
+
+    const FILE_NAME = '/^[a-zA-Z0-9_.-]+$/';
+
+    const MODULE_NAME = '/^[a-zA-Z0-9_-]+$/';
+
+    const ADDRESS = '/^[^!<>?=+@{}_$%]*$/u';
+
+    const POST_CODE = '/^[a-zA-Z 0-9-]+$/';
+
+    const PHONE_NUMBER = '/^[+0-9. ()\/-]*$/';
+
+    const MESSAGE = '/^[^\[<>{}\]]+$/i';
+
+    const LANG_CODE = '/^[a-zA-Z]{2}(-[a-zA-Z]{2})?$/';
 }

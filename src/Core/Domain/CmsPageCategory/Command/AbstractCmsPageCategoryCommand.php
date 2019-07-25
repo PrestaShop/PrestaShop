@@ -34,9 +34,6 @@ use PrestaShop\PrestaShop\Core\Domain\Validation\RegexPattern;
  */
 abstract class AbstractCmsPageCategoryCommand
 {
-    const CATEGORY_NAME_REGEX_PATTERN = '/^[^<>;=#{}]*$/u';
-    const GENERIC_NAME_REGEX_PATTERN = '/^[^<>={}]*$/u';
-
     /**
      * Checks if given names matches pattern.
      *
@@ -47,12 +44,12 @@ abstract class AbstractCmsPageCategoryCommand
     protected function assertCategoryName(array $names)
     {
         foreach ($names as $name) {
-            if (!preg_match(self::CATEGORY_NAME_REGEX_PATTERN, $name)) {
+            if (!preg_match(RegexPattern::CATALOG_NAME, $name)) {
                 throw new CmsPageCategoryConstraintException(
                     sprintf(
                       'Given category name "%s" does not match pattern "%s"',
                       $name,
-                      self::CATEGORY_NAME_REGEX_PATTERN
+                      RegexPattern::CATALOG_NAME
                     ),
                     CmsPageCategoryConstraintException::INVALID_CATEGORY_NAME
                 );
@@ -74,7 +71,7 @@ abstract class AbstractCmsPageCategoryCommand
                 sprintf(
                     'Given meta title "%s" does not match pattern "%s"',
                     $assertionResult,
-                    RegexPattern::PATTERN_GENERIC_NAME
+                    RegexPattern::GENERIC_NAME
                 ),
                 CmsPageCategoryConstraintException::INVALID_META_TITLE
             );
@@ -95,7 +92,7 @@ abstract class AbstractCmsPageCategoryCommand
                 sprintf(
                     'Given meta description "%s" does not match pattern "%s"',
                     $assertionResult,
-                    RegexPattern::PATTERN_GENERIC_NAME
+                    RegexPattern::GENERIC_NAME
                 ),
                 CmsPageCategoryConstraintException::INVALID_META_DESCRIPTION
             );
@@ -116,7 +113,7 @@ abstract class AbstractCmsPageCategoryCommand
                 sprintf(
                     'Given meta keyword "%s" does not match pattern "%s"',
                     $assertionResult,
-                    RegexPattern::PATTERN_GENERIC_NAME
+                    RegexPattern::GENERIC_NAME
                 ),
                 CmsPageCategoryConstraintException::INVALID_META_KEYWORDS
             );
@@ -131,7 +128,7 @@ abstract class AbstractCmsPageCategoryCommand
     private function assertIsGenericName(array $localisedNames)
     {
         foreach ($localisedNames as $localisedName) {
-            if (!preg_match(self::GENERIC_NAME_REGEX_PATTERN, $localisedName)) {
+            if (!preg_match(RegexPattern::GENERIC_NAME, $localisedName)) {
                 return $localisedName;
             }
         }

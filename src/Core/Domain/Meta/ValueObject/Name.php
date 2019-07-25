@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Meta\ValueObject;
 
 use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Validation\RegexPattern;
 
 /**
  * Class Name
@@ -65,7 +66,7 @@ class Name
      */
     private function assertIsValidPageName($pageName)
     {
-        if (!is_string($pageName) || !$pageName || !preg_match('/^[a-zA-Z0-9_.-]+$/', $pageName)) {
+        if (!is_string($pageName) || !$pageName || !preg_match(RegexPattern::FILE_NAME, $pageName)) {
             throw new MetaConstraintException(
                 sprintf('Invalid Meta page name %s', var_export($pageName, true)),
                 MetaConstraintException::INVALID_PAGE_NAME

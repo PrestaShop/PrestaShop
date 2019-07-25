@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject;
 
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Validation\RegexPattern;
 
 /**
  * Carries employee's first name
@@ -69,7 +70,7 @@ class FirstName
      */
     private function assertFirstNameIsValid($firstName)
     {
-        $matchesFirstNamePattern = preg_match('/^[^0-9!<>,;?=+()@#"°{}_$%:¤|]*$/u', stripslashes($firstName));
+        $matchesFirstNamePattern = preg_match(RegexPattern::NAME, stripslashes($firstName));
 
         if (!$matchesFirstNamePattern) {
             throw new EmployeeConstraintException(
