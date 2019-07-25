@@ -65,7 +65,7 @@ class NewsDataProviderTest extends TestCase
         $expectedJson = $generator->getData($expectedLocale);
         $this->assertInternalType('array', $expectedJson);
         $this->assertArrayHasKey('has_errors', $expectedJson);
-        $this->assertTrue($expectedJson['has_errors']);
+        $this->assertFalse($expectedJson['has_errors']);
         $this->assertArrayHasKey('rss', $expectedJson);
         $this->assertInternalType('array', $expectedJson['rss']);
         $this->assertEmpty($expectedJson['rss']);

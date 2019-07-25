@@ -119,6 +119,7 @@ class NewsDataProvider
 
         if (empty($blogXMLResponse)) {
             $data['has_errors'] = false;
+
             return $data;
         }
 
