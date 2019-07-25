@@ -50,6 +50,4 @@ final class RegexPattern
     const PHONE_NUMBER = '/^[+0-9. ()\/-]*$/';
 
     const MESSAGE = '/^[^\[<>{}\]]+$/i';
-
-    const LANG_CODE = '/^[a-zA-Z]{2}(-[a-zA-Z]{2})?$/';
 }

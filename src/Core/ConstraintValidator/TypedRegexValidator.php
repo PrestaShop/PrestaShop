@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Core\ConstraintValidator;
 
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\IsoCode;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\TagIETF;
 use PrestaShop\PrestaShop\Core\Domain\Validation\RegexPattern;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -87,7 +88,7 @@ class TypedRegexValidator extends ConstraintValidator
             'phone_number' => RegexPattern::PHONE_NUMBER,
             'message' => RegexPattern::MESSAGE,
             'language_iso_code' => IsoCode::PATTERN,
-            'language_code' => RegexPattern::LANG_CODE,
+            'language_code' => TagIETF::PATTERN,
         ];
 
         if (isset($typePatterns[$type])) {
