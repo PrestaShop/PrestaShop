@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Attachment\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\DeleteAttachmentException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\ValueObject\AttachmentId;
 use PrestaShopException;
 use Attachment;
@@ -39,17 +40,23 @@ abstract class AbstractAttachmentCommandHandler
 {
     /**
      * @param AttachmentId $attachmentId
-     * @param Attachment $attachment
+     * @return Attachment
      * @throws AttachmentNotFoundException
+     * @throws PrestaShopException
+     * @throws \PrestaShopDatabaseException
      */
-    protected function assertAttachmentWasFound(AttachmentId $attachmentId, Attachment $attachment)
+    protected function getAttachment(AttachmentId $attachmentId)
     {
+        $attachmentIdValue = $attachmentId->getValue();
+        $attachment = new Attachment($attachmentIdValue);
+
         if ($attachment->id !== $attachmentId->getValue()) {
             throw new AttachmentNotFoundException(
-                $attachmentId,
                 sprintf('Attachment with id "%s" was not found.', $attachmentId->getValue())
             );
         }
+
+        return $attachment;
     }
 
     /**
@@ -66,9 +73,8 @@ abstract class AbstractAttachmentCommandHandler
         try {
             return $attachment->delete();
         } catch (PrestaShopException $e) {
-            throw new AttachmentException(
-                'An error occurred when deleting Attachment object with id "%s".',
-                $attachment->id
+            throw new DeleteAttachmentException(
+                sprintf('An error occurred when deleting Attachment object with id "%s".', $attachment->id)
             );
         }
     }
