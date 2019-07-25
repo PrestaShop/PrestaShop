@@ -30,6 +30,8 @@ use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\BulkDeleteAttachmentsCo
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\DeleteAttachmentCommand;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\DeleteAttachmentException;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\AttachmentPath;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\DownloadableAttachment;
 use PrestaShop\PrestaShop\Core\Search\Filters\AttachmentFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -111,13 +113,21 @@ class AttachmentController extends FrameworkBundleAdminController
      * )
      *
      * @param int $attachmentId
-     * @param Request $request
      *
      * @return Response
      */
-    public function viewAction($attachmentId, Request $request)
+    public function viewAction($attachmentId)
     {
-        return new Response($attachmentId);
+        try {
+            /** @var DownloadableAttachment $downloadableAttachment */
+            $downloadableAttachment = $this->getCommandBus()->handle(new AttachmentPath((int) $attachmentId));
+
+            return $this->file($downloadableAttachment->getPath(), $downloadableAttachment->getName());
+        } catch (AttachmentException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        return $this->redirectToRoute('admin_attachments_index');
     }
 
     /**

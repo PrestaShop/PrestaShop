@@ -11,3 +11,8 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Attachment\CommandHandler\BulkDeleteAttachmentsHandler'
     tags:
       - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Attachment\Command\BulkDeleteAttachmentsCommand' }
+
+  prestashop.adapter.contact.query_handler.get_attachment_path:
+    class: 'PrestaShop\PrestaShop\Adapter\Attachment\QueryHandler\AttachmentPathProvider'
+    tags:
+      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Attachment\Query\AttachmentPath' }

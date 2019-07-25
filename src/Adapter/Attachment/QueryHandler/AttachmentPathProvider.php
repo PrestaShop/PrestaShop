@@ -24,29 +24,28 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Attachment\CommandHandler;
+namespace PrestaShop\PrestaShop\Adapter\Attachment\QueryHandler;
 
 use PrestaShop\PrestaShop\Adapter\Attachment\AbstractAttachmentHandler;
-use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\DeleteAttachmentCommand;
-use PrestaShop\PrestaShop\Core\Domain\Attachment\CommandHandler\DeleteAttachmentHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\DeleteAttachmentException;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\AttachmentPath;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryHandler\AttachmentPathProviderInterface;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\DownloadableAttachment;
 
 /**
- * Class DeleteAttachmentHandler
+ * Class AttachmentPathProvider provides path and original file name of attachment
  */
-final class DeleteAttachmentHandler extends AbstractAttachmentHandler implements DeleteAttachmentHandlerInterface
+class AttachmentPathProvider extends AbstractAttachmentHandler implements AttachmentPathProviderInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function handle(DeleteAttachmentCommand $command)
+    public function handle(AttachmentPath $query)
     {
-        $attachment = $this->getAttachment($command->getAttachmentId());
+        $attachment = $this->getAttachment($query->getAttachmentId());
 
-        if (!$this->deleteAttachment($attachment)) {
-            throw new DeleteAttachmentException(sprintf(
-                'Cannot delete Attachment object with id "%s".', $attachment->id)
-            );
-        }
+        return new DownloadableAttachment(
+            _PS_DOWNLOAD_DIR_ . $attachment->file,
+            $attachment->file_name
+        );
     }
 }
