@@ -27,17 +27,17 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Attachment\QueryHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\AttachmentPath;
-use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\DownloadableAttachment;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\Attachment;
 
 /**
  * Defines contract for AttachmentPathProvider
  */
-interface AttachmentPathProviderInterface
+interface GetAttachmentPathHandlerInterface
 {
     /**
      * @param AttachmentPath $query
      *
-     * @return DownloadableAttachment
+     * @return Attachment
      */
-    public function handle(AttachmentPath $query);
+    public function handle(AttachmentPath $query): Attachment;
 }

@@ -28,13 +28,13 @@ namespace PrestaShop\PrestaShop\Adapter\Attachment\QueryHandler;
 
 use PrestaShop\PrestaShop\Adapter\Attachment\AbstractAttachmentHandler;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\AttachmentPath;
-use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryHandler\AttachmentPathProviderInterface;
-use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\DownloadableAttachment;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryHandler\GetAttachmentPathHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\Attachment;
 
 /**
  * Class AttachmentPathProvider provides path and original file name of attachment
  */
-class AttachmentPathProvider extends AbstractAttachmentHandler implements AttachmentPathProviderInterface
+class GetAttachmentPathHandler extends AbstractAttachmentHandler implements GetAttachmentPathHandlerInterface
 {
     /**
      * {@inheritdoc}
@@ -43,7 +43,7 @@ class AttachmentPathProvider extends AbstractAttachmentHandler implements Attach
     {
         $attachment = $this->getAttachment($query->getAttachmentId());
 
-        return new DownloadableAttachment(
+        return new Attachment(
             _PS_DOWNLOAD_DIR_ . $attachment->file,
             $attachment->file_name
         );
