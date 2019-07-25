@@ -63,7 +63,7 @@ class ResetPasswordCommand
      */
     public function __construct($employeeId, $email, $resetToken, $newPlainPassword)
     {
-        if (empty($this->resetToken)) {
+        if (empty($resetToken)) {
             throw new ResetPasswordInformationMissingException('Reset token cannot be empty.');
         }
 
