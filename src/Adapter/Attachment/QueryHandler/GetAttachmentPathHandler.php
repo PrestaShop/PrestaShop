@@ -24,47 +24,28 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult;
+namespace PrestaShop\PrestaShop\Adapter\Attachment\QueryHandler;
+
+use PrestaShop\PrestaShop\Adapter\Attachment\AbstractAttachmentHandler;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\AttachmentPath;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryHandler\GetAttachmentPathHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\Attachment;
 
 /**
- * Class DownloadableAttachment stores attachment path and original name information.
+ * Class AttachmentPathProvider provides path and original file name of attachment
  */
-class DownloadableAttachment
+class GetAttachmentPathHandler extends AbstractAttachmentHandler implements GetAttachmentPathHandlerInterface
 {
     /**
-     * @var string
+     * {@inheritdoc}
      */
-    private $path;
-
-    /**
-     * @var string
-     */
-    private $name;
-
-    /**
-     * @param string $path
-     * @param string $name
-     *
-     */
-    public function __construct(string $path, string $name)
+    public function handle(AttachmentPath $query)
     {
-        $this->path = $path;
-        $this->name = $name;
-    }
+        $attachment = $this->getAttachment($query->getAttachmentId());
 
-    /**
-     * @return string
-     */
-    public function getPath(): string
-    {
-        return $this->path;
-    }
-
-    /**
-     * @return string
-     */
-    public function getName(): string
-    {
-        return $this->name;
+        return new Attachment(
+            _PS_DOWNLOAD_DIR_ . $attachment->file,
+            $attachment->file_name
+        );
     }
 }
