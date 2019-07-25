@@ -98,6 +98,7 @@ final class GetManufacturerForViewingHandler implements GetManufacturerForViewin
                         'reference' => $combination['reference'],
                         'ean13' => $combination['ean13'],
                         'upc' => $combination['upc'],
+                        'mpn' => $combination['mpn'],
                         'quantity' => $combination['quantity'],
                         'attributes' => '',
                     ];
@@ -122,6 +123,7 @@ final class GetManufacturerForViewingHandler implements GetManufacturerForViewin
                 'reference' => $product->reference,
                 'ean13' => $product->ean13,
                 'upc' => $product->upc,
+                'mpn' => $product->mpn,
                 'quantity' => $product->quantity,
                 'combinations' => $combinations,
             ];
