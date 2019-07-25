@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Crypto\Hashing;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\ResetPasswordCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\CommandHandler\ResetPasswordHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\PasswordResetTooFrequentException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\ResetPasswordTokenExpiredException;
@@ -101,6 +102,13 @@ final class ResetPasswordHandler implements ResetPasswordHandlerInterface
 
         if (!$employeeFound) {
             throw new EmployeeNotFoundException(null, 'Employee could not be found by given email.');
+        }
+
+        if (8 > strlen($command->getNewPlainPassword())) {
+            throw new EmployeeConstraintException(
+                'Password must be not shorter than 8 symbols',
+                EmployeeConstraintException::INVALID_PASSWORD
+            );
         }
 
         $timeExpression = sprintf(

@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Controller\Admin;
 use DateTime;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\ResetPasswordCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\SendResetPasswordEmailCommand;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\FailedToSendEmailException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\InvalidEmployeeIdException;
@@ -107,18 +108,21 @@ class AuthorizationController extends FrameworkBundleAdminController
         $showForgotPasswordForm = true;
 
         if ($forgotPasswordForm->isSubmitted() && $forgotPasswordForm->isValid()) {
+            $successMessage = $this->trans(
+                'Check your mailbox and click on the link to reset your password.',
+                'Admin.Login.Notification'
+            );
+
             try {
                 $this->getCommandBus()->handle(
                     new SendResetPasswordEmailCommand($forgotPasswordForm->getData()['email'])
                 );
 
-                $this->addFlash(
-                    'success',
-                    $this->trans(
-                        'Check your mailbox and click on the link to reset your password.',
-                        'Admin.Login.Notification'
-                    )
-                );
+                $this->addFlash('success', $successMessage);
+                $showForgotPasswordForm = false;
+            } catch (EmployeeNotFoundException $e) {
+                // Not showing an error message when employee is not found
+                $this->addFlash('success', $successMessage);
                 $showForgotPasswordForm = false;
             } catch (DomainException $e) {
                 $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
@@ -175,6 +179,11 @@ class AuthorizationController extends FrameworkBundleAdminController
                 ));
 
                 return $this->redirectToRoute('_admin_login');
+            } catch (EmployeeNotFoundException $e) {
+                $this->addFlash('error', $this->trans(
+                    'An error occurred while attempting to reset your password.',
+                    'Admin.Login.Notification'
+                ));
             } catch (DomainException $e) {
                 $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
             }
@@ -314,6 +323,12 @@ class AuthorizationController extends FrameworkBundleAdminController
                 'An error occurred while attempting to change your password.',
                 'Admin.Login.Notification'
             ),
+            EmployeeConstraintException::class => [
+                EmployeeConstraintException::INVALID_PASSWORD => $this->trans(
+                    'Password should be at least 8 characters long',
+                    'Admin.Login.Notification'
+                ),
+            ],
         ];
     }
 }
