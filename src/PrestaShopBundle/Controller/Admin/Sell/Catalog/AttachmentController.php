@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\BulkDeleteAttachmentsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\DeleteAttachmentCommand;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\DeleteAttachmentException;
@@ -87,35 +88,35 @@ class AttachmentController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_attachments_index');
     }
 
-//    /**
-//     * Delete attachments in bulk action.
-//     *
-//     * @AdminSecurity(
-//     *     "is_granted('delete', request.get('_legacy_controller'))",
-//     *     redirectRoute="admin_attachments_index",
-//     *     message="You do not have permission to delete this."
-//     * )
-//     *
-//     * @param Request $request
-//     *
-//     * @return RedirectResponse
-//     */
-//    public function deleteBulkAction(Request $request)
-//    {
-//        $manufacturerIds = $this->getBulkAttachmentsFromRequest($request);
-//
-//        try {
-//            $this->getCommandBus()->handle(new BulkDeleteAttachmentCommand($manufacturerIds));
-//            $this->addFlash(
-//                'success',
-//                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
-//            );
-//        } catch (AttachmentException $e) {
-//            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
-//        }
-//
-//        return $this->redirectToRoute('admin_attachments_index');
-//    }
+    /**
+     * Delete attachments in bulk action.
+     *
+     * @AdminSecurity(
+     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_attachments_index",
+     *     message="You do not have permission to delete this."
+     * )
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function deleteBulkAction(Request $request)
+    {
+        $attachmentIds = $this->getBulkAttachmentsFromRequest($request);
+
+        try {
+            $this->getCommandBus()->handle(new BulkDeleteAttachmentsCommand($attachmentIds));
+            $this->addFlash(
+                'success',
+                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+            );
+        } catch (AttachmentException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        return $this->redirectToRoute('admin_attachments_index');
+    }
 
     /**
      * Provides error messages for exceptions
@@ -139,7 +140,7 @@ class AttachmentController extends FrameworkBundleAdminController
      */
     private function getBulkAttachmentsFromRequest(Request $request)
     {
-        $attachmentIds = $request->request->get('attachment_bulk');
+        $attachmentIds = $request->request->get('attachment_files_bulk');
 
         if (!is_array($attachmentIds)) {
             return [];
@@ -149,6 +150,6 @@ class AttachmentController extends FrameworkBundleAdminController
             $attachmentIds[$i] = (int) $attachmentId;
         }
 
-        return $attachmentId;
+        return $attachmentIds;
     }
 }

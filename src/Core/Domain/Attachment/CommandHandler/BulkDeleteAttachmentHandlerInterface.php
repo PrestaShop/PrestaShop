@@ -24,32 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Attachment\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Attachment\CommandHandler;
 
-use Attachment;
-use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\DeleteAttachmentCommand;
-use PrestaShop\PrestaShop\Core\Domain\Attachment\CommandHandler\DeleteAttachmentHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\DeleteAttachmentException;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\BulkDeleteAttachmentsCommand;
 
 /**
- * Class DeleteAttachmentHandler
+ * Defines contract for BulkDeleteAttachmentHandler
  */
-class DeleteAttachmentHandler extends AbstractAttachmentCommandHandler implements DeleteAttachmentHandlerInterface
+interface BulkDeleteAttachmentHandlerInterface
 {
     /**
-     * {@inheritdoc}
+     * @param BulkDeleteAttachmentsCommand $command
      */
-    public function handle(DeleteAttachmentCommand $command)
-    {
-        $attachmentIdValue = $command->getAttachmentId()->getValue();
-        $attachment = new Attachment($attachmentIdValue);
-
-        $this->assertAttacmentWasFound($command->getAttachmentId(), $attachment);
-
-        if (!$this->deleteAttachment($attachment)) {
-            throw new DeleteAttachmentException(sprintf(
-                'Cannot delete Attachment object with id "%s".', $attachment->id)
-            );
-        }
-    }
+    public function handle(BulkDeleteAttachmentsCommand $command);
 }

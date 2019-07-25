@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
+use PrestaShop\PrestaShop\Core\Util\File\FileSizeConverter;
 use PrestaShopBundle\Translation\TranslatorAwareTrait;
 
 /**
@@ -61,21 +62,29 @@ final class AttachmentGridDataFactoryDecorator implements GridDataFactoryInterfa
     private $dbPrefix;
 
     /**
+     * @var FileSizeConverter
+     */
+    private $fileSizeConverter;
+
+    /**
      * @param GridDataFactoryInterface $attachmentDoctrineGridDataFactory
      * @param int $employeeIdLang
      * @param Connection $connection
      * @param string $dbPrefix
+     * @param FileSizeConverter $fileSizeConverter
      */
     public function __construct(
         GridDataFactoryInterface $attachmentDoctrineGridDataFactory,
-        $employeeIdLang,
+        int $employeeIdLang,
         Connection $connection,
-        $dbPrefix
+        string $dbPrefix,
+        FileSizeConverter $fileSizeConverter
     ) {
         $this->attachmentDoctrineGridDataFactory = $attachmentDoctrineGridDataFactory;
         $this->employeeIdLang = $employeeIdLang;
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
+        $this->fileSizeConverter = $fileSizeConverter;
     }
 
     /**
@@ -105,16 +114,44 @@ final class AttachmentGridDataFactoryDecorator implements GridDataFactoryInterfa
 
         foreach ($attachments as $attachment) {
             if ((int) $attachment['products'] > 0) {
+                $productNamesArray = $this->getProductNames($attachment['id_attachment']);
+                $productNames = isset($productNamesArray['product_names']) ? $productNamesArray['product_names'] : '';
                 $attachment['dynamic_message'] = $this->trans(
-                    "This file is associated with the following products, do you really want to  delete it?\r\n%products%",
-                    ['%products%' => 'testas'],
+                    "This file is associated with the following products, do you really want to  delete it?\r\n\r\n%products%",
+                    ['%products%' => $productNames],
                     'Admin.Notifications.Warning'
                 );
             }
+
+            $attachment['file_size'] = $this->fileSizeConverter->convert((int) $attachment['file_size']);
 
             $modifiedAttachments[] = $attachment;
         }
 
         return new RecordCollection($modifiedAttachments);
+    }
+
+    /**
+     * @param string $attachmentId
+     * @return array
+     */
+    private function getProductNames(string $attachmentId)
+    {
+        $qb = $this->connection->createQueryBuilder();
+
+        $qb->select("GROUP_CONCAT(DISTINCT pl.`name` SEPARATOR ', ') as product_names")
+            ->from($this->dbPrefix . 'product_attachment', 'pa')
+            ->leftJoin(
+                'pa',
+                $this->dbPrefix . 'product_lang',
+                'pl',
+                'pa.`id_product` = pl.`id_product` AND pl.`id_lang` = :langId'
+            )
+            ->where('pa.`id_attachment` = :attachmentId')
+            ->setParameter('attachmentId', $attachmentId)
+            ->setParameter('langId', $this->employeeIdLang)
+            ->setMaxResults(1);
+
+        return $qb->execute()->fetch();
     }
 }

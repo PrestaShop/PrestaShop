@@ -147,7 +147,7 @@ final class AttachmentGridDefinitionFactory extends AbstractGridDefinitionFactor
             )
             ->add(
                 (new DataColumn('products'))
-                    ->setName($this->trans('Size', [], 'Admin.Global'))
+                    ->setName($this->trans('Products', [], 'Admin.Global'))
                     ->setOptions([
                         'field' => 'products',
                     ])
