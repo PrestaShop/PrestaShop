@@ -12,7 +12,8 @@ Feature: Add cart rule
     Given currency "currency1" is the default one
 
   Scenario: Create a cart rule with amount discount
-    When I want to create a cart rule named "Promotion"
+    When I want to create a new cart rule
+    And I specify its name in default language as "Promotion"
     And I specify its "description" as "Promotion for holidays"
     And I specify that its active from "2019-01-01 11:05:00"
     And I specify that its active until "2019-12-01 00:00:00"
@@ -47,7 +48,8 @@ Feature: Add cart rule
     And it should give a reduction of "15" in currency "USD" which is tax included and applies to order without shipping
 
   Scenario: Create a cart rule with percentage discount
-    When I want to create a cart rule named "50% off promo"
+    When I want to create a new cart rule
+    And I specify its name in default language as "50% off promo"
     And I specify its "description" as "Discount for whole catalog for one hour"
     And I specify that its active from "2019-01-01 11:00:00"
     And I specify that its active until "2019-01-01 12:00:00"
