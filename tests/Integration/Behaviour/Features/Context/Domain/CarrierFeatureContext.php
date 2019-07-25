@@ -29,10 +29,14 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 use Behat\Gherkin\Node\TableNode;
 use Carrier;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Command\AddCarrierCommand;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\Command\AddModuleCarrierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\OutOfRangeBehavior;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\ShippingMethod;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
+use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class CarrierFeatureContext extends AbstractDomainFeatureContext
 {
@@ -44,7 +48,8 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
     public function __construct()
     {
         $this->defaultLangId = CommonFeatureContext::getContainer()
-            ->get('prestashop.adapter.legacy.configuration')->get('PS_LANG_DEFAULT');
+            ->get('prestashop.adapter.legacy.configuration')
+            ->get('PS_LANG_DEFAULT');
     }
 
     /**
@@ -59,10 +64,10 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
             [$this->defaultLangId => $data['shipping_delay']],
             (int) $data['speed_grade'],
             $data['tracking_url'],
-            (bool) $data['shipping_cost_included'],
-            (int) $data['shipping_method'],
+            PrimitiveUtils::castStringBooleanIntoBoolean($data['shipping_cost_included']),
+            $this->getShippingMethodValueMap()[$data['shipping_method']],
             (int) $data['tax_rules_group_id'],
-            (int) $data['out_of_range_behavior'],
+            $this->getOutOfRangeBehaviorValueMap()[$data['out_of_range_behavior']],
             $this->formatShippingRanges($data['ranges_from'], $data['ranges_to'], $data['zone_ids'], $data['prices']),
             (int) $data['max_width'],
             (int) $data['max_height'],
@@ -103,6 +108,161 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
         $carrierId = $this->getCommandBus()->handle($command);
 
         SharedStorage::getStorage()->set($reference, new Carrier($carrierId->getValue()));
+    }
+
+    /**
+     * @When I add new module carrier :reference with free shipping and following properties:
+     */
+    public function addFreeShippingModuleCarrier($reference, TableNode $node)
+    {
+        $data = $node->getRowsHash();
+
+        $command = AddModuleCarrierCommand::withFreeShipping(
+            [$this->defaultLangId => $data['carrier_name']],
+            [$this->defaultLangId => $data['shipping_delay']],
+            (int) $data['speed_grade'],
+            $data['tracking_url'],
+            (int) $data['tax_rules_group_id'],
+            (int) $data['max_width'],
+            (int) $data['max_height'],
+            (int) $data['max_depth'],
+            (float) $data['max_weight'],
+            explode(',', $data['group_ids']),
+            explode(',', $data['shop_ids']),
+            $data['module_name']
+        );
+
+        /** @var CarrierId $carrierId */
+        $carrierId = $this->getCommandBus()->handle($command);
+
+        SharedStorage::getStorage()->set($reference, new Carrier($carrierId->getValue()));
+    }
+
+    /**
+     * @When I add new module carrier :reference with PrestaShop shipping price and following properties:
+     */
+    public function addModuleCarrierWithCoreShippingPrice($reference, TableNode $node)
+    {
+        $data = $node->getRowsHash();
+
+        $command = AddModuleCarrierCommand::withCoreShippingPrice(
+            [$this->defaultLangId => $data['carrier_name']],
+            [$this->defaultLangId => $data['shipping_delay']],
+            (int) $data['speed_grade'],
+            $data['tracking_url'],
+            PrimitiveUtils::castStringBooleanIntoBoolean($data['shipping_cost_included']),
+            $this->getShippingMethodValueMap()[$data['shipping_method']],
+            (int) $data['tax_rules_group_id'],
+            $this->getOutOfRangeBehaviorValueMap()[$data['out_of_range_behavior']],
+            $this->formatShippingRanges($data['ranges_from'], $data['ranges_to'], $data['zone_ids'], $data['prices']),
+            (int) $data['max_width'],
+            (int) $data['max_height'],
+            (int) $data['max_depth'],
+            (float) $data['max_weight'],
+            explode(',', $data['group_ids']),
+            explode(',', $data['shop_ids']),
+            $data['module_name']
+        );
+
+        /** @var CarrierId $carrierId */
+        $carrierId = $this->getCommandBus()->handle($command);
+
+        SharedStorage::getStorage()->set($reference, new Carrier($carrierId->getValue()));
+    }
+
+    /**
+     * @When I add new module carrier :reference with module shipping price and following properties:
+     */
+    public function addModuleCarrierWithModuleShippingPrice($reference, TableNode $node)
+    {
+        $data = $node->getRowsHash();
+
+        $command = AddModuleCarrierCommand::withModuleShippingPrice(
+            [$this->defaultLangId => $data['carrier_name']],
+            [$this->defaultLangId => $data['shipping_delay']],
+            (int) $data['speed_grade'],
+            $data['tracking_url'],
+            PrimitiveUtils::castStringBooleanIntoBoolean($data['shipping_cost_included']),
+            $this->getShippingMethodValueMap()[$data['shipping_method']],
+            (int) $data['tax_rules_group_id'],
+            $this->getOutOfRangeBehaviorValueMap()[$data['out_of_range_behavior']],
+            $this->formatShippingRanges($data['ranges_from'], $data['ranges_to'], $data['zone_ids'], $data['prices']),
+            (int) $data['max_width'],
+            (int) $data['max_height'],
+            (int) $data['max_depth'],
+            (float) $data['max_weight'],
+            explode(',', $data['group_ids']),
+            explode(',', $data['shop_ids']),
+            $data['module_name'],
+            PrimitiveUtils::castStringBooleanIntoBoolean($data['module_needs_core_shipping_price'])
+        );
+
+        /** @var CarrierId $carrierId */
+        $carrierId = $this->getCommandBus()->handle($command);
+
+        SharedStorage::getStorage()->set($reference, new Carrier($carrierId->getValue()));
+    }
+
+    /**
+     * @Then /^Carrier "(.+)" shipping price should be calculated by (module|PrestaShop)$/
+     */
+    public function assertShippingPriceIsCalculatedBy($reference, $calculationMethod)
+    {
+        /** @var Carrier $carrier */
+        $carrier = SharedStorage::getStorage()->get($reference);
+
+        $isModule = 'module' === $calculationMethod;
+        $actualResult = (bool) $carrier->shipping_external;
+
+        if ($isModule !== $actualResult) {
+            throw new RuntimeException(sprintf(
+                'Carrier "%s" shipping price is calculated by %s, but it was expected it to be calculated by %s',
+                $reference,
+                $actualResult ? 'module' : 'PrestaShop',
+                $calculationMethod
+            ));
+        }
+    }
+
+    /**
+     * @Then /^Carrier "(.+)" module (should|should not) need the shipping price calculated by PrestaShop$/
+     */
+    public function assertModuleNeedsCoreShippingPrice($reference, $condition)
+    {
+        /** @var Carrier $carrier */
+        $carrier = SharedStorage::getStorage()->get($reference);
+        $needsPrice = 'should' === $condition;
+        $actualResult = (bool) $carrier->need_range;
+
+        if ($needsPrice !== $actualResult) {
+            throw new RuntimeException(sprintf(
+                'Carrier "%s" module %s the shipping price calculated by PrestaShop, but was expected it to %s',
+                $reference,
+                $actualResult ? 'needs' : 'does not need',
+                $condition === 'should' ? 'need' : 'not need'
+            ));
+        }
+    }
+
+    /**
+     * @Then /^Carrier "(.+)" (should|should not) belong to module$/
+     */
+    public function assertIsModule($reference, $condition)
+    {
+        $isModule = 'should' === $condition;
+
+        /** @var Carrier $carrier */
+        $carrier = SharedStorage::getStorage()->get($reference);
+        $actualResult = (bool) $carrier->is_module;
+
+        if ($actualResult !== $isModule) {
+            throw new RuntimeException(sprintf(
+                'Carrier "%s" %s to module. It was expected that it %s belong to module',
+                $reference,
+                $actualResult ? 'belongs' : 'does not belong',
+                $condition
+            ));
+        }
     }
 
     /**
@@ -176,6 +336,48 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then /^Carrier "(.+)" shipping price calculation should be based on package (price|weight)$/
+     */
+    public function assertShippingMethod($reference, $expectedMethod)
+    {
+        $methodValueMap = $this->getShippingMethodValueMap();
+
+        /** @var Carrier $carrier */
+        $carrier = SharedStorage::getStorage()->get($reference);
+
+        $actualMethod = (int) $carrier->shipping_method;
+
+        if ($methodValueMap[$expectedMethod] !== $actualMethod) {
+            throw new RuntimeException(sprintf(
+                'Carrier "%s" shipping price calculation is based on package %s, but expected to be based on %s',
+                $reference,
+                $actualMethod === $methodValueMap['price'] ? 'price' : 'weight',
+                $expectedMethod
+            ));
+        }
+    }
+
+    /**
+     * @Then /^when package is out of carrier "(.+)" range, the (carrier should be disabled|highest range price should be applied)$/
+     */
+    public function assertOutOfRangeBehavior($reference, $expectedBehavior)
+    {
+        $behaviorValueMap = $this->getOutOfRangeBehaviorValueMap();
+
+        /** @var Carrier $carrier */
+        $carrier = SharedStorage::getStorage()->get($reference);
+        $actualBehavior = (int) $carrier->range_behavior;
+
+        if ($behaviorValueMap[$expectedBehavior] !== $actualBehavior) {
+            throw new RuntimeException(sprintf(
+                'Unexpected out of range behavior. When package is out of carrier "%s" range the %s',
+                $reference,
+                $actualBehavior === $behaviorValueMap[$expectedBehavior]
+            ));
+        }
+    }
+
+    /**
      * @Then /^the shipping of "(.*)" should be (free of charge|priced)?$/
      */
     public function assertShippingIsFree($reference, $condition)
@@ -183,15 +385,14 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
         /** @var Carrier $carrier */
         $carrier = SharedStorage::getStorage()->get($reference);
 
-        $isFree = true;
-        if ('priced' === $condition) {
-            $isFree = false;
-        }
-        if ($isFree !== (bool) $carrier->is_free) {
+        $isFree = 'free of charge' === $condition;
+        $actualResult = (bool) $carrier->is_free;
+
+        if ($isFree !== $actualResult) {
             throw new RuntimeException(sprintf(
                 'Carrier "%s" shipping is "%s", but it expected to be "%s".',
                 $reference,
-                $carrier->is_free ? 'free of charge' : 'priced',
+                $actualResult ? 'free of charge' : 'priced',
                 $condition
             ));
         }
@@ -209,12 +410,11 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
         $objectProperyByFieldNameMap = [
             'speed grade' => 'grade',
             'tracking url' => 'url',
-            'shipping method' => 'shipping_method',
-            'out of range behavior' => 'range_behavior',
             'max package width' => 'max_width',
             'max package height' => 'max_height',
             'max package depth' => 'max_depth',
             'max package weight' => 'max_weight',
+            'module name' => 'external_module_name',
         ];
 
         if (array_key_exists($fieldName, $objectProperyByFieldNameMap)) {
@@ -224,6 +424,14 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
         return $fieldName;
     }
 
+    /**
+     * @param string $rangesFrom
+     * @param string $rangesTo
+     * @param string $zoneIds
+     * @param string $prices
+     *
+     * @return array
+     */
     private function formatShippingRanges(string $rangesFrom, string $rangesTo, string $zoneIds, string $prices)
     {
         $rangesFrom = explode(',', $rangesFrom);
@@ -248,5 +456,27 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
         }
 
         return $ranges;
+    }
+
+    /**
+     * @return array
+     */
+    private function getShippingMethodValueMap()
+    {
+        return [
+            'price' => ShippingMethod::SHIPPING_METHOD_PRICE,
+            'weight' => ShippingMethod::SHIPPING_METHOD_WEIGHT,
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    private function getOutOfRangeBehaviorValueMap()
+    {
+        return [
+            'carrier should be disabled' => OutOfRangeBehavior::DISABLE_CARRIER,
+            'highest range price should be applied' => OutOfRangeBehavior::APPLY_HIGHEST_RANGE,
+        ];
     }
 }
