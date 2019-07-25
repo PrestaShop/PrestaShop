@@ -24,7 +24,7 @@
  *#}
 
 <!DOCTYPE html>
-<html lang="{{ languageIso }}">
+<html lang="{{ languageIso }}" class="login-page">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
@@ -44,7 +44,7 @@
     <link rel="stylesheet" href="{{ asset('themes/new-theme/public/theme.css') }}" />
   {% endblock %}
 </head>
-<body class="login-page">
+<body>
 {% block content %}
   <div class="d-flex flex-column align-items-center justify-content-center flip-card">
     <div class="title-row">
@@ -86,7 +86,7 @@
 
     {{ renderhook('displayAdminLogin') }}
 
-    <div class="row text-center mt-4">
+    <div class="row text-center footer-container">
       <img src="{{ imgDir }}puffin.png" alt="">
     </div>
 
