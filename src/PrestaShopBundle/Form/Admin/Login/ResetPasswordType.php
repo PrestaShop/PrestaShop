@@ -47,12 +47,6 @@ class ResetPasswordType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $lengthMessage = $this->trans(
-            'The password is not in a valid format.',
-            [],
-            'Admin.Login.Notification'
-        );
-
         $builder
             ->add('reset_password', RepeatedType::class, [
                 'type' => PasswordType::class,
@@ -64,10 +58,18 @@ class ResetPasswordType extends AbstractType
                 'first_options' => [
                     'constraints' => [
                         new Length([
-                            'min' => 5,
+                            'min' => 8,
                             'max' => 72,
-                            'minMessage' => $lengthMessage,
-                            'maxMessage' => $lengthMessage,
+                            'minMessage' => $this->trans(
+                                sprintf('Password should be at least %d characters long.', 8),
+                                [],
+                                'Admin.Login.Notification'
+                            ),
+                            'maxMessage' => $this->trans(
+                                sprintf('Password should not exceed %d characters.', 72),
+                                [],
+                                'Admin.Login.Notification'
+                            ),
                         ]),
                     ],
                 ],
