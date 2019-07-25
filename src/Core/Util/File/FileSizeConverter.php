@@ -24,32 +24,38 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Attachment\CommandHandler;
-
-use Attachment;
-use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\DeleteAttachmentCommand;
-use PrestaShop\PrestaShop\Core\Domain\Attachment\CommandHandler\DeleteAttachmentHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\DeleteAttachmentException;
+namespace PrestaShop\PrestaShop\Core\Util\File;
 
 /**
- * Class DeleteAttachmentHandler
+ * Class FileSizeConverter converts int value to formatted file size value
  */
-class DeleteAttachmentHandler extends AbstractAttachmentCommandHandler implements DeleteAttachmentHandlerInterface
+final class FileSizeConverter
 {
     /**
-     * {@inheritdoc}
+     * @param int $bytes
+     * @return string
      */
-    public function handle(DeleteAttachmentCommand $command)
+    public function convert(int $bytes)
     {
-        $attachmentIdValue = $command->getAttachmentId()->getValue();
-        $attachment = new Attachment($attachmentIdValue);
-
-        $this->assertAttacmentWasFound($command->getAttachmentId(), $attachment);
-
-        if (!$this->deleteAttachment($attachment)) {
-            throw new DeleteAttachmentException(sprintf(
-                'Cannot delete Attachment object with id "%s".', $attachment->id)
-            );
+        if ($bytes >= 1073741824) {
+            $size = number_format($bytes / 1073741824, 2) . 'GB';
         }
+        elseif ($bytes >= 1048576) {
+            $size = number_format($bytes / 1048576, 2) . 'M';
+        }
+        elseif ($bytes >= 1024) {
+            $size = number_format($bytes / 1024, 2) . 'k';
+        }
+        elseif ($bytes > 1) {
+            $size = $bytes . 'b';
+        }
+        elseif ($bytes == 1) {
+            $size = $bytes . 'b';
+        }
+        else {
+            $size = '0b';
+        }
+
+        return $size;
     }
 }

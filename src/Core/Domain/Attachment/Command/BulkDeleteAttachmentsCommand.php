@@ -24,32 +24,48 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Attachment\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Attachment\Command;
 
-use Attachment;
-use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\DeleteAttachmentCommand;
-use PrestaShop\PrestaShop\Core\Domain\Attachment\CommandHandler\DeleteAttachmentHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\DeleteAttachmentException;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\ValueObject\AttachmentId;
 
 /**
- * Class DeleteAttachmentHandler
+ * Class BulkDeleteAttachmentsCommand is responsible for deleting Attachment
  */
-class DeleteAttachmentHandler extends AbstractAttachmentCommandHandler implements DeleteAttachmentHandlerInterface
+class BulkDeleteAttachmentsCommand
 {
     /**
-     * {@inheritdoc}
+     * @var AttachmentId[]
      */
-    public function handle(DeleteAttachmentCommand $command)
+    private $attachmentIds;
+
+    /**
+     * @param int[] $attachmentIds
+     *
+     * @throws AttachmentConstraintException
+     */
+    public function __construct(array $attachmentIds)
     {
-        $attachmentIdValue = $command->getAttachmentId()->getValue();
-        $attachment = new Attachment($attachmentIdValue);
+        $this->setAttachmentIds($attachmentIds);
+    }
 
-        $this->assertAttacmentWasFound($command->getAttachmentId(), $attachment);
+    /**
+     * @return AttachmentId[]
+     */
+    public function getAttachmentIds()
+    {
+        return $this->attachmentIds;
+    }
 
-        if (!$this->deleteAttachment($attachment)) {
-            throw new DeleteAttachmentException(sprintf(
-                'Cannot delete Attachment object with id "%s".', $attachment->id)
-            );
+    /**
+     * @param array $attachmentIds
+     *
+     * @throws AttachmentConstraintException
+     */
+    private function setAttachmentIds(array $attachmentIds)
+    {
+        foreach ($attachmentIds as $attachmentId) {
+            $this->attachmentIds[] = new AttachmentId($attachmentId);
         }
     }
 }
