@@ -27,14 +27,17 @@
 namespace PrestaShop\PrestaShop\Core\Domain\CartRule\Command;
 
 use DateTime;
+use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRuleActionInterface;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\DiscountApplicationType;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\MoneyAmountCondition;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Money;
 
 /**
  * Adds new cart rule
@@ -54,7 +57,7 @@ class AddCartRuleCommand
     /**
      * @var MoneyAmountCondition
      */
-    private $minimumAmount;
+    private $minimumAmountCondition;
 
     /**
      * @var CustomerId|null
@@ -196,9 +199,8 @@ class AddCartRuleCommand
         $this->setPriority($priority);
         $this->setTotalQuantity($totalQuantity);
         $this->setQuantityPerUser($quantityPerUser);
-        $this->minimumAmount = new MoneyAmountCondition(
-            $minimumAmount,
-            $minimumAmountCurrencyId,
+        $this->minimumAmountCondition = new MoneyAmountCondition(
+            new Money(new Number((string) $minimumAmount), new CurrencyId($minimumAmountCurrencyId)),
             $isMinimumAmountTaxExcluded,
             $isMinimumAmountShippingExcluded
         );
@@ -271,9 +273,9 @@ class AddCartRuleCommand
     /**
      * @return MoneyAmountCondition
      */
-    public function getMinimumAmount(): MoneyAmountCondition
+    public function getMinimumAmountCondition(): MoneyAmountCondition
     {
-        return $this->minimumAmount;
+        return $this->minimumAmountCondition;
     }
 
     /**
@@ -414,96 +416,138 @@ class AddCartRuleCommand
 
     /**
      * @param string $description
+     *
+     * @return AddCartRuleCommand
      */
-    public function setDescription(string $description): void
+    public function setDescription(string $description): AddCartRuleCommand
     {
         $this->description = $description;
+
+        return $this;
     }
 
     /**
      * @param string $code
+     *
+     * @return AddCartRuleCommand
      */
-    public function setCode(string $code): void
+    public function setCode(string $code): AddCartRuleCommand
     {
         $this->code = $code;
+
+        return $this;
     }
 
     /**
      * @param int $customerId
+     *
+     * @return AddCartRuleCommand
      */
-    public function setCustomerId(int $customerId): void
+    public function setCustomerId(int $customerId): AddCartRuleCommand
     {
         $this->customerId = new CustomerId($customerId);
+
+        return $this;
     }
 
     /**
      * @param bool $hasCountryRestriction
+     *
+     * @return AddCartRuleCommand
      */
-    public function setHasCountryRestriction(bool $hasCountryRestriction): void
+    public function setHasCountryRestriction(bool $hasCountryRestriction): AddCartRuleCommand
     {
         $this->hasCountryRestriction = $hasCountryRestriction;
+
+        return $this;
     }
 
     /**
      * @param bool $hasCarrierRestriction
+     *
+     * @return AddCartRuleCommand
      */
-    public function setHasCarrierRestriction(bool $hasCarrierRestriction): void
+    public function setHasCarrierRestriction(bool $hasCarrierRestriction): AddCartRuleCommand
     {
         $this->hasCarrierRestriction = $hasCarrierRestriction;
+
+        return $this;
     }
 
     /**
      * @param bool $hasGroupRestriction
+     *
+     * @return AddCartRuleCommand
      */
-    public function setHasGroupRestriction(bool $hasGroupRestriction): void
+    public function setHasGroupRestriction(bool $hasGroupRestriction): AddCartRuleCommand
     {
         $this->hasGroupRestriction = $hasGroupRestriction;
+
+        return $this;
     }
 
     /**
      * @param bool $hasCartRuleRestriction
+     *
+     * @return AddCartRuleCommand
      */
-    public function setHasCartRuleRestriction(bool $hasCartRuleRestriction): void
+    public function setHasCartRuleRestriction(bool $hasCartRuleRestriction): AddCartRuleCommand
     {
         $this->hasCartRuleRestriction = $hasCartRuleRestriction;
+
+        return $this;
     }
 
     /**
      * @param bool $hasProductRestriction
+     *
+     * @return AddCartRuleCommand
      */
-    public function setHasProductRestriction(bool $hasProductRestriction): void
+    public function setHasProductRestriction(bool $hasProductRestriction): AddCartRuleCommand
     {
         $this->hasProductRestriction = $hasProductRestriction;
+
+        return $this;
     }
 
     /**
      * @param bool $hasShopRestriction
+     *
+     * @return AddCartRuleCommand
      */
-    public function setHasShopRestriction(bool $hasShopRestriction): void
+    public function setHasShopRestriction(bool $hasShopRestriction): AddCartRuleCommand
     {
         $this->hasShopRestriction = $hasShopRestriction;
+
+        return $this;
     }
 
     /**
      * @param array $localizedNames
      *
+     * @return AddCartRuleCommand
+     *
      * @throws CartRuleConstraintException
      */
-    private function setLocalizedNames(array $localizedNames): void
+    private function setLocalizedNames(array $localizedNames): AddCartRuleCommand
     {
         $this->assertAtLeastOneNameIsPresent($localizedNames);
 
         foreach ($localizedNames as $languageId => $name) {
             $this->localizedNames[(new LanguageId($languageId))->getValue()] = $name;
         }
+
+        return $this;
     }
 
     /**
      * @param int $priority
      *
+     * @return AddCartRuleCommand
+     *
      * @throws CartRuleConstraintException
      */
-    private function setPriority(int $priority): void
+    private function setPriority(int $priority): AddCartRuleCommand
     {
         if (0 >= $priority) {
             throw new CartRuleConstraintException(
@@ -516,14 +560,18 @@ class AddCartRuleCommand
         }
 
         $this->priority = $priority;
+
+        return $this;
     }
 
     /**
      * @param int $quantity
      *
+     * @return AddCartRuleCommand
+     *
      * @throws CartRuleConstraintException
      */
-    private function setTotalQuantity(int $quantity): void
+    private function setTotalQuantity(int $quantity): AddCartRuleCommand
     {
         if (0 > $quantity) {
             throw new CartRuleConstraintException(
@@ -536,14 +584,18 @@ class AddCartRuleCommand
         }
 
         $this->totalQuantity = $quantity;
+
+        return $this;
     }
 
     /**
      * @param int $quantity
      *
+     * @return AddCartRuleCommand
+     *
      * @throws CartRuleConstraintException
      */
-    private function setQuantityPerUser(int $quantity): void
+    private function setQuantityPerUser(int $quantity): AddCartRuleCommand
     {
         if (0 > $quantity) {
             throw new CartRuleConstraintException(
@@ -556,6 +608,8 @@ class AddCartRuleCommand
         }
 
         $this->quantityPerUser = $quantity;
+
+        return $this;
     }
 
     /**
