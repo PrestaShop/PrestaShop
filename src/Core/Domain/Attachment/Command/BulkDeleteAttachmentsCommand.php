@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Attachment\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\ValueObject\AttachmentId;
 
 /**
@@ -40,6 +41,8 @@ class BulkDeleteAttachmentsCommand
 
     /**
      * @param int[] $attachmentIds
+     *
+     * @throws AttachmentConstraintException
      */
     public function __construct(array $attachmentIds)
     {
@@ -56,6 +59,8 @@ class BulkDeleteAttachmentsCommand
 
     /**
      * @param array $attachmentIds
+     *
+     * @throws AttachmentConstraintException
      */
     private function setAttachmentIds(array $attachmentIds)
     {
