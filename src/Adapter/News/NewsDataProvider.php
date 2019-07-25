@@ -118,6 +118,7 @@ class NewsDataProvider
         $blogXMLResponse = $this->circuitBreaker->call($apiUrl . '/rss/blog/blog-' . $isoCode . '.xml');
 
         if (empty($blogXMLResponse)) {
+            $data['has_errors'] = false;
             return $data;
         }
 
@@ -157,8 +158,9 @@ class NewsDataProvider
             $base_url = explode('?', (string) $item->link);
             $base_url = (string) $base_url[0];
             $article_link = $base_url . '?' . http_build_query($full_url_params);
+            $date = strtotime($item->pubDate);
             $data['rss'][] = [
-                'date' => $this->tools->displayDate($item->pubDate, null, false),
+                'date' => $this->tools->displayDate(date('Y-m-d H:i:s', $date), null, false),
                 'title' => htmlentities($item->title, ENT_QUOTES, 'utf-8'),
                 'short_desc' => $this->tools->truncateString(strip_tags((string) $item->description), 150),
                 'link' => (string) $article_link,
