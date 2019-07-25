@@ -26,8 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\ValueObject\MoneyAmount;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Money;
 
 /**
  * A cart rule condition for amount of money
@@ -35,9 +34,9 @@ use PrestaShop\PrestaShop\Core\Domain\ValueObject\MoneyAmount;
 class MoneyAmountCondition
 {
     /**
-     * @var MoneyAmount
+     * @var Money
      */
-    private $amount;
+    private $money;
 
     /**
      * @var bool
@@ -50,26 +49,23 @@ class MoneyAmountCondition
     private $shippingExcluded;
 
     /**
-     * @param float $amount
-     * @param int $currencyId
+     * @param Money $money
      * @param bool $taxExcluded
      * @param bool|null $shippingExcluded
-     *
-     * @throws DomainConstraintException
      */
-    public function __construct(float $amount, int $currencyId, bool $taxExcluded, bool $shippingExcluded = null)
+    public function __construct(Money $money, bool $taxExcluded, bool $shippingExcluded = null)
     {
-        $this->amount = new MoneyAmount($amount, $currencyId);
+        $this->money = $money;
         $this->taxExcluded = $taxExcluded;
         $this->shippingExcluded = $shippingExcluded;
     }
 
     /**
-     * @return MoneyAmount
+     * @return Money
      */
-    public function getMoneyAmount(): MoneyAmount
+    public function getMoneyAmount(): Money
     {
-        return $this->amount;
+        return $this->money;
     }
 
     /**

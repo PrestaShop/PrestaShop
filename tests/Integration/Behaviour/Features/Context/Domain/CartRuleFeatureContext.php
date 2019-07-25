@@ -41,7 +41,9 @@ use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\DiscountApplicationTy
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\GiftProduct;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\MoneyAmountCondition;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\PercentageDiscount;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Money;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Transform\CurrencyTransform;
@@ -81,7 +83,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
     /**
      * @When /^I want to create a cart rule named "([^"]+)"$/
      */
-    public function iCreateCartRuleWithName(string $name)
+    public function createCartRuleWithName(string $name)
     {
         $key = sprintf('cart_rule_%s', $name);
 
@@ -94,7 +96,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
      * @Given /^I specify (its) "([^"]+)" as "([^"]+)"$/
      * @Given /^I specify that (its) "([^"]+)" is "([^"]+)"$/
      */
-    public function iSpecifyItsAs(array $properties, string $property, string $value)
+    public function specifyCartRuleProperty(array $properties, string $property, string $value)
     {
         $properties[$property] = $value;
         SharedStorage::getStorage()->setLatestResource($properties);
@@ -103,7 +105,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
     /**
      * @Given /^I specify that (its) ((active from|active until) "([^"]+)")$/
      */
-    public function iSpecifyThatItsActiveFromOrUntil(array $properties, DateTime $date, string $property)
+    public function specifyCartRuleActiveFromOrUntil(array $properties, DateTime $date, string $property)
     {
         $properties[$property] = $date;
         SharedStorage::getStorage()->setLatestResource($properties);
@@ -112,7 +114,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
     /**
      * @Given /^I specify that partial use is (enabled|disabled) for (it)$/
      */
-    public function iSpecifyThatPartialUseIsDisabledForIt(bool $isPartialUseEnabled, array $properties)
+    public function specifyCartRulePartialUse(bool $isPartialUseEnabled, array $properties)
     {
         $properties['partial_use'] = $isPartialUseEnabled;
         SharedStorage::getStorage()->setLatestResource($properties);
@@ -121,7 +123,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
     /**
      * @Given /^I specify (its) status as (enabled|disabled)$/
      */
-    public function iSpecifyItsStatusAsEnabled(array $properties, bool $isEnabled)
+    public function specifyCartRuleStatus(array $properties, bool $isEnabled)
     {
         $properties['active'] = $isEnabled;
         SharedStorage::getStorage()->setLatestResource($properties);
@@ -130,7 +132,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
     /**
      * @Given /^I specify that (it) (should|should not) be highlighted in cart$/
      */
-    public function iSpecifyThatItShouldNotBeHighlightedInCart(array $properties, bool $highlightInCart)
+    public function specifyCartRuleHighlightedInCart(array $properties, bool $highlightInCart)
     {
         $properties['highlight'] = $highlightInCart;
         SharedStorage::getStorage()->setLatestResource($properties);
@@ -139,7 +141,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
     /**
      * @Given /^(its) minimum purchase amount in (currency "[^"]+") is "([^"]+)"$/
      */
-    public function itsMinimumPurchaseAmountIsInCurrency(array $properties, Currency $currency, $amount)
+    public function specifyMinimumPurchaseAmountInCurrency(array $properties, Currency $currency, $amount)
     {
         $properties['minimum_amount'] = (float) $amount;
         $properties['minimum_amount_currency'] = $currency->id;
@@ -149,7 +151,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
     /**
      * @Given /^(its) minimum purchase amount is tax (included|excluded)$/
      */
-    public function itsMinimumPurchaseAmountIsTaxIncluded(array $properties, bool $isTaxIncluded)
+    public function specifyIfMinimumPurchaseAmountIsTaxIncluded(array $properties, bool $isTaxIncluded)
     {
         $properties['minimum_amount_tax'] = $isTaxIncluded;
         SharedStorage::getStorage()->setLatestResource($properties);
@@ -158,7 +160,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
     /**
      * @Given /^(its) minimum purchase amount is shipping (included|excluded)$/
      */
-    public function itsMinimumPurchaseAmountIsShippingIncluded(array $properties, bool $isShippingIncluded)
+    public function specifyIfMinimumPurchaseAmountIsShippingIncluded(array $properties, bool $isShippingIncluded)
     {
         $properties['minimum_amount_shipping'] = $isShippingIncluded;
         SharedStorage::getStorage()->setLatestResource($properties);
@@ -167,7 +169,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
     /**
      * @Given /^(it) gives free shipping$/
      */
-    public function itGivesFreeShipping(array $properties)
+    public function specifyCartRuleGivesFreeShipping(array $properties)
     {
         $properties['free_shipping'] = true;
         SharedStorage::getStorage()->setLatestResource($properties);
@@ -176,7 +178,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
     /**
      * @Given /^(it) gives a reduction amount of "([^"]+)" in (currency "[^"]+") which is tax (included|excluded) and (applies to (order without shipping|specific product|cheapest product|selected products))$/
      */
-    public function itGivesAmountReduction(
+    public function specifyCartRuleGivesAmountReduction(
         array $properties,
         $reductionAmount,
         Currency $currency,
@@ -193,7 +195,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
     /**
      * @Given /^(it) gives a percentage reduction of "([^"]+)" which (excludes|includes) discounted products and (applies to (order without shipping|specific product|cheapest product|selected products))$/
      */
-    public function itGivesPercentageReduction(
+    public function specifyCartRuleGivesPercentageReduction(
         array $properties,
         $percentage,
         bool $includesDiscountedProducts,
@@ -206,9 +208,9 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then /^I successfully save (it)$/
+     * @Then /^I save (it)$/
      */
-    public function iSaveIt(array $properties)
+    public function saveCartRule(array $properties)
     {
         $cartRuleAction = $this->createCartRuleAction(
             $properties['free_shipping'] ?? false,
@@ -255,7 +257,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
     /**
      * @Then /^(its) name in default language should be "([^"]*)"$/
      */
-    public function itsNameInDefaultLanguageShouldBe(CartRule $cartRule, string $value)
+    public function assertCartRuleNameInDefaultLanguage(CartRule $cartRule, string $value)
     {
         $defaultLanguageId = Configuration::get('PS_LANG_DEFAULT');
 
@@ -271,7 +273,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
     /**
      * @Then /^(its) "([^"]+)" should be "([^"]+)"$/
      */
-    public function itsShouldBe(CartRule $cartRule, string $property, $value)
+    public function assertCartRuleProperty(CartRule $cartRule, string $property, $value)
     {
         $propertyToCheck = $cartRule->{$property};
 
@@ -291,7 +293,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
     /**
      * @Then /^(it) should be ((active from|active until) "([^"]+)")$/
      */
-    public function itShouldBeActiveFromUntil(CartRule $cartRule, DateTime $date, string $property)
+    public function assertCartRuleIsActiveFromUntil(CartRule $cartRule, DateTime $date, string $property)
     {
         $formattedDate = $date->format('Y-m-d H:i:s');
 
@@ -307,7 +309,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
     /**
      * @Given /^(it) (should|should not) be highlighted in cart$/
      */
-    public function itShouldBeHighlightedInCart(CartRule $cartRule, bool $isHighlighted)
+    public function assertCartRuleIsHighlightedInCart(CartRule $cartRule, bool $isHighlighted)
     {
         if ((bool) $cartRule->highlight !== $isHighlighted) {
             throw new RuntimeException(sprintf(
@@ -320,7 +322,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
     /**
      * @Given /^(it) should have minimum purchase amount of "([^"]+)" in (currency "[^"]+")$/
      */
-    public function itShouldHaveMinimumPurchaseAmountOfInCurrency(
+    public function assertCartRuleHasMinimumPurchaseAmountInCurrency(
         CartRule $cartRule,
         $minimumPurchaseAmount,
         Currency $currency
@@ -343,7 +345,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
     /**
      * @Given /^(its) minimum purchase amount should be tax (included|excluded)$/
      */
-    public function itsMinimumPurchaseAmountShouldBeTaxExcluded(CartRule $cartRule, bool $isTaxIncluded)
+    public function assertCartRuleMinimumPurchaseAmountIsTaxExcluded(CartRule $cartRule, bool $isTaxIncluded)
     {
         if ((bool) $cartRule->minimum_amount_tax !== $isTaxIncluded) {
             throw new RuntimeException('Invalid cart rule minimum purchase amount tax flag');
@@ -353,7 +355,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
     /**
      * @Given /^(its) minimum purchase amount should be shipping (included|excluded)$/
      */
-    public function itsMinimumPurchaseAmountShouldBeShippingIncluded(CartRule $cartRule, bool $isShippingIncluded)
+    public function assertCartRuleMinimumPurchaseAmountIsShippingIncluded(CartRule $cartRule, bool $isShippingIncluded)
     {
         if ((bool) $cartRule->minimum_amount_shipping !== $isShippingIncluded) {
             throw new RuntimeException('Invalid cart rule minimum purchase amount shipping flag');
@@ -363,7 +365,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
     /**
      * @Given /^(it) (should|should not) give free shipping$/
      */
-    public function itShouldGiveFreeShipping(CartRule $cartRule, bool $isFreeShipping)
+    public function assertCartRuleGivesFreeShipping(CartRule $cartRule, bool $isFreeShipping)
     {
         if ((bool) $cartRule->free_shipping !== $isFreeShipping) {
             throw new RuntimeException('Cart rule free shipping flag is invalid');
@@ -373,7 +375,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
     /**
      * @Given /^(it) should give a reduction of "([^"]+)" in (currency "[^"]+") which is tax (included|excluded) and (applies to (order without shipping|specific product|cheapest product|selected products))$/
      */
-    public function itShouldGiveAmountReduction(
+    public function assertCartRuleGivesAmountReduction(
         CartRule $cartRule,
         $reductionAmount,
         Currency $currency,
@@ -407,7 +409,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
     /**
      * @Given /^(it) should give a percentage reduction of "([^"]+)" which (excludes|includes) discounted products and (applies to (order without shipping|specific product|cheapest product|selected products))$/
      */
-    public function itShouldGivePercentageReduction(
+    public function assertCartRuleGivesPercentageReduction(
         CartRule $cartRule,
         $percentage,
         bool $includesDiscountedProducts,
@@ -620,7 +622,10 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
 
         if (null !== $amount) {
             $builder->setAmountDiscount(
-                new MoneyAmountCondition($amount, $amountCurrencyId, !$amountTaxIncluded)
+                new MoneyAmountCondition(
+                    new Money(new Number((string) $amount), new CurrencyId($amountCurrencyId)),
+                    !$amountTaxIncluded
+                )
             );
         }
 

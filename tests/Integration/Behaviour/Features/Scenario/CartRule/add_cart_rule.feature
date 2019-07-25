@@ -28,7 +28,7 @@ Feature: Add cart rule
     And its minimum purchase amount is shipping included
     And it gives free shipping
     And it gives a reduction amount of "15" in currency "USD" which is tax included and applies to order without shipping
-    When I successfully save it
+    When I save it
     Then its name in default language should be "Promotion"
     And its "description" should be "Promotion for holidays"
     And it should be active from "2019-01-01 11:05:00"
@@ -62,7 +62,7 @@ Feature: Add cart rule
     And its minimum purchase amount is tax included
     And its minimum purchase amount is shipping excluded
     And it gives a percentage reduction of "50" which excludes discounted products and applies to cheapest product
-    When I successfully save it
+    When I save it
     Then its name in default language should be "50% off promo"
     And its "description" should be "Discount for whole catalog for one hour"
     And it should be active from "2019-01-01 11:00:00"

@@ -27,6 +27,7 @@
 namespace Tests\Unit\Core\Domain\CartRule\ValueObject\CartRuleAction;
 
 use PHPUnit\Framework\TestCase;
+use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\AmountDiscountAction;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRuleActionBuilder;
@@ -37,6 +38,8 @@ use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\Percen
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\GiftProduct;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\MoneyAmountCondition;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\PercentageDiscount;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Money;
 
 /**
  * Tests if cart rule actions are built correctly.
@@ -49,7 +52,12 @@ class CartRuleActionBuilderTest extends TestCase
         $this->expectExceptionCode(CartRuleConstraintException::INCOMPATIBLE_CART_RULE_ACTIONS);
 
         (new CartRuleActionBuilder())
-            ->setAmountDiscount(new MoneyAmountCondition(0, 1, true))
+            ->setAmountDiscount(
+                new MoneyAmountCondition(
+                    new Money(new Number('0'), new CurrencyId(1)),
+                    true
+                )
+            )
             ->setPercentageDiscount(new PercentageDiscount(10, true))
             ->build();
     }
@@ -65,7 +73,12 @@ class CartRuleActionBuilderTest extends TestCase
     public function testItCorrectlyBuildsAmountDiscountAction()
     {
         $action = (new CartRuleActionBuilder())
-            ->setAmountDiscount(new MoneyAmountCondition(10, 1, true))
+            ->setAmountDiscount(
+                new MoneyAmountCondition(
+                    new Money(new Number('10'), new CurrencyId(1)),
+                    true
+                )
+            )
             ->build();
 
         $this->assertInstanceOf(AmountDiscountAction::class, $action);
@@ -128,7 +141,10 @@ class CartRuleActionBuilderTest extends TestCase
 
     public function validActionsProvider()
     {
-        $moneyAmount = new MoneyAmountCondition(100, 1, true);
+        $moneyAmount = new MoneyAmountCondition(
+            new Money(new Number('100'), new CurrencyId(1)),
+            true
+        );
         $percentage = new PercentageDiscount(30.5, true);
         $giftProduct = new GiftProduct(1);
 

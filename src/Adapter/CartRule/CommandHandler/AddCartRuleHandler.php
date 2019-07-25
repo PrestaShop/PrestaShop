@@ -100,8 +100,8 @@ final class AddCartRuleHandler implements AddCartRuleHandlerInterface
         $cartRule->date_from = $command->getValidFrom()->format('Y-m-d H:i:s');
         $cartRule->date_to = $command->getValidTo()->format('Y-m-d H:i:s');
 
-        $minimumAmount = $command->getMinimumAmount();
-        $cartRule->minimum_amount = $minimumAmount->getMoneyAmount()->getAmount();
+        $minimumAmount = $command->getMinimumAmountCondition();
+        $cartRule->minimum_amount = (string) $minimumAmount->getMoneyAmount()->getAmount();
         $cartRule->minimum_amount_currency = $minimumAmount->getMoneyAmount()->getCurrencyId()->getValue();
         $cartRule->minimum_amount_shipping = !$minimumAmount->isShippingExcluded();
         $cartRule->minimum_amount_tax = !$minimumAmount->isTaxExcluded();
@@ -134,7 +134,7 @@ final class AddCartRuleHandler implements AddCartRuleHandlerInterface
         $cartRule->gift_product = null !== $giftProduct ? $giftProduct->getProductId()->getValue() : null;
         $cartRule->gift_product_attribute = null !== $giftProduct ? $giftProduct->getProductAttributeId() : null;
         $cartRule->reduction_amount = null !== $amountDiscount ?
-            $amountDiscount->getMoneyAmount()->getAmount() :
+            (string) $amountDiscount->getMoneyAmount()->getAmount() :
             null;
         $cartRule->reduction_currency = null !== $amountDiscount ?
             $amountDiscount->getMoneyAmount()->getCurrencyId()->getValue() :
@@ -189,7 +189,6 @@ final class AddCartRuleHandler implements AddCartRuleHandlerInterface
                 $cartRule->reduction_product = -2;
 
                 break;
-
             case DiscountApplicationType::CHEAPEST_PRODUCT:
                 if (!$hasPercentageDiscount) {
                     throw new CartRuleConstraintException(
@@ -201,7 +200,6 @@ final class AddCartRuleHandler implements AddCartRuleHandlerInterface
                 $cartRule->reduction_product = -1;
 
                 break;
-
             case DiscountApplicationType::SPECIFIC_PRODUCT:
                 if (!$hasPercentageDiscount && !$hasAmountDiscount) {
                     throw new CartRuleConstraintException(
@@ -221,7 +219,6 @@ final class AddCartRuleHandler implements AddCartRuleHandlerInterface
                 $cartRule->reduction_product = $command->getDiscountProductId()->getValue();
 
                 break;
-
             case DiscountApplicationType::ORDER_WITHOUT_SHIPPING:
                 if (!$hasAmountDiscount && !$hasPercentageDiscount) {
                     throw new CartRuleConstraintException(
