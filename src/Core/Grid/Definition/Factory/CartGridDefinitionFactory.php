@@ -151,11 +151,11 @@ final class CartGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setName($this->trans('Actions', [], 'Admin.Global'))
                 ->setOptions([
                     'actions' => (new RowActionCollection())
-                        ->add((new LinkRowAction('edit'))
-                            ->setName($this->trans('Edit', [], 'Admin.Actions'))
-                            ->setIcon('edit')
+                        ->add((new LinkRowAction('view'))
+                            ->setName($this->trans('View', [], 'Admin.Actions'))
+                            ->setIcon('zoom_in')
                             ->setOptions([
-                                'route' => 'admin_carts_index',
+                                'route' => 'admin_carts_view',
                                 'route_param_name' => 'cartId',
                                 'route_param_field' => 'id_cart',
                             ])
