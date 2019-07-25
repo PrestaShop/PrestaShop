@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Attachment\CommandHandler;
+namespace PrestaShop\PrestaShop\Adapter\Attachment;
 
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\DeleteAttachmentException;
@@ -34,9 +34,9 @@ use Attachment;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentException;
 
 /**
- * Class AbstractAttachmentCommandHandler
+ * Class AbstractAttachmentHandler
  */
-abstract class AbstractAttachmentCommandHandler
+abstract class AbstractAttachmentHandler
 {
     /**
      * @param AttachmentId $attachmentId

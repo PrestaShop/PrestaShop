@@ -24,29 +24,47 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Attachment\CommandHandler;
-
-use PrestaShop\PrestaShop\Adapter\Attachment\AbstractAttachmentHandler;
-use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\DeleteAttachmentCommand;
-use PrestaShop\PrestaShop\Core\Domain\Attachment\CommandHandler\DeleteAttachmentHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\DeleteAttachmentException;
+namespace PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult;
 
 /**
- * Class DeleteAttachmentHandler
+ * Class DownloadableAttachment stores attachment path and original name information.
  */
-final class DeleteAttachmentHandler extends AbstractAttachmentHandler implements DeleteAttachmentHandlerInterface
+class DownloadableAttachment
 {
     /**
-     * {@inheritdoc}
+     * @var string
      */
-    public function handle(DeleteAttachmentCommand $command)
-    {
-        $attachment = $this->getAttachment($command->getAttachmentId());
+    private $path;
 
-        if (!$this->deleteAttachment($attachment)) {
-            throw new DeleteAttachmentException(sprintf(
-                'Cannot delete Attachment object with id "%s".', $attachment->id)
-            );
-        }
+    /**
+     * @var string
+     */
+    private $name;
+
+    /**
+     * @param string $path
+     * @param string $name
+     *
+     */
+    public function __construct(string $path, string $name)
+    {
+        $this->path = $path;
+        $this->name = $name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPath(): string
+    {
+        return $this->path;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
     }
 }

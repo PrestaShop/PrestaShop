@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Attachment\CommandHandler;
 
+use PrestaShop\PrestaShop\Adapter\Attachment\AbstractAttachmentHandler;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\BulkDeleteAttachmentsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\CommandHandler\BulkDeleteAttachmentHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\DeleteAttachmentException;
@@ -33,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\DeleteAttachmentExcep
 /**
  * Class BulkDeleteAttachmentsHandler
  */
-final class BulkDeleteAttachmentsHandler extends AbstractAttachmentCommandHandler implements BulkDeleteAttachmentHandlerInterface
+final class BulkDeleteAttachmentsHandler extends AbstractAttachmentHandler implements BulkDeleteAttachmentHandlerInterface
 {
     /**
      * {@inheritdoc}
