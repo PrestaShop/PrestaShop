@@ -33,6 +33,8 @@ use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\UpdateCustomerThre
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerServiceSignature;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerThreadForViewing;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerThreadView;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeEmailById;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\CustomerService\CustomerThread\ForwardCustomerThreadType;
 use PrestaShopBundle\Form\Admin\Sell\CustomerService\ReplyToCustomerThreadType;
@@ -225,22 +227,33 @@ class CustomerThreadController extends FrameworkBundleAdminController
             ]);
         }
 
-        $command = $data['employee_id'] ?
-            ForwardCustomerThreadCommand::toAnotherEmployee(
+        if ($data['employee_id']) {
+            /** @var Email $employeeEmail */
+            $employeeEmail = $this->getQueryBus()->handle(new GetEmployeeEmailById((int) $data['employee_id']));
+            $forwardEmail = $employeeEmail->getValue();
+
+            $command = ForwardCustomerThreadCommand::toAnotherEmployee(
                 (int) $customerThreadId,
                 (int) $data['employee_id'],
                 $data['comment']
-            ) :
-            ForwardCustomerThreadCommand::toSomeoneElse(
+            );
+        } else {
+            $forwardEmail = $data['someone_else_email'];
+
+            $command = ForwardCustomerThreadCommand::toSomeoneElse(
                 (int) $customerThreadId,
                 $data['someone_else_email'],
                 $data['comment']
             );
+        }
 
         try {
             $this->getCommandBus()->handle($command);
 
-            $this->addFlash('success', $this->trans('Message forwarded to', 'Admin.Catalog.Feature'));
+            $this->addFlash(
+                'success',
+                sprintf('%s %s', $this->trans('Message forwarded to', 'Admin.Catalog.Feature'), $forwardEmail)
+            );
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, []));
         }
