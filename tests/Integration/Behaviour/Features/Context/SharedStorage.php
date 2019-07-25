@@ -121,14 +121,4 @@ class SharedStorage
 
         return $this->storage[$this->latestKey];
     }
-
-    /**
-     * Sets the latest resource.
-     *
-     * @param mixed $resource
-     */
-    public function setLatestResource($resource)
-    {
-        $this->set($this->latestKey, $resource);
-    }
 }
