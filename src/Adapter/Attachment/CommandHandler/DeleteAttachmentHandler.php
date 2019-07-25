@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Attachment\CommandHandler;
 
-use Attachment;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\DeleteAttachmentCommand;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\CommandHandler\DeleteAttachmentHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\DeleteAttachmentException;
@@ -34,17 +33,14 @@ use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\DeleteAttachmentExcep
 /**
  * Class DeleteAttachmentHandler
  */
-class DeleteAttachmentHandler extends AbstractAttachmentCommandHandler implements DeleteAttachmentHandlerInterface
+final class DeleteAttachmentHandler extends AbstractAttachmentCommandHandler implements DeleteAttachmentHandlerInterface
 {
     /**
      * {@inheritdoc}
      */
     public function handle(DeleteAttachmentCommand $command)
     {
-        $attachmentIdValue = $command->getAttachmentId()->getValue();
-        $attachment = new Attachment($attachmentIdValue);
-
-        $this->assertAttacmentWasFound($command->getAttachmentId(), $attachment);
+        $attachment = $this->getAttachment($command->getAttachmentId());
 
         if (!$this->deleteAttachment($attachment)) {
             throw new DeleteAttachmentException(sprintf(

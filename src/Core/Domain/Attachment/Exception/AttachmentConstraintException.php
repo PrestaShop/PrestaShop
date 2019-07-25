@@ -31,4 +31,5 @@ namespace PrestaShop\PrestaShop\Core\Domain\Attachment\Exception;
  */
 class AttachmentConstraintException extends AttachmentException
 {
+    const INVALID_ID = 1;
 }

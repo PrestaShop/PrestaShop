@@ -35,6 +35,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 final class SubmitRowAction extends AbstractRowAction
 {
+    const MESSAGE_TYPE_STATIC = 'static';
+    const MESSAGE_TYPE_DYNAMIC = 'dynamic';
+
     /**
      * {@inheritdoc}
      */
@@ -60,6 +63,8 @@ final class SubmitRowAction extends AbstractRowAction
                 'method' => 'POST',
                 'confirm_message' => '',
                 'accessibility_checker' => null,
+                'confirm_message_type' => self::MESSAGE_TYPE_STATIC,
+                'dynamic_message_field' => '',
             ])
             ->setAllowedTypes('route', 'string')
             ->setAllowedTypes('route_param_name', 'string')
@@ -67,6 +72,8 @@ final class SubmitRowAction extends AbstractRowAction
             ->setAllowedTypes('method', 'string')
             ->setAllowedTypes('confirm_message', 'string')
             ->setAllowedTypes('accessibility_checker', [AccessibilityCheckerInterface::class, 'callable', 'null'])
+            ->setAllowedTypes('dynamic_message_field', 'string')
+            ->setAllowedTypes('confirm_message_type', 'string')
         ;
     }
 

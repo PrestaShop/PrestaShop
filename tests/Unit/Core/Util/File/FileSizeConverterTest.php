@@ -24,53 +24,55 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Attachment\ValueObject;
+namespace Tests\Unit\Core\Util\File;
 
-use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentConstraintException;
+use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Util\File\FileSizeConverter;
 
-/**
- * Class AttachmentId provides attachment id
- */
-class AttachmentId
+class FileSizeConverterTest extends TestCase
 {
     /**
-     * @var int
+     * @var FileSizeConverter
      */
-    private $id;
+    protected $converter;
 
-    /**
-     * @param int $id
-     *
-     * @throws AttachmentConstraintException
-     */
-    public function __construct($id)
+    protected function setUp(): void
     {
-        $this->assertIsIntegerGreaterThanZero($id);
-        $this->id = $id;
+        $this->converter = new FileSizeConverter();
     }
 
-    /**
-     * @return int
-     */
-    public function getValue()
+    public function testConvertZeorByte()
     {
-        return $this->id;
+        $result = $this->converter->convert(0);
+
+        $this->assertEquals('0b', $result);
     }
 
-    /**
-     * Validates that the value is integer and is greater than zero
-     *
-     * @param $value
-     *
-     * @throws AttachmentConstraintException
-     */
-    private function assertIsIntegerGreaterThanZero($value)
+    public function testConvertByte()
     {
-        if (!is_int($value) || 0 >= $value) {
-            throw new AttachmentConstraintException(
-                sprintf('Invalid attachment id "%s".', var_export($value, true)),
-                AttachmentConstraintException::INVALID_ID
-            );
-        }
+        $result = $this->converter->convert(1);
+
+        $this->assertEquals('1b', $result);
+    }
+
+    public function testConvertKilobyte()
+    {
+        $result = $this->converter->convert(1024);
+
+        $this->assertEquals('1.00k', $result);
+    }
+
+    public function testConvertMegabyte()
+    {
+        $result = $this->converter->convert(1048576);
+
+        $this->assertEquals('1.00M', $result);
+    }
+
+    public function testConvertGigabyte()
+    {
+        $result = $this->converter->convert(1073741824);
+
+        $this->assertEquals('1.00GB', $result);
     }
 }
