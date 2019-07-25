@@ -291,7 +291,7 @@ class AuthorizationController extends FrameworkBundleAdminController
         );
 
         $missingInformationMessage = $this->trans(
-            'Some identification information is missing.',
+            'It looks like something went wrong, please try again.',
             'Admin.Login.Notification'
         );
 
