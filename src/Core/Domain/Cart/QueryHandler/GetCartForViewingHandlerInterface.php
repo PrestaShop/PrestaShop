@@ -24,39 +24,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Kpi\Row;
+namespace PrestaShop\PrestaShop\Core\Domain\Cart\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Kpi\KpiInterface;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartView;
 
 /**
- * Interface KpiRowInterface describes a KPI row.
+ * Interface for service that gets cart for viewing
  */
-interface KpiRowInterface
+interface GetCartForViewingHandlerInterface
 {
     /**
-     * Add a KPI to this row.
+     * @param GetCartForViewing $query
      *
-     * @param KpiInterface $kpi
+     * @return CartView
      */
-    public function addKpi(KpiInterface $kpi);
-
-    /**
-     * @return array[KpiInterface]
-     */
-    public function getKpis();
-
-    /**
-     * @param bool $allowRefresh
-     */
-    public function setAllowRefresh($allowRefresh);
-
-    /**
-     * @return bool
-     */
-    public function isRefreshAllowed();
-
-    /**
-     * @return array
-     */
-    public function getOptions();
+    public function handle(GetCartForViewing $query);
 }
