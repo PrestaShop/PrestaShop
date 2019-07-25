@@ -73,6 +73,7 @@ final class ProductFieldsProvider implements EntityFieldsProviderInterface
             new EntityField('manufacturer', $this->trans('Brand', 'Admin.Global')),
             new EntityField('ean13', $this->trans('EAN13', 'Admin.Advparameters.Feature')),
             new EntityField('upc', $this->trans('UPC', 'Admin.Advparameters.Feature')),
+            new EntityField('mpn', $this->trans('MPN', 'Admin.Advparameters.Feature')),
             new EntityField('ecotax', $this->trans('Ecotax', 'Admin.Catalog.Feature')),
             new EntityField('width', $this->trans('Width', 'Admin.Global')),
             new EntityField('height', $this->trans('Height', 'Admin.Global')),
