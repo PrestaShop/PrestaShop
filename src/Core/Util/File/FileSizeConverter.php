@@ -39,16 +39,24 @@ final class FileSizeConverter
     {
         if ($bytes >= 1073741824) {
             return number_format($bytes / 1073741824, 2) . 'GB';
-        } elseif ($bytes >= 1048576) {
-            return number_format($bytes / 1048576, 2) . 'M';
-        } elseif ($bytes >= 1024) {
-            return number_format($bytes / 1024, 2) . 'k';
-        } elseif ($bytes > 1) {
-            return $bytes . 'b';
-        } elseif ($bytes == 1) {
-            return $bytes . 'b';
-        } else {
-            return '0b';
         }
+
+        if ($bytes >= 1048576) {
+            return number_format($bytes / 1048576, 2) . 'M';
+        }
+
+        if ($bytes >= 1024) {
+            return number_format($bytes / 1024, 2) . 'k';
+        }
+
+        if ($bytes > 1) {
+            return $bytes . 'b';
+        }
+
+        if ($bytes == 1) {
+            return $bytes . 'b';
+        }
+
+        return '0b';
     }
 }

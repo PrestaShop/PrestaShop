@@ -41,38 +41,27 @@ class FileSizeConverterTest extends TestCase
         $this->converter = new FileSizeConverter();
     }
 
-    public function testConvertZeorByte()
+    /**
+     * @dataProvider sizeDataProvider
+     *
+     * @param int $bytes
+     * @param string $expectedResult
+     */
+    public function testConvert(int $bytes, string $expectedResult)
     {
-        $result = $this->converter->convert(0);
+        $result = $this->converter->convert($bytes);
 
-        $this->assertEquals('0b', $result);
+        $this->assertEquals($expectedResult, $result);
     }
 
-    public function testConvertByte()
+    public function sizeDataProvider()
     {
-        $result = $this->converter->convert(1);
-
-        $this->assertEquals('1b', $result);
-    }
-
-    public function testConvertKilobyte()
-    {
-        $result = $this->converter->convert(1024);
-
-        $this->assertEquals('1.00k', $result);
-    }
-
-    public function testConvertMegabyte()
-    {
-        $result = $this->converter->convert(1048576);
-
-        $this->assertEquals('1.00M', $result);
-    }
-
-    public function testConvertGigabyte()
-    {
-        $result = $this->converter->convert(1073741824);
-
-        $this->assertEquals('1.00GB', $result);
+        return [
+            [0, '0b'],
+            [1, '1b'],
+            [1024, '1.00k'],
+            [1048576, '1.00M'],
+            [1073741824, '1.00GB'],
+        ];
     }
 }
