@@ -170,7 +170,7 @@ class AuthorizationController extends FrameworkBundleAdminController
                 ));
 
                 $this->addFlash('success', $this->trans(
-                    'The password has been changed successfully.',
+                    'Your password has been changed successfully.',
                     'Admin.Login.Notification'
                 ));
 
@@ -276,8 +276,8 @@ class AuthorizationController extends FrameworkBundleAdminController
      */
     private function getErrorMessages()
     {
-        $employeeDoesNotExistMessage = $this->trans(
-            'The employee does not exist, or the password provided is incorrect.',
+        $invalidCredentialsMessage = $this->trans(
+            'Invalid email address or password, please try again.',
             'Admin.Login.Notification'
         );
 
@@ -287,16 +287,10 @@ class AuthorizationController extends FrameworkBundleAdminController
         );
 
         return [
-            BadCredentialsException::class => $employeeDoesNotExistMessage,
-            UsernameNotFoundException::class => $employeeDoesNotExistMessage,
-            DomainConstraintException::class => $this->trans(
-                'Invalid email address.',
-                'Admin.Notifications.Error'
-            ),
-            EmployeeNotFoundException::class => $this->trans(
-                'This account does not exist.',
-                'Admin.Login.Notification'
-            ),
+            BadCredentialsException::class => $invalidCredentialsMessage,
+            UsernameNotFoundException::class => $invalidCredentialsMessage,
+            DomainConstraintException::class => $invalidCredentialsMessage,
+            EmployeeNotFoundException::class => $invalidCredentialsMessage,
             PasswordResetTooFrequentException::class => $this->trans(
                 'You can reset your password every %interval% minute(s) only. Please try again later.',
                 'Admin.Login.Notification',
