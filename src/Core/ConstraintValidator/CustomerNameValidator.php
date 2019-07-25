@@ -95,9 +95,8 @@ class CustomerNameValidator extends ConstraintValidator
      */
     private function isPointSpacedValid($name)
     {
-        $lastCharPos = strlen($name) - 1;
-        if ((strpos($name, '.') === false || strpos($name, '.') === $lastCharPos)
-            && (strpos($name, '。') === false || strpos($name, '。') === $lastCharPos)) {
+        if ((strpos($name, '.') === false || substr($name, -1) === '.')
+            && (strpos($name, '。') === false || substr($name, -1) === '。')) {
             return true;
         }
 

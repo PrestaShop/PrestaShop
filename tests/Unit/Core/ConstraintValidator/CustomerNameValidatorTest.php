@@ -54,6 +54,16 @@ class CustomerNameValidatorTest extends ConstraintValidatorTestCase
     /**
      * @return array
      */
+    public function getValidCharactersWithSpaces()
+    {
+        return [
+            ['. '], ['。 '],
+        ];
+    }
+
+    /**
+     * @return array
+     */
     public function getValidCharacters()
     {
         return [
@@ -78,6 +88,19 @@ class CustomerNameValidatorTest extends ConstraintValidatorTestCase
 
     /**
      * @dataProvider getValidCharacters
+     *
+     * @param string $validChar
+     */
+    public function testIfSucceedsWhenPointsAreFinal($validChar)
+    {
+        $input = 'AZERTY' . $validChar;
+        $this->validator->validate($input, new CustomerName());
+
+        $this->assertNoViolation();
+    }
+
+    /**
+     * @dataProvider getValidCharactersWithSpaces
      *
      * @param string $validChar
      */
