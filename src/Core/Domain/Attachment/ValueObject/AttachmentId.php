@@ -68,7 +68,8 @@ class AttachmentId
     {
         if (!is_int($value) || 0 >= $value) {
             throw new AttachmentConstraintException(
-                sprintf('Invalid attachment id "%s".', var_export($value, true))
+                sprintf('Invalid attachment id "%s".', var_export($value, true)),
+                AttachmentConstraintException::INVALID_ID
             );
         }
     }
