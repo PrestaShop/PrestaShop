@@ -159,7 +159,7 @@ final class ForwardCustomerThreadHandler implements ForwardCustomerThreadHandler
         $params = [
             '{messages}' => Tools::nl2br(stripslashes($content)),
             '{employee}' => $this->context->employee->firstname . ' ' . $this->context->employee->lastname,
-            '{comment}' => stripslashes($_POST['message_forward']),
+            '{comment}' => stripslashes($command->getComment()),
             '{firstname}' => '',
             '{lastname}' => '',
         ];
@@ -207,7 +207,7 @@ final class ForwardCustomerThreadHandler implements ForwardCustomerThreadHandler
     protected function renderMessage(array $message, $id_employee = null)
     {
         $tpl = $this->context->smarty->createTemplate(
-            $this->context->smarty->getTemplateDir(0) . 'message.tpl',
+            'controllers' . DIRECTORY_SEPARATOR . 'customer_threads/message.tpl',
             $this->context->smarty
         );
 
@@ -253,7 +253,7 @@ final class ForwardCustomerThreadHandler implements ForwardCustomerThreadHandler
         $tpl->assign([
             'thread_url' => $threadUrl,
             'link' => $this->context->link,
-            'current' => $this->context->link->getAdminLink('AdminCustomerThreads', false),
+            'current' => 'index.php?controller=AdminCustomerThreads',
             'token' => Tools::getAdminToken(
                 'AdminCustomerThreads' . (int) $message['id_customer_thread'] . (int) $this->context->employee->id
             ),
