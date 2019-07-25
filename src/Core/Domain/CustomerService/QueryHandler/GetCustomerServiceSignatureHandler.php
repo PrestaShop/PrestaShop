@@ -54,9 +54,6 @@ final class GetCustomerServiceSignatureHandler implements GetCustomerServiceSign
     {
         $signature = $this->configuration->get('PS_CUSTOMER_SERVICE_SIGNATURE');
 
-        return str_replace(
-            '\r\n', '\\n',
-            $signature[$query->getLanguageId()->getValue()]
-        );
+        return $signature[$query->getLanguageId()->getValue()];
     }
 }

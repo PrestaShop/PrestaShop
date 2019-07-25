@@ -253,7 +253,6 @@ final class ForwardCustomerThreadHandler implements ForwardCustomerThreadHandler
         $tpl->assign([
             'thread_url' => $threadUrl,
             'link' => $this->context->link,
-            'current' => 'index.php?controller=AdminCustomerThreads',
             'token' => Tools::getAdminToken(
                 'AdminCustomerThreads' . (int) $message['id_customer_thread'] . (int) $this->context->employee->id
             ),
