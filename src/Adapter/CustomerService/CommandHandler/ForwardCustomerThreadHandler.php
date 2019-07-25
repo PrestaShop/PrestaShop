@@ -243,15 +243,17 @@ final class ForwardCustomerThreadHandler implements ForwardCustomerThreadHandler
             $isValidOrderId = false;
         }
 
-        $link = $this->context->link->getAdminLink('AdminCustomerThreads', true, [], [
+        $baseAdminLink = Tools::getAdminUrl(basename(_PS_ADMIN_DIR_));
+
+        $threadUrl = $baseAdminLink . '/' . $this->context->link->getAdminLink('AdminCustomerThreads', true, [], [
             'id_customer_thread' => (int) $message['id_customer_thread'],
             'viewcustomer_thread' => 1,
         ]);
 
         $tpl->assign([
-            'thread_url' => Tools::getAdminUrl(basename(_PS_ADMIN_DIR_) . '/' . $link),
+            'thread_url' => $threadUrl,
             'link' => $this->context->link,
-            'current' => 'index.php?controller=AdminCustomerThreads',
+            'current' => $this->context->link->getAdminLink('AdminCustomerThreads', false),
             'token' => Tools::getAdminToken(
                 'AdminCustomerThreads' . (int) $message['id_customer_thread'] . (int) $this->context->employee->id
             ),
