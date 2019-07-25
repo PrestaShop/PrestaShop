@@ -1,80 +1,87 @@
-// @todo change to a variable when this color is introduced to the UI kit
-$temporaryColor: #011638;
+body.login-page {
+  // The following styles are temporary will be moved to UI kit at some point
 
-html > body {
+  $temporaryColor: #011638;
+
+  .form-control {
+    padding: .657rem 1rem;
+  }
+
+  // End of temporary styles
+
   background-color: $temporaryColor;
   background-image: url('../../../../img/login-background-shape.png');
   background-repeat: no-repeat;
   background-position: 50% 115%;
-}
 
-.login-card {
-  z-index: 1;
-  padding-top: 20px;
-  width: 500px;
-  min-height: 250px;
+  .login-card {
+    z-index: 1;
+    padding-top: 20px;
+    width: 500px;
+    min-height: 250px;
 
-  input[type=password],
-  input[type=email],
-  button {
-    border-radius: 4px;
-  }
-
-  @include media-breakpoint-down(xs) {
-    width: 90%;
-  }
-
-  .form-actions-row {
-    margin-top: 35px;
-    margin-bottom: 29px;
-  }
-
-  .card-text {
-    padding-bottom: 11px;
-  }
-
-  .show-forgot-password {
-    color: $temporaryColor;
-    text-decoration: underline;
-  }
-}
-
-.flip-card {
-  perspective: 1000px;
-  position: relative;
-
-  .flip-card-inner {
-    .flip-card-back {
-      padding-left: 31px;
-      padding-right: 31px;
+    input[type=password],
+    input[type=email],
+    button {
+      border-radius: 4px;
     }
 
-    &.flipped {
-      transform: rotateY(180deg);
-
-      .flip-card-back {
-        transform: rotateY(180deg);
-        position: absolute;
-        left: 0;
-        backface-visibility: hidden;
-        width: 100%;
-        padding-left: 40px;
-        padding-right: 40px;
-      }
+    @include media-breakpoint-down(xs) {
+      width: 90%;
     }
 
+    .form-actions-row {
+      margin-top: 35px;
+      margin-bottom: 29px;
+    }
+
+    .card-text {
+      padding-bottom: 11px;
+    }
+
+    .show-forgot-password {
+      color: $temporaryColor;
+      text-decoration: underline;
+    }
+  }
+
+  .flip-card {
+    perspective: 1000px;
     position: relative;
-    transition: transform 0.8s;
-    transform-style: preserve-3d;
+
+    .flip-card-inner {
+      .flip-card-back {
+        padding-left: 31px;
+        padding-right: 31px;
+      }
+
+      &.flipped {
+        transform: rotateY(180deg);
+
+        .flip-card-back {
+          transform: rotateY(180deg);
+          position: absolute;
+          left: 0;
+          backface-visibility: hidden;
+          width: 100%;
+          padding-left: 40px;
+          padding-right: 40px;
+        }
+      }
+
+      position: relative;
+      transition: transform 0.8s;
+      transform-style: preserve-3d;
+    }
   }
-}
 
-.title-row {
-  margin-bottom: 45px;
-  margin-top: 77px;
-}
+  .title-row {
+    margin-bottom: 45px;
+    margin-top: 77px;
+  }
 
-.version-text,
-.copyright-text {
-  font-size: 0.7rem;
+  .version-text,
+  .copyright-text {
+    font-size: 0.7rem;
+  }
 }
