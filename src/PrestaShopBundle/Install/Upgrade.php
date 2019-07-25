@@ -164,7 +164,6 @@ namespace PrestaShopBundle\Install {
             'blockstore',
             'blocktags',
             'blockwishlist',
-            'productcomments',
             'productpaymentlogos',
             'sendtoafriend',
             'themeconfigurator',
