@@ -259,7 +259,7 @@ final class ForwardCustomerThreadHandler implements ForwardCustomerThreadHandler
             ),
             'message' => $message,
             'id_order_product' => isset($id_order_product) ? $id_order_product : null,
-            'email' => true, // @todo: check why bool is used
+            'email' => true,
             'id_employee' => $id_employee,
             'PS_SHOP_NAME' => $this->configuration->get('PS_SHOP_NAME'),
             'file_name' => file_exists(_PS_UPLOAD_DIR_ . $message['file_name']),
