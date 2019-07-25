@@ -841,6 +841,8 @@ class ProductLazyArray extends AbstractLazyArray
                 return $this->translator->trans('isbn', array(), 'Shop.Theme.Catalog');
             case 'upc':
                 return $this->translator->trans('upc', array(), 'Shop.Theme.Catalog');
+            case 'mpn':
+                return $this->translator->trans('mpn', array(), 'Shop.Theme.Catalog');
         }
 
         return $key;
