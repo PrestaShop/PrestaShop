@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Contact\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Validation\RegexPattern;
+use PrestaShop\PrestaShop\Core\Validation\RegexPattern;
 
 /**
  * Class AbstractContactCommand is responsible for providing common behavior for AddContactCommand and EditContactCommand.

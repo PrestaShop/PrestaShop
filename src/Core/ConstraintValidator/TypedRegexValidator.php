@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\ConstraintValidator;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\IsoCode;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\TagIETF;
-use PrestaShop\PrestaShop\Core\Domain\Validation\RegexPattern;
+use PrestaShop\PrestaShop\Core\Validation\RegexPattern;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\InvalidArgumentException;

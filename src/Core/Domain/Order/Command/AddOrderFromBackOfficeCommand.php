@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Order\Command;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
-use PrestaShop\PrestaShop\Core\Domain\Validation\RegexPattern;
+use PrestaShop\PrestaShop\Core\Validation\RegexPattern;
 
 /**
  * Adds new order from given cart.

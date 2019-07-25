@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Validation;
+namespace PrestaShop\PrestaShop\Core\Validation;
 
 /**
  * Provides reusable regex patterns for validation

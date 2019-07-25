@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject;
 
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Validation\RegexPattern;
+use PrestaShop\PrestaShop\Core\Validation\RegexPattern;
 
 /**
  * Stores customer's last name

@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Meta\ValueObject;
 
 use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Validation\RegexPattern;
+use PrestaShop\PrestaShop\Core\Validation\RegexPattern;
 
 /**
  * Class Name

@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Validation\RegexPattern;
+use PrestaShop\PrestaShop\Core\Validation\RegexPattern;
 
 /**
  * Class AbstractCmsPageCategoryCommand

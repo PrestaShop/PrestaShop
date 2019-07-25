@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject;
 
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Validation\RegexPattern;
+use PrestaShop\PrestaShop\Core\Validation\RegexPattern;
 
 /**
  * Carries employee's first name
