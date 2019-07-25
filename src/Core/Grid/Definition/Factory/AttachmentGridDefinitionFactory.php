@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\Accessibilit
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\Attachment\DeleteAttachmentRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
@@ -176,7 +177,8 @@ final class AttachmentGridDefinitionFactory extends AbstractGridDefinitionFactor
                                     'route_param_field' => 'id_attachment',
                                 ])
                         )
-                        ->add((new DeleteAttachmentRowAction('delete'))
+                        ->add(
+                            (new SubmitRowAction('delete'))
                             ->setName($this->trans('Delete', [], 'Admin.Actions'))
                             ->setIcon('delete')
                             ->setOptions([
@@ -188,7 +190,7 @@ final class AttachmentGridDefinitionFactory extends AbstractGridDefinitionFactor
                                     [],
                                     'Admin.Notifications.Warning'
                                 ),
-                                'confirm_message_type' => DeleteAttachmentRowAction::MESSAGE_TYPE_DYNAMIC,
+                                'confirm_message_type' => SubmitRowAction::MESSAGE_TYPE_DYNAMIC,
                                 'dynamic_message_field' => 'dynamic_message',
                             ])
                         ),

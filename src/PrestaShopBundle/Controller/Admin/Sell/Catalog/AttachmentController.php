@@ -60,7 +60,64 @@ class AttachmentController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'attachmentGrid' => $this->presentGrid($attachmentGrid),
             'enableSidebar' => true,
+            'layoutHeaderToolbarBtn' => $this->getAttachmentToolbarButtons($request),
         ]);
+    }
+
+    /**
+     * Show "Add new" form and handle form submit.
+     *
+     * @AdminSecurity(
+     *     "is_granted(['create'], request.get('_legacy_controller'))",
+     *     redirectRoute="admin_attachments_index",
+     *     message="You do not have permission to create this."
+     * )
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function createAction(Request $request)
+    {
+        return new Response();
+    }
+
+    /**
+     * Show & process attachment editing.
+     *
+     * @AdminSecurity(
+     *     "is_granted(['update'], request.get('_legacy_controller'))",
+     *     redirectRoute="admin_attachments_index",
+     *     message="You do not have permission to edit this."
+     * )
+     *
+     * @param int $attachmentId
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function editAction($attachmentId, Request $request)
+    {
+        return new Response($attachmentId);
+    }
+
+    /**
+     * View attachment.
+     *
+     * @AdminSecurity(
+     *     "is_granted(['read'], request.get('_legacy_controller'))",
+     *     redirectRoute="admin_attachments_index",
+     *     message="You do not have permission to edit this."
+     * )
+     *
+     * @param int $attachmentId
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function viewAction($attachmentId, Request $request)
+    {
+        return new Response($attachmentId);
     }
 
     /**
@@ -151,5 +208,23 @@ class AttachmentController extends FrameworkBundleAdminController
         }
 
         return $attachmentIds;
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return array
+     */
+    private function getAttachmentToolbarButtons(Request $request)
+    {
+        $toolbarButtons = [];
+
+        $toolbarButtons['add'] = [
+            'href' => $this->generateUrl('admin_attachment_create'),
+            'desc' => $this->trans('Add new Attachment', 'Admin.Catalog.Feature'),
+            'icon' => 'add_circle_outline',
+        ];
+
+        return $toolbarButtons;
     }
 }

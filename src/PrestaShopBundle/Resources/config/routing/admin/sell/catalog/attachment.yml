@@ -15,15 +15,15 @@ admin_attachments_filter:
     gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.attachment
     redirectRoute: admin_attachments_index
     _legacy_link: AdminAttachments:submitFilterattachment
-#
-#admin_files_create:
-#  path: /new
-#  methods: [GET, POST]
-#  defaults:
-#    _controller: PrestaShopBundle:Admin/Sell/Catalog/File:create
-#    _legacy_controller: AdminAttachments
-#    _legacy_link: AdminAttachments:addattachment
-#
+
+admin_attachment_create:
+  path: /new
+  methods: [GET, POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Catalog/Attachment:create
+    _legacy_controller: AdminAttachments
+    _legacy_link: AdminAttachments:addattachment
+
 admin_attachment_edit:
   path: /{attachmentId}/edit
   methods: [GET, POST]
@@ -35,7 +35,7 @@ admin_attachment_edit:
       id_attachment: attachmentId
   requirements:
     attachmentId: \d+
-#
+
 admin_attachment_view:
   path: /{attachmentId}/view
   methods: [GET, POST]
@@ -67,4 +67,3 @@ admin_attachment_delete:
       id_attachment: attachmentId
   requirements:
     attachmentId: \d+
-
