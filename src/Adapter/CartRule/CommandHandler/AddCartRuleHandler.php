@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\CartRule\CommandHandler;
 
 use CartRule;
+use PrestaShop\PrestaShop\Adapter\CartRule\LegacyDiscountApplicationType;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\AddCartRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\CommandHandler\AddCartRuleHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
@@ -186,7 +187,7 @@ final class AddCartRuleHandler implements AddCartRuleHandlerInterface
                     );
                 }
 
-                $cartRule->reduction_product = -2;
+                $cartRule->reduction_product = LegacyDiscountApplicationType::SELECTED_PRODUCTS;
 
                 break;
             case DiscountApplicationType::CHEAPEST_PRODUCT:
@@ -197,7 +198,7 @@ final class AddCartRuleHandler implements AddCartRuleHandlerInterface
                     );
                 }
 
-                $cartRule->reduction_product = -1;
+                $cartRule->reduction_product = LegacyDiscountApplicationType::CHEAPEST_PRODUCT;
 
                 break;
             case DiscountApplicationType::SPECIFIC_PRODUCT:
@@ -228,7 +229,7 @@ final class AddCartRuleHandler implements AddCartRuleHandlerInterface
                     );
                 }
 
-                $cartRule->reduction_product = 0;
+                $cartRule->reduction_product = LegacyDiscountApplicationType::ORDER_WITHOUT_SHIPPING;
 
                 break;
         }

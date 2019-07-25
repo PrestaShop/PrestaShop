@@ -80,4 +80,3 @@ Feature: Add cart rule
     And its minimum purchase amount should be tax included
     And its minimum purchase amount should be shipping excluded
     And it should give a percentage reduction of "50" which excludes discounted products and applies to cheapest product
-

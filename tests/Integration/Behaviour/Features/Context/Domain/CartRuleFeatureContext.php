@@ -32,6 +32,7 @@ use Currency;
 use DateTime;
 use ObjectModel;
 use PrestaShop\Decimal\Number;
+use PrestaShop\PrestaShop\Adapter\CartRule\LegacyDiscountApplicationType;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\AddCartRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRuleActionBuilder;
@@ -481,24 +482,26 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
      */
     private function assertDiscountApplicationTypeIsValid(CartRule $cartRule, string $discountApplicationType)
     {
+        $reductionType = (int) $cartRule->reduction_product;
+
         switch ($discountApplicationType) {
             case DiscountApplicationType::ORDER_WITHOUT_SHIPPING:
-                $hasError = 0 !== (int) $cartRule->reduction_product;
+                $hasError = LegacyDiscountApplicationType::ORDER_WITHOUT_SHIPPING !== $reductionType;
 
                 break;
 
             case DiscountApplicationType::SELECTED_PRODUCTS:
-                $hasError = -2 !== (int) $cartRule->reduction_product;
+                $hasError = LegacyDiscountApplicationType::SELECTED_PRODUCTS !== $reductionType;
 
                 break;
 
             case DiscountApplicationType::CHEAPEST_PRODUCT:
-                $hasError = -1 !== (int) $cartRule->reduction_product;
+                $hasError = LegacyDiscountApplicationType::CHEAPEST_PRODUCT !== $reductionType;
 
                 break;
 
             case DiscountApplicationType::SPECIFIC_PRODUCT:
-                $hasError = 0 >= (int) $cartRule->reduction_product;
+                $hasError = 0 >= $reductionType;
 
                 break;
 
