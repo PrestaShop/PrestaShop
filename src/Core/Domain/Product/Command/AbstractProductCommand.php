@@ -10,10 +10,11 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Category;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ConfigurableImageInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\CostPrice;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\FriendlyUrl;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Image;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\IdentifiableImageInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\MetaDescription;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\MetaKeywords;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\MetaTitle;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\NewImageInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductName;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectionPageInterface;
@@ -30,9 +31,9 @@ abstract class AbstractProductCommand
      * @var ProductName[]
      */
     private $localisedProductNames;
-    
+
     /**
-     * @var ConfigurableImageInterface[]
+     * @var ConfigurableImageInterface[]|NewImageInterface[]|IdentifiableImageInterface[] - can be mixed as well.
      */
     private $images;
 
@@ -161,7 +162,7 @@ abstract class AbstractProductCommand
     }
 
     /**
-     * @return ConfigurableImageInterface[]
+     * @return ConfigurableImageInterface[]|NewImageInterface[]|IdentifiableImageInterface[]
      */
     public function getImages(): ?array
     {
@@ -169,7 +170,7 @@ abstract class AbstractProductCommand
     }
 
     /**
-     * @param array ConfigurableImageInterface[]
+     * @param ConfigurableImageInterface[]|NewImageInterface[]|IdentifiableImageInterface[] $images
      *
      * @return self
      */
@@ -585,7 +586,7 @@ abstract class AbstractProductCommand
         foreach ($productNames as $productName) {
             $this->localisedProductNames[] = new ProductName($productName);
         }
-        
+
         return $this;
     }
 

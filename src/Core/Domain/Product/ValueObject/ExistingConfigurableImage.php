@@ -2,10 +2,12 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+
 /**
  * Existing image
  */
-final class ExistingConfigurableImage implements ConfigurableImageInterface
+final class ExistingConfigurableImage implements ConfigurableImageInterface, IdentifiableImageInterface
 {
     /**
      * @var int
@@ -23,7 +25,7 @@ final class ExistingConfigurableImage implements ConfigurableImageInterface
     private $localizedCaptions;
 
     /**
-     * @var int
+     * @var ImageId
      */
     private $imageId;
 
@@ -32,6 +34,8 @@ final class ExistingConfigurableImage implements ConfigurableImageInterface
      * @param int $position
      * @param bool $isCover
      * @param array $localizedCaptions
+     *
+     * @throws ProductConstraintException
      */
     public function __construct(
         int $imageId,
@@ -42,7 +46,7 @@ final class ExistingConfigurableImage implements ConfigurableImageInterface
         $this->position = $position;
         $this->isCover = $isCover;
         $this->localizedCaptions = $localizedCaptions;
-        $this->imageId = $imageId;
+        $this->imageId = new ImageId($imageId);
     }
 
     /**
@@ -72,15 +76,7 @@ final class ExistingConfigurableImage implements ConfigurableImageInterface
     /**
      * {@inheritdoc}
      */
-    public function getImage(): ?Image
-    {
-        return null;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getId(): ?int
+    public function getId(): ImageId
     {
         return $this->imageId;
     }

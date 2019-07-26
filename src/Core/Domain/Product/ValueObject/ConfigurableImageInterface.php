@@ -27,16 +27,4 @@ interface ConfigurableImageInterface
      * @return string[]
      */
     public function getLocalizedCaptions(): array;
-
-    /**
-     * Gets the image which is being uploaded.
-     *
-     * @return Image|null
-     */
-    public function getImage(): ?Image;
-
-    /**
-     * @return int|null
-     */
-    public function getId(): ?int;
 }

@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 /**
  * New not created image.
  */
-final class NewConfigurableImage implements ConfigurableImageInterface
+final class NewConfigurableImage implements ConfigurableImageInterface, NewImageInterface
 {
     /**
      * @var int
@@ -53,7 +53,7 @@ final class NewConfigurableImage implements ConfigurableImageInterface
     /**
      * {@inheritdoc}
      */
-    public function getImage(): ?Image
+    public function getImage(): Image
     {
         return $this->image;
     }
