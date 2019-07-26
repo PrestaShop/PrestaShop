@@ -55,7 +55,8 @@ final class NewConfigurableImage implements ConfigurableImageInterface
     private $image;
 
     /**
-     * @param UploadedFile $file
+     * @param string $filePath
+     * @param string $fileName
      * @param int $position
      * @param bool $isCover
      * @param array $localizedCaptions
@@ -63,12 +64,13 @@ final class NewConfigurableImage implements ConfigurableImageInterface
      * @throws ProductConstraintException
      */
     public function __construct(
-        UploadedFile $file,
+        string $filePath,
+        string $fileName,
         int $position,
         bool $isCover,
         array $localizedCaptions
     ) {
-        $this->image = new Image($file);
+        $this->image = new Image($filePath, $fileName);
         $this->position = $position;
         $this->isCover = $isCover;
         $this->localizedCaptions = $localizedCaptions;

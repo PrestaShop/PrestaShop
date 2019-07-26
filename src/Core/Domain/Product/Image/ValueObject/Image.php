@@ -47,13 +47,17 @@ final class Image
     private $file;
 
     /**
-     * @param UploadedFile $file
+     * @param string $filePath
+     * @param string $fileName
      *
      * @throws ProductConstraintException
      */
     public function __construct(
-        UploadedFile $file
+        string $filePath,
+        string $fileName
     ) {
+        $file = new UploadedFile($filePath, $fileName);
+
         $this->assertIsValidFile($file);
 
         $this->file = $file;
