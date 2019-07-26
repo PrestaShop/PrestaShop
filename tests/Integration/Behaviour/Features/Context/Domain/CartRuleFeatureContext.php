@@ -586,11 +586,25 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
             !$minimumAmountShippingIncluded
         );
 
-        null !== $code ? $command->setCode($code) : null;
-        null !== $description ? $command->setDescription($description) : null;
-        null !== $customerId ? $command->setCustomerId($customerId) : null;
-        null !== $discountApplicationType ? $command->setDiscountApplicationType($discountApplicationType) : null;
-        null !== $discountProductId ? $command->setDiscountProductId($discountProductId) : null;
+        if (null !== $code) {
+            $command->setCode($code);
+        }
+
+        if (null !== $description) {
+            $command->setDescription($description);
+        }
+
+        if (null !== $customerId) {
+            $command->setCustomerId($customerId);
+        }
+
+        if (null !== $discountApplicationType) {
+            $command->setDiscountApplicationType($discountApplicationType);
+        }
+
+        if (null !== $discountProductId) {
+            $command->setDiscountProductId($discountProductId);
+        }
 
         return $this->getCommandBus()->handle($command);
     }
