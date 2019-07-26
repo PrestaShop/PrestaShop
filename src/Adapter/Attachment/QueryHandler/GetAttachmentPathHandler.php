@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\Attachment;
 /**
  * Class GetAttachmentPathHandler provides path and original file name of attachment
  */
-class GetAttachmentPathHandler extends AbstractAttachmentHandler implements GetAttachmentPathHandlerInterface
+final class GetAttachmentPathHandler extends AbstractAttachmentHandler implements GetAttachmentPathHandlerInterface
 {
     /**
      * {@inheritdoc}
