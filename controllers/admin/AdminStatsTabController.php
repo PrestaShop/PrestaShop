@@ -28,7 +28,6 @@ abstract class AdminStatsTabControllerCore extends AdminController
     public function init()
     {
         parent::init();
-        
         $this->bootstrap = true;
         $this->action = 'view';
         $this->display = 'view';
