@@ -43,6 +43,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectionPage\Redire
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Price\RetailPrice;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectionPage\TypedRedirectionPageInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Price\UnitPrice;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Visibility;
 
 /**
  * Holds the abstraction of common product data which does not depend from product type.
@@ -138,7 +139,7 @@ abstract class AbstractProductCommand
     private $redirectionPage;
 
     /**
-     * @var null
+     * @var Visibility
      */
     private $visibility;
 
@@ -174,13 +175,13 @@ abstract class AbstractProductCommand
      */
     public function __construct(array $localizedProductNames)
     {
-        $this->setlocalizedProductNames($localizedProductNames);
+        $this->setLocalizedProductNames($localizedProductNames);
     }
 
     /**
      * @return ProductName[]
      */
-    public function getlocalizedProductNames(): array
+    public function getLocalizedProductNames(): array
     {
         return $this->localizedProductNames;
     }
@@ -268,7 +269,7 @@ abstract class AbstractProductCommand
     /**
      * @return array|string[]
      */
-    public function getlocalizedSummary(): ?array
+    public function getLocalizedSummary(): ?array
     {
         return $this->localizedSummary;
     }
@@ -278,7 +279,7 @@ abstract class AbstractProductCommand
      *
      * @return self
      */
-    public function setlocalizedSummary($localizedSummary): self
+    public function setLocalizedSummary($localizedSummary): self
     {
         $this->localizedSummary = $localizedSummary;
 
@@ -288,7 +289,7 @@ abstract class AbstractProductCommand
     /**
      * @return array|string[]
      */
-    public function getlocalizedDescription(): array
+    public function getLocalizedDescription(): array
     {
         return $this->localizedDescription;
     }
@@ -298,7 +299,7 @@ abstract class AbstractProductCommand
      *
      * @return self
      */
-    public function setlocalizedDescription($localizedDescription): self
+    public function setLocalizedDescription($localizedDescription): self
     {
         $this->localizedDescription = $localizedDescription;
 
@@ -501,19 +502,19 @@ abstract class AbstractProductCommand
     }
 
     /**
-     * @return null
+     * @return Visibility
      */
-    public function getVisibility()
+    public function getVisibility(): ?Visibility
     {
         return $this->visibility;
     }
 
     /**
-     * @param null $visibility
+     * @param Visibility $visibility
      *
      * @return self
      */
-    public function setVisibility($visibility): self
+    public function setVisibility(Visibility $visibility): self
     {
         $this->visibility = $visibility;
 
@@ -605,7 +606,7 @@ abstract class AbstractProductCommand
      *
      * @throws ProductConstraintException
      */
-    private function setlocalizedProductNames(array $productNames): self
+    private function setLocalizedProductNames(array $productNames): self
     {
         foreach ($productNames as $productName) {
             $this->localizedProductNames[] = new ProductName($productName);
