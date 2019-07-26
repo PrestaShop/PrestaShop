@@ -39,6 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeNotFoundExcepti
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\PasswordResetTooFrequentException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\ResetPasswordTokenExpiredException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\UnableToResetPasswordException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\Password;
 use Shop;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -104,7 +105,7 @@ final class ResetPasswordHandler implements ResetPasswordHandlerInterface
             throw new EmployeeNotFoundException(null, 'Employee could not be found by given email.');
         }
 
-        if (8 > strlen($command->getNewPlainPassword())) {
+        if (Password::MIN_LENGTH > strlen($command->getNewPlainPassword())) {
             throw new EmployeeConstraintException(
                 'Password must be not shorter than 8 symbols',
                 EmployeeConstraintException::INVALID_PASSWORD

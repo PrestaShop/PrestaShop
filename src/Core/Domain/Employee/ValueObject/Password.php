@@ -41,7 +41,7 @@ class Password
     /**
      * @var string maximum allowed password length
      */
-    const MAX_LENGTH = 255;
+    const MAX_LENGTH = 72;
 
     /**
      * @var string
