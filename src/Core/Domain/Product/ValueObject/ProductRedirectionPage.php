@@ -8,7 +8,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintExcepti
 /**
  * Holds data which points to product redirection page.
  */
-final class ProductRedirectionPage implements RedirectionPageInterface
+final class ProductRedirectionPage implements TypedRedirectionPageInterface
 {
     /**
      * @var ResponseCode
@@ -43,7 +43,7 @@ final class ProductRedirectionPage implements RedirectionPageInterface
     /**
      * {@inheritdoc}
      */
-    public function getType(): ?string
+    public function getType(): string
     {
         return 'product';
     }
@@ -51,7 +51,7 @@ final class ProductRedirectionPage implements RedirectionPageInterface
     /**
      * {@inheritdoc}
      */
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->categoryId->getValue();
     }

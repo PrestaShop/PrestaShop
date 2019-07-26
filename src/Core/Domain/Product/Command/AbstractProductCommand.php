@@ -19,6 +19,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductName;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectionPageInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RetailPrice;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\TypedRedirectionPageInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\UnitPrice;
 
 /**
@@ -109,7 +110,7 @@ abstract class AbstractProductCommand
     private $friendlyUrls;
 
     /**
-     * @var RedirectionPageInterface
+     * @var RedirectionPageInterface|TypedRedirectionPageInterface
      */
     private $redirectionPage;
 
@@ -457,7 +458,7 @@ abstract class AbstractProductCommand
     }
 
     /**
-     * @return RedirectionPageInterface
+     * @return RedirectionPageInterface|TypedRedirectionPageInterface
      */
     public function getRedirectionPage(): RedirectionPageInterface
     {
@@ -465,7 +466,7 @@ abstract class AbstractProductCommand
     }
 
     /**
-     * @param RedirectionPageInterface $redirectionPage
+     * @param RedirectionPageInterface|TypedRedirectionPageInterface $redirectionPage
      *
      * @return self
      */

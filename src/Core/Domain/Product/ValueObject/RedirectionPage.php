@@ -31,20 +31,4 @@ final class RedirectionPage implements RedirectionPageInterface
     {
         return $this->responseCode;
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getType(): ?string
-    {
-        return null;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getId(): ?int
-    {
-        return null;
-    }
 }

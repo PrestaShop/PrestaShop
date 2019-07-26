@@ -9,7 +9,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintExcepti
 /**
  * Category redirection page
  */
-final class CategoryRedirectionPage implements RedirectionPageInterface
+final class CategoryRedirectionPage implements TypedRedirectionPageInterface
 {
     /**
      * @var ResponseCode
@@ -45,7 +45,7 @@ final class CategoryRedirectionPage implements RedirectionPageInterface
     /**
      * {@inheritdoc}
      */
-    public function getType(): ?string
+    public function getType(): string
     {
         return 'category';
     }
@@ -53,7 +53,7 @@ final class CategoryRedirectionPage implements RedirectionPageInterface
     /**
      * {@inheritdoc}
      */
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->categoryId->getValue();
     }
