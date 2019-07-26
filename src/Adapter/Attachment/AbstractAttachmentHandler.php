@@ -40,7 +40,9 @@ abstract class AbstractAttachmentHandler
 {
     /**
      * @param AttachmentId $attachmentId
+     *
      * @return Attachment
+     *
      * @throws AttachmentNotFoundException
      * @throws PrestaShopException
      * @throws \PrestaShopDatabaseException
