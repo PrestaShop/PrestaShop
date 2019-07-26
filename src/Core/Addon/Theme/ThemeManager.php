@@ -34,13 +34,14 @@ use PrestaShop\PrestaShop\Core\Addon\Theme\Exception\ThemeAlreadyExistsException
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\FailedToEnableThemeModuleException;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\ThemeConstraintException;
+use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem as PsFileSystem;
 use PrestaShop\PrestaShop\Core\Module\HookConfigurator;
 use PrestaShop\PrestaShop\Core\Image\ImageTypeRepository;
 use PrestaShop\PrestaShop\Core\Addon\AddonManagerInterface;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShopBundle\Service\TranslationService;
-use PrestaShopBundle\Translation\Provider\TranslationFinderTrait;
+use PrestaShopBundle\Translation\Provider\TranslationFinder;
 use PrestaShopLogger;
 use Shop;
 use Symfony\Component\Filesystem\Filesystem;
@@ -556,14 +557,21 @@ class ThemeManager implements AddonManagerInterface
                 continue;
             }
 
-            // construct a new catalog for this lang and import in database if key and message are different
-            $messageCatalog = $this->translationFinder->getCatalogueFromPaths($translationFolder . $locale, $locale);
+            try {
+                // construct a new catalog for this lang and import in database if key and message are different
+                $messageCatalog = $this->translationFinder->getCatalogueFromPaths(
+                    $translationFolder . $locale,
+                    $locale
+                );
 
-            // get all default domain from catalog
-            $allDomains = $this->getDefaultDomains($locale, $themeProvider);
+                // get all default domain from catalog
+                $allDomains = $this->getDefaultDomains($locale, $themeProvider);
 
-            // do the import
-            $this->handleImport($translationService, $messageCatalog, $allDomains, $lang, $locale, $themeName);
+                // do the import
+                $this->handleImport($translationService, $messageCatalog, $allDomains, $lang, $locale, $themeName);
+            } catch (FileNotFoundException $e) {
+                // if the directory is there but there are no files, do nothing
+            }
         }
     }
 
