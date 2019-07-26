@@ -29,9 +29,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\Attachment\Query;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\ValueObject\AttachmentId;
 
 /**
- * Class AttachmentPath
+ * Class GetAttachment
  */
-class AttachmentPath
+class GetAttachment
 {
     /**
      * @var AttachmentId
