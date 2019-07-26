@@ -39,9 +39,11 @@ use Symfony\Component\Translation\MessageCatalogueInterface;
  */
 class TranslationFinder
 {
+    const ERR_NO_FILES_IN_DIRECTORY = 1;
+    const ERR_DIRECTORY_NOT_FOUND = 2;
 
     /**
-     * @param array $paths a list of paths when we can look for translations
+     * @param string|array $paths a list of paths when we can look for translations
      * @param string $locale the Symfony (not the PrestaShop one) locale
      * @param string|null $pattern a regular expression
      *
@@ -67,13 +69,13 @@ class TranslationFinder
                     'Could not crawl for translation files: %s',
                     $e->getMessage()
                 ),
-                0,
+                self::ERR_DIRECTORY_NOT_FOUND,
                 $e
             );
         }
 
         if (count($translationFiles) === 0) {
-            throw new FileNotFoundException('There is no translation file available.');
+            throw new FileNotFoundException('There are no translation file available.', self::ERR_NO_FILES_IN_DIRECTORY);
         }
 
         /** @var SplFileInfo $file */
