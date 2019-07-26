@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\BulkDeleteAttachmentsCo
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\DeleteAttachmentCommand;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\DeleteAttachmentException;
-use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\AttachmentPath;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachment;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\Attachment;
 use PrestaShop\PrestaShop\Core\Search\Filters\AttachmentFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -120,7 +120,7 @@ class AttachmentController extends FrameworkBundleAdminController
     {
         try {
             /** @var Attachment $attachment */
-            $attachment = $this->getCommandBus()->handle(new AttachmentPath((int) $attachmentId));
+            $attachment = $this->getCommandBus()->handle(new GetAttachment((int) $attachmentId));
 
             return $this->file($attachment->getPath(), $attachment->getName());
         } catch (AttachmentException $e) {
@@ -221,11 +221,9 @@ class AttachmentController extends FrameworkBundleAdminController
     }
 
     /**
-     * @param Request $request
-     *
      * @return array
      */
-    private function getAttachmentToolbarButtons(Request $request)
+    private function getAttachmentToolbarButtons()
     {
         $toolbarButtons = [];
 
