@@ -265,4 +265,9 @@ abstract class AbstractProvider implements ProviderInterface, XliffCatalogueInte
     {
         return (new TranslationFinder())->getCatalogueFromPaths($paths, $locale, $pattern);
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public abstract function getDefaultResourceDirectory();
 }
