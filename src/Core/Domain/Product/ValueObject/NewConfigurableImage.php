@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 /**
  * New not created image.
  */
-final class NewConfigurableImage implements ConfigurableImageInterface, NewImageInterface
+final class NewConfigurableImage implements ConfigurableImageInterface
 {
     /**
      * @var int
@@ -80,13 +80,5 @@ final class NewConfigurableImage implements ConfigurableImageInterface, NewImage
     public function getLocalizedCaptions(): array
     {
         return $this->localizedCaptions;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getId(): ?int
-    {
-        return null;
     }
 }

@@ -5,16 +5,14 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Product\DTO\FeatureCollection;
+use PrestaShop\PrestaShop\Core\Domain\Product\DTO\ImageCollection;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Category;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ConfigurableImageInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\CostPrice;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\FriendlyUrl;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\IdentifiableImageInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\MetaDescription;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\MetaKeywords;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\MetaTitle;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\NewImageInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductName;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectionPageInterface;
@@ -34,7 +32,7 @@ abstract class AbstractProductCommand
     private $localisedProductNames;
 
     /**
-     * @var ConfigurableImageInterface[]|NewImageInterface[]|IdentifiableImageInterface[] - can be mixed as well.
+     * @var ImageCollection- can be mixed as well.
      */
     private $images;
 
@@ -163,19 +161,19 @@ abstract class AbstractProductCommand
     }
 
     /**
-     * @return ConfigurableImageInterface[]|NewImageInterface[]|IdentifiableImageInterface[]
+     * @return ImageCollection
      */
-    public function getImages(): ?array
+    public function getImages(): ?ImageCollection
     {
         return $this->images;
     }
 
     /**
-     * @param ConfigurableImageInterface[]|NewImageInterface[]|IdentifiableImageInterface[] $images
+     * @param ImageCollection $images
      *
      * @return self
      */
-    public function setImages(array $images): self
+    public function setImages(ImageCollection $images): self
     {
         $this->images = $images;
 

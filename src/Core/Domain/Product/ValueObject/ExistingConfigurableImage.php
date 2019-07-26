@@ -7,7 +7,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintExcepti
 /**
  * Existing image
  */
-final class ExistingConfigurableImage implements ConfigurableImageInterface, IdentifiableImageInterface
+final class ExistingConfigurableImage implements ConfigurableImageInterface
 {
     /**
      * @var int
