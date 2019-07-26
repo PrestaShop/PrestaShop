@@ -75,7 +75,7 @@ class AuthorizationController extends FrameworkBundleAdminController
 
         if (null !== $authenticationError) {
             $this->addFlash(
-                'error',
+                FrameworkBundleAdminController::ERROR,
                 $this->getErrorMessageForException(
                     $authenticationError,
                     $this->getErrorMessages()
@@ -118,14 +118,14 @@ class AuthorizationController extends FrameworkBundleAdminController
                     new SendResetPasswordEmailCommand($forgotPasswordForm->getData()['email'])
                 );
 
-                $this->addFlash('success', $successMessage);
+                $this->addSuccess($successMessage);
                 $showForgotPasswordForm = false;
             } catch (EmployeeNotFoundException $e) {
                 // Not showing an error message when employee is not found
-                $this->addFlash('success', $successMessage);
+                $this->addSuccess($successMessage);
                 $showForgotPasswordForm = false;
             } catch (DomainException $e) {
-                $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+                $this->addError($this->getErrorMessageForException($e, $this->getErrorMessages()));
             }
         }
 
@@ -154,7 +154,7 @@ class AuthorizationController extends FrameworkBundleAdminController
             /** @var PasswordResettingEmployee $employee */
             $employee = $this->getQueryBus()->handle(new GetEmployeeForPasswordReset((int) $employeeId));
         } catch (DomainException $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+            $this->addError($this->getErrorMessageForException($e, $this->getErrorMessages()));
 
             return $this->redirectToRoute('_admin_login');
         }
@@ -173,19 +173,19 @@ class AuthorizationController extends FrameworkBundleAdminController
                     $resetPasswordForm->getData()['reset_password']
                 ));
 
-                $this->addFlash('success', $this->trans(
+                $this->addSuccess($this->trans(
                     'Your password has been changed successfully.',
                     'Admin.Login.Notification'
                 ));
 
                 return $this->redirectToRoute('_admin_login');
             } catch (EmployeeNotFoundException $e) {
-                $this->addFlash('error', $this->trans(
+                $this->addError($this->trans(
                     'An error occurred while attempting to reset your password.',
                     'Admin.Login.Notification'
                 ));
             } catch (DomainException $e) {
-                $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+                $this->addError($this->getErrorMessageForException($e, $this->getErrorMessages()));
             }
         }
 
