@@ -97,13 +97,13 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
             ->addSelect('IF ((' . $newCustomerSubSelect->getSQL() . ') > 0, 0, 1) AS new')
         ;
 
+        $this->applySorting($qb, $searchCriteria);
+
         $qb = $this->applyNewCustomerFilter($qb, $searchCriteria->getFilters());
 
         $this->criteriaApplicator
             ->applyPagination($searchCriteria, $qb)
         ;
-
-        $this->applySorting($qb, $searchCriteria);
 
         return $qb;
     }
