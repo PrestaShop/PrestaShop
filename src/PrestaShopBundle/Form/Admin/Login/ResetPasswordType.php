@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Login;
 
+use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\Password;
 use PrestaShopBundle\Translation\TranslatorAwareTrait;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -58,15 +59,15 @@ class ResetPasswordType extends AbstractType
                 'first_options' => [
                     'constraints' => [
                         new Length([
-                            'min' => 8,
-                            'max' => 72,
+                            'min' => Password::MIN_LENGTH,
+                            'max' => Password::MAX_LENGTH,
                             'minMessage' => $this->trans(
-                                sprintf('Password should be at least %d characters long.', 8),
+                                sprintf('Password should be at least %d characters long.', Password::MIN_LENGTH),
                                 [],
                                 'Admin.Login.Notification'
                             ),
                             'maxMessage' => $this->trans(
-                                sprintf('Password should not exceed %d characters.', 72),
+                                sprintf('Password should not exceed %d characters.', Password::MAX_LENGTH),
                                 [],
                                 'Admin.Login.Notification'
                             ),

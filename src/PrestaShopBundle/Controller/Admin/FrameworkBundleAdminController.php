@@ -46,6 +46,16 @@ use Symfony\Component\HttpFoundation\Response;
 class FrameworkBundleAdminController extends Controller
 {
     /**
+     * Used for success flash messages
+     */
+    protected const FLASH_TYPE_SUCCESS = 'success';
+
+    /**
+     * Used for error flash messages
+     */
+    protected const FLASH_TYPE_ERROR = 'error';
+
+    /**
      * @var ConfigurationInterface
      */
     protected $configuration;
@@ -486,5 +496,25 @@ class FrameworkBundleAdminController extends Controller
             $exceptionType,
             $exceptionCode
         );
+    }
+
+    /**
+     * Add a success flash message
+     *
+     * @param string $message
+     */
+    protected function addSuccess(string $message): void
+    {
+        $this->addFlash(self::FLASH_TYPE_SUCCESS, $message);
+    }
+
+    /**
+     * Add an error flash message
+     *
+     * @param string $message
+     */
+    protected function addError(string $message): void
+    {
+        $this->addFlash(self::FLASH_TYPE_ERROR, $message);
     }
 }
