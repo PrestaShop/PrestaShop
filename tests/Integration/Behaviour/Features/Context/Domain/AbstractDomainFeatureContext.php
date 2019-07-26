@@ -27,6 +27,8 @@
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Behat\Context\Context;
+use Behat\Testwork\Hook\Scope\BeforeSuiteScope;
+use ObjectModel;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
@@ -37,6 +39,15 @@ abstract class AbstractDomainFeatureContext implements Context
      * @var \Exception|null
      */
     protected $lastException;
+
+    /**
+     * @BeforeSuite
+     */
+    public static function prepare(BeforeSuiteScope $scope)
+    {
+        // Disable legacy object model cache to prevent conflicts between scenarios.
+        ObjectModel::disableCache();
+    }
 
     /**
      * @return CommandBusInterface

@@ -30,7 +30,6 @@ use CartRule;
 use Configuration;
 use Currency;
 use DateTime;
-use ObjectModel;
 use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Adapter\CartRule\LegacyDiscountApplicationType;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\AddCartRuleCommand;
@@ -252,14 +251,10 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
             $properties['discount_product_id'] ?? null
         );
 
-        ObjectModel::disableCache();
-
         SharedStorage::getStorage()->set(
             sprintf('cart_rule_object_%s', $properties['name']),
             new CartRule($cartRuleId->getValue())
         );
-
-        ObjectModel::enableCache();
 
         SharedStorage::getStorage()->clear($this->cartRuleStorageProperty);
     }
