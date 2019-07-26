@@ -23,10 +23,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  *}
 
-{**
- * @deprecated since 1.7.6, to be removed in the next minor
- *}
-
 {if isset($cms_breadcrumb)}
 	<ul class="breadcrumb cat_bar">
 		{$cms_breadcrumb}

@@ -23,10 +23,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  *}
 
-{**
- * @deprecated since 1.7.6, to be removed in the next minor
- *}
-
 {extends file="helpers/view/view.tpl"}
 
 {block name="override_tpl"}

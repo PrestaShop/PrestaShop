@@ -23,10 +23,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  *}
 
-{**
- * @deprecated since 1.7.6, to be removed in the next minor
- *}
-
 {extends file="helpers/form/form.tpl"}
 {block name="input"}
 	{if $input.name == "link_rewrite"}
