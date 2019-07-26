@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
-<!-- Copyright © 1991-2017 Unicode, Inc.
+<!-- Copyright © 1991-2019 Unicode, Inc.
 For terms of use, see http://www.unicode.org/copyright.html
 Unicode and the Unicode Logo are registered trademarks of Unicode, Inc. in the U.S. and other countries.
 CLDR data files are interpreted according to the LDML specification (http://unicode.org/reports/tr35/)
 -->
 <ldml>
 	<identity>
-		<version number="$Revision: 13701 $"/>
+		<version number="$Revision: 14782 $"/>
 		<language type="ln"/>
 	</identity>
 	<localeDisplayNames>
@@ -556,7 +556,9 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 					</eraNames>
 					<eraAbbr>
 						<era type="0">libóso ya</era>
+						<era type="0" alt="variant" draft="unconfirmed">LYK</era>
 						<era type="1">nsima ya Y</era>
+						<era type="1" alt="variant" draft="unconfirmed">NSYK</era>
 					</eraAbbr>
 				</eras>
 				<dateFormats>
@@ -1038,6 +1040,9 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 				<symbol draft="unconfirmed">MKD</symbol>
 			</currency>
 			<currency type="MRO">
+				<displayName>Ugwiya ya Moritani (1973–2017)</displayName>
+			</currency>
+			<currency type="MRU">
 				<displayName>Ugwiya ya Moritani</displayName>
 			</currency>
 			<currency type="MUR">
@@ -1164,6 +1169,9 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 				<displayName draft="unconfirmed">Bojito ya Sudaní ya Súdi</displayName>
 			</currency>
 			<currency type="STD">
+				<displayName>Dobra ya Sao Tomé mpé Presipe (1977–2017)</displayName>
+			</currency>
+			<currency type="STN">
 				<displayName>Dobra ya Sao Tomé mpé Presipe</displayName>
 			</currency>
 			<currency type="SZL">
