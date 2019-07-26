@@ -303,26 +303,20 @@ class AdminProductDataUpdater implements ProductInterface
         ksort($combinedOldNewPositions); // (keys: old positions starting at '1', values: new positions)
         $positionsMatcher = array_replace(array_pad(array(), $maxPosition, 0), $combinedOldNewPositions); // pad holes with 0
         array_shift($positionsMatcher); // shift because [0] is not used in MySQL FIELD()
-        $fields = implode(',', $positionsMatcher);
+        $firstPosition = min($positionsMatcher);
+        $productsIds = implode(',', array_map('intval', array_keys($productList)));
 
-        // update current pages.
+        Db::getInstance()->query('SET @i := ' . (((int) $firstPosition) - 1));
         $updatePositions = 'UPDATE `' . _DB_PREFIX_ . 'category_product` cp
             INNER JOIN `' . _DB_PREFIX_ . 'product` p ON (cp.`id_product` = p.`id_product`)
             ' . Shop::addSqlAssociation('product', 'p') . '
-            SET cp.`position` = ELT(cp.`position`, ' . $fields . '),
+            SET cp.`position` = (SELECT @i := @i + 1),
                 p.`date_upd` = "' . date('Y-m-d H:i:s') . '",
                 product_shop.`date_upd` = "' . date('Y-m-d H:i:s') . '"
-            WHERE cp.`id_category` = ' . (int) $categoryId . ' AND cp.`id_product` IN (' . implode(',', array_map('intval', array_keys($productList))) . ')';
+            WHERE cp.`id_category` = ' . (int) $categoryId . ' AND cp.`id_product` IN (' . $productsIds . ')
+            ORDER BY FIELD(cp.`id_product`, ' . $productsIds . ')';
 
-        Db::getInstance()->execute($updatePositions);
-
-        // Fixes duplicates on all pages
-        Db::getInstance()->query('SET @i := 0');
-        $selectPositions = 'UPDATE`' . _DB_PREFIX_ . 'category_product` cp
-            SET cp.`position` = (SELECT @i := @i + 1)
-            WHERE cp.`id_category` = ' . (int) $categoryId . '
-            ORDER BY cp.`id_product` NOT IN (' . implode(',', array_map('intval', array_keys($productList))) . '), cp.`position` ASC';
-        Db::getInstance()->execute($selectPositions);
+        Db::getInstance()->query($updatePositions);
 
         return true;
     }
