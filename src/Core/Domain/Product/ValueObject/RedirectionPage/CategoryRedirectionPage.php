@@ -24,20 +24,23 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectionPage;
 
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectionPage\TypedRedirectionPageInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectionPage\ResponseCode;
 
 /**
- * Holds information about product category.
+ * Category redirection page
  */
-final class Category
+final class CategoryRedirectionPage implements TypedRedirectionPageInterface
 {
     /**
-     * @var bool
+     * @var ResponseCode
      */
-    private $isMainCategory;
+    private $responseCode;
 
     /**
      * @var CategoryId
@@ -45,30 +48,39 @@ final class Category
     private $categoryId;
 
     /**
+     * @param int $responseCode
      * @param int $categoryId
-     * @param bool $isMainCategory
      *
+     * @throws ProductConstraintException
      * @throws CategoryException
      */
-    public function __construct(int $categoryId, bool $isMainCategory)
+    public function __construct(int $responseCode, int $categoryId)
     {
+        $this->responseCode = new ResponseCode($responseCode);
         $this->categoryId = new CategoryId($categoryId);
-        $this->isMainCategory = $isMainCategory;
     }
 
     /**
-     * @return bool
+     * {@inheritdoc}
      */
-    public function isMainCategory(): bool
+    public function getResponseCode(): ResponseCode
     {
-        return $this->isMainCategory;
+        return $this->responseCode;
     }
 
     /**
-     * @return CategoryId
+     * {@inheritdoc}
      */
-    public function getCategoryId(): CategoryId
+    public function getType(): string
     {
-        return $this->categoryId;
+        return 'category';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getId(): int
+    {
+        return $this->categoryId->getValue();
     }
 }

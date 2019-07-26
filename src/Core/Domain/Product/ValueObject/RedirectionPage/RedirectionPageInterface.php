@@ -24,12 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectionPage;
+
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectionPage\ResponseCode;
 
 /**
- * Holds data which is only common for standard product type.
+ * Redirection page which displays certain response code.
  */
-class AddStandardProductCommand extends AbstractProductCommand
+interface RedirectionPageInterface
 {
-    //todo: here will appear only standard product getters and setters.
+    /**
+     * @return ResponseCode
+     */
+    public function getResponseCode(): ResponseCode;
 }

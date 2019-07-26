@@ -24,12 +24,24 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectionPage;
 
 /**
- * Holds data which is only common for standard product type.
+ * Redirection page which displays certain response code and redirects to the page provided with type.
  */
-class AddStandardProductCommand extends AbstractProductCommand
+interface TypedRedirectionPageInterface extends RedirectionPageInterface
 {
-    //todo: here will appear only standard product getters and setters.
+    /**
+     * Type of redirection page - e.g category or product.
+     *
+     * @return string|null
+     */
+    public function getType(): string;
+
+    /**
+     * Unique identifier of redirection page.
+     *
+     * @return int|null
+     */
+    public function getId(): int;
 }

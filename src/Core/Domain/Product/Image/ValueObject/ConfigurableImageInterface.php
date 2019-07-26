@@ -24,12 +24,31 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject;
 
 /**
- * Holds data which is only common for standard product type.
+ * Defines contract for image which can be configured.
  */
-class AddStandardProductCommand extends AbstractProductCommand
+interface ConfigurableImageInterface
 {
-    //todo: here will appear only standard product getters and setters.
+    /**
+     * Gets the position of an image.
+     *
+     * @return int
+     */
+    public function getPosition(): int;
+
+    /**
+     * Determines if the image is used as cover image
+     *
+     * @return bool
+     */
+    public function isCover(): bool;
+
+    /**
+     * Gets captions which has key id language language and string value.
+     *
+     * @return string[]
+     */
+    public function getLocalizedCaptions(): array;
 }

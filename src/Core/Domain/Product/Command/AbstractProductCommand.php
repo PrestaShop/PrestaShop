@@ -1,24 +1,48 @@
 <?php
+/**
+ * 2007-2019 PrestaShop and Contributors
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
-use PrestaShop\PrestaShop\Core\Domain\Product\DTO\FeatureCollection;
-use PrestaShop\PrestaShop\Core\Domain\Product\DTO\ImageCollection;
+use PrestaShop\PrestaShop\Core\Domain\Product\Feature\DTO\FeatureCollection;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\DTO\ImageCollection;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Category;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\CostPrice;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\FriendlyUrl;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\MetaDescription;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\MetaKeywords;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\MetaTitle;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Price\CostPrice;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\MetaData\FriendlyUrl;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\MetaData\MetaDescription;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\MetaData\MetaKeywords;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\MetaData\MetaTitle;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductName;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectionPageInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RetailPrice;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\TypedRedirectionPageInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\UnitPrice;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectionPage\RedirectionPageInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Price\RetailPrice;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectionPage\TypedRedirectionPageInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Price\UnitPrice;
 
 /**
  * Holds the abstraction of common product data which does not depend from product type.
@@ -29,9 +53,10 @@ abstract class AbstractProductCommand
      * @todo: I need defaultLanguage validation in handler
      * @var ProductName[]
      */
-    private $localisedProductNames;
+    private $localizedProductNames;
 
     /**
+     * @todo: maybe put it out of common product command due to this part will be added in asynch way.
      * @var ImageCollection- can be mixed as well.
      */
     private $images;
@@ -55,14 +80,14 @@ abstract class AbstractProductCommand
      * @todo: I need cleanHtml validation in handler
      * @var array|string[]
      */
-    private $localisedSummary;
+    private $localizedSummary;
 
     /**
      * @todo: I need cleanHtml validation in handler
      *
      * @var array|string[]
      */
-    private $localisedDescription;
+    private $localizedDescription;
 
     /**
      * @var FeatureCollection
@@ -143,21 +168,21 @@ abstract class AbstractProductCommand
     private $shopAssociation;
 
     /**
-     * @param string[] $localisedProductNames
+     * @param string[] $localizedProductNames
      *
      * @throws ProductConstraintException
      */
-    public function __construct(array $localisedProductNames)
+    public function __construct(array $localizedProductNames)
     {
-        $this->setLocalisedProductNames($localisedProductNames);
+        $this->setlocalizedProductNames($localizedProductNames);
     }
 
     /**
      * @return ProductName[]
      */
-    public function getLocalisedProductNames(): array
+    public function getlocalizedProductNames(): array
     {
-        return $this->localisedProductNames;
+        return $this->localizedProductNames;
     }
 
     /**
@@ -243,19 +268,19 @@ abstract class AbstractProductCommand
     /**
      * @return array|string[]
      */
-    public function getLocalisedSummary(): ?array
+    public function getlocalizedSummary(): ?array
     {
-        return $this->localisedSummary;
+        return $this->localizedSummary;
     }
 
     /**
-     * @param array|string[] $localisedSummary
+     * @param array|string[] $localizedSummary
      *
      * @return self
      */
-    public function setLocalisedSummary($localisedSummary): self
+    public function setlocalizedSummary($localizedSummary): self
     {
-        $this->localisedSummary = $localisedSummary;
+        $this->localizedSummary = $localizedSummary;
 
         return $this;
     }
@@ -263,19 +288,19 @@ abstract class AbstractProductCommand
     /**
      * @return array|string[]
      */
-    public function getLocalisedDescription(): array
+    public function getlocalizedDescription(): array
     {
-        return $this->localisedDescription;
+        return $this->localizedDescription;
     }
 
     /**
-     * @param array|string[] $localisedDescription
+     * @param array|string[] $localizedDescription
      *
      * @return self
      */
-    public function setLocalisedDescription($localisedDescription): self
+    public function setlocalizedDescription($localizedDescription): self
     {
-        $this->localisedDescription = $localisedDescription;
+        $this->localizedDescription = $localizedDescription;
 
         return $this;
     }
@@ -580,10 +605,10 @@ abstract class AbstractProductCommand
      *
      * @throws ProductConstraintException
      */
-    private function setLocalisedProductNames(array $productNames): self
+    private function setlocalizedProductNames(array $productNames): self
     {
         foreach ($productNames as $productName) {
-            $this->localisedProductNames[] = new ProductName($productName);
+            $this->localizedProductNames[] = new ProductName($productName);
         }
 
         return $this;

@@ -24,12 +24,37 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectionPage;
+
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectionPage\RedirectionPageInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectionPage\ResponseCode;
 
 /**
- * Holds data which is only common for standard product type.
+ * Response code for product unavailable case.
  */
-class AddStandardProductCommand extends AbstractProductCommand
+final class RedirectionPage implements RedirectionPageInterface
 {
-    //todo: here will appear only standard product getters and setters.
+    /**
+     * @var int
+     */
+    private $responseCode;
+
+    /**
+     * @param int $responseCode
+     *
+     * @throws ProductConstraintException
+     */
+    public function __construct(int $responseCode)
+    {
+        $this->responseCode = new ResponseCode($responseCode);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getResponseCode(): ResponseCode
+    {
+        return $this->responseCode;
+    }
 }

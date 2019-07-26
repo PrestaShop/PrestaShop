@@ -24,33 +24,48 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Price;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\Decimal\Number;
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Price;
 
-class EditStandardProductCommand extends AbstractProductCommand
+/**
+ * The price that the product actually costs - used for margin calculation etc...
+ */
+final class CostPrice
 {
     /**
-     * @var ProductId
+     * @var Number
      */
-    private $productId;
+    private $price;
 
     /**
-     * @param int $productId
-     * @param array $localizedProductNames
+     * @param float $price
+     *
+     * @throws ProductConstraintException
      */
-    public function __construct(int $productId, array $localizedProductNames)
+    public function __construct(float $price)
     {
-        parent::__construct($localizedProductNames);
+        try {
+            $numberPrice = (new Price($price))->getValue();
+        } catch (DomainConstraintException $e) {
+            throw new ProductConstraintException(
+                'invalid cost price',
+                ProductConstraintException::INVALID_COST_PRICE,
+                $e
+            );
+        }
 
-        $this->productId = new ProductId($productId);
+        $this->price = $numberPrice;
     }
 
     /**
-     * @return ProductId
+     * @return Number
      */
-    public function getProductId(): ProductId
+    public function getValue(): Number
     {
-        return $this->productId;
+        return $this->price;
     }
 }

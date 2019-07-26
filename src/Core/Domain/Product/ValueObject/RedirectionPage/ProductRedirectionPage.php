@@ -24,68 +24,62 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectionPage;
 
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectionPage\TypedRedirectionPageInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectionPage\ResponseCode;
 
 /**
- * Holds product name.
+ * Holds data which points to product redirection page.
  */
-final class ProductName
+final class ProductRedirectionPage implements TypedRedirectionPageInterface
 {
-    public const MAX_SIZE = 128;
-
-    private $name;
+    /**
+     * @var ResponseCode
+     */
+    private $responseCode;
 
     /**
-     * @param string $name
+     * @var CategoryId
+     */
+    private $categoryId;
+
+    /**
+     * @param int $responseCode
+     * @param int $productId
      *
      * @throws ProductConstraintException
      */
-    public function __construct(string $name)
+    public function __construct(int $responseCode, int $productId)
     {
-        $this->setName($name);
+        $this->responseCode = new ResponseCode($responseCode);
+        $this->categoryId = new ProductId($productId);
     }
 
     /**
-     * @return mixed
+     * {@inheritdoc}
      */
-    public function getName()
+    public function getResponseCode(): ResponseCode
     {
-        return $this->name;
+        return $this->responseCode;
     }
 
     /**
-     * @param string $name
-     *
-     * @throws ProductConstraintException
+     * {@inheritdoc}
      */
-    private function setName(string $name): void
+    public function getType(): string
     {
-        $pattern = '/^[^<>;=#{}]*$/u';
+        return 'product';
+    }
 
-        if (!preg_match($pattern, $name)) {
-            throw new ProductConstraintException(
-                sprintf(
-                    'Given product name "%s" did not matched pattern "%s"',
-                    $name,
-                    $pattern
-                ),
-                ProductConstraintException::INVALID_NAME
-            );
-        }
-
-        if (strlen($name) > self::MAX_SIZE) {
-            throw new ProductConstraintException(
-                sprintf(
-                    'Given product name "%s" is longer then expected size %d',
-                    $name,
-                    self::MAX_SIZE
-                ),
-                ProductConstraintException::NAME_TOO_LONG
-            );
-        }
-
-        $this->name = $name;
+    /**
+     * {@inheritdoc}
+     */
+    public function getId(): int
+    {
+        return $this->categoryId->getValue();
     }
 }

@@ -24,12 +24,43 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\MetaData;
+
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 
 /**
- * Holds data which is only common for standard product type.
+ * An url which appears in the browser for product.
  */
-class AddStandardProductCommand extends AbstractProductCommand
+final class FriendlyUrl
 {
-    //todo: here will appear only standard product getters and setters.
+    public const MAX_SIZE = 128;
+
+    /**
+     * @param string $friendlyUrl
+     *
+     * @throws ProductConstraintException
+     */
+    public function __construct(string $friendlyUrl)
+    {
+        $this->setFriendlyUrl($friendlyUrl);
+    }
+
+    /**
+     * @param string $friendlyUrl
+     *
+     * @throws ProductConstraintException
+     */
+    private function setFriendlyUrl(string $friendlyUrl)
+    {
+        if (strlen($friendlyUrl) > self::MAX_SIZE) {
+            throw new ProductConstraintException(
+                sprintf(
+                    'Friendly url "%s" has breached max size which is %d',
+                    $friendlyUrl,
+                    self::MAX_SIZE
+                ),
+                ProductConstraintException::FRIENDLY_URL_TOO_LONG
+            );
+        }
+    }
 }

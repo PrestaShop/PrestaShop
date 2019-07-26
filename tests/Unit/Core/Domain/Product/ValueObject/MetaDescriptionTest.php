@@ -4,10 +4,10 @@ namespace Tests\Unit\Core\Domain\Product\ValueObject;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\CustomizableFeatureValue;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\MetaDescription;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\MetaKeywords;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\MetaTitle;
+use PrestaShop\PrestaShop\Core\Domain\Product\Feature\ValueObject\CustomizableFeatureValue;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\MetaData\MetaDescription;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\MetaData\MetaKeywords;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\MetaData\MetaTitle;
 
 class MetaDescriptionTest extends TestCase
 {

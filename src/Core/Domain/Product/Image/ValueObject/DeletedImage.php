@@ -24,12 +24,36 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject;
+
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 
 /**
- * Holds data which is only common for standard product type.
+ * Image which is about to be deleted.
  */
-class AddStandardProductCommand extends AbstractProductCommand
+final class DeletedImage
 {
-    //todo: here will appear only standard product getters and setters.
+    /**
+     * @var ImageId
+     */
+    private $imageId;
+
+    /**
+     * @param int $imageId
+     *
+     * @throws ProductConstraintException
+     */
+    public function __construct(int $imageId)
+    {
+        $this->imageId = new ImageId($imageId);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getId(): ImageId
+    {
+        return $this->imageId;
+    }
 }
