@@ -1,4 +1,4 @@
-<?php
+AdminManufacturersController<?php
 /**
  * 2007-2019 PrestaShop and Contributors
  *
@@ -120,7 +120,6 @@ class ControllerTest extends TestCase
             array('AdminLoginController'),
             array('AdminQuickAccessesController'),
             array('AdminCustomerThreadsController'),
-            array('AdminManufacturersController'),
             array('AdminReferrersController'),
             array('AdminAttachmentsController'),
             array('AdminReturnController'),
