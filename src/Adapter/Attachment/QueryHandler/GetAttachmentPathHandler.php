@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Attachment\QueryHandler;
 
 use PrestaShop\PrestaShop\Adapter\Attachment\AbstractAttachmentHandler;
-use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\AttachmentPath;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachment;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryHandler\GetAttachmentPathHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\Attachment;
 
@@ -39,7 +39,7 @@ final class GetAttachmentPathHandler extends AbstractAttachmentHandler implement
     /**
      * {@inheritdoc}
      */
-    public function handle(AttachmentPath $query): Attachment
+    public function handle(GetAttachment $query): Attachment
     {
         $attachment = $this->getAttachment($query->getAttachmentId());
 
