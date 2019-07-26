@@ -34,8 +34,6 @@ use Symfony\Component\Translation\MessageCatalogue;
 
 abstract class AbstractProvider implements ProviderInterface, XliffCatalogueInterface, DatabaseCatalogueInterface
 {
-    use TranslationFinderTrait;
-
     const DEFAULT_LOCALE = 'en-US';
 
     /**
@@ -120,9 +118,9 @@ abstract class AbstractProvider implements ProviderInterface, XliffCatalogueInte
     /**
      * Get the PrestaShop locale from real locale.
      *
+     * @return string The PrestaShop locale
      * @deprecated since 1.7.6, to be removed in the next major
      *
-     * @return string The PrestaShop locale
      */
     public function getPrestaShopLocale()
     {
@@ -252,5 +250,19 @@ abstract class AbstractProvider implements ProviderInterface, XliffCatalogueInte
         }
 
         return $messageCatalogue;
+    }
+
+    /**
+     * @param array $paths a list of paths when we can look for translations
+     * @param string $locale the Symfony (not the PrestaShop one) locale
+     * @param string|null $pattern a regular expression
+     *
+     * @return MessageCatalogue
+     *
+     * @throws FileNotFoundException
+     */
+    public function getCatalogueFromPaths($paths, $locale, $pattern = null)
+    {
+        return (new TranslationFinder())->getCatalogueFromPaths($paths, $locale, $pattern);
     }
 }
