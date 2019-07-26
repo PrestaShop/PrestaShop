@@ -33,6 +33,7 @@ final class FileSizeConverter
 {
     /**
      * @param int $bytes
+     *
      * @return string
      */
     public function convert(int $bytes)

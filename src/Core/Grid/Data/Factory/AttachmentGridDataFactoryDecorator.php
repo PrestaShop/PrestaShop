@@ -133,6 +133,7 @@ final class AttachmentGridDataFactoryDecorator implements GridDataFactoryInterfa
 
     /**
      * @param string $attachmentId
+     *
      * @return array
      */
     private function getProductNames(string $attachmentId)

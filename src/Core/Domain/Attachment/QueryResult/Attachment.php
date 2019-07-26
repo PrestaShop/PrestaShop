@@ -44,7 +44,6 @@ class Attachment
     /**
      * @param string $path
      * @param string $name
-     *
      */
     public function __construct(string $path, string $name)
     {
