@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Attachment\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\AttachmentPath;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachment;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\Attachment;
 
 /**
@@ -35,9 +35,9 @@ use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\Attachment;
 interface GetAttachmentPathHandlerInterface
 {
     /**
-     * @param AttachmentPath $query
+     * @param GetAttachment $query
      *
      * @return Attachment
      */
-    public function handle(AttachmentPath $query): Attachment;
+    public function handle(GetAttachment $query): Attachment;
 }
