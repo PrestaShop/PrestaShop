@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -24,18 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Attachment\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Attachment\CommandHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\EditAttachmentCommand;
 
 /**
- * Exception is thrown when Attachment constraint is violated
+ * Interface EditAttachmentHandlerInterface defines contract for EditAttachmentHandler
  */
-class AttachmentConstraintException extends AttachmentException
+interface EditAttachmentHandlerInterface
 {
-    const INVALID_ID = 1;
-
-    const INVALID_FILE_SIZE = 2;
-
-    const EMPTY_NAME = 3;
-
-    const EMPTY_DESCRIPTION = 4;
+    /**
+     * @param EditAttachmentCommand $command
+     */
+    public function handle(EditAttachmentCommand $command);
 }

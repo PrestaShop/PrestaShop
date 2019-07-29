@@ -36,6 +36,8 @@ use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\DeleteAttachmentExcep
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachment;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\Attachment;
 use PrestaShop\PrestaShop\Core\Search\Filters\AttachmentFilters;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachmentForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\EditableAttachment;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
@@ -101,6 +103,47 @@ class AttachmentController extends FrameworkBundleAdminController
      *
      * @return Response
      */
+    public function editAction($attachmentId, Request $request)
+    {
+        try {
+            /** @var EditableAttachment $attachmentInformation */
+            $attachmentInformation = $this->getQueryBus()->handle(new GetAttachmentForEditing((int) $attachmentId));
+
+            $attachmentFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.attachment_form_builder');
+            $attachmentFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.attachment_form_handler');
+
+            $attachmentForm = $attachmentFormBuilder->getFormFor((int) $attachmentId);
+            $attachmentForm->handleRequest($request);
+
+            $result = $attachmentFormHandler->handleFor((int) $attachmentId, $attachmentForm);
+
+            if ($result->isSubmitted() && $result->isValid()) {
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_attachments_index');
+            }
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+            if ($e instanceof AttachmentNotFoundException) {
+                return $this->redirectToRoute('admin_attachments_index');
+            }
+        }
+
+        return $this->render('@PrestaShop/Admin/Sell/Attachment/edit.html.twig', [
+            'attachmentForm' => $attachmentForm->createView(),
+            'attachmentInformation' => $attachmentInformation,
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+        ]);
+    }
+
+    /**
+     * Provides error messages for exceptions
+     *
+     * @return array
+     */
+    private function getErrorMessages()
+    {
+        return [
     public function editAction(int $attachmentId, Request $request)
     {
         return new Response($attachmentId);

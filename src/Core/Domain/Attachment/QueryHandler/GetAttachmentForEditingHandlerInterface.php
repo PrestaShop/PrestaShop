@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -24,18 +24,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Attachment\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Attachment\QueryHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachmentForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\EditableAttachment;
 
 /**
- * Exception is thrown when Attachment constraint is violated
+ * Interface for service that gets attachment data for editing
  */
-class AttachmentConstraintException extends AttachmentException
+interface GetAttachmentForEditingHandlerInterface
 {
-    const INVALID_ID = 1;
-
-    const INVALID_FILE_SIZE = 2;
-
-    const EMPTY_NAME = 3;
-
-    const EMPTY_DESCRIPTION = 4;
+    /**
+     * @param GetAttachmentForEditing $query
+     *
+     * @return EditableAttachment
+     */
+    public function handle(GetAttachmentForEditing $query): EditableAttachment;
 }

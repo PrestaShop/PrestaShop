@@ -18,3 +18,19 @@ services:
       - !php/const _PS_DOWNLOAD_DIR_
     tags:
       - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachment' }
+
+  prestashop.adapter.contact.query_handler.get_attachment_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Attachment\QueryHandler\GetAttachmentForEditingHandler'
+    tags:
+      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachmentForEditing' }
+
+  prestashop.adapter.image.uploader.attachment_file_uploader:
+    class: 'PrestaShop\PrestaShop\Adapter\File\Uploader\AttachmentFileUploader'
+    calls:
+      - { method: setTranslator, arguments: ['@translator'] }
+
+  prestashop.adapter.category.command_handler.edit_attachment_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Attachment\CommandHandler\EditAttachmentHandler'
+    tags:
+      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Attachment\Command\EditAttachmentCommand' }
+

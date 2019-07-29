@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -24,53 +24,35 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Attachment\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Attachment\Query;
 
-use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\ValueObject\AttachmentId;
 
 /**
- * Provides attachment id
+ * Gets attachment information for editing.
  */
-class AttachmentId
+class GetAttachmentForEditing
 {
     /**
-     * @var int
+     * @var AttachmentId
      */
-    private $id;
+    private $attachmentId;
 
     /**
-     * @param int $id
+     * @param $attachmentId
      *
-     * @throws AttachmentConstraintException
+     * @throws \PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentConstraintException
      */
-    public function __construct($id)
+    public function __construct($attachmentId)
     {
-        $this->assertIsIntegerGreaterThanZero($id);
-        $this->id = $id;
+        $this->attachmentId = new AttachmentId($attachmentId);
     }
 
     /**
-     * @return int
+     * @return AttachmentId
      */
-    public function getValue()
+    public function getAttachmentId()
     {
-        return $this->id;
-    }
-
-    /**
-     * Validates that the value is integer and is greater than zero
-     *
-     * @param $value
-     *
-     * @throws AttachmentConstraintException
-     */
-    private function assertIsIntegerGreaterThanZero($value)
-    {
-        if (!is_int($value) || 0 >= $value) {
-            throw new AttachmentConstraintException(
-                sprintf('Invalid attachment id "%s".', var_export($value, true)),
-                AttachmentConstraintException::INVALID_ID
-            );
-        }
+        return $this->attachmentId;
     }
 }
