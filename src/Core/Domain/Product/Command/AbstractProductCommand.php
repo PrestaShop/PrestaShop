@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
+use PrestaShop\PrestaShop\Core\Domain\Product\CustomizationField\ValueObject\CustomizationFieldInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Feature\DTO\FeatureCollection;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\DTO\ImageCollection;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
@@ -174,7 +175,7 @@ abstract class AbstractProductCommand
     private $upc;
 
     /**
-     * @var array
+     * @var CustomizationFieldInterface[]
      */
     private $customizationFields;
 
@@ -584,7 +585,7 @@ abstract class AbstractProductCommand
     }
 
     /**
-     * @return array
+     * @return CustomizationFieldInterface[]
      */
     public function getCustomizationFields(): ?array
     {
@@ -592,7 +593,7 @@ abstract class AbstractProductCommand
     }
 
     /**
-     * @param array $customizationFields
+     * @param CustomizationFieldInterface[] $customizationFields
      *
      * @return self
      */

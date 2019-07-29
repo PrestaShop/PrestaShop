@@ -50,4 +50,5 @@ class ProductConstraintException extends ProductException
     public const INVALID_ISBN_REFERENCE = 20;
     public const INVALID_EAN13_REFERENCE = 21;
     public const INVALID_UPC_REFERENCE = 22;
+    public const CUSTOMIZATION_FIELD_LABEL_TOO_LONG = 23;
 }
