@@ -14,7 +14,7 @@ module.exports = class CommonPage {
   /**
    * Wait for selector and click
    * @param selector, element to check
-   * @return boolean, true if text exist, false if not
+   * @param timeout, wait timeout
    */
   async waitForSelectorAndClick(selector, timeout = 10) {
     await this.page.waitForSelector(selector, {visible: true, timeout});
@@ -26,7 +26,7 @@ module.exports = class CommonPage {
    * @param selector, element to check
    * @param textToCheckWith, text to check with
    * @param parameter, parameter to use
-   * @return boolean, true when the result of parameter(textToCheckWith) is true, false if not
+   * @return promise, throw an error if element does not exist or text is not correct
    */
   async checkTextValue(selector, textToCheckWith, parameter = 'equal') {
     await this.page.waitForSelector(selector);
@@ -49,7 +49,7 @@ module.exports = class CommonPage {
    * @param selector, element to check
    * @param attribute, attribute to test
    * @param textToCheckWith, text to check with
-   * @return boolean, true if text in attribute is equal to textToCheckWith, false if not
+   * @return promise, throw an error if element does not exist or attribute value is not correct
    */
   async checkAttributeValue(selector, attribute, textToCheckWith) {
     await this.page.waitForSelector(selector);

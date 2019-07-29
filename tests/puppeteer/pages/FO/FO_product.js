@@ -15,6 +15,7 @@ module.exports = class FO_PRODUCT extends CommonPage {
 
   /**
    * To check the product information (Product name, price, quantity, description)
+   * @param productData, product data to check
    */
   async checkProduct(productData) {
     await this.checkTextValue(this.productName, productData.name_fr);

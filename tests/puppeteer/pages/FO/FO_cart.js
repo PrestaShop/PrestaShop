@@ -16,6 +16,8 @@ module.exports = class FO_CART extends CommonPage {
 
   /**
    * To check the cart details (product name, price, quantity)
+   * @param cartData, cart data to check
+   * @param productID, product id to check
    */
   async checkCartDetails(cartData, productID) {
     await this.checkTextValue(this.productName.replace('%NUMBER', productID), cartData.name_fr);
