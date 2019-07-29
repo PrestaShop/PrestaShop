@@ -1,6 +1,5 @@
-<?php
-/**
- * 2007-2019 PrestaShop SA and Contributors
+{#**
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -22,20 +21,23 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- */
+ *#}
 
-namespace PrestaShop\PrestaShop\Core\Domain\Attachment\Exception;
+{% set enableSidebar = true %}
+{% set layoutTitle = 'Editing attachment %name%'|trans({'%name%': attachmentInformation.fileName}, 'Admin.Orderscustomers.Feature') %}
 
-/**
- * Exception is thrown when Attachment constraint is violated
- */
-class AttachmentConstraintException extends AttachmentException
-{
-    const INVALID_ID = 1;
+{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
 
-    const INVALID_FILE_SIZE = 2;
+{% block content %}
+  <div class="row justify-content-center">
+    <div class="col">
+      {% include '@PrestaShop/Admin/Sell/Attachment/Blocks/form.html.twig' %}
+    </div>
+  </div>
+{% endblock %}
 
-    const EMPTY_NAME = 3;
+{% block javascripts %}
+  {{ parent() }}
 
-    const EMPTY_DESCRIPTION = 4;
-}
+  {% include '@PrestaShop/Admin/Sell/Customer/Blocks/javascript.html.twig' %}
+{% endblock %}

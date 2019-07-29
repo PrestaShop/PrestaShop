@@ -147,3 +147,10 @@ services:
     arguments:
       - 'PrestaShopBundle\Form\Admin\Sell\CatalogPriceRule\CatalogPriceRuleType'
       - '@prestashop.core.form.identifiable_object.data_provider.catalog_price_rule_form_data_provider'
+
+  prestashop.core.form.identifiable_object.builder.attachment_form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: 'prestashop.core.form.builder.form_builder_factory:create'
+    arguments:
+      - 'PrestaShopBundle\Form\Admin\Sell\Attachment\AttachmentType'
+      - '@prestashop.core.form.identifiable_object.data_provider.attachment_form_data_provider'
