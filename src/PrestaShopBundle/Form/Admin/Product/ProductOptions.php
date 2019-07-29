@@ -164,7 +164,7 @@ class ProductOptions extends CommonAbstractType
                 'required' => false,
                 'label' => $this->translator->trans('MPN', [], 'Admin.Catalog.Feature'),
                 'constraints' => [
-                    new Assert\Length(['max' => 32]),
+                    new Assert\Length(['max' => 40]),
                 ],
                 'empty_data' => '',
             ])
