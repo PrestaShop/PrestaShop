@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter;
 
 use Context;
+use Controller;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -43,11 +44,11 @@ class ContainerFinder
     public function getContainer(Context $context)
     {
         $container = isset($context->container) ? $context->container : null;
-        if (!is_null($container)) {
+        if (null !== $container) {
             return $container;
         }
-        $container = isset($context->controller) ? $context->controller->getContainer() : null;
-        if (!is_null($container)) {
+        $container = isset($context->controller) && $context->controller instanceof Controller ? $context->controller->getContainer() : null;
+        if (null !== $container) {
             return $container;
         }
 
