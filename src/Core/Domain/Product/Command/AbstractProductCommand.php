@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Attachment\ValueObject\Attachment;
 use PrestaShop\PrestaShop\Core\Domain\Product\CustomizationField\ValueObject\CustomizationFieldInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Feature\DTO\FeatureCollection;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\DTO\ImageCollection;
@@ -175,12 +176,15 @@ abstract class AbstractProductCommand
     private $upc;
 
     /**
+     * @todo: I need label for default language validation.
+     *
      * @var CustomizationFieldInterface[]
      */
     private $customizationFields;
 
     /**
-     * @var array
+     * @todo: clean html validation for description field.
+     * @var Attachment[]
      */
     private $attachments;
 
@@ -604,7 +608,7 @@ abstract class AbstractProductCommand
     }
 
     /**
-     * @return array
+     * @return Attachment[]
      */
     public function getAttachments(): ?array
     {
@@ -612,7 +616,7 @@ abstract class AbstractProductCommand
     }
 
     /**
-     * @param array $attachments
+     * @param Attachment[] $attachments
      *
      * @return self
      */
