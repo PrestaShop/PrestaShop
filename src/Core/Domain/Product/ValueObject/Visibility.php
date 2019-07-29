@@ -104,7 +104,8 @@ final class Visibility
                     'Invalid product visibility "%s" detected. Available values are "%s"',
                     $visibility,
                     implode(',', self::AVAILABLE_VISIBILITY)
-                )
+                ),
+                ProductConstraintException::INVALID_VISIBILITY_TYPE
             );
         }
     }

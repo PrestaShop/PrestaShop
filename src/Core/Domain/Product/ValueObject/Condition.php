@@ -27,9 +27,71 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+
 /**
  * Holds product condition either its new , used etc...
  */
 final class Condition
 {
+    public const IS_NEW = 'new';
+
+    public const IS_USED = 'used';
+
+    public const IS_REFURBISHED = 'refurbished';
+
+    public const AVAILABLE_CONDITIONS = [
+        self::IS_NEW,
+        self::IS_USED,
+        self::IS_REFURBISHED,
+    ];
+
+    /**
+     * @var string
+     */
+    private $condition;
+
+    /**
+     * @var bool
+     */
+    private $displayedOnProductPage;
+
+    /**
+     * @param string $condition
+     * @param bool $displayedOnProductPage
+     *
+     * @throws ProductConstraintException
+     */
+    public function __construct(string $condition, bool $displayedOnProductPage)
+    {
+        if (!in_array($condition, self::AVAILABLE_CONDITIONS, true)) {
+            throw new ProductConstraintException(
+                sprintf(
+                    'Non valid condition "%s" detected. Available values are "%s"',
+                    $condition,
+                    implode(',', self::AVAILABLE_CONDITIONS)
+                ),
+                ProductConstraintException::INVALID_CONDITION_TYPE
+            );
+        }
+
+        $this->condition = $condition;
+        $this->displayedOnProductPage = $displayedOnProductPage;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCondition(): string
+    {
+        return $this->condition;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDisplayedOnProductPage(): bool
+    {
+        return $this->displayedOnProductPage;
+    }
 }
