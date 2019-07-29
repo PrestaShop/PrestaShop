@@ -269,30 +269,7 @@ class AdminProductDataUpdater implements ProductInterface
         }
 
         $categoryId = $filterParams['filter_category'];
-
-        /* Sorting items on one page only, with ONE SQL UPDATE query,
-         * then fixing bugs (duplicates and 0 values) on next pages with more queries, if needed.
-         *
-         * Most complicated case example:
-         * We have to sort items from offset 5, limit 5, on total object count: 14
-         * The previous AND the next pages MUST NOT be impacted but fixed if needed.
-         * legend:  #<id>|P<position>
-         *
-         * Before sort:
-         * #1|P2 #2|P4 #3|P5 #7|P8 #6|P9   #5|P10 #8|P11 #10|P13 #12|P14 #11|P15   #9|P16 #12|P18 #14|P19 #22|P24
-         * (there is holes in positions)
-         *
-         * Sort request:
-         *                                 #5|P?? #10|P?? #12|P?? #8|P?? #11|P??
-         *
-         * After sort:
-         * (previous page unchanged)       (page to sort: sort and no duplicates) (the next pages MUST be shifted to avoid duplicates if any)
-         *
-         * Request input:
-         *                               [#5]P10 [#10]P13 [#12]P14 [#8]P11 [#11]P15
-         */
         $minPosition = min(array_values($productList));
-        // combine old positions with new position in an array
         $productsIds = implode(',', array_map('intval', array_keys($productList)));
 
         /*
