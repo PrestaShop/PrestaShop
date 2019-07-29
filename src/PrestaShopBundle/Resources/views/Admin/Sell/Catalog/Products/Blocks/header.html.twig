@@ -25,8 +25,51 @@
 <div class="product-header col-md-12">
   <div class="row justify-content-md-center">
     <div class="col-xxl-10">
-      <div class="row"></div>
-      <div class="row"></div>
+      <div class="row">
+        <div class="col-md-7 big-input">
+          {{ form_widget(productForm.name) }}
+        </div>
+
+        <div class="col-sm-7 col-md-2">
+          {{ form_widget(productForm.type) }}
+          <span class="help-box pull-xs-right"
+                data-toggle="popover"
+                data-content="{{ "Is the product a pack (a combination of at least two existing products), a virtual product (downloadable file, service, etc.), or simply a standard, physical product?"|trans({}, 'Admin.Catalog.Help') }}">
+          </span>
+        </div>
+
+        <div class="toolbar col-sm-3 col-md-2 text-md-right">
+          <a class="toolbar-button btn-sales" href="#" target="_blank" title="{{ 'Sales'|trans({}, 'Admin.Global') }}"
+             id="product_form_go_to_sales">
+            <i class="material-icons">assessment</i>
+            <span class="title">{{ 'Sales'|trans({}, 'Admin.Global') }}</span>
+          </a>
+
+          <a
+            class="toolbar-button btn-quicknav btn-sidebar"
+            href="#"
+            title="{{ 'Quick navigation'|trans({}, 'Admin.Global') }}"
+            data-toggle="sidebar"
+            data-target="#right-sidebar"
+            data-url="{{ path('admin_product_list', {limit: 'last', offset: 'last', view: 'quicknav'}) }}"
+            id="product_form_open_quicknav"
+          >
+            <i class="material-icons">list</i>
+            <span class="title">{{ 'Product list'|trans({}, 'Admin.Catalog.Feature') }}</span>
+          </a>
+
+          <a class="toolbar-button btn-help btn-sidebar" href="#"
+             title="{{ 'Help'|trans({}, 'Admin.Global') }}"
+             data-toggle="sidebar"
+             data-target="#right-sidebar"
+             data-url="#"
+             id="product_form_open_help"
+          >
+            <i class="material-icons">help</i>
+            <span class="title">{{ 'Help'|trans({}, 'Admin.Global') }}</span>
+          </a>
+        </div>
+      </div>
     </div>
   </div>
 </div>
