@@ -337,7 +337,7 @@ class ProductCore extends ObjectModel
             'ean13' => array('type' => self::TYPE_STRING, 'validate' => 'isEan13', 'size' => 13),
             'isbn' => array('type' => self::TYPE_STRING, 'validate' => 'isIsbn', 'size' => 32),
             'upc' => array('type' => self::TYPE_STRING, 'validate' => 'isUpc', 'size' => 12),
-            'mpn' => array('type' => self::TYPE_STRING, 'validate' => 'isMpn', 'size' => 32),
+            'mpn' => array('type' => self::TYPE_STRING, 'validate' => 'isMpn', 'size' => 40),
             'cache_is_pack' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'cache_has_attachments' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'is_virtual' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
