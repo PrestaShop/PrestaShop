@@ -292,16 +292,20 @@ class AdminProductDataUpdater implements ProductInterface
         $productsIds = implode(',', array_map('intval', array_keys($productList)));
 
         Db::getInstance()->query('SET @i := ' . (((int) $minPosition) - 1));
+
         $updatePositions = 'UPDATE `' . _DB_PREFIX_ . 'category_product` cp ' .
-            'INNER JOIN `' . _DB_PREFIX_ . 'product` p ON (cp.`id_product` = p.`id_product`) ' .
-            '' . Shop::addSqlAssociation('product', 'p') . ' ' .
-            'SET cp.`position` = (SELECT @i := @i + 1), ' .
-            '    p.`date_upd` = "' . date('Y-m-d H:i:s') . '", ' .
-            '    product_shop.`date_upd` = "' . date('Y-m-d H:i:s') . '" ' .
+            'SET cp.`position` = (SELECT @i := @i + 1) ' .
             'WHERE cp.`id_category` = ' . (int) $categoryId . ' AND cp.`id_product` IN (' . $productsIds . ') ' .
             'ORDER BY FIELD(cp.`id_product`, ' . $productsIds . ')';
-
         Db::getInstance()->query($updatePositions);
+
+        $updateProducts = 'UPDATE `' . _DB_PREFIX_ . 'product` p ' .
+            '' . Shop::addSqlAssociation('product', 'p') . ' ' .
+            'SET ' .
+            '    p.`date_upd` = "' . date('Y-m-d H:i:s') . '", ' .
+            '    product_shop.`date_upd` = "' . date('Y-m-d H:i:s') . '" ' .
+            'WHERE p.`id_product` IN (' . $productsIds . ') ';
+        Db::getInstance()->query($updateProducts);
 
         return true;
     }
