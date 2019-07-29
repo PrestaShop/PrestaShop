@@ -295,14 +295,20 @@ class AdminProductDataUpdater implements ProductInterface
         // combine old positions with new position in an array
         $productsIds = implode(',', array_map('intval', array_keys($productList)));
 
+        /*
+         * First request to update position on category_product
+         */
         Db::getInstance()->query('SET @i := ' . (((int) $minPosition) - 1));
-
         $updatePositions = 'UPDATE `' . _DB_PREFIX_ . 'category_product` cp ' .
             'SET cp.`position` = (SELECT @i := @i + 1) ' .
             'WHERE cp.`id_category` = ' . (int) $categoryId . ' AND cp.`id_product` IN (' . $productsIds . ') ' .
             'ORDER BY FIELD(cp.`id_product`, ' . $productsIds . ')';
         Db::getInstance()->query($updatePositions);
 
+        /**
+         * Second request to update date_upd because
+         * ORDER BY is not working on multi-tables update
+         */
         $updateProducts = 'UPDATE `' . _DB_PREFIX_ . 'product` p ' .
             '' . Shop::addSqlAssociation('product', 'p') . ' ' .
             'SET ' .
