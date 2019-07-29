@@ -1,0 +1,7 @@
+admin_products_add:
+  path: /new
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Catalog/Product:add
+
+

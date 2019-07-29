@@ -56,7 +56,7 @@ class ProductType extends AbstractType
                     $this->translator->trans('Virtual product', [], 'Admin.Catalog.Feature') => 2,
                 ],
             ])
-            ->add('basic_settings', BasicSettingsType::class)
+            ->add('basic_settings', BasicSettingsTabType::class)
         ;
     }
 }

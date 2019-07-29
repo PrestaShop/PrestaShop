@@ -32,7 +32,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\FormBuilderInterface;
 
-class PriceType extends AbstractType
+class ProductPriceType extends AbstractType
 {
     /**
      * @var FormChoiceProviderInterface

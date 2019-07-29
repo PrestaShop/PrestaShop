@@ -33,7 +33,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class BasicSettingsType extends AbstractType
+class BasicSettingsTabType extends AbstractType
 {
     /**
      * @var TranslatorInterface
@@ -52,11 +52,12 @@ class BasicSettingsType extends AbstractType
                 'expanded' => true,
                 'multiple' => false,
                 'choices' => [
-                    $this->translator->trans('Yes', [], 'Admin.Global') => true,
-                    $this->translator->trans('No', [], 'Admin.Global') => false,
+                    $this->translator->trans('Simple product', [], 'Admin.Catalog.Feature') => 0,
+                    $this->translator->trans('Product with combinations', [], 'Admin.Catalog.Feature') => 1,
                 ],
                 'required' => true,
                 'choice_translation_domain' => false,
+                'empty_data' => 0,
             ])
             ->add('reference', TextType::class, [
                 'required' => false,
@@ -64,7 +65,7 @@ class BasicSettingsType extends AbstractType
             ->add('quantity', NumberType::class, [
                 'required' => false,
             ])
-            ->add('price', PriceType::class, [
+            ->add('price', ProductPriceType::class, [
                 'required' => false,
             ])
         ;
