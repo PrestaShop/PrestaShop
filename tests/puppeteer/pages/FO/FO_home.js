@@ -22,6 +22,6 @@ module.exports = class FO_HOME extends CommonPage {
    */
   async goToProductPage(id) {
     await this.page.waitForSelector(this.logoHomePage, {visible: true});
-    await this.waitForSelectorAndClick(this.productImg.replace('%NUMBER', id));
+    await this.waitForSelectorAndClick(this.productImg.replace('%NUMBER', id), 5000);
   }
 };

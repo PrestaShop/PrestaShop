@@ -15,8 +15,9 @@ module.exports = class CommonPage {
    * Wait for selector and click
    * @param selector, element to check
    * @param timeout, wait timeout
+   * @return {Promise<void>}
    */
-  async waitForSelectorAndClick(selector, timeout = 10) {
+  async waitForSelectorAndClick(selector, timeout = 5000) {
     await this.page.waitForSelector(selector, {visible: true, timeout});
     await this.page.click(selector);
   }

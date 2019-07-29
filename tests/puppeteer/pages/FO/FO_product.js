@@ -29,6 +29,6 @@ module.exports = class FO_PRODUCT extends CommonPage {
    */
   async addProductToTheCart() {
     await this.waitForSelectorAndClick(this.addToCartButton);
-    await this.waitForSelectorAndClick(this.proceedToCheckoutButton, 5000);
+    await this.waitForSelectorAndClick(this.proceedToCheckoutButton);
   }
 };
