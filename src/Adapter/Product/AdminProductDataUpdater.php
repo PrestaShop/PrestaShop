@@ -291,7 +291,7 @@ class AdminProductDataUpdater implements ProductInterface
          * Request input:
          *                               [#5]P10 [#10]P13 [#12]P14 [#8]P11 [#11]P15
          */
-        $maxPosition = max(array_values($productList));
+        $minPosition = min(array_values($productList));
         $sortedPositions = array_values($productList);
         sort($sortedPositions); // new positions to update
 
@@ -303,14 +303,9 @@ class AdminProductDataUpdater implements ProductInterface
         }
 
         // combine old positions with new position in an array
-        $combinedOldNewPositions = array_combine(array_values($productList), $sortedPositions);
-        ksort($combinedOldNewPositions); // (keys: old positions starting at '1', values: new positions)
-        $positionsMatcher = array_replace(array_pad(array(), $maxPosition, 0), $combinedOldNewPositions); // pad holes with 0
-        array_shift($positionsMatcher); // shift because [0] is not used in MySQL FIELD()
-        $firstPosition = min($positionsMatcher);
         $productsIds = implode(',', array_map('intval', array_keys($productList)));
 
-        Db::getInstance()->query('SET @i := ' . (((int) $firstPosition) - 1));
+        Db::getInstance()->query('SET @i := ' . (((int) $minPosition) - 1));
         $updatePositions = 'UPDATE `' . _DB_PREFIX_ . 'category_product` cp
             INNER JOIN `' . _DB_PREFIX_ . 'product` p ON (cp.`id_product` = p.`id_product`)
             ' . Shop::addSqlAssociation('product', 'p') . '
