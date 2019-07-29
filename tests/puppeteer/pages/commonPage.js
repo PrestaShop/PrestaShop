@@ -106,3 +106,4 @@ module.exports = class CommonPage {
     return this.page;
   }
 };
+
