@@ -23,14 +23,27 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import StepVisibilityHandler from '../../components/form/step-visibility-handler.js';
-import AddRangeHandler from './add-range-handler.js';
-import RangesContentSwitcher from './ranges-content-switcher.js';
-
 const $ = window.$;
 
-$(document).ready(() => {
-  new StepVisibilityHandler('active');
-  new AddRangeHandler();
-  new RangesContentSwitcher();
-});
+export default class RangesContentSwitcher {
+  constructor() {
+    this.$priceContentSelector = '.js-content-case-price';
+    this.$weightContentSelector = '.js-content-case-weight';
+    this.$shippingMethodSelector = '.js-shipping-method';
+
+    this._handle();
+    $(this.$shippingMethodSelector).change(event => this._handle(event));
+
+    return {};
+  }
+
+  _handle() {
+    if ($(`${this.$shippingMethodSelector} input:checked`).val() === '1') {
+      $(this.$weightContentSelector).show();
+      $(this.$priceContentSelector).hide();
+    } else {
+      $(this.$priceContentSelector).show();
+      $(this.$weightContentSelector).hide();
+    }
+  }
+}

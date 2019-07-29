@@ -28,10 +28,10 @@ const $ = window.$;
 export default class AddRangeHandler {
   constructor() {
     $(document).on('click', '.js-add-range', () => {
-      const collectionHolder = $('tbody.ranges > tr');
-      const formPrototype = $('.ranges').data('prototype');
+      const rows = $('.js-range-row, .js-zone-row');
+      const formTemplate = $('#js-ranges-input-template').html();
 
-      this.addToCollection(collectionHolder, formPrototype);
+      this.addColumn(rows, formTemplate);
     });
 
     return {};
@@ -40,33 +40,24 @@ export default class AddRangeHandler {
   /**
    * Add new form prototype to collection
    *
-   * @param collectionHolder
-   * @param formPrototype
+   * @param rows
+   * @param formTemplate
    */
-  addToCollection(collectionHolder, formPrototype) {
-    const index = this.getCollectionCount(collectionHolder);
+  addColumn(rows, formTemplate) {
+    const rangesCount = $('table').data('culumn-count') + 1;
 
-    // replace prototype name placeholder with current index value
-    const newForm = formPrototype.replace(/__name__/g, index);
+    for (let i = 0; i < Object.keys(rows).length; i++) {
+      const zoneId = $(rows[i]).data('zone-id');
 
-    // append the new form to collection
-    collectionHolder.append(`<td>${newForm}</td>`);
+      let name = `range_${rangesCount}`;
+      if (typeof $(rows[i]).data('zone-id') !== 'undefined') {
+        name = `zone_${zoneId}_range_${rangesCount}`;
+      }
 
-    // increase collection count by one
-    collectionHolder.data('index', index + 1);
-  }
-
-  /**
-   * Count current items in collection
-   *
-   * @param collectionHolder
-   *
-   * @returns int
-   */
-  getCollectionCount(collectionHolder) {
-    collectionHolder.data('index', collectionHolder.find('.js-form-block-count').length);
-
-    return collectionHolder.data('index');
+      const form = formTemplate.replace('/__name__/', name);
+      $(rows[i]).append(form);
+    }
+    $('table').data('range-count', rangesCount);
   }
 }
 

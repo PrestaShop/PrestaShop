@@ -27,7 +27,6 @@
 namespace PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -62,45 +61,39 @@ class ZoneRangeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('applied_from', NumberType::class, [
-                'constraints' => [
-                    new GreaterThanOrEqual([
-                        'value' => 0,
-                        'message' => $this->translator->trans(
-                            'Value cannot be less than %value%.',
-                            ['%value%' => 0],
-                            'Admin.Notifications.Error'
-                        ),
-                    ]),
-                ],
-            ])
-            ->add('applied_to', TextType::class, [
-                'constraints' => [
-                    new GreaterThanOrEqual([
-                        'value' => 0,
-                        'message' => $this->translator->trans(
-                            'Value cannot be less than %value%.',
-                            ['%value%' => 0],
-                            'Admin.Notifications.Error'
-                        ),
-                    ]),
-                ],
-            ])
+//            ->add('applied_from', NumberType::class, [
+//                'constraints' => [
+//                    new GreaterThanOrEqual([
+//                        'value' => 0,
+//                        'message' => $this->translator->trans(
+//                            'Value cannot be less than %value%.',
+//                            ['%value%' => 0],
+//                            'Admin.Notifications.Error'
+//                        ),
+//                    ]),
+//                ],
+//            ])
+//            ->add('applied_to', TextType::class, [
+//                'constraints' => [
+//                    new GreaterThanOrEqual([
+//                        'value' => 0,
+//                        'message' => $this->translator->trans(
+//                            'Value cannot be less than %value%.',
+//                            ['%value%' => 0],
+//                            'Admin.Notifications.Error'
+//                        ),
+//                    ]),
+//                ],
+//            ])
             ->add('zone_checks', ZoneCheckType::class, [
                 'zones' => $this->zones,
             ])
-            ->add('zone_range_inputs', CollectionType::class, [
-                'entry_type' => ZoneRangeInputType::class,
-                'entry_options' => [
+            ->add('zone_range_inputs', ZoneRangeInputType::class, [
                     'label' => false,
                     'attr' => [
                         'class' => 'js-form-block-count',
                     ],
                     'zones' => $this->zones,
-                ],
-                'data' => [$this->getDefaultData()],
-                'allow_add' => true,
-                'allow_delete' => true,
             ]);
     }
 
