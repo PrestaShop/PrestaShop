@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 use Composer\CaBundle\CaBundle;
-use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShop\PrestaShop\Adapter\ContainerFinder;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
 use PHPSQLParser\PHPSQLParser;
@@ -792,10 +792,8 @@ class ToolsCore
             return $locale;
         }
 
-        $container = isset($context->controller) ? $context->controller->getContainer() : null;
-        if (null === $container) {
-            $container = SymfonyContainer::getInstance();
-        }
+        $containerFinder = new ContainerFinder();
+        $container = $containerFinder->getContainer($context);
 
         /** @var LocaleRepository $localeRepository */
         $localeRepository = $container->get(self::SERVICE_LOCALE_REPOSITORY);
