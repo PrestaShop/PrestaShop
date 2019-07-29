@@ -52,4 +52,5 @@ class ProductConstraintException extends ProductException
     public const INVALID_UPC_REFERENCE = 22;
     public const CUSTOMIZATION_FIELD_LABEL_TOO_LONG = 23;
     public const INVALID_ATTACHMENT_TITLE = 24;
+    public const INVALID_SUPPLIER_REFERENCE = 25;
 }
