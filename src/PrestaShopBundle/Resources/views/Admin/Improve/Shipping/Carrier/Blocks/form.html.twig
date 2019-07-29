@@ -40,9 +40,11 @@
         {% include '@PrestaShop/Admin/Improve/Shipping/Carrier/Blocks/step_general.html.twig' %}
       </div>
 
-      <div class="form-step js-form-step-2">
-        {% include '@PrestaShop/Admin/Improve/Shipping/Carrier/Blocks/step_multi_shop.html.twig' %}
-      </div>
+      {% if carrierForm.step_multi_shop is defined %}
+        <div class="form-step js-form-step-2">
+          {% include '@PrestaShop/Admin/Improve/Shipping/Carrier/Blocks/step_multi_shop.html.twig' %}
+        </div>
+      {% endif %}
 
       <div class="form-step js-form-step-3">
         {% include '@PrestaShop/Admin/Improve/Shipping/Carrier/Blocks/step_shipping.html.twig' %}

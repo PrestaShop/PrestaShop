@@ -30,11 +30,13 @@ use PrestaShopBundle\Form\Admin\Type\Material\MaterialChoiceTableType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 
 /**
  * Defines form part for create/edit carrier Properties and group access step
  */
-class StepPropertiesAndAccess extends AbstractType
+class StepPropertiesAndAccessType extends AbstractType
 {
     /**
      * @var array
@@ -42,11 +44,18 @@ class StepPropertiesAndAccess extends AbstractType
     private $customerGroupChoices;
 
     /**
-     * @param array $customerGroupChoices
+     * @var TranslatorInterface
      */
-    public function __construct(array $customerGroupChoices)
+    private $translator;
+
+    /**
+     * @param array $customerGroupChoices
+     * @param TranslatorInterface $translator
+     */
+    public function __construct(array $customerGroupChoices, TranslatorInterface $translator)
     {
         $this->customerGroupChoices = $customerGroupChoices;
+        $this->translator = $translator;
     }
 
     /**
@@ -54,11 +63,32 @@ class StepPropertiesAndAccess extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $gtoConstraint = new GreaterThanOrEqual([
+            'value' => 0,
+            'message' => $this->translator->trans(
+                'Value cannot be less than %value%.',
+                ['%value%' => 0],
+                'Admin.Notifications.Error'
+            ),
+        ]);
+
         $builder
-            ->add('max_width', NumberType::class)
-            ->add('max_height', NumberType::class)
-            ->add('max_depth', NumberType::class)
-            ->add('max_weight', NumberType::class)
+            ->add('max_width', NumberType::class, [
+                'required' => false,
+                'constraints' => [$gtoConstraint],
+            ])
+            ->add('max_height', NumberType::class, [
+                'required' => false,
+                'constraints' => [$gtoConstraint],
+            ])
+            ->add('max_depth', NumberType::class, [
+                'required' => false,
+                'constraints' => [$gtoConstraint],
+            ])
+            ->add('max_weight', NumberType::class, [
+                'required' => false,
+                'constraints' => [$gtoConstraint],
+            ])
             ->add('group_association', MaterialChoiceTableType::class, [
                 'choices' => $this->customerGroupChoices,
             ])

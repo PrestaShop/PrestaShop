@@ -34,12 +34,29 @@ use Symfony\Component\Form\FormBuilderInterface;
  */
 class CarrierType extends AbstractType
 {
+    /**
+     * @var bool
+     */
+    private $isMultishopActive;
+
+    /**
+     * @param bool $isMultishopActive
+     */
+    public function __construct(
+        bool $isMultishopActive
+    ) {
+        $this->isMultishopActive = $isMultishopActive;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('step_general', StepGeneralType::class)
-            ->add('step_multi_shop', StepMultiShopType::class)
             ->add('step_shipping', StepShippingType::class)
-            ->add('step_properties_and_access', StepPropertiesAndAccess::class);
+            ->add('step_properties_and_access', StepPropertiesAndAccessType::class);
+
+        if ($this->isMultishopActive) {
+            $builder->add('step_multi_shop', StepMultiShopType::class);
+        }
     }
 }

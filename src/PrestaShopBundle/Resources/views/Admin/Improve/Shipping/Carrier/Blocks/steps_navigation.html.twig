@@ -31,11 +31,13 @@
       </button>
     </li>
 
-    <li class="d-inline">
-      <button type="button" class="btn btn-block btn-outline-info js-form-step-switch" data-step="2">
-        {{ 'MultiStore'|trans({}, 'Admin.Global') }}
-      </button>
-    </li>
+    {% if carrierForm.step_multi_shop is defined %}
+      <li class="d-inline">
+        <button type="button" class="btn btn-block btn-outline-info js-form-step-switch" data-step="2">
+          {{ 'MultiStore'|trans({}, 'Admin.Global') }}
+        </button>
+      </li>
+    {% endif %}
 
     <li class="d-inline">
       <button type="button" class="btn btn-block btn-outline-info js-form-step-switch" data-step="3">

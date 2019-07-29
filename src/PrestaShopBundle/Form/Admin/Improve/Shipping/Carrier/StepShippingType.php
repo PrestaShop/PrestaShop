@@ -30,6 +30,7 @@ use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Defines form part for carrier create/edit action Shipping step
@@ -52,36 +53,64 @@ class StepShippingType extends AbstractType
     private $outOfRangeBehaviorChoices;
 
     /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
      * @param array $taxChoices
      * @param array $shippingMethodChoices
      * @param array $outOfRangeBehaviorChoices
+     * @param TranslatorInterface $translator
      */
     public function __construct(
         array $taxChoices,
         array $shippingMethodChoices,
-        array $outOfRangeBehaviorChoices
+        array $outOfRangeBehaviorChoices,
+        TranslatorInterface $translator
     ) {
         $this->taxChoices = $taxChoices;
         $this->outOfRangeBehaviorChoices = $outOfRangeBehaviorChoices;
         $this->shippingMethodChoices = $shippingMethodChoices;
+        $this->translator = $translator;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('cost_handling', SwitchType::class)
-            ->add('is_free_shipping', SwitchType::class)
+            ->add('cost_handling', SwitchType::class, [
+                'required' => false,
+            ])
+            ->add('is_free_shipping', SwitchType::class, [
+                'required' => false,
+            ])
             ->add('shipping_method', ChoiceType::class, [
+                'placeholder' => false,
+                'required' => false,
                 'expanded' => true,
                 'choices' => $this->shippingMethodChoices,
             ])
             ->add('tax', ChoiceType::class, [
-                'choices' => $this->taxChoices,
+                'placeholder' => false,
+                'required' => false,
+                'choices' => $this->getTaxChoices(),
             ])
             ->add('out_of_range', ChoiceType::class, [
+                'required' => false,
+                'placeholder' => false,
                 'choices' => $this->outOfRangeBehaviorChoices,
             ])
             ->add('zone_ranges', ZoneRangeType::class)
         ;
+    }
+
+    /**
+     * @return array
+     */
+    private function getTaxChoices(): array
+    {
+        $choices[$this->translator->trans('No tax', [], 'Admin.International.Help')] = 0;
+
+        return array_merge($choices, $this->taxChoices);
     }
 }

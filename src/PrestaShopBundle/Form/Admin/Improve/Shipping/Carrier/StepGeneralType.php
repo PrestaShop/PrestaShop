@@ -26,25 +26,112 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier;
 
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
+use Symfony\Component\Validator\Constraints\LessThanOrEqual;
 
 /**
  * Defines form part for add/edit carrier general-settings step
  */
 class StepGeneralType extends AbstractType
 {
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
+     * @param TranslatorInterface $translator
+     */
+    public function __construct(TranslatorInterface $translator)
+    {
+        $this->translator = $translator;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name', TranslatableType::class)
-            ->add('transit_time', TranslatableType::class)
-            ->add('speed_grade', NumberType::class)
-            ->add('logo', FileType::class)
-            ->add('tracking_url', TextType::class);
+            ->add('name', TranslatableType::class, [
+                'constraints' => [
+                    new DefaultLanguage([
+                        'message' => $this->translator->trans(
+                            'This field is required at least in your default language.',
+                            [],
+                            'Admin.Notifications.Error'
+                        ),
+                    ]),
+                ],
+                'options' => [
+                    'constraints' => [
+                        new TypedRegex([
+                            'type' => 'carrier_name',
+                            'message' => $this->translator->trans('%s is invalid.', [], 'Admin.Notifications.Error'),
+                        ]),
+                    ],
+                ],
+            ])
+            ->add('transit_time', TranslatableType::class, [
+                'constraints' => [
+                    new DefaultLanguage([
+                        'message' => $this->translator->trans(
+                            'This field is required at least in your default language.',
+                            [],
+                            'Admin.Notifications.Error'
+                        ),
+                    ]),
+                ],
+                'options' => [
+                    'constraints' => [
+                        new TypedRegex([
+                            'type' => 'generic_name',
+                            'message' => $this->translator->trans('%s is invalid.', [], 'Admin.Notifications.Error'),
+                        ]),
+                    ],
+                ],
+            ])
+            ->add('speed_grade', NumberType::class, [
+                'required' => false,
+                'constraints' => [
+                    new LessThanOrEqual([
+                        'value' => 9,
+                        'message' => $this->translator->trans(
+                            'Value cannot be greater than %value%.',
+                            ['%value%' => 9],
+                            'Admin.Notifications.Error'
+                        ),
+                    ]),
+                    new GreaterThanOrEqual([
+                        'value' => 0,
+                        'message' => $this->translator->trans(
+                            'Value cannot be less than %value%.',
+                            ['%value%' => 0],
+                            'Admin.Notifications.Error'
+                        ),
+                    ]),
+                ],
+            ])
+            ->add('logo', FileType::class, [
+                'required' => false,
+            ])
+            ->add('tracking_url', TextType::class, [
+                'required' => false,
+                'constraints' => [
+                    new TypedRegex([
+                        'type' => 'absolute_url',
+                        'message' => $this->translator->trans('%s is invalid.', [], 'Admin.Notifications.Error'),
+                    ]),
+                ],
+            ]);
     }
 }

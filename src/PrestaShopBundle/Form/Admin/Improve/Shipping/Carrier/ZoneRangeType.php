@@ -28,8 +28,11 @@ namespace PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 
 /**
  * Defines cost ranges form part for carriers create/edit action Shipping step.
@@ -42,18 +45,47 @@ class ZoneRangeType extends AbstractType
     private $zones;
 
     /**
-     * @param array $zones
+     * @var TranslatorInterface
      */
-    public function __construct(array $zones)
+    private $translator;
+
+    /**
+     * @param array $zones
+     * @param TranslatorInterface $translator
+     */
+    public function __construct(array $zones, TranslatorInterface $translator)
     {
         $this->zones = $zones;
+        $this->translator = $translator;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('applied_from', TextType::class)
-            ->add('applied_to', TextType::class)
+            ->add('applied_from', NumberType::class, [
+                'constraints' => [
+                    new GreaterThanOrEqual([
+                        'value' => 0,
+                        'message' => $this->translator->trans(
+                            'Value cannot be less than %value%.',
+                            ['%value%' => 0],
+                            'Admin.Notifications.Error'
+                        ),
+                    ]),
+                ],
+            ])
+            ->add('applied_to', TextType::class, [
+                'constraints' => [
+                    new GreaterThanOrEqual([
+                        'value' => 0,
+                        'message' => $this->translator->trans(
+                            'Value cannot be less than %value%.',
+                            ['%value%' => 0],
+                            'Admin.Notifications.Error'
+                        ),
+                    ]),
+                ],
+            ])
             ->add('zone_checks', ZoneCheckType::class, [
                 'zones' => $this->zones,
             ])

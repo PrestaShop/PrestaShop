@@ -87,6 +87,8 @@ class TypedRegexValidator extends ConstraintValidator
             'message' => '/[<>{}]/i',
             'language_iso_code' => IsoCode::PATTERN,
             'language_code' => '/^[a-zA-Z]{2}(-[a-zA-Z]{2})?$/',
+            'carrier_name' => $this->cleanNonUnicodeSupport('/^[^<>;=#{}]*$/u'),
+            'absolute_url' => '/^(https?:)?\/\/[$~:;#,%&_=\(\)\[\]\.\? \+\-@\/a-zA-Z0-9]+$/',
         ];
 
         if (isset($typePatterns[$type])) {
