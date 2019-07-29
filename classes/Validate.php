@@ -710,7 +710,7 @@ class ValidateCore
      */
     public static function isMpn($mpn)
     {
-        return Tools::strlen($mpn) <= 32;
+        return Tools::strlen($mpn) <= 40;
     }
 
     /**
