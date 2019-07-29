@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Feature\DTO\FeatureCollection;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\DTO\ImageCollection;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Category;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Condition;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Price\CostPrice;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\MetaData\FriendlyUrl;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\MetaData\MetaDescription;
@@ -144,7 +145,7 @@ abstract class AbstractProductCommand
     private $visibility;
 
     /**
-     * @var null
+     * @var Condition
      */
     private $condition;
 
@@ -522,19 +523,19 @@ abstract class AbstractProductCommand
     }
 
     /**
-     * @return null
+     * @return Condition
      */
-    public function getCondition()
+    public function getCondition(): Condition
     {
         return $this->condition;
     }
 
     /**
-     * @param null $condition
+     * @param Condition $condition
      *
      * @return self
      */
-    public function setCondition($condition): self
+    public function setCondition(Condition $condition): self
     {
         $this->condition = $condition;
 
