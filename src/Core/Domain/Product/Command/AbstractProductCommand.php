@@ -44,6 +44,10 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectionPage\Redire
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Price\RetailPrice;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectionPage\TypedRedirectionPageInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Price\UnitPrice;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference\Ean13;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference\Isbn;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference\Reference;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference\Upc;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Visibility;
 
 /**
@@ -150,9 +154,24 @@ abstract class AbstractProductCommand
     private $condition;
 
     /**
-     * @var null
+     * @var Reference
      */
-    private $references;
+    private $reference;
+
+    /**
+     * @var Isbn
+     */
+    private $isbn;
+
+    /**
+     * @var Ean13
+     */
+    private $ean13;
+
+    /**
+     * @var Upc
+     */
+    private $upc;
 
     /**
      * @var array
@@ -485,7 +504,7 @@ abstract class AbstractProductCommand
     /**
      * @return RedirectionPageInterface|TypedRedirectionPageInterface
      */
-    public function getRedirectionPage(): RedirectionPageInterface
+    public function getRedirectionPage(): ?RedirectionPageInterface
     {
         return $this->redirectionPage;
     }
@@ -525,7 +544,7 @@ abstract class AbstractProductCommand
     /**
      * @return Condition
      */
-    public function getCondition(): Condition
+    public function getCondition(): ?Condition
     {
         return $this->condition;
     }
@@ -543,21 +562,23 @@ abstract class AbstractProductCommand
     }
 
     /**
-     * @return null
+     * @return Reference
      */
-    public function getReferences()
+    public function getReference(): Reference
     {
-        return $this->references;
+        return $this->reference;
     }
 
     /**
-     * @param null $references
+     * @param string $reference
      *
      * @return self
+     *
+     * @throws ProductConstraintException
      */
-    public function setReferences($references): self
+    public function setReference(string $reference): self
     {
-        $this->references = $references;
+        $this->reference = new Reference($reference);
 
         return $this;
     }
@@ -619,7 +640,7 @@ abstract class AbstractProductCommand
     /**
      * @return int[]
      */
-    public function getShopAssociation(): array
+    public function getShopAssociation(): ?array
     {
         return $this->shopAssociation;
     }
@@ -632,6 +653,72 @@ abstract class AbstractProductCommand
     public function setShopAssociation(array $shopAssociation): self
     {
         $this->shopAssociation = $shopAssociation;
+
+        return $this;
+    }
+
+    /**
+     * @return Isbn
+     */
+    public function getIsbn(): ?Isbn
+    {
+        return $this->isbn;
+    }
+
+    /**
+     * @param string $isbn
+     *
+     * @return self
+     *
+     * @throws ProductConstraintException
+     */
+    public function setIsbn(string $isbn): self
+    {
+        $this->isbn = new Isbn($isbn);
+
+        return $this;
+    }
+
+    /**
+     * @return Ean13
+     */
+    public function getEan13(): ?Ean13
+    {
+        return $this->ean13;
+    }
+
+    /**
+     * @param string $ean13
+     *
+     * @return self
+     *
+     * @throws ProductConstraintException
+     */
+    public function setEan13(string $ean13): self
+    {
+        $this->ean13 = new Ean13($ean13);
+
+        return $this;
+    }
+
+    /**
+     * @return Upc
+     */
+    public function getUpc(): ?Upc
+    {
+        return $this->upc;
+    }
+
+    /**
+     * @param string $upc
+     *
+     * @return self
+     *
+     * @throws ProductConstraintException
+     */
+    public function setUpc(string $upc): self
+    {
+        $this->upc = new Upc($upc);
 
         return $this;
     }
