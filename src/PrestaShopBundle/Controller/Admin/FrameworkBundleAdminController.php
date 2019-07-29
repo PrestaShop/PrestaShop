@@ -48,12 +48,12 @@ class FrameworkBundleAdminController extends Controller
     /**
      * Used for success flash messages
      */
-    protected const FLASH_TYPE_SUCCESS = 'success';
+    const FLASH_TYPE_SUCCESS = 'success';
 
     /**
      * Used for error flash messages
      */
-    protected const FLASH_TYPE_ERROR = 'error';
+    const FLASH_TYPE_ERROR = 'error';
 
     /**
      * @var ConfigurationInterface
