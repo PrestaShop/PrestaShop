@@ -243,14 +243,14 @@
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ 'Your order with the reference <span class="label">{order_name}</span> from <span class="label">{shop_name}</span> has been canceled by the merchant.'|trans({}, 'Emails.Body', locale)|raw }}
+                                          {{ 'Your order with the reference [bold]{order_name}[/bold] from [bold]{shop_name}[/bold] has been canceled by the merchant.'|trans({'[bold]': '<span class="label">', '[/bold]': '</span>'}, 'Emails.Body', locale)|raw }}
                                         </div>
                                       </td>
                                     </tr>
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ 'Go to your customer account to learn more about it.'|trans({}, 'Emails.Body', locale)|raw }}
+                                          {{ 'Go to your customer account to learn more about it.'|trans({}, 'Emails.Body', locale) }}
                                         </div>
                                       </td>
                                     </tr>

@@ -26,7 +26,7 @@
             
 {% endif %}
                         <span style="color:#777">
-                            {{ 'Your order with the reference <span><strong>{order_name}</strong></span> has been modified.'|trans({}, 'Emails.Body', locale)|raw }}
+                            {{ 'Your order with the reference [bold]{order_name}[/bold] has been modified.'|trans({'[bold]': '<span><strong>', '[/bold]': '</strong></span>'}, 'Emails.Body', locale)|raw }}
                         </span>
                     </font>
                 </td>

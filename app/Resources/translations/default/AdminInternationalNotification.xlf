@@ -115,24 +115,24 @@
       <trans-unit id="bec88b0b441e9deb3008eb5b2a57ec70">
         <source>Sorry this language is not available</source>
         <target>Sorry this language is not available</target>
-        <note>Line: 1090</note>
+        <note>Line: 1095</note>
       </trans-unit>
       <trans-unit id="edeb9e20655b946e4bee4ac44a6c0a7f">
         <source>Server does not have permissions for writing.</source>
         <target>Server does not have permissions for writing.</target>
-        <note>Line: 1116
+        <note>Line: 1121
 Comment: @todo Throw exception</note>
       </trans-unit>
       <trans-unit id="19429992fd747ce8d7606c7ddb7fa272">
         <source>Language pack unavailable.</source>
         <target>Language pack unavailable.</target>
-        <note>Line: 1129
+        <note>Line: 1134
 Comment: @todo Throw exception</note>
       </trans-unit>
       <trans-unit id="2e3dec4700000b6db379437f7d8d9fac">
         <source>An error occurred while creating the language: %s</source>
         <target>An error occurred while creating the language: %s</target>
-        <note>Line: 1199</note>
+        <note>Line: 1204</note>
       </trans-unit>
     </body>
   </file>
@@ -201,42 +201,42 @@ Comment: @todo Throw exception</note>
       <trans-unit id="4a11be1a3905ec59ca2d35a068de6f2e">
         <source>Localization pack corrupted: wrong unit type.</source>
         <target>Localization pack corrupted: wrong unit type.</target>
-        <note>Line: 490</note>
+        <note>Line: 489</note>
       </trans-unit>
       <trans-unit id="28194875b1f41da98a320b0c31e658a2">
         <source>An error occurred while setting the units.</source>
         <target>An error occurred while setting the units.</target>
-        <note>Line: 495</note>
+        <note>Line: 494</note>
       </trans-unit>
       <trans-unit id="0964494eb4e763fd08c6004a31b4b8a7">
         <source>An error occurred while installing the module: %s</source>
         <target>An error occurred while installing the module: %s</target>
-        <note>Line: 529</note>
+        <note>Line: 528</note>
       </trans-unit>
       <trans-unit id="e9b1cabd191f8141419c43cc46802e35">
         <source>An error occurred while uninstalling the module: %s</source>
         <target>An error occurred while uninstalling the module: %s</target>
-        <note>Line: 534</note>
+        <note>Line: 533</note>
       </trans-unit>
       <trans-unit id="962f6e835582ebb404a37893f46c60f3">
         <source>An error has occurred, this module does not exist: %s</source>
         <target>An error has occurred, this module does not exist: %s</target>
-        <note>Line: 540</note>
+        <note>Line: 539</note>
       </trans-unit>
       <trans-unit id="e7ae5e7fbebb7b087110d07b06bd2418">
         <source>An error occurred during the configuration setup: %1$s</source>
         <target>An error occurred during the configuration setup: %1$s</target>
-        <note>Line: 568</note>
+        <note>Line: 567</note>
       </trans-unit>
       <trans-unit id="b34f6454b80599ab92262b1da79a9edb">
         <source>An error occurred during the default group update</source>
         <target>An error occurred during the default group update</target>
-        <note>Line: 606</note>
+        <note>Line: 605</note>
       </trans-unit>
       <trans-unit id="09a0fad4c9a9702b2db457f6bff88f3d">
         <source>An error has occurred during the default group update</source>
         <target>An error has occurred during the default group update</target>
-        <note>Line: 610</note>
+        <note>Line: 609</note>
       </trans-unit>
     </body>
   </file>
@@ -603,7 +603,7 @@ Comment: @todo Throw exception</note>
       <trans-unit id="52326ecbfcdff77b4bc9dcf7f055c2eb">
         <source>Fatal error: ISO code is not correct</source>
         <target>Fatal error: ISO code is not correct</target>
-        <note>Line: 72</note>
+        <note>Line: 71</note>
       </trans-unit>
     </body>
   </file>
@@ -626,27 +626,27 @@ Comment: @todo Throw exception</note>
       <trans-unit id="8246d0c794e7db090587c4797b2a234f">
         <source>You cannot delete the default currency</source>
         <target>You cannot delete the default currency</target>
-        <note>Line: 425</note>
+        <note>Line: 424</note>
       </trans-unit>
       <trans-unit id="7c77e53206853cb381e91e037554faa3">
         <source>You cannot disable the default currency</source>
         <target>You cannot disable the default currency</target>
-        <note>Line: 429</note>
+        <note>Line: 428</note>
       </trans-unit>
       <trans-unit id="9289665482a13fc74be054caef49b63e">
         <source>This currency already exists.</source>
         <target>This currency already exists.</target>
-        <note>Line: 385</note>
+        <note>Line: 384</note>
       </trans-unit>
       <trans-unit id="0bb1c64dda8dcd3473e0eee6c06c8a4e">
         <source>%currency% is the default currency for shop %shop_name%, and therefore cannot be removed from shop association</source>
         <target>%currency% is the default currency for shop %shop_name%, and therefore cannot be removed from shop association</target>
-        <note>Line: 400</note>
+        <note>Line: 399</note>
       </trans-unit>
       <trans-unit id="d51f13fb7e04f0002b08f14370e565a9">
         <source>%currency% is the default currency for shop %shop_name%, and therefore cannot be disabled</source>
         <target>%currency% is the default currency for shop %shop_name%, and therefore cannot be disabled</target>
-        <note>Line: 408</note>
+        <note>Line: 407</note>
       </trans-unit>
     </body>
   </file>
@@ -655,37 +655,37 @@ Comment: @todo Throw exception</note>
       <trans-unit id="8bd94436fa6738863292fb9823368694">
         <source>You cannot delete the default language.</source>
         <target>You cannot delete the default language.</target>
-        <note>Line: 363</note>
+        <note>Line: 362</note>
       </trans-unit>
       <trans-unit id="f25eedbf89efbd0cfce488fe01f9c4cb">
         <source>You cannot delete the language currently in use. Please select a different language.</source>
         <target>You cannot delete the language currently in use. Please select a different language.</target>
-        <note>Line: 371</note>
+        <note>Line: 370</note>
       </trans-unit>
       <trans-unit id="2f236f9450ce8714611e468181064659">
         <source>You cannot change the status of the default language.</source>
         <target>You cannot change the status of the default language.</target>
-        <note>Line: 367</note>
+        <note>Line: 366</note>
       </trans-unit>
       <trans-unit id="59382adebc7f0d65c42fe773d443e4c7">
         <source>This ISO code is already linked to another language.</source>
         <target>This ISO code is already linked to another language.</target>
-        <note>Line: 353</note>
+        <note>Line: 352</note>
       </trans-unit>
       <trans-unit id="8037670f9e6df1f09e040ff8ab047fac">
         <source>An error occurred while copying "No Picture" image to your product folder.</source>
         <target>An error occurred while copying "No Picture" image to your product folder.</target>
-        <note>Line: 319</note>
+        <note>Line: 318</note>
       </trans-unit>
       <trans-unit id="0773497a933e6c2b618678b02cbdf7a1">
         <source>An error occurred while copying "No picture" image to your category folder.</source>
         <target>An error occurred while copying "No picture" image to your category folder.</target>
-        <note>Line: 323</note>
+        <note>Line: 322</note>
       </trans-unit>
       <trans-unit id="6509c8bfa3f06725a6016e6a429dbcd9">
         <source>An error occurred while copying "No picture" image to your brand folder.</source>
         <target>An error occurred while copying "No picture" image to your brand folder.</target>
-        <note>Line: 327</note>
+        <note>Line: 326</note>
       </trans-unit>
     </body>
   </file>

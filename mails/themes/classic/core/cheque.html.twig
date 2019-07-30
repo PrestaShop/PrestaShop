@@ -27,7 +27,7 @@
             
 {% endif %}
             <span>
-              {{ 'Your order with the reference <span><strong>{order_name}</strong></span> has been placed successfully and will be <strong>shipped as soon as we receive your payment</strong>.'|trans({}, 'Emails.Body', locale)|raw }}
+              {{ 'Your order with the reference [bold]{order_name}[/bold] has been placed successfully and will be [bold]shipped as soon as we receive your payment[/bold].'|trans({'[bold]': '<span><strong>', '[/bold]': '</strong></span>'}, 'Emails.Body', locale)|raw }}
             </span>
           </font>
         </td>

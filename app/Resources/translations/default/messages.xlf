@@ -2636,6 +2636,16 @@
         <target>Enable this module for all shops</target>
         <note>Line: 4395</note>
       </trans-unit>
+      <trans-unit id="bcfaccebf745acfd5e75351095a5394a">
+        <source>Disable</source>
+        <target>Disable</target>
+        <note>Line: 4396</note>
+      </trans-unit>
+      <trans-unit id="2faec1f9f8cc7f8f40d521c4dd574f49">
+        <source>Enable</source>
+        <target>Enable</target>
+        <note>Line: 4397</note>
+      </trans-unit>
       <trans-unit id="112b842b7d5dda8d3fed05c0e5aaf983">
         <source>Disable on mobiles</source>
         <target>Disable on mobiles</target>
@@ -2666,6 +2676,11 @@
         <target>Display on computers</target>
         <note>Line: 4403</note>
       </trans-unit>
+      <trans-unit id="f1206f9fadc5ce41694f69129aecac26">
+        <source>Configure</source>
+        <target>Configure</target>
+        <note>Line: 4405</note>
+      </trans-unit>
       <trans-unit id="f2a6c498fb90ee345d997f888fce3b18">
         <source>Delete</source>
         <target>Delete</target>
@@ -2675,21 +2690,6 @@
         <source>This action will permanently remove the module from the server. Are you sure you want to do this?</source>
         <target>This action will permanently remove the module from the server. Are you sure you want to do this?</target>
         <note>Line: 4410</note>
-      </trans-unit>
-      <trans-unit id="bcfaccebf745acfd5e75351095a5394a">
-        <source>Disable</source>
-        <target>Disable</target>
-        <note>Line: 4396</note>
-      </trans-unit>
-      <trans-unit id="2faec1f9f8cc7f8f40d521c4dd574f49">
-        <source>Enable</source>
-        <target>Enable</target>
-        <note>Line: 4397</note>
-      </trans-unit>
-      <trans-unit id="f1206f9fadc5ce41694f69129aecac26">
-        <source>Configure</source>
-        <target>Configure</target>
-        <note>Line: 4405</note>
       </trans-unit>
     </body>
   </file>
@@ -2957,88 +2957,6 @@ Comment: $this->list_modules_categories['search_filter']['name'] = $this->l('Sea
         <source>Disable selection</source>
         <target>Disable selection</target>
         <note>Line: 307</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/gamification/controllers/admin/AdminGamificationController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="3d4aafb2eedeba2fbf92e852f0af745a">
-        <source>Merchant Expertise</source>
-        <target>Merchant Expertise</target>
-        <note>Line: 44</note>
-      </trans-unit>
-      <trans-unit id="ca96b4f8d13722aac99da25f94ea1711">
-        <source>Your Merchant Expertise</source>
-        <target>Your Merchant Expertise</target>
-        <note>Line: 18</note>
-      </trans-unit>
-      <trans-unit id="98f770b0af18ca763421bac22b4b6805">
-        <source>Features</source>
-        <target>Features</target>
-        <note>Line: 85</note>
-      </trans-unit>
-      <trans-unit id="f5c7922da355fd289ec1d6469e0583a7">
-        <source>Achievements</source>
-        <target>Achievements</target>
-        <note>Line: 86</note>
-      </trans-unit>
-      <trans-unit id="8189ecf686157db0c0274c1f49373318">
-        <source>International</source>
-        <target>International</target>
-        <note>Line: 87</note>
-      </trans-unit>
-      <trans-unit id="851f12a0c936baace7f0e734d5c624e7">
-        <source>1. Beginner</source>
-        <target>1. Beginner</target>
-        <note>Line: 91</note>
-      </trans-unit>
-      <trans-unit id="583981a16ea761fe852b64094d8a887e">
-        <source>2. Pro</source>
-        <target>2. Pro</target>
-        <note>Line: 92</note>
-      </trans-unit>
-      <trans-unit id="38f7af7416ffcd1524d8a4acda756cbf">
-        <source>3. Expert</source>
-        <target>3. Expert</target>
-        <note>Line: 93</note>
-      </trans-unit>
-      <trans-unit id="e7613fe56cdbeddfc9bb6276fd0f0d12">
-        <source>4. Wizard</source>
-        <target>4. Wizard</target>
-        <note>Line: 94</note>
-      </trans-unit>
-      <trans-unit id="8d03eaad7ff7babdd33c2c74fe479ed0">
-        <source>5. Guru</source>
-        <target>5. Guru</target>
-        <note>Line: 95</note>
-      </trans-unit>
-      <trans-unit id="e4be4f3e3ae4ee9dda6b60815bf774c1">
-        <source>6. Legend</source>
-        <target>6. Legend</target>
-        <note>Line: 96</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/gamification/gamification.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="bacc1bf300527bad9c6ac2d3b875a8d8">
-        <source>Become an e-commerce expert within the blink of an eye!</source>
-        <target>Become an e-commerce expert within the blink of an eye!</target>
-        <note>Line: 58</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/ps_emailsubscription/ps_emailsubscription.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="2df860f82be52de57fc5e3f7ecac9431">
-        <source>Newsletter subscription: Unable to delete customer using email.</source>
-        <target>Newsletter subscription: Unable to delete customer using email.</target>
-        <note>Line: 1267</note>
-      </trans-unit>
-      <trans-unit id="0b6664aa3bb3e3130368b120a8adfa91">
-        <source>Newsletter subscription: Unable to export customer using email.</source>
-        <target>Newsletter subscription: Unable to export customer using email.</target>
-        <note>Line: 1277</note>
       </trans-unit>
     </body>
   </file>

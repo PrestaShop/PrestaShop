@@ -27,7 +27,7 @@
             
 {% endif %}
             <span>
-              {{ 'You have <span><strong>{nbProducts}</strong></span> product(s) now available for download using the following link(s):'|trans({}, 'Emails.Body', locale)|raw }}<br/><br/>
+              {{ 'You have [bold]{nbProducts}[bold] product(s) now available for download using the following link(s):'|trans({'[bold]': '<span><strong>', '[/bold]': '</strong></span>'}, 'Emails.Body', locale)|raw }}<br/><br/>
               {virtualProducts}
             </span>
           </font>

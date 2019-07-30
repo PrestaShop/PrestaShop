@@ -159,7 +159,7 @@
       <trans-unit id="3ed07fe73e25bba69e3e5dac234b1941">
         <source>Error - The following e-mail template is missing: %s</source>
         <target>Error - The following e-mail template is missing: %s</target>
-        <note>Line: 416</note>
+        <note>Line: 410</note>
       </trans-unit>
     </body>
   </file>
@@ -1012,32 +1012,32 @@
       <trans-unit id="a375d9230fd61b4a70ac109ab7b11082">
         <source>You cannot edit the SuperAdmin profile.</source>
         <target>You cannot edit the SuperAdmin profile.</target>
-        <note>Line: 343</note>
+        <note>Line: 342</note>
       </trans-unit>
       <trans-unit id="cd34716bc68eb08479ddf16f17b2580e">
         <source>The provided profile is invalid</source>
         <target>The provided profile is invalid</target>
-        <note>Line: 507</note>
+        <note>Line: 506</note>
       </trans-unit>
       <trans-unit id="f5d44b60e38b28d19549bb7a107654ca">
         <source>You cannot disable or delete your own account.</source>
         <target>You cannot disable or delete your own account.</target>
-        <note>Line: 491</note>
+        <note>Line: 490</note>
       </trans-unit>
       <trans-unit id="2450228823b8e17792cf687b8543b59d">
         <source>You cannot disable or delete the administrator account.</source>
         <target>You cannot disable or delete the administrator account.</target>
-        <note>Line: 485</note>
+        <note>Line: 484</note>
       </trans-unit>
       <trans-unit id="4220fb02fdc65e838a02a3b51c6f737f">
         <source>Your current password is invalid.</source>
         <target>Your current password is invalid.</target>
-        <note>Line: 535</note>
+        <note>Line: 534</note>
       </trans-unit>
       <trans-unit id="cfe45dd92c1b71a640ea19767578f38c">
         <source>The employee must be associated with at least one shop.</source>
         <target>The employee must be associated with at least one shop.</target>
-        <note>Line: 503</note>
+        <note>Line: 502</note>
       </trans-unit>
     </body>
   </file>
@@ -1097,7 +1097,7 @@
       <trans-unit id="7d6f235518e595f4e988b6811d2ceeab">
         <source>For security reasons, you cannot delete the Administrator's profile.</source>
         <target>For security reasons, you cannot delete the Administrator's profile.</target>
-        <note>Line: 272</note>
+        <note>Line: 271</note>
       </trans-unit>
     </body>
   </file>

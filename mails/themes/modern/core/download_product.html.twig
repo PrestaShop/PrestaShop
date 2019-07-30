@@ -50,7 +50,7 @@
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0px;padding-bottom:25px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:16px;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ 'Thank you for your order with the reference {order_name} from <span class="label">{shop_name}</span>'|trans({}, 'Emails.Body', locale)|raw }}
+                                          {{ 'Thank you for your order with the reference {order_name} from [bold]{shop_name}[/bold]'|trans({'[bold]': '<span class="label">', '[/bold]': '</span>'}, 'Emails.Body', locale)|raw }}
                                         </div>
                                       </td>
                                     </tr>
@@ -253,7 +253,7 @@
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ 'You have <span class="label">{nbProducts}</span> product(s) now available for download using the following link(s):'|trans({}, 'Emails.Body', locale)|raw }}
+                                          {{ 'You have [bold]{nbProducts}[/bold] product(s) now available for download using the following link(s):'|trans({'[bold]': '<span class="label">', '[/bold]': '</span>'}, 'Emails.Body', locale)|raw }}
                                         </div>
                                       </td>
                                     </tr>

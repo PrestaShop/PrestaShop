@@ -26,9 +26,9 @@
             
 {% endif %}
             <span>
-              {{ '<span><strong>{employee}</strong></span> wanted to forward this discussion to you.'|trans({}, 'Emails.Body', locale)|raw }} <br/><br/>
+              {{ '[bold]{employee}[/bold] wanted to forward this discussion to you.'|trans({'[bold]': '<span><strong>', '[/bold]': '</strong></span>'}, 'Emails.Body', locale)|raw }} <br/><br/>
               <span><strong>{{ 'Discussion history:'|trans({}, 'Emails.Body', locale)|raw }}</strong></span> {messages}<br/><br/>
-              {{ '<span><strong>{employee}</strong></span> added <span><strong>"{comment}"</strong></span>'|trans({}, 'Emails.Body', locale)|raw }}
+              {{ '[bold]{employee}[/bold] added [bold]"{comment}"[/bold]'|trans({'[bold]': '<span><strong>', '[/bold]': '</strong></span>'}, 'Emails.Body', locale)|raw }}
             </span>
           </font>
         </td>

@@ -759,12 +759,12 @@
       <trans-unit id="b50f440e3c9f14988bd0086683e77095">
         <source>You cannot remove this category because one of your shops uses it as a root category.</source>
         <target>You cannot remove this category because one of your shops uses it as a root category.</target>
-        <note>Line: 754</note>
+        <note>Line: 750</note>
       </trans-unit>
       <trans-unit id="a874ef298164bbd4d00d55901225cd87">
         <source>An error occurred while uploading the image:</source>
         <target>An error occurred while uploading the image:</target>
-        <note>Line: 763</note>
+        <note>Line: 759</note>
       </trans-unit>
     </body>
   </file>
@@ -782,7 +782,7 @@
       <trans-unit id="925c714b657d85c49a9718ef792fcb95">
         <source>It is not possible to delete a supplier if there are pending supplier orders.</source>
         <target>It is not possible to delete a supplier if there are pending supplier orders.</target>
-        <note>Line: 472</note>
+        <note>Line: 469</note>
       </trans-unit>
     </body>
   </file>

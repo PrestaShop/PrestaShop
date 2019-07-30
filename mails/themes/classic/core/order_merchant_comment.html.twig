@@ -26,7 +26,7 @@
             
 {% endif %}
             <span>
-              {{ 'You have received a new message from <span><strong>{shop_name}</strong></span> regarding order with the reference <span><strong>{order_name}</strong></span>.'|trans({}, 'Emails.Body', locale)|raw }}<br/><br/>
+              {{ 'You have received a new message from [bold]{shop_name}[/bold] regarding order with the reference [bold]{order_name}[/bold].'|trans({'[bold]': '<span><strong>', '[/bold]': '</strong></span>'}, 'Emails.Body', locale)|raw }}<br/><br/>
               <span><strong>{{ 'Message:'|trans({}, 'Emails.Body', locale)|raw }}</strong></span> {message}
             </span>
           </font>

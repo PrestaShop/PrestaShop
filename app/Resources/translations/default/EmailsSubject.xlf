@@ -14,12 +14,12 @@
       <trans-unit id="fca7e8d1c86db11246e429e40aa10c81">
         <source>New voucher for your order %s</source>
         <target>New voucher for your order %s</target>
-        <note>Line: 1143</note>
+        <note>Line: 1142</note>
       </trans-unit>
       <trans-unit id="fb077ecba55e5552916bde26d8b9e794">
         <source>Order confirmation</source>
         <target>Order confirmation</target>
-        <note>Line: 656</note>
+        <note>Line: 655</note>
       </trans-unit>
     </body>
   </file>

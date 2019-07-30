@@ -26,7 +26,7 @@
             
 {% endif %}
             <span>
-              {{ 'Your guest account for <span><strong>{shop_name}</strong></span> has been transformed into a customer account.'|trans({}, 'Emails.Body', locale)|raw }} <br/><br/>
+              {{ 'Your guest account for [bold]{shop_name}[/bold] has been transformed into a customer account.'|trans({'[bold]': '<span><strong>', '[/bold]': '</strong></span>'}, 'Emails.Body', locale)|raw }} <br/><br/>
               <span><strong>{{ 'E-mail address:'|trans({}, 'Emails.Body', locale)|raw }}</strong></span> {email}
             </span>
           </font>

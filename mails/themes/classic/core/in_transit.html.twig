@@ -51,7 +51,7 @@
             
 {% endif %}
             <span>
-              {{ 'Your order with the reference <span><strong>{order_name}</strong></span> is currently in transit.'|trans({}, 'Emails.Body', locale)|raw }} <br/><br/>
+              {{ 'Your order with the reference [bold]{order_name}[/bold] is currently in transit.'|trans({'[bold]': '<span><strong>', '[/bold]': '</strong></span>'}, 'Emails.Body', locale)|raw }} <br/><br/>
               {{ 'You can track your package using the following link:'|trans({}, 'Emails.Body', locale)|raw }} <a href="{followup}">{{ '{followup}'|trans({}, 'Emails.Body', locale) }}</a>
             </span>
           </font>

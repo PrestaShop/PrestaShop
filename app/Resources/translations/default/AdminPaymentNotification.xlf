@@ -34,17 +34,17 @@
       <trans-unit id="ed13b3693357ebed3751cb71cb639e65">
         <source>No carrier</source>
         <target>No carrier</target>
-        <note>Line: 613</note>
+        <note>Line: 612</note>
       </trans-unit>
       <trans-unit id="b08d3867be98e6fff3233cd40ab8134a">
         <source>Order creation failed</source>
         <target>Order creation failed</target>
-        <note>Line: 698</note>
+        <note>Line: 697</note>
       </trans-unit>
       <trans-unit id="43423b4056880b08f2c9aa50d8670531">
         <source>Cart cannot be loaded or an order has already been placed using this cart</source>
         <target>Cart cannot be loaded or an order has already been placed using this cart</target>
-        <note>Line: 715</note>
+        <note>Line: 714</note>
       </trans-unit>
     </body>
   </file>

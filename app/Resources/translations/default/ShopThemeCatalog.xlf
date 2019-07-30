@@ -14,12 +14,12 @@
       <trans-unit id="9dea4016dbcc290b773ab2fae678aaa8">
         <source>Items</source>
         <target>Items</target>
-        <note>Line: 1080</note>
+        <note>Line: 1079</note>
       </trans-unit>
       <trans-unit id="7d74f3b92b19da5e606d737d339a9679">
         <source>Item</source>
         <target>Item</target>
-        <note>Line: 1080</note>
+        <note>Line: 1079</note>
       </trans-unit>
     </body>
   </file>
@@ -624,27 +624,27 @@ File: themes/StarterTheme/templates/customer/_partials/order-detail-return.tpl:3
       <trans-unit id="56e11b516943cb38a57c9a53219a8370">
         <source>This pack contains</source>
         <target>This pack contains</target>
-        <note>Line: 116</note>
+        <note>Line: 115</note>
       </trans-unit>
       <trans-unit id="b5a7adde1af5c87d7fd797b6245c2a39">
         <source>Description</source>
         <target>Description</target>
-        <note>Line: 160</note>
+        <note>Line: 159</note>
       </trans-unit>
       <trans-unit id="b8900d8adf598b6653bb8c071bc49a1d">
         <source>Product Details</source>
         <target>Product Details</target>
-        <note>Line: 170</note>
+        <note>Line: 169</note>
       </trans-unit>
       <trans-unit id="7e2708aeb65763c54052f57ed1a1ec1d">
         <source>Attachments</source>
         <target>Attachments</target>
-        <note>Line: 179</note>
+        <note>Line: 178</note>
       </trans-unit>
       <trans-unit id="3767d4f3efe17bd95a1bc7cf4194bb93">
         <source>You might also like</source>
         <target>You might also like</target>
-        <note>Line: 239</note>
+        <note>Line: 238</note>
       </trans-unit>
     </body>
   </file>
