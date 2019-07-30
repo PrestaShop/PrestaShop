@@ -26,47 +26,56 @@ import 'url-polyfill';
 
 const $ = global.$;
 
+const replaceDatePicker = () => {
+  const datepickerWidget = $('body').find('.bootstrap-datetimepicker-widget:last');
+  if (datepickerWidget.length <= 0) {
+    return;
+  }
+
+  const position = datepickerWidget.offset();
+  const originalHeight = datepickerWidget.outerHeight();
+  const margin = (datepickerWidget.outerHeight(true) - originalHeight) / 2;
+
+  // Move datepicker to the exact same place it was but attached to body
+  datepickerWidget.appendTo('body');
+
+  // Height changed because the css from column-filters is not applied any more
+  let top = (position.top) + margin;
+
+  // Datepicker is settle to the top position
+  if (datepickerWidget.hasClass('top')) {
+    top += (originalHeight - datepickerWidget.outerHeight(true) - margin);
+  }
+
+  datepickerWidget.css({
+    position: 'absolute',
+    top,
+    bottom: 'auto',
+    left: position.left,
+    right: 'auto',
+  });
+
+  $(window).on('resize', replaceDatePicker);
+};
+
 /**
  * Enable all datepickers.
  */
 const init = function initDatePickers() {
-  $('.datepicker input[type="text"]').datetimepicker({
-    locale: global.full_language_code,
-    format: 'YYYY-MM-DD',
-  })
-  .on('dp.show', replaceDatePicker)
-  .on('dp.hide', function() {
-    $(window).off('resize', replaceDatePicker);
-  })
-  ;
-
-  function replaceDatePicker() {
-    const datepicker = $('body').find('.bootstrap-datetimepicker-widget:last');
-    if (datepicker.length <= 0) {
-      return;
-    }
-
-    const position = datepicker.offset(),
-      originalHeight = datepicker.outerHeight(),
-      margin = (datepicker.outerHeight(true) - datepicker.outerHeight()) / 2
-    ;
-
-    // Move datepicker to the exact same place it was but attached to body
-    datepicker.appendTo('body');
-
-    //Height changed because the css from column-filters is not applied any more
-    const top = position.top + originalHeight - margin - datepicker.outerHeight();
-
-    datepicker.css({
-      position: 'absolute',
-      top: top,
-      bottom: 'auto',
-      left: position.left,
-      right: 'auto'
-    });
-    
-    $(window).on('resize', replaceDatePicker);
-  }
+  $('.datepicker input[type="text"]').datetimepicker(
+    {
+      locale: global.full_language_code,
+      format: 'YYYY-MM-DD',
+    },
+  ).on(
+    'dp.show',
+    replaceDatePicker,
+  ).on(
+    'dp.hide',
+    () => {
+      $(window).off('resize', replaceDatePicker);
+    },
+  );
 };
 
 export default init;
