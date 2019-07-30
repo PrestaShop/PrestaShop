@@ -62,6 +62,7 @@ final class EditAttachmentHandler implements EditAttachmentHandlerInterface
     /**
      * @param Attachment $attachment
      * @param EditAttachmentCommand $command
+     *
      * @throws AttachmentConstraintException
      * @throws \PrestaShopException
      */

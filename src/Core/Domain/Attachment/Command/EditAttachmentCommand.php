@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Attachment\Command;
 
-
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\ValueObject\AttachmentId;
 
@@ -87,6 +86,7 @@ class EditAttachmentCommand
 
     /**
      * @param AttachmentId $attachmentId
+     *
      * @return EditAttachmentCommand
      */
     public function setAttachmentId(AttachmentId $attachmentId): EditAttachmentCommand
@@ -106,6 +106,7 @@ class EditAttachmentCommand
 
     /**
      * @param string|null $file
+     *
      * @return EditAttachmentCommand
      */
     public function setFile(?string $file): EditAttachmentCommand
@@ -125,6 +126,7 @@ class EditAttachmentCommand
 
     /**
      * @param string|null $fileName
+     *
      * @return EditAttachmentCommand
      */
     public function setFileName(?string $fileName): EditAttachmentCommand
@@ -144,6 +146,7 @@ class EditAttachmentCommand
 
     /**
      * @param int|null $fileSize
+     *
      * @return EditAttachmentCommand
      */
     public function setFileSize(?int $fileSize): EditAttachmentCommand
@@ -163,6 +166,7 @@ class EditAttachmentCommand
 
     /**
      * @param string|null $mimeType
+     *
      * @return EditAttachmentCommand
      */
     public function setMimeType(?string $mimeType): EditAttachmentCommand
@@ -211,6 +215,7 @@ class EditAttachmentCommand
 
     /**
      * @param string[]|null $localizedDescriptions
+     *
      * @return EditAttachmentCommand
      */
     public function setLocalizedDescriptions(?array $localizedDescriptions): EditAttachmentCommand

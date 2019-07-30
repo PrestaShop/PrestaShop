@@ -155,7 +155,7 @@ class AttachmentController extends FrameworkBundleAdminController
                 [],
                 [
                     'is_edit_form' => true,
-                    'has_old_file' => $attachmentInformation->getFile() !== null
+                    'has_old_file' => $attachmentInformation->getFile() !== null,
                 ]
             );
 

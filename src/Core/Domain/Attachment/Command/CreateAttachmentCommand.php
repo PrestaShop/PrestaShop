@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Attachment\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Attachment\ValueObject\AttachmentId;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
@@ -70,6 +69,7 @@ class CreateAttachmentCommand
 
     /**
      * @param UploadedFile|null $file
+     *
      * @return CreateAttachmentCommand
      */
     public function setFile(?UploadedFile $file): CreateAttachmentCommand
@@ -89,6 +89,7 @@ class CreateAttachmentCommand
 
     /**
      * @param string $uniqueFileName
+     *
      * @return CreateAttachmentCommand
      */
     public function setUniqueFileName(string $uniqueFileName): CreateAttachmentCommand
@@ -108,7 +109,9 @@ class CreateAttachmentCommand
 
     /**
      * @param array $localizedNames
+     *
      * @return CreateAttachmentCommand
+     *
      * @throws AttachmentConstraintException
      */
     public function setLocalizedNames(array $localizedNames): CreateAttachmentCommand
@@ -135,6 +138,7 @@ class CreateAttachmentCommand
 
     /**
      * @param string[]|null $localizedDescriptions
+     *
      * @return CreateAttachmentCommand
      */
     public function setLocalizedDescriptions(?array $localizedDescriptions): CreateAttachmentCommand
@@ -154,6 +158,7 @@ class CreateAttachmentCommand
 
     /**
      * @param string $mimeType
+     *
      * @return CreateAttachmentCommand
      */
     public function setMimeType(string $mimeType): CreateAttachmentCommand

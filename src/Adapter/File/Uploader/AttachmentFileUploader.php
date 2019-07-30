@@ -50,7 +50,6 @@ final class AttachmentFileUploader implements FileUploaderInterface
 
     /**
      * @param TranslatorInterface $translator
-     *
      */
     public function __construct(TranslatorInterface $translator)
     {
@@ -76,7 +75,9 @@ final class AttachmentFileUploader implements FileUploaderInterface
 
     /**
      * Delete old attachment file.
+     *
      * @param int $attachmentId
+     *
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
      */
@@ -89,6 +90,7 @@ final class AttachmentFileUploader implements FileUploaderInterface
     /**
      * @param UploadedFile $file
      * @param string $uniqid
+     *
      * @throws AttachmentConstraintException
      * @throws AttachmentException
      */
@@ -128,6 +130,7 @@ final class AttachmentFileUploader implements FileUploaderInterface
 
     /**
      * @param UploadedFile $file
+     *
      * @throws AttachmentConstraintException
      */
     private function checkFileAllowedForUpload(UploadedFile $file)
