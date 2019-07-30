@@ -57,4 +57,8 @@ module.exports = class CommonPage {
     await this.page.waitForSelector('body');
     return this.page;
   }
+
+  async reloadPage() {
+    await this.page.reload({waitUntil: 'networkidle0'});
+  }
 };
