@@ -27,52 +27,44 @@
 namespace PrestaShop\PrestaShop\Adapter\Attachment\CommandHandler;
 
 use Attachment;
-use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\EditAttachmentCommand;
-use PrestaShop\PrestaShop\Core\Domain\Attachment\CommandHandler\EditAttachmentHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\CreateAttachmentCommand;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\CommandHandler\CreateAttachmentHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentNotFoundException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
- * Class EditAttachmentHandler
+ * Class CreateAttachmentHandler
  */
-final class EditAttachmentHandler implements EditAttachmentHandlerInterface
+final class CreateAttachmentHandler implements CreateAttachmentHandlerInterface
 {
     /**
      * {@inheritdoc}
      *
      * @throws AttachmentConstraintException
-     * @throws AttachmentNotFoundException
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
      */
-    public function handle(EditAttachmentCommand $command)
+    public function handle(CreateAttachmentCommand $command)
     {
-        $attachmentIdValue = $command->getAttachmentId()->getValue();
-        $attachment = new Attachment($attachmentIdValue);
+        $attachment = new Attachment();
 
-        if ($attachment->id !== $attachmentIdValue) {
-            throw new AttachmentNotFoundException(
-                sprintf('Attachment with id "%s" was not found.', $attachmentIdValue)
-            );
-        }
-
-        $this->updateAttachmentFromCommandData($attachment, $command);
+        $this->createAttachmentFromCommandData($attachment, $command);
     }
 
     /**
      * @param Attachment $attachment
-     * @param EditAttachmentCommand $command
+     * @param CreateAttachmentCommand $command
      * @throws AttachmentConstraintException
      * @throws \PrestaShopException
      */
-    private function updateAttachmentFromCommandData(Attachment $attachment, EditAttachmentCommand $command)
+    private function createAttachmentFromCommandData(Attachment $attachment, CreateAttachmentCommand $command)
     {
-        if (null !== $command->getFile()) {
-            $attachment->file = $command->getFile();
+        if (null !== $command->getUniqueFileName()) {
+            $attachment->file = $command->getUniqueFileName();
         }
 
-        if (null !== $command->getFileName()) {
-            $attachment->file_name = $command->getFileName();
+        if ($command->getFile() instanceof UploadedFile) {
+            $attachment->file_name = $command->getFile()->getClientOriginalName();
         }
 
         if (null !== $command->getLocalizedDescriptions()) {
@@ -94,6 +86,6 @@ final class EditAttachmentHandler implements EditAttachmentHandlerInterface
             );
         }
 
-        $attachment->update();
+        $attachment->add();
     }
 }

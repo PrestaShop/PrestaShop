@@ -24,7 +24,8 @@
  *#}
 
 {% set enableSidebar = true %}
-{% set layoutTitle = 'Editing attachment %name%'|trans({'%name%': attachmentInformation.fileName}, 'Admin.Orderscustomers.Feature') %}
+
+{% set layoutTitle = 'Editing attachment %name%'|trans({'%name%': attachmentInformation.name|first}, 'Admin.Orderscustomers.Feature') %}
 
 {% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
 
@@ -39,5 +40,5 @@
 {% block javascripts %}
   {{ parent() }}
 
-  {% include '@PrestaShop/Admin/Sell/Customer/Blocks/javascript.html.twig' %}
+  <script src="{{ asset('themes/new-theme/public/attachment.bundle.js') }}"></script>
 {% endblock %}

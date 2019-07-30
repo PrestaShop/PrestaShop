@@ -22,7 +22,7 @@ admin_attachment_create:
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Catalog/Attachment:create
     _legacy_controller: AdminAttachments
-#    _legacy_link: AdminAttachments:addattachment
+    _legacy_link: AdminAttachments:addattachment
 
 admin_attachment_edit:
   path: /{attachmentId}/edit

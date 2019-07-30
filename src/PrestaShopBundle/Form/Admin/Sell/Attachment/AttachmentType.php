@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Attachment;
 
+use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Translation\TranslatorAwareTrait;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -48,15 +49,19 @@ class AttachmentType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('file_name', TextType::class, [
+            ->add('name', TranslatableType::class, [
+                'type' => TextType::class,
                 'required' => true,
-                'constraints' => [
-                    new NotBlank([
-                        'message' => $this->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
-                    ]),
-                ],
+                'options' => [
+                    'constraints' => [
+                        new NotBlank([
+                            'message' => $this->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
+                        ]),
+                    ],
+                ]
             ])
-            ->add('description', TextType::class, [
+            ->add('file_description', TranslatableType::class, [
+                'type' => TextType::class,
                 'required' => false,
             ])
             ->add('file', FileType::class, [
@@ -65,7 +70,7 @@ class AttachmentType extends AbstractType
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
-                        'groups' => ['create']
+                        'groups' => ['validate']
                     ]),
                 ],
             ])
@@ -77,18 +82,29 @@ class AttachmentType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
+        $resolver->setRequired(['is_edit_form', 'has_old_file']);
         $resolver->setDefaults([
             'validation_groups' => function (FormInterface $form) {
-                $data = $form->getData();
-
                 $groups = ['Default'];
+                $data = $form->getData();
+                $options = $form->getConfig()->getOptions();
 
-                if (!isset($data['id']) || $data['id'] === null) {
-                    array_push($groups, 'create');
+                $shouldValidateFile = (!$options['is_edit_form'] ||
+                    (isset($options['has_old_file']) &&
+                    !$options['has_old_file'])) &&
+                    $data['file'] === null;
+
+                if ($shouldValidateFile) {
+                    array_push($groups, 'validate');
                 }
 
                 return $groups;
             },
+            'has_old_file' => false,
         ]);
+
+        $resolver->setAllowedTypes('has_old_file', 'bool');
+        $resolver->setAllowedTypes('is_edit_form', 'bool');
+
     }
 }

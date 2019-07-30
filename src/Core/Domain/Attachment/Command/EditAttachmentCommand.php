@@ -38,41 +38,41 @@ class EditAttachmentCommand
     private $attachmentId;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $file;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $fileName;
 
     /**
-     * @var int
+     * @var int|null
      */
     private $fileSize;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $mimeType;
 
     /**
-     * @var string[]
+     * @var string[]|null
      */
     private $localizedNames;
 
     /**
-     * @var string[]
+     * @var string[]|null
      */
     private $localizedDescriptions;
 
     /**
-     * @param $attachmentId
+     * @param int $attachmentId
      *
      * @throws \PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentConstraintException
      */
-    public function __construct($attachmentId)
+    public function __construct(int $attachmentId)
     {
         $this->attachmentId = new AttachmentId($attachmentId);
     }
@@ -87,92 +87,107 @@ class EditAttachmentCommand
 
     /**
      * @param AttachmentId $attachmentId
+     * @return EditAttachmentCommand
      */
-    public function setAttachmentId(AttachmentId $attachmentId): void
+    public function setAttachmentId(AttachmentId $attachmentId): EditAttachmentCommand
     {
         $this->attachmentId = $attachmentId;
+
+        return $this;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getFile(): string
+    public function getFile(): ?string
     {
         return $this->file;
     }
 
     /**
-     * @param string $file
+     * @param string|null $file
+     * @return EditAttachmentCommand
      */
-    public function setFile(string $file): void
+    public function setFile(?string $file): EditAttachmentCommand
     {
         $this->file = $file;
+
+        return $this;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getFileName(): string
+    public function getFileName(): ?string
     {
         return $this->fileName;
     }
 
     /**
-     * @param string $fileName
+     * @param string|null $fileName
+     * @return EditAttachmentCommand
      */
-    public function setFileName(string $fileName): void
+    public function setFileName(?string $fileName): EditAttachmentCommand
     {
         $this->fileName = $fileName;
+
+        return $this;
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getFileSize(): int
+    public function getFileSize(): ?int
     {
         return $this->fileSize;
     }
 
     /**
-     * @param int $fileSize
+     * @param int|null $fileSize
+     * @return EditAttachmentCommand
      */
-    public function setFileSize(int $fileSize): void
+    public function setFileSize(?int $fileSize): EditAttachmentCommand
     {
         $this->fileSize = $fileSize;
+
+        return $this;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getMimeType(): string
+    public function getMimeType(): ?string
     {
         return $this->mimeType;
     }
 
     /**
-     * @param string $mimeType
+     * @param string|null $mimeType
+     * @return EditAttachmentCommand
      */
-    public function setMimeType(string $mimeType): void
+    public function setMimeType(?string $mimeType): EditAttachmentCommand
     {
         $this->mimeType = $mimeType;
+
+        return $this;
     }
 
     /**
-     * @return string[]
+     * @return string[]|null
      */
-    public function getLocalizedNames(): array
+    public function getLocalizedNames(): ?array
     {
         return $this->localizedNames;
     }
 
     /**
-     * @param string[] $localizedNames
+     * @param string[]|null $localizedNames
      *
-     * @return $this
+     * @return EditAttachmentCommand
      *
      * @throws AttachmentConstraintException
      */
-    public function setLocalizedNames(array $localizedNames)
+    public function setLocalizedNames(?array $localizedNames): EditAttachmentCommand
     {
         if (empty($localizedNames)) {
             throw new AttachmentConstraintException(
@@ -187,19 +202,18 @@ class EditAttachmentCommand
     }
 
     /**
-     * @return string[]
+     * @return string[]|null
      */
-    public function getLocalizedDescriptions(): array
+    public function getLocalizedDescriptions(): ?array
     {
         return $this->localizedDescriptions;
     }
 
     /**
-     * @param string[] $localizedDescriptions
-     *
-     * @return $this
+     * @param string[]|null $localizedDescriptions
+     * @return EditAttachmentCommand
      */
-    public function setLocalizedDescriptions(array $localizedDescriptions)
+    public function setLocalizedDescriptions(?array $localizedDescriptions): EditAttachmentCommand
     {
         $this->localizedDescriptions = $localizedDescriptions;
 

@@ -29,8 +29,6 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachmentForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\EditableAttachment;
-use Symfony\Component\HttpFoundation\File\File;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Provides data for attachment add/edit forms
@@ -59,7 +57,8 @@ final class AttachmentFormDataProvider implements FormDataProviderInterface
         $editableAttachment = $this->queryBus->handle(new GetAttachmentForEditing((int) $attachmentId));
 
         $data = [
-            'id' => $editableAttachment->getId(),
+            'file' => $editableAttachment->getFile(),
+            'name' => $editableAttachment->getName(),
             'file_name' => $editableAttachment->getFileName(),
             'file_description' => $editableAttachment->getDescription(),
         ];

@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentNotFoundExc
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachmentForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryHandler\GetAttachmentForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\EditableAttachment;
+use Symfony\Component\HttpFoundation\File\File;
 
 /**
  * Handles command that gets attachment for editing
@@ -53,12 +54,14 @@ final class GetAttachmentForEditingHandler implements GetAttachmentForEditingHan
             );
         }
 
+        $filePath = _PS_DOWNLOAD_DIR_ . $attachment->file;
+        $file = file_exists($filePath) ? new File($filePath) : null;
+
         return new EditableAttachment(
             $attachment->file_name,
-            reset($attachment->description),
-            _PS_DOWNLOAD_DIR_ . $attachment->file,
-            $attachment->file_size,
-            $attachment->id
+            $attachment->name,
+            $attachment->description,
+            $file
         );
     }
 }
