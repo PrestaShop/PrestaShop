@@ -26,10 +26,15 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject;
 
+use PrestaShop\Decimal\Number;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference\Reference;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Price;
 
 /**
  * Holds supplier and product related information.
@@ -47,6 +52,21 @@ final class Supplier
     private $isDefaultSupplier;
 
     /**
+     * @var Reference
+     */
+    private $reference;
+
+    /**
+     * @var CurrencyId
+     */
+    private $currencyId;
+
+    /**
+     * @var Number
+     */
+    private $priceTaxExcluded;
+
+    /**
      *
      * @param int $supplierId
      * @param bool $isDefaultSupplier
@@ -56,6 +76,8 @@ final class Supplier
      *
      * @throws SupplierException
      * @throws ProductConstraintException
+     * @throws DomainConstraintException
+     * @throws CurrencyException
      */
     public function __construct(
         int $supplierId,
@@ -66,5 +88,48 @@ final class Supplier
     ) {
         $this->supplierId = new SupplierId($supplierId);
         $this->isDefaultSupplier = $isDefaultSupplier;
+        $this->reference = new Reference($reference);
+        $this->priceTaxExcluded = (new Price($priceTaxExcluded))->getValue();
+        $this->currencyId = new CurrencyId($currencyId);
+    }
+
+    /**
+     * @return SupplierId
+     */
+    public function getSupplierId(): SupplierId
+    {
+        return $this->supplierId;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDefaultSupplier(): bool
+    {
+        return $this->isDefaultSupplier;
+    }
+
+    /**
+     * @return Reference
+     */
+    public function getReference(): Reference
+    {
+        return $this->reference;
+    }
+
+    /**
+     * @return CurrencyId
+     */
+    public function getCurrencyId(): CurrencyId
+    {
+        return $this->currencyId;
+    }
+
+    /**
+     * @return Number
+     */
+    public function getPriceTaxExcluded(): Number
+    {
+        return $this->priceTaxExcluded;
     }
 }
