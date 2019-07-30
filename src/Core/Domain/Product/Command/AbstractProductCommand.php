@@ -47,7 +47,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference\Upc;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Visibility;
 
 /**
- * Holds the abstraction of common product data which does not depend from product type.
+ * Holds the abstraction of common product data.
  */
 abstract class AbstractProductCommand
 {

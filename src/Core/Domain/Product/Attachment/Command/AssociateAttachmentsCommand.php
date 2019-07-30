@@ -26,50 +26,64 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Attachment\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Attachment\Exception\ProductAttachmentException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Attachment\ValueObject\Attachment;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
- * Updates product attachments.
+ * Associates products with attachments.
  */
-class UpdateAttachmentsCommand
+class AssociateAttachmentsCommand
 {
     /**
      * @var ProductId
      */
     private $productId;
 
-    /**
-     * @var Attachment[]
-     */
-    private $attachment;
+    private $attachmentIds;
 
     /**
      * @param int $productId
-     * @param array $attachments
-     *
-     * @throws ProductAttachmentException
+     * @param int[] $attachmentIds
      */
-    public function __construct(int $productId, array $attachments)
+    public function __construct(int $productId, array $attachmentIds)
     {
         $this->productId = new ProductId($productId);
-
-        $this->setAttachments($attachments);
+        $this->setAttachmentIds($attachmentIds);
     }
 
     /**
-     * @param array $attachments
-     * @throws ProductAttachmentException
+     * @return ProductId
      */
-    private function setAttachments(array $attachments): void
+    public function getProductId(): ProductId
     {
-        foreach ($attachments as $attachment) {
-            $this->attachment[] = new Attachment(
-                $attachment['file_path'],
-                $attachment['title'],
-                $attachment['description']
-            );
+        return $this->productId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAttachmentIds()
+    {
+        return $this->attachmentIds;
+    }
+
+    private function setAttachmentIds(array $attachmentIds): void
+    {
+        foreach ($attachmentIds as $attachmentId) {
+            //todo: change me when AttachmentId VO is available
+            $this->attachmentIds[] = new class($attachmentId) {
+
+                private $attachmentId;
+
+                public function __construct(int $attachmentId)
+                {
+                    $this->attachmentId;
+                }
+
+                public function getValue()
+                {
+                    return $this->attachmentId;
+                }
+            };
         }
     }
 }
