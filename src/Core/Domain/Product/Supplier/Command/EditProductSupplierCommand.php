@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierException;
 
 /**
+ * @todo: I have also different behavior when combinations are available.
  * Updates supplier data related with specific product.
  */
 class EditProductSupplierCommand

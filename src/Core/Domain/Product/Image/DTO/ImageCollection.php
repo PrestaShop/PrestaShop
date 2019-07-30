@@ -41,7 +41,7 @@ class ImageCollection
     /** @var ExistingConfigurableImage[] */
     private $existingImages;
 
-    /** @var \PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\DeletedImage[] */
+    /** @var DeletedImage[] */
     private $deletesImages;
 
     /**

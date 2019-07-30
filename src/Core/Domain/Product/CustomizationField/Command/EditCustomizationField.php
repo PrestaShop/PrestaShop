@@ -24,16 +24,15 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Attachment\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\CustomizationField\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Attachment\ValueObject\Attachment;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\CustomizationField\ValueObject\CustomizationFieldInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
- * Edits product attachments.
+ * Edits product customization fields.
  */
-class EditAttachmentCommand
+class EditCustomizationField
 {
     /**
      * @var ProductId
@@ -41,36 +40,34 @@ class EditAttachmentCommand
     private $productId;
 
     /**
-     * @var Attachment[]
+     * @var CustomizationFieldInterface[]
      */
-    private $attachment;
+    private $customizationFields;
 
     /**
-     * @param int $productId
-     * @param array $attachments
      *
-     * @throws ProductConstraintException
+     * @param int $productId
+     * @param CustomizationFieldInterface[] $customizationFields
      */
-    public function __construct(int $productId, array $attachments)
+    public function __construct(int $productId, array $customizationFields)
     {
         $this->productId = new ProductId($productId);
-
-        $this->setAttachments($attachments);
+        $this->customizationFields = $customizationFields;
     }
 
     /**
-     * @param array $attachments
-     * @throws ProductConstraintException
+     * @return ProductId
      */
-    private function setAttachments(array $attachments): void
+    public function getProductId(): ProductId
     {
-        foreach ($attachments as $attachment) {
-            $this->attachment[] = new Attachment(
-                $attachment['file_path'],
-                $attachment['file_name'],
-                $attachment['title'],
-                $attachment['description']
-            );
-        }
+        return $this->productId;
+    }
+
+    /**
+     * @return CustomizationFieldInterface[]
+     */
+    public function getCustomizationFields(): array
+    {
+        return $this->customizationFields;
     }
 }

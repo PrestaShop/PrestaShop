@@ -64,12 +64,6 @@ abstract class AbstractProductCommand
     private $localizedProductNames;
 
     /**
-     * @todo: maybe put it out of common product command due to this part will be added in asynch way.
-     * @var ImageCollection- can be mixed as well.
-     */
-    private $images;
-
-    /**
      * @var CostPrice
      */
     private $costPrice;
@@ -176,13 +170,6 @@ abstract class AbstractProductCommand
     private $upc;
 
     /**
-     * @todo: I need label for default language validation.
-     *
-     * @var CustomizationFieldInterface[]
-     */
-    private $customizationFields;
-
-    /**
      * @var int[]
      */
     private $shopAssociation;
@@ -203,26 +190,6 @@ abstract class AbstractProductCommand
     public function getLocalizedProductNames(): array
     {
         return $this->localizedProductNames;
-    }
-
-    /**
-     * @return ImageCollection
-     */
-    public function getImages(): ?ImageCollection
-    {
-        return $this->images;
-    }
-
-    /**
-     * @param ImageCollection $images
-     *
-     * @return self
-     */
-    public function setImages(ImageCollection $images): self
-    {
-        $this->images = $images;
-
-        return $this;
     }
 
     /**
@@ -579,25 +546,6 @@ abstract class AbstractProductCommand
     {
         $this->reference = new Reference($reference);
 
-        return $this;
-    }
-
-    /**
-     * @return CustomizationFieldInterface[]
-     */
-    public function getCustomizationFields(): ?array
-    {
-        return $this->customizationFields;
-    }
-
-    /**
-     * @param CustomizationFieldInterface[] $customizationFields
-     *
-     * @return self
-     */
-    public function setCustomizationFields(array $customizationFields): void
-    {
-        $this->customizationFields = $customizationFields;
         return $this;
     }
 
