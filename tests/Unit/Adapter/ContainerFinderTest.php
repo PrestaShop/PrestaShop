@@ -40,8 +40,7 @@ class ContainerFinderTest extends TestCase
         $contextMock->container = $this->getMockContainerInterface();
 
         $containerFinder = new ContainerFinder();
-        $this->assertInternalType('object', $containerFinder->getContainer($contextMock));
-        $this->assertInstanceOf('Symfony\Component\DependencyInjection\ContainerInterface', $containerFinder->getContainer($contextMock));
+        $this->assertInstanceOf(ContainerInterface::class, $containerFinder->getContainer($contextMock));
     }
 
     public function testGetContainerFromController()
@@ -50,8 +49,7 @@ class ContainerFinderTest extends TestCase
         $contextMock->controller = $this->getMockController();
 
         $containerFinder = new ContainerFinder();
-        $this->assertInternalType('object', $containerFinder->getContainer($contextMock));
-        $this->assertInstanceOf('Symfony\Component\DependencyInjection\ContainerInterface', $containerFinder->getContainer($contextMock));
+        $this->assertInstanceOf(ContainerInterface::class, $containerFinder->getContainer($contextMock));
     }
 
     public function testGetContainerFallback()

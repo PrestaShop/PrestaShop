@@ -43,12 +43,13 @@ class ContainerFinder
      */
     public function getContainer(Context $context)
     {
-        $container = isset($context->container) ? $context->container : null;
-        if (null !== $container) {
-            return $container;
+        if (isset($context->container)) {
+            return $context->container;
         }
-        $container = isset($context->controller) && $context->controller instanceof Controller ? $context->controller->getContainer() : null;
-        if (null !== $container) {
+        if (isset($context->controller)
+            && $context->controller instanceof Controller
+            && $container = $context->controller->getContainer()
+            && null !== $container) {
             return $container;
         }
 
