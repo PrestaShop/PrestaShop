@@ -48,7 +48,7 @@ class ContainerFinder
         }
         if (isset($context->controller)
             && $context->controller instanceof Controller
-            && $container = $context->controller->getContainer()
+            && ($container = $context->controller->getContainer())
             && null !== $container) {
             return $container;
         }
