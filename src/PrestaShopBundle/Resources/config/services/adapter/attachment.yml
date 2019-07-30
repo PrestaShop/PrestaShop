@@ -26,11 +26,16 @@ services:
 
   prestashop.adapter.image.uploader.attachment_file_uploader:
     class: 'PrestaShop\PrestaShop\Adapter\File\Uploader\AttachmentFileUploader'
-    calls:
-      - { method: setTranslator, arguments: ['@translator'] }
+    arguments:
+      - '@translator'
 
   prestashop.adapter.category.command_handler.edit_attachment_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Attachment\CommandHandler\EditAttachmentHandler'
     tags:
       - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Attachment\Command\EditAttachmentCommand' }
+
+  prestashop.adapter.category.command_handler.create_attachment_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Attachment\CommandHandler\CreateAttachmentHandler'
+    tags:
+      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Attachment\Command\CreateAttachmentCommand' }
 

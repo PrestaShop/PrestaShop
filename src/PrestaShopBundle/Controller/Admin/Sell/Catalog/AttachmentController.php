@@ -40,8 +40,6 @@ use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachmentForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\EditableAttachment;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use PrestaShopBundle\Security\Annotation\DemoRestricted;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -50,6 +48,11 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class AttachmentController extends FrameworkBundleAdminController
 {
+    public function indexAction(Request $request)
+    {
+        return new Response(dump($request));
+    }
+
     /**
      * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
      *
@@ -86,7 +89,38 @@ class AttachmentController extends FrameworkBundleAdminController
      */
     public function createAction(Request $request)
     {
-        return new Response();
+        $attachmentFormBuilder = $this->get(
+            'prestashop.core.form.identifiable_object.builder.attachment_form_builder'
+        );
+        $attachmentFormHandler = $this->get(
+            'prestashop.core.form.identifiable_object.handler.attachment_form_handler'
+        );
+
+        $attachmentForm = $attachmentFormBuilder->getForm(
+            [],
+            [
+                'is_edit_form' => false,
+            ]
+        );
+
+        $attachmentForm->handleRequest($request);
+
+        try {
+            $handlerResult = $attachmentFormHandler->handle($attachmentForm);
+
+            if ($handlerResult->isSubmitted() && $handlerResult->isValid()) {
+                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_attachments_index');
+            }
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        return $this->render('@PrestaShop/Admin/Sell/Attachment/add.html.twig', [
+            'attachmentForm' => $attachmentForm->createView(),
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+        ]);
     }
 
     /**
@@ -109,12 +143,23 @@ class AttachmentController extends FrameworkBundleAdminController
             /** @var EditableAttachment $attachmentInformation */
             $attachmentInformation = $this->getQueryBus()->handle(new GetAttachmentForEditing((int) $attachmentId));
 
-            $attachmentFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.attachment_form_builder');
-            $attachmentFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.attachment_form_handler');
+            $attachmentFormBuilder = $this->get(
+                'prestashop.core.form.identifiable_object.builder.attachment_form_builder'
+            );
+            $attachmentFormHandler = $this->get(
+                'prestashop.core.form.identifiable_object.handler.attachment_form_handler'
+            );
 
-            $attachmentForm = $attachmentFormBuilder->getFormFor((int) $attachmentId);
+            $attachmentForm = $attachmentFormBuilder->getFormFor(
+                (int) $attachmentId,
+                [],
+                [
+                    'is_edit_form' => true,
+                    'has_old_file' => $attachmentInformation->getFile() !== null
+                ]
+            );
+
             $attachmentForm->handleRequest($request);
-
             $result = $attachmentFormHandler->handleFor((int) $attachmentId, $attachmentForm);
 
             if ($result->isSubmitted() && $result->isValid()) {

@@ -24,21 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\File\Uploader;
+namespace PrestaShop\PrestaShop\Core\Domain\Attachment\CommandHandler;
 
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\CreateAttachmentCommand;
 
 /**
- * Interface ImageUploaderInterface is contract for file uploader.
+ * Interface CreateAttachmentHandlerInterface defines contract for CreateAttachmentHandler
  */
-interface FileUploaderInterface
+interface CreateAttachmentHandlerInterface
 {
     /**
-     * Upload file.
-     *
-     * @param UploadedFile $uploadedFile
-     * @param string $uniqueFileName
-     * @param int|null $entityId
+     * @param CreateAttachmentCommand $command
      */
-    public function upload(UploadedFile $uploadedFile, string $uniqueFileName, ?int $entityId = null);
+    public function handle(CreateAttachmentCommand $command);
 }

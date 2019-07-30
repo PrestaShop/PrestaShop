@@ -31,9 +31,9 @@ use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentException;
 use PrestaShop\PrestaShop\Core\File\Uploader\FileUploaderInterface;
-use PrestaShopBundle\Translation\TranslatorAwareTrait;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Translation\TranslatorInterface;
 use Tools;
 
 /**
@@ -43,7 +43,19 @@ use Tools;
  */
 final class AttachmentFileUploader implements FileUploaderInterface
 {
-    use TranslatorAwareTrait;
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
+     * @param TranslatorInterface $translator
+     *
+     */
+    public function __construct(TranslatorInterface $translator)
+    {
+        $this->translator = $translator;
+    }
 
     /**
      * {@inheritdoc}
@@ -53,11 +65,13 @@ final class AttachmentFileUploader implements FileUploaderInterface
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
      */
-    public function upload($id, UploadedFile $uploadedFile, string $uniqueFileName)
+    public function upload(UploadedFile $uploadedFile, string $uniqueFileName, ?int $id = null)
     {
         $this->checkFileAllowedForUpload($uploadedFile);
         $this->uploadFile($uploadedFile, $uniqueFileName);
-        $this->deleteOldFile($id);
+        if ($id !== null) {
+            $this->deleteOldFile($id);
+        }
     }
 
     /**
@@ -84,7 +98,7 @@ final class AttachmentFileUploader implements FileUploaderInterface
             $max_upload = (int) ini_get('upload_max_filesize');
             $max_post = (int) ini_get('post_max_size');
             $upload_mb = min($max_upload, $max_post);
-            throw new AttachmentConstraintException($this->trans(
+            throw new AttachmentConstraintException($this->translator->trans(
                 'The file %file% exceeds the size allowed by the server. The limit is set to %size% MB.',
                 array('%file%' => '<b>' . $file->getClientOriginalName() . '</b> ', '%size%' => '<b>' . $upload_mb . '</b>'),
                 'Admin.Catalog.Notification'
@@ -92,7 +106,7 @@ final class AttachmentFileUploader implements FileUploaderInterface
         }
 
         if ($file->getSize() > (Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024 * 1024)) {
-            throw new AttachmentConstraintException($this->trans(
+            throw new AttachmentConstraintException($this->translator->trans(
                 'The file is too large. Maximum size allowed is: %1$d kB. The file you are trying to upload is %2$d kB.',
                 array(
                     '%1$d' => (Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024),
@@ -105,7 +119,7 @@ final class AttachmentFileUploader implements FileUploaderInterface
         try {
             $file->move(_PS_DOWNLOAD_DIR_, $uniqid);
         } catch (FileException $e) {
-            throw new AttachmentException($this->trans('Failed to copy the file.',
+            throw new AttachmentException($this->translator->trans('Failed to copy the file.',
                 [],
                 'Admin.Catalog.Notification')
             );

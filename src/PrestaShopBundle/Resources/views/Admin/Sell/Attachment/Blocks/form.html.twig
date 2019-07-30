@@ -26,7 +26,6 @@
 {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
 
 {% block attachment_form %}
-  {{ dump(attachmentForm) }}
   {{ form_start(attachmentForm) }}
     <div class="card">
       <h3 class="card-header">
@@ -37,11 +36,11 @@
         <div class="card-text">
           {{ form_errors(attachmentForm) }}
 
-          {{ ps.form_group_row(attachmentForm.file_name, {}, {
+          {{ ps.form_group_row(attachmentForm.name, {}, {
             'label': 'File name'|trans({}, 'Admin.Global')
           }) }}
 
-          {{ ps.form_group_row(attachmentForm.description, {}, {
+          {{ ps.form_group_row(attachmentForm.file_description, {}, {
             'label': 'Description'|trans({}, 'Admin.Global')
           }) }}
 
@@ -53,7 +52,8 @@
             <div class="col-sm">
               {% include '@PrestaShop/Admin/Sell/Catalog/Categories/Blocks/thumbnail_image.html.twig' %}
 
-              {{ form_row(attachmentForm.file) }}
+              {{ form_widget(attachmentForm.file) }}
+              {{ form_errors(attachmentForm.file) }}
 
             </div>
           </div>
