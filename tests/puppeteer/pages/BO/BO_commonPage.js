@@ -86,4 +86,9 @@ module.exports = class BO_COMMONPAGE extends CommonPage {
       await this.page.click(this.onboardingStopButton);
     }
   }
+
+  async viewMyShop() {
+    const FOPage = await this.openLinkWithTargetBlank(this.page, this.headerShopNameLink);
+    return FOPage;
+  }
 };
