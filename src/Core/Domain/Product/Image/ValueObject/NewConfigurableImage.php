@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ProductImageConstraintException;
 use SplFileObject;
 use function in_array;
@@ -69,7 +68,7 @@ final class NewConfigurableImage implements ConfigurableImageInterface
      * @param bool $isCover
      * @param array $localizedCaptions
      *
-     * @throws ProductConstraintException
+     * @throws ProductImageConstraintException
      */
     public function __construct(
         string $filePath,
@@ -132,7 +131,7 @@ final class NewConfigurableImage implements ConfigurableImageInterface
                     'File "%s" is not a regular file',
                     $file->getPathname()
                 ),
-                ProductImageConstraintException::NOT_FILE
+                ProductImageConstraintException::INVALID_FILE
             );
         }
 

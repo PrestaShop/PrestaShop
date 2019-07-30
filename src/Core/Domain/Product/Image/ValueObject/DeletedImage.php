@@ -26,8 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ProductImageConstraintException;
 
 /**
  * Image which is about to be deleted.
@@ -42,7 +41,7 @@ final class DeletedImage
     /**
      * @param int $imageId
      *
-     * @throws ProductConstraintException
+     * @throws ProductImageConstraintException
      */
     public function __construct(int $imageId)
     {

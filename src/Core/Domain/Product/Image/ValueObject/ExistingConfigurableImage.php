@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ProductImageConstraintException;
 
 /**
  * Existing image
@@ -59,7 +59,7 @@ final class ExistingConfigurableImage implements ConfigurableImageInterface
      * @param bool $isCover
      * @param array $localizedCaptions
      *
-     * @throws ProductConstraintException
+     * @throws ProductImageConstraintException
      */
     public function __construct(
         int $imageId,

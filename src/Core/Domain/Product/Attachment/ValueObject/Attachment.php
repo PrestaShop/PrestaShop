@@ -26,7 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Attachment\ValueObject;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\Attachment\Exception\ProductAttachmentException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use SplFileObject;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use function strlen;
 
@@ -48,28 +50,29 @@ final class Attachment
     private $localizedDescriptions;
 
     /**
-     * @var UploadedFile
+     * @var SplFileObject
      */
     private $file;
 
     /**
      *
      * @param string $filePath
-     * @param string $fileName
      * @param array $localizedTitles
      * @param array $localizedDescriptions
      *
-     * @throws ProductConstraintException
+     * @throws ProductAttachmentException
      */
     public function __construct(
         string $filePath,
-        string $fileName,
         array $localizedTitles,
         array $localizedDescriptions
     ) {
         $this->assertIsTitleLengthValid($localizedTitles);
 
-        $this->file = new UploadedFile($filePath, $fileName);
+        $file = new SplFileObject($filePath);
+        $this->assertIsFile($file);
+
+        $this->file = $file;
         $this->localizedTitles = $localizedTitles;
         $this->localizedDescriptions = $localizedDescriptions;
     }
@@ -91,9 +94,9 @@ final class Attachment
     }
 
     /**
-     * @return UploadedFile
+     * @return SplFileObject
      */
-    public function getFile(): UploadedFile
+    public function getFile(): SplFileObject
     {
         return $this->file;
     }
@@ -101,22 +104,40 @@ final class Attachment
     /**
      * @param array $localizedTitles
      *
-     * @throws ProductConstraintException
+     * @throws ProductAttachmentException
      */
     private function assertIsTitleLengthValid(array $localizedTitles): void
     {
         foreach ($localizedTitles as $langId => $title) {
             if (strlen($title) > self::MAX_SIZE) {
-                throw new ProductConstraintException(
+                throw new ProductAttachmentException(
                     sprintf(
                         'Product attachment title "%s" has breached maximum allowed size of %d for language id %d',
                         $title,
                         self::MAX_SIZE,
                         $langId
                     ),
-                    ProductConstraintException::INVALID_ATTACHMENT_TITLE
+                    ProductAttachmentException::INVALID_ATTACHMENT_TITLE
                 );
             }
+        }
+    }
+
+    /**
+     * @param SplFileObject $file
+     *
+     * @throws ProductAttachmentException
+     */
+    private function assertIsFile(SplFileObject $file): void
+    {
+        if (!$file->isFile()) {
+            throw new ProductAttachmentException(
+                sprintf(
+                    'File "%s" is not a regular file',
+                    $file->getPathname()
+                ),
+                ProductAttachmentException::INVALID_FILE
+            );
         }
     }
 }

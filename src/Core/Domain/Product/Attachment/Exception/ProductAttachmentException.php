@@ -24,13 +24,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Attachment\Exception;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 
-class ProductImageConstraintException extends ProductException
+class ProductAttachmentException extends ProductException
 {
-    public const INVALID_IMAGE_ID = 1;
+    public const INVALID_ATTACHMENT_TITLE = 1;
     public const INVALID_FILE = 2;
-    public const INVALID_MIME_TYPE = 3;
 }

@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ProductImageConstraintException;
 
 final class ImageId
@@ -39,12 +38,12 @@ final class ImageId
     /**
      * @param int $imageId
      *
-     * @throws ProductConstraintException
+     * @throws ProductImageConstraintException
      */
     public function __construct(int $imageId)
     {
         if (0 > $imageId) {
-            throw new ProductConstraintException(
+            throw new ProductImageConstraintException(
                 'Image id cannot be negative',
                 ProductImageConstraintException::INVALID_IMAGE_ID
             );

@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Attachment\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\Attachment\Exception\ProductAttachmentException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Attachment\ValueObject\Attachment;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
@@ -50,6 +51,7 @@ class UpdateAttachmentsCommand
      * @param array $attachments
      *
      * @throws ProductConstraintException
+     * @throws ProductAttachmentException
      */
     public function __construct(int $productId, array $attachments)
     {
@@ -61,6 +63,7 @@ class UpdateAttachmentsCommand
     /**
      * @param array $attachments
      * @throws ProductConstraintException
+     * @throws ProductAttachmentException
      */
     private function setAttachments(array $attachments): void
     {
