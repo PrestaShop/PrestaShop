@@ -26,7 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\CustomizationField\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\CustomizationField\Exception\ProductCustomizationFieldConstraintException;
+use function strlen;
 
 /**
  * Customization field label value.
@@ -43,18 +44,18 @@ final class Label
     /**
      * @param string $label
      *
-     * @throws ProductConstraintException
+     * @throws ProductCustomizationFieldConstraintException
      */
     public function __construct(string $label)
     {
         if (strlen($label) > self::MAX_SIZE) {
-            throw new ProductConstraintException(
+            throw new ProductCustomizationFieldConstraintException(
                 sprintf(
                     'Customization field label "%s" has breached max available length of %d',
                     $label,
                     self::MAX_SIZE
                 ),
-                ProductConstraintException::CUSTOMIZATION_FIELD_LABEL_TOO_LONG
+                ProductCustomizationFieldConstraintException::CUSTOMIZATION_FIELD_LABEL_TOO_LONG
             );
         }
 

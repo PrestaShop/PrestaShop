@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierConstraintException;
 
 /**
  * Products supplier reference
@@ -41,7 +41,7 @@ final class Reference
     /**
      * @param string $reference
      *
-     * @throws ProductConstraintException
+     * @throws ProductSupplierConstraintException
      */
     public function __construct(string $reference)
     {
@@ -61,19 +61,19 @@ final class Reference
     /**
      * @param string $reference
      *
-     * @throws ProductConstraintException
+     * @throws ProductSupplierConstraintException
      */
     private function assertIsValidReference(string $reference): void
     {
         $pattern = '/^[^<>;={}]*$/u';
         if (!preg_match($pattern, $reference)) {
-            throw new ProductConstraintException(
+            throw new ProductSupplierConstraintException(
                 sprintf(
                     'Product reference "%s" did not matched pattern "%s"',
                     $reference,
                     $pattern
                 ),
-                ProductConstraintException::INVALID_SUPPLIER_REFERENCE
+                ProductSupplierConstraintException::INVALID_SUPPLIER_REFERENCE
             );
         }
     }

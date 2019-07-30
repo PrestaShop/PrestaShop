@@ -28,6 +28,7 @@ namespace Tests\Unit\Core\Domain\Product\CustomizationField\ValueObject;
 
 
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Domain\Product\CustomizationField\Exception\ProductCustomizationFieldConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\CustomizationField\ValueObject\Label;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 
@@ -36,7 +37,7 @@ class LabelTest extends TestCase
     public function testItThrowsExceptionWhenTooLongCustomizationFieldLabelIsProvided()
     {
         $this->expectException(ProductConstraintException::class);
-        $this->expectExceptionCode(ProductConstraintException::CUSTOMIZATION_FIELD_LABEL_TOO_LONG);
+        $this->expectExceptionCode(ProductCustomizationFieldConstraintException::CUSTOMIZATION_FIELD_LABEL_TOO_LONG);
 
         new Label(str_repeat('a', Label::MAX_SIZE + 1));
     }

@@ -53,7 +53,7 @@ final class TextCustomizationField implements CustomizationFieldInterface
     {
         $this->localizedLabels = array_map(
             static function (string $label) {
-                return (new Label($label))->getValue();
+                return new Label($label);
             },
             $localizedLabels
         );

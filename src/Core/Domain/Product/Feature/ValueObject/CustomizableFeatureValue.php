@@ -26,7 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Feature\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Feature\Exception\ProductFeatureConstraintException;
+use function strlen;
 
 final class CustomizableFeatureValue
 {
@@ -38,7 +39,7 @@ final class CustomizableFeatureValue
      * @param int $featureId
      * @param string $featureValue
      *
-     * @throws ProductConstraintException
+     * @throws ProductFeatureConstraintException
      */
     public function __construct(int $featureId, string $featureValue)
     {
@@ -72,19 +73,19 @@ final class CustomizableFeatureValue
     /**
      * @param string $featureValue
      *
-     * @throws ProductConstraintException
+     * @throws ProductFeatureConstraintException
      */
     private function assertValueNameIsValid(string $featureValue): void
     {
         $pattern = '/^[^<>={}]*$/u';
         if (!preg_match($pattern, $featureValue)) {
-            throw new ProductConstraintException(
+            throw new ProductFeatureConstraintException(
                 sprintf(
                     'Customizable feature value name "%s" did not matched given regex pattern "%s"',
                     $featureValue,
                     $pattern
                 ),
-                ProductConstraintException::INVALID_CUSTOMIZABLE_FEATURE_VALUE
+                ProductFeatureConstraintException::INVALID_CUSTOMIZABLE_FEATURE_VALUE
             );
         }
     }
@@ -92,18 +93,18 @@ final class CustomizableFeatureValue
     /**
      * @param string $featureValue
      *
-     * @throws ProductConstraintException
+     * @throws ProductFeatureConstraintException
      */
     private function assertValueSizeIsValid(string $featureValue): void
     {
         if (strlen($featureValue) > self::MAX_SIZE) {
-            throw new ProductConstraintException(
+            throw new ProductFeatureConstraintException(
                 sprintf(
                     'Customizable feature value name "%s" is too long. Max size is %d',
                     $featureValue,
                     self::MAX_SIZE
                 ),
-                ProductConstraintException::CUSTOMIZABLE_FEATURE_VALUE_TOO_LONG
+                ProductFeatureConstraintException::CUSTOMIZABLE_FEATURE_VALUE_TOO_LONG
             );
         }
     }

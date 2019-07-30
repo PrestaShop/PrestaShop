@@ -27,9 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Attachment\ValueObject;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Attachment\Exception\ProductAttachmentException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use SplFileObject;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use function strlen;
 
 /**

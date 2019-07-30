@@ -33,8 +33,6 @@ class ProductConstraintException extends ProductException
     public const INVALID_UNIT_PRICE = 3;
     public const INVALID_RETAIL_PRICE = 5;
     public const INVALID_COST_PRICE = 6;
-    public const INVALID_CUSTOMIZABLE_FEATURE_VALUE = 7;
-    public const CUSTOMIZABLE_FEATURE_VALUE_TOO_LONG = 8;
     public const INVALID_META_TITLE = 9;
     public const META_TITLE_NAME_TOO_LONG = 10;
     public const INVALID_META_KEYWORDS = 11;
@@ -49,6 +47,4 @@ class ProductConstraintException extends ProductException
     public const INVALID_ISBN_REFERENCE = 20;
     public const INVALID_EAN13_REFERENCE = 21;
     public const INVALID_UPC_REFERENCE = 22;
-    public const CUSTOMIZATION_FIELD_LABEL_TOO_LONG = 23;
-    public const INVALID_SUPPLIER_REFERENCE = 25;
 }

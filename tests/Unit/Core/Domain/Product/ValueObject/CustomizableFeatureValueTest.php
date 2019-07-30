@@ -26,20 +26,21 @@
 
 namespace Tests\Unit\Core\Domain\Product\ValueObject;
 
+use Generator;
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Feature\Exception\ProductFeatureConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Feature\ValueObject\CustomizableFeatureValue;
 
 class CustomizableFeatureValueTest extends TestCase
 {
     public function testItDetectsThatNameIsTooLong(): void
     {
-        $this->expectException(ProductConstraintException::class);
-        $this->expectExceptionCode(ProductConstraintException::CUSTOMIZABLE_FEATURE_VALUE_TOO_LONG);
+        $this->expectException(ProductFeatureConstraintException::class);
+        $this->expectExceptionCode(ProductFeatureConstraintException::CUSTOMIZABLE_FEATURE_VALUE_TOO_LONG);
 
-        $tooLongName = str_repeat('a', \PrestaShop\PrestaShop\Core\Domain\Product\Feature\ValueObject\CustomizableFeatureValue::MAX_SIZE + 1);
+        $tooLongName = str_repeat('a', CustomizableFeatureValue::MAX_SIZE + 1);
 
-        new \PrestaShop\PrestaShop\Core\Domain\Product\Feature\ValueObject\CustomizableFeatureValue(1, $tooLongName);
+        new CustomizableFeatureValue(1, $tooLongName);
     }
 
     /**
@@ -47,13 +48,13 @@ class CustomizableFeatureValueTest extends TestCase
      */
     public function testItDetectsInvalidName(string $invalidName): void
     {
-        $this->expectException(ProductConstraintException::class);
-        $this->expectExceptionCode(ProductConstraintException::INVALID_CUSTOMIZABLE_FEATURE_VALUE);
+        $this->expectException(ProductFeatureConstraintException::class);
+        $this->expectExceptionCode(ProductFeatureConstraintException::INVALID_CUSTOMIZABLE_FEATURE_VALUE);
 
-        new \PrestaShop\PrestaShop\Core\Domain\Product\Feature\ValueObject\CustomizableFeatureValue(1, $invalidName);
+        new CustomizableFeatureValue(1, $invalidName);
     }
 
-    public function provideInvalidNames(): ?\Generator
+    public function provideInvalidNames(): ?Generator
     {
         yield [
             '<something>',

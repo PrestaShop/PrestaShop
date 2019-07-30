@@ -24,37 +24,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\Core\Domain\Product\Supplier\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Feature\Exception;
 
-use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\Reference;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 
-class ReferenceTest extends TestCase
+class ProductFeatureConstraintException extends ProductException
 {
-    /**
-     * @dataProvider provideInvalidReferences
-     */
-    public function testItThrowsExceptionOnInvalidReference(string $nonValidReference)
-    {
-        $this->expectException(ProductSupplierConstraintException::class);
-        $this->expectExceptionCode(ProductSupplierConstraintException::INVALID_SUPPLIER_REFERENCE);
-
-        new Reference($nonValidReference);
-    }
-
-    public function provideInvalidReferences()
-    {
-        yield [
-            '{object}',
-        ];
-
-        yield [
-            '<div>refrefref</div>',
-        ];
-
-        yield [
-            'ref;ref',
-        ];
-    }
+    public const INVALID_CUSTOMIZABLE_FEATURE_VALUE = 1;
+    public const CUSTOMIZABLE_FEATURE_VALUE_TOO_LONG = 2;
 }
