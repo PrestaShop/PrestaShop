@@ -27,12 +27,27 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-9">
-        {# RIGHT SIDE #}
+
+        <div class="summary-description-container">
+          <ul class="nav nav-tabs bordered">
+            <li id="tab_description_short" class="nav-item"><a href="#description_short" data-toggle="tab" class="nav-link description-tab active">{{ 'Summary'|trans({}, 'Admin.Catalog.Feature') }}</a></li>
+            <li id="tab_description" class="nav-item"><a href="#description" data-toggle="tab" class="nav-link description-tab">{{ 'Description'|trans({}, 'Admin.Global') }}</a></li>
+          </ul>
+
+          <div class="tab-content">
+            <div class="tab-pane panel panel-default active" id="description_short">
+              {{ form_widget(productForm.basic_settings.short_description) }}
+            </div>
+            <div class="tab-pane panel panel-default" id="description">
+              {{ form_widget(productForm.basic_settings.description) }}
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="col-md-3">
         {% if isCombinationFeatureActive %}
-          <div class="form-group mb-3">
+          <div class="form-group mb-3" id="product_with_combinations_selection_block">
             <h2>
               {{ 'Combinations'|trans({}, 'Admin.Catalog.Feature') }}
               <span class="help-box"

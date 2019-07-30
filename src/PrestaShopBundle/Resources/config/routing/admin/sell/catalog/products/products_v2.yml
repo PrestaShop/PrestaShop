@@ -3,5 +3,4 @@ admin_products_add:
   methods: [GET]
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Catalog/Product:add
-
-
+    _legacy_controller: AdminProducts

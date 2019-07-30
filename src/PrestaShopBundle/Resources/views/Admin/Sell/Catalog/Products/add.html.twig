@@ -39,12 +39,38 @@
         {% block product_basic_settings_tab_content %}
           {% include '@PrestaShop/Admin/Sell/Catalog/Products/Blocks/Tab/basic_settings_tab.html.twig' %}
         {% endblock %}
+
+        {% block product_combinations_tab_content %}
+          {% include '@PrestaShop/Admin/Sell/Catalog/Products/Blocks/Tab/combinations_tab.html.twig' %}
+        {% endblock %}
+
+        {% block product_quantities_tab_content %}
+          {% include '@PrestaShop/Admin/Sell/Catalog/Products/Blocks/Tab/quantities_tab.html.twig' %}
+        {% endblock %}
+
+        {% block product_shipping_tab_content %}
+          {% include '@PrestaShop/Admin/Sell/Catalog/Products/Blocks/Tab/shipping_tab.html.twig' %}
+        {% endblock %}
+
+        {% block product_pricing_tab_content %}
+          {% include '@PrestaShop/Admin/Sell/Catalog/Products/Blocks/Tab/pricing_tab.html.twig' %}
+        {% endblock %}
+
+        {% block product_seo_tab_content %}
+          {% include '@PrestaShop/Admin/Sell/Catalog/Products/Blocks/Tab/seo_tab.html.twig' %}
+        {% endblock %}
+
+        {% block product_options_tab_content %}
+          {% include '@PrestaShop/Admin/Sell/Catalog/Products/Blocks/Tab/options_tab.html.twig' %}
+        {% endblock %}
       </div>
     </div>
 
-    <div class="d-none">
-      {{ form_rest(productForm) }}
-    </div>
-
   {{ form_end(productForm) }}
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+
+  <script src="{{ asset('themes/new-theme/public/product_form.bundle.js') }}"></script>
 {% endblock %}

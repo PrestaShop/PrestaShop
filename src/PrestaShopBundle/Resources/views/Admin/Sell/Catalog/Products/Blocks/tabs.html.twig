@@ -33,11 +33,37 @@
         {{ 'Basic settings'|trans({}, 'Admin.Catalog.Feature') }}
       </a>
     </li>
-    <li id="tab_step3" class="nav-item"><a href="#step3" role="tab" data-toggle="tab" class="nav-link">{{ 'Quantities'|trans({}, 'Admin.Catalog.Feature') }}</a></li>
-    <li id="tab_step4" class="nav-item"><a href="#step4" role="tab" data-toggle="tab" class="nav-link">{{ 'Shipping'|trans({}, 'Admin.Catalog.Feature') }}</a></li>
-    <li id="tab_step2" class="nav-item"><a href="#step2" role="tab" data-toggle="tab" class="nav-link">{{ 'Pricing'|trans({}, 'Admin.Catalog.Feature') }}</a></li>
-    <li id="tab_step5" class="nav-item"><a href="#step5" role="tab" data-toggle="tab" class="nav-link">{{ 'SEO'|trans({}, 'Admin.Catalog.Feature') }}</a></li>
-    <li id="tab_step6" class="nav-item"><a href="#step6" role="tab" data-toggle="tab" class="nav-link">{{ 'Options'|trans({}, 'Admin.Global') }}</a></li>
+    <li id="product_combinations_tab" class="nav-item">
+      <a href="#product_combinations_tab_content" role="tab" data-toggle="tab" class="nav-link">
+        {{ 'Combinations'|trans({}, 'Admin.Catalog.Feature') }}
+      </a>
+    </li>
+    <li id="product_quantities_tab" class="nav-item">
+      <a href="#product_quantities_tab_content" role="tab" data-toggle="tab" class="nav-link">
+        {{ 'Quantities'|trans({}, 'Admin.Catalog.Feature') }}
+      </a>
+    </li>
+    <li id="product_shipping_tab" class="nav-item">
+      <a href="#product_shipping_tab_content" role="tab" data-toggle="tab" class="nav-link">
+        {{ 'Shipping'|trans({}, 'Admin.Catalog.Feature') }}
+      </a>
+    </li>
+    <li id="product_pricing_tab" class="nav-item">
+      <a href="#product_pricing_tab_content" role="tab" data-toggle="tab" class="nav-link">
+        {{ 'Pricing'|trans({}, 'Admin.Catalog.Feature') }}
+      </a>
+    </li>
+    <li id="product_seo_tab" class="nav-item">
+      <a href="#product_seo_tab_content" role="tab" data-toggle="tab" class="nav-link">
+        {{ 'SEO'|trans({}, 'Admin.Catalog.Feature') }}
+      </a>
+    </li>
+    <li id="product_options_tab" class="nav-item">
+      <a href="#product_options_tab_content" role="tab" data-toggle="tab" class="nav-link">
+        {{ 'Options'|trans({}, 'Admin.Global') }}
+      </a>
+    </li>
+
     {% if hookcount('displayAdminProductsExtra') > 0 %}
       <li id="tab_hooks" class="nav-item"><a href="#hooks" role="tab" data-toggle="tab" class="nav-link">{{ 'Modules'|trans({}, 'Admin.Catalog.Feature') }}</a></li>
     {% endif %}

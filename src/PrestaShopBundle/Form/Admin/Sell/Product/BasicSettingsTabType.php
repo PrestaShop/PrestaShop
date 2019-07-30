@@ -26,9 +26,11 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
+use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -48,6 +50,17 @@ class BasicSettingsTabType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+            ->add('short_description', TranslatableType::class, [
+                'type' => TextareaType::class,
+                'options' => [
+                    'attr' => [
+                        'placeholder' => $this->translator->trans('The summary is a short sentence describing your product.<br />It will appears at the top of your shop\'s product page, in product lists, and in search engines\' results page (so it\'s important for SEO). To give more details about your product, use the "Description" tab.', [], 'Admin.Catalog.Help'),
+                    ],
+                ],
+            ])
+            ->add('description', TranslatableType::class, [
+                'type' => TextareaType::class,
+            ])
             ->add('with_combinations', ChoiceType::class, [
                 'expanded' => true,
                 'multiple' => false,

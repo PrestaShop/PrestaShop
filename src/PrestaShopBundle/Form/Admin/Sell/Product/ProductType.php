@@ -47,7 +47,13 @@ class ProductType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name', TranslatableType::class)
+            ->add('name', TranslatableType::class, [
+                'options' => [
+                    'attr' => [
+                        'placeholder' => $this->translator->trans('Enter your product name', [], 'Admin.Catalog.Help'),
+                    ],
+                ],
+            ])
             ->add('type', ChoiceType::class, [
                 'expanded' => false,
                 'multiple' => false,
