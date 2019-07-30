@@ -24,37 +24,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ProductImageConstraintException;
 
-final class ImageId
+class ProductImageConstraintException extends ProductConstraintException
 {
-    /**
-     * @var int
-     */
-    private $imageId;
-
-    /**
-     * @param int $imageId
-     *
-     * @throws ProductConstraintException
-     */
-    public function __construct(int $imageId)
-    {
-        if (0 > $imageId) {
-            throw new ProductConstraintException(
-                'Image id cannot be negative',
-                ProductImageConstraintException::INVALID_IMAGE_ID
-            );
-        }
-
-        $this->imageId = $imageId;
-    }
-
-    public function getValue(): int
-    {
-        return $this->imageId;
-    }
+    public const INVALID_IMAGE_ID = 1;
+    public const NOT_FILE = 2;
+    public const INVALID_MIME_TYPE = 3;
 }

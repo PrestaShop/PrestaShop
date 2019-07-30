@@ -28,19 +28,13 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
-use PrestaShop\PrestaShop\Core\Domain\Product\Attachment\ValueObject\Attachment;
-use PrestaShop\PrestaShop\Core\Domain\Product\CustomizationField\ValueObject\CustomizationFieldInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Feature\DTO\FeatureCollection;
-use PrestaShop\PrestaShop\Core\Domain\Product\Image\DTO\ImageCollection;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Category;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Condition;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Price\CostPrice;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\MetaData\FriendlyUrl;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\MetaData\MetaDescription;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\MetaData\MetaKeywords;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\MetaData\MetaTitle;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductName;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectionPage\RedirectionPageInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Price\RetailPrice;
@@ -95,11 +89,6 @@ abstract class AbstractProductCommand
      * @var ManufacturerId
      */
     private $manufacturerId;
-
-    /**
-     * @var Category[]
-     */
-    private $categories;
 
     /**
      * @var MetaTitle[]
@@ -300,26 +289,6 @@ abstract class AbstractProductCommand
     public function setManufacturerId(int $manufacturerId): self
     {
         $this->manufacturerId = new ManufacturerId($manufacturerId);
-
-        return $this;
-    }
-
-    /**
-     * @return Category[]
-     */
-    public function getCategories(): ?array
-    {
-        return $this->categories;
-    }
-
-    /**
-     * @param Category[] $categories
-     *
-     * @return self
-     */
-    public function setCategories(array $categories): self
-    {
-        $this->categories = $categories;
 
         return $this;
     }

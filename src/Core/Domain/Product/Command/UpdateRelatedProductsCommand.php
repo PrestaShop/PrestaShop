@@ -24,51 +24,56 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
-use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
- * Holds information about product category.
+ * Update related products.
  */
-final class Category
+class UpdateRelatedProductsCommand
 {
     /**
-     * @var bool
+     * @var ProductId
      */
-    private $isMainCategory;
+    private $productId;
 
     /**
-     * @var CategoryId
+     * @var ProductId[]
      */
-    private $categoryId;
+    private $relatedProductIds;
 
     /**
-     * @param int $categoryId
-     * @param bool $isMainCategory
-     *
-     * @throws CategoryException
+     * @param int $productId
+     * @param array $relatedProductIds
      */
-    public function __construct(int $categoryId, bool $isMainCategory)
+    public function __construct(int $productId, array $relatedProductIds)
     {
-        $this->categoryId = new CategoryId($categoryId);
-        $this->isMainCategory = $isMainCategory;
+        $this->productId = new ProductId($productId);
+
+        $this->setRelatedProductIds($relatedProductIds);
     }
 
     /**
-     * @return bool
+     * @return ProductId
      */
-    public function isMainCategory(): bool
+    public function getProductId(): ProductId
     {
-        return $this->isMainCategory;
+        return $this->productId;
     }
 
     /**
-     * @return CategoryId
+     * @return ProductId[]
      */
-    public function getCategoryId(): CategoryId
+    public function getRelatedProductIds(): array
     {
-        return $this->categoryId;
+        return $this->relatedProductIds;
+    }
+
+    private function setRelatedProductIds(array $relatedProductIds): void
+    {
+        foreach ($relatedProductIds as $productId) {
+            $this->relatedProductIds[] = new ProductId($productId);
+        }
     }
 }

@@ -27,13 +27,22 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ProductImageConstraintException;
+use SplFileObject;
+use function in_array;
 
 /**
  * New not created image.
  */
 final class NewConfigurableImage implements ConfigurableImageInterface
 {
+    public const ALLOWED_MIME_TYPES = [
+        'image/gif',
+        'image/png',
+        'image/jpeg',
+        'image/jpg',
+    ];
+
     /**
      * @var int
      */
@@ -50,13 +59,12 @@ final class NewConfigurableImage implements ConfigurableImageInterface
     private $localizedCaptions;
 
     /**
-     * @var Image
+     * @var SplFileObject
      */
     private $image;
 
     /**
      * @param string $filePath
-     * @param string $fileName
      * @param int $position
      * @param bool $isCover
      * @param array $localizedCaptions
@@ -65,12 +73,15 @@ final class NewConfigurableImage implements ConfigurableImageInterface
      */
     public function __construct(
         string $filePath,
-        string $fileName,
         int $position,
         bool $isCover,
         array $localizedCaptions
     ) {
-        $this->image = new Image($filePath, $fileName);
+        $file = new SplFileObject($filePath);
+
+        $this->assertIsValidImage($file);
+
+        $this->image = $file;
         $this->position = $position;
         $this->isCover = $isCover;
         $this->localizedCaptions = $localizedCaptions;
@@ -79,7 +90,7 @@ final class NewConfigurableImage implements ConfigurableImageInterface
     /**
      * {@inheritdoc}
      */
-    public function getImage(): Image
+    public function getImage(): SplFileObject
     {
         return $this->image;
     }
@@ -106,5 +117,36 @@ final class NewConfigurableImage implements ConfigurableImageInterface
     public function getLocalizedCaptions(): array
     {
         return $this->localizedCaptions;
+    }
+
+    /**
+     * @param SplFileObject $file
+     *
+     * @throws ProductImageConstraintException
+     */
+    private function assertIsValidImage(SplFileObject $file): void
+    {
+        if (!$file->isFile()) {
+            throw new ProductImageConstraintException(
+                sprintf(
+                    'File "%s" is not a regular file',
+                    $file->getPathname()
+                ),
+                ProductImageConstraintException::NOT_FILE
+            );
+        }
+
+        $mimeType = mime_content_type($file->getPathname());
+
+        if (!in_array($mimeType, self::ALLOWED_MIME_TYPES, true)) {
+            throw new ProductImageConstraintException(
+                sprintf(
+                    'Invalid image mime type "%s" detected. Available values are "%s"',
+                    $mimeType,
+                    implode(',', self::ALLOWED_MIME_TYPES)
+                ),
+                ProductImageConstraintException::INVALID_MIME_TYPE
+            );
+        }
     }
 }
