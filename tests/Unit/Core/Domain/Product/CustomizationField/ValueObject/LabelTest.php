@@ -36,7 +36,7 @@ class LabelTest extends TestCase
 {
     public function testItThrowsExceptionWhenTooLongCustomizationFieldLabelIsProvided()
     {
-        $this->expectException(ProductConstraintException::class);
+        $this->expectException(ProductCustomizationFieldConstraintException::class);
         $this->expectExceptionCode(ProductCustomizationFieldConstraintException::CUSTOMIZATION_FIELD_LABEL_TOO_LONG);
 
         new Label(str_repeat('a', Label::MAX_SIZE + 1));

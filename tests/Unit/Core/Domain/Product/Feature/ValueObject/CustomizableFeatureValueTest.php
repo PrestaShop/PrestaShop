@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\Core\Domain\Product\ValueObject;
+namespace Tests\Unit\Core\Domain\Product\Feature\ValueObject;
 
 use Generator;
 use PHPUnit\Framework\TestCase;
