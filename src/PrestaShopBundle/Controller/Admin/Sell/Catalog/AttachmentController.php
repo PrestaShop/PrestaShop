@@ -48,9 +48,9 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class AttachmentController extends FrameworkBundleAdminController
 {
-    public function indexAction(Request $request)
+    public function indexAction()
     {
-        return new Response(dump($request));
+        return new Response();
     }
 
     /**
