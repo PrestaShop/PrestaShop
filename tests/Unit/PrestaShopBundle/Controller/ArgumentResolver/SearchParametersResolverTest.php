@@ -48,17 +48,13 @@ class SearchParametersResolverTest extends TestCase
 
     public function testConstructor()
     {
-        $queryBusMock = $this->getMockBuilder(CommandBusInterface::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
         $resolver = new SearchParametersResolver(
             $this->buildSearchParametersMock(),
             $this->buildTokenStorageMock(),
             $this->buildAdminFilterRepositoryMock(),
             $this->buildEventDispatcherMock(),
             self::SHOP_ID,
-            $queryBusMock
+            $this->buildQueryBusMock()
         );
         $this->assertNotNull($resolver);
     }
@@ -76,7 +72,8 @@ class SearchParametersResolverTest extends TestCase
             $this->buildTokenStorageMock(),
             $this->buildAdminFilterRepositoryMock(),
             $this->buildEventDispatcherMock(),
-            self::SHOP_ID
+            self::SHOP_ID,
+            $this->buildQueryBusMock()
         );
         $this->assertNotNull($resolver);
 
@@ -88,7 +85,8 @@ class SearchParametersResolverTest extends TestCase
             $this->buildTokenStorageMock(true),
             $this->buildAdminFilterRepositoryMock(),
             $this->buildEventDispatcherMock(),
-            self::SHOP_ID
+            self::SHOP_ID,
+            $this->buildQueryBusMock()
         );
         $this->assertNotNull($resolver);
 
@@ -104,7 +102,8 @@ class SearchParametersResolverTest extends TestCase
             $this->buildTokenStorageMock(true),
             $this->buildAdminFilterRepositoryMock(),
             $this->buildEventDispatcherMock(SampleFilters::getDefaults()),
-            self::SHOP_ID
+            self::SHOP_ID,
+            $this->buildQueryBusMock()
         );
         $this->assertNotNull($resolver);
 
@@ -131,7 +130,8 @@ class SearchParametersResolverTest extends TestCase
             $this->buildTokenStorageMock(true),
             $this->buildAdminFilterRepositoryMock(), //No request parameters so no saving
             $this->buildEventDispatcherMock($expectedParameters),
-            self::SHOP_ID
+            self::SHOP_ID,
+            $this->buildQueryBusMock()
         );
         $this->assertNotNull($resolver);
 
@@ -164,7 +164,8 @@ class SearchParametersResolverTest extends TestCase
             $this->buildTokenStorageMock(true),
             $this->buildAdminFilterRepositoryMock($requestParameters),
             $this->buildEventDispatcherMock($expectedParameters),
-            self::SHOP_ID
+            self::SHOP_ID,
+            $this->buildQueryBusMock()
         );
         $this->assertNotNull($resolver);
 
@@ -208,7 +209,8 @@ class SearchParametersResolverTest extends TestCase
             $this->buildTokenStorageMock(true),
             $this->buildAdminFilterRepositoryMock($expectedParameters),
             $this->buildEventDispatcherMock($expectedParameters),
-            self::SHOP_ID
+            self::SHOP_ID,
+            $this->buildQueryBusMock()
         );
         $this->assertNotNull($resolver);
 
@@ -436,6 +438,13 @@ class SearchParametersResolverTest extends TestCase
         }
 
         return $repositoryMock;
+    }
+
+    private function buildQueryBusMock()
+    {
+        return $this->getMockBuilder(CommandBusInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
     }
 }
 
