@@ -97,11 +97,6 @@ abstract class AbstractProductCommand
     private $manufacturerId;
 
     /**
-     * @var ProductId[]
-     */
-    private $relatedProductIds;
-
-    /**
      * @var Category[]
      */
     private $categories;
@@ -305,29 +300,6 @@ abstract class AbstractProductCommand
     public function setManufacturerId(int $manufacturerId): self
     {
         $this->manufacturerId = new ManufacturerId($manufacturerId);
-
-        return $this;
-    }
-
-    /**
-     * @return ProductId[]
-     */
-    public function getRelatedProductIds(): ?array
-    {
-        return $this->relatedProductIds;
-    }
-
-    /**
-     * @param array|int[] $relatedProductIds
-     *
-     * @return self
-     */
-    public function setRelatedProductIds($relatedProductIds): self
-    {
-        $this->relatedProductIds = array_map(
-            static function ($item) { return new ProductId($item); },
-            $relatedProductIds
-        );
 
         return $this;
     }
