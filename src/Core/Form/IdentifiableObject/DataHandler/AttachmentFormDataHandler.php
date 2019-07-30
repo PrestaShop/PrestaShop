@@ -60,7 +60,9 @@ final class AttachmentFormDataHandler implements FormDataHandlerInterface
 
     /**
      * @param array $data
+     *
      * @return mixed|void
+     *
      * @throws \PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentConstraintException
      */
     public function create(array $data)
@@ -84,6 +86,7 @@ final class AttachmentFormDataHandler implements FormDataHandlerInterface
     /**
      * @param int $attachmentId
      * @param array $data
+     *
      * @throws \PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentConstraintException
      */
     public function update($attachmentId, array $data)
@@ -113,7 +116,9 @@ final class AttachmentFormDataHandler implements FormDataHandlerInterface
      * @param $attachmentId
      * @param array $data
      * @param string $file
+     *
      * @return EditAttachmentCommand
+     *
      * @throws \PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentConstraintException
      */
     private function createEditAttachmentCommand(
@@ -138,7 +143,9 @@ final class AttachmentFormDataHandler implements FormDataHandlerInterface
     /**
      * @param array $data
      * @param $uniqueFileName
+     *
      * @return CreateAttachmentCommand
+     *
      * @throws \PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentConstraintException
      */
     private function createAddAttachmentCommand(array $data, $uniqueFileName)

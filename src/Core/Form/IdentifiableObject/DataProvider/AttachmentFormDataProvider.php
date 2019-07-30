@@ -53,7 +53,7 @@ final class AttachmentFormDataProvider implements FormDataProviderInterface
      */
     public function getData($attachmentId)
     {
-        /** @var EditableAttachment $editableAttachment*/
+        /** @var EditableAttachment $editableAttachment */
         $editableAttachment = $this->queryBus->handle(new GetAttachmentForEditing((int) $attachmentId));
 
         $data = [

@@ -58,7 +58,6 @@ class EditableAttachment
      * @param string[] $name
      * @param string[]|null $description
      * @param File|null $file
-     *
      */
     public function __construct(
         string $fileName,
