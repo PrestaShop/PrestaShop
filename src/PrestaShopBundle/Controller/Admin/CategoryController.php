@@ -106,7 +106,7 @@ class CategoryController extends FrameworkBundleAdminController
                 }
             } catch (CategoryException $e) {
                 // TODO: do some frontend work to display this error message from ajax query
-                $response->setStatusCode(400);
+                $response->setStatusCode(Response::HTTP_BAD_REQUEST);
                 $response->setData(['error' => $this->getErrorMessageForException($e, $this->getErrorMessages($data['category']['name']))]);
             } catch (ProductException $e) {
                 // TODO: do some frontend work to display this error message from ajax query
