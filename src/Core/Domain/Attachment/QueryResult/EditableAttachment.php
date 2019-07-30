@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult;
 
+use Symfony\Component\HttpFoundation\File\File;
+
 /**
  * Stores editable data for attachment
  */
@@ -37,47 +39,38 @@ class EditableAttachment
     private $fileName;
 
     /**
-     * @var string|null
+     * @var string[]
+     */
+    private $name;
+
+    /**
+     * @var string[]|null
      */
     private $description;
 
     /**
-     * @var string
+     * @var File|null
      */
     private $file;
 
     /**
-     * @var int
-     */
-    private $size;
-
-    /**
-     * @var int|null
-     */
-    private $id;
-
-    /**
      * @param string $fileName
-     * @param string|null $description
-     * @param string $file
-     * @param int $size
-     * @param int $id
+     * @param string[] $name
+     * @param string[]|null $description
+     * @param File|null $file
+     *
      */
     public function __construct(
         string $fileName,
-        ?string $description,
-        string $file,
-        int $size,
-        ?int $id = null
+        array $name,
+        ?array $description,
+        ?File $file
     ) {
-        $this->id = $id;
         $this->fileName = $fileName;
+        $this->name = $name;
         $this->description = $description;
         $this->file = $file;
-        $this->size = $size;
     }
-
-
 
     /**
      * @return string
@@ -88,34 +81,26 @@ class EditableAttachment
     }
 
     /**
-     * @return string|null
+     * @return string[]
      */
-    public function getDescription(): ?string
+    public function getName(): array
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return string[]|null
+     */
+    public function getDescription(): ?array
     {
         return $this->description;
     }
 
     /**
-     * @return string
+     * @return File|null
      */
-    public function getFile(): string
+    public function getFile(): ?File
     {
         return $this->file;
-    }
-
-    /**
-     * @return int
-     */
-    public function getSize(): int
-    {
-        return $this->size;
-    }
-
-    /**
-     * @return int|null
-     */
-    public function getId(): ?int
-    {
-        return $this->id;
     }
 }

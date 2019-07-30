@@ -38,4 +38,6 @@ class AttachmentConstraintException extends AttachmentException
     const EMPTY_NAME = 3;
 
     const EMPTY_DESCRIPTION = 4;
+
+    const INVALID_FIELDS = 5;
 }
