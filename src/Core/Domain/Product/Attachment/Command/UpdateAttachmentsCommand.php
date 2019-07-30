@@ -24,15 +24,16 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Attachment\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Image\DTO\ImageCollection;
+use PrestaShop\PrestaShop\Core\Domain\Product\Attachment\ValueObject\Attachment;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
- * Edits product images.
+ * Updates product attachments.
  */
-class EditImageCommand
+class UpdateAttachmentsCommand
 {
     /**
      * @var ProductId
@@ -40,33 +41,36 @@ class EditImageCommand
     private $productId;
 
     /**
-     * @var ImageCollection
+     * @var Attachment[]
      */
-    private $images;
+    private $attachment;
 
     /**
      * @param int $productId
-     * @param ImageCollection $images
+     * @param array $attachments
+     *
+     * @throws ProductConstraintException
      */
-    public function __construct(int $productId, ImageCollection $images)
+    public function __construct(int $productId, array $attachments)
     {
         $this->productId = new ProductId($productId);
-        $this->images = $images;
+
+        $this->setAttachments($attachments);
     }
 
     /**
-     * @return ProductId
+     * @param array $attachments
+     * @throws ProductConstraintException
      */
-    public function getProductId(): ProductId
+    private function setAttachments(array $attachments): void
     {
-        return $this->productId;
-    }
-
-    /**
-     * @return ImageCollection
-     */
-    public function getImages(): ImageCollection
-    {
-        return $this->images;
+        foreach ($attachments as $attachment) {
+            $this->attachment[] = new Attachment(
+                $attachment['file_path'],
+                $attachment['file_name'],
+                $attachment['title'],
+                $attachment['description']
+            );
+        }
     }
 }

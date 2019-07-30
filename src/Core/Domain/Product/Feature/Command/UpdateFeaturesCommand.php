@@ -30,9 +30,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Feature\DTO\FeatureCollection;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
- * Edits product features.
+ * Update product features.
  */
-class EditFeatureCommand
+class UpdateFeaturesCommand
 {
     /**
      * @var ProductId

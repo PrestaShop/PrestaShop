@@ -30,9 +30,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\CustomizationField\ValueObject\Cus
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
- * Edits product customization fields.
+ * Update product customization fields.
  */
-class EditCustomizationField
+class UpdateCustomizationFieldsCommand
 {
     /**
      * @var ProductId

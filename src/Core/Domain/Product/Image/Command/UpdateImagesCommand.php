@@ -24,16 +24,15 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Attachment\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Attachment\ValueObject\Attachment;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\DTO\ImageCollection;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
- * Edits product attachments.
+ * Updates product images.
  */
-class EditAttachmentCommand
+class UpdateImagesCommand
 {
     /**
      * @var ProductId
@@ -41,36 +40,33 @@ class EditAttachmentCommand
     private $productId;
 
     /**
-     * @var Attachment[]
+     * @var ImageCollection
      */
-    private $attachment;
+    private $images;
 
     /**
      * @param int $productId
-     * @param array $attachments
-     *
-     * @throws ProductConstraintException
+     * @param ImageCollection $images
      */
-    public function __construct(int $productId, array $attachments)
+    public function __construct(int $productId, ImageCollection $images)
     {
         $this->productId = new ProductId($productId);
-
-        $this->setAttachments($attachments);
+        $this->images = $images;
     }
 
     /**
-     * @param array $attachments
-     * @throws ProductConstraintException
+     * @return ProductId
      */
-    private function setAttachments(array $attachments): void
+    public function getProductId(): ProductId
     {
-        foreach ($attachments as $attachment) {
-            $this->attachment[] = new Attachment(
-                $attachment['file_path'],
-                $attachment['file_name'],
-                $attachment['title'],
-                $attachment['description']
-            );
-        }
+        return $this->productId;
+    }
+
+    /**
+     * @return ImageCollection
+     */
+    public function getImages(): ImageCollection
+    {
+        return $this->images;
     }
 }
