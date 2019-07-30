@@ -14,6 +14,10 @@ module.exports = class BO_SHOPPARAMSGENERAL extends BOCommonPage {
   Methods
    */
 
+  /**
+   * Change Tab to Maintenance in Shop Parameters General Page
+   * @return {Promise<void>}
+   */
   async goToSubTabMaintenance() {
     await this.page.click(this.maintenanceNavItemLink, {waitUntil: 'networkidle2'});
   }

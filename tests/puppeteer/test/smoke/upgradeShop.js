@@ -31,7 +31,7 @@ const init = async () => {
   BO_AUTOUPGRADE = await (new BO_AUTOUPGRADE_PAGE(page));
 };
 
-// test scenario
+// Upgrade shop from a version to the last stable one
 global.scenario('Upgrade Prestashop to last Stable', async () => {
   test('should login into BO', async () => {
     await BO_LOGIN.goTo(global.URL_BO);

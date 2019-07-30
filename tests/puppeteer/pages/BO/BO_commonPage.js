@@ -87,6 +87,10 @@ module.exports = class BO_COMMONPAGE extends CommonPage {
     }
   }
 
+  /**
+   * Click On View my shop and waiting for new tab to be open
+   * @return Page, opened Page by puppeteer
+   */
   async viewMyShop() {
     const FOPage = await this.openLinkWithTargetBlank(this.page, this.headerShopNameLink);
     return FOPage;

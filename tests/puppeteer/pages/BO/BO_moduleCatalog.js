@@ -19,12 +19,23 @@ module.exports = class BO_MODULE_CATALOG extends BOCommonPage {
   Methods
    */
 
+  /**
+   * Search Module in Page module Catalog
+   * @param moduleTag, Tag of Module
+   * @param moduleName, Name of module
+   * @return {Promise<void>}
+   */
   async searchModule(moduleTag, moduleName) {
     await this.page.type(this.searchModuleTagInput, moduleTag);
     await this.page.click(this.searchModuleButton);
     await this.page.waitForSelector(this.moduleBloc.replace('%MODULENAME', moduleName), {visible: true});
   }
 
+  /**
+   * Install Module and waiting for Successful massage
+   * @param moduleName, Name of module
+   * @return {Promise<textContent>}
+   */
   async installModule(moduleName) {
     await this.page.click(this.installModuleButton.replace('%MODULENAME', moduleName));
     await this.page.waitForSelector(this.growlMessageBloc, {visible: true});

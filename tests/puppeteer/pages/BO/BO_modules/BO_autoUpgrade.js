@@ -27,6 +27,11 @@ module.exports = class BO_AUTOUPGRADE extends BOCommonPage {
   Methods
    */
 
+  /**
+   * Select the channel from where to do the upgrade
+   * @param upgradeChannelValue, value to select
+   * @return {Promise<void>}
+   */
   async chooseUpgradeChannel(upgradeChannelValue) {
     if (await this.elementVisible(this.showExpertModeButton)) {
       await this.page.click(this.showExpertModeButton);
@@ -37,6 +42,13 @@ module.exports = class BO_AUTOUPGRADE extends BOCommonPage {
     await this.page.waitForNavigation({waitUntil: 'networkidle0'});
   }
 
+  /**
+   * Select the channel from where to do the upgrade,
+   * Upgrade Prestashop
+   * And check successful message and that all steps are passed
+   * @param upgradeChannelValue, value to select
+   * @return {Promise<void>}
+   */
   async upgradePrestashop(upgradeChannelValue) {
     await this.chooseUpgradeChannel(upgradeChannelValue);
     await this.page.waitForSelector(this.upgradePrestashopNowButton, {visible: true});
