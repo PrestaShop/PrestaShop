@@ -28,6 +28,11 @@ namespace Tests\Unit\PrestaShopBundle\Controller\ArgumentResolver;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\Employee\AuthorizationOptions;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeForAuthentication;
+use PrestaShop\PrestaShop\Core\Domain\Employee\QueryResult\EmployeeForAuthentication;
+use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 use PrestaShop\PrestaShop\Core\Search\SearchParametersInterface;
 use PrestaShopBundle\Controller\ArgumentResolver\SearchParametersResolver;
@@ -442,9 +447,23 @@ class SearchParametersResolverTest extends TestCase
 
     private function buildQueryBusMock()
     {
-        return $this->getMockBuilder(CommandBusInterface::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $queryBus = $this->createMock(CommandBusInterface::class);
+        $queryBus
+            ->method('handle')
+            ->with($this->isInstanceOf(GetEmployeeForAuthentication::class))
+            ->willReturn(
+                new EmployeeForAuthentication(
+                    new EmployeeId((int) self::EMPLOYEE_ID),
+                    new Email('test@prestashop.com'),
+                    'verysecurepasswordhash',
+                    '',
+                    1,
+                    [AuthorizationOptions::DEFAULT_EMPLOYEE_ROLE]
+                )
+            )
+        ;
+
+        return $queryBus;
     }
 }
 
