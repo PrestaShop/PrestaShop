@@ -27,11 +27,8 @@
 namespace PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
-use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 
 /**
  * Defines cost ranges form part for carriers create/edit action Shipping step.
@@ -61,49 +58,27 @@ class ZoneRangeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-//            ->add('applied_from', NumberType::class, [
-//                'constraints' => [
-//                    new GreaterThanOrEqual([
-//                        'value' => 0,
-//                        'message' => $this->translator->trans(
-//                            'Value cannot be less than %value%.',
-//                            ['%value%' => 0],
-//                            'Admin.Notifications.Error'
-//                        ),
-//                    ]),
-//                ],
-//            ])
-//            ->add('applied_to', TextType::class, [
-//                'constraints' => [
-//                    new GreaterThanOrEqual([
-//                        'value' => 0,
-//                        'message' => $this->translator->trans(
-//                            'Value cannot be less than %value%.',
-//                            ['%value%' => 0],
-//                            'Admin.Notifications.Error'
-//                        ),
-//                    ]),
-//                ],
-//            ])
             ->add('zone_checks', ZoneCheckType::class, [
-                'zones' => $this->zones,
+                'zones' => $this->getModifiedZones(),
             ])
             ->add('zone_range_inputs', ZoneRangeInputType::class, [
-                    'label' => false,
-                    'attr' => [
-                        'class' => 'js-form-block-count',
-                    ],
-                    'zones' => $this->zones,
+                'label' => false,
+                'zones' => $this->getModifiedZones(),
             ]);
     }
 
-    public function getDefaultData()
+    /**
+     * @return array
+     */
+    private function getModifiedZones(): array
     {
-        $defaultData = [];
-        foreach ($this->zones as $zone) {
-            $defaultData[$zone['id_zone']] = '';
-        }
+        $zones = [
+            [
+                'name' => $this->translator->trans('All', [], 'Admin.Global'),
+                'id_zone' => 0,
+            ],
+        ];
 
-        return $defaultData;
+        return array_merge($zones, $this->zones);
     }
 }
