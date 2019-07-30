@@ -36,6 +36,7 @@ use PrestaShopBundle\Form\Admin\Category\SimpleCategory;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Admin controller for the Category pages.
@@ -109,11 +110,11 @@ class CategoryController extends FrameworkBundleAdminController
                 $response->setData(['error' => $this->getErrorMessageForException($e, $this->getErrorMessages($data['category']['name']))]);
             } catch (ProductException $e) {
                 // TODO: do some frontend work to display this error message from ajax query
-                $response->setStatusCode(400);
+                $response->setStatusCode(Response::HTTP_BAD_REQUEST);
                 $response->setData(['error' => $this->getErrorMessageForException($e, $this->getErrorMessages($data['category']['name']))]);
             }
         } else {
-            $response->setStatusCode(400);
+            $response->setStatusCode(Response::HTTP_BAD_REQUEST);
             $response->setData($this->getFormErrorsForJS($form));
         }
 
@@ -144,7 +145,7 @@ class CategoryController extends FrameworkBundleAdminController
      *
      * @return array
      */
-    private function getErrorMessages($categoryName)
+    private function getErrorMessages(string $categoryName): array
     {
         return [
             CategoryException::class => $this->trans(

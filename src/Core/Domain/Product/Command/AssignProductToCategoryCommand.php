@@ -63,7 +63,7 @@ class AssignProductToCategoryCommand
      *
      * @return self
      */
-    public function setCategoryId(int $categoryId)
+    public function setCategoryId(int $categoryId): AssignProductToCategoryCommand
     {
         $this->categoryId = new CategoryId($categoryId);
 
@@ -73,7 +73,7 @@ class AssignProductToCategoryCommand
     /**
      * @return CategoryId
      */
-    public function getCategoryId()
+    public function getCategoryId(): CategoryId
     {
         return $this->categoryId;
     }
@@ -83,7 +83,7 @@ class AssignProductToCategoryCommand
      *
      * @return self
      */
-    public function setProductId(int $productId)
+    public function setProductId(int $productId): AssignProductToCategoryCommand
     {
         $this->productId = new ProductId($productId);
 
@@ -93,7 +93,7 @@ class AssignProductToCategoryCommand
     /**
      * @return ProductId
      */
-    public function getProductId()
+    public function getProductId(): ProductId
     {
         return $this->productId;
     }

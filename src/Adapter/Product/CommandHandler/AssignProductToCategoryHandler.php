@@ -32,7 +32,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\AssignProductToCategoryCom
 use PrestaShop\PrestaShop\Adapter\Product\ProductDataProvider;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotAssignProductToCategoryException;
 
-
 /**
  * Adds a category to a product
  *
@@ -52,7 +51,6 @@ final class AssignProductToCategoryHandler extends AbstractObjectModelHandler im
      * @param AssignProductToCategoryCommand $command
      *
      * @throws CannotAssignProductToCategoryException
-     *
      */
     private function assignProductToCategory(AssignProductToCategoryCommand $command)
     {
