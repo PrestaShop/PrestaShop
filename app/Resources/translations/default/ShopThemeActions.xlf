@@ -203,7 +203,7 @@ File: themes/StarterTheme/templates/checkout/_partials/steps/payment.tpl:115</no
       <trans-unit id="c91e4ee170226d66e90f99ba917e4c20">
         <source>Quick view</source>
         <target>Quick view</target>
-        <note>Line: 96</note>
+        <note>Line: 97</note>
       </trans-unit>
     </body>
   </file>
@@ -267,7 +267,7 @@ File: themes/StarterTheme/templates/checkout/_partials/steps/payment.tpl:115</no
       <trans-unit id="801ab24683a4a8c433c6eb40c48bcd9d">
         <source>Download</source>
         <target>Download</target>
-        <note>Line: 214</note>
+        <note>Line: 215</note>
       </trans-unit>
     </body>
   </file>

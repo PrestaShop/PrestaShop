@@ -2960,4 +2960,18 @@ Comment: $this->list_modules_categories['search_filter']['name'] = $this->l('Sea
       </trans-unit>
     </body>
   </file>
+  <file original="modules/ps_emailsubscription/ps_emailsubscription.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="2df860f82be52de57fc5e3f7ecac9431">
+        <source>Newsletter subscription: Unable to delete customer using email.</source>
+        <target>Newsletter subscription: Unable to delete customer using email.</target>
+        <note>Line: 1267</note>
+      </trans-unit>
+      <trans-unit id="0b6664aa3bb3e3130368b120a8adfa91">
+        <source>Newsletter subscription: Unable to export customer using email.</source>
+        <target>Newsletter subscription: Unable to export customer using email.</target>
+        <note>Line: 1277</note>
+      </trans-unit>
+    </body>
+  </file>
 </xliff>
