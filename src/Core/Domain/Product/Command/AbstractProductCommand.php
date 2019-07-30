@@ -92,11 +92,6 @@ abstract class AbstractProductCommand
     private $localizedDescription;
 
     /**
-     * @var FeatureCollection
-     */
-    private $features;
-
-    /**
      * @var ManufacturerId
      */
     private $manufacturerId;
@@ -288,26 +283,6 @@ abstract class AbstractProductCommand
     public function setLocalizedDescription($localizedDescription): self
     {
         $this->localizedDescription = $localizedDescription;
-
-        return $this;
-    }
-
-    /**
-     * @return FeatureCollection
-     */
-    public function getFeatures(): FeatureCollection
-    {
-        return $this->features;
-    }
-
-    /**
-     * @param FeatureCollection $features
-     *
-     * @return self
-     */
-    public function setFeatures(FeatureCollection $features): void
-    {
-        $this->features = $features;
 
         return $this;
     }
