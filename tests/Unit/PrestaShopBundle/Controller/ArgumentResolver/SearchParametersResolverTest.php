@@ -27,6 +27,7 @@
 namespace Tests\Unit\PrestaShopBundle\Controller\ArgumentResolver;
 
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 use PrestaShop\PrestaShop\Core\Search\SearchParametersInterface;
 use PrestaShopBundle\Controller\ArgumentResolver\SearchParametersResolver;
@@ -47,12 +48,17 @@ class SearchParametersResolverTest extends TestCase
 
     public function testConstructor()
     {
+        $queryBusMock = $this->getMockBuilder(CommandBusInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
         $resolver = new SearchParametersResolver(
             $this->buildSearchParametersMock(),
             $this->buildTokenStorageMock(),
             $this->buildAdminFilterRepositoryMock(),
             $this->buildEventDispatcherMock(),
-            self::SHOP_ID
+            self::SHOP_ID,
+            $queryBusMock
         );
         $this->assertNotNull($resolver);
     }
