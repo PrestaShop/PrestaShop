@@ -24,11 +24,16 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Attachment\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\Attachment\ValueObject\Attachment;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
-class EditStandardProductCommand extends AbstractProductCommand
+/**
+ * Edits product attachment.
+ */
+class EditAttachmentCommand
 {
     /**
      * @var ProductId
@@ -36,21 +41,36 @@ class EditStandardProductCommand extends AbstractProductCommand
     private $productId;
 
     /**
-     * @param int $productId
-     * @param array $localizedProductNames
+     * @var Attachment[]
      */
-    public function __construct(int $productId, array $localizedProductNames)
-    {
-        parent::__construct($localizedProductNames);
+    private $attachment;
 
+    /**
+     * @param int $productId
+     * @param array $attachments
+     *
+     * @throws ProductConstraintException
+     */
+    public function __construct(int $productId, array $attachments)
+    {
         $this->productId = new ProductId($productId);
+
+        $this->setAttachments($attachments);
     }
 
     /**
-     * @return ProductId
+     * @param array $attachments
+     * @throws ProductConstraintException
      */
-    public function getProductId(): ProductId
+    private function setAttachments(array $attachments): void
     {
-        return $this->productId;
+        foreach ($attachments as $attachment) {
+            $this->attachment[] = new Attachment(
+                $attachment['file_path'],
+                $attachment['file_name'],
+                $attachment['title'],
+                $attachment['description']
+            );
+        }
     }
 }

@@ -183,12 +183,6 @@ abstract class AbstractProductCommand
     private $customizationFields;
 
     /**
-     * @todo: clean html validation for description field.
-     * @var Attachment[]
-     */
-    private $attachments;
-
-    /**
      * @var int[]
      */
     private $shopAssociation;
@@ -604,26 +598,6 @@ abstract class AbstractProductCommand
     public function setCustomizationFields(array $customizationFields): void
     {
         $this->customizationFields = $customizationFields;
-        return $this;
-    }
-
-    /**
-     * @return Attachment[]
-     */
-    public function getAttachments(): ?array
-    {
-        return $this->attachments;
-    }
-
-    /**
-     * @param Attachment[] $attachments
-     *
-     * @return self
-     */
-    public function setAttachments(array $attachments): self
-    {
-        $this->attachments = $attachments;
-
         return $this;
     }
 
