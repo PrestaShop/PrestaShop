@@ -58,7 +58,7 @@ class AttachmentType extends AbstractType
                             'message' => $this->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
                         ]),
                     ],
-                ]
+                ],
             ])
             ->add('file_description', TranslatableType::class, [
                 'type' => TextType::class,
@@ -70,7 +70,7 @@ class AttachmentType extends AbstractType
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
-                        'groups' => ['validate']
+                        'groups' => ['validate'],
                     ]),
                 ],
             ])
@@ -105,6 +105,5 @@ class AttachmentType extends AbstractType
 
         $resolver->setAllowedTypes('has_old_file', 'bool');
         $resolver->setAllowedTypes('is_edit_form', 'bool');
-
     }
 }

@@ -54,6 +54,7 @@ final class CreateAttachmentHandler implements CreateAttachmentHandlerInterface
     /**
      * @param Attachment $attachment
      * @param CreateAttachmentCommand $command
+     *
      * @throws AttachmentConstraintException
      * @throws \PrestaShopException
      */
