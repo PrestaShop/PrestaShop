@@ -74,8 +74,7 @@ class AuthorizationController extends FrameworkBundleAdminController
         ]);
 
         if (null !== $authenticationError) {
-            $this->addFlash(
-                FrameworkBundleAdminController::ERROR,
+            $this->addError(
                 $this->getErrorMessageForException(
                     $authenticationError,
                     $this->getErrorMessages()
