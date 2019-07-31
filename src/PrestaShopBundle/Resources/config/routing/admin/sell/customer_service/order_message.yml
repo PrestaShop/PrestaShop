@@ -1,0 +1,5 @@
+admin_order_messages_index:
+  path: /
+  methods: [GET, POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/CustomerService/OrderMessage:index
