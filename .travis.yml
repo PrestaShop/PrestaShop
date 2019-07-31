@@ -63,7 +63,10 @@ before_install:
   - bash travis-scripts/setup-php-fpm.sh
   - bash travis-scripts/setup-apache.sh
 
-before_script:
+  # PrestaShop configuration
+  - cp tests-legacy/parameters.yml.travis app/config/parameters.yml
+
+install:
   - if [ "$EXTRA_DEPS" = "phpHigh" ]; then
         composer update --ignore-platform-reqs --no-suggest --ansi --no-interaction --no-progress --quiet;
     else
@@ -71,8 +74,6 @@ before_script:
     fi
 
   - bash travis-scripts/install-prestashop;
-  # PrestaShop configuration
-  - cp tests-legacy/parameters.yml.travis app/config/parameters.yml
 
 script:
   - if [ "$PRESTASHOP_TEST_TYPE" = "unit" ]; then
