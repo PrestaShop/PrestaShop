@@ -78,6 +78,7 @@ class SupplierController extends FrameworkBundleAdminController
                 'supplierGrid' => $gridPresenter->present($supplierGrid),
                 'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
                 'enableSidebar' => true,
+                'alertInfoMessage' => $this->getAlertInfoMessage(),
             ]
         );
     }
@@ -499,5 +500,20 @@ class SupplierController extends FrameworkBundleAdminController
         }
 
         return $this->trans('Unexpected error occurred.', 'Admin.Notifications.Error');
+    }
+
+    protected function getAlertInfoMessage()
+    {
+        if ($this->configuration->get('PS_DISPLAY_SUPPLIERS')) {
+            return $this->trans(
+                'The display of your suppliers is enabled on your store. Go to Shop Parameters > General to edit settings.',
+                'Admin.Catalog.Notification'
+            );
+        }
+
+        return $this->trans(
+            'The display of your suppliers is disabled on your store. Go to Shop Parameters > General to edit settings.',
+            'Admin.Catalog.Notification'
+        );
     }
 }
