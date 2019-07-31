@@ -45,6 +45,7 @@
     "bootstrap": "~4.0.0",
     "chai": "^4.2.0",
     "clean-webpack-plugin": "^0.1.19",
+    "copy-webpack-plugin": "^4.6.0",
     "css-loader": "^0.27",
     "eslint": "^3.19.0",
     "eslint-config-airbnb-base": "^11.3.2",

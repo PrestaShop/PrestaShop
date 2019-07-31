@@ -126,7 +126,7 @@ class ReleaseCreator
         'admin/(.*/)?config\.rb$',
         'admin/themes/default/sass$',
         //'admin/themes/new\-theme/js$',
-        //'admin/themes/new\-theme/scss$',
+        'admin/themes/new\-theme/scss$',
         'themes/_core$',
         'themes/classic/_dev',
         'themes/webpack\.config\.js$',
