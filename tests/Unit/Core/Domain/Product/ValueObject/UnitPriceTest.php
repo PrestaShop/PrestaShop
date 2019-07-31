@@ -24,17 +24,24 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Exception;
+namespace Tests\Unit\Core\Domain\Product\ValueObject;
 
-/**
- * Class DomainConstraintException is responsible for holding exception codes which can be raised in reusable way.
- */
-class DomainConstraintException extends DomainException
+use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Price\UnitPrice;
+
+class UnitPriceTest extends TestCase
 {
-    /**
-     * @var int - raised when native php email validation fails. E.g filter_var($email, FILTER_VALIDATE_EMAIL)
-     */
-    public const INVALID_EMAIL = 1;
+    public function testItDoesNotAllowNegativeValues(): void
+    {
+        $this->expectException(ProductConstraintException::class);
+        $this->expectExceptionCode(ProductConstraintException::INVALID_UNIT_PRICE);
 
-    public const INVALID_PRICE = 2;
+        $negativeValue = -0.1;
+
+        new UnitPrice(
+            $negativeValue,
+            'per kilo'
+        );
+    }
 }

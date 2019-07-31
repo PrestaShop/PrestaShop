@@ -24,59 +24,63 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Category\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectionPage;
 
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectionPage\TypedRedirectionPageInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectionPage\ResponseCode;
 
 /**
- * Class CategoryId.
+ * Category redirection page
  */
-class CategoryId
+final class CategoryRedirectionPage implements TypedRedirectionPageInterface
 {
     /**
-     * @var int
+     * @var ResponseCode
+     */
+    private $responseCode;
+
+    /**
+     * @var CategoryId
      */
     private $categoryId;
 
     /**
+     * @param int $responseCode
      * @param int $categoryId
      *
+     * @throws ProductConstraintException
      * @throws CategoryException
      */
-    public function __construct($categoryId)
+    public function __construct(int $responseCode, int $categoryId)
     {
-        $this->setCategoryId($categoryId);
+        $this->responseCode = new ResponseCode($responseCode);
+        $this->categoryId = new CategoryId($categoryId);
     }
 
     /**
-     * @return int
+     * {@inheritdoc}
      */
-    public function getValue()
+    public function getResponseCode(): ResponseCode
     {
-        return $this->categoryId;
+        return $this->responseCode;
     }
 
     /**
-     * @param CategoryId $categoryId
-     *
-     * @return bool
+     * {@inheritdoc}
      */
-    public function isEqual(CategoryId $categoryId)
+    public function getType(): string
     {
-        return $this->getValue() === $categoryId->getValue();
+        return 'category';
     }
 
     /**
-     * @param int $categoryId
+     * {@inheritdoc}
      */
-    private function setCategoryId($categoryId)
+    public function getId(): int
     {
-        if (!is_int($categoryId) || 0 >= $categoryId) {
-            throw new CategoryException(
-                sprintf('Invalid Category id %s supplied', var_export($categoryId, true))
-            );
-        }
-
-        $this->categoryId = $categoryId;
+        return $this->categoryId->getValue();
     }
 }

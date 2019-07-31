@@ -24,59 +24,45 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Category\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Feature\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Feature\DTO\FeatureCollection;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
- * Class CategoryId.
+ * Update product features.
  */
-class CategoryId
+class UpdateFeaturesCommand
 {
     /**
-     * @var int
+     * @var ProductId
      */
-    private $categoryId;
+    private $productId;
 
     /**
-     * @param int $categoryId
-     *
-     * @throws CategoryException
+     * @var FeatureCollection
      */
-    public function __construct($categoryId)
+    private $features;
+
+    public function __construct(int $productId, FeatureCollection $features)
     {
-        $this->setCategoryId($categoryId);
+        $this->productId = new ProductId($productId);
+        $this->features = $features;
     }
 
     /**
-     * @return int
+     * @return ProductId
      */
-    public function getValue()
+    public function getProductId(): ProductId
     {
-        return $this->categoryId;
+        return $this->productId;
     }
 
     /**
-     * @param CategoryId $categoryId
-     *
-     * @return bool
+     * @return FeatureCollection
      */
-    public function isEqual(CategoryId $categoryId)
+    public function getFeatures(): FeatureCollection
     {
-        return $this->getValue() === $categoryId->getValue();
-    }
-
-    /**
-     * @param int $categoryId
-     */
-    private function setCategoryId($categoryId)
-    {
-        if (!is_int($categoryId) || 0 >= $categoryId) {
-            throw new CategoryException(
-                sprintf('Invalid Category id %s supplied', var_export($categoryId, true))
-            );
-        }
-
-        $this->categoryId = $categoryId;
+        return $this->features;
     }
 }

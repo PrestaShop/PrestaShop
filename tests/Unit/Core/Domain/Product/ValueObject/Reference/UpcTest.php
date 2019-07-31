@@ -24,59 +24,35 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Category\ValueObject;
+namespace Tests\Unit\Core\Domain\Product\ValueObject\Reference;
 
-use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
 
-/**
- * Class CategoryId.
- */
-class CategoryId
+use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference\Upc;
+
+class UpcTest extends TestCase
 {
     /**
-     * @var int
+     * @dataProvider provideInvalidReferences
      */
-    private $categoryId;
-
-    /**
-     * @param int $categoryId
-     *
-     * @throws CategoryException
-     */
-    public function __construct($categoryId)
+    public function testItThrowsExceptionOnInvalidReference(string $nonValidReference)
     {
-        $this->setCategoryId($categoryId);
+        $this->expectException(ProductConstraintException::class);
+        $this->expectExceptionCode(ProductConstraintException::INVALID_UPC_REFERENCE);
+
+        new Upc($nonValidReference);
     }
 
-    /**
-     * @return int
-     */
-    public function getValue()
+    public function provideInvalidReferences()
     {
-        return $this->categoryId;
-    }
+        yield [
+            '01354#a',
+        ];
 
-    /**
-     * @param CategoryId $categoryId
-     *
-     * @return bool
-     */
-    public function isEqual(CategoryId $categoryId)
-    {
-        return $this->getValue() === $categoryId->getValue();
-    }
-
-    /**
-     * @param int $categoryId
-     */
-    private function setCategoryId($categoryId)
-    {
-        if (!is_int($categoryId) || 0 >= $categoryId) {
-            throw new CategoryException(
-                sprintf('Invalid Category id %s supplied', var_export($categoryId, true))
-            );
-        }
-
-        $this->categoryId = $categoryId;
+        //too long
+        yield [
+            str_repeat('1', 13),
+        ];
     }
 }

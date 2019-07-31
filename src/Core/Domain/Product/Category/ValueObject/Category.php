@@ -24,59 +24,51 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Category\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Category\ValueObject;
 
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 
 /**
- * Class CategoryId.
+ * Holds information about product category.
  */
-class CategoryId
+final class Category
 {
     /**
-     * @var int
+     * @var bool
+     */
+    private $isMainCategory;
+
+    /**
+     * @var CategoryId
      */
     private $categoryId;
 
     /**
      * @param int $categoryId
+     * @param bool $isMainCategory
      *
      * @throws CategoryException
      */
-    public function __construct($categoryId)
+    public function __construct(int $categoryId, bool $isMainCategory)
     {
-        $this->setCategoryId($categoryId);
+        $this->categoryId = new CategoryId($categoryId);
+        $this->isMainCategory = $isMainCategory;
     }
 
     /**
-     * @return int
-     */
-    public function getValue()
-    {
-        return $this->categoryId;
-    }
-
-    /**
-     * @param CategoryId $categoryId
-     *
      * @return bool
      */
-    public function isEqual(CategoryId $categoryId)
+    public function isMainCategory(): bool
     {
-        return $this->getValue() === $categoryId->getValue();
+        return $this->isMainCategory;
     }
 
     /**
-     * @param int $categoryId
+     * @return CategoryId
      */
-    private function setCategoryId($categoryId)
+    public function getCategoryId(): CategoryId
     {
-        if (!is_int($categoryId) || 0 >= $categoryId) {
-            throw new CategoryException(
-                sprintf('Invalid Category id %s supplied', var_export($categoryId, true))
-            );
-        }
-
-        $this->categoryId = $categoryId;
+        return $this->categoryId;
     }
 }

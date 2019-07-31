@@ -24,59 +24,24 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Category\ValueObject;
-
-use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectionPage;
 
 /**
- * Class CategoryId.
+ * Redirection page which displays certain response code and redirects to the page provided with type.
  */
-class CategoryId
+interface TypedRedirectionPageInterface extends RedirectionPageInterface
 {
     /**
-     * @var int
-     */
-    private $categoryId;
-
-    /**
-     * @param int $categoryId
+     * Type of redirection page - e.g category or product.
      *
-     * @throws CategoryException
+     * @return string|null
      */
-    public function __construct($categoryId)
-    {
-        $this->setCategoryId($categoryId);
-    }
+    public function getType(): string;
 
     /**
-     * @return int
-     */
-    public function getValue()
-    {
-        return $this->categoryId;
-    }
-
-    /**
-     * @param CategoryId $categoryId
+     * Unique identifier of redirection page.
      *
-     * @return bool
+     * @return int|null
      */
-    public function isEqual(CategoryId $categoryId)
-    {
-        return $this->getValue() === $categoryId->getValue();
-    }
-
-    /**
-     * @param int $categoryId
-     */
-    private function setCategoryId($categoryId)
-    {
-        if (!is_int($categoryId) || 0 >= $categoryId) {
-            throw new CategoryException(
-                sprintf('Invalid Category id %s supplied', var_export($categoryId, true))
-            );
-        }
-
-        $this->categoryId = $categoryId;
-    }
+    public function getId(): int;
 }

@@ -24,59 +24,24 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Category\ValueObject;
-
-use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\CustomizationField\ValueObject;
 
 /**
- * Class CategoryId.
+ * Defines contract for customization fields.
  */
-class CategoryId
+interface CustomizationFieldInterface
 {
     /**
-     * @var int
-     */
-    private $categoryId;
-
-    /**
-     * @param int $categoryId
+     * Gets localised labels of customization field.
      *
-     * @throws CategoryException
+     * @return Label[]
      */
-    public function __construct($categoryId)
-    {
-        $this->setCategoryId($categoryId);
-    }
+    public function getLocalizedLabels(): array;
 
     /**
-     * @return int
-     */
-    public function getValue()
-    {
-        return $this->categoryId;
-    }
-
-    /**
-     * @param CategoryId $categoryId
+     * Determines if field is required or not.
      *
      * @return bool
      */
-    public function isEqual(CategoryId $categoryId)
-    {
-        return $this->getValue() === $categoryId->getValue();
-    }
-
-    /**
-     * @param int $categoryId
-     */
-    private function setCategoryId($categoryId)
-    {
-        if (!is_int($categoryId) || 0 >= $categoryId) {
-            throw new CategoryException(
-                sprintf('Invalid Category id %s supplied', var_export($categoryId, true))
-            );
-        }
-
-        $this->categoryId = $categoryId;
-    }
+    public function isRequired(): bool;
 }

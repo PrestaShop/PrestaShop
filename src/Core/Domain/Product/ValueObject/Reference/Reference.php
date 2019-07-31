@@ -24,59 +24,58 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Category\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference;
+
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 
 /**
- * Class CategoryId.
+ * Holds products reference.
  */
-class CategoryId
+final class Reference
 {
     /**
-     * @var int
+     * @var string
      */
-    private $categoryId;
+    private $reference;
 
     /**
-     * @param int $categoryId
+     * @param string $reference
      *
-     * @throws CategoryException
+     * @throws ProductConstraintException
      */
-    public function __construct($categoryId)
+    public function __construct(string $reference)
     {
-        $this->setCategoryId($categoryId);
+        $this->assertIsValidReference($reference);
+
+        $this->reference = $reference;
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getValue()
+    public function getValue(): string
     {
-        return $this->categoryId;
+        return $this->reference;
     }
 
     /**
-     * @param CategoryId $categoryId
+     * @param string $reference
      *
-     * @return bool
+     * @throws ProductConstraintException
      */
-    public function isEqual(CategoryId $categoryId)
+    private function assertIsValidReference(string $reference): void
     {
-        return $this->getValue() === $categoryId->getValue();
-    }
-
-    /**
-     * @param int $categoryId
-     */
-    private function setCategoryId($categoryId)
-    {
-        if (!is_int($categoryId) || 0 >= $categoryId) {
-            throw new CategoryException(
-                sprintf('Invalid Category id %s supplied', var_export($categoryId, true))
+        $pattern = '/^[^<>;={}]*$/u';
+        if (!preg_match($pattern, $reference)) {
+            throw new ProductConstraintException(
+                sprintf(
+                    'Product reference "%s" did not matched pattern "%s"',
+                    $reference,
+                    $pattern
+                ),
+                ProductConstraintException::INVALID_REFERENCE
             );
         }
-
-        $this->categoryId = $categoryId;
     }
 }

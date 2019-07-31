@@ -24,59 +24,66 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Category\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Category\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Category\ValueObject\Category;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
- * Class CategoryId.
+ * Updates product categories.
  */
-class CategoryId
+class UpdateCategoriesCommand
 {
     /**
-     * @var int
+     * @var ProductId
      */
-    private $categoryId;
+    private $productId;
 
     /**
-     * @param int $categoryId
+     * @var Category[]
+     */
+    private $categories;
+
+    /**
+     * @param int $productId
+     * @param array $categories
      *
      * @throws CategoryException
      */
-    public function __construct($categoryId)
+    public function __construct(int $productId, array $categories)
     {
-        $this->setCategoryId($categoryId);
+        $this->productId = new ProductId($productId);
+        $this->setCategories($categories);
     }
 
     /**
-     * @return int
+     * @return ProductId
      */
-    public function getValue()
+    public function getProductId(): ProductId
     {
-        return $this->categoryId;
+        return $this->productId;
     }
 
     /**
-     * @param CategoryId $categoryId
-     *
-     * @return bool
+     * @return Category[]
      */
-    public function isEqual(CategoryId $categoryId)
+    public function getCategories(): array
     {
-        return $this->getValue() === $categoryId->getValue();
+        return $this->categories;
     }
 
     /**
-     * @param int $categoryId
+     * @param array $categories
+     * @throws CategoryException
      */
-    private function setCategoryId($categoryId)
+    private function setCategories(array $categories)
     {
-        if (!is_int($categoryId) || 0 >= $categoryId) {
-            throw new CategoryException(
-                sprintf('Invalid Category id %s supplied', var_export($categoryId, true))
+        foreach ($categories as $category) {
+            $this->categories[] = new Category(
+                $category['id'],
+                $category['is_main_category']
             );
         }
-
-        $this->categoryId = $categoryId;
     }
 }

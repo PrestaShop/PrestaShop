@@ -24,59 +24,49 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Category\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\DTO\ImageCollection;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
- * Class CategoryId.
+ * Updates product images.
  */
-class CategoryId
+class UpdateImagesCommand
 {
     /**
-     * @var int
+     * @var ProductId
      */
-    private $categoryId;
+    private $productId;
 
     /**
-     * @param int $categoryId
-     *
-     * @throws CategoryException
+     * @var ImageCollection
      */
-    public function __construct($categoryId)
+    private $images;
+
+    /**
+     * @param int $productId
+     * @param ImageCollection $images
+     */
+    public function __construct(int $productId, ImageCollection $images)
     {
-        $this->setCategoryId($categoryId);
+        $this->productId = new ProductId($productId);
+        $this->images = $images;
     }
 
     /**
-     * @return int
+     * @return ProductId
      */
-    public function getValue()
+    public function getProductId(): ProductId
     {
-        return $this->categoryId;
+        return $this->productId;
     }
 
     /**
-     * @param CategoryId $categoryId
-     *
-     * @return bool
+     * @return ImageCollection
      */
-    public function isEqual(CategoryId $categoryId)
+    public function getImages(): ImageCollection
     {
-        return $this->getValue() === $categoryId->getValue();
-    }
-
-    /**
-     * @param int $categoryId
-     */
-    private function setCategoryId($categoryId)
-    {
-        if (!is_int($categoryId) || 0 >= $categoryId) {
-            throw new CategoryException(
-                sprintf('Invalid Category id %s supplied', var_export($categoryId, true))
-            );
-        }
-
-        $this->categoryId = $categoryId;
+        return $this->images;
     }
 }

@@ -24,59 +24,50 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Category\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\CustomizationField\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
+use PrestaShop\PrestaShop\Core\Domain\Product\CustomizationField\ValueObject\CustomizationFieldInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
- * Class CategoryId.
+ * Update product customization fields.
  */
-class CategoryId
+class UpdateCustomizationFieldsCommand
 {
     /**
-     * @var int
+     * @var ProductId
      */
-    private $categoryId;
+    private $productId;
 
     /**
-     * @param int $categoryId
+     * @var CustomizationFieldInterface[]
+     */
+    private $customizationFields;
+
+    /**
      *
-     * @throws CategoryException
+     * @param int $productId
+     * @param CustomizationFieldInterface[] $customizationFields
      */
-    public function __construct($categoryId)
+    public function __construct(int $productId, array $customizationFields)
     {
-        $this->setCategoryId($categoryId);
+        $this->productId = new ProductId($productId);
+        $this->customizationFields = $customizationFields;
     }
 
     /**
-     * @return int
+     * @return ProductId
      */
-    public function getValue()
+    public function getProductId(): ProductId
     {
-        return $this->categoryId;
+        return $this->productId;
     }
 
     /**
-     * @param CategoryId $categoryId
-     *
-     * @return bool
+     * @return CustomizationFieldInterface[]
      */
-    public function isEqual(CategoryId $categoryId)
+    public function getCustomizationFields(): array
     {
-        return $this->getValue() === $categoryId->getValue();
-    }
-
-    /**
-     * @param int $categoryId
-     */
-    private function setCategoryId($categoryId)
-    {
-        if (!is_int($categoryId) || 0 >= $categoryId) {
-            throw new CategoryException(
-                sprintf('Invalid Category id %s supplied', var_export($categoryId, true))
-            );
-        }
-
-        $this->categoryId = $categoryId;
+        return $this->customizationFields;
     }
 }

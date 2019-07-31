@@ -24,59 +24,43 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Category\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\MetaData;
 
-use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 
 /**
- * Class CategoryId.
+ * An url which appears in the browser for product.
  */
-class CategoryId
+final class FriendlyUrl
 {
-    /**
-     * @var int
-     */
-    private $categoryId;
+    public const MAX_SIZE = 128;
 
     /**
-     * @param int $categoryId
+     * @param string $friendlyUrl
      *
-     * @throws CategoryException
+     * @throws ProductConstraintException
      */
-    public function __construct($categoryId)
+    public function __construct(string $friendlyUrl)
     {
-        $this->setCategoryId($categoryId);
+        $this->setFriendlyUrl($friendlyUrl);
     }
 
     /**
-     * @return int
-     */
-    public function getValue()
-    {
-        return $this->categoryId;
-    }
-
-    /**
-     * @param CategoryId $categoryId
+     * @param string $friendlyUrl
      *
-     * @return bool
+     * @throws ProductConstraintException
      */
-    public function isEqual(CategoryId $categoryId)
+    private function setFriendlyUrl(string $friendlyUrl)
     {
-        return $this->getValue() === $categoryId->getValue();
-    }
-
-    /**
-     * @param int $categoryId
-     */
-    private function setCategoryId($categoryId)
-    {
-        if (!is_int($categoryId) || 0 >= $categoryId) {
-            throw new CategoryException(
-                sprintf('Invalid Category id %s supplied', var_export($categoryId, true))
+        if (strlen($friendlyUrl) > self::MAX_SIZE) {
+            throw new ProductConstraintException(
+                sprintf(
+                    'Friendly url "%s" has breached max size which is %d',
+                    $friendlyUrl,
+                    self::MAX_SIZE
+                ),
+                ProductConstraintException::FRIENDLY_URL_TOO_LONG
             );
         }
-
-        $this->categoryId = $categoryId;
     }
 }

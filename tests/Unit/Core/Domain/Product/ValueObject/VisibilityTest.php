@@ -24,17 +24,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Exception;
 
-/**
- * Class DomainConstraintException is responsible for holding exception codes which can be raised in reusable way.
- */
-class DomainConstraintException extends DomainException
+namespace Tests\Unit\Core\Domain\Product\ValueObject;
+
+use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Visibility;
+
+class VisibilityTest extends TestCase
 {
-    /**
-     * @var int - raised when native php email validation fails. E.g filter_var($email, FILTER_VALIDATE_EMAIL)
-     */
-    public const INVALID_EMAIL = 1;
+    public function testItThrowsExceptionInNonFoundTypeCase()
+    {
+        $this->expectException(ProductConstraintException::class);
+        $this->expectExceptionCode(ProductConstraintException::INVALID_VISIBILITY_TYPE);
 
-    public const INVALID_PRICE = 2;
+        new Visibility('super_invisible', false, false);
+    }
 }

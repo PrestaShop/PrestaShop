@@ -24,59 +24,62 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Category\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Price;
 
-use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
+use PrestaShop\Decimal\Number;
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Price;
 
 /**
- * Class CategoryId.
+ * Price per unit - e.g 10 per kilo.
  */
-class CategoryId
+final class UnitPrice
 {
     /**
-     * @var int
+     * @var Number
      */
-    private $categoryId;
+    private $price;
 
     /**
-     * @param int $categoryId
+     * @var string
+     */
+    private $unit;
+
+    /**
+     * @param float $price
+     * @param string $unit
      *
-     * @throws CategoryException
+     * @throws ProductConstraintException
      */
-    public function __construct($categoryId)
+    public function __construct(float $price, string $unit)
     {
-        $this->setCategoryId($categoryId);
-    }
-
-    /**
-     * @return int
-     */
-    public function getValue()
-    {
-        return $this->categoryId;
-    }
-
-    /**
-     * @param CategoryId $categoryId
-     *
-     * @return bool
-     */
-    public function isEqual(CategoryId $categoryId)
-    {
-        return $this->getValue() === $categoryId->getValue();
-    }
-
-    /**
-     * @param int $categoryId
-     */
-    private function setCategoryId($categoryId)
-    {
-        if (!is_int($categoryId) || 0 >= $categoryId) {
-            throw new CategoryException(
-                sprintf('Invalid Category id %s supplied', var_export($categoryId, true))
+        try {
+            $this->price = (new Price($price))->getValue();
+        } catch (DomainConstraintException $e) {
+            throw new ProductConstraintException(
+                'Invalid products unit price',
+                ProductConstraintException::INVALID_UNIT_PRICE,
+                $e
             );
         }
 
-        $this->categoryId = $categoryId;
+        $this->unit = $unit;
+    }
+
+    /**
+     * @return Number
+     */
+    public function getPrice(): Number
+    {
+        return $this->price;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUnit(): string
+    {
+        return $this->unit;
     }
 }

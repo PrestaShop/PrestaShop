@@ -24,59 +24,49 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Category\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\CustomizationField\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
+use PrestaShop\PrestaShop\Core\Domain\Product\CustomizationField\Exception\ProductCustomizationFieldConstraintException;
+use function strlen;
 
 /**
- * Class CategoryId.
+ * Customization field label value.
  */
-class CategoryId
+final class Label
 {
-    /**
-     * @var int
-     */
-    private $categoryId;
+    public const MAX_SIZE = 255;
 
     /**
-     * @param int $categoryId
+     * @var string
+     */
+    private $label;
+
+    /**
+     * @param string $label
      *
-     * @throws CategoryException
+     * @throws ProductCustomizationFieldConstraintException
      */
-    public function __construct($categoryId)
+    public function __construct(string $label)
     {
-        $this->setCategoryId($categoryId);
-    }
-
-    /**
-     * @return int
-     */
-    public function getValue()
-    {
-        return $this->categoryId;
-    }
-
-    /**
-     * @param CategoryId $categoryId
-     *
-     * @return bool
-     */
-    public function isEqual(CategoryId $categoryId)
-    {
-        return $this->getValue() === $categoryId->getValue();
-    }
-
-    /**
-     * @param int $categoryId
-     */
-    private function setCategoryId($categoryId)
-    {
-        if (!is_int($categoryId) || 0 >= $categoryId) {
-            throw new CategoryException(
-                sprintf('Invalid Category id %s supplied', var_export($categoryId, true))
+        if (strlen($label) > self::MAX_SIZE) {
+            throw new ProductCustomizationFieldConstraintException(
+                sprintf(
+                    'Customization field label "%s" has breached max available length of %d',
+                    $label,
+                    self::MAX_SIZE
+                ),
+                ProductCustomizationFieldConstraintException::CUSTOMIZATION_FIELD_LABEL_TOO_LONG
             );
         }
 
-        $this->categoryId = $categoryId;
+        $this->label = $label;
+    }
+
+    /**
+     * @return string
+     */
+    public function getValue(): string
+    {
+        return $this->label;
     }
 }

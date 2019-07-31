@@ -24,59 +24,56 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Category\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\CustomizationField\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 
 /**
- * Class CategoryId.
+ * Text type customization field.
  */
-class CategoryId
+final class TextCustomizationField implements CustomizationFieldInterface
 {
     /**
-     * @var int
+     * @var string[]
      */
-    private $categoryId;
+    private $localizedLabels;
 
     /**
-     * @param int $categoryId
+     * @var bool
+     */
+    private $isRequired;
+
+    /**
+     * @param array $localizedLabels
+     * @param bool $isRequired
      *
-     * @throws CategoryException
+     * ProductConstraintException
      */
-    public function __construct($categoryId)
+    public function __construct(array $localizedLabels, bool $isRequired)
     {
-        $this->setCategoryId($categoryId);
+        $this->localizedLabels = array_map(
+            static function (string $label) {
+                return new Label($label);
+            },
+            $localizedLabels
+        );
+
+        $this->isRequired = $isRequired;
     }
 
     /**
-     * @return int
+     * {@inheritdoc}
      */
-    public function getValue()
+    public function getLocalizedLabels(): array
     {
-        return $this->categoryId;
+        return $this->localizedLabels;
     }
 
     /**
-     * @param CategoryId $categoryId
-     *
-     * @return bool
+     * {@inheritdoc}
      */
-    public function isEqual(CategoryId $categoryId)
+    public function isRequired(): bool
     {
-        return $this->getValue() === $categoryId->getValue();
-    }
-
-    /**
-     * @param int $categoryId
-     */
-    private function setCategoryId($categoryId)
-    {
-        if (!is_int($categoryId) || 0 >= $categoryId) {
-            throw new CategoryException(
-                sprintf('Invalid Category id %s supplied', var_export($categoryId, true))
-            );
-        }
-
-        $this->categoryId = $categoryId;
+        return $this->isRequired;
     }
 }

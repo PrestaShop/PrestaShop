@@ -24,59 +24,38 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Category\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
+namespace Tests\Unit\Core\Domain\Product\ValueObject\Reference;
 
-/**
- * Class CategoryId.
- */
-class CategoryId
+use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference\Reference;
+
+class ReferenceTest extends TestCase
 {
     /**
-     * @var int
+     * @dataProvider provideInvalidReferences
      */
-    private $categoryId;
-
-    /**
-     * @param int $categoryId
-     *
-     * @throws CategoryException
-     */
-    public function __construct($categoryId)
+    public function testItThrowsExceptionOnInvalidReference(string $nonValidReference)
     {
-        $this->setCategoryId($categoryId);
+        $this->expectException(ProductConstraintException::class);
+        $this->expectExceptionCode(ProductConstraintException::INVALID_REFERENCE);
+
+        new Reference($nonValidReference);
     }
 
-    /**
-     * @return int
-     */
-    public function getValue()
+    public function provideInvalidReferences()
     {
-        return $this->categoryId;
-    }
+        yield [
+            '{object}',
+        ];
 
-    /**
-     * @param CategoryId $categoryId
-     *
-     * @return bool
-     */
-    public function isEqual(CategoryId $categoryId)
-    {
-        return $this->getValue() === $categoryId->getValue();
-    }
+        yield [
+            '<div>refrefref</div>',
+        ];
 
-    /**
-     * @param int $categoryId
-     */
-    private function setCategoryId($categoryId)
-    {
-        if (!is_int($categoryId) || 0 >= $categoryId) {
-            throw new CategoryException(
-                sprintf('Invalid Category id %s supplied', var_export($categoryId, true))
-            );
-        }
-
-        $this->categoryId = $categoryId;
+        yield [
+            'ref;ref',
+        ];
     }
 }

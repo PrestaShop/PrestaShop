@@ -24,59 +24,35 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Category\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ProductImageConstraintException;
 
 /**
- * Class CategoryId.
+ * Image which is about to be deleted.
  */
-class CategoryId
+final class DeletedImage
 {
     /**
-     * @var int
+     * @var ImageId
      */
-    private $categoryId;
+    private $imageId;
 
     /**
-     * @param int $categoryId
+     * @param int $imageId
      *
-     * @throws CategoryException
+     * @throws ProductImageConstraintException
      */
-    public function __construct($categoryId)
+    public function __construct(int $imageId)
     {
-        $this->setCategoryId($categoryId);
+        $this->imageId = new ImageId($imageId);
     }
 
     /**
-     * @return int
+     * {@inheritdoc}
      */
-    public function getValue()
+    public function getId(): ImageId
     {
-        return $this->categoryId;
-    }
-
-    /**
-     * @param CategoryId $categoryId
-     *
-     * @return bool
-     */
-    public function isEqual(CategoryId $categoryId)
-    {
-        return $this->getValue() === $categoryId->getValue();
-    }
-
-    /**
-     * @param int $categoryId
-     */
-    private function setCategoryId($categoryId)
-    {
-        if (!is_int($categoryId) || 0 >= $categoryId) {
-            throw new CategoryException(
-                sprintf('Invalid Category id %s supplied', var_export($categoryId, true))
-            );
-        }
-
-        $this->categoryId = $categoryId;
+        return $this->imageId;
     }
 }

@@ -24,59 +24,48 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Category\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Price;
 
-use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
+use PrestaShop\Decimal\Number;
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Price;
 
 /**
- * Class CategoryId.
+ * The price that the product actually costs - used for margin calculation etc...
  */
-class CategoryId
+final class CostPrice
 {
     /**
-     * @var int
+     * @var Number
      */
-    private $categoryId;
+    private $price;
 
     /**
-     * @param int $categoryId
+     * @param float $price
      *
-     * @throws CategoryException
+     * @throws ProductConstraintException
      */
-    public function __construct($categoryId)
+    public function __construct(float $price)
     {
-        $this->setCategoryId($categoryId);
-    }
-
-    /**
-     * @return int
-     */
-    public function getValue()
-    {
-        return $this->categoryId;
-    }
-
-    /**
-     * @param CategoryId $categoryId
-     *
-     * @return bool
-     */
-    public function isEqual(CategoryId $categoryId)
-    {
-        return $this->getValue() === $categoryId->getValue();
-    }
-
-    /**
-     * @param int $categoryId
-     */
-    private function setCategoryId($categoryId)
-    {
-        if (!is_int($categoryId) || 0 >= $categoryId) {
-            throw new CategoryException(
-                sprintf('Invalid Category id %s supplied', var_export($categoryId, true))
+        try {
+            $numberPrice = (new Price($price))->getValue();
+        } catch (DomainConstraintException $e) {
+            throw new ProductConstraintException(
+                'invalid cost price',
+                ProductConstraintException::INVALID_COST_PRICE,
+                $e
             );
         }
 
-        $this->categoryId = $categoryId;
+        $this->price = $numberPrice;
+    }
+
+    /**
+     * @return Number
+     */
+    public function getValue(): Number
+    {
+        return $this->price;
     }
 }

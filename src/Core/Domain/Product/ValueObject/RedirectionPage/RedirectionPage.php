@@ -24,59 +24,37 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Category\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectionPage;
 
-use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectionPage\RedirectionPageInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectionPage\ResponseCode;
 
 /**
- * Class CategoryId.
+ * Response code for product unavailable case.
  */
-class CategoryId
+final class RedirectionPage implements RedirectionPageInterface
 {
     /**
      * @var int
      */
-    private $categoryId;
+    private $responseCode;
 
     /**
-     * @param int $categoryId
+     * @param int $responseCode
      *
-     * @throws CategoryException
+     * @throws ProductConstraintException
      */
-    public function __construct($categoryId)
+    public function __construct(int $responseCode)
     {
-        $this->setCategoryId($categoryId);
+        $this->responseCode = new ResponseCode($responseCode);
     }
 
     /**
-     * @return int
+     * {@inheritdoc}
      */
-    public function getValue()
+    public function getResponseCode(): ResponseCode
     {
-        return $this->categoryId;
-    }
-
-    /**
-     * @param CategoryId $categoryId
-     *
-     * @return bool
-     */
-    public function isEqual(CategoryId $categoryId)
-    {
-        return $this->getValue() === $categoryId->getValue();
-    }
-
-    /**
-     * @param int $categoryId
-     */
-    private function setCategoryId($categoryId)
-    {
-        if (!is_int($categoryId) || 0 >= $categoryId) {
-            throw new CategoryException(
-                sprintf('Invalid Category id %s supplied', var_export($categoryId, true))
-            );
-        }
-
-        $this->categoryId = $categoryId;
+        return $this->responseCode;
     }
 }

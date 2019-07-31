@@ -24,59 +24,31 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Category\ValueObject;
-
-use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject;
 
 /**
- * Class CategoryId.
+ * Defines contract for image which can be configured.
  */
-class CategoryId
+interface ConfigurableImageInterface
 {
     /**
-     * @var int
-     */
-    private $categoryId;
-
-    /**
-     * @param int $categoryId
+     * Gets the position of an image.
      *
-     * @throws CategoryException
-     */
-    public function __construct($categoryId)
-    {
-        $this->setCategoryId($categoryId);
-    }
-
-    /**
      * @return int
      */
-    public function getValue()
-    {
-        return $this->categoryId;
-    }
+    public function getPosition(): int;
 
     /**
-     * @param CategoryId $categoryId
+     * Determines if the image is used as cover image
      *
      * @return bool
      */
-    public function isEqual(CategoryId $categoryId)
-    {
-        return $this->getValue() === $categoryId->getValue();
-    }
+    public function isCover(): bool;
 
     /**
-     * @param int $categoryId
+     * Gets captions which has key id language language and string value.
+     *
+     * @return string[]
      */
-    private function setCategoryId($categoryId)
-    {
-        if (!is_int($categoryId) || 0 >= $categoryId) {
-            throw new CategoryException(
-                sprintf('Invalid Category id %s supplied', var_export($categoryId, true))
-            );
-        }
-
-        $this->categoryId = $categoryId;
-    }
+    public function getLocalizedCaptions(): array;
 }

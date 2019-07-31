@@ -24,17 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\CustomizationField\Exception;
 
-/**
- * Class DomainConstraintException is responsible for holding exception codes which can be raised in reusable way.
- */
-class DomainConstraintException extends DomainException
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+
+class ProductCustomizationFieldConstraintException extends ProductException
 {
-    /**
-     * @var int - raised when native php email validation fails. E.g filter_var($email, FILTER_VALIDATE_EMAIL)
-     */
-    public const INVALID_EMAIL = 1;
-
-    public const INVALID_PRICE = 2;
+    public const CUSTOMIZATION_FIELD_LABEL_TOO_LONG = 1;
 }
