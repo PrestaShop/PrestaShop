@@ -31,11 +31,25 @@ use Cache;
 use Context;
 use Employee;
 use PhpEncryption;
+use PrestaShop\PrestaShop\Adapter\Security\EmployeeAuthenticationHandler;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShop\PrestaShop\Core\CommandBus\TacticianCommandBusAdapter;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeForAuthentication;
+use PrestaShop\PrestaShop\Core\Domain\Employee\QueryResult\EmployeeForAuthentication;
 use ReflectionClass;
 
 abstract class AbstractEndpointAdminTest extends AbstractEndpointTest
 {
+    /**
+     * @var EmployeeAuthenticationHandler
+     */
+    private $authenticationHandler;
+
+    /**
+     * @var TacticianCommandBusAdapter
+     */
+    private $queryBus;
+
     protected function setUp()
     {
         parent::setUp();
@@ -44,6 +58,10 @@ abstract class AbstractEndpointAdminTest extends AbstractEndpointTest
             define('_PS_TAB_MODULE_LIST_URL_', '');
         }
         Context::getContext()->employee = new Employee(1);
+
+        $this->authenticationHandler = SymfonyContainer::getInstance()
+            ->get('prestashop.adapter.security.employee_authentication_handler');
+        $this->queryBus = SymfonyContainer::getInstance()->get('prestashop.core.query_bus');
     }
 
     protected function employeeLogin()
@@ -54,6 +72,8 @@ abstract class AbstractEndpointAdminTest extends AbstractEndpointTest
         $cookieName = 'PrestaShop-' . md5(_PS_VERSION_ . 'psAdmin');
         $_COOKIE[$cookieName] = $cipherTool->encrypt($cookieContent);
         Cache::store('isLoggedBack' . 1, true);
+
+        $this->symfonyLogIn();
     }
 
     /**
@@ -72,5 +92,15 @@ abstract class AbstractEndpointAdminTest extends AbstractEndpointTest
         $instanceProperty->setAccessible(true);
         $instanceProperty->setValue($kernel->getContainer());
         $instanceProperty->setAccessible(false);
+    }
+
+    private function symfonyLogIn()
+    {
+        /** @var EmployeeForAuthentication $employeeForAuthentication */
+        $employeeForAuthentication = $this->queryBus->handle(
+            GetEmployeeForAuthentication::fromEmployeeId(Context::getContext()->employee->id)
+        );
+
+        $this->authenticationHandler->renewAuthenticationCredentials($employeeForAuthentication);
     }
 }
