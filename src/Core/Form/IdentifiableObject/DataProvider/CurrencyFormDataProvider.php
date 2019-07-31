@@ -64,7 +64,9 @@ final class CurrencyFormDataProvider implements FormDataProviderInterface
         $result = $this->queryBus->handle(new GetCurrencyForEditing((int) $id));
 
         return [
+            'selected_iso_code' => $result->getIsoCode(),
             'iso_code' => $result->getIsoCode(),
+            'numeric_iso_code' => $result->getNumericIsoCode(),
             'exchange_rate' => $result->getExchangeRate(),
             'shop_association' => $result->getAssociatedShopIds(),
             'active' => $result->isEnabled(),
