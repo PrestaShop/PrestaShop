@@ -45,6 +45,11 @@ class EditableCurrency
     private $isoCode;
 
     /**
+     * @var int
+     */
+    private $numericIsoCode;
+
+    /**
      * @var float
      */
     private $exchangeRate;
@@ -62,6 +67,7 @@ class EditableCurrency
     /**
      * @param int $currencyId
      * @param string $isoCode
+     * @param int $numericIsoCode
      * @param float $exchangeRate
      * @param bool $isEnabled
      * @param int[] $associatedShopIds
@@ -71,12 +77,14 @@ class EditableCurrency
     public function __construct(
         $currencyId,
         $isoCode,
+        $numericIsoCode,
         $exchangeRate,
         $isEnabled,
         array $associatedShopIds
     ) {
         $this->currencyId = new CurrencyId($currencyId);
         $this->isoCode = $isoCode;
+        $this->numericIsoCode = $numericIsoCode;
         $this->exchangeRate = $exchangeRate;
         $this->isEnabled = $isEnabled;
         $this->associatedShopIds = $associatedShopIds;
@@ -96,6 +104,14 @@ class EditableCurrency
     public function getIsoCode()
     {
         return $this->isoCode;
+    }
+
+    /**
+     * @return int
+     */
+    public function getNumericIsoCode()
+    {
+        return $this->numericIsoCode;
     }
 
     /**
