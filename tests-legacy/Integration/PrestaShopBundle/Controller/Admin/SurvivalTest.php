@@ -27,11 +27,6 @@
 namespace LegacyTests\Integration\PrestaShopBundle\Controller\Admin;
 
 use LegacyTests\Integration\PrestaShopBundle\Test\WebTestCase;
-use PrestaShop\PrestaShop\Core\Domain\Employee\AuthorizationOptions;
-use PrestaShopBundle\Security\Admin\Employee as LoggedEmployee;
-use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
-use Symfony\Component\Security\Core\Role\Role;
 
 /**
  * @group demo
@@ -41,34 +36,11 @@ use Symfony\Component\Security\Core\Role\Role;
 class SurvivalTest extends WebTestCase
 {
     /**
-     * @var TokenStorage
-     */
-    private $tokenStorage;
-
-    /**
      * {@inheritdoc}
      */
     public static function setUpBeforeClass()
     {
         // Do not reset the Database.
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function setUp()
-    {
-        parent::setUp();
-        $this->tokenStorage = self::$kernel->getContainer()->get('security.token_storage');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function tearDown()
-    {
-        self::$kernel->getContainer()->set('security.token_storage', $this->tokenStorage);
-        parent::tearDown();
     }
 
     /**
@@ -181,52 +153,5 @@ class SurvivalTest extends WebTestCase
             '_admin_login' => ['Login', '_admin_login'],
             '_admin_forgot_password' => ['Forgot password (login)', '_admin_forgot_password'],
         ];
-    }
-
-    /**
-     * Emulates a real employee logged to the Back Office.
-     * For survival tests only.
-     */
-    private function logIn()
-    {
-        $loggedEmployeeData = new \stdClass();
-        $loggedEmployeeData->email = 'demo@prestashop.com';
-        $loggedEmployeeData->id = 1;
-        $loggedEmployeeData->passwd = '';
-        $loggedEmployeeMock = new LoggedEmployee($loggedEmployeeData);
-
-        $tokenMock = $this
-            ->getMockBuilder(AbstractToken::class)
-            ->setMethods([
-                'getUser',
-                'getRoles',
-                'isAuthenticated',
-            ])
-            ->getMockForAbstractClass();
-
-        $tokenMock->expects($this->any())
-            ->method('getUser')
-            ->willReturn($loggedEmployeeMock);
-
-        $tokenMock->expects($this->any())
-            ->method('getRoles')
-            ->willReturn([new Role(AuthorizationOptions::DEFAULT_EMPLOYEE_ROLE)]);
-
-        $tokenMock->expects($this->any())
-            ->method('isAuthenticated')
-            ->willReturn(true);
-
-        $tokenStorageMock = $this->getMockBuilder(TokenStorage::class)
-            ->setMethods([
-                'getToken',
-            ])
-            ->disableAutoload()
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $tokenStorageMock->method('getToken')
-            ->willReturn($tokenMock);
-
-        self::$kernel->getContainer()->set('security.token_storage', $tokenStorageMock);
     }
 }

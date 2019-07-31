@@ -34,13 +34,18 @@ use Link;
 use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
+use PrestaShop\PrestaShop\Core\Domain\Employee\AuthorizationOptions;
 use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowPresenterInterface;
+use PrestaShopBundle\Security\Admin\Employee as LoggedEmployee;
 use Psr\Log\NullLogger;
 
 use Shop;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase as TestCase;
 use Symfony\Component\Routing\Router;
+use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
+use Symfony\Component\Security\Core\Role\Role;
 use Symfony\Component\Translation\Translator;
 
 /**
@@ -252,5 +257,51 @@ class LightWebTestCase extends TestCase
             ->will($this->returnValueMap($values));
 
         self::$kernel->getContainer()->set('prestashop.adapter.legacy.configuration', $configurationMock);
+    }
+
+    /**
+     * Emulates a real employee logged to the Back Office.
+     */
+    protected function logIn()
+    {
+        $loggedEmployeeData = new \stdClass();
+        $loggedEmployeeData->email = 'demo@prestashop.com';
+        $loggedEmployeeData->id = 1;
+        $loggedEmployeeData->passwd = '';
+        $loggedEmployeeMock = new LoggedEmployee($loggedEmployeeData);
+
+        $tokenMock = $this
+            ->getMockBuilder(AbstractToken::class)
+            ->setMethods([
+                'getUser',
+                'getRoles',
+                'isAuthenticated',
+            ])
+            ->getMockForAbstractClass();
+
+        $tokenMock->expects($this->any())
+            ->method('getUser')
+            ->willReturn($loggedEmployeeMock);
+
+        $tokenMock->expects($this->any())
+            ->method('getRoles')
+            ->willReturn([new Role(AuthorizationOptions::DEFAULT_EMPLOYEE_ROLE)]);
+
+        $tokenMock->expects($this->any())
+            ->method('isAuthenticated')
+            ->willReturn(true);
+
+        $tokenStorageMock = $this->getMockBuilder(TokenStorage::class)
+            ->setMethods([
+                'getToken',
+            ])
+            ->disableAutoload()
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $tokenStorageMock->method('getToken')
+            ->willReturn($tokenMock);
+
+        self::$kernel->getContainer()->set('security.token_storage', $tokenStorageMock);
     }
 }
