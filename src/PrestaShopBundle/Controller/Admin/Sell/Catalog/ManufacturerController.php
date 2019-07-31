@@ -788,11 +788,16 @@ class ManufacturerController extends FrameworkBundleAdminController
 
     private function getAlertInfoMessage()
     {
-        $message = sprintf(
-            'The display of your brands is %s on your store. Go to Shop Parameters > General to edit settings.',
-            $this->configuration->get('PS_DISPLAY_MANUFACTURERS') ? 'enabled' : 'disabled'
-        );
+        if ($this->configuration->get('PS_DISPLAY_MANUFACTURERS')) {
+            return $this->trans(
+                'The display of your brands is enabled on your store. Go to Shop Parameters > General to edit settings.',
+                'Admin.Catalog.Notification'
+            );
+        }
 
-        return $this->trans($message, 'Admin.Catalog.Notification');
+        return $this->trans(
+            'The display of your brands is disabled on your store. Go to Shop Parameters > General to edit settings.',
+            'Admin.Catalog.Notification'
+        );
     }
 }

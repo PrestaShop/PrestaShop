@@ -575,13 +575,16 @@ class AdminSuppliersControllerCore extends AdminController
      */
     protected function supplierInfoMessage()
     {
-        $message = sprintf(
-            'The display of your suppliers is %s on your store. Go to Shop Parameters > General to edit settings.',
-            Configuration::get('PS_DISPLAY_SUPPLIERS') ? 'enabled' : 'disabled'
-        );
+        if (Configuration::get('PS_DISPLAY_SUPPLIERS')) {
+            return $this->trans(
+                'The display of your suppliers is enabled on your store. Go to Shop Parameters > General to edit settings.',
+                [],
+                'Admin.Catalog.Notification'
+            );
+        }
 
         return $this->trans(
-            $message,
+            'The display of your suppliers is disabled on your store. Go to Shop Parameters > General to edit settings.',
             [],
             'Admin.Catalog.Notification'
         );
