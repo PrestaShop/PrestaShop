@@ -75,6 +75,7 @@ final class GetCurrencyForEditingHandler implements GetCurrencyForEditingHandler
         return new EditableCurrency(
             $entity->id,
             $entity->iso_code,
+            $entity->numeric_iso_code,
             $entity->conversion_rate,
             $entity->active,
             $entity->getAssociatedShops()
