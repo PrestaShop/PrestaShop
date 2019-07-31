@@ -2804,13 +2804,13 @@ CREATE TABLE `PREFIX_smarty_lazy_cache` (
   PRIMARY KEY (
     `template_hash`, `cache_id`, `compile_id`
   )
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `PREFIX_smarty_last_flush` (
   `type` ENUM('compile', 'template'),
   `last_flush` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`type`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `PREFIX_cms_role` (
   `id_cms_role` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -2818,7 +2818,7 @@ CREATE TABLE IF NOT EXISTS `PREFIX_cms_role` (
   `id_cms` int(11) unsigned NOT NULL,
   PRIMARY KEY (`id_cms_role`, `id_cms`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `PREFIX_cms_role_lang` (
   `id_cms_role` int(11) unsigned NOT NULL,
@@ -2828,4 +2828,4 @@ CREATE TABLE IF NOT EXISTS `PREFIX_cms_role_lang` (
   PRIMARY KEY (
     `id_cms_role`, `id_lang`, id_shop
   )
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4;
