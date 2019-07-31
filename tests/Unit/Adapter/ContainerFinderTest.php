@@ -52,12 +52,16 @@ class ContainerFinderTest extends TestCase
         $this->assertInstanceOf(ContainerInterface::class, $containerFinder->getContainer($contextMock));
     }
 
-    public function testGetContainerFallback()
+    /**
+     * @expectedException \Exception
+     * @expectedExceptionMessage Kernel Container is not available
+     */
+    public function testGetContainerException()
     {
         $contextMock = $this->getMockContext();
 
         $containerFinder = new ContainerFinder();
-        $this->assertNull($containerFinder->getContainer($contextMock));
+        $containerFinder->getContainer($contextMock);
     }
 
     /**
