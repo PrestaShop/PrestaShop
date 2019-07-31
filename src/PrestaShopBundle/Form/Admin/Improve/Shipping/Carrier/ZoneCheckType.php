@@ -40,6 +40,7 @@ class ZoneCheckType extends AbstractType
     {
         foreach ($options['zones'] as $zone) {
             $builder->add($zone['id_zone'], CheckboxType::class, [
+                'required' => false,
                 'label' => $zone['name'],
             ]);
         }

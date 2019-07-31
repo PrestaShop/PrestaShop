@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Controller\Admin\Improve\Shipping;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier\CarrierType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class CarrierController extends FrameworkBundleAdminController
@@ -40,10 +41,14 @@ class CarrierController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    public function createAction()
+    public function createAction(Request $request)
     {
         $carrierForm = $this->createForm(CarrierType::class);
+        $carrierForm->handleRequest($request);
 
+        if ($carrierForm->isSubmitted()) {
+            dump($carrierForm->getData());die;
+        }
         return $this->render('@PrestaShop/Admin/Improve/Shipping/Carrier/add.html.twig', [
             'carrierForm' => $carrierForm->createView(),
         ]);

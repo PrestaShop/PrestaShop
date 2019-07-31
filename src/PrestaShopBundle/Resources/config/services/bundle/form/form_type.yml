@@ -867,47 +867,48 @@ services:
         tags:
             - { name: form.type }
 
-    form.type.improve.shipping.carrier.zone_range:
-      class: 'PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier\ZoneRangeType'
-      public: true
-      arguments:
-        - '@=service("prestashop.adapter.form.choice_provider.zones_choice_provider").getChoices()'
-        - '@translator'
-      tags:
-        - { name: form.type }
+    form.type.improve.shipping.carrier.carrier_zone_ranges:
+        class: 'PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier\CarrierZoneRangesType'
+        public: true
+        arguments:
+            - '@=service("prestashop.adapter.form.choice_provider.zones_choice_provider").getChoices()'
+            - '@translator'
+        tags:
+            - { name: form.type }
 
     form.type.improve.shipping.carrier.step_shipping:
-      class: 'PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier\StepShippingType'
-      public: true
-      arguments:
-        - '@=service("prestashop.adapter.form.choice_provider.tax_name_by_id_choice_provider").getChoices()'
-        - '@=service("prestashop.core.form.choice_provider.shipping_method").getChoices()'
-        - '@=service("prestashop.core.form.choice_provider.carrier_out_of_range_behavior").getChoices()'
-        - '@translator'
-      tags:
-        - { name: form.type }
+        class: 'PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier\StepShippingType'
+        public: true
+        arguments:
+            - '@=service("prestashop.adapter.form.choice_provider.tax_name_by_id_choice_provider").getChoices()'
+            - '@=service("prestashop.core.form.choice_provider.shipping_method").getChoices()'
+            - '@=service("prestashop.core.form.choice_provider.carrier_out_of_range_behavior").getChoices()'
+            - '@translator'
+            - '@=service("prestashop.adapter.form.choice_provider.zones_choice_provider").getChoices()'
+        tags:
+            - { name: form.type }
 
     prestashop.bundle.form.admin.improve.shipping.carrier.step_properties_and_access:
-      class: 'PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier\StepPropertiesAndAccessType'
-      public: true
-      arguments:
-        - '@=service("prestashop.core.form.choice_provider.group_by_id").getChoices()'
-        - '@translator'
-      tags:
-        - { name: form.type }
+        class: 'PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier\StepPropertiesAndAccessType'
+        public: true
+        arguments:
+            - '@=service("prestashop.core.form.choice_provider.group_by_id").getChoices()'
+            - '@translator'
+        tags:
+            - { name: form.type }
 
     prestashop.bundle.form.admin.improve.shipping.carrier.step_general_type:
-      class: 'PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier\StepGeneralType'
-      public: true
-      arguments:
-        - '@translator'
-      tags:
-        - { name: form.type }
+        class: 'PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier\StepGeneralType'
+        public: true
+        arguments:
+           - '@translator'
+        tags:
+           - { name: form.type }
 
     prestashop.bundle.form.admin.improve.shipping.carrier.carrier:
-      class: 'PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier\CarrierType'
-      public: true
-      arguments:
-        - '@=service("prestashop.adapter.multistore_feature").isUsed()'
-      tags:
-        - { name: form.type }
+        class: 'PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier\CarrierType'
+        public: true
+        arguments:
+            - '@=service("prestashop.adapter.multistore_feature").isUsed()'
+        tags:
+            - { name: form.type }

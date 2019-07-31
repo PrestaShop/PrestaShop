@@ -27,52 +27,19 @@
 namespace PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 
-/**
- * Defines zones range input form part for carrier create/edit action Shipping step
- */
-class ZoneRangeInputType extends AbstractType
+class ZonePricesType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('applied_from', NumberType::class, [
+            ->add('price', TextType::class, [
                 'label' => false,
-                'constraints' => [
-                    new GreaterThanOrEqual([
-                        'value' => 0,
-                        'message' => '',
-                    ]),
-                ],
+                'required' => false,
             ])
-            ->add('applied_to', TextType::class, [
-                'label' => false,
-                'constraints' => [
-                new GreaterThanOrEqual([
-                    'value' => 0,
-                    'message' => '',
-                ]),
-            ],
-        ]);
-
-        foreach ($options['zones'] as $zone) {
-            $builder->add($zone['id_zone'], TextType::class, [
-                'label' => false,
-            ]);
-        }
-    }
-
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        parent::configureOptions($resolver);
-
-        $resolver->setRequired([
-            'zones',
-        ]);
+            ->add('zone_id', HiddenType::class);
     }
 }

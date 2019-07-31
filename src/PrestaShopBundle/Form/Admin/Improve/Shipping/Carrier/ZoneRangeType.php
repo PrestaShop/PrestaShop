@@ -27,58 +27,29 @@
 namespace PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Defines cost ranges form part for carriers create/edit action Shipping step.
  */
 class ZoneRangeType extends AbstractType
 {
-    /**
-     * @var array
-     */
-    private $zones;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
-     * @param array $zones
-     * @param TranslatorInterface $translator
-     */
-    public function __construct(array $zones, TranslatorInterface $translator)
-    {
-        $this->zones = $zones;
-        $this->translator = $translator;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('zone_checks', ZoneCheckType::class, [
-                'zones' => $this->getModifiedZones(),
-            ])
-            ->add('zone_range_inputs', ZoneRangeInputType::class, [
-                'label' => false,
-                'zones' => $this->getModifiedZones(),
+            ->add('from', TextType::class)
+            ->add('to', TextType::class)
+            ->add('zone_prices', CollectionType::class, [
+                'required' => false,
+                'entry_type' => ZonePricesType::class,
+                'prototype' => false,
+                'entry_options' => [
+                    'label' => false,
+                    'required' => false,
+                ],
+                'by_reference' => false,
             ]);
-    }
-
-    /**
-     * @return array
-     */
-    private function getModifiedZones(): array
-    {
-        $zones = [
-            [
-                'name' => $this->translator->trans('All', [], 'Admin.Global'),
-                'id_zone' => 0,
-            ],
-        ];
-
-        return array_merge($zones, $this->zones);
     }
 }

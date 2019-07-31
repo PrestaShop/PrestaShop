@@ -58,21 +58,29 @@ class StepShippingType extends AbstractType
     private $translator;
 
     /**
+     * @var array
+     */
+    private $zones;
+
+    /**
      * @param array $taxChoices
      * @param array $shippingMethodChoices
      * @param array $outOfRangeBehaviorChoices
      * @param TranslatorInterface $translator
+     * @param array $zones
      */
     public function __construct(
         array $taxChoices,
         array $shippingMethodChoices,
         array $outOfRangeBehaviorChoices,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        array $zones
     ) {
         $this->taxChoices = $taxChoices;
         $this->outOfRangeBehaviorChoices = $outOfRangeBehaviorChoices;
         $this->shippingMethodChoices = $shippingMethodChoices;
         $this->translator = $translator;
+        $this->zones = $zones;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -100,7 +108,7 @@ class StepShippingType extends AbstractType
                 'placeholder' => false,
                 'choices' => $this->outOfRangeBehaviorChoices,
             ])
-            ->add('zone_ranges', ZoneRangeType::class)
+            ->add('carrier_ranges', CarrierZoneRangesType::class)
         ;
     }
 
