@@ -79,7 +79,7 @@ class DbPDOCore extends Db
         } else {
             $dsn .= 'host=' . $host;
         }
-        $dsn .= ';charset=utf8';
+        $dsn .= ';charset=utf8mb4';
 
         return new PDO(
             $dsn,
