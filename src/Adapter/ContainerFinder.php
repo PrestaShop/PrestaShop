@@ -44,6 +44,7 @@ class ContainerFinder
 
     /**
      * ContainerFinder constructor.
+     *
      * @param Context $context
      */
     public function __construct(Context $context)
