@@ -35,6 +35,7 @@ class AjaxTest extends AbstractEndpointAdminTest
     {
         parent::setUp();
         $this->employeeLogin();
+        $_SERVER['REQUEST_URI'] = _PS_ROOT_DIR_ . '/admin-dev/ajax.php';
     }
 
     // Referrers calls
@@ -68,7 +69,7 @@ class AjaxTest extends AbstractEndpointAdminTest
         ob_start();
         require _PS_ROOT_DIR_ . '/admin-dev/ajax.php';
         $output = json_decode(ob_get_clean());
-        $this->assertTrue(is_array($output)); 
+        $this->assertTrue(is_array($output));
     }
 
     // Import calls
@@ -82,7 +83,7 @@ class AjaxTest extends AbstractEndpointAdminTest
         ob_start();
         require _PS_ROOT_DIR_ . '/admin-dev/ajax.php';
         $output = json_decode(ob_get_clean());
-        $this->assertTrue(is_array($output)); 
+        $this->assertTrue(is_array($output));
     }
 
     public function testAjaxEndpointForProductPack()
