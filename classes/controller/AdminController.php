@@ -4891,11 +4891,8 @@ class AdminControllerCore extends Controller
      * @param string $message The message to be displayed
      * @param string $namespace Type of alert, use FRONT_ALERT_XXX constants
      */
-    protected function addTopAlertMessage($message, $namespace = false)
+    protected function addTopAlertMessage($message, $namespace = self::FRONT_ALERT_INFO)
     {
-        if (!$namespace) {
-            $namespace = self::FRONT_ALERT_INFO;
-        }
         $messages = $this->context->smarty->getVariable('topAlertMessages')->value;
         if ($messages === null) {
             $messages = [];
