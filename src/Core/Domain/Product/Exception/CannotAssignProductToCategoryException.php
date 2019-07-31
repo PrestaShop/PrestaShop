@@ -24,50 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject;
-
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Exception;
 
 /**
- * Product identity.
+ * Is thrown when the assignation of a product to a category failed
  */
-class ProductId
+class CannotAssignProductToCategoryException extends ProductException
 {
-    /**
-     * @var int
-     */
-    private $productId;
-
-    /**
-     * @param int $productId
-     */
-    public function __construct($productId)
-    {
-        $this->assertIntegerIsGreaterThanZero($productId);
-
-        $this->productId = $productId;
-    }
-
-    /**
-     * @return int
-     */
-    public function getValue()
-    {
-        return $this->productId;
-    }
-
-    /**
-     * @param int $productId
-     */
-    private function assertIntegerIsGreaterThanZero($productId)
-    {
-        if (!is_int($productId) || 0 > $productId) {
-            throw new ProductConstraintException(
-                sprintf(
-                    'Product id %s is invalid. Product id must be number that is greater than zero.',
-                    var_export($productId, true)
-                )
-            );
-        }
-    }
 }

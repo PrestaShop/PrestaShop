@@ -24,50 +24,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Exception;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
-
-/**
- * Product identity.
- */
-class ProductId
+class ProductConstraintException extends ProductException
 {
     /**
-     * @var int
+     * Code is used when invalid id is supplied.
      */
-    private $productId;
-
-    /**
-     * @param int $productId
-     */
-    public function __construct($productId)
-    {
-        $this->assertIntegerIsGreaterThanZero($productId);
-
-        $this->productId = $productId;
-    }
-
-    /**
-     * @return int
-     */
-    public function getValue()
-    {
-        return $this->productId;
-    }
-
-    /**
-     * @param int $productId
-     */
-    private function assertIntegerIsGreaterThanZero($productId)
-    {
-        if (!is_int($productId) || 0 > $productId) {
-            throw new ProductConstraintException(
-                sprintf(
-                    'Product id %s is invalid. Product id must be number that is greater than zero.',
-                    var_export($productId, true)
-                )
-            );
-        }
-    }
+    const INVALID_ID = 10;
 }
