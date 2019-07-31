@@ -39,8 +39,8 @@ class ContainerFinderTest extends TestCase
         $contextMock = $this->getMockContext();
         $contextMock->container = $this->getMockContainerInterface();
 
-        $containerFinder = new ContainerFinder();
-        $this->assertInstanceOf(ContainerInterface::class, $containerFinder->getContainer($contextMock));
+        $containerFinder = new ContainerFinder($contextMock);
+        $this->assertInstanceOf(ContainerInterface::class, $containerFinder->getContainer());
     }
 
     public function testGetContainerFromController()
@@ -48,8 +48,8 @@ class ContainerFinderTest extends TestCase
         $contextMock = $this->getMockContext();
         $contextMock->controller = $this->getMockController();
 
-        $containerFinder = new ContainerFinder();
-        $this->assertInstanceOf(ContainerInterface::class, $containerFinder->getContainer($contextMock));
+        $containerFinder = new ContainerFinder($contextMock);
+        $this->assertInstanceOf(ContainerInterface::class, $containerFinder->getContainer());
     }
 
     /**
@@ -60,8 +60,8 @@ class ContainerFinderTest extends TestCase
     {
         $contextMock = $this->getMockContext();
 
-        $containerFinder = new ContainerFinder();
-        $containerFinder->getContainer($contextMock);
+        $containerFinder = new ContainerFinder($contextMock);
+        $containerFinder->getContainer();
     }
 
     /**

@@ -38,20 +38,32 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class ContainerFinder
 {
     /**
+     * @var Context
+     */
+    protected $context;
+
+    /**
+     * ContainerFinder constructor.
      * @param Context $context
-     *
+     */
+    public function __construct(Context $context)
+    {
+        $this->context = $context;
+    }
+
+    /**
      * @return ContainerBuilder|ContainerInterface|null
      *
      * @throws Exception
      */
-    public function getContainer(Context $context)
+    public function getContainer()
     {
-        if (isset($context->container)) {
-            return $context->container;
+        if (isset($this->context->container)) {
+            return $this->context->container;
         }
-        if (isset($context->controller)
-            && $context->controller instanceof Controller
-            && ($container = $context->controller->getContainer())
+        if (isset($this->context->controller)
+            && $this->context->controller instanceof Controller
+            && ($container = $this->context->controller->getContainer())
             && null !== $container
         ) {
             return $container;

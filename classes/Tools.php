@@ -792,8 +792,11 @@ class ToolsCore
             return $locale;
         }
 
-        $containerFinder = new ContainerFinder();
-        $container = $containerFinder->getContainer($context);
+        $containerFinder = new ContainerFinder($context);
+        $container = $containerFinder->getContainer();
+        if (null === $context->container) {
+            $context->container = $container;
+        }
 
         /** @var LocaleRepository $localeRepository */
         $localeRepository = $container->get(self::SERVICE_LOCALE_REPOSITORY);
