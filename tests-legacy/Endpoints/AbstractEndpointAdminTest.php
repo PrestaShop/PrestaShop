@@ -32,12 +32,20 @@ use Context;
 use Employee;
 use PhpEncryption;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
-use PrestaShopBundle\Security\Admin\Employee as SecurityEmployee;
+use PrestaShop\PrestaShop\Core\Domain\Employee\AuthorizationOptions;
+use PrestaShopBundle\Security\Admin\Employee as LoggedEmployee;
 use ReflectionClass;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
+use Symfony\Component\Security\Core\Role\Role;
 
 abstract class AbstractEndpointAdminTest extends AbstractEndpointTest
 {
+    /**
+     * @var TokenStorage
+     */
+    private $tokenStorage;
+
     protected function setUp()
     {
         parent::setUp();
@@ -46,6 +54,15 @@ abstract class AbstractEndpointAdminTest extends AbstractEndpointTest
             define('_PS_TAB_MODULE_LIST_URL_', '');
         }
         Context::getContext()->employee = new Employee(1);
+
+        $this->tokenStorage = SymfonyContainer::getInstance()->get('security.token_storage');
+    }
+
+    protected function tearDown()
+    {
+        parent::tearDown();
+
+        SymfonyContainer::getInstance()->set('security.token_storage', $this->tokenStorage);
     }
 
     protected function employeeLogin()
@@ -58,6 +75,52 @@ abstract class AbstractEndpointAdminTest extends AbstractEndpointTest
         Cache::store('isLoggedBack' . 1, true);
 
         $this->symfonyLogIn();
+    }
+
+    /**
+     * Emulates a real employee logged to the Back Office.
+     */
+    protected function symfonyLogIn()
+    {
+        $loggedEmployeeData = new \stdClass();
+        $loggedEmployeeData->email = 'demo@prestashop.com';
+        $loggedEmployeeData->id = 1;
+        $loggedEmployeeData->passwd = '';
+        $loggedEmployeeMock = new LoggedEmployee($loggedEmployeeData);
+
+        $tokenMock = $this
+            ->getMockBuilder(AbstractToken::class)
+            ->setMethods([
+                'getUser',
+                'getRoles',
+                'isAuthenticated',
+            ])
+            ->getMockForAbstractClass();
+
+        $tokenMock->expects($this->any())
+            ->method('getUser')
+            ->willReturn($loggedEmployeeMock);
+
+        $tokenMock->expects($this->any())
+            ->method('getRoles')
+            ->willReturn([new Role(AuthorizationOptions::DEFAULT_EMPLOYEE_ROLE)]);
+
+        $tokenMock->expects($this->any())
+            ->method('isAuthenticated')
+            ->willReturn(true);
+
+        $tokenStorageMock = $this->getMockBuilder(TokenStorage::class)
+            ->setMethods([
+                'getToken',
+            ])
+            ->disableAutoload()
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $tokenStorageMock->method('getToken')
+            ->willReturn($tokenMock);
+
+        SymfonyContainer::getInstance()->set('security.token_storage', $tokenStorageMock);
     }
 
     /**
@@ -76,18 +139,5 @@ abstract class AbstractEndpointAdminTest extends AbstractEndpointTest
         $instanceProperty->setAccessible(true);
         $instanceProperty->setValue($kernel->getContainer());
         $instanceProperty->setAccessible(false);
-    }
-
-    private function symfonyLogIn()
-    {
-        $tokenStorage = SymfonyContainer::getInstance()->get('security.token_storage');
-        $user = new SecurityEmployee(Context::getContext()->employee);
-        $token = new UsernamePasswordToken(
-            $user,
-            null,
-            'admin',
-            $user->getRoles()
-        );
-        $tokenStorage->setToken($token);
     }
 }
