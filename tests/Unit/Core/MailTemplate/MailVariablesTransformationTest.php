@@ -55,4 +55,16 @@ class MailVariablesTransformationTest extends TestCase
         $transformedTemplate = $transformation->apply($template, $layoutVariables);
         $this->assertEquals('Hello John Doe wasup mate?', $transformedTemplate);
     }
+
+    public function testApplyViaConstructor()
+    {
+        $template = 'Hello {firstname} {lastname} how are you?';
+        $transformation = new MailVariablesTransformation(MailTemplateInterface::HTML_TYPE, [
+            '{firstname}' => 'John',
+            '{lastname}' => 'Doe',
+            'how are you' => 'wasup mate',
+        ]);
+        $transformedTemplate = $transformation->apply($template, []);
+        $this->assertEquals('Hello John Doe wasup mate?', $transformedTemplate);
+    }
 }
