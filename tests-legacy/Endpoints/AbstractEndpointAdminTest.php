@@ -31,25 +31,13 @@ use Cache;
 use Context;
 use Employee;
 use PhpEncryption;
-use PrestaShop\PrestaShop\Adapter\Security\EmployeeAuthenticationHandler;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
-use PrestaShop\PrestaShop\Core\CommandBus\TacticianCommandBusAdapter;
-use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeForAuthentication;
-use PrestaShop\PrestaShop\Core\Domain\Employee\QueryResult\EmployeeForAuthentication;
+use PrestaShopBundle\Security\Admin\Employee as SecurityEmployee;
 use ReflectionClass;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 abstract class AbstractEndpointAdminTest extends AbstractEndpointTest
 {
-    /**
-     * @var EmployeeAuthenticationHandler
-     */
-    private $authenticationHandler;
-
-    /**
-     * @var TacticianCommandBusAdapter
-     */
-    private $queryBus;
-
     protected function setUp()
     {
         parent::setUp();
@@ -58,10 +46,6 @@ abstract class AbstractEndpointAdminTest extends AbstractEndpointTest
             define('_PS_TAB_MODULE_LIST_URL_', '');
         }
         Context::getContext()->employee = new Employee(1);
-
-        $this->authenticationHandler = SymfonyContainer::getInstance()
-            ->get('prestashop.adapter.security.employee_authentication_handler');
-        $this->queryBus = SymfonyContainer::getInstance()->get('prestashop.core.query_bus');
     }
 
     protected function employeeLogin()
@@ -96,11 +80,14 @@ abstract class AbstractEndpointAdminTest extends AbstractEndpointTest
 
     private function symfonyLogIn()
     {
-        /** @var EmployeeForAuthentication $employeeForAuthentication */
-        $employeeForAuthentication = $this->queryBus->handle(
-            GetEmployeeForAuthentication::fromEmployeeId(Context::getContext()->employee->id)
+        $tokenStorage = SymfonyContainer::getInstance()->get('security.token_storage');
+        $user = new SecurityEmployee(Context::getContext()->employee);
+        $token = new UsernamePasswordToken(
+            $user,
+            null,
+            'admin',
+            $user->getRoles()
         );
-
-        $this->authenticationHandler->renewAuthenticationCredentials($employeeForAuthentication);
+        $tokenStorage->setToken($token);
     }
 }
