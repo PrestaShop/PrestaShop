@@ -212,13 +212,7 @@ module.exports = {
       jQuery: 'jquery',
     }),
     new CopyPlugin([
-        'scss/img/helper-card/category@3x.png',
-        'scss/img/helper-card/customer@3x.png',
-        'scss/img/pages/themes/icon_themes.png',
-        'scss/img/pages/themes/icon_layouts.png',
-        'scss/img/helper-card/content@3x.png',
-        'scss/img/helper-card/seo@3x.png',
-        'scss/img/helper-card/team@3x.png',
+      { from: 'static' },
     ])
   ],
 };
