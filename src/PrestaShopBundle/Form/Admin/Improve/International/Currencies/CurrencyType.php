@@ -28,13 +28,17 @@ namespace PrestaShopBundle\Form\Admin\Improve\International\Currencies;
 
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
+use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Translation\TranslatorAwareTrait;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\GreaterThan;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Type;
 
 /**
  * Class CurrencyType
@@ -69,9 +73,69 @@ class CurrencyType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('iso_code', ChoiceType::class, [
+            ->add('selected_iso_code', ChoiceType::class, [
                 'choices' => $this->allCurrencies,
                 'choice_translation_domain' => false,
+                'required' => false,
+                'placeholder' => '--',
+            ])
+            ->add('is_custom', CheckboxType::class, [
+                'required' => false,
+                'label' => $this->trans('Create new', [], 'Admin.International.Feature'),
+            ])
+            ->add('name', TranslatableType::class, [
+                'type' => TextType::class,
+            ])
+            ->add('iso_code', TextType::class, [
+                'constraints' => [
+                    new NotBlank([
+                        'message' => $this->trans(
+                            'The %s field is required.',
+                            [
+                                sprintf('"%s"', $this->trans('Exchange rate', [], 'Admin.International.Feature')),
+                            ],
+                            'Admin.Notifications.Error'
+                        ),
+                    ]),
+                ],
+            ])
+            ->add('numeric_iso_code', NumberType::class, [
+                'constraints' => [
+                    new NotBlank([
+                        'message' => $this->trans(
+                            'The %s field is required.',
+                            [
+                                sprintf('"%s"', $this->trans('Numeric iso code', [], 'Admin.International.Feature')),
+                            ],
+                            'Admin.Notifications.Error'
+                        ),
+                    ]),
+                    new Type([
+                        'type' => 'integer',
+                        'message' => $this->trans(
+                            'This value should be of type {{ type }}.',
+                            [
+                                '%value%' => 0,
+                            ],
+                            'Admin.Notifications.Error'
+                        ),
+                    ]),
+                    new GreaterThan([
+                        'value' => 0,
+                        'message' => $this->trans(
+                            'This value should be greater than %value%',
+                            [
+                                '%value%' => 0,
+                            ],
+                            'Admin.Notifications.Error'
+                        ),
+                    ]),
+                ],
+                'invalid_message' => $this->trans(
+                    'This field is invalid, it must contain numeric values',
+                    [],
+                    'Admin.Notifications.Error'
+                ),
             ])
             ->add('exchange_rate', NumberType::class, [
                 'scale' => 6,
