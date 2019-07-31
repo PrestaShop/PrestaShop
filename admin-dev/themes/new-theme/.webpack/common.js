@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const webpack = require('webpack');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const cssExtractedFileName = 'theme';
 
@@ -186,5 +187,14 @@ module.exports = {
       $: 'jquery', // needed for jquery-ui
       jQuery: 'jquery',
     }),
+    new CopyPlugin([
+        'scss/img/helper-card/category@3x.png',
+        'scss/img/helper-card/customer@3x.png',
+        'scss/img/pages/themes/icon_themes.png',
+        'scss/img/pages/themes/icon_layouts.png',
+        'scss/img/helper-card/content@3x.png',
+        'scss/img/helper-card/seo@3x.png',
+        'scss/img/helper-card/team@3x.png',
+    ])
   ],
 };
