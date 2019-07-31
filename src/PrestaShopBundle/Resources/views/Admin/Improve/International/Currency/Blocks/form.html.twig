@@ -36,9 +36,26 @@
       <div class="card-text">
         {{ form_errors(currencyForm) }}
 
+        {{ ps.form_group_row(currencyForm.selected_iso_code, {}, {
+          'label': 'Choose a currency'|trans({}, 'Admin.Global'),
+        }) }}
+
+        {{ ps.form_group_row(currencyForm.is_custom, {}, {
+          'label': 'or'|trans({}, 'Admin.Global'),
+        }) }}
+
+        {{ ps.form_group_row(currencyForm.name, {}, {
+          'label': 'Currency name'|trans({}, 'Admin.Global'),
+        }) }}
+
         {{ ps.form_group_row(currencyForm.iso_code, {}, {
-          'label': 'Currency'|trans({}, 'Admin.Global'),
+          'label': 'ISO code'|trans({}, 'Admin.Global'),
           'help': 'ISO code (e.g. USD for Dollars, EUR for Euros, etc.).'|trans({}, 'Admin.International.Help')
+        }) }}
+
+        {{ ps.form_group_row(currencyForm.numeric_iso_code, {}, {
+          'label': 'Numeric ISO code'|trans({}, 'Admin.Global'),
+          'help': 'Numeric ISO code (e.g. 840 for Dollars, 978 for Euros, etc.).'|trans({}, 'Admin.International.Help')
         }) }}
 
         {% set exchangeRateLabel %}
