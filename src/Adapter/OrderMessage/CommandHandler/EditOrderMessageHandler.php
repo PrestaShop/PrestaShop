@@ -26,26 +26,30 @@
 
 namespace PrestaShop\PrestaShop\Adapter\OrderMessage\CommandHandler;
 
-use OrderMessage;
-use PrestaShop\PrestaShop\Core\Domain\OrderMessage\Command\AddOrderMessageCommand;
-use PrestaShop\PrestaShop\Core\Domain\OrderMessage\CommandHandler\AddOrderMessageHandlerInterface;
+use PrestaShop\PrestaShop\Adapter\OrderMessage\AbstractOrderMessageHandler;
+use PrestaShop\PrestaShop\Core\Domain\OrderMessage\Command\EditOrderMessageCommand;
+use PrestaShop\PrestaShop\Core\Domain\OrderMessage\CommandHandler\EditOrderMessageHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\OrderMessage\Exception\OrderMessageException;
-use PrestaShop\PrestaShop\Core\Domain\OrderMessage\ValueObject\OrderMessageId;
 use PrestaShopException;
 
 /**
- * Handles adding new order message using legacy object model
+ * Handles editing order message using legacy object model
  *
  * @internal
  */
-final class AddOrderMessageHandler implements AddOrderMessageHandlerInterface
+final class EditOrderMessageHandler extends AbstractOrderMessageHandler implements EditOrderMessageHandlerInterface
 {
-    public function handle(AddOrderMessageCommand $command): OrderMessageId
+    public function handle(EditOrderMessageCommand $command): void
     {
-        $orderMessage = new OrderMessage();
+        $orderMessage = $this->getOrderMessage($command->getOrderMessageId());
 
-        $orderMessage->name = $command->getLocalizedName();
-        $orderMessage->message = $command->getLocalizedMessage();
+        if (null !== $command->getLocalizedName()) {
+            $orderMessage->name = $command->getLocalizedName();
+        }
+
+        if (null !== $command->getLocalizedMessage()) {
+            $orderMessage->message = $command->getLocalizedMessage();
+        }
 
         try {
             $orderMessage->validateFields();
@@ -54,10 +58,10 @@ final class AddOrderMessageHandler implements AddOrderMessageHandlerInterface
             throw new OrderMessageException('Order message contains invalid fields', 0, $e);
         }
 
-        if (false === $orderMessage->add()) {
-            throw new OrderMessageException('Failed to add order message');
+        if (false === $orderMessage->update()) {
+            throw new OrderMessageException(
+                sprintf('Failed to update order message with id "%s"', $command->getOrderMessageId()->getValue())
+            );
         }
-
-        return new OrderMessageId((int) $orderMessage->id);
     }
 }
