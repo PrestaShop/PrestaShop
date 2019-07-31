@@ -30,6 +30,7 @@ use LegacyTests\Integration\PrestaShopBundle\Test\WebTestCase;
 use PrestaShopBundle\Security\Admin\Employee as LoggedEmployee;
 use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
+use Symfony\Component\Security\Core\Role\Role;
 
 /**
  * @group demo
@@ -178,7 +179,6 @@ class SurvivalTest extends WebTestCase
             'admin_order_messages_create' => ['Add new', 'admin_order_messages_create'],
             '_admin_login' => ['Login', '_admin_login'],
             '_admin_forgot_password' => ['Forgot password (login)', '_admin_forgot_password'],
-            'admin_logout' => ['Logout', 'admin_logout'],
         ];
     }
 
@@ -209,7 +209,7 @@ class SurvivalTest extends WebTestCase
 
         $tokenMock->expects($this->any())
             ->method('getRoles')
-            ->willReturn([]);
+            ->willReturn([new Role('ROLE_EMPLOYEE')]);
 
         $tokenMock->expects($this->any())
             ->method('isAuthenticated')
