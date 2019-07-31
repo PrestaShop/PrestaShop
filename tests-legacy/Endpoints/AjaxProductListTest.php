@@ -37,6 +37,7 @@ class AjaxProductListTest extends AbstractEndpointAdminTest
     {
         parent::setUp();
         $this->employeeLogin();
+        $_SERVER['REQUEST_URI'] = _PS_ROOT_DIR_ . '/admin-dev/ajax_products_list.php';
     }
 
     public function testAjaxEndpoint()
