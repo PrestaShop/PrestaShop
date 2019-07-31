@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+use PDOException;
 use Doctrine\DBAL\DBALException;
 
 ob_start();
@@ -83,10 +84,11 @@ if (file_exists(_PS_CORE_DIR_.'/app/config/parameters.php')) {
     } else {
         $env = _PS_MODE_DEV_ ? 'dev' : 'prod';
     }
-    global $kernel;
-    $kernel = new AppKernel($env, _PS_MODE_DEV_);
-    $kernel->loadClassCache();
+
     try {
+        global $kernel;
+        $kernel = new AppKernel($env, _PS_MODE_DEV_);
+        $kernel->loadClassCache();
         $kernel->boot();
     } catch (DBALException $e) {
         /**
@@ -94,6 +96,17 @@ if (file_exists(_PS_CORE_DIR_.'/app/config/parameters.php')) {
          * non existence database
          */
         if (!strpos($e->getMessage(), 'You can circumvent this by setting a \'server_version\' configuration value') === false) {
+            throw $e;
+        }
+    } catch (PDOException $e) {
+        /**
+         * The server_version option was added in Doctrine DBAL 2.5, which is used by DoctrineBundle 1.3.
+         * The value of this option should match your database server version.
+         * If you don't define this option and you haven't created your database yet,
+         * you may get PDOException errors because Doctrine will try to guess the database
+         * server version automatically and none is available.
+         */
+        if (!strpos($e->getMessage(), 'Unknown database ') === false) {
             throw $e;
         }
     }
