@@ -24,7 +24,7 @@
  *}
 
 <div class="block_newsletter">
-    <form action="{$urls.pages.index}#footer" method="post">
+    <form action="{$urls.current_url}" method="post">
         <div class="row">
             <p id="block-newsletter-label" class="col-lg-12 col-md-12 col-xs-12">{l s='Get our latest news and special sales' d='Shop.Theme.Global'}</p>
             <div class="col-lg-12 col-md-12 col-xs-12 mb-1">

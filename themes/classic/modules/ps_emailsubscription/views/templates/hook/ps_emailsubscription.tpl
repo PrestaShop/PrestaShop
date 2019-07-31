@@ -27,7 +27,7 @@
   <div class="row">
     <p id="block-newsletter-label" class="col-md-5 col-xs-12">{l s='Get our latest news and special sales' d='Shop.Theme.Global'}</p>
     <div class="col-md-7 col-xs-12">
-      <form action="{$urls.pages.index}#footer" method="post">
+      <form action="{$urls.current_url}" method="post">
         <div class="row">
           <div class="col-xs-12">
             <input
