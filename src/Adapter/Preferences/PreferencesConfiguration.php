@@ -84,7 +84,6 @@ class PreferencesConfiguration implements DataConfigurationInterface
             $this->configuration->set('PS_DISPLAY_MANUFACTURERS', $configuration['display_manufacturers']);
             $this->configuration->set('PS_DISPLAY_BEST_SELLERS', $configuration['display_best_sellers']);
             $this->configuration->set('PS_MULTISHOP_FEATURE_ACTIVE', $configuration['multishop_feature_active']);
-            $this->configuration->set('PS_MULTISHOP_FEATURE_ACTIVE', $configuration['multishop_feature_active']);
             $this->configuration->set('PS_SHOP_ACTIVITY', $configuration['shop_activity']);
         }
 
