@@ -39,7 +39,7 @@
 {% macro infotip(text)%}
 <div class="alert alert-info" role="alert">
   <p class="alert-text">
-    {{ text }}
+    {{ text|raw }}
   </p>
 </div>
 {% endmacro %}

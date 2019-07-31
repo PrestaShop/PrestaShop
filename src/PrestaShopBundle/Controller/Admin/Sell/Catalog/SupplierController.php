@@ -78,7 +78,7 @@ class SupplierController extends FrameworkBundleAdminController
                 'supplierGrid' => $gridPresenter->present($supplierGrid),
                 'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
                 'enableSidebar' => true,
-                'alertInfoMessage' => $this->getAlertInfoMessage(),
+                'permanentInfoMessage' => $this->getPermanentInfoMessage(),
             ]
         );
     }
@@ -502,18 +502,23 @@ class SupplierController extends FrameworkBundleAdminController
         return $this->trans('Unexpected error occurred.', 'Admin.Notifications.Error');
     }
 
-    protected function getAlertInfoMessage()
+    protected function getPermanentInfoMessage()
     {
+        $urlOpening = sprintf('<a href="%s">', $this->get('router')->generate('admin_preferences'));
+        $urlEnding = '</a>';
+
         if ($this->configuration->get('PS_DISPLAY_SUPPLIERS')) {
             return $this->trans(
-                'The display of your suppliers is enabled on your store. Go to Shop Parameters > General to edit settings.',
-                'Admin.Catalog.Notification'
+                'The display of your suppliers is enabled on your store. Go to %sShop Parameters > General to edit settings%s.',
+                'Admin.Catalog.Notification',
+                [$urlOpening, $urlEnding]
             );
         }
 
         return $this->trans(
-            'The display of your suppliers is disabled on your store. Go to Shop Parameters > General to edit settings.',
-            'Admin.Catalog.Notification'
+            'The display of your suppliers is disabled on your store. Go to %sShop Parameters > General to edit settings%s.',
+            'Admin.Catalog.Notification',
+            [$urlOpening, $urlEnding]
         );
     }
 }
