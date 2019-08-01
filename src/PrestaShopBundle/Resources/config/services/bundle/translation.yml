@@ -108,6 +108,11 @@ services:
         tags:
             - {name: translation.loader, alias: db}
 
+    prestashop.translation.sql_loader:
+        class: PrestaShopBundle\Translation\Loader\SqlTranslationLoader
+        tags:
+            - {name: translation.loader, alias: db}
+
     prestashop.translation.legacy_file_reader:
         class: PrestaShopBundle\Translation\Loader\LegacyFileReader
         arguments:
