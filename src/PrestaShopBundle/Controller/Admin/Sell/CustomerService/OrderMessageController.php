@@ -27,15 +27,29 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\CustomerService;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Search\Filters\OrderMessageFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class OrderMessageController extends FrameworkBundleAdminController
 {
-    public function indexAction(): Response
+    public function indexAction(OrderMessageFilters $filters): Response
     {
-        return $this->render('@PrestaShop/Admin/Sell/CustomerService/OrderMessage/index.html.twig');
+        $gridFactory = $this->get('prestashop.core.grid.grid_factory.order_message');
+        $grid = $gridFactory->getGrid($filters);
+
+        return $this->render('@PrestaShop/Admin/Sell/CustomerService/OrderMessage/index.html.twig', [
+            'layoutTitle' => $this->trans('Order Messages', 'Admin.Navigation.Menu'),
+            'layoutHeaderToolbarBtn' => [
+                'add' => [
+                    'href' => $this->generateUrl('admin_order_messages_create'),
+                    'desc' => $this->trans('Add new customer', 'Admin.Orderscustomers.Feature'),
+                    'icon' => 'add_circle_outline'
+                ],
+            ],
+            'orderMessageGrid' => $this->presentGrid($grid),
+        ]);
     }
 
     public function createAction(Request $request): Response
