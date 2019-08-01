@@ -26,7 +26,9 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\CustomerService;
 
+use Exception;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class OrderMessageController extends FrameworkBundleAdminController
@@ -34,5 +36,30 @@ class OrderMessageController extends FrameworkBundleAdminController
     public function indexAction(): Response
     {
         return $this->render('@PrestaShop/Admin/Sell/CustomerService/OrderMessage/index.html.twig');
+    }
+
+    public function createAction(Request $request): Response
+    {
+        $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.order_message_form_builder');
+        $formHandler = $this->get('prestashop.core.form.identifiable_object.handler.order_message_form_handler');
+
+        $form = $formBuilder->getForm();
+        $form->handleRequest($request);
+
+        try {
+            $result = $formHandler->handle($form);
+
+            if ($result->getIdentifiableObjectId()) {
+                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_order_messages_index');
+            }
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, []));
+        }
+
+        return $this->render('@PrestaShop/Admin/Sell/CustomerService/OrderMessage/create.html.twig', [
+            'orderMessageForm' => $form->createView(),
+        ]);
     }
 }

@@ -80,10 +80,17 @@ module.exports = {
     webservice: './js/pages/webservice',
     error: './js/pages/error',
     monitoring: './js/pages/monitoring',
+<<<<<<< HEAD
     order: './js/pages/order',
     order_create: './js/pages/order/create.js',
     catalog_price_rule: './js/pages/catalog-price-rule',
+<<<<<<< HEAD
     feature_form: './js/pages/feature/form',
+=======
+=======
+    order_message_form: './js/pages/order_message/form',
+>>>>>>> 4485feb078... Implement order message saving using form
+>>>>>>> c5a9004469... Implement order message saving using form
   },
   output: {
     path: path.resolve(__dirname, '../public'),

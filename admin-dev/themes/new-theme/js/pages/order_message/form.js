@@ -1,4 +1,4 @@
-{#**
+/**
  * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,9 +21,11 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
+import TranslatableInput from '../../components/translatable-input';
 
-{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
+const $ = window.$;
 
-
-
+$(() => {
+  new TranslatableInput();
+});
