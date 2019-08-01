@@ -183,3 +183,8 @@ services:
       class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\ProductWithoutPriceGridDefinitionFactory'
       parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
       public: true
+
+    prestashop.core.grid.definition.factory.order_message:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderMessageGridDefinitionFactory'
+      parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+      public: true

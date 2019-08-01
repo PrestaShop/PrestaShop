@@ -4,13 +4,13 @@ admin_order_messages_index:
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/CustomerService/OrderMessage:index
 
-admin_orders_messages_create:
+admin_order_messages_create:
   path: /new
   methods: [GET, POST]
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/CustomerService/OrderMessage:create
 
-admin_orders_messages_edit:
+admin_order_messages_edit:
   path: /{orderMessageId}/edit
   methods: [GET, POST]
   defaults:
