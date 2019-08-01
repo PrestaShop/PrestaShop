@@ -23,8 +23,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  *}
 
-<div class="block_newsletter">
-    <form action="{$urls.current_url}" method="post">
+<div class="block_newsletter" id="blockEmailSubscription_{$hookName}">
+    <form action="{$urls.current_url}#blockEmailSubscription_{$hookName}" method="post">
         <div class="row">
             <p id="block-newsletter-label" class="col-lg-12 col-md-12 col-xs-12">{l s='Get our latest news and special sales' d='Shop.Theme.Global'}</p>
             <div class="col-lg-12 col-md-12 col-xs-12 mb-1">
@@ -43,6 +43,7 @@
                             aria-labelledby="block-newsletter-label"
                     >
                 </div>
+                <input type="hidden" name="blockHookName" value="{$hookName}" />
                 <input type="hidden" name="action" value="0">
                 <div class="clearfix"></div>
             </div>
