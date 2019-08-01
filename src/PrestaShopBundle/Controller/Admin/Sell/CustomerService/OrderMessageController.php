@@ -27,8 +27,10 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\CustomerService;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Domain\OrderMessage\Command\DeleteOrderMessageCommand;
 use PrestaShop\PrestaShop\Core\Search\Filters\OrderMessageFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -100,5 +102,18 @@ class OrderMessageController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Sell/CustomerService/OrderMessage/edit.html.twig', [
             'orderMessageForm' => $form->createView(),
         ]);
+    }
+
+    public function deleteAction(int $orderMessageId): RedirectResponse
+    {
+        try {
+            $this->getCommandBus()->handle(new DeleteOrderMessageCommand($orderMessageId));
+
+            $this->addFlash('success', $this->trans('Successful deletion.', 'Admin.Notifications.Success'));
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, []));
+        }
+
+        return $this->redirectToRoute('admin_order_messages_index');
     }
 }
