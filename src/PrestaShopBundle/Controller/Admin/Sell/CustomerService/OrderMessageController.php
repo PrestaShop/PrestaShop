@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\CustomerService;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Domain\OrderMessage\Command\BulkDeleteOrderMessageCommand;
 use PrestaShop\PrestaShop\Core\Domain\OrderMessage\Command\DeleteOrderMessageCommand;
 use PrestaShop\PrestaShop\Core\Search\Filters\OrderMessageFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -110,6 +111,26 @@ class OrderMessageController extends FrameworkBundleAdminController
             $this->getCommandBus()->handle(new DeleteOrderMessageCommand($orderMessageId));
 
             $this->addFlash('success', $this->trans('Successful deletion.', 'Admin.Notifications.Success'));
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, []));
+        }
+
+        return $this->redirectToRoute('admin_order_messages_index');
+    }
+
+    public function bulkDeleteAction(Request $request): RedirectResponse
+    {
+        try {
+            $orderMessageIds = array_map(static function ($orderMessageId) {
+                return (int) $orderMessageId;
+            }, $request->request->get('order_message_order_messages_bulk'));
+
+            $this->getCommandBus()->handle(new BulkDeleteOrderMessageCommand($orderMessageIds));
+
+            $this->addFlash(
+                'success',
+                $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
+            );
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, []));
         }

@@ -41,31 +41,37 @@ class OrderMessageType extends AbstractType
     {
         $builder
             ->add('name', TranslatableType::class, [
+                'options' => [
+                    'constraints' => [
+                        new TypedRegex([
+                            'type' => 'generic_name',
+                        ]),
+                        new Length([
+                            'max' => OrderMessageConstraint::MAX_NAME_LENGTH,
+                        ]),
+                    ],
+                ],
                 'constraints' => [
                     new DefaultLanguage(),
-                    new TypedRegex([
-                        'type' => 'generic_name',
-                    ]),
-                    new Length([
-                        'max' => OrderMessageConstraint::MAX_NAME_LENGTH,
-                    ]),
                 ],
             ])
             ->add('message', TranslatableType::class, [
                 'type' => TextareaType::class,
                 'options' => [
+                    'constraints' => [
+                        new TypedRegex([
+                            'type' => 'message',
+                        ]),
+                        new Length([
+                            'max' => OrderMessageConstraint::MAX_MESSAGE_LENGTH,
+                        ]),
+                    ],
                     'attr' => [
                         'rows' => 5,
                     ],
                 ],
                 'constraints' => [
                     new DefaultLanguage(),
-                    new TypedRegex([
-                        'type' => 'message',
-                    ]),
-                    new Length([
-                        'max' => OrderMessageConstraint::MAX_MESSAGE_LENGTH,
-                    ]),
                 ],
             ])
         ;
