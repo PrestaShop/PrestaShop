@@ -25,3 +25,9 @@ admin_order_messages_delete:
     _controller: PrestaShopBundle:Admin/Sell/CustomerService/OrderMessage:delete
   requirements:
     orderMessageId: \d+
+
+admin_order_messages_bulk_delete:
+  path: /bulk-delete
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/CustomerService/OrderMessage:bulkDelete

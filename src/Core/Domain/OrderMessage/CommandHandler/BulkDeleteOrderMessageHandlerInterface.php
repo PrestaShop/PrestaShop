@@ -24,12 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\OrderMessage\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\OrderMessage\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
+use PrestaShop\PrestaShop\Core\Domain\OrderMessage\Command\BulkDeleteOrderMessageCommand;
 
-class OrderMessageException extends DomainException
+interface BulkDeleteOrderMessageHandlerInterface
 {
-    public const FAILED_TO_DELETE = 1;
-    public const FAILED_TO_BULK_DELETE = 2;
+    public function handle(BulkDeleteOrderMessageCommand $command): void;
 }

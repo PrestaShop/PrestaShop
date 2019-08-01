@@ -24,12 +24,32 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\OrderMessage\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\OrderMessage\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
+use PrestaShop\PrestaShop\Core\Domain\OrderMessage\ValueObject\OrderMessageId;
 
-class OrderMessageException extends DomainException
+class BulkDeleteOrderMessageCommand
 {
-    public const FAILED_TO_DELETE = 1;
-    public const FAILED_TO_BULK_DELETE = 2;
+    /**
+     * @var OrderMessageId[]
+     */
+    private $orderMessageIds;
+
+    /**
+     * @param int[] $orderMessageIds
+     */
+    public function __construct(array $orderMessageIds)
+    {
+        foreach ($orderMessageIds as $orderMessageId) {
+            $this->orderMessageIds[] = new OrderMessageId($orderMessageId);
+        }
+    }
+
+    /**
+     * @return OrderMessageId[]
+     */
+    public function getOrderMessageIds(): array
+    {
+        return $this->orderMessageIds;
+    }
 }
