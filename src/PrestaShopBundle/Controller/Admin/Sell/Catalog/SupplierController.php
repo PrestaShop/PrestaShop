@@ -78,7 +78,7 @@ class SupplierController extends FrameworkBundleAdminController
                 'supplierGrid' => $gridPresenter->present($supplierGrid),
                 'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
                 'enableSidebar' => true,
-                'permanentInfoMessage' => $this->getPermanentInfoMessage(),
+                'settingsTipMessage' => $this->getSettingsTipMessage(),
             ]
         );
     }
@@ -502,7 +502,7 @@ class SupplierController extends FrameworkBundleAdminController
         return $this->trans('Unexpected error occurred.', 'Admin.Notifications.Error');
     }
 
-    protected function getPermanentInfoMessage()
+    protected function getSettingsTipMessage()
     {
         $urlOpening = sprintf('<a href="%s">', $this->get('router')->generate('admin_preferences'));
         $urlEnding = '</a>';

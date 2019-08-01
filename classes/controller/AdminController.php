@@ -259,18 +259,6 @@ class AdminControllerCore extends Controller
     /** @var int VIEW access level */
     const LEVEL_VIEW = 1;
 
-    /** @var string frontend alert type */
-    const FRONT_ALERT_INFO = 'info';
-
-    /** @var string frontend alert type */
-    const FRONT_ALERT_SUCCESS = 'success';
-
-    /** @var string frontend alert type */
-    const FRONT_ALERT_WARNING = 'warning';
-
-    /** @var string frontend alert type */
-    const FRONT_ALERT_DANGER = 'danger';
-
     /**
      * Actions to execute on multiple selections.
      *
@@ -4880,28 +4868,5 @@ class AdminControllerCore extends Controller
             ['symbol' => $numberSpecification->getSymbolsByNumberingSystem(Locale::NUMBERING_SYSTEM_LATIN)->toArray()],
             $numberSpecification->toArray()
         );
-    }
-
-    /**
-     * Using this method will display the given message as an "alert" message at the top of the current
-     * administration page.
-     *
-     * @see admin-dev/themes/default/template/content.tpl
-     *
-     * @param string $message The message to be displayed
-     * @param string $namespace Type of alert, use FRONT_ALERT_XXX constants
-     */
-    protected function addTopAlertMessage($message, $namespace = self::FRONT_ALERT_INFO)
-    {
-        $messages = $this->context->smarty->getVariable('topAlertMessages')->value;
-        if ($messages === null) {
-            $messages = [];
-        }
-        if (!isset($messages[$namespace])) {
-            $messages[$namespace] = [];
-        }
-        $messages[$namespace][] = $message;
-
-        $this->context->smarty->assign('topAlertMessages', $messages);
     }
 }
