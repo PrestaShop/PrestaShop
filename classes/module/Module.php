@@ -37,7 +37,7 @@ abstract class ModuleCore implements ModuleInterface
     /** @var int Module ID */
     public $id = null;
 
-    /** @var float Version */
+    /** @var string Version */
     public $version;
     public $database_version;
 
