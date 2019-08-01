@@ -151,7 +151,7 @@ class CustomerCore extends ObjectModel
 
     protected $webserviceParameters = array(
         'objectMethods' => array(
-            'add' => 'addWs'
+            'add' => 'addWs',
         ),
         'fields' => array(
             'id_default_group' => array('xlink_resource' => 'groups'),
@@ -239,9 +239,9 @@ class CustomerCore extends ObjectModel
      */
     public function addWs($autodate = true, $null_values = false)
     {
-        if (CustomerCore::customerExists($this->email)) {
+        if (self::customerExists($this->email)) {
             //Customer already exist... update
-            $customer = Customer::getByEmail($this->email);
+            $customer = self::getByEmail($this->email);
             $this->id = $customer->id;
             return $this->update($null_values);
         } else {
