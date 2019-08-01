@@ -38,7 +38,11 @@ class RangeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('from', TextType::class)
-            ->add('to', TextType::class);
+            ->add('from', TextType::class, [
+                'label' => false,
+            ])
+            ->add('to', TextType::class, [
+                'label' => false,
+            ]);
     }
 }

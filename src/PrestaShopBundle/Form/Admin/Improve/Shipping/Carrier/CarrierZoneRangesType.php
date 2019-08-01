@@ -59,6 +59,13 @@ class CarrierZoneRangesType extends AbstractType
                 'required' => false,
                 'zones' => $this->getModifiedZones(),
             ])
+            ->add('ranges', CollectionType::class, [
+                'required' => false,
+                'entry_type' => RangeType::class,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'data' => $this->getDefaultRanges(),
+            ])
             ->add('prices', CollectionType::class, [
                 'entry_type' => ZonePriceType::class,
                 'allow_add' => true,
@@ -68,10 +75,6 @@ class CarrierZoneRangesType extends AbstractType
                 'data' => $this->getDefaultPricesByZone(),
                 'label' => false,
                 'required' => false,
-            ])
-            ->add('ranges', CollectionType::class, [
-                'entry_type' => RangeType::class,
-                'data' => $this->getDefaultRanges(),
             ])
         ;
     }

@@ -28,10 +28,9 @@ const $ = window.$;
 export default class AddRangeHandler {
   constructor() {
     $(document).on('click', '.js-add-range', () => {
-      const rows = $('.js-range-row, .js-zone-row');
-      const formTemplate = $('#js-ranges-input-template').html();
-
-      this.addColumn(rows, formTemplate);
+      this.$rows = $('#js-append-inputs').find('table tr');
+      this.$templates = $('#js-carrier-range-templates');
+      this.addColumn();
     });
 
     return {};
@@ -39,25 +38,27 @@ export default class AddRangeHandler {
 
   /**
    * Add new form prototype to collection
-   *
-   * @param rows
-   * @param formTemplate
    */
-  addColumn(rows, formTemplate) {
-    const rangesCount = $('table').data('culumn-count') + 1;
+  addColumn() {
+    const currentRange = this.$rows.last().find('td:not(:first-child)').length;
+    const $inputFrom = this.$templates.find('#js-range-from-template');
+    const $inputTo = this.$templates.find('#js-range-to-template');
+    const $inputPrice = this.$templates.find('#js-price-template');
 
-    for (let i = 0; i < Object.keys(rows).length; i++) {
-      const zoneId = $(rows[i]).data('zone-id');
+    for (let i = 0; i < Object.keys(this.$rows).length; i++) {
+      const $row = $(this.$rows[i]);
 
-      let name = `range_${rangesCount}`;
-      if (typeof $(rows[i]).data('zone-id') !== 'undefined') {
-        name = `zone_${zoneId}_range_${rangesCount}`;
+      if ($row.hasClass('js-range-from')) {
+        const inputFrom = ($inputFrom.get(0).outerHTML).replace(/__RANGE_INDEX__/, currentRange);
+        $row.append(`<td>${inputFrom}</td>`);
+      } else if ($row.hasClass('js-range-to')) {
+        const inputTo = ($inputTo.get(0).outerHTML).replace(/__RANGE_INDEX__/, currentRange);
+        $row.append(`<td>${inputTo}</td>`);
+      } else {
+        const inputPrice = ($inputPrice.get(0).outerHTML).replace(/__RANGE_INDEX__/, currentRange).replace(/__ZONE_ID__/, $row.data('zone-id'));
+        $row.append(`<td>${inputPrice}</td>`);
       }
-
-      const form = formTemplate.replace('/__name__/', name);
-      $(rows[i]).append(form);
     }
-    $('table').data('range-count', rangesCount);
   }
 }
 

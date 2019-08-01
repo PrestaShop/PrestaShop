@@ -782,10 +782,9 @@
 {% endblock text_with_recommended_length_widget %}
 
 {% block carrier_zone_ranges_widget %}
-  {{ dump(form) }}
   <div>
-    <div class="row" id="js-append-inputs">
-      <table class="table table-sm col">
+    <div id="js-append-inputs" class="table-responsive">
+      <table class="table table-sm">
         <tbody class="ranges">
           <tr class="table-dark text-dark js-range-from">
             <td>
@@ -796,7 +795,7 @@
               </p>
             </td>
             <td>
-              {{ form_row(form.ranges[0].from) }}
+              {{ form_widget(form.ranges[0].from) }}
             </td>
           </tr>
           <tr class="table-dark text-dark js-range-to">
@@ -808,11 +807,11 @@
               </p>
             </td>
             <td>
-              {{ form_row(form.ranges[0].to) }}
+              {{ form_widget(form.ranges[0].to) }}
             </td>
           </tr>
           {% for zone_id, zone in form.zones %}
-            <tr>
+            <tr data-zone-id="{{ zone_id }}">
               <td>{{ form_widget(form.zones[zone_id]) }}</td>
               <td>{{ form_widget(form.prices[0].price_by_zone[zone_id]) }}</td>
             </tr>
@@ -824,9 +823,23 @@
       {{ 'Add new range'|trans({}, 'Admin.Global') }}
     </button>
   </div>
-  <script type="text/html" id="js-zone-range-price-input">
-    <input type="text" id="carrier_step_shipping_carrier_ranges_zone_prices___RANGE_INDEX___price"
-           name="carrier[step_shipping][carrier_ranges][zone_prices][0][price]"
-           class="form-control">
-  </script>
+
+  <div hidden id="js-carrier-range-templates">
+    <input type="text"
+     id="js-price-template"
+     name="carrier[step_shipping][carrier_ranges][prices][__RANGE_INDEX__][price_by_zone][__ZONE_ID__]"
+     class="form-control">
+
+    <input type="text"
+     id="js-range-from-template"
+     name="carrier[step_shipping][carrier_ranges][ranges][__RANGE_INDEX__][from]"
+     required="required"
+     class="form-control">
+
+    <input type="text"
+     id="js-range-to-template"
+     name="carrier[step_shipping][carrier_ranges][ranges][__RANGE_INDEX__][to]"
+     required="required"
+     class="form-control">
+  </div>
 {% endblock %}
