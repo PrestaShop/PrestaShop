@@ -109,7 +109,6 @@ class ThemeManager implements AddonManagerInterface
      */
     private $translationFinder;
 
-
     public function __construct(
         Shop $shop,
         ConfigurationInterface $configuration,

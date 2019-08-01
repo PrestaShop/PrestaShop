@@ -46,11 +46,9 @@ trait TranslationFinderTrait
      * @throws FileNotFoundException
      *
      * @deprecated use TraslationFinder::getCatalogueFromPaths() instead
-     *
      */
     public function getCatalogueFromPaths($paths, $locale, $pattern = null)
     {
-
         @trigger_error(
             __FUNCTION__ . 'is deprecated since version 1.7.6.1 Use TranslationFinder::getCatalogueFromPaths() instead.',
             E_USER_DEPRECATED

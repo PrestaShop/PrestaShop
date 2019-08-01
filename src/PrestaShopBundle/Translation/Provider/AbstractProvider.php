@@ -119,8 +119,8 @@ abstract class AbstractProvider implements ProviderInterface, XliffCatalogueInte
      * Get the PrestaShop locale from real locale.
      *
      * @return string The PrestaShop locale
-     * @deprecated since 1.7.6, to be removed in the next major
      *
+     * @deprecated since 1.7.6, to be removed in the next major
      */
     public function getPrestaShopLocale()
     {
@@ -267,7 +267,7 @@ abstract class AbstractProvider implements ProviderInterface, XliffCatalogueInte
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public abstract function getDefaultResourceDirectory();
+    abstract public function getDefaultResourceDirectory();
 }
