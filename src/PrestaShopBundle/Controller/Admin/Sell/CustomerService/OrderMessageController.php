@@ -29,8 +29,12 @@ namespace PrestaShopBundle\Controller\Admin\Sell\CustomerService;
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\OrderMessage\Command\BulkDeleteOrderMessageCommand;
 use PrestaShop\PrestaShop\Core\Domain\OrderMessage\Command\DeleteOrderMessageCommand;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ManufacturerAddressGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ManufacturerGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderMessageGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\OrderMessageFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Service\Grid\ResponseBuilder;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -53,6 +57,19 @@ class OrderMessageController extends FrameworkBundleAdminController
             ],
             'orderMessageGrid' => $this->presentGrid($grid),
         ]);
+    }
+
+    public function filterAction(Request $request): RedirectResponse
+    {
+        /** @var ResponseBuilder $responseBuilder */
+        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
+
+        return $responseBuilder->buildSearchResponse(
+            $this->get('prestashop.core.grid.definition.factory.order_message'),
+            $request,
+            OrderMessageGridDefinitionFactory::GRID_ID,
+            'admin_order_messages_index'
+        );
     }
 
     public function createAction(Request $request): Response
