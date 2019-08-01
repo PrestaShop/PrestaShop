@@ -3,3 +3,9 @@ admin_order_messages_index:
   methods: [GET, POST]
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/CustomerService/OrderMessage:index
+
+admin_orders_messages_craete:
+  path: /new
+  methods: [GET, POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/CustomerService/OrderMessage:create

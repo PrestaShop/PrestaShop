@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,9 +22,24 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
+namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
+final class OrderMessageFormDataProvider implements FormDataProviderInterface
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function getData($orderMessageId)
+    {
+    }
 
-
+    /**
+     * {@inheritdoc}
+     */
+    public function getDefaultData()
+    {
+        return [];
+    }
+}
