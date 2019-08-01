@@ -23,18 +23,36 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
+{{ form_start(orderMessageForm) }}
+  <div class="card">
+  <h3 class="card-header">
+    <i class="material-icons">person</i>
+    {{ 'Order messages'|trans({}, 'Admin.Orderscustomers.Feature') }}
+  </h3>
+  <div class="card-block row">
+    <div class="card-text">
+      {{ form_errors(orderMessageForm) }}
 
-{% block content %}
-  <div class="row justify-content-center">
-    <div class="col">
-      {% include '@PrestaShop/Admin/Sell/CustomerService/OrderMessage/Blocks/form.html.twig' %}
+      {{ ps.form_group_row(orderMessageForm.name, {}, {
+        'label': 'Name'|trans({}, 'Admin.Global')
+      }) }}
+
+      {{ ps.form_group_row(orderMessageForm.message, {}, {
+        'label': 'Message'|trans({}, 'Admin.Global')
+      }) }}
+
+      {% block order_message_form_rest %}
+        {{ form_rest(orderMessageForm) }}
+      {% endblock %}
     </div>
   </div>
-{% endblock %}
-
-{% block javascripts %}
-  {{ parent() }}
-
-  <script src="{{ asset('themes/new-theme/public/order_message_form.bundle.js') }}"></script>
-{% endblock %}
+  <div class="card-footer">
+    <a href="{{ path('admin_order_messages_index') }}" class="btn btn-outline-secondary">
+      {{ 'Cancel'|trans({}, 'Admin.Actions') }}
+    </a>
+    <button class="btn btn-primary float-right">
+      {{ 'Save'|trans({}, 'Admin.Actions') }}
+    </button>
+  </div>
+</div>
+{{ form_end(orderMessageForm) }}

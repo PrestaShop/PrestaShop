@@ -99,3 +99,5 @@ services:
 
   prestashop.core.form.identifiable_object.data_provider.order_message_form_data_provider:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\OrderMessageFormDataProvider'
+    arguments:
+      - '@prestashop.core.query_bus'
