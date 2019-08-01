@@ -59,17 +59,7 @@ class ValidateConstraintTranslatorCore
 
         if ($validator === 'isCustomerName') {
             return $this->translator->trans(
-                'Invalid name',
-                [],
-                'Shop.Forms.Errors'
-            ) . PHP_EOL .
-            $this->translator->trans(
-                'Invalid characters: 0-9!<>,;?=+()@#"°{}_$%/\^*`',
-                [],
-                'Shop.Forms.Errors'
-            ) . PHP_EOL .
-            $this->translator->trans(
-                'A space is required after the dot (.) character',
+                'Invalid format.',
                 [],
                 'Shop.Forms.Errors'
             );
