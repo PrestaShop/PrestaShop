@@ -19,13 +19,13 @@ services:
   prestashop.core.constraint_validator.customer_name_validator:
     class: 'PrestaShop\PrestaShop\Core\ConstraintValidator\CustomerNameValidator'
     arguments:
-      - '@prestashop.adapter.tools'
+      - '@prestashop.core.string.character_cleaner'
     tags:
       - { name: validator.constraint_validator }
 
   prestashop.core.constraint_validator.typed_regex_validator:
     class: 'PrestaShop\PrestaShop\Core\ConstraintValidator\TypedRegexValidator'
     arguments:
-      - '@prestashop.adapter.tools'
+      - '@prestashop.core.string.character_cleaner'
     tags:
       - { name: validator.constraint_validator }
