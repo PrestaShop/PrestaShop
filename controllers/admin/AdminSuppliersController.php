@@ -67,8 +67,6 @@ class AdminSuppliersControllerCore extends AdminController
             'products' => array('title' => $this->trans('Number of products', array(), 'Admin.Catalog.Feature'), 'align' => 'right', 'filter_type' => 'int', 'tmpTableFilter' => true),
             'active' => array('title' => $this->trans('Enabled', array(), 'Admin.Global'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false, 'class' => 'fixed-width-xs'),
         );
-
-        $this->addTopAlertMessage($this->supplierInfoMessage());
     }
 
     public function setMedia($isNewTheme = false)
@@ -567,27 +565,5 @@ class AdminSuppliersControllerCore extends AdminController
         }
 
         return true;
-    }
-
-    /**
-     * builds a message related to the display suppliers configuration status
-     *
-     * @return string
-     */
-    protected function supplierInfoMessage()
-    {
-        if (Configuration::get('PS_DISPLAY_SUPPLIERS')) {
-            return $this->trans(
-                'The display of your suppliers is enabled on your store. Go to Shop Parameters > General to edit settings.',
-                [],
-                'Admin.Catalog.Notification'
-            );
-        }
-
-        return $this->trans(
-            'The display of your suppliers is disabled on your store. Go to Shop Parameters > General to edit settings.',
-            [],
-            'Admin.Catalog.Notification'
-        );
     }
 }
