@@ -35,6 +35,10 @@ use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
+use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
+use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
+use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 final class OrderMessageGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
@@ -116,6 +120,51 @@ final class OrderMessageGridDefinitionFactory extends AbstractGridDefinitionFact
                         ),
                 ])
             )
+        ;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getFilters()
+    {
+        return (new FilterCollection())
+            ->add((new Filter('id_order_message', TextType::class))
+                ->setTypeOptions([
+                    'attr' => [
+                        'placeholder' => $this->trans('Search ID', [], 'Admin.Actions'),
+                    ],
+                    'required' => false,
+                ])
+                ->setAssociatedColumn('id_order_message')
+            )
+            ->add((new Filter('name', TextType::class))
+                ->setTypeOptions([
+                    'attr' => [
+                        'placeholder' => $this->trans('Search Name', [], 'Admin.Actions'),
+                    ],
+                    'required' => false,
+                ])
+                ->setAssociatedColumn('name')
+            )
+            ->add((new Filter('message', TextType::class))
+                ->setTypeOptions([
+                    'attr' => [
+                        'placeholder' => $this->trans('Search Message', [], 'Admin.Actions'),
+                    ],
+                    'required' => false,
+                ])
+                ->setAssociatedColumn('message')
+            )
+            ->add((new Filter('actions', SearchAndResetType::class))
+                ->setTypeOptions([
+                    'reset_route' => 'admin_common_reset_search_by_filter_id',
+                    'reset_route_params' => [
+                        'filterId' => self::GRID_ID,
+                    ],
+                    'redirect_route' => 'admin_order_messages_index',
+                ])
+                ->setAssociatedColumn('actions'))
         ;
     }
 
