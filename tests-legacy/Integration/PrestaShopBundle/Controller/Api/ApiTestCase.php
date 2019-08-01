@@ -28,6 +28,7 @@ namespace LegacyTests\Integration\PrestaShopBundle\Controller\Api;
 
 use Context;
 use Language;
+use LegacyTests\Services\EmployeeLoginTrait;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use Shop;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
@@ -37,6 +38,8 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 // bin/phpunit -c tests/phpunit-admin.xml --group api --stop-on-error --stop-on-failure --verbose --debug
 abstract class ApiTestCase extends WebTestCase
 {
+    use EmployeeLoginTrait;
+
     /**
      * @var \Symfony\Component\Routing\RouterInterface
      */
@@ -67,11 +70,8 @@ abstract class ApiTestCase extends WebTestCase
         $this->oldContext = Context::getContext();
         $legacyContextMock = $this->mockContextAdapter();
         self::$container->set('prestashop.adapter.legacy.context', $legacyContextMock);
-
-        $client = self::$kernel->getContainer()->get('test.client');
-        $client->setServerParameters(array());
-
-        self::$client = $client;
+        self::$client = $this->createClient();
+        $this->logIn();
     }
 
     protected function tearDown()
