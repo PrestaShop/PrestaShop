@@ -100,7 +100,7 @@ class ManufacturerController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'manufacturerGrid' => $this->presentGrid($manufacturerGrid),
             'manufacturerAddressGrid' => $this->presentGrid($manufacturerAddressGrid),
-            'permanentInfoMessage' => $this->getPermanentInfoMessage(),
+            'settingsTipMessage' => $this->getSettingsTipMessage(),
         ]);
     }
 
@@ -786,7 +786,7 @@ class ManufacturerController extends FrameworkBundleAdminController
         return $this->get('prestashop.core.form.identifiable_object.handler.manufacturer_address_form_handler');
     }
 
-    private function getPermanentInfoMessage()
+    private function getSettingsTipMessage()
     {
         $urlOpening = sprintf('<a href="%s">', $this->get('router')->generate('admin_preferences'));
         $urlEnding = '</a>';

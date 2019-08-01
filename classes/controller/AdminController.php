@@ -4894,27 +4894,4 @@ class AdminControllerCore extends Controller
             $numberSpecification->toArray()
         );
     }
-
-    /**
-     * Using this method will display the given message as an "alert" message at the top of the current
-     * administration page.
-     *
-     * @see admin-dev/themes/default/template/content.tpl
-     *
-     * @param string $message The message to be displayed
-     * @param string $namespace Type of alert, use FRONT_ALERT_XXX constants
-     */
-    protected function addTopAlertMessage($message, $namespace = self::FRONT_ALERT_INFO)
-    {
-        $messages = $this->context->smarty->getVariable('topAlertMessages')->value;
-        if ($messages === null) {
-            $messages = [];
-        }
-        if (!isset($messages[$namespace])) {
-            $messages[$namespace] = [];
-        }
-        $messages[$namespace][] = $message;
-
-        $this->context->smarty->assign('topAlertMessages', $messages);
-    }
 }
