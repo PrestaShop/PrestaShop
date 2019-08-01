@@ -27,10 +27,13 @@
 namespace PrestaShopBundle\Form\Admin\Sell\CustomerService;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
+use PrestaShop\PrestaShop\Core\Domain\OrderMessage\OrderMessageConstraint;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\Length;
 
 class OrderMessageType extends AbstractType
 {
@@ -40,12 +43,24 @@ class OrderMessageType extends AbstractType
             ->add('name', TranslatableType::class, [
                 'constraints' => [
                     new DefaultLanguage(),
+                    new TypedRegex([
+                        'type' => 'generic_name',
+                    ]),
+                    new Length([
+                        'max' => OrderMessageConstraint::MAX_NAME_LENGTH,
+                    ]),
                 ],
             ])
             ->add('message', TranslatableType::class, [
                 'type' => TextareaType::class,
                 'constraints' => [
                     new DefaultLanguage(),
+                    new TypedRegex([
+                        'type' => 'message',
+                    ]),
+                    new Length([
+                        'max' => OrderMessageConstraint::MAX_MESSAGE_LENGTH,
+                    ]),
                 ],
             ])
         ;
