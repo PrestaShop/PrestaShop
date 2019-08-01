@@ -3782,17 +3782,24 @@ exit;
     /**
      * Delete unicode class from regular expression patterns.
      *
+     * @deprecated Use PrestaShop\PrestaShop\Core\String\CharacterCleaner::cleanNonUnicodeSupport() instead
+     *
      * @param string $pattern
      *
      * @return string pattern
+     *
+     * @throws Exception
      */
     public static function cleanNonUnicodeSupport($pattern)
     {
-        if (!defined('PREG_BAD_UTF8_OFFSET')) {
-            return $pattern;
+        $context = Context::getContext();
+        $container = isset($context->controller) ? $context->controller->getContainer() : null;
+        if (null === $container) {
+            $container = SymfonyContainer::getInstance();
         }
+        $characterCleaner = $container->get('prestashop.core.string.character_cleaner');
 
-        return preg_replace('/\\\[px]\{[a-z]{1,2}\}|(\/[a-z]*)u([a-z]*)$/i', '$1$2', $pattern);
+        return $characterCleaner->cleanNonUnicodeSupport($pattern);
     }
 
     protected static $is_addons_up = true;

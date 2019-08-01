@@ -26,9 +26,9 @@
 
 namespace Tests\Unit\Core\ConstraintValidator;
 
-use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\CustomerNameValidator;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CustomerName;
+use PrestaShop\PrestaShop\Core\String\CharacterCleaner;
 use Symfony\Component\Validator\Test\ConstraintValidatorTestCase;
 
 class CustomerNameValidatorTest extends ConstraintValidatorTestCase
@@ -114,15 +114,15 @@ class CustomerNameValidatorTest extends ConstraintValidatorTestCase
 
     protected function createValidator()
     {
-        return new CustomerNameValidator($this->createToolsMock());
+        return new CustomerNameValidator($this->createCharacterCleanerMock());
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|Tools
+     * @return \PHPUnit_Framework_MockObject_MockObject|CharacterCleaner
      */
-    private function createToolsMock()
+    private function createCharacterCleanerMock()
     {
-        $toolsMock = $this->getMockBuilder(Tools::class)
+        $toolsMock = $this->getMockBuilder(CharacterCleaner::class)
             ->disableOriginalConstructor()
             ->getMock();
         $toolsMock

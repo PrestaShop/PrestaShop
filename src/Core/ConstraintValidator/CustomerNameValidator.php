@@ -26,8 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\ConstraintValidator;
 
-use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CustomerName;
+use PrestaShop\PrestaShop\Core\String\CharacterCleaner;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -38,18 +38,19 @@ use Symfony\Component\Validator\ConstraintValidator;
 class CustomerNameValidator extends ConstraintValidator
 {
     const PATTERN_NAME = '/^(?:[^0-9!<>,;?=+()\/\\\\@#"°*`{}_^$%:¤\[\]|\.]|[\.](?:\s|$))*$/u';
+    const PATTERN_DOT_SPACED = '/[\.。](\s{1}([^\ ]|$))/';
 
     /**
-     * @var Tools
+     * @var CharacterCleaner
      */
-    private $tools;
+    private $characterCleaner;
 
     /**
-     * @param Tools $tools
+     * @param CharacterCleaner $characterCleaner
      */
-    public function __construct(Tools $tools)
+    public function __construct(CharacterCleaner $characterCleaner)
     {
-        $this->tools = $tools;
+        $this->characterCleaner = $characterCleaner;
     }
 
     /**
@@ -81,7 +82,7 @@ class CustomerNameValidator extends ConstraintValidator
      */
     private function isNameValid($name)
     {
-        $pattern = $this->tools->cleanNonUnicodeSupport(self::PATTERN_NAME);
+        $pattern = $this->characterCleaner->cleanNonUnicodeSupport(self::PATTERN_NAME);
 
         return preg_match($pattern, $name);
     }
@@ -95,12 +96,8 @@ class CustomerNameValidator extends ConstraintValidator
      */
     private function isPointSpacedValid($name)
     {
-        if ((strpos($name, '.') === false || substr($name, -1) === '.')
-            && (strpos($name, '。') === false || substr($name, -1) === '。')) {
-            return true;
-        }
+        $pattern = $this->characterCleaner->cleanNonUnicodeSupport(self::PATTERN_DOT_SPACED);
 
-        return (strpos($name, '. ') !== false || strpos($name, '。 ') !== false)
-            && strpos($name, '.  ') === false && strpos($name, '。  ') === false;
+        return preg_match($pattern, $name);
     }
 }

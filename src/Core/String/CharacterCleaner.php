@@ -24,38 +24,23 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\ConstraintValidator\Factory;
+namespace PrestaShop\PrestaShop\Core\String;
 
-use PrestaShop\PrestaShop\Core\ConstraintValidator\CustomerNameValidator;
-use PrestaShop\PrestaShop\Core\String\CharacterCleaner;
-use Symfony\Component\Validator\ConstraintValidatorFactoryInterface;
-use Symfony\Component\Validator\Constraint;
-use Symfony\Component\Validator\ConstraintValidatorInterface;
-
-class CustomerNameValidatorFactory implements ConstraintValidatorFactoryInterface
+class CharacterCleaner
 {
     /**
-     * @var CharacterCleaner
-     */
-    private $characterCleaner;
-
-    /**
-     * CustomerNameValidatorFactory constructor.
+     * Delete unicode class from regular expression patterns.
      *
-     * @param CharacterCleaner $characterCleaner
-     */
-    public function __construct(CharacterCleaner $characterCleaner)
-    {
-        $this->characterCleaner = $characterCleaner;
-    }
-
-    /**
-     * @param Constraint $constraint
+     * @param string $pattern
      *
-     * @return ConstraintValidatorInterface
+     * @return string pattern
      */
-    public function getInstance(Constraint $constraint)
+    public function cleanNonUnicodeSupport($pattern)
     {
-        return new CustomerNameValidator($this->characterCleaner);
+        if (!defined('PREG_BAD_UTF8_OFFSET')) {
+            return $pattern;
+        }
+
+        return preg_replace('/\\\[px]\{[a-z]{1,2}\}|(\/[a-z]*)u([a-z]*)$/i', '$1$2', $pattern);
     }
 }

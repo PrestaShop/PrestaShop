@@ -26,9 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\ConstraintValidator;
 
-use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\IsoCode;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
+use PrestaShop\PrestaShop\Core\String\CharacterCleaner;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\InvalidArgumentException;
@@ -40,16 +40,16 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 class TypedRegexValidator extends ConstraintValidator
 {
     /**
-     * @var Tools
+     * @var CharacterCleaner
      */
-    private $tools;
+    private $characterCleaner;
 
     /**
-     * @param Tools $tools
+     * @param CharacterCleaner $characterCleaner
      */
-    public function __construct(Tools $tools)
+    public function __construct(CharacterCleaner $characterCleaner)
     {
-        $this->tools = $tools;
+        $this->characterCleaner = $characterCleaner;
     }
 
     /**
@@ -91,11 +91,11 @@ class TypedRegexValidator extends ConstraintValidator
     private function getPattern($type)
     {
         $typePatterns = [
-            'name' => $this->tools->cleanNonUnicodeSupport('/^[^0-9!<>,;?=+()@#"°{}_$%:¤|]*$/u'),
-            'catalog_name' => $this->tools->cleanNonUnicodeSupport('/^[^<>;=#{}]*$/u'),
-            'generic_name' => $this->tools->cleanNonUnicodeSupport('/^[^<>={}]*$/u'),
-            'city_name' => $this->tools->cleanNonUnicodeSupport('/^[^!<>;?=+@#"°{}_$%]*$/u'),
-            'address' => $this->tools->cleanNonUnicodeSupport('/^[^!<>?=+@{}_$%]*$/u'),
+            'name' => $this->characterCleaner->cleanNonUnicodeSupport('/^[^0-9!<>,;?=+()@#"°{}_$%:¤|]*$/u'),
+            'catalog_name' => $this->characterCleaner->cleanNonUnicodeSupport('/^[^<>;=#{}]*$/u'),
+            'generic_name' => $this->characterCleaner->cleanNonUnicodeSupport('/^[^<>={}]*$/u'),
+            'city_name' => $this->characterCleaner->cleanNonUnicodeSupport('/^[^!<>;?=+@#"°{}_$%]*$/u'),
+            'address' => $this->characterCleaner->cleanNonUnicodeSupport('/^[^!<>?=+@{}_$%]*$/u'),
             'post_code' => '/^[a-zA-Z 0-9-]+$/',
             'phone_number' => '/^[+0-9. ()\/-]*$/',
             'message' => '/[<>{}]/i',
