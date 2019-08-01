@@ -32,6 +32,9 @@ use PrestaShop\PrestaShop\Core\Grid\Query\Filter\DoctrineFilterApplicatorInterfa
 use PrestaShop\PrestaShop\Core\Grid\Query\Filter\SqlFilters;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
+/**
+ * Builds search & count queries for Order message grid
+ */
 final class OrderMessageQueryBuilder implements DoctrineQueryBuilderInterface
 {
     /**
@@ -54,16 +57,23 @@ final class OrderMessageQueryBuilder implements DoctrineQueryBuilderInterface
      */
     private $doctrineFilterApplicator;
 
+    /**
+     * @var DoctrineSearchCriteriaApplicatorInterface
+     */
+    private $doctrineSearchCriteriaApplicator;
+
     public function __construct(
         Connection $connection,
         string $dbPrefix,
         int $contextLanguageId,
-        DoctrineFilterApplicatorInterface $doctrineFilterApplicator
+        DoctrineFilterApplicatorInterface $doctrineFilterApplicator,
+        DoctrineSearchCriteriaApplicatorInterface $doctrineSearchCriteriaApplicator
     ) {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
         $this->contextLanguageId = $contextLanguageId;
         $this->doctrineFilterApplicator = $doctrineFilterApplicator;
+        $this->doctrineSearchCriteriaApplicator = $doctrineSearchCriteriaApplicator;
     }
 
     /**
@@ -73,6 +83,11 @@ final class OrderMessageQueryBuilder implements DoctrineQueryBuilderInterface
     {
         $qb = $this->buildBaseQuery($searchCriteria);
         $qb->select('om.id_order_message, oml.name, oml.message');
+
+        $this->doctrineSearchCriteriaApplicator
+            ->applyPagination($searchCriteria, $qb)
+            ->applySorting($searchCriteria, $qb)
+        ;
 
         return $qb;
     }
