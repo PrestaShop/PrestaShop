@@ -150,6 +150,9 @@ class CustomerCore extends ObjectModel
     public $reset_password_validity;
 
     protected $webserviceParameters = array(
+        'objectMethods' => array(
+            'add' => 'addWs'
+        ),
         'fields' => array(
             'id_default_group' => array('xlink_resource' => 'groups'),
             'id_lang' => array('xlink_resource' => 'languages'),
@@ -222,7 +225,31 @@ class CustomerCore extends ObjectModel
         $this->id_default_group = (int) Configuration::get('PS_CUSTOMER_GROUP');
         parent::__construct($id);
     }
-
+    
+    /**
+     * Add customer or update if customer already exist
+     *
+     * @param bool $autoDate Automatically set `date_upd` and `date_add` columns
+     * @param bool $nullValues Whether we want to use NULL values instead of empty quotes values
+     *
+     * @return bool Indicates whether the Customer has been successfully added
+     *
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     */
+    public function addWs($autodate = true, $null_values = false)
+    {
+        if (CustomerCore::customerExists($this->email)) {
+            //Customer already exist... update
+            $customer = Customer::getByEmail($this->email);
+            $this->id = $customer->id;
+            return $this->update($null_values);
+        } else {
+            //Customer not exist... add
+            return $this->add($autodate, $null_values);
+        }
+    }
+    
     /**
      * Adds current Customer as a new Object to the database.
      *
