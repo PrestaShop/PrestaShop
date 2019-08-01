@@ -824,20 +824,23 @@
     </button>
   </div>
 
-  <div hidden id="js-carrier-range-templates">
+  <div class="d-none" id="js-carrier-range-templates">
     <input type="text"
+     disabled
      id="js-price-template"
      name="carrier[step_shipping][carrier_ranges][prices][__RANGE_INDEX__][price_by_zone][__ZONE_ID__]"
      class="form-control">
 
     <input type="text"
      id="js-range-from-template"
+     disabled
      name="carrier[step_shipping][carrier_ranges][ranges][__RANGE_INDEX__][from]"
      required="required"
      class="form-control">
 
     <input type="text"
      id="js-range-to-template"
+     disabled
      name="carrier[step_shipping][carrier_ranges][ranges][__RANGE_INDEX__][to]"
      required="required"
      class="form-control">

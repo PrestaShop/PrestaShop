@@ -49,13 +49,14 @@ export default class AddRangeHandler {
       const $row = $(this.$rows[i]);
 
       if ($row.hasClass('js-range-from')) {
-        const inputFrom = ($inputFrom.get(0).outerHTML).replace(/__RANGE_INDEX__/, currentRange);
+        const inputFrom = ($inputFrom.get(0).outerHTML).replace(/__RANGE_INDEX__/, currentRange).replace(/disabled/, '');
         $row.append(`<td>${inputFrom}</td>`);
       } else if ($row.hasClass('js-range-to')) {
-        const inputTo = ($inputTo.get(0).outerHTML).replace(/__RANGE_INDEX__/, currentRange);
+        const inputTo = ($inputTo.get(0).outerHTML).replace(/__RANGE_INDEX__/, currentRange).replace(/disabled/, '');
         $row.append(`<td>${inputTo}</td>`);
       } else {
-        const inputPrice = ($inputPrice.get(0).outerHTML).replace(/__RANGE_INDEX__/, currentRange).replace(/__ZONE_ID__/, $row.data('zone-id'));
+        const inputPrice = ($inputPrice.get(0).outerHTML).replace(/__RANGE_INDEX__/, currentRange).
+          replace(/__ZONE_ID__/, $row.data('zone-id')).replace(/disabled/, '');
         $row.append(`<td>${inputPrice}</td>`);
       }
     }
