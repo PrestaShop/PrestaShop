@@ -50,52 +50,5 @@
   }) }}
 
   {{ form_widget(carrierForm.step_shipping.carrier_ranges) }}
-
-{#  Ranges#}
-{#  <div class="row" id="js-append-inputs">#}
-{#    <table class="table table-sm col">#}
-{#      <tbody class="ranges"#}
-{#  #}{#      data-prototype-from='{{ form_widget(carrierForm.step_shipping.zone_ranges.zone_range_inputs.vars.prototype.applied_from) }}'#}
-{#  #}{#      data-prototype-to='{{ form_widget(carrierForm.step_shipping.zone_ranges.zone_range_inputs.vars.prototype.applied_to) }}'#}
-{#      >#}
-{#        <tr class="table-dark text-dark js-range-from">#}
-{#          <td>#}
-{#            <p>#}
-{#              <span class="js-content-case-weight">{{ 'Will be applied when the weight is'|trans({}, 'Admin.Shipping.Feature') }}</span>#}
-{#              <span class="js-content-case-price">{{ 'Will be applied when the price is'|trans({}, 'Admin.Shipping.Feature') }}</span>#}
-{#              <#}
-{#            </p>#}
-{#          </td>#}
-{#          <td>#}
-{#            {{ form_widget(carrierForm.step_shipping.carrier_ranges.zone_ranges.from) }}#}
-{#          </td>#}
-{#        </tr>#}
-{#        <tr class="table-dark text-dark js-range-to">#}
-{#          <td>#}
-{#            <p>#}
-{#              <span class="js-content-case-weight">{{ 'Will be applied when the weight is'|trans({}, 'Admin.Shipping.Feature') }}</span>#}
-{#              <span class="js-content-case-price">{{ 'Will be applied when the price is'|trans({}, 'Admin.Shipping.Feature') }}</span>#}
-{#              >=#}
-{#            </p>#}
-{#          </td>#}
-{#          <td>#}
-{#            {{ form_widget(carrierForm.step_shipping.carrier_ranges.zone_ranges) }}#}
-{#          </td>#}
-{#        </tr>#}
-{#        {% for zone_id, checkbox in carrierForm.step_shipping.carrier_ranges.zone_ranges.zones %}#}
-{#          <tr data-zone-id="{{ zone_id }}" class="js-zone-row">#}
-{#            <td> {{ form_widget(checkbox) }}</td>#}
-{#            <td>{{ form_widget(carrierForm.step_shipping.carrier_ranges.zone_ranges[zone_id]) }}</td>#}
-{#          </tr>#}
-{#        {% endfor %}#}
-{#      </tbody>#}
-{#    </table>#}
-{#  </div>#}
-{#  {{ form_widget(carrierForm.step_shipping.carrier_ranges.zone_ranges) }}#}
-{#  <button type="button" class="js-add-range btn btn-outline-primary">#}
-{#    {{ 'Add new range'|trans({}, 'Admin.Global') }}#}
-{#  </button>#}
-  <script id="js-ranges-input-template" type="text/html">
-  </script>
 {% endblock %}
 

@@ -780,3 +780,53 @@
     </em>
   </small>
 {% endblock text_with_recommended_length_widget %}
+
+{% block carrier_zone_ranges_widget %}
+  {{ dump(form) }}
+  <div>
+    <div class="row" id="js-append-inputs">
+      <table class="table table-sm col">
+        <tbody class="ranges">
+          <tr class="table-dark text-dark js-range-from">
+            <td>
+              <p>
+                <span class="js-content-case-weight">{{ 'Will be applied when the weight is'|trans({}, 'Admin.Shipping.Feature') }}</span>
+                <span class="js-content-case-price">{{ 'Will be applied when the price is'|trans({}, 'Admin.Shipping.Feature') }}</span>
+                <
+              </p>
+            </td>
+            <td>
+              {{ form_row(form.ranges[0].from) }}
+            </td>
+          </tr>
+          <tr class="table-dark text-dark js-range-to">
+            <td>
+              <p>
+                <span class="js-content-case-weight">{{ 'Will be applied when the weight is'|trans({}, 'Admin.Shipping.Feature') }}</span>
+                <span class="js-content-case-price">{{ 'Will be applied when the price is'|trans({}, 'Admin.Shipping.Feature') }}</span>
+                >=
+              </p>
+            </td>
+            <td>
+              {{ form_row(form.ranges[0].to) }}
+            </td>
+          </tr>
+          {% for zone_id, zone in form.zones %}
+            <tr>
+              <td>{{ form_widget(form.zones[zone_id]) }}</td>
+              <td>{{ form_widget(form.prices[0].price_by_zone[zone_id]) }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <button type="button" class="js-add-range btn btn-outline-primary">
+      {{ 'Add new range'|trans({}, 'Admin.Global') }}
+    </button>
+  </div>
+  <script type="text/html" id="js-zone-range-price-input">
+    <input type="text" id="carrier_step_shipping_carrier_ranges_zone_prices___RANGE_INDEX___price"
+           name="carrier[step_shipping][carrier_ranges][zone_prices][0][price]"
+           class="form-control">
+  </script>
+{% endblock %}

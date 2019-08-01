@@ -56,33 +56,58 @@ class CarrierZoneRangesType extends AbstractType
     {
         $builder
             ->add('zones', ZoneCheckType::class, [
+                'required' => false,
+                'zones' => $this->getModifiedZones(),
+            ])
+            ->add('prices', CollectionType::class, [
+                'entry_type' => ZonePriceType::class,
+                'allow_add' => true,
+                'entry_options' => [
+                    'zones' => $this->getModifiedZones(),
+                ],
+                'data' => $this->getDefaultPricesByZone(),
                 'label' => false,
                 'required' => false,
-                'zones' => $this->zones,
             ])
-            ->add('zone_ranges', CollectionType::class, [
-                'entry_type' => ZoneRangeType::class,
-                'allow_add' => true,
-                'allow_delete' => true,
-                'by_reference' => false,
-                'entry_options' => [
-                    'label' => false,
-                ],
-                'label' => false,
-                'data' => [
-                    [
-                        'from' => '',
-                        'to' => '',
-                        'zone_prices' => $this->getDefaultZonePrices()
-                    ]
-                ]
-            ]);
+            ->add('ranges', CollectionType::class, [
+                'entry_type' => RangeType::class,
+                'data' => $this->getDefaultRanges(),
+            ])
+        ;
     }
 
     /**
      * @return array
      */
-    private function getDefaultZonePrices(): array
+    private function getDefaultRanges(): array
+    {
+        return [
+            [
+                'from' => '',
+                'to' => '',
+            ],
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    private function getDefaultPricesByZone(): array
+    {
+        $zones = $this->getModifiedZones();
+
+        $zonePrices = [];
+        foreach ($zones as $zone) {
+            $zonePrices[$zone['id_zone']] = '';
+        }
+
+        return [$zonePrices];
+    }
+
+    /**
+     * @return array
+     */
+    private function getModifiedZones(): array
     {
         $zones = [
             [
@@ -91,16 +116,6 @@ class CarrierZoneRangesType extends AbstractType
             ],
         ];
 
-        $zones = array_merge($zones, $this->zones);
-
-        $zonePrices = [];
-        foreach ($zones as $zone) {
-            $zonePrices[] = [
-                'zone_id' => $zone['id_zone'],
-                'price' => ''
-            ];
-        }
-
-        return $zonePrices;
+        return array_merge($zones, $this->zones);
     }
 }

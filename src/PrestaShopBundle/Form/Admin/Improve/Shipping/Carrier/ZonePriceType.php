@@ -27,19 +27,32 @@
 namespace PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class ZonePricesType extends AbstractType
+class ZonePriceType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('price', TextType::class, [
+            ->add('price_by_zone', PriceByZoneType::class, [
                 'label' => false,
-                'required' => false,
+                'zones' => $options['zones'],
             ])
-            ->add('zone_id', HiddenType::class);
+        ;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        parent::configureOptions($resolver);
+
+        $resolver->setRequired([
+            'zones',
+        ]);
+
+        $resolver->setAllowedTypes('zones', 'array');
     }
 }

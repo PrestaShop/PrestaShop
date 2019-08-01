@@ -27,29 +27,34 @@
 namespace PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
-/**
- * Defines cost ranges form part for carriers create/edit action Shipping step.
- */
-class ZoneRangeType extends AbstractType
+class PriceByZoneType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            ->add('from', TextType::class)
-            ->add('to', TextType::class)
-            ->add('zone_prices', CollectionType::class, [
-                'required' => false,
-                'entry_type' => ZonePricesType::class,
-                'prototype' => false,
-                'entry_options' => [
-                    'label' => false,
+        foreach ($options['zones'] as $zone) {
+            $builder
+                ->add($zone['id_zone'], TextType::class, [
                     'required' => false,
-                ],
-                'by_reference' => false,
-            ]);
+                    'label' => false,
+                ]);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        parent::configureOptions($resolver);
+
+        $resolver->setRequired([
+            'zones',
+        ]);
+
+        $resolver->setAllowedTypes('zones', 'array');
     }
 }

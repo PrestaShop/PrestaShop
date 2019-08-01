@@ -47,8 +47,10 @@ class CarrierController extends FrameworkBundleAdminController
         $carrierForm->handleRequest($request);
 
         if ($carrierForm->isSubmitted()) {
-            dump($carrierForm->getData());die;
+            dump($carrierForm->getData());
+            die;
         }
+
         return $this->render('@PrestaShop/Admin/Improve/Shipping/Carrier/add.html.twig', [
             'carrierForm' => $carrierForm->createView(),
         ]);
