@@ -62,4 +62,29 @@ class OrderMessageController extends FrameworkBundleAdminController
             'orderMessageForm' => $form->createView(),
         ]);
     }
+
+    public function editAction(int $orderMessageId, Request $request): Response
+    {
+        $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.order_message_form_builder');
+        $formHandler = $this->get('prestashop.core.form.identifiable_object.handler.order_message_form_handler');
+
+        $form = $formBuilder->getFormFor($orderMessageId);
+        $form->handleRequest($request);
+
+        try {
+            $result = $formHandler->handleFor($orderMessageId, $form);
+
+            if ($result->getIdentifiableObjectId()) {
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_order_messages_index');
+            }
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, []));
+        }
+
+        return $this->render('@PrestaShop/Admin/Sell/CustomerService/OrderMessage/edit.html.twig', [
+            'orderMessageForm' => $form->createView(),
+        ]);
+    }
 }

@@ -24,43 +24,27 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
+namespace PrestaShop\PrestaShop\Core\Domain\OrderMessage\Query;
 
-use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\Domain\OrderMessage\Query\GetOrderMessageForEditing;
-use PrestaShop\PrestaShop\Core\Domain\OrderMessage\QueryResult\EditableOrderMessage;
+use PrestaShop\PrestaShop\Core\Domain\OrderMessage\ValueObject\OrderMessageId;
 
-final class OrderMessageFormDataProvider implements FormDataProviderInterface
+class GetOrderMessageForEditing
 {
     /**
-     * @var CommandBusInterface
+     * @var OrderMessageId
      */
-    private $queryBus;
+    private $orderMessageId;
 
-    public function __construct(CommandBusInterface $queryBus)
+    public function __construct(int $orderMessageId)
     {
-        $this->queryBus = $queryBus;
+        $this->orderMessageId = new OrderMessageId($orderMessageId);
     }
 
     /**
-     * {@inheritdoc}
+     * @return OrderMessageId
      */
-    public function getData($orderMessageId)
+    public function getOrderMessageId(): OrderMessageId
     {
-        /** @var EditableOrderMessage $editableOrderMessage */
-        $editableOrderMessage = $this->queryBus->handle(new GetOrderMessageForEditing((int) $orderMessageId));
-
-        return [
-            'name' => $editableOrderMessage->getLocalizedName(),
-            'message' => $editableOrderMessage->getLocalizedMessage(),
-        ];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getDefaultData()
-    {
-        return [];
+        return $this->orderMessageId;
     }
 }

@@ -24,43 +24,57 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
+namespace PrestaShop\PrestaShop\Core\Domain\OrderMessage\QueryResult;
 
-use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\Domain\OrderMessage\Query\GetOrderMessageForEditing;
-use PrestaShop\PrestaShop\Core\Domain\OrderMessage\QueryResult\EditableOrderMessage;
+use PrestaShop\PrestaShop\Core\Domain\OrderMessage\ValueObject\OrderMessageId;
 
-final class OrderMessageFormDataProvider implements FormDataProviderInterface
+class EditableOrderMessage
 {
     /**
-     * @var CommandBusInterface
+     * @var OrderMessageId
      */
-    private $queryBus;
+    private $orderMessageId;
 
-    public function __construct(CommandBusInterface $queryBus)
+    /**
+     * @var string[]
+     */
+    private $localizedName;
+
+    /**
+     * @var string[]
+     */
+    private $localizedMessage;
+
+    /**
+     * @param OrderMessageId $orderMessageId
+     * @param string[] $localizedName
+     * @param string[] $localizedMessage
+     */
+    public function __construct(OrderMessageId $orderMessageId, array $localizedName, array $localizedMessage)
     {
-        $this->queryBus = $queryBus;
+        $this->orderMessageId = $orderMessageId;
+        $this->localizedName = $localizedName;
+        $this->localizedMessage = $localizedMessage;
+    }
+
+    public function getOrderMessageId(): OrderMessageId
+    {
+        return $this->orderMessageId;
     }
 
     /**
-     * {@inheritdoc}
+     * @return string[]
      */
-    public function getData($orderMessageId)
+    public function getLocalizedName(): array
     {
-        /** @var EditableOrderMessage $editableOrderMessage */
-        $editableOrderMessage = $this->queryBus->handle(new GetOrderMessageForEditing((int) $orderMessageId));
-
-        return [
-            'name' => $editableOrderMessage->getLocalizedName(),
-            'message' => $editableOrderMessage->getLocalizedMessage(),
-        ];
+        return $this->localizedName;
     }
 
     /**
-     * {@inheritdoc}
+     * @return string[]
      */
-    public function getDefaultData()
+    public function getLocalizedMessage(): array
     {
-        return [];
+        return $this->localizedMessage;
     }
 }

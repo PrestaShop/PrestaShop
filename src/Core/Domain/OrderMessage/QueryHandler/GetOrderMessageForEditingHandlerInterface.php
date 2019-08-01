@@ -24,43 +24,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
+namespace PrestaShop\PrestaShop\Core\Domain\OrderMessage\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\OrderMessage\Query\GetOrderMessageForEditing;
 use PrestaShop\PrestaShop\Core\Domain\OrderMessage\QueryResult\EditableOrderMessage;
 
-final class OrderMessageFormDataProvider implements FormDataProviderInterface
+interface GetOrderMessageForEditingHandlerInterface
 {
-    /**
-     * @var CommandBusInterface
-     */
-    private $queryBus;
-
-    public function __construct(CommandBusInterface $queryBus)
-    {
-        $this->queryBus = $queryBus;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getData($orderMessageId)
-    {
-        /** @var EditableOrderMessage $editableOrderMessage */
-        $editableOrderMessage = $this->queryBus->handle(new GetOrderMessageForEditing((int) $orderMessageId));
-
-        return [
-            'name' => $editableOrderMessage->getLocalizedName(),
-            'message' => $editableOrderMessage->getLocalizedMessage(),
-        ];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getDefaultData()
-    {
-        return [];
-    }
+    public function handle(GetOrderMessageForEditing $query): EditableOrderMessage;
 }
