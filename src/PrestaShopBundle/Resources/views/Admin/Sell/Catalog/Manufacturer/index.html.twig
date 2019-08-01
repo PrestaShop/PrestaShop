@@ -25,11 +25,23 @@
 
 {% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
 
-
+{% set layoutHeaderToolbarBtn = {
+  add_manufacturer: {
+    href: path('admin_manufacturers_create'),
+    desc: 'Add new brand'|trans({}, 'Admin.Catalog.Feature'),
+    icon: 'add_circle_outline',
+  },
+  add_manufacturer_address: {
+    href: path('admin_manufacturer_addresses_create'),
+    desc: 'Add new brand address'|trans({}, 'Admin.Catalog.Feature'),
+    icon: 'add_circle_outline',
+  },
+}
+%}
 
 {% block content %}
   {% block manufacturers_listing %}
-    {{ ps.infotip(permanentInfoMessage)|raw }}
+    {{ ps.infotip(settingsTipMessage) }}
     <div class="row">
       <div class="col">
         {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': manufacturerGrid} %}
