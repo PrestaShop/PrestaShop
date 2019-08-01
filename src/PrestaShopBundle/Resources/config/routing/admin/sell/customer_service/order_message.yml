@@ -17,3 +17,11 @@ admin_order_messages_edit:
     _controller: PrestaShopBundle:Admin/Sell/CustomerService/OrderMessage:edit
   requirements:
     orderMessageId: \d+
+
+admin_order_messages_delete:
+  path: /{orderMessageId}/delete
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/CustomerService/OrderMessage:delete
+  requirements:
+    orderMessageId: \d+

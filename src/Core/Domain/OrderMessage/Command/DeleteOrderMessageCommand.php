@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,24 +22,26 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
+namespace PrestaShop\PrestaShop\Core\Domain\OrderMessage\Command;
 
-{% block content %}
-  <div class="row">
-    <div class="col-12">
-      {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': orderMessageGrid} %}
-    </div>
-  </div>
-{% endblock %}
+use PrestaShop\PrestaShop\Core\Domain\OrderMessage\ValueObject\OrderMessageId;
 
-{% block javascripts %}
-  {{ parent() }}
+class DeleteOrderMessageCommand
+{
+    /**
+     * @var OrderMessageId
+     */
+    private $orderMessageId;
 
-  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
-  <script src="{{ asset('themes/new-theme/public/order_message.bundle.js') }}"></script>
-{% endblock %}
+    public function __construct(int $orderMessageId)
+    {
+        $this->orderMessageId = new OrderMessageId($orderMessageId);
+    }
 
-
-
+    public function getOrderMessageId(): OrderMessageId
+    {
+        return $this->orderMessageId;
+    }
+}

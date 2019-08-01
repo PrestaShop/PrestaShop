@@ -53,6 +53,11 @@ class OrderMessageType extends AbstractType
             ])
             ->add('message', TranslatableType::class, [
                 'type' => TextareaType::class,
+                'options' => [
+                    'attr' => [
+                        'rows' => 5,
+                    ],
+                ],
                 'constraints' => [
                     new DefaultLanguage(),
                     new TypedRegex([
