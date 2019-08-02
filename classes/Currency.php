@@ -38,6 +38,13 @@ class CurrencyCore extends ObjectModel
     public $name;
 
     /**
+     * Names of the currency.
+     *
+     * @var array
+     */
+    public $names;
+
+    /**
      * Alphabetic ISO 4217 code of this currency.
      *
      * @var string
@@ -74,6 +81,13 @@ class CurrencyCore extends ObjectModel
     public $deleted = 0;
 
     /**
+     * Is this currency custom ?
+     *
+     * @var int|bool custom
+     */
+    public $custom;
+
+    /**
      * Is this currency active ?
      *
      * @var int|bool active
@@ -95,6 +109,13 @@ class CurrencyCore extends ObjectModel
      * @var string
      */
     public $symbol;
+
+    /**
+     * Currency's symbols.
+     *
+     * @var string
+     */
+    public $symbols;
 
     /**
      * CLDR price formatting pattern
@@ -139,6 +160,7 @@ class CurrencyCore extends ObjectModel
             'conversion_rate' => array('type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat', 'required' => true, 'shop' => true),
             'deleted' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'active' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+            'custom' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 
             /* Lang fields */
             'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
@@ -186,14 +208,18 @@ class CurrencyCore extends ObjectModel
                 $idLang = Context::getContext()->language->id;
             }
             if (is_array($this->symbol)) {
+                $this->symbols = $this->symbol;
                 $this->sign = $this->symbol = $this->symbol[$idLang];
             } else {
+                $this->symbols = [$idLang => $this->symbol];
                 $this->sign = $this->symbol;
             }
 
             if (is_array($this->name)) {
+                $this->names = $this->name;
                 $this->name = Tools::ucfirst($this->name[$idLang]);
             } else {
+                $this->names = [$idLang = $this->name];
                 $this->name = Tools::ucfirst($this->name);
             }
 
