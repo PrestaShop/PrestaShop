@@ -25,15 +25,14 @@
  */
 
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference;
-
+namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 
 /**
- * The International Standard Book Number (ISBN) is used to identify books and other publications.
+ * Holds products reference.
  */
-class Isbn
+class Reference
 {
     /**
      * @var string
@@ -67,15 +66,15 @@ class Isbn
      */
     private function assertIsValidReference(string $reference): void
     {
-        $pattern = '/^[0-9-]{0,32}$/';
+        $pattern = '/^[^<>;={}]*$/u';
         if (!preg_match($pattern, $reference)) {
             throw new ProductConstraintException(
                 sprintf(
-                    'Product ISBN reference "%s" did not matched pattern "%s"',
+                    'Product reference "%s" did not matched pattern "%s"',
                     $reference,
                     $pattern
                 ),
-                ProductConstraintException::INVALID_ISBN_REFERENCE
+                ProductConstraintException::INVALID_REFERENCE
             );
         }
     }

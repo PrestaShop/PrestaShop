@@ -29,7 +29,7 @@ namespace Tests\Unit\Core\Domain\Product\ValueObject\Reference;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference\Upc;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Upc;
 
 class UpcTest extends TestCase
 {
@@ -39,7 +39,7 @@ class UpcTest extends TestCase
     public function testItThrowsExceptionOnInvalidReference(string $nonValidReference)
     {
         $this->expectException(ProductConstraintException::class);
-        $this->expectExceptionCode(ProductConstraintException::INVALID_UPC_REFERENCE);
+        $this->expectExceptionCode(ProductConstraintException::INVALID_UPC);
 
         new Upc($nonValidReference);
     }

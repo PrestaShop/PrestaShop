@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference\Reference;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Price;

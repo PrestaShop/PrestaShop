@@ -26,13 +26,14 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Feature\DTO;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\Feature\Exception\ProductFeatureConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Feature\ValueObject\CustomizableFeatureValue;
 use PrestaShop\PrestaShop\Core\Domain\Product\Feature\ValueObject\FeatureValue;
 
 /**
  * Gets a collection from all possible feature values that can be applied for product.
  */
-class FeatureCollection
+class ProductFeaturesCollection
 {
     /**
      * @var FeatureValue[]
@@ -53,13 +54,14 @@ class FeatureCollection
     }
 
     /**
-     * @param FeatureValue $existingFeatureValue
+     * @param int $featureId
+     * @param int $featureValueId
      *
      * @return void
      */
-    public function setExistingFeatureValue(FeatureValue $existingFeatureValue): void
+    public function addExistingFeatureValue(int $featureId, int $featureValueId): void
     {
-        $this->existingFeatureValues[] = $existingFeatureValue;
+        $this->existingFeatureValues[] = new FeatureValue($featureId, $featureValueId);
     }
 
     /**
@@ -71,12 +73,15 @@ class FeatureCollection
     }
 
     /**
-     * @param CustomizableFeatureValue $customizableFeatureValues
+     * @param int $featureId
+     * @param string $featureValue
      *
      * @return void
+     *
+     * @throws ProductFeatureConstraintException
      */
-    public function setCustomizableFeatureValue(CustomizableFeatureValue $customizableFeatureValues): void
+    public function addCustomizableFeatureValue(int $featureId, string $featureValue): void
     {
-        $this->customizableFeatureValues[] = $customizableFeatureValues;
+        $this->customizableFeatureValues[] = new CustomizableFeatureValue($featureId, $featureValue);
     }
 }

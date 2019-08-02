@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Feature\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Feature\DTO\FeatureCollection;
+use PrestaShop\PrestaShop\Core\Domain\Product\Feature\DTO\ProductFeaturesCollection;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
@@ -40,11 +40,11 @@ class UpdateProductFeaturesCommand
     private $productId;
 
     /**
-     * @var FeatureCollection
+     * @var ProductFeaturesCollection
      */
     private $features;
 
-    public function __construct(int $productId, FeatureCollection $features)
+    public function __construct(int $productId, ProductFeaturesCollection $features)
     {
         $this->productId = new ProductId($productId);
         $this->features = $features;
@@ -59,9 +59,9 @@ class UpdateProductFeaturesCommand
     }
 
     /**
-     * @return FeatureCollection
+     * @return ProductFeaturesCollection
      */
-    public function getFeatures(): FeatureCollection
+    public function getFeatures(): ProductFeaturesCollection
     {
         return $this->features;
     }

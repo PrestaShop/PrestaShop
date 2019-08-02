@@ -28,7 +28,7 @@ namespace Tests\Unit\Core\Domain\Product\ValueObject\Reference;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference\Ean13;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Ean13;
 
 class Ean13Test extends TestCase
 {
@@ -38,7 +38,7 @@ class Ean13Test extends TestCase
     public function testItThrowsExceptionOnInvalidReference(string $nonValidReference)
     {
         $this->expectException(ProductConstraintException::class);
-        $this->expectExceptionCode(ProductConstraintException::INVALID_EAN13_REFERENCE);
+        $this->expectExceptionCode(ProductConstraintException::INVALID_EAN13);
 
         new Ean13($nonValidReference);
     }

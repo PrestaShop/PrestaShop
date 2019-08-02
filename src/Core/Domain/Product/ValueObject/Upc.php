@@ -24,15 +24,15 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
-namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 
 /**
- * Holds products reference.
+ * Upc barcode. This type of product code is widely used in the United States, Canada, the United Kingdom, Australia,
+ * New Zealand and in other countries.
  */
-class Reference
+class Upc
 {
     /**
      * @var string
@@ -66,15 +66,15 @@ class Reference
      */
     private function assertIsValidReference(string $reference): void
     {
-        $pattern = '/^[^<>;={}]*$/u';
+        $pattern = '/^\d{0,12}$/';
         if (!preg_match($pattern, $reference)) {
             throw new ProductConstraintException(
                 sprintf(
-                    'Product reference "%s" did not matched pattern "%s"',
+                    'Product Upc reference "%s" did not matched pattern "%s"',
                     $reference,
                     $pattern
                 ),
-                ProductConstraintException::INVALID_REFERENCE
+                ProductConstraintException::INVALID_UPC
             );
         }
     }

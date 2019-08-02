@@ -24,15 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference;
+
+namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject;
+
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 
 /**
- * Upc barcode. This type of product code is widely used in the United States, Canada, the United Kingdom, Australia,
- * New Zealand and in other countries.
+ * This type of product code is specific to Europe and Japan, but is widely used internationally.
+ * It is a superset of the UPC code: all products marked with an EAN will be accepted in North America.
  */
-class Upc
+class Ean13
 {
     /**
      * @var string
@@ -66,15 +68,15 @@ class Upc
      */
     private function assertIsValidReference(string $reference): void
     {
-        $pattern = '/^\d{0,12}$/';
+        $pattern = '/^\d{0,13}$/';
         if (!preg_match($pattern, $reference)) {
             throw new ProductConstraintException(
                 sprintf(
-                    'Product Upc reference "%s" did not matched pattern "%s"',
+                    'Product Ean13 reference "%s" did not matched pattern "%s"',
                     $reference,
                     $pattern
                 ),
-                ProductConstraintException::INVALID_UPC_REFERENCE
+                ProductConstraintException::INVALID_EAN13
             );
         }
     }

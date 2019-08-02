@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
@@ -34,10 +35,10 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectionPage\Redire
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Price\RetailPrice;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectionPage\TypedRedirectionPageInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Price\UnitPrice;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference\Ean13;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference\Isbn;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference\Reference;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference\Upc;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Ean13;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Isbn;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Upc;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Visibility;
 use PrestaShop\PrestaShop\Core\Domain\TaxRule\Exception\TaxRuleConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Price;
@@ -179,6 +180,8 @@ abstract class AbstractProductCommand
      * @param float $costPrice
      *
      * @return self
+     *
+     * @throws DomainConstraintException
      */
     public function setCostPrice(float $costPrice): self
     {

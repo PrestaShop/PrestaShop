@@ -25,16 +25,15 @@
  */
 
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject;
 
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 
 /**
- * This type of product code is specific to Europe and Japan, but is widely used internationally.
- * It is a superset of the UPC code: all products marked with an EAN will be accepted in North America.
+ * The International Standard Book Number (ISBN) is used to identify books and other publications.
  */
-class Ean13
+class Isbn
 {
     /**
      * @var string
@@ -68,15 +67,15 @@ class Ean13
      */
     private function assertIsValidReference(string $reference): void
     {
-        $pattern = '/^\d{0,13}$/';
+        $pattern = '/^[0-9-]{0,32}$/';
         if (!preg_match($pattern, $reference)) {
             throw new ProductConstraintException(
                 sprintf(
-                    'Product Ean13 reference "%s" did not matched pattern "%s"',
+                    'Product ISBN reference "%s" did not matched pattern "%s"',
                     $reference,
                     $pattern
                 ),
-                ProductConstraintException::INVALID_EAN13_REFERENCE
+                ProductConstraintException::INVALID_ISBN
             );
         }
     }

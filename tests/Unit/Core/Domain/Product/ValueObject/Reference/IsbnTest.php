@@ -29,8 +29,8 @@ namespace Tests\Unit\Core\Domain\Product\ValueObject\Reference;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference\Isbn;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference\Reference;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Isbn;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference;
 
 class IsbnTest extends TestCase
 {
@@ -40,7 +40,7 @@ class IsbnTest extends TestCase
     public function testItThrowsExceptionOnInvalidReference(string $nonValidReference)
     {
         $this->expectException(ProductConstraintException::class);
-        $this->expectExceptionCode(ProductConstraintException::INVALID_ISBN_REFERENCE);
+        $this->expectExceptionCode(ProductConstraintException::INVALID_ISBN);
 
         new Isbn($nonValidReference);
     }

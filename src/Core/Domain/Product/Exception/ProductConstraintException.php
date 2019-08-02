@@ -37,7 +37,7 @@ class ProductConstraintException extends ProductException
     public const INVALID_CONDITION_TYPE = 7;
     public const INVALID_VISIBILITY_TYPE = 8;
     public const INVALID_REFERENCE = 9;
-    public const INVALID_ISBN_REFERENCE = 10;
-    public const INVALID_EAN13_REFERENCE = 11;
-    public const INVALID_UPC_REFERENCE = 12;
+    public const INVALID_ISBN = 10;
+    public const INVALID_EAN13 = 11;
+    public const INVALID_UPC = 12;
 }

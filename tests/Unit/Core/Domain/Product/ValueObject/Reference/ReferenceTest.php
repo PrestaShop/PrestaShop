@@ -29,7 +29,7 @@ namespace Tests\Unit\Core\Domain\Product\ValueObject\Reference;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference\Reference;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference;
 
 class ReferenceTest extends TestCase
 {
