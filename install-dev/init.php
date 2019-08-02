@@ -76,15 +76,20 @@ require_once _PS_CORE_DIR_.'/config/autoload.php';
 if (file_exists(_PS_CORE_DIR_.'/app/config/parameters.php')) {
     require_once _PS_CORE_DIR_.'/config/bootstrap.php';
 
-    if (defined('_PS_IN_TEST_') && _PS_IN_TEST_) {
-        $env = 'test';
-    } else {
-        $env = _PS_MODE_DEV_ ? 'dev' : 'prod';
-    }
     global $kernel;
-    $kernel = new AppKernel($env, _PS_MODE_DEV_);
-    $kernel->loadClassCache();
-    $kernel->boot();
+    try {
+        $kernel = new AppKernel(_PS_ENV_, _PS_MODE_DEV_);
+        $kernel->loadClassCache();
+        $kernel->boot();
+    } catch (DBALException $e) {
+        /**
+         * Doctrine couldn't be loaded because database settings point to a
+         * non existence database
+         */
+        if (strpos($e->getMessage(), 'You can circumvent this by setting a \'server_version\' configuration value') === false) {
+            throw $e;
+        }
+    }
 }
 
 if (!defined('_THEME_NAME_')) {

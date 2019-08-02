@@ -58,16 +58,12 @@ class UpdateSchemaCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $config = include __DIR__ . '/../../../app/config/parameters.php';
-        if ($input->getOption('env') === 'test') {
-            $this->dbName = 'test_' . $config['parameters']['database_name'];
-        } else {
-            $this->dbName = $config['parameters']['database_name'];
-        }
+        $container = $this->getContainer();
 
-        $this->dbPrefix = $config['parameters']['database_prefix'];
+        $this->dbName = $container->getParameter('database_name');
+        $this->dbPrefix = $container->getParameter('database_prefix');
 
-        $this->em = $this->getContainer()->get('doctrine')->getManager();
+        $this->em = $container->get('doctrine')->getManager();
         $this->metadata = $this->em->getMetadataFactory()->getAllMetadata();
 
         $conn = $this->em->getConnection();
@@ -78,9 +74,9 @@ class UpdateSchemaCommand extends ContainerAwareCommand
 
         // First drop any existing FK
         $query = $conn->query(
-            'SELECT CONSTRAINT_NAME, TABLE_NAME 
+            'SELECT CONSTRAINT_NAME, TABLE_NAME
                 FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS
-                WHERE CONSTRAINT_TYPE = "FOREIGN KEY" 
+                WHERE CONSTRAINT_TYPE = "FOREIGN KEY"
                     AND TABLE_SCHEMA = "' . $this->dbName . '"
                     AND TABLE_NAME LIKE "' . $this->dbPrefix . '%" '
         );
