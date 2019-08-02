@@ -32,6 +32,7 @@ use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -77,20 +78,31 @@ class CurrencyType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        if (!isset($options['data']['iso_code'])) {
+            $builder
+                ->add('selected_iso_code', ChoiceType::class, [
+                    'choices' => $this->allCurrencies,
+                    'choice_translation_domain' => false,
+                    'required' => false,
+                    'placeholder' => '--',
+                ])
+                ->add('is_custom', CheckboxType::class, [
+                    'required' => false,
+                    'label' => $this->trans('Create new', 'Admin.International.Feature'),
+                    'attr' => [
+                        'material_design' => true,
+                    ],
+                ])
+            ;
+        } else {
+            $builder
+                ->add('is_custom', HiddenType::class, [
+                    'required' => false,
+                ])
+            ;
+        }
+
         $builder
-            ->add('selected_iso_code', ChoiceType::class, [
-                'choices' => $this->allCurrencies,
-                'choice_translation_domain' => false,
-                'required' => false,
-                'placeholder' => '--',
-            ])
-            ->add('is_custom', CheckboxType::class, [
-                'required' => false,
-                'label' => $this->trans('Create new', 'Admin.International.Feature'),
-                'attr' => [
-                    'material_design' => true,
-                ],
-            ])
             ->add('name', TranslatableType::class, [
                 'type' => TextType::class,
             ])
