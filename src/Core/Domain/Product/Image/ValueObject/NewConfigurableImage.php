@@ -26,7 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject;
 
+use LogicException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ProductImageConstraintException;
+use RuntimeException;
 use SplFileObject;
 use function in_array;
 
@@ -76,11 +78,7 @@ final class NewConfigurableImage implements ConfigurableImageInterface
         bool $isCover,
         array $localizedCaptions
     ) {
-        $file = new SplFileObject($filePath);
-
-        $this->assertIsValidImage($file);
-
-        $this->image = $file;
+        $this->setImage($filePath);
         $this->position = $position;
         $this->isCover = $isCover;
         $this->localizedCaptions = $localizedCaptions;
@@ -119,19 +117,21 @@ final class NewConfigurableImage implements ConfigurableImageInterface
     }
 
     /**
-     * @param SplFileObject $file
-     *
+     * @param string $filePath
      * @throws ProductImageConstraintException
      */
-    private function assertIsValidImage(SplFileObject $file): void
+    private function setImage(string $filePath): void
     {
-        if (!$file->isFile()) {
+        try {
+            $file = new SplFileObject($filePath);
+        } catch (RuntimeException | LogicException $exception) {
             throw new ProductImageConstraintException(
                 sprintf(
-                    'File "%s" is not a regular file',
-                    $file->getPathname()
+                    'Non valid file "%s" given',
+                    $filePath
                 ),
-                ProductImageConstraintException::INVALID_FILE
+                ProductImageConstraintException::INVALID_FILE,
+                $exception
             );
         }
 
@@ -147,5 +147,7 @@ final class NewConfigurableImage implements ConfigurableImageInterface
                 ProductImageConstraintException::INVALID_MIME_TYPE
             );
         }
+
+        $this->image = $file;
     }
 }
