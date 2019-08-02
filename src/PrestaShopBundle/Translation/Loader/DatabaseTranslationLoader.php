@@ -55,6 +55,13 @@ class DatabaseTranslationLoader implements LoaderInterface
     public function load($resource, $locale, $domain = 'messages', $theme = null)
     {
         static $langs = array();
+        $catalogue = new MessageCatalogue($locale);
+
+        // do not try and load translations for a locale that cannot be saved to DB anyway
+        if ($locale === 'default') {
+            return $catalogue;
+        }
+
         if (!array_key_exists($locale, $langs)) {
             $langs[$locale] = $this->entityManager
                 ->getRepository('PrestaShopBundle:Lang')
@@ -75,8 +82,6 @@ class DatabaseTranslationLoader implements LoaderInterface
         $translations = $queryBuilder
             ->getQuery()
             ->getResult();
-
-        $catalogue = new MessageCatalogue($locale);
 
         /** @var Translation $translation */
         foreach ($translations as $translation) {
