@@ -41,12 +41,14 @@ use Symfony\Component\HttpFoundation\Response;
 
 class OrderMessageController extends FrameworkBundleAdminController
 {
-    public function indexAction(OrderMessageFilters $filters): Response
+    public function indexAction(OrderMessageFilters $filters, Request $request): Response
     {
         $gridFactory = $this->get('prestashop.core.grid.grid_factory.order_message');
         $grid = $gridFactory->getGrid($filters);
 
         return $this->render('@PrestaShop/Admin/Sell/CustomerService/OrderMessage/index.html.twig', [
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'enableSidebar' => true,
             'layoutTitle' => $this->trans('Order Messages', 'Admin.Navigation.Menu'),
             'layoutHeaderToolbarBtn' => [
                 'add' => [
