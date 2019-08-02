@@ -27,13 +27,14 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Category\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Category\ValueObject\Category;
+use PrestaShop\PrestaShop\Core\Domain\Product\Category\Exception\ProductCategoryConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Category\ValueObject\ProductCategory;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
  * Updates product categories.
  */
-class UpdateCategoriesCommand
+class UpdateProductCategoriesCommand
 {
     /**
      * @var ProductId
@@ -41,7 +42,7 @@ class UpdateCategoriesCommand
     private $productId;
 
     /**
-     * @var Category[]
+     * @var ProductCategory[]
      */
     private $categories;
 
@@ -50,6 +51,7 @@ class UpdateCategoriesCommand
      * @param array $categories
      *
      * @throws CategoryException
+     * @throws ProductCategoryConstraintException
      */
     public function __construct(int $productId, array $categories)
     {
@@ -66,7 +68,7 @@ class UpdateCategoriesCommand
     }
 
     /**
-     * @return Category[]
+     * @return ProductCategory[]
      */
     public function getCategories(): array
     {
@@ -76,13 +78,29 @@ class UpdateCategoriesCommand
     /**
      * @param array $categories
      * @throws CategoryException
+     *
+     * @throws ProductCategoryConstraintException
      */
-    private function setCategories(array $categories)
+    private function setCategories(array $categories): void
     {
+        $mainCategoriesCount = 0;
         foreach ($categories as $category) {
-            $this->categories[] = new Category(
+            $isMainCategory = $category['is_main_category'];
+
+            if ($isMainCategory) {
+                $mainCategoriesCount++;
+            }
+
+            if ($mainCategoriesCount > 1) {
+                throw new ProductCategoryConstraintException(
+                    'Cannot have two main categories',
+                    ProductCategoryConstraintException::MULTIPLE_MAIN_CATEGORIES
+                );
+            }
+
+            $this->categories[] = new ProductCategory(
                 $category['id'],
-                $category['is_main_category']
+                $isMainCategory
             );
         }
     }

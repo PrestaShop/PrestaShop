@@ -24,51 +24,34 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Category\ValueObject;
+namespace Tests\Unit\Core\Domain\Product\Category\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
-use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
+use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Domain\Product\Category\Command\UpdateProductCategoriesCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Category\Exception\ProductCategoryConstraintException;
 
-/**
- * Holds information about product category.
- */
-final class Category
+class UpdateProductCategoriesCommandTest extends TestCase
 {
-    /**
-     * @var bool
-     */
-    private $isMainCategory;
-
-    /**
-     * @var CategoryId
-     */
-    private $categoryId;
-
-    /**
-     * @param int $categoryId
-     * @param bool $isMainCategory
-     *
-     * @throws CategoryException
-     */
-    public function __construct(int $categoryId, bool $isMainCategory)
+    public function testItDoesNotAllowToSetMultipleMainCategories()
     {
-        $this->categoryId = new CategoryId($categoryId);
-        $this->isMainCategory = $isMainCategory;
-    }
+        $this->expectException(ProductCategoryConstraintException::class);
+        $this->expectExceptionCode(ProductCategoryConstraintException::MULTIPLE_MAIN_CATEGORIES);
 
-    /**
-     * @return bool
-     */
-    public function isMainCategory(): bool
-    {
-        return $this->isMainCategory;
-    }
+        $categories = [
+            [
+                'id' => 1,
+                'is_main_category' => true,
+            ],
+            [
+                'id' => 2,
+                'is_main_category' => false,
+            ],
+            [
+                'id' => 3,
+                'is_main_category' => true,
+            ]
+        ];
 
-    /**
-     * @return CategoryId
-     */
-    public function getCategoryId(): CategoryId
-    {
-        return $this->categoryId;
+        new UpdateProductCategoriesCommand(1, $categories);
     }
 }
