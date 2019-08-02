@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\ValueObject\Price;
 /**
  * Price per unit - e.g 10 per kilo.
  */
-final class UnitPrice
+class UnitPrice
 {
     /**
      * @var Number

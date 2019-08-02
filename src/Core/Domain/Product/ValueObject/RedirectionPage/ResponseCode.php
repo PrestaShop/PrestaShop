@@ -32,7 +32,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Response code for product unavailable case.
  */
-final class ResponseCode
+class ResponseCode
 {
     public const AVAILABLE_RESPONSE_CODES = [
         Response::HTTP_MOVED_PERMANENTLY,

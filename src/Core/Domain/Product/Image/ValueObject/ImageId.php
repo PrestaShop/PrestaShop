@@ -28,7 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ProductImageConstraintException;
 
-final class ImageId
+class ImageId
 {
     /**
      * @var int

@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintExcepti
  * Upc barcode. This type of product code is widely used in the United States, Canada, the United Kingdom, Australia,
  * New Zealand and in other countries.
  */
-final class Upc
+class Upc
 {
     /**
      * @var string

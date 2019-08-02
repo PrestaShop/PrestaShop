@@ -27,12 +27,9 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Feature\ValueObject;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Feature\Exception\ProductFeatureConstraintException;
-use function strlen;
 
-final class CustomizableFeatureValue
+class CustomizableFeatureValue
 {
-    public const MAX_SIZE = 255;
-
     private $featureId;
 
     /**
@@ -44,9 +41,7 @@ final class CustomizableFeatureValue
     public function __construct(int $featureId, string $featureValue)
     {
         $this->setFeatureId($featureId);
-
         $this->assertValueNameIsValid($featureValue);
-        $this->assertValueSizeIsValid($featureValue);
     }
 
     private function setFeatureId(int $featureId): void
@@ -86,25 +81,6 @@ final class CustomizableFeatureValue
                     $pattern
                 ),
                 ProductFeatureConstraintException::INVALID_CUSTOMIZABLE_FEATURE_VALUE
-            );
-        }
-    }
-
-    /**
-     * @param string $featureValue
-     *
-     * @throws ProductFeatureConstraintException
-     */
-    private function assertValueSizeIsValid(string $featureValue): void
-    {
-        if (strlen($featureValue) > self::MAX_SIZE) {
-            throw new ProductFeatureConstraintException(
-                sprintf(
-                    'Customizable feature value name "%s" is too long. Max size is %d',
-                    $featureValue,
-                    self::MAX_SIZE
-                ),
-                ProductFeatureConstraintException::CUSTOMIZABLE_FEATURE_VALUE_TOO_LONG
             );
         }
     }

@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintExcepti
 /**
  * The International Standard Book Number (ISBN) is used to identify books and other publications.
  */
-final class Isbn
+class Isbn
 {
     /**
      * @var string

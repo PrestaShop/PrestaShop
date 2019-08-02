@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintExcepti
  * This type of product code is specific to Europe and Japan, but is widely used internationally.
  * It is a superset of the UPC code: all products marked with an EAN will be accepted in North America.
  */
-final class Ean13
+class Ean13
 {
     /**
      * @var string

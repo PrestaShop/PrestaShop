@@ -39,7 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\ValueObject\Price;
 /**
  * Holds supplier and product related information.
  */
-final class Supplier
+class Supplier
 {
     /**
      * @var SupplierId

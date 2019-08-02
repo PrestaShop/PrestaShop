@@ -31,5 +31,4 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 class ProductFeatureConstraintException extends ProductException
 {
     public const INVALID_CUSTOMIZABLE_FEATURE_VALUE = 1;
-    public const CUSTOMIZABLE_FEATURE_VALUE_TOO_LONG = 2;
 }

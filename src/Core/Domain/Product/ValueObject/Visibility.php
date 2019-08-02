@@ -7,7 +7,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintExcepti
 /**
  * Defines where product should be visible.
  */
-final class Visibility
+class Visibility
 {
     /**
      * @var string defines that product is visible everywhere - e.g category, product, search pages

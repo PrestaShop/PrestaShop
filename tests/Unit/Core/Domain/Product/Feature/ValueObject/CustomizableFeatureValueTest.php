@@ -33,16 +33,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Feature\ValueObject\CustomizableFe
 
 class CustomizableFeatureValueTest extends TestCase
 {
-    public function testItDetectsThatNameIsTooLong(): void
-    {
-        $this->expectException(ProductFeatureConstraintException::class);
-        $this->expectExceptionCode(ProductFeatureConstraintException::CUSTOMIZABLE_FEATURE_VALUE_TOO_LONG);
-
-        $tooLongName = str_repeat('a', CustomizableFeatureValue::MAX_SIZE + 1);
-
-        new CustomizableFeatureValue(1, $tooLongName);
-    }
-
     /**
      * @dataProvider provideInvalidNames
      */

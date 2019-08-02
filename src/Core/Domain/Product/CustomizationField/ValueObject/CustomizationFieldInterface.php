@@ -34,7 +34,7 @@ interface CustomizationFieldInterface
     /**
      * Gets localised labels of customization field.
      *
-     * @return Label[]
+     * @return string[]
      */
     public function getLocalizedLabels(): array;
 

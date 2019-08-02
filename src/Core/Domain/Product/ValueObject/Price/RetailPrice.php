@@ -37,7 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\ValueObject\Price;
  * This is the net sales price for your customers.
  * The retail price will automatically be calculated using the applied tax rate.
  */
-final class RetailPrice
+class RetailPrice
 {
     /**
      * @var bool

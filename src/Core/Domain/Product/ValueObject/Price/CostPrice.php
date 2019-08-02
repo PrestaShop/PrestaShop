@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\ValueObject\Price;
 /**
  * The price that the product actually costs - used for margin calculation etc...
  */
-final class CostPrice
+class CostPrice
 {
     /**
      * @var Number

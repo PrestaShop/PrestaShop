@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Feature\ValueObject;
 /**
  * Existing Feature value.
  */
-final class FeatureValue
+class FeatureValue
 {
 
     private $featureId;

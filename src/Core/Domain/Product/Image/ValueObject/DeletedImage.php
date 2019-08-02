@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ProductImageConstr
 /**
  * Image which is about to be deleted.
  */
-final class DeletedImage
+class DeletedImage
 {
     /**
      * @var ImageId

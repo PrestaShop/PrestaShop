@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintExcepti
 /**
  * Holds products reference.
  */
-final class Reference
+class Reference
 {
     /**
      * @var string

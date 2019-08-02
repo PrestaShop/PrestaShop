@@ -51,13 +51,7 @@ final class TextCustomizationField implements CustomizationFieldInterface
      */
     public function __construct(array $localizedLabels, bool $isRequired)
     {
-        $this->localizedLabels = array_map(
-            static function (string $label) {
-                return new Label($label);
-            },
-            $localizedLabels
-        );
-
+        $this->localizedLabels = $localizedLabels;
         $this->isRequired = $isRequired;
     }
 

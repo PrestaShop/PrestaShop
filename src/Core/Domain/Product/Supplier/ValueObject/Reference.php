@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplier
 /**
  * Products supplier reference
  */
-final class Reference
+class Reference
 {
     /**
      * @var string

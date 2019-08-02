@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintExcepti
 /**
  * Holds product condition either its new , used etc...
  */
-final class Condition
+class Condition
 {
     public const IS_NEW = 'new';
 

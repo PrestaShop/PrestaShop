@@ -28,23 +28,16 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Exception;
 
 class ProductConstraintException extends ProductException
 {
-    public const INVALID_NAME = 1;
-    public const NAME_TOO_LONG = 2;
-    public const INVALID_UNIT_PRICE = 3;
-    public const INVALID_RETAIL_PRICE = 4;
-    public const INVALID_COST_PRICE = 5;
-    public const INVALID_META_TITLE = 6;
-    public const META_TITLE_NAME_TOO_LONG = 7;
-    public const INVALID_META_KEYWORDS = 8;
-    public const META_KEYWORDS_NAME_TOO_LONG = 9;
-    public const INVALID_META_DESCRIPTION = 10;
-    public const META_DESCRIPTION_NAME_TOO_LONG = 11;
-    public const FRIENDLY_URL_TOO_LONG = 12;
-    public const INVALID_RESPONSE_CODE = 13;
-    public const INVALID_CONDITION_TYPE = 14;
-    public const INVALID_VISIBILITY_TYPE = 15;
-    public const INVALID_REFERENCE = 16;
-    public const INVALID_ISBN_REFERENCE = 17;
-    public const INVALID_EAN13_REFERENCE = 18;
-    public const INVALID_UPC_REFERENCE = 19;
+    public const INVALID_UNIT_PRICE = 1;
+    public const INVALID_RETAIL_PRICE = 2;
+    public const INVALID_COST_PRICE = 3;
+    public const INVALID_META_KEYWORDS = 4;
+    public const INVALID_META_DESCRIPTION = 5;
+    public const INVALID_RESPONSE_CODE = 6;
+    public const INVALID_CONDITION_TYPE = 7;
+    public const INVALID_VISIBILITY_TYPE = 8;
+    public const INVALID_REFERENCE = 9;
+    public const INVALID_ISBN_REFERENCE = 10;
+    public const INVALID_EAN13_REFERENCE = 11;
+    public const INVALID_UPC_REFERENCE = 12;
 }

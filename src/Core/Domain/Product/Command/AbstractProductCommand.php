@@ -31,11 +31,6 @@ use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Condition;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Price\CostPrice;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\MetaData\FriendlyUrl;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\MetaData\MetaDescription;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\MetaData\MetaKeywords;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\MetaData\MetaTitle;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductName;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectionPage\RedirectionPageInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Price\RetailPrice;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectionPage\TypedRedirectionPageInterface;
@@ -53,7 +48,7 @@ abstract class AbstractProductCommand
 {
     /**
      * @todo: I need defaultLanguage validation in handler
-     * @var ProductName[]
+     * @var string[]
      */
     private $localizedProductNames;
 
@@ -91,17 +86,17 @@ abstract class AbstractProductCommand
     private $manufacturerId;
 
     /**
-     * @var MetaTitle[]
+     * @var string[]
      */
     private $metaTitle;
 
     /**
-     * @var MetaDescription[]
+     * @var string[]
      */
     private $metaDescription;
 
     /**
-     * @var MetaKeywords[]
+     * @var string[]
      */
     private $metaKeywords;
 
@@ -109,7 +104,7 @@ abstract class AbstractProductCommand
      * @todo: check if I am required in default language or I am set by product name etc... If so validate
      * @todo: I need link rewrite validation
      *
-     * @var FriendlyUrl[]
+     * @var string[]
      */
     private $friendlyUrls;
 
@@ -164,7 +159,7 @@ abstract class AbstractProductCommand
     }
 
     /**
-     * @return ProductName[]
+     * @return string[]
      */
     public function getLocalizedProductNames(): array
     {
@@ -294,7 +289,7 @@ abstract class AbstractProductCommand
     }
 
     /**
-     * @return MetaTitle[]
+     * @return string[]
      */
     public function getMetaTitle(): ?array
     {
@@ -308,15 +303,13 @@ abstract class AbstractProductCommand
      */
     public function setMetaTitle(array $metaTitle): self
     {
-        foreach ($metaTitle as $languageId => $value) {
-            $this->metaTitle[$languageId] = new MetaTitle($value);
-        }
+        $this->metaTitle = $metaTitle;
 
         return $this;
     }
 
     /**
-     * @return MetaDescription[]
+     * @return string[]
      */
     public function getMetaDescription(): ?array
     {
@@ -330,15 +323,13 @@ abstract class AbstractProductCommand
      */
     public function setMetaDescription(array $metaDescription): self
     {
-        foreach ($metaDescription as $languageId => $value) {
-            $this->metaDescription[$languageId] = new MetaDescription($value);
-        }
+        $this->metaDescription = $metaDescription;
 
         return $this;
     }
 
     /**
-     * @return MetaKeywords[]
+     * @return string[]
      */
     public function getMetaKeywords(): ?array
     {
@@ -352,15 +343,13 @@ abstract class AbstractProductCommand
      */
     public function setMetaKeywords(array $metaKeywords): self
     {
-        foreach ($metaKeywords as $languageId => $value) {
-            $this->metaKeywords[$languageId] = new MetaKeywords($value);
-        }
+        $this->metaKeywords = $metaKeywords;
 
         return $this;
     }
 
     /**
-     * @return FriendlyUrl[]
+     * @return string[]
      */
     public function getFriendlyUrls(): ?array
     {
@@ -371,14 +360,10 @@ abstract class AbstractProductCommand
      * @param string[] $friendlyUrls
      *
      * @return self
-     *
-     * @throws ProductConstraintException
      */
     public function setFriendlyUrls(array $friendlyUrls): self
     {
-        foreach ($friendlyUrls as $languageId => $value) {
-            $this->friendlyUrls[$languageId] = new FriendlyUrl($value);
-        }
+        $this->friendlyUrls = $friendlyUrls;
 
         return $this;
     }
@@ -473,9 +458,7 @@ abstract class AbstractProductCommand
      */
     private function setLocalizedProductNames(array $productNames): self
     {
-        foreach ($productNames as $productName) {
-            $this->localizedProductNames[] = new ProductName($productName);
-        }
+        $this->localizedProductNames = $productNames;
 
         return $this;
     }
