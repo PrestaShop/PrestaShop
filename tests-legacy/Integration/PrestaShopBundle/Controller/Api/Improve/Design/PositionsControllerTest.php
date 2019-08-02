@@ -36,6 +36,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @group api
+ * @runTestsInSeparateProcesses
  */
 class PositionsControllerTest extends WebTestCase
 {
@@ -49,6 +50,8 @@ class PositionsControllerTest extends WebTestCase
         Module::clearStaticCache();
 
         parent::setUp();
+        $this->logIn();
+        unset($_SERVER['REMOTE_ADDR']);
 
         /** @var ModuleManager */
         $moduleManager = self::$kernel->getContainer()->get('prestashop.module.manager');

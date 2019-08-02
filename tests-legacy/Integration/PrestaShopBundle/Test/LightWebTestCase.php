@@ -35,18 +35,13 @@ use Link;
 use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
-use PrestaShop\PrestaShop\Core\Domain\Employee\AuthorizationOptions;
 use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowPresenterInterface;
-use PrestaShopBundle\Security\Admin\Employee as LoggedEmployee;
 use Psr\Log\NullLogger;
 
 use Shop;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase as TestCase;
 use Symfony\Component\Routing\Router;
-use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
-use Symfony\Component\Security\Core\Role\Role;
 use Symfony\Component\Translation\Translator;
 
 /**
