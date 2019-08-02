@@ -98,7 +98,6 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CurrencyFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\CartRuleFeatureContext
-
         meta:
             paths:
               features: Features/Scenario/Meta
@@ -116,3 +115,10 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\FeatureFeatureContext
+        order_message:
+            paths:
+                features: Features/Scenario/OrderMessage
+            contexts:
+              - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+              - Tests\Integration\Behaviour\Features\Context\Domain\OrderMessageContext
+              - Tests\Integration\Behaviour\Features\Context\OrderMessageContext
