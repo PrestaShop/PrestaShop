@@ -31,6 +31,8 @@ use PrestaShop\PrestaShop\Core\Domain\OrderMessage\Command\BulkDeleteOrderMessag
 use PrestaShop\PrestaShop\Core\Domain\OrderMessage\Command\DeleteOrderMessageCommand;
 use PrestaShop\PrestaShop\Core\Domain\OrderMessage\Exception\OrderMessageException;
 use PrestaShop\PrestaShop\Core\Domain\OrderMessage\Exception\OrderMessageNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\OrderMessage\Query\GetOrderMessageForEditing;
+use PrestaShop\PrestaShop\Core\Domain\OrderMessage\QueryResult\EditableOrderMessage;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ManufacturerAddressGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ManufacturerGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderMessageGridDefinitionFactory;
@@ -137,6 +139,7 @@ class OrderMessageController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Sell/CustomerService/OrderMessage/create.html.twig', [
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
+            'layoutTitle' => $this->trans('Add new', 'Admin.Actions'),
             'orderMessageForm' => $form->createView(),
         ]);
     }
@@ -159,10 +162,15 @@ class OrderMessageController extends FrameworkBundleAdminController
         $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.order_message_form_builder');
         $formHandler = $this->get('prestashop.core.form.identifiable_object.handler.order_message_form_handler');
 
-        $form = $formBuilder->getFormFor($orderMessageId);
-        $form->handleRequest($request);
-
         try {
+            /** @var EditableOrderMessage $editableOrderMessage */
+            $editableOrderMessage = $this->getQueryBus()->handle(new GetOrderMessageForEditing($orderMessageId));
+
+            $orderMessageName = $editableOrderMessage->getLocalizedName()[$this->getContextLangId()];
+
+            $form = $formBuilder->getFormFor($orderMessageId);
+            $form->handleRequest($request);
+
             $result = $formHandler->handleFor($orderMessageId, $form);
 
             if ($result->getIdentifiableObjectId()) {
@@ -170,6 +178,10 @@ class OrderMessageController extends FrameworkBundleAdminController
 
                 return $this->redirectToRoute('admin_order_messages_index');
             }
+        } catch (OrderMessageNotFoundException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+
+            return $this->redirectToRoute('admin_order_messages_index');
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
@@ -177,6 +189,7 @@ class OrderMessageController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Sell/CustomerService/OrderMessage/edit.html.twig', [
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
+            'layoutTitle' => sprintf($this->trans('Edit: %s', 'Admin.Actions'), $orderMessageName),
             'orderMessageForm' => $form->createView(),
         ]);
     }
