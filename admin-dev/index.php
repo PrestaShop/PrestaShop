@@ -71,7 +71,7 @@ if (_PS_MODE_DEV_) {
 }
 require_once __DIR__.'/../app/AppKernel.php';
 
-$kernel = new AppKernel(_PS_MODE_DEV_?'dev':'prod', _PS_MODE_DEV_);
+$kernel = new AppKernel(_PS_ENV_, _PS_MODE_DEV_);
 if (PHP_VERSION_ID < 70000) {
     $kernel->loadClassCache();
 }

@@ -78,15 +78,9 @@ require_once _PS_CORE_DIR_.'/config/autoload.php';
 if (file_exists(_PS_CORE_DIR_.'/app/config/parameters.php')) {
     require_once _PS_CORE_DIR_.'/config/bootstrap.php';
 
-    if (defined('_PS_IN_TEST_') && _PS_IN_TEST_) {
-        $env = 'test';
-    } else {
-        $env = _PS_MODE_DEV_ ? 'dev' : 'prod';
-    }
-
     global $kernel;
     try {
-        $kernel = new AppKernel($env, _PS_MODE_DEV_);
+        $kernel = new AppKernel(_PS_ENV_, _PS_MODE_DEV_);
         $kernel->loadClassCache();
         $kernel->boot();
     } catch (DBALException $e) {
@@ -95,17 +89,6 @@ if (file_exists(_PS_CORE_DIR_.'/app/config/parameters.php')) {
          * non existence database
          */
         if (strpos($e->getMessage(), 'You can circumvent this by setting a \'server_version\' configuration value') === false) {
-            throw $e;
-        }
-    } catch (\PDOException $e) {
-        /**
-         * The server_version option was added in Doctrine DBAL 2.5, which is used by DoctrineBundle 1.3.
-         * The value of this option should match your database server version.
-         * If you don't define this option and you haven't created your database yet,
-         * you may get PDOException errors because Doctrine will try to guess the database
-         * server version automatically and none is available.
-         */
-        if (strpos($e->getMessage(), 'Unknown database ') === false) {
             throw $e;
         }
     }
