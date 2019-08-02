@@ -146,6 +146,7 @@ abstract class ApiTestCase extends WebTestCase
     {
         $employeeMock = $this->getMockBuilder('\Employee')->getMock();
         $employeeMock->id_lang = 1;
+        $employeeMock->id_profile = _PS_ADMIN_PROFILE_;
 
         return $employeeMock;
     }

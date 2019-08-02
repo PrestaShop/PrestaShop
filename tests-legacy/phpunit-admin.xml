@@ -1,6 +1,6 @@
 <phpunit
   bootstrap="bootstrap-admin.php"
-  processIsolation="false"
+  processIsolation="true"
   convertErrorsToExceptions="true"
   convertNoticesToExceptions="true"
   convertWarningsToExceptions="true"

@@ -29,6 +29,7 @@ namespace LegacyTests\Integration\PrestaShopBundle\Controller\Api;
 /**
  * @group api
  * @group translation
+ * @runTestsInSeparateProcesses
  */
 class TranslationControllerTest extends ApiTestCase
 {
