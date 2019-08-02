@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
@@ -15,25 +16,41 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
+namespace PrestaShop\PrestaShop\Core\Domain\Currency\Query;
 
-{% block content %}
-  <div class="row justify-content-center">
-    <div class="col">
-      {{ include('@PrestaShop/Admin/Improve/International/Currency/Blocks/form.html.twig', {'currencyForm': currencyForm}) }}
-    </div>
-  </div>
-{% endblock %}
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\AlphaIsoCode;
 
-{% block javascripts %}
-  {{ parent() }}
-  <script src="{{ asset('themes/new-theme/public/currency_form.bundle.js') }}"></script>
-{% endblock %}
+class GetCurrencyExchangeRate
+{
+    /**
+     * @var AlphaIsoCode
+     */
+    private $isoCode;
+
+    /**
+     * @param string $isoCode
+     *
+     * @throws CurrencyException
+     */
+    public function __construct($isoCode)
+    {
+        $this->isoCode = new AlphaIsoCode($isoCode);
+    }
+
+    /**
+     * @return AlphaIsoCode
+     */
+    public function getIsoCode()
+    {
+        return $this->isoCode;
+    }
+}
