@@ -35,6 +35,7 @@ if [ -n "$(ls ${REPORT_PATH})" ]; then
   # Send file, remove directory, and shutdown if everything is ok
   gsutil cp -r "${DIR_PATH}/reports" gs://prestashop-core-nightly
 
+  # Trigger event on nightly board
   curl "https://nightly.prestashop.com/hook/add?token=${TOKEN}&filename=${REPORT_NAME}.json"
 
   if [ -z "${NO_SHUTDOWN}" ]; then
