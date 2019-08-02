@@ -25,13 +25,14 @@
  */
 
 
-namespace Tests\Unit\Core\Domain\Product\ValueObject\Reference;
+namespace Tests\Unit\Core\Domain\Product\ValueObject;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Isbn;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference;
 
-class ReferenceTest extends TestCase
+class IsbnTest extends TestCase
 {
     /**
      * @dataProvider provideInvalidReferences
@@ -39,23 +40,20 @@ class ReferenceTest extends TestCase
     public function testItThrowsExceptionOnInvalidReference(string $nonValidReference)
     {
         $this->expectException(ProductConstraintException::class);
-        $this->expectExceptionCode(ProductConstraintException::INVALID_REFERENCE);
+        $this->expectExceptionCode(ProductConstraintException::INVALID_ISBN);
 
-        new Reference($nonValidReference);
+        new Isbn($nonValidReference);
     }
 
     public function provideInvalidReferences()
     {
         yield [
-            '{object}',
+            '01354#a',
         ];
 
+        //too long
         yield [
-            '<div>refrefref</div>',
-        ];
-
-        yield [
-            'ref;ref',
+            str_repeat('1', 33),
         ];
     }
 }

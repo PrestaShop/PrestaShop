@@ -37,36 +37,36 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintExcepti
 class Ean13
 {
     /**
-     * @var string
+     * @var int
      */
     private $reference;
 
     /**
-     * @param string $reference
+     * @param int $reference
      *
      * @throws ProductConstraintException
      */
-    public function __construct(string $reference)
+    public function __construct(int $reference)
     {
-        $this->assertIsValidReference($reference);
+        $this->assertIsValidNumber($reference);
 
         $this->reference = $reference;
     }
 
     /**
-     * @return string
+     * @return int
      */
-    public function getValue(): string
+    public function getValue(): int
     {
         return $this->reference;
     }
 
     /**
-     * @param string $reference
+     * @param int $reference
      *
      * @throws ProductConstraintException
      */
-    private function assertIsValidReference(string $reference): void
+    private function assertIsValidNumber(int $reference): void
     {
         $pattern = '/^\d{0,13}$/';
         if (!preg_match($pattern, $reference)) {

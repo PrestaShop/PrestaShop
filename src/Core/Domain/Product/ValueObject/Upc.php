@@ -35,36 +35,36 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintExcepti
 class Upc
 {
     /**
-     * @var string
+     * @var int
      */
-    private $reference;
+    private $number;
 
     /**
-     * @param string $reference
+     * @param int $number
      *
      * @throws ProductConstraintException
      */
-    public function __construct(string $reference)
+    public function __construct(int $number)
     {
-        $this->assertIsValidReference($reference);
+        $this->assertIsValidNumber($number);
 
-        $this->reference = $reference;
+        $this->number = $number;
     }
 
     /**
-     * @return string
+     * @return int
      */
-    public function getValue(): string
+    public function getValue(): int
     {
-        return $this->reference;
+        return $this->number;
     }
 
     /**
-     * @param string $reference
+     * @param int $reference
      *
      * @throws ProductConstraintException
      */
-    private function assertIsValidReference(string $reference): void
+    private function assertIsValidNumber(int $reference): void
     {
         $pattern = '/^\d{0,12}$/';
         if (!preg_match($pattern, $reference)) {

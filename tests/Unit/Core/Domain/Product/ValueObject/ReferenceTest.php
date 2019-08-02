@@ -24,13 +24,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\Core\Domain\Product\ValueObject\Reference;
+
+namespace Tests\Unit\Core\Domain\Product\ValueObject;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Ean13;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference;
 
-class Ean13Test extends TestCase
+class ReferenceTest extends TestCase
 {
     /**
      * @dataProvider provideInvalidReferences
@@ -38,20 +39,23 @@ class Ean13Test extends TestCase
     public function testItThrowsExceptionOnInvalidReference(string $nonValidReference)
     {
         $this->expectException(ProductConstraintException::class);
-        $this->expectExceptionCode(ProductConstraintException::INVALID_EAN13);
+        $this->expectExceptionCode(ProductConstraintException::INVALID_REFERENCE);
 
-        new Ean13($nonValidReference);
+        new Reference($nonValidReference);
     }
 
     public function provideInvalidReferences()
     {
         yield [
-            '01354#a',
+            '{object}',
         ];
 
-        //too long
         yield [
-            str_repeat('1', 14),
+            '<div>refrefref</div>',
+        ];
+
+        yield [
+            'ref;ref',
         ];
     }
 }

@@ -24,15 +24,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
-namespace Tests\Unit\Core\Domain\Product\ValueObject\Reference;
+namespace Tests\Unit\Core\Domain\Product\ValueObject;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Isbn;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Ean13;
 
-class IsbnTest extends TestCase
+class Ean13Test extends TestCase
 {
     /**
      * @dataProvider provideInvalidReferences
@@ -40,20 +38,15 @@ class IsbnTest extends TestCase
     public function testItThrowsExceptionOnInvalidReference(string $nonValidReference)
     {
         $this->expectException(ProductConstraintException::class);
-        $this->expectExceptionCode(ProductConstraintException::INVALID_ISBN);
+        $this->expectExceptionCode(ProductConstraintException::INVALID_EAN13);
 
-        new Isbn($nonValidReference);
+        new Ean13($nonValidReference);
     }
 
     public function provideInvalidReferences()
     {
         yield [
-            '01354#a',
-        ];
-
-        //too long
-        yield [
-            str_repeat('1', 33),
+            str_repeat('9', 14),
         ];
     }
 }

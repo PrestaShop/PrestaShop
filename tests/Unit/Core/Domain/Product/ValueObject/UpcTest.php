@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\Core\Domain\Product\ValueObject\Reference;
+namespace Tests\Unit\Core\Domain\Product\ValueObject;
 
 
 use PHPUnit\Framework\TestCase;
@@ -46,11 +46,6 @@ class UpcTest extends TestCase
 
     public function provideInvalidReferences()
     {
-        yield [
-            '01354#a',
-        ];
-
-        //too long
         yield [
             str_repeat('1', 13),
         ];
