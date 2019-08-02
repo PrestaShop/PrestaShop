@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Currency\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotFindExchangeRateException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\ExchangeRateNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Query\GetCurrencyExchangeRate;
 use PrestaShop\PrestaShop\Core\Domain\Currency\QueryHandler\GetCurrencyExchangeRateHandlerInterface;
@@ -41,8 +41,8 @@ class GetCurrencyExchangeRateHandler implements GetCurrencyExchangeRateHandlerIn
      */
     public function handle(GetCurrencyExchangeRate $query)
     {
-        if (!$feed = Tools::simplexml_load_file(_PS_CURRENCY_FEED_URL_)) {
-            throw new CannotFindExchangeRateException('Cannot fetch exchange rate feed');
+        if (!($feed = Tools::simplexml_load_file(_PS_CURRENCY_FEED_URL_)) || !$feed->list) {
+            throw new ExchangeRateNotFoundException('Cannot fetch exchange rate feed');
         }
         $data = $feed->list;
 
@@ -53,10 +53,10 @@ class GetCurrencyExchangeRateHandler implements GetCurrencyExchangeRateHandlerIn
             throw new CurrencyNotFoundException('Default Currency object was not found');
         }
         if ($defaultCurrency->iso_code == $query->getIsoCode()->getValue()) {
-            return new ExchangeRate(1);
+            return new ExchangeRate(ExchangeRate::DEFAULT_RATE);
         }
 
-        // Fetch the exchange rate of the default currency
+        // Fetch the exchange rate of the default currency (compared to the source currency)
         $defaultExchangeRate = 1;
         if ($defaultCurrency->iso_code != $sourceIsoCode) {
             foreach ($data->currency as $currency) {
@@ -69,7 +69,7 @@ class GetCurrencyExchangeRateHandler implements GetCurrencyExchangeRateHandlerIn
         }
 
         if ($sourceIsoCode == $query->getIsoCode()->getValue()) {
-            return new ExchangeRate(1);
+            return new ExchangeRate(ExchangeRate::DEFAULT_RATE);
         } else {
             foreach ($data->currency as $obj) {
                 if ((string) ($obj['iso_code']) == $query->getIsoCode()->getValue()) {
@@ -80,7 +80,7 @@ class GetCurrencyExchangeRateHandler implements GetCurrencyExchangeRateHandlerIn
             }
         }
 
-        throw new CannotFindExchangeRateException(sprintf(
+        throw new ExchangeRateNotFoundException(sprintf(
             'Exchange rate for Currency with iso code %s was not found',
             $query->getIsoCode()->getValue()
         ));
