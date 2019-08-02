@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShopBundle\Translation\Loader\SqlTranslationLoader;
 use PrestaShopBundle\Translation\TranslatorComponent as Translator;
@@ -370,10 +371,16 @@ class ContextCore
             return $this->translator;
         }
 
-        $translator = $this->getTranslatorFromLocale($this->language->locale);
-        $this->translator = $translator;
+        $sfContainer = SymfonyContainer::getInstance();
 
-        return $translator;
+        if (null === $sfContainer) {
+            // symfony's container isn't available in front office, so we load and configure the translator component
+            $this->translator = $this->getTranslatorFromLocale($this->language->locale);
+        } else {
+            $this->translator = $sfContainer->get('translator');
+        }
+
+        return $this->translator;
     }
 
     /**
