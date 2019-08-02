@@ -24,30 +24,30 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Attachment\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Feature\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\Feature\DTO\FeatureCollection;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
- * Associates products with attachments.
+ * Update product features.
  */
-class AssociateAttachmentsCommand
+class UpdateProductFeaturesCommand
 {
     /**
      * @var ProductId
      */
     private $productId;
 
-    private $attachmentIds;
-
     /**
-     * @param int $productId
-     * @param int[] $attachmentIds
+     * @var FeatureCollection
      */
-    public function __construct(int $productId, array $attachmentIds)
+    private $features;
+
+    public function __construct(int $productId, FeatureCollection $features)
     {
         $this->productId = new ProductId($productId);
-        $this->setAttachmentIds($attachmentIds);
+        $this->features = $features;
     }
 
     /**
@@ -59,31 +59,10 @@ class AssociateAttachmentsCommand
     }
 
     /**
-     * @return mixed
+     * @return FeatureCollection
      */
-    public function getAttachmentIds()
+    public function getFeatures(): FeatureCollection
     {
-        return $this->attachmentIds;
-    }
-
-    private function setAttachmentIds(array $attachmentIds): void
-    {
-        foreach ($attachmentIds as $attachmentId) {
-            //todo: change me when AttachmentId VO is available
-            $this->attachmentIds[] = new class($attachmentId) {
-
-                private $attachmentId;
-
-                public function __construct(int $attachmentId)
-                {
-                    $this->attachmentId;
-                }
-
-                public function getValue()
-                {
-                    return $this->attachmentId;
-                }
-            };
-        }
+        return $this->features;
     }
 }

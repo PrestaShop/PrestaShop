@@ -24,15 +24,15 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\CustomizationField\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\CustomizationField\ValueObject\CustomizationFieldInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\DTO\ImageCollection;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
- * Update product customization fields.
+ * Updates product images.
  */
-class UpdateCustomizationFieldsCommand
+class UpdateProductImagesCommand
 {
     /**
      * @var ProductId
@@ -40,19 +40,18 @@ class UpdateCustomizationFieldsCommand
     private $productId;
 
     /**
-     * @var CustomizationFieldInterface[]
+     * @var ImageCollection
      */
-    private $customizationFields;
+    private $images;
 
     /**
-     *
      * @param int $productId
-     * @param CustomizationFieldInterface[] $customizationFields
+     * @param ImageCollection $images
      */
-    public function __construct(int $productId, array $customizationFields)
+    public function __construct(int $productId, ImageCollection $images)
     {
         $this->productId = new ProductId($productId);
-        $this->customizationFields = $customizationFields;
+        $this->images = $images;
     }
 
     /**
@@ -64,10 +63,10 @@ class UpdateCustomizationFieldsCommand
     }
 
     /**
-     * @return CustomizationFieldInterface[]
+     * @return ImageCollection
      */
-    public function getCustomizationFields(): array
+    public function getImages(): ImageCollection
     {
-        return $this->customizationFields;
+        return $this->images;
     }
 }

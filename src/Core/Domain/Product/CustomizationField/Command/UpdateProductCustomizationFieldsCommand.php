@@ -24,15 +24,15 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Feature\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\CustomizationField\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Feature\DTO\FeatureCollection;
+use PrestaShop\PrestaShop\Core\Domain\Product\CustomizationField\ValueObject\CustomizationFieldInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
- * Update product features.
+ * Update product customization fields.
  */
-class UpdateFeaturesCommand
+class UpdateProductCustomizationFieldsCommand
 {
     /**
      * @var ProductId
@@ -40,14 +40,19 @@ class UpdateFeaturesCommand
     private $productId;
 
     /**
-     * @var FeatureCollection
+     * @var CustomizationFieldInterface[]
      */
-    private $features;
+    private $customizationFields;
 
-    public function __construct(int $productId, FeatureCollection $features)
+    /**
+     *
+     * @param int $productId
+     * @param CustomizationFieldInterface[] $customizationFields
+     */
+    public function __construct(int $productId, array $customizationFields)
     {
         $this->productId = new ProductId($productId);
-        $this->features = $features;
+        $this->customizationFields = $customizationFields;
     }
 
     /**
@@ -59,10 +64,10 @@ class UpdateFeaturesCommand
     }
 
     /**
-     * @return FeatureCollection
+     * @return CustomizationFieldInterface[]
      */
-    public function getFeatures(): FeatureCollection
+    public function getCustomizationFields(): array
     {
-        return $this->features;
+        return $this->customizationFields;
     }
 }

@@ -268,7 +268,7 @@ abstract class AbstractProductCommand
     }
 
     /**
-     * @param array|string[] $localizedDescription
+     * @param string[] $localizedDescription
      *
      * @return self
      */
