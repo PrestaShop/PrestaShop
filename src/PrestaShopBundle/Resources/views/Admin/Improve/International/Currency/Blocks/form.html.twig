@@ -35,12 +35,13 @@
 
   <div class="card">
     <div class="card-header">
-      {{ 'Currencies'|trans({}, 'Admin.Global') }}
+      {{ 'Currency'|trans({}, 'Admin.Global') }}
     </div>
     <div class="card-block row">
       <div class="card-text">
         {{ form_errors(currencyForm) }}
 
+        {% if not currencyForm.vars.data.iso_code is defined %}
         {{ ps.form_group_row(currencyForm.selected_iso_code, {}, {
           'label': 'Choose a currency'|trans({}, 'Admin.Global'),
         }) }}
@@ -48,6 +49,7 @@
         {{ ps.form_group_row(currencyForm.is_custom, {}, {
           'label': 'or'|trans({}, 'Admin.Global'),
         }) }}
+        {% endif %}
 
         {{ ps.form_group_row(currencyForm.name, {}, {
           'label': 'Currency name'|trans({}, 'Admin.International.Feature'),

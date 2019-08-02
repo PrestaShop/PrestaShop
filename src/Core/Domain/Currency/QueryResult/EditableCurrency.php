@@ -40,6 +40,16 @@ class EditableCurrency
     private $currencyId;
 
     /**
+     * @var array
+     */
+    private $names;
+
+    /**
+     * @var array
+     */
+    private $symbols;
+
+    /**
      * @var string
      */
     private $isoCode;
@@ -60,6 +70,11 @@ class EditableCurrency
     private $isEnabled;
 
     /**
+     * @var bool
+     */
+    private $isCustom;
+
+    /**
      * @var int[]
      */
     private $associatedShopIds;
@@ -68,8 +83,11 @@ class EditableCurrency
      * @param int $currencyId
      * @param string $isoCode
      * @param int $numericIsoCode
+     * @param array $names
+     * @param array $symbols
      * @param float $exchangeRate
      * @param bool $isEnabled
+     * @param bool $isCustom
      * @param int[] $associatedShopIds
      *
      * @throws CurrencyException
@@ -78,15 +96,21 @@ class EditableCurrency
         $currencyId,
         $isoCode,
         $numericIsoCode,
+        $names,
+        $symbols,
         $exchangeRate,
         $isEnabled,
+        $isCustom,
         array $associatedShopIds
     ) {
         $this->currencyId = new CurrencyId($currencyId);
         $this->isoCode = $isoCode;
         $this->numericIsoCode = $numericIsoCode;
+        $this->names = $names;
+        $this->symbols = $symbols;
         $this->exchangeRate = $exchangeRate;
         $this->isEnabled = $isEnabled;
+        $this->isCustom = $isCustom;
         $this->associatedShopIds = $associatedShopIds;
     }
 
@@ -115,6 +139,22 @@ class EditableCurrency
     }
 
     /**
+     * @return array
+     */
+    public function getNames()
+    {
+        return $this->names;
+    }
+
+    /**
+     * @return array
+     */
+    public function getSymbols()
+    {
+        return $this->symbols;
+    }
+
+    /**
      * @return float
      */
     public function getExchangeRate()
@@ -128,6 +168,14 @@ class EditableCurrency
     public function isEnabled()
     {
         return $this->isEnabled;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCustom()
+    {
+        return $this->isCustom;
     }
 
     /**
