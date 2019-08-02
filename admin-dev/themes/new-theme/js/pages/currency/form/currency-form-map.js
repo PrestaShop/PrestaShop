@@ -1,5 +1,5 @@
-{#**
- * 2007-2019 PrestaShop SA and Contributors
+/**
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -21,19 +21,17 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
-
-{% block content %}
-  <div class="row justify-content-center">
-    <div class="col">
-      {{ include('@PrestaShop/Admin/Improve/International/Currency/Blocks/form.html.twig', {'currencyForm': currencyForm}) }}
-    </div>
-  </div>
-{% endblock %}
-
-{% block javascripts %}
-  {{ parent() }}
-  <script src="{{ asset('themes/new-theme/public/currency_form.bundle.js') }}"></script>
-{% endblock %}
+/**
+ * Defines all selectors that are used in currency add/edit form.
+ */
+export default {
+  currencyForm: '#currency_form',
+  currencySelector: '#currency_selected_iso_code',
+  nameSelector: '#currency_name_LANG_ID',
+  symbolSelector: '#currency_symbol_LANG_ID',
+  isoCodeSelector: '#currency_iso_code',
+  numericIsoCodeSelector: '#currency_numeric_iso_code',
+  exchangeRateSelector: '#currency_exchange_rate'
+}
