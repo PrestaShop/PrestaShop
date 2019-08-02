@@ -47,11 +47,11 @@ $(() => {
       const getCurrencyData = getCLDRDataUrl.replace('CURRENCY_ISO_CODE', selectedISOCode);
       $.get(getCurrencyData).then((currencyData) => {
         for (let langId in currencyData.names) {
-          let langNameSelector = currencyFormMap.nameSelector.replace('LANG_ID', langId);
+          let langNameSelector = currencyFormMap.namesSelector.replace('LANG_ID', langId);
           $(langNameSelector).val(currencyData.names[langId]);
         }
         for (let langId in currencyData.symbols) {
-          let langSymbolSelector = currencyFormMap.symbolSelector.replace('LANG_ID', langId);
+          let langSymbolSelector = currencyFormMap.symbolsSelector.replace('LANG_ID', langId);
           $(langSymbolSelector).val(currencyData.symbols[langId]);
         }
         $(currencyFormMap.isoCodeSelector).val(currencyData.iso_code);
@@ -61,6 +61,7 @@ $(() => {
         }
       })
     } else {
+      $(currencyFormMap.isCustomCheckbox).prop('checked', true);
       $(currencyFormMap.isoCodeSelector).prop('disabled', false);
       $(currencyFormMap.numericIsoCodeSelector).prop('disabled', false);
     }
