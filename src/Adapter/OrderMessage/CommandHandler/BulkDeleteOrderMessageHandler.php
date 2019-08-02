@@ -46,7 +46,7 @@ final class BulkDeleteOrderMessageHandler extends AbstractOrderMessageHandler im
             if (false === $orderMessage->delete()) {
                 throw new OrderMessageException(
                     sprintf('Failed to delete Order message with id "%d" during bulk delete', $orderMessage->id),
-                    OrderMessageException::FAILED_TO_BULK_DELETE
+                    OrderMessageException::FAILED_BULK_DELETE
                 );
             }
         }

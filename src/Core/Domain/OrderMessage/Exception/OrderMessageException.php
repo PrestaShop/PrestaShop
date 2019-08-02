@@ -30,6 +30,6 @@ use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 
 class OrderMessageException extends DomainException
 {
-    public const FAILED_TO_DELETE = 1;
-    public const FAILED_TO_BULK_DELETE = 2;
+    public const FAILED_DELETE = 1;
+    public const FAILED_BULK_DELETE = 2;
 }
