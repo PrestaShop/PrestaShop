@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject;
 
-use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
@@ -39,7 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\ValueObject\Price;
 /**
  * Holds supplier and product related information.
  */
-class Supplier
+class ProductSupplier
 {
     /**
      * @var SupplierId
@@ -62,12 +61,11 @@ class Supplier
     private $currencyId;
 
     /**
-     * @var Number
+     * @var Price
      */
     private $priceTaxExcluded;
 
     /**
-     *
      * @param int $supplierId
      * @param bool $isDefaultSupplier
      * @param string $reference
@@ -89,7 +87,7 @@ class Supplier
         $this->supplierId = new SupplierId($supplierId);
         $this->isDefaultSupplier = $isDefaultSupplier;
         $this->reference = new Reference($reference);
-        $this->priceTaxExcluded = (new Price($priceTaxExcluded))->getValue();
+        $this->priceTaxExcluded = new Price($priceTaxExcluded);
         $this->currencyId = new CurrencyId($currencyId);
     }
 
@@ -126,9 +124,9 @@ class Supplier
     }
 
     /**
-     * @return Number
+     * @return Price
      */
-    public function getPriceTaxExcluded(): Number
+    public function getPriceTaxExcluded(): Price
     {
         return $this->priceTaxExcluded;
     }

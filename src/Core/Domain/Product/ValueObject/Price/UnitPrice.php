@@ -37,7 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\ValueObject\Price;
 class UnitPrice
 {
     /**
-     * @var Number
+     * @var Price
      */
     private $price;
 
@@ -55,7 +55,7 @@ class UnitPrice
     public function __construct(float $price, string $unit)
     {
         try {
-            $this->price = (new Price($price))->getValue();
+            $this->price = new Price($price);
         } catch (DomainConstraintException $e) {
             throw new ProductConstraintException(
                 'Invalid products unit price',
@@ -68,9 +68,9 @@ class UnitPrice
     }
 
     /**
-     * @return Number
+     * @return Price
      */
-    public function getPrice(): Number
+    public function getPrice(): Price
     {
         return $this->price;
     }

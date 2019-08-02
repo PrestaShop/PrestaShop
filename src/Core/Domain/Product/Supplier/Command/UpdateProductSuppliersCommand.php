@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\Supplier;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplier;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierException;
 
@@ -39,7 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierException;
 class UpdateProductSuppliersCommand
 {
     /**
-     * @var Supplier[]
+     * @var ProductSupplier[]
      */
     private $suppliers;
 
@@ -65,7 +65,7 @@ class UpdateProductSuppliersCommand
     }
 
     /**
-     * @return Supplier[]
+     * @return ProductSupplier[]
      */
     public function getSuppliers(): array
     {
@@ -91,7 +91,7 @@ class UpdateProductSuppliersCommand
     private function setSuppliers(array $suppliers): void
     {
         foreach ($suppliers as $supplier) {
-            $this->suppliers[] = new Supplier(
+            $this->suppliers[] = new ProductSupplier(
                 $supplier['id'],
                 $supplier['is_default'],
                 $supplier['reference'],

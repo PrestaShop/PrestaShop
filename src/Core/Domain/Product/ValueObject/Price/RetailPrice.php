@@ -50,7 +50,7 @@ class RetailPrice
     private $taxRuleId;
 
     /**
-     * @var Number
+     * @var Price
      */
     private $priceWithoutTax;
 
@@ -65,7 +65,7 @@ class RetailPrice
     public function __construct(float $priceWithoutTax, int $taxRuleId, bool $displayOnSaleFlag)
     {
         try {
-            $this->priceWithoutTax = (new Price($priceWithoutTax))->getValue();
+            $this->priceWithoutTax = new Price($priceWithoutTax);
         } catch (DomainConstraintException $e) {
             throw new ProductConstraintException(
                 'Invalid products retail price',
@@ -95,9 +95,9 @@ class RetailPrice
     }
 
     /**
-     * @return Number
+     * @return Price
      */
-    public function getPriceWithoutTax(): Number
+    public function getPriceWithoutTax(): Price
     {
         return $this->priceWithoutTax;
     }
