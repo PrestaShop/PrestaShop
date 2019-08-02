@@ -30,7 +30,6 @@ use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerConstra
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Condition;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Price\CostPrice;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectionPage\RedirectionPageInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Price\RetailPrice;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectionPage\TypedRedirectionPageInterface;
@@ -40,6 +39,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference\Isbn;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference\Reference;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference\Upc;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Visibility;
+use PrestaShop\PrestaShop\Core\Domain\TaxRule\Exception\TaxRuleConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Price;
 
 /**
  * Holds the abstraction of common product data.
@@ -53,7 +54,7 @@ abstract class AbstractProductCommand
     private $localizedProductNames;
 
     /**
-     * @var CostPrice
+     * @var Price
      */
     private $costPrice;
 
@@ -167,21 +168,21 @@ abstract class AbstractProductCommand
     }
 
     /**
-     * @return CostPrice
+     * @return Price
      */
-    public function getCostPrice(): CostPrice
+    public function getCostPrice(): Price
     {
         return $this->costPrice;
     }
 
     /**
-     * @param CostPrice $costPrice
+     * @param float $costPrice
      *
      * @return self
      */
-    public function setCostPrice(CostPrice $costPrice): self
+    public function setCostPrice(float $costPrice): self
     {
-        $this->costPrice = $costPrice;
+        $this->costPrice = new Price($costPrice);
 
         return $this;
     }
@@ -195,13 +196,22 @@ abstract class AbstractProductCommand
     }
 
     /**
-     * @param RetailPrice $retailPrice
+     * @param float $priceWithoutTax
+     * @param int $taxRuleId
+     * @param bool $displayOnSaleFlag
      *
      * @return self
+     *
+     * @throws ProductConstraintException
+     * @throws TaxRuleConstraintException
      */
-    public function setRetailPrice(RetailPrice $retailPrice): self
+    public function setRetailPrice(float $priceWithoutTax, int $taxRuleId, bool $displayOnSaleFlag): self
     {
-        $this->retailPrice = $retailPrice;
+        $this->retailPrice = new RetailPrice(
+            $priceWithoutTax,
+            $taxRuleId,
+            $displayOnSaleFlag
+        );
 
         return $this;
     }
@@ -215,13 +225,16 @@ abstract class AbstractProductCommand
     }
 
     /**
-     * @param UnitPrice $unitPrice
+     * @param float $price
+     * @param string $unit
      *
      * @return self
+     *
+     * @throws ProductConstraintException
      */
-    public function setUnitPrice(UnitPrice $unitPrice): self
+    public function setUnitPrice(float $price, string $unit): self
     {
-        $this->unitPrice = $unitPrice;
+        $this->unitPrice = new UnitPrice($price, $unit);
 
         return $this;
     }
