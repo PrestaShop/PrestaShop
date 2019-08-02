@@ -34,13 +34,27 @@ use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ManufacturerGridDefinitio
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderMessageGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\OrderMessageFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Service\Grid\ResponseBuilder;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Manages page under "Sell > Customer Service > Order Messages"
+ */
 class OrderMessageController extends FrameworkBundleAdminController
 {
+    /**
+     * Show list of Order messages
+     *
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     *
+     * @param OrderMessageFilters $filters
+     * @param Request $request
+     *
+     * @return Response
+     */
     public function indexAction(OrderMessageFilters $filters, Request $request): Response
     {
         $gridFactory = $this->get('prestashop.core.grid.grid_factory.order_message');
@@ -61,6 +75,18 @@ class OrderMessageController extends FrameworkBundleAdminController
         ]);
     }
 
+    /**
+     * Prepares filtering response
+     *
+     * @AdminSecurity(
+     *     "is_granted(['read'], request.get('_legacy_controller'))",
+     *     redirectRoute="admin_order_messages_index"
+     * )
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
     public function filterAction(Request $request): RedirectResponse
     {
         /** @var ResponseBuilder $responseBuilder */
@@ -74,6 +100,18 @@ class OrderMessageController extends FrameworkBundleAdminController
         );
     }
 
+    /**
+     * Create new order message
+     *
+     * @AdminSecurity(
+     *     "is_granted(['create'], request.get('_legacy_controller'))",
+     *     redirectRoute="admin_order_messages_index"
+     * )
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
     public function createAction(Request $request): Response
     {
         $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.order_message_form_builder');
@@ -95,10 +133,25 @@ class OrderMessageController extends FrameworkBundleAdminController
         }
 
         return $this->render('@PrestaShop/Admin/Sell/CustomerService/OrderMessage/create.html.twig', [
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'enableSidebar' => true,
             'orderMessageForm' => $form->createView(),
         ]);
     }
 
+    /**
+     * Edit existing order message
+     *
+     * @AdminSecurity(
+     *     "is_granted(['update'], request.get('_legacy_controller'))",
+     *     redirectRoute="admin_order_messages_index"
+     * )
+     *
+     * @param int $orderMessageId
+     * @param Request $request
+     *
+     * @return Response
+     */
     public function editAction(int $orderMessageId, Request $request): Response
     {
         $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.order_message_form_builder');
@@ -120,10 +173,24 @@ class OrderMessageController extends FrameworkBundleAdminController
         }
 
         return $this->render('@PrestaShop/Admin/Sell/CustomerService/OrderMessage/edit.html.twig', [
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'enableSidebar' => true,
             'orderMessageForm' => $form->createView(),
         ]);
     }
 
+    /**
+     * Delete single order message
+     *
+     * @AdminSecurity(
+     *     "is_granted(['delete'], request.get('_legacy_controller'))",
+     *     redirectRoute="admin_order_messages_index"
+     * )
+     *
+     * @param int $orderMessageId
+     *
+     * @return RedirectResponse
+     */
     public function deleteAction(int $orderMessageId): RedirectResponse
     {
         try {
@@ -137,6 +204,18 @@ class OrderMessageController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_order_messages_index');
     }
 
+    /**
+     * Delete order messages in bulk action
+     *
+     * @AdminSecurity(
+     *     "is_granted(['delete'], request.get('_legacy_controller'))",
+     *     redirectRoute="admin_order_messages_index"
+     * )
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
     public function bulkDeleteAction(Request $request): RedirectResponse
     {
         try {
