@@ -1,5 +1,6 @@
-{#**
- * 2007-2019 PrestaShop SA and Contributors
+<?php
+/**
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -21,19 +22,33 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
+namespace PrestaShop\PrestaShop\Core\Domain\Currency\QueryResult;
 
-{% block content %}
-  <div class="row justify-content-center">
-    <div class="col">
-      {{ include('@PrestaShop/Admin/Improve/International/Currency/Blocks/form.html.twig', {'currencyForm': currencyForm}) }}
-    </div>
-  </div>
-{% endblock %}
+/**
+ * Class ExchangeRate
+ */
+class ExchangeRate
+{
+    /**
+     * @var float|int
+     */
+    private $exchangeRate;
 
-{% block javascripts %}
-  {{ parent() }}
-  <script src="{{ asset('themes/new-theme/public/currency_form.bundle.js') }}"></script>
-{% endblock %}
+    /**
+     * @param float|int $exchangeRate
+     */
+    public function __construct($exchangeRate)
+    {
+        $this->exchangeRate = $exchangeRate;
+    }
+
+    /**
+     * @return float
+     */
+    public function getValue()
+    {
+        return $this->exchangeRate;
+    }
+}

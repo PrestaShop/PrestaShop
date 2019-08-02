@@ -457,7 +457,7 @@
           {% set label = name|humanize %}
       {% endif %}
 
-      {% if material_design is defined %}
+      {% if material_design is defined or attr.material_design is defined %}
         <div class="md-checkbox md-checkbox-inline">
           <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
           {{- widget|raw -}}
