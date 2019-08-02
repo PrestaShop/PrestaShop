@@ -70,14 +70,14 @@ abstract class AbstractProductCommand
 
     /**
      * @todo: I need cleanHtml validation in handler
-     * @var array|string[]
+     * @var string[]
      */
     private $localizedSummary;
 
     /**
      * @todo: I need cleanHtml validation in handler
      *
-     * @var array|string[]
+     * @var string[]
      */
     private $localizedDescription;
 
@@ -240,7 +240,7 @@ abstract class AbstractProductCommand
     }
 
     /**
-     * @return array|string[]
+     * @return string[]
      */
     public function getLocalizedSummary(): ?array
     {
@@ -248,7 +248,7 @@ abstract class AbstractProductCommand
     }
 
     /**
-     * @param array|string[] $localizedSummary
+     * @param string[] $localizedSummary
      *
      * @return self
      */
@@ -260,7 +260,7 @@ abstract class AbstractProductCommand
     }
 
     /**
-     * @return array|string[]
+     * @return string[]
      */
     public function getLocalizedDescription(): array
     {

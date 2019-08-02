@@ -24,48 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\CustomizationField\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\CustomizationField\Exception;
 
-/**
- * File type customization field.
- */
-final class FileCustomizationField implements CustomizationFieldInterface
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+
+class ProductCustomizationFieldConstraintException extends ProductException
 {
-    /**
-     * @var string[]
-     */
-    private $localizedLabels;
-
-    /**
-     * @var bool
-     */
-    private $isRequired;
-
-    /**
-     * @param array $localizedLabels
-     * @param bool $isRequired
-     *
-     * ProductConstraintException
-     */
-    public function __construct(array $localizedLabels, bool $isRequired)
-    {
-        $this->localizedLabels = $localizedLabels;
-        $this->isRequired = $isRequired;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getLocalizedLabels(): array
-    {
-        return $this->localizedLabels;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isRequired(): bool
-    {
-        return $this->isRequired;
-    }
+    public const INVALID_TYPE = 1;
 }

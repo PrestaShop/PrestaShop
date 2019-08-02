@@ -24,24 +24,19 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\CustomizationField\ValueObject;
+namespace Tests\Unit\Core\Domain\Product\CustomizationField\ValueObject;
 
-/**
- * Defines contract for customization fields.
- */
-interface CustomizationFieldInterface
+use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Domain\Product\CustomizationField\Exception\ProductCustomizationFieldConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\CustomizationField\ValueObject\CustomizationField;
+
+class CustomizationFieldTest extends TestCase
 {
-    /**
-     * Gets localised labels of customization field.
-     *
-     * @return string[]
-     */
-    public function getLocalizedLabels(): array;
+    public function testItDoesNotAllowIncorrectTypeToBePassed()
+    {
+        $this->expectException(ProductCustomizationFieldConstraintException::class);
+        $this->expectExceptionCode(ProductCustomizationFieldConstraintException::INVALID_TYPE);
 
-    /**
-     * Determines if field is required or not.
-     *
-     * @return bool
-     */
-    public function isRequired(): bool;
+        new CustomizationField(10, [], false);
+    }
 }

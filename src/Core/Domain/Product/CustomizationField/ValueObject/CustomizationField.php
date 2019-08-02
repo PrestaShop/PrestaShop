@@ -26,13 +26,19 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\CustomizationField\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\CustomizationField\Exception\ProductCustomizationFieldConstraintException;
+use function in_array;
 
 /**
- * Text type customization field.
+ * Holds products customization field.
  */
-final class TextCustomizationField implements CustomizationFieldInterface
+class CustomizationField
 {
+    public const TYPE_TEXT = 1;
+    public const TYPE_FILE = 2;
+
+    private $type;
+
     /**
      * @var string[]
      */
@@ -44,19 +50,31 @@ final class TextCustomizationField implements CustomizationFieldInterface
     private $isRequired;
 
     /**
+     * @param int $type
      * @param array $localizedLabels
      * @param bool $isRequired
      *
-     * ProductConstraintException
+     * @throws ProductCustomizationFieldConstraintException
      */
-    public function __construct(array $localizedLabels, bool $isRequired)
+    public function __construct(int $type, array $localizedLabels, bool $isRequired)
     {
+        $this->assertIsValidType($type);
+
+        $this->type = $type;
         $this->localizedLabels = $localizedLabels;
         $this->isRequired = $isRequired;
     }
 
     /**
-     * {@inheritdoc}
+     * @return int
+     */
+    public function getType(): int
+    {
+        return $this->type;
+    }
+
+    /**
+     * @return string[]
      */
     public function getLocalizedLabels(): array
     {
@@ -64,10 +82,35 @@ final class TextCustomizationField implements CustomizationFieldInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @return bool
      */
     public function isRequired(): bool
     {
         return $this->isRequired;
+    }
+
+    /**
+     * @param int $type
+     *
+     * @throws ProductCustomizationFieldConstraintException
+     */
+    private function assertIsValidType(int $type): void
+    {
+        $availableTypes = [
+            self::TYPE_TEXT,
+            self::TYPE_FILE,
+        ];
+
+        if (!in_array($type, $availableTypes, true)) {
+            throw new ProductCustomizationFieldConstraintException(
+                sprintf(
+                    'Invalid type %d given. Available types are text with id %d and file with id %d',
+                    $type,
+                    self::TYPE_TEXT,
+                    self::TYPE_FILE
+                ),
+                ProductCustomizationFieldConstraintException::INVALID_TYPE
+            );
+        }
     }
 }

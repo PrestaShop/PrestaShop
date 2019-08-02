@@ -26,7 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\CustomizationField\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\CustomizationField\ValueObject\CustomizationFieldInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\CustomizationField\Exception\ProductCustomizationFieldConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\CustomizationField\ValueObject\CustomizationField;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
@@ -40,19 +41,21 @@ class UpdateProductCustomizationFieldsCommand
     private $productId;
 
     /**
-     * @var CustomizationFieldInterface[]
+     * @var CustomizationField[]
      */
     private $customizationFields;
 
     /**
      *
      * @param int $productId
-     * @param CustomizationFieldInterface[] $customizationFields
+     * @param array $customizationFields
+     *
+     * @throws ProductCustomizationFieldConstraintException
      */
     public function __construct(int $productId, array $customizationFields)
     {
         $this->productId = new ProductId($productId);
-        $this->customizationFields = $customizationFields;
+        $this->setCustomizationFields($customizationFields);
     }
 
     /**
@@ -64,10 +67,25 @@ class UpdateProductCustomizationFieldsCommand
     }
 
     /**
-     * @return CustomizationFieldInterface[]
+     * @return CustomizationField[]
      */
     public function getCustomizationFields(): array
     {
         return $this->customizationFields;
+    }
+
+    /**
+     * @param array $customizationFields
+     * @throws ProductCustomizationFieldConstraintException
+     */
+    private function setCustomizationFields(array $customizationFields): void
+    {
+        foreach ($customizationFields as $customizationField) {
+            $this->customizationFields[] = new CustomizationField(
+                $customizationField['type'],
+                $customizationField['titles'],
+                $customizationField['is_required']
+            );
+        }
     }
 }
