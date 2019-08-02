@@ -47,7 +47,7 @@ CREATE TABLE `PREFIX_address` (
 /* Used for search, if a search string is present inside the table, search the alias as well */
 CREATE TABLE `PREFIX_alias` (
   `id_alias` int(10) unsigned NOT NULL auto_increment,
-  `alias` varchar(255) NOT NULL,
+  `alias` varchar(191) NOT NULL,
   `search` varchar(255) NOT NULL,
   `active` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id_alias`),
@@ -1144,7 +1144,7 @@ CREATE TABLE `PREFIX_module` (
 /* Module / class authorization_role */
 CREATE TABLE `PREFIX_authorization_role` (
   `id_authorization_role` int(10) unsigned NOT NULL auto_increment,
-  `slug` VARCHAR(255) NOT NULL,
+  `slug` VARCHAR(191) NOT NULL,
   PRIMARY KEY (`id_authorization_role`),
   UNIQUE KEY (`slug`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
@@ -2722,7 +2722,7 @@ CREATE TABLE `PREFIX_category_shop` (
 CREATE TABLE `PREFIX_module_preference` (
   `id_module_preference` int(11) NOT NULL auto_increment,
   `id_employee` int(11) NOT NULL,
-  `module` varchar(255) NOT NULL,
+  `module` varchar(191) NOT NULL,
   `interest` tinyint(1) DEFAULT NULL,
   `favorite` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id_module_preference`),
@@ -2733,7 +2733,7 @@ CREATE TABLE `PREFIX_tab_module_preference` (
   `id_tab_module_preference` int(11) NOT NULL auto_increment,
   `id_employee` int(11) NOT NULL,
   `id_tab` int(11) NOT NULL,
-  `module` varchar(255) NOT NULL,
+  `module` varchar(191) NOT NULL,
   PRIMARY KEY (`id_tab_module_preference`),
   UNIQUE KEY `employee_module` (
     `id_employee`, `id_tab`, `module`
@@ -2797,7 +2797,7 @@ CREATE TABLE IF NOT EXISTS `PREFIX_mail` (
 
 CREATE TABLE `PREFIX_smarty_lazy_cache` (
   `template_hash` varchar(32) NOT NULL DEFAULT '',
-  `cache_id` varchar(255) NOT NULL DEFAULT '',
+  `cache_id` varchar(191) NOT NULL DEFAULT '',
   `compile_id` varchar(32) NOT NULL DEFAULT '',
   `filepath` varchar(255) NOT NULL DEFAULT '',
   `last_update` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
