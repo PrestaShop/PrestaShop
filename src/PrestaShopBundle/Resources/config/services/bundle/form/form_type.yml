@@ -704,11 +704,11 @@ services:
 
     form.type.currency:
         class: 'PrestaShopBundle\Form\Admin\Improve\International\Currencies\CurrencyType'
+        parent: 'form.type.translatable.aware'
+        public: true
         arguments:
             - '@=service("prestashop.core.form.choice_provider.currency_name_by_iso_code").getChoices()'
             - '@=service("prestashop.adapter.multistore_feature").isUsed()'
-        calls:
-            - { method: setTranslator, arguments: ['@translator'] }
         tags:
             - { name: form.type }
 

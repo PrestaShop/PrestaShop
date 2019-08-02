@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
 use Exception;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\DeleteCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\ToggleCurrencyStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\RefreshExchangeRatesCommand;
@@ -39,9 +40,12 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintExcep
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\AutomateExchangeRatesUpdateException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Query\GetCurrencyExchangeRate;
+use PrestaShop\PrestaShop\Core\Domain\Currency\QueryResult\ExchangeRate;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CurrencyGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\Reader;
 use PrestaShop\PrestaShop\Core\Search\Filters\CurrencyFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -209,6 +213,54 @@ class CurrencyController extends FrameworkBundleAdminController
         $this->addFlash('success', $this->trans('Successful deletion.', 'Admin.Notifications.Success'));
 
         return $this->redirectToRoute('admin_currencies_index');
+    }
+
+    /**
+     * Get the default data for a currency (from CLDR)
+     *
+     * @param string $currencyIsoCode
+     *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @DemoRestricted(redirectRoute="admin_currencies_index")
+     *
+     * @return JsonResponse
+     */
+    public function getCLDRDataAction($currencyIsoCode)
+    {
+        /** @var LegacyContext $legacyContext */
+        $legacyContext = $this->get('prestashop.adapter.legacy.context');
+        $languages = $legacyContext->getAvailableLanguages();
+
+        /** @var Reader $dataSource */
+        $reader = $this->get('prestashop.core.localization.cldr.reader');
+
+        $cldrCurrency = [];
+        foreach ($languages as $language) {
+            $localeData = $reader->readLocaleData($language['locale']);
+            foreach ($localeData->getCurrencies() as $currencyData) {
+                if ($currencyData->getIsoCode() != $currencyIsoCode) {
+                    continue;
+                }
+                $cldrCurrency['names'][$language['id_lang']] = $currencyData->getDisplayNames()['default'];
+                if (isset($currencyData->getSymbols()['default'])) {
+                    $cldrCurrency['symbols'][$language['id_lang']] = $currencyData->getSymbols()['default'];
+                } else {
+                    $cldrCurrency['symbols'][$language['id_lang']] = $currencyData->getIsoCode();
+                }
+
+                $cldrCurrency['iso_code'] = $currencyData->getIsoCode();
+                $cldrCurrency['numeric_iso_code'] = $currencyData->getNumericIsoCode();
+            }
+        }
+        try {
+            /** @var ExchangeRate $exchangeRate */
+            $exchangeRate = $this->getQueryBus()->handle(new GetCurrencyExchangeRate($currencyIsoCode));
+            $cldrCurrency['exchange_rate'] = $exchangeRate->getValue();
+        } catch (CurrencyException $e) {
+            $cldrCurrency['exchange_rate'] = 1;
+        }
+
+        return new JsonResponse($cldrCurrency);
     }
 
     /**

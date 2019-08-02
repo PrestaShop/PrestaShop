@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
+use Tools;
 
 /**
  * Class CurrencyGridDataFactory is responsible for providing modified currency list grid data.
@@ -81,7 +82,7 @@ final class CurrencyGridDataFactory implements GridDataFactoryInterface
         $result = [];
         foreach ($records as $key => $record) {
             $result[$key] = $record;
-            $result[$key]['currency'] = ucfirst($result[$key]['name']);
+            $result[$key]['currency'] = Tools::ucfirst($result[$key]['name']);
             $result[$key]['conversion_rate'] = (float) $result[$key]['conversion_rate'];
         }
 

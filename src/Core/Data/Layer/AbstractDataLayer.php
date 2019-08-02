@@ -196,7 +196,7 @@ abstract class AbstractDataLayer
                 $this->doWrite($id, $data);
             } catch (Exception $e) {
                 throw new DataLayerException(
-                    'Unable to write into "' . $id . '"" (data layer : "' . __CLASS__ . '")',
+                    'Unable to write into "' . $id . '"" (data layer : "' . get_class($this) . '")',
                     0,
                     $e
                 );
@@ -230,7 +230,7 @@ abstract class AbstractDataLayer
                 $this->doWrite($id, $data);
             } catch (Exception $e) {
                 throw new DataLayerException(
-                    'Unable to write into "' . $id . '" (data layer "' . __CLASS__ . '")',
+                    'Unable to write into "' . $id . '" (data layer "' . get_class($this) . '")',
                     0,
                     $e
                 );

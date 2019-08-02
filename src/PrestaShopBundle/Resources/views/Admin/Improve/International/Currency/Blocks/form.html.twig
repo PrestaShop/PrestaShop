@@ -26,7 +26,12 @@
 {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
 
 {% block form %}
-  {{ form_start(currencyForm) }}
+  {{ form_start(currencyForm, {
+    'attr': {
+      'id': 'currency_form',
+      'data-get-cldr-data': path('admin_currencies_get_cldr_data', {'currencyIsoCode': 'CURRENCY_ISO_CODE'}),
+    }
+  }) }}
 
   <div class="card">
     <div class="card-header">
@@ -45,7 +50,11 @@
         }) }}
 
         {{ ps.form_group_row(currencyForm.name, {}, {
-          'label': 'Currency name'|trans({}, 'Admin.Global'),
+          'label': 'Currency name'|trans({}, 'Admin.International.Feature'),
+        }) }}
+
+        {{ ps.form_group_row(currencyForm.symbol, {}, {
+          'label': 'Symbol'|trans({}, 'Admin.International.Feature'),
         }) }}
 
         {{ ps.form_group_row(currencyForm.iso_code, {}, {

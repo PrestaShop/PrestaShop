@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
 
 class CurrencyCore extends ObjectModel
@@ -189,9 +190,9 @@ class CurrencyCore extends ObjectModel
             }
 
             if (is_array($this->name)) {
-                $this->name = ucfirst($this->name[$idLang]);
+                $this->name = Tools::ucfirst($this->name[$idLang]);
             } else {
-                $this->name = ucfirst($this->name);
+                $this->name = Tools::ucfirst($this->name);
             }
 
             $this->iso_code_num = $this->numeric_iso_code;
