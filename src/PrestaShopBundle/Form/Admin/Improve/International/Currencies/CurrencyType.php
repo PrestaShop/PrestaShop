@@ -78,7 +78,9 @@ class CurrencyType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        if (!isset($options['data']['iso_code'])) {
+        $newCurrency = !isset($options['data']['iso_code']);
+        $customCurrency = isset($options['data']['is_custom']) ? $options['data']['is_custom'] : false;
+        if ($newCurrency) {
             $builder
                 ->add('selected_iso_code', ChoiceType::class, [
                     'choices' => $this->allCurrencies,
@@ -103,13 +105,16 @@ class CurrencyType extends TranslatorAwareType
         }
 
         $builder
-            ->add('name', TranslatableType::class, [
+            ->add('names', TranslatableType::class, [
                 'type' => TextType::class,
             ])
-            ->add('symbol', TranslatableType::class, [
+            ->add('symbols', TranslatableType::class, [
                 'type' => TextType::class,
             ])
             ->add('iso_code', TextType::class, [
+                'attr' => [
+                    'disabled' => !$newCurrency && !$customCurrency
+                ],
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->trans(
@@ -123,6 +128,9 @@ class CurrencyType extends TranslatorAwareType
                 ],
             ])
             ->add('numeric_iso_code', NumberType::class, [
+                'attr' => [
+                    'disabled' => !$newCurrency && !$customCurrency
+                ],
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->trans(
