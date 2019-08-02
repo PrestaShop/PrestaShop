@@ -51,11 +51,11 @@
         }) }}
         {% endif %}
 
-        {{ ps.form_group_row(currencyForm.name, {}, {
+        {{ ps.form_group_row(currencyForm.names, {}, {
           'label': 'Currency name'|trans({}, 'Admin.International.Feature'),
         }) }}
 
-        {{ ps.form_group_row(currencyForm.symbol, {}, {
+        {{ ps.form_group_row(currencyForm.symbols, {}, {
           'label': 'Symbol'|trans({}, 'Admin.International.Feature'),
         }) }}
 
