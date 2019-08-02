@@ -29,13 +29,13 @@ namespace PrestaShopBundle\Form\Admin\Improve\International\Currencies;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
-use PrestaShopBundle\Translation\TranslatorAwareTrait;
-use Symfony\Component\Form\AbstractType;
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\GreaterThan;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
@@ -43,10 +43,8 @@ use Symfony\Component\Validator\Constraints\Type;
 /**
  * Class CurrencyType
  */
-class CurrencyType extends AbstractType
+class CurrencyType extends TranslatorAwareType
 {
-    use TranslatorAwareTrait;
-
     /**
      * @var array
      */
@@ -58,11 +56,18 @@ class CurrencyType extends AbstractType
     private $isShopFeatureEnabled;
 
     /**
+     * @param TranslatorInterface $translator
+     * @param array $locales
      * @param array $allCurrencies
-     * @param bool $isShopFeatureEnabled
+     * @param $isShopFeatureEnabled
      */
-    public function __construct(array $allCurrencies, $isShopFeatureEnabled)
+    public function __construct(
+        TranslatorInterface $translator,
+        array $locales,
+        array $allCurrencies,
+        $isShopFeatureEnabled)
     {
+        parent::__construct($translator, $locales);
         $this->allCurrencies = $allCurrencies;
         $this->isShopFeatureEnabled = $isShopFeatureEnabled;
     }
@@ -81,9 +86,15 @@ class CurrencyType extends AbstractType
             ])
             ->add('is_custom', CheckboxType::class, [
                 'required' => false,
-                'label' => $this->trans('Create new', [], 'Admin.International.Feature'),
+                'label' => $this->trans('Create new', 'Admin.International.Feature'),
+                'attr' => [
+                    'material_design' => true,
+                ],
             ])
             ->add('name', TranslatableType::class, [
+                'type' => TextType::class,
+            ])
+            ->add('symbol', TranslatableType::class, [
                 'type' => TextType::class,
             ])
             ->add('iso_code', TextType::class, [
@@ -91,10 +102,10 @@ class CurrencyType extends AbstractType
                     new NotBlank([
                         'message' => $this->trans(
                             'The %s field is required.',
+                            'Admin.Notifications.Error',
                             [
-                                sprintf('"%s"', $this->trans('Exchange rate', [], 'Admin.International.Feature')),
-                            ],
-                            'Admin.Notifications.Error'
+                                sprintf('"%s"', $this->trans('Exchange rate', 'Admin.International.Feature')),
+                            ]
                         ),
                     ]),
                 ],
@@ -104,36 +115,35 @@ class CurrencyType extends AbstractType
                     new NotBlank([
                         'message' => $this->trans(
                             'The %s field is required.',
+                            'Admin.Notifications.Error',
                             [
-                                sprintf('"%s"', $this->trans('Numeric iso code', [], 'Admin.International.Feature')),
-                            ],
-                            'Admin.Notifications.Error'
+                                sprintf('"%s"', $this->trans('Numeric iso code', 'Admin.International.Feature')),
+                            ]
                         ),
                     ]),
                     new Type([
                         'type' => 'integer',
                         'message' => $this->trans(
                             'This value should be of type {{ type }}.',
+                            'Admin.Notifications.Error',
                             [
                                 '%value%' => 0,
-                            ],
-                            'Admin.Notifications.Error'
+                            ]
                         ),
                     ]),
                     new GreaterThan([
                         'value' => 0,
                         'message' => $this->trans(
                             'This value should be greater than %value%',
+                            'Admin.Notifications.Error',
                             [
                                 '%value%' => 0,
-                            ],
-                            'Admin.Notifications.Error'
+                            ]
                         ),
                     ]),
                 ],
                 'invalid_message' => $this->trans(
                     'This field is invalid, it must contain numeric values',
-                    [],
                     'Admin.Notifications.Error'
                 ),
             ])
@@ -143,26 +153,25 @@ class CurrencyType extends AbstractType
                     new NotBlank([
                         'message' => $this->trans(
                             'The %s field is required.',
+                            'Admin.Notifications.Error',
                             [
-                                sprintf('"%s"', $this->trans('Exchange rate', [], 'Admin.International.Feature')),
-                            ],
-                            'Admin.Notifications.Error'
+                                sprintf('"%s"', $this->trans('Exchange rate', 'Admin.International.Feature')),
+                            ]
                         ),
                     ]),
                     new GreaterThan([
                         'value' => 0,
                         'message' => $this->trans(
                             'This value should be greater than %value%',
+                            'Admin.Notifications.Error',
                             [
                                 '%value%' => 0,
-                            ],
-                            'Admin.Notifications.Error'
+                            ]
                         ),
                     ]),
                 ],
                 'invalid_message' => $this->trans(
                     'This field is invalid, it must contain numeric values',
-                    [],
                     'Admin.Notifications.Error'
                 ),
             ])
@@ -177,10 +186,10 @@ class CurrencyType extends AbstractType
                     new NotBlank([
                         'message' => $this->trans(
                             'The %s field is required.',
+                            'Admin.Notifications.Error',
                             [
-                                sprintf('"%s"', $this->trans('Shop association', [], 'Admin.Global')),
-                            ],
-                            'Admin.Notifications.Error'
+                                sprintf('"%s"', $this->trans('Shop association', 'Admin.Global')),
+                            ]
                         ),
                     ]),
                 ],

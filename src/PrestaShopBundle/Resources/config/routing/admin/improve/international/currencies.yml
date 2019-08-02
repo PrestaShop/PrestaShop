@@ -73,3 +73,10 @@ admin_currencies_refresh_exchange_rates:
         _legacy_controller: AdminCurrencies
         _legacy_link: AdminCurrencies:SubmitExchangesRates
 
+admin_currencies_get_cldr_data:
+  path: /cldr-datas/{currencyIsoCode}
+  methods: GET
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Improve\International\Currency:getCLDRData'
+    _legacy_controller: AdminCurrencies
+    _legacy_link: AdminCurrencies:getCLDRDataAction

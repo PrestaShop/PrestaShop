@@ -29,7 +29,6 @@ import FiltersResetExtension from '../../components/grid/extension/filters-reset
 import ReloadListActionExtension from '../../components/grid/extension/reload-list-extension';
 import ColumnTogglingExtension from '../../components/grid/extension/column-toggling-extension';
 import SubmitRowActionExtension from '../../components/grid/extension/action/row/submit-row-action-extension';
-import ChoiceTree from '../../components/form/choice-tree';
 import ExchangeRatesUpdateScheduler from './ExchangeRatesUpdateScheduler';
 import FiltersSubmitButtonEnablerExtension
   from '../../components/grid/extension/filters-submit-button-enabler-extension';
@@ -46,9 +45,6 @@ $(() => {
   currency.addExtension(new SubmitRowActionExtension());
   currency.addExtension(new FiltersSubmitButtonEnablerExtension());
   currency.addExtension(new LinkRowActionExtension());
-
-  const choiceTree = new ChoiceTree('#currency_shop_association');
-  choiceTree.enableAutoCheckChildren();
 
   new ExchangeRatesUpdateScheduler();
 });
