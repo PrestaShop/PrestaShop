@@ -38,20 +38,39 @@ $(() => {
   const getCLDRDataUrl = $currencyForm.data('get-cldr-data');
   const $currencySelector = $(currencyFormMap.currencySelector);
   $currencySelector.change(() => {
-    const getCurrencyData = getCLDRDataUrl.replace('CURRENCY_ISO_CODE', $currencySelector.val());
-    console.log(getCurrencyData);
-    $.get(getCurrencyData).then((currencyData) => {
-      for (let langId in currencyData.names) {
-        let langNameSelector = currencyFormMap.nameSelector.replace('LANG_ID', langId);
-        $(langNameSelector).val(currencyData.names[langId]);
-      }
-      for (let langId in currencyData.symbols) {
-        let langSymbolSelector = currencyFormMap.symbolSelector.replace('LANG_ID', langId);
-        $(langSymbolSelector).val(currencyData.symbols[langId]);
-      }
-      $(currencyFormMap.isoCodeSelector).val(currencyData.iso_code);
-      $(currencyFormMap.numericIsoCodeSelector).val(currencyData.numeric_iso_code);
-      $(currencyFormMap.exchangeRateSelector).val(currencyData.exchange_rate);
-    })
+    const selectedISOCode = $currencySelector.val();
+    if ('' !== selectedISOCode) {
+      $(currencyFormMap.isCustomCheckbox).prop('checked', false);
+      $(currencyFormMap.isoCodeSelector).prop('disabled', true);
+      $(currencyFormMap.numericIsoCodeSelector).prop('disabled', true);
+
+      const getCurrencyData = getCLDRDataUrl.replace('CURRENCY_ISO_CODE', selectedISOCode);
+      $.get(getCurrencyData).then((currencyData) => {
+        for (let langId in currencyData.names) {
+          let langNameSelector = currencyFormMap.nameSelector.replace('LANG_ID', langId);
+          $(langNameSelector).val(currencyData.names[langId]);
+        }
+        for (let langId in currencyData.symbols) {
+          let langSymbolSelector = currencyFormMap.symbolSelector.replace('LANG_ID', langId);
+          $(langSymbolSelector).val(currencyData.symbols[langId]);
+        }
+        $(currencyFormMap.isoCodeSelector).val(currencyData.iso_code);
+        $(currencyFormMap.numericIsoCodeSelector).val(currencyData.numeric_iso_code);
+        if (currencyData.exchange_rate) {
+          $(currencyFormMap.exchangeRateSelector).val(currencyData.exchange_rate);
+        }
+      })
+    } else {
+      $(currencyFormMap.isoCodeSelector).prop('disabled', false);
+      $(currencyFormMap.numericIsoCodeSelector).prop('disabled', false);
+    }
+  });
+
+  $(currencyFormMap.isCustomCheckbox).change(() => {
+    if ($(currencyFormMap.isCustomCheckbox).prop('checked')) {
+      $currencySelector.val('');
+      $(currencyFormMap.isoCodeSelector).prop('disabled', false);
+      $(currencyFormMap.numericIsoCodeSelector).prop('disabled', false);
+    }
   });
 });

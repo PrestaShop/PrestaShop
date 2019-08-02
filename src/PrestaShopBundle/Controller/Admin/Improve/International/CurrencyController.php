@@ -163,10 +163,9 @@ class CurrencyController extends FrameworkBundleAdminController
     public function editAction($currencyId, Request $request)
     {
         $multiStoreFeature = $this->get('prestashop.adapter.multistore_feature');
-        $currencyForm = null;
+        $currencyForm = $this->getCurrencyFormBuilder()->getFormFor($currencyId);
 
         try {
-            $currencyForm = $this->getCurrencyFormBuilder()->getFormFor($currencyId);
             $currencyForm->handleRequest($request);
 
             $result = $this->getCurrencyFormHandler()->handleFor($currencyId, $currencyForm);
@@ -238,26 +237,27 @@ class CurrencyController extends FrameworkBundleAdminController
         foreach ($languages as $language) {
             $localeData = $reader->readLocaleData($language['locale']);
             foreach ($localeData->getCurrencies() as $currencyData) {
-                if ($currencyData->getIsoCode() != $currencyIsoCode) {
+                if ($currencyData->getIsoCode() !== $currencyIsoCode) {
                     continue;
                 }
                 $cldrCurrency['names'][$language['id_lang']] = $currencyData->getDisplayNames()['default'];
-                if (isset($currencyData->getSymbols()['default'])) {
-                    $cldrCurrency['symbols'][$language['id_lang']] = $currencyData->getSymbols()['default'];
-                } else {
-                    $cldrCurrency['symbols'][$language['id_lang']] = $currencyData->getIsoCode();
-                }
-
+                $cldrCurrency['symbols'][$language['id_lang']] = $currencyData->getSymbols()['default'] ?: $currencyData->getIsoCode();
                 $cldrCurrency['iso_code'] = $currencyData->getIsoCode();
                 $cldrCurrency['numeric_iso_code'] = $currencyData->getNumericIsoCode();
             }
         }
+
         try {
             /** @var ExchangeRate $exchangeRate */
             $exchangeRate = $this->getQueryBus()->handle(new GetCurrencyExchangeRate($currencyIsoCode));
             $cldrCurrency['exchange_rate'] = $exchangeRate->getValue();
         } catch (CurrencyException $e) {
-            $cldrCurrency['exchange_rate'] = 1;
+            $logger = $this->container->get('logger');
+            $logger->error(sprintf('Unable to find the exchange rate: %s', $e->getMessage()));
+
+            //Unable to find the exchange rate, either the currency doesn't exist (custom)
+            //or the currency feed could not be fetched, use the default rate as a fallback
+            $cldrCurrency['exchange_rate'] = '';
         }
 
         return new JsonResponse($cldrCurrency);
