@@ -29,9 +29,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ProductImageConstraintException;
 
 /**
- * Image which is about to be deleted.
+ * Product image which can be identified by id.
  */
-class DeletedImage
+class ExistingProductImage extends ProductImage
 {
     /**
      * @var ImageId
@@ -40,18 +40,27 @@ class DeletedImage
 
     /**
      * @param int $imageId
+     * @param int $position
+     * @param bool $isCover
+     * @param array $localizedCaptions
      *
      * @throws ProductImageConstraintException
      */
-    public function __construct(int $imageId)
-    {
+    public function __construct(
+        int $imageId,
+        int $position,
+        bool $isCover,
+        array $localizedCaptions
+    ) {
+        parent::__construct($position, $isCover, $localizedCaptions);
+
         $this->imageId = new ImageId($imageId);
     }
 
     /**
-     * {@inheritdoc}
+     * @return ImageId
      */
-    public function getId(): ImageId
+    public function getImageId(): ImageId
     {
         return $this->imageId;
     }

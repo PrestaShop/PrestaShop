@@ -24,31 +24,52 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\Command;
+
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ProductImageConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
- * Defines contract for image which can be configured.
+ * Deletes product image.
  */
-interface ConfigurableImageInterface
+class DeleteProductImageCommand
 {
     /**
-     * Gets the position of an image.
-     *
-     * @return int
+     * @var ProductId
      */
-    public function getPosition(): int;
+    private $productId;
 
     /**
-     * Determines if the image is used as cover image
-     *
-     * @return bool
+     * @var ImageId
      */
-    public function isCover(): bool;
+    private $imageId;
 
     /**
-     * Gets captions which has key id language language and string value.
+     * @param int $productId
+     * @param int $imageId
      *
-     * @return string[]
+     * @throws ProductImageConstraintException
      */
-    public function getLocalizedCaptions(): array;
+    public function __construct(int $productId, int $imageId)
+    {
+        $this->productId = new ProductId($productId);
+        $this->imageId = new ImageId($imageId);
+    }
+
+    /**
+     * @return ImageId
+     */
+    public function getImageId(): ImageId
+    {
+        return $this->imageId;
+    }
+
+    /**
+     * @return ProductId
+     */
+    public function getProductId(): ProductId
+    {
+        return $this->productId;
+    }
 }

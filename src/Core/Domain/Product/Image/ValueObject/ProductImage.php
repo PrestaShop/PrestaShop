@@ -26,12 +26,10 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ProductImageConstraintException;
-
 /**
- * Existing image
+ * Holds product image data.
  */
-final class ExistingConfigurableImage implements ConfigurableImageInterface
+class ProductImage
 {
     /**
      * @var int
@@ -49,32 +47,23 @@ final class ExistingConfigurableImage implements ConfigurableImageInterface
     private $localizedCaptions;
 
     /**
-     * @var ImageId
-     */
-    private $imageId;
-
-    /**
-     * @param int $imageId
      * @param int $position
      * @param bool $isCover
      * @param array $localizedCaptions
-     *
-     * @throws ProductImageConstraintException
      */
     public function __construct(
-        int $imageId,
         int $position,
         bool $isCover,
         array $localizedCaptions
-    ) {
+    ){
+
         $this->position = $position;
         $this->isCover = $isCover;
         $this->localizedCaptions = $localizedCaptions;
-        $this->imageId = new ImageId($imageId);
     }
 
     /**
-     * {@inheritdoc}
+     * @return int
      */
     public function getPosition(): int
     {
@@ -82,7 +71,7 @@ final class ExistingConfigurableImage implements ConfigurableImageInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @return bool
      */
     public function isCover(): bool
     {
@@ -90,18 +79,10 @@ final class ExistingConfigurableImage implements ConfigurableImageInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @return array
      */
     public function getLocalizedCaptions(): array
     {
         return $this->localizedCaptions;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getId(): ImageId
-    {
-        return $this->imageId;
     }
 }

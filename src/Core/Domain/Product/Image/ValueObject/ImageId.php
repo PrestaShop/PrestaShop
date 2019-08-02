@@ -42,7 +42,7 @@ class ImageId
      */
     public function __construct(int $imageId)
     {
-        if (0 > $imageId) {
+        if (0 >= $imageId) {
             throw new ProductImageConstraintException(
                 'Image id cannot be negative',
                 ProductImageConstraintException::INVALID_IMAGE_ID

@@ -26,7 +26,10 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Image\DTO\ImageCollection;
+;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ProductImageConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ExistingProductImage;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ProductImage;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
@@ -40,18 +43,20 @@ class UpdateProductImagesCommand
     private $productId;
 
     /**
-     * @var ImageCollection
+     * @var ExistingProductImage[]|ProductImage[]
      */
     private $images;
 
     /**
      * @param int $productId
-     * @param ImageCollection $images
+     * @param array $images
+     *
+     * @throws ProductImageConstraintException
      */
-    public function __construct(int $productId, ImageCollection $images)
+    public function __construct(int $productId, array $images)
     {
+        $this->setImages($images);
         $this->productId = new ProductId($productId);
-        $this->images = $images;
     }
 
     /**
@@ -63,10 +68,30 @@ class UpdateProductImagesCommand
     }
 
     /**
-     * @return ImageCollection
+     * @return ExistingProductImage[]|ProductImage[]
      */
-    public function getImages(): ImageCollection
+    public function getImages(): array
     {
         return $this->images;
+    }
+
+    /**
+     * @param array $images
+     *
+     * @throws ProductImageConstraintException
+     */
+    private function setImages(array $images): void
+    {
+        foreach ($images as $image) {
+            $commonParameters = [$image['position'], $image['is_cover'], $image['captions']];
+
+            if (isset($image['id'])) {
+                $this->images[] = new ExistingProductImage($image['id'], ...$commonParameters);
+
+                continue;
+            }
+
+            $this->images[] = new ProductImage(...$commonParameters);
+        }
     }
 }
