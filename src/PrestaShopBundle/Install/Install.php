@@ -103,7 +103,7 @@ class Install extends AbstractInstall
 
         if (null === $logger) {
             $cacheDir = _PS_ROOT_DIR_ . '/var/logs/';
-            $file = $cacheDir . (_PS_MODE_DEV_ ? 'dev' : 'prod') . '_' . @date('Ymd') . '_installation.log';
+            $file = $cacheDir . _PS_ENV_ . '_' . @date('Ymd') . '_installation.log';
             $logger = new FileLogger();
             $logger->setFilename($file);
             $this->logger = $logger;
