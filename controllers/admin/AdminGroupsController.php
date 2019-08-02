@@ -187,7 +187,7 @@ class AdminGroupsControllerCore extends AdminController
                 $this->processResetFilters();
             }
 
-            if (Tools::getIsset('submitFilter')) {
+            if (Tools::isSubmit('submitFilter')) {
                 self::$currentIndex .= '&id_group=' . (int) Tools::getValue('id_group') . '&viewgroup';
             }
         } else {
