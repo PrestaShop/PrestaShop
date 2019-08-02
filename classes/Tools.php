@@ -3793,9 +3793,10 @@ exit;
     public static function cleanNonUnicodeSupport($pattern)
     {
         $context = Context::getContext();
-        $container = isset($context->controller) ? $context->controller->getContainer() : null;
-        if (null === $container) {
-            $container = SymfonyContainer::getInstance();
+        $containerFinder = new ContainerFinder($context);
+        $container = $containerFinder->getContainer();
+        if (null === $context->container) {
+            $context->container = $container;
         }
         $characterCleaner = $container->get('prestashop.core.string.character_cleaner');
 
