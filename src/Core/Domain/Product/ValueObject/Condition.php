@@ -52,17 +52,12 @@ class Condition
     private $condition;
 
     /**
-     * @var bool
-     */
-    private $displayedOnProductPage;
-
-    /**
      * @param string $condition
      * @param bool $displayedOnProductPage
      *
      * @throws ProductConstraintException
      */
-    public function __construct(string $condition, bool $displayedOnProductPage)
+    public function __construct(string $condition)
     {
         if (!in_array($condition, self::AVAILABLE_CONDITIONS, true)) {
             throw new ProductConstraintException(
@@ -76,7 +71,6 @@ class Condition
         }
 
         $this->condition = $condition;
-        $this->displayedOnProductPage = $displayedOnProductPage;
     }
 
     /**
@@ -85,13 +79,5 @@ class Condition
     public function getCondition(): string
     {
         return $this->condition;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isDisplayedOnProductPage(): bool
-    {
-        return $this->displayedOnProductPage;
     }
 }

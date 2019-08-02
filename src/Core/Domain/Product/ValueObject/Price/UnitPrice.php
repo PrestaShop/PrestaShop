@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintExcepti
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Price;
 
 /**
+ * @todo: split my params. DO that for whole price.
  * Price per unit - e.g 10 per kilo.
  */
 class UnitPrice

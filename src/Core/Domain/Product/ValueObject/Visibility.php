@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use function in_array;
 
 /**
  * Defines where product should be visible.
@@ -66,29 +67,15 @@ class Visibility
     private $visibility;
 
     /**
-     * @var bool
-     */
-    private $isAvailableForOrder;
-
-    /**
-     * @var bool
-     */
-    private $isWebOnly;
-
-    /**
      * @param string $visibility
      *
-     * @param bool $isAvailableForOrder
-     * @param bool $isWebOnly - only sold in retail store
      * @throws ProductConstraintException
      */
-    public  function __construct(string $visibility, bool $isAvailableForOrder, bool $isWebOnly)
+    public  function __construct(string $visibility)
     {
         $this->assertIsValidVisibility($visibility);
 
         $this->visibility = $visibility;
-        $this->isAvailableForOrder = $isAvailableForOrder;
-        $this->isWebOnly = $isWebOnly;
     }
 
     /**
@@ -97,22 +84,6 @@ class Visibility
     public function getVisibility(): string
     {
         return $this->visibility;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isAvailableForOrder(): bool
-    {
-        return $this->isAvailableForOrder;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isWebOnly(): bool
-    {
-        return $this->isWebOnly;
     }
 
     /**

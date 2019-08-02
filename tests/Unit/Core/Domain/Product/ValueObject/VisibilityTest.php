@@ -38,6 +38,6 @@ class VisibilityTest extends TestCase
         $this->expectException(ProductConstraintException::class);
         $this->expectExceptionCode(ProductConstraintException::INVALID_VISIBILITY_TYPE);
 
-        new Visibility('super_invisible', false, false);
+        new Visibility('super_invisible');
     }
 }

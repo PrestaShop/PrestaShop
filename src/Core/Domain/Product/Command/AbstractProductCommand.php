@@ -121,6 +121,16 @@ abstract class AbstractProductCommand
     private $visibility;
 
     /**
+     * @var bool
+     */
+    private $isAvailableForOrder;
+
+    /**
+     * @var bool
+     */
+    private $isWebOnly;
+
+    /**
      * @var Condition
      */
     private $condition;
@@ -149,6 +159,11 @@ abstract class AbstractProductCommand
      * @var int[]
      */
     private $shopAssociation;
+
+    /**
+     * @var bool
+     */
+    private $isConditionDisplayedOnProductPage;
 
     /**
      * @param string[] $localizedProductNames
@@ -413,13 +428,15 @@ abstract class AbstractProductCommand
     }
 
     /**
-     * @param Visibility $visibility
+     * @param string $visibility
      *
      * @return self
+     *
+     * @throws ProductConstraintException
      */
-    public function setVisibility(Visibility $visibility): self
+    public function setVisibility(string $visibility): self
     {
-        $this->visibility = $visibility;
+        $this->visibility = new Visibility($visibility);
 
         return $this;
     }
@@ -433,13 +450,15 @@ abstract class AbstractProductCommand
     }
 
     /**
-     * @param Condition $condition
+     * @param string $condition
      *
      * @return self
+     *
+     * @throws ProductConstraintException
      */
-    public function setCondition(Condition $condition): self
+    public function setCondition(string $condition): self
     {
-        $this->condition = $condition;
+        $this->condition = new Condition($condition);
 
         return $this;
     }

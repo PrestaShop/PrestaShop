@@ -37,6 +37,6 @@ class ConditionTest extends TestCase
         $this->expectException(ProductConstraintException::class);
         $this->expectExceptionCode(ProductConstraintException::INVALID_CONDITION_TYPE);
 
-        new Condition('unknown', false);
+        new Condition('unknown');
     }
 }
