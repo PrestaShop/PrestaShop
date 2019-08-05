@@ -3789,16 +3789,16 @@
         },
         {
             "name": "prestashop/ps_facetedsearch",
-            "version": "v3.0.6",
+            "version": "v3.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_facetedsearch.git",
-                "reference": "2b8a461669715c9989aa223f2205f45e608b5d23"
+                "reference": "c1ee491b0861f98fa59570618ca0285d5a4e3709"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_facetedsearch/zipball/2b8a461669715c9989aa223f2205f45e608b5d23",
-                "reference": "2b8a461669715c9989aa223f2205f45e608b5d23",
+                "url": "https://api.github.com/repos/PrestaShop/ps_facetedsearch/zipball/c1ee491b0861f98fa59570618ca0285d5a4e3709",
+                "reference": "c1ee491b0861f98fa59570618ca0285d5a4e3709",
                 "shasum": ""
             },
             "require": {
@@ -3834,7 +3834,7 @@
             ],
             "description": "PrestaShop module ps_facetedsearch",
             "homepage": "https://github.com/PrestaShop/ps_facetedsearch",
-            "time": "2019-07-01T16:31:53+00:00"
+            "time": "2019-07-31T14:41:32+00:00"
         },
         {
             "name": "prestashop/ps_faviconnotificationbo",
@@ -3966,16 +3966,16 @@
         },
         {
             "name": "prestashop/ps_linklist",
-            "version": "3.0.3",
+            "version": "3.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_linklist.git",
-                "reference": "3e21e7b3ff481fdf07e078b881b1099e57d0c187"
+                "reference": "2b31859ea29fd92586892eb29f556f0023f207d2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_linklist/zipball/3e21e7b3ff481fdf07e078b881b1099e57d0c187",
-                "reference": "3e21e7b3ff481fdf07e078b881b1099e57d0c187",
+                "url": "https://api.github.com/repos/PrestaShop/ps_linklist/zipball/2b31859ea29fd92586892eb29f556f0023f207d2",
+                "reference": "2b31859ea29fd92586892eb29f556f0023f207d2",
                 "shasum": ""
             },
             "require": {
@@ -4003,7 +4003,7 @@
             ],
             "description": "PrestaShop - Link list",
             "homepage": "https://github.com/PrestaShop/ps_linklist",
-            "time": "2019-05-09T16:31:33+00:00"
+            "time": "2019-06-20T08:09:30+00:00"
         },
         {
             "name": "prestashop/ps_mainmenu",
@@ -4967,16 +4967,16 @@
         },
         {
             "name": "prestashop/translationtools-bundle",
-            "version": "v3.1.0",
+            "version": "v3.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/TranslationToolsBundle.git",
-                "reference": "7ca162cee5a24359a33ada3eba13f94f23c1c926"
+                "reference": "d1e9b0b051aaebc934f59b880233571d7b865af9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/TranslationToolsBundle/zipball/7ca162cee5a24359a33ada3eba13f94f23c1c926",
-                "reference": "7ca162cee5a24359a33ada3eba13f94f23c1c926",
+                "url": "https://api.github.com/repos/PrestaShop/TranslationToolsBundle/zipball/d1e9b0b051aaebc934f59b880233571d7b865af9",
+                "reference": "d1e9b0b051aaebc934f59b880233571d7b865af9",
                 "shasum": ""
             },
             "require": {
@@ -5022,7 +5022,7 @@
                 "prestashop",
                 "translation"
             ],
-            "time": "2019-04-19T12:27:03+00:00"
+            "time": "2019-08-05T13:44:51+00:00"
         },
         {
             "name": "prestashop/welcome",
