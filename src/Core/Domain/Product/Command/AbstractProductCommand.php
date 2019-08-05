@@ -32,15 +32,14 @@ use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Condition;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectionPage\RedirectionPageInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Price\RetailPrice;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectionPage\TypedRedirectionPageInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Price\UnitPrice;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Ean13;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Isbn;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Upc;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Visibility;
 use PrestaShop\PrestaShop\Core\Domain\TaxRule\Exception\TaxRuleConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\TaxRule\ValueObject\TaxRuleId;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Price;
 
 /**
@@ -60,14 +59,29 @@ abstract class AbstractProductCommand
     private $costPrice;
 
     /**
-     * @var RetailPrice
+     * @var Price
      */
     private $retailPrice;
 
     /**
-     * @var UnitPrice
+     * @var TaxRuleId
+     */
+    private $taxRuleId;
+
+    /**
+     * @var bool
+     */
+    private $displayOnSaleFlag;
+
+    /**
+     * @var Price
      */
     private $unitPrice;
+
+    /**
+     * @var string
+     */
+    private $unit;
 
     /**
      * @todo: I need cleanHtml validation in handler
@@ -206,53 +220,105 @@ abstract class AbstractProductCommand
     }
 
     /**
-     * @return RetailPrice
+     * @return Price
      */
-    public function getRetailPrice(): RetailPrice
+    public function getRetailPrice(): Price
     {
         return $this->retailPrice;
     }
 
     /**
-     * @param float $priceWithoutTax
+     * @return TaxRuleId
+     */
+    public function getTaxRuleId(): TaxRuleId
+    {
+        return $this->taxRuleId;
+    }
+
+    /**
      * @param int $taxRuleId
-     * @param bool $displayOnSaleFlag
      *
      * @return self
      *
-     * @throws ProductConstraintException
      * @throws TaxRuleConstraintException
      */
-    public function setRetailPrice(float $priceWithoutTax, int $taxRuleId, bool $displayOnSaleFlag): self
+    public function setTaxRuleId(int $taxRuleId): self
     {
-        $this->retailPrice = new RetailPrice(
-            $priceWithoutTax,
-            $taxRuleId,
-            $displayOnSaleFlag
-        );
+        $this->taxRuleId = new TaxRuleId($taxRuleId);
 
         return $this;
     }
 
     /**
-     * @return UnitPrice
+     * @return bool
      */
-    public function getUnitPrice(): UnitPrice
+    public function isDisplayOnSaleFlag(): bool
+    {
+        return $this->displayOnSaleFlag;
+    }
+
+    /**
+     * @param bool $displayOnSaleFlag
+     *
+     * @return self
+     */
+    public function setDisplayOnSaleFlag(bool $displayOnSaleFlag): self
+    {
+        $this->displayOnSaleFlag = $displayOnSaleFlag;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUnit(): string
+    {
+        return $this->unit;
+    }
+
+    /**
+     * @param string $unit
+     *
+     * @return self
+     */
+    public function setUnit(string $unit): self
+    {
+        $this->unit = $unit;
+        return $this;
+    }
+
+    /**
+     * @param float $priceWithoutTax
+     *
+     * @return self
+     *
+     * @throws DomainConstraintException
+     */
+    public function setRetailPrice(float $priceWithoutTax): self
+    {
+        $this->retailPrice = new Price($priceWithoutTax);
+
+        return $this;
+    }
+
+    /**
+     * @return Price
+     */
+    public function getUnitPrice(): Price
     {
         return $this->unitPrice;
     }
 
     /**
      * @param float $price
-     * @param string $unit
      *
      * @return self
      *
-     * @throws ProductConstraintException
+     * @throws DomainConstraintException
      */
-    public function setUnitPrice(float $price, string $unit): self
+    public function setUnitPrice(float $price): self
     {
-        $this->unitPrice = new UnitPrice($price, $unit);
+        $this->unitPrice = new Price($price);
 
         return $this;
     }
@@ -460,6 +526,63 @@ abstract class AbstractProductCommand
     {
         $this->condition = new Condition($condition);
 
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAvailableForOrder(): bool
+    {
+        return $this->isAvailableForOrder;
+    }
+
+    /**
+     * @param bool $isAvailableForOrder
+     *
+     * @return self
+     */
+    public function setIsAvailableForOrder(bool $isAvailableForOrder): self
+    {
+        $this->isAvailableForOrder = $isAvailableForOrder;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isWebOnly(): bool
+    {
+        return $this->isWebOnly;
+    }
+
+    /**
+     * @param bool $isWebOnly
+     *
+     * @return self
+     */
+    public function setIsWebOnly(bool $isWebOnly): self
+    {
+        $this->isWebOnly = $isWebOnly;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isConditionDisplayedOnProductPage(): bool
+    {
+        return $this->isConditionDisplayedOnProductPage;
+    }
+
+    /**
+     * @param bool $isConditionDisplayedOnProductPage
+     *
+     * @return self
+     */
+    public function setIsConditionDisplayedOnProductPage(bool $isConditionDisplayedOnProductPage): self
+    {
+        $this->isConditionDisplayedOnProductPage = $isConditionDisplayedOnProductPage;
         return $this;
     }
 
