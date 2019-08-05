@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerConstra
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Condition;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectionPage\RedirectionPageInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectionPage\TypedRedirectionPageInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Ean13;
@@ -43,9 +44,9 @@ use PrestaShop\PrestaShop\Core\Domain\TaxRule\ValueObject\TaxRuleId;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Price;
 
 /**
- * Holds the abstraction of common product data.
+ * Holds product edit data.
  */
-abstract class AbstractProductCommand
+class EditProductCommand
 {
     /**
      * @todo: I need defaultLanguage validation in handler
@@ -180,13 +181,38 @@ abstract class AbstractProductCommand
     private $isConditionDisplayedOnProductPage;
 
     /**
+     * @var bool
+     */
+    private $isEnabled;
+
+    /**
+     * @var ProductId
+     */
+    private $productId;
+
+    public function __construct(int $productId)
+    {
+        $this->productId = new ProductId($productId);
+    }
+
+    /**
+     * @return ProductId
+     */
+    public function getProductId(): ProductId
+    {
+        return $this->productId;
+    }
+
+    /**
      * @param string[] $localizedProductNames
      *
-     * @throws ProductConstraintException
+     * @return self
      */
-    public function __construct(array $localizedProductNames)
+    public function setLocalizedProductNames(array $localizedProductNames): self
     {
-        $this->setLocalizedProductNames($localizedProductNames);
+        $this->localizedProductNames = $localizedProductNames;
+
+        return $this;
     }
 
     /**
@@ -195,6 +221,25 @@ abstract class AbstractProductCommand
     public function getLocalizedProductNames(): array
     {
         return $this->localizedProductNames;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEnabled(): bool
+    {
+        return $this->isEnabled;
+    }
+
+    /**
+     * @param bool $isEnabled
+     *
+     * @return self
+     */
+    public function setIsEnabled(bool $isEnabled): self
+    {
+        $this->isEnabled = $isEnabled;
+        return $this;
     }
 
     /**
@@ -604,19 +649,6 @@ abstract class AbstractProductCommand
     public function setReference(string $reference): self
     {
         $this->reference = new Reference($reference);
-
-        return $this;
-    }
-
-    /**
-     * @param array $productNames
-     * @return AbstractProductCommand
-     *
-     * @throws ProductConstraintException
-     */
-    private function setLocalizedProductNames(array $productNames): self
-    {
-        $this->localizedProductNames = $productNames;
 
         return $this;
     }

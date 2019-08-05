@@ -24,60 +24,34 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
-namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject;
-
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 
 /**
- * This type of product code is specific to Europe and Japan, but is widely used internationally.
- * It is a superset of the UPC code: all products marked with an EAN will be accepted in North America.
+ * Holds mandatory product data.
  */
-class Ean13
+class AddProductCommand
 {
     /**
-     * @var int
+     * @todo: I need defaultLanguage validation in handler
+     * @var string[]
      */
-    private $number;
+    private $localizedProductNames;
 
     /**
-     * @param int $number
-     *
-     * @throws ProductConstraintException
+     * @param string[] $localizedProductNames
      */
-    public function __construct(int $number)
+    public function __construct(array $localizedProductNames)
     {
-        $this->assertIsValidNumber($number);
-
-        $this->number = $number;
+        $this->localizedProductNames = $localizedProductNames;
     }
 
     /**
-     * @return int
+     * @return string[]
      */
-    public function getValue(): int
+    public function getLocalizedProductNames(): array
     {
-        return $this->number;
-    }
-
-    /**
-     * @param int $number
-     *
-     * @throws ProductConstraintException
-     */
-    private function assertIsValidNumber(int $number): void
-    {
-        $pattern = '/^\d{0,13}$/';
-        if (!preg_match($pattern, $number)) {
-            throw new ProductConstraintException(
-                sprintf(
-                    'Product Ean13 reference "%s" did not matched pattern "%s"',
-                    $number,
-                    $pattern
-                ),
-                ProductConstraintException::INVALID_EAN13
-            );
-        }
+        return $this->localizedProductNames;
     }
 }
