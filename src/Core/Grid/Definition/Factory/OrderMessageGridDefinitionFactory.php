@@ -146,7 +146,7 @@ final class OrderMessageGridDefinitionFactory extends AbstractGridDefinitionFact
             ->add((new Filter('name', TextType::class))
                 ->setTypeOptions([
                     'attr' => [
-                        'placeholder' => $this->trans('Search Name', [], 'Admin.Actions'),
+                        'placeholder' => $this->trans('Search name', [], 'Admin.Actions'),
                     ],
                     'required' => false,
                 ])
