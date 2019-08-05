@@ -24,9 +24,12 @@
  */
 
 import productTypeChangeHandler from './components/product-type-change-handler';
+import TranslatableInput from '../../components/translatable-input';
 
 const $ = window.$;
 
 $(() => {
   productTypeChangeHandler();
+
+  new TranslatableInput();
 });
