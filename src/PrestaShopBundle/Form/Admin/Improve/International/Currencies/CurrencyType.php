@@ -26,6 +26,8 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\International\Currencies;
 
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
@@ -38,6 +40,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\GreaterThan;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
 
@@ -78,7 +81,7 @@ class CurrencyType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $newCurrency = !isset($options['data']['iso_code']);
+        $newCurrency = !isset($options['data']['id']);
         $customCurrency = isset($options['data']['is_custom']) ? $options['data']['is_custom'] : false;
         if ($newCurrency) {
             $builder
@@ -107,9 +110,39 @@ class CurrencyType extends TranslatorAwareType
         $builder
             ->add('names', TranslatableType::class, [
                 'type' => TextType::class,
+                'constraints' => [
+                    new DefaultLanguage(),
+                ],
+                'options' => [
+                    'constraints' => [
+                        new Length([
+                            'max' => 255,
+                            'maxMessage' => $this->trans(
+                                'This field cannot be longer than %limit% characters',
+                                'Admin.Notifications.Error',
+                                ['%limit%' => 255]
+                            ),
+                        ]),
+                    ],
+                ],
             ])
             ->add('symbols', TranslatableType::class, [
                 'type' => TextType::class,
+                'constraints' => [
+                    new DefaultLanguage(),
+                ],
+                'options' => [
+                    'constraints' => [
+                        new Length([
+                            'max' => 255,
+                            'maxMessage' => $this->trans(
+                                'This field cannot be longer than %limit% characters',
+                                'Admin.Notifications.Error',
+                                ['%limit%' => 255]
+                            ),
+                        ]),
+                    ],
+                ],
             ])
             ->add('iso_code', TextType::class, [
                 'attr' => [
@@ -121,9 +154,12 @@ class CurrencyType extends TranslatorAwareType
                             'The %s field is required.',
                             'Admin.Notifications.Error',
                             [
-                                sprintf('"%s"', $this->trans('Exchange rate', 'Admin.International.Feature')),
+                                sprintf('"%s"', $this->trans('ISO code', 'Admin.International.Feature')),
                             ]
                         ),
+                    ]),
+                    new TypedRegex([
+                        'type' => 'currency_iso_code',
                     ]),
                 ],
             ])
@@ -137,7 +173,7 @@ class CurrencyType extends TranslatorAwareType
                             'The %s field is required.',
                             'Admin.Notifications.Error',
                             [
-                                sprintf('"%s"', $this->trans('Numeric iso code', 'Admin.International.Feature')),
+                                sprintf('"%s"', $this->trans('Numeric ISO code', 'Admin.International.Feature')),
                             ]
                         ),
                     ]),
