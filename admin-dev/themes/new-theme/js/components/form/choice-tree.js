@@ -42,12 +42,6 @@ export default class ChoiceTree {
       this._toggleChildTree($inputWrapper);
     });
 
-    this.$container.on('click', '.js-toggle-choice-tree-action', (event) => {
-      const $action = $(event.currentTarget);
-
-      this._toggleTree($action);
-    });
-
     this.$container.on('click', '.js-unselect-all', (event) => {
       event.preventDefault();
 

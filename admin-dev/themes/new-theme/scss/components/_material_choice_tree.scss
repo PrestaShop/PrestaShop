@@ -18,8 +18,28 @@
 
       .checkbox,
       .radio {
-        padding-left: 20px;
+        padding-left: 18px;
         padding-top: 0;
+
+        i.material-icons {
+          &::before {
+            content: "radio_button_unchecked";
+          }
+
+          padding-right: 1px;
+        }
+
+        input[type="radio"] {
+          &:checked {
+            + i.material-icons {
+              &::before {
+                content: "radio_button_checked";
+              }
+            }
+          }
+
+          display: none;
+        }
       }
 
       .checkbox {
