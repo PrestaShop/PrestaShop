@@ -239,7 +239,7 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
                 'Carrier "%s" module %s the shipping price calculated by PrestaShop, but was expected it to %s',
                 $reference,
                 $actualResult ? 'needs' : 'does not need',
-                $condition === 'should' ? 'need' : 'not need'
+                $needsPrice ? 'need' : 'not need'
             ));
         }
     }
@@ -266,50 +266,28 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then Carrier :reference name in default language should be :value
+     * @Then Carrier :reference :field in default language should be :value
      */
-    public function assertLocalizedName($reference, $value)
+    public function assertLocalizedField($reference, $field, $value)
     {
         /** @var Carrier $carrier */
         $carrier = SharedStorage::getStorage()->get($reference);
+        $field = $this->getObjectPropertyMappedByFieldName($field);
 
-        if (!isset($carrier->localized_name[$this->defaultLangId])) {
+        if (!isset($carrier->{$field}[$this->defaultLangId])) {
             throw new RuntimeException(sprintf(
-                'Carrier "%s" name in default language is not set, "%s" was expected.',
+                'Carrier "%s" "%s" in default language is not set, but "%s" was expected.',
                 $reference,
+                $field,
                 $value
             ));
         }
-        if ($carrier->localized_name[$this->defaultLangId] !== $value) {
+        if ($value !== $carrier->{$field}[$this->defaultLangId]) {
             throw new RuntimeException(sprintf(
-                'Carrier "%s" name in default language is "%s", but "%s" was expected.',
+                'Carrier "%s" "%s" in default language is "%s", but "%s" was expected.',
                 $reference,
-                $carrier->localized_name[$this->defaultLangId],
-                $value
-            ));
-        }
-    }
-
-    /**
-     * @Then Carrier :reference shipping delay in default language should be :value
-     */
-    public function assertShippingDelay($reference, $value)
-    {
-        /** @var Carrier $carrier */
-        $carrier = SharedStorage::getStorage()->get($reference);
-
-        if (!isset($carrier->delay[$this->defaultLangId])) {
-            throw new RuntimeException(sprintf(
-                'Carrier "%s" shipping delay in default language is not set, but "%s" was expected.',
-                $reference,
-                $value
-            ));
-        }
-        if ($value !== $carrier->delay[$this->defaultLangId]) {
-            throw new RuntimeException(sprintf(
-                'Carrier "%s" shipping delay in default language is "%s", but "%s" was expected.',
-                $reference,
-                $carrier->localized_name[$this->defaultLangId],
+                $field,
+                $carrier->{$field}[$this->defaultLangId],
                 $value
             ));
         }
@@ -415,6 +393,8 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
             'max package depth' => 'max_depth',
             'max package weight' => 'max_weight',
             'module name' => 'external_module_name',
+            'shipping delay' => 'delay',
+            'localized name' => 'localized_name',
         ];
 
         if (array_key_exists($fieldName, $objectProperyByFieldNameMap)) {

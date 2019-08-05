@@ -25,9 +25,9 @@ Feature: Carrier Management
       | max_weight                | 5.5                                               |
       | group_ids                 | 1                                                 |
       | shop_ids                  | 1                                                 |
-    Then Carrier "my carrier" name in default language should be "My carrier"
+    Then Carrier "my carrier" "localized name" in default language should be "My carrier"
     And Carrier "my carrier" "name" should be "My carrier"
-    And Carrier "my carrier" shipping delay in default language should be "Pickup in store"
+    And Carrier "my carrier" "shipping delay" in default language should be "Pickup in store"
     And Carrier "my carrier" "speed grade" should be "1"
     And the shipping of "my carrier" should be priced
     And Carrier "my carrier" shipping price calculation should be based on package price
@@ -53,9 +53,9 @@ Feature: Carrier Management
       | max_weight                | 5.5                                               |
       | group_ids                 | 1                                                 |
       | shop_ids                  | 1                                                 |
-    Then Carrier "Free shipping carrier" name in default language should be "Free shipping carrier"
+    Then Carrier "Free shipping carrier" "localized name" in default language should be "Free shipping carrier"
     And Carrier "Free shipping carrier" "name" should be "Free shipping carrier"
-    And Carrier "Free shipping carrier" shipping delay in default language should be "One week"
+    And Carrier "Free shipping carrier" "shipping delay" in default language should be "One week"
     And Carrier "Free shipping carrier" "speed grade" should be "4"
     And the shipping of "Free shipping carrier" should be free of charge
     And Carrier "Free shipping carrier" shipping price calculation should be based on package weight
@@ -81,9 +81,9 @@ Feature: Carrier Management
       | group_ids                 | 1,2,3                                             |
       | shop_ids                  | 1                                                 |
       | module_name               | fs-shipping                                       |
-    Then Carrier "Fs module carrier" name in default language should be "Free shipping module carrier"
+    Then Carrier "Fs module carrier" "localized name" in default language should be "Free shipping module carrier"
     And Carrier "Fs module carrier" "name" should be "Free shipping module carrier"
-    And Carrier "Fs module carrier" shipping delay in default language should be "Instant"
+    And Carrier "Fs module carrier" "shipping delay" in default language should be "Instant"
     And Carrier "Fs module carrier" "speed grade" should be "9"
     And the shipping of "Fs module carrier" should be free of charge
     And Carrier "Fs module carrier" shipping price calculation should be based on package weight
@@ -118,9 +118,9 @@ Feature: Carrier Management
       | group_ids                 | 1,2,3                                             |
       | shop_ids                  | 1                                                 |
       | module_name               | p2                                                |
-    Then Carrier "P2 carry" name in default language should be "Pay to carry"
+    Then Carrier "P2 carry" "localized name" in default language should be "Pay to carry"
     And Carrier "P2 carry" "name" should be "Pay to carry"
-    And Carrier "P2 carry" shipping delay in default language should be "2 days"
+    And Carrier "P2 carry" "shipping delay" in default language should be "2 days"
     And Carrier "P2 carry" "speed grade" should be "3"
     And the shipping of "P2 carry" should be priced
     And Carrier "P2 carry" shipping price calculation should be based on package price
@@ -157,9 +157,9 @@ Feature: Carrier Management
       | shop_ids                               | 1                                                 |
       | module_name                            | p2                                                |
       | module_needs_core_shipping_price       | true                                              |
-    Then Carrier "rollercoaster" name in default language should be "Rollercoaster"
+    Then Carrier "rollercoaster" "localized name" in default language should be "Rollercoaster"
     And Carrier "rollercoaster" "name" should be "Rollercoaster"
-    And Carrier "rollercoaster" shipping delay in default language should be "Up to one week"
+    And Carrier "rollercoaster" "shipping delay" in default language should be "Up to one week"
     And Carrier "rollercoaster" "speed grade" should be "3"
     And the shipping of "rollercoaster" should be priced
     And Carrier "rollercoaster" shipping price calculation should be based on package weight
