@@ -28,6 +28,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\OrderMessage\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\OrderMessage\ValueObject\OrderMessageId;
 
+/**
+ * Delete given order message
+ */
 class DeleteOrderMessageCommand
 {
     /**

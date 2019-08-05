@@ -28,6 +28,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\OrderMessage\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\OrderMessage\Command\EditOrderMessageCommand;
 
+/**
+ * Interface for service that handles editing order message
+ */
 interface EditOrderMessageHandlerInterface
 {
     public function handle(EditOrderMessageCommand $command): void;

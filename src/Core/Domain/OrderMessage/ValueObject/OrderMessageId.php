@@ -26,6 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\OrderMessage\ValueObject;
 
+/**
+ * Order message identity
+ */
 class OrderMessageId
 {
     /**

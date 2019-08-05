@@ -28,6 +28,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\OrderMessage\Query;
 
 use PrestaShop\PrestaShop\Core\Domain\OrderMessage\ValueObject\OrderMessageId;
 
+/**
+ * Get order message data for editing
+ */
 class GetOrderMessageForEditing
 {
     /**

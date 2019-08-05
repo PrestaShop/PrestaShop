@@ -28,6 +28,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\OrderMessage\QueryResult;
 
 use PrestaShop\PrestaShop\Core\Domain\OrderMessage\ValueObject\OrderMessageId;
 
+/**
+ * Transfers current order message data that can be edited
+ */
 class EditableOrderMessage
 {
     /**

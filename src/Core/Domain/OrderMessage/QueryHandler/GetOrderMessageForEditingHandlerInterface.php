@@ -29,6 +29,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\OrderMessage\QueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\OrderMessage\Query\GetOrderMessageForEditing;
 use PrestaShop\PrestaShop\Core\Domain\OrderMessage\QueryResult\EditableOrderMessage;
 
+/**
+ * Interface for service that handles retrieving order message data
+ */
 interface GetOrderMessageForEditingHandlerInterface
 {
     public function handle(GetOrderMessageForEditing $query): EditableOrderMessage;

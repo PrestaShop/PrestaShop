@@ -28,6 +28,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\OrderMessage\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\OrderMessage\Command\BulkDeleteOrderMessageCommand;
 
+/**
+ * Interface for service that handles deleting of order messages
+ */
 interface BulkDeleteOrderMessageHandlerInterface
 {
     public function handle(BulkDeleteOrderMessageCommand $command): void;

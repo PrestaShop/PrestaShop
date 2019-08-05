@@ -29,6 +29,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\OrderMessage\Exception;
 use PrestaShop\PrestaShop\Core\Domain\OrderMessage\ValueObject\OrderMessageId;
 use Throwable;
 
+/**
+ * Thrown when order message is not found
+ */
 class OrderMessageNotFoundException extends OrderMessageException
 {
     /**

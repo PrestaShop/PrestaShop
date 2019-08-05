@@ -42,6 +42,9 @@ use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
+/**
+ * Creates definition for order message grid
+ */
 final class OrderMessageGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
     public const GRID_ID = 'order_message';
