@@ -92,7 +92,7 @@ final class OrderMessageGridDefinitionFactory extends AbstractGridDefinitionFact
             ->add((new DataColumn('message'))
                 ->setName($this->trans('Message', [], 'Admin.Global'))
                 ->setOptions([
-                    'field' =>'message',
+                    'field' => 'message',
                 ])
             )
             ->add((new ActionColumn('actions'))

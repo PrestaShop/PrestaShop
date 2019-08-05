@@ -33,8 +33,6 @@ use PrestaShop\PrestaShop\Core\Domain\OrderMessage\Exception\OrderMessageExcepti
 use PrestaShop\PrestaShop\Core\Domain\OrderMessage\Exception\OrderMessageNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\OrderMessage\Query\GetOrderMessageForEditing;
 use PrestaShop\PrestaShop\Core\Domain\OrderMessage\QueryResult\EditableOrderMessage;
-use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ManufacturerAddressGridDefinitionFactory;
-use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ManufacturerGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderMessageGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\OrderMessageFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -72,7 +70,7 @@ class OrderMessageController extends FrameworkBundleAdminController
                 'add' => [
                     'href' => $this->generateUrl('admin_order_messages_create'),
                     'desc' => $this->trans('Add new customer', 'Admin.Orderscustomers.Feature'),
-                    'icon' => 'add_circle_outline'
+                    'icon' => 'add_circle_outline',
                 ],
             ],
             'orderMessageGrid' => $this->presentGrid($grid),
