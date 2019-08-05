@@ -69,18 +69,16 @@ final class ProductWithoutImageQueryBuilder extends AbstractProductQueryBuilder
     private function getQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getProductsCommonQueryBuilder($searchCriteria);
-        $imageSubQuery = $this->connection->createQueryBuilder()->select(1);
+
+        $imageSubQuery = $this->connection->createQueryBuilder()
+            ->select(1)
+            ->from($this->dbPrefix . 'image_shop', 'img')
+            ->andWhere('p.id_product = img.id_product');
 
         if ($this->multistoreContextChecker->isSingleShopContext()) {
-            $imageSubQuery
-                ->from($this->dbPrefix . 'image', 'img')
-                ->andWhere('p.id_product = img.id_product');
+            $imageSubQuery->andWhere('img.id_shop = :context_shop_id');
         } else {
-            $imageSubQuery
-                ->from($this->dbPrefix . 'image_shop', 'img')
-                ->andWhere('p.id_product = img.id_product')
-                ->andWhere('img.id_shop = :context_shop_id')
-                ->setParameter('context_shop_id', $this->contextShopId);
+            $imageSubQuery->andWhere('img.id_shop = p.id_shop_default');
         }
 
         $qb->andWhere('NOT EXISTS(' . $imageSubQuery->getSQL() . ')');
