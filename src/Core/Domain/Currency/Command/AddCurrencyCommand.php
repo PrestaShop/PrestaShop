@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Currency\Command;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\ExchangeRate;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\AlphaIsoCode;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\NumericIsoCode;
 
 /**
  * Class AddCurrencyCommand
@@ -41,9 +42,24 @@ class AddCurrencyCommand
     private $isoCode;
 
     /**
+     * @var NumericIsoCode
+     */
+    private $numericIsoCode;
+
+    /**
      * @var ExchangeRate
      */
     private $exchangeRate;
+
+    /**
+     * @var string[]
+     */
+    private $localizedNames;
+
+    /**
+     * @var string[]
+     */
+    private $localizedSymbols;
 
     /**
      * @var bool
@@ -57,16 +73,30 @@ class AddCurrencyCommand
 
     /**
      * @param string $isoCode
+     * @param int $numericIsoCode
      * @param float $exchangeRate
+     * @param string[] $localizedNames
+     * @param string[] $localizedSymbols
      * @param bool $isEnabled
      *
      * @throws CurrencyConstraintException
      */
-    public function __construct($isoCode, $exchangeRate, $isEnabled)
-    {
+    public function __construct(
+        $isoCode,
+        $numericIsoCode,
+        $exchangeRate,
+        $localizedNames,
+        $localizedSymbols,
+        $isEnabled
+    ) {
         $this->isoCode = new AlphaIsoCode($isoCode);
+        $this->numericIsoCode = new NumericIsoCode($numericIsoCode);
         $this->exchangeRate = new ExchangeRate($exchangeRate);
         $this->isEnabled = $isEnabled;
+        $this
+            ->setLocalizedNames($localizedNames)
+            ->setLocalizedSymbols($localizedSymbols)
+        ;
     }
 
     /**
@@ -78,11 +108,77 @@ class AddCurrencyCommand
     }
 
     /**
+     * @return NumericIsoCode
+     */
+    public function getNumericIsoCode()
+    {
+        return $this->numericIsoCode;
+    }
+
+    /**
      * @return ExchangeRate
      */
     public function getExchangeRate()
     {
         return $this->exchangeRate;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getLocalizedNames()
+    {
+        return $this->localizedNames;
+    }
+
+    /**
+     * @param string[] $localizedNames
+     *
+     * @return $this
+     *
+     * @throws CurrencyConstraintException
+     */
+    public function setLocalizedNames(array $localizedNames)
+    {
+        if (empty($localizedNames)) {
+            throw new CurrencyConstraintException(
+                'Currency name cannot be empty',
+                CurrencyConstraintException::EMPTY_NAME
+            );
+        }
+
+        $this->localizedNames = $localizedNames;
+
+        return $this;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getLocalizedSymbols()
+    {
+        return $this->localizedSymbols;
+    }
+
+    /**
+     * @param string[] $localizedSymbols
+     *
+     * @return $this
+     *
+     * @throws CurrencyConstraintException
+     */
+    public function setLocalizedSymbols(array $localizedSymbols)
+    {
+        if (empty($localizedSymbols)) {
+            throw new CurrencyConstraintException(
+                'Currency symbol cannot be empty',
+                CurrencyConstraintException::EMPTY_SYMBOL
+            );
+        }
+
+        $this->localizedSymbols = $localizedSymbols;
+
+        return $this;
     }
 
     /**
