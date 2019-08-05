@@ -1,4 +1,5 @@
-{**
+<?php
+/**
  * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,27 +22,16 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *}
+ */
 
-{**
- * @deprecated since 1.7.6, to be removed in the next minor
- *}
+namespace PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler;
 
-{if isset($cms_breadcrumb)}
-	<ul class="breadcrumb cat_bar">
-		{$cms_breadcrumb}
-	</ul>
-{/if}
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\AssignProductToCategoryCommand;
 
-{$content}
-
-{if isset($url_prev)}
-	<script type="text/javascript">
-	$(document).ready(function () {
-		var re = /url_preview=(.*)/;
-		var url = re.exec(window.location.href);
-		if (typeof url !== 'undefined' && url !== null && typeof url[1] !== 'undefined' && url[1] === "1")
-			window.open("{$url_prev}", "_blank");
-	});
-	</script>
-{/if}
+interface AssignProductToCategoryHandlerInterface
+{
+    /**
+     * @param AssignProductToCategoryCommand $command
+     */
+    public function handle(AssignProductToCategoryCommand $command);
+}
