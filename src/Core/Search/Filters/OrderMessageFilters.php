@@ -29,6 +29,9 @@ namespace PrestaShop\PrestaShop\Core\Search\Filters;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderMessageGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 
+/**
+ * Defines filters for order message grid
+ */
 final class OrderMessageFilters extends Filters
 {
     /** @var string */

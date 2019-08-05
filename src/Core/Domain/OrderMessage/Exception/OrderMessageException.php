@@ -28,6 +28,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\OrderMessage\Exception;
 
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 
+/**
+ * Base exception for order message subdomain
+ */
 class OrderMessageException extends DomainException
 {
     public const FAILED_DELETE = 1;

@@ -30,6 +30,11 @@ use OrderMessage;
 use PrestaShop\PrestaShop\Core\Domain\OrderMessage\Exception\OrderMessageNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\OrderMessage\ValueObject\OrderMessageId;
 
+/**
+ * Provides common methods for OrderMessage command/query handlers that uses object model
+ *
+ * @internal
+ */
 abstract class AbstractOrderMessageHandler
 {
     protected function getOrderMessage(OrderMessageId $orderMessageId): OrderMessage

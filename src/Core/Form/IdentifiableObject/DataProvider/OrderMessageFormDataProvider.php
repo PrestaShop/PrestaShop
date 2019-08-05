@@ -30,6 +30,9 @@ use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\OrderMessage\Query\GetOrderMessageForEditing;
 use PrestaShop\PrestaShop\Core\Domain\OrderMessage\QueryResult\EditableOrderMessage;
 
+/**
+ * Provides add/edit data for order message form
+ */
 final class OrderMessageFormDataProvider implements FormDataProviderInterface
 {
     /**

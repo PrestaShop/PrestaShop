@@ -26,6 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\OrderMessage\Command;
 
+/**
+ * Add new order message
+ */
 class AddOrderMessageCommand
 {
     /**
