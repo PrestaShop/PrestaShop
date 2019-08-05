@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\ConstraintValidator;
 
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\AlphaIsoCode;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\NumericIsoCode;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\IsoCode;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use Symfony\Component\Validator\Constraint;
@@ -87,6 +89,7 @@ class TypedRegexValidator extends ConstraintValidator
             'message' => '/[<>{}]/i',
             'language_iso_code' => IsoCode::PATTERN,
             'language_code' => '/^[a-zA-Z]{2}(-[a-zA-Z]{2})?$/',
+            'currency_iso_code' => AlphaIsoCode::PATTERN,
         ];
 
         if (isset($typePatterns[$type])) {

@@ -28,6 +28,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
 use Currency;
+use Configuration;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\DeleteCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\EditCurrencyCommand;
@@ -44,13 +45,18 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
      */
     public function addCurrency($reference, TableNode $node)
     {
+        $defaultLangId = Configuration::get('PS_LANG_DEFAULT');
+
         $data = $node->getRowsHash();
         /** @var \Shop $shop */
         $shop = SharedStorage::getStorage()->get($data['shop_association']);
 
         $command = new AddCurrencyCommand(
             $data['iso_code'],
+            (int) $data['numeric_iso_code'],
             (float) $data['exchange_rate'],
+            [$defaultLangId => $data['name']],
+            [$defaultLangId => $data['symbol']],
             (bool) $data['is_enabled']
         );
 
@@ -77,6 +83,10 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
 
         if (isset($data['iso_code'])) {
             $command->setIsoCode($data['iso_code']);
+        }
+
+        if (isset($data['numeric_iso_code'])) {
+            $command->setNumericIsoCode((int) $data['numeric_iso_code']);
         }
 
         if (isset($data['exchange_rate'])) {
