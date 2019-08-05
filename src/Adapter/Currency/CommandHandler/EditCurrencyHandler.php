@@ -97,12 +97,14 @@ final class EditCurrencyHandler extends AbstractCurrencyHandler implements EditC
             }
 
             if (null !== $command->getIsoCode()) {
-                $this->updateNameAndSymbol(
+                //todo: handler must use data from command not deduce them
+                /*$this->updateNameAndSymbol(
                     $entity,
                     $command->getIsoCode()->getValue()
-                );
+                );*/
 
                 $entity->iso_code = $command->getIsoCode()->getValue();
+                $entity->numeric_iso_code = $command->getNumericIsoCode()->getValue();
             }
 
             $entity->active = $command->isEnabled();
