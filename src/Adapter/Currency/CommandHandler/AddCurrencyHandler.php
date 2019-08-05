@@ -77,6 +77,7 @@ final class AddCurrencyHandler extends AbstractCurrencyHandler implements AddCur
             $entity = new Currency();
 
             $entity->iso_code = $command->getIsoCode()->getValue();
+            $entity->numeric_iso_code = $command->getNumericIsoCode()->getValue();
             $entity->active = $command->isEnabled();
             $entity->conversion_rate = $command->getExchangeRate()->getValue();
             // CLDR locale give us the CLDR reference specification
@@ -88,6 +89,7 @@ final class AddCurrencyHandler extends AbstractCurrencyHandler implements AddCur
                 $entity->precision = (int) $cldrCurrency->getDecimalDigits();
             }
 
+            //todo: handler must use data from command not deduce them
             $entity->refreshLocalizedCurrencyData(Language::getLanguages(), $this->localeRepoCLDR);
 
             if (false === $entity->add()) {
