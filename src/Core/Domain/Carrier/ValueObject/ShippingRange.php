@@ -34,12 +34,12 @@ use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierConstraintExcepti
 final class ShippingRange
 {
     /**
-     * @var int
+     * @var float
      */
     private $from;
 
     /**
-     * @var int
+     * @var float
      */
     private $to;
 
@@ -49,13 +49,13 @@ final class ShippingRange
     private $pricesByZoneId;
 
     /**
-     * @param int $from
-     * @param int $to
+     * @param float $from
+     * @param float $to
      * @param array $pricesByZoneId
      *
      * @throws CarrierConstraintException
      */
-    public function __construct(int $from, int $to, array $pricesByZoneId)
+    public function __construct(float $from, float $to, array $pricesByZoneId)
     {
         $this->assertRangeIsValid($from, $to);
         $this->assertPricesByZoneArrayIsNotEmpty($pricesByZoneId);
@@ -65,7 +65,7 @@ final class ShippingRange
     }
 
     /**
-     * @return int
+     * @return float
      */
     public function getFrom()
     {
@@ -73,7 +73,7 @@ final class ShippingRange
     }
 
     /**
-     * @return int
+     * @return float
      */
     public function getTo()
     {
@@ -89,15 +89,15 @@ final class ShippingRange
     }
 
     /**
-     * @param int $from
-     * @param int $to
+     * @param float $from
+     * @param float $to
      *
      * @throws CarrierConstraintException
      */
-    private function assertRangeIsValid(int $from, int $to)
+    private function assertRangeIsValid(float $from, float $to)
     {
-        $this->assertIsNonNegativeInteger($from);
-        $this->assertIsNonNegativeInteger($to);
+        $this->assertIsNonNegativeNumber($from);
+        $this->assertIsNonNegativeNumber($to);
 
         if ($from >= $to) {
             throw new CarrierConstraintException(sprintf(
@@ -108,11 +108,11 @@ final class ShippingRange
     }
 
     /**
-     * @param int $value
+     * @param float $value
      *
      * @throws CarrierConstraintException
      */
-    private function assertIsNonNegativeInteger(int $value)
+    private function assertIsNonNegativeNumber(float $value)
     {
         if (0 > $value) {
             throw new CarrierConstraintException(sprintf(

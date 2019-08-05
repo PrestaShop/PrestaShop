@@ -64,6 +64,7 @@ class ShippingRangeTest extends TestCase
         yield [1, 2];
         yield [2, 5];
         yield [0, 2];
+        yield [0, 2.5];
     }
 
     public function getInvalidRangeValues()

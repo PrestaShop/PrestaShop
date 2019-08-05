@@ -108,39 +108,13 @@ abstract class AbstractAddCarrierHandler extends AbstractCarrierHandler
     {
         $methodValue = $shippingMethod->getValue();
         $carrierId = (int) $carrier->id;
-        $range = new RangePrice();
-
-        if ($methodValue === ShippingMethod::SHIPPING_METHOD_WEIGHT) {
-            $range = new RangeWeight();
-        }
 
         foreach ($shippingRanges as $shippingRange) {
-            $this->addRange($range, $carrierId, $shippingRange);
+            ShippingMethod::SHIPPING_METHOD_WEIGHT === $methodValue ?
+                $this->addRange($range = new RangeWeight(), $carrierId, $shippingRange) :
+                $this->addRange($range = new RangePrice(), $carrierId, $shippingRange);
+
             $this->addDeliveryPrice($shippingRange, $shippingMethod, $carrier, (int) $range->id);
-        }
-    }
-
-    /**
-     * @param ObjectModel $range RangePrice|RangeWeight
-     * @param int $carrierId
-     * @param ShippingRange $shippingRange
-     *
-     * @throws CarrierException
-     * @throws PrestaShopException
-     */
-    protected function addRange(ObjectModel $range, int $carrierId, ShippingRange $shippingRange)
-    {
-        $range->id_carrier = $carrierId;
-        $range->delimiter1 = $shippingRange->getFrom();
-        $range->delimiter2 = $shippingRange->getTo();
-
-        if (false === $range->add()) {
-            throw new CarrierException(sprintf(
-                'Failed to create range "%s - %s" for carrier with id "%s"',
-                $shippingRange->getFrom(),
-                $shippingRange->getTo(),
-                $carrierId
-            ));
         }
     }
 
@@ -158,12 +132,12 @@ abstract class AbstractAddCarrierHandler extends AbstractCarrierHandler
         Carrier $carrier,
         int $rangeId
     ) {
-        $rangePriceId = $rangeId;
-        $rangeWeightId = null;
-
         if ($shippingMethod->getValue() === ShippingMethod::SHIPPING_METHOD_WEIGHT) {
             $rangePriceId = null;
             $rangeWeightId = $rangeId;
+        } else {
+            $rangePriceId = $rangeId;
+            $rangeWeightId = null;
         }
 
         foreach ($shippingRange->getPricesByZoneId() as $zoneId => $price) {
@@ -183,6 +157,30 @@ abstract class AbstractAddCarrierHandler extends AbstractCarrierHandler
                     $shippingRange->getTo()
                 ));
             }
+        }
+    }
+
+    /**
+     * @param ObjectModel $range RangePrice|RangeWeight
+     * @param int $carrierId
+     * @param ShippingRange $shippingRange
+     *
+     * @throws CarrierException
+     * @throws PrestaShopException
+     */
+    private function addRange(ObjectModel $range, int $carrierId, ShippingRange $shippingRange)
+    {
+        $range->id_carrier = $carrierId;
+        $range->delimiter1 = $shippingRange->getFrom();
+        $range->delimiter2 = $shippingRange->getTo();
+
+        if (false === $range->add()) {
+            throw new CarrierException(sprintf(
+                'Failed to create range "%s - %s" for carrier with id "%s"',
+                $shippingRange->getFrom(),
+                $shippingRange->getTo(),
+                $carrierId
+            ));
         }
     }
 }
