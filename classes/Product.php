@@ -4468,6 +4468,12 @@ class ProductCore extends ObjectModel
         return true;
     }
 
+    /**
+     * Duplicate prices when duplicating a product.
+     *
+     * @param int $id_product_old Old product id
+     * @param int $id_product_new New product id
+     */
     public static function duplicatePrices($id_product_old, $id_product_new)
     {
         $query = new DbQuery();
