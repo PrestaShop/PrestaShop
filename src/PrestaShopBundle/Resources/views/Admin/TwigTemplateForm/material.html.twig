@@ -26,25 +26,14 @@
 {% block material_choice_tree_widget %}
 <div class="material-choice-tree-container js-choice-tree-container" id="{{ form.vars.id }}">
   <div class="choice-tree-actions">
-    <span class="form-control-label js-toggle-choice-tree-action"
-          data-expanded-text="{{ 'Expand'|trans({}, 'Admin.Actions') }}"
-          data-expanded-icon="expand_more"
-          data-collapsed-text="{{ 'Collapse'|trans({}, 'Admin.Actions') }}"
-          data-collapsed-icon="expand_less"
-          data-action="expand"
-    >
-      <i class="material-icons">expand_more</i>
-      <span class="js-toggle-text">{{ 'Expand'|trans({}, 'Admin.Actions') }}</span>
-    </span>
-
     {% if display_unselect_all %}
-      <span class="float-right">
-      <div class="radio js-unselect-all">
-        <label>
-          <input type="radio" name="unselect_all" value="1"> {{ 'Unselect'|trans({}, 'Admin.Actions') }}
-        </label>
-      </div>
-    </span>
+      <span>
+        <div class="radio js-unselect-all">
+          <label>
+            <input type="radio" name="unselect_all" value="1"> {{ 'Unselect'|trans({}, 'Admin.Actions') }}
+          </label>
+        </div>
+      </span>
     {% endif %}
   </div>
 
@@ -105,6 +94,8 @@
              {% if choice[choice_value] in selected_values %}checked{% endif %}
              {% if disabled or choice[choice_value] in disabled_values %}disabled{% endif %}
       >
+      <i class="material-icons">
+      </i>
       {{ choice[choice_label] }}
     </label>
   </div>
