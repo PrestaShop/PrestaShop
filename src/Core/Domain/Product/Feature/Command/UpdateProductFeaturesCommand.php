@@ -26,7 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Feature\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Feature\DTO\ProductFeaturesCollection;
+use PrestaShop\PrestaShop\Core\Domain\Product\Feature\Exception\ProductFeatureConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Feature\ValueObject\CustomizableFeatureValue;
+use PrestaShop\PrestaShop\Core\Domain\Product\Feature\ValueObject\FeatureValue;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
@@ -40,14 +42,25 @@ class UpdateProductFeaturesCommand
     private $productId;
 
     /**
-     * @var ProductFeaturesCollection
+     * @var FeatureValue[]
      */
-    private $features;
+    private $featureValues;
 
-    public function __construct(int $productId, ProductFeaturesCollection $features)
+    /**
+     * @var CustomizableFeatureValue[]
+     */
+    private $customizableFeatureValues;
+
+    /**
+     * @param int $productId
+     * @param array $features
+     *
+     * @throws ProductFeatureConstraintException
+     */
+    public function __construct(int $productId, array $features)
     {
         $this->productId = new ProductId($productId);
-        $this->features = $features;
+        $this->setFeatures($features);
     }
 
     /**
@@ -59,10 +72,38 @@ class UpdateProductFeaturesCommand
     }
 
     /**
-     * @return ProductFeaturesCollection
+     * @return FeatureValue[]
      */
-    public function getFeatures(): ProductFeaturesCollection
+    public function getFeatureValues(): array
     {
-        return $this->features;
+        return $this->featureValues;
+    }
+
+    /**
+     * @return CustomizableFeatureValue[]
+     */
+    public function getCustomizableFeatureValues(): array
+    {
+        return $this->customizableFeatureValues;
+    }
+
+    /**
+     * @param array $features
+     * @throws ProductFeatureConstraintException
+     */
+    private function setFeatures(array $features): void
+    {
+        foreach ($features as $feature)  {
+            if ($feature['is_customizable']) {
+                $this->customizableFeatureValues[] = new CustomizableFeatureValue(
+                    $feature['feature_id'],
+                    $feature['value']
+                );
+
+                continue;
+            }
+
+            $this->featureValues[] = new FeatureValue($feature['feature_id'], $feature['feature_value_id']);
+        }
     }
 }
