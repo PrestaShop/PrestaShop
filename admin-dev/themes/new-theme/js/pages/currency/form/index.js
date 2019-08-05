@@ -41,8 +41,8 @@ $(() => {
     const selectedISOCode = $currencySelector.val();
     if ('' !== selectedISOCode) {
       $(currencyFormMap.isCustomCheckbox).prop('checked', false);
-      $(currencyFormMap.isoCodeSelector).prop('disabled', true);
-      $(currencyFormMap.numericIsoCodeSelector).prop('disabled', true);
+      $(currencyFormMap.isoCodeSelector).prop('readonly', true);
+      $(currencyFormMap.numericIsoCodeSelector).prop('readonly', true);
 
       const getCurrencyData = getCLDRDataUrl.replace('CURRENCY_ISO_CODE', selectedISOCode);
       $.get(getCurrencyData).then((currencyData) => {
@@ -62,16 +62,30 @@ $(() => {
       })
     } else {
       $(currencyFormMap.isCustomCheckbox).prop('checked', true);
-      $(currencyFormMap.isoCodeSelector).prop('disabled', false);
-      $(currencyFormMap.numericIsoCodeSelector).prop('disabled', false);
+      $(currencyFormMap.isoCodeSelector).prop('readonly', false);
+      $(currencyFormMap.numericIsoCodeSelector).prop('readonly', false);
     }
   });
 
   $(currencyFormMap.isCustomCheckbox).change(() => {
     if ($(currencyFormMap.isCustomCheckbox).prop('checked')) {
       $currencySelector.val('');
-      $(currencyFormMap.isoCodeSelector).prop('disabled', false);
-      $(currencyFormMap.numericIsoCodeSelector).prop('disabled', false);
+      $(currencyFormMap.isoCodeSelector).prop('readonly', false);
+      $(currencyFormMap.numericIsoCodeSelector).prop('readonly', false);
     }
   });
+
+  function initFields() {
+    const selectedISOCode = $currencySelector.val();
+    if ('' !== selectedISOCode) {
+      $(currencyFormMap.isCustomCheckbox).prop('checked', false);
+      $(currencyFormMap.isoCodeSelector).prop('readonly', true);
+      $(currencyFormMap.numericIsoCodeSelector).prop('readonly', true);
+    } else {
+      $currencySelector.val('');
+      $(currencyFormMap.isoCodeSelector).prop('readonly', false);
+      $(currencyFormMap.numericIsoCodeSelector).prop('readonly', false);
+    }
+  }
+  initFields();
 });
