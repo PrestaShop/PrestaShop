@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerConstra
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Condition;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\OfflineRedirectionPage;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectionPage\RedirectionPageInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectionPage\TypedRedirectionPageInterface;
@@ -126,7 +127,7 @@ class EditProductCommand
     private $friendlyUrls;
 
     /**
-     * @var RedirectionPageInterface|TypedRedirectionPageInterface
+     * @var OfflineRedirectionPage
      */
     private $redirectionPage;
 
@@ -511,21 +512,24 @@ class EditProductCommand
     }
 
     /**
-     * @return RedirectionPageInterface|TypedRedirectionPageInterface
+     * @return OfflineRedirectionPage
      */
-    public function getRedirectionPage(): ?RedirectionPageInterface
+    public function getRedirectionPage(): ?OfflineRedirectionPage
     {
         return $this->redirectionPage;
     }
 
     /**
-     * @param RedirectionPageInterface|TypedRedirectionPageInterface $redirectionPage
+     * @param string $redirectionType
+     * @param int|null $resourceId
      *
      * @return self
+     *
+     * @throws ProductConstraintException
      */
-    public function setRedirectionPage(RedirectionPageInterface $redirectionPage): self
+    public function setRedirectionPage(string $redirectionType, ?int $resourceId): self
     {
-        $this->redirectionPage = $redirectionPage;
+        $this->redirectionPage = new OfflineRedirectionPage($redirectionType, $resourceId);
 
         return $this;
     }

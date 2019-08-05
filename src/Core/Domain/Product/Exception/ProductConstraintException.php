@@ -28,16 +28,14 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Exception;
 
 class ProductConstraintException extends ProductException
 {
-    public const INVALID_UNIT_PRICE = 1;
-    public const INVALID_RETAIL_PRICE = 2;
-    public const INVALID_COST_PRICE = 3;
-    public const INVALID_META_KEYWORDS = 4;
-    public const INVALID_META_DESCRIPTION = 5;
-    public const INVALID_RESPONSE_CODE = 6;
-    public const INVALID_CONDITION_TYPE = 7;
-    public const INVALID_VISIBILITY_TYPE = 8;
-    public const INVALID_REFERENCE = 9;
-    public const INVALID_ISBN = 10;
-    public const INVALID_EAN13 = 11;
-    public const INVALID_UPC = 12;
+    public const INVALID_META_KEYWORDS = 1;
+    public const INVALID_META_DESCRIPTION = 2;
+    public const INVALID_CONDITION_TYPE = 3;
+    public const INVALID_VISIBILITY_TYPE = 4;
+    public const INVALID_REFERENCE = 5;
+    public const INVALID_ISBN = 6;
+    public const INVALID_EAN13 = 7;
+    public const INVALID_UPC = 8;
+    public const INVALID_REDIRECTION_TYPE = 9;
+    public const INVALID_REDIRECTION_RESOURCE_ID = 10;
 }

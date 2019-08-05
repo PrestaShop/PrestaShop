@@ -28,16 +28,45 @@ namespace Tests\Unit\Core\Domain\Product\ValueObject;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectionPage\ResponseCode;
-use Symfony\Component\HttpFoundation\Response;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\OfflineRedirectionPage;
 
-class ResponseCodeTest extends TestCase
+class OfflineRedirectionPageTest extends TestCase
 {
-    public function testItDetectsInvalidResponseCodeProvided(): void
+    public function testItDoesNotAllowInvalidType(): void
     {
         $this->expectException(ProductConstraintException::class);
-        $this->expectExceptionCode(ProductConstraintException::INVALID_RESPONSE_CODE);
+        $this->expectExceptionCode(ProductConstraintException::INVALID_REDIRECTION_TYPE);
 
-        new ResponseCode(Response::HTTP_OK);
+        new OfflineRedirectionPage('500', null);
+    }
+
+    /**
+     * @dataProvider provideRedirectionTypesWithResourceId
+     */
+    public function testItDoesNotAllowEmptyResourceIdForCertainTypes(string $type): void
+    {
+        $this->expectException(ProductConstraintException::class);
+        $this->expectExceptionCode(ProductConstraintException::INVALID_REDIRECTION_RESOURCE_ID);
+
+        new OfflineRedirectionPage($type, null);
+    }
+
+    public function provideRedirectionTypesWithResourceId(): ?\Generator
+    {
+        yield [
+            OfflineRedirectionPage::PERMANENT_TO_CATEGORY_TYPE,
+        ];
+
+        yield [
+            OfflineRedirectionPage::TEMPORARY_TO_CATEGORY_TYPE,
+        ];
+
+        yield [
+            OfflineRedirectionPage::TEMPORARY_TO_PRODUCT_TYPE,
+        ];
+
+        yield [
+            OfflineRedirectionPage::PERMANENT_TO_PRODUCT_TYPE,
+        ];
     }
 }
