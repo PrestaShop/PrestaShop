@@ -300,4 +300,74 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
             );
         }
     }
+
+    /**
+     * @Then currency :reference numeric iso code should be :numericIsoCode
+     */
+    public function assertCurrencyNumericIsoCode($reference, $numericIsoCode)
+    {
+        /** @var Currency $currency */
+        $currency = SharedStorage::getStorage()->get($reference);
+
+        if ((int) $currency->numeric_iso_code !== (int) $numericIsoCode) {
+            throw new RuntimeException(sprintf(
+                'Currency "%s" has "%s" numeric iso code, but "%s" was expected.',
+                $reference,
+                $currency->numeric_iso_code,
+                $numericIsoCode
+            ));
+        }
+    }
+
+    /**
+     * @Then currency :reference name should be :name
+     */
+    public function assertCurrencyName($reference, $name)
+    {
+        /** @var Currency $currency */
+        $currency = SharedStorage::getStorage()->get($reference);
+
+        if ($currency->name !== $name) {
+            throw new RuntimeException(sprintf(
+                'Currency "%s" has "%s" name, but "%s" was expected.',
+                $reference,
+                $currency->name,
+                $name
+            ));
+        }
+    }
+
+    /**
+     * @Then currency :reference symbol should be :symbol
+     */
+    public function assertCurrencySymbol($reference, $symbol)
+    {
+        /** @var Currency $currency */
+        $currency = SharedStorage::getStorage()->get($reference);
+
+        if ($currency->symbol !== $symbol) {
+            throw new RuntimeException(sprintf(
+                'Currency "%s" has "%s" symbol, but "%s" was expected.',
+                $reference,
+                $currency->name,
+                $symbol
+            ));
+        }
+    }
+
+    /**
+     * @Then currency :reference should not be custom
+     */
+    public function currencyShouldNotBeCustom($reference)
+    {
+        /** @var Currency $currency */
+        $currency = SharedStorage::getStorage()->get($reference);
+
+        if ($currency->custom) {
+            throw new RuntimeException(sprintf(
+                'Currency "%s" is custom, but should not be.',
+                $reference
+            ));
+        }
+    }
 }
