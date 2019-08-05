@@ -41,7 +41,7 @@
       <div class="card-text">
         {{ form_errors(currencyForm) }}
 
-        {% if not currencyForm.vars.data.iso_code is defined %}
+        {% if not currencyForm.vars.data.id is defined %}
         {{ ps.form_group_row(currencyForm.selected_iso_code, {}, {
           'label': 'Choose a currency'|trans({}, 'Admin.Global'),
         }) }}
