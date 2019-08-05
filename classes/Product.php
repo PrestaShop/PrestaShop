@@ -4492,6 +4492,7 @@ class ProductCore extends ObjectModel
                 }
             }
         }
+
         return true;
     }
 
