@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -29,54 +29,48 @@ namespace PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintException;
 
 /**
- * Class AlphaIsoCode
+ * Class NumericIsoCode
  */
-class AlphaIsoCode
+class NumericIsoCode
 {
     /**
-     * @var string ISO Code validation pattern
+     * @var int
      */
-    const PATTERN = '/^[a-zA-Z]{2,3}$/';
+    private $numericIsoCode;
 
     /**
-     * @var string
-     */
-    private $isoCode;
-
-    /**
-     * @param string $isoCode
+     * @param string $numericIsoCode
      *
      * @throws CurrencyConstraintException
      */
-    public function __construct($isoCode)
+    public function __construct($numericIsoCode)
     {
-        $this->assertIsValidIsoCode($isoCode);
-        $this->isoCode = $isoCode;
+        $this->assertIsValidNumericIsoCode($numericIsoCode);
+        $this->numericIsoCode = (int) $numericIsoCode;
     }
 
     /**
-     * @return string
+     * @return int
      */
     public function getValue()
     {
-        return $this->isoCode;
+        return $this->numericIsoCode;
     }
 
     /**
-     * @param string $isoCode
+     * @param int $numericIsoCode
      *
      * @throws CurrencyConstraintException
      */
-    private function assertIsValidIsoCode($isoCode)
+    private function assertIsValidNumericIsoCode($numericIsoCode)
     {
-        if (!is_string($isoCode) || !preg_match(self::PATTERN, $isoCode)) {
+        if (!is_int($numericIsoCode) || (int) $numericIsoCode < 0) {
             throw new CurrencyConstraintException(
                 sprintf(
-                    'Given iso code "%s" is not valid. It did not matched given regex %s',
-                    var_export($isoCode, true),
-                    self::PATTERN
+                    'Given numeric iso code "%s" is not valid. It must be a strictly positive integer',
+                    var_export($numericIsoCode, true)
                 ),
-                CurrencyConstraintException::INVALID_ISO_CODE
+                CurrencyConstraintException::INVALID_NUMERIC_ISO_CODE
             );
         }
     }
