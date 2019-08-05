@@ -12,7 +12,7 @@
 <tr>
   <td class="linkbelow">
     <span>
-      {{ 'This is a [bold]test e-mail[/bold] from your shop.'|trans({'[bold]': '<span><strong>', '[/bold]': '</strong></span>'}, 'Emails.Body', locale)|raw }}.
+      {{ 'This is a [1]test e-mail[/1] from your shop.'|trans({'[1]': '<span><strong>', '[/1]': '</strong></span>'}, 'Emails.Body', locale)|raw }}.
       <br/><br/>
       {{ 'If you can read this, the test was successful!'|trans({}, 'Emails.Body', locale)|raw }}.
     </span>
