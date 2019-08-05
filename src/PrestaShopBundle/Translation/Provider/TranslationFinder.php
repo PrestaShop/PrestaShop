@@ -53,48 +53,9 @@ class TranslationFinder
      */
     public function getCatalogueFromPaths($paths, $locale, $pattern = null)
     {
-        $messageCatalogue = new MessageCatalogue($locale);
-        $xliffFileLoader = new XliffFileLoader();
-        $finder = new Finder();
+        $translationFiles = $this->getTranslationFilesFromPath($paths, $pattern);
 
-        if (null !== $pattern) {
-            $finder->name($pattern);
-        }
-
-        try {
-            $translationFiles = $finder->files()->notName('index.php')->in($paths);
-        } catch (\InvalidArgumentException $e) {
-            throw new FileNotFoundException(
-                sprintf(
-                    'Could not crawl for translation files: %s',
-                    $e->getMessage()
-                ),
-                self::ERR_DIRECTORY_NOT_FOUND,
-                $e
-            );
-        }
-
-        if (count($translationFiles) === 0) {
-            throw new FileNotFoundException('There are no translation file available.', self::ERR_NO_FILES_IN_DIRECTORY);
-        }
-
-        /** @var SplFileInfo $file */
-        foreach ($translationFiles as $file) {
-            if ('xlf' === $file->getExtension()) {
-                if (strpos($file->getBasename('.xlf'), $locale) !== false) {
-                    $domain = $file->getBasename('.xlf');
-                } else {
-                    $domain = $file->getBasename('.xlf') . '.' . $locale;
-                }
-
-                $fileCatalogue = $xliffFileLoader->load($file->getPathname(), $locale, $domain);
-                $messageCatalogue->addCatalogue(
-                    $this->removeTrailingLocaleFromDomains($fileCatalogue)
-                );
-            }
-        }
-
-        return $messageCatalogue;
+        return $this->buildCatalogueFromFiles($translationFiles, $locale);
     }
 
     /**
@@ -118,5 +79,87 @@ class TranslationFinder
         }
 
         return new MessageCatalogue($locale, $messages);
+    }
+
+    /**
+     * @param $paths
+     * @param $pattern
+     *
+     * @return Finder
+     *
+     * @throws FileNotFoundException
+     */
+    private function getTranslationFilesFromPath($paths, $pattern)
+    {
+        $finder = new Finder();
+
+        if (null !== $pattern) {
+            $finder->name($pattern);
+        }
+
+        try {
+            $translationFiles = $finder->files()->notName('index.php')->in($paths);
+        } catch (\InvalidArgumentException $e) {
+            throw new FileNotFoundException(
+                sprintf(
+                    'Could not crawl for translation files: %s',
+                    $e->getMessage()
+                ),
+                self::ERR_DIRECTORY_NOT_FOUND,
+                $e
+            );
+        }
+
+        if (count($translationFiles) === 0) {
+            throw new FileNotFoundException(
+                'There are no translation file available.', self::ERR_NO_FILES_IN_DIRECTORY
+            );
+        }
+
+        return $translationFiles;
+    }
+
+    /**
+     * @param Finder $translationFiles
+     * @param string $locale
+     *
+     * @return MessageCatalogue
+     */
+    private function buildCatalogueFromFiles(Finder $translationFiles, $locale)
+    {
+        $messageCatalogue = new MessageCatalogue($locale);
+        $xliffFileLoader = new XliffFileLoader();
+
+        /** @var SplFileInfo $file */
+        foreach ($translationFiles as $file) {
+            if ('xlf' === $file->getExtension()) {
+                $domain = $this->getDomainFromFile($file, $locale);
+
+                $fileCatalogue = $xliffFileLoader->load($file->getPathname(), $locale, $domain);
+                $messageCatalogue->addCatalogue(
+                    $this->removeTrailingLocaleFromDomains($fileCatalogue)
+                );
+            }
+        }
+
+        return $messageCatalogue;
+    }
+
+    /**
+     * @param SplFileInfo $file
+     * @param string $locale
+     *
+     * @return string
+     */
+    private function getDomainFromFile(SplFileInfo $file, $locale)
+    {
+        $basename = $file->getBasename('.xlf');
+
+        $domain = $basename;
+        if (strpos($basename, $locale) === false) {
+            $domain .= '.' . $locale;
+        }
+
+        return $domain;
     }
 }
