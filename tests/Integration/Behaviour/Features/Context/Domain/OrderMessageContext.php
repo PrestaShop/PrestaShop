@@ -29,7 +29,6 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 use OrderMessage;
 use PrestaShop\PrestaShop\Core\Domain\OrderMessage\Command\AddOrderMessageCommand;
 use PrestaShop\PrestaShop\Core\Domain\OrderMessage\ValueObject\OrderMessageId;
-use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 
 class OrderMessageContext extends AbstractDomainFeatureContext
 {
