@@ -24,7 +24,14 @@
         i.material-icons {
           &::before {
             content: "radio_button_unchecked";
+            color: $medium-gray;
           }
+
+          cursor: pointer;
+
+          width: 22px;
+          height: 22px;
+          font-size: 1.3rem;
 
           padding-right: 1px;
         }
@@ -34,7 +41,14 @@
             + i.material-icons {
               &::before {
                 content: "radio_button_checked";
+                color: $primary;
               }
+            }
+          }
+          &:disabled {
+            + i.material-icons {
+              cursor: not-allowed;
+              opacity: .5;
             }
           }
 

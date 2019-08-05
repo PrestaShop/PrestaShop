@@ -30,7 +30,7 @@
       <span>
         <div class="radio js-unselect-all">
           <label>
-            <input type="radio" name="unselect_all" value="1"> {{ 'Unselect'|trans({}, 'Admin.Actions') }}
+            <input type="radio" name="{{ form.vars.full_name }}_unselect_all" value="1"> {{ 'Unselect all'|trans({}, 'Admin.Actions') }}
           </label>
         </div>
       </span>
@@ -94,8 +94,7 @@
              {% if choice[choice_value] in selected_values %}checked{% endif %}
              {% if disabled or choice[choice_value] in disabled_values %}disabled{% endif %}
       >
-      <i class="material-icons">
-      </i>
+      <i class="material-icons"></i>
       {{ choice[choice_label] }}
     </label>
   </div>
