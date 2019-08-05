@@ -58,6 +58,11 @@ class ProductPriceType extends AbstractType
             ->add('tax_rule_group_id', ChoiceType::class, [
                 'choices' => $this->taxRuleGroupChoiceProvider->getChoices(),
                 'required' => false,
+                'placeholder' => false,
+                'attr' => [
+                    'data-toggle' => 'select2',
+                    'data-minimumResultsForSearch' => '7',
+                ],
             ])
         ;
     }
