@@ -75,6 +75,8 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
      */
     public function editCurrency($reference, TableNode $node)
     {
+        $defaultLangId = Configuration::get('PS_LANG_DEFAULT');
+
         $data = $node->getRowsHash();
         /** @var Currency $currency */
         $currency = SharedStorage::getStorage()->get($reference);
@@ -99,6 +101,14 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
 
         if (isset($data['shop_association'])) {
             $command->setShopIds([(int) $data['shop_association']]);
+        }
+
+        if (isset($data['name'])) {
+            $command->setLocalizedNames([$defaultLangId => $data['name']]);
+        }
+
+        if (isset($data['symbol'])) {
+            $command->setLocalizedSymbols([$defaultLangId => $data['symbol']]);
         }
 
         $this->getCommandBus()->handle($command);
