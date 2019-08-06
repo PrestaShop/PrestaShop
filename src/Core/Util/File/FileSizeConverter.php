@@ -39,7 +39,7 @@ final class FileSizeConverter
      */
     public function convert(int $bytes, int $precision = 2): string
     {
-        $units = ['b', 'kB', 'MB', 'GB', 'TB'];
+        $units = ['B', 'kB', 'MB', 'GB', 'TB'];
         $bytes = max($bytes, 0);
         $pow = floor(($bytes ? log($bytes) : 0) / log(1024));
         $pow = min($pow, count($units) - 1);
