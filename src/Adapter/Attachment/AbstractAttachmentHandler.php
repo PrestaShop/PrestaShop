@@ -31,7 +31,6 @@ use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\DeleteAttachmentExcep
 use PrestaShop\PrestaShop\Core\Domain\Attachment\ValueObject\AttachmentId;
 use PrestaShopException;
 use Attachment;
-use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentException;
 
 /**
  * Abstract attachment handler
@@ -44,13 +43,17 @@ abstract class AbstractAttachmentHandler
      * @return Attachment
      *
      * @throws AttachmentNotFoundException
-     * @throws PrestaShopException
-     * @throws \PrestaShopDatabaseException
      */
     protected function getAttachment(AttachmentId $attachmentId)
     {
         $attachmentIdValue = $attachmentId->getValue();
-        $attachment = new Attachment($attachmentIdValue);
+        try {
+            $attachment = new Attachment($attachmentIdValue);
+        } catch (PrestaShopException $e) {
+            throw new AttachmentNotFoundException(
+                sprintf('Attachment with id "%s" was not found.', $attachmentId->getValue())
+            );
+        }
 
         if ($attachment->id !== $attachmentId->getValue()) {
             throw new AttachmentNotFoundException(
@@ -68,9 +71,9 @@ abstract class AbstractAttachmentHandler
      *
      * @return bool
      *
-     * @throws AttachmentException
+     * @throws DeleteAttachmentException
      */
-    protected function deleteAttachment(Attachment $attachment)
+    protected function deleteAttachment(Attachment $attachment): bool
     {
         try {
             return $attachment->delete();
