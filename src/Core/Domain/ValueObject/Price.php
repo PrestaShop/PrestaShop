@@ -51,7 +51,6 @@ class Price
         $this->assertIsLargerThenZero($priceAsNumber);
 
         $this->price = $priceAsNumber;
-
     }
 
     /**

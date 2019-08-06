@@ -26,8 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
-
 /**
  * Holds mandatory product data.
  */
@@ -35,6 +33,7 @@ class AddProductCommand
 {
     /**
      * @todo: I need defaultLanguage validation in handler
+     *
      * @var string[]
      */
     private $localizedNames;

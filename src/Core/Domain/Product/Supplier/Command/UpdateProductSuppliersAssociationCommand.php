@@ -49,7 +49,6 @@ class UpdateProductSuppliersAssociationCommand
     private $productId;
 
     /**
-     *
      * @param int $productId
      * @param array $suppliers
      *

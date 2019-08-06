@@ -46,7 +46,6 @@ class UpdateProductCustomizationFieldsAssociationCommand
     private $customizationFields;
 
     /**
-     *
      * @param int $productId
      * @param array $customizationFields
      *
@@ -76,6 +75,7 @@ class UpdateProductCustomizationFieldsAssociationCommand
 
     /**
      * @param array $customizationFields
+     *
      * @throws ProductCustomizationFieldConstraintException
      */
     private function setCustomizationFields(array $customizationFields): void

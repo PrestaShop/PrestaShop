@@ -77,8 +77,8 @@ class UpdateProductCategoriesAssociationCommand
 
     /**
      * @param array $categories
-     * @throws CategoryException
      *
+     * @throws CategoryException
      * @throws ProductCategoryConstraintException
      */
     private function setCategories(array $categories): void
@@ -88,7 +88,7 @@ class UpdateProductCategoriesAssociationCommand
             $isMainCategory = $category['is_main_category'];
 
             if ($isMainCategory) {
-                $mainCategoriesCount++;
+                ++$mainCategoriesCount;
             }
 
             if ($mainCategoriesCount > 1) {

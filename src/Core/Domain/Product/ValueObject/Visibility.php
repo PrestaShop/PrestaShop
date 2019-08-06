@@ -40,17 +40,17 @@ class Visibility
     public const EVERYWHERE = 'both';
 
     /**
-     * @var string - defines that the product is visible only in catalog page.
+     * @var string - defines that the product is visible only in catalog page
      */
     public const CATALOG = 'catalog';
 
     /**
-     * @var string - defines that the product is visible only in search results.
+     * @var string - defines that the product is visible only in search results
      */
     public const SEARCH = 'search';
 
     /**
-     * @var string - defines that product should not appear anywhere.
+     * @var string - defines that product should not appear anywhere
      */
     public const NOWHERE = 'none';
 
@@ -71,7 +71,7 @@ class Visibility
      *
      * @throws ProductConstraintException
      */
-    public  function __construct(string $visibility)
+    public function __construct(string $visibility)
     {
         $this->assertIsValidVisibility($visibility);
 

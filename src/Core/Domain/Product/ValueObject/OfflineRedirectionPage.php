@@ -35,22 +35,22 @@ use function in_array;
 class OfflineRedirectionPage
 {
     /**
-     * @var string - 302 moved temporarily to product page.
+     * @var string - 302 moved temporarily to product page
      */
     public const TEMPORARY_TO_PRODUCT_TYPE = 'temporary_to_product';
 
     /**
-     * @var string - 301 status code moved permanent to product page.
+     * @var string - 301 status code moved permanent to product page
      */
-    public const PERMANENT_TO_PRODUCT_TYPE  = 'permanent_to_product';
+    public const PERMANENT_TO_PRODUCT_TYPE = 'permanent_to_product';
 
     /**
-     * @var string - 302 moved temporarily to category page.
+     * @var string - 302 moved temporarily to category page
      */
     public const TEMPORARY_TO_CATEGORY_TYPE = 'temporary_to_category';
 
     /**
-     * @var string - 301 status code moved permanent to product page.
+     * @var string - 301 status code moved permanent to product page
      */
     public const PERMANENT_TO_CATEGORY_TYPE = 'permanent_to_category';
 
@@ -81,7 +81,6 @@ class OfflineRedirectionPage
     private $resourceId;
 
     /**
-     *
      * @param string $redirectionType
      * @param int|null $resourceId
      *

@@ -46,11 +46,10 @@ class CustomizableFeatureValue
 
     private function setFeatureId(int $featureId): void
     {
-        /**
+        /*
          * @todo: change me when FeatureId object is available.
          */
         $this->featureId = new class($featureId) {
-
             private $featureId;
 
             public function __construct(int $featureId)

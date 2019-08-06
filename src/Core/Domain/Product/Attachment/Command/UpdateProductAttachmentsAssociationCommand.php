@@ -74,7 +74,6 @@ class UpdateProductAttachmentsAssociationCommand
         foreach ($attachmentIds as $attachmentId) {
             //todo: change me when AttachmentId VO is available
             $this->attachmentIds[] = new class($attachmentId) {
-
                 private $attachmentId;
 
                 public function __construct(int $attachmentId)

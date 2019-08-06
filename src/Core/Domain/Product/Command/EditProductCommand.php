@@ -33,8 +33,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintExcepti
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Condition;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\OfflineRedirectionPage;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectionPage\RedirectionPageInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectionPage\TypedRedirectionPageInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Ean13;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Isbn;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference;
@@ -51,6 +49,7 @@ class EditProductCommand
 {
     /**
      * @todo: I need defaultLanguage validation in handler
+     *
      * @var string[]
      */
     private $localizedNames;
@@ -87,6 +86,7 @@ class EditProductCommand
 
     /**
      * @todo: I need cleanHtml validation in handler
+     *
      * @var string[]
      */
     private $localizedSummaries;
@@ -240,6 +240,7 @@ class EditProductCommand
     public function setIsEnabled(bool $isEnabled): self
     {
         $this->isEnabled = $isEnabled;
+
         return $this;
     }
 
@@ -311,6 +312,7 @@ class EditProductCommand
     public function setDisplayOnSaleFlag(bool $displayOnSaleFlag): self
     {
         $this->displayOnSaleFlag = $displayOnSaleFlag;
+
         return $this;
     }
 
@@ -330,6 +332,7 @@ class EditProductCommand
     public function setUnit(string $unit): self
     {
         $this->unit = $unit;
+
         return $this;
     }
 
@@ -594,6 +597,7 @@ class EditProductCommand
     public function setIsAvailableForOrder(bool $isAvailableForOrder): self
     {
         $this->isAvailableForOrder = $isAvailableForOrder;
+
         return $this;
     }
 
@@ -613,6 +617,7 @@ class EditProductCommand
     public function setIsWebOnly(bool $isWebOnly): self
     {
         $this->isWebOnly = $isWebOnly;
+
         return $this;
     }
 
@@ -632,6 +637,7 @@ class EditProductCommand
     public function setIsConditionDisplayedOnProductPage(bool $isConditionDisplayedOnProductPage): self
     {
         $this->isConditionDisplayedOnProductPage = $isConditionDisplayedOnProductPage;
+
         return $this;
     }
 

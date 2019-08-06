@@ -89,11 +89,12 @@ class UpdateProductFeaturesAssociationCommand
 
     /**
      * @param array $features
+     *
      * @throws ProductFeatureConstraintException
      */
     private function setFeatures(array $features): void
     {
-        foreach ($features as $feature)  {
+        foreach ($features as $feature) {
             if ($feature['is_customizable']) {
                 $this->customizableFeatureValues[] = new CustomizableFeatureValue(
                     $feature['feature_id'],

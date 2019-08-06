@@ -31,7 +31,6 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Feature\ValueObject;
  */
 class FeatureValue
 {
-
     private $featureId;
 
     private $featureValueId;
@@ -66,32 +65,30 @@ class FeatureValue
 
     private function setFeatureId(int $featureId): void
     {
-        /**
+        /*
          * @todo: change me when FeatureId object is available.
          */
         $this->featureId = new class($featureId) {
+            private $featureId;
 
-        private $featureId;
+            public function __construct(int $featureId)
+            {
+                $this->featureId = $featureId;
+            }
 
-        public function __construct(int $featureId)
-        {
-            $this->featureId = $featureId;
-        }
-
-        public function getValue(): int
-        {
-            return $this->featureId;
-        }
+            public function getValue(): int
+            {
+                return $this->featureId;
+            }
         };
     }
 
     private function setFeatureValueId(int $featureValueId): void
     {
-        /**
+        /*
          * @todo: change me when FeatureValueId object is available.
          */
         $this->featureValueId = new class($featureValueId) {
-
             private $featureValueId;
 
             public function __construct(int $featureValueId)
