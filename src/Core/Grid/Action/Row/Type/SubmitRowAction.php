@@ -31,15 +31,12 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\Accessibilit
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Class SubmitRowAction defines row action as form submit.
+ * Defines row action as form submit.
  */
 final class SubmitRowAction extends AbstractRowAction
 {
-    /* Static confirmation message type */
-    const MESSAGE_TYPE_STATIC = 'static';
-
-    /* Dynamic confirmation message type with dynamic message parameters available */
-    const MESSAGE_TYPE_DYNAMIC = 'dynamic';
+    const MESSAGE_TYPE_STATIC = 'static'; # Static confirmation message type is standard confirmation message type
+    const MESSAGE_TYPE_DYNAMIC = 'dynamic'; # Dynamic confirmation message type enables dynamic confirmation message
 
     /**
      * {@inheritdoc}

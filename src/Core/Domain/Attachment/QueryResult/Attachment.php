@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult;
 
 /**
- * Class Attachment stores attachment path and original name information.
+ * Stores attachment path and original name information.
  */
 class Attachment
 {

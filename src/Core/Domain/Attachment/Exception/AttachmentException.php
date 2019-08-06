@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Attachment\Exception;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 
 /**
- * Class AttachmentException base exception for Attachment subdomain
+ * Base exception for Attachment subdomain
  */
 class AttachmentException extends DomainException
 {
