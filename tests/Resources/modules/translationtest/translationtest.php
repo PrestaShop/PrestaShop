@@ -54,6 +54,7 @@ class translationtest extends Module
         $this->ps_versions_compliancy = array('min' => '1.7.5.0', 'max' => _PS_VERSION_);
 
         $this->adminControllerName ='AdminTranslationtestFoo';
+        $this->controllers = ['bar']; // this is a front controller
     }
 
     /**

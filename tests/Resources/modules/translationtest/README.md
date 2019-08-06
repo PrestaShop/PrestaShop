@@ -11,3 +11,4 @@ To access this module's controllers:
 
 - BO controller, modern: /admin-dev/index.php/modules/translations
 - BO controller, legacy: /admin-dev/index.php?controller=AdminTranslationtestFoo
+- FO controller: index.php?fc=module&module=translationtest&controller=bar
