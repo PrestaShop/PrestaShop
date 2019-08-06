@@ -106,7 +106,7 @@ Feature: Meta management (Traffic & Seo)
       | pageName                          |  	pagenotfound                  |
     Then I should get error that page name value is incorrect
 
-  Scenario: Get non existing meta for editing it raises an error
+  Scenario: Fail to edit a meta item that does not exist
     When I get meta "meta12" with specified properties
       | metaId                            | 9999                             |
     Then I should get error that meta entity is not found
