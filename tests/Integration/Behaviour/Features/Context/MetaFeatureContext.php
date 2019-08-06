@@ -57,7 +57,7 @@ class MetaFeatureContext extends AbstractPrestaShopFeatureContext
         if ($meta->{$field}[$defaultLanguageId] !== $expectedValue) {
             throw new RuntimeException(
                 sprintf(
-                    'Expected value "%s" did not matched given %s for language %s',
+                    'Expected value "%s" did not matched given "%s" for language %d',
                     $expectedValue,
                     $meta->{$field}[$defaultLanguageId],
                     $defaultLanguageId
