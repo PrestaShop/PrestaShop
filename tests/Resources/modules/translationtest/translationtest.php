@@ -24,6 +24,8 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+use PrestaShopBundle\Entity\Repository\TabRepository;
+
 if (!defined('_PS_VERSION_')) {
     exit;
 }
@@ -34,6 +36,8 @@ if (file_exists(__DIR__ . '/vendor/autoload.php')) {
 
 class translationtest extends Module
 {
+    private $adminControllerName;
+
     public function __construct()
     {
         $this->name = 'translationtest';
@@ -44,10 +48,82 @@ class translationtest extends Module
         $this->bootstrap = true;
         parent::__construct();
 
-        $this->displayName = 'translations tests';
+        $this->displayName = 'translation tests';
         $this->description = 'Test the translations accross different templating engines and controllers';
 
         $this->ps_versions_compliancy = array('min' => '1.7.5.0', 'max' => _PS_VERSION_);
+
+        $this->adminControllerName ='AdminTranslationtestFoo';
+    }
+
+    /**
+     * Content for the configuration page
+     *
+     * @return string
+     * @throws PrestaShopException
+     */
+    public function getContent()
+    {
+        $content = $this->context->link->getAdminLink($this->adminControllerName);
+        return $content;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function install()
+    {
+        return parent::install() && $this->installTab();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function uninstall()
+    {
+        return parent::uninstall() && $this->uninstallTab();
+    }
+
+    /**
+     * Installs the tab for the admin controller
+     *
+     * @return bool
+     *
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     */
+    public function installTab()
+    {
+        $tab = new Tab();
+        $tab->class_name = $this->adminControllerName;
+        $tab->active = 1;
+        $tab->name = [];
+        foreach (Language::getLanguages(true) as $lang) {
+            $tab->name[$lang['id_lang']] = $this->name;
+        }
+        $tab->id_parent = -1; // do not show
+        $tab->module = $this->name;
+
+        return $tab->add();
+    }
+
+    /**
+     * Uninstalls the tab for the admin controller
+     *
+     * @return bool
+     * @throws PrestaShopException
+     */
+    public function uninstallTab()
+    {
+        $tabId = Tab::getIdFromClassName($this->adminControllerName);
+        if ($tabId > 0) {
+            $tab = new Tab($tabId);
+            if (Validate::isLoadedObject($tab)) {
+                return $tab->delete();
+            }
+        }
+
+        return true;
     }
 
     /**
