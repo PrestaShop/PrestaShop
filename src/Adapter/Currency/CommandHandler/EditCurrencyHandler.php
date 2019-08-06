@@ -97,18 +97,23 @@ final class EditCurrencyHandler extends AbstractCurrencyHandler implements EditC
             }
 
             if (null !== $command->getIsoCode()) {
-                //todo: handler must use data from command not deduce them
-                /*$this->updateNameAndSymbol(
-                    $entity,
-                    $command->getIsoCode()->getValue()
-                );*/
-
                 $entity->iso_code = $command->getIsoCode()->getValue();
+            }
+            if (null !== $command->getNumericIsoCode()) {
                 $entity->numeric_iso_code = $command->getNumericIsoCode()->getValue();
             }
 
             $entity->active = $command->isEnabled();
             $entity->conversion_rate = $command->getExchangeRate()->getValue();
+
+            if (!empty($command->getLocalizedNames())) {
+                $entity->name = $entity->names = $command->getLocalizedNames();
+            }
+            if (!empty($command->getLocalizedSymbols())) {
+                $entity->symbol = $entity->symbols = $command->getLocalizedSymbols();
+            }
+            //This method will insert the missing localized names/symbols and detect if the currency has been edited
+            $entity->refreshLocalizedCurrencyData(Language::getLanguages(), $this->localeRepository);
 
             $this->assertCurrencyWithIsoCodeDoesNotExist(
                 $command->getCurrencyId()->getValue(),
