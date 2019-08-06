@@ -88,6 +88,13 @@ class CurrencyCore extends ObjectModel
     public $custom;
 
     /**
+     * Is this currency edited ?
+     *
+     * @var int|bool edited
+     */
+    public $edited;
+
+    /**
      * Is this currency active ?
      *
      * @var int|bool active
@@ -161,6 +168,7 @@ class CurrencyCore extends ObjectModel
             'deleted' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'active' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'custom' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+            'edited' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 
             /* Lang fields */
             'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
@@ -661,6 +669,30 @@ class CurrencyCore extends ObjectModel
     }
 
     /**
+     * Get Currency ID by numeric ISO code.
+     *
+     * @param int $numericIsoCode ISO code
+     * @param int $idShop Shop ID
+     *
+     * @return int Currency ID
+     */
+    public static function getIdByNumericIsoCode($numericIsoCode, $idShop = 0)
+    {
+        $cacheId = 'Currency::getIdByNumericIsoCode_' . pSQL($numericIsoCode) . '-' . (int) $idShop;
+        if (!Cache::isStored($cacheId)) {
+            $query = Currency::getIdByQuery($idShop);
+            $query->where('numeric_iso_code = \'' . pSQL($numericIsoCode) . '\'');
+
+            $result = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query->build());
+            Cache::store($cacheId, $result);
+
+            return $result;
+        }
+
+        return Cache::retrieve($cacheId);
+    }
+
+    /**
      * Get Currency ID query.
      *
      * @param int $idShop Shop ID
@@ -864,6 +896,9 @@ class CurrencyCore extends ObjectModel
      */
     public function refreshLocalizedCurrencyData(array $languages, LocaleRepository $localeRepoCLDR)
     {
+        $this->edited = false;
+        $originalNames = $this->names;
+        $originalSymbols = $this->symbols;
         $symbolsByLang = $namesByLang = [];
         foreach ($languages as $languageData) {
             $language = new Language($languageData['id_lang']);
@@ -882,14 +917,23 @@ class CurrencyCore extends ObjectModel
                 continue;
             }
 
-            $symbol = (string) $cldrCurrency->getSymbol();
-            if (empty($symbol)) {
-                $symbol = $this->iso_code;
+            // Symbol is localized, we check if it was manually edited
+            $symbol = (string) $cldrCurrency->getSymbol() ?: $this->iso_code;
+            if (!empty($originalSymbols[$language->id]) && $symbol !== $originalSymbols[$language->id]) {
+                $symbol = $originalSymbols[$language->id];
+                $this->edited = true;
             }
-            // symbol is localized
-            $namesByLang[$language->id] = $cldrCurrency->getDisplayName();
             $symbolsByLang[$language->id] = $symbol;
+
+            // Name is localized, we check if it was manually edited
+            $name = $cldrCurrency->getDisplayName();
+            if (!empty($originalNames[$language->id]) && $name !== $originalNames[$language->id]) {
+                $name = $originalNames[$language->id];
+                $this->edited = true;
+            }
+            $namesByLang[$language->id] = $name;
         }
+
         $this->name = $namesByLang;
         $this->symbol = $symbolsByLang;
     }
