@@ -27,7 +27,7 @@
 namespace Tests\Unit\Core\Domain\Carrier\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\OutOfRangeBehavior;
-use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\ShippingMethod;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\Billing;
 
 final class ValidDataProviderForCommandCreation
 {
@@ -39,7 +39,7 @@ final class ValidDataProviderForCommandCreation
             'speed_grade' => 0,
             'tracking_url' => 'http://example.com/track.php?num=@',
             'shipping_cost_included' => true,
-            'shipping_method' => ShippingMethod::SHIPPING_METHOD_PRICE,
+            'billing' => Billing::ACCORDING_TO_PRICE,
             'tax_rules_group' => 1,
             'out_of_range_behavior' => OutOfRangeBehavior::APPLY_HIGHEST_RANGE,
             'shipping_ranges' => [

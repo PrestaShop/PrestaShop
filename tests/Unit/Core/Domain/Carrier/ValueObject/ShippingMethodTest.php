@@ -28,7 +28,7 @@ namespace Tests\Unit\Core\Domain\Carrier\ValueObject;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\ShippingMethod;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\Billing;
 
 class ShippingMethodTest extends TestCase
 {
@@ -38,9 +38,9 @@ class ShippingMethodTest extends TestCase
     public function testItThrowsAnExceptionWhenUndefinedMethodIsGiven($undefinedMethod)
     {
         $this->expectException(CarrierConstraintException::class);
-        $this->expectExceptionCode(CarrierConstraintException::INVALID_SHIPPING_METHOD);
+        $this->expectExceptionCode(CarrierConstraintException::INVALID_BILLING);
 
-        new ShippingMethod($undefinedMethod);
+        new Billing($undefinedMethod);
     }
 
     public function getUndefinedMethods()
@@ -52,8 +52,8 @@ class ShippingMethodTest extends TestCase
 
     public function testItReturnsCorrectMethodValue()
     {
-        $shippingMethod = new ShippingMethod(ShippingMethod::SHIPPING_METHOD_PRICE);
+        $shippingMethod = new Billing(Billing::ACCORDING_TO_PRICE);
 
-        $this->assertEquals(ShippingMethod::SHIPPING_METHOD_PRICE, $shippingMethod->getValue());
+        $this->assertEquals(Billing::ACCORDING_TO_PRICE, $shippingMethod->getValue());
     }
 }

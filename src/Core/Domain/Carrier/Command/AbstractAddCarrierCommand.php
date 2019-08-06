@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierConstraintExcepti
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierName;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\OutOfRangeBehavior;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\ShippingDelay;
-use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\ShippingMethod;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\Billing;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\ShippingRange;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\SpeedGrade;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\TrackingUrl;
@@ -67,9 +67,9 @@ abstract class AbstractAddCarrierCommand
     protected $shippingCostIncluded;
 
     /**
-     * @var ShippingMethod
+     * @var Billing
      */
-    protected $shippingMethod;
+    protected $billing;
 
     /**
      * @var ShippingRange[]
@@ -169,11 +169,11 @@ abstract class AbstractAddCarrierCommand
     }
 
     /**
-     * @return ShippingMethod
+     * @return Billing
      */
-    public function getShippingMethod(): ShippingMethod
+    public function getBilling(): Billing
     {
-        return $this->shippingMethod;
+        return $this->billing;
     }
 
     /**

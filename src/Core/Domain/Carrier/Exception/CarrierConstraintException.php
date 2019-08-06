@@ -47,9 +47,9 @@ class CarrierConstraintException extends CarrierException
     const INVALID_SHIPPING_DELAY = 3;
 
     /**
-     * When carrier shipping method value is invalid
+     * When carrier billing value is invalid
      */
-    const INVALID_SHIPPING_METHOD = 4;
+    const INVALID_BILLING = 4;
 
     /**
      * When shipping range contains invalid values

@@ -27,12 +27,11 @@
 namespace PrestaShop\PrestaShop\Adapter\Carrier\CommandHandler;
 
 use Carrier;
-use ObjectModel;
 use PrestaShop\PrestaShop\Adapter\Carrier\AbstractCarrierHandler;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Command\AbstractAddCarrierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierException;
-use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\ShippingMethod;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\Billing;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\ShippingRange;
 use PrestaShopException;
 use RangePrice;
@@ -63,18 +62,8 @@ abstract class AbstractAddCarrierHandler extends AbstractCarrierHandler
      */
     protected function fillCarrierCommonFieldsWithData(Carrier $carrier, AbstractAddCarrierCommand $command)
     {
-        $shippingMethod = $command->getShippingMethod()->getValue();
-
-        /*
-         * Backwards compatibility.
-         * SHIPPING_METHOD_DEFAULT @deprecated 1.5.5
-         */
-        if (Carrier::SHIPPING_METHOD_DEFAULT === $shippingMethod) {
-            $shippingMethod = $this->configuration->get('PS_SHIPPING_METHOD') ?
-                ShippingMethod::SHIPPING_METHOD_WEIGHT : ShippingMethod::SHIPPING_METHOD_PRICE;
-        }
         $carrier->is_free = $command->isFreeShipping();
-        $carrier->shipping_method = $shippingMethod;
+        $carrier->shipping_method = $command->getBilling()->getValue();
 
         $localizedNames = $command->getLocalizedNames();
         foreach ($localizedNames as $langId => $carrierName) {
@@ -98,29 +87,28 @@ abstract class AbstractAddCarrierHandler extends AbstractCarrierHandler
 
     /**
      * @param Carrier $carrier
-     * @param ShippingMethod $shippingMethod
+     * @param Billing $billing
      * @param ShippingRange[] $shippingRanges
      *
      * @throws CarrierException
      * @throws PrestaShopException
      */
-    protected function addShippingRanges(Carrier $carrier, ShippingMethod $shippingMethod, array $shippingRanges): void
+    protected function addShippingRanges(Carrier $carrier, Billing $billing, array $shippingRanges): void
     {
-        $methodValue = $shippingMethod->getValue();
         $carrierId = (int) $carrier->id;
 
         foreach ($shippingRanges as $shippingRange) {
-            ShippingMethod::SHIPPING_METHOD_WEIGHT === $methodValue ?
-                $this->addRange($range = new RangeWeight(), $carrierId, $shippingRange) :
-                $this->addRange($range = new RangePrice(), $carrierId, $shippingRange);
+            $billing->accordingToWeight() ?
+                $this->addRangeWeight($range = new RangeWeight(), $carrierId, $shippingRange) :
+                $this->addRangePrice($range = new RangePrice(), $carrierId, $shippingRange);
 
-            $this->addDeliveryPrice($shippingRange, $shippingMethod, $carrier, (int) $range->id);
+            $this->addDeliveryPrice($shippingRange, $billing, $carrier, (int) $range->id);
         }
     }
 
     /**
      * @param ShippingRange $shippingRange
-     * @param ShippingMethod $shippingMethod
+     * @param Billing $billing
      * @param Carrier $carrier
      * @param int $rangeId
      *
@@ -128,11 +116,11 @@ abstract class AbstractAddCarrierHandler extends AbstractCarrierHandler
      */
     protected function addDeliveryPrice(
         ShippingRange $shippingRange,
-        ShippingMethod $shippingMethod,
+        Billing $billing,
         Carrier $carrier,
         int $rangeId
     ) {
-        if ($shippingMethod->getValue() === ShippingMethod::SHIPPING_METHOD_WEIGHT) {
+        if ($billing->accordingToWeight()) {
             $rangePriceId = null;
             $rangeWeightId = $rangeId;
         } else {
@@ -161,22 +149,44 @@ abstract class AbstractAddCarrierHandler extends AbstractCarrierHandler
     }
 
     /**
-     * @param ObjectModel $range RangePrice|RangeWeight
+     * @param RangePrice $rangePrice
      * @param int $carrierId
      * @param ShippingRange $shippingRange
      *
      * @throws CarrierException
-     * @throws PrestaShopException
      */
-    private function addRange(ObjectModel $range, int $carrierId, ShippingRange $shippingRange)
+    private function addRangePrice(RangePrice $rangePrice, int $carrierId, ShippingRange $shippingRange)
     {
-        $range->id_carrier = $carrierId;
-        $range->delimiter1 = $shippingRange->getFrom();
-        $range->delimiter2 = $shippingRange->getTo();
+        $rangePrice->id_carrier = $carrierId;
+        $rangePrice->delimiter1 = $shippingRange->getFrom();
+        $rangePrice->delimiter2 = $shippingRange->getTo();
 
-        if (false === $range->add()) {
+        if (false === $rangePrice->add()) {
             throw new CarrierException(sprintf(
-                'Failed to create range "%s - %s" for carrier with id "%s"',
+                'Failed to create price range "%s - %s" for carrier with id "%s"',
+                $shippingRange->getFrom(),
+                $shippingRange->getTo(),
+                $carrierId
+            ));
+        }
+    }
+
+    /**
+     * @param RangeWeight $rangeWeight
+     * @param int $carrierId
+     * @param ShippingRange $shippingRange
+     *
+     * @throws CarrierException
+     */
+    private function addRangeWeight(RangeWeight $rangeWeight, int $carrierId, ShippingRange $shippingRange)
+    {
+        $rangeWeight->id_carrier = $carrierId;
+        $rangeWeight->delimiter1 = $shippingRange->getFrom();
+        $rangeWeight->delimiter2 = $shippingRange->getTo();
+
+        if (false === $rangeWeight->add()) {
+            throw new CarrierException(sprintf(
+                'Failed to create weight range "%s - %s" for carrier with id "%s"',
                 $shippingRange->getFrom(),
                 $shippingRange->getTo(),
                 $carrierId

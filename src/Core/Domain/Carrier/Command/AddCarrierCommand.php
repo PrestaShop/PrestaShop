@@ -28,7 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Carrier\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\OutOfRangeBehavior;
-use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\ShippingMethod;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\Billing;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\SpeedGrade;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\TrackingUrl;
 
@@ -52,7 +52,7 @@ final class AddCarrierCommand extends AbstractAddCarrierCommand
      * @param int $speedGrade
      * @param string $trackingUrl
      * @param bool $shippingCostIncluded
-     * @param int $shippingMethod
+     * @param int $billing
      * @param int $taxRulesGroupId
      * @param int $outOfRangeBehavior
      * @param array $shippingRanges
@@ -73,7 +73,7 @@ final class AddCarrierCommand extends AbstractAddCarrierCommand
         int $speedGrade,
         string $trackingUrl,
         bool $shippingCostIncluded,
-        int $shippingMethod,
+        int $billing,
         int $taxRulesGroupId,
         int $outOfRangeBehavior,
         array $shippingRanges,
@@ -90,7 +90,7 @@ final class AddCarrierCommand extends AbstractAddCarrierCommand
         $command->setMeasures($maxPackageWidth, $maxPackageHeight, $maxPackageDepth, $maxPackageWeight);
         $command->setShippingRanges($shippingRanges);
         $command->speedGrade = new SpeedGrade($speedGrade);
-        $command->shippingMethod = new ShippingMethod($shippingMethod);
+        $command->billing = new Billing($billing);
         $command->trackingUrl = new TrackingUrl($trackingUrl);
         $command->outOfRangeBehavior = new OutOfRangeBehavior($outOfRangeBehavior);
         $command->shippingCostIncluded = $shippingCostIncluded;
@@ -142,7 +142,7 @@ final class AddCarrierCommand extends AbstractAddCarrierCommand
         $command->speedGrade = new SpeedGrade($speedGrade);
         $command->trackingUrl = new TrackingUrl($trackingUrl);
         $command->outOfRangeBehavior = new OutOfRangeBehavior(OutOfRangeBehavior::APPLY_HIGHEST_RANGE);
-        $command->shippingMethod = new ShippingMethod(ShippingMethod::SHIPPING_METHOD_WEIGHT);
+        $command->billing = new Billing(Billing::ACCORDING_TO_WEIGHT);
         $command->taxRulesGroupId = $taxRulesGroupId;
         $command->associatedGroupIds = $associatedGroupIds;
         $command->associatedShopIds = $associatedShopIds;

@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Carrier\Command\AddCarrierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Command\AddModuleCarrierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\OutOfRangeBehavior;
-use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\ShippingMethod;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\Billing;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
@@ -65,7 +65,7 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
             (int) $data['speed_grade'],
             $data['tracking_url'],
             PrimitiveUtils::castStringBooleanIntoBoolean($data['shipping_cost_included']),
-            $this->getShippingMethodValueMap()[$data['shipping_method']],
+            $this->getBillingValueMap()[$data['billing']],
             (int) $data['tax_rules_group_id'],
             $this->getOutOfRangeBehaviorValueMap()[$data['out_of_range_behavior']],
             $this->formatShippingRanges($data['ranges_from'], $data['ranges_to'], $data['zone_ids'], $data['prices']),
@@ -151,7 +151,7 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
             (int) $data['speed_grade'],
             $data['tracking_url'],
             PrimitiveUtils::castStringBooleanIntoBoolean($data['shipping_cost_included']),
-            $this->getShippingMethodValueMap()[$data['shipping_method']],
+            $this->getBillingValueMap()[$data['billing']],
             (int) $data['tax_rules_group_id'],
             $this->getOutOfRangeBehaviorValueMap()[$data['out_of_range_behavior']],
             $this->formatShippingRanges($data['ranges_from'], $data['ranges_to'], $data['zone_ids'], $data['prices']),
@@ -183,7 +183,7 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
             (int) $data['speed_grade'],
             $data['tracking_url'],
             PrimitiveUtils::castStringBooleanIntoBoolean($data['shipping_cost_included']),
-            $this->getShippingMethodValueMap()[$data['shipping_method']],
+            $this->getBillingValueMap()[$data['billing']],
             (int) $data['tax_rules_group_id'],
             $this->getOutOfRangeBehaviorValueMap()[$data['out_of_range_behavior']],
             $this->formatShippingRanges($data['ranges_from'], $data['ranges_to'], $data['zone_ids'], $data['prices']),
@@ -204,7 +204,7 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then /^Carrier "(.+)" shipping price should be calculated by (module|PrestaShop)$/
+     * @Then /^carrier "(.+)" shipping price should be calculated by (module|PrestaShop)$/
      */
     public function assertShippingPriceIsCalculatedBy($reference, $calculationMethod)
     {
@@ -225,7 +225,7 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then /^Carrier "(.+)" module (should|should not) need the shipping price calculated by PrestaShop$/
+     * @Then /^carrier "(.+)" module (should|should not) need the shipping price calculated by PrestaShop$/
      */
     public function assertModuleNeedsCoreShippingPrice($reference, $condition)
     {
@@ -245,7 +245,7 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then /^Carrier "(.+)" (should|should not) belong to module$/
+     * @Then /^carrier "(.+)" (should|should not) belong to module$/
      */
     public function assertIsModule($reference, $condition)
     {
@@ -266,7 +266,7 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then Carrier :reference :field in default language should be :value
+     * @Then carrier :reference :field in default language should be :value
      */
     public function assertLocalizedField($reference, $field, $value)
     {
@@ -294,7 +294,7 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then Carrier :reference :field should be :value
+     * @Then carrier :reference :field should be :value
      */
     public function assertFieldValue($reference, $field, $value)
     {
@@ -314,22 +314,22 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then /^Carrier "(.+)" shipping price calculation should be based on package (price|weight)$/
+     * @Then /^carrier "(.+)" billing should be based on package (price|weight)$/
      */
-    public function assertShippingMethod($reference, $expectedMethod)
+    public function assertBilling($reference, $expectedMethod)
     {
-        $methodValueMap = $this->getShippingMethodValueMap();
+        $billingValueMap = $this->getBillingValueMap();
 
         /** @var Carrier $carrier */
         $carrier = SharedStorage::getStorage()->get($reference);
 
         $actualMethod = (int) $carrier->shipping_method;
 
-        if ($methodValueMap[$expectedMethod] !== $actualMethod) {
+        if ($billingValueMap[$expectedMethod] !== $actualMethod) {
             throw new RuntimeException(sprintf(
-                'Carrier "%s" shipping price calculation is based on package %s, but expected to be based on %s',
+                'Carrier "%s" billing is based on package %s, but expected to be based on %s',
                 $reference,
-                $actualMethod === $methodValueMap['price'] ? 'price' : 'weight',
+                $actualMethod === $billingValueMap['price'] ? 'price' : 'weight',
                 $expectedMethod
             ));
         }
@@ -441,11 +441,11 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
     /**
      * @return array
      */
-    private function getShippingMethodValueMap()
+    private function getBillingValueMap()
     {
         return [
-            'price' => ShippingMethod::SHIPPING_METHOD_PRICE,
-            'weight' => ShippingMethod::SHIPPING_METHOD_WEIGHT,
+            'price' => Billing::ACCORDING_TO_PRICE,
+            'weight' => Billing::ACCORDING_TO_WEIGHT,
         ];
     }
 

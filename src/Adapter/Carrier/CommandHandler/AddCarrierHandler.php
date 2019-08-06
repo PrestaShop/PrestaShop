@@ -39,11 +39,7 @@ use PrestaShopException;
 final class AddCarrierHandler extends AbstractAddCarrierHandler implements AddCarrierHandlerInterface
 {
     /**
-     * @param AddCarrierCommand $command
-     *
-     * @return CarrierId
-     *
-     * @throws CarrierException
+     * {@inheritdoc}
      */
     public function handle(AddCarrierCommand $command): CarrierId
     {
@@ -60,7 +56,7 @@ final class AddCarrierHandler extends AbstractAddCarrierHandler implements AddCa
             $this->associateWithShops($carrier, $command->getAssociatedShopIds());
             $carrier->setTaxRulesGroup($command->getTaxRulesGroupId());
             $carrier->setGroups($command->getAssociatedGroupIds());
-            $this->addShippingRanges($carrier, $command->getShippingMethod(), $command->getShippingRanges());
+            $this->addShippingRanges($carrier, $command->getBilling(), $command->getShippingRanges());
         } catch (PrestaShopException $e) {
             throw new CarrierException('An error occurred when trying to add new carrier');
         }

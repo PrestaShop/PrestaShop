@@ -173,7 +173,7 @@ class TestAddCarrierCommand extends TestCase
                 $data['speed_grade'],
                 $data['tracking_url'],
                 $data['shipping_cost_included'],
-                $data['shipping_method'],
+                $data['billing'],
                 $data['tax_rules_group'],
                 $data['out_of_range_behavior'],
                 $data['shipping_ranges'],

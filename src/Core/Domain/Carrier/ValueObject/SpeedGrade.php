@@ -34,6 +34,16 @@ use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierConstraintExcepti
 final class SpeedGrade
 {
     /**
+     * Minimum allowed value for speed grade
+     */
+    const MIN_VALUE = 0;
+
+    /**
+     * Maximum allowed value for speed grade
+     */
+    const MAX_VALUE = 9;
+
+    /**
      * @var int
      */
     private $value;
@@ -64,9 +74,13 @@ final class SpeedGrade
      */
     private function assertValueIsNonNegativeIntegerLessThanTen(int $value)
     {
-        if (0 > $value || 9 < $value) {
+        if (self::MIN_VALUE > $value || self::MAX_VALUE < $value) {
             throw new CarrierConstraintException(sprintf(
-                'Shipping grade "%s" is invalid. It must be integer from 0 to 9', $value),
+                    'Shipping grade "%s" is invalid. It must be integer from %s to %s',
+                    $value,
+                    self::MIN_VALUE,
+                    self::MAX_VALUE
+                ),
                 CarrierConstraintException::INVALID_SPEED_GRADE
             );
         }

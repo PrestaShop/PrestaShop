@@ -56,7 +56,7 @@ final class AddModuleCarrierHandler extends AbstractAddCarrierHandler implements
             $this->associateWithShops($carrier, $command->getAssociatedShopIds());
             $carrier->setTaxRulesGroup($command->getTaxRulesGroupId());
             $carrier->setGroups($command->getAssociatedGroupIds());
-            $this->addShippingRanges($carrier, $command->getShippingMethod(), $command->getShippingRanges());
+            $this->addShippingRanges($carrier, $command->getBilling(), $command->getShippingRanges());
         } catch (PrestaShopException $e) {
             throw new CarrierException('An error occurred when trying to add new carrier with module');
         }

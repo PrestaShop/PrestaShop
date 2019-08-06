@@ -29,19 +29,19 @@ namespace PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierConstraintException;
 
 /**
- * Provides valid values for shipping method
+ * Provides valid billing values
  */
-final class ShippingMethod
+final class Billing
 {
     /**
-     * Represents shipping method when the shipping price depends from total package weight
+     * Represents billing when the shipping price is calculated according to total package weight
      */
-    const SHIPPING_METHOD_WEIGHT = 1;
+    const ACCORDING_TO_WEIGHT = 1;
 
     /**
-     * Represents shipping method when the shipping price depends from total package price
+     * Represents billing when the shipping price is calculated according to total package price
      */
-    const SHIPPING_METHOD_PRICE = 2;
+    const ACCORDING_TO_PRICE = 2;
 
     /**
      * @var int
@@ -55,8 +55,24 @@ final class ShippingMethod
      */
     public function __construct(int $value)
     {
-        $this->assertValueIsDefinedShippingMethod($value);
+        $this->assertValueIsDefinedBilling($value);
         $this->value = $value;
+    }
+
+    /**
+     * @return bool
+     */
+    public function accordingToWeight()
+    {
+        return self::ACCORDING_TO_WEIGHT === $this->value;
+    }
+
+    /**
+     * @return bool
+     */
+    public function accordingToPrice()
+    {
+        return self::ACCORDING_TO_PRICE === $this->value;
     }
 
     /**
@@ -72,19 +88,19 @@ final class ShippingMethod
      *
      * @throws CarrierConstraintException
      */
-    private function assertValueIsDefinedShippingMethod(int $value)
+    private function assertValueIsDefinedBilling(int $value)
     {
         $definedMethods = [
-            self::SHIPPING_METHOD_PRICE,
-            self::SHIPPING_METHOD_WEIGHT,
+            self::ACCORDING_TO_PRICE,
+            self::ACCORDING_TO_WEIGHT,
         ];
 
         if (!in_array($value, $definedMethods, true)) {
             throw new CarrierConstraintException(sprintf(
-                'Invalid shipping method value "%s". Defined values are: %s',
+                'Invalid billing value "%s". Defined values are: %s',
                 $value,
                 implode(', ', $definedMethods)),
-                CarrierConstraintException::INVALID_SHIPPING_METHOD
+                CarrierConstraintException::INVALID_BILLING
             );
         }
     }
