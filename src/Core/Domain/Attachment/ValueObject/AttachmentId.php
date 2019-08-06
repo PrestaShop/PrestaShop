@@ -26,10 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Attachment\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentConstraintException;
-
 /**
- * Class AttachmentId provides attachment id
+ * Provides attachment id
  */
 class AttachmentId
 {
@@ -40,37 +38,17 @@ class AttachmentId
 
     /**
      * @param int $id
-     *
-     * @throws AttachmentConstraintException
      */
-    public function __construct($id)
+    public function __construct(int $id)
     {
-        $this->assertIsIntegerGreaterThanZero($id);
         $this->id = $id;
     }
 
     /**
      * @return int
      */
-    public function getValue()
+    public function getValue(): int
     {
         return $this->id;
-    }
-
-    /**
-     * Validates that the value is integer and is greater than zero
-     *
-     * @param $value
-     *
-     * @throws AttachmentConstraintException
-     */
-    private function assertIsIntegerGreaterThanZero($value)
-    {
-        if (!is_int($value) || 0 >= $value) {
-            throw new AttachmentConstraintException(
-                sprintf('Invalid attachment id "%s".', var_export($value, true)),
-                AttachmentConstraintException::INVALID_ID
-            );
-        }
     }
 }

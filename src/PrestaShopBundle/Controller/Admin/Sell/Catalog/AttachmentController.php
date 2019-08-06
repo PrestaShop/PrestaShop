@@ -229,7 +229,7 @@ class AttachmentController extends FrameworkBundleAdminController
 
         $toolbarButtons['add'] = [
             'href' => $this->generateUrl('admin_attachment_create'),
-            'desc' => $this->trans('Add new Attachment', 'Admin.Catalog.Feature'),
+            'desc' => $this->trans('Add new file', 'Admin.Catalog.Feature'),
             'icon' => 'add_circle_outline',
         ];
 

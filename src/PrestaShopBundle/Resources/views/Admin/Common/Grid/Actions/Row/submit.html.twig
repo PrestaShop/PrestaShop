@@ -32,7 +32,7 @@
 {% set confirmation_message = action.options.confirm_message %}
 {% if action.options.confirm_message_type == 'dynamic' and record[action.options.dynamic_message_field] is defined %}
   {% set dynamic_field = record[action.options.dynamic_message_field] %}
-  {% set confirmation_message = dynamic_field is defined ? dynamic_field : action.options.confirm_message %}
+  {% set confirmation_message = dynamic_field|default(action.options.confirm_message) %}
 {% endif %}
 
 <a class="{{ class }}"

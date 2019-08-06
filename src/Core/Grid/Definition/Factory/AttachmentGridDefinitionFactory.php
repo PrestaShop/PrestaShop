@@ -46,6 +46,9 @@ use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
+/**
+ * Attachment grid definition
+ */
 final class AttachmentGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
     /**
@@ -102,7 +105,7 @@ final class AttachmentGridDefinitionFactory extends AbstractGridDefinitionFactor
      */
     protected function getName()
     {
-        return $this->trans('Files', [], 'Admin.Navigation.Feature');
+        return $this->trans('Files', [], 'Admin.Navigation.Menu');
     }
 
     /**

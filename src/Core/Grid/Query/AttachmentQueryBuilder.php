@@ -31,7 +31,7 @@ use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
- * Class AttachmentQueryBuilder builds search & count queries for attachment grid.
+ * Attachment query builder builds search & count queries for attachment grid.
  */
 final class AttachmentQueryBuilder extends AbstractDoctrineQueryBuilder
 {
@@ -47,15 +47,15 @@ final class AttachmentQueryBuilder extends AbstractDoctrineQueryBuilder
 
     /**
      * @param Connection $connection
-     * @param $dbPrefix
+     * @param string $dbPrefix
      * @param DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
-     * @param $employeeIdLang
+     * @param string $employeeIdLang
      */
     public function __construct(
         Connection $connection,
-        $dbPrefix,
+        string $dbPrefix,
         DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator,
-        $employeeIdLang
+        string $employeeIdLang
     ) {
         parent::__construct($connection, $dbPrefix);
 
@@ -66,13 +66,13 @@ final class AttachmentQueryBuilder extends AbstractDoctrineQueryBuilder
     /**
      * {@inheritdoc}
      */
-    public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
+    public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
 
         $qb
             ->select('a.`id_attachment`, al.`name`, a.`file`, a.`file_size`')
-            ->addSelect('CONCAT(COALESCE(virtual_product_attachment.`product_count`, 0), " product(s)") AS products')
+            ->addSelect('COALESCE(virtual_product_attachment.`product_count`, 0) AS products')
         ;
 
         $this->searchCriteriaApplicator
@@ -86,7 +86,7 @@ final class AttachmentQueryBuilder extends AbstractDoctrineQueryBuilder
     /**
      * {@inheritdoc}
      */
-    public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
+    public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters())
             ->select('COUNT(DISTINCT a.`id_attachment`)')
@@ -102,7 +102,7 @@ final class AttachmentQueryBuilder extends AbstractDoctrineQueryBuilder
      *
      * @return QueryBuilder
      */
-    private function getQueryBuilder(array $filters)
+    private function getQueryBuilder(array $filters): QueryBuilder
     {
         $qb = $this->connection
             ->createQueryBuilder()
