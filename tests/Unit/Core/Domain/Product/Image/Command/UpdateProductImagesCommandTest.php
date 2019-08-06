@@ -48,7 +48,7 @@ class UpdateProductImagesCommandTest extends TestCase
         yield [
             [
                 new ExistingProductImage(1, 1, false, []),
-                new ExistingProductImage(2, 2, true, ['caption'])
+                new ExistingProductImage(2, 2, true, ['caption']),
             ],
             [
                 [
@@ -62,14 +62,14 @@ class UpdateProductImagesCommandTest extends TestCase
                     'position' => 2,
                     'is_cover' => true,
                     'captions' => ['caption'],
-                ]
-            ]
+                ],
+            ],
         ];
 
         yield [
             [
                 new ProductImage(1, false, []),
-                new ProductImage( 2, true, ['caption'])
+                new ProductImage(2, true, ['caption']),
             ],
             [
                 [
@@ -81,14 +81,14 @@ class UpdateProductImagesCommandTest extends TestCase
                     'position' => 2,
                     'is_cover' => true,
                     'captions' => ['caption'],
-                ]
-            ]
+                ],
+            ],
         ];
 
         yield [
             [
                 new ProductImage(1, false, []),
-                new ExistingProductImage(1, 2, true, ['caption'])
+                new ExistingProductImage(1, 2, true, ['caption']),
             ],
             [
                 [
@@ -101,8 +101,8 @@ class UpdateProductImagesCommandTest extends TestCase
                     'position' => 2,
                     'is_cover' => true,
                     'captions' => ['caption'],
-                ]
-            ]
+                ],
+            ],
         ];
     }
 }

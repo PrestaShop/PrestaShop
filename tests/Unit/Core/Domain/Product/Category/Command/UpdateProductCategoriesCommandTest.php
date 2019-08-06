@@ -49,7 +49,7 @@ class UpdateProductCategoriesCommandTest extends TestCase
             [
                 'id' => 3,
                 'is_main_category' => true,
-            ]
+            ],
         ];
 
         new UpdateProductCategoriesAssociationCommand(1, $categories);

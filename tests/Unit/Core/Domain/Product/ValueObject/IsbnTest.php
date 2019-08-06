@@ -24,14 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 namespace Tests\Unit\Core\Domain\Product\ValueObject;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Ean13;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Isbn;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference;
 
 class IsbnTest extends TestCase
 {

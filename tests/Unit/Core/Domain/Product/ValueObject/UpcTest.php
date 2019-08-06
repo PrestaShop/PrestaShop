@@ -26,7 +26,6 @@
 
 namespace Tests\Unit\Core\Domain\Product\ValueObject;
 
-
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Upc;
