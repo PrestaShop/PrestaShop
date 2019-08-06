@@ -137,7 +137,7 @@ class StylesheetManagerCore extends AbstractAssetManager
         foreach ($this->list['inline'] as &$item) {
             $item['content'] =
                 '/* ---- ' . $item['id'] . ' @ ' . $item['path'] . ' ---- */' . "\r\n" .
-                file_get_contents($item['path']);
+                file_get_contents("." . $item['path']);
         }
     }
 }
