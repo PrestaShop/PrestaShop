@@ -180,6 +180,10 @@ abstract class ControllerCore
             define('_PS_BASE_URL_SSL_', Tools::getShopDomainSsl(true));
         }
 
+        if (null === $this->getContainer()) {
+            $this->container = $this->buildContainer();
+        }
+
         $localeRepo = $this->get(self::SERVICE_LOCALE_REPOSITORY);
         $this->context->currentLocale = $localeRepo->getLocale(
             $this->context->language->getLocale()
@@ -225,9 +229,6 @@ abstract class ControllerCore
         }
         if (null === $this->display_footer) {
             $this->display_footer = true;
-        }
-        if (null === $this->getContainer()) {
-            $this->container = $this->buildContainer();
         }
         $this->context = Context::getContext();
         $this->context->controller = $this;
