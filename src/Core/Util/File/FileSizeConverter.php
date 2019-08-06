@@ -33,31 +33,22 @@ final class FileSizeConverter
 {
     /**
      * @param int $bytes
+     * @param int $precision
      *
      * @return string
      */
-    public function convert(int $bytes)
+    public function convert(int $bytes, int $precision = 2): string
     {
-        if ($bytes >= 1073741824) {
-            return number_format($bytes / 1073741824, 2) . 'GB';
+        $units = ['b', 'kB', 'MB', 'GB', 'TB'];
+        $bytes = max($bytes, 0);
+        $pow = floor(($bytes ? log($bytes) : 0) / log(1024));
+        $pow = min($pow, count($units) - 1);
+
+        if ($bytes > 1024) {
+            $bytes /= pow(1024, $pow);
+            $bytes = number_format(round($bytes, $precision), 2, '.', '');
         }
 
-        if ($bytes >= 1048576) {
-            return number_format($bytes / 1048576, 2) . 'M';
-        }
-
-        if ($bytes >= 1024) {
-            return number_format($bytes / 1024, 2) . 'k';
-        }
-
-        if ($bytes > 1) {
-            return $bytes . 'b';
-        }
-
-        if ($bytes == 1) {
-            return $bytes . 'b';
-        }
-
-        return '0b';
+        return $bytes . $units[$pow];
     }
 }

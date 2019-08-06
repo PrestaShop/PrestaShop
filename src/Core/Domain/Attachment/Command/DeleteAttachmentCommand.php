@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentConstraintE
 use PrestaShop\PrestaShop\Core\Domain\Attachment\ValueObject\AttachmentId;
 
 /**
- * Class DeleteAttachmentCommand is responsible for deleting Attachment
+ * Delete attachment command is responsible for deleting Attachment
  */
 class DeleteAttachmentCommand
 {
@@ -44,7 +44,7 @@ class DeleteAttachmentCommand
      *
      * @throws AttachmentConstraintException
      */
-    public function __construct($attachmentId)
+    public function __construct(int $attachmentId)
     {
         $this->attachmentId = new AttachmentId($attachmentId);
     }
@@ -52,7 +52,7 @@ class DeleteAttachmentCommand
     /**
      * @return AttachmentId
      */
-    public function getAttachmentId()
+    public function getAttachmentId(): AttachmentId
     {
         return $this->attachmentId;
     }
