@@ -29,13 +29,26 @@ services:
     arguments:
       - '@translator'
 
+  prestashop.adapter.category.command_handler.abstract_attachment_handler:
+    abstract:  true
+    class: 'PrestaShop\PrestaShop\Adapter\Attachment\CommandHandler\AbstractAttachmentHandler'
+    calls:
+      - ['setValidator', ['@validator']]
+
   prestashop.adapter.category.command_handler.edit_attachment_handler:
+    public: true
     class: 'PrestaShop\PrestaShop\Adapter\Attachment\CommandHandler\EditAttachmentHandler'
+    parent: 'prestashop.adapter.category.command_handler.abstract_attachment_handler'
+    arguments:
+      - '@prestashop.adapter.image.uploader.attachment_file_uploader'
     tags:
       - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Attachment\Command\EditAttachmentCommand' }
 
   prestashop.adapter.category.command_handler.create_attachment_handler:
+    public: true
     class: 'PrestaShop\PrestaShop\Adapter\Attachment\CommandHandler\CreateAttachmentHandler'
+    parent: 'prestashop.adapter.category.command_handler.abstract_attachment_handler'
+    arguments:
+      - '@prestashop.adapter.image.uploader.attachment_file_uploader'
     tags:
       - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Attachment\Command\CreateAttachmentCommand' }
-

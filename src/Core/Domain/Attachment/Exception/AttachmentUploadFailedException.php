@@ -24,21 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\File\Uploader;
-
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+namespace PrestaShop\PrestaShop\Core\Domain\Attachment\Exception;
 
 /**
- * Interface ImageUploaderInterface is contract for file uploader.
+ * Thrown when upload error occurs
  */
-interface FileUploaderInterface
+class AttachmentUploadFailedException extends AttachmentException
 {
-    /**
-     * Upload file.
-     *
-     * @param UploadedFile $uploadedFile
-     * @param string $uniqueFileName
-     * @param int|null $entityId
-     */
-    public function upload(UploadedFile $uploadedFile, string $uniqueFileName, ?int $entityId = null);
 }

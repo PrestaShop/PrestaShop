@@ -27,10 +27,13 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\BulkDeleteAttachmentsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\DeleteAttachmentCommand;
-use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentUploadFailedException;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\CannotAddAttachmentException;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\CannotUpdateAttachmentException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\BulkDeleteAttachmentsException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\DeleteAttachmentException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachment;
@@ -40,6 +43,8 @@ use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachmentForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\EditableAttachment;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Annotation\DemoRestricted;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -48,11 +53,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class AttachmentController extends FrameworkBundleAdminController
 {
-    public function indexAction()
-    {
-        return new Response();
-    }
-
     /**
      * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
      *
@@ -181,14 +181,6 @@ class AttachmentController extends FrameworkBundleAdminController
         ]);
     }
 
-    /**
-     * Provides error messages for exceptions
-     *
-     * @return array
-     */
-    private function getErrorMessages()
-    {
-        return [
     public function editAction(int $attachmentId, Request $request)
     {
         return new Response($attachmentId);
@@ -296,8 +288,47 @@ class AttachmentController extends FrameworkBundleAdminController
                 AttachmentConstraintException::INVALID_ID => $this->trans(
                     'The object cannot be loaded (the identifier is missing or invalid)',
                     'Admin.Notifications.Error'
+                    ),
+                AttachmentConstraintException::INVALID_FILE_SIZE => $this->trans(
+                    'Upload error. Please check your server configurations for the maximum upload size allowed.',
+                    'Admin.Catalog.Notification'
+                ),
+                AttachmentConstraintException::EMPTY_NAME => $this->trans(
+                    'An attachment name is required.',
+                    'Admin.Catalog.Notification'
+                ),
+                AttachmentConstraintException::EMPTY_DESCRIPTION => $this->trans(
+                    'Invalid description for %s language',
+                    'Admin.Catalog.Notification'
+                ),
+                AttachmentConstraintException::INVALID_FIELDS => $this->trans(
+                    'An error occurred when attempting to update the required fields.',
+                    'Admin.Notifications.Error'
+                    ),
+                AttachmentConstraintException::INVALID_DESCRIPTION => $this->trans(
+                    'Invalid description for %s language',
+                    'Admin.Catalog.Notification'
+                ),
+                AttachmentConstraintException::MISSING_DEFAULT_LANGUAGE_FOR_NAME => $this->trans(
+                    'The %s field is not valid',
+                    'Admin.Notifications.Error',
+                    [
+                        sprintf('"%s"', $this->trans('Name', 'Admin.Global')),
+                    ]
                 ),
             ],
+            AttachmentUploadFailedException::class => $this->trans(
+                'Failed to copy the file.',
+                'Admin.Catalog.Notification'
+            ),
+            CannotAddAttachmentException::class => $this->trans(
+                'This attachment was unable to be loaded into the database.',
+                'Admin.Catalog.Notification'
+                ),
+            CannotUpdateAttachmentException::class => $this->trans(
+                'This attachment was unable to be loaded into the database.',
+                'Admin.Catalog.Notification'
+            ),
             BulkDeleteAttachmentsException::class => sprintf(
                 '%s: %s',
                 $this->trans(

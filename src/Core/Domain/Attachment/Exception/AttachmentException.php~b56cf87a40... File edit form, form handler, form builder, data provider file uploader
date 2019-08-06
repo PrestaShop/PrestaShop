@@ -24,17 +24,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Attachment\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Attachment\Exception;
 
-use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\EditAttachmentCommand;
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 
 /**
- * Interface defines contract for edit attachment handler
+ * Class AttachmentException base exception for Attachment subdomain
  */
-interface EditAttachmentHandlerInterface
+class AttachmentException extends DomainException
 {
-    /**
-     * @param EditAttachmentCommand $command
-     */
-    public function handle(EditAttachmentCommand $command);
 }

@@ -26,23 +26,20 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Attachment\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentConstraintException;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
-
 /**
- * Class CreateAttachmentCommand
+ * Attachment creation command
  */
 class CreateAttachmentCommand
 {
     /**
-     * @var UploadedFile|null
-     */
-    private $file;
-
-    /**
      * @var string
      */
-    private $uniqueFileName;
+    private $pathName;
+
+    /**
+     * @var int
+     */
+    private $fileSize;
 
     /**
      * @var string[]
@@ -50,9 +47,9 @@ class CreateAttachmentCommand
     private $localizedNames;
 
     /**
-     * @var string[]|null
+     * @var string[]
      */
-    private $localizedDescriptions;
+    private $localizedDescriptions = [];
 
     /**
      * @var string
@@ -60,43 +57,45 @@ class CreateAttachmentCommand
     private $mimeType;
 
     /**
-     * @return UploadedFile|null
+     * @var string
      */
-    public function getFile(): ?UploadedFile
-    {
-        return $this->file;
-    }
+    private $originalName;
 
     /**
-     * @param UploadedFile|null $file
-     *
-     * @return CreateAttachmentCommand
+     * @param string $pathName
+     * @param int $fileSize
+     * @param array $localizedNames
+     * @param array $localizedDescriptions
+     * @param string $mimeType
+     * @param string $originalName
      */
-    public function setFile(?UploadedFile $file): CreateAttachmentCommand
-    {
-        $this->file = $file;
-
-        return $this;
+    public function __construct(
+        string $pathName,
+        int $fileSize,
+        array $localizedNames,
+        array $localizedDescriptions,
+        string $mimeType,
+        string $originalName
+    ) {
+        $this->pathName = $pathName;
+        $this->fileSize = $fileSize;
+        $this->localizedNames = $localizedNames;
+        $this->localizedDescriptions = $localizedDescriptions;
+        $this->mimeType = $mimeType;
+        $this->originalName = $originalName;
     }
 
     /**
      * @return string
      */
-    public function getUniqueFileName(): string
+    public function getFilePathName(): string
     {
-        return $this->uniqueFileName;
+        return $this->pathName;
     }
 
-    /**
-     * @param string $uniqueFileName
-     *
-     * @return CreateAttachmentCommand
-     */
-    public function setUniqueFileName(string $uniqueFileName): CreateAttachmentCommand
+    public function getFileSize(): int
     {
-        $this->uniqueFileName = $uniqueFileName;
-
-        return $this;
+        return $this->fileSize;
     }
 
     /**
@@ -108,44 +107,11 @@ class CreateAttachmentCommand
     }
 
     /**
-     * @param array $localizedNames
-     *
-     * @return CreateAttachmentCommand
-     *
-     * @throws AttachmentConstraintException
+     * @return string[]
      */
-    public function setLocalizedNames(array $localizedNames): CreateAttachmentCommand
-    {
-        if (empty($localizedNames)) {
-            throw new AttachmentConstraintException(
-                'Attachment name cannot be empty',
-                AttachmentConstraintException::EMPTY_NAME
-            );
-        }
-
-        $this->localizedNames = $localizedNames;
-
-        return $this;
-    }
-
-    /**
-     * @return string[]|null
-     */
-    public function getLocalizedDescriptions(): ?array
+    public function getLocalizedDescriptions(): array
     {
         return $this->localizedDescriptions;
-    }
-
-    /**
-     * @param string[]|null $localizedDescriptions
-     *
-     * @return CreateAttachmentCommand
-     */
-    public function setLocalizedDescriptions(?array $localizedDescriptions): CreateAttachmentCommand
-    {
-        $this->localizedDescriptions = $localizedDescriptions;
-
-        return $this;
     }
 
     /**
@@ -157,14 +123,10 @@ class CreateAttachmentCommand
     }
 
     /**
-     * @param string $mimeType
-     *
-     * @return CreateAttachmentCommand
+     * @return string
      */
-    public function setMimeType(string $mimeType): CreateAttachmentCommand
+    public function getOriginalName(): string
     {
-        $this->mimeType = $mimeType;
-
-        return $this;
+        return $this->originalName;
     }
 }
