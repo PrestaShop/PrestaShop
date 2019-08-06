@@ -29,9 +29,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\Attachment\CommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\BulkDeleteAttachmentsCommand;
 
 /**
- * Defines contract for BulkDeleteAttachmentHandler
+ * Defines contract for bulk delete attachments handler
  */
-interface BulkDeleteAttachmentHandlerInterface
+interface BulkDeleteAttachmentsHandlerInterface
 {
     /**
      * @param BulkDeleteAttachmentsCommand $command

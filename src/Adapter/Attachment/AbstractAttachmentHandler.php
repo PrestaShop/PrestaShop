@@ -34,7 +34,7 @@ use Attachment;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentException;
 
 /**
- * Class AbstractAttachmentHandler
+ * Abstract attachment handler
  */
 abstract class AbstractAttachmentHandler
 {

@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Attachment\Exception;
 
 /**
- * Class AttachmentConstraintException is thrown when Attachment constraint is violated
+ * Exception is thrown when Attachment constraint is violated
  */
 class AttachmentConstraintException extends AttachmentException
 {

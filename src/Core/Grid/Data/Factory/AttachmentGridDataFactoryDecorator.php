@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Util\File\FileSizeConverter;
 use PrestaShopBundle\Translation\TranslatorAwareTrait;
 
 /**
- * Class AttachmentGridDataFactoryDecorator
+ * Decorates attachment grid data factory
  */
 final class AttachmentGridDataFactoryDecorator implements GridDataFactoryInterface
 {
