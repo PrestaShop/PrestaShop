@@ -27,6 +27,15 @@ import tableDnD from 'tablednd/dist/jquery.tablednd.min';
 
 const $ = window.$;
 
+/**
+ * A component which adds asynchronous position drag & drop functionality -
+ * no page refresh happens after each drag & drop action.
+ *
+ * Usage:
+ *
+ * const myGrid = new Grid('my_grid_id');
+ * myGrid.addExtension(new AsyncPositionExtension());
+ */
 export default class AsyncPositionExtension {
   constructor() {
     return {
@@ -173,9 +182,6 @@ export default class AsyncPositionExtension {
   _updatePosition(url, params) {
     $.post({
       url,
-      headers: {
-        'cache-control': 'no-cache',
-      },
       data: params,
       dataType: 'json',
     }).then((response) => {

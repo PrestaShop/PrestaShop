@@ -117,11 +117,20 @@ class DemoModeEnabledListener
             return;
         }
 
-        $isXmlHttpRequest = $event->getRequest()->isXmlHttpRequest();
+        if ($event->getRequest()->isXmlHttpRequest()) {
+            $response = new JsonResponse([
+                'status' => false,
+                'message' => $this->getErrorMessage($demoRestricted),
+            ], Response::HTTP_FORBIDDEN);
 
-        if (!$isXmlHttpRequest) {
-            $this->showNotificationMessage($demoRestricted);
+            $event->setController(function () use ($response) {
+                return $response;
+            });
+
+            return;
         }
+
+        $this->showNotificationMessage($demoRestricted);
 
         $routeParametersToKeep = $this->getQueryParamsFromRequestQuery(
             $demoRestricted->getRedirectQueryParamsToKeep(),
@@ -130,14 +139,7 @@ class DemoModeEnabledListener
 
         $url = $this->router->generate($demoRestricted->getRedirectRoute(), $routeParametersToKeep);
 
-        if ($isXmlHttpRequest) {
-            $response = new JsonResponse([
-                'status' => false,
-                'message' => $this->getErrorMessage($demoRestricted),
-            ], Response::HTTP_FORBIDDEN);
-        } else {
-            $response = new RedirectResponse($url);
-        }
+        $response = new RedirectResponse($url);
 
         $event->setController(function () use ($response) {
             return $response;
