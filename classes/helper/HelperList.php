@@ -24,6 +24,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShop\PrestaShop\Core\Routing\EntityLinkBuilderFactory;
+use PrestaShop\PrestaShop\Adapter\Routing\AdminLinkBuilder;
+use PrestaShop\PrestaShop\Adapter\Routing\LegacyHelperLinkBuilder;
+use PrestaShop\PrestaShop\Core\Routing\Exception\BuilderNotFoundException;
 
 /**
  * @since 1.5.0
@@ -124,10 +128,22 @@ class HelperListCore extends Helper
 
     public $page;
 
+    /** @var EntityLinkBuilderFactory */
+    private $linkBuilderFactory;
+
     public function __construct()
     {
         $this->base_folder = 'helpers/list/';
         $this->base_tpl = 'list.tpl';
+
+        $adminLinkBuilder = new AdminLinkBuilder(Context::getContext()->link, [
+            'customer' => 'AdminCustomers',
+            'product' => 'AdminProducts',
+        ]);
+        $this->linkBuilderFactory = new EntityLinkBuilderFactory([
+            $adminLinkBuilder,
+            new LegacyHelperLinkBuilder(),
+        ]);
 
         parent::__construct();
     }
@@ -816,62 +832,56 @@ class HelperListCore extends Helper
     }
 
     /**
-     * @param string $token
+     * @param string|null $token
      * @param int $id
      *
      * @return string
      *
+     * @throws BuilderNotFoundException
      * @throws PrestaShopException
      */
     protected function getViewLink($token, $id)
     {
-        switch ($this->table) {
-            case 'customer':
-                $updateAction = 'view' . $this->table;
-                $href = Context::getContext()->link->getAdminLink('AdminCustomers', true, ['id_customer' => $id, $updateAction => 1]);
-                break;
-            default:
-                $href = $this->currentIndex . '&' . $this->identifier . '=' . $id . '&view' . $this->table . '&token=' . ($token != null ? $token : $this->token);
-                break;
-        }
+        $linkBuilder = $this->linkBuilderFactory->getBuilder($this->table);
+        $parameters = $this->buildLinkParameters($token, $id);
 
-        return $href;
+        return $linkBuilder->buildViewLink($this->table, $parameters);
     }
 
     /**
-     * @param string $token
+     * @param string|null $token
      * @param int $id
      *
      * @return string
      *
+     * @throws BuilderNotFoundException
      * @throws PrestaShopException
      */
     protected function getEditLink($token, $id)
     {
-        switch ($this->table) {
-            case 'customer':
-                $updateAction = 'update' . $this->table;
-                $href = Context::getContext()->link->getAdminLink('AdminCustomers', true, ['id_customer' => $id, $updateAction => 1]);
-                break;
-            default:
-                $href = $this->currentIndex . '&' . $this->identifier . '=' . $id . '&update' . $this->table . ($this->page && $this->page > 1 ? '&page=' . (int) $this->page : '') . '&token=' . ($token != null ? $token : $this->token);
+        $linkBuilder = $this->linkBuilderFactory->getBuilder($this->table);
+        $parameters = $this->buildLinkParameters($token, $id);
 
-                switch ($this->currentIndex) {
-                    case 'index.php?controller=AdminProducts':
-                    case 'index.php?tab=AdminProducts':
-                        // New architecture modification: temporary behavior to switch between old and new controllers.
-                        $pagePreference = SymfonyContainer::getInstance()->get('prestashop.core.admin.page_preference_interface');
-                        $redirectLegacy = $pagePreference->getTemporaryShouldUseLegacyPage('product');
-                        if (!$redirectLegacy && $this->identifier == 'id_product') {
-                            $href = Context::getContext()->link->getAdminLink('AdminProducts', true, ['id_product' => $id, 'updateproduct' => 1]);
-                        }
+        return $linkBuilder->buildEditLink($this->table, $parameters);
+    }
 
-                        break;
-                    default:
-                }
-                break;
+    /**
+     * @param string|null $token
+     * @param int $id
+     *
+     * @return array
+     */
+    protected function buildLinkParameters($token, $id)
+    {
+        $parameters = [
+            $this->identifier => $id,
+            'current_index' => $this->currentIndex,
+            'token' => $token != null ? $token : $this->token,
+        ];
+        if ($this->page && $this->page > 1) {
+            $parameters['page'] = $this->page;
         }
 
-        return $href;
+        return $parameters;
     }
 }
