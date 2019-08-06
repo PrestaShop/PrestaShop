@@ -64,6 +64,7 @@ class TestAddModuleCarrierCommand extends TestCase
             $data['weight'],
             $data['associated_group_ids'],
             $data['associated_shop_ids'],
+            $data['is_enabled'],
             $data['module_name']
         );
     }
@@ -86,6 +87,7 @@ class TestAddModuleCarrierCommand extends TestCase
             $data['weight'],
             $data['associated_group_ids'],
             $data['associated_shop_ids'],
+            $data['is_enabled'],
             $data['module_name'],
             $data['needs_core_shipping_price']
         );
@@ -105,6 +107,7 @@ class TestAddModuleCarrierCommand extends TestCase
             $data['weight'],
             $data['associated_group_ids'],
             $data['associated_shop_ids'],
+            $data['is_enabled'],
             $data['module_name']
         );
     }

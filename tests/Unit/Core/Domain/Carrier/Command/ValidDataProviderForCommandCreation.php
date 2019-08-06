@@ -68,6 +68,7 @@ final class ValidDataProviderForCommandCreation
             'associated_shop_ids' => [1],
             'module_name' => 'myCarrierModule',
             'needs_core_shipping_price' => true,
+            'is_enabled' => true,
         ];
     }
 }

@@ -80,6 +80,7 @@ class AddModuleCarrierCommand extends AbstractAddCarrierCommand
      * @param int[] $associatedGroupIds
      * @param int[] $associatedShopIds
      * @param string $moduleName
+     * @param bool $enabled
      *
      * @return AddModuleCarrierCommand
      *
@@ -101,6 +102,7 @@ class AddModuleCarrierCommand extends AbstractAddCarrierCommand
         float $maxPackageWeight,
         array $associatedGroupIds,
         array $associatedShopIds,
+        bool $enabled,
         string $moduleName
     ) {
         $command = new self();
@@ -118,6 +120,7 @@ class AddModuleCarrierCommand extends AbstractAddCarrierCommand
         $command->taxRulesGroupId = $taxRulesGroupId;
         $command->associatedGroupIds = $associatedGroupIds;
         $command->associatedShopIds = $associatedShopIds;
+        $command->enabled = $enabled;
 
         $command->freeShipping = false;
         $command->moduleCalculatesShippingPrice = false;
@@ -167,6 +170,7 @@ class AddModuleCarrierCommand extends AbstractAddCarrierCommand
         float $maxPackageWeight,
         array $associatedGroupIds,
         array $associatedShopIds,
+        bool $enabled,
         string $moduleName,
         bool $moduleNeedsCoreShippingPrice
     ) {
@@ -186,6 +190,7 @@ class AddModuleCarrierCommand extends AbstractAddCarrierCommand
         $command->associatedGroupIds = $associatedGroupIds;
         $command->associatedShopIds = $associatedShopIds;
         $command->moduleNeedsCoreShippingPrice = $moduleNeedsCoreShippingPrice;
+        $command->enabled = $enabled;
 
         $command->moduleCalculatesShippingPrice = true;
         $command->freeShipping = false;
@@ -207,6 +212,7 @@ class AddModuleCarrierCommand extends AbstractAddCarrierCommand
      * @param float $maxPackageWeight
      * @param int[] $associatedGroupIds
      * @param int[] $associatedShopIds
+     * @param bool $enabled
      * @param string $moduleName
      *
      * @return AddModuleCarrierCommand
@@ -225,6 +231,7 @@ class AddModuleCarrierCommand extends AbstractAddCarrierCommand
         float $maxPackageWeight,
         array $associatedGroupIds,
         array $associatedShopIds,
+        bool $enabled,
         string $moduleName
     ) {
         $command = new self();
@@ -240,6 +247,7 @@ class AddModuleCarrierCommand extends AbstractAddCarrierCommand
         $command->taxRulesGroupId = $taxRulesGroupId;
         $command->associatedGroupIds = $associatedGroupIds;
         $command->associatedShopIds = $associatedShopIds;
+        $command->enabled = $enabled;
 
         $command->shippingRanges = [];
         $command->freeShipping = true;

@@ -164,7 +164,8 @@ class TestAddCarrierCommand extends TestCase
                 $data['depth'],
                 $data['weight'],
                 $data['associated_group_ids'],
-                $data['associated_shop_ids']
+                $data['associated_shop_ids'],
+                $data['is_enabled']
             );
         } else {
             $command = AddCarrierCommand::withPricedShipping(
@@ -182,7 +183,8 @@ class TestAddCarrierCommand extends TestCase
                 $data['depth'],
                 $data['weight'],
                 $data['associated_group_ids'],
-                $data['associated_shop_ids']
+                $data['associated_shop_ids'],
+                $data['is_enabled']
             );
         }
 

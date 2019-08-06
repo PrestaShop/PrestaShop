@@ -82,6 +82,7 @@ abstract class AbstractAddCarrierHandler extends AbstractCarrierHandler
         $carrier->max_height = $command->getMaxPackageHeight();
         $carrier->max_depth = $command->getMaxPackageDepth();
         $carrier->max_weight = $command->getMaxPackageWeight();
+        $carrier->active = $command->isEnabled();
         $carrier->deleted = false;
     }
 

@@ -62,6 +62,7 @@ class AddCarrierCommand extends AbstractAddCarrierCommand
      * @param float $maxPackageWeight
      * @param int[] $associatedGroupIds
      * @param int[] $associatedShopIds
+     * @param bool $enabled
      *
      * @return AddCarrierCommand
      *
@@ -82,7 +83,8 @@ class AddCarrierCommand extends AbstractAddCarrierCommand
         int $maxPackageDepth,
         float $maxPackageWeight,
         array $associatedGroupIds,
-        array $associatedShopIds
+        array $associatedShopIds,
+        bool $enabled
     ) {
         $command = new self();
         $command->setLocalizedName($localizedName);
@@ -97,7 +99,7 @@ class AddCarrierCommand extends AbstractAddCarrierCommand
         $command->taxRulesGroupId = $taxRulesGroupId;
         $command->associatedGroupIds = $associatedGroupIds;
         $command->associatedShopIds = $associatedShopIds;
-
+        $command->enabled = $enabled;
         $command->freeShipping = false;
 
         return $command;
@@ -117,6 +119,7 @@ class AddCarrierCommand extends AbstractAddCarrierCommand
      * @param float $maxPackageWeight
      * @param int[] $associatedGroupIds
      * @param int[] $associatedShopIds
+     * @param bool $enabled
      *
      * @return AddCarrierCommand
      *
@@ -133,7 +136,8 @@ class AddCarrierCommand extends AbstractAddCarrierCommand
         int $maxPackageDepth,
         float $maxPackageWeight,
         array $associatedGroupIds,
-        array $associatedShopIds
+        array $associatedShopIds,
+        bool $enabled
     ) {
         $command = new self();
         $command->setLocalizedName($localizedName);
@@ -146,6 +150,7 @@ class AddCarrierCommand extends AbstractAddCarrierCommand
         $command->taxRulesGroupId = $taxRulesGroupId;
         $command->associatedGroupIds = $associatedGroupIds;
         $command->associatedShopIds = $associatedShopIds;
+        $command->enabled = $enabled;
 
         $command->shippingRanges = [];
         $command->freeShipping = true;

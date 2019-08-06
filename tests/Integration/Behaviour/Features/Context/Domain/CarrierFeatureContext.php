@@ -74,7 +74,8 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
             (int) $data['max_depth'],
             (float) $data['max_weight'],
             explode(',', $data['group_ids']),
-            explode(',', $data['shop_ids'])
+            explode(',', $data['shop_ids']),
+            PrimitiveUtils::castStringBooleanIntoBoolean($data['is_enabled'])
         );
 
         /** @var CarrierId $carrierId */
@@ -101,7 +102,8 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
             (int) $data['max_depth'],
             (float) $data['max_weight'],
             explode(',', $data['group_ids']),
-            explode(',', $data['shop_ids'])
+            explode(',', $data['shop_ids']),
+            PrimitiveUtils::castStringBooleanIntoBoolean($data['is_enabled'])
         );
 
         /** @var CarrierId $carrierId */
@@ -129,6 +131,7 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
             (float) $data['max_weight'],
             explode(',', $data['group_ids']),
             explode(',', $data['shop_ids']),
+            PrimitiveUtils::castStringBooleanIntoBoolean($data['is_enabled']),
             $data['module_name']
         );
 
@@ -161,6 +164,7 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
             (float) $data['max_weight'],
             explode(',', $data['group_ids']),
             explode(',', $data['shop_ids']),
+            PrimitiveUtils::castStringBooleanIntoBoolean($data['is_enabled']),
             $data['module_name']
         );
 
@@ -193,6 +197,7 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
             (float) $data['max_weight'],
             explode(',', $data['group_ids']),
             explode(',', $data['shop_ids']),
+            PrimitiveUtils::castStringBooleanIntoBoolean($data['is_enabled']),
             $data['module_name'],
             PrimitiveUtils::castStringBooleanIntoBoolean($data['module_needs_core_shipping_price'])
         );
@@ -201,6 +206,27 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
         $carrierId = $this->getCommandBus()->handle($command);
 
         SharedStorage::getStorage()->set($reference, new Carrier($carrierId->getValue()));
+    }
+
+    /**
+     * @Then /^carrier "(.+)" should be (enabled|disabled)$/
+     */
+    public function assertIsEnabled($reference, $status)
+    {
+        $isEnabled = $status === 'enabled';
+
+        /** @var Carrier $carrier */
+        $carrier = SharedStorage::getStorage()->get($reference);
+        $actualStatus = (bool) $carrier->active;
+
+        if ($actualStatus !== $isEnabled) {
+            throw new RuntimeException(sprintf(
+                'Carrier "%s" expected to be %s, but it is %s',
+                $reference,
+                $status,
+                $actualStatus ? 'enabled' : 'disabled'
+            ));
+        }
     }
 
     /**
@@ -294,7 +320,7 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then carrier :reference :field should be :value
+     * @Then carrier :reference :field value should be :value
      */
     public function assertFieldValue($reference, $field, $value)
     {

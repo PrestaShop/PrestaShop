@@ -122,6 +122,11 @@ abstract class AbstractAddCarrierCommand
     protected $freeShipping;
 
     /**
+     * @var bool
+     */
+    protected $enabled;
+
+    /**
      * @return bool
      */
     public function isFreeShipping(): bool
@@ -247,6 +252,14 @@ abstract class AbstractAddCarrierCommand
     public function getAssociatedShopIds(): array
     {
         return $this->associatedShopIds;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEnabled()
+    {
+        return $this->enabled;
     }
 
     /**

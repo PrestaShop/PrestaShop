@@ -25,20 +25,22 @@ Feature: carrier Management
       | max_weight                | 5.5                                               |
       | group_ids                 | 1                                                 |
       | shop_ids                  | 1                                                 |
+      | is_enabled                | true                                              |
     Then carrier "my carrier" "localized name" in default language should be "My carrier"
-    And carrier "my carrier" "name" should be "My carrier"
+    And carrier "my carrier" "name" value should be "My carrier"
     And carrier "my carrier" "shipping delay" in default language should be "Pickup in store"
-    And carrier "my carrier" "speed grade" should be "1"
+    And carrier "my carrier" "speed grade" value should be "1"
     And the shipping of "my carrier" should be priced
     And carrier "my carrier" billing should be based on package price
     And when package is out of carrier "my carrier" range, the carrier should be disabled
-    And carrier "my carrier" "tracking url" should be "http://example.com/track.php?num=@"
-    And carrier "my carrier" "max package width" should be "10"
-    And carrier "my carrier" "max package height" should be "20"
-    And carrier "my carrier" "max package depth" should be "15"
-    And carrier "my carrier" "max package weight" should be "5.500000"
+    And carrier "my carrier" "tracking url" value should be "http://example.com/track.php?num=@"
+    And carrier "my carrier" "max package width" value should be "10"
+    And carrier "my carrier" "max package height" value should be "20"
+    And carrier "my carrier" "max package depth" value should be "15"
+    And carrier "my carrier" "max package weight" value should be "5.500000"
     And carrier "my carrier" should not belong to module
     And carrier "my carrier" shipping price should be calculated by PrestaShop
+    And carrier "my carrier" should be enabled
 
   Scenario: Adding new carrier with free shipping
     When I add new carrier "Free shipping carrier" with free shipping and following properties:
@@ -53,19 +55,21 @@ Feature: carrier Management
       | max_weight                | 5.5                                               |
       | group_ids                 | 1                                                 |
       | shop_ids                  | 1                                                 |
+      | is_enabled                | true                                              |
     Then carrier "Free shipping carrier" "localized name" in default language should be "Free shipping carrier"
-    And carrier "Free shipping carrier" "name" should be "Free shipping carrier"
+    And carrier "Free shipping carrier" "name" value should be "Free shipping carrier"
     And carrier "Free shipping carrier" "shipping delay" in default language should be "One week"
-    And carrier "Free shipping carrier" "speed grade" should be "4"
+    And carrier "Free shipping carrier" "speed grade" value should be "4"
     And the shipping of "Free shipping carrier" should be free of charge
     And carrier "Free shipping carrier" billing should be based on package weight
     And when package is out of carrier "Free shipping carrier" range, the highest range price should be applied
-    And carrier "Free shipping carrier" "tracking url" should be "http://example.com/track.php?num=@"
-    And carrier "Free shipping carrier" "max package width" should be "10"
-    And carrier "Free shipping carrier" "max package height" should be "20"
-    And carrier "Free shipping carrier" "max package depth" should be "15"
-    And carrier "Free shipping carrier" "max package weight" should be "5.500000"
+    And carrier "Free shipping carrier" "tracking url" value should be "http://example.com/track.php?num=@"
+    And carrier "Free shipping carrier" "max package width" value should be "10"
+    And carrier "Free shipping carrier" "max package height" value should be "20"
+    And carrier "Free shipping carrier" "max package depth" value should be "15"
+    And carrier "Free shipping carrier" "max package weight" value should be "5.500000"
     And carrier "Free shipping carrier" should not belong to module
+    And carrier "Free shipping carrier" should be enabled
 
   Scenario: Adding new module carrier with free shipping
     When I add new module carrier "Fs module carrier" with free shipping and following properties:
@@ -81,20 +85,22 @@ Feature: carrier Management
       | group_ids                 | 1,2,3                                             |
       | shop_ids                  | 1                                                 |
       | module_name               | fs-shipping                                       |
+      | is_enabled                | true                                              |
     Then carrier "Fs module carrier" "localized name" in default language should be "Free shipping module carrier"
-    And carrier "Fs module carrier" "name" should be "Free shipping module carrier"
+    And carrier "Fs module carrier" "name" value should be "Free shipping module carrier"
     And carrier "Fs module carrier" "shipping delay" in default language should be "Instant"
-    And carrier "Fs module carrier" "speed grade" should be "9"
+    And carrier "Fs module carrier" "speed grade" value should be "9"
     And the shipping of "Fs module carrier" should be free of charge
     And carrier "Fs module carrier" billing should be based on package weight
     And when package is out of carrier "Fs module carrier" range, the highest range price should be applied
-    And carrier "Fs module carrier" "tracking url" should be "https://fs.com?nr=@"
-    And carrier "Fs module carrier" "max package width" should be "20"
-    And carrier "Fs module carrier" "max package height" should be "30"
-    And carrier "Fs module carrier" "max package depth" should be "50"
-    And carrier "Fs module carrier" "max package weight" should be "50.000000"
-    And carrier "Fs module carrier" "module name" should be "fs-shipping"
+    And carrier "Fs module carrier" "tracking url" value should be "https://fs.com?nr=@"
+    And carrier "Fs module carrier" "max package width" value should be "20"
+    And carrier "Fs module carrier" "max package height" value should be "30"
+    And carrier "Fs module carrier" "max package depth" value should be "50"
+    And carrier "Fs module carrier" "max package weight" value should be "50.000000"
+    And carrier "Fs module carrier" "module name" value should be "fs-shipping"
     And carrier "Fs module carrier" should belong to module
+    And carrier "Fs module carrier" should be enabled
 
   Scenario: Adding new module carrier with shipping price which is calculated by PrestaShop core
     When I add new module carrier "P2 carry" with PrestaShop shipping price and following properties:
@@ -117,22 +123,24 @@ Feature: carrier Management
       | max_weight                | 50                                                |
       | group_ids                 | 1,2,3                                             |
       | shop_ids                  | 1                                                 |
+      | is_enabled                | false                                              |
       | module_name               | p2                                                |
     Then carrier "P2 carry" "localized name" in default language should be "Pay to carry"
-    And carrier "P2 carry" "name" should be "Pay to carry"
+    And carrier "P2 carry" "name" value should be "Pay to carry"
     And carrier "P2 carry" "shipping delay" in default language should be "2 days"
-    And carrier "P2 carry" "speed grade" should be "3"
+    And carrier "P2 carry" "speed grade" value should be "3"
     And the shipping of "P2 carry" should be priced
     And carrier "P2 carry" billing should be based on package price
     And when package is out of carrier "P2 carry" range, the highest range price should be applied
-    And carrier "P2 carry" "tracking url" should be "https://www.p2carry.lt"
-    And carrier "P2 carry" "max package width" should be "20"
-    And carrier "P2 carry" "max package height" should be "30"
-    And carrier "P2 carry" "max package depth" should be "50"
-    And carrier "P2 carry" "max package weight" should be "50.000000"
+    And carrier "P2 carry" "tracking url" value should be "https://www.p2carry.lt"
+    And carrier "P2 carry" "max package width" value should be "20"
+    And carrier "P2 carry" "max package height" value should be "30"
+    And carrier "P2 carry" "max package depth" value should be "50"
+    And carrier "P2 carry" "max package weight" value should be "50.000000"
     And carrier "P2 carry" should belong to module
-    And carrier "P2 carry" "module name" should be "p2"
+    And carrier "P2 carry" "module name" value should be "p2"
     And carrier "P2 carry" shipping price should be calculated by PrestaShop
+    And carrier "P2 carry" should be disabled
 
   Scenario: Adding new module carrier with shipping price which is calculated by module
     When I add new module carrier "rollercoaster" with module shipping price and following properties:
@@ -155,21 +163,23 @@ Feature: carrier Management
       | max_weight                             | 50                                                |
       | group_ids                              | 1,2,3                                             |
       | shop_ids                               | 1                                                 |
-      | module_name                            | p2                                                |
+      | is_enabled                             | false                                              |
+      | module_name                            | ModRollnCarry                                     |
       | module_needs_core_shipping_price       | true                                              |
     Then carrier "rollercoaster" "localized name" in default language should be "Rollercoaster"
-    And carrier "rollercoaster" "name" should be "Rollercoaster"
+    And carrier "rollercoaster" "name" value should be "Rollercoaster"
     And carrier "rollercoaster" "shipping delay" in default language should be "Up to one week"
-    And carrier "rollercoaster" "speed grade" should be "3"
+    And carrier "rollercoaster" "speed grade" value should be "3"
     And the shipping of "rollercoaster" should be priced
     And carrier "rollercoaster" billing should be based on package weight
     And when package is out of carrier "P2 carry" range, the highest range price should be applied
-    And carrier "rollercoaster" "tracking url" should be "https://www.rollerCarry.com/id=@"
-    And carrier "rollercoaster" "max package width" should be "20"
-    And carrier "rollercoaster" "max package height" should be "30"
-    And carrier "rollercoaster" "max package depth" should be "50"
-    And carrier "rollercoaster" "max package weight" should be "50.000000"
+    And carrier "rollercoaster" "tracking url" value should be "https://www.rollerCarry.com/id=@"
+    And carrier "rollercoaster" "max package width" value should be "20"
+    And carrier "rollercoaster" "max package height" value should be "30"
+    And carrier "rollercoaster" "max package depth" value should be "50"
+    And carrier "rollercoaster" "max package weight" value should be "50.000000"
     And carrier "rollercoaster" should belong to module
-    And carrier "rollercoaster" "module name" should be "p2"
+    And carrier "rollercoaster" "module name" value should be "ModRollnCarry"
     And carrier "rollercoaster" shipping price should be calculated by module
     And carrier "rollercoaster" module should need the shipping price calculated by PrestaShop
+    And carrier "rollercoaster" should be disabled
