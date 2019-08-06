@@ -136,13 +136,14 @@ $(function() {
     </div>
     {/if}
 
-    {if isset($orders) && $orders}
+    {if isset($orders) && $orders &&
+    isset($orderCount) && $orderCount}
     <div class="panel">
         <h3>
-            {if $orders|@count == 1}
+            {if $orderCount == 1}
                 {l s='1 order' d='Admin.Navigation.Search'}
             {else}
-                {l s='%d orders' sprintf=[$orders|@count] d='Admin.Navigation.Search'}
+                {l s='%d orders' sprintf=[$orderCount] d='Admin.Navigation.Search'}
             {/if}
         </h3>
         {$orders}

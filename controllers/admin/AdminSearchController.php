@@ -460,6 +460,7 @@ class AdminSearchControllerCore extends AdminController
 
                 $view = $helper->generateList($this->_list['orders'], $this->fields_list['orders']);
                 $this->tpl_view_vars['orders'] = $view;
+                $this->tpl_view_vars['orderCount'] = count($this->_list['orders']);
             }
 
             if ($this->isCountableAndNotEmpty($this->_list, 'modules')) {
