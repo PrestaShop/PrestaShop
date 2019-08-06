@@ -101,7 +101,7 @@ class CarrierZoneRangesType extends AbstractType
 
         $zonePrices = [];
         foreach ($zones as $zone) {
-            $zonePrices[$zone['id_zone']] = '';
+            $zonePrices['price_by_zone'][$zone['id_zone']] = '';
         }
 
         return [$zonePrices];
