@@ -27,29 +27,28 @@ Feature: Meta management (Traffic & Seo)
     Then I should get error that url rewrite value is incorrect
 
   Scenario: Creating new metadata with invalid url rewrite should not be allowed when ascended chars setting is turned off
+    but allowed then the setting is on
     Given shop configuration for "PS_ALLOW_ACCENTED_CHARS_URL" is set to 0
     When I add meta "meta3" with specified properties
-      | pageName                          | order-return                            |
+      | pageName                          | order-return                           |
       | localisedRewriteUrls             | i-got-char-š                            |
     Then I should get error that url rewrite value is incorrect
-
-  Scenario: Creating new metadata with invalid url rewrite should be allowed when ascended chars setting is turned on
-    Given shop configuration for "PS_ALLOW_ACCENTED_CHARS_URL" is set to 1
-    When I add meta "meta4" with specified properties
-      | pageName                          | newproducts                            |
-      | localisedRewriteUrls             | i-got-char-š                           |
-    Then meta "meta4" page should be "newproducts"
-    And meta "meta4" field "url_rewrite" for default language should be "i-got-char-š"
+    When shop configuration for "PS_ALLOW_ACCENTED_CHARS_URL" is set to 1
+    And I add meta "meta3" with specified properties
+      | pageName                          | order-return                           |
+      | localisedRewriteUrls             | i-got-char-š                            |
+    Then meta "meta3" page should be "order-return"
+    And meta "meta3" field "url_rewrite" for default language should be "i-got-char-š"
 
   Scenario: Creating new metadata with unknown page name
     When I add meta "meta5" with specified properties
-      | pageName                          | test-unknown                                    |
+      | pageName                         | test-unknown                                    |
       | localisedRewriteUrls             | test-page-unknown                               |
     Then I should get error that page name value is incorrect
 
   Scenario: Creating new metadata with already created page name
     When I add meta "meta6" with specified properties
-      | pageName                          | index                                           |
+      | pageName                         | index                                           |
       | localisedRewriteUrls             | index                                           |
     Then I should get error that page name value is incorrect
 
@@ -75,24 +74,23 @@ Feature: Meta management (Traffic & Seo)
 
   Scenario: Updating metadata without default language for url rewrite should not be allowed
     When I update meta "meta9" with specified properties without default language
-      | metaId                            | 1                                        |
+      | metaId                            | 1                                       |
       | localisedRewriteUrls             | rewrite-url                              |
     Then I should get error that url rewrite value is incorrect
 
   Scenario: Updating metadata with invalid url rewrite should not be allowed when ascended chars setting is turned off
+    but allowed when the setting is on
     Given shop configuration for "PS_ALLOW_ACCENTED_CHARS_URL" is set to 0
     When I update meta "meta10" with specified properties
-      | metaId                            | 4                                |
+      | metaId                            | 4                               |
       | localisedRewriteUrls             | i-got-char-š                     |
     Then I should get error that url rewrite value is incorrect
-
-  Scenario: Updating metadata with invalid url rewrite should be allowed when ascended chars setting is turned on
-    Given shop configuration for "PS_ALLOW_ACCENTED_CHARS_URL" is set to 1
-    When I update meta "meta11" with specified properties
+    When shop configuration for "PS_ALLOW_ACCENTED_CHARS_URL" is set to 1
+    And I update meta "meta10" with specified properties
       | metaId                            | 4                                |
-      | localisedRewriteUrls             | i-got-char-š                     |
-    Then meta "meta11" page should be "index"
-    And meta "meta11" field "url_rewrite" for default language should be "i-got-char-š"
+      | localisedRewriteUrls              | i-got-char-š                     |
+    Then meta "meta10" page should be "index"
+    And meta "meta10" field "url_rewrite" for default language should be "i-got-char-š"
 
   Scenario: Updating metadata with non existing page name
     When I update meta "meta11" with specified properties
@@ -102,7 +100,7 @@ Feature: Meta management (Traffic & Seo)
 
   Scenario: Updating metadata with already existing page name
     When I update meta "meta11" with specified properties
-      | metaId                            | 4                                |
+      | metaId                            | 4                               |
       | pageName                          |  	pagenotfound                  |
     Then I should get error that page name value is incorrect
 
