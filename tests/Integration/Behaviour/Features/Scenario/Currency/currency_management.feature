@@ -10,19 +10,21 @@ Feature: Currency Management
 
   Scenario: Adding and editing currency
     When I add new currency "currency1" with following properties:
-      | iso_code         | EUR   |
-      | exchange_rate    | 0.88  |
-      | name             | Euro  |
-      | symbol           | €     |
-      | is_enabled       | 1     |
-      | is_custom        | 0     |
-      | shop_association | shop1 |
+      | iso_code         | EUR       |
+      | numeric_iso_code | 978       |
+      | exchange_rate    | 0.88      |
+      | name             | My Euros  |
+      | symbol           | €         |
+      | is_enabled       | 1         |
+      | is_custom        | 0         |
+      | shop_association | shop1     |
     Then currency "currency1" should be "EUR"
     And currency "currency1" exchange rate should be 0.88
     And currency "currency1" numeric iso code should be 978
-    And currency "currency1" name should be "Euro"
+    And currency "currency1" name should be "My Euros"
     And currency "currency1" symbol should be "€"
-    And currency "currency1" should not be custom
+    And currency "currency1" should have custom false
+    And currency "currency1" should have edited true
     And currency "currency1" should have status enabled
     And currency "currency1" should be available in shop "shop1"
     And database contains 1 rows of currency "EUR"
@@ -36,9 +38,10 @@ Feature: Currency Management
     Then currency "currency1" should be "GBP"
     And currency "currency1" exchange rate should be 1.22
     And currency "currency1" numeric iso code should be 826
-    And currency "currency1" name should be "Euro"
+    And currency "currency1" name should be "My Euros"
     And currency "currency1" symbol should be "€"
-    And currency "currency1" should not be custom
+    And currency "currency1" should have custom false
+    And currency "currency1" should have edited true
     And currency "currency1" should have status disabled
     When I edit currency "currency1" with following properties:
       | iso_code         | GBP           |
@@ -54,7 +57,9 @@ Feature: Currency Management
     And currency "currency1" numeric iso code should be 826
     And currency "currency1" name should be "British Pound"
     And currency "currency1" symbol should be "£"
-    And currency "currency1" should not be custom
+    And currency "currency1" should have custom false
+    And currency "currency1" should have custom false
+    And currency "currency1" should have edited false
     And currency "currency1" should have status disabled
 
   Scenario: Disabling default currency should not be allowed
