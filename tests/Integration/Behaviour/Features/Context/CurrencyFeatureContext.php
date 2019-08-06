@@ -356,17 +356,39 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Then currency :reference should not be custom
+     * @Then /^currency "(.*)" should have custom (true|false)$/
      */
-    public function currencyShouldNotBeCustom($reference)
+    public function assertCurrencyCustom($reference, $custom)
     {
         /** @var Currency $currency */
         $currency = SharedStorage::getStorage()->get($reference);
+        $expectedCustom = $custom === 'true';
 
-        if ($currency->custom) {
+        if ($currency->custom != $expectedCustom) {
             throw new RuntimeException(sprintf(
-                'Currency "%s" is custom, but should not be.',
-                $reference
+                'Currency "%s" has custom "%s", but "%s" was expected.',
+                $reference,
+                $currency->custom,
+                $expectedCustom
+            ));
+        }
+    }
+
+    /**
+     * @Then /^currency "(.*)" should have edited (true|false)$/
+     */
+    public function assertCurrencyEdited($reference, $edited)
+    {
+        /** @var Currency $currency */
+        $currency = SharedStorage::getStorage()->get($reference);
+        $expectedEdited = $edited === 'true';
+
+        if ($currency->edited != $expectedEdited) {
+            throw new RuntimeException(sprintf(
+                'Currency "%s" has edited "%s", but "%s" was expected.',
+                $reference,
+                $currency->edited,
+                $expectedEdited
             ));
         }
     }

@@ -38,8 +38,6 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Command\ToggleCurrencyStatusComma
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDeleteDefaultCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDisableDefaultCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
-use PrestaShop\PrestaShop\Core\Exception\CoreException;
-use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
 class CurrencyFeatureContext extends AbstractDomainFeatureContext
@@ -84,6 +82,8 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
      */
     public function editCurrency($reference, TableNode $node)
     {
+        $defaultLangId = Configuration::get('PS_LANG_DEFAULT');
+
         $data = $node->getRowsHash();
         /** @var Currency $currency */
         $currency = SharedStorage::getStorage()->get($reference);
@@ -110,6 +110,15 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
             $command->setShopIds([(int) $data['shop_association']]);
         }
 
+        if (isset($data['name'])) {
+            $command->setLocalizedNames([$defaultLangId => $data['name']]);
+        }
+
+        if (isset($data['symbol'])) {
+            $command->setLocalizedSymbols([$defaultLangId => $data['symbol']]);
+        }
+
+        $this->getCommandBus()->handle($command);
         try {
             $this->lastException = null;
             $this->getCommandBus()->handle($command);
