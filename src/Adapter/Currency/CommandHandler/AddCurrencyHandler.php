@@ -72,6 +72,7 @@ final class AddCurrencyHandler extends AbstractCurrencyHandler implements AddCur
     public function handle(AddCurrencyCommand $command)
     {
         $this->assertCurrencyWithIsoCodeDoesNotExist($command->getIsoCode()->getValue());
+        $this->assertCurrencyWithNumericIsoCodeDoesNotExist($command->getNumericIsoCode()->getValue());
 
         try {
             $entity = new Currency();
@@ -80,6 +81,7 @@ final class AddCurrencyHandler extends AbstractCurrencyHandler implements AddCur
             $entity->numeric_iso_code = $command->getNumericIsoCode()->getValue();
             $entity->active = $command->isEnabled();
             $entity->conversion_rate = $command->getExchangeRate()->getValue();
+
             // CLDR locale give us the CLDR reference specification
             $cldrLocale = $this->localeRepoCLDR->getLocale($this->defaultLanguage->getLocale());
             // CLDR currency gives data from CLDR reference, for the given language
@@ -90,7 +92,13 @@ final class AddCurrencyHandler extends AbstractCurrencyHandler implements AddCur
                 $entity->numeric_iso_code = $cldrCurrency->getNumericIsoCode();
             }
 
-            //todo: handler must use data from command not deduce them
+            if (!empty($command->getLocalizedNames())) {
+                $entity->name = $entity->names = $command->getLocalizedNames();
+            }
+            if (!empty($command->getLocalizedSymbols())) {
+                $entity->symbol = $entity->symbols = $command->getLocalizedSymbols();
+            }
+            //This method will insert the missing localized names/symbols and detect if the currency has been edited
             $entity->refreshLocalizedCurrencyData(Language::getLanguages(), $this->localeRepoCLDR);
 
             if (false === $entity->add()) {
@@ -118,6 +126,24 @@ final class AddCurrencyHandler extends AbstractCurrencyHandler implements AddCur
                 sprintf(
                     'Currency with iso code "%s" already exist and cannot be created',
                     $isoCode
+                ),
+                CurrencyConstraintException::CURRENCY_ALREADY_EXISTS
+            );
+        }
+    }
+
+    /**
+     * @param int $numericIsoCode
+     *
+     * @throws CurrencyConstraintException
+     */
+    private function assertCurrencyWithNumericIsoCodeDoesNotExist($numericIsoCode)
+    {
+        if (Currency::getIdByNumericIsoCode($numericIsoCode)) {
+            throw new CurrencyConstraintException(
+                sprintf(
+                    'Currency with numeric iso code "%s" already exist and cannot be created',
+                    $numericIsoCode
                 ),
                 CurrencyConstraintException::CURRENCY_ALREADY_EXISTS
             );

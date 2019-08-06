@@ -59,6 +59,16 @@ class EditCurrencyCommand
     private $exchangeRate;
 
     /**
+     * @var string[]
+     */
+    private $localizedNames;
+
+    /**
+     * @var string[]
+     */
+    private $localizedSymbols;
+
+    /**
      * @var bool
      */
     private $isEnabled;
@@ -148,6 +158,64 @@ class EditCurrencyCommand
     public function setExchangeRate($exchangeRate)
     {
         $this->exchangeRate = new ExchangeRate($exchangeRate);
+
+        return $this;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getLocalizedNames()
+    {
+        return $this->localizedNames;
+    }
+
+    /**
+     * @param string[] $localizedNames
+     *
+     * @return $this
+     *
+     * @throws CurrencyConstraintException
+     */
+    public function setLocalizedNames(array $localizedNames)
+    {
+        if (empty($localizedNames)) {
+            throw new CurrencyConstraintException(
+                'Currency name cannot be empty',
+                CurrencyConstraintException::EMPTY_NAME
+            );
+        }
+
+        $this->localizedNames = $localizedNames;
+
+        return $this;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getLocalizedSymbols()
+    {
+        return $this->localizedSymbols;
+    }
+
+    /**
+     * @param string[] $localizedSymbols
+     *
+     * @return $this
+     *
+     * @throws CurrencyConstraintException
+     */
+    public function setLocalizedSymbols(array $localizedSymbols)
+    {
+        if (empty($localizedSymbols)) {
+            throw new CurrencyConstraintException(
+                'Currency symbol cannot be empty',
+                CurrencyConstraintException::EMPTY_SYMBOL
+            );
+        }
+
+        $this->localizedSymbols = $localizedSymbols;
 
         return $this;
     }
