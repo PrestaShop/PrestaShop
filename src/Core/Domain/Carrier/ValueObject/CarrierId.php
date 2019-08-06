@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierConstraintExcepti
 /**
  * Provides valid carrier identification data
  */
-final class CarrierId
+class CarrierId
 {
     /**
      * @var int

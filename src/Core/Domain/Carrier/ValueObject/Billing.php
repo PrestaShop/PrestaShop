@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierConstraintExcepti
 /**
  * Provides valid billing values
  */
-final class Billing
+class Billing
 {
     /**
      * Represents billing when the shipping price is calculated according to total package weight

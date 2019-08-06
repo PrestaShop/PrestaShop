@@ -44,7 +44,7 @@ abstract class AbstractAddCarrierCommand
     /**
      * @var CarrierName[]
      */
-    protected $localizedCarrierNames;
+    protected $localizedName;
 
     /**
      * @var ShippingDelay[]
@@ -131,9 +131,9 @@ abstract class AbstractAddCarrierCommand
     /**
      * @return CarrierName[]
      */
-    public function getLocalizedNames(): array
+    public function getLocalizedName(): array
     {
-        return $this->localizedCarrierNames;
+        return $this->localizedName;
     }
 
     /**
@@ -317,24 +317,25 @@ abstract class AbstractAddCarrierCommand
         if ($currentRange['from'] < $previousRange['to']) {
             throw new CarrierConstraintException(sprintf(
                 'Shipping ranges %s - %s and %s - %s are overlapping.',
-                $previousRange['from'],
-                $previousRange['to'],
-                $currentRange['from'],
-                $currentRange['to']),
+                    $previousRange['from'],
+                    $previousRange['to'],
+                    $currentRange['from'],
+                    $currentRange['to']
+                ),
                 CarrierConstraintException::INVALID_SHIPPING_RANGE
             );
         }
     }
 
     /**
-     * @param array $localizedNames
+     * @param array $localizedName
      *
      * @throws CarrierConstraintException
      */
-    protected function setLocalizedNames(array $localizedNames)
+    protected function setLocalizedName(array $localizedName)
     {
-        foreach ($localizedNames as $langId => $name) {
-            $this->localizedCarrierNames[(new LanguageId($langId))->getValue()] = new CarrierName($name);
+        foreach ($localizedName as $langId => $name) {
+            $this->localizedName[(new LanguageId($langId))->getValue()] = new CarrierName($name);
         }
     }
 

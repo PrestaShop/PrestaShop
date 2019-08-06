@@ -1,20 +1,22 @@
 services:
+    _defaults:
+        public: true
 
-    prestashop.adapter.currency.command_handler.abstract_add_carrier:
+    prestashop.adapter.carrier.command_handler.abstract_add_carrier:
         class: 'PrestaShop\PrestaShop\Adapter\Carrier\CommandHandler\AbstractAddCarrierHandler'
         arguments:
             - "@=service('prestashop.adapter.legacy.configuration')"
 
-    prestashop.adapter.currency.command_handler.add_carrier:
+    prestashop.adapter.carrier.command_handler.add_carrier:
         class: 'PrestaShop\PrestaShop\Adapter\Carrier\CommandHandler\AddCarrierHandler'
-        parent: 'prestashop.adapter.currency.command_handler.abstract_add_carrier'
+        parent: 'prestashop.adapter.carrier.command_handler.abstract_add_carrier'
         tags:
             - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Carrier\Command\AddCarrierCommand' }
         public: true
 
-    prestashop.adapter.currency.command_handler.add_module_carrier:
+    prestashop.adapter.carrier.command_handler.add_module_carrier:
         class: 'PrestaShop\PrestaShop\Adapter\Carrier\CommandHandler\AddModuleCarrierHandler'
-        parent: 'prestashop.adapter.currency.command_handler.abstract_add_carrier'
+        parent: 'prestashop.adapter.carrier.command_handler.abstract_add_carrier'
         tags:
             - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Carrier\Command\AddModuleCarrierCommand' }
         public: true

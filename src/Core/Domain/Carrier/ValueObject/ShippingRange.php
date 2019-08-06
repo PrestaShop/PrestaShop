@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierConstraintExcepti
 /**
  * Provides shipping range and its prices by zone
  */
-final class ShippingRange
+class ShippingRange
 {
     /**
      * @var float

@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierConstraintExcepti
 /**
  * Provides valid out of range behavior values
  */
-final class OutOfRangeBehavior
+class OutOfRangeBehavior
 {
     /**
      * When out of range, the carrier is disabled

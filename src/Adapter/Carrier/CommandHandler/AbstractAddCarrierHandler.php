@@ -65,7 +65,7 @@ abstract class AbstractAddCarrierHandler extends AbstractCarrierHandler
         $carrier->is_free = $command->isFreeShipping();
         $carrier->shipping_method = $command->getBilling()->getValue();
 
-        $localizedNames = $command->getLocalizedNames();
+        $localizedNames = $command->getLocalizedName();
         foreach ($localizedNames as $langId => $carrierName) {
             $carrier->localized_name[$langId] = $carrierName->getValue();
         }
@@ -129,13 +129,13 @@ abstract class AbstractAddCarrierHandler extends AbstractCarrierHandler
         }
 
         foreach ($shippingRange->getPricesByZoneId() as $zoneId => $price) {
-            $priceList[] = array(
+            $priceList[] = [
                 'id_range_price' => $rangePriceId,
                 'id_range_weight' => $rangeWeightId,
                 'id_carrier' => (int) $carrier->id,
                 'id_zone' => (int) $zoneId,
                 'price' => (float) $price,
-            );
+            ];
 
             if (false === $carrier->addDeliveryPrice($priceList)) {
                 throw new CarrierException(sprintf(

@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\TrackingUrl;
 /**
  * Adds new carrier
  */
-final class AddCarrierCommand extends AbstractAddCarrierCommand
+class AddCarrierCommand extends AbstractAddCarrierCommand
 {
     /**
      * This class should be initialized using static factories
@@ -47,7 +47,7 @@ final class AddCarrierCommand extends AbstractAddCarrierCommand
     /**
      * Adds carrier with shipping costs
      *
-     * @param string[] $localizedNames
+     * @param string[] $localizedName
      * @param string[] $localizedShippingDelays
      * @param int $speedGrade
      * @param string $trackingUrl
@@ -68,7 +68,7 @@ final class AddCarrierCommand extends AbstractAddCarrierCommand
      * @throws CarrierConstraintException
      */
     public static function withPricedShipping(
-        array $localizedNames,
+        array $localizedName,
         array $localizedShippingDelays,
         int $speedGrade,
         string $trackingUrl,
@@ -85,7 +85,7 @@ final class AddCarrierCommand extends AbstractAddCarrierCommand
         array $associatedShopIds
     ) {
         $command = new self();
-        $command->setLocalizedNames($localizedNames);
+        $command->setLocalizedName($localizedName);
         $command->setLocalizedShippingDelays($localizedShippingDelays);
         $command->setMeasures($maxPackageWidth, $maxPackageHeight, $maxPackageDepth, $maxPackageWeight);
         $command->setShippingRanges($shippingRanges);
@@ -106,7 +106,7 @@ final class AddCarrierCommand extends AbstractAddCarrierCommand
     /**
      * Adds carrier with free of charge shipping
      *
-     * @param string[] $localizedNames
+     * @param string[] $localizedName
      * @param string[] $localizedShippingDelays
      * @param int $speedGrade
      * @param string $trackingUrl
@@ -123,7 +123,7 @@ final class AddCarrierCommand extends AbstractAddCarrierCommand
      * @throws CarrierConstraintException
      */
     public static function withFreeShipping(
-        array $localizedNames,
+        array $localizedName,
         array $localizedShippingDelays,
         int $speedGrade,
         string $trackingUrl,
@@ -136,7 +136,7 @@ final class AddCarrierCommand extends AbstractAddCarrierCommand
         array $associatedShopIds
     ) {
         $command = new self();
-        $command->setLocalizedNames($localizedNames);
+        $command->setLocalizedName($localizedName);
         $command->setLocalizedShippingDelays($localizedShippingDelays);
         $command->setMeasures($maxPackageWidth, $maxPackageHeight, $maxPackageDepth, $maxPackageWeight);
         $command->speedGrade = new SpeedGrade($speedGrade);

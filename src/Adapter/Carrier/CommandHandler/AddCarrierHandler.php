@@ -43,8 +43,7 @@ final class AddCarrierHandler extends AbstractAddCarrierHandler implements AddCa
      */
     public function handle(AddCarrierCommand $command): CarrierId
     {
-        $carrier = new Carrier();
-        $this->fillCarrierWithData($carrier, $command);
+        $carrier = $this->createCarrierFromCommand($command);
 
         try {
             $this->validateFields($carrier);
@@ -65,15 +64,20 @@ final class AddCarrierHandler extends AbstractAddCarrierHandler implements AddCa
     }
 
     /**
-     * @param Carrier $carrier
      * @param AddCarrierCommand $command
+     *
+     * @return Carrier
      */
-    private function fillCarrierWithData(Carrier $carrier, AddCarrierCommand $command)
+    private function createCarrierFromCommand(AddCarrierCommand $command): Carrier
     {
+        $carrier = new Carrier();
+
         $this->fillCarrierCommonFieldsWithData($carrier, $command);
         $carrier->is_module = false;
         $carrier->external_module_name = null;
         $carrier->shipping_external = false;
         $carrier->need_range = false;
+
+        return $carrier;
     }
 }

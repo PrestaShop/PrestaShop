@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\TrackingUrl;
 /**
  * Responsible for adding a carrier via module
  */
-final class AddModuleCarrierCommand extends AbstractAddCarrierCommand
+class AddModuleCarrierCommand extends AbstractAddCarrierCommand
 {
     /**
      * @var string
@@ -62,7 +62,7 @@ final class AddModuleCarrierCommand extends AbstractAddCarrierCommand
     /**
      * Adds module carrier with a priced shipping when the module itself does not calculate the carrier shipping price
      *
-     * @param string[] $localizedNames
+     * @param string[] $localizedName
      * @param string[] $localizedShippingDelays
      * @param int $speedGrade
      * @param string $trackingUrl
@@ -84,7 +84,7 @@ final class AddModuleCarrierCommand extends AbstractAddCarrierCommand
      * @throws CarrierConstraintException
      */
     public static function withCoreShippingPrice(
-        array $localizedNames,
+        array $localizedName,
         array $localizedShippingDelays,
         int $speedGrade,
         string $trackingUrl,
@@ -102,7 +102,7 @@ final class AddModuleCarrierCommand extends AbstractAddCarrierCommand
         string $moduleName
     ) {
         $command = new self();
-        $command->setLocalizedNames($localizedNames);
+        $command->setLocalizedName($localizedName);
         $command->setLocalizedShippingDelays($localizedShippingDelays);
         $command->setMeasures($maxPackageWidth, $maxPackageHeight, $maxPackageDepth, $maxPackageWeight);
         $command->setShippingRanges($shippingRanges);
@@ -127,7 +127,7 @@ final class AddModuleCarrierCommand extends AbstractAddCarrierCommand
     /**
      * Adds module carrier with a priced shipping when the module itself calculates the carrier shipping price
      *
-     * @param string[] $localizedNames
+     * @param string[] $localizedName
      * @param string[] $localizedShippingDelays
      * @param int $speedGrade
      * @param string $trackingUrl
@@ -150,7 +150,7 @@ final class AddModuleCarrierCommand extends AbstractAddCarrierCommand
      * @throws CarrierConstraintException
      */
     public static function withModuleShippingPrice(
-        array $localizedNames,
+        array $localizedName,
         array $localizedShippingDelays,
         int $speedGrade,
         string $trackingUrl,
@@ -169,7 +169,7 @@ final class AddModuleCarrierCommand extends AbstractAddCarrierCommand
         bool $moduleNeedsCoreShippingPrice
     ) {
         $command = new self();
-        $command->setLocalizedNames($localizedNames);
+        $command->setLocalizedName($localizedName);
         $command->setLocalizedShippingDelays($localizedShippingDelays);
         $command->setMeasures($maxPackageWidth, $maxPackageHeight, $maxPackageDepth, $maxPackageWeight);
         $command->setShippingRanges($shippingRanges);
@@ -179,13 +179,14 @@ final class AddModuleCarrierCommand extends AbstractAddCarrierCommand
         $command->billing = new Billing($billing);
         $command->trackingUrl = new TrackingUrl($trackingUrl);
         $command->outOfRangeBehavior = new OutOfRangeBehavior($outOfRangeBehavior);
-        $command->freeShipping = false;
         $command->shippingCostIncluded = $shippingCostIncluded;
         $command->taxRulesGroupId = $taxRulesGroupId;
         $command->associatedGroupIds = $associatedGroupIds;
         $command->associatedShopIds = $associatedShopIds;
-        $command->moduleCalculatesShippingPrice = true;
         $command->moduleNeedsCoreShippingPrice = $moduleNeedsCoreShippingPrice;
+
+        $command->moduleCalculatesShippingPrice = true;
+        $command->freeShipping = false;
 
         return $command;
     }
@@ -193,7 +194,7 @@ final class AddModuleCarrierCommand extends AbstractAddCarrierCommand
     /**
      * Adds module carrier with a free shipping
      *
-     * @param string[] $localizedNames
+     * @param string[] $localizedName
      * @param string[] $localizedShippingDelays
      * @param int $speedGrade
      * @param string $trackingUrl
@@ -211,7 +212,7 @@ final class AddModuleCarrierCommand extends AbstractAddCarrierCommand
      * @throws CarrierConstraintException
      */
     public static function withFreeShipping(
-        array $localizedNames,
+        array $localizedName,
         array $localizedShippingDelays,
         int $speedGrade,
         string $trackingUrl,
@@ -225,7 +226,7 @@ final class AddModuleCarrierCommand extends AbstractAddCarrierCommand
         string $moduleName
     ) {
         $command = new self();
-        $command->setLocalizedNames($localizedNames);
+        $command->setLocalizedName($localizedName);
         $command->setLocalizedShippingDelays($localizedShippingDelays);
         $command->setMeasures($maxPackageWidth, $maxPackageHeight, $maxPackageDepth, $maxPackageWeight);
         $command->assertModuleName($moduleName);
