@@ -27,7 +27,11 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentUploadFailedException;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\CannotAddAttachmentException;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\CannotUpdateAttachmentException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachmentForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\EditableAttachment;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -36,7 +40,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Class AttachmentController
+ * Class is responsible for "Sell > Catalog > Files" page.
  */
 class AttachmentController extends FrameworkBundleAdminController
 {
@@ -67,12 +71,7 @@ class AttachmentController extends FrameworkBundleAdminController
             'prestashop.core.form.identifiable_object.handler.attachment_form_handler'
         );
 
-        $attachmentForm = $attachmentFormBuilder->getForm(
-            [],
-            [
-                'is_edit_form' => false,
-            ]
-        );
+        $attachmentForm = $attachmentFormBuilder->getForm();
 
         $attachmentForm->handleRequest($request);
 
@@ -139,7 +138,7 @@ class AttachmentController extends FrameworkBundleAdminController
                 return $this->redirectToRoute('admin_attachments_index');
             }
         } catch (Exception $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
             if ($e instanceof AttachmentNotFoundException) {
                 return $this->redirectToRoute('admin_attachments_index');
             }
@@ -163,6 +162,51 @@ class AttachmentController extends FrameworkBundleAdminController
             AttachmentNotFoundException::class => $this->trans(
                 'The object cannot be loaded (or found)',
                 'Admin.Notifications.Error'
+            ),
+            AttachmentConstraintException::class => [
+                AttachmentConstraintException::INVALID_ID => $this->trans(
+                    'The object cannot be loaded (the identifier is missing or invalid)',
+                    'Admin.Notifications.Error'
+                    ),
+                AttachmentConstraintException::INVALID_FILE_SIZE => $this->trans(
+                    'Upload error. Please check your server configurations for the maximum upload size allowed.',
+                    'Admin.Catalog.Notification'
+                ),
+                AttachmentConstraintException::EMPTY_NAME => $this->trans(
+                    'An attachment name is required.',
+                    'Admin.Catalog.Notification'
+                ),
+                AttachmentConstraintException::EMPTY_DESCRIPTION => $this->trans(
+                    'Invalid description for %s language',
+                    'Admin.Catalog.Notification'
+                ),
+                AttachmentConstraintException::INVALID_FIELDS => $this->trans(
+                    'An error occurred when attempting to update the required fields.',
+                    'Admin.Notifications.Error'
+                    ),
+                AttachmentConstraintException::INVALID_DESCRIPTION => $this->trans(
+                    'Invalid description for %s language',
+                    'Admin.Catalog.Notification'
+                ),
+                AttachmentConstraintException::MISSING_DEFAULT_LANGUAGE_FOR_NAME => $this->trans(
+                    'The %s field is not valid',
+                    'Admin.Notifications.Error',
+                    [
+                        sprintf('"%s"', $this->trans('Name', 'Admin.Global')),
+                    ]
+                ),
+            ],
+            AttachmentUploadFailedException::class => $this->trans(
+                'Failed to copy the file.',
+                'Admin.Catalog.Notification'
+            ),
+            CannotAddAttachmentException::class => $this->trans(
+                'This attachment was unable to be loaded into the database.',
+                'Admin.Catalog.Notification'
+                ),
+            CannotUpdateAttachmentException::class => $this->trans(
+                'This attachment was unable to be loaded into the database.',
+                'Admin.Catalog.Notification'
             ),
         ];
     }

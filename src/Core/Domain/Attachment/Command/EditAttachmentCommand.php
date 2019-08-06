@@ -26,9 +26,11 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Attachment\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\ValueObject\AttachmentId;
 
+/**
+ * Attachment editing command
+ */
 class EditAttachmentCommand
 {
     /**
@@ -39,41 +41,39 @@ class EditAttachmentCommand
     /**
      * @var string|null
      */
-    private $file;
+    private $pathName = null;
 
     /**
      * @var string|null
      */
-    private $fileName;
-
-    /**
-     * @var int|null
-     */
-    private $fileSize;
+    private $originalFileName = null;
 
     /**
      * @var string|null
      */
-    private $mimeType;
+    private $mimeType = null;
 
     /**
      * @var string[]|null
      */
-    private $localizedNames;
+    private $localizedNames = null;
 
     /**
      * @var string[]|null
      */
-    private $localizedDescriptions;
+    private $localizedDescriptions = null;
 
     /**
-     * @param int $attachmentId
-     *
-     * @throws \PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentConstraintException
+     * @var string|null
      */
-    public function __construct(int $attachmentId)
+    private $fileSize = null;
+
+    /**
+     * @param AttachmentId $attachmentId
+     */
+    public function __construct(AttachmentId $attachmentId)
     {
-        $this->attachmentId = new AttachmentId($attachmentId);
+        $this->attachmentId = $attachmentId;
     }
 
     /**
@@ -85,72 +85,30 @@ class EditAttachmentCommand
     }
 
     /**
-     * @param AttachmentId $attachmentId
-     *
-     * @return EditAttachmentCommand
-     */
-    public function setAttachmentId(AttachmentId $attachmentId): EditAttachmentCommand
-    {
-        $this->attachmentId = $attachmentId;
-
-        return $this;
-    }
-
-    /**
      * @return string|null
      */
-    public function getFile(): ?string
+    public function getPathName(): ?string
     {
-        return $this->file;
+        return $this->pathName;
     }
 
     /**
-     * @param string|null $file
+     * @param string|null $pathName
+     * @param string $mimeType
+     * @param string $originalFileName
+     * @param int $fileSize
      *
      * @return EditAttachmentCommand
      */
-    public function setFile(?string $file): EditAttachmentCommand
-    {
-        $this->file = $file;
-
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getFileName(): ?string
-    {
-        return $this->fileName;
-    }
-
-    /**
-     * @param string|null $fileName
-     *
-     * @return EditAttachmentCommand
-     */
-    public function setFileName(?string $fileName): EditAttachmentCommand
-    {
-        $this->fileName = $fileName;
-
-        return $this;
-    }
-
-    /**
-     * @return int|null
-     */
-    public function getFileSize(): ?int
-    {
-        return $this->fileSize;
-    }
-
-    /**
-     * @param int|null $fileSize
-     *
-     * @return EditAttachmentCommand
-     */
-    public function setFileSize(?int $fileSize): EditAttachmentCommand
-    {
+    public function setFileInfo(
+        string $pathName,
+        string $mimeType,
+        string $originalFileName,
+        int $fileSize
+    ): EditAttachmentCommand {
+        $this->pathName = $pathName;
+        $this->mimeType = $mimeType;
+        $this->originalFileName = $originalFileName;
         $this->fileSize = $fileSize;
 
         return $this;
@@ -159,21 +117,17 @@ class EditAttachmentCommand
     /**
      * @return string|null
      */
-    public function getMimeType(): ?string
+    public function getOriginalFileName(): ?string
     {
-        return $this->mimeType;
+        return $this->originalFileName;
     }
 
     /**
-     * @param string|null $mimeType
-     *
-     * @return EditAttachmentCommand
+     * @return string|null
      */
-    public function setMimeType(?string $mimeType): EditAttachmentCommand
+    public function getMimeType(): ?string
     {
-        $this->mimeType = $mimeType;
-
-        return $this;
+        return $this->mimeType;
     }
 
     /**
@@ -188,18 +142,9 @@ class EditAttachmentCommand
      * @param string[]|null $localizedNames
      *
      * @return EditAttachmentCommand
-     *
-     * @throws AttachmentConstraintException
      */
     public function setLocalizedNames(?array $localizedNames): EditAttachmentCommand
     {
-        if (empty($localizedNames)) {
-            throw new AttachmentConstraintException(
-                'Attachment name cannot be empty',
-                AttachmentConstraintException::EMPTY_NAME
-            );
-        }
-
         $this->localizedNames = $localizedNames;
 
         return $this;
@@ -223,5 +168,13 @@ class EditAttachmentCommand
         $this->localizedDescriptions = $localizedDescriptions;
 
         return $this;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getFileSize(): ?int
+    {
+        return $this->fileSize;
     }
 }

@@ -29,8 +29,8 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\CreateAttachmentCommand;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\EditAttachmentCommand;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\ValueObject\AttachmentId;
-use PrestaShop\PrestaShop\Core\File\Uploader\FileUploaderInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
@@ -44,41 +44,19 @@ final class AttachmentFormDataHandler implements FormDataHandlerInterface
     private $commandBus;
 
     /**
-     * @var FileUploaderInterface
-     */
-    private $fileUploader;
-
-    /**
      * @param CommandBusInterface $commandBus
-     * @param FileUploaderInterface $fileUploader
      */
-    public function __construct(CommandBusInterface $commandBus, FileUploaderInterface $fileUploader)
+    public function __construct(CommandBusInterface $commandBus)
     {
         $this->commandBus = $commandBus;
-        $this->fileUploader = $fileUploader;
     }
 
     /**
      * @param array $data
-     *
-     * @return mixed|void
-     *
-     * @throws \PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentConstraintException
      */
     public function create(array $data)
     {
-        do {
-            $uniqueFileName = sha1(microtime());
-        } while (file_exists(_PS_DOWNLOAD_DIR_ . $uniqueFileName));
-
-        $command = $this->createAddAttachmentCommand($data, $uniqueFileName);
-
-        if ($data['file'] instanceof UploadedFile) {
-            $this->uploadFile(
-                $uniqueFileName,
-                $data['file']
-            );
-        }
+        $command = $this->createAddAttachmentCommand($data);
 
         $this->commandBus->handle($command);
     }
@@ -87,25 +65,13 @@ final class AttachmentFormDataHandler implements FormDataHandlerInterface
      * @param int $attachmentId
      * @param array $data
      *
-     * @throws \PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentConstraintException
+     * @throws AttachmentConstraintException
      */
     public function update($attachmentId, array $data)
     {
         $attachmentIdObj = new AttachmentId((int) $attachmentId);
 
-        do {
-            $uniqueFileName = sha1(microtime());
-        } while (file_exists(_PS_DOWNLOAD_DIR_ . $uniqueFileName));
-
-        $command = $this->createEditAttachmentCommand($attachmentIdObj, $data, $uniqueFileName);
-
-        if ($data['file'] instanceof UploadedFile) {
-            $this->uploadFile(
-                $uniqueFileName,
-                $data['file'],
-                $attachmentIdObj->getValue()
-            );
-        }
+        $command = $this->createEditAttachmentCommand($attachmentIdObj, $data);
 
         $this->commandBus->handle($command);
     }
@@ -115,66 +81,49 @@ final class AttachmentFormDataHandler implements FormDataHandlerInterface
      *
      * @param $attachmentId
      * @param array $data
-     * @param string $file
      *
      * @return EditAttachmentCommand
-     *
-     * @throws \PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentConstraintException
      */
     private function createEditAttachmentCommand(
         AttachmentId $attachmentId,
-        array $data,
-        string $file
-    ) {
-        /** @var \SplFileInfo|null $file */
+        array $data
+    ): EditAttachmentCommand {
+        /** @var UploadedFile|null $fileObj */
         $fileObj = $data['file'];
 
-        $command = new EditAttachmentCommand($attachmentId->getValue());
+        $command = new EditAttachmentCommand($attachmentId);
         $command->setLocalizedNames($data['name']);
         $command->setLocalizedDescriptions($data['file_description']);
-        $command->setAttachmentId($attachmentId);
-        $command->setFileName($fileObj instanceof UploadedFile ? $fileObj->getClientOriginalName() : $data['file_name']);
-        $command->setFile($fileObj instanceof UploadedFile ? $file : null);
-        $command->setMimeType($fileObj instanceof UploadedFile ? $fileObj->getMimeType() : null);
+
+        if ($fileObj instanceof UploadedFile) {
+            $command->setFileInfo(
+                $fileObj->getPathname(),
+                $fileObj->getMimeType(),
+                $fileObj->getClientOriginalName(),
+                $fileObj->getSize()
+            );
+        }
 
         return $command;
     }
 
     /**
      * @param array $data
-     * @param $uniqueFileName
      *
      * @return CreateAttachmentCommand
-     *
-     * @throws \PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentConstraintException
      */
-    private function createAddAttachmentCommand(array $data, $uniqueFileName)
+    private function createAddAttachmentCommand(array $data)
     {
-        /** @var UploadedFile $fileObj */
-        $fileObj = $data['file'];
+        /** @var UploadedFile $file */
+        $file = $data['file'];
 
-        $command = new CreateAttachmentCommand();
-        $command->setLocalizedNames($data['name']);
-        $command->setLocalizedDescriptions($data['file_description']);
-        $command->setFile($fileObj);
-        $command->setUniqueFileName($uniqueFileName);
-        $command->setMimeType($fileObj->getMimeType());
-
-        return $command;
-    }
-
-    /**
-     * @param string $uniqueFileName
-     * @param UploadedFile|null $file
-     * @param int|null $attachmentId
-     */
-    private function uploadFile(
-        string $uniqueFileName,
-        UploadedFile $file = null,
-        ?int $attachmentId = null
-    ) {
-        if (null !== $file) {
-            $this->fileUploader->upload($file, $uniqueFileName, $attachmentId);
-        }
+        return new CreateAttachmentCommand(
+            $file->getPathname(),
+            $file->getSize(),
+            $data['name'],
+            $data['file_description'],
+            $file->getMimeType(),
+            $file->getClientOriginalName()
+        );
     }
 }

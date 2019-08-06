@@ -29,19 +29,19 @@ namespace PrestaShop\PrestaShop\Adapter\File\Uploader;
 use Attachment;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentException;
-use PrestaShop\PrestaShop\Core\File\Uploader\FileUploaderInterface;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentUploadFailedException;
+use PrestaShopException;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Translation\TranslatorInterface;
 use Tools;
 
 /**
- * Class AttachmentFileUploader
+ * Uploads attachment file and if needed deletes old attachment file
  *
  * @internal
  */
-final class AttachmentFileUploader implements FileUploaderInterface
+final class AttachmentFileUploader
 {
     /**
      * @var TranslatorInterface
@@ -57,92 +57,84 @@ final class AttachmentFileUploader implements FileUploaderInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param string $filePath
+     * @param string $uniqueFileName
+     * @param int $fileSize
+     * @param int|null $id
      *
      * @throws AttachmentConstraintException
-     * @throws AttachmentException
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
+     * @throws AttachmentNotFoundException
+     * @throws AttachmentUploadFailedException
      */
-    public function upload(UploadedFile $uploadedFile, string $uniqueFileName, ?int $id = null)
+    public function upload(string $filePath, string $uniqueFileName, int $fileSize, ?int $id = null)
     {
-        $this->checkFileAllowedForUpload($uploadedFile);
-        $this->uploadFile($uploadedFile, $uniqueFileName);
+        $this->checkFileAllowedForUpload($fileSize);
+        $this->uploadFile($filePath, $uniqueFileName, $fileSize);
         if ($id !== null) {
             $this->deleteOldFile($id);
         }
     }
 
     /**
-     * Delete old attachment file.
-     *
      * @param int $attachmentId
      *
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
+     * @throws AttachmentNotFoundException
      */
     private function deleteOldFile(int $attachmentId)
     {
-        $attachment = new Attachment($attachmentId);
-        @unlink(_PS_DOWNLOAD_DIR_ . $attachment->file);
+        try {
+            $attachment = new Attachment($attachmentId);
+            @unlink(_PS_DOWNLOAD_DIR_ . $attachment->file);
+        } catch (PrestaShopException $e) {
+            throw new AttachmentNotFoundException(sprintf('Attachment with id "%s" was not found.', $attachmentId));
+        }
     }
 
     /**
-     * @param UploadedFile $file
+     * @param string $filePath
      * @param string $uniqid
+     * @param int $fileSize
      *
      * @throws AttachmentConstraintException
-     * @throws AttachmentException
+     * @throws AttachmentUploadFailedException
      */
-    private function uploadFile(UploadedFile $file, string $uniqid)
+    private function uploadFile(string $filePath, string $uniqid, int $fileSize)
     {
-        if ($file->getError() === 1) {
-            $max_upload = (int) ini_get('upload_max_filesize');
-            $max_post = (int) ini_get('post_max_size');
-            $upload_mb = min($max_upload, $max_post);
-            throw new AttachmentConstraintException($this->translator->trans(
-                'The file %file% exceeds the size allowed by the server. The limit is set to %size% MB.',
-                array('%file%' => '<b>' . $file->getClientOriginalName() . '</b> ', '%size%' => '<b>' . $upload_mb . '</b>'),
-                'Admin.Catalog.Notification'
-            ), AttachmentConstraintException::INVALID_FILE_SIZE);
-        }
-
-        if ($file->getSize() > (Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024 * 1024)) {
+        if ($fileSize > (Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024 * 1024)) {
             throw new AttachmentConstraintException($this->translator->trans(
                 'The file is too large. Maximum size allowed is: %1$d kB. The file you are trying to upload is %2$d kB.',
                 array(
                     '%1$d' => (Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024),
-                    '%2$d' => number_format(($file->getSize() / 1024), 2, '.', ''),
+                    '%2$d' => number_format(($fileSize / 1024), 2, '.', ''),
                 ),
                 'Admin.Notifications.Error'
             ), AttachmentConstraintException::INVALID_FILE_SIZE);
         }
 
         try {
-            $file->move(_PS_DOWNLOAD_DIR_, $uniqid);
+            move_uploaded_file($filePath, _PS_DOWNLOAD_DIR_ . $uniqid);
         } catch (FileException $e) {
-            throw new AttachmentException($this->translator->trans('Failed to copy the file.',
-                [],
-                'Admin.Catalog.Notification')
+            throw new AttachmentUploadFailedException(
+                $this->translator->trans('Failed to copy the file.', [], 'Admin.Catalog.Notification')
             );
         }
     }
 
     /**
-     * @param UploadedFile $file
+     * @param int $fileSize
      *
      * @throws AttachmentConstraintException
      */
-    private function checkFileAllowedForUpload(UploadedFile $file)
+    private function checkFileAllowedForUpload(int $fileSize)
     {
         $maxFileSize = Tools::getMaxUploadSize();
 
-        if ($maxFileSize > 0 && $file->getSize() > $maxFileSize) {
+        if ($maxFileSize > 0 && $fileSize > $maxFileSize) {
             throw new AttachmentConstraintException(
                 sprintf(
                     'Max file size allowed is "%s" bytes. Uploaded file size is "%s".',
                     $maxFileSize,
-                    $file->getSize()
+                    $fileSize
                 ),
                 AttachmentConstraintException::INVALID_FILE_SIZE
             );

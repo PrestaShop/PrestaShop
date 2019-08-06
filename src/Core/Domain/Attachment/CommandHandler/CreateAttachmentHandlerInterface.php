@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Attachment\CommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\CreateAttachmentCommand;
 
 /**
- * Interface CreateAttachmentHandlerInterface defines contract for CreateAttachmentHandler
+ * Interface  defines contract for create attachment handler
  */
 interface CreateAttachmentHandlerInterface
 {

@@ -27,66 +27,78 @@
 namespace PrestaShop\PrestaShop\Adapter\Attachment\CommandHandler;
 
 use Attachment;
+use PrestaShop\PrestaShop\Adapter\File\Uploader\AttachmentFileUploader;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\CreateAttachmentCommand;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\CommandHandler\CreateAttachmentHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentConstraintException;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentException;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\CannotAddAttachmentException;
+use PrestaShopException;
 
 /**
- * Class CreateAttachmentHandler
+ * Handles attachment creation
  */
-final class CreateAttachmentHandler implements CreateAttachmentHandlerInterface
+final class CreateAttachmentHandler extends AbstractAttachmentHandler implements CreateAttachmentHandlerInterface
 {
+    /**
+     * @var AttachmentFileUploader
+     */
+    protected $fileUploader;
+
+    /**
+     * @param AttachmentFileUploader $fileUploader
+     */
+    public function __construct(AttachmentFileUploader $fileUploader)
+    {
+        $this->fileUploader = $fileUploader;
+    }
+
     /**
      * {@inheritdoc}
      *
      * @throws AttachmentConstraintException
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
+     * @throws AttachmentException
+     * @throws AttachmentNotFoundException
      */
     public function handle(CreateAttachmentCommand $command)
     {
-        $attachment = new Attachment();
+        try {
+            $attachment = new Attachment();
 
-        $this->createAttachmentFromCommandData($attachment, $command);
-    }
+            $this->assertDescriptionContainsCleanHtml($command->getLocalizedDescriptions());
+            $this->assertHasDefaultLanguage($command->getLocalizedNames());
 
-    /**
-     * @param Attachment $attachment
-     * @param CreateAttachmentCommand $command
-     *
-     * @throws AttachmentConstraintException
-     * @throws \PrestaShopException
-     */
-    private function createAttachmentFromCommandData(Attachment $attachment, CreateAttachmentCommand $command)
-    {
-        if (null !== $command->getUniqueFileName()) {
-            $attachment->file = $command->getUniqueFileName();
-        }
+            $uniqueFileName = $this->getUniqueFileName();
 
-        if ($command->getFile() instanceof UploadedFile) {
-            $attachment->file_name = $command->getFile()->getClientOriginalName();
-        }
-
-        if (null !== $command->getLocalizedDescriptions()) {
+            $attachment->file_name = $command->getOriginalName();
+            $attachment->file = $uniqueFileName;
             $attachment->description = $command->getLocalizedDescriptions();
-        }
-
-        if (null !== $command->getLocalizedNames()) {
             $attachment->name = $command->getLocalizedNames();
-        }
-
-        if (null !== $command->getMimeType()) {
             $attachment->mime = $command->getMimeType();
-        }
 
-        if (!$attachment->validateFields(false)) {
-            throw new AttachmentConstraintException(
-                'Attachment contains invalid field values',
-                AttachmentConstraintException::INVALID_FIELDS
+            if (!$attachment->validateFields(false) && !$attachment->validateFieldsLang(false)) {
+                throw new AttachmentConstraintException(
+                    'Attachment contains invalid field values',
+                    AttachmentConstraintException::INVALID_FIELDS
+                );
+            }
+
+            if (null !== $command->getFilePathName()) {
+                $this->fileUploader->upload($command->getFilePathName(), $uniqueFileName, $command->getFileSize());
+            }
+
+            if (false === $attachment->add()) {
+                throw new CannotAddAttachmentException(
+                    'Failed to add attachment'
+                );
+            }
+        } catch (PrestaShopException $e) {
+            throw new AttachmentException(
+                'An unexpected error occurred when adding attachment',
+                0,
+                $e
             );
         }
-
-        $attachment->add();
     }
 }

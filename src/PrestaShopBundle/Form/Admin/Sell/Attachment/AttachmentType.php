@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Attachment;
 
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Translation\TranslatorAwareTrait;
 use Symfony\Component\Form\AbstractType;
@@ -52,12 +53,8 @@ class AttachmentType extends AbstractType
             ->add('name', TranslatableType::class, [
                 'type' => TextType::class,
                 'required' => true,
-                'options' => [
-                    'constraints' => [
-                        new NotBlank([
-                            'message' => $this->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
-                        ]),
-                    ],
+                'constraints' => [
+                    new DefaultLanguage(),
                 ],
             ])
             ->add('file_description', TranslatableType::class, [
@@ -65,8 +62,8 @@ class AttachmentType extends AbstractType
                 'required' => false,
             ])
             ->add('file', FileType::class, [
-                'required' => false,
-                'mapped' => true,
+                'required' => !$options['is_edit_form'] ||
+                    (isset($options['has_old_file']) && !$options['has_old_file']),
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
@@ -101,6 +98,7 @@ class AttachmentType extends AbstractType
                 return $groups;
             },
             'has_old_file' => false,
+            'is_edit_form' => false,
         ]);
 
         $resolver->setAllowedTypes('has_old_file', 'bool');

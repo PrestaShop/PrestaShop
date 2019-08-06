@@ -27,28 +27,52 @@
 namespace PrestaShop\PrestaShop\Adapter\Attachment\CommandHandler;
 
 use Attachment;
+use PrestaShop\PrestaShop\Adapter\File\Uploader\AttachmentFileUploader;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\EditAttachmentCommand;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\CommandHandler\EditAttachmentHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\CannotUpdateAttachmentException;
+use PrestaShopException;
 
 /**
- * Class EditAttachmentHandler
+ * Handles editing of attachment
  */
-final class EditAttachmentHandler implements EditAttachmentHandlerInterface
+final class EditAttachmentHandler extends AbstractAttachmentHandler implements EditAttachmentHandlerInterface
 {
+    /**
+     * @var AttachmentFileUploader
+     */
+    protected $fileUploader;
+
+    /**
+     * @param AttachmentFileUploader $fileUploader
+     */
+    public function __construct(AttachmentFileUploader $fileUploader)
+    {
+        $this->fileUploader = $fileUploader;
+    }
+
     /**
      * {@inheritdoc}
      *
      * @throws AttachmentConstraintException
+     * @throws AttachmentException
      * @throws AttachmentNotFoundException
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
+     * @throws CannotUpdateAttachmentException
      */
     public function handle(EditAttachmentCommand $command)
     {
         $attachmentIdValue = $command->getAttachmentId()->getValue();
-        $attachment = new Attachment($attachmentIdValue);
+
+        try {
+            $attachment = new Attachment($attachmentIdValue);
+        } catch (PrestaShopException $e) {
+            throw new AttachmentNotFoundException(
+                sprintf('Attachment with id "%s" was not found.', $attachmentIdValue)
+            );
+        }
 
         if ($attachment->id !== $attachmentIdValue) {
             throw new AttachmentNotFoundException(
@@ -64,37 +88,61 @@ final class EditAttachmentHandler implements EditAttachmentHandlerInterface
      * @param EditAttachmentCommand $command
      *
      * @throws AttachmentConstraintException
-     * @throws \PrestaShopException
+     * @throws AttachmentException
+     * @throws AttachmentNotFoundException
+     * @throws CannotUpdateAttachmentException
      */
     private function updateAttachmentFromCommandData(Attachment $attachment, EditAttachmentCommand $command)
     {
-        if (null !== $command->getFile()) {
-            $attachment->file = $command->getFile();
-        }
+        try {
+            if (!$attachment->validateFields(false) && !$attachment->validateFieldsLang(false)) {
+                throw new AttachmentConstraintException(
+                    'Attachment contains invalid field values',
+                    AttachmentConstraintException::INVALID_FIELDS
+                );
+            }
 
-        if (null !== $command->getFileName()) {
-            $attachment->file_name = $command->getFileName();
-        }
+            $this->assertDescriptionContainsCleanHtml($command->getLocalizedDescriptions());
+            $this->assertHasDefaultLanguage($command->getLocalizedNames());
 
-        if (null !== $command->getLocalizedDescriptions()) {
+            $uniqueFileName = $this->getUniqueFileName();
+
             $attachment->description = $command->getLocalizedDescriptions();
-        }
-
-        if (null !== $command->getLocalizedNames()) {
             $attachment->name = $command->getLocalizedNames();
-        }
 
-        if (null !== $command->getMimeType()) {
-            $attachment->mime = $command->getMimeType();
-        }
+            if (!$attachment->validateFields(false) && !$attachment->validateFieldsLang(false)) {
+                throw new AttachmentConstraintException(
+                    'Attachment contains invalid field values',
+                    AttachmentConstraintException::INVALID_FIELDS
+                );
+            }
 
-        if (!$attachment->validateFields(false)) {
-            throw new AttachmentConstraintException(
-                'Attachment contains invalid field values',
-                AttachmentConstraintException::INVALID_FIELDS
+            if (null !== $command->getPathName()) {
+                $attachment->file_name = $command->getOriginalFileName();
+                $attachment->file = $uniqueFileName;
+                $attachment->mime = $command->getMimeType();
+
+                if (null !== $command->getPathName()) {
+                    $this->fileUploader->upload(
+                        $command->getPathName(),
+                        $uniqueFileName,
+                        $command->getFileSize(),
+                        $command->getAttachmentId()->getValue()
+                    );
+                }
+            }
+
+            if (false === $attachment->update()) {
+                throw new CannotUpdateAttachmentException(
+                    'Failed to update attachment'
+                );
+            }
+        } catch (PrestaShopException $e) {
+            throw new AttachmentException(
+                'An unexpected error occurred when updating attachment',
+                0,
+                $e
             );
         }
-
-        $attachment->update();
     }
 }

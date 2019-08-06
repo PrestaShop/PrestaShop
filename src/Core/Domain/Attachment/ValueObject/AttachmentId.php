@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Attachment\ValueObject;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentConstraintException;
 
 /**
- * Class AttachmentId provides attachment id
+ * Class provides attachment id
  */
 class AttachmentId
 {

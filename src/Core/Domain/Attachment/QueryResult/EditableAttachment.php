@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult;
 
-use Symfony\Component\HttpFoundation\File\File;
+use SplFileInfo;
 
 /**
  * Stores editable data for attachment
@@ -34,12 +34,12 @@ use Symfony\Component\HttpFoundation\File\File;
 class EditableAttachment
 {
     /**
-     * @var string
+     * @var string|null
      */
     private $fileName;
 
     /**
-     * @var string[]
+     * @var string[]null
      */
     private $name;
 
@@ -49,7 +49,7 @@ class EditableAttachment
     private $description;
 
     /**
-     * @var File|null
+     * @var SplFileInfo|null
      */
     private $file;
 
@@ -57,18 +57,15 @@ class EditableAttachment
      * @param string $fileName
      * @param string[] $name
      * @param string[]|null $description
-     * @param File|null $file
      */
     public function __construct(
         string $fileName,
         array $name,
-        ?array $description,
-        ?File $file
+        array $description
     ) {
         $this->fileName = $fileName;
         $this->name = $name;
         $this->description = $description;
-        $this->file = $file;
     }
 
     /**
@@ -96,10 +93,22 @@ class EditableAttachment
     }
 
     /**
-     * @return File|null
+     * @return SplFileInfo|null
      */
-    public function getFile(): ?File
+    public function getFile(): ?SplFileInfo
     {
         return $this->file;
+    }
+
+    /**
+     * @param SplFileInfo|null $file
+     *
+     * @return EditableAttachment
+     */
+    public function setFile(?SplFileInfo $file): EditableAttachment
+    {
+        $this->file = $file;
+
+        return $this;
     }
 }

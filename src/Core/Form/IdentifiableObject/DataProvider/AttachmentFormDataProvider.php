@@ -57,7 +57,6 @@ final class AttachmentFormDataProvider implements FormDataProviderInterface
         $editableAttachment = $this->queryBus->handle(new GetAttachmentForEditing((int) $attachmentId));
 
         $data = [
-            'file' => $editableAttachment->getFile(),
             'name' => $editableAttachment->getName(),
             'file_name' => $editableAttachment->getFileName(),
             'file_description' => $editableAttachment->getDescription(),

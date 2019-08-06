@@ -31,7 +31,8 @@ use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentNotFoundExc
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachmentForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryHandler\GetAttachmentForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\EditableAttachment;
-use Symfony\Component\HttpFoundation\File\File;
+use PrestaShopException;
+use SplFileInfo;
 
 /**
  * Handles command that gets attachment for editing
@@ -42,11 +43,20 @@ final class GetAttachmentForEditingHandler implements GetAttachmentForEditingHan
 {
     /**
      * {@inheritdoc}
+     *
+     * @throws AttachmentNotFoundException
      */
     public function handle(GetAttachmentForEditing $query): EditableAttachment
     {
         $attachmentIdValue = $query->getAttachmentId()->getValue();
-        $attachment = new Attachment($attachmentIdValue);
+
+        try {
+            $attachment = new Attachment($attachmentIdValue);
+        } catch (PrestaShopException $e) {
+            throw new AttachmentNotFoundException(
+                sprintf('Attachment with id "%s" was not found.', $attachmentIdValue)
+            );
+        }
 
         if ($attachment->id !== $attachmentIdValue) {
             throw new AttachmentNotFoundException(
@@ -55,13 +65,18 @@ final class GetAttachmentForEditingHandler implements GetAttachmentForEditingHan
         }
 
         $filePath = _PS_DOWNLOAD_DIR_ . $attachment->file;
-        $file = file_exists($filePath) ? new File($filePath) : null;
+        $file = file_exists($filePath) ? new SplFileInfo($filePath) : null;
 
-        return new EditableAttachment(
+        $editableAttachment = new EditableAttachment(
             $attachment->file_name,
             $attachment->name,
-            $attachment->description,
-            $file
+            $attachment->description
         );
+
+        if (null !== $file) {
+            $editableAttachment->setFile($file);
+        }
+
+        return $editableAttachment;
     }
 }
