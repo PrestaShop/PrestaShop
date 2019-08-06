@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierConstraintExcepti
 /**
  * Provides valid values for carrier speed grade
  */
-final class SpeedGrade
+class SpeedGrade
 {
     /**
      * Minimum allowed value for speed grade

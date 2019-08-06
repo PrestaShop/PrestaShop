@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierConstraintExcepti
 /**
  * Provides valid carrier name value
  */
-final class CarrierName
+class CarrierName
 {
     /**
      * Allowed carrier name pattern

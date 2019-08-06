@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierConstraintExcepti
 /**
  * Provides valid carrier shipping delay value
  */
-final class ShippingDelay
+class ShippingDelay
 {
     /**
      * Regex pattern for valid shipping delay value

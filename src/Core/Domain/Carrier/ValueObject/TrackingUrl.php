@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierConstraintExcepti
 /**
  * Provides valid tracking url
  */
-final class TrackingUrl
+class TrackingUrl
 {
     const VALID_PATTERN = '/^(https?:)?\/\/[$~:;#,%&_=\(\)\[\]\.\? \+\-@\/a-zA-Z0-9]+$/';
     /**

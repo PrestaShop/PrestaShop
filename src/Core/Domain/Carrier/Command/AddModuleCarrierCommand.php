@@ -37,6 +37,8 @@ use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\TrackingUrl;
  */
 class AddModuleCarrierCommand extends AbstractAddCarrierCommand
 {
+    const MAX_MODULE_NAME_LENGTH = 64;
+
     /**
      * @var string
      */
@@ -259,7 +261,7 @@ class AddModuleCarrierCommand extends AbstractAddCarrierCommand
     /**
      * @return bool
      */
-    public function doModuleCalculateShippingPrice(): bool
+    public function moduleCalculateShippingPrice(): bool
     {
         return $this->moduleCalculatesShippingPrice;
     }
@@ -267,7 +269,7 @@ class AddModuleCarrierCommand extends AbstractAddCarrierCommand
     /**
      * @return bool
      */
-    public function doModuleNeedCoreShippingPrice(): bool
+    public function moduleNeedCoreShippingPrice(): bool
     {
         return $this->moduleNeedsCoreShippingPrice;
     }
@@ -279,11 +281,11 @@ class AddModuleCarrierCommand extends AbstractAddCarrierCommand
      */
     private function assertModuleName(string $name)
     {
-        $maxLength = 64;
-
-        if ('' === $name || $maxLength < strlen($name)) {
-            throw new CarrierConstraintException(
-                sprintf('Carrier module name length is invalid. It must be 1 - %s characters long', $maxLength),
+        if ('' === $name || self::MAX_MODULE_NAME_LENGTH < strlen($name)) {
+            throw new CarrierConstraintException(sprintf(
+                    'Carrier module name length is invalid. It must be 1 - %s characters long',
+                    self::MAX_MODULE_NAME_LENGTH
+                ),
                 CarrierConstraintException::INVALID_MODULE_NAME
             );
         }

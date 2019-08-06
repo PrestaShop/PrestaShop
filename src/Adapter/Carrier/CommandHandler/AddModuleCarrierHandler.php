@@ -73,7 +73,7 @@ final class AddModuleCarrierHandler extends AbstractAddCarrierHandler implements
         $this->fillCarrierCommonFieldsWithData($carrier, $command);
         $carrier->is_module = true;
         $carrier->external_module_name = $command->getModuleName();
-        $carrier->shipping_external = $command->doModuleCalculateShippingPrice();
-        $carrier->need_range = $command->doModuleNeedCoreShippingPrice();
+        $carrier->shipping_external = $command->moduleCalculateShippingPrice();
+        $carrier->need_range = $command->moduleNeedCoreShippingPrice();
     }
 }

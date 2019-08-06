@@ -115,6 +115,7 @@ abstract class AbstractAddCarrierCommand
      * @var int[]
      */
     protected $associatedShopIds;
+
     /**
      * @var bool
      */
