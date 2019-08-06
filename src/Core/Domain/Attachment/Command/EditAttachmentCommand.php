@@ -41,32 +41,32 @@ class EditAttachmentCommand
     /**
      * @var string|null
      */
-    private $pathName = null;
+    private $pathName;
 
     /**
      * @var string|null
      */
-    private $originalFileName = null;
+    private $originalFileName;
 
     /**
      * @var string|null
      */
-    private $mimeType = null;
+    private $mimeType;
 
     /**
      * @var string[]|null
      */
-    private $localizedNames = null;
+    private $localizedNames;
 
     /**
      * @var string[]|null
      */
-    private $localizedDescriptions = null;
+    private $localizedDescriptions;
 
     /**
      * @var string|null
      */
-    private $fileSize = null;
+    private $fileSize;
 
     /**
      * @param AttachmentId $attachmentId
