@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Attachment\Query;
 
-use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\ValueObject\AttachmentId;
 
 /**
@@ -40,11 +39,9 @@ class GetAttachmentForEditing
     private $attachmentId;
 
     /**
-     * @param $attachmentId
-     *
-     * @throws AttachmentConstraintException
+     * @param int $attachmentId
      */
-    public function __construct($attachmentId)
+    public function __construct(int $attachmentId)
     {
         $this->attachmentId = new AttachmentId($attachmentId);
     }

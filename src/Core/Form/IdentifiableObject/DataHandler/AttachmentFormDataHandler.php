@@ -29,7 +29,6 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\CreateAttachmentCommand;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\EditAttachmentCommand;
-use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\ValueObject\AttachmentId;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -64,8 +63,6 @@ final class AttachmentFormDataHandler implements FormDataHandlerInterface
     /**
      * @param int $attachmentId
      * @param array $data
-     *
-     * @throws AttachmentConstraintException
      */
     public function update($attachmentId, array $data)
     {
