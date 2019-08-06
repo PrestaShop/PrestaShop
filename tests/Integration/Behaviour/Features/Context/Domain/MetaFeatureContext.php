@@ -21,22 +21,11 @@ use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 class MetaFeatureContext extends AbstractDomainFeatureContext
 {
     /**
-     * @Given /^I specify following properties for new meta "([^"]*)":$/
-     */
-    public function specifyFollowingPropertiesForNewMeta($reference, TableNode $node)
-    {
-        $data = $node->getRowsHash();
-        SharedStorage::getStorage()->set(sprintf('%s_properties', $reference), $data);
-    }
-
-    /**
      * @When /^I add meta "([^"]*)" with specified properties$/
      */
-    public function addMetaWithSpecifiedProperties($reference)
+    public function addMetaWithSpecifiedProperties($reference, TableNode $node)
     {
-        $propertiesKey = sprintf('%s_properties', $reference);
-
-        $data = SharedStorage::getStorage()->get($propertiesKey);
+        $data = $node->getRowsHash();
         $data = $this->getWithDefaultLanguage($data);
 
         $command = (new AddMetaCommand($data['page_name']))
@@ -68,11 +57,9 @@ class MetaFeatureContext extends AbstractDomainFeatureContext
     /**
      * @When /^I get meta "([^"]*)" with specified properties$/
      */
-    public function getMetaWithSpecifiedProperties($reference)
+    public function getMetaWithSpecifiedProperties($reference, TableNode $node)
     {
-        $propertiesKey = sprintf('%s_properties', $reference);
-        $data = SharedStorage::getStorage()->get($propertiesKey);
-
+        $data = $node->getRowsHash();
         $queryCommand = new GetMetaForEditing((int) $data['meta_id']);
 
         try {
@@ -89,11 +76,9 @@ class MetaFeatureContext extends AbstractDomainFeatureContext
     /**
      * @When /^I update meta "([^"]*)" with specified properties$/
      */
-    public function updateMetaWithSpecifiedProperties($reference)
+    public function updateMetaWithSpecifiedProperties($reference, TableNode $node)
     {
-        $propertiesKey = sprintf('%s_properties', $reference);
-
-        $data = SharedStorage::getStorage()->get($propertiesKey);
+        $data = $node->getRowsHash();
         $data = $this->getWithDefaultLanguage($data);
 
         $command = (new EditMetaCommand((int) $data['meta_id']))
@@ -120,11 +105,9 @@ class MetaFeatureContext extends AbstractDomainFeatureContext
     /**
      * @When /^I add meta "([^"]*)" with specified properties without default language$/
      */
-    public function addMetaWithSpecifiedPropertiesWithoutDefaultLanguage($reference)
+    public function addMetaWithSpecifiedPropertiesWithoutDefaultLanguage($reference, TableNode $node)
     {
-        $propertiesKey = sprintf('%s_properties', $reference);
-
-        $data = SharedStorage::getStorage()->get($propertiesKey);
+        $data = $node->getRowsHash();
         $data = $this->getWithDefaultLanguage($data);
 
         $command = (new AddMetaCommand($data['page_name']))
@@ -142,11 +125,9 @@ class MetaFeatureContext extends AbstractDomainFeatureContext
     /**
      * @When /^I update meta "([^"]*)" with specified properties without default language$/
      */
-    public function updateMetaWithSpecifiedPropertiesWithoutDefaultLanguage($reference)
+    public function updateMetaWithSpecifiedPropertiesWithoutDefaultLanguage($reference, TableNode $node)
     {
-        $propertiesKey = sprintf('%s_properties', $reference);
-
-        $data = SharedStorage::getStorage()->get($propertiesKey);
+        $data = $node->getRowsHash();
         $data = $this->getWithDefaultLanguage($data);
 
         $command = (new EditMetaCommand((int) $data['meta_id']))
@@ -191,7 +172,7 @@ class MetaFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When /^I get pages for customization layout$/
+     * @Then /^I get pages for customization layout$/
      */
     public function getPagesForCustomizationLayout()
     {
