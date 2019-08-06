@@ -783,37 +783,45 @@
 
 {% block carrier_zone_ranges_widget %}
   <div>
-    <div id="js-append-inputs" class="table-responsive">
+    <div id="js-carrier-ranges" class="table-responsive">
       <table class="table table-sm">
         <tbody class="ranges">
           <tr class="table-dark text-dark js-range-from">
+            {% set weightContent = 'Will be applied when the weight is'|trans({}, 'Admin.Shipping.Feature') %}
+            {% set priceContent = 'Will be applied when the price is'|trans({}, 'Admin.Shipping.Feature') %}
             <td>
               <p>
-                <span class="js-content-case-weight">{{ 'Will be applied when the weight is'|trans({}, 'Admin.Shipping.Feature') }}</span>
-                <span class="js-content-case-price">{{ 'Will be applied when the price is'|trans({}, 'Admin.Shipping.Feature') }}</span>
+                <span class="js-content-case-weight">{{ weightContent }}</span>
+                <span class="js-content-case-price">{{ priceContent }}</span>
                 <
               </p>
             </td>
-            <td>
-              {{ form_widget(form.ranges[0].from) }}
-            </td>
+            {% if form.ranges[0] is defined %}
+              <td>
+                {{ form_widget(form.ranges[0].from) }}
+              </td>
+            {% endif %}
           </tr>
           <tr class="table-dark text-dark js-range-to">
             <td>
               <p>
-                <span class="js-content-case-weight">{{ 'Will be applied when the weight is'|trans({}, 'Admin.Shipping.Feature') }}</span>
-                <span class="js-content-case-price">{{ 'Will be applied when the price is'|trans({}, 'Admin.Shipping.Feature') }}</span>
+                <span class="js-content-case-weight">{{ weightContent }}</span>
+                <span class="js-content-case-price">{{ priceContent }}</span>
                 >=
               </p>
             </td>
-            <td>
-              {{ form_widget(form.ranges[0].to) }}
-            </td>
+            {% if form.ranges[0] is defined %}
+              <td>
+                {{ form_widget(form.ranges[0].to) }}
+              </td>
+            {% endif %}
           </tr>
           {% for zone_id, zone in form.zones %}
             <tr data-zone-id="{{ zone_id }}">
               <td>{{ form_widget(form.zones[zone_id]) }}</td>
-              <td>{{ form_widget(form.prices[0].price_by_zone[zone_id]) }}</td>
+              {% if form.prices[0] is defined %}
+                <td>{{ form_widget(form.prices[0].price_by_zone[zone_id]) }}</td>
+              {% endif %}
             </tr>
           {% endfor %}
         </tbody>

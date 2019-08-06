@@ -26,10 +26,10 @@
 const $ = window.$;
 
 export default class AddRangeHandler {
-  constructor() {
+  constructor(rowsSelector, templatesSelector) {
     $(document).on('click', '.js-add-range', () => {
-      this.$rows = $('#js-append-inputs').find('table tr');
-      this.$templates = $('#js-carrier-range-templates');
+      this.$rows = $(rowsSelector);
+      this.$templates = $(templatesSelector);
       this.addColumn();
     });
 

@@ -881,7 +881,7 @@ services:
         public: true
         arguments:
             - '@=service("prestashop.adapter.form.choice_provider.tax_name_by_id_choice_provider").getChoices()'
-            - '@=service("prestashop.core.form.choice_provider.shipping_method").getChoices()'
+            - '@=service("prestashop.core.form.choice_provider.carrier_billing").getChoices()'
             - '@=service("prestashop.core.form.choice_provider.carrier_out_of_range_behavior").getChoices()'
             - '@translator'
             - '@=service("prestashop.adapter.form.choice_provider.zones_choice_provider").getChoices()'

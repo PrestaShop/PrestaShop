@@ -26,16 +26,16 @@
 {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
 
 {% block carrier_form_step_shipping %}
-  {{ ps.form_group_row(carrierForm.step_shipping.cost_handling, {}, {
+  {{ ps.form_group_row(carrierForm.step_shipping.include_handling_cost, {'attr': {'class': 'js-handling-cost'}}, {
     'label': 'Add handling costs'|trans({}, 'Admin.Global'),
     'help': 'Include the handling costs (as set in Shipping > Preferences) in the final carrier price.'|trans({}, 'Admin.Shipping.Help')
   }) }}
 
-  {{ ps.form_group_row(carrierForm.step_shipping.is_free_shipping, {}, {
+  {{ ps.form_group_row(carrierForm.step_shipping.is_free_shipping, {'attr': {'class': 'js-free-shipping'}}, {
     'label': 'Free shipping'|trans({}, 'Admin.Global'),
   }) }}
 
-  {{ ps.form_group_row(carrierForm.step_shipping.shipping_method, {'attr': {'class': 'js-shipping-method'}}, {
+  {{ ps.form_group_row(carrierForm.step_shipping.billing, {'attr': {'class': 'js-billing'}}, {
     'label': 'Billing'|trans({}, 'Admin.Global'),
   }) }}
 
@@ -49,6 +49,6 @@
     |trans({}, 'Admin.Shipping.Help')
   }) }}
 
-  {{ form_widget(carrierForm.step_shipping.carrier_ranges) }}
+  {{ form_widget(carrierForm.step_shipping.carrier_ranges, {'attr': {'class': 'js-shipping-ranges'}}) }}
 {% endblock %}
 

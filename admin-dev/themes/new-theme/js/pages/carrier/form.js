@@ -26,11 +26,25 @@
 import StepVisibilityHandler from '../../components/form/step-visibility-handler.js';
 import AddRangeHandler from './add-range-handler.js';
 import RangesContentSwitcher from './ranges-content-switcher.js';
+import CarrierMap from './carrier-map.js';
+import FreeShippingToggleHandler from './free-shipping-toggle-handler.js';
 
 const $ = window.$;
 
 $(document).ready(() => {
   new StepVisibilityHandler('active');
-  new AddRangeHandler();
-  new RangesContentSwitcher();
+  new AddRangeHandler(
+    CarrierMap.rangesTableRowsSelector,
+    CarrierMap.rangesTemplateSelector
+  );
+  new RangesContentSwitcher(
+    CarrierMap.priceContentSelector,
+    CarrierMap.weightContentSelector,
+    CarrierMap.billingSelector
+  );
+  new FreeShippingToggleHandler(
+    CarrierMap.freeShippingSelector,
+    CarrierMap.handlingCostSelector,
+    CarrierMap.rangesTableRowsSelector
+  );
 });

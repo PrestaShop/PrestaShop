@@ -54,7 +54,7 @@ class CarrierController extends FrameworkBundleAdminController
         $carrierForm = $this->createForm(CarrierType::class);
         $carrierForm->handleRequest($request);
 
-        if ($carrierForm->isSubmitted()) {
+        if ($carrierForm->isSubmitted() && $carrierForm->isValid()) {
             dump($carrierForm->getData());
             die;
         }

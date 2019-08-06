@@ -215,7 +215,7 @@ services:
     arguments:
       - '@translator'
 
-  prestashop.core.form.choice_provider.shipping_method:
-    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ShippingMethodChoiceProvider'
+  prestashop.core.form.choice_provider.carrier_billing:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CarrierBillingChoiceProvider'
     arguments:
       - '@translator'

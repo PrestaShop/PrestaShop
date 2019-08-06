@@ -23,27 +23,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = window.$;
-
-export default class RangesContentSwitcher {
-  constructor(priceContentSelector, weightContentSelector, billingSelector) {
-    this.$priceContentSelector = $(priceContentSelector);
-    this.$weightContentSelector = $(weightContentSelector);
-    this.$billingSelector = $(billingSelector);
-
-    this._handle();
-    this.$billingSelector.change(event => this._handle(event));
-
-    return {};
-  }
-
-  _handle() {
-    if (this.$billingSelector.find('input:checked').val() === '1') {
-      this.$weightContentSelector.show();
-      this.$priceContentSelector.hide();
-    } else {
-      this.$priceContentSelector.show();
-      this.$weightContentSelector.hide();
-    }
-  }
-}
+export default {
+  priceContentSelector: '.js-content-case-price',
+  weightContentSelector: '.js-content-case-weight',
+  billingSelector: '.js-billing',
+  freeShippingSelector: '.js-free-shipping',
+  handlingCostSelector: '.js-handling-cost',
+  rangesTableRowsSelector: '#js-carrier-ranges table tr',
+  rangesTemplateSelector: '#js-carrier-range-templates',
+};

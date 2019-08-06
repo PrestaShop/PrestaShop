@@ -32,7 +32,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 /**
  * Provides shipping method choices in translated name => value pairs.
  */
-final class ShippingMethodChoiceProvider implements FormChoiceProviderInterface
+final class CarrierBillingChoiceProvider implements FormChoiceProviderInterface
 {
     /**
      * @var TranslatorInterface

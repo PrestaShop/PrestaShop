@@ -45,7 +45,7 @@ class StepShippingType extends AbstractType
     /**
      * @var array
      */
-    private $shippingMethodChoices;
+    private $billingChoices;
 
     /**
      * @var array
@@ -64,21 +64,21 @@ class StepShippingType extends AbstractType
 
     /**
      * @param array $taxChoices
-     * @param array $shippingMethodChoices
+     * @param array $billingChoices
      * @param array $outOfRangeBehaviorChoices
      * @param TranslatorInterface $translator
      * @param array $zones
      */
     public function __construct(
         array $taxChoices,
-        array $shippingMethodChoices,
+        array $billingChoices,
         array $outOfRangeBehaviorChoices,
         TranslatorInterface $translator,
         array $zones
     ) {
         $this->taxChoices = $taxChoices;
         $this->outOfRangeBehaviorChoices = $outOfRangeBehaviorChoices;
-        $this->shippingMethodChoices = $shippingMethodChoices;
+        $this->billingChoices = $billingChoices;
         $this->translator = $translator;
         $this->zones = $zones;
     }
@@ -86,17 +86,17 @@ class StepShippingType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('cost_handling', SwitchType::class, [
+            ->add('include_handling_cost', SwitchType::class, [
                 'required' => false,
             ])
             ->add('is_free_shipping', SwitchType::class, [
                 'required' => false,
             ])
-            ->add('shipping_method', ChoiceType::class, [
+            ->add('billing', ChoiceType::class, [
                 'placeholder' => false,
                 'required' => false,
                 'expanded' => true,
-                'choices' => $this->shippingMethodChoices,
+                'choices' => $this->billingChoices,
             ])
             ->add('tax', ChoiceType::class, [
                 'placeholder' => false,
