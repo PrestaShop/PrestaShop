@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Attachment\Exception;
 
 /**
- * Class DeleteAttachmentException is thrown when attachment or attachments cannot be deleted
+ * Exception is thrown when attachment or attachments cannot be deleted
  */
 class DeleteAttachmentException extends AttachmentException
 {

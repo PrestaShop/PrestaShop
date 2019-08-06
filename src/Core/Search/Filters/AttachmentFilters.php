@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Search\Filters;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 
 /**
- * Class AttachmentFilters defines default filters for Attachments grid.
+ * Defines default filters for Attachments grid.
  */
 final class AttachmentFilters extends Filters
 {

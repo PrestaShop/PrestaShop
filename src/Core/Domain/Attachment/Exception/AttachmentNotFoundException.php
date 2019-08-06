@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Attachment\Exception;
 
 /**
- * Class AttachmentNotFoundException
+ * Attachment not found exception
  */
 class AttachmentNotFoundException extends AttachmentException
 {

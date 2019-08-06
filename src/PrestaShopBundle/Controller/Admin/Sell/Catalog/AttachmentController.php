@@ -41,7 +41,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Class AttachmentController
+ * Class is responsible for "Sell > Catalog > Files" page.
  */
 class AttachmentController extends FrameworkBundleAdminController
 {

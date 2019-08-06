@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Attachment\CommandHandler\DeleteAttachment
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\DeleteAttachmentException;
 
 /**
- * Class DeleteAttachmentHandler
+ * Delete attachment handler
  */
 final class DeleteAttachmentHandler extends AbstractAttachmentHandler implements DeleteAttachmentHandlerInterface
 {
