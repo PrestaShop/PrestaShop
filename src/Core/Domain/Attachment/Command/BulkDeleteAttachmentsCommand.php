@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentConstraintE
 use PrestaShop\PrestaShop\Core\Domain\Attachment\ValueObject\AttachmentId;
 
 /**
- * Class BulkDeleteAttachmentsCommand is responsible for deleting Attachment
+ * Bulk delete attachment command is responsible for deleting Attachment
  */
 class BulkDeleteAttachmentsCommand
 {
@@ -52,7 +52,7 @@ class BulkDeleteAttachmentsCommand
     /**
      * @return AttachmentId[]
      */
-    public function getAttachmentIds()
+    public function getAttachmentIds(): array
     {
         return $this->attachmentIds;
     }

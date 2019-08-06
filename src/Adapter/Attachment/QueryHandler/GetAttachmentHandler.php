@@ -28,13 +28,13 @@ namespace PrestaShop\PrestaShop\Adapter\Attachment\QueryHandler;
 
 use PrestaShop\PrestaShop\Adapter\Attachment\AbstractAttachmentHandler;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachment;
-use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryHandler\GetAttachmentPathHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryHandler\GetAttachmentHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\Attachment;
 
 /**
- * Class GetAttachmentPathHandler provides path and original file name of attachment
+ * Provides path and original file name of attachment
  */
-final class GetAttachmentPathHandler extends AbstractAttachmentHandler implements GetAttachmentPathHandlerInterface
+final class GetAttachmentHandler extends AbstractAttachmentHandler implements GetAttachmentHandlerInterface
 {
     /**
      * {@inheritdoc}

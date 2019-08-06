@@ -30,9 +30,9 @@ use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachment;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\Attachment;
 
 /**
- * Defines contract for GetAttachmentPathHandler
+ * Defines contract for get attachment handler
  */
-interface GetAttachmentPathHandlerInterface
+interface GetAttachmentHandlerInterface
 {
     /**
      * @param GetAttachment $query

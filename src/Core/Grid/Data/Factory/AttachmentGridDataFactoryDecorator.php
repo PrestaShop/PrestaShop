@@ -115,15 +115,17 @@ final class AttachmentGridDataFactoryDecorator implements GridDataFactoryInterfa
         foreach ($attachments as $attachment) {
             if ((int) $attachment['products'] > 0) {
                 $productNamesArray = $this->getProductNames($attachment['id_attachment']);
-                $productNames = isset($productNamesArray['product_names']) ? $productNamesArray['product_names'] : '';
+                $productNames = $productNamesArray['product_names'] ?? '';
                 $attachment['dynamic_message'] = $this->trans(
-                    "This file is associated with the following products, do you really want to  delete it?\r\n\r\n%products%",
-                    ['%products%' => $productNames],
-                    'Admin.Notifications.Warning'
+                    'This file is associated with the following products, do you really want to  delete it?',
+                    [],
+                    'Admin.Catalog.Notification'
                 );
+                $attachment['dynamic_message'] .= "\n\n" . $productNames;
             }
 
             $attachment['file_size'] = $this->fileSizeConverter->convert((int) $attachment['file_size']);
+            $attachment['products'] .= ' ' . $this->trans('product(s)', [], 'Admin.Catalog.Feature');
 
             $modifiedAttachments[] = $attachment;
         }
