@@ -17,6 +17,7 @@ use PrestaShop\PrestaShop\Core\Domain\Meta\QueryResult\LayoutCustomizationPage;
 use PrestaShop\PrestaShop\Core\Domain\Meta\ValueObject\MetaId;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
+use Tests\Integration\Behaviour\Features\Context\Util\DataTransfer;
 
 class MetaFeatureContext extends AbstractDomainFeatureContext
 {
@@ -28,20 +29,8 @@ class MetaFeatureContext extends AbstractDomainFeatureContext
         $data = $node->getRowsHash();
         $data = $this->getWithDefaultLanguage($data);
 
-        $command = (new AddMetaCommand($data['page_name']))
-            ->setLocalisedPageTitle(
-                isset($data['localized_page_title']) ? $data['localized_page_title'] : []
-            )
-            ->setLocalisedMetaDescription(
-                isset($data['localized_meta_description']) ? $data['localized_meta_description'] : []
-            )
-            ->setLocalisedMetaKeywords(
-                isset($data['localized_meta_keywords']) ? $data['localized_meta_keywords'] : []
-            )
-            ->setLocalisedRewriteUrls(
-                isset($data['localized_rewrite_urls']) ? $data['localized_rewrite_urls'] : []
-            )
-        ;
+        $command = new AddMetaCommand($data['pageName']);
+        $command = DataTransfer::transferAttributesFromArrayToObject($data, $command);
 
         try {
             /** @var MetaId $metaId */
@@ -60,7 +49,7 @@ class MetaFeatureContext extends AbstractDomainFeatureContext
     public function getMetaWithSpecifiedProperties($reference, TableNode $node)
     {
         $data = $node->getRowsHash();
-        $queryCommand = new GetMetaForEditing((int) $data['meta_id']);
+        $queryCommand = new GetMetaForEditing((int) $data['metaId']);
 
         try {
             /** @var EditableMeta $editableMeta */
@@ -81,21 +70,13 @@ class MetaFeatureContext extends AbstractDomainFeatureContext
         $data = $node->getRowsHash();
         $data = $this->getWithDefaultLanguage($data);
 
-        $command = (new EditMetaCommand((int) $data['meta_id']))
-            ->setLocalisedPageTitles(isset($data['localized_page_title']) ? $data['localized_page_title'] : [])
-            ->setLocalisedMetaDescriptions(isset($data['localized_meta_description']) ? $data['localized_meta_description'] : [])
-            ->setLocalisedMetaKeywords(isset($data['localized_meta_keywords']) ? $data['localized_meta_keywords'] : [])
-            ->setLocalisedRewriteUrls(isset($data['localized_rewrite_urls']) ? $data['localized_rewrite_urls'] : [])
-        ;
-
-        if (isset($data['page_name'])) {
-            $command->setPageName($data['page_name']);
-        }
+        $command = new EditMetaCommand((int) $data['metaId']);
+        $command = DataTransfer::transferAttributesFromArrayToObject($data, $command);
 
         try {
             $this->getCommandBus()->handle($command);
 
-            SharedStorage::getStorage()->set($reference, new Meta((int) $data['meta_id']));
+            SharedStorage::getStorage()->set($reference, new Meta((int) $data['metaId']));
         } catch (Exception $exception) {
             $this->lastException = $exception;
             $this->lastErrorCode = $exception->getCode();
@@ -110,8 +91,8 @@ class MetaFeatureContext extends AbstractDomainFeatureContext
         $data = $node->getRowsHash();
         $data = $this->getWithDefaultLanguage($data);
 
-        $command = (new AddMetaCommand($data['page_name']))
-            ->setLocalisedRewriteUrls([0 => $data['localized_rewrite_urls']])
+        $command = (new AddMetaCommand($data['pageName']))
+            ->setLocalisedRewriteUrls([0 => $data['localisedRewriteUrls']])
         ;
 
         try {
@@ -130,8 +111,8 @@ class MetaFeatureContext extends AbstractDomainFeatureContext
         $data = $node->getRowsHash();
         $data = $this->getWithDefaultLanguage($data);
 
-        $command = (new EditMetaCommand((int) $data['meta_id']))
-            ->setLocalisedRewriteUrls([0 => $data['localized_rewrite_urls']])
+        $command = (new EditMetaCommand((int) $data['metaId']))
+            ->setLocalisedRewriteUrls([0 => $data['localisedRewriteUrls']])
         ;
 
         try {
@@ -152,10 +133,12 @@ class MetaFeatureContext extends AbstractDomainFeatureContext
         $defaultLanguageId = SharedStorage::getStorage()->get('default_language_id');
 
         $languageFields = [
-            'localized_page_title',
-            'localized_meta_description',
-            'localized_meta_keywords',
-            'localized_rewrite_urls',
+            'localisedPageTitles',
+            'localisedPageTitle',
+            'localisedMetaDescriptions',
+            'localisedMetaDescription',
+            'localisedMetaKeywords',
+            'localisedRewriteUrls',
         ];
 
         foreach ($data as $key => $item) {
