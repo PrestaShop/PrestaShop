@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,31 +22,26 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% set enableSidebar = true %}
-{% set layoutTitle = 'Add new'|trans({}, 'Admin.Actions') %}
+namespace PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier;
 
-{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
+use PrestaShopBundle\Form\Admin\Type\SwitchType;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
 
-{% block content %}
-  <div class="row justify-content-center">
-    <div class="col-3">
-      <div class="card">
-        <div class="card-block">
-          {#@todo: carrier logo #}
-          logo
-        </div>
-      </div>
-    </div>
-    <div class="col-9">
-      {% include '@PrestaShop/Admin/Improve/Shipping/Carrier/Blocks/form.html.twig' %}
-    </div>
-  </div>
-{% endblock %}
-
-{% block javascripts %}
-  {{ parent() }}
-
-  <script src="{{ asset('themes/new-theme/public/carrier_form.bundle.js') }}"></script>
-{% endblock %}
+/**
+ * Defines form part for add/edit carrier summary step
+ */
+class StepSummaryType extends AbstractType
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder->add('is_enabled', SwitchType::class, [
+            'required' => false,
+        ]);
+    }
+}

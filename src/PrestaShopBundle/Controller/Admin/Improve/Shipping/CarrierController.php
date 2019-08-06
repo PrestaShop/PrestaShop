@@ -35,13 +35,21 @@ use Symfony\Component\HttpFoundation\Response;
 class CarrierController extends FrameworkBundleAdminController
 {
     /**
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     */
+    public function indexAction()
+    {
+        //@todo: implemet index action
+    }
+
+    /**
      * Show shipping carrier creation page
      *
      * @AdminSecurity("is_granted(['create'], request.get('_legacy_controller'))")
      *
      * @return Response
      */
-    public function createAction(Request $request)
+    public function createAction(Request $request): Response
     {
         $carrierForm = $this->createForm(CarrierType::class);
         $carrierForm->handleRequest($request);

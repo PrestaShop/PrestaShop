@@ -53,6 +53,11 @@
       <div class="form-step js-form-step-4">
         {% include '@PrestaShop/Admin/Improve/Shipping/Carrier/Blocks/step_properties_and_access.html.twig' %}
       </div>
+
+      <div class="form-step js-form-step-5">
+        {% include '@PrestaShop/Admin/Improve/Shipping/Carrier/Blocks/step_summary.html.twig' %}
+      </div>
+
       {% block carrier_form_rest %}
         {{ form_rest(carrierForm) }}
       {% endblock %}

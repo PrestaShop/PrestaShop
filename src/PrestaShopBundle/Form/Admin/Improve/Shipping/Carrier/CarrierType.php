@@ -53,7 +53,8 @@ class CarrierType extends AbstractType
         $builder
             ->add('step_general', StepGeneralType::class)
             ->add('step_shipping', StepShippingType::class)
-            ->add('step_properties_and_access', StepPropertiesAndAccessType::class);
+            ->add('step_properties_and_access', StepPropertiesAndAccessType::class)
+            ->add('step_summary', StepSummaryType::class);
 
         if ($this->isMultishopActive) {
             $builder->add('step_multi_shop', StepMultiShopType::class);

@@ -1,3 +1,10 @@
+admin_carriers_index:
+  path: carriers
+  methods: [GET]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Improve\Shipping\Carrier:index'
+    _legacy_controller: AdminCarriers
+
 admin_carriers_create:
   path: carriers/new
   methods: [GET, POST]

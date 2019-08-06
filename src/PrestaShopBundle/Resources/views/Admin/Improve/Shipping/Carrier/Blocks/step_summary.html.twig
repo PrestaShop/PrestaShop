@@ -23,29 +23,21 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-{% set enableSidebar = true %}
-{% set layoutTitle = 'Add new'|trans({}, 'Admin.Actions') %}
+{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
 
-{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
-
-{% block content %}
-  <div class="row justify-content-center">
-    <div class="col-3">
-      <div class="card">
-        <div class="card-block">
-          {#@todo: carrier logo #}
-          logo
-        </div>
-      </div>
-    </div>
-    <div class="col-9">
-      {% include '@PrestaShop/Admin/Improve/Shipping/Carrier/Blocks/form.html.twig' %}
+{% block carrier_form_step_summary %}
+<div>
+  <div class="card">
+    <div class="card-block">
+      {#@todo: carrier summary #}
+      carrier summary
     </div>
   </div>
-{% endblock %}
-
-{% block javascripts %}
-  {{ parent() }}
-
-  <script src="{{ asset('themes/new-theme/public/carrier_form.bundle.js') }}"></script>
+  <div>
+      {{ ps.form_group_row(carrierForm.step_summary.is_enabled, {}, {
+        'label': 'Enabled'|trans({}, 'Admin.Global'),
+        'help': 'Enable the carrier in the front office.'|trans({}, 'Admin.Shipping.Help'),
+      }) }}
+  </div>
+</div>
 {% endblock %}
