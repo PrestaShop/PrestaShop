@@ -27,7 +27,7 @@
 namespace Tests\Unit\Core\Domain\Product\Image\Command;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\UpdateProductImagesCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\UpdateProductImagesAssociationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ExistingProductImage;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ProductImage;
 
@@ -38,7 +38,7 @@ class UpdateProductImagesCommandTest extends TestCase
      */
     public function testItBuildsImagesCorrectly(array $expected, array $images): void
     {
-        $command = new UpdateProductImagesCommand(1, $images);
+        $command = new UpdateProductImagesAssociationCommand(1, $images);
 
         $this->assertEquals($expected, $command->getImages());
     }

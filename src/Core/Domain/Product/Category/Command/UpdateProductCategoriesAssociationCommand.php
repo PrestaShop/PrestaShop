@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 /**
  * Updates product categories.
  */
-class UpdateProductCategoriesCommand
+class UpdateProductCategoriesAssociationCommand
 {
     /**
      * @var ProductId

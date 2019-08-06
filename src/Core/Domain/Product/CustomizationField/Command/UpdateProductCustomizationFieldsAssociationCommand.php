@@ -24,30 +24,38 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Attachment\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\CustomizationField\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\CustomizationField\Exception\ProductCustomizationFieldConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\CustomizationField\ValueObject\CustomizationField;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
- * Associates products with attachments.
+ * Update product customization fields.
  */
-class AssociateProductAttachmentsCommand
+class UpdateProductCustomizationFieldsAssociationCommand
 {
     /**
      * @var ProductId
      */
     private $productId;
 
-    private $attachmentIds;
+    /**
+     * @var CustomizationField[]
+     */
+    private $customizationFields;
 
     /**
+     *
      * @param int $productId
-     * @param int[] $attachmentIds
+     * @param array $customizationFields
+     *
+     * @throws ProductCustomizationFieldConstraintException
      */
-    public function __construct(int $productId, array $attachmentIds)
+    public function __construct(int $productId, array $customizationFields)
     {
         $this->productId = new ProductId($productId);
-        $this->setAttachmentIds($attachmentIds);
+        $this->setCustomizationFields($customizationFields);
     }
 
     /**
@@ -59,31 +67,25 @@ class AssociateProductAttachmentsCommand
     }
 
     /**
-     * @return mixed
+     * @return CustomizationField[]
      */
-    public function getAttachmentIds()
+    public function getCustomizationFields(): array
     {
-        return $this->attachmentIds;
+        return $this->customizationFields;
     }
 
-    private function setAttachmentIds(array $attachmentIds): void
+    /**
+     * @param array $customizationFields
+     * @throws ProductCustomizationFieldConstraintException
+     */
+    private function setCustomizationFields(array $customizationFields): void
     {
-        foreach ($attachmentIds as $attachmentId) {
-            //todo: change me when AttachmentId VO is available
-            $this->attachmentIds[] = new class($attachmentId) {
-
-                private $attachmentId;
-
-                public function __construct(int $attachmentId)
-                {
-                    $this->attachmentId;
-                }
-
-                public function getValue()
-                {
-                    return $this->attachmentId;
-                }
-            };
+        foreach ($customizationFields as $customizationField) {
+            $this->customizationFields[] = new CustomizationField(
+                $customizationField['type'],
+                $customizationField['titles'],
+                $customizationField['is_required']
+            );
         }
     }
 }

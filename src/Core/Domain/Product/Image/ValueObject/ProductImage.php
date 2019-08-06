@@ -55,8 +55,7 @@ class ProductImage
         int $position,
         bool $isCover,
         array $localizedCaptions
-    ){
-
+    ) {
         $this->position = $position;
         $this->isCover = $isCover;
         $this->localizedCaptions = $localizedCaptions;

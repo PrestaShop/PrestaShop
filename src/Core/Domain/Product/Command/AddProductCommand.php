@@ -37,21 +37,21 @@ class AddProductCommand
      * @todo: I need defaultLanguage validation in handler
      * @var string[]
      */
-    private $localizedProductNames;
+    private $localizedNames;
 
     /**
      * @param string[] $localizedProductNames
      */
     public function __construct(array $localizedProductNames)
     {
-        $this->localizedProductNames = $localizedProductNames;
+        $this->localizedNames = $localizedProductNames;
     }
 
     /**
      * @return string[]
      */
-    public function getLocalizedProductNames(): array
+    public function getLocalizedNames(): array
     {
-        return $this->localizedProductNames;
+        return $this->localizedNames;
     }
 }

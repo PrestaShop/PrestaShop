@@ -24,17 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Feature\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Feature\Exception\ProductFeatureConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Feature\ValueObject\CustomizableFeatureValue;
-use PrestaShop\PrestaShop\Core\Domain\Product\Feature\ValueObject\FeatureValue;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ProductImageConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ExistingProductImage;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ProductImage;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
- * Update product features.
+ * Updates product images.
  */
-class UpdateProductFeaturesCommand
+class UpdateProductImagesAssociationCommand
 {
     /**
      * @var ProductId
@@ -42,25 +42,20 @@ class UpdateProductFeaturesCommand
     private $productId;
 
     /**
-     * @var FeatureValue[]
+     * @var ExistingProductImage[]|ProductImage[]
      */
-    private $featureValues;
-
-    /**
-     * @var CustomizableFeatureValue[]
-     */
-    private $customizableFeatureValues;
+    private $images;
 
     /**
      * @param int $productId
-     * @param array $features
+     * @param array $images
      *
-     * @throws ProductFeatureConstraintException
+     * @throws ProductImageConstraintException
      */
-    public function __construct(int $productId, array $features)
+    public function __construct(int $productId, array $images)
     {
+        $this->setImages($images);
         $this->productId = new ProductId($productId);
-        $this->setFeatures($features);
     }
 
     /**
@@ -72,38 +67,30 @@ class UpdateProductFeaturesCommand
     }
 
     /**
-     * @return FeatureValue[]
+     * @return ExistingProductImage[]|ProductImage[]
      */
-    public function getFeatureValues(): array
+    public function getImages(): array
     {
-        return $this->featureValues;
+        return $this->images;
     }
 
     /**
-     * @return CustomizableFeatureValue[]
+     * @param array $images
+     *
+     * @throws ProductImageConstraintException
      */
-    public function getCustomizableFeatureValues(): array
+    private function setImages(array $images): void
     {
-        return $this->customizableFeatureValues;
-    }
+        foreach ($images as $image) {
+            $commonParameters = [$image['position'], $image['is_cover'], $image['captions']];
 
-    /**
-     * @param array $features
-     * @throws ProductFeatureConstraintException
-     */
-    private function setFeatures(array $features): void
-    {
-        foreach ($features as $feature)  {
-            if ($feature['is_customizable']) {
-                $this->customizableFeatureValues[] = new CustomizableFeatureValue(
-                    $feature['feature_id'],
-                    $feature['value']
-                );
+            if (isset($image['id'])) {
+                $this->images[] = new ExistingProductImage($image['id'], ...$commonParameters);
 
                 continue;
             }
 
-            $this->featureValues[] = new FeatureValue($feature['feature_id'], $feature['feature_value_id']);
+            $this->images[] = new ProductImage(...$commonParameters);
         }
     }
 }

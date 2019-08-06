@@ -27,7 +27,7 @@
 namespace Tests\Unit\Core\Domain\Product\Category\Command;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Domain\Product\Category\Command\UpdateProductCategoriesCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Category\Command\UpdateProductCategoriesAssociationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Category\Exception\ProductCategoryConstraintException;
 
 class UpdateProductCategoriesCommandTest extends TestCase
@@ -52,6 +52,6 @@ class UpdateProductCategoriesCommandTest extends TestCase
             ]
         ];
 
-        new UpdateProductCategoriesCommand(1, $categories);
+        new UpdateProductCategoriesAssociationCommand(1, $categories);
     }
 }

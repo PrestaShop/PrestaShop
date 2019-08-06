@@ -24,18 +24,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
-;
-use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ProductImageConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ExistingProductImage;
-use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ProductImage;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
- * Updates product images.
+ * Update related products.
  */
-class UpdateProductImagesCommand
+class UpdateRelatedProductsAssociationCommand
 {
     /**
      * @var ProductId
@@ -43,20 +39,19 @@ class UpdateProductImagesCommand
     private $productId;
 
     /**
-     * @var ExistingProductImage[]|ProductImage[]
+     * @var ProductId[]
      */
-    private $images;
+    private $relatedProductIds;
 
     /**
      * @param int $productId
-     * @param array $images
-     *
-     * @throws ProductImageConstraintException
+     * @param array $relatedProductIds
      */
-    public function __construct(int $productId, array $images)
+    public function __construct(int $productId, array $relatedProductIds)
     {
-        $this->setImages($images);
         $this->productId = new ProductId($productId);
+
+        $this->setRelatedProductIds($relatedProductIds);
     }
 
     /**
@@ -68,30 +63,17 @@ class UpdateProductImagesCommand
     }
 
     /**
-     * @return ExistingProductImage[]|ProductImage[]
+     * @return ProductId[]
      */
-    public function getImages(): array
+    public function getRelatedProductIds(): array
     {
-        return $this->images;
+        return $this->relatedProductIds;
     }
 
-    /**
-     * @param array $images
-     *
-     * @throws ProductImageConstraintException
-     */
-    private function setImages(array $images): void
+    private function setRelatedProductIds(array $relatedProductIds): void
     {
-        foreach ($images as $image) {
-            $commonParameters = [$image['position'], $image['is_cover'], $image['captions']];
-
-            if (isset($image['id'])) {
-                $this->images[] = new ExistingProductImage($image['id'], ...$commonParameters);
-
-                continue;
-            }
-
-            $this->images[] = new ProductImage(...$commonParameters);
+        foreach ($relatedProductIds as $productId) {
+            $this->relatedProductIds[] = new ProductId($productId);
         }
     }
 }

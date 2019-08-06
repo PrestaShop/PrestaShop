@@ -24,14 +24,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Attachment\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
- * Update related products.
+ * Associates products with attachments.
  */
-class UpdateRelatedProductsCommand
+class UpdateProductAttachmentsAssociationCommand
 {
     /**
      * @var ProductId
@@ -39,19 +39,18 @@ class UpdateRelatedProductsCommand
     private $productId;
 
     /**
-     * @var ProductId[]
+     * @var array
      */
-    private $relatedProductIds;
+    private $attachmentIds;
 
     /**
      * @param int $productId
-     * @param array $relatedProductIds
+     * @param int[] $attachmentIds
      */
-    public function __construct(int $productId, array $relatedProductIds)
+    public function __construct(int $productId, array $attachmentIds)
     {
         $this->productId = new ProductId($productId);
-
-        $this->setRelatedProductIds($relatedProductIds);
+        $this->setAttachmentIds($attachmentIds);
     }
 
     /**
@@ -63,17 +62,31 @@ class UpdateRelatedProductsCommand
     }
 
     /**
-     * @return ProductId[]
+     * @return array
      */
-    public function getRelatedProductIds(): array
+    public function getAttachmentIds(): array
     {
-        return $this->relatedProductIds;
+        return $this->attachmentIds;
     }
 
-    private function setRelatedProductIds(array $relatedProductIds): void
+    private function setAttachmentIds(array $attachmentIds): void
     {
-        foreach ($relatedProductIds as $productId) {
-            $this->relatedProductIds[] = new ProductId($productId);
+        foreach ($attachmentIds as $attachmentId) {
+            //todo: change me when AttachmentId VO is available
+            $this->attachmentIds[] = new class($attachmentId) {
+
+                private $attachmentId;
+
+                public function __construct(int $attachmentId)
+                {
+                    $this->attachmentId;
+                }
+
+                public function getValue()
+                {
+                    return $this->attachmentId;
+                }
+            };
         }
     }
 }

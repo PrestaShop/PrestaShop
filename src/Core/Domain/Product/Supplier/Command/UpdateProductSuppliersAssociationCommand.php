@@ -36,7 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierException;
 /**
  * Updates supplier data related with specific product.
  */
-class UpdateProductSuppliersCommand
+class UpdateProductSuppliersAssociationCommand
 {
     /**
      * @var ProductSupplier[]

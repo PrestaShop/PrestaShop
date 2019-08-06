@@ -53,7 +53,7 @@ class EditProductCommand
      * @todo: I need defaultLanguage validation in handler
      * @var string[]
      */
-    private $localizedProductNames;
+    private $localizedNames;
 
     /**
      * @var Price
@@ -89,14 +89,14 @@ class EditProductCommand
      * @todo: I need cleanHtml validation in handler
      * @var string[]
      */
-    private $localizedSummary;
+    private $localizedSummaries;
 
     /**
      * @todo: I need cleanHtml validation in handler
      *
      * @var string[]
      */
-    private $localizedDescription;
+    private $localizedDescriptions;
 
     /**
      * @var ManufacturerId
@@ -106,17 +106,17 @@ class EditProductCommand
     /**
      * @var string[]
      */
-    private $metaTitle;
+    private $localizedMetaTitles;
 
     /**
      * @var string[]
      */
-    private $metaDescription;
+    private $localizedMetaDescriptions;
 
     /**
      * @var string[]
      */
-    private $metaKeywords;
+    private $localizedMetaKeywords;
 
     /**
      * @todo: check if I am required in default language or I am set by product name etc... If so validate
@@ -124,7 +124,7 @@ class EditProductCommand
      *
      * @var string[]
      */
-    private $friendlyUrls;
+    private $localizedFriendlyUrls;
 
     /**
      * @var OfflineRedirectionPage
@@ -205,13 +205,13 @@ class EditProductCommand
     }
 
     /**
-     * @param string[] $localizedProductNames
+     * @param string[] $localizedNames
      *
      * @return self
      */
-    public function setLocalizedProductNames(array $localizedProductNames): self
+    public function setLocalizedNames(array $localizedNames): self
     {
-        $this->localizedProductNames = $localizedProductNames;
+        $this->localizedNames = $localizedNames;
 
         return $this;
     }
@@ -219,9 +219,9 @@ class EditProductCommand
     /**
      * @return string[]
      */
-    public function getLocalizedProductNames(): array
+    public function getLocalizedNames(): array
     {
-        return $this->localizedProductNames;
+        return $this->localizedNames;
     }
 
     /**
@@ -372,19 +372,19 @@ class EditProductCommand
     /**
      * @return string[]
      */
-    public function getLocalizedSummary(): ?array
+    public function getLocalizedSummaries(): ?array
     {
-        return $this->localizedSummary;
+        return $this->localizedSummaries;
     }
 
     /**
-     * @param string[] $localizedSummary
+     * @param string[] $localizedSummaries
      *
      * @return self
      */
-    public function setLocalizedSummary($localizedSummary): self
+    public function setLocalizedSummaries($localizedSummaries): self
     {
-        $this->localizedSummary = $localizedSummary;
+        $this->localizedSummaries = $localizedSummaries;
 
         return $this;
     }
@@ -392,19 +392,19 @@ class EditProductCommand
     /**
      * @return string[]
      */
-    public function getLocalizedDescription(): array
+    public function getLocalizedDescriptions(): array
     {
-        return $this->localizedDescription;
+        return $this->localizedDescriptions;
     }
 
     /**
-     * @param string[] $localizedDescription
+     * @param string[] $localizedDescriptions
      *
      * @return self
      */
-    public function setLocalizedDescription($localizedDescription): self
+    public function setLocalizedDescriptions($localizedDescriptions): self
     {
-        $this->localizedDescription = $localizedDescription;
+        $this->localizedDescriptions = $localizedDescriptions;
 
         return $this;
     }
@@ -434,19 +434,19 @@ class EditProductCommand
     /**
      * @return string[]
      */
-    public function getMetaTitle(): ?array
+    public function getLocalizedMetaTitles(): ?array
     {
-        return $this->metaTitle;
+        return $this->localizedMetaTitles;
     }
 
     /**
-     * @param string[] $metaTitle
+     * @param string[] $localizedMetaTitles
      *
      * @return self
      */
-    public function setMetaTitle(array $metaTitle): self
+    public function setLocalizedMetaTitles(array $localizedMetaTitles): self
     {
-        $this->metaTitle = $metaTitle;
+        $this->localizedMetaTitles = $localizedMetaTitles;
 
         return $this;
     }
@@ -454,19 +454,19 @@ class EditProductCommand
     /**
      * @return string[]
      */
-    public function getMetaDescription(): ?array
+    public function getLocalizedMetaDescriptions(): ?array
     {
-        return $this->metaDescription;
+        return $this->localizedMetaDescriptions;
     }
 
     /**
-     * @param array $metaDescription
+     * @param array $localizedMetaDescriptions
      *
      * @return self
      */
-    public function setMetaDescription(array $metaDescription): self
+    public function setLocalizedMetaDescriptions(array $localizedMetaDescriptions): self
     {
-        $this->metaDescription = $metaDescription;
+        $this->localizedMetaDescriptions = $localizedMetaDescriptions;
 
         return $this;
     }
@@ -474,19 +474,19 @@ class EditProductCommand
     /**
      * @return string[]
      */
-    public function getMetaKeywords(): ?array
+    public function getLocalizedMetaKeywords(): ?array
     {
-        return $this->metaKeywords;
+        return $this->localizedMetaKeywords;
     }
 
     /**
-     * @param string[] $metaKeywords
+     * @param string[] $localizedMetaKeywords
      *
      * @return self
      */
-    public function setMetaKeywords(array $metaKeywords): self
+    public function setLocalizedMetaKeywords(array $localizedMetaKeywords): self
     {
-        $this->metaKeywords = $metaKeywords;
+        $this->localizedMetaKeywords = $localizedMetaKeywords;
 
         return $this;
     }
@@ -494,19 +494,19 @@ class EditProductCommand
     /**
      * @return string[]
      */
-    public function getFriendlyUrls(): ?array
+    public function getLocalizedFriendlyUrls(): ?array
     {
-        return $this->friendlyUrls;
+        return $this->localizedFriendlyUrls;
     }
 
     /**
-     * @param string[] $friendlyUrls
+     * @param string[] $localizedFriendlyUrls
      *
      * @return self
      */
-    public function setFriendlyUrls(array $friendlyUrls): self
+    public function setLocalizedFriendlyUrls(array $localizedFriendlyUrls): self
     {
-        $this->friendlyUrls = $friendlyUrls;
+        $this->localizedFriendlyUrls = $localizedFriendlyUrls;
 
         return $this;
     }
