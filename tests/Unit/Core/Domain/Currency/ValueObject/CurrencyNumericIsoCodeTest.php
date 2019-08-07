@@ -26,7 +26,6 @@
 
 namespace Tests\Unit\Core\Domain\Currency\ValueObject;
 
-
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\NumericIsoCode;
@@ -75,8 +74,8 @@ class CurrencyNumericIsoCodeTest extends TestCase
                 '-51',
             ],
             [
-                -42
-            ]
+                -42,
+            ],
         ];
     }
 
@@ -95,20 +94,20 @@ class CurrencyNumericIsoCodeTest extends TestCase
         return [
             [
                 '008',
-                8
+                8,
             ],
             [
                 '8',
-                8
+                8,
             ],
             [
                 '981',
-                981
+                981,
             ],
             [
                 '49',
-                49
-            ]
+                49,
+            ],
         ];
     }
 }
