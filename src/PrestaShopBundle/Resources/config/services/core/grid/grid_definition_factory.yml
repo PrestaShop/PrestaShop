@@ -194,3 +194,8 @@ services:
           - '@=service("prestashop.adapter.legacy.context").getContext().language.date_format_full'
           - '@prestashop.adapter.feature.multistore'
         public: true
+
+    prestashop.core.grid.definition.factory.merchandise_return:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\MerchandiseReturnGridDefinitionFactory'
+      parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+      public: true

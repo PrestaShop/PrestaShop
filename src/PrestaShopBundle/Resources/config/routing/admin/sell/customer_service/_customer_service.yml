@@ -1,0 +1,3 @@
+_merchandise_return:
+  resource: "merchandise_return.yml"
+  prefix: /merchandise-return/
