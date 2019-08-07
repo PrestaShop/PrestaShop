@@ -27,9 +27,22 @@
 namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Domain\State\Command\BulkDeleteStatesCommand;
+use PrestaShop\PrestaShop\Core\Domain\State\Command\BulkToggleStateStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\State\Command\DeleteStateCommand;
+use PrestaShop\PrestaShop\Core\Domain\State\Command\ToggleStateStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\State\Exception\DeleteStateException;
+use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateException;
+use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\State\Exception\UpdateStateException;
+use PrestaShop\PrestaShop\Core\Domain\State\Query\GetStateForEditing;
+use PrestaShop\PrestaShop\Core\Domain\State\QueryResult\EditableState;
 use PrestaShop\PrestaShop\Core\Search\Filters\StateFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -45,7 +58,7 @@ class StateController extends FrameworkBundleAdminController
      *
      * @return JsonResponse
      */
-    public function getStatesAction(Request $request)
+    public function getStatesAction(Request $request): JsonResponse
     {
         try {
             $countryId = (int) $request->query->get('id_country');
@@ -86,6 +99,146 @@ class StateController extends FrameworkBundleAdminController
     }
 
     /**
+     * Deletes state
+     *
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_state_index")
+     * @DemoRestricted(redirectRoute="admin_state_index")
+     *
+     * @param $stateId
+     *
+     * @return RedirectResponse
+     */
+    public function deleteAction($stateId): RedirectResponse
+    {
+        try {
+            $this->getCommandBus()->handle(new DeleteStateCommand((int) $stateId));
+            $this->addFlash(
+                'success',
+                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+            );
+        } catch (StateException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        return $this->redirectToRoute('admin_state_index');
+    }
+
+    /**
+     * Delete states in bulk action.
+     *
+     * @AdminSecurity(
+     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_state_index",
+     *     message="You do not have permission to delete this."
+     * )
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function deleteBulkAction(Request $request): RedirectResponse
+    {
+        $stateIds = $this->getBulkStatesFromRequest($request);
+
+        try {
+            $this->getCommandBus()->handle(new BulkDeleteStatesCommand($stateIds));
+            $this->addFlash(
+                'success',
+                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+            );
+        } catch (StateException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        return $this->redirectToRoute('admin_state_index');
+    }
+
+    /**
+     * Toggles state status
+     *
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_state_index")
+     * @DemoRestricted(redirectRoute="admin_state_index")
+     *
+     * @param int $stateId
+     *
+     * @return RedirectResponse
+     */
+    public function toggleStatusAction(int $stateId): RedirectResponse
+    {
+        try {
+            /** @var EditableState $editableState */
+            $editableState = $this->getQueryBus()->handle(new GetStateForEditing($stateId));
+            $this->getCommandBus()->handle(
+                new ToggleStateStatusCommand((int) $stateId, !$editableState->isActive())
+            );
+            $this->addFlash(
+                'success',
+                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+            );
+        } catch (StateException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        return $this->redirectToRoute('admin_state_index');
+    }
+
+    /**
+     * Enables states on bulk action
+     *
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_state_index")
+     * @DemoRestricted(redirectRoute="admin_state_index")
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function bulkEnableAction(Request $request): RedirectResponse
+    {
+        $stateIds = $this->getBulkStatesFromRequest($request);
+
+        try {
+            $this->getCommandBus()->handle(new BulkToggleStateStatusCommand($stateIds, true));
+
+            $this->addFlash(
+                'success',
+                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+            );
+        } catch (StateException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        return $this->redirectToRoute('admin_state_index');
+    }
+
+    /**
+     * Disables states on bulk action
+     *
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_state_index")
+     * @DemoRestricted(redirectRoute="admin_state_index")
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function bulkDisableAction(Request $request): RedirectResponse
+    {
+        $stateIds = $this->getBulkStatesFromRequest($request);
+
+        try {
+            $this->getCommandBus()->handle(new BulkToggleStateStatusCommand($stateIds, false));
+
+            $this->addFlash(
+                'success',
+                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+            );
+        } catch (StateException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        return $this->redirectToRoute('admin_state_index');
+    }
+
+    /**
      * @return array
      */
     private function getStateToolbarButtons(): array
@@ -99,5 +252,48 @@ class StateController extends FrameworkBundleAdminController
         ];
 
         return $toolbarButtons;
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return array
+     */
+    private function getBulkStatesFromRequest(Request $request): array
+    {
+        $stateIds = $request->request->get('state_states_bulk');
+
+        if (!is_array($stateIds)) {
+            return [];
+        }
+
+        foreach ($stateIds as $i => $stateId) {
+            $stateIds[$i] = (int) $stateId;
+        }
+
+        return $stateIds;
+    }
+
+    /**
+     * @return array
+     */
+    private function getErrorMessages(): array
+    {
+        return [
+            DeleteStateException::class => $this->trans(
+                'An error occurred while deleting the object.',
+                'Admin.Notifications.Error'
+            ),
+            StateNotFoundException::class => $this->trans(
+                'The object cannot be loaded (or found)',
+                'Admin.Notifications.Error'
+            ),
+            UpdateStateException::class => [
+                UpdateStateException::FAILED_BULK_UPDATE_STATUS => $this->trans(
+                    'An error occurred while updating the status.',
+                    'Admin.Notifications.Error'
+                ),
+            ],
+        ];
     }
 }

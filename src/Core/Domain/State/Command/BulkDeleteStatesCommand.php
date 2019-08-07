@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,23 +22,45 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
+namespace PrestaShop\PrestaShop\Core\Domain\State\Command;
 
-{% block content %}
-  {% block states_listing %}
-    <div class="row">
-      <div class="col">
-        {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': stateGrid} %}
-      </div>
-    </div>
-  {% endblock %}
-{% endblock %}
+use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
 
-{% block javascripts %}
-  {{ parent() }}
+/**
+ * Command responsible for bulk states deletion
+ */
+class BulkDeleteStatesCommand
+{
+    /**
+     * @var StateId[]
+     */
+    private $stateIds;
 
-  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
-  <script src="{{ asset('themes/new-theme/public/state.bundle.js') }}"></script>
-{% endblock %}
+    /**
+     * @param int[] $stateIds
+     */
+    public function __construct(array $stateIds)
+    {
+        $this->setStateIds($stateIds);
+    }
+
+    /**
+     * @return StateId[]
+     */
+    public function getStateIds(): array
+    {
+        return $this->stateIds;
+    }
+
+    /**
+     * @param array $stateIds
+     */
+    private function setStateIds(array $stateIds)
+    {
+        foreach ($stateIds as $stateId) {
+            $this->stateIds[] = new StateId($stateId);
+        }
+    }
+}

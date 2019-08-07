@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,23 +22,31 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
+namespace PrestaShop\PrestaShop\Adapter\State\CommandHandler;
 
-{% block content %}
-  {% block states_listing %}
-    <div class="row">
-      <div class="col">
-        {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': stateGrid} %}
-      </div>
-    </div>
-  {% endblock %}
-{% endblock %}
+use PrestaShop\PrestaShop\Adapter\State\AbstractStateHandler;
+use PrestaShop\PrestaShop\Core\Domain\State\Command\DeleteStateCommand;
+use PrestaShop\PrestaShop\Core\Domain\State\CommandHandler\DeleteStateHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\State\Exception\DeleteStateException;
 
-{% block javascripts %}
-  {{ parent() }}
+/**
+ * Handles state deletion
+ */
+final class DeleteStateHandler extends AbstractStateHandler implements DeleteStateHandlerInterface
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function handle(DeleteStateCommand $command)
+    {
+        $state = $this->getState($command->getStateId());
 
-  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
-  <script src="{{ asset('themes/new-theme/public/state.bundle.js') }}"></script>
-{% endblock %}
+        if (!$this->deleteState($state)) {
+            throw new DeleteStateException(sprintf(
+                    'Cannot delete State object with id "%s".', $state->id)
+            );
+        }
+    }
+}
