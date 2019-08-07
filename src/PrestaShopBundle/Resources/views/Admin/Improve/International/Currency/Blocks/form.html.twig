@@ -120,4 +120,21 @@
 
   </div>
   {{ form_end(currencyForm) }}
+
+  <!-- Modal -->
+  <div class="modal fade" id="currency_loading_data_modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">{{ 'Loading currency datas'|trans({}, 'Admin.International.Feature') }}</h5>
+        </div>
+        <div class="modal-body">
+          {{ 'Please wait while currency data are being loaded'|trans({}, 'Admin.International.Feature') }}
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary spinner">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
 {% endblock %}
