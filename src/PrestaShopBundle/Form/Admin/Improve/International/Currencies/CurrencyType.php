@@ -147,7 +147,7 @@ class CurrencyType extends TranslatorAwareType
             ])
             ->add('iso_code', TextType::class, [
                 'attr' => [
-                    'readonly' => !$newCurrency && !$customCurrency
+                    'readonly' => !$newCurrency && !$customCurrency,
                 ],
                 'constraints' => [
                     new NotBlank([
@@ -166,7 +166,7 @@ class CurrencyType extends TranslatorAwareType
             ])
             ->add('numeric_iso_code', IntegerType::class, [
                 'attr' => [
-                    'readonly' => !$newCurrency && !$customCurrency
+                    'readonly' => !$newCurrency && !$customCurrency,
                 ],
                 'constraints' => [
                     new NotBlank([
