@@ -27,7 +27,10 @@
 namespace PrestaShop\PrestaShop\Adapter\Currency\CommandHandler;
 
 use Currency;
+use Language;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\InvalidCustomCurrencyException;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
 
 /**
  * Class AbstractCurrencyHandler is responsible for encapsulating common behavior for legacy currency object model.
@@ -36,6 +39,19 @@ use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
  */
 abstract class AbstractCurrencyHandler extends AbstractObjectModelHandler
 {
+    /**
+     * @var LocaleRepository
+     */
+    protected $localeRepoCLDR;
+
+    /**
+     * @param LocaleRepository $localeRepoCLDR
+     */
+    public function __construct(LocaleRepository $localeRepoCLDR)
+    {
+        $this->localeRepoCLDR = $localeRepoCLDR;
+    }
+
     /**
      * Associations conversion rate to given shop ids.
      *
@@ -52,5 +68,54 @@ abstract class AbstractCurrencyHandler extends AbstractObjectModelHandler
         }
 
         $this->updateMultiStoreColumns($entity, $columnsToUpdate);
+    }
+
+    /**
+     * @param string $isoCode
+     *
+     * @throws InvalidCustomCurrencyException
+     */
+    protected function assertCustomCurrencyDoesNotMatchAnyIsoCode($isoCode)
+    {
+        $allLanguages = Language::getLanguages(false);
+        foreach ($allLanguages as $languageData) {
+            // CLDR locale give us the CLDR reference specification
+            $cldrLocale = $this->localeRepoCLDR->getLocale($languageData['locale']);
+            $cldrCurrency = $cldrLocale->getCurrency($isoCode);
+            if (null !== $cldrCurrency) {
+                throw new InvalidCustomCurrencyException(
+                    sprintf(
+                        'Custom currency with iso code "%s" is invalid because it matches a real currency',
+                        $isoCode
+                    ),
+                    InvalidCustomCurrencyException::INVALID_ISO_CODE
+                );
+            }
+        }
+    }
+
+    /**
+     * @param int $numericIsoCode
+     *
+     * @throws InvalidCustomCurrencyException
+     */
+    protected function assertCustomCurrencyDoesNotMatchAnyNumericIsoCode($numericIsoCode)
+    {
+        $allLanguages = Language::getLanguages(false);
+        foreach ($allLanguages as $languageData) {
+            // CLDR locale give us the CLDR reference specification
+            $cldrLocale = $this->localeRepoCLDR->getLocale($languageData['locale']);
+            foreach ($cldrLocale->getAllCurrencies() as $cldrCurrency) {
+                if ($numericIsoCode == $cldrCurrency->getNumericIsoCode()) {
+                    throw new InvalidCustomCurrencyException(
+                        sprintf(
+                            'Custom currency with numeric iso code "%s" is invalid because it matches a real currency',
+                            $numericIsoCode
+                        ),
+                        InvalidCustomCurrencyException::INVALID_NUMERIC_ISO_CODE
+                    );
+                }
+            }
+        }
     }
 }
