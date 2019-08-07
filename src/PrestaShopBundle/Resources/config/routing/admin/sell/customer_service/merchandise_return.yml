@@ -1,0 +1,7 @@
+admin_merchandise_returns_index:
+  path: /
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/CustomerService/MerchandiseReturn:index
+    _legacy_controller: AdminReturn
+#    _legacy_link: AdminReturn
