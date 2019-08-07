@@ -81,14 +81,22 @@ abstract class AbstractDomainFeatureContext implements Context
 
     /**
      * @param string $expectedError
+     * @param int|null $errorCode
      */
-    protected function assertLastErrorIs($expectedError)
+    protected function assertLastErrorIs($expectedError, $errorCode = null)
     {
         if (!$this->lastException instanceof $expectedError) {
             throw new RuntimeException(sprintf(
                 'Last error should be "%s", but got "%s"',
                 $expectedError,
                 $this->lastException ? get_class($this->lastException) : 'null'
+            ));
+        }
+        if (null !== $errorCode && $this->lastException->getCode() !== $errorCode) {
+            throw new RuntimeException(sprintf(
+                'Last error should have code "%s", but has "%s"',
+                $errorCode,
+                $this->lastException ? $this->lastException->getCode() : 'null'
             ));
         }
     }
