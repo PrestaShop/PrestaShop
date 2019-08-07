@@ -24,8 +24,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-use PrestaShopBundle\Entity\Repository\TabRepository;
-
 if (!defined('_PS_VERSION_')) {
     exit;
 }
@@ -53,7 +51,7 @@ class translationtest extends Module
 
         $this->ps_versions_compliancy = array('min' => '1.7.5.0', 'max' => _PS_VERSION_);
 
-        $this->adminControllerName ='AdminTranslationtestFoo';
+        $this->adminControllerName = 'AdminTranslationtestFoo';
         $this->controllers = ['bar']; // this is a front controller
     }
 
@@ -61,6 +59,7 @@ class translationtest extends Module
      * Content for the configuration page
      *
      * @return string
+     *
      * @throws PrestaShopException
      */
     public function getContent()
@@ -71,7 +70,7 @@ class translationtest extends Module
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function install()
     {
@@ -79,7 +78,7 @@ class translationtest extends Module
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function uninstall()
     {
@@ -113,6 +112,7 @@ class translationtest extends Module
      * Uninstalls the tab for the admin controller
      *
      * @return bool
+     *
      * @throws PrestaShopException
      */
     public function uninstallTab()
