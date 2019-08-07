@@ -56,10 +56,12 @@ final class CurrencyFormDataHandler implements FormDataHandlerInterface
     {
         $command = new AddCurrencyCommand(
             $data['iso_code'],
+            (int) $data['numeric_iso_code'],
             (float) $data['exchange_rate'],
+            $data['names'],
+            $data['symbols'],
             $data['active']
         );
-
         $command->setShopIds(is_array($data['shop_association']) ? $data['shop_association'] : []);
 
         /** @var CurrencyId $currencyId */
@@ -76,9 +78,12 @@ final class CurrencyFormDataHandler implements FormDataHandlerInterface
         $command = new EditCurrencyCommand((int) $id);
 
         $command
+            ->setIsoCode($data['iso_code'])
+            ->setNumericIsoCode($data['numeric_iso_code'])
+            ->setLocalizedNames($data['names'])
+            ->setLocalizedSymbols($data['symbols'])
             ->setExchangeRate((float) $data['exchange_rate'])
             ->setIsEnabled($data['active'])
-            ->setIsoCode($data['iso_code'])
             ->setShopIds(is_array($data['shop_association']) ? $data['shop_association'] : [])
         ;
 
