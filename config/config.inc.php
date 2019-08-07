@@ -120,7 +120,7 @@ try {
 } catch (PrestaShopException $e) {
     $e->displayMessage();
 }
-define('_THEME_NAME_', $context->shop->theme->getName());
+define('_THEME_NAME_', $context->shop->theme->getName());@
 define('_PARENT_THEME_NAME_', $context->shop->theme->get('parent') ?: '');
 
 define('__PS_BASE_URI__', $context->shop->getBaseURI());
@@ -131,8 +131,12 @@ require_once $currentDir.'/defines_uri.inc.php';
 global $_MODULES;
 $_MODULES = array();
 
+// $currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
+// $localeCldr = Tools::getContextLocale(Context::getContext());
+
 define('_PS_PRICE_DISPLAY_PRECISION_', Configuration::get('PS_PRICE_DISPLAY_PRECISION'));
-define('_PS_PRICE_COMPUTE_PRECISION_', _PS_PRICE_DISPLAY_PRECISION_);
+//define('_PS_PRICE_DISPLAY_PRECISION_', $localeCldr->getPriceMaxFractionDigit($currency->iso_code));
+define('_PS_PRICE_COMPUTE_PRECISION_', 6);
 
 /* Load all languages */
 Language::loadLanguages();
