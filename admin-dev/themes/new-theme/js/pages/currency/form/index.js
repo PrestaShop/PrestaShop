@@ -43,23 +43,7 @@ $(() => {
       $(currencyFormMap.isCustomCheckbox).prop('checked', false);
       $(currencyFormMap.isoCodeSelector).prop('readonly', true);
       $(currencyFormMap.numericIsoCodeSelector).prop('readonly', true);
-
-      const getCurrencyData = getCLDRDataUrl.replace('CURRENCY_ISO_CODE', selectedISOCode);
-      $.get(getCurrencyData).then((currencyData) => {
-        for (let langId in currencyData.names) {
-          let langNameSelector = currencyFormMap.namesSelector.replace('LANG_ID', langId);
-          $(langNameSelector).val(currencyData.names[langId]);
-        }
-        for (let langId in currencyData.symbols) {
-          let langSymbolSelector = currencyFormMap.symbolsSelector.replace('LANG_ID', langId);
-          $(langSymbolSelector).val(currencyData.symbols[langId]);
-        }
-        $(currencyFormMap.isoCodeSelector).val(currencyData.iso_code);
-        $(currencyFormMap.numericIsoCodeSelector).val(currencyData.numeric_iso_code);
-        if (currencyData.exchange_rate) {
-          $(currencyFormMap.exchangeRateSelector).val(currencyData.exchange_rate);
-        }
-      })
+      resetCurrencyData(selectedISOCode);
     } else {
       $(currencyFormMap.isCustomCheckbox).prop('checked', true);
       $(currencyFormMap.isoCodeSelector).prop('readonly', false);
@@ -74,6 +58,31 @@ $(() => {
       $(currencyFormMap.numericIsoCodeSelector).prop('readonly', false);
     }
   });
+
+  $(currencyFormMap.resetDefaultSettingsSelector).click((event) => {
+    resetCurrencyData($(currencyFormMap.isoCodeSelector).val());
+
+    return false;
+  });
+
+  function resetCurrencyData(selectedISOCode) {
+    const getCurrencyData = getCLDRDataUrl.replace('CURRENCY_ISO_CODE', selectedISOCode);
+    $.get(getCurrencyData).then((currencyData) => {
+      for (let langId in currencyData.names) {
+        let langNameSelector = currencyFormMap.namesSelector.replace('LANG_ID', langId);
+        $(langNameSelector).val(currencyData.names[langId]);
+      }
+      for (let langId in currencyData.symbols) {
+        let langSymbolSelector = currencyFormMap.symbolsSelector.replace('LANG_ID', langId);
+        $(langSymbolSelector).val(currencyData.symbols[langId]);
+      }
+      $(currencyFormMap.isoCodeSelector).val(currencyData.iso_code);
+      $(currencyFormMap.numericIsoCodeSelector).val(currencyData.numeric_iso_code);
+      if (currencyData.exchange_rate) {
+        $(currencyFormMap.exchangeRateSelector).val(currencyData.exchange_rate);
+      }
+    })
+  }
 
   function initFields() {
     const selectedISOCode = $currencySelector.val();
