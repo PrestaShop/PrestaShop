@@ -67,14 +67,12 @@ final class AddCurrencyHandler extends AbstractCurrencyHandler implements AddCur
      */
     public function handle(AddCurrencyCommand $command)
     {
-        if ($command->isCustom()) {
-            $this->assertCustomCurrencyDoesNotMatchAnyIsoCode($command->getIsoCode()->getValue());
-            $this->assertCustomCurrencyDoesNotMatchAnyNumericIsoCode($command->getNumericIsoCode()->getValue());
-        } else {
-            $this->assertIsoCodesAreMatching($command);
-        }
-        $this->assertCurrencyWithIsoCodeDoesNotExist($command->getIsoCode()->getValue());
-        $this->assertCurrencyWithNumericIsoCodeDoesNotExist($command->getNumericIsoCode()->getValue());
+        $this->assertCustomCurrencyDoesNotMatchAnyIsoCode($command);
+        $this->assertCustomCurrencyDoesNotMatchAnyNumericIsoCode($command);
+        $this->assertIsoCodesAreMatching($command);
+
+        $this->assertCurrencyWithIsoCodeDoesNotExist($command);
+        $this->assertCurrencyWithNumericIsoCodeDoesNotExist($command);
 
         try {
             $entity = new Currency();
@@ -118,12 +116,13 @@ final class AddCurrencyHandler extends AbstractCurrencyHandler implements AddCur
     }
 
     /**
-     * @param string $isoCode
+     * @param AddCurrencyCommand $command
      *
      * @throws CurrencyConstraintException
      */
-    private function assertCurrencyWithIsoCodeDoesNotExist($isoCode)
+    private function assertCurrencyWithIsoCodeDoesNotExist(AddCurrencyCommand $command)
     {
+        $isoCode = $command->getIsoCode()->getValue();
         if (Currency::exists($isoCode)) {
             throw new CurrencyConstraintException(
                 sprintf(
@@ -136,12 +135,13 @@ final class AddCurrencyHandler extends AbstractCurrencyHandler implements AddCur
     }
 
     /**
-     * @param int $numericIsoCode
+     * @param AddCurrencyCommand $command
      *
      * @throws CurrencyConstraintException
      */
-    private function assertCurrencyWithNumericIsoCodeDoesNotExist($numericIsoCode)
+    private function assertCurrencyWithNumericIsoCodeDoesNotExist(AddCurrencyCommand $command)
     {
+        $numericIsoCode = $command->getNumericIsoCode()->getValue();
         if (Currency::getIdByNumericIsoCode($numericIsoCode)) {
             throw new CurrencyConstraintException(
                 sprintf(
