@@ -13,7 +13,7 @@ They should be named following this convention:
 
 \*action\*()
 
-For example, the method allowing a user to login in the BO should be named: `login()`. Since it's belonging to the `BO_login` page, it's obvious that it targets the form in the login page. However, at the test level, we don't need to know what's happening exactly in the page to allow us to `login`. All the low-level logic is handled by the page object. 
+For example, the method allowing a user to login in the BO should be named: `login()`. Since it's belonging to the `login` page, it's obvious that it targets the form in the login page. However, at the test level, we don't need to know what's happening exactly in the page to allow us to `login`. All the low-level logic is handled by the page object. 
 
 ### Pages
 Pages names are the first hint you get when browsing pages lists, so it's really **important** that the name conveys the most information.
@@ -22,7 +22,7 @@ They should be named following this convention:
 
 \*office\*\_\*pagename\*
 
-For example, the login page in the BO should be named `BO_login`.
+For example, the login page in the BO should be named `login`.
 
 It's *critical* that the page name allow us to find immediately what application page it refers to.
 
@@ -56,14 +56,14 @@ Each selector must belong to a certain type. The whole list (not exhaustive) is 
 ### Coding conventions
 Variables representing pages should always be named the same as the page they're referencing, but in **all caps**. For example, your test script might look like this:
 ```javascript
-require('BO/BO_login.js');
+require('BO/login.js');
 
-const BO_LOGIN = new BO_login();
+const LOGIN = new login();
 
 ...
 
 test('should login in the BO', () => {
-  BO_LOGIN.setCredentials(EMAIL, PASSWD);
-  BO_LOGIN.login();
+  LOGIN.setCredentials(EMAIL, PASSWD);
+  LOGIN.login();
 });
 ```

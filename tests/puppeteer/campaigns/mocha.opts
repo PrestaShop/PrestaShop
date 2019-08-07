@@ -1,4 +1,4 @@
---require ./test/utils/helpers.js
+--require ./campaigns/utils/helpers.js
 --timeout 0
 --slow 45000
 --reporter mochawesome

@@ -1,27 +1,27 @@
 // importing pages
-const BO_LOGIN_PAGE = require('../../pages/BO/BO_login');
-const BO_DASHBOARD_PAGE = require('../../pages/BO/BO_dashboard');
-const BO_COMMON_PAGE = require('../../pages/BO/BO_commonPage');
-const BO_ORDERS_PAGE = require('../../pages/BO/BO_orders');
-const BO_PRODUCTS_PAGE = require('../../pages/BO/BO_products');
-const BO_CUSTOMERS_PAGE = require('../../pages/BO/BO_customers');
+const LOGIN_PAGE = require('../../pages/BO/login');
+const DASHBOARD_PAGE = require('../../pages/BO/dashboard');
+const COMMON_PAGE = require('../../pages/BO/commonPage');
+const ORDERS_PAGE = require('../../pages/BO/orders');
+const PRODUCTS_PAGE = require('../../pages/BO/products');
+const CUSTOMERS_PAGE = require('../../pages/BO/customers');
 
 let page;
-let BO_LOGIN;
-let BO_DASHBOARD;
-let BO_COMMON;
-let BO_ORDERS;
-let BO_PRODUCTS;
-let BO_CUSTOMERS;
+let LOGIN;
+let DASHBOARD;
+let COMMON;
+let ORDERS;
+let PRODUCTS;
+let CUSTOMERS;
 // creating pages objects in a function
 const init = async () => {
   page = await global.browser.newPage();
-  BO_LOGIN = await (new BO_LOGIN_PAGE(page));
-  BO_DASHBOARD = await (new BO_DASHBOARD_PAGE(page));
-  BO_COMMON = await (new BO_COMMON_PAGE(page));
-  BO_ORDERS = await (new BO_ORDERS_PAGE(page));
-  BO_PRODUCTS = await (new BO_PRODUCTS_PAGE(page));
-  BO_CUSTOMERS = await (new BO_CUSTOMERS_PAGE(page));
+  LOGIN = await (new LOGIN_PAGE(page));
+  DASHBOARD = await (new DASHBOARD_PAGE(page));
+  COMMON = await (new COMMON_PAGE(page));
+  ORDERS = await (new ORDERS_PAGE(page));
+  PRODUCTS = await (new PRODUCTS_PAGE(page));
+  CUSTOMERS = await (new CUSTOMERS_PAGE(page));
 };
 
 /*
@@ -29,37 +29,37 @@ const init = async () => {
   Crawl a few key pages
   Logout from the BO
  */
-global.scenario('Crawl into BO et check a few key pages', async () => {
+global.scenario('Crawl into BO and check a few key pages', async () => {
   test('should login into BO', async () => {
-    await BO_LOGIN.goTo(global.URL_BO);
-    await BO_LOGIN.login(global.EMAIL, global.PASSWD);
-    const pageTitle = await BO_DASHBOARD.getPageTitle();
-    await global.expect(pageTitle).to.contains(BO_DASHBOARD.pageTitle);
-    await BO_COMMON.closeOnboardingModal();
+    await LOGIN.goTo(global.URL_BO);
+    await LOGIN.login(global.EMAIL, global.PASSWD);
+    const pageTitle = await DASHBOARD.getPageTitle();
+    await global.expect(pageTitle).to.contains(DASHBOARD.pageTitle);
+    await COMMON.closeOnboardingModal();
   });
 
   test('should visit the Orders page', async () => {
-    await BO_COMMON.goToSubMenu(BO_COMMON.ordersParentLink, BO_COMMON.ordersLink);
-    const pageTitle = await BO_ORDERS.getPageTitle();
-    await global.expect(pageTitle).to.contains(BO_ORDERS.pageTitle);
+    await COMMON.goToSubMenu(COMMON.ordersParentLink, COMMON.ordersLink);
+    const pageTitle = await ORDERS.getPageTitle();
+    await global.expect(pageTitle).to.contains(ORDERS.pageTitle);
   });
 
   test('should visit the Products page', async () => {
-    await BO_COMMON.goToSubMenu(BO_COMMON.productsParentLink, BO_COMMON.productsLink);
-    const pageTitle = await BO_PRODUCTS.getPageTitle();
-    await global.expect(pageTitle).to.contains(BO_PRODUCTS.pageTitle);
+    await COMMON.goToSubMenu(COMMON.productsParentLink, COMMON.productsLink);
+    const pageTitle = await PRODUCTS.getPageTitle();
+    await global.expect(pageTitle).to.contains(PRODUCTS.pageTitle);
   });
 
   test('should visit the Customers page', async () => {
-    await BO_COMMON.goToSubMenu(BO_COMMON.customersParentLink, BO_COMMON.customersLink);
-    const pageTitle = await BO_CUSTOMERS.getPageTitle();
-    await global.expect(pageTitle).to.contains(BO_CUSTOMERS.pageTitle);
+    await COMMON.goToSubMenu(COMMON.customersParentLink, COMMON.customersLink);
+    const pageTitle = await CUSTOMERS.getPageTitle();
+    await global.expect(pageTitle).to.contains(CUSTOMERS.pageTitle);
   });
 
   test('should logout from the BO', async () => {
-    // await BO_LOGIN.goTo(global.URL_BO);
-    await BO_COMMON.logoutBO();
-    const pageTitle = await BO_LOGIN.getPageTitle();
-    await global.expect(pageTitle).to.contains(BO_LOGIN.pageTitle);
+    // await LOGIN.goTo(global.URL_BO);
+    await COMMON.logoutBO();
+    const pageTitle = await LOGIN.getPageTitle();
+    await global.expect(pageTitle).to.contains(LOGIN.pageTitle);
   });
 }, init, true);

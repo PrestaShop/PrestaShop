@@ -1,6 +1,6 @@
 const CommonPage = require('../commonPage');
 
-module.exports = class BO_DASHBOARD extends CommonPage {
+module.exports = class DASHBOARD extends CommonPage {
   constructor(page) {
     super(page);
 
