@@ -6,10 +6,10 @@
     "test": "test"
   },
   "scripts": {
-    "linkchecker": "node test/linkchecker.js",
+    "linkchecker": "node campaigns/linkchecker.js",
     "lint": "eslint  --fix --ignore-path .gitignore .",
-    "specific-test": "./node_modules/mocha/bin/mocha test/$TEST_PATH",
-    "smoke-tests": "./node_modules/mocha/bin/mocha test/smoke/*"
+    "specific-test": "./node_modules/mocha/bin/mocha campaigns/$TEST_PATH",
+    "smoke-tests": "./node_modules/mocha/bin/mocha campaigns/smoke/*"
   },
   "repository": {
     "type": "git",

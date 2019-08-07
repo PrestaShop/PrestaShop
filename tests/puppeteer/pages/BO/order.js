@@ -1,10 +1,10 @@
 const CommonPage = require('../commonPage');
 
-module.exports = class BO_PRODUCTS extends CommonPage {
+module.exports = class Order extends CommonPage {
   constructor(page) {
     super(page);
 
-    this.pageTitle = 'Products •';
+    this.pageTitle = 'Orders •';
   }
 
   /*
