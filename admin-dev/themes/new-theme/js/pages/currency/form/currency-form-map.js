@@ -34,5 +34,6 @@ export default {
   symbolsSelector: '#currency_symbols_LANG_ID',
   isoCodeSelector: '#currency_iso_code',
   numericIsoCodeSelector: '#currency_numeric_iso_code',
-  exchangeRateSelector: '#currency_exchange_rate'
+  exchangeRateSelector: '#currency_exchange_rate',
+  resetDefaultSettingsSelector: '#currency_reset_default_settings',
 }
