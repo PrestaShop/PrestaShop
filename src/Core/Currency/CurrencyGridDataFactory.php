@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 use Tools;
 
 /**
@@ -44,14 +45,22 @@ final class CurrencyGridDataFactory implements GridDataFactoryInterface
     private $gridDataFactory;
 
     /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
      * CurrencyGridDataFactory constructor.
      *
      * @param GridDataFactoryInterface $gridDataFactory
+     * @param TranslatorInterface $translator
      */
     public function __construct(
-        GridDataFactoryInterface $gridDataFactory
+        GridDataFactoryInterface $gridDataFactory,
+        TranslatorInterface $translator
     ) {
         $this->gridDataFactory = $gridDataFactory;
+        $this->translator = $translator;
     }
 
     /**
@@ -83,6 +92,12 @@ final class CurrencyGridDataFactory implements GridDataFactoryInterface
         foreach ($records as $key => $record) {
             $result[$key] = $record;
             $result[$key]['currency'] = Tools::ucfirst($result[$key]['name']);
+            if (isset($result[$key]['edited']) && $result[$key]['edited']) {
+                $result[$key]['currency'] .= sprintf(
+                    ' (%s)',
+                    $this->translator->trans('Edited', [], 'Admin.International.Feature')
+                );
+            }
             $result[$key]['conversion_rate'] = (float) $result[$key]['conversion_rate'];
         }
 
