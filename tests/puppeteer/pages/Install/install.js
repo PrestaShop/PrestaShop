@@ -1,6 +1,6 @@
 const CommonPage = require('../commonPage');
 
-module.exports = class INSTALL extends CommonPage {
+module.exports = class Install extends CommonPage {
   constructor(page) {
     super(page);
 

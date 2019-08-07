@@ -1,6 +1,6 @@
 const CommonPage = require('../commonPage');
 
-module.exports = class FO_CART extends CommonPage {
+module.exports = class Cart extends CommonPage {
   constructor(page) {
     super(page);
 

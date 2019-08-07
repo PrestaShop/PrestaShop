@@ -1,56 +1,56 @@
 // Importing pages
-const INSTALL_PAGE = require('../../pages/Install/install');
+const InstallPage = require('../../pages/Install/install');
 
 let page;
-let INSTALL;
+let installPage;
 
 // Init objects needed
 const init = async () => {
   page = await global.browser.newPage();
-  INSTALL = await (new INSTALL_PAGE(page));
+  installPage = await (new InstallPage(page));
 };
 
 // Scenario
 global.scenario('Install Prestashop', async () => {
   test('should open the Install page', async () => {
-    await INSTALL.goTo(global.URL_INSTALL);
-    await INSTALL.checkStepTitle(INSTALL.firstStepPageTitle, INSTALL.firstStepFrTitle);
+    await installPage.goTo(global.URL_INSTALL);
+    await installPage.checkStepTitle(installPage.firstStepPageTitle, installPage.firstStepFrTitle);
   });
   test('should change language to English and check title', async () => {
-    await INSTALL.setInstallLanguage();
-    await INSTALL.checkStepTitle(INSTALL.firstStepPageTitle, INSTALL.firstStepEnTitle);
+    await installPage.setInstallLanguage();
+    await installPage.checkStepTitle(installPage.firstStepPageTitle, installPage.firstStepEnTitle);
   });
   test('should click on next and go to step \'License Agreements\'', async () => {
-    await INSTALL.nextStep();
-    await INSTALL.checkStepTitle(INSTALL.secondStepPageTitle, INSTALL.secondStepEnTitle);
+    await installPage.nextStep();
+    await installPage.checkStepTitle(installPage.secondStepPageTitle, installPage.secondStepEnTitle);
   });
   test('should agree to terms and conditions and go to step \'System compatibility\'', async () => {
-    await INSTALL.agreeToTermsAndConditions();
-    await INSTALL.nextStep();
-    if (!INSTALL.elementVisible(INSTALL.thirdStepFinishedListItem)) {
-      await INSTALL.checkStepTitle(INSTALL.thirdStepPageTitle, INSTALL.thirdStepEnTitle);
+    await installPage.agreeToTermsAndConditions();
+    await installPage.nextStep();
+    if (!installPage.elementVisible(installPage.thirdStepFinishedListItem)) {
+      await installPage.checkStepTitle(installPage.thirdStepPageTitle, installPage.thirdStepEnTitle);
     }
   });
   test('should click on next and go to step \'shop Information\'', async () => {
-    if (!INSTALL.elementVisible(INSTALL.thirdStepFinishedListItem)) {
-      await INSTALL.nextStep();
+    if (!installPage.elementVisible(installPage.thirdStepFinishedListItem)) {
+      await installPage.nextStep();
     }
-    await INSTALL.checkStepTitle(INSTALL.fourthStepPageTitle, INSTALL.fourthStepEnTitle);
+    await installPage.checkStepTitle(installPage.fourthStepPageTitle, installPage.fourthStepEnTitle);
   });
   test('should fill shop Information form and go to step \'Database Configuration\'', async () => {
-    await INSTALL.fillInformationForm();
-    await INSTALL.nextStep();
-    await INSTALL.checkStepTitle(INSTALL.fifthStepPageTitle, INSTALL.fifthStepEnTitle);
+    await installPage.fillInformationForm();
+    await installPage.nextStep();
+    await installPage.checkStepTitle(installPage.fifthStepPageTitle, installPage.fifthStepEnTitle);
   });
   test('should fill database configuration form and check database connection', async () => {
-    await INSTALL.fillDatabaseForm();
-    await INSTALL.checkDatabaseConnected();
+    await installPage.fillDatabaseForm();
+    await installPage.checkDatabaseConnected();
   });
   test('should finish installation and check that installation is successful', async () => {
-    await INSTALL.nextStep();
-    await INSTALL.checkInstallationSuccessful();
+    await installPage.nextStep();
+    await installPage.checkInstallationSuccessful();
   });
   test('should go to FO and check that Prestashop logo exists', async () => {
-    await INSTALL.goAndCheckFOAfterInstall();
+    await installPage.goAndCheckFOAfterInstall();
   });
 }, init, true);
