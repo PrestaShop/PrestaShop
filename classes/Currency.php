@@ -25,6 +25,7 @@
  */
 
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\CurrencyInterface;
 
 class CurrencyCore extends ObjectModel
 {
@@ -918,8 +919,8 @@ class CurrencyCore extends ObjectModel
             }
 
             // Symbol is localized, we check if it was manually edited
-            $symbol = (string) $cldrCurrency->getSymbol() ?: $this->iso_code;
-            if (!empty($originalSymbols[$language->id]) && $symbol !== $originalSymbols[$language->id]) {
+            $symbol = (string) $cldrCurrency->getSymbol(CurrencyInterface::SYMBOL_TYPE_DEFAULT) ?: $this->iso_code;
+            if (!empty($originalSymbols[$language->id]) && $symbol != $originalSymbols[$language->id]) {
                 $symbol = $originalSymbols[$language->id];
                 $this->edited = true;
             }
@@ -927,7 +928,7 @@ class CurrencyCore extends ObjectModel
 
             // Name is localized, we check if it was manually edited
             $name = $cldrCurrency->getDisplayName();
-            if (!empty($originalNames[$language->id]) && $name !== $originalNames[$language->id]) {
+            if (!empty($originalNames[$language->id]) && $name != $originalNames[$language->id]) {
                 $name = $originalNames[$language->id];
                 $this->edited = true;
             }
