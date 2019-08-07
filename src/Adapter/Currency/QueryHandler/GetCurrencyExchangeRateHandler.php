@@ -73,8 +73,8 @@ class GetCurrencyExchangeRateHandler implements GetCurrencyExchangeRateHandlerIn
         } else {
             foreach ($data->currency as $obj) {
                 if ((string) ($obj['iso_code']) == $query->getIsoCode()->getValue()) {
-
                     $rate = (float) $obj['rate'];
+
                     return new ExchangeRate(round($rate / $defaultExchangeRate, 6));
                 }
             }

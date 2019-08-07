@@ -88,6 +88,19 @@
           }) }}
         {% endif %}
 
+        {% if currencyForm.vars.data.id is defined %}
+          <div class="form-group row ">
+            <label for="currency_reset_default_settings" class="form-control-label">
+            </label>
+            <div class="col-sm">
+              <button id="currency_reset_default_settings" class="btn btn-outline-secondary">
+                <i class="material-icons">refresh</i>
+                {{ 'Reset default settings'|trans({}, 'Admin.International.Feature') }}
+              </button>
+            </div>
+          </div>
+        {% endif %}
+
         {% block currency_form_rest %}
           {{ form_rest(currencyForm) }}
         {% endblock %}
