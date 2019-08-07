@@ -93,29 +93,13 @@ final class EditCurrencyHandler extends AbstractCurrencyHandler implements EditC
                 );
             }
             $this->assertCurrencyImmutableFields($entity, $command);
-            $this->assertDefaultCurrencyIsNotBeingRemovedOrDisabledFromShop(
-                $entity,
-                $command->getShopIds()
-            );
+            $this->assertDefaultCurrencyIsNotBeingRemovedOrDisabledFromShop($entity, $command->getShopIds());
 
-            if ($command->isCustom()) {
-                if (null !== $command->getIsoCode()) {
-                    $this->assertCustomCurrencyDoesNotMatchAnyIsoCode($command->getIsoCode()->getValue());
-                }
-                if (null !== $command->getNumericIsoCode()) {
-                    $this->assertCustomCurrencyDoesNotMatchAnyNumericIsoCode($command->getNumericIsoCode()->getValue());
-                }
-            }
-            $this->assertOtherCurrencyWithIsoCodeDoesNotExist(
-                $command->getCurrencyId()->getValue(),
-                $entity->iso_code,
-                $command->getIsoCode()->getValue()
-            );
-            $this->assertOtherCurrencyWithNumericIsoCodeDoesNotExist(
-                $command->getCurrencyId()->getValue(),
-                $entity->numeric_iso_code,
-                $command->getNumericIsoCode()->getValue()
-            );
+            $this->assertCustomCurrencyDoesNotMatchAnyIsoCode($command);
+            $this->assertCustomCurrencyDoesNotMatchAnyNumericIsoCode($command);
+
+            $this->assertOtherCurrencyWithIsoCodeDoesNotExist($entity, $command);
+            $this->assertOtherCurrencyWithNumericIsoCodeDoesNotExist($entity, $command);
 
             //todo: if the immutable check is validated by PO then these assignments become useless
             if (null !== $command->getIsoCode()) {
@@ -164,14 +148,20 @@ final class EditCurrencyHandler extends AbstractCurrencyHandler implements EditC
      * When editing the currency it checks if new iso code does not exist
      * so it will not create multiple currencies with same iso codes,
      *
-     * @param int $currencyId
-     * @param string $currentIsoCode
-     * @param string $newIsoCode
+     * @param Currency $currency
+     * @param EditCurrencyCommand $command
      *
      * @throws CurrencyConstraintException
      */
-    private function assertOtherCurrencyWithIsoCodeDoesNotExist($currencyId, $currentIsoCode, $newIsoCode)
+    private function assertOtherCurrencyWithIsoCodeDoesNotExist(Currency $currency, EditCurrencyCommand $command)
     {
+        if (null === $command->getIsoCode()) {
+            return;
+        }
+
+        $currencyId = $command->getCurrencyId()->getValue();
+        $currentIsoCode = $currency->iso_code;
+        $newIsoCode = $command->getIsoCode()->getValue();
         if ($currentIsoCode === $newIsoCode) {
             return;
         }
@@ -201,14 +191,20 @@ final class EditCurrencyHandler extends AbstractCurrencyHandler implements EditC
      * When editing the currency it checks if new numeric iso code does not exist
      * so it will not create multiple currencies with same numeric iso codes,
      *
-     * @param int $currencyId
-     * @param int $currentNumericIsoCode
-     * @param int $newNumericIsoCode
+     * @param Currency $currency
+     * @param EditCurrencyCommand $command
      *
      * @throws CurrencyConstraintException
      */
-    private function assertOtherCurrencyWithNumericIsoCodeDoesNotExist($currencyId, $currentNumericIsoCode, $newNumericIsoCode)
+    private function assertOtherCurrencyWithNumericIsoCodeDoesNotExist(Currency $currency, EditCurrencyCommand $command)
     {
+        if (null === $command->getNumericIsoCode()) {
+            return;
+        }
+
+        $currencyId = $command->getCurrencyId()->getValue();
+        $currentNumericIsoCode = $currency->numeric_iso_code;
+        $newNumericIsoCode = $command->getNumericIsoCode()->getValue();
         if ($currentNumericIsoCode === $newNumericIsoCode) {
             return;
         }
