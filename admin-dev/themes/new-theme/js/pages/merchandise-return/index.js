@@ -1,4 +1,4 @@
-{#**
+/**
  * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,25 +21,19 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% set enableSidebar = true %}
-{% set layoutTitle = 'Merchandise Returns'|trans({}, 'Admin.Orderscustomers.Feature') %}
+import Grid from "../../components/grid/grid";
+import SortingExtension from "../../components/grid/extension/sorting-extension";
+import FiltersResetExtension from "../../components/grid/extension/filters-reset-extension";
+import FiltersSubmitButtonEnablerExtension
+  from "../../components/grid/extension/filters-submit-button-enabler-extension";
 
-{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
+const $ = window.$;
 
-{% block content %}
-  {% block merchandise_returns_listing %}
-    <div class="row">
-      <div class="col-12">
-        {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': merchandiseReturnsGrid} %}
-      </div>
-    </div>
-  {% endblock %}
-{% endblock %}
-
-{% block javascripts %}
-  {{ parent() }}
-
-  <script src="{{ asset('themes/new-theme/public/merchandise_return.bundle.js') }}"></script>
-{% endblock %}
+$(() => {
+  const grid = new Grid('merchandise_return');
+  grid.addExtension(new SortingExtension());
+  grid.addExtension(new FiltersResetExtension());
+  grid.addExtension(new FiltersSubmitButtonEnablerExtension());
+});
