@@ -74,6 +74,11 @@ class EditCurrencyCommand
     private $isEnabled;
 
     /**
+     * @var bool
+     */
+    private $isCustom;
+
+    /**
      * @var int[]
      */
     private $shopIds;
@@ -236,6 +241,26 @@ class EditCurrencyCommand
     public function setIsEnabled($isEnabled)
     {
         $this->isEnabled = $isEnabled;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCustom()
+    {
+        return $this->isCustom;
+    }
+
+    /**
+     * @param bool $isCustom
+     *
+     * @return self
+     */
+    public function setIsCustom($isCustom)
+    {
+        $this->isCustom = $isCustom;
 
         return $this;
     }
