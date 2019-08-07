@@ -144,7 +144,7 @@ final class MerchandiseReturnQueryBuilder extends AbstractDoctrineQueryBuilder
         $allowedFilters = [
             'id_order_return',
             'id_order',
-            'name',
+            'status',
             'date_add',
         ];
 
@@ -153,8 +153,22 @@ final class MerchandiseReturnQueryBuilder extends AbstractDoctrineQueryBuilder
                 continue;
             }
 
+            if ('id_order' === $filterName) {
+                $qb->andWhere('o.`' . $filterName . '` LIKE :' . $filterName);
+                $qb->setParameter($filterName, '%' . $filterValue . '%');
+
+                continue;
+            }
+
+            if ('status' === $filterName) {
+                $qb->andWhere('orsl.`name` LIKE :' . $filterName);
+                $qb->setParameter($filterName, '%' . $filterValue . '%');
+
+                continue;
+            }
+
             if ('date_add' === $filterName) {
-                $qb->andWhere('r.date_add >= :date_from AND c.date_add <= :date_to');
+                $qb->andWhere('r.date_add >= :date_from AND r.date_add <= :date_to');
                 $qb->setParameter('date_from', sprintf('%s 0:0:0', $filterValue['from']));
                 $qb->setParameter('date_to', sprintf('%s 23:59:59', $filterValue['to']));
 

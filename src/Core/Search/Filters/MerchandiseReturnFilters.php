@@ -34,7 +34,6 @@ use PrestaShop\PrestaShop\Core\Search\Filters;
  */
 final class MerchandiseReturnFilters extends Filters
 {
-    /** @var string */
     protected $filterId = MerchandiseReturnGridDefinitionFactory::GRID_ID;
 
     /**
