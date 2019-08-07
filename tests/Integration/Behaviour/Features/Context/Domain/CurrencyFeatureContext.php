@@ -37,6 +37,8 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Command\EditCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\ToggleCurrencyStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDeleteDefaultCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDisableDefaultCurrencyException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\ImmutableCurrencyFieldException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\InvalidCustomCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
@@ -184,18 +186,43 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then I should get error that custom currency has invalid iso code
+     * @Then /^I should get error that custom currency has invalid (isoCode|numericIsoCode)$/
      */
-    public function assertLastErrorIsInvalidIsoCodeCustomCurrency()
+    public function assertLastErrorIsInvalidCustomCurrency($errorType)
     {
-        $this->assertLastErrorIs(InvalidCustomCurrencyException::class, InvalidCustomCurrencyException::INVALID_ISO_CODE);
+        $errorCode = 'isoCode' == $errorType ? InvalidCustomCurrencyException::INVALID_ISO_CODE : InvalidCustomCurrencyException::INVALID_NUMERIC_ISO_CODE;
+
+        $this->assertLastErrorIs(InvalidCustomCurrencyException::class, $errorCode);
     }
 
     /**
-     * @Then I should get error that custom currency has invalid numeric iso code
+     * @Then /^I should get error that (isoCode|numericIsoCode|custom) is immutable$/
      */
-    public function assertLastErrorIsInvalidNumericIsoCodeCustomCurrency()
+    public function assertLastErrorIsImmutableCurrencyField($errorType)
     {
-        $this->assertLastErrorIs(InvalidCustomCurrencyException::class, InvalidCustomCurrencyException::INVALID_NUMERIC_ISO_CODE);
+        switch ($errorType) {
+            case 'isoCode':
+                $errorCode = ImmutableCurrencyFieldException::IMMUTABLE_ISO_CODE;
+                break;
+            case 'numericIsoCode':
+                $errorCode = ImmutableCurrencyFieldException::IMMUTABLE_NUMERIC_ISO_CODE;
+                break;
+            case 'custom':
+                $errorCode = ImmutableCurrencyFieldException::IMMUTABLE_CUSTOM;
+                break;
+            default:
+                $errorCode = null;
+                break;
+        }
+
+        $this->assertLastErrorIs(ImmutableCurrencyFieldException::class, $errorCode);
+    }
+
+    /**
+     * @Then I should get error that currency already exists
+     */
+    public function assertLastErrorIsCurrencyAlreadyExists()
+    {
+        $this->assertLastErrorIs(CurrencyConstraintException::class, CurrencyConstraintException::CURRENCY_ALREADY_EXISTS);
     }
 }
