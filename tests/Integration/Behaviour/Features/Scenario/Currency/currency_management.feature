@@ -82,6 +82,69 @@ Feature: Currency Management
       | name             | Euro  |
       | symbol           | €     |
       | is_enabled       | 1     |
+      | is_custom        | 0     |
       | shop_association | shop1 |
     When I delete currency "currency4"
     Then "EUR" currency should be deleted
+
+  Scenario: Adding a new instance of deleted currency should be allowed
+    When I add new currency "currency5" with following properties:
+      | iso_code         | EUR   |
+      | numeric_iso_code | 978   |
+      | exchange_rate    | 0.88  |
+      | name             | Euro  |
+      | symbol           | €     |
+      | is_enabled       | 1     |
+      | is_custom        | 0     |
+      | shop_association | shop1 |
+    Then currency "currency5" should be "EUR"
+    And currency "currency5" exchange rate should be 0.88
+    And currency "currency5" numeric iso code should be 978
+    And currency "currency5" name should be "Euro"
+    And currency "currency5" symbol should be "€"
+    And currency "currency5" should have custom false
+    And currency "currency5" should have edited false
+    And currency "currency5" should have status enabled
+    And currency "currency5" should be available in shop "shop1"
+
+  Scenario: Adding invalid custom currency
+    When I add new currency "currency6" with following properties:
+      | iso_code         | EUR       |
+      | numeric_iso_code | 978       |
+      | exchange_rate    | 0.88      |
+      | name             | My Euros  |
+      | symbol           | €         |
+      | is_enabled       | 1         |
+      | is_custom        | 1         |
+      | shop_association | shop1     |
+    Then I should get error that custom currency has invalid iso code
+    When I add new currency "currency6" with following properties:
+      | iso_code         | CST       |
+      | numeric_iso_code | 978       |
+      | exchange_rate    | 0.88      |
+      | name             | My Euros  |
+      | symbol           | €         |
+      | is_enabled       | 1         |
+      | is_custom        | 1         |
+      | shop_association | shop1     |
+    Then I should get error that custom currency has invalid numeric iso code
+
+  Scenario: Adding and editing custom currency
+    When I add new currency "currency7" with following properties:
+      | iso_code         | CST          |
+      | numeric_iso_code | 777          |
+      | exchange_rate    | 0.77         |
+      | name             | Custom Money |
+      | symbol           | @            |
+      | is_enabled       | 1            |
+      | is_custom        | 1            |
+      | shop_association | shop1        |
+    Then currency "currency7" should be "CST"
+    And currency "currency7" exchange rate should be 0.77
+    And currency "currency7" numeric iso code should be 777
+    And currency "currency7" name should be "Custom Money"
+    And currency "currency7" symbol should be "@"
+    And currency "currency7" should have custom false
+    And currency "currency7" should have edited true
+    And currency "currency7" should have status enabled
+    And currency "currency7" should be available in shop "shop1"
