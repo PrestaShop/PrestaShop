@@ -29,9 +29,10 @@ namespace Tests\Integration\Behaviour\Features\Context;
 use Context;
 use Currency;
 use Configuration;
-use DbQuery;
 use Db;
+use DbQuery;
 use RuntimeException;
+use Cache;
 
 class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
 {
@@ -50,6 +51,7 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
     public function storePreviousCurrencyId()
     {
         $this->previousDefaultCurrencyId = Configuration::get('PS_CURRENCY_DEFAULT');
+        Cache::clean('Currency::*');
     }
 
     /**
@@ -270,6 +272,24 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
         }
 
         SharedStorage::getStorage()->set($reference, new Currency($currencyId));
+    }
+
+    /**
+     * @Given currency with :isoCode has been deleted
+     */
+    public function assertCurrencyHasBeenDeleted($isoCode)
+    {
+        $query = new DbQuery();
+        $query->select('c.id_currency');
+        $query->from('currency', 'c');
+        $query->where('deleted = 1');
+        $query->where('iso_code = \'' . pSQL($isoCode) . '\'');
+
+        $currencyId = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query->build());
+
+        if (!$currencyId) {
+            throw new RuntimeException(sprintf('Currency with ISO Code "%s" should be deleted in database', $isoCode));
+        }
     }
 
     /**
