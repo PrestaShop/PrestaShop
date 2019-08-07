@@ -36,4 +36,5 @@ export default {
   numericIsoCodeSelector: '#currency_numeric_iso_code',
   exchangeRateSelector: '#currency_exchange_rate',
   resetDefaultSettingsSelector: '#currency_reset_default_settings',
+  loadingDataModalSelector: '#currency_loading_data_modal'
 }
