@@ -67,6 +67,11 @@ class AddCurrencyCommand
     private $isEnabled;
 
     /**
+     * @var bool
+     */
+    private $isCustom;
+
+    /**
      * @var int[]
      */
     private $shopIds;
@@ -78,6 +83,7 @@ class AddCurrencyCommand
      * @param string[] $localizedNames
      * @param string[] $localizedSymbols
      * @param bool $isEnabled
+     * @param bool $isCustom
      *
      * @throws CurrencyConstraintException
      */
@@ -87,12 +93,14 @@ class AddCurrencyCommand
         $exchangeRate,
         $localizedNames,
         $localizedSymbols,
-        $isEnabled
+        $isEnabled,
+        $isCustom
     ) {
         $this->isoCode = new AlphaIsoCode($isoCode);
         $this->numericIsoCode = new NumericIsoCode($numericIsoCode);
         $this->exchangeRate = new ExchangeRate($exchangeRate);
         $this->isEnabled = $isEnabled;
+        $this->isCustom = $isCustom;
         $this
             ->setLocalizedNames($localizedNames)
             ->setLocalizedSymbols($localizedSymbols)
@@ -187,6 +195,14 @@ class AddCurrencyCommand
     public function isEnabled()
     {
         return $this->isEnabled;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCustom()
+    {
+        return $this->isCustom;
     }
 
     /**

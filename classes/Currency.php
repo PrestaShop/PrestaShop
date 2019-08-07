@@ -913,12 +913,15 @@ class CurrencyCore extends ObjectModel
 
             if (empty($cldrCurrency)) {
                 // The currency may not be declared in the locale, eg with custom iso code
+                $namesByLang[$language->id] = $originalNames[$language->id];
+                $symbolsByLang[$language->id] = $originalSymbols[$language->id];
+                $this->edited = true;
                 continue;
             }
 
             // Symbol is localized, we check if it was manually edited
             $symbol = (string) $cldrCurrency->getSymbol() ?: $this->iso_code;
-            if (!empty($originalSymbols[$language->id]) && $symbol != $originalSymbols[$language->id]) {
+            if (!empty($symbol) && !empty($originalSymbols[$language->id]) && $symbol != $originalSymbols[$language->id]) {
                 $symbol = $originalSymbols[$language->id];
                 $this->edited = true;
             }
