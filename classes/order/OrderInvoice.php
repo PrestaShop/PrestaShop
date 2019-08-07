@@ -552,11 +552,14 @@ class OrderInvoiceCore extends ObjectModel
         AND `id_order_invoice` = ' . (int) $this->id . '
         GROUP BY `ecotax_tax_rate`');
 
+        $localeCldr = Tools::getContextLocale(Context::getContext());
+        $currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
+        $priceDisplayPrecision = $localeCldr->getPriceDisplayPrecision($currency);
         $taxes = array();
         foreach ($result as $row) {
             if ($row['ecotax_tax_excl'] > 0) {
-                $row['ecotax_tax_incl'] = Tools::ps_round($row['ecotax_tax_excl'] + ($row['ecotax_tax_excl'] * $row['rate'] / 100), _PS_PRICE_DISPLAY_PRECISION_);
-                $row['ecotax_tax_excl'] = Tools::ps_round($row['ecotax_tax_excl'], _PS_PRICE_DISPLAY_PRECISION_);
+                $row['ecotax_tax_incl'] = Tools::ps_round($row['ecotax_tax_excl'] + ($row['ecotax_tax_excl'] * $row['rate'] / 100), $priceDisplayPrecision);
+                $row['ecotax_tax_excl'] = Tools::ps_round($row['ecotax_tax_excl'], $priceDisplayPrecision);
                 $taxes[] = $row;
             }
         }
