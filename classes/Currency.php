@@ -23,9 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
-use PrestaShop\PrestaShop\Core\Localization\CLDR\CurrencyInterface;
 
 class CurrencyCore extends ObjectModel
 {
@@ -919,7 +917,7 @@ class CurrencyCore extends ObjectModel
             }
 
             // Symbol is localized, we check if it was manually edited
-            $symbol = (string) $cldrCurrency->getSymbol(CurrencyInterface::SYMBOL_TYPE_DEFAULT) ?: $this->iso_code;
+            $symbol = (string) $cldrCurrency->getSymbol() ?: $this->iso_code;
             if (!empty($originalSymbols[$language->id]) && $symbol != $originalSymbols[$language->id]) {
                 $symbol = $originalSymbols[$language->id];
                 $this->edited = true;
