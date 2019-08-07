@@ -5,3 +5,11 @@ admin_merchandise_returns_index:
     _controller: PrestaShopBundle:Admin/Sell/CustomerService/MerchandiseReturn:index
     _legacy_controller: AdminReturn
 #    _legacy_link: AdminReturn
+
+admin_merchandise_returns_filter:
+  path: /
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/CustomerService/MerchandiseReturn:filter
+    _legacy_controller: AdminReturn
+#    _legacy_link: AdminReturn:submitFilterorder_return
