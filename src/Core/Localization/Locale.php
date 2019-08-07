@@ -156,6 +156,11 @@ class Locale implements LocaleInterface
         );
     }
 
+    public function getPriceDisplayPrecision($currency)
+    {
+        return $this->getPriceSpecification($currency->iso_code)->getMaxFractionDigits();
+    }
+
     /**
      * Get price specification
      *

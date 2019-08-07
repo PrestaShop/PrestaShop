@@ -367,13 +367,14 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
         // post treatment
         $currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
         $localeCldr = Tools::getContextLocale(Context::getContext());
+
         foreach ($products as &$product) {
             $product['total'] = $total; // total product count (filtered)
             $product['price_final'] = Product::getPriceStatic(
                 $product['id_product'],
                 true,
                 null,
-                (int) Configuration::get('PS_PRICE_DISPLAY_PRECISION'),
+                (int) $localeCldr->getPriceDisplayPrecision($currency),
                 null,
                 false,
                 false,
