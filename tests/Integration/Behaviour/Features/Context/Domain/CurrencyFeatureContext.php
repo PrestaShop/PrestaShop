@@ -35,7 +35,9 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Command\EditCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\ToggleCurrencyStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDeleteDefaultCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDisableDefaultCurrencyException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\InvalidCustomCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
 class CurrencyFeatureContext extends AbstractDomainFeatureContext
@@ -57,17 +59,23 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
             (float) $data['exchange_rate'],
             [$defaultLangId => $data['name']],
             [$defaultLangId => $data['symbol']],
-            (bool) $data['is_enabled']
+            (bool) $data['is_enabled'],
+            (bool) $data['is_custom']
         );
 
         $command->setShopIds([
             (int) $shop->id,
         ]);
 
-        /** @var CurrencyId $currencyId */
-        $currencyId = $this->getCommandBus()->handle($command);
+        try {
+            $this->lastException = null;
+            /** @var CurrencyId $currencyId */
+            $currencyId = $this->getCommandBus()->handle($command);
 
-        SharedStorage::getStorage()->set($reference, new Currency($currencyId->getValue()));
+            SharedStorage::getStorage()->set($reference, new Currency($currencyId->getValue()));
+        } catch (CoreException $e) {
+            $this->lastException = $e;
+        }
     }
 
     /**
@@ -99,6 +107,10 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
             $command->setIsEnabled((bool) $data['is_enabled']);
         }
 
+        if (isset($data['is_custom'])) {
+            $command->setIsCustom((bool) $data['is_custom']);
+        }
+
         if (isset($data['shop_association'])) {
             $command->setShopIds([(int) $data['shop_association']]);
         }
@@ -111,9 +123,14 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
             $command->setLocalizedSymbols([$defaultLangId => $data['symbol']]);
         }
 
-        $this->getCommandBus()->handle($command);
+        try {
+            $this->lastException = null;
+            $this->getCommandBus()->handle($command);
 
-        SharedStorage::getStorage()->set($reference, new Currency($currency->id));
+            SharedStorage::getStorage()->set($reference, new Currency($currency->id));
+        } catch (CoreException $e) {
+            $this->lastException = $e;
+        }
     }
 
     /**
@@ -125,6 +142,7 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
         $currency = SharedStorage::getStorage()->get($reference);
 
         try {
+            $this->lastException = null;
             $this->getCommandBus()->handle(new ToggleCurrencyStatusCommand((int) $currency->id));
         } catch (CannotDisableDefaultCurrencyException $e) {
             $this->lastException = $e;
@@ -140,6 +158,7 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
         $currency = SharedStorage::getStorage()->get($reference);
 
         try {
+            $this->lastException = null;
             $this->getCommandBus()->handle(new DeleteCurrencyCommand((int) $currency->id));
         } catch (CannotDeleteDefaultCurrencyException $e) {
             $this->lastException = $e;
@@ -160,5 +179,21 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
     public function assertLastErrorIsDefaultCurrencyCannotBeDeleted()
     {
         $this->assertLastErrorIs(CannotDeleteDefaultCurrencyException::class);
+    }
+
+    /**
+     * @Then I should get error that custom currency has invalid iso code
+     */
+    public function assertLastErrorIsInvalidIsoCodeCustomCurrency()
+    {
+        $this->assertLastErrorIs(InvalidCustomCurrencyException::class, InvalidCustomCurrencyException::INVALID_ISO_CODE);
+    }
+
+    /**
+     * @Then I should get error that custom currency has invalid numeric iso code
+     */
+    public function assertLastErrorIsInvalidNumericIsoCodeCustomCurrency()
+    {
+        $this->assertLastErrorIs(InvalidCustomCurrencyException::class, InvalidCustomCurrencyException::INVALID_NUMERIC_ISO_CODE);
     }
 }
