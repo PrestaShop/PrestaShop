@@ -55,6 +55,7 @@ module.exports = {
     error: './js/pages/error',
     monitoring: './js/pages/monitoring',
     order: './js/pages/order',
+    merchandise_return: './js/pages/merchandise-return',
   },
   output: {
     path: path.resolve(__dirname, '../public'),
