@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Currency\CommandHandler;
 use Currency;
 use Language;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Command\CurrencyCommandInterface;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\InvalidCustomCurrencyException;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
 
@@ -71,12 +72,17 @@ abstract class AbstractCurrencyHandler extends AbstractObjectModelHandler
     }
 
     /**
-     * @param string $isoCode
+     * @param CurrencyCommandInterface $command
      *
      * @throws InvalidCustomCurrencyException
      */
-    protected function assertCustomCurrencyDoesNotMatchAnyIsoCode($isoCode)
+    protected function assertCustomCurrencyDoesNotMatchAnyIsoCode(CurrencyCommandInterface $command)
     {
+        if (!$command->isCustom() || null === $command->getIsoCode()) {
+            return;
+        }
+
+        $isoCode = $command->getIsoCode()->getValue();
         $allLanguages = Language::getLanguages(false);
         foreach ($allLanguages as $languageData) {
             // CLDR locale give us the CLDR reference specification
@@ -95,12 +101,17 @@ abstract class AbstractCurrencyHandler extends AbstractObjectModelHandler
     }
 
     /**
-     * @param int $numericIsoCode
+     * @param CurrencyCommandInterface $command
      *
      * @throws InvalidCustomCurrencyException
      */
-    protected function assertCustomCurrencyDoesNotMatchAnyNumericIsoCode($numericIsoCode)
+    protected function assertCustomCurrencyDoesNotMatchAnyNumericIsoCode(CurrencyCommandInterface $command)
     {
+        if (!$command->isCustom() || null === $command->getIsoCode()) {
+            return;
+        }
+
+        $numericIsoCode = $command->getNumericIsoCode()->getValue();
         $allLanguages = Language::getLanguages(false);
         foreach ($allLanguages as $languageData) {
             // CLDR locale give us the CLDR reference specification
