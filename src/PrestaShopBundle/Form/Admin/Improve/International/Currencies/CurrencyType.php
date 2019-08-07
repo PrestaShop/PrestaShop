@@ -35,6 +35,7 @@ use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -146,7 +147,7 @@ class CurrencyType extends TranslatorAwareType
             ])
             ->add('iso_code', TextType::class, [
                 'attr' => [
-                    'disabled' => !$newCurrency && !$customCurrency
+                    'readonly' => !$newCurrency && !$customCurrency
                 ],
                 'constraints' => [
                     new NotBlank([
@@ -163,9 +164,9 @@ class CurrencyType extends TranslatorAwareType
                     ]),
                 ],
             ])
-            ->add('numeric_iso_code', NumberType::class, [
+            ->add('numeric_iso_code', IntegerType::class, [
                 'attr' => [
-                    'disabled' => !$newCurrency && !$customCurrency
+                    'readonly' => !$newCurrency && !$customCurrency
                 ],
                 'constraints' => [
                     new NotBlank([
