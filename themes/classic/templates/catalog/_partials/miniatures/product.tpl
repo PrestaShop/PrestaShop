@@ -29,7 +29,7 @@
     <div class="thumbnail-container">
       {block name='product_thumbnail'}
         {if $product.cover}
-          <a href="{$product.canonical_url}" class="thumbnail product-thumbnail">
+          <a href="{$product.url}" class="thumbnail product-thumbnail">
             <img
               src="{$product.cover.bySize.home_default.url}"
               alt="{if !empty($product.cover.legend)}{$product.cover.legend}{else}{$product.name|truncate:30:'...'}{/if}"
@@ -37,7 +37,7 @@
             />
           </a>
         {else}
-          <a href="{$product.canonical_url}" class="thumbnail product-thumbnail">
+          <a href="{$product.url}" class="thumbnail product-thumbnail">
             <img src="{$urls.no_picture_image.bySize.home_default.url}" />
           </a>
         {/if}
@@ -46,9 +46,9 @@
       <div class="product-description">
         {block name='product_name'}
           {if $page.page_name == 'index'}
-            <h3 class="h3 product-title" itemprop="name"><a href="{$product.canonical_url}" itemprop="url" content="{$product.canonical_url}">{$product.name|truncate:30:'...'}</a></h3>
+            <h3 class="h3 product-title" itemprop="name"><a href="{$product.url}" itemprop="url" content="{$product.url}">{$product.name|truncate:30:'...'}</a></h3>
           {else}
-            <h2 class="h3 product-title" itemprop="name"><a href="{$product.canonical_url}" itemprop="url" content="{$product.canonical_url}">{$product.name|truncate:30:'...'}</a></h2>
+            <h2 class="h3 product-title" itemprop="name"><a href="{$product.url}" itemprop="url" content="{$product.url}">{$product.name|truncate:30:'...'}</a></h2>
           {/if}
         {/block}
 
