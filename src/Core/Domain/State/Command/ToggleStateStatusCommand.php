@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,23 +22,50 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
+namespace PrestaShop\PrestaShop\Core\Domain\State\Command;
 
-{% block content %}
-  {% block states_listing %}
-    <div class="row">
-      <div class="col">
-        {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': stateGrid} %}
-      </div>
-    </div>
-  {% endblock %}
-{% endblock %}
+use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
 
-{% block javascripts %}
-  {{ parent() }}
+/**
+ * Toggles state status in row action
+ */
+class ToggleStateStatusCommand
+{
+    /**
+     * @var StateId
+     */
+    private $stateId;
 
-  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
-  <script src="{{ asset('themes/new-theme/public/state.bundle.js') }}"></script>
-{% endblock %}
+    /**
+     * @var bool
+     */
+    private $expectedStatus;
+
+    /**
+     * @param int $stateId
+     * @param bool $expectedStatus
+     */
+    public function __construct(int $stateId, bool $expectedStatus)
+    {
+        $this->expectedStatus = $expectedStatus;
+        $this->stateId = new StateId($stateId);
+    }
+
+    /**
+     * @return StateId
+     */
+    public function getStateId()
+    {
+        return $this->stateId;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getExpectedStatus()
+    {
+        return $this->expectedStatus;
+    }
+}

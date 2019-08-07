@@ -153,7 +153,7 @@ final class StateGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'primary_field' => 'id_state',
                         'route' => 'admin_states_toggle_status',
                         'route_param_name' => 'stateId',
-                        'sortable' => false
+                        'sortable' => false,
                     ])
             )
             ->add((new ActionColumn('actions'))

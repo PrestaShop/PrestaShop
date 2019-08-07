@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,23 +22,33 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
+namespace PrestaShop\PrestaShop\Core\Domain\State\ValueObject;
 
-{% block content %}
-  {% block states_listing %}
-    <div class="row">
-      <div class="col">
-        {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': stateGrid} %}
-      </div>
-    </div>
-  {% endblock %}
-{% endblock %}
+/**
+ * Provides state id
+ */
+class StateId
+{
+    /**
+     * @var int
+     */
+    private $id;
 
-{% block javascripts %}
-  {{ parent() }}
+    /**
+     * @param int $id
+     */
+    public function __construct(int $id)
+    {
+        $this->id = $id;
+    }
 
-  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
-  <script src="{{ asset('themes/new-theme/public/state.bundle.js') }}"></script>
-{% endblock %}
+    /**
+     * @return int
+     */
+    public function getValue(): int
+    {
+        return $this->id;
+    }
+}

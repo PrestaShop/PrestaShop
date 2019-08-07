@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,23 +22,35 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
+namespace PrestaShop\PrestaShop\Core\Domain\State\Command;
 
-{% block content %}
-  {% block states_listing %}
-    <div class="row">
-      <div class="col">
-        {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': stateGrid} %}
-      </div>
-    </div>
-  {% endblock %}
-{% endblock %}
+use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
 
-{% block javascripts %}
-  {{ parent() }}
+/**
+ * Command responsible for state deletion
+ */
+class DeleteStateCommand
+{
+    /**
+     * @var StateId
+     */
+    private $stateId;
 
-  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
-  <script src="{{ asset('themes/new-theme/public/state.bundle.js') }}"></script>
-{% endblock %}
+    /**
+     * @param int $stateId
+     */
+    public function __construct(int $stateId)
+    {
+        $this->stateId = new StateId($stateId);
+    }
+
+    /**
+     * @return StateId
+     */
+    public function getStateId(): StateId
+    {
+        return $this->stateId;
+    }
+}
