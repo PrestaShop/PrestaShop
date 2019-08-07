@@ -236,15 +236,15 @@ class CurrencyController extends FrameworkBundleAdminController
         $cldrCurrency = [];
         foreach ($languages as $language) {
             $localeData = $reader->readLocaleData($language['locale']);
-            foreach ($localeData->getCurrencies() as $currencyData) {
-                if ($currencyData->getIsoCode() !== $currencyIsoCode) {
-                    continue;
-                }
-                $cldrCurrency['names'][$language['id_lang']] = $currencyData->getDisplayNames()['default'];
-                $cldrCurrency['symbols'][$language['id_lang']] = $currencyData->getSymbols()['default'] ?: $currencyData->getIsoCode();
-                $cldrCurrency['iso_code'] = $currencyData->getIsoCode();
-                $cldrCurrency['numeric_iso_code'] = $currencyData->getNumericIsoCode();
+            $currencyData = $localeData->getCurrencyByIsoCode($currencyIsoCode);
+            if (null === $currencyData) {
+                continue;
             }
+
+            $cldrCurrency['names'][$language['id_lang']] = $currencyData->getDisplayNames()['default'];
+            $cldrCurrency['symbols'][$language['id_lang']] = $currencyData->getSymbols()['default'] ?: $currencyData->getIsoCode();
+            $cldrCurrency['iso_code'] = $currencyData->getIsoCode();
+            $cldrCurrency['numeric_iso_code'] = $currencyData->getNumericIsoCode();
         }
 
         try {
