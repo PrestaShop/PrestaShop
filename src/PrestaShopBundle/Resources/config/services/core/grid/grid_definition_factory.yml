@@ -183,3 +183,11 @@ services:
       class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\ProductWithoutPriceGridDefinitionFactory'
       parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
       public: true
+
+    prestashop.core.grid.definition.factory.state:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\StateGridDefinitionFactory'
+      parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+      arguments:
+        - "@=service('router').generate('admin_common_reset_search', {'controller': 'state', 'action': 'index'})"
+        - "@=service('router').generate('admin_state_index')"
+      public: true

@@ -1,6 +1,91 @@
 admin_country_states:
   path: /
   methods: [GET]
+  condition: "request.isXmlHttpRequest()"
   defaults:
     _controller: 'PrestaShopBundle:Admin\Improve\International\State:getStates'
     _legacy_controller: AdminStates
+
+admin_state_index:
+  path: /
+  methods: GET
+  defaults:
+    _controller: PrestaShopBundle:Admin\Improve\International\State:index
+    _legacy_controller: AdminStates
+#    _legacy_link: AdminStates
+
+admin_states_filter:
+  path: /
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Common:searchGrid
+    _legacy_controller: AdminStates
+    gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.state
+    redirectRoute: admin_state_index
+#    _legacy_link: AdminStates:submitFilterstate
+
+admin_state_create:
+  path: /new
+  methods: [GET, POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Improve\International\State:create
+    _legacy_controller: AdminStates
+#    _legacy_link: AdminAttachments:addstate
+
+admin_state_edit:
+  path: /{stateId}/edit
+  methods: [GET, POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Improve\International\State:edit
+    _legacy_controller: AdminStates
+    #    _legacy_link: AdminAttachments:updatestate
+    _legacy_parameters:
+      id_attachment: stateId
+  requirements:
+    attachmentId: \d+
+
+admin_states_delete_bulk:
+  path: /delete-bulk
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Improve\International\State:deleteBulk
+    _legacy_controller: AdminStates
+#    _legacy_link: AdminAttachments:submitBulkdeletestate
+
+admin_state_delete:
+  path: /{stateId}/delete
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Improve\International\State:delete
+    _legacy_controller: AdminStates
+    #    _legacy_link: AdminStates:deletestate
+    _legacy_parameters:
+      id_attachment: stateId
+  requirements:
+    attachmentId: \d+
+
+admin_states_bulk_enable_status:
+  path: /bulk-status-enable
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Improve\International\State:bulkEnableStatus
+    _legacy_controller: AdminStates
+#    _legacy_link: AdminStates:submitBulkenableSelectionstate
+
+admin_states_bulk_disable_status:
+  path: /bulk-status-disable
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Improve\International\State:bulkDisableStatus
+    _legacy_controller: AdminStates
+#    _legacy_link: AdminStates:submitBulkdisableSelectionstate
+
+admin_states_toggle_status:
+  path: /{stateId}/toggle-status
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Improve\International\State:toggleStatus
+    _legacy_controller: AdminStates
+#    _legacy_link: AdminStates:statusstate
+    _legacy_parameters:
+      id_category: stateId
