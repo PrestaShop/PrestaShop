@@ -46,11 +46,6 @@ use PrestaShopException;
 final class AddCurrencyHandler extends AbstractCurrencyHandler implements AddCurrencyHandlerInterface
 {
     /**
-     * @var LocaleRepository
-     */
-    private $localeRepoCLDR;
-
-    /**
      * @var Language
      */
     private $defaultLanguage;
@@ -61,7 +56,7 @@ final class AddCurrencyHandler extends AbstractCurrencyHandler implements AddCur
      */
     public function __construct(LocaleRepository $localeRepoCLDR, $defaultLanguageId)
     {
-        $this->localeRepoCLDR = $localeRepoCLDR;
+        parent::__construct($localeRepoCLDR);
         $this->defaultLanguage = new Language((int) $defaultLanguageId);
     }
 
@@ -72,12 +67,12 @@ final class AddCurrencyHandler extends AbstractCurrencyHandler implements AddCur
      */
     public function handle(AddCurrencyCommand $command)
     {
-        $this->assertCurrencyWithIsoCodeDoesNotExist($command->getIsoCode()->getValue());
-        $this->assertCurrencyWithNumericIsoCodeDoesNotExist($command->getNumericIsoCode()->getValue());
         if ($command->isCustom()) {
             $this->assertCustomCurrencyDoesNotMatchAnyIsoCode($command->getIsoCode()->getValue());
             $this->assertCustomCurrencyDoesNotMatchAnyNumericIsoCode($command->getNumericIsoCode()->getValue());
         }
+        $this->assertCurrencyWithIsoCodeDoesNotExist($command->getIsoCode()->getValue());
+        $this->assertCurrencyWithNumericIsoCodeDoesNotExist($command->getNumericIsoCode()->getValue());
 
         try {
             $entity = new Currency();
@@ -85,6 +80,7 @@ final class AddCurrencyHandler extends AbstractCurrencyHandler implements AddCur
             $entity->iso_code = $command->getIsoCode()->getValue();
             $entity->numeric_iso_code = $command->getNumericIsoCode()->getValue();
             $entity->active = $command->isEnabled();
+            $entity->custom = $command->isCustom();
             $entity->conversion_rate = $command->getExchangeRate()->getValue();
 
             // CLDR locale give us the CLDR reference specification
@@ -152,55 +148,6 @@ final class AddCurrencyHandler extends AbstractCurrencyHandler implements AddCur
                 ),
                 CurrencyConstraintException::CURRENCY_ALREADY_EXISTS
             );
-        }
-    }
-
-    /**
-     * @param string $isoCode
-     *
-     * @throws InvalidCustomCurrencyException
-     */
-    private function assertCustomCurrencyDoesNotMatchAnyIsoCode($isoCode)
-    {
-        $allLanguages = Language::getLanguages(false);
-        foreach ($allLanguages as $languageData) {
-            // CLDR locale give us the CLDR reference specification
-            $cldrLocale = $this->localeRepoCLDR->getLocale($languageData['locale']);
-            $cldrCurrency = $cldrLocale->getCurrency($isoCode);
-            if (null !== $cldrCurrency) {
-                throw new InvalidCustomCurrencyException(
-                    sprintf(
-                        'Custom currency with iso code "%s" is invalid because it matches a real currency',
-                        $isoCode
-                    ),
-                    InvalidCustomCurrencyException::INVALID_ISO_CODE
-                );
-            }
-        }
-    }
-
-    /**
-     * @param int $numericIsoCode
-     *
-     * @throws InvalidCustomCurrencyException
-     */
-    private function assertCustomCurrencyDoesNotMatchAnyNumericIsoCode($numericIsoCode)
-    {
-        $allLanguages = Language::getLanguages(false);
-        foreach ($allLanguages as $languageData) {
-            // CLDR locale give us the CLDR reference specification
-            $cldrLocale = $this->localeRepoCLDR->getLocale($languageData['locale']);
-            foreach ($cldrLocale->getAllCurrencies() as $cldrCurrency) {
-                if ($numericIsoCode == $cldrCurrency->getNumericIsoCode()) {
-                    throw new InvalidCustomCurrencyException(
-                        sprintf(
-                            'Custom currency with numeric iso code "%s" is invalid because it matches a real currency',
-                            $numericIsoCode
-                        ),
-                        InvalidCustomCurrencyException::INVALID_NUMERIC_ISO_CODE
-                    );
-                }
-            }
         }
     }
 }
