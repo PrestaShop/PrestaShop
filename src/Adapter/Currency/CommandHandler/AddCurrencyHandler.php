@@ -70,6 +70,8 @@ final class AddCurrencyHandler extends AbstractCurrencyHandler implements AddCur
         if ($command->isCustom()) {
             $this->assertCustomCurrencyDoesNotMatchAnyIsoCode($command->getIsoCode()->getValue());
             $this->assertCustomCurrencyDoesNotMatchAnyNumericIsoCode($command->getNumericIsoCode()->getValue());
+        } else {
+            $this->assertIsoCodesAreMatching($command);
         }
         $this->assertCurrencyWithIsoCodeDoesNotExist($command->getIsoCode()->getValue());
         $this->assertCurrencyWithNumericIsoCodeDoesNotExist($command->getNumericIsoCode()->getValue());
@@ -147,6 +149,41 @@ final class AddCurrencyHandler extends AbstractCurrencyHandler implements AddCur
                     $numericIsoCode
                 ),
                 CurrencyConstraintException::CURRENCY_ALREADY_EXISTS
+            );
+        }
+    }
+
+    /**
+     * @param AddCurrencyCommand $command
+     *
+     * @throws CurrencyConstraintException
+     */
+    private function assertIsoCodesAreMatching(AddCurrencyCommand $command)
+    {
+        //Numeric is code will be deduced from iso code, only check real currencies
+        if (null === $command->getNumericIsoCode() || $command->isCustom()) {
+            return;
+        }
+
+        $defaultLocaleCLDR = $this->localeRepoCLDR->getLocale($this->defaultLanguage->getLocale());
+        $allCurrencies = $defaultLocaleCLDR->getAllCurrencies();
+        $matchingRealCurrency = null;
+        foreach ($allCurrencies as $currencyData) {
+            if ($currencyData->getIsoCode() == $command->getIsoCode()->getValue() &&
+                $currencyData->getNumericIsoCode() == $command->getNumericIsoCode()->getValue()) {
+                $matchingRealCurrency = $currencyData;
+                break;
+            }
+        }
+
+        if (null === $matchingRealCurrency) {
+            throw new CurrencyConstraintException(
+                sprintf(
+                    'The is no real currency matching iso code %s and numeric iso code %s',
+                    $command->getIsoCode()->getValue(),
+                    $command->getNumericIsoCode()->getValue()
+                ),
+                CurrencyConstraintException::MISMATCHING_ISO_CODES
             );
         }
     }
