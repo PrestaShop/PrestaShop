@@ -54,6 +54,7 @@ module.exports = {
     webservice: './js/pages/webservice',
     error: './js/pages/error',
     monitoring: './js/pages/monitoring',
+    state: './js/pages/state',
   },
   output: {
     path: path.resolve(__dirname, '../public'),
