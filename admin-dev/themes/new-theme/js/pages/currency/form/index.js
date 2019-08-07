@@ -59,29 +59,38 @@ $(() => {
     }
   });
 
-  $(currencyFormMap.resetDefaultSettingsSelector).click((event) => {
+  $(currencyFormMap.resetDefaultSettingsSelector).click(() => {
     resetCurrencyData($(currencyFormMap.isoCodeSelector).val());
 
     return false;
   });
 
   function resetCurrencyData(selectedISOCode) {
+    $(currencyFormMap.loadingDataModalSelector).modal('show');
+    $(currencyFormMap.resetDefaultSettingsSelector).addClass('spinner');
     const getCurrencyData = getCLDRDataUrl.replace('CURRENCY_ISO_CODE', selectedISOCode);
-    $.get(getCurrencyData).then((currencyData) => {
-      for (let langId in currencyData.names) {
-        let langNameSelector = currencyFormMap.namesSelector.replace('LANG_ID', langId);
-        $(langNameSelector).val(currencyData.names[langId]);
-      }
-      for (let langId in currencyData.symbols) {
-        let langSymbolSelector = currencyFormMap.symbolsSelector.replace('LANG_ID', langId);
-        $(langSymbolSelector).val(currencyData.symbols[langId]);
-      }
-      $(currencyFormMap.isoCodeSelector).val(currencyData.iso_code);
-      $(currencyFormMap.numericIsoCodeSelector).val(currencyData.numeric_iso_code);
-      if (currencyData.exchange_rate) {
-        $(currencyFormMap.exchangeRateSelector).val(currencyData.exchange_rate);
-      }
-    })
+    $.get(getCurrencyData)
+      .then((currencyData) => {
+        for (let langId in currencyData.names) {
+          let langNameSelector = currencyFormMap.namesSelector.replace('LANG_ID', langId);
+          $(langNameSelector).val(currencyData.names[langId]);
+        }
+        for (let langId in currencyData.symbols) {
+          let langSymbolSelector = currencyFormMap.symbolsSelector.replace('LANG_ID', langId);
+          $(langSymbolSelector).val(currencyData.symbols[langId]);
+        }
+        $(currencyFormMap.isoCodeSelector).val(currencyData.iso_code);
+        $(currencyFormMap.numericIsoCodeSelector).val(currencyData.numeric_iso_code);
+        if (currencyData.exchange_rate) {
+          $(currencyFormMap.exchangeRateSelector).val(currencyData.exchange_rate);
+        }
+        $(currencyFormMap.loadingDataModalSelector).modal('hide');
+        $(currencyFormMap.resetDefaultSettingsSelector).removeClass('spinner');
+      })
+      .fail(() => {
+        $(currencyFormMap.loadingDataModalSelector).modal('hide');
+        $(currencyFormMap.resetDefaultSettingsSelector).removeClass('spinner');
+      })
   }
 
   function initFields() {
