@@ -3340,9 +3340,7 @@ class AdminControllerCore extends Controller
      */
     protected function getFromClause()
     {
-        $sql_table = $this->table == 'order' ? 'orders' : $this->table;
-
-        return "\n" . 'FROM `' . _DB_PREFIX_ . $sql_table . '` a ';
+        return "\n" . 'FROM `' . _DB_PREFIX_ . bqSQL($this->table) . '` a ';
     }
 
     /**
