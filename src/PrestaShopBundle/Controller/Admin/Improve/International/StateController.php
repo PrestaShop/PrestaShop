@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Search\Filters\StateFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -63,5 +64,40 @@ class StateController extends FrameworkBundleAdminController
                 Response::HTTP_INTERNAL_SERVER_ERROR
             );
         }
+    }
+
+    /**
+     * @param Request $request
+     * @param StateFilters $filters
+     *
+     * @return Response
+     */
+    public function indexAction(Request $request, StateFilters $filters): Response
+    {
+        $stateGridFactory = $this->get('prestashop.core.grid.grid_factory.state');
+        $stateGrid = $stateGridFactory->getGrid($filters);
+
+        return $this->render('@PrestaShop/Admin/Improve/International/Locations/State/index.html.twig', [
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'stateGrid' => $this->presentGrid($stateGrid),
+            'enableSidebar' => true,
+            'layoutHeaderToolbarBtn' => $this->getStateToolbarButtons(),
+        ]);
+    }
+
+    /**
+     * @return array
+     */
+    private function getStateToolbarButtons(): array
+    {
+        $toolbarButtons = [];
+
+        $toolbarButtons['add'] = [
+            'href' => $this->generateUrl('admin_state_create'),
+            'desc' => $this->trans('Add new state', 'Admin.International.Feature'),
+            'icon' => 'add_circle_outline',
+        ];
+
+        return $toolbarButtons;
     }
 }
