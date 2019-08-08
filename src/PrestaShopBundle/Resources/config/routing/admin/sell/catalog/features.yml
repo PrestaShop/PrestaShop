@@ -10,8 +10,10 @@ admin_features_filter:
   path: /
   methods: [POST]
   defaults:
-    _controller: PrestaShopBundle:Admin\Sell\Catalog\Feature:filter
+    _controller: PrestaShopBundle:Admin\Common:searchGrid
     _legacy_controller: AdminFeatures
+    gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.feature
+    redirectRoute: admin_features_index
 #    _legacy_link: AdminFeatures:submitFilterfeature
 
 admin_features_delete_bulk:
@@ -19,7 +21,7 @@ admin_features_delete_bulk:
   methods: [POST]
   defaults:
     #@todo change action
-    _controller: PrestaShopBundle:Admin\Sell\Catalog\Feature:index
+#    _controller: PrestaShopBundle:Admin\Sell\Catalog\Feature:index
     _legacy_controller: AdminFeatures
 #    _legacy_link: AdminFeatures:submitBulkdeletefeature
 
@@ -28,6 +30,6 @@ admin_features_update_position:
   methods: [POST]
   defaults:
     #@todo change action
-    _controller: PrestaShopBundle:Admin\Sell\Catalog\Feature:index
+#    _controller: PrestaShopBundle:Admin\Sell\Catalog\Feature:index
     _legacy_controller: AdminFeatures
 #    _legacy_link: AdminFeatures:updatefeature

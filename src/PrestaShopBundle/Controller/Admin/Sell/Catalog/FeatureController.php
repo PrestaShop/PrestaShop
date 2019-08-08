@@ -59,6 +59,7 @@ class FeatureController extends FrameworkBundleAdminController
         $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Features/index.html.twig', [
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'featuresGrid' => $gridPresenter->present($gridFactory->getGrid($filters)),
         ]);
     }
