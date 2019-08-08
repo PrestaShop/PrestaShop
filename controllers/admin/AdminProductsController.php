@@ -889,6 +889,7 @@ class AdminProductsControllerCore extends AdminController
                         }
                     }
                 }
+	            Search::indexation(false, $id_product);
             }
         } else {
             $this->errors[] = $this->trans('A product must be created before adding features.', array(), 'Admin.Catalog.Notification');
