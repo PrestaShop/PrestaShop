@@ -1,13 +1,21 @@
 admin_merchandise_returns_index:
   path: /
-  methods: [GET,POST]
+  methods: [GET]
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/CustomerService/MerchandiseReturn:index
     _legacy_controller: AdminReturn
 #    _legacy_link: AdminReturn
 
-admin_merchandise_returns_filter:
+admin_merchandise_returns_save_options:
   path: /
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/CustomerService/MerchandiseReturn:index
+    _legacy_controller: AdminReturn
+#    _legacy_link: AdminReturn:submitOptionsTax
+
+admin_merchandise_returns_filter:
+  path: /filter
   methods: [POST]
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/CustomerService/MerchandiseReturn:filter
