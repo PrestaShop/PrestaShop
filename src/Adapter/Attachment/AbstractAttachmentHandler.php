@@ -44,7 +44,7 @@ abstract class AbstractAttachmentHandler
      *
      * @throws AttachmentNotFoundException
      */
-    protected function getAttachment(AttachmentId $attachmentId)
+    protected function getAttachment(AttachmentId $attachmentId): Attachment
     {
         $attachmentIdValue = $attachmentId->getValue();
         try {
