@@ -150,5 +150,4 @@ final class MerchandiseReturnGridDefinitionFactory extends AbstractGridDefinitio
             )
         ;
     }
-
 }

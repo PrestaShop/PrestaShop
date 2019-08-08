@@ -95,6 +95,7 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
     {
         /** @var ResponseBuilder $responseBuilder */
         $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
+
         return $responseBuilder->buildSearchResponse(
             $this->get('prestashop.core.grid.definition.factory.merchandise_return'),
             $request,
