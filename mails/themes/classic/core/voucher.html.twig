@@ -26,8 +26,8 @@
             
 {% endif %}
             <span>
-              {{ 'A voucher has been created in your name as a result of your order with the reference <span><strong>{order_name}</strong></span>.'|trans({}, 'Emails.Body', locale)|raw }}<br/><br/>
-              {{ '<span><strong>Voucher code: {voucher_num}</strong></span> in the amount of <span><strong>{voucher_amount}</strong></span>'|trans({}, 'Emails.Body', locale)|raw }}<br/><br/>
+              {{ 'A voucher has been created in your name as a result of your order with the reference [1]{order_name}[/1].'|trans({'[1]': '<span><strong>', '[/1]': '</strong></span>'}, 'Emails.Body', locale)|raw }}<br/><br/>
+              {{ '[1]Voucher code: {voucher_num}[/1] in the amount of [1]{voucher_amount}[/1]'|trans({'[1]': '<span><strong>', '[/1]': '</strong></span>'}, 'Emails.Body', locale)|raw }}<br/><br/>
               {{ 'Simply copy/paste this code during the payment process for your next order.'|trans({}, 'Emails.Body', locale)|raw }}
             </span>
           </font>
