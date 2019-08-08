@@ -28,6 +28,7 @@ import SortingExtension from "../../components/grid/extension/sorting-extension"
 import FiltersResetExtension from "../../components/grid/extension/filters-reset-extension";
 import FiltersSubmitButtonEnablerExtension
   from "../../components/grid/extension/filters-submit-button-enabler-extension";
+import TranslatableInput from "../../components/translatable-input";
 
 const $ = window.$;
 
@@ -36,4 +37,6 @@ $(() => {
   grid.addExtension(new SortingExtension());
   grid.addExtension(new FiltersResetExtension());
   grid.addExtension(new FiltersSubmitButtonEnablerExtension());
+
+  new TranslatableInput();
 });
