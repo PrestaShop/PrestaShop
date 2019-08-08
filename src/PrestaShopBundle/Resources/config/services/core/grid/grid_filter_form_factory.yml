@@ -21,3 +21,10 @@ services:
             - '@prestashop.core.grid.filter.form_factory'
             - '@router'
             - '@request_stack'
+
+    prestashop.core.grid.filter.merchandise_return_form_factory:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Filter\FilterFormFactoryFormActionDecorator'
+        arguments:
+            - '@prestashop.core.grid.filter.form_factory'
+            - '@router'
+            - 'admin_merchandise_returns_filter'
