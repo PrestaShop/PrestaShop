@@ -121,7 +121,7 @@ final class MerchandiseReturnGridDefinitionFactory extends AbstractGridDefinitio
                 ->setTypeOptions([
                     'required' => false,
                     'attr' => [
-                        'placeholder' => $this->trans('Search Order ID', [], 'Admin.Actions'),
+                        'placeholder' => $this->trans('Search order ID', [], 'Admin.Actions'),
                     ],
                 ])
                 ->setAssociatedColumn('id_order')
