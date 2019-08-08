@@ -26,8 +26,6 @@ services:
 
   prestashop.adapter.image.uploader.attachment_file_uploader:
     class: 'PrestaShop\PrestaShop\Adapter\File\Uploader\AttachmentFileUploader'
-    arguments:
-      - '@translator'
 
   prestashop.adapter.category.command_handler.abstract_attachment_handler:
     abstract:  true
