@@ -1,6 +1,10 @@
 <?php
 /**
+<<<<<<< HEAD
  * 2007-2019 PrestaShop SA and Contributors
+=======
+ * 2007-2019 PrestaShop.
+>>>>>>> Add features grid
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +20,17 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
+<<<<<<< HEAD
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2019 PrestaShop SA and Contributors
+=======
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2018 PrestaShop SA
+>>>>>>> Add features grid
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -32,6 +43,10 @@ use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureNotFoundException
 use PrestaShop\PrestaShop\Core\Domain\Feature\Query\GetFeatureForEditing;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\FeatureGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Search\Filters\FeatureFilters;
+use PrestaShopBundle\Service\Grid\ResponseBuilder;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -78,6 +93,29 @@ class FeatureController extends FrameworkBundleAdminController
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Features/create.html.twig', [
             'featureForm' => $featureForm->createView(),
+        ]);
+    }
+
+    /**
+     * Renders features list
+     *
+     * @AdminSecurity(
+     *     "is_granted(['read'], request.get('_legacy_controller'))",
+     *     redirectRoute="admin_merchandise_return_index"
+     * )
+     *
+     * @param Request $request
+     * @param FeatureFilters $filters
+     *
+     * @return Response
+     */
+    public function indexAction(Request $request, FeatureFilters $filters): Response
+    {
+        $gridFactory = $this->get('prestashop.core.grid.factory.feature');
+        $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
+
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Features/index.html.twig', [
+            'featuresGrid' => $gridPresenter->present($gridFactory->getGrid($filters)),
         ]);
     }
 
@@ -184,5 +222,30 @@ class FeatureController extends FrameworkBundleAdminController
     private function isFeatureEnabled()
     {
         return $this->get('prestashop.adapter.feature.feature')->isActive();
+    }
+
+    /**
+     * Prepares filtering response
+     *
+     * @AdminSecurity(
+     *     "is_granted(['read'], request.get('_legacy_controller'))",
+     *     redirectRoute="admin_merchandise_return_index"
+     * )
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function filterAction(Request $request): RedirectResponse
+    {
+        /** @var ResponseBuilder $responseBuilder */
+        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
+
+        return $responseBuilder->buildSearchResponse(
+            $this->get('prestashop.core.grid.definition.factory.feature'),
+            $request,
+            FeatureGridDefinitionFactory::GRID_ID,
+            'admin_features_index'
+        );
     }
 }
