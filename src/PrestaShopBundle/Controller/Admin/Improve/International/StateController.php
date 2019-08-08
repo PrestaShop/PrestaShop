@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\State\Command\BulkToggleStateStatusCommand
 use PrestaShop\PrestaShop\Core\Domain\State\Command\DeleteStateCommand;
 use PrestaShop\PrestaShop\Core\Domain\State\Command\ToggleStateStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\DeleteStateException;
+use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateException;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\UpdateStateException;
@@ -80,6 +81,10 @@ class StateController extends FrameworkBundleAdminController
     }
 
     /**
+     * Show states listing page
+     *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     *
      * @param Request $request
      * @param StateFilters $filters
      *
@@ -101,17 +106,17 @@ class StateController extends FrameworkBundleAdminController
     /**
      * Deletes state
      *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_state_index")
-     * @DemoRestricted(redirectRoute="admin_state_index")
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_states_index")
+     * @DemoRestricted(redirectRoute="admin_states_index")
      *
-     * @param $stateId
+     * @param int $stateId
      *
      * @return RedirectResponse
      */
-    public function deleteAction($stateId): RedirectResponse
+    public function deleteAction(int $stateId): RedirectResponse
     {
         try {
-            $this->getCommandBus()->handle(new DeleteStateCommand((int) $stateId));
+            $this->getCommandBus()->handle(new DeleteStateCommand($stateId));
             $this->addFlash(
                 'success',
                 $this->trans('Successful deletion.', 'Admin.Notifications.Success')
@@ -120,7 +125,7 @@ class StateController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
-        return $this->redirectToRoute('admin_state_index');
+        return $this->redirectToRoute('admin_states_index');
     }
 
     /**
@@ -128,7 +133,7 @@ class StateController extends FrameworkBundleAdminController
      *
      * @AdminSecurity(
      *     "is_granted('delete', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_state_index",
+     *     redirectRoute="admin_states_index",
      *     message="You do not have permission to delete this."
      * )
      *
@@ -150,14 +155,14 @@ class StateController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
-        return $this->redirectToRoute('admin_state_index');
+        return $this->redirectToRoute('admin_states_index');
     }
 
     /**
      * Toggles state status
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_state_index")
-     * @DemoRestricted(redirectRoute="admin_state_index")
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_states_index")
+     * @DemoRestricted(redirectRoute="admin_states_index")
      *
      * @param int $stateId
      *
@@ -179,14 +184,14 @@ class StateController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
-        return $this->redirectToRoute('admin_state_index');
+        return $this->redirectToRoute('admin_states_index');
     }
 
     /**
      * Enables states on bulk action
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_state_index")
-     * @DemoRestricted(redirectRoute="admin_state_index")
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_states_index")
+     * @DemoRestricted(redirectRoute="admin_states_index")
      *
      * @param Request $request
      *
@@ -207,14 +212,14 @@ class StateController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
-        return $this->redirectToRoute('admin_state_index');
+        return $this->redirectToRoute('admin_states_index');
     }
 
     /**
      * Disables states on bulk action
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_state_index")
-     * @DemoRestricted(redirectRoute="admin_state_index")
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_states_index")
+     * @DemoRestricted(redirectRoute="admin_states_index")
      *
      * @param Request $request
      *
@@ -235,7 +240,7 @@ class StateController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
-        return $this->redirectToRoute('admin_state_index');
+        return $this->redirectToRoute('admin_states_index');
     }
 
     /**
@@ -246,7 +251,7 @@ class StateController extends FrameworkBundleAdminController
         $toolbarButtons = [];
 
         $toolbarButtons['add'] = [
-            'href' => $this->generateUrl('admin_state_create'),
+            'href' => $this->generateUrl('admin_states_create'),
             'desc' => $this->trans('Add new state', 'Admin.International.Feature'),
             'icon' => 'add_circle_outline',
         ];
@@ -291,6 +296,12 @@ class StateController extends FrameworkBundleAdminController
             UpdateStateException::class => [
                 UpdateStateException::FAILED_BULK_UPDATE_STATUS => $this->trans(
                     'An error occurred while updating the status.',
+                    'Admin.Notifications.Error'
+                ),
+            ],
+            StateConstraintException::class => [
+                StateConstraintException::INVALID_ID => $this->trans(
+                    'The object cannot be loaded (the identifier is missing or invalid)',
                     'Admin.Notifications.Error'
                 ),
             ],

@@ -165,7 +165,7 @@ final class StateGridDefinitionFactory extends AbstractGridDefinitionFactory
                                 ->setName($this->trans('Edit', [], 'Admin.Actions'))
                                 ->setIcon('edit')
                                 ->setOptions([
-                                    'route' => 'admin_state_edit',
+                                    'route' => 'admin_states_edit',
                                     'route_param_name' => 'stateId',
                                     'route_param_field' => 'id_state',
                                 ])
@@ -175,7 +175,7 @@ final class StateGridDefinitionFactory extends AbstractGridDefinitionFactory
                                 ->setName($this->trans('Delete', [], 'Admin.Actions'))
                                 ->setIcon('delete')
                                 ->setOptions([
-                                    'route' => 'admin_state_delete',
+                                    'route' => 'admin_states_delete',
                                     'route_param_name' => 'stateId',
                                     'route_param_field' => 'id_state',
                                     'confirm_message' => $this->trans(

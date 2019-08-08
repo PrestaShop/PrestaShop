@@ -6,7 +6,7 @@ admin_country_states:
     _controller: 'PrestaShopBundle:Admin\Improve\International\State:getStates'
     _legacy_controller: AdminStates
 
-admin_state_index:
+admin_states_index:
   path: /
   methods: GET
   defaults:
@@ -21,10 +21,10 @@ admin_states_filter:
     _controller: PrestaShopBundle:Admin\Common:searchGrid
     _legacy_controller: AdminStates
     gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.state
-    redirectRoute: admin_state_index
+    redirectRoute: admin_states_index
 #    _legacy_link: AdminStates:submitFilterstate
 
-admin_state_create:
+admin_states_create:
   path: /new
   methods: [GET, POST]
   defaults:
@@ -32,7 +32,7 @@ admin_state_create:
     _legacy_controller: AdminStates
 #    _legacy_link: AdminStates:addstate
 
-admin_state_edit:
+admin_states_edit:
   path: /{stateId}/edit
   methods: [GET, POST]
   defaults:
@@ -52,9 +52,9 @@ admin_states_delete_bulk:
     _legacy_controller: AdminStates
 #    _legacy_link: AdminStates:submitBulkdeletestate
 
-admin_state_delete:
+admin_states_delete:
   path: /{stateId}/delete
-  methods: [POST, GET]
+  methods: [POST]
   defaults:
     _controller: PrestaShopBundle:Admin\Improve\International\State:delete
     _legacy_controller: AdminStates

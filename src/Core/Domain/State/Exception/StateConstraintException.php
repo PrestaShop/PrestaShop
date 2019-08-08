@@ -24,43 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
+namespace PrestaShop\PrestaShop\Core\Domain\State\Exception;
 
-use PrestaShop\PrestaShop\Core\Domain\Zone\DataProvider\ZoneDataProviderInterface;
-use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
-
-/**
- * Class provides Zone choices with ID values.
- */
-final class ZoneByIdChoiceProvider implements FormChoiceProviderInterface
+class StateConstraintException extends StateException
 {
-    /**
-     * @var ZoneDataProviderInterface
-     */
-    private $zoneDataProvider;
-
-    /**
-     * @param ZoneDataProviderInterface $zoneDataProvider
-     */
-    public function __construct(ZoneDataProviderInterface $zoneDataProvider)
-    {
-        $this->zoneDataProvider = $zoneDataProvider;
-    }
-
-    /**
-     * Get zone choices.
-     *
-     * @return array
-     */
-    public function getChoices(): array
-    {
-        $zones = $this->zoneDataProvider->getZones();
-        $choices = [];
-
-        foreach ($zones as $zone) {
-            $choices[$zone['name']] = $zone['id_zone'];
-        }
-
-        return $choices;
-    }
+    const INVALID_ID = 1;
 }
