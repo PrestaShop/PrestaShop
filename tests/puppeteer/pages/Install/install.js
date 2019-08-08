@@ -47,8 +47,17 @@ module.exports = class Install extends CommonPage {
     this.dbResultCheckOkBlock = '#dbResultCheck.okBlock';
 
     // Selectors for Final step
-    this.finalStepPageTitle = '#install_process_success h2';
     this.installationProgressBar = '#install_process_form #progress_bar .installing';
+    this.generateSettingsFileStep = "#process_step_generateSettingsFile";
+    this.installDatabaseStep = "#process_step_installDatabase";
+    this.installDefaultDataStep = "#process_step_installDefaultData";
+    this.populateDatabaseStep = "#process_step_populateDatabase";
+    this.configureShopStep = "#process_step_configureShop";
+    this.installModulesStep = "#process_step_installModules";
+    this.installModulesAddons = "#process_step_installModulesAddons";
+    this.installThemeStep = "#process_step_installTheme";
+    this.installFixturesStep = "#process_step_installFixtures";
+    this.finalStepPageTitle = '#install_process_success h2';
     this.discoverFoButton = '#foBlock';
 
     // Selectors in FO
@@ -63,6 +72,7 @@ module.exports = class Install extends CommonPage {
    * @param pageTitle, expected title
    */
   async checkStepTitle(selector, pageTitle) {
+    await this.page.waitFor(selector, {visible: true, timeout: 90000});
     const title = await this.getTextContent(selector);
     await global.expect(title).to.contains(pageTitle);
   }
@@ -133,6 +143,16 @@ module.exports = class Install extends CommonPage {
    */
   async checkInstallationSuccessful() {
     await this.page.waitForSelector(this.installationProgressBar, {visible: true});
+    await this.page.waitFor(this.installationProgressBar, {visible: true});
+    await this.page.waitFor(this.generateSettingsFileStep, {visible: true});
+    await this.page.waitFor(this.installDatabaseStep, {visible: true});
+    await this.page.waitFor(this.installDefaultDataStep, {visible: true, timeout: 360000});
+    await this.page.waitFor(this.populateDatabaseStep, {visible: true, timeout: 360000});
+    await this.page.waitFor(this.configureShopStep, {visible: true, timeout: 360000});
+    await this.page.waitFor(this.installModulesStep, {visible: true});
+    await this.page.waitFor(this.installModulesAddons, {visible: true, timeout: 360000});
+    await this.page.waitFor(this.installThemeStep, {visible: true});
+    await this.page.waitFor(this.installFixturesStep, {visible: true});
     await this.page.waitForSelector(this.finalStepPageTitle, {visible: true, timeout: 90000});
     await this.checkStepTitle(this.finalStepPageTitle, this.finalStepEnTitle);
   }
