@@ -76,6 +76,12 @@ $(document).ready(function() {
   });
 
   $('.summary-description-container a[data-toggle="tab"]').on('shown.bs.tab', resetEditor);
+
+  /** Activate save and generate buttons directly if product doesn't have combinations */
+  if ($('input[name="show_variations"]:checked').val() === '0') {
+    $('#submit').removeAttr('disabled');
+    $('#create-combinations').removeAttr('disabled');
+  }
 });
 
 /**

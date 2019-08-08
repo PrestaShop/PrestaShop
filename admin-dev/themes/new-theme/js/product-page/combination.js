@@ -110,6 +110,10 @@ export default function() {
       $jsCombinationsBulkForm.removeClass('inactive');
       $('#loading-attribute').fadeOut(1000).remove();
       $('[data-toggle="popover"]').popover();
+
+      /** Activate save and generate buttons after combinations has loaded */
+      $('#submit').removeAttr('disabled');
+      $('#create-combinations').removeAttr('disabled');
     }
   }
 
