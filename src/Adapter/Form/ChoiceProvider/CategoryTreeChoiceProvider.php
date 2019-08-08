@@ -59,7 +59,7 @@ final class CategoryTreeChoiceProvider implements FormChoiceProviderInterface
      */
     public function getChoices()
     {
-        $categories = $this->categoryDataProvider->getNestedCategories($this->contextShopRootCategoryId);
+        $categories = $this->categoryDataProvider->getNestedCategories($this->contextShopRootCategoryId, false, false);
         $choices = [];
 
         foreach ($categories as $category) {
