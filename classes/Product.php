@@ -4477,7 +4477,7 @@ class ProductCore extends ObjectModel
     public static function duplicatePrices($id_product_old, $id_product_new)
     {
         $query = new DbQuery();
-        $query->select('price, id_shop');
+        $query->select('price, unit_price_ratio, id_shop');
         $query->from('product_shop');
         $query->where('`id_product` = ' . (int) $id_product_old);
         $results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query->build());
@@ -4485,7 +4485,7 @@ class ProductCore extends ObjectModel
             foreach ($results as $result) {
                 if (!Db::getInstance()->update(
                     'product_shop',
-                    array('price' => pSQL($result['price'])),
+                    array('price' => pSQL($result['price']), 'unit_price_ratio' => pSQL($result['unit_price_ratio'])),
                     'id_product=' . (int) $id_product_new . ' AND id_shop = ' . (int) $result['id_shop']
                 )) {
                     return false;
