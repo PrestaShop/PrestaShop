@@ -25,7 +25,7 @@
 
 {% set enableSidebar = true %}
 
-{% set layoutTitle = 'Editing attachment %name%'|trans({'%name%': attachmentInformation.name|first}, 'Admin.Orderscustomers.Feature') %}
+{% set layoutTitle = 'Edit: %value%'|trans({'%value%': attachmentInformation.name|first}, 'Admin.Catalog.Feature') %}
 
 {% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
 

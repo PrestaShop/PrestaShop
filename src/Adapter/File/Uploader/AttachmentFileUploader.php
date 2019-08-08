@@ -33,7 +33,6 @@ use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentNotFoundExc
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentUploadFailedException;
 use PrestaShopException;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
-use Symfony\Component\Translation\TranslatorInterface;
 use Tools;
 
 /**
@@ -43,19 +42,6 @@ use Tools;
  */
 final class AttachmentFileUploader
 {
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
-     * @param TranslatorInterface $translator
-     */
-    public function __construct(TranslatorInterface $translator)
-    {
-        $this->translator = $translator;
-    }
-
     /**
      * @param string $filePath
      * @param string $uniqueFileName
@@ -101,22 +87,18 @@ final class AttachmentFileUploader
     private function uploadFile(string $filePath, string $uniqid, int $fileSize)
     {
         if ($fileSize > (Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024 * 1024)) {
-            throw new AttachmentConstraintException($this->translator->trans(
-                'The file is too large. Maximum size allowed is: %1$d kB. The file you are trying to upload is %2$d kB.',
-                array(
-                    '%1$d' => (Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024),
-                    '%2$d' => number_format(($fileSize / 1024), 2, '.', ''),
+            throw new AttachmentConstraintException(sprintf(
+                'Max file size allowed is "%s" bytes. Uploaded file size is "%s".',
+                    (string)(Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024),
+                    number_format(($fileSize / 1024), 2, '.', '')
                 ),
-                'Admin.Notifications.Error'
-            ), AttachmentConstraintException::INVALID_FILE_SIZE);
+             AttachmentConstraintException::INVALID_FILE_SIZE);
         }
 
         try {
             move_uploaded_file($filePath, _PS_DOWNLOAD_DIR_ . $uniqid);
         } catch (FileException $e) {
-            throw new AttachmentUploadFailedException(
-                $this->translator->trans('Failed to copy the file.', [], 'Admin.Catalog.Notification')
-            );
+            throw new AttachmentUploadFailedException('Failed to copy the file.');
         }
     }
 
