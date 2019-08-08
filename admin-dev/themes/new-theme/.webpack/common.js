@@ -84,6 +84,7 @@ module.exports = {
     monitoring: './js/pages/monitoring',
     order: './js/pages/order',
     catalog_price_rule: './js/pages/catalog-price-rule',
+    feature: './js/pages/feature',
   },
   output: {
     path: path.resolve(__dirname, '../public'),
