@@ -218,7 +218,7 @@ final class StateGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setAssociatedColumn('name')
             )
             ->add(
-                (new Filter('iso_code', NumberType::class))
+                (new Filter('iso_code', TextType::class))
                     ->setTypeOptions([
                         'attr' => [
                             'placeholder' => $this->trans('Search ISO code', [], 'Admin.Actions'),
