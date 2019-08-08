@@ -285,7 +285,7 @@ class HelperListCore extends Helper
                 }
             }
 
-            $this->_list[$index]['onclick'] = in_array('view', $this->actions) ? $this->getViewLink($this->token, $id) : $this->getEditLink($this->token, $id);
+            $this->_list[$index]['link'] = in_array('view', $this->actions) ? $this->getViewLink($this->token, $id) : $this->getEditLink($this->token, $id);
 
             // @todo skip action for bulk actions
             // $this->_list[$index]['has_bulk_actions'] = true;
@@ -842,10 +842,10 @@ class HelperListCore extends Helper
      */
     protected function getViewLink($token, $id)
     {
-        $linkBuilder = $this->linkBuilderFactory->getBuilder($this->table);
+        $linkBuilder = $this->linkBuilderFactory->getBuilderFor($this->table);
         $parameters = $this->buildLinkParameters($token, $id);
 
-        return $linkBuilder->buildViewLink($this->table, $parameters);
+        return $linkBuilder->getViewLink($this->table, $parameters);
     }
 
     /**
@@ -859,10 +859,10 @@ class HelperListCore extends Helper
      */
     protected function getEditLink($token, $id)
     {
-        $linkBuilder = $this->linkBuilderFactory->getBuilder($this->table);
+        $linkBuilder = $this->linkBuilderFactory->getBuilderFor($this->table);
         $parameters = $this->buildLinkParameters($token, $id);
 
-        return $linkBuilder->buildEditLink($this->table, $parameters);
+        return $linkBuilder->getEditLink($this->table, $parameters);
     }
 
     /**

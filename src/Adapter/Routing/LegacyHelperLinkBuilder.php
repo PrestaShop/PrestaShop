@@ -38,7 +38,7 @@ class LegacyHelperLinkBuilder implements EntityLinkBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function buildViewLink($entity, array $parameters)
+    public function getViewLink($entity, array $parameters)
     {
         $currentIndex = $parameters['current_index'];
         $parameters = $this->buildActionParameters('view', $entity, $parameters);
@@ -49,7 +49,7 @@ class LegacyHelperLinkBuilder implements EntityLinkBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function buildEditLink($entity, array $parameters)
+    public function getEditLink($entity, array $parameters)
     {
         $currentIndex = $parameters['current_index'];
         $parameters = $this->buildActionParameters('update', $entity, $parameters);

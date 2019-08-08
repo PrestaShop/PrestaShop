@@ -44,9 +44,9 @@ class EntityLinkBuilderFactoryTest extends TestCase
         $builder2 = $this->getEntityLinkBuilderMock(['order', 'product']);
 
         $factory = new EntityLinkBuilderFactory([$builder1, $builder2]);
-        $this->assertEquals($builder1, $factory->getBuilder('customer'));
-        $this->assertEquals($builder2, $factory->getBuilder('order'));
-        $this->assertEquals($builder1, $factory->getBuilder('product'));
+        $this->assertEquals($builder1, $factory->getBuilderFor('customer'));
+        $this->assertEquals($builder2, $factory->getBuilderFor('order'));
+        $this->assertEquals($builder1, $factory->getBuilderFor('product'));
     }
 
     /**

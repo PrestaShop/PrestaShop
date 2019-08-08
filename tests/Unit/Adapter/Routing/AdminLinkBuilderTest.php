@@ -56,41 +56,41 @@ class AdminLinkBuilderTest extends TestCase
     public function testBuildViewLink()
     {
         $builder = new AdminLinkBuilder($this->getLinkMock(), ['customer' => 'AdminCustomers']);
-        $viewLink = $builder->buildViewLink('customer', ['id_customer' => 42]);
+        $viewLink = $builder->getViewLink('customer', ['id_customer' => 42]);
         $this->assertEquals('?controller=AdminCustomers&id_customer=42&viewcustomer=1', $viewLink);
 
-        $viewLink = $builder->buildViewLink('customer', ['id_customer' => 42, 'preview' => 'full']);
+        $viewLink = $builder->getViewLink('customer', ['id_customer' => 42, 'preview' => 'full']);
         $this->assertEquals('?controller=AdminCustomers&id_customer=42&preview=full&viewcustomer=1', $viewLink);
 
         $builder = new AdminLinkBuilder($this->getLinkMock(), ['product' => 'AdminProducts']);
-        $viewLink = $builder->buildViewLink('product', ['id_product' => 42]);
+        $viewLink = $builder->getViewLink('product', ['id_product' => 42]);
         $this->assertEquals('?controller=AdminProducts&id_product=42&viewproduct=1', $viewLink);
 
-        $viewLink = $builder->buildViewLink('product', ['id_product' => 42, 'preview' => 'full']);
+        $viewLink = $builder->getViewLink('product', ['id_product' => 42, 'preview' => 'full']);
         $this->assertEquals('?controller=AdminProducts&id_product=42&preview=full&viewproduct=1', $viewLink);
     }
 
     public function testBuildEditLink()
     {
         $builder = new AdminLinkBuilder($this->getLinkMock(), ['customer' => 'AdminCustomers']);
-        $editLink = $builder->buildEditLink('customer', ['id_customer' => 42]);
+        $editLink = $builder->getEditLink('customer', ['id_customer' => 42]);
         $this->assertEquals('?controller=AdminCustomers&id_customer=42&updatecustomer=1', $editLink);
 
-        $editLink = $builder->buildEditLink('customer', ['id_customer' => 42, 'preview' => 'full']);
+        $editLink = $builder->getEditLink('customer', ['id_customer' => 42, 'preview' => 'full']);
         $this->assertEquals('?controller=AdminCustomers&id_customer=42&preview=full&updatecustomer=1', $editLink);
 
         $builder = new AdminLinkBuilder($this->getLinkMock(), ['product' => 'AdminProducts']);
-        $editLink = $builder->buildEditLink('product', ['id_product' => 42]);
+        $editLink = $builder->getEditLink('product', ['id_product' => 42]);
         $this->assertEquals('?controller=AdminProducts&id_product=42&updateproduct=1', $editLink);
 
-        $editLink = $builder->buildViewLink('product', ['id_product' => 42, 'preview' => 'full']);
+        $editLink = $builder->getViewLink('product', ['id_product' => 42, 'preview' => 'full']);
         $this->assertEquals('?controller=AdminProducts&id_product=42&preview=full&viewproduct=1', $editLink);
     }
 
     public function testCleanTokenInLink()
     {
         $builder = new AdminLinkBuilder($this->getLinkMock(), ['product' => 'AdminProducts', 'token' => 'toto']);
-        $editLink = $builder->buildEditLink('product', ['id_product' => 42]);
+        $editLink = $builder->getEditLink('product', ['id_product' => 42]);
         $this->assertEquals('?controller=AdminProducts&id_product=42&updateproduct=1', $editLink);
     }
 

@@ -39,7 +39,7 @@ interface EntityLinkBuilderInterface
      *
      * @return string
      */
-    public function buildViewLink($entity, array $parameters);
+    public function getViewLink($entity, array $parameters);
 
     /**
      * @param string $entity
@@ -47,7 +47,7 @@ interface EntityLinkBuilderInterface
      *
      * @return string
      */
-    public function buildEditLink($entity, array $parameters);
+    public function getEditLink($entity, array $parameters);
 
     /**
      * @param string $entity

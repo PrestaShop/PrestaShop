@@ -34,14 +34,14 @@ class LegacyHelperLinkBuilderTest extends TestCase
     public function testBuildViewLink()
     {
         $builder = new LegacyHelperLinkBuilder();
-        $viewLink = $builder->buildViewLink('product', ['id_product' => 42, 'current_index' => 'index.php?controller=AdminProducts']);
+        $viewLink = $builder->getViewLink('product', ['id_product' => 42, 'current_index' => 'index.php?controller=AdminProducts']);
         $this->assertEquals('index.php?controller=AdminProducts&id_product=42&viewproduct=1', $viewLink);
     }
 
     public function testBuildEditLink()
     {
         $builder = new LegacyHelperLinkBuilder();
-        $viewLink = $builder->buildEditLink('product', ['id_product' => 42, 'current_index' => 'index.php?controller=AdminProducts']);
+        $viewLink = $builder->getEditLink('product', ['id_product' => 42, 'current_index' => 'index.php?controller=AdminProducts']);
         $this->assertEquals('index.php?controller=AdminProducts&id_product=42&updateproduct=1', $viewLink);
     }
 }

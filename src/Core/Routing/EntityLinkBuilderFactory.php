@@ -53,7 +53,7 @@ class EntityLinkBuilderFactory
      *
      * @throws BuilderNotFoundException
      */
-    public function getBuilder($entity)
+    public function getBuilderFor($entity)
     {
         foreach ($this->builders as $builder) {
             if ($builder->canBuild($entity)) {

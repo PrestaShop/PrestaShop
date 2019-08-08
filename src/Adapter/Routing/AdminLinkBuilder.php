@@ -39,24 +39,32 @@ class AdminLinkBuilder implements EntityLinkBuilderInterface
     private $link;
 
     /** @var array */
-    private $entitiesControllers;
+    private $entityControllers;
 
     /**
-     * @param Link $link
-     * @param array $entitiesControllers
+     * This class can manage entities based on the $entityControllers parameter,
+     * you need to specify an array map with then entity/table short name and its
+     * associated legacy controller:
+     * e.g. $entityControllers = [
+     *  'product' => 'AdminProducts',
+     *  'customer' => 'AdminCustomers',
+     * ];
+     *
+     * @param Link $link Link class that generates links
+     * @param array $entityControllers List of entities with appropriate controller
      */
-    public function __construct(Link $link, array $entitiesControllers)
+    public function __construct(Link $link, array $entityControllers)
     {
         $this->link = $link;
-        $this->entitiesControllers = $entitiesControllers;
+        $this->entityControllers = $entityControllers;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function buildViewLink($entity, array $parameters)
+    public function getViewLink($entity, array $parameters)
     {
-        $controller = $this->entitiesControllers[$entity];
+        $controller = $this->entityControllers[$entity];
         $parameters = $this->buildActionParameters('view', $entity, $parameters);
 
         return $this->link->getAdminLink($controller, true, $parameters);
@@ -65,9 +73,9 @@ class AdminLinkBuilder implements EntityLinkBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function buildEditLink($entity, array $parameters)
+    public function getEditLink($entity, array $parameters)
     {
-        $controller = $this->entitiesControllers[$entity];
+        $controller = $this->entityControllers[$entity];
         $parameters = $this->buildActionParameters('update', $entity, $parameters);
 
         return $this->link->getAdminLink($controller, true, $parameters);
@@ -96,6 +104,6 @@ class AdminLinkBuilder implements EntityLinkBuilderInterface
      */
     public function canBuild($entity)
     {
-        return array_key_exists($entity, $this->entitiesControllers);
+        return !empty($this->entityControllers[$entity]);
     }
 }
