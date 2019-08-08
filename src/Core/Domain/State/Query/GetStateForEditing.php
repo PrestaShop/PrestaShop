@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\State\Query;
 
+use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
 
 /**
@@ -40,6 +41,8 @@ class GetStateForEditing
 
     /**
      * @param int $stateId
+     *
+     * @throws StateConstraintException
      */
     public function __construct(int $stateId)
     {
@@ -49,7 +52,7 @@ class GetStateForEditing
     /**
      * @return StateId $stateId
      */
-    public function getStateId()
+    public function getStateId(): StateId
     {
         return $this->stateId;
     }

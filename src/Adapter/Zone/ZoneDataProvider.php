@@ -26,20 +26,16 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Zone;
 
+use PrestaShop\PrestaShop\Core\Domain\Zone\DataProvider\ZoneDataProviderInterface;
 use Zone;
 
 /**
  * This class will provide data from DB / ORM about Zone
  */
-class ZoneDataProvider
+final class ZoneDataProvider implements ZoneDataProviderInterface
 {
     /**
-     * Return available zones.
-     *
-     * @param bool $active only active zones
-     * @param bool $activeFirst order by active DESC
-     *
-     * @return array
+     * {@inheritdoc}
      */
     public function getZones($active = false, $activeFirst = false): array
     {

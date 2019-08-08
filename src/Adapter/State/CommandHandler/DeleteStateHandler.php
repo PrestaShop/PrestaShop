@@ -44,9 +44,7 @@ final class DeleteStateHandler extends AbstractStateHandler implements DeleteSta
         $state = $this->getState($command->getStateId());
 
         if (!$this->deleteState($state)) {
-            throw new DeleteStateException(sprintf(
-                    'Cannot delete State object with id "%s".', $state->id)
-            );
+            throw new DeleteStateException(sprintf('Cannot delete State object with id "%s".', $state->id));
         }
     }
 }
