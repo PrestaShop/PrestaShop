@@ -183,16 +183,6 @@ final class FeatureGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setAssociatedColumn('name')
             )
             ->add(
-                (new Filter('values_count', NumberType::class))
-                    ->setTypeOptions([
-                        'attr' => [
-                            'placeholder' => $this->trans('Search values', [], 'Admin.Actions'),
-                        ],
-                        'required' => false,
-                    ])
-                    ->setAssociatedColumn('values_count')
-            )
-            ->add(
                 (new Filter('position', NumberType::class))
                     ->setTypeOptions([
                         'attr' => [
@@ -205,9 +195,10 @@ final class FeatureGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->add(
                 (new Filter('actions', SearchAndResetType::class))
                     ->setTypeOptions([
-                        'reset_route' => 'admin_common_reset_search_by_filter_id',
+                        'reset_route' => 'admin_common_reset_search',
                         'reset_route_params' => [
-                            'filterId' => self::GRID_ID,
+                            'controller' => 'feature',
+                            'action' => 'index',
                         ],
                         'redirect_route' => 'admin_features_index',
                     ])

@@ -84,15 +84,15 @@ final class FeatureQueryBuilder extends AbstractDoctrineQueryBuilder
                 'fv',
                 'f.id_feature = fv.id_feature'
             )
-            ->where('(fv.custom=0 OR fv.custom IS NULL)')
+            ->andWhere('(fv.custom=0 OR fv.custom IS NULL)')
             ->groupBy('f.id_feature')
         ;
 
+        $this->applySorting($searchQueryBuilder, $searchCriteria);
         $this->criteriaApplicator->applyPagination(
             $searchCriteria,
             $searchQueryBuilder
         );
-        $this->applySorting($searchQueryBuilder, $searchCriteria);
 
         return $searchQueryBuilder;
     }
@@ -158,9 +158,9 @@ final class FeatureQueryBuilder extends AbstractDoctrineQueryBuilder
                 continue;
             }
 
-            if ('values_count' === $filterName) {
-                $qb->having('values_count LIKE :values_count');
-                $qb->setParameter('values_count', '%' . $filterValue . '%');
+            if ('id_feature' === $filterName) {
+                $qb->andWhere('f.`id_feature` LIKE :' . $filterName);
+                $qb->setParameter($filterName, '%' . $filterValue . '%');
 
                 continue;
             }
