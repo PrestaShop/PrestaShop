@@ -1,0 +1,33 @@
+admin_features_index:
+  path: /
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Sell\Catalog\Feature:index
+    _legacy_controller: AdminFeatures
+#    _legacy_link: AdminFeatures
+
+admin_features_filter:
+  path: /
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Sell\Catalog\Feature:filter
+    _legacy_controller: AdminFeatures
+#    _legacy_link: AdminFeatures:submitFilterfeature
+
+admin_features_delete_bulk:
+  path: /delete-bulk
+  methods: [POST]
+  defaults:
+    #@todo change action
+    _controller: PrestaShopBundle:Admin\Sell\Catalog\Feature:index
+    _legacy_controller: AdminFeatures
+#    _legacy_link: AdminFeatures:submitBulkdeletefeature
+
+admin_features_update_position:
+  path: /update-position
+  methods: [POST]
+  defaults:
+    #@todo change action
+    _controller: PrestaShopBundle:Admin\Sell\Catalog\Feature:index
+    _legacy_controller: AdminFeatures
+#    _legacy_link: AdminFeatures:updatefeature
