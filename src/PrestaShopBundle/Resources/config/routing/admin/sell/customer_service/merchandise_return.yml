@@ -12,7 +12,7 @@ admin_merchandise_returns_save_options:
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/CustomerService/MerchandiseReturn:index
     _legacy_controller: AdminReturn
-#    _legacy_link: AdminReturn:submitOptionsTax
+#    _legacy_link: AdminReturn:submitOptionsorder_return
 
 admin_merchandise_returns_filter:
   path: /filter
