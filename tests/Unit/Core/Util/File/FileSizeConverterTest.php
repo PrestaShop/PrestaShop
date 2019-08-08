@@ -54,7 +54,7 @@ class FileSizeConverterTest extends TestCase
         $this->assertEquals($expectedResult, $result);
     }
 
-    public function sizeDataProvider()
+    public function sizeDataProvider(): array
     {
         return [
             [0, '0B'],

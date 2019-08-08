@@ -55,7 +55,7 @@ class AttachmentController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    public function indexAction(Request $request, AttachmentFilters $filters)
+    public function indexAction(Request $request, AttachmentFilters $filters): Response
     {
         $attachmentGridFactory = $this->get('prestashop.core.grid.factory.attachment');
         $attachmentGrid = $attachmentGridFactory->getGrid($filters);
@@ -64,7 +64,7 @@ class AttachmentController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'attachmentGrid' => $this->presentGrid($attachmentGrid),
             'enableSidebar' => true,
-            'layoutHeaderToolbarBtn' => $this->getAttachmentToolbarButtons($request),
+            'layoutHeaderToolbarBtn' => $this->getAttachmentToolbarButtons(),
         ]);
     }
 
@@ -100,7 +100,7 @@ class AttachmentController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    public function editAction($attachmentId, Request $request)
+    public function editAction(int $attachmentId, Request $request)
     {
         return new Response($attachmentId);
     }
@@ -118,7 +118,7 @@ class AttachmentController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    public function viewAction($attachmentId)
+    public function viewAction(int $attachmentId): Response
     {
         try {
             /** @var Attachment $attachment */
@@ -142,7 +142,7 @@ class AttachmentController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function deleteAction($attachmentId)
+    public function deleteAction(int $attachmentId): RedirectResponse
     {
         try {
             $this->getCommandBus()->handle(new DeleteAttachmentCommand((int) $attachmentId));
@@ -170,7 +170,7 @@ class AttachmentController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function deleteBulkAction(Request $request)
+    public function deleteBulkAction(Request $request): RedirectResponse
     {
         $attachmentIds = $this->getBulkAttachmentsFromRequest($request);
 
@@ -192,7 +192,7 @@ class AttachmentController extends FrameworkBundleAdminController
      *
      * @return array
      */
-    private function getErrorMessages()
+    private function getErrorMessages(): array
     {
         return [
             DeleteAttachmentException::class => $this->trans(
@@ -217,7 +217,7 @@ class AttachmentController extends FrameworkBundleAdminController
      *
      * @return array
      */
-    private function getBulkAttachmentsFromRequest(Request $request)
+    private function getBulkAttachmentsFromRequest(Request $request): array
     {
         $attachmentIds = $request->request->get('attachment_files_bulk');
 
@@ -235,7 +235,7 @@ class AttachmentController extends FrameworkBundleAdminController
     /**
      * @return array
      */
-    private function getAttachmentToolbarButtons()
+    private function getAttachmentToolbarButtons(): array
     {
         $toolbarButtons = [];
 
