@@ -127,7 +127,6 @@ final class MerchandiseReturnQueryBuilder extends AbstractDoctrineQueryBuilder
             ->andWhere('o.id_shop IN (:context_shop_ids)')
             ->setParameter('context_shop_ids', $this->contextShopIds, Connection::PARAM_INT_ARRAY);
 
-
         $this->applyFilters($searchCriteria->getFilters(), $queryBuilder);
 
         return $queryBuilder;
