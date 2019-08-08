@@ -108,7 +108,7 @@ final class AttachmentGridDataFactoryDecorator implements GridDataFactoryInterfa
      *
      * @return RecordCollection
      */
-    private function applyModifications(RecordCollectionInterface $attachments)
+    private function applyModifications(RecordCollectionInterface $attachments): RecordCollection
     {
         $modifiedAttachments = [];
 
@@ -117,7 +117,7 @@ final class AttachmentGridDataFactoryDecorator implements GridDataFactoryInterfa
                 $productNamesArray = $this->getProductNames($attachment['id_attachment']);
                 $productNames = $productNamesArray['product_names'] ?? '';
                 $attachment['dynamic_message'] = $this->trans(
-                    'This file is associated with the following products, do you really want to  delete it?',
+                    'This file is associated with the following products. Are you sure you want to delete it?',
                     [],
                     'Admin.Catalog.Notification'
                 );
@@ -138,7 +138,7 @@ final class AttachmentGridDataFactoryDecorator implements GridDataFactoryInterfa
      *
      * @return array
      */
-    private function getProductNames(string $attachmentId)
+    private function getProductNames(string $attachmentId): array
     {
         $qb = $this->connection->createQueryBuilder();
 
