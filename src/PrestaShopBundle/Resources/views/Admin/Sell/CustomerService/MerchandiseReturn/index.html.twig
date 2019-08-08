@@ -36,6 +36,14 @@
       </div>
     </div>
   {% endblock %}
+
+  {% block merchandise_returns_options %}
+    <div class="row">
+      <div class="col-12">
+        {% include '@PrestaShop/Admin/Sell/CustomerService/MerchandiseReturn/Blocks/options.html.twig' %}
+      </div>
+    </div>
+  {% endblock %}
 {% endblock %}
 
 {% block javascripts %}

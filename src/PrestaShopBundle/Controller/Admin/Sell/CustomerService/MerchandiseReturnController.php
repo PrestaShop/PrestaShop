@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\CustomerService;
 
+use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\MerchandiseReturnGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\MerchandiseReturnFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -48,17 +49,33 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
      *     redirectRoute="admin_merchandise_return_index"
      * )
      *
+     * @param Request $request
      * @param MerchandiseReturnFilters $filters
      *
      * @return Response
      */
-    public function indexAction(MerchandiseReturnFilters $filters): Response
+    public function indexAction(Request $request, MerchandiseReturnFilters $filters): Response
     {
         $gridFactory = $this->get('prestashop.core.grid.factory.merchandise_return');
         $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
 
+        $optionsFormHandler = $this->getOptionsFormHandler();
+        $optionsForm = $optionsFormHandler->getForm();
+        $optionsForm->handleRequest($request);
+
+        if ($optionsForm->isSubmitted() && $optionsForm->isValid()) {
+            $errors = $optionsFormHandler->save($optionsForm->getData());
+
+            if (empty($errors)) {
+                $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
+            } else {
+                $this->flashErrors($errors);
+            }
+        }
+
         return $this->render('@PrestaShop/Admin/Sell/CustomerService/MerchandiseReturn/index.html.twig', [
             'merchandiseReturnsGrid' => $gridPresenter->present($gridFactory->getGrid($filters)),
+            'merchandiseReturnsOptionsForm' => $optionsForm->createView(),
         ]);
     }
 
@@ -84,5 +101,13 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
             MerchandiseReturnGridDefinitionFactory::GRID_ID,
             'admin_merchandise_returns_index'
         );
+    }
+
+    /**
+     * @return FormHandlerInterface
+     */
+    private function getOptionsFormHandler(): FormHandlerInterface
+    {
+        return $this->get('prestashop.admin.merchandise_return_options.form_handler');
     }
 }
