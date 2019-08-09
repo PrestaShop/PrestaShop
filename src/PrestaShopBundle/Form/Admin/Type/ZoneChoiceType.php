@@ -33,21 +33,21 @@ use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Class CountryChoiceType is responsible for providing country choices with -- symbol in front of array.
+ * Class is responsible for providing configurable zone choices with -- symbol in front of array.
  */
-class CountryChoiceType extends AbstractType
+class ZoneChoiceType extends AbstractType
 {
     /**
      * @var ConfigurableFormChoiceProviderInterface
      */
-    private $countriesChoiceProvider;
+    private $zonesChoiceProvider;
 
     /**
-     * @param ConfigurableFormChoiceProviderInterface $countriesChoiceProvider
+     * @param ConfigurableFormChoiceProviderInterface $zonesChoiceProvider
      */
-    public function __construct(ConfigurableFormChoiceProviderInterface $countriesChoiceProvider)
+    public function __construct(ConfigurableFormChoiceProviderInterface $zonesChoiceProvider)
     {
-        $this->countriesChoiceProvider = $countriesChoiceProvider;
+        $this->zonesChoiceProvider = $zonesChoiceProvider;
     }
 
     /**
@@ -59,10 +59,9 @@ class CountryChoiceType extends AbstractType
             'choices', function (Options $options) {
                 $choices = array_merge(
                     ['--' => ''],
-                    $this->countriesChoiceProvider->getChoices([
+                    $this->zonesChoiceProvider->getChoices([
                         'active' => $options['active'],
-                        'containsStates' => $options['containsStates'],
-                        'listStates' => $options['listStates'],
+                        'activeFirst' => $options['activeFirst'],
                     ])
                 );
 
@@ -72,8 +71,7 @@ class CountryChoiceType extends AbstractType
 
         $resolver->setDefaults([
             'active' => false,
-            'containsStates' => false,
-            'listStates' => false,
+            'activeFirst' => false,
         ]);
     }
 

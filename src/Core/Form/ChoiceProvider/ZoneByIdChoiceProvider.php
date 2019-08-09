@@ -26,38 +26,29 @@
 
 namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
-use PrestaShop\PrestaShop\Adapter\Country\CountryDataProvider;
+use PrestaShop\PrestaShop\Core\Domain\Zone\DataProvider\ZoneDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 
 /**
- * Class CountryByIdChoiceProvider provides country choices with ID values.
+ * Class provides Zone choices with ID values.
  */
-final class CountryByIdChoiceProvider implements ConfigurableFormChoiceProviderInterface
+final class ZoneByIdChoiceProvider implements ConfigurableFormChoiceProviderInterface
 {
     /**
-     * @var CountryDataProvider
+     * @var ZoneDataProviderInterface
      */
-    private $countryDataProvider;
+    private $zoneDataProvider;
 
     /**
-     * @var int
+     * @param ZoneDataProviderInterface $zoneDataProvider
      */
-    private $langId;
-
-    /**
-     * @param int $langId
-     * @param CountryDataProvider $countryDataProvider
-     */
-    public function __construct(
-        $langId,
-        CountryDataProvider $countryDataProvider
-    ) {
-        $this->langId = $langId;
-        $this->countryDataProvider = $countryDataProvider;
+    public function __construct(ZoneDataProviderInterface $zoneDataProvider)
+    {
+        $this->zoneDataProvider = $zoneDataProvider;
     }
 
     /**
-     * Get country choices.
+     * Get zone choices.
      *
      * {@inheritdoc}
      */
@@ -67,19 +58,15 @@ final class CountryByIdChoiceProvider implements ConfigurableFormChoiceProviderI
             $options['active'] :
             false;
 
-        $containsStates = isset($options['containsStates']) && is_bool($options['containsStates']) ?
-            $options['containsStates'] :
+        $activeFirst = isset($options['activeFirst']) && is_bool($options['activeFirst']) ?
+            $options['activeFirst'] :
             false;
 
-        $listStates = isset($options['listStates']) && is_bool($options['listStates']) ?
-            $options['listStates'] :
-            false;
-
-        $countries = $this->countryDataProvider->getCountries($this->langId, $active, $containsStates, $listStates);
+        $zones = $this->zoneDataProvider->getZones($active, $activeFirst);
         $choices = [];
 
-        foreach ($countries as $country) {
-            $choices[$country['name']] = (int) $country['id_country'];
+        foreach ($zones as $zone) {
+            $choices[$zone['name']] = (int) $zone['id_zone'];
         }
 
         return $choices;

@@ -1,0 +1,11 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.validator.constraint.unique_state_iso_code:
+    class: PrestaShopBundle\Form\Validator\Constraints\UniqueStateIsoCodeValidator
+    arguments:
+      - "@translator"
+      - "@prestashop.core.query_bus"
+    tags:
+      - { name: validator.constraint_validator }
