@@ -29,6 +29,8 @@ namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
@@ -113,8 +115,8 @@ final class FeatureGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->add((new ActionColumn('actions'))
                 ->setName($this->trans('Actions', [], 'Admin.Global'))
                 ->setOptions([
-                    //@todo uncomment when form is migrated
-//                    'actions' => (new RowActionCollection())
+                    'actions' => (new RowActionCollection())
+                        //@todo uncomment when form is migrated
 //                        ->add(
 //                            (new LinkRowAction('view'))
 //                                ->setName($this->trans('View', [], 'Admin.Actions'))
@@ -135,21 +137,21 @@ final class FeatureGridDefinitionFactory extends AbstractGridDefinitionFactory
 //                                    'route_param_field' => 'id_feature',
 //                                ])
 //                        )
-//                        ->add((new SubmitRowAction('delete'))
-//                            ->setName($this->trans('Delete', [], 'Admin.Actions'))
-//                            ->setIcon('delete')
-//                            ->setOptions([
-//                                'method' => 'DELETE',
-//                                'route' => 'admin_features_delete',
-//                                'route_param_name' => 'featureId',
-//                                'route_param_field' => 'id_feature',
-//                                'confirm_message' => $this->trans(
-//                                    'Delete selected item?',
-//                                    [],
-//                                    'Admin.Notifications.Warning'
-//                                ),
-//                            ])
-//                        ),
+                        ->add((new SubmitRowAction('delete'))
+                            ->setName($this->trans('Delete', [], 'Admin.Actions'))
+                            ->setIcon('delete')
+                            ->setOptions([
+                                'method' => 'POST',
+                                'route' => 'admin_features_delete',
+                                'route_param_name' => 'featureId',
+                                'route_param_field' => 'id_feature',
+                                'confirm_message' => $this->trans(
+                                    'Delete selected item?',
+                                    [],
+                                    'Admin.Notifications.Warning'
+                                ),
+                            ])
+                        ),
                 ])
             );
 
