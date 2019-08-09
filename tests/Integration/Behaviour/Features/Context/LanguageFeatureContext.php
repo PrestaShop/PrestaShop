@@ -33,8 +33,8 @@ use RuntimeException;
 class LanguageFeatureContext extends AbstractPrestaShopFeatureContext
 {
     /**
-    *  @Given /^language with iso code "([^"]*)" is the default one$/
-    */
+     *  @Given /^language with iso code "([^"]*)" is the default one$/
+     */
     public function languageWithIsoCodeIsTheDefaultOne($isoCode)
     {
         $languageId = Language::getIdByIso($isoCode);

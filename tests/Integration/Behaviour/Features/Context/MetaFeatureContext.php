@@ -26,8 +26,6 @@
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
-use Behat\Behat\Tester\Exception\PendingException;
-use Behat\Gherkin\Node\TableNode;
 use Meta;
 use RuntimeException;
 
