@@ -40,6 +40,8 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintExcep
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\AutomateExchangeRatesUpdateException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\ImmutableCurrencyFieldException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\InvalidCustomCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Query\GetCurrencyExchangeRate;
 use PrestaShop\PrestaShop\Core\Domain\Currency\QueryResult\ExchangeRate;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
@@ -439,6 +441,10 @@ class CurrencyController extends FrameworkBundleAdminController
                     'This currency already exists.',
                     'Admin.International.Notification'
                 ),
+                CurrencyConstraintException::MISMATCHING_ISO_CODES => $this->trans(
+                    'Can not find a real currency matching this couple of ISO code and numeric ISO code',
+                    'Admin.International.Notification'
+                ),
             ],
             AutomateExchangeRatesUpdateException::class => [
                 AutomateExchangeRatesUpdateException::CRON_TASK_MANAGER_MODULE_NOT_INSTALLED => $this->trans(
@@ -483,6 +489,34 @@ class CurrencyController extends FrameworkBundleAdminController
                 'You cannot disable the default currency',
                 'Admin.International.Notification'
             ),
+            InvalidCustomCurrencyException::class => [
+                InvalidCustomCurrencyException::INVALID_ISO_CODE => $this->trans(
+                    'You can not create a custom currency which ISO code matches a real one',
+                    'Admin.International.Notification'
+                ),
+                InvalidCustomCurrencyException::INVALID_NUMERIC_ISO_CODE => $this->trans(
+                    'You can not create a custom currency which numeric ISO code matches a real one',
+                    'Admin.International.Notification'
+                ),
+            ],
+            ImmutableCurrencyFieldException::class => [
+                ImmutableCurrencyFieldException::IMMUTABLE_CUSTOM => $this->trans(
+                    'You can not change a custom currency into a real one',
+                    'Admin.International.Notification'
+                ),
+                ImmutableCurrencyFieldException::IMMUTABLE_REAL => $this->trans(
+                    'You can not change a real currency into a custom one',
+                    'Admin.International.Notification'
+                ),
+                ImmutableCurrencyFieldException::IMMUTABLE_ISO_CODE => $this->trans(
+                    'You can not modify ISO code of a real currency',
+                    'Admin.International.Notification'
+                ),
+                ImmutableCurrencyFieldException::IMMUTABLE_NUMERIC_ISO_CODE => $this->trans(
+                    'You can not modify numeric ISO code of a real currency',
+                    'Admin.International.Notification'
+                ),
+            ]
         ];
     }
 }

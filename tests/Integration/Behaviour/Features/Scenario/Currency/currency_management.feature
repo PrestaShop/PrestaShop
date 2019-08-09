@@ -51,7 +51,7 @@ Feature: Currency Management
       | is_enabled       | 1         |
       | is_custom        | 1         |
       | shop_association | shop1     |
-    Then I should get error that custom is immutable
+    Then I should get error that real is immutable
     When I edit currency "currency1" with following properties:
       | iso_code         | EUR       |
       | numeric_iso_code | 978       |
