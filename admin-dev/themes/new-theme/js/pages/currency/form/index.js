@@ -25,6 +25,7 @@
 
 import ChoiceTree from '../../../components/form/choice-tree';
 import TranslatableInput from '../../../components/translatable-input';
+import { showGrowl } from '../../../app/utils/growl';
 import currencyFormMap from "./currency-form-map";
 
 const $ = window.$;
@@ -87,9 +88,14 @@ $(() => {
         $(currencyFormMap.loadingDataModalSelector).modal('hide');
         $(currencyFormMap.resetDefaultSettingsSelector).removeClass('spinner');
       })
-      .fail(() => {
+      .fail((currencyData) => {
         $(currencyFormMap.loadingDataModalSelector).modal('hide');
         $(currencyFormMap.resetDefaultSettingsSelector).removeClass('spinner');
+        let errorMessage = 'Can not find CLDR data for currency ' + selectedISOCode;
+        if (currencyData && currencyData.responseJSON && currencyData.responseJSON.error) {
+          errorMessage = currencyData.responseJSON.error;
+        }
+        showGrowl('error', errorMessage, 3000);
       })
   }
 
