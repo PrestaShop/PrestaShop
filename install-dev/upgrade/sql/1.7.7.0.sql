@@ -540,3 +540,24 @@ INSERT IGNORE INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `po
 ;
 
 INSERT INTO `PREFIX_hook_alias` (`name`, `alias`) VALUES ('displayAdminOrderTop', 'displayInvoice');
+
+ALTER TABLE `PREFIX_search_word` MODIFY `word` VARCHAR(30) NOT NULL;
+
+/* Update wrong hook names */
+UPDATE `PREFIX_hook_module` AS hm
+INNER JOIN `PREFIX_hook` AS hfrom ON hm.id_hook = hfrom.id_hook AND hfrom.name = 'actionAdministrationPageFormSave'
+INNER JOIN `PREFIX_hook` AS hto ON hto.name = 'actionAdministrationPageSave'
+SET hm.id_hook = hto.id_hook;
+DELETE FROM `PREFIX_hook` WHERE name = 'actionAdministrationPageFormSave';
+
+UPDATE `PREFIX_hook_module` AS hm
+INNER JOIN `PREFIX_hook` AS hfrom ON hm.id_hook = hfrom.id_hook AND hfrom.name = 'actionMaintenancePageFormSave'
+INNER JOIN `PREFIX_hook` AS hto ON hto.name = 'actionMaintenancePageSave'
+SET hm.id_hook = hto.id_hook;
+DELETE FROM `PREFIX_hook` WHERE name = 'actionMaintenancePageFormSave';
+
+UPDATE `PREFIX_hook_module` AS hm
+INNER JOIN `PREFIX_hook` AS hfrom ON hm.id_hook = hfrom.id_hook AND hfrom.name = 'actionPerformancePageFormSave'
+INNER JOIN `PREFIX_hook` AS hto ON hto.name = 'actionPerformancePageSave'
+SET hm.id_hook = hto.id_hook;
+DELETE FROM `PREFIX_hook` WHERE name = 'actionPerformancePageFormSave';
