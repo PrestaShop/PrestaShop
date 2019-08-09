@@ -45,13 +45,20 @@ final class CategoryTreeChoiceProvider implements FormChoiceProviderInterface
     private $contextShopRootCategoryId;
 
     /**
+     * @var boolean
+     */
+    private $enabledCategoriesOnly;
+
+    /**
      * @param CategoryDataProvider $categoryDataProvider
      * @param $contextShopRootCategoryId
+     * @param boolean $enabledCategoriesOnly
      */
-    public function __construct(CategoryDataProvider $categoryDataProvider, $contextShopRootCategoryId)
+    public function __construct(CategoryDataProvider $categoryDataProvider, $contextShopRootCategoryId, $enabledCategoriesOnly = false)
     {
         $this->categoryDataProvider = $categoryDataProvider;
         $this->contextShopRootCategoryId = $contextShopRootCategoryId;
+        $this->enabledCategoriesOnly = $enabledCategoriesOnly;
     }
 
     /**
@@ -59,7 +66,7 @@ final class CategoryTreeChoiceProvider implements FormChoiceProviderInterface
      */
     public function getChoices()
     {
-        $categories = $this->categoryDataProvider->getNestedCategories($this->contextShopRootCategoryId, false, false);
+        $categories = $this->categoryDataProvider->getNestedCategories($this->contextShopRootCategoryId, false, $this->enabledCategoriesOnly);
         $choices = [];
 
         foreach ($categories as $category) {
