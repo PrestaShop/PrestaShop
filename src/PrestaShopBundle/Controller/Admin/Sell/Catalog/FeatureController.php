@@ -88,4 +88,9 @@ class FeatureController extends FrameworkBundleAdminController
             'admin_features_index'
         );
     }
+
+    public function deleteAction(int $featureId): RedirectResponse
+    {
+        return $this->redirectToRoute('admin_features_index');
+    }
 }

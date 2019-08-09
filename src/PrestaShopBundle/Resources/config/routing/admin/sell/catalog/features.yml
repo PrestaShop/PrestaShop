@@ -16,6 +16,18 @@ admin_features_filter:
     redirectRoute: admin_features_index
 #    _legacy_link: AdminFeatures:submitFilterfeature
 
+admin_features_delete:
+  path: /{featureId}/delete
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Sell\Catalog\Feature:delete
+    _legacy_controller: AdminFeatures
+#    _legacy_link: AdminFeatures:submitBulkdeletefeature
+    _legacy_parameters:
+      id_feature: featureId
+  requirements:
+    featureId: \d+
+
 admin_features_delete_bulk:
   path: /delete-bulk
   methods: [POST]
