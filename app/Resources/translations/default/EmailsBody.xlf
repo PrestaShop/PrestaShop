@@ -144,11 +144,6 @@
         <target>Product(s) now available for download</target>
         <note>Line: 25</note>
       </trans-unit>
-      <trans-unit id="e939102049f2ebc4cab871d68d4237be">
-        <source>You have [1]{nbProducts}[1] product(s) now available for download using the following link(s):</source>
-        <target>You have [1]{nbProducts}[1] product(s) now available for download using the following link(s):</target>
-        <note>Line: 30</note>
-      </trans-unit>
     </body>
   </file>
   <file original="mails/themes/classic/core/employee_password.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
@@ -1183,15 +1178,15 @@
         <target>We have updated the progress on your return #{id_order_return}, the new status is:</target>
         <note>Line: 247</note>
       </trans-unit>
-      <trans-unit id="ec7067871aef5b5d9c85a20c88e74eaf">
-        <source>Order return sale</source>
-        <target>Order return sale</target>
-        <note>Line: 3</note>
-      </trans-unit>
       <trans-unit id="3bc517b4a402645da419438914f481c6">
         <source>Order return #{id_order_return} - Update</source>
         <target>Order return #{id_order_return} - Update</target>
         <note>Line: 180</note>
+      </trans-unit>
+      <trans-unit id="d28c38eafee0f9e02256b284275603f9">
+        <source>Order return state</source>
+        <target>Order return state</target>
+        <note>Line: 3</note>
       </trans-unit>
     </body>
   </file>
@@ -1842,11 +1837,6 @@
         <target>Congratulations!</target>
         <note>Line: 44</note>
       </trans-unit>
-      <trans-unit id="680ac1cb2fca9067c46fc2a52d726f86">
-        <source>Refferal program Congratulations</source>
-        <target>Refferal program Congratulations</target>
-        <note>Line: 3</note>
-      </trans-unit>
       <trans-unit id="0920dd6cc2680f2a960c59f757d5184d">
         <source><![CDATA[Your referred friend [1]{sponsored_firstname}[/1] [1]{sponsored_lastname}[/1] has placed his/her first order on <a href="{shop_url}">{shop_name}</a>!]]></source>
         <target><![CDATA[Your referred friend [1]{sponsored_firstname}[/1] [1]{sponsored_lastname}[/1] has placed his/her first order on <a href="{shop_url}">{shop_name}</a>!]]></target>
@@ -1856,6 +1846,11 @@
         <source>We are pleased to offer you a voucher worth [1]{discount_display}[/1] (VOUCHER # [1]{discount_name}[/1]) that you can use on your next order.</source>
         <target>We are pleased to offer you a voucher worth [1]{discount_display}[/1] (VOUCHER # [1]{discount_name}[/1]) that you can use on your next order.</target>
         <note>Line: 187</note>
+      </trans-unit>
+      <trans-unit id="49af6950c9d9101af9ae958b4426c6b9">
+        <source>Referral program Congratulations</source>
+        <target>Referral program Congratulations</target>
+        <note>Line: 3</note>
       </trans-unit>
     </body>
   </file>
@@ -1870,11 +1865,6 @@
         <source>We are pleased to offer you a voucher worth [1]{discount}[/1] that you can use on your next order.</source>
         <target>We are pleased to offer you a voucher worth [1]{discount}[/1] that you can use on your next order.</target>
         <note>Line: 186</note>
-      </trans-unit>
-      <trans-unit id="3faf1da2d00adbfbf0813d2b776ff26e">
-        <source>Refferal program Invitation</source>
-        <target>Refferal program Invitation</target>
-        <note>Line: 3</note>
       </trans-unit>
       <trans-unit id="814fd45dff3fa38cc8114bc0d6c9020a">
         <source>Join us!</source>
@@ -1900,6 +1890,11 @@
         <source>When signing up, don't forget to provide the email address of your referring friend:</source>
         <target>When signing up, don't forget to provide the email address of your referring friend:</target>
         <note>Line: 253</note>
+      </trans-unit>
+      <trans-unit id="a9f8dbec69378bc1c5b1e9d144bd2412">
+        <source>Referral program Invitation</source>
+        <target>Referral program Invitation</target>
+        <note>Line: 3</note>
       </trans-unit>
     </body>
   </file>
@@ -1930,15 +1925,15 @@
         <target>, with an amount of</target>
         <note>Line: 248</note>
       </trans-unit>
-      <trans-unit id="4ad352fa59706c15c3134e72b13b1d42">
-        <source>Refferal program Voucher</source>
-        <target>Refferal program Voucher</target>
-        <note>Line: 3</note>
-      </trans-unit>
       <trans-unit id="cb3374f4e7a0afb61e63d0ee694ad501">
         <source>Sponsorship Program</source>
         <target>Sponsorship Program</target>
         <note>Line: 180</note>
+      </trans-unit>
+      <trans-unit id="f38a99a3e90333bd34a64e90f03960f4">
+        <source>Referral program Voucher</source>
+        <target>Referral program Voucher</target>
+        <note>Line: 3</note>
       </trans-unit>
     </body>
   </file>
