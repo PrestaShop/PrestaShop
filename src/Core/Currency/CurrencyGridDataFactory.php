@@ -92,7 +92,12 @@ final class CurrencyGridDataFactory implements GridDataFactoryInterface
         foreach ($records as $key => $record) {
             $result[$key] = $record;
             $result[$key]['currency'] = Tools::ucfirst($result[$key]['name']);
-            if (isset($result[$key]['edited']) && $result[$key]['edited']) {
+            if (isset($result[$key]['custom']) && $result[$key]['custom']) {
+                $result[$key]['currency'] .= sprintf(
+                    ' (%s)',
+                    $this->translator->trans('Custom', [], 'Admin.International.Feature')
+                );
+            } elseif (isset($result[$key]['edited']) && $result[$key]['edited']) {
                 $result[$key]['currency'] .= sprintf(
                     ' (%s)',
                     $this->translator->trans('Edited', [], 'Admin.International.Feature')

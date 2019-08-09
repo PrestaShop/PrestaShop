@@ -315,7 +315,7 @@ final class EditCurrencyHandler extends AbstractCurrencyHandler implements EditC
         if ($currency->custom != $command->isCustom()) {
             throw new ImmutableCurrencyFieldException(
                 'You can not change custom field on a currency',
-                ImmutableCurrencyFieldException::IMMUTABLE_CUSTOM
+                $currency->custom ? ImmutableCurrencyFieldException::IMMUTABLE_CUSTOM : ImmutableCurrencyFieldException::IMMUTABLE_REAL
             );
         }
         if ($currency->custom) {

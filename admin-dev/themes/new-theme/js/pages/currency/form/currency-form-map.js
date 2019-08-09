@@ -29,7 +29,7 @@
 export default {
   currencyForm: '#currency_form',
   currencySelector: '#currency_selected_iso_code',
-  isCustomCheckbox: '#currency_is_custom',
+  isCustomCheckbox: '#currency_custom',
   namesSelector: '#currency_names_LANG_ID',
   symbolsSelector: '#currency_symbols_LANG_ID',
   isoCodeSelector: '#currency_iso_code',
