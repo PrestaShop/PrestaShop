@@ -10,3 +10,6 @@ services:
         arguments:
           - "@prestashop.adapter.legacy.configuration"
           - "@=service('prestashop.adapter.legacy.context').getContext().shop?service('prestashop.adapter.legacy.context').getContext().shop.id"
+
+    prestashop.adapter.data_provider.zone:
+        class: PrestaShop\PrestaShop\Adapter\Zone\ZoneDataProvider

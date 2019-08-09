@@ -24,20 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\State\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\State\CommandHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\State\Command\EditStateCommand;
 
 /**
- * Is thrown when State constraint is violated
+ * Defines contract for edit state handler
  */
-class StateConstraintException extends StateException
+interface EditStateHandlerInterface
 {
-    const INVALID_ID = 1;
-
-    const INVALID_NAME = 2;
-
-    const INVALID_ISO_CODE = 3;
-
-    const INVALID_FIELDS = 4;
-
-    const INVALID_ACTIVE = 5;
+    /**
+     * @param EditStateCommand $command
+     */
+    public function handle(EditStateCommand $command);
 }

@@ -27,10 +27,11 @@
 namespace PrestaShopBundle\Form\Admin\Type;
 
 use PrestaShop\PrestaShop\Core\Form\FormChoiceAttributeProviderInterface;
-use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -87,13 +88,25 @@ class CountryChoiceType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $choices = array_merge(
-            ['--' => ''],
-            $this->countriesChoiceProvider->getChoices()
+        $resolver->setNormalizer(
+            'choices', function (Options $options) {
+                $choices = array_merge(
+                    ['--' => ''],
+                    $this->countriesChoiceProvider->getChoices([
+                        'active' => $options['active'],
+                        'containsStates' => $options['containsStates'],
+                        'listStates' => $options['listStates'],
+                    ])
+                );
+
+                return $choices;
+            }
         );
 
         $resolver->setDefaults([
-            'choices' => $choices,
+            'active' => false,
+            'containsStates' => false,
+            'listStates' => false,
             'choice_attr' => [$this, 'getChoiceAttr'],
             'withDniAttr' => false,
             'withPostcodeAttr' => false,

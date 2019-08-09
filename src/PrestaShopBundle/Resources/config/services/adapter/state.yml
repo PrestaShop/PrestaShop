@@ -1,0 +1,42 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.adapter.state.command_handler.abstract_state_handler:
+    abstract:  true
+    class: 'PrestaShop\PrestaShop\Adapter\State\AbstractStateHandler'
+    arguments:
+      - '@validator'
+
+  prestashop.adapter.state.command_handler.create_state_handler:
+    public: true
+    class: 'PrestaShop\PrestaShop\Adapter\State\CommandHandler\AddStateHandler'
+    parent: 'prestashop.adapter.state.command_handler.abstract_state_handler'
+    arguments:
+      - '@validator'
+    tags:
+      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\State\Command\AddStateCommand' }
+
+  prestashop.adapter.state.command_handler.edit_state_handler:
+    public: true
+    class: 'PrestaShop\PrestaShop\Adapter\State\CommandHandler\EditStateHandler'
+    parent: 'prestashop.adapter.state.command_handler.abstract_state_handler'
+    arguments:
+      - '@validator'
+    tags:
+      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\State\Command\EditStateCommand' }
+
+  prestashop.adapter.state.query_handler.get_state_for_editing:
+    public: true
+    class: 'PrestaShop\PrestaShop\Adapter\State\QueryHandler\GetStateForEditingHandler'
+    parent: 'prestashop.adapter.state.command_handler.abstract_state_handler'
+    arguments:
+      - '@validator'
+    tags:
+      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\State\Query\GetStateForEditing' }
+
+  prestashop.adapter.state.query_handler.get_state_existance:
+    class: 'PrestaShop\PrestaShop\Adapter\State\QueryHandler\GetStateByIsoCodeHandler'
+    tags:
+      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\State\Query\GetStateByIsoCode' }
+

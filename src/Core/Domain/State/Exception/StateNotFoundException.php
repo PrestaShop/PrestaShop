@@ -27,17 +27,8 @@
 namespace PrestaShop\PrestaShop\Core\Domain\State\Exception;
 
 /**
- * Is thrown when State constraint is violated
+ * Thrown on failure to find state
  */
-class StateConstraintException extends StateException
+class StateNotFoundException extends StateException
 {
-    const INVALID_ID = 1;
-
-    const INVALID_NAME = 2;
-
-    const INVALID_ISO_CODE = 3;
-
-    const INVALID_FIELDS = 4;
-
-    const INVALID_ACTIVE = 5;
 }

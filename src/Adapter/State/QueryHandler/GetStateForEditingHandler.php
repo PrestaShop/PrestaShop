@@ -24,51 +24,36 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\State\ValueObject;
+namespace PrestaShop\PrestaShop\Adapter\State\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateConstraintException;
+use PrestaShop\PrestaShop\Adapter\State\AbstractStateHandler;
+use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\State\Query\GetStateForEditing;
+use PrestaShop\PrestaShop\Core\Domain\State\QueryHandler\GetStateForEditingHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\State\QueryResult\EditableState;
 
 /**
- * Provides state id
+ * Handles query which gets state for editing
  */
-class StateId
+final class GetStateForEditingHandler extends AbstractStateHandler implements GetStateForEditingHandlerInterface
 {
     /**
-     * @var int
-     */
-    private $id;
-
-    /**
-     * @param int $id
+     * {@inheritdoc}
      *
-     * @throws StateConstraintException
+     * @throws StateNotFoundException
      */
-    public function __construct(int $id)
+    public function handle(GetStateForEditing $query): EditableState
     {
-        $this->assertPositiveInt($id);
-        $this->id = $id;
-    }
+        $stateId = $query->getStateId();
+        $state = $this->getState($stateId);
 
-    /**
-     * @return int
-     */
-    public function getValue(): int
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param int $value
-     *
-     * @throws StateConstraintException
-     */
-    private function assertPositiveInt(int $value)
-    {
-        if (0 >= $value) {
-            throw new StateConstraintException(
-                sprintf('Invalid state id "%s".', var_export($value, true)),
-                StateConstraintException::INVALID_ID
-            );
-        }
+        return new EditableState(
+            $stateId,
+            $state->id_country,
+            $state->id_zone,
+            $state->name,
+            $state->iso_code,
+            (bool) $state->active
+        );
     }
 }

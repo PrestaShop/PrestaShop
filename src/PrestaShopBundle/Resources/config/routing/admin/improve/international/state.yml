@@ -1,6 +1,35 @@
 admin_country_states:
   path: /
   methods: [GET]
+  condition: "request.isXmlHttpRequest()"
   defaults:
     _controller: 'PrestaShopBundle:Admin\Improve\International\State:getStates'
     _legacy_controller: AdminStates
+
+admin_states_index:
+  path: /
+  methods: GET
+  defaults:
+    _controller: PrestaShopBundle:Admin\Improve\International\State:index
+    _legacy_controller: AdminStates
+#    _legacy_link: AdminStates
+
+admin_states_create:
+  path: /new
+  methods: [GET, POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Improve\International\State:create
+    _legacy_controller: AdminStates
+    _legacy_link: AdminStates:addstate
+
+admin_states_edit:
+  path: /{stateId}/edit
+  methods: [GET, POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Improve\International\State:edit
+    _legacy_controller: AdminStates
+    _legacy_link: AdminStates:updatestate
+    _legacy_parameters:
+      id_state: stateId
+  requirements:
+    stateId: \d+

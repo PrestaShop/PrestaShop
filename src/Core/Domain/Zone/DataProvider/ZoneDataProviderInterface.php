@@ -24,20 +24,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\State\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Zone\DataProvider;
 
 /**
- * Is thrown when State constraint is violated
+ * Defines contract for zone data provider
  */
-class StateConstraintException extends StateException
+interface ZoneDataProviderInterface
 {
-    const INVALID_ID = 1;
-
-    const INVALID_NAME = 2;
-
-    const INVALID_ISO_CODE = 3;
-
-    const INVALID_FIELDS = 4;
-
-    const INVALID_ACTIVE = 5;
+    /**
+     * Return available zones.
+     *
+     * @param bool $active only active zones
+     * @param bool $activeFirst order by active DESC
+     *
+     * @return array
+     */
+    public function getZones($active = false, $activeFirst = false): array;
 }

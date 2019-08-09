@@ -1,0 +1,108 @@
+{#**
+ * 2007-2019 PrestaShop and Contributors
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+
+{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+
+{{ form_start(stateForm) }}
+<div class="card">
+  <div class="card-header">
+    {{ 'State'|trans({}, 'Admin.Global') }}
+  </div>
+
+  <div class="card-block row">
+    <div class="card-text">
+      {{ form_errors(stateForm) }}
+
+      <div class="form-group row">
+        {{ ps.label_with_help(
+          'Name'|trans({}, 'Admin.Global'),
+          'Provide the state name to be displayed in addresses and on invoices.'|trans({}, 'Admin.International.Help'),
+          '',
+          '',
+          true
+        ) }}
+        <div class="col-sm">
+          {{ form_widget(stateForm.name) }}
+        </div>
+      </div>
+
+      <div class="form-group row">
+        {{ ps.label_with_help(
+          'ISO code'|trans({}, 'Admin.International.Feature'),
+          ('1 to 4 letter ISO code.'|trans({}, 'Admin.International.Help')) ~ ' ' ~ ('You can prefix it with the country ISO code if needed.'|trans({}, 'Admin.International.Help')),
+          '',
+          '',
+          true
+        ) }}
+        <div class="col-sm">
+          {{ form_widget(stateForm.iso_code) }}
+        </div>
+      </div>
+
+      <div class="form-group row">
+        {{ ps.label_with_help(
+          'Country'|trans({}, 'Admin.Global'),
+          ('Country where the state is located.'|trans({}, 'Admin.International.Help')) ~ ' ' ~ ('Only the countries with the option "contains states" enabled are displayed.'|trans({}, 'Admin.International.Help')),
+          '',
+          '',
+          true
+        ) }}
+        <div class="col-sm">
+          {{ form_widget(stateForm.id_country) }}
+        </div>
+      </div>
+
+      <div class="form-group row">
+        {{ ps.label_with_help(
+          'Zone'|trans({}, 'Admin.Global'),
+          ('Geographical region where this state is located.'|trans({}, 'Admin.International.Help')) ~ ' ' ~ ('Used for shipping'|trans({}, 'Admin.International.Help')),
+          '',
+          '',
+          true
+        ) }}
+        <div class="col-sm">
+          {{ form_widget(stateForm.id_zone) }}
+        </div>
+      </div>
+
+      {{ ps.form_group_row(stateForm.active, {}, {
+        'label': 'Status'|trans({}, 'Admin.Global'),
+      }) }}
+    </div>
+  </div>
+
+  <div class="card-footer">
+    <div class="d-inline-flex">
+      <a href="{{ path('admin_states_index') }}" class="btn btn-outline-secondary">
+        {{ 'Cancel'|trans({}, 'Admin.Actions') }}
+      </a>
+    </div>
+    <div class="d-inline-flex float-right">
+      <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+    </div>
+  </div>
+
+</div>
+{{ form_end(stateForm) }}

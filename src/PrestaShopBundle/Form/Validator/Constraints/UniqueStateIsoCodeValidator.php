@@ -24,51 +24,45 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\State\ValueObject;
+namespace PrestaShopBundle\Form\Validator\Constraints;
 
-use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateConstraintException;
+use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\State\Query\GetStateByIsoCode;
+use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Constraint;
+use Symfony\Component\Validator\ConstraintValidator;
 
 /**
- * Provides state id
+ * Unique state iso code validator
  */
-class StateId
+class UniqueStateIsoCodeValidator extends ConstraintValidator
 {
     /**
-     * @var int
+     * @var TranslatorInterface
      */
-    private $id;
+    private $translator;
 
     /**
-     * @param int $id
-     *
-     * @throws StateConstraintException
+     * @var CommandBusInterface
      */
-    public function __construct(int $id)
+    private $queryBus;
+
+    /**
+     * @param TranslatorInterface $translator
+     * @param CommandBusInterface $queryBus
+     */
+    public function __construct(TranslatorInterface $translator, CommandBusInterface $queryBus)
     {
-        $this->assertPositiveInt($id);
-        $this->id = $id;
+        $this->translator = $translator;
+        $this->queryBus = $queryBus;
     }
 
     /**
-     * @return int
+     * {@inheritdoc}
      */
-    public function getValue(): int
+    public function validate($value, Constraint $constraint)
     {
-        return $this->id;
-    }
-
-    /**
-     * @param int $value
-     *
-     * @throws StateConstraintException
-     */
-    private function assertPositiveInt(int $value)
-    {
-        if (0 >= $value) {
-            throw new StateConstraintException(
-                sprintf('Invalid state id "%s".', var_export($value, true)),
-                StateConstraintException::INVALID_ID
-            );
-        }
+        $result = $this->queryBus->handle(new GetStateByIsoCode($value));
+        $a = 1;
     }
 }

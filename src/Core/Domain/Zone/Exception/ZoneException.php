@@ -24,20 +24,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\State\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Zone\Exception;
+
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 
 /**
- * Is thrown when State constraint is violated
+ * Base exception for zone subdomain
  */
-class StateConstraintException extends StateException
+class ZoneException extends DomainException
 {
-    const INVALID_ID = 1;
-
-    const INVALID_NAME = 2;
-
-    const INVALID_ISO_CODE = 3;
-
-    const INVALID_FIELDS = 4;
-
-    const INVALID_ACTIVE = 5;
 }

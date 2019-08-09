@@ -24,20 +24,31 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\State\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\State\Query;
 
 /**
- * Is thrown when State constraint is violated
+ * Gets bool value that determines if state with given iso code exists
  */
-class StateConstraintException extends StateException
+class GetStateByIsoCode
 {
-    const INVALID_ID = 1;
+    /**
+     * @var string
+     */
+    private $isoCode;
 
-    const INVALID_NAME = 2;
+    /**
+     * @param string $isoCode
+     */
+    public function __construct(string $isoCode)
+    {
+        $this->isoCode = $isoCode;
+    }
 
-    const INVALID_ISO_CODE = 3;
-
-    const INVALID_FIELDS = 4;
-
-    const INVALID_ACTIVE = 5;
+    /**
+     * @return string
+     */
+    public function getIsoCode(): string
+    {
+        return $this->isoCode;
+    }
 }
