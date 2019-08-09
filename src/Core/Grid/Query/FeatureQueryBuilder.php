@@ -110,6 +110,12 @@ final class FeatureQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     private function getFeatureQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
+        $subQuery = $this->connection->createQueryBuilder()
+            ->select(1)
+            ->from($this->dbPrefix . 'feature_shop', 'fs')
+            ->where('f.id_feature = fs.id_feature')
+            ->andWhere('fs.id_shop IN (:context_shop_ids)');
+
         $queryBuilder = $this->connection->createQueryBuilder()
             ->select('f.id_feature, fl.name, COUNT(fv.id_feature_value) values_count, f.position')
             ->from($this->dbPrefix . 'feature', 'f')
@@ -125,13 +131,7 @@ final class FeatureQueryBuilder extends AbstractDoctrineQueryBuilder
                 'fl',
                 'f.id_feature = fl.id_feature AND fl.id_lang = :context_lang_id'
             )
-            ->innerJoin(
-                'f',
-                $this->dbPrefix . 'feature_shop',
-                'fs',
-                'f.id_feature = fs.id_feature'
-            )
-            ->where('fs.id_shop IN (:context_shop_ids)')
+            ->where('EXISTS(' . $subQuery->getSQL() . ')')
             ->groupBy('f.id_feature')
             ->setParameter('context_shop_ids', $this->contextShopIds, Connection::PARAM_INT_ARRAY)
             ->setParameter('context_lang_id', $this->contextLangId);
