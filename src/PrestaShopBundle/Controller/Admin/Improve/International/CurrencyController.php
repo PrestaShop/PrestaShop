@@ -240,7 +240,7 @@ class CurrencyController extends FrameworkBundleAdminController
         foreach ($languages as $language) {
             $localeData = $reader->readLocaleData($language['locale']);
             $currencyData = $localeData->getCurrencyByIsoCode($currencyIsoCode);
-            if (null === $currencyData && !empty($currencyData)) {
+            if (null === $currencyData || empty($currencyData)) {
                 continue;
             }
 
@@ -249,6 +249,17 @@ class CurrencyController extends FrameworkBundleAdminController
             $cldrCurrency['symbols'][$language['id_lang']] = $currency->getSymbol() ?: $currencyData->getIsoCode();
             $cldrCurrency['iso_code'] = $currencyData->getIsoCode();
             $cldrCurrency['numeric_iso_code'] = $currencyData->getNumericIsoCode();
+        }
+        if (empty($cldrCurrency)) {
+            return new JsonResponse([
+                'error' => $this->trans(
+                    'Can not find CLDR data for currency %isoCode%',
+                    'Admin.International.Feature',
+                    [
+                        '%isoCode%' => $currencyIsoCode,
+                    ]
+                )
+            ], 404);
         }
 
         try {
