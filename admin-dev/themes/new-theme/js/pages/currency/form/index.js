@@ -95,7 +95,8 @@ $(() => {
 
   function initFields() {
     const selectedISOCode = $currencySelector.val();
-    if ('' !== selectedISOCode) {
+    const isCustom = parseInt($(currencyFormMap.isCustomCheckbox).val());
+    if ('' !== selectedISOCode && !isCustom) {
       $(currencyFormMap.isCustomCheckbox).prop('checked', false);
       $(currencyFormMap.isoCodeSelector).prop('readonly', true);
       $(currencyFormMap.numericIsoCodeSelector).prop('readonly', true);
