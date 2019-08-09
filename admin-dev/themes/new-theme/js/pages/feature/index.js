@@ -33,6 +33,7 @@ import SubmitBulkExtension from "../../components/grid/extension/submit-bulk-act
 import FiltersSubmitButtonEnablerExtension
   from "../../components/grid/extension/filters-submit-button-enabler-extension";
 import PositionExtension from "../../components/grid/extension/position-extension";
+import SubmitRowActionExtension from "../../components/grid/extension/action/row/submit-row-action-extension";
 
 const $ = window.$;
 
@@ -47,4 +48,5 @@ $(() => {
   grid.addExtension(new SubmitBulkExtension());
   grid.addExtension(new FiltersSubmitButtonEnablerExtension());
   grid.addExtension(new PositionExtension());
+  grid.addExtension(new SubmitRowActionExtension());
 });
