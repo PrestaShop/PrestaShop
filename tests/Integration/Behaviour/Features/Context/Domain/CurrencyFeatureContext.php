@@ -194,7 +194,7 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then /^I should get error that (isoCode|numericIsoCode|custom) is immutable$/
+     * @Then /^I should get error that (isoCode|numericIsoCode|custom|real) is immutable$/
      */
     public function assertLastErrorIsImmutableCurrencyField($errorType)
     {
@@ -207,6 +207,9 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
                 break;
             case 'custom':
                 $errorCode = ImmutableCurrencyFieldException::IMMUTABLE_CUSTOM;
+                break;
+            case 'real':
+                $errorCode = ImmutableCurrencyFieldException::IMMUTABLE_REAL;
                 break;
             default:
                 $errorCode = null;
