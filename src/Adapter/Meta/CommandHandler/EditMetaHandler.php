@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Meta\CommandHandler;
 
 use Meta;
+use PrestaShop\PrestaShop\Adapter\Meta\MetaDataProvider;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\IsUrlRewrite;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Command\EditMetaCommand;
@@ -49,21 +50,23 @@ final class EditMetaHandler implements EditMetaHandlerInterface
      * @var ValidatorInterface
      */
     private $validator;
+
     /**
-     * @var array
+     * @var MetaDataProvider
      */
-    private $availablePages;
+    private $metaDataProvider;
+
 
     /**
      * @param ValidatorInterface $validator
-     * @param array $availablePages
+     * @param MetaDataProvider $metaDataProvider
      */
     public function __construct(
         ValidatorInterface $validator,
-        array $availablePages
+        MetaDataProvider $metaDataProvider
     ) {
         $this->validator = $validator;
-        $this->availablePages = $availablePages;
+        $this->metaDataProvider = $metaDataProvider;
     }
 
     /**
@@ -181,12 +184,14 @@ final class EditMetaHandler implements EditMetaHandlerInterface
             return;
         }
 
-        if (!in_array($command->getPageName()->getValue(), $this->availablePages, true)) {
+        $availablePages = $this->metaDataProvider->getAvailablePages();
+
+        if (!in_array($command->getPageName()->getValue(), $availablePages, true)) {
             throw new MetaConstraintException(
                 sprintf(
                     'Given page name %s is not available. Available values are %s',
                     $command->getPageName()->getValue(),
-                    var_export($this->availablePages, true)
+                    var_export($availablePages, true)
                 ),
                 MetaConstraintException::INVALID_PAGE_NAME
             );
