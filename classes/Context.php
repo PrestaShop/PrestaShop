@@ -379,7 +379,7 @@ class ContextCore
     /**
      * Returns a new instance of Translator for the provided locale code.
      *
-     * @param string $locale 5-letter iso code
+     * @param string $locale IETF language tag (eg. "en-US")
      *
      * @return Translator
      */
@@ -428,7 +428,7 @@ class ContextCore
             list($domain, $locale, $format) = explode('.', $file->getBasename(), 3);
 
             $translator->addResource($format, $file, $locale, $domain);
-            if (!is_a($this->language, 'PrestashopBundle\Install\Language')) {
+            if (!$this->language instanceof PrestashopBundle\Install\Language) {
                 $translator->addResource('db', $domain . '.' . $locale . '.db', $locale, $domain);
             }
         }

@@ -84,7 +84,7 @@ class TabCore extends ObjectModel
      * @param bool $autoDate
      * @param bool $nullValues
      *
-     * @return int id_tab
+     * @return bool true if success
      */
     public function add($autoDate = true, $nullValues = false)
     {

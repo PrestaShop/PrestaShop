@@ -1,4 +1,5 @@
 <?php
+
 /*
 * 2007-2015 PrestaShop
 *
@@ -24,35 +25,15 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-if (!defined('_PS_VERSION_')) {
-    exit;
-}
-
-class translation_test extends Module
+/**
+ * Test front controller
+ */
+class TranslationtestBarModuleFrontController extends ModuleFrontController
 {
-    public function __construct()
+    public function initContent()
     {
-        $this->name = 'translation_test';
-        $this->version = '1.0';
-        $this->author = 'PrestaShop';
-        $this->need_instance = 0;
+        parent::initContent();
 
-        $this->bootstrap = true;
-        parent::__construct();
-
-        $this->displayName = 'translations tests';
-        $this->description = 'Test the translations accross different templating engines and controllers';
-
-        $this->ps_versions_compliancy = array('min' => '1.7.5.0', 'max' => _PS_VERSION_);
-    }
-
-    /**
-     * Needed to access the new BO translations page
-     *
-     * @return bool
-     */
-    public function isUsingNewTranslationSystem()
-    {
-        return true;
+        $this->setTemplate('module:' . $this->module->name . '/views/templates/front/some_template.tpl');
     }
 }

@@ -6,5 +6,5 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'Translations\\' => array($baseDir . '/src'),
+    'PrestaShop\\Module\\TranslationTest\\' => array($baseDir . '/src'),
 );
