@@ -1183,6 +1183,11 @@
         <target>Order return #{id_order_return} - Update</target>
         <note>Line: 180</note>
       </trans-unit>
+      <trans-unit id="d28c38eafee0f9e02256b284275603f9">
+        <source>Order return state</source>
+        <target>Order return state</target>
+        <note>Line: 3</note>
+      </trans-unit>
     </body>
   </file>
   <file original="mails/themes/modern/core/outofstock.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
@@ -1842,6 +1847,11 @@
         <target>We are pleased to offer you a voucher worth [1]{discount_display}[/1] (VOUCHER # [1]{discount_name}[/1]) that you can use on your next order.</target>
         <note>Line: 187</note>
       </trans-unit>
+      <trans-unit id="49af6950c9d9101af9ae958b4426c6b9">
+        <source>Referral program Congratulations</source>
+        <target>Referral program Congratulations</target>
+        <note>Line: 3</note>
+      </trans-unit>
     </body>
   </file>
   <file original="mails/themes/modern/modules/referralprogram/referralprogram-invitation.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
@@ -1881,6 +1891,11 @@
         <target>When signing up, don't forget to provide the email address of your referring friend:</target>
         <note>Line: 253</note>
       </trans-unit>
+      <trans-unit id="a9f8dbec69378bc1c5b1e9d144bd2412">
+        <source>Referral program Invitation</source>
+        <target>Referral program Invitation</target>
+        <note>Line: 3</note>
+      </trans-unit>
     </body>
   </file>
   <file original="mails/themes/modern/modules/referralprogram/referralprogram-voucher.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
@@ -1914,6 +1929,11 @@
         <source>Sponsorship Program</source>
         <target>Sponsorship Program</target>
         <note>Line: 180</note>
+      </trans-unit>
+      <trans-unit id="f38a99a3e90333bd34a64e90f03960f4">
+        <source>Referral program Voucher</source>
+        <target>Referral program Voucher</target>
+        <note>Line: 3</note>
       </trans-unit>
     </body>
   </file>
