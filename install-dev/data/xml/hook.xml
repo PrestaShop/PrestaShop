@@ -781,30 +781,15 @@
       <title>Manage Administration Page form fields</title>
       <description>This hook adds, update or remove fields of the Administration Page form</description>
     </hook>
-    <hook id="actionAdministrationPageFormSave">
-      <name>actionAdministrationPageFormSave</name>
-      <title>Processing Administration page form</title>
-      <description>This hook is called when the Administration Page form is processed</description>
-    </hook>
     <hook id="actionPerformancePageForm">
       <name>actionPerformancePageForm</name>
       <title>Manage Performance Page form fields</title>
       <description>This hook adds, update or remove fields of the Performance Page form</description>
     </hook>
-    <hook id="actionPerformancePageFormSave">
-      <name>actionPerformancePageFormSave</name>
-      <title>Processing Performance page form</title>
-      <description>This hook is called when the Performance Page form is processed</description>
-    </hook>
     <hook id="actionMaintenancePageForm">
       <name>actionMaintenancePageForm</name>
       <title>Manage Maintenance Page form fields</title>
       <description>This hook adds, update or remove fields of the Maintenance Page form</description>
-    </hook>
-    <hook id="actionMaintenancePageFormSave">
-      <name>actionMaintenancePageFormSave</name>
-      <title>Processing Maintenance page form</title>
-      <description>This hook is called when the Maintenance Page form is processed</description>
     </hook>
     <hook id="actionWebserviceKeyGridPresenterModifier">
       <name>actionWebserviceKeyGridPresenterModifier</name>
