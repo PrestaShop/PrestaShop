@@ -183,6 +183,16 @@ final class FeatureGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setAssociatedColumn('name')
             )
             ->add(
+                (new Filter('values_count', NumberType::class))
+                    ->setTypeOptions([
+                        'attr' => [
+                            'placeholder' => $this->trans('Search values', [], 'Admin.Actions'),
+                        ],
+                        'required' => false,
+                    ])
+                    ->setAssociatedColumn('values_count')
+            )
+            ->add(
                 (new Filter('position', NumberType::class))
                     ->setTypeOptions([
                         'attr' => [

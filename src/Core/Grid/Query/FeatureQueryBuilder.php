@@ -76,17 +76,7 @@ final class FeatureQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
-        $searchQueryBuilder = $this->getFeatureQueryBuilder($searchCriteria)
-            ->select('f.id_feature, fl.name, COUNT(fv.id_feature_value) values_count, f.position')
-            ->leftJoin(
-                'f',
-                $this->dbPrefix . 'feature_value',
-                'fv',
-                'f.id_feature = fv.id_feature'
-            )
-            ->andWhere('(fv.custom=0 OR fv.custom IS NULL)')
-            ->groupBy('f.id_feature')
-        ;
+        $searchQueryBuilder = $this->getFeatureQueryBuilder($searchCriteria);
 
         $this->applySorting($searchQueryBuilder, $searchCriteria);
         $this->criteriaApplicator->applyPagination(
@@ -102,8 +92,13 @@ final class FeatureQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
-        $countQueryBuilder = $this->getFeatureQueryBuilder($searchCriteria)
-            ->select('COUNT(f.id_feature)');
+        $queryBuilder = $this->getFeatureQueryBuilder($searchCriteria);
+
+        $countQueryBuilder = $this->connection->createQueryBuilder()
+            ->select('COUNT(*)')
+            // Need to do a subquery because we have a HAVING filter.
+            ->from('(' . $queryBuilder . ')', 'fc')
+            ->setParameters($queryBuilder->getParameters(), $queryBuilder->getParameterTypes());
 
         return $countQueryBuilder;
     }
@@ -116,7 +111,14 @@ final class FeatureQueryBuilder extends AbstractDoctrineQueryBuilder
     private function getFeatureQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $queryBuilder = $this->connection->createQueryBuilder()
+            ->select('f.id_feature, fl.name, COUNT(fv.id_feature_value) values_count, f.position')
             ->from($this->dbPrefix . 'feature', 'f')
+            ->leftJoin(
+                'f',
+                $this->dbPrefix . 'feature_value',
+                'fv',
+                'f.id_feature = fv.id_feature AND (fv.custom=0 OR fv.custom IS NULL)'
+            )
             ->leftJoin(
                 'f',
                 $this->dbPrefix . 'feature_lang',
@@ -130,6 +132,7 @@ final class FeatureQueryBuilder extends AbstractDoctrineQueryBuilder
                 'f.id_feature = fs.id_feature'
             )
             ->where('fs.id_shop IN (:context_shop_ids)')
+            ->groupBy('f.id_feature')
             ->setParameter('context_shop_ids', $this->contextShopIds, Connection::PARAM_INT_ARRAY)
             ->setParameter('context_lang_id', $this->contextLangId);
 
@@ -161,6 +164,23 @@ final class FeatureQueryBuilder extends AbstractDoctrineQueryBuilder
             if ('id_feature' === $filterName) {
                 $qb->andWhere('f.`id_feature` LIKE :' . $filterName);
                 $qb->setParameter($filterName, '%' . $filterValue . '%');
+
+                continue;
+            }
+
+            if ('values_count' === $filterName) {
+                $qb->andHaving('values_count LIKE :values_count');
+                $qb->setParameter('values_count', '%' . $filterValue . '%');
+
+                continue;
+            }
+
+            if ('position' === $filterName) {
+                // Position values needs to be reduced by one because presented values
+                // are different from position values stored in the database.
+                $filterValue = is_numeric($filterValue) ? $filterValue - 1 : null;
+                $qb->andWhere('`' . $filterName . '` = :' . $filterName);
+                $qb->setParameter($filterName, $filterValue);
 
                 continue;
             }
