@@ -83,7 +83,7 @@ class CurrencyType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $newCurrency = !isset($options['data']['id']);
-        $customCurrency = isset($options['data']['is_custom']) ? $options['data']['is_custom'] : false;
+        $customCurrency = isset($options['data']['custom']) ? (bool) $options['data']['custom'] : false;
         if ($newCurrency) {
             $builder
                 ->add('selected_iso_code', ChoiceType::class, [
@@ -92,9 +92,9 @@ class CurrencyType extends TranslatorAwareType
                     'required' => false,
                     'placeholder' => '--',
                 ])
-                ->add('is_custom', CheckboxType::class, [
+                ->add('custom', CheckboxType::class, [
                     'required' => false,
-                    'label' => $this->trans('Create new', 'Admin.International.Feature'),
+                    'label' => $this->trans('Create custom', 'Admin.International.Feature'),
                     'attr' => [
                         'material_design' => true,
                     ],
@@ -102,10 +102,14 @@ class CurrencyType extends TranslatorAwareType
             ;
         } else {
             $builder
-                ->add('is_custom', HiddenType::class, [
+                ->add('custom', HiddenType::class, [
                     'required' => false,
                 ])
             ;
+        }
+        $isoCodeAttrs = [];
+        if (!$newCurrency && !$customCurrency) {
+            $isoCodeAttrs['readonly'] = 1;
         }
 
         $builder
@@ -146,9 +150,7 @@ class CurrencyType extends TranslatorAwareType
                 ],
             ])
             ->add('iso_code', TextType::class, [
-                'attr' => [
-                    'readonly' => !$newCurrency && !$customCurrency,
-                ],
+                'attr' => $isoCodeAttrs,
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->trans(
@@ -165,9 +167,7 @@ class CurrencyType extends TranslatorAwareType
                 ],
             ])
             ->add('numeric_iso_code', IntegerType::class, [
-                'attr' => [
-                    'readonly' => !$newCurrency && !$customCurrency,
-                ],
+                'attr' => $isoCodeAttrs,
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->trans(
