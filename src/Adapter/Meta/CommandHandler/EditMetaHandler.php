@@ -56,7 +56,6 @@ final class EditMetaHandler implements EditMetaHandlerInterface
      */
     private $metaDataProvider;
 
-
     /**
      * @param ValidatorInterface $validator
      * @param MetaDataProvider $metaDataProvider

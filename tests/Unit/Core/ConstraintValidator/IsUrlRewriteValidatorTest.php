@@ -197,7 +197,7 @@ class IsUrlRewriteValidatorTest extends ConstraintValidatorTestCase
 
     protected function createValidator()
     {
-         $configuration = $this->useAscendedChars ?
+        $configuration = $this->useAscendedChars ?
              $this->configurationMockWithAscendingCharsOn :
              $this->configurationMockWithAscendingCharsOff
          ;
