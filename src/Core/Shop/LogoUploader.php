@@ -104,7 +104,7 @@ class LogoUploader
                 throw new PrestaShopException(sprintf('%Upload of temporary file to %s has failed.', $tmpName));
             }
 
-            $fileExtension = ($fieldName == 'PS_STORES_ICON') ? '.gif' : '.jpg';
+            $fileExtension = ($fieldName == 'PS_STORES_ICON') ? '.gif' : '.' . Configuration::get('PS_IMAGE_QUALITY');
             $logoName = $this->getLogoName($logoPrefix, $fileExtension);
 
             if ($fieldName == 'PS_STORES_ICON') {
