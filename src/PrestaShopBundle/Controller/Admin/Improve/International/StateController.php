@@ -215,7 +215,7 @@ class StateController extends FrameworkBundleAdminController
                     'Admin.Notifications.Error',
                     [sprintf('"%s"', $this->trans('ISO code', 'Admin.International.Feature'))]
                 ),
-                StateConstraintException::INVALID_ACTIVE => $this->trans(
+                StateConstraintException::INVALID_STATE => $this->trans(
                     'An error occurred when attempting to update the required fields.',
                     'Admin.Notifications.Error'
                 ),
