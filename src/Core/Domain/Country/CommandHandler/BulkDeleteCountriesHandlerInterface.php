@@ -24,51 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Country\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Country\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Country\Command\BulkDeleteCountriesCommand;
 
 /**
- * Provides country id value
+ * Defines contract for bulk delete countries handler
  */
-class CountryId
+interface BulkDeleteCountriesHandlerInterface
 {
     /**
-     * @var int
+     * @param BulkDeleteCountriesCommand $command
      */
-    private $id;
-
-    /**
-     * @param int $id
-     *
-     * @throws CountryConstraintException
-     */
-    public function __construct(int $id)
-    {
-        $this->assertPositiveInt($id);
-        $this->id = $id;
-    }
-
-    /**
-     * @return int
-     */
-    public function getValue(): int
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param int $value
-     *
-     * @throws CountryConstraintException
-     */
-    private function assertPositiveInt(int $value)
-    {
-        if (0 > $value) {
-            throw new CountryConstraintException(
-                sprintf('Invalid country id "%s".', var_export($value, true)),
-                CountryConstraintException::INVALID_ID
-            );
-        }
-    }
+    public function handle(BulkDeleteCountriesCommand $command);
 }

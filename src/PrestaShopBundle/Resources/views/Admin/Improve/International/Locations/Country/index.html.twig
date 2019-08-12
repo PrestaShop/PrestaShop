@@ -1,5 +1,4 @@
-<?php
-/**
+{#**
  * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
@@ -22,53 +21,23 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- */
+ *#}
 
-namespace PrestaShop\PrestaShop\Core\Domain\Country\ValueObject;
+{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
 
-use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
+{% block content %}
+  {% block countries_listing %}
+    <div class="row">
+      <div class="col">
+        {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': countryGrid} %}
+      </div>
+    </div>
+  {% endblock %}
+{% endblock %}
 
-/**
- * Provides country id value
- */
-class CountryId
-{
-    /**
-     * @var int
-     */
-    private $id;
+{% block javascripts %}
+  {{ parent() }}
 
-    /**
-     * @param int $id
-     *
-     * @throws CountryConstraintException
-     */
-    public function __construct(int $id)
-    {
-        $this->assertPositiveInt($id);
-        $this->id = $id;
-    }
-
-    /**
-     * @return int
-     */
-    public function getValue(): int
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param int $value
-     *
-     * @throws CountryConstraintException
-     */
-    private function assertPositiveInt(int $value)
-    {
-        if (0 > $value) {
-            throw new CountryConstraintException(
-                sprintf('Invalid country id "%s".', var_export($value, true)),
-                CountryConstraintException::INVALID_ID
-            );
-        }
-    }
-}
+  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
+  <script src="{{ asset('themes/new-theme/public/tax.bundle.js') }}"></script>
+{% endblock %}

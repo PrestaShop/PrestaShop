@@ -24,51 +24,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Country\ValueObject;
-
-use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
+namespace PrestaShop\PrestaShop\Core\Domain\Zone\DataProvider;
 
 /**
- * Provides country id value
+ * Defines contract for zone data provider
  */
-class CountryId
+interface ZoneDataProviderInterface
 {
     /**
-     * @var int
-     */
-    private $id;
-
-    /**
-     * @param int $id
+     * Return available zones.
      *
-     * @throws CountryConstraintException
-     */
-    public function __construct(int $id)
-    {
-        $this->assertPositiveInt($id);
-        $this->id = $id;
-    }
-
-    /**
-     * @return int
-     */
-    public function getValue(): int
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param int $value
+     * @param bool $active only active zones
+     * @param bool $activeFirst order by active DESC
      *
-     * @throws CountryConstraintException
+     * @return array
      */
-    private function assertPositiveInt(int $value)
-    {
-        if (0 > $value) {
-            throw new CountryConstraintException(
-                sprintf('Invalid country id "%s".', var_export($value, true)),
-                CountryConstraintException::INVALID_ID
-            );
-        }
-    }
+    public function getZones($active = false, $activeFirst = false): array;
 }

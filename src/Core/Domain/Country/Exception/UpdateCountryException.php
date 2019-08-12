@@ -24,51 +24,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Country\ValueObject;
-
-use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
+namespace PrestaShop\PrestaShop\Core\Domain\Country\Exception;
 
 /**
- * Provides country id value
+ * Is thrown on failure to update country
  */
-class CountryId
+class UpdateCountryException extends CountryException
 {
-    /**
-     * @var int
-     */
-    private $id;
+    const FAILED_UPDATE_STATUS = 1;
 
-    /**
-     * @param int $id
-     *
-     * @throws CountryConstraintException
-     */
-    public function __construct(int $id)
-    {
-        $this->assertPositiveInt($id);
-        $this->id = $id;
-    }
-
-    /**
-     * @return int
-     */
-    public function getValue(): int
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param int $value
-     *
-     * @throws CountryConstraintException
-     */
-    private function assertPositiveInt(int $value)
-    {
-        if (0 > $value) {
-            throw new CountryConstraintException(
-                sprintf('Invalid country id "%s".', var_export($value, true)),
-                CountryConstraintException::INVALID_ID
-            );
-        }
-    }
+    const FAILED_BULK_UPDATE_STATUS = 2;
 }

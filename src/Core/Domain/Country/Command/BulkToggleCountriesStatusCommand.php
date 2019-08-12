@@ -24,51 +24,63 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Country\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Country\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 
 /**
- * Provides country id value
+ * Toggles country status in bulk action
  */
-class CountryId
+class BulkToggleCountriesStatusCommand
 {
     /**
-     * @var int
+     * @var CountryId[]
      */
-    private $id;
+    private $countryIds;
 
     /**
-     * @param int $id
+     * @var bool
+     */
+    private $expectedStatus;
+
+    /**
+     * @param int[] $countryIds
+     * @param bool $expectedStatus
      *
      * @throws CountryConstraintException
      */
-    public function __construct(int $id)
+    public function __construct(array $countryIds, bool $expectedStatus)
     {
-        $this->assertPositiveInt($id);
-        $this->id = $id;
+        $this->expectedStatus = $expectedStatus;
+        $this->setCountryIds($countryIds);
     }
 
     /**
-     * @return int
+     * @return bool
      */
-    public function getValue(): int
+    public function getExpectedStatus(): bool
     {
-        return $this->id;
+        return $this->expectedStatus;
     }
 
     /**
-     * @param int $value
+     * @return CountryId[]
+     */
+    public function getCountryIds(): array
+    {
+        return $this->countryIds;
+    }
+
+    /**
+     * @param int[] $countryIds
      *
      * @throws CountryConstraintException
      */
-    private function assertPositiveInt(int $value)
+    private function setCountryIds(array $countryIds)
     {
-        if (0 > $value) {
-            throw new CountryConstraintException(
-                sprintf('Invalid country id "%s".', var_export($value, true)),
-                CountryConstraintException::INVALID_ID
-            );
+        foreach ($countryIds as $countryId) {
+            $this->countryIds[] = new CountryId($countryId);
         }
     }
 }

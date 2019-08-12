@@ -24,51 +24,26 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Country\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Search\Filters;
 
-use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
+use PrestaShop\PrestaShop\Core\Search\Filters;
 
 /**
- * Provides country id value
+ * Default Countries list filters
  */
-class CountryId
+final class CountryFilters extends Filters
 {
     /**
-     * @var int
+     * {@inheritdoc}
      */
-    private $id;
-
-    /**
-     * @param int $id
-     *
-     * @throws CountryConstraintException
-     */
-    public function __construct(int $id)
+    public static function getDefaults(): array
     {
-        $this->assertPositiveInt($id);
-        $this->id = $id;
-    }
-
-    /**
-     * @return int
-     */
-    public function getValue(): int
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param int $value
-     *
-     * @throws CountryConstraintException
-     */
-    private function assertPositiveInt(int $value)
-    {
-        if (0 > $value) {
-            throw new CountryConstraintException(
-                sprintf('Invalid country id "%s".', var_export($value, true)),
-                CountryConstraintException::INVALID_ID
-            );
-        }
+        return [
+            'limit' => 50,
+            'offset' => 0,
+            'orderBy' => 'id_country',
+            'sortOrder' => 'asc',
+            'filters' => [],
+        ];
     }
 }

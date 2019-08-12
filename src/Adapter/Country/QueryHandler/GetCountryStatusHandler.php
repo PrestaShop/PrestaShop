@@ -24,51 +24,29 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Country\ValueObject;
+namespace PrestaShop\PrestaShop\Adapter\Country\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
+use PrestaShop\PrestaShop\Adapter\Country\AbstractCountryHandler;
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountryStatus;
+use PrestaShop\PrestaShop\Core\Domain\Country\QueryHandler\GetCountryStatusHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\IsActiveCountry;
 
 /**
- * Provides country id value
+ * Handles query to get country status
  */
-class CountryId
+final class GetCountryStatusHandler extends AbstractCountryHandler implements GetCountryStatusHandlerInterface
 {
     /**
-     * @var int
-     */
-    private $id;
-
-    /**
-     * @param int $id
+     * {@inheritdoc}
      *
-     * @throws CountryConstraintException
+     * @throws CountryNotFoundException
      */
-    public function __construct(int $id)
+    public function handle(GetCountryStatus $query): IsActiveCountry
     {
-        $this->assertPositiveInt($id);
-        $this->id = $id;
-    }
+        $countryId = $query->getCountryId();
+        $country = $this->getCountry($countryId);
 
-    /**
-     * @return int
-     */
-    public function getValue(): int
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param int $value
-     *
-     * @throws CountryConstraintException
-     */
-    private function assertPositiveInt(int $value)
-    {
-        if (0 > $value) {
-            throw new CountryConstraintException(
-                sprintf('Invalid country id "%s".', var_export($value, true)),
-                CountryConstraintException::INVALID_ID
-            );
-        }
+        return new IsActiveCountry((bool) $country->active);
     }
 }

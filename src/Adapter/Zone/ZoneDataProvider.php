@@ -24,51 +24,21 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Country\ValueObject;
+namespace PrestaShop\PrestaShop\Adapter\Zone;
 
-use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
+use Zone;
+use PrestaShop\PrestaShop\Core\Domain\Zone\DataProvider\ZoneDataProviderInterface;
 
 /**
- * Provides country id value
+ * This class will provide data from DB / ORM about Zone
  */
-class CountryId
+final class ZoneDataProvider implements ZoneDataProviderInterface
 {
     /**
-     * @var int
+     * {@inheritdoc}
      */
-    private $id;
-
-    /**
-     * @param int $id
-     *
-     * @throws CountryConstraintException
-     */
-    public function __construct(int $id)
+    public function getZones($active = false, $activeFirst = false): array
     {
-        $this->assertPositiveInt($id);
-        $this->id = $id;
-    }
-
-    /**
-     * @return int
-     */
-    public function getValue(): int
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param int $value
-     *
-     * @throws CountryConstraintException
-     */
-    private function assertPositiveInt(int $value)
-    {
-        if (0 > $value) {
-            throw new CountryConstraintException(
-                sprintf('Invalid country id "%s".', var_export($value, true)),
-                CountryConstraintException::INVALID_ID
-            );
-        }
+        return Zone::getZones($active, $activeFirst);
     }
 }

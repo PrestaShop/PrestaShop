@@ -1,0 +1,72 @@
+admin_countries_index:
+  path: /
+  methods: GET
+  defaults:
+    _controller: PrestaShopBundle:Admin\Improve\International\Country:index
+    _legacy_controller: AdminCountries
+    #_legacy_link: AdminCountries
+
+admin_countries_filter:
+  path: /
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Common:searchGrid
+    _legacy_controller: AdminCountries
+    gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.country
+    redirectRoute: admin_countries_index
+    #_legacy_link: AdminCountries:submitFiltercountry
+
+admin_countries_create:
+  path: /new
+  methods: [GET, POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Improve\International\Country:create
+    _legacy_controller: AdminCountries
+    #_legacy_link: AdminCountries:addcountry
+
+admin_countries_edit:
+  path: /{countryId}/edit
+  methods: [GET, POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Improve\International\Country:edit
+    _legacy_controller: AdminCountries
+    #_legacy_link: AdminCountries:updatecountry
+    _legacy_parameters:
+      id_state: countryId
+  requirements:
+    stateId: \d+
+
+admin_countries_toggle_status:
+  path: /{countryId}/toggle-status
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Improve\International\Country:toggleStatus
+    _legacy_controller: AdminCountries
+    #_legacy_link: AdminCountries:statuscountry
+    _legacy_parameters:
+      id_state: countryId
+
+admin_countries_bulk_enable_status:
+  path: /bulk-status-enable
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Improve\International\Country:bulkEnable
+    _legacy_controller: AdminCountries
+    #_legacy_link: AdminCountries:submitBulkenableSelectioncountry
+
+admin_countries_bulk_disable_status:
+  path: /bulk-status-disable
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Improve\International\Country:bulkDisable
+    _legacy_controller: AdminCountries
+    #_legacy_link: AdminCountries:submitBulkdisableSelectioncountry
+
+admin_countries_delete_bulk:
+  path: /delete-bulk
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Improve\International\Country:deleteBulk
+    _legacy_controller: AdminCountries
+    #_legacy_link: AdminCountries:submitBulkdeletecountry
+

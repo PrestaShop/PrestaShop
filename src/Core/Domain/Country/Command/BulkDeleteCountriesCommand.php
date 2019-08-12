@@ -24,51 +24,48 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Country\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Country\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 
 /**
- * Provides country id value
+ * Command responsible for bulk countries deletion
  */
-class CountryId
+class BulkDeleteCountriesCommand
 {
     /**
-     * @var int
+     * @var CountryId[]
      */
-    private $id;
+    private $countryIds;
 
     /**
-     * @param int $id
+     * @param int[] $countryIds
      *
      * @throws CountryConstraintException
      */
-    public function __construct(int $id)
+    public function __construct(array $countryIds)
     {
-        $this->assertPositiveInt($id);
-        $this->id = $id;
+        $this->setCountryIds($countryIds);
     }
 
     /**
-     * @return int
+     * @return CountryId[]
      */
-    public function getValue(): int
+    public function getCountryIds(): array
     {
-        return $this->id;
+        return $this->countryIds;
     }
 
     /**
-     * @param int $value
+     * @param array $countryIds
      *
      * @throws CountryConstraintException
      */
-    private function assertPositiveInt(int $value)
+    private function setCountryIds(array $countryIds)
     {
-        if (0 > $value) {
-            throw new CountryConstraintException(
-                sprintf('Invalid country id "%s".', var_export($value, true)),
-                CountryConstraintException::INVALID_ID
-            );
+        foreach ($countryIds as $countryId) {
+            $this->countryIds[] = new CountryId($countryId);
         }
     }
 }

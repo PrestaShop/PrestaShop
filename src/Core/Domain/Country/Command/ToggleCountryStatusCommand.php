@@ -24,51 +24,51 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Country\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Country\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 
 /**
- * Provides country id value
+ * Toggles single country status
  */
-class CountryId
+class ToggleCountryStatusCommand
 {
     /**
-     * @var int
+     * @var CountryId
      */
-    private $id;
+    private $countryId;
 
     /**
-     * @param int $id
+     * @var bool
+     */
+    private $expectedStatus;
+
+    /**
+     * @param int $countryId
+     * @param bool $expectedStatus
      *
      * @throws CountryConstraintException
      */
-    public function __construct(int $id)
+    public function __construct(int $countryId, bool $expectedStatus)
     {
-        $this->assertPositiveInt($id);
-        $this->id = $id;
+        $this->expectedStatus = $expectedStatus;
+        $this->countryId = new CountryId($countryId);
     }
 
     /**
-     * @return int
+     * @return CountryId
      */
-    public function getValue(): int
+    public function getCountryId(): CountryId
     {
-        return $this->id;
+        return $this->countryId;
     }
 
     /**
-     * @param int $value
-     *
-     * @throws CountryConstraintException
+     * @return bool
      */
-    private function assertPositiveInt(int $value)
+    public function getExpectedStatus(): bool
     {
-        if (0 > $value) {
-            throw new CountryConstraintException(
-                sprintf('Invalid country id "%s".', var_export($value, true)),
-                CountryConstraintException::INVALID_ID
-            );
-        }
+        return $this->expectedStatus;
     }
 }
