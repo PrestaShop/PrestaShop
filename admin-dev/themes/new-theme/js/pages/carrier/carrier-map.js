@@ -29,7 +29,8 @@ export default {
   billingSelector: '.js-billing',
   freeShippingSelector: '.js-free-shipping',
   handlingCostSelector: '.js-handling-cost',
-  rangesTableRowsSelector: '#js-carrier-ranges table tr',
+  rangesTableSelector: '#js-carrier-ranges table',
   rangesTemplateSelector: '#js-carrier-range-templates',
   addRangeBtnSelector: '.js-add-range',
+  appendButtonsSelector: '.js-append-buttons',
 };

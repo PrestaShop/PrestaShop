@@ -857,12 +857,16 @@
               {% endif %}
             </tr>
           {% endfor %}
+          <tr class="js-append-buttons">
+            <td></td>
+            <td></td>
+          </tr>
         </tbody>
       </table>
+      <button type="button" class="js-add-range btn btn-outline-primary">
+        {{ 'Add new range'|trans({}, 'Admin.Global') }}
+      </button>
     </div>
-    <button type="button" class="js-add-range btn btn-outline-primary">
-      {{ 'Add new range'|trans({}, 'Admin.Global') }}
-    </button>
   </div>
 
   <div class="d-none" id="js-carrier-range-templates">
@@ -919,5 +923,9 @@
         required="required"
         class="form-control">
     </div>
+
+    <button type="button" class="js-remove-range btn btn-outline-danger">
+      {{ 'Delete'|trans({}, 'Admin.Global') }}
+    </button>
   </div>
 {% endblock %}

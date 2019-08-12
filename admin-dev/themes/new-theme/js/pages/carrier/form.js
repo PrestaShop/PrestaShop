@@ -34,8 +34,9 @@ const $ = window.$;
 $(document).ready(() => {
   new StepVisibilityHandler('active');
   new AddRangeHandler(
-    CarrierMap.rangesTableRowsSelector,
-    CarrierMap.rangesTemplateSelector
+    CarrierMap.rangesTableSelector,
+    CarrierMap.rangesTemplateSelector,
+    CarrierMap.appendButtonsSelector
   );
   new RangesContentSwitcher(
     CarrierMap.rangePriceLabelSelector,
@@ -45,7 +46,7 @@ $(document).ready(() => {
   new FreeShippingToggleHandler(
     CarrierMap.freeShippingSelector,
     CarrierMap.handlingCostSelector,
-    CarrierMap.rangesTableRowsSelector,
+    CarrierMap.rangesTableSelector,
     CarrierMap.addRangeBtnSelector
   );
 });
