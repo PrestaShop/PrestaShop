@@ -255,7 +255,7 @@ Feature: Currency Management
     Then I should get error that currency already exists
 
   Scenario: Adding real currency whose ISO code and numeric iso code don't match should not be allowed
-    When I add new currency "currency10" with following properties:
+    When I add new currency "currency13" with following properties:
       | iso_code         | AUD               |
       | numeric_iso_code | 44                |
       | exchange_rate    | 1.656967          |
@@ -265,7 +265,7 @@ Feature: Currency Management
       | is_custom        | 0                 |
       | shop_association | shop1             |
     Then I should get error that currency iso codes don't match
-    When I add new currency "currency10" with following properties:
+    When I add new currency "currency13" with following properties:
       | iso_code         | USD               |
       | numeric_iso_code | 36                |
       | exchange_rate    | 1.656967          |
@@ -275,7 +275,7 @@ Feature: Currency Management
       | is_custom        | 0                 |
       | shop_association | shop1             |
     Then I should get error that currency iso codes don't match
-    When I add new currency "currency10" with following properties:
+    When I add new currency "currency13" with following properties:
       | iso_code         | ASD               |
       | numeric_iso_code | 36                |
       | exchange_rate    | 1.656967          |
