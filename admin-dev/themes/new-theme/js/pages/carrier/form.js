@@ -38,13 +38,14 @@ $(document).ready(() => {
     CarrierMap.rangesTemplateSelector
   );
   new RangesContentSwitcher(
-    CarrierMap.priceContentSelector,
-    CarrierMap.weightContentSelector,
+    CarrierMap.rangePriceLabelSelector,
+    CarrierMap.rangeWeightLabelSelector,
     CarrierMap.billingSelector
   );
   new FreeShippingToggleHandler(
     CarrierMap.freeShippingSelector,
     CarrierMap.handlingCostSelector,
-    CarrierMap.rangesTableRowsSelector
+    CarrierMap.rangesTableRowsSelector,
+    CarrierMap.addRangeBtnSelector
   );
 });

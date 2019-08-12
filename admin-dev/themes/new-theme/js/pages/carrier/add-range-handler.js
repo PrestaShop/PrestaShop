@@ -25,6 +25,9 @@
 
 const $ = window.$;
 
+/**
+ * Responsible for adding new range column which consists of range and price inputs
+ */
 export default class AddRangeHandler {
   constructor(rowsSelector, templatesSelector) {
     $(document).on('click', '.js-add-range', () => {
@@ -37,7 +40,7 @@ export default class AddRangeHandler {
   }
 
   /**
-   * Add new form prototype to collection
+   * Add new column of inputs to table
    */
   addColumn() {
     const currentRange = this.$rows.last().find('td:not(:first-child)').length;

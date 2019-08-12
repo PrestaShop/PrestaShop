@@ -787,32 +787,56 @@
       <table class="table table-sm">
         <tbody class="ranges">
           <tr class="table-dark text-dark js-range-from">
-            {% set weightContent = 'Will be applied when the weight is'|trans({}, 'Admin.Shipping.Feature') %}
-            {% set priceContent = 'Will be applied when the price is'|trans({}, 'Admin.Shipping.Feature') %}
+            {% set rangeWeightLabel = 'Will be applied when the weight is'|trans({}, 'Admin.Shipping.Feature') %}
+            {% set rangePriceLabel = 'Will be applied when the price is'|trans({}, 'Admin.Shipping.Feature') %}
             <td>
               <p>
-                <span class="js-content-case-weight">{{ weightContent }}</span>
-                <span class="js-content-case-price">{{ priceContent }}</span>
-                <
+                <b class="js-range-label-case-weight">{{ rangeWeightLabel }}</b>
+                <b class="js-range-label-case-price">{{ rangePriceLabel }}</b>
+                <b>>=</b>
               </p>
             </td>
             {% if form.ranges[0] is defined %}
               <td>
-                {{ form_widget(form.ranges[0].from) }}
+                <div class="input-group fixed-width-md">
+                  <div class="js-range-label-case-weight input-group-prepend">
+                    <span class="input-group-text">
+                      kg
+                    </span>
+                  </div>
+                  <div class="js-range-label-case-price input-group-prepend">
+                    <span class="input-group-text">
+                      $
+                    </span>
+                  </div>
+                  {{ form_widget(form.ranges[0].from) }}
+                </div>
               </td>
             {% endif %}
           </tr>
           <tr class="table-dark text-dark js-range-to">
             <td>
               <p>
-                <span class="js-content-case-weight">{{ weightContent }}</span>
-                <span class="js-content-case-price">{{ priceContent }}</span>
-                >=
+                <b class="js-range-label-case-weight">{{ rangeWeightLabel }}</b>
+                <b class="js-range-label-case-price">{{ rangePriceLabel }}</b>
+                <b><</b>
               </p>
             </td>
             {% if form.ranges[0] is defined %}
               <td>
-                {{ form_widget(form.ranges[0].to) }}
+                <div class="input-group fixed-width-md">
+                  <div class="js-range-label-case-weight input-group-prepend">
+                    <span class="input-group-text">
+                      kg
+                    </span>
+                  </div>
+                  <div class="js-range-label-case-price input-group-prepend">
+                    <span class="input-group-text">
+                      $
+                    </span>
+                  </div>
+                  {{ form_widget(form.ranges[0].to) }}
+                </div>
               </td>
             {% endif %}
           </tr>
@@ -820,7 +844,16 @@
             <tr data-zone-id="{{ zone_id }}">
               <td>{{ form_widget(form.zones[zone_id]) }}</td>
               {% if form.prices[0] is defined %}
-                <td>{{ form_widget(form.prices[0].price_by_zone[zone_id]) }}</td>
+                <td>
+                  <div class="input-group fixed-width-md">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">
+                        $
+                      </span>
+                    </div>
+                    {{ form_widget(form.prices[0].price_by_zone[zone_id]) }}
+                  </div>
+                </td>
               {% endif %}
             </tr>
           {% endfor %}
@@ -833,24 +866,58 @@
   </div>
 
   <div class="d-none" id="js-carrier-range-templates">
-    <input type="text"
-     disabled
-     id="js-price-template"
-     name="carrier[step_shipping][carrier_ranges][prices][__RANGE_INDEX__][price_by_zone][__ZONE_ID__]"
-     class="form-control">
 
-    <input type="text"
-     id="js-range-from-template"
-     disabled
-     name="carrier[step_shipping][carrier_ranges][ranges][__RANGE_INDEX__][from]"
-     required="required"
-     class="form-control">
+    <div id="js-price-template" class="input-group fixed-width-md">
+      <div class="input-group-prepend">
+        <span class="input-group-text">
+          $
+        </span>
+      </div>
+      <input
+        type="text"
+        disabled
+        name="carrier[step_shipping][carrier_ranges][prices][__RANGE_INDEX__][price_by_zone][__ZONE_ID__]"
+        class="form-control">
+    </div>
 
-    <input type="text"
-     id="js-range-to-template"
-     disabled
-     name="carrier[step_shipping][carrier_ranges][ranges][__RANGE_INDEX__][to]"
-     required="required"
-     class="form-control">
+
+    <div id="js-range-from-template" class="input-group fixed-width-md">
+      <div class="js-range-label-case-weight input-group-prepend">
+        <span class="input-group-text">
+          kg
+        </span>
+      </div>
+      <div class="js-range-label-case-price input-group-prepend">
+        <span class="input-group-text">
+          $
+        </span>
+      </div>
+      <input
+        type="number"
+        disabled
+        name="carrier[step_shipping][carrier_ranges][ranges][__RANGE_INDEX__][from]"
+        required="required"
+        class="form-control">
+    </div>
+
+
+    <div id="js-range-to-template" class="input-group fixed-width-md">
+      <div class="js-range-label-case-weight input-group-prepend">
+        <span class="input-group-text">
+          kg
+        </span>
+      </div>
+      <div class="js-range-label-case-price input-group-prepend">
+        <span class="input-group-text">
+          $
+        </span>
+      </div>
+      <input
+        type="number"
+        disabled
+        name="carrier[step_shipping][carrier_ranges][ranges][__RANGE_INDEX__][to]"
+        required="required"
+        class="form-control">
+    </div>
   </div>
 {% endblock %}

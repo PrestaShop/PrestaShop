@@ -25,12 +25,21 @@
 
 const $ = window.$;
 
+/**
+ * Responsible for toggling/disabling form fields that are dependant from free-shipping field value
+ */
 export default class FreeShippingToggleHandler {
-  constructor(freeShippingSelector, handlingCostSelector, rangeTableRowsSelector) {
+  constructor(
+    freeShippingSelector,
+    handlingCostSelector,
+    rangeTableRowsSelector,
+    addRangeBtnSelector
+  ) {
     this.freeShippingSelector = freeShippingSelector;
     this.handlingCostSelector = handlingCostSelector;
     this.rangesTableRowsSelector = rangeTableRowsSelector;
 
+    this.$addRangeBtnSelector = $(addRangeBtnSelector);
     this.$freeShippingSelector = $(freeShippingSelector);
     this.$handlingCostSelector = $(handlingCostSelector);
 
@@ -42,6 +51,7 @@ export default class FreeShippingToggleHandler {
     const isFreeShipping = $(`${this.freeShippingSelector}:checked`).val() === '1';
     this._toggleHandlingCost(isFreeShipping);
     this._toggleRangesAvailability(isFreeShipping);
+    this._disableAddingRange(isFreeShipping);
   }
 
   _toggleHandlingCost(isFreeShipping) {
@@ -54,6 +64,13 @@ export default class FreeShippingToggleHandler {
   }
 
   _toggleRangesAvailability(isFreeShipping) {
-    $(`${this.rangesTableRowsSelector}`).find('input:not([type="checkbox"])').prop('disabled', isFreeShipping);
+    $(`${this.rangesTableRowsSelector}`).find('input:not([type="checkbox"])').prop('readonly', isFreeShipping);
+  }
+
+  _disableAddingRange(isFreeShipping) {
+    this.$addRangeBtnSelector.show();
+    if (isFreeShipping) {
+      this.$addRangeBtnSelector.hide();
+    }
   }
 }

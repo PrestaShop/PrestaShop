@@ -27,8 +27,9 @@ const $ = window.$;
 
 export default class RangesContentSwitcher {
   constructor(priceContentSelector, weightContentSelector, billingSelector) {
-    this.$priceContentSelector = $(priceContentSelector);
-    this.$weightContentSelector = $(weightContentSelector);
+    this.priceContentSelector = priceContentSelector;
+    this.weightContentSelector = weightContentSelector;
+
     this.$billingSelector = $(billingSelector);
 
     this._handle();
@@ -39,11 +40,18 @@ export default class RangesContentSwitcher {
 
   _handle() {
     if (this.$billingSelector.find('input:checked').val() === '1') {
-      this.$weightContentSelector.show();
-      this.$priceContentSelector.hide();
+      this._getWeightContentSelector().show();
+      this._getPriceContentSelector().hide();
     } else {
-      this.$priceContentSelector.show();
-      this.$weightContentSelector.hide();
+      this._getPriceContentSelector().show();
+      this._getWeightContentSelector().hide();
     }
+  }
+
+  _getPriceContentSelector() {
+    return $(this.priceContentSelector);
+  }
+  _getWeightContentSelector() {
+    return $(this.weightContentSelector);
   }
 }

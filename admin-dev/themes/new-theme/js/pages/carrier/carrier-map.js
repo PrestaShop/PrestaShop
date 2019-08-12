@@ -24,11 +24,12 @@
  */
 
 export default {
-  priceContentSelector: '.js-content-case-price',
-  weightContentSelector: '.js-content-case-weight',
+  rangePriceLabelSelector: '.js-range-label-case-price',
+  rangeWeightLabelSelector: '.js-range-label-case-weight',
   billingSelector: '.js-billing',
   freeShippingSelector: '.js-free-shipping',
   handlingCostSelector: '.js-handling-cost',
   rangesTableRowsSelector: '#js-carrier-ranges table tr',
   rangesTemplateSelector: '#js-carrier-range-templates',
+  addRangeBtnSelector: '.js-add-range',
 };
