@@ -1,0 +1,26 @@
+.ranges-table {
+  td {
+    width: 125px;
+    min-width: 125px;
+    margin: 15px;
+    padding-right: 5px;
+    overflow:hidden;
+  }
+  th {
+    width: 260px;
+    min-width: 260px;
+    font-weight: 600;
+    vertical-align: middle;
+    label {
+      margin-bottom: 0;
+    }
+  }
+  .range-row {
+    background-color: #39acce;
+    color: #fff;
+    p {
+      text-align: center;
+      margin: 5px;
+    }
+  }
+}
