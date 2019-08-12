@@ -39,5 +39,5 @@ class StateConstraintException extends StateException
 
     const INVALID_FIELDS = 4;
 
-    const INVALID_ACTIVE = 5;
+    const INVALID_STATE = 5;
 }

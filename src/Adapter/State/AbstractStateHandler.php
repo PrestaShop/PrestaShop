@@ -161,7 +161,7 @@ abstract class AbstractStateHandler
                     'Unexpected type of active. Expected bool, got "%s"',
                     var_export($active, true)
                 ),
-                StateConstraintException::INVALID_ACTIVE
+                StateConstraintException::INVALID_STATE
             );
         }
     }
