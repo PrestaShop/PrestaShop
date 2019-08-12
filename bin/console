@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 
-use Symfony\Bundle\FrameworkBundle\Console\Application;
+use PrestaShop\PrestaShop\Core\Console\Application;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Debug\Debug;
 
@@ -12,7 +12,7 @@ use Symfony\Component\Debug\Debug;
 
 set_time_limit(0);
 
-require __DIR__.'/../vendor/autoload.php';
+require_once __DIR__.'/../vendor/autoload.php';
 require_once __DIR__.'/../autoload.php';
 
 $input = new ArgvInput();

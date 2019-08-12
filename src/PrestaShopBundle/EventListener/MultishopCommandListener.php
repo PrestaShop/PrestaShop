@@ -31,6 +31,9 @@ use Symfony\Component\Console\Event\ConsoleCommandEvent;
 use Symfony\Component\Console\Exception\LogicException;
 use Symfony\Component\Console\Input\InputOption;
 
+/**
+ * @deprecated since 1.7.7, to be removed in the next major version.
+ */
 class MultishopCommandListener
 {
     public $context;
