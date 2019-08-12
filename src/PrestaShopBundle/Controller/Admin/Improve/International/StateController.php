@@ -81,7 +81,9 @@ class StateController extends FrameworkBundleAdminController
      */
     public function indexAction(): Response
     {
-        return new Response('index');
+        $link = $this->getAdminLink('AdminStates', [], true);
+
+        return $this->redirect($link);
     }
 
     /**
@@ -167,9 +169,8 @@ class StateController extends FrameworkBundleAdminController
             $result = $stateFormHandler->handleFor((int) $stateId, $stateForm);
             if ($result->isSubmitted() && $result->isValid()) {
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
-                $link = $this->getAdminLink('AdminStates', [], true);
 
-                return $this->redirect($link);
+                return $this->redirectToRoute('admin_states_index');
             }
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));

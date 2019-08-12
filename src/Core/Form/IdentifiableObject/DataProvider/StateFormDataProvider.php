@@ -83,9 +83,8 @@ final class StateFormDataProvider implements FormDataProviderInterface
      */
     public function getDefaultData()
     {
-        return [];
-//        return [
-//            'id_country' => $this->defaultCountryId,
-//        ];
+        return [
+            'id_country' => $this->defaultCountryId,
+        ];
     }
 }
