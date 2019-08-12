@@ -32,12 +32,12 @@ namespace PrestaShop\PrestaShop\Core\Domain\Currency\QueryResult;
 class ExchangeRate
 {
     /**
-     * @var float|int
+     * @var float
      */
     private $exchangeRate;
 
     /**
-     * @param float|int $exchangeRate
+     * @param float $exchangeRate
      */
     public function __construct($exchangeRate)
     {
@@ -45,7 +45,7 @@ class ExchangeRate
     }
 
     /**
-     * @return float|int
+     * @return float
      */
     public function getValue()
     {
