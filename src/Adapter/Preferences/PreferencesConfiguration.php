@@ -57,7 +57,6 @@ class PreferencesConfiguration implements DataConfigurationInterface
             'use_htmlpurifier' => $this->configuration->getBoolean('PS_USE_HTMLPURIFIER'),
             'price_round_mode' => $this->configuration->get('PS_PRICE_ROUND_MODE'),
             'price_round_type' => $this->configuration->get('PS_ROUND_TYPE'),
-            'price_display_precision' => $this->configuration->get('PS_PRICE_DISPLAY_PRECISION'),
             'display_suppliers' => $this->configuration->getBoolean('PS_DISPLAY_SUPPLIERS'),
             'display_manufacturers' => $this->configuration->getBoolean('PS_DISPLAY_MANUFACTURERS'),
             'display_best_sellers' => $this->configuration->getBoolean('PS_DISPLAY_BEST_SELLERS'),
@@ -79,7 +78,6 @@ class PreferencesConfiguration implements DataConfigurationInterface
             $this->configuration->set('PS_USE_HTMLPURIFIER', $configuration['use_htmlpurifier']);
             $this->configuration->set('PS_PRICE_ROUND_MODE', $configuration['price_round_mode']);
             $this->configuration->set('PS_ROUND_TYPE', $configuration['price_round_type']);
-            $this->configuration->set('PS_PRICE_DISPLAY_PRECISION', $configuration['price_display_precision']);
             $this->configuration->set('PS_DISPLAY_SUPPLIERS', $configuration['display_suppliers']);
             $this->configuration->set('PS_DISPLAY_MANUFACTURERS', $configuration['display_manufacturers']);
             $this->configuration->set('PS_DISPLAY_BEST_SELLERS', $configuration['display_best_sellers']);
@@ -103,7 +101,6 @@ class PreferencesConfiguration implements DataConfigurationInterface
             $configuration['use_htmlpurifier'],
             $configuration['price_round_mode'],
             $configuration['price_round_type'],
-            $configuration['price_display_precision'],
             $configuration['display_suppliers'],
             $configuration['display_manufacturers'],
             $configuration['display_best_sellers'],

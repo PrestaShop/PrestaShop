@@ -122,11 +122,6 @@ class PreferencesType extends TranslatorAwareType
                     'Round on the total' => Order::ROUND_TOTAL,
                 ],
             ])
-            ->add('price_display_precision', IntegerType::class, [
-                'attr' => [
-                    'min' => 0,
-                ],
-            ])
             ->add('display_suppliers', SwitchType::class)
             ->add('display_manufacturers', SwitchType::class)
             ->add('display_best_sellers', SwitchType::class)
