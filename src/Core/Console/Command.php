@@ -26,16 +26,12 @@
 
 namespace PrestaShop\PrestaShop\Core\Console;
 
-use Employee;
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Exception\LogicException;
-use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopContext;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 
 /**
- * Adapter of Symfony Command class for PrestaShop
+ * Symfony Command class for PrestaShop allowed to rely on legacy classes
  *
  * @author Mickaël Andrieu <mickael.andrieu@prestashop.com>
  */
@@ -44,32 +40,7 @@ abstract class Command extends ContainerAwareCommand
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
         $container = $this->getContainer();
-
-        require_once $container->get('kernel')->getRootDir() . '/../config/config.inc.php';
-
-        /** @var LegacyContext $legacyContext */
-        $legacyContext = $container->get('prestashop.adapter.legacy.context');
-
-        /** @var ShopContext $shopContext */
-        $shopContext = $container->get('prestashop.adapter.shop.context');
-
-        // Set an employee
-        $employeeId = $input->getOption('employee');
-        $shopId = $input->getOption('shop');
-        $shopGroupId = $input->getOption('shop_group');
-
-        if ($shopId && $shopGroupId) {
-            throw new LogicException('Do not specify an ID shop and an ID group shop at the same time.');
-        }
-
-        $legacyContext->getContext()->controller = new \stdClass();
-        $legacyContext->getContext()->controller->controller_type = 'console';
-
-        if (!$legacyContext->getContext()->employee) {
-            $shopContext->setShopContext($shopId);
-            $shopContext->setShopGroupContext($shopGroupId);
-            $legacyContext->getContext()->employee = new Employee($employeeId);
-        }
+        $container->get('prestashop.adapter.console.context_loader')->loadConsoleContext($input);
 
         return parent::initialize($input, $output);
     }

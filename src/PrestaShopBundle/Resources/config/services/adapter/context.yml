@@ -12,3 +12,10 @@ services:
             - "@prestashop.security.admin.provider"
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
+    prestashop.adapter.console.context_loader:
+        class: PrestaShop\PrestaShop\Adapter\Console\ContextLoader
+        arguments:
+          - '@prestashop.adapter.legacy.context'
+          - '@prestashop.adapter.shop.context'
+          - '%kernel.root_dir%'

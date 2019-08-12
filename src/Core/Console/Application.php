@@ -45,7 +45,14 @@ final class Application extends FrameworkConsoleApplication
 
         $inputDefinition = $this->getDefinition();
         $inputDefinition->addOption(new InputOption('employee', '-em', InputOption::VALUE_REQUIRED, 'Specify employee context (id).', null));
-        $inputDefinition->addOption(new InputOption('shop', '-s', InputOption::VALUE_REQUIRED, 'Specify shop context (id).', null));
-        $inputDefinition->addOption(new InputOption('shop_group', '-sg', InputOption::VALUE_OPTIONAL, 'Specify shop group context (id).', null));
+
+        // @see MultiShopCommandListener BC compatible fix to display the options in the Console
+        if (!$inputDefinition->hasOption('id_shop')) {
+            $inputDefinition->addOption(new InputOption('id_shop', null, InputOption::VALUE_OPTIONAL, 'Specify shop context.'));
+        }
+
+        if (!$inputDefinition->hasOption('id_shop_group')) {
+            $inputDefinition->addOption(new InputOption('id_shop_group', null, InputOption::VALUE_OPTIONAL, 'Specify shop group context.'));
+        }
     }
 }
