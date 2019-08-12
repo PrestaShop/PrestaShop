@@ -45,14 +45,14 @@ final class CategoryTreeChoiceProvider implements FormChoiceProviderInterface
     private $contextShopRootCategoryId;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $enabledCategoriesOnly;
 
     /**
      * @param CategoryDataProvider $categoryDataProvider
-     * @param $contextShopRootCategoryId
-     * @param boolean $enabledCategoriesOnly
+     * @param int $contextShopRootCategoryId
+     * @param bool $enabledCategoriesOnly
      */
     public function __construct(CategoryDataProvider $categoryDataProvider, $contextShopRootCategoryId, $enabledCategoriesOnly = false)
     {
