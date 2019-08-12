@@ -25,12 +25,12 @@
 
 /**
  *
- * @param {jQuery} $element
- * @param {string} url
- * @param {number} maxFilesize
- * @param {string} acceptedFiles
- * @param {object} optionalProperties
- * @param {string} paramName
+ * @param {jQuery} $element - a jquery element which is being loaded with plugin
+ * @param {string} url - an url which is being called for file upload
+ * @param {number} maxFilesize - adds maximum filesize for single file
+ * @param {string} acceptedFiles - mime types of available types. E.g image/* allows all image formats.
+ * @param {object} optionalProperties - other properties which can be used with the dropzone plugin
+ * @param {string} paramName - a file name which is being sent to the server
  *
  * @return jQuery
  */
