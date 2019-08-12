@@ -54,7 +54,7 @@ class EditAttachmentCommand
     private $mimeType;
 
     /**
-     * @var string[]|null
+     * @var string[]
      */
     private $localizedNames;
 
@@ -131,19 +131,19 @@ class EditAttachmentCommand
     }
 
     /**
-     * @return string[]|null
+     * @return string[]
      */
-    public function getLocalizedNames(): ?array
+    public function getLocalizedNames(): array
     {
         return $this->localizedNames;
     }
 
     /**
-     * @param string[]|null $localizedNames
+     * @param string[] $localizedNames
      *
      * @return EditAttachmentCommand
      */
-    public function setLocalizedNames(?array $localizedNames): EditAttachmentCommand
+    public function setLocalizedNames(array $localizedNames): EditAttachmentCommand
     {
         $this->localizedNames = $localizedNames;
 
