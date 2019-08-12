@@ -43,7 +43,7 @@
 
         {% if not currencyForm.vars.data.id is defined %}
         {{ ps.form_group_row(currencyForm.selected_iso_code, {}, {
-          'label': 'Choose a currency'|trans({}, 'Admin.Global'),
+          'label': 'Select a currency'|trans({}, 'Admin.International.Feature'),
         }) }}
 
         {{ ps.form_group_row(currencyForm.custom, {}, {
@@ -60,12 +60,12 @@
         }) }}
 
         {{ ps.form_group_row(currencyForm.iso_code, {}, {
-          'label': 'ISO code'|trans({}, 'Admin.Global'),
+          'label': 'ISO code'|trans({}, 'Admin.International.Feature'),
           'help': 'ISO code (e.g. USD for Dollars, EUR for Euros, etc.).'|trans({}, 'Admin.International.Help')
         }) }}
 
         {{ ps.form_group_row(currencyForm.numeric_iso_code, {}, {
-          'label': 'Numeric ISO code'|trans({}, 'Admin.Global'),
+          'label': 'Numeric ISO code'|trans({}, 'Admin.International.Feature'),
           'help': 'Numeric ISO code (e.g. 840 for Dollars, 978 for Euros, etc.).'|trans({}, 'Admin.International.Help')
         }) }}
 
