@@ -36,16 +36,46 @@
       }
     }
   }
-}
 
-.product-draggable-file-uploader {
-  .dz-preview {
-    &:hover {
-      border: 3px solid $primary;
-      border-radius: 3px;
+  &.with-hover {
+    .dz-preview {
+      &:hover {
+        border: 3px solid $primary;
+        border-radius: 3px;
+      }
     }
-    .dz-success-mark, .dz-error-mark, .dz-remove, .dz-details {
-      display: none;
+  }
+
+  &.with-defaults-hidden {
+    .dz-preview {
+      .dz-success-mark, .dz-error-mark, .dz-remove, .dz-details {
+        display: none;
+      }
+    }
+  }
+
+  .clickable-file-uploader {
+    text-align: center;
+    color: $gray-light;
+
+    div {
+      display: inline-block;
+      width: 50px;
+      height: 50px;
+      border-radius: 100%;
+      border: 5px solid #bbcdd2;
+      position: relative;
+      top: 50%;
+      transform: translateY(-50%);
+
+      span {
+        text-align: center;
+        display: inline-block;
+        line-height: 40px;
+        height: 50px;
+        font-size: 30px;
+        font-weight: 700;
+      }
     }
   }
 }
