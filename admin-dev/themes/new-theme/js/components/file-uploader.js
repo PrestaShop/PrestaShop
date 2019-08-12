@@ -34,8 +34,28 @@
  *
  * @return jQuery
  */
-export default ({$element, url, maxFilesize, acceptedFiles, optionalProperties, paramName = 'file'}) => {
-  return $element.dropzone(
-    Object.assign({},{url, paramName, maxFilesize, acceptedFiles}, optionalProperties),
-  );
-}
+
+/**
+ * @param {object} properties
+ * @return {object}
+ */
+const getDefaultProperties = (properties) => {
+  const defaultProperties = {
+    thumbnailWidth: 250,
+  };
+
+  return Object.assign({}, defaultProperties, properties);
+};
+
+const fileUploader = ({$element, url, maxFilesize, acceptedFiles, optionalProperties, paramName = 'file'}) => {
+  const properties = Object.assign(
+    {},
+    {url, paramName, maxFilesize, acceptedFiles},
+    optionalProperties);
+
+  const withDefaultProperties = getDefaultProperties(properties);
+
+  return $element.dropzone(withDefaultProperties);
+};
+
+export default fileUploader;
