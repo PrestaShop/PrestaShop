@@ -89,7 +89,7 @@ final class AttachmentFileUploader
         if ($fileSize > (Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024 * 1024)) {
             throw new AttachmentConstraintException(sprintf(
                 'Max file size allowed is "%s" bytes. Uploaded file size is "%s".',
-                    (string)(Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024),
+                    (string) (Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024),
                     number_format(($fileSize / 1024), 2, '.', '')
                 ),
              AttachmentConstraintException::INVALID_FILE_SIZE);
