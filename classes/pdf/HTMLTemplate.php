@@ -137,7 +137,7 @@ abstract class HTMLTemplateCore
         }
 
         $this->smarty->assign(array(
-            'logo_path' => Tools::getShopProtocol() . Tools::getMediaServer(_PS_IMG_) . _PS_IMG_ . $logo,
+            'logo_path' => _PS_IMG_DIR_ . $logo,
             'img_ps_dir' => Tools::getShopProtocol() . Tools::getMediaServer(_PS_IMG_) . _PS_IMG_,
             'img_update_time' => Configuration::get('PS_IMG_UPDATE_TIME'),
             'date' => $this->date,
