@@ -31,8 +31,6 @@ namespace PrestaShop\PrestaShop\Core\Domain\Currency\QueryResult;
  */
 class ExchangeRate
 {
-    const DEFAULT_RATE = \PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\ExchangeRate::DEFAULT_RATE;
-
     /**
      * @var float|int
      */
