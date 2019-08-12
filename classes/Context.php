@@ -363,9 +363,14 @@ class ContextCore
     }
 
     /**
+     * Returns a translator depending on service container availability and if the method
+     * is called by the installer or not.
+     *
+     * @param bool $isInstaller Set to true if the method is called by the installer
+     *
      * @return Translator
      */
-    public function getTranslator($needComponentTranslator = false)
+    public function getTranslator($isInstaller = false)
     {
         if (null !== $this->translator) {
             return $this->translator;
@@ -373,11 +378,13 @@ class ContextCore
 
         $sfContainer = SymfonyContainer::getInstance();
 
-        if ($needComponentTranslator || null === $sfContainer) {
+        if ($isInstaller || null === $sfContainer) {
             // symfony's container isn't available in front office, so we load and configure the translator component
             $this->translator = $this->getTranslatorFromLocale($this->language->locale);
         } else {
             $this->translator = $sfContainer->get('translator');
+            // We need to set the locale here because in legacy BO pages, the translator is used
+            // before the TranslatorListener does its job of setting the locale according to the Request object
             $this->translator->setLocale($this->language->locale);
         }
 
