@@ -24,27 +24,31 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\State\QueryHandler;
-
-use PrestaShop\PrestaShop\Core\Domain\State\Query\GetStateByIsoCode;
-use PrestaShop\PrestaShop\Core\Domain\State\QueryHandler\GetStateByIsoCodeHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\State\QueryResult\StateByIsoCode;
-use State;
+namespace PrestaShop\PrestaShop\Core\Domain\State\QueryResult;
 
 /**
- * Handles query for determining if state with given iso code exists
+ * Transfers boolean value to determine if state by iso code was found
  */
-final class GetStateByIsoCodeHandler implements GetStateByIsoCodeHandlerInterface
+class IsFoundStateByIsoCode
 {
     /**
-     * {@inheritdoc}
+     * @var bool
      */
-    public function handle(GetStateByIsoCode $query): StateByIsoCode
+    private $found = false;
+
+    /**
+     * @param bool $found
+     */
+    public function __construct(bool $found)
     {
-        $state = State::getIdByIso($query->getIsoCode());
+        $this->found = $found;
+    }
 
-        $a = 1;
-
-        return new StateByIsoCode(false);
+    /**
+     * @return bool
+     */
+    public function isFound(): bool
+    {
+        return $this->found;
     }
 }

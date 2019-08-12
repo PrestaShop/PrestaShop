@@ -27,7 +27,9 @@
 namespace PrestaShopBundle\Form\Validator\Constraints;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\Domain\State\Query\GetStateByIsoCode;
+use PrestaShop\PrestaShop\Core\Domain\State\Query\IsUniqueStateIsoCode;
+use PrestaShop\PrestaShop\Core\Domain\State\QueryResult\IsFoundStateByIsoCode;
+use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -62,7 +64,28 @@ class UniqueStateIsoCodeValidator extends ConstraintValidator
      */
     public function validate($value, Constraint $constraint)
     {
-        $result = $this->queryBus->handle(new GetStateByIsoCode($value));
-        $a = 1;
+        $isUniqueStateIsoCodeQuery = new IsUniqueStateIsoCode($value['iso_code']);
+
+        if (isset($value['id_state']) && $value['id_state'] instanceof StateId) {
+            /** @var StateId $stateId */
+            $stateId = $value['id_state'];
+
+            $isUniqueStateIsoCodeQuery->setStateId($stateId->getValue());
+        }
+
+        /** @var IsFoundStateByIsoCode $result */
+        $result = $this->queryBus->handle($isUniqueStateIsoCodeQuery);
+
+        if ($result->isFound()) {
+            $this->context->buildViolation(
+                $this->translator->trans(
+                    'This ISO code already exists. You cannot create two states with the same ISO code.',
+                    [],
+                    'Admin.International.Notification'
+                )
+            )
+                ->atPath('[iso_code]')
+                ->addViolation();
+        }
     }
 }

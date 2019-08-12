@@ -30,7 +30,6 @@ use PrestaShopBundle\Form\Admin\Type\CountryChoiceType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\ZoneChoiceType;
 use PrestaShopBundle\Form\Validator\Constraints\UniqueStateIsoCode;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -58,7 +57,6 @@ class StateType extends AbstractType
                 'required' => true,
                 'constraints' => [
                     new NotBlank(),
-                    new UniqueStateIsoCode(),
                 ],
             ])
             ->add('id_country', CountryChoiceType::class, [
@@ -78,5 +76,13 @@ class StateType extends AbstractType
                 'required' => true,
             ])
         ;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefault('constraints', new UniqueStateIsoCode());
     }
 }
