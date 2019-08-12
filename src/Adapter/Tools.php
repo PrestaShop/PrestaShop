@@ -244,4 +244,26 @@ class Tools
     {
         return LegacyTools::getAdminImageUrl($fileName, $escapeHtmlEntities);
     }
+
+    /**
+     * @see LegacyTools::displayDate()
+     *
+     * @return string
+     *
+     * @throws \PrestaShopException
+     */
+    public function displayDate($date, $id_lang = null, $full = false, $separator = null)
+    {
+        return LegacyTools::displayDate($date, $id_lang, $full, $separator);
+    }
+
+    /**
+     * @see LegacyTools::truncateString()
+     *
+     * @return bool|string
+     */
+    public function truncateString($text, $length = 120, $options = array())
+    {
+        return LegacyTools::truncateString($text, $length, $options);
+    }
 }

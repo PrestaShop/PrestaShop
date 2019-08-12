@@ -57,4 +57,52 @@ module.exports = class CommonPage {
     await this.page.waitForSelector('body');
     return this.page;
   }
+
+  /**
+   * Wait for selector and click
+   * @param selector, element to check
+   * @param timeout, wait timeout
+   * @return {Promise<void>}
+   */
+  async waitForSelectorAndClick(selector, timeout = 5000) {
+    await this.page.waitForSelector(selector, {visible: true, timeout});
+    await this.page.click(selector);
+  }
+
+  /**
+   * Check text value
+   * @param selector, element to check
+   * @param textToCheckWith, text to check with
+   * @param parameter, parameter to use
+   * @return promise, throw an error if element does not exist or text is not correct
+   */
+  async checkTextValue(selector, textToCheckWith, parameter = 'equal') {
+    await this.page.waitForSelector(selector);
+    switch (parameter) {
+      case 'equal':
+        await this.page.$eval(selector, el => el.innerText)
+          .then(text => expect(text.replace(/\s+/g, ' ').trim()).to.equal(textToCheckWith));
+        break;
+      case 'contain':
+        await this.page.$eval(selector, el => el.innerText)
+          .then(text => expect(text).to.contain(textToCheckWith));
+        break;
+      default:
+      // do nothing
+    }
+  }
+
+  /**
+   * Check attribute value
+   * @param selector, element to check
+   * @param attribute, attribute to test
+   * @param textToCheckWith, text to check with
+   * @return promise, throw an error if element does not exist or attribute value is not correct
+   */
+  async checkAttributeValue(selector, attribute, textToCheckWith) {
+    await this.page.waitForSelector(selector);
+    const value = await this.page.$eval(selector, (el, attribute) => el
+      .getAttribute(attribute), attribute);
+    expect(value).to.be.equal(textToCheckWith);
+  }
 };

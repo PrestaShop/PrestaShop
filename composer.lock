@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "14237e2d05079ff7540791318ff6912c",
+    "content-hash": "56c5e5834c29573fac056bb72364c9d5",
     "packages": [
         {
             "name": "analog/analog",
@@ -3162,6 +3162,62 @@
             "description": "PrestaShop module blockreassurance",
             "homepage": "https://github.com/PrestaShop/blockreassurance",
             "time": "2017-06-29T07:28:29+00:00"
+        },
+        {
+            "name": "prestashop/circuit-breaker",
+            "version": "v3.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/circuit-breaker.git",
+                "reference": "8764540d470b533c9484534343688733bc363f77"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/circuit-breaker/zipball/8764540d470b533c9484534343688733bc363f77",
+                "reference": "8764540d470b533c9484534343688733bc363f77",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^5",
+                "php": ">=5.6"
+            },
+            "require-dev": {
+                "doctrine/cache": "^1.6.0",
+                "friendsofphp/php-cs-fixer": "^2.12",
+                "phpunit/phpunit": "^5.7.0",
+                "squizlabs/php_codesniffer": "3.*",
+                "symfony/cache": "^3.4.0",
+                "symfony/event-dispatcher": "^3.4",
+                "vimeo/psalm": "^1.1"
+            },
+            "suggest": {
+                "doctrine/cache": "Allows use of Doctrine Cache adapters to store transactions",
+                "ext-apcu": "Allows use of APCu adapter (performant) to store transactions",
+                "guzzlehttp/cache-subscriber": "Allow use of Guzzle cache (use dev-master for most recent changes)",
+                "symfony/cache": "Allows use of Symfony Cache adapters to store transactions"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "PrestaShop\\CircuitBreaker\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                },
+                {
+                    "name": "PrestaShop Community",
+                    "homepage": "http://contributors.prestashop.com/"
+                }
+            ],
+            "description": "A circuit breaker implementation for PHP",
+            "time": "2019-06-13T10:50:14+00:00"
         },
         {
             "name": "prestashop/contactform",

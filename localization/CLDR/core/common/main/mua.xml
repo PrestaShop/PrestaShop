@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
-<!-- Copyright © 1991-2017 Unicode, Inc.
+<!-- Copyright © 1991-2019 Unicode, Inc.
 For terms of use, see http://www.unicode.org/copyright.html
 Unicode and the Unicode Logo are registered trademarks of Unicode, Inc. in the U.S. and other countries.
 CLDR data files are interpreted according to the LDML specification (http://unicode.org/reports/tr35/)
 -->
 <ldml>
 	<identity>
-		<version number="$Revision: 13701 $"/>
+		<version number="$Revision: 14782 $"/>
 		<language type="mua"/>
 	</identity>
 	<localeDisplayNames>
@@ -714,6 +714,9 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 				<displayName>Solai Malagasya</displayName>
 			</currency>
 			<currency type="MRO">
+				<displayName>Solai Mauritaniya (1973–2017)</displayName>
+			</currency>
+			<currency type="MRU">
 				<displayName>Solai Mauritaniya</displayName>
 			</currency>
 			<currency type="MUR">
@@ -756,6 +759,9 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 				<displayName>Solai Somaliya</displayName>
 			</currency>
 			<currency type="STD">
+				<displayName>Solai Sao Tome (1977–2017)</displayName>
+			</currency>
+			<currency type="STN">
 				<displayName>Solai Sao Tome</displayName>
 			</currency>
 			<currency type="SZL">
