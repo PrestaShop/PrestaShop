@@ -49,7 +49,7 @@ class ExchangeRateProviderTest extends TestCase
     private $fileSystem;
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     protected function setUp()
     {
