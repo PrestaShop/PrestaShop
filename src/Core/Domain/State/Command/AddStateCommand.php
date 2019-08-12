@@ -26,6 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\State\Command;
 
+/**
+ * Creates state with provided data
+ */
 class AddStateCommand
 {
     /**
