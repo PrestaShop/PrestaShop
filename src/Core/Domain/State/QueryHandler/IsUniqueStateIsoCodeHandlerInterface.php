@@ -24,31 +24,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\State\Query;
+namespace PrestaShop\PrestaShop\Core\Domain\State\QueryHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\State\Query\isUniqueStateIsoCode;
+use PrestaShop\PrestaShop\Core\Domain\State\QueryResult\IsFoundStateByIsoCode;
 
 /**
- * Gets bool value that determines if state with given iso code exists
+ * Defines contract for get unique state iso code handler
  */
-class GetStateByIsoCode
+interface IsUniqueStateIsoCodeHandlerInterface
 {
     /**
-     * @var string
+     * @param isUniqueStateIsoCode $query
+     *
+     * @return IsFoundStateByIsoCode
      */
-    private $isoCode;
-
-    /**
-     * @param string $isoCode
-     */
-    public function __construct(string $isoCode)
-    {
-        $this->isoCode = $isoCode;
-    }
-
-    /**
-     * @return string
-     */
-    public function getIsoCode(): string
-    {
-        return $this->isoCode;
-    }
+    public function handle(isUniqueStateIsoCode $query): IsFoundStateByIsoCode;
 }

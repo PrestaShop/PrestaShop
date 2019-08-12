@@ -26,7 +26,6 @@
 
 namespace PrestaShopBundle\Form\Validator\Constraints;
 
-
 use Symfony\Component\Validator\Constraint;
 
 /**

@@ -24,31 +24,56 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\State\QueryResult;
+namespace PrestaShop\PrestaShop\Core\Domain\State\Query;
 
 /**
- * Transfers boolean value to determine if state by iso code was found
+ * Gets bool value that determines if state with given iso code exists
  */
-class StateByIsoCode
+class IsUniqueStateIsoCode
 {
     /**
-     * @var bool
+     * @var string
      */
-    private $found = false;
+    private $isoCode;
 
     /**
-     * @param bool $found
+     * @var int|null
      */
-    public function __construct(bool $found)
+    private $stateId;
+
+    /**
+     * @param string $isoCode
+     */
+    public function __construct(string $isoCode)
     {
-        $this->found = $found;
+        $this->isoCode = $isoCode;
     }
 
     /**
-     * @return bool
+     * @return string
      */
-    public function isFound(): bool
+    public function getIsoCode(): string
     {
-        return $this->found;
+        return $this->isoCode;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getStateId(): ?int
+    {
+        return $this->stateId;
+    }
+
+    /**
+     * @param int $stateId
+     *
+     * @return isUniqueStateIsoCode
+     */
+    public function setStateId(int $stateId): isUniqueStateIsoCode
+    {
+        $this->stateId = $stateId;
+
+        return $this;
     }
 }

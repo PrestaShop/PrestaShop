@@ -35,8 +35,8 @@ services:
     tags:
       - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\State\Query\GetStateForEditing' }
 
-  prestashop.adapter.state.query_handler.get_state_existance:
-    class: 'PrestaShop\PrestaShop\Adapter\State\QueryHandler\GetStateByIsoCodeHandler'
+  prestashop.adapter.state.query_handler.is_unique_state_iso_code:
+    class: 'PrestaShop\PrestaShop\Adapter\State\QueryHandler\IsUniqueStateIsoCodeHandler'
     tags:
-      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\State\Query\GetStateByIsoCode' }
+      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\State\Query\IsUniqueStateIsoCode' }
 

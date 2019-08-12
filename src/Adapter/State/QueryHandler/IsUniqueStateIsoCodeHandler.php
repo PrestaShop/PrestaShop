@@ -24,20 +24,34 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\State\QueryHandler;
+namespace PrestaShop\PrestaShop\Adapter\State\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\State\Query\GetStateByIsoCode;
-use PrestaShop\PrestaShop\Core\Domain\State\QueryResult\StateByIsoCode;
+use PrestaShop\PrestaShop\Core\Domain\State\Query\isUniqueStateIsoCode;
+use PrestaShop\PrestaShop\Core\Domain\State\QueryHandler\IsUniqueStateIsoCodeHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\State\QueryResult\IsFoundStateByIsoCode;
+use State;
 
 /**
- * Defines contract for get state by iso code handler
+ * Handles query for determining if state with given iso code exists
  */
-interface GetStateByIsoCodeHandlerInterface
+final class IsUniqueStateIsoCodeHandler implements IsUniqueStateIsoCodeHandlerInterface
 {
     /**
-     * @param GetStateByIsoCode $query
-     *
-     * @return StateByIsoCode
+     * {@inheritdoc}
      */
-    public function handle(GetStateByIsoCode $query): StateByIsoCode;
+    public function handle(isUniqueStateIsoCode $query): IsFoundStateByIsoCode
+    {
+        /** @var int $state */
+        $state = State::getIdByIso($query->getIsoCode());
+
+        if (!$state) {
+            return new IsFoundStateByIsoCode(false);
+        }
+
+        if ($query->getStateId() !== null && $state != $query->getStateId()) {
+            return new IsFoundStateByIsoCode(false);
+        }
+
+        return new IsFoundStateByIsoCode(true);
+    }
 }

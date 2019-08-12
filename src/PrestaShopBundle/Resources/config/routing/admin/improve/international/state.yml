@@ -20,7 +20,7 @@ admin_states_create:
   defaults:
     _controller: PrestaShopBundle:Admin\Improve\International\State:create
     _legacy_controller: AdminStates
-    _legacy_link: AdminStates:addstate
+#    _legacy_link: AdminStates:addstate
 
 admin_states_edit:
   path: /{stateId}/edit
@@ -28,7 +28,7 @@ admin_states_edit:
   defaults:
     _controller: PrestaShopBundle:Admin\Improve\International\State:edit
     _legacy_controller: AdminStates
-    _legacy_link: AdminStates:updatestate
+#    _legacy_link: AdminStates:updatestate
     _legacy_parameters:
       id_state: stateId
   requirements:

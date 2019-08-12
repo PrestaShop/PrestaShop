@@ -38,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\State\QueryResult\EditableState;
 use PrestaShop\PrestaShop\Core\Domain\Zone\Exception\ZoneNotFoundException;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -57,7 +58,7 @@ class StateController extends FrameworkBundleAdminController
     public function getStatesAction(Request $request)
     {
         try {
-            $countryId = (int)$request->query->get('id_country');
+            $countryId = (int) $request->query->get('id_country');
             $statesProvider = $this->get('prestashop.adapter.form.choice_provider.country_state_by_id');
             $states = $statesProvider->getChoices([
                 'id_country' => $countryId,
@@ -125,11 +126,25 @@ class StateController extends FrameworkBundleAdminController
         ]);
     }
 
-    public function editAction(int $stateId, Request $request)
+    /**
+     * Handles edit form rendering and submission
+     *
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_states_index"
+     * )
+     * @DemoRestricted(redirectRoute="admin_states_index")
+     *
+     * @param int $stateId
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function editAction(int $stateId, Request $request): Response
     {
         try {
             /** @var EditableState $stateInformation */
-            $stateInformation = $this->getQueryBus()->handle(new GetStateForEditing((int)$stateId));
+            $stateInformation = $this->getQueryBus()->handle(new GetStateForEditing((int) $stateId));
         } catch (StateException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
 
@@ -147,9 +162,9 @@ class StateController extends FrameworkBundleAdminController
                 'prestashop.core.form.identifiable_object.handler.state_form_handler'
             );
 
-            $stateForm = $stateFormBuilder->getFormFor((int)$stateId);
+            $stateForm = $stateFormBuilder->getFormFor((int) $stateId);
             $stateForm->handleRequest($request);
-            $result = $stateFormHandler->handleFor((int)$stateId, $stateForm);
+            $result = $stateFormHandler->handleFor((int) $stateId, $stateForm);
             if ($result->isSubmitted() && $result->isValid()) {
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
                 $link = $this->getAdminLink('AdminStates', [], true);
@@ -167,6 +182,9 @@ class StateController extends FrameworkBundleAdminController
         ]);
     }
 
+    /**
+     * @return array
+     */
     private function getErrorMessages(): array
     {
         return [
@@ -188,12 +206,14 @@ class StateController extends FrameworkBundleAdminController
                     'Admin.Notifications.Error'
                 ),
                 StateConstraintException::INVALID_NAME => $this->trans(
-                    'An error occurred when attempting to update the required fields.',
-                    'Admin.Notifications.Error'
+                    'The %s field is invalid.',
+                    'Admin.Notifications.Error',
+                    [sprintf('"%s"', $this->trans('Name', 'Admin.Global'))]
                 ),
                 StateConstraintException::INVALID_ISO_CODE => $this->trans(
-                    'An error occurred when attempting to update the required fields.',
-                    'Admin.Notifications.Error'
+                    'The %s field is invalid.',
+                    'Admin.Notifications.Error',
+                    [sprintf('"%s"', $this->trans('ISO code', 'Admin.International.Feature'))]
                 ),
                 StateConstraintException::INVALID_ACTIVE => $this->trans(
                     'An error occurred when attempting to update the required fields.',
@@ -201,12 +221,12 @@ class StateController extends FrameworkBundleAdminController
                 ),
             ],
             CannotUpdateStateException::class => $this->trans(
-                'Failed to copy the file.',
-                'Admin.Catalog.Notification'
+                'An error occurred on saving.',
+                'Admin.Notifications.Error'
             ),
             CannotAddStateException::class => $this->trans(
-                'This attachment was unable to be loaded into the database.',
-                'Admin.Catalog.Notification'
+                'An error occurred on saving.',
+                'Admin.Notifications.Error'
             ),
             ZoneNotFoundException::class => $this->trans(
                 'The object cannot be loaded (or found)',
