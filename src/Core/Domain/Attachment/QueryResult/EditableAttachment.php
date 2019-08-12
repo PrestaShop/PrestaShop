@@ -34,12 +34,12 @@ use SplFileInfo;
 class EditableAttachment
 {
     /**
-     * @var string|null
+     * @var string
      */
     private $fileName;
 
     /**
-     * @var string[]null
+     * @var string[]
      */
     private $name;
 
