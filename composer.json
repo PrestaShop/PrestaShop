@@ -44,7 +44,7 @@
         "prestashop/dashgoals": "^2",
         "prestashop/dashproducts": "^2",
         "prestashop/dashtrends": "^2",
-        "prestashop/decimal": "^1.0.0",
+        "prestashop/decimal": "^1.2",
         "prestashop/graphnvd3": "^2",
         "prestashop/gridhtml": "^2",
         "prestashop/gsitemap": "^4",

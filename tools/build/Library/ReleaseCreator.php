@@ -76,7 +76,6 @@ class ReleaseCreator
         '.gitignore',
         '.gitmodules',
         '.travis.yml',
-        'composer.lock',
         'package-lock.json',
         '.babelrc',
         'postcss.config.js',

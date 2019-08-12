@@ -29,6 +29,9 @@ namespace PrestaShopBundle\Translation;
 
 use Symfony\Bundle\FrameworkBundle\Translation\Translator as BaseTranslator;
 
+/**
+ * Replacement for the original Symfony FrameworkBundle translator
+ */
 class Translator extends BaseTranslator
 {
     use PrestaShopTranslatorTrait;
