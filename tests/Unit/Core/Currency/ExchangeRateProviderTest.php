@@ -208,7 +208,7 @@ class ExchangeRateProviderTest extends TestCase
 
     /**
      * @expectedException \PrestaShop\PrestaShop\Core\Currency\Exception\CurrencyFeedException
-     * @expectedExceptionMessage Exchange rate for currency with ISO code XXX was not found
+     * @expectedExceptionMessage Exchange rate for currency with ISO code XYZ was not found
      */
     public function testUnknownCurrency()
     {
@@ -221,12 +221,12 @@ class ExchangeRateProviderTest extends TestCase
             $this->cacheDir
         );
 
-        $exchangeRateProvider->getExchangeRate('XXX');
+        $exchangeRateProvider->getExchangeRate('XYZ');
     }
 
     /**
      * @expectedException \PrestaShop\PrestaShop\Core\Currency\Exception\CurrencyFeedException
-     * @expectedExceptionMessage Could not find default currency XXX in the currency feed
+     * @expectedExceptionMessage Could not find default currency XYZ in the currency feed
      */
     public function testUnknownDefaultCurrency()
     {
@@ -234,7 +234,7 @@ class ExchangeRateProviderTest extends TestCase
 
         $exchangeRateProvider = new ExchangeRateProvider(
             $this->feedFilePath,
-            'XXX',
+            'XYZ',
             $circuitBreaker,
             $this->cacheDir
         );
