@@ -36,10 +36,18 @@ export default class ClickableElementExtension {
       throw new Error(`Missing element "${selector}" in your draggable file uploader container`);
     }
 
-    fileUploader.getDropzoneInstance().on('thumbnail', function () {
-      if (fileUploader.getElementInstance().find('img').length > 0) {
-        fileUploader.getElementInstance().addClass('dz-max-files-reached');
-      }
+    fileUploader.getDropzoneInstance().on('thumbnail', () => {
+      this.toggle(fileUploader.getElementInstance());
     });
+
+    fileUploader.getDropzoneInstance().on('removedfile', () => {
+      this.toggle(fileUploader.getElementInstance());
+    });
+  }
+
+  toggle($element) {
+    const containsImages = $element.find('img').length > 0;
+    $element.toggleClass('dz-max-files-reached', containsImages);
+    $element.find('.js-clickable-file-uploader').toggleClass('d-none', !containsImages);
   }
 }
