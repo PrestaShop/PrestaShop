@@ -552,9 +552,7 @@ class OrderInvoiceCore extends ObjectModel
         AND `id_order_invoice` = ' . (int) $this->id . '
         GROUP BY `ecotax_tax_rate`');
 
-        $localeCldr = Tools::getContextLocale(Context::getContext());
-        $currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
-        $priceDisplayPrecision = $localeCldr->getPriceDisplayPrecision($currency);
+        $priceDisplayPrecision = Tools::displayPricePrecision();
         $taxes = array();
         foreach ($result as $row) {
             if ($row['ecotax_tax_excl'] > 0) {
