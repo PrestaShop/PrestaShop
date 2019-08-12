@@ -248,8 +248,9 @@ class CurrencyController extends FrameworkBundleAdminController
             $cldrCurrency['names'][$language['id_lang']] = $currency->getDisplayName();
             $cldrCurrency['symbols'][$language['id_lang']] = $currency->getSymbol() ?: $currencyData->getIsoCode();
             $cldrCurrency['iso_code'] = $currencyData->getIsoCode();
-            $cldrCurrency['numeric_iso_code'] = $currencyData->getNumericIsoCode();
+            $cldrCurrency['numeric_iso_code'] = (int) $currencyData->getNumericIsoCode();
         }
+
         if (empty($cldrCurrency)) {
             return new JsonResponse([
                 'error' => $this->trans(
@@ -272,7 +273,7 @@ class CurrencyController extends FrameworkBundleAdminController
 
             //Unable to find the exchange rate, either the currency doesn't exist (custom)
             //or the currency feed could not be fetched, use the default rate as a fallback
-            $cldrCurrency['exchange_rate'] = '';
+            $cldrCurrency['exchange_rate'] = 1.0;
         }
 
         return new JsonResponse($cldrCurrency);
