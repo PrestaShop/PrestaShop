@@ -131,11 +131,6 @@ require_once $currentDir.'/defines_uri.inc.php';
 global $_MODULES;
 $_MODULES = array();
 
-// $currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
-// $localeCldr = Tools::getContextLocale(Context::getContext());
-
-define('_PS_PRICE_DISPLAY_PRECISION_', Configuration::get('PS_PRICE_DISPLAY_PRECISION'));
-//define('_PS_PRICE_DISPLAY_PRECISION_', $localeCldr->getPriceMaxFractionDigit($currency->iso_code));
 define('_PS_PRICE_COMPUTE_PRECISION_', 6);
 
 /* Load all languages */
