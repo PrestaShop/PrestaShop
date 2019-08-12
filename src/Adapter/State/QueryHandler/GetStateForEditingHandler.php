@@ -38,9 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\State\QueryResult\EditableState;
 final class GetStateForEditingHandler extends AbstractStateHandler implements GetStateForEditingHandlerInterface
 {
     /**
-     * @param GetStateForEditing $query
-     *
-     * @return EditableState
+     * {@inheritdoc}
      *
      * @throws StateNotFoundException
      */
