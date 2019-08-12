@@ -12,7 +12,7 @@ services:
     tags:
       - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Attachment\Command\BulkDeleteAttachmentsCommand' }
 
-  prestashop.adapter.contact.query_handler.get_attachment_handler:
+  prestashop.adapter.attachment.query_handler.get_attachment_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Attachment\QueryHandler\GetAttachmentHandler'
     tags:
       - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachment' }
