@@ -54,6 +54,15 @@
     }
   }
 
+  &.dz-max-files-reached {
+    pointer-events: none;
+    cursor: default;
+
+    .dz-preview {
+      pointer-events: all;
+    }
+  }
+
   .clickable-file-uploader {
     text-align: center;
     color: $gray-light;

@@ -23,8 +23,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+const $ = window.$;
+
 export default class DraggableFileUploader {
-  constructor($element, optionalProperties) {
+  constructor(elementSelector, optionalProperties) {
+    const $element = $(elementSelector);
+
     const withDefaultProperties = this.getWithDefaultProperties(optionalProperties);
 
     const properties = Object.assign(
@@ -32,11 +36,22 @@ export default class DraggableFileUploader {
       this.getRequiredProperties($element),
       withDefaultProperties);
 
-    this._$fileUploader = $element.dropzone(properties);
+    const dropzone = new Dropzone('#file-uploader', properties);
+
+    this._$fileUploader = dropzone;
+    this._$element = $element;
   }
 
-  getInstance() {
+  getDropzoneInstance() {
     return this._$fileUploader;
+  }
+
+  getElementInstance() {
+    return this._$element;
+  }
+
+  addExtension(extension) {
+    extension.extend(this);
   }
 
   /**
