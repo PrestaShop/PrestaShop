@@ -259,7 +259,7 @@ class CurrencyController extends FrameworkBundleAdminController
                     [
                         '%isoCode%' => $currencyIsoCode,
                     ]
-                )
+                ),
             ], 404);
         }
 
@@ -273,7 +273,7 @@ class CurrencyController extends FrameworkBundleAdminController
 
             //Unable to find the exchange rate, either the currency doesn't exist (custom)
             //or the currency feed could not be fetched, use the default rate as a fallback
-            $cldrCurrency['exchange_rate'] = 1.0;
+            $cldrCurrency['exchange_rate'] = \PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\ExchangeRate::DEFAULT_RATE;
         }
 
         return new JsonResponse($cldrCurrency);
@@ -528,7 +528,7 @@ class CurrencyController extends FrameworkBundleAdminController
                     'You can not modify numeric ISO code of a real currency',
                     'Admin.International.Notification'
                 ),
-            ]
+            ],
         ];
     }
 }
