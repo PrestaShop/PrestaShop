@@ -32,14 +32,6 @@ services:
         tags:
         - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 40 }
 
-    prestashop.multishop_command_listener:
-        class: PrestaShopBundle\EventListener\MultishopCommandListener
-        arguments:
-            - "@prestashop.adapter.shop.context"
-            - "@=service('kernel').getRootDir()"
-        tags:
-            - { name: kernel.event_listener, event: console.command, method: onConsoleCommand }
-
     prestashop.access_denied.listener:
         class: PrestaShopBundle\EventListener\AccessDeniedListener
         arguments:
