@@ -760,6 +760,19 @@ class ToolsCore
     }
 
     /**
+     * Get the display price precision (max fraction digits)
+     *
+     * @return int
+     */
+    public static function displayPricePrecision()
+    {
+        $localeCldr = self::getContextLocale(Context::getContext());
+        $currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
+
+        return $localeCldr->getPriceDisplayPrecision($currency);
+    }
+
+    /**
      * Return current locale
      *
      * @param Context $context
