@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\State\CommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\State\Command\ToggleStateStatusCommand;
 
 /**
- * Defines contract for toggle state status handler interface
+ * Defines contract for toggle state status handler
  */
 interface ToggleStateStatusHandlerInterface
 {

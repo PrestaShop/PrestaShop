@@ -45,7 +45,7 @@ abstract class AbstractStateHandler
      *
      * @throws StateNotFoundException
      */
-    protected function getState(StateId $stateId)
+    protected function getState(StateId $stateId): State
     {
         $stateIdValue = $stateId->getValue();
 
@@ -96,7 +96,7 @@ abstract class AbstractStateHandler
      *
      * @throws StateException
      */
-    protected function toggleStateStatus(State $state, bool $newStatus)
+    protected function toggleStateStatus(State $state, bool $newStatus): bool
     {
         $state->active = $newStatus;
 

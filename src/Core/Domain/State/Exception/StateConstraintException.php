@@ -26,6 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\State\Exception;
 
+/**
+ * Is thrown when State constraint is violated
+ */
 class StateConstraintException extends StateException
 {
     const INVALID_ID = 1;

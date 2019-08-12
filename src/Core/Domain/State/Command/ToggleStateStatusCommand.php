@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\State\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
 
 /**
@@ -46,6 +47,8 @@ class ToggleStateStatusCommand
     /**
      * @param int $stateId
      * @param bool $expectedStatus
+     *
+     * @throws StateConstraintException
      */
     public function __construct(int $stateId, bool $expectedStatus)
     {
@@ -56,7 +59,7 @@ class ToggleStateStatusCommand
     /**
      * @return StateId
      */
-    public function getStateId()
+    public function getStateId(): StateId
     {
         return $this->stateId;
     }
@@ -64,7 +67,7 @@ class ToggleStateStatusCommand
     /**
      * @return bool
      */
-    public function getExpectedStatus()
+    public function getExpectedStatus(): bool
     {
         return $this->expectedStatus;
     }
