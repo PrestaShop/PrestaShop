@@ -1,0 +1,51 @@
+.draggable-file-uploader {
+  border: 1px solid $gray-light;
+  height: 30%;
+
+  .dz-preview {
+    position: relative;
+    display: inline-block;
+    vertical-align: top;
+    margin: 16px;
+    background-color: #ffffff;
+
+    width: 130px;
+    height: 130px;
+    border: 1px solid #bbcdd2;
+
+    .dz-image {
+      border-radius: 0;
+      line-height: 130px;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      position: relative;
+      display: block;
+      z-index: 10;
+
+      img {
+        max-width: 130px;
+        max-height: 130px;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        margin: auto;
+        filter: none;
+      }
+    }
+  }
+}
+
+.product-draggable-file-uploader {
+  .dz-preview {
+    &:hover {
+      border: 3px solid $primary;
+      border-radius: 3px;
+    }
+    .dz-success-mark, .dz-error-mark, .dz-remove, .dz-details {
+      display: none;
+    }
+  }
+}
