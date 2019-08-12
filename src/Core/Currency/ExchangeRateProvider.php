@@ -38,13 +38,20 @@ use SimpleXMLElement;
  */
 class ExchangeRateProvider
 {
+    /**
+     * This url was set in the _PS_CURRENCY_FEED_URL_ const but it is not accessible in every
+     * context because it is weirdly defined in defines_uri.inc.php So it is safer to define
+     * it properly here.
+     */
+    const CURRENCY_FEED_URL = 'http://api.prestashop.com/xml/currencies.xml';
+
     const DEFAULT_EXCHANGE_RATE = 1.0;
 
     const CLOSED_ALLOWED_FAILURES = 3;
-    const CLOSED_TIMEOUT_SECONDS = 3;
+    const CLOSED_TIMEOUT_SECONDS = 1;
 
     const OPEN_ALLOWED_FAILURES = 3;
-    const OPEN_TIMEOUT_SECONDS = 3;
+    const OPEN_TIMEOUT_SECONDS = 2;
     const OPEN_THRESHOLD_SECONDS = 3600; // 1 hour
 
     /** @var string */
