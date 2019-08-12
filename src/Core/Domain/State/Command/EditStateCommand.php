@@ -28,6 +28,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\State\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
 
+/**
+ * Edits state with provided data
+ */
 class EditStateCommand
 {
     /**
