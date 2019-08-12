@@ -30,7 +30,6 @@ use Employee;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Debug\Exception\FatalThrowableError;
 use Symfony\Component\Console\Exception\LogicException;
 use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopContext;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -47,7 +46,6 @@ abstract class Command extends ContainerAwareCommand
         $container = $this->getContainer();
 
         require_once $container->get('kernel')->getRootDir() . '/../config/config.inc.php';
-
 
         /** @var LegacyContext $legacyContext */
         $legacyContext = $container->get('prestashop.adapter.legacy.context');
