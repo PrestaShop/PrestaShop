@@ -65,5 +65,7 @@ services:
 
     prestashop.adapter.currency.query_handler.get_currency_exchange_rate:
       class: 'PrestaShop\PrestaShop\Adapter\Currency\QueryHandler\GetCurrencyExchangeRateHandler'
+      arguments:
+        - '@prestashop.core.exchange_rate.provider'
       tags:
         - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Query\GetCurrencyExchangeRate' }
