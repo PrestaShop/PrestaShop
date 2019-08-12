@@ -75,6 +75,7 @@ final class AddStateHandler extends AbstractStateHandler implements AddStateHand
             $state->iso_code = $command->getIsoCode();
             $state->id_country = $command->getCountryId();
             $state->id_zone = $command->getZoneId();
+            $state->active = $command->isActive();
 
             if (!$state->validateFields(false)) {
                 throw new StateConstraintException(
