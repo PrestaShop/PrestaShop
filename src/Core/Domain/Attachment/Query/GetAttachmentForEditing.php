@@ -39,17 +39,17 @@ class GetAttachmentForEditing
     private $attachmentId;
 
     /**
-     * @param int $attachmentId
+     * @param int $attachmentIdValue
      */
-    public function __construct(int $attachmentId)
+    public function __construct(int $attachmentIdValue)
     {
-        $this->attachmentId = new AttachmentId($attachmentId);
+        $this->attachmentId = new AttachmentId($attachmentIdValue);
     }
 
     /**
      * @return AttachmentId
      */
-    public function getAttachmentId()
+    public function getAttachmentId(): AttachmentId
     {
         return $this->attachmentId;
     }
