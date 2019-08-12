@@ -365,7 +365,7 @@ class ContextCore
     /**
      * @return Translator
      */
-    public function getTranslator()
+    public function getTranslator($needComponentTranslator = false)
     {
         if (null !== $this->translator) {
             return $this->translator;
@@ -373,11 +373,12 @@ class ContextCore
 
         $sfContainer = SymfonyContainer::getInstance();
 
-        if (null === $sfContainer) {
+        if ($needComponentTranslator || null === $sfContainer) {
             // symfony's container isn't available in front office, so we load and configure the translator component
             $this->translator = $this->getTranslatorFromLocale($this->language->locale);
         } else {
             $this->translator = $sfContainer->get('translator');
+            $this->translator->setLocale($this->language->locale);
         }
 
         return $this->translator;
