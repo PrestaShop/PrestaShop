@@ -4342,7 +4342,7 @@ class ProductCore extends ObjectModel
                 unset($row3['id_product_supplier']);
                 $row3['id_product'] = $id_product_new;
                 $row3['id_product_attribute'] = $id_product_attribute_new;
-                $return &= Db::getInstance()->insert('product_supplier', $row3);
+                $return &= Db::getInstance()->insert('product_supplier', $row3, false, true, Db::INSERT_IGNORE);
             }
         }
 
