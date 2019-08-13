@@ -1,5 +1,6 @@
 .draggable-file-uploader {
   border: 1px solid $gray-light;
+  position: relative;
 
   height: 30%;
   padding: 0;
@@ -92,6 +93,11 @@
   }
 
   .dz-default {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
     &.dz-message {
       i {
         font-size: 60px;

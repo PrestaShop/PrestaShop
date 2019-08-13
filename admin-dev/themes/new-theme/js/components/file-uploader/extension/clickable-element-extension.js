@@ -37,11 +37,11 @@ export default class ClickableElementExtension {
     }
 
     fileUploader.getDropzoneInstance().on('thumbnail', () => {
-      this.toggle(fileUploader.getElementInstance());
+      this.toggle(fileUploader);
     });
 
     fileUploader.getDropzoneInstance().on('removedfile', () => {
-      this.toggle(fileUploader.getElementInstance());
+      this.toggle(fileUploader);
     });
   }
 
@@ -52,11 +52,11 @@ export default class ClickableElementExtension {
   toggle(fileUploader) {
     const $element = fileUploader.getElementInstance();
 
-    const containsImages = fileUploader.doesContainImages;
+    const containsImages = fileUploader.getDoesContainImages($element);
 
     this.changePointerEvents($element, containsImages);
 
-    $element.find('.js-file-uploader-placeholder').toggleClass('d-none', containsImages);
+    // $element.find('.js-file-uploader-placeholder').toggleClass('d-none', containsImages);
     $element.toggleClass('d-flex, justify-content-center', !containsImages);
     $element.find('.js-clickable-file-uploader').toggleClass('d-none', !containsImages);
   }
