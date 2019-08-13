@@ -26,7 +26,7 @@
 {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
 
 {% block carrier_form_step_general %}
-<div id="step-1" class="form-step js-form-step active" data-step="1">
+<div class="form-step js-form-step active" data-step="1">
   <div class="card-block row">
     <div class="card-text">
         {% set nameHelp =
@@ -80,7 +80,7 @@
       {% set next_step = 2 %}
     {% endif %}
 
-    <a href="#step-{{ next_step }}" class="btn btn-primary float-right js-form-step-switch" data-step="{{ next_step }}">
+    <a href="#" class="btn btn-primary float-right js-form-step-switch" data-step="{{ next_step }}">
       {{ 'Next'|trans({}, 'Admin.Actions') }}
     </a>
   </div>

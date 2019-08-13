@@ -15,13 +15,9 @@
       width: 280px;
       min-width: 280px;
       vertical-align: middle;
-      label {
-        margin-bottom: 0;
-      }
     }
     .range-row {
-      background-color: #39acce;
-      color: #fff;
+      background-color: $background-grey;
       p {
         text-align: center;
         margin: 5px;

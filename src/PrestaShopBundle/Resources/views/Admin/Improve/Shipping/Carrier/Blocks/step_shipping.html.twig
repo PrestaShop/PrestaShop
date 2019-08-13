@@ -26,7 +26,7 @@
 {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
 
 {% block carrier_form_step_shipping %}
-<div id="step-3" class="form-step js-form-step" data-step="3">
+<div class="form-step js-form-step" data-step="3">
   <div class="card-block row">
     <div class="card-text">
         {{ ps.form_group_row(carrierForm.step_shipping.include_handling_cost, {'attr': {'class': 'js-handling-cost'}}, {
@@ -72,10 +72,10 @@
       {% set previous_step = 2 %}
     {% endif %}
 
-    <a href="#step-{{ previous_step }}" class="btn btn-outline-secondary  js-form-step-switch" data-step="{{ previous_step }}">
+    <a href="#" class="btn btn-outline-secondary  js-form-step-switch" data-step="{{ previous_step }}">
       {{ 'Previous'|trans({}, 'Admin.Actions') }}
     </a>
-    <a href="#step-4" class="btn btn-primary float-right js-form-step-switch" data-step="4">
+    <a href="#" class="btn btn-primary float-right js-form-step-switch" data-step="4">
       {{ 'Next'|trans({}, 'Admin.Actions') }}
     </a>
   </div>

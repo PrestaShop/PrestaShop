@@ -32,9 +32,12 @@
 
         <div>
           <div class="card">
-            <div class="card-block">
-              {#@todo: carrier summary #}
-              carrier summary
+            <div class="card-block" id="carrier-summary">
+              <p>This carrier <span id="is-free"></span> and the transit time is <span id="transit-time"></span></p>
+              <p>Shipping costs are calculated according to the price and the tax rule US-AL Rate (4%) will be applied.</p>
+              <p>This carrier can deliver orders from [undefined] $ to [undefined] $. If the order is out of range, the behavior is to disable carrier.</p>
+              <p>This carrier will be proposed for those delivery zones:</p>
+              <p>And it will be proposed for those client groups:</p>
             </div>
           </div>
           <div>
@@ -61,7 +64,7 @@
       {{ 'Cancel'|trans({}, 'Admin.Actions') }}
     </a>
 
-    <a href="#step-4" class="btn btn-outline-secondary js-form-step-switch" data-step="4">
+    <a href="#" class="btn btn-outline-secondary js-form-step-switch" data-step="4">
       {{ 'Previous'|trans({}, 'Admin.Actions') }}
     </a>
 

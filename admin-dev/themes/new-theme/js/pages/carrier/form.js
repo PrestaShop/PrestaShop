@@ -47,6 +47,7 @@ $(document).ready(() => {
     CarrierMap.freeShippingSelector,
     CarrierMap.handlingCostSelector,
     CarrierMap.rangesTableSelector,
-    CarrierMap.addRangeBtnSelector
+    CarrierMap.addRangeBtnSelector,
+    CarrierMap.rangeRowSelector
   );
 });

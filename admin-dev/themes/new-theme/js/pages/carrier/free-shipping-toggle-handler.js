@@ -33,11 +33,13 @@ export default class FreeShippingToggleHandler {
     freeShippingSelector,
     handlingCostSelector,
     rangeTableRowsSelector,
-    addRangeBtnSelector
+    addRangeBtnSelector,
+    rangeRowSelector
   ) {
     this.freeShippingSelector = freeShippingSelector;
     this.handlingCostSelector = handlingCostSelector;
     this.rangesTableRowsSelector = rangeTableRowsSelector;
+    this.rangeRowSelector = rangeRowSelector;
 
     this.$addRangeBtnSelector = $(addRangeBtnSelector);
     this.$freeShippingSelector = $(freeShippingSelector);
@@ -50,7 +52,7 @@ export default class FreeShippingToggleHandler {
   _handle() {
     const isFreeShipping = $(`${this.freeShippingSelector}:checked`).val() === '1';
     this._toggleHandlingCost(isFreeShipping);
-    this._toggleRangesAvailability(isFreeShipping);
+    this._toggleRangesVisibility(isFreeShipping);
     this._disableAddingRange(isFreeShipping);
   }
 
@@ -63,8 +65,14 @@ export default class FreeShippingToggleHandler {
     }
   }
 
-  _toggleRangesAvailability(isFreeShipping) {
-    $(`${this.rangesTableRowsSelector}`).find('input:not([type="checkbox"])').prop('readonly', isFreeShipping);
+  _toggleRangesVisibility(isFreeShipping) {
+    const $tableRows = $(`${this.rangesTableRowsSelector}`);
+    $tableRows.find('td').show();
+    $tableRows.find(this.rangeRowSelector).show();
+    if (isFreeShipping) {
+      $tableRows.find('td').hide();
+      $tableRows.find(this.rangeRowSelector).hide();
+    }
   }
 
   _disableAddingRange(isFreeShipping) {

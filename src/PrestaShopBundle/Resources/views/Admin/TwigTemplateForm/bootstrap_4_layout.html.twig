@@ -785,7 +785,7 @@
   <div>
     <div id="js-carrier-ranges" class="table-responsive">
       <table class="ranges-table table-responsive">
-        <tr class="range-row js-range-from">
+        <tr class="range-row js-range-row js-range-from">
           {% set rangeWeightLabel = 'Will be applied when the weight is'|trans({}, 'Admin.Shipping.Feature') %}
           {% set rangePriceLabel = 'Will be applied when the price is'|trans({}, 'Admin.Shipping.Feature') %}
           <th>
@@ -813,7 +813,7 @@
             </td>
           {% endif %}
         </tr>
-        <tr class="range-row js-range-to">
+        <tr class="range-row js-range-row js-range-to">
           <th>
             <p>
               <span class="js-range-label-case-weight">{{ rangeWeightLabel }}</span>

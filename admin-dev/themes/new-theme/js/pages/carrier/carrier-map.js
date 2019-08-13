@@ -27,6 +27,7 @@ export default {
   carrierFormWrapperSelector: '#carrier-form',
   rangePriceLabelSelector: '.js-range-label-case-price',
   rangeWeightLabelSelector: '.js-range-label-case-weight',
+  rangeRowSelector: '.js-range-row',
   billingSelector: '.js-billing',
   freeShippingSelector: '.js-free-shipping',
   handlingCostSelector: '.js-handling-cost',
