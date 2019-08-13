@@ -26,18 +26,49 @@
 {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
 
 {% block carrier_form_step_summary %}
-<div>
-  <div class="card">
-    <div class="card-block">
-      {#@todo: carrier summary #}
-      carrier summary
+<div class="form-step js-form-step-5">
+  <div class="card-block row">
+    <div class="card-text">
+
+        <div>
+          <div class="card">
+            <div class="card-block">
+              {#@todo: carrier summary #}
+              carrier summary
+            </div>
+          </div>
+          <div>
+            {{ ps.form_group_row(carrierForm.step_summary.is_enabled, {}, {
+              'label': 'Enabled'|trans({}, 'Admin.Global'),
+              'help': 'Enable the carrier in the front office.'|trans({}, 'Admin.Shipping.Help'),
+            }) }}
+
+            {% block carrier_step_summary_form_rest %}
+              {{ form_rest(carrierForm.step_summary) }}
+            {% endblock %}
+          </div>
+        </div>
+
+      {% block carrier_form_rest %}
+        {{ form_rest(carrierForm) }}
+      {% endblock %}
     </div>
   </div>
-  <div>
-      {{ ps.form_group_row(carrierForm.step_summary.is_enabled, {}, {
-        'label': 'Enabled'|trans({}, 'Admin.Global'),
-        'help': 'Enable the carrier in the front office.'|trans({}, 'Admin.Shipping.Help'),
-      }) }}
+
+  <div class="card-footer">
+    {#@todo: admin_carriers_index#}
+    <a href="{{ path('admin_carriers_create') }}" class="btn btn-outline-secondary">
+      {{ 'Cancel'|trans({}, 'Admin.Actions') }}
+    </a>
+
+    <a href="#step-4" class="btn btn-outline-secondary">
+      {{ 'Previous'|trans({}, 'Admin.Actions') }}
+    </a>
+
+    <button class="btn btn-primary float-right">
+      {{ 'Save'|trans({}, 'Admin.Actions') }}
+    </button>
   </div>
 </div>
+
 {% endblock %}

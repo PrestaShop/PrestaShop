@@ -1,26 +1,60 @@
-.ranges-table {
-  td {
-    width: 125px;
-    min-width: 125px;
-    margin: 15px;
-    padding-right: 5px;
-    overflow:hidden;
+#carrier_form {
+  .card {
+    border-top: none;
+    border-radius: 0;
   }
-  th {
-    width: 280px;
-    min-width: 280px;
-    font-weight: 600;
-    vertical-align: middle;
-    label {
-      margin-bottom: 0;
+  .ranges-table {
+    td {
+      width: 125px;
+      min-width: 125px;
+      margin: 15px;
+      padding-right: 5px;
+      overflow:hidden;
+    }
+    th {
+      width: 280px;
+      min-width: 280px;
+      vertical-align: middle;
+      label {
+        margin-bottom: 0;
+      }
+    }
+    .range-row {
+      background-color: #39acce;
+      color: #fff;
+      p {
+        text-align: center;
+        margin: 5px;
+        font-weight: 600;
+      }
+      .range-operator {
+        font-size: 20px;
+        margin-left: 5px;
+      }
     }
   }
-  .range-row {
-    background-color: #39acce;
-    color: #fff;
-    p {
-      text-align: center;
-      margin: 5px;
+  #carrier_steps_navigation {
+    ul.nav-tab {
+      display: flex;
+      background-color: $background-grey;
+      margin-left: 0;
+      padding-left: 0;
+      .nav-item {
+        list-style-type: none;
+        border: none;
+        .nav-link {
+          border:none;
+        }
+        .active {
+          border-top: .1875rem solid $primary;
+          background-color: $card-bg;
+          color: $gray-dark;
+        }
+      }
+
     }
+  }
+  .form-step:not(.form-step-active) {
+    display: none;
   }
 }

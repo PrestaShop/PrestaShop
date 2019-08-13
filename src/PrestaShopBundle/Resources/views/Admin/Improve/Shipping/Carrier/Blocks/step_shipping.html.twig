@@ -26,29 +26,60 @@
 {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
 
 {% block carrier_form_step_shipping %}
-  {{ ps.form_group_row(carrierForm.step_shipping.include_handling_cost, {'attr': {'class': 'js-handling-cost'}}, {
-    'label': 'Add handling costs'|trans({}, 'Admin.Global'),
-    'help': 'Include the handling costs (as set in Shipping > Preferences) in the final carrier price.'|trans({}, 'Admin.Shipping.Help')
-  }) }}
+<div id="step-3" class="form-step js-form-step-3">
+  <div class="card-block row">
+    <div class="card-text">
+        {{ ps.form_group_row(carrierForm.step_shipping.include_handling_cost, {'attr': {'class': 'js-handling-cost'}}, {
+          'label': 'Add handling costs'|trans({}, 'Admin.Global'),
+          'help': 'Include the handling costs (as set in Shipping > Preferences) in the final carrier price.'|trans({}, 'Admin.Shipping.Help')
+        }) }}
 
-  {{ ps.form_group_row(carrierForm.step_shipping.is_free_shipping, {'attr': {'class': 'js-free-shipping'}}, {
-    'label': 'Free shipping'|trans({}, 'Admin.Global'),
-  }) }}
+        {{ ps.form_group_row(carrierForm.step_shipping.is_free_shipping, {'attr': {'class': 'js-free-shipping'}}, {
+          'label': 'Free shipping'|trans({}, 'Admin.Global'),
+        }) }}
 
-  {{ ps.form_group_row(carrierForm.step_shipping.billing, {'attr': {'class': 'js-billing'}}, {
-    'label': 'Billing'|trans({}, 'Admin.Global'),
-  }) }}
+        {{ ps.form_group_row(carrierForm.step_shipping.billing, {'attr': {'class': 'js-billing'}}, {
+          'label': 'Billing'|trans({}, 'Admin.Global'),
+        }) }}
 
-  {{ ps.form_group_row(carrierForm.step_shipping.tax, {}, {
-    'label': 'Tax'|trans({}, 'Admin.Global'),
-  }) }}
+        {{ ps.form_group_row(carrierForm.step_shipping.tax, {}, {
+          'label': 'Tax'|trans({}, 'Admin.Global'),
+        }) }}
 
-  {{ ps.form_group_row(carrierForm.step_shipping.out_of_range, {}, {
-    'label': 'Out of range behavior'|trans({}, 'Admin.Global'),
-    'help': "Out-of-range behavior occurs when no defined range matches the customer's cart (e.g. when the weight of the cart is greater than the highest weight limit defined by the weight ranges)."
-    |trans({}, 'Admin.Shipping.Help')
-  }) }}
+        {{ ps.form_group_row(carrierForm.step_shipping.out_of_range, {}, {
+          'label': 'Out of range behavior'|trans({}, 'Admin.Global'),
+          'help': "Out-of-range behavior occurs when no defined range matches the customer's cart (e.g. when the weight of the cart is greater than the highest weight limit defined by the weight ranges)."
+          |trans({}, 'Admin.Shipping.Help')
+        }) }}
 
-  {{ form_widget(carrierForm.step_shipping.carrier_ranges, {'attr': {'class': 'js-shipping-ranges'}}) }}
+        {{ form_widget(carrierForm.step_shipping.carrier_ranges, {'attr': {'class': 'js-shipping-ranges'}}) }}
+      </div>
+
+      {% block carrier_step_shipping_form_rest %}
+        {{ form_rest(carrierForm.step_shipping) }}
+      {% endblock %}
+    </div>
+
+  <div class="card-footer">
+    {#@todo: admin_carriers_index#}
+    <a href="{{ path('admin_carriers_create') }}" class="btn btn-outline-secondary">
+      {{ 'Cancel'|trans({}, 'Admin.Actions') }}
+    </a>
+
+    {% set previous_step = '#step-1' %}
+
+    {% if carrierForm.step_multi_shop is defined %}
+      {% set previous_step = '#step-2' %}
+    {% endif %}
+
+    <a href="{{ previous_step }}" class="btn btn-outline-secondary">
+      {{ 'Previous'|trans({}, 'Admin.Actions') }}
+    </a>
+    <a href="#step-4" class="btn btn-primary float-right">
+      {{ 'Next'|trans({}, 'Admin.Actions') }}
+    </a>
+  </div>
+</div>
+
 {% endblock %}
 

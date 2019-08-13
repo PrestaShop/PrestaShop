@@ -26,7 +26,31 @@
 {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
 
 {% block carrier_form_step_multishop %}
-  {{ ps.form_group_row(carrierForm.step_multi_shop.shop_association, {}, {
-    'label': 'Shop association'|trans({}, 'Admin.Global'),
-  }) }}
+<div id="step-2" class="form-step js-form-step-2">
+  <div class="card-block row">
+    <div class="card-text">
+      {{ ps.form_group_row(carrierForm.step_multi_shop.shop_association, {}, {
+        'label': 'Shop association'|trans({}, 'Admin.Global'),
+      }) }}
+
+      {% block carrier_step_multi_shop_form_rest %}
+        {{ form_rest(carrierForm.step_multi_shop) }}
+      {% endblock %}
+    </div>
+  </div>
+
+  <div class="card-footer">
+    {#@todo: admin_carriers_index#}
+    <a href="{{ path('admin_carriers_create') }}" class="btn btn-outline-secondary">
+      {{ 'Cancel'|trans({}, 'Admin.Actions') }}
+    </a>
+    <a href="#step-1" class="btn btn-outline-secondary">
+      {{ 'Previous'|trans({}, 'Admin.Actions') }}
+    </a>
+    <a href="#step-3" class="btn btn-primary float-right">
+      {{ 'Next'|trans({}, 'Admin.Actions') }}
+    </a>
+  </div>
+</div>
+
 {% endblock %}
