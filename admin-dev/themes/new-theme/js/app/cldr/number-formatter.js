@@ -30,6 +30,8 @@ import NumberSymbol from './number-symbol';
 import PriceSpecification from './specifications/price';
 import NumberSpecification from './specifications/number';
 
+const escapeRE = require('lodash.escaperegexp');
+
 const CURRENCY_SYMBOL_PLACEHOLDER = '¤';
 const DECIMAL_SEPARATOR_PLACEHOLDER = '.';
 const GROUP_SEPARATOR_PLACEHOLDER = ',';
@@ -199,15 +201,35 @@ class NumberFormatter {
    */
   replaceSymbols(number) {
     const symbols = this.numberSpecification.getSymbol();
-    let num = number;
-    num = num.split(DECIMAL_SEPARATOR_PLACEHOLDER).join(symbols.getDecimal());
-    num = num.split(GROUP_SEPARATOR_PLACEHOLDER).join(symbols.getGroup());
-    num = num.split(MINUS_SIGN_PLACEHOLDER).join(symbols.getMinusSign());
-    num = num.split(PERCENT_SYMBOL_PLACEHOLDER).join(symbols.getPercentSign());
-    num = num.split(PLUS_SIGN_PLACEHOLDER).join(symbols.getPlusSign());
 
-    return num;
+    const map = {};
+    map[DECIMAL_SEPARATOR_PLACEHOLDER] = symbols.getDecimal();
+    map[GROUP_SEPARATOR_PLACEHOLDER] = symbols.getGroup();
+    map[MINUS_SIGN_PLACEHOLDER] = symbols.getMinusSign();
+    map[PERCENT_SYMBOL_PLACEHOLDER] = symbols.getPercentSign();
+    map[PLUS_SIGN_PLACEHOLDER] = symbols.getPlusSign();
+
+    return this.strtr(number, map);
   }
+
+  /**
+   * strtr() for JavaScript
+   * Translate characters or replace substrings
+   *
+   * @param str
+   *  String to parse
+   * @param pairs
+   *  Hash of ('from' => 'to', ...).
+   *
+   * @return string
+   */
+  strtr(str, pairs) {
+    const substrs = Object.keys(pairs).map(escapeRE);
+    return str.split(RegExp(`(${substrs.join('|')})`))
+              .map(part => pairs[part] || part)
+              .join('');
+  }
+
 
   /**
    * Add missing placeholders to the number using the passed CLDR pattern.
@@ -290,9 +312,7 @@ class NumberFormatter {
       );
     }
 
-    const currency = new NumberFormatter(specification);
-
-    return currency;
+    return new NumberFormatter(specification);
   }
 }
 

@@ -2113,6 +2113,7 @@ class AdminImportControllerCore extends AdminController
                 $product_supplier->id_supplier = (int) $product->id_supplier;
                 $product_supplier->product_supplier_price_te = $product->wholesale_price;
                 $product_supplier->product_supplier_reference = $product->supplier_reference;
+                $product_supplier->id_currency = Currency::getDefaultCurrency()->id;
                 $product_supplier->save();
             }
 

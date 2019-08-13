@@ -9,6 +9,7 @@ paths:
   - install-dev
   - themes
   - pdf
+  - mails/themes
 exclude_files:
   - src/PrestaShopBundle/Tests
   - classes/PrestaShopAutoload.php
@@ -17,5 +18,6 @@ exclude_files:
   - node_modules
   - vendor
   - tools
-  - mails
+  - mails/[a-zA-Z]{2}/
   - js
+  - modules/ps_themecusto
