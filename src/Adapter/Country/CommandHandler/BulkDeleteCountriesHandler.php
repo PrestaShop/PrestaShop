@@ -29,6 +29,8 @@ namespace PrestaShop\PrestaShop\Adapter\Country\CommandHandler;
 use PrestaShop\PrestaShop\Adapter\Country\AbstractCountryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Country\Command\BulkDeleteCountriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Country\CommandHandler\BulkDeleteCountriesHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\DeleteCountryException;
 
 /**
  * Handles countries bulk deletion
@@ -37,9 +39,20 @@ final class BulkDeleteCountriesHandler extends AbstractCountryHandler implements
 {
     /**
      * {@inheritdoc}
+     *
+     * @throws DeleteCountryException
+     * @throws CountryNotFoundException
      */
     public function handle(BulkDeleteCountriesCommand $command)
     {
-        // TODO: Implement handle() method.
+        foreach ($command->getCountryIds() as $countryId) {
+            $country = $this->getCountry($countryId);
+
+            if (!$this->deleteCountry($country)) {
+                throw new DeleteCountryException(
+                    sprintf('Cannot delete Country object with id "%s".', $country->id)
+                );
+            }
+        }
     }
 }

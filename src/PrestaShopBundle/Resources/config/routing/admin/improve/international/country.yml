@@ -4,7 +4,7 @@ admin_countries_index:
   defaults:
     _controller: PrestaShopBundle:Admin\Improve\International\Country:index
     _legacy_controller: AdminCountries
-    #_legacy_link: AdminCountries
+#    _legacy_link: AdminCountries
 
 admin_countries_filter:
   path: /
@@ -69,4 +69,13 @@ admin_countries_delete_bulk:
     _controller: PrestaShopBundle:Admin\Improve\International\Country:deleteBulk
     _legacy_controller: AdminCountries
     #_legacy_link: AdminCountries:submitBulkdeletecountry
+
+admin_countries_save_options:
+  path: /save-options
+  methods: POST
+  defaults:
+    _controller: PrestaShopBundle:Admin\Improve\International\Country:saveOptions
+    _legacy_controller: AdminCountries
+#    _legacy_link: AdminCountries:submitOptionscountry
+
 

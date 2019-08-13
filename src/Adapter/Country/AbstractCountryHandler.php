@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Country;
 use Country;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\DeleteCountryException;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShopException;
 
@@ -88,6 +89,22 @@ class AbstractCountryHandler
                 'An error occurred when updating country status with id "%s"',
                 $country->id
             ));
+        }
+    }
+
+    /**
+     * @param Country $country
+     * @return bool
+     * @throws DeleteCountryException
+     */
+    protected function deleteCountry(Country $country)
+    {
+        try {
+            return $country->delete();
+        } catch (PrestaShopException $e) {
+            throw new DeleteCountryException(
+                sprintf('An error occurred when deleting Country object with id "%s".', $country->id)
+            );
         }
     }
 }

@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
+use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Country\Command\BulkDeleteCountriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Country\Command\BulkToggleCountriesStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Country\Command\ToggleCountryStatusCommand;
@@ -36,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Country\Exception\DeleteCountryException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\UpdateCountryException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountryStatus;
 use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\IsActiveCountry;
+use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\CountryFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -63,12 +65,14 @@ class CountryController extends FrameworkBundleAdminController
     {
         $countryGridFactory = $this->get('prestashop.core.grid.grid_factory.country');
         $countryGrid = $countryGridFactory->getGrid($filters);
+        $countryOptionsForm = $this->getCountryOptionsFormHandler()->getForm();
 
         return $this->render('@PrestaShop/Admin/Improve/International/Locations/Country/index.html.twig', [
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'countryGrid' => $this->presentGrid($countryGrid),
             'enableSidebar' => true,
             'layoutHeaderToolbarBtn' => $this->getCountryToolbarButtons(),
+            'countryOptionsForm' => $countryOptionsForm->createView(),
         ]);
     }
 
@@ -186,6 +190,43 @@ class CountryController extends FrameworkBundleAdminController
     }
 
     /**
+     * Process country options configuration form.
+     *
+     * @AdminSecurity(
+     *     "is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))",
+     *     redirectRoute="admin_countries_index"
+     * )
+     * @DemoRestricted(redirectRoute="admin_countries_index")
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     *
+     * @throws Exception
+     */
+    public function saveOptionsAction(Request $request)
+    {
+        $countryOptionsFormHandler = $this->getCountryOptionsFormHandler();
+
+        $countryOptionsForm = $countryOptionsFormHandler->getForm();
+        $countryOptionsForm->handleRequest($request);
+
+        if ($countryOptionsForm->isSubmitted()) {
+            $errors = $countryOptionsFormHandler->save($countryOptionsForm->getData());
+
+            if (empty($errors)) {
+                $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_countries_index');
+            }
+
+            $this->flashErrors($errors);
+        }
+
+        return $this->redirectToRoute('admin_countries_index');
+    }
+
+    /**
      * @param Request $request
      *
      * @return array
@@ -254,13 +295,49 @@ class CountryController extends FrameworkBundleAdminController
         return $toolbarButtons;
     }
 
-    public function createAction(): Response
+    /**
+     * @return FormHandlerInterface
+     */
+    private function getCountryOptionsFormHandler(): FormHandlerInterface
     {
-        return new Response('new');
+        return $this->get('prestashop.admin.country_options.form_handler');
     }
 
-    public function editAction(): Response
+    /**
+     * Show "Add new" form and handle form submit.
+     *
+     * @AdminSecurity(
+     *     "is_granted(['create'], request.get('_legacy_controller'))",
+     *     redirectRoute="admin_countries_index",
+     *     message="You do not have permission to create this."
+     * )
+     *
+     * @return Response
+     */
+    public function createAction(): Response
     {
-        return new Response('edit');
+        $link = $this->getAdminLink('AdminCountries', ['addcountry' => 1]);
+
+        return $this->redirect($link);
+    }
+
+    /**
+     * Handles edit form rendering and submission
+     *
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_countries_index"
+     * )
+     * @DemoRestricted(redirectRoute="admin_countries_index")
+     *
+     * @param int $countryId
+     *
+     * @return Response
+     */
+    public function editAction(int $countryId): Response
+    {
+        $link = $this->getAdminLink('AdminCountries', ['id_country' => $countryId, 'updatecountry' => 1]);
+
+        return $this->redirect($link);
     }
 }

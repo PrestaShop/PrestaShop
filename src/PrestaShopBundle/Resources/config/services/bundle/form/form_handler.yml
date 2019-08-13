@@ -368,3 +368,13 @@ services:
             -
               'options': 'PrestaShopBundle\Form\Admin\Sell\Order\CreditSlip\CreditSlipOptionsType'
             - 'CreditSlip'
+
+    prestashop.admin.country_options.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        arguments:
+          - '@=service("form.factory").createBuilder()'
+          - '@prestashop.core.hook.dispatcher'
+          - '@prestashop.admin.country_options.form_data_provider'
+          -
+            'options': 'PrestaShopBundle\Form\Admin\Improve\International\Locations\Country\CountryOptionsType'
+          - 'Country'
