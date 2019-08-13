@@ -24,8 +24,6 @@ ALTER TABLE `PREFIX_product_attribute_shop` MODIFY `unit_price_impact` DECIMAL(2
 
 /* PHP:p16011_media_server(); */;
 
-INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES ('PS_PRICE_DISPLAY_PRECISION', 2, NOW(), NOW());
-
 /* Precision used to be 2, now it can be set freely, so the DB must be ready to accept more decimals */
 ALTER TABLE `PREFIX_orders`
 CHANGE COLUMN `total_discounts` `total_discounts` DECIMAL(20,6) NOT NULL DEFAULT '0.00' ,
