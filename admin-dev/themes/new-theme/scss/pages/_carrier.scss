@@ -1,4 +1,4 @@
-#carrier_form {
+#carrier-form {
   .card {
     border-top: none;
     border-radius: 0;
@@ -33,7 +33,7 @@
       }
     }
   }
-  #carrier_steps_navigation {
+  #carrier-steps-navigation {
     ul.nav-tab {
       display: flex;
       background-color: $background-grey;
@@ -54,7 +54,7 @@
 
     }
   }
-  .form-step:not(.form-step-active) {
+  .form-step:not(.active) {
     display: none;
   }
 }

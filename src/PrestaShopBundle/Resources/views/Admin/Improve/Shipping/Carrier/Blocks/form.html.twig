@@ -25,23 +25,22 @@
 
 {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
 
-{{ form_start(carrierForm) }}
-<div class="card">
+<div id="carrier-form" class="card">
+  {{ form_start(carrierForm) }}
+    <div id="carrier-steps-navigation" class="js-form-steps-navigation">
+      {% include '@PrestaShop/Admin/Improve/Shipping/Carrier/Blocks/steps_navigation.html.twig' %}
+    </div>
 
-  <div id="carrier_steps_navigation" class="js-form-steps-navigation">
-    {% include '@PrestaShop/Admin/Improve/Shipping/Carrier/Blocks/steps_navigation.html.twig' %}
-  </div>
-  {% include '@PrestaShop/Admin/Improve/Shipping/Carrier/Blocks/step_general.html.twig' %}
+    {% include '@PrestaShop/Admin/Improve/Shipping/Carrier/Blocks/step_general.html.twig' %}
 
-  {% if carrierForm.step_multi_shop is defined %}
-    {% include '@PrestaShop/Admin/Improve/Shipping/Carrier/Blocks/step_multi_shop.html.twig' %}
-  {% endif %}
+    {% if carrierForm.step_multi_shop is defined %}
+      {% include '@PrestaShop/Admin/Improve/Shipping/Carrier/Blocks/step_multi_shop.html.twig' %}
+    {% endif %}
 
-  {% include '@PrestaShop/Admin/Improve/Shipping/Carrier/Blocks/step_shipping.html.twig' %}
+    {% include '@PrestaShop/Admin/Improve/Shipping/Carrier/Blocks/step_shipping.html.twig' %}
 
-  {% include '@PrestaShop/Admin/Improve/Shipping/Carrier/Blocks/step_properties_and_access.html.twig' %}
+    {% include '@PrestaShop/Admin/Improve/Shipping/Carrier/Blocks/step_properties_and_access.html.twig' %}
 
-  {% include '@PrestaShop/Admin/Improve/Shipping/Carrier/Blocks/step_summary.html.twig' %}
-
+    {% include '@PrestaShop/Admin/Improve/Shipping/Carrier/Blocks/step_summary.html.twig' %}
+  {{ form_end(carrierForm) }}
 </div>
-{{ form_end(carrierForm) }}
