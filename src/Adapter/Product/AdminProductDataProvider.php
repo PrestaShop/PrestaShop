@@ -37,7 +37,6 @@ use Hook;
 use PrestaShop\PrestaShop\Adapter\Admin\AbstractAdminQueryBuilder;
 use PrestaShop\PrestaShop\Adapter\ImageManager;
 use PrestaShop\PrestaShop\Adapter\Validate;
-use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShopBundle\Entity\AdminFilter;
 use PrestaShopBundle\Service\DataProvider\Admin\ProductInterface;
 use Product;
