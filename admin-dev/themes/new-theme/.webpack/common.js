@@ -98,6 +98,7 @@ module.exports = {
     translation_settings: './js/pages/translation-settings',
     translations: './js/app/pages/translations',
     webservice: './js/pages/webservice',
+    country: './js/pages/country',
   },
   output: {
     path: path.resolve(__dirname, '../public'),
