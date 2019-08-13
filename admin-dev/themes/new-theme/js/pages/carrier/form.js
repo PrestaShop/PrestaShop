@@ -32,7 +32,7 @@ import FreeShippingToggleHandler from './free-shipping-toggle-handler.js';
 const $ = window.$;
 
 $(document).ready(() => {
-  new StepVisibilityHandler('active');
+  new StepVisibilityHandler(CarrierMap.carrierFormWrapperSelector);
   new AddRangeHandler(
     CarrierMap.rangesTableSelector,
     CarrierMap.rangesTemplateSelector,

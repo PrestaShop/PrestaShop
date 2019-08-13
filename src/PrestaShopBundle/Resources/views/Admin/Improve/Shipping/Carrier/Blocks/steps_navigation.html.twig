@@ -26,33 +26,33 @@
 {% block carrier_form_steps_navigation %}
   <ul class="nav-tab">
     <li class="nav-item">
-      <a href="#" class="js-form-step-switch nav-link active" data-step="1">
+      <a href="#step-1" class="js-form-step-switch nav-link active" data-step="1">
         {{ 'General settings'|trans({}, 'Admin.Global') }}
       </a>
     </li>
 
     {% if carrierForm.step_multi_shop is defined %}
       <li class="nav-item">
-        <a href="#" class="js-form-step-switch nav-link" data-step="2">
+        <a href="#step-2" class="js-form-step-switch nav-link" data-step="2">
           {{ 'MultiStore'|trans({}, 'Admin.Global') }}
         </a>
       </li>
     {% endif %}
 
     <li class="nav-item">
-      <a href="#" class="js-form-step-switch nav-link" data-step="3">
+      <a href="#step-3" class="js-form-step-switch nav-link" data-step="3">
         {{ 'Shipping locations and costs'|trans({}, 'Admin.Global') }}
       </a>
     </li>
 
     <li class="nav-item">
-      <a href="#" class="js-form-step-switch nav-link" data-step="4">
+      <a href="#step-4" class="js-form-step-switch nav-link" data-step="4">
         {{ 'Size, weight, and group access'|trans({}, 'Admin.Global') }}
       </a>
     </li>
 
     <li class="nav-item">
-      <a href="#" class="js-form-step-switch nav-link" data-step="5">
+      <a href="#step-5" class="js-form-step-switch nav-link" data-step="5">
         {{ 'Summary'|trans({}, 'Admin.Global') }}
       </a>
     </li>

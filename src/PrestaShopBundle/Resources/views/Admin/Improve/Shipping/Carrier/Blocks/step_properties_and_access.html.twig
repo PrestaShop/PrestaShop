@@ -26,7 +26,7 @@
 {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
 
 {% block carrier_form_step_properties_and_access %}
-<div id="step-4" class="form-step js-form-step-4">
+<div id="step-4" class="form-step js-form-step" data-step="4">
   <div class="card-block row">
     <div class="card-text">
 
@@ -70,10 +70,10 @@
     <a href="{{ path('admin_carriers_create') }}" class="btn btn-outline-secondary">
       {{ 'Cancel'|trans({}, 'Admin.Actions') }}
     </a>
-    <a href="#step-3" class="btn btn-outline-secondary">
+    <a href="#step-3" class="btn btn-outline-secondary  js-form-step-switch" data-step="3">
       {{ 'Previous'|trans({}, 'Admin.Actions') }}
     </a>
-    <a href="#step-5" class="btn btn-primary float-right">
+    <a href="#step-5" class="btn btn-primary float-right js-form-step-switch" data-step="5">
       {{ 'Next'|trans({}, 'Admin.Actions') }}
     </a>
   </div>

@@ -26,7 +26,7 @@
 {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
 
 {% block carrier_form_step_summary %}
-<div class="form-step js-form-step-5">
+<div class="form-step js-form-step" data-step="5">
   <div class="card-block row">
     <div class="card-text">
 
@@ -61,7 +61,7 @@
       {{ 'Cancel'|trans({}, 'Admin.Actions') }}
     </a>
 
-    <a href="#step-4" class="btn btn-outline-secondary">
+    <a href="#step-4" class="btn btn-outline-secondary js-form-step-switch" data-step="4">
       {{ 'Previous'|trans({}, 'Admin.Actions') }}
     </a>
 

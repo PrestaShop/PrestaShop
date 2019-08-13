@@ -26,28 +26,28 @@
 const $ = window.$;
 
 export default class StepVisibilityHandler {
-  constructor(activeSwitcherClass) {
-    this.activeSwitcherClass = activeSwitcherClass;
+  constructor(formWrapperSelector) {
+    this.formWrapperSelector = formWrapperSelector;
     this._handle();
 
     return {};
   }
 
   _handle() {
-    $(document).on('click', '.js-form-step-switch', event => this._showStep(event));
+    $(document).on('click', `${this.formWrapperSelector} .js-form-step-switch`, event => this._showStep(event));
   }
 
   _showStep(event) {
     const $this = $(event.currentTarget);
     const stepToShow = $this.data('step');
-    this._activateButton($this);
+    this._activateTab(stepToShow);
 
-    $('.form-step-active').removeClass('form-step-active');
-    $(`.js-form-step-${stepToShow}`).addClass('form-step-active');
+    $(document).find(`${this.formWrapperSelector} .js-form-step .active`).removeClass('active');
+    $(document).find(`${this.formWrapperSelector} *[data-step=${stepToShow}].js-form-step`).addClass('active');
   }
 
-  _activateButton(target) {
-    $(document).find('.js-form-step-switch').removeClass(this.activeSwitcherClass);
-    target.addClass(this.activeSwitcherClass);
+  _activateTab(stepToShow) {
+    $(document).find(`${this.formWrapperSelector} .nav-link`).removeClass('active');
+    $(document).find(`${this.formWrapperSelector} *[data-step=${stepToShow}].nav-link `).addClass('active');
   }
 }
