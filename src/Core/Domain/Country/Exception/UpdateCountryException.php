@@ -31,7 +31,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Country\Exception;
  */
 class UpdateCountryException extends CountryException
 {
-    const FAILED_UPDATE_STATUS = 1;
+    public const FAILED_UPDATE_STATUS = 1;
 
-    const FAILED_BULK_UPDATE_STATUS = 2;
+    public const FAILED_BULK_UPDATE_STATUS = 2;
 }

@@ -26,7 +26,6 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\International\Locations\Country;
 
-
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 

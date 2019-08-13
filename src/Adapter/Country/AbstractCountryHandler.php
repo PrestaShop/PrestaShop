@@ -94,7 +94,9 @@ class AbstractCountryHandler
 
     /**
      * @param Country $country
+     *
      * @return bool
+     *
      * @throws DeleteCountryException
      */
     protected function deleteCountry(Country $country)

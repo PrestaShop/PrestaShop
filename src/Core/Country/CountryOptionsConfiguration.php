@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 /**
  * Handles configuration data for country options.
  */
-class CountryOptionsConfiguration implements DataConfigurationInterface
+final class CountryOptionsConfiguration implements DataConfigurationInterface
 {
     /**
      * @var ConfigurationInterface
@@ -42,9 +42,8 @@ class CountryOptionsConfiguration implements DataConfigurationInterface
     /**
      * @param ConfigurationInterface $configuration
      */
-    public function __construct(
-        ConfigurationInterface $configuration
-    ) {
+    public function __construct(ConfigurationInterface $configuration)
+    {
         $this->configuration = $configuration;
     }
 
