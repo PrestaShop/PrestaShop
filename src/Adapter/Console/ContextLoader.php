@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Console;
 
+use Language;
+use Currency;
 use Employee;
 use ConsoleController;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
@@ -41,11 +43,13 @@ final class ContextLoader implements ContextLoaderInterface
 {
     private $legacyContext;
     private $shopContext;
+    private $rootDir;
 
     public function __construct(LegacyContext $legacyContext, ShopContext $shopContext, $rootDir)
     {
         $this->legacyContext = $legacyContext;
         $this->shopContext = $shopContext;
+        $this->rootDir = $rootDir;
 
         require_once $rootDir . '/../config/config.inc.php';
     }
@@ -55,6 +59,9 @@ final class ContextLoader implements ContextLoaderInterface
      */
     public function loadConsoleContext(InputInterface $input)
     {
+        if (!defined('_PS_ADMIN_DIR_')) {
+            define('_PS_ADMIN_DIR_', $this->rootDir);
+        }
         $employeeId = $input->getOption('employee');
         $shopId = $input->getOption('id_shop');
         $shopGroupId = $input->getOption('id_shop_group');
@@ -66,9 +73,23 @@ final class ContextLoader implements ContextLoaderInterface
         $this->legacyContext->getContext()->controller = new ConsoleController();
 
         if (!$this->legacyContext->getContext()->employee) {
-            $this->shopContext->setShopContext($shopId);
-            $this->shopContext->setShopGroupContext($shopGroupId);
             $this->legacyContext->getContext()->employee = new Employee($employeeId);
         }
+
+        $shop = $this->legacyContext->getContext()->shop;
+        $shop::setContext(1);
+
+        if ($shopId === null) {
+            $shopId = 1;
+        }
+        $this->shopContext->setShopContext($shopId);
+        $this->legacyContext->getContext()->shop = $shop;
+
+        if ($shopGroupId !== null) {
+            $this->shopContext->setShopGroupContext($shopGroupId);
+        }
+
+
+        $this->legacyContext->getContext()->currency = new Currency();
     }
 }
