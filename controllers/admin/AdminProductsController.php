@@ -202,10 +202,11 @@ class AdminProductsControllerCore extends AdminController
      * @param int $start
      * @param int $limit
      * @param null $id_lang_shop
+     *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
-     * @deprecated
      *
+     * @deprecated
      */
     public function getList($id_lang, $orderBy = null, $orderWay = null, $start = 0, $limit = null, $id_lang_shop = null)
     {

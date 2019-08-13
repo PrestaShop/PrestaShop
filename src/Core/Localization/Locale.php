@@ -158,7 +158,9 @@ class Locale implements LocaleInterface
 
     /**
      * @param Currency $currency
+     *
      * @return int
+     *
      * @throws Exception\LocalizationException
      */
     public function getPriceDisplayPrecision($currency)
