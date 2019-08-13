@@ -222,11 +222,11 @@ class StateController extends FrameworkBundleAdminController
                 ),
             ],
             CannotUpdateStateException::class => $this->trans(
-                'An error occurred on saving.',
+                'An error occurred while attempting to save.',
                 'Admin.Notifications.Error'
             ),
             CannotAddStateException::class => $this->trans(
-                'An error occurred on saving.',
+                'An error occurred while attempting to save.',
                 'Admin.Notifications.Error'
             ),
             ZoneNotFoundException::class => $this->trans(
