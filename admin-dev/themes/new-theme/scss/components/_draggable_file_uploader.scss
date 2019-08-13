@@ -1,8 +1,9 @@
 .draggable-file-uploader {
+  background-color: #ffffff;
   border: 1px solid $gray-light;
   position: relative;
 
-  height: 30%;
+  min-height: 210px;
   padding: 0;
   margin: 0;
 
@@ -15,6 +16,7 @@
     width: 130px;
     height: 130px;
     border: 1px solid #bbcdd2;
+    z-index: 10;
 
     .dz-image {
       border-radius: 0;
@@ -24,8 +26,6 @@
       overflow: hidden;
       position: relative;
       display: block;
-      z-index: 10;
-
       img {
         max-width: 130px;
         max-height: 130px;
@@ -35,7 +35,6 @@
         left: 0;
         right: 0;
         margin: auto;
-        filter: none;
       }
     }
   }
@@ -97,6 +96,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    margin: 0;
 
     &.dz-message {
       i {

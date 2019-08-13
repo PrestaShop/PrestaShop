@@ -56,7 +56,7 @@ export default class ClickableElementExtension {
 
     this.changePointerEvents($element, containsImages);
 
-    // $element.find('.js-file-uploader-placeholder').toggleClass('d-none', containsImages);
+    $element.find('.js-file-uploader-placeholder').toggleClass('d-none', containsImages);
     $element.toggleClass('d-flex, justify-content-center', !containsImages);
     $element.find('.js-clickable-file-uploader').toggleClass('d-none', !containsImages);
   }
