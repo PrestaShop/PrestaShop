@@ -48,6 +48,8 @@ export default class ClickableElementExtension {
   toggle($element) {
     const containsImages = $element.find('img').length > 0;
     $element.toggleClass('dz-max-files-reached', containsImages);
+    $element.find('.js-file-uploader-placeholder').toggleClass('d-none', containsImages);
+    $element.toggleClass('d-flex, justify-content-center', !containsImages);
     $element.find('.js-clickable-file-uploader').toggleClass('d-none', !containsImages);
   }
 }
