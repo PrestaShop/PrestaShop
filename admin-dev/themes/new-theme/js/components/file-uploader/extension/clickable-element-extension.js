@@ -45,11 +45,23 @@ export default class ClickableElementExtension {
     });
   }
 
-  toggle($element) {
-    const containsImages = $element.find('img').length > 0;
-    $element.toggleClass('dz-max-files-reached', containsImages);
+  /**
+   *
+   * @param {DraggableFileUploader} fileUploader
+   */
+  toggle(fileUploader) {
+    const $element = fileUploader.getElementInstance();
+
+    const containsImages = fileUploader.doesContainImages;
+
+    this.changePointerEvents($element, containsImages);
+
     $element.find('.js-file-uploader-placeholder').toggleClass('d-none', containsImages);
     $element.toggleClass('d-flex, justify-content-center', !containsImages);
     $element.find('.js-clickable-file-uploader').toggleClass('d-none', !containsImages);
+  }
+
+  changePointerEvents($element, shouldDisableEvents) {
+    $element.toggleClass('no-pointer-events', shouldDisableEvents);
   }
 }

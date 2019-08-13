@@ -42,6 +42,10 @@ export default class DraggableFileUploader {
     this._$element = $element;
   }
 
+  get doesContainImages() {
+    return this._$element.find('img').length > 0;
+  }
+
   getDropzoneInstance() {
     return this._$fileUploader;
   }
