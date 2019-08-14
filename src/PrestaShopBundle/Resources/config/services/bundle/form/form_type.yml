@@ -443,7 +443,7 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Improve\International\Localization\LocalizationConfigurationType'
         arguments:
             - '@=service("prestashop.core.form.choice_provider.language_by_id").getChoices()'
-            - '@=service("prestashop.core.form.choice_provider.country_by_id").getChoices()'
+            - '@=service("prestashop.core.form.choice_provider.country_by_id").getChoices([])'
             - '@=service("prestashop.core.form.choice_provider.currency_by_id").getChoices()'
             - '@=service("prestashop.core.form.choice_provider.timezone_by_name").getChoices()'
         tags:
@@ -474,7 +474,7 @@ services:
         public: true
         arguments:
             - '@=service("prestashop.adapter.module.payment_module_provider").getPaymentModuleList()'
-            - '@=service("prestashop.core.form.choice_provider.country_by_id").getChoices()'
+            - '@=service("prestashop.core.form.choice_provider.country_by_id").getChoices([])'
             - '@=service("prestashop.core.form.choice_provider.group_by_id").getChoices()'
             - '@=service("prestashop.core.form.choice_provider.carrier_by_reference_id").getChoices()'
             - '@=service("prestashop.core.form.choice_provider.currency_by_id").getChoices()'
