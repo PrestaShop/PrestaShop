@@ -56,31 +56,31 @@ class ImageTagSourceParserTest extends TestCase
         return [
             [
                 '<img src="/path/to/my_image.jpg">',
-                '/my-shop/path/to/my_image.jpg',
+                '/path/to/my_image.jpg',
             ],
             [
                 '<img src="../path/to/my_image.jpg">',
-                '/my-shop/path/to/my_image.jpg',
+                '/path/to/my_image.jpg',
             ],
             [
                 '<img class="test" src="../path/to/my_image.jpg" alt="some alt text">',
-                '/my-shop/path/to/my_image.jpg',
+                '/path/to/my_image.jpg',
             ],
             [
                 '<img class="test" src="../path/to/my_image.jpg?time=123" alt="some alt text">',
-                '/my-shop/path/to/my_image.jpg?time=123',
+                '/path/to/my_image.jpg?time=123',
             ],
             [
                 '<img class="test" src="../.././path/to/my_image.jpg?time=123" alt="some alt text">',
-                '/my-shop/path/to/my_image.jpg?time=123',
+                '/path/to/my_image.jpg?time=123',
             ],
             [
                 '<img class="test" src="../../../../../../../path/to/my_image.jpg?time=123" alt="some alt text">',
-                '/my-shop/path/to/my_image.jpg?time=123',
+                '/path/to/my_image.jpg?time=123',
             ],
             [
                 '<img class="test" src="./../../../path/to/my_image.jpg?time=123" alt="some alt text">',
-                '/my-shop/path/to/my_image.jpg?time=123',
+                '/path/to/my_image.jpg?time=123',
             ],
             [
                 '<img class="test">',

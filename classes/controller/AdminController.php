@@ -25,26 +25,12 @@
  */
 use PrestaShop\PrestaShop\Adapter\ContainerBuilder;
 use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
+use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Price as PriceSpecification;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecification;
 
 class AdminControllerCore extends Controller
 {
-    /** @var array */
-    const DEFAULT_SPECIFICATION_SYMBOL = [
-        '.',
-        ',',
-        ';',
-        '%',
-        '-',
-        '+',
-        'E',
-        '×',
-        '‰',
-        '∞',
-        'NaN',
-    ];
-
     /** @var string */
     public $path;
 
@@ -789,11 +775,11 @@ class AdminControllerCore extends Controller
         }
 
         $token = Tools::getValue('token');
-        if (!empty($token) && $token === $this->token) {
+        if ($token === $this->token) {
             return true;
         }
 
-        if (count($_POST) || !isset($_GET['controller']) || !Validate::isControllerName($_GET['controller']) || $token) {
+        if (count($_POST) || !isset($_GET['controller']) || !Validate::isControllerName($_GET['controller']) || !$token) {
             return false;
         }
 
@@ -4060,7 +4046,7 @@ class AdminControllerCore extends Controller
 
             // Evaluate the memory required to resize the image: if it's too much, you can't resize it.
             if (!ImageManager::checkImageMemoryLimit($tmp_name)) {
-                $this->errors[] = $this->trans('Due to memory limit restrictions, this image cannot be loaded. Please increase your memory_limit value via your server\'s configuration settings. ', array(), 'Admin.Notifications.Error');
+                $this->errors[] = $this->trans('Due to memory limit restrictions, this image cannot be loaded. Please increase your memory_limit value via your server\'s configuration settings.', array(), 'Admin.Notifications.Error');
             }
 
             // Copy new image
@@ -4857,7 +4843,7 @@ class AdminControllerCore extends Controller
         }
 
         return array_merge(
-            ['symbol' => self::DEFAULT_SPECIFICATION_SYMBOL],
+            ['symbol' => $priceSpecification->getSymbolsByNumberingSystem(Locale::NUMBERING_SYSTEM_LATIN)->toArray()],
             $priceSpecification->toArray()
         );
     }
@@ -4878,7 +4864,7 @@ class AdminControllerCore extends Controller
         }
 
         return array_merge(
-            ['symbol' => self::DEFAULT_SPECIFICATION_SYMBOL],
+            ['symbol' => $numberSpecification->getSymbolsByNumberingSystem(Locale::NUMBERING_SYSTEM_LATIN)->toArray()],
             $numberSpecification->toArray()
         );
     }

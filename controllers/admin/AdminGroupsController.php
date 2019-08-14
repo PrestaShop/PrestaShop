@@ -186,6 +186,10 @@ class AdminGroupsControllerCore extends AdminController
             if (isset($_POST['submitReset' . $this->list_id])) {
                 $this->processResetFilters();
             }
+
+            if (Tools::isSubmit('submitFilter')) {
+                self::$currentIndex .= '&id_group=' . (int) Tools::getValue('id_group') . '&viewgroup';
+            }
         } else {
             $this->list_id = 'group';
         }

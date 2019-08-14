@@ -12,6 +12,15 @@ default:
             contexts:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CustomerManagerFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\CustomerFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\CustomerFeatureContext
+        category:
+            paths:
+                features: Features/Scenario/Category
+            contexts:
+                - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\CategoryFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\CategoryFeatureContext
         cart:
             paths:
                 features: Features/Scenario/Cart
@@ -45,6 +54,7 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\OrderFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Configuration\EmailConfigurationFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\CartFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\ProductFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\OrderFeatureContext
         currency:
             paths:

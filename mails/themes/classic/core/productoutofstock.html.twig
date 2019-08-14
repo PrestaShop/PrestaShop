@@ -28,7 +28,7 @@
             <span>
               {{ 'The remaining stock is now less than the specified minimum of'|trans({}, 'Emails.Body', locale)|raw }} <strong><span>{last_qty}.</span></strong><br/><br/>
               <strong><span>{{ 'Remaining stock:'|trans({}, 'Emails.Body', locale)|raw }}</span></strong> {qty}<br/><br/>
-              {{ 'You are advised to open the product\'s admin Product Page in order to replenish your inventory.'|trans({}, 'Emails.Body', locale)|raw }}
+              {{ 'Replenish your inventory, go to the [1]Catalog > Stocks[/1] section of your back office to manage your stock.'|trans({'[1]': '<span><strong>', '[/1]': '</strong></span>'}, 'Emails.Body', locale)|raw }}
             </span>
           </font>
         </td>

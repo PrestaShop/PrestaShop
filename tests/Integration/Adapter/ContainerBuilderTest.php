@@ -33,6 +33,7 @@ use PrestaShop\Module\Banner\Repository\AdminRepository;
 use PrestaShop\Module\Banner\Repository\FrontRepository;
 use PrestaShop\PrestaShop\Adapter\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 
 class ContainerBuilderTest extends TestCase
 {
@@ -98,20 +99,18 @@ class ContainerBuilderTest extends TestCase
         $this->assertInstanceOf(AdminRepository::class, $adminRepository);
     }
 
-    /**
-     * @expectedException \Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException
-     */
     public function testNoAdminServicesInFront()
     {
+        $this->setExpectedException(ServiceNotFoundException::class);
+
         $container = ContainerBuilder::getContainer('front', true);
         $container->get('ps_banner.admin_repository');
     }
 
-    /**
-     * @expectedException \Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException
-     */
     public function testNoFrontServicesInAdmin()
     {
+        $this->setExpectedException(ServiceNotFoundException::class);
+
         $container = ContainerBuilder::getContainer('admin', true);
         $container->get('ps_banner.front_repository');
     }

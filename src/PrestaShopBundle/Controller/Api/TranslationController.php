@@ -67,7 +67,7 @@ class TranslationController extends ApiController
 
             $locale = $request->attributes->get('locale');
             $domain = $request->attributes->get('domain');
-            $theme = $request->attributes->get('theme', $this->getSelectedTheme());
+            $theme = $request->attributes->get('theme');
             $module = $request->query->get('module');
             $search = $request->query->get('search');
 
@@ -171,7 +171,7 @@ class TranslationController extends ApiController
             $response = [];
             foreach ($translations as $translation) {
                 if (empty($translation['theme'])) {
-                    $translation['theme'] = $this->getSelectedTheme();
+                    $translation['theme'] = null;
                 }
 
                 try {
@@ -314,8 +314,8 @@ class TranslationController extends ApiController
      */
     private function getNormalTree($lang, $type, $selected, $search = null)
     {
-        $treeBuilder = new TreeBuilder($this->translationService->langToLocale($lang), $this->getSelectedTheme());
-        $catalogue = $this->translationService->getTranslationsCatalogue($lang, $type, $this->getSelectedTheme(), $search);
+        $treeBuilder = new TreeBuilder($this->translationService->langToLocale($lang), $selected);
+        $catalogue = $this->translationService->getTranslationsCatalogue($lang, $type, $selected, $search);
 
         return $this->getCleanTree($treeBuilder, $catalogue, $type, $selected, $search);
     }
