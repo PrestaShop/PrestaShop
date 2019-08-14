@@ -136,7 +136,7 @@ abstract class HTMLTemplateCore
             $width *= $ratio;
         }
 
-        if (_MEDIA_SERVER_1_ || _MEDIA_SERVER_2_ || _MEDIA_SERVER_3_ !== '') {
+        if ('' !== _MEDIA_SERVER_1_ || _MEDIA_SERVER_2_ || _MEDIA_SERVER_3_) {
             $logo_path = Tools::getShopProtocol() . Tools::getMediaServer(_PS_IMG_) . _PS_IMG_ . $logo;
         } else {
             $logo_path = _PS_IMG_ . $logo;
