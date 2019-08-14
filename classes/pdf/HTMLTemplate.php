@@ -136,8 +136,14 @@ abstract class HTMLTemplateCore
             $width *= $ratio;
         }
 
+        if (_MEDIA_SERVER_1_ || _MEDIA_SERVER_2_ || _MEDIA_SERVER_3_ !== '') {
+            $logo_path = Tools::getShopProtocol() . Tools::getMediaServer(_PS_IMG_) . _PS_IMG_ . $logo;
+        } else {
+            $logo_path = _PS_IMG_ . $logo;
+        }
+
         $this->smarty->assign(array(
-            'logo_path' => Tools::getShopProtocol() . Tools::getMediaServer(_PS_IMG_) . _PS_IMG_ . $logo,
+            'logo_path' => $logo_path,
             'img_ps_dir' => Tools::getShopProtocol() . Tools::getMediaServer(_PS_IMG_) . _PS_IMG_,
             'img_update_time' => Configuration::get('PS_IMG_UPDATE_TIME'),
             'date' => $this->date,
