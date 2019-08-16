@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 2007-2019 PrestaShop and Contributors
  *
@@ -25,28 +24,41 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Localization\CLDR;
+namespace Tests\Unit\Core\Localization\CLDR;
 
-/**
- *  Will calculate the computing precision (fraction digits number used for computations) that should
- * be used for a given display precision.
- */
-class ComputingPrecision
+use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
+
+class ComputingPrecisionTest extends TestCase
 {
-    private $multiplier = 3;
+    /**
+     * @var ComputingPrecision
+     */
+    private $computingPrecision;
 
     /**
-     * Number of decimal digits to take into account when computing values
-     * for a given display precision
-     *
-     * @var int
-     *
-     * @return int
+     * Setup tested dependency
      */
-    public function getPrecision(int $displayPrecision)
+    public function setUp()
     {
-        $computingPrecision = $displayPrecision * $this->multiplier;
+        $this->computingPrecision = new ComputingPrecision();
+    }
 
-        return ($computingPrecision < 2) ? 2 : $computingPrecision;
+    /**
+     * @dataProvider provider
+     */
+    public function testGetPrecision($input, $expected)
+    {
+        $result = $this->computingPrecision->getPrecision($input);
+        $this->assertEquals($expected, $result);
+    }
+
+    public function provider()
+    {
+        return [
+            [1, 3],
+            [3, 9],
+            [0, 2],
+        ];
     }
 }
