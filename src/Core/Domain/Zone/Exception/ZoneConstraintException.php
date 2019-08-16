@@ -24,31 +24,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\State\QueryResult;
+namespace PrestaShop\PrestaShop\Core\Domain\Zone\Exception;
 
 /**
- * Transfers boolean value to determine if state by iso code was found
+ * Is thrown when zone constraint is violated
  */
-class IsFoundStateByIsoCode
+class ZoneConstraintException extends ZoneException
 {
-    /**
-     * @var bool
-     */
-    private $found = false;
-
-    /**
-     * @param bool $found
-     */
-    public function __construct(bool $found)
-    {
-        $this->found = $found;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isFound(): bool
-    {
-        return $this->found;
-    }
+    public const INVALID_ID = 1;
 }

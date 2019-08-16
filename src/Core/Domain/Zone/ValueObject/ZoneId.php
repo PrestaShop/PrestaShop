@@ -24,21 +24,51 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Zone;
+namespace PrestaShop\PrestaShop\Core\Domain\Zone\ValueObject;
 
-use Zone;
-use PrestaShop\PrestaShop\Core\Domain\Zone\DataProvider\ZoneDataProviderInterface;
+use PrestaShop\PrestaShop\Core\Domain\Zone\Exception\ZoneConstraintException;
 
 /**
- * This class will provide data from DB / ORM about Zone
+ * Provides zone id
  */
-final class ZoneDataProvider implements ZoneDataProviderInterface
+class ZoneId
 {
     /**
-     * {@inheritdoc}
+     * @var int
      */
-    public function getZones($active = false, $activeFirst = false): array
+    private $id;
+
+    /**
+     * @param int $id
+     *
+     * @throws ZoneConstraintException
+     */
+    public function __construct(int $id)
     {
-        return Zone::getZones($active, $activeFirst);
+        $this->assertPositiveInt($id);
+        $this->id = $id;
+    }
+
+    /**
+     * @return int
+     */
+    public function getValue(): int
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param int $value
+     *
+     * @throws ZoneConstraintException
+     */
+    private function assertPositiveInt(int $value)
+    {
+        if (0 > $value) {
+            throw new ZoneConstraintException(
+                sprintf('Invalid zone id "%s".', var_export($value, true)),
+                ZoneConstraintException::INVALID_ID
+            );
+        }
     }
 }

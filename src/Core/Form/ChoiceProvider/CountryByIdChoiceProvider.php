@@ -28,7 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
 use PrestaShop\PrestaShop\Adapter\Country\CountryDataProvider;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceAttributeProviderInterface;
-use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 
 /**
  * Class CountryByIdChoiceProvider provides country choices with ID values.
@@ -77,7 +77,7 @@ final class CountryByIdChoiceProvider implements FormChoiceProviderInterface, Fo
      *
      * @return array
      */
-    public function getChoices(array $options): array
+    public function getChoices()
     {
         $countries = $this->getCountries();
         $choices = [];

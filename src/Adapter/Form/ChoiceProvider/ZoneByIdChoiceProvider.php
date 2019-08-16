@@ -24,32 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
+namespace PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider;
 
-use PrestaShop\PrestaShop\Core\Domain\Zone\DataProvider\ZoneDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
+use Zone;
 
 /**
- * Class provides Zone choices with ID values.
+ * This class will provide data from DB / ORM about Zone
  */
 final class ZoneByIdChoiceProvider implements ConfigurableFormChoiceProviderInterface
 {
     /**
-     * @var ZoneDataProviderInterface
-     */
-    private $zoneDataProvider;
-
-    /**
-     * @param ZoneDataProviderInterface $zoneDataProvider
-     */
-    public function __construct(ZoneDataProviderInterface $zoneDataProvider)
-    {
-        $this->zoneDataProvider = $zoneDataProvider;
-    }
-
-    /**
-     * Get zone choices.
-     *
      * {@inheritdoc}
      */
     public function getChoices(array $options): array
@@ -58,11 +43,11 @@ final class ZoneByIdChoiceProvider implements ConfigurableFormChoiceProviderInte
             $options['active'] :
             false;
 
-        $activeFirst = isset($options['activeFirst']) && is_bool($options['activeFirst']) ?
-            $options['activeFirst'] :
+        $activeFirst = isset($options['active_first']) && is_bool($options['active_first']) ?
+            $options['active_first'] :
             false;
 
-        $zones = $this->zoneDataProvider->getZones($active, $activeFirst);
+        $zones = Zone::getZones($active, $activeFirst);
         $choices = [];
 
         foreach ($zones as $zone) {

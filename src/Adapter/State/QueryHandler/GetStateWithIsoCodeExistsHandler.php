@@ -24,13 +24,33 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Validator\Constraints;
+namespace PrestaShop\PrestaShop\Adapter\State\QueryHandler;
 
-use Symfony\Component\Validator\Constraint;
+use PrestaShop\PrestaShop\Core\Domain\State\Query\isUniqueStateIsoCode;
+use PrestaShop\PrestaShop\Core\Domain\State\QueryHandler\IsUniqueStateIsoCodeHandlerInterface;
+use State;
 
 /**
- * Unique state iso code validator constraint
+ * Handles query for determining if state with given iso code exists
  */
-class UniqueStateIsoCode extends Constraint
+final class GetStateWithIsoCodeExistsHandler implements IsUniqueStateIsoCodeHandlerInterface
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function handle(IsUniqueStateIsoCode $query): bool
+    {
+        /** @var int $stateId */
+        $stateId = (int) State::getIdByIso($query->getIsoCode());
+
+        if (!$stateId) {
+            return false;
+        }
+
+        if ($query->getExcludeStateId() !== null && $stateId === $query->getExcludeStateId()) {
+            return false;
+        }
+
+        return true;
+    }
 }

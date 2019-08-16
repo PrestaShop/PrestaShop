@@ -24,11 +24,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Validator\Constraints;
+namespace PrestaShop\PrestaShop\Core\ConstraintValidator;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\State\Query\IsUniqueStateIsoCode;
-use PrestaShop\PrestaShop\Core\Domain\State\QueryResult\IsFoundStateByIsoCode;
 use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraint;
@@ -37,7 +36,7 @@ use Symfony\Component\Validator\ConstraintValidator;
 /**
  * Unique state iso code validator
  */
-class UniqueStateIsoCodeValidator extends ConstraintValidator
+final class UniqueStateIsoCodeValidator extends ConstraintValidator
 {
     /**
      * @var TranslatorInterface
@@ -70,13 +69,13 @@ class UniqueStateIsoCodeValidator extends ConstraintValidator
             /** @var StateId $stateId */
             $stateId = $value['id_state'];
 
-            $isUniqueStateIsoCodeQuery->setStateId($stateId->getValue());
+            $isUniqueStateIsoCodeQuery->setExcludeStateId($stateId->getValue());
         }
 
-        /** @var IsFoundStateByIsoCode $result */
-        $result = $this->queryBus->handle($isUniqueStateIsoCodeQuery);
+        /** @var bool $isFound */
+        $isFound = $this->queryBus->handle($isUniqueStateIsoCodeQuery);
 
-        if ($result->isFound()) {
+        if ($isFound) {
             $this->context->buildViolation(
                 $this->translator->trans(
                     'This ISO code already exists. You cannot create two states with the same ISO code.',

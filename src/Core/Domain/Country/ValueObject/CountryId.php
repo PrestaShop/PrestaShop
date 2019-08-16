@@ -65,7 +65,10 @@ class CountryId
     private function assertPositiveInt(int $value)
     {
         if (0 > $value) {
-            throw new CountryConstraintException(sprintf('Invalid country id "%s".', var_export($value, true)), CountryConstraintException::INVALID_ID);
+            throw new CountryConstraintException(
+                sprintf('Invalid country id "%s".', var_export($value, true)),
+                CountryConstraintException::INVALID_ID
+            );
         }
     }
 }

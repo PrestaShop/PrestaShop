@@ -26,7 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\State\QueryResult;
 
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
+use PrestaShop\PrestaShop\Core\Domain\Zone\ValueObject\ZoneId;
 
 /**
  * Transfers state data for editing
@@ -65,16 +67,16 @@ class EditableState
 
     /**
      * @param StateId $stateId
-     * @param int $countryId
-     * @param int $zoneId
+     * @param CountryId $countryId
+     * @param ZoneId $zoneId
      * @param string $name
      * @param string $isoCode
      * @param bool $active
      */
     public function __construct(
         StateId $stateId,
-        int $countryId,
-        int $zoneId,
+        CountryId $countryId,
+        ZoneId $zoneId,
         string $name,
         string $isoCode,
         bool $active
@@ -96,17 +98,17 @@ class EditableState
     }
 
     /**
-     * @return int
+     * @return CountryId
      */
-    public function getCountryId(): int
+    public function getCountryId(): CountryId
     {
         return $this->countryId;
     }
 
     /**
-     * @return int
+     * @return ZoneId
      */
-    public function getZoneId(): int
+    public function getZoneId(): ZoneId
     {
         return $this->zoneId;
     }

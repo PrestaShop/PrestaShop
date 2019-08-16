@@ -23,6 +23,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
+{% set enableSidebar = true %}
+
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
@@ -31,8 +33,4 @@
       {{ include('@PrestaShop/Admin/Improve/International/Locations/State/Blocks/form.html.twig', {'stateForm': stateForm}) }}
     </div>
   </div>
-{% endblock %}
-
-{% block javascripts %}
-  {{ parent() }}
 {% endblock %}

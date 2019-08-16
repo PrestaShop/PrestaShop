@@ -60,7 +60,7 @@ class IsUniqueStateIsoCode
     /**
      * @return int|null
      */
-    public function getStateId(): ?int
+    public function getExcludeStateId(): ?int
     {
         return $this->stateId;
     }
@@ -68,9 +68,9 @@ class IsUniqueStateIsoCode
     /**
      * @param int $stateId
      *
-     * @return isUniqueStateIsoCode
+     * @return IsUniqueStateIsoCode
      */
-    public function setStateId(int $stateId): isUniqueStateIsoCode
+    public function setExcludeStateId(int $stateId): IsUniqueStateIsoCode
     {
         $this->stateId = $stateId;
 

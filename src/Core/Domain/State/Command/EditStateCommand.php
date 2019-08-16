@@ -26,7 +26,12 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\State\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
+use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
+use PrestaShop\PrestaShop\Core\Domain\Zone\Exception\ZoneConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Zone\ValueObject\ZoneId;
 
 /**
  * Edits state with provided data
@@ -39,12 +44,12 @@ class EditStateCommand
     private $stateId;
 
     /**
-     * @var int|null
+     * @var CountryId|null
      */
     private $countryId;
 
     /**
-     * @var int|null
+     * @var ZoneId|null
      */
     private $zoneId;
 
@@ -64,11 +69,13 @@ class EditStateCommand
     private $active;
 
     /**
-     * @param StateId $stateId
+     * @param int $stateId
+     *
+     * @throws StateConstraintException
      */
-    public function __construct(StateId $stateId)
+    public function __construct(int $stateId)
     {
-        $this->stateId = $stateId;
+        $this->stateId = new StateId($stateId);
     }
 
     /**
@@ -80,9 +87,9 @@ class EditStateCommand
     }
 
     /**
-     * @return int|null
+     * @return CountryId|null
      */
-    public function getCountryId(): ?int
+    public function getCountryId(): ?CountryId
     {
         return $this->countryId;
     }
@@ -91,18 +98,20 @@ class EditStateCommand
      * @param int|null $countryId
      *
      * @return EditStateCommand
+     *
+     * @throws CountryConstraintException
      */
     public function setCountryId(?int $countryId): EditStateCommand
     {
-        $this->countryId = $countryId;
+        $this->countryId = new CountryId($countryId);
 
         return $this;
     }
 
     /**
-     * @return int|null
+     * @return ZoneId|null
      */
-    public function getZoneId(): ?int
+    public function getZoneId(): ?ZoneId
     {
         return $this->zoneId;
     }
@@ -111,10 +120,12 @@ class EditStateCommand
      * @param int|null $zoneId
      *
      * @return EditStateCommand
+     *
+     * @throws ZoneConstraintException
      */
     public function setZoneId(?int $zoneId): EditStateCommand
     {
-        $this->zoneId = $zoneId;
+        $this->zoneId = new ZoneId($zoneId);
 
         return $this;
     }

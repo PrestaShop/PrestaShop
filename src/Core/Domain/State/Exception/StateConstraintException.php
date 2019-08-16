@@ -31,13 +31,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\State\Exception;
  */
 class StateConstraintException extends StateException
 {
-    const INVALID_ID = 1;
+    public const INVALID_ID = 1;
 
-    const INVALID_NAME = 2;
-
-    const INVALID_ISO_CODE = 3;
-
-    const INVALID_FIELDS = 4;
-
-    const INVALID_STATE = 5;
+    public const INVALID_FIELD_VALUES = 2;
 }

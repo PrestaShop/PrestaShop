@@ -27,10 +27,12 @@
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\State\Command\AddStateCommand;
 use PrestaShop\PrestaShop\Core\Domain\State\Command\EditStateCommand;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
+use PrestaShop\PrestaShop\Core\Domain\Zone\Exception\ZoneConstraintException;
 
 /**
  * Handles submitted state form data
@@ -51,30 +53,35 @@ final class StateFormDataHandler implements FormDataHandlerInterface
     }
 
     /**
-     * {@inheritdoc]
+     * {@inheritdoc}
+     *
+     * @throws CountryConstraintException
+     * @throws ZoneConstraintException
      */
     public function create(array $data)
     {
-        $this->commandBus->handle(new AddStateCommand(
+        /** @var StateId $stateId */
+        $stateId = $this->commandBus->handle(new AddStateCommand(
             $data['id_country'],
             $data['id_zone'],
             $data['name'],
             $data['iso_code'],
-            $data['active']
+            $data['active'] ?? false
         ));
+
+        return $stateId->getValue();
     }
 
     /**
      * {@inheritdoc}
      *
      * @throws StateConstraintException
+     * @throws CountryConstraintException
+     * @throws ZoneConstraintException
      */
     public function update($stateId, array $data)
     {
-        /** @var StateId $stateIdObject */
-        $stateIdObject = new StateId((int) $stateId);
-
-        $command = new EditStateCommand($stateIdObject);
+        $command = new EditStateCommand((int) $stateId);
 
         $command->setCountryId($data['id_country'])
             ->setZoneId($data['id_zone'])

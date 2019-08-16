@@ -29,25 +29,26 @@ namespace PrestaShopBundle\Form\Admin\Type;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Class is responsible for providing configurable zone choices with -- symbol in front of array.
+ * Class responsible for providing configurable countries list
  */
-class ZoneChoiceType extends AbstractType
+class ConfigurableCountryChoiceType extends AbstractType
 {
     /**
      * @var ConfigurableFormChoiceProviderInterface
      */
-    private $zonesChoiceProvider;
+    private $countriesChoiceProvider;
 
     /**
-     * @param ConfigurableFormChoiceProviderInterface $zonesChoiceProvider
+     * @param ConfigurableFormChoiceProviderInterface $countriesChoiceProvider
      */
-    public function __construct(ConfigurableFormChoiceProviderInterface $zonesChoiceProvider)
+    public function __construct(ConfigurableFormChoiceProviderInterface $countriesChoiceProvider)
     {
-        $this->zonesChoiceProvider = $zonesChoiceProvider;
+        $this->countriesChoiceProvider = $countriesChoiceProvider;
     }
 
     /**
@@ -59,9 +60,10 @@ class ZoneChoiceType extends AbstractType
             'choices', function (Options $options) {
                 $choices = array_merge(
                     ['--' => ''],
-                    $this->zonesChoiceProvider->getChoices([
+                    $this->countriesChoiceProvider->getChoices([
                         'active' => $options['active'],
-                        'active_first' => $options['active_first'],
+                        'contains_states' => $options['contains_states'],
+                        'list_states' => $options['list_states'],
                     ])
                 );
 
@@ -71,7 +73,8 @@ class ZoneChoiceType extends AbstractType
 
         $resolver->setDefaults([
             'active' => false,
-            'active_first' => false,
+            'contains_states' => false,
+            'list_states' => false,
         ]);
     }
 
