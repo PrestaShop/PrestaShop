@@ -55,6 +55,7 @@ class ZoneChoiceType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
+        # Set normalizer enables to use closure for choice generation with options
         $resolver->setNormalizer(
             'choices', function (Options $options) {
                 $choices = array_merge(
