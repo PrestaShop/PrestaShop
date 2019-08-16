@@ -48,7 +48,7 @@ final class AddStateHandler extends AbstractStateHandler implements AddStateHand
      * @throws StateConstraintException
      * @throws StateException
      */
-    public function handle(AddStateCommand $command)
+    public function handle(AddStateCommand $command): StateId
     {
         try {
             $state = new State();
