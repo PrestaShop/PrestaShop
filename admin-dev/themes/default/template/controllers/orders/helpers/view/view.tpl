@@ -37,7 +37,7 @@
   var currency_sign = "{$currency->sign}";
   var currency_format = "{$currency->format}";
   var currency_blank = "{$currency->blank}";
-  var priceDisplayPrecision = {Tools::displayPricePrecision()|intval};
+  var priceDisplayPrecision = {$smarty.const._PS_PRICE_DISPLAY_PRECISION_|intval};
   var use_taxes = {if $order->getTaxCalculationMethod() == $smarty.const.PS_TAX_INC}true{else}false{/if};
   var stock_management = {$stock_management|intval};
   var txt_add_product_stock_issue = "{l s='Are you sure you want to add this quantity?' d='Admin.Orderscustomers.Notification' js=1}";

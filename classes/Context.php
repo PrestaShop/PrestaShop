@@ -23,7 +23,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShopBundle\Translation\Loader\SqlTranslationLoader;
 use PrestaShopBundle\Translation\TranslatorComponent as Translator;
@@ -99,6 +101,9 @@ class ContextCore
 
     /** @var Translator */
     protected $translator = null;
+
+    /** @var int */
+    protected $priceComputingPrecision;
 
     /**
      * Mobile device of the customer.
@@ -467,5 +472,20 @@ class ContextCore
         }
 
         return $locations;
+    }
+
+    /**
+     * Returns the computing precision according to the current currency
+     *
+     * @return int
+     */
+    public function getComputingPrecision()
+    {
+        if (empty($this->priceComputingPrecision)) {
+            $computingPrecision = new ComputingPrecision();
+            $this->priceComputingPrecision = $computingPrecision->getPrecision($this->currency->precision);
+        }
+
+        return $this->priceComputingPrecision;
     }
 }
