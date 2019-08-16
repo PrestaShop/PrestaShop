@@ -61,7 +61,7 @@ class ZoneChoiceType extends AbstractType
                     ['--' => ''],
                     $this->zonesChoiceProvider->getChoices([
                         'active' => $options['active'],
-                        'activeFirst' => $options['activeFirst'],
+                        'active_first' => $options['active_first'],
                     ])
                 );
 
@@ -71,7 +71,7 @@ class ZoneChoiceType extends AbstractType
 
         $resolver->setDefaults([
             'active' => false,
-            'activeFirst' => false,
+            'active_first' => false,
         ]);
     }
 

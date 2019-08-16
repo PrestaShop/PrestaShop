@@ -27,16 +27,14 @@
 namespace PrestaShop\PrestaShop\Adapter\State\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\State\AbstractStateHandler;
-use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\State\Command\AddStateCommand;
 use PrestaShop\PrestaShop\Core\Domain\State\CommandHandler\AddStateHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\CannotAddStateException;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateException;
-use PrestaShop\PrestaShop\Core\Domain\Zone\Exception\ZoneNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
 use PrestaShopException;
 use State;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * Handles creation of state
@@ -44,43 +42,27 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 final class AddStateHandler extends AbstractStateHandler implements AddStateHandlerInterface
 {
     /**
-     * @param ValidatorInterface $validator
-     */
-    public function __construct(ValidatorInterface $validator)
-    {
-        parent::__construct($validator);
-    }
-
-    /**
      * {@inheritdoc}
      *
      * @throws CannotAddStateException
      * @throws StateConstraintException
      * @throws StateException
-     * @throws CountryNotFoundException
-     * @throws ZoneNotFoundException
      */
     public function handle(AddStateCommand $command)
     {
         try {
             $state = new State();
 
-            $this->assertFieldContainsCleanHtml($command->getName(), StateConstraintException::INVALID_NAME);
-            $this->assertFieldContainsCleanHtml($command->getIsoCode(), StateConstraintException::INVALID_ISO_CODE);
-
-            $this->assertCountryWithIdExists((int) $command->getCountryId());
-            $this->assertZoneWithIdExists((int) $command->getZoneId());
-
             $state->name = $command->getName();
             $state->iso_code = $command->getIsoCode();
-            $state->id_country = $command->getCountryId();
-            $state->id_zone = $command->getZoneId();
+            $state->id_country = $command->getCountryId()->getValue();
+            $state->id_zone = $command->getZoneId()->getValue();
             $state->active = $command->isActive();
 
             if (!$state->validateFields(false)) {
                 throw new StateConstraintException(
                     'State contains invalid field values',
-                    StateConstraintException::INVALID_FIELDS
+                    StateConstraintException::INVALID_FIELD_VALUES
                 );
             }
 
@@ -96,5 +78,7 @@ final class AddStateHandler extends AbstractStateHandler implements AddStateHand
                 $e
             );
         }
+
+        return new StateId($state->id);
     }
 }

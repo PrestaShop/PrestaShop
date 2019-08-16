@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Core\Domain\State\QueryHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\State\Query\isUniqueStateIsoCode;
-use PrestaShop\PrestaShop\Core\Domain\State\QueryResult\IsFoundStateByIsoCode;
 
 /**
  * Defines contract for get unique state iso code handler
@@ -35,9 +34,9 @@ use PrestaShop\PrestaShop\Core\Domain\State\QueryResult\IsFoundStateByIsoCode;
 interface IsUniqueStateIsoCodeHandlerInterface
 {
     /**
-     * @param isUniqueStateIsoCode $query
+     * @param IsUniqueStateIsoCode $query
      *
-     * @return IsFoundStateByIsoCode
+     * @return bool
      */
-    public function handle(isUniqueStateIsoCode $query): IsFoundStateByIsoCode;
+    public function handle(IsUniqueStateIsoCode $query): bool;
 }

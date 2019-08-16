@@ -26,25 +26,27 @@
 
 namespace PrestaShopBundle\Form\Admin\Type;
 
-use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Class CountryChoiceType is responsible for providing country choices with -- symbol in front of array.
+ * Class responsible for providing configurable countries list
  */
-class CountryChoiceType extends AbstractType
+class ConfigurableCountryChoiceType extends AbstractType
 {
     /**
-     * @var FormChoiceProviderInterface
+     * @var ConfigurableFormChoiceProviderInterface
      */
     private $countriesChoiceProvider;
 
     /**
-     * @param FormChoiceProviderInterface $countriesChoiceProvider
+     * @param ConfigurableFormChoiceProviderInterface $countriesChoiceProvider
      */
-    public function __construct(FormChoiceProviderInterface $countriesChoiceProvider)
+    public function __construct(ConfigurableFormChoiceProviderInterface $countriesChoiceProvider)
     {
         $this->countriesChoiceProvider = $countriesChoiceProvider;
     }
@@ -54,13 +56,25 @@ class CountryChoiceType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $choices = array_merge(
-            ['--' => ''],
-            $this->countriesChoiceProvider->getChoices()
+        $resolver->setNormalizer(
+            'choices', function (Options $options) {
+                $choices = array_merge(
+                    ['--' => ''],
+                    $this->countriesChoiceProvider->getChoices([
+                        'active' => $options['active'],
+                        'contains_states' => $options['contains_states'],
+                        'list_states' => $options['list_states'],
+                    ])
+                );
+
+                return $choices;
+            }
         );
 
         $resolver->setDefaults([
-            'choices' => $choices,
+            'active' => false,
+            'contains_states' => false,
+            'list_states' => false,
         ]);
     }
 

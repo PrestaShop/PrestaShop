@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\CannotAddStateException;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\CannotUpdateStateException;
@@ -35,10 +36,10 @@ use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateException;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\State\Query\GetStateForEditing;
 use PrestaShop\PrestaShop\Core\Domain\State\QueryResult\EditableState;
+use PrestaShop\PrestaShop\Core\Domain\Zone\Exception\ZoneConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Zone\Exception\ZoneNotFoundException;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -101,18 +102,18 @@ class StateController extends FrameworkBundleAdminController
      */
     public function createAction(Request $request)
     {
-        $attachmentFormBuilder = $this->get(
+        $stateFormBuilder = $this->get(
             'prestashop.core.form.identifiable_object.builder.state_form_builder'
         );
-        $attachmentFormHandler = $this->get(
+        $stateFormHandler = $this->get(
             'prestashop.core.form.identifiable_object.handler.state_form_handler'
         );
 
-        $attachmentForm = $attachmentFormBuilder->getForm();
-        $attachmentForm->handleRequest($request);
+        $stateForm = $stateFormBuilder->getForm();
+        $stateForm->handleRequest($request);
 
         try {
-            $handlerResult = $attachmentFormHandler->handle($attachmentForm);
+            $handlerResult = $stateFormHandler->handle($stateForm);
             if ($handlerResult->isSubmitted() && $handlerResult->isValid()) {
                 $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
 
@@ -123,7 +124,7 @@ class StateController extends FrameworkBundleAdminController
         }
 
         return $this->render('@PrestaShop/Admin/Improve/International/Locations/State/add.html.twig', [
-            'stateForm' => $attachmentForm->createView(),
+            'stateForm' => $stateForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
         ]);
     }
@@ -135,7 +136,6 @@ class StateController extends FrameworkBundleAdminController
      *     "is_granted('update', request.get('_legacy_controller'))",
      *     redirectRoute="admin_states_index"
      * )
-     * @DemoRestricted(redirectRoute="admin_states_index")
      *
      * @param int $stateId
      * @param Request $request
@@ -145,8 +145,8 @@ class StateController extends FrameworkBundleAdminController
     public function editAction(int $stateId, Request $request): Response
     {
         try {
-            /** @var EditableState $stateInformation */
-            $stateInformation = $this->getQueryBus()->handle(new GetStateForEditing((int) $stateId));
+            /** @var EditableState $editableState */
+            $editableState = $this->getQueryBus()->handle(new GetStateForEditing((int) $stateId));
         } catch (StateException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
 
@@ -174,11 +174,13 @@ class StateController extends FrameworkBundleAdminController
             }
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+
+            return $this->redirectToRoute('admin_states_index');
         }
 
         return $this->render('@PrestaShop/Admin/Improve/International/Locations/State/edit.html.twig', [
-            'stateForm' => null !== $stateForm ? $stateForm->createView() : null,
-            'stateInformation' => $stateInformation,
+            'stateForm' => $stateForm->createView(),
+            'stateInformation' => $editableState,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
         ]);
     }
@@ -202,21 +204,7 @@ class StateController extends FrameworkBundleAdminController
                     'The object cannot be loaded (the identifier is missing or invalid)',
                     'Admin.Notifications.Error'
                 ),
-                StateConstraintException::INVALID_FIELDS => $this->trans(
-                    'An error occurred when attempting to update the required fields.',
-                    'Admin.Notifications.Error'
-                ),
-                StateConstraintException::INVALID_NAME => $this->trans(
-                    'The %s field is invalid.',
-                    'Admin.Notifications.Error',
-                    [sprintf('"%s"', $this->trans('Name', 'Admin.Global'))]
-                ),
-                StateConstraintException::INVALID_ISO_CODE => $this->trans(
-                    'The %s field is invalid.',
-                    'Admin.Notifications.Error',
-                    [sprintf('"%s"', $this->trans('ISO code', 'Admin.International.Feature'))]
-                ),
-                StateConstraintException::INVALID_STATE => $this->trans(
+                StateConstraintException::INVALID_FIELD_VALUES => $this->trans(
                     'An error occurred when attempting to update the required fields.',
                     'Admin.Notifications.Error'
                 ),
@@ -237,6 +225,18 @@ class StateController extends FrameworkBundleAdminController
                 'The object cannot be loaded (or found)',
                 'Admin.Notifications.Error'
             ),
+            ZoneConstraintException::class => [
+                ZoneConstraintException::INVALID_ID => $this->trans(
+                    'The object cannot be loaded (the identifier is missing or invalid)',
+                    'Admin.Notifications.Error'
+                ),
+            ],
+            CountryConstraintException::class => [
+                CountryConstraintException::INVALID_ID => $this->trans(
+                    'The object cannot be loaded (the identifier is missing or invalid)',
+                    'Admin.Notifications.Error'
+                ),
+            ],
         ];
     }
 }

@@ -24,34 +24,21 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\State\QueryHandler;
+namespace PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints;
 
-use PrestaShop\PrestaShop\Core\Domain\State\Query\isUniqueStateIsoCode;
-use PrestaShop\PrestaShop\Core\Domain\State\QueryHandler\IsUniqueStateIsoCodeHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\State\QueryResult\IsFoundStateByIsoCode;
-use State;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\UniqueStateIsoCodeValidator;
+use Symfony\Component\Validator\Constraint;
 
 /**
- * Handles query for determining if state with given iso code exists
+ * Unique state iso code validator constraint
  */
-final class IsUniqueStateIsoCodeHandler implements IsUniqueStateIsoCodeHandlerInterface
+class UniqueStateIsoCode extends Constraint
 {
     /**
      * {@inheritdoc}
      */
-    public function handle(isUniqueStateIsoCode $query): IsFoundStateByIsoCode
+    public function validatedBy()
     {
-        /** @var int $state */
-        $state = State::getIdByIso($query->getIsoCode());
-
-        if (!$state) {
-            return new IsFoundStateByIsoCode(false);
-        }
-
-        if ($query->getStateId() !== null && $state != $query->getStateId()) {
-            return new IsFoundStateByIsoCode(false);
-        }
-
-        return new IsFoundStateByIsoCode(true);
+        return UniqueStateIsoCodeValidator::class;
     }
 }

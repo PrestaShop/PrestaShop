@@ -24,20 +24,33 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Zone\DataProvider;
+namespace PrestaShop\PrestaShop\Adapter\State\QueryHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\State\Query\isUniqueStateIsoCode;
+use PrestaShop\PrestaShop\Core\Domain\State\QueryHandler\IsUniqueStateIsoCodeHandlerInterface;
+use State;
 
 /**
- * Defines contract for zone data provider
+ * Handles query for determining if state with given iso code exists
  */
-interface ZoneDataProviderInterface
+final class GetStateWithIsoCodeExistsHandler implements IsUniqueStateIsoCodeHandlerInterface
 {
     /**
-     * Return available zones.
-     *
-     * @param bool $active only active zones
-     * @param bool $activeFirst order by active DESC
-     *
-     * @return array
+     * {@inheritdoc}
      */
-    public function getZones($active = false, $activeFirst = false): array;
+    public function handle(IsUniqueStateIsoCode $query): bool
+    {
+        /** @var int $stateId */
+        $stateId = (int) State::getIdByIso($query->getIsoCode());
+
+        if (!$stateId) {
+            return false;
+        }
+
+        if ($query->getExcludeStateId() !== null && $stateId === $query->getExcludeStateId()) {
+            return false;
+        }
+
+        return true;
+    }
 }

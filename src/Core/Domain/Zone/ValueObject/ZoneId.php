@@ -24,31 +24,51 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\State\QueryResult;
+namespace PrestaShop\PrestaShop\Core\Domain\Zone\ValueObject;
+
+use PrestaShop\PrestaShop\Core\Domain\Zone\Exception\ZoneConstraintException;
 
 /**
- * Transfers boolean value to determine if state by iso code was found
+ * Provides zone id
  */
-class IsFoundStateByIsoCode
+class ZoneId
 {
     /**
-     * @var bool
+     * @var int
      */
-    private $found = false;
+    private $id;
 
     /**
-     * @param bool $found
+     * @param int $id
+     *
+     * @throws ZoneConstraintException
      */
-    public function __construct(bool $found)
+    public function __construct(int $id)
     {
-        $this->found = $found;
+        $this->assertPositiveInt($id);
+        $this->id = $id;
     }
 
     /**
-     * @return bool
+     * @return int
      */
-    public function isFound(): bool
+    public function getValue(): int
     {
-        return $this->found;
+        return $this->id;
+    }
+
+    /**
+     * @param int $value
+     *
+     * @throws ZoneConstraintException
+     */
+    private function assertPositiveInt(int $value)
+    {
+        if (0 > $value) {
+            throw new ZoneConstraintException(
+                sprintf('Invalid zone id "%s".', var_export($value, true)),
+                ZoneConstraintException::INVALID_ID
+            );
+        }
     }
 }

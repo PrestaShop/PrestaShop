@@ -70,8 +70,8 @@ final class StateFormDataProvider implements FormDataProviderInterface
 
         return [
             'id_state' => $editableState->getStateId(),
-            'id_zone' => $editableState->getZoneId(),
-            'id_country' => $editableState->getCountryId(),
+            'id_zone' => $editableState->getZoneId()->getValue(),
+            'id_country' => $editableState->getCountryId()->getValue(),
             'name' => $editableState->getName(),
             'iso_code' => $editableState->getIsoCode(),
             'active' => $editableState->isActive(),

@@ -26,18 +26,23 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\State\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
+use PrestaShop\PrestaShop\Core\Domain\Zone\Exception\ZoneConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Zone\ValueObject\ZoneId;
+
 /**
  * Creates state with provided data
  */
 class AddStateCommand
 {
     /**
-     * @var int
+     * @var CountryId
      */
     private $countryId;
 
     /**
-     * @var int
+     * @var ZoneId
      */
     private $zoneId;
 
@@ -52,7 +57,7 @@ class AddStateCommand
     private $isoCode;
 
     /**
-     * @var bool|null
+     * @var bool
      */
     private $active;
 
@@ -61,34 +66,37 @@ class AddStateCommand
      * @param int $zoneId
      * @param string $name
      * @param string $isoCode
-     * @param bool|null $active
+     * @param bool $active
+     *
+     * @throws CountryConstraintException
+     * @throws ZoneConstraintException
      */
     public function __construct(
         int $countryId,
         int $zoneId,
         string $name,
         string $isoCode,
-        ?bool $active
+        bool $active
     ) {
-        $this->countryId = $countryId;
-        $this->zoneId = $zoneId;
+        $this->countryId = new CountryId($countryId);
+        $this->zoneId = new ZoneId($zoneId);
         $this->name = $name;
         $this->isoCode = $isoCode;
-        $this->active = $active ?? false;
+        $this->active = $active;
     }
 
     /**
-     * @return int
+     * @return CountryId
      */
-    public function getCountryId(): int
+    public function getCountryId(): CountryId
     {
         return $this->countryId;
     }
 
     /**
-     * @return int
+     * @return ZoneId
      */
-    public function getZoneId(): int
+    public function getZoneId(): ZoneId
     {
         return $this->zoneId;
     }

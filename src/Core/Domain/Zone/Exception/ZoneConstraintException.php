@@ -24,13 +24,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Validator\Constraints;
-
-use Symfony\Component\Validator\Constraint;
+namespace PrestaShop\PrestaShop\Core\Domain\Zone\Exception;
 
 /**
- * Unique state iso code validator constraint
+ * Is thrown when zone constraint is violated
  */
-class UniqueStateIsoCode extends Constraint
+class ZoneConstraintException extends ZoneException
 {
+    public const INVALID_ID = 1;
 }

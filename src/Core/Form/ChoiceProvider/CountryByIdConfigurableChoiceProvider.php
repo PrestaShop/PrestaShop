@@ -27,12 +27,12 @@
 namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
 use PrestaShop\PrestaShop\Adapter\Country\CountryDataProvider;
-use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 
 /**
- * Class CountryByIdChoiceProvider provides country choices with ID values.
+ * Class provides configurable country choices with ID values.
  */
-final class CountryByIdChoiceProvider implements FormChoiceProviderInterface
+final class CountryByIdConfigurableChoiceProvider implements ConfigurableFormChoiceProviderInterface
 {
     /**
      * @var CountryDataProvider
@@ -57,17 +57,29 @@ final class CountryByIdChoiceProvider implements FormChoiceProviderInterface
     }
 
     /**
-     * Get currency choices.
+     * Get country choices.
      *
-     * @return array
+     * {@inheritdoc}
      */
-    public function getChoices()
+    public function getChoices(array $options): array
     {
-        $countries = $this->countryDataProvider->getCountries($this->langId);
+        $active = isset($options['active']) && is_bool($options['active']) ?
+            $options['active'] :
+            false;
+
+        $containsStates = isset($options['contains_states']) && is_bool($options['contains_states']) ?
+            $options['contains_states'] :
+            false;
+
+        $listStates = isset($options['list_states']) && is_bool($options['list_states']) ?
+            $options['list_states'] :
+            false;
+
+        $countries = $this->countryDataProvider->getCountries($this->langId, $active, $containsStates, $listStates);
         $choices = [];
 
         foreach ($countries as $country) {
-            $choices[$country['name']] = $country['id_country'];
+            $choices[$country['name']] = (int) $country['id_country'];
         }
 
         return $choices;

@@ -27,31 +27,27 @@
 namespace PrestaShop\PrestaShop\Adapter\State\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\State\AbstractStateHandler;
-use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\State\Command\EditStateCommand;
 use PrestaShop\PrestaShop\Core\Domain\State\CommandHandler\EditStateHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\CannotUpdateStateException;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateException;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Zone\Exception\ZoneNotFoundException;
 use PrestaShopException;
 use State;
 
 /**
  * Handles state editing
  */
-class EditStateHandler extends AbstractStateHandler implements EditStateHandlerInterface
+final class EditStateHandler extends AbstractStateHandler implements EditStateHandlerInterface
 {
     /**
      * {@inheritdoc}
      *
      * @throws CannotUpdateStateException
-     * @throws CountryNotFoundException
      * @throws StateConstraintException
      * @throws StateException
      * @throws StateNotFoundException
-     * @throws ZoneNotFoundException
      */
     public function handle(EditStateCommand $command)
     {
@@ -66,41 +62,34 @@ class EditStateHandler extends AbstractStateHandler implements EditStateHandlerI
      * @throws CannotUpdateStateException
      * @throws StateConstraintException
      * @throws StateException
-     * @throws CountryNotFoundException
-     * @throws ZoneNotFoundException
      */
     private function updateStateFromCommandData(State $state, EditStateCommand $command)
     {
         try {
-            if ($command->getZoneId()) {
-                $this->assertZoneWithIdExists($command->getZoneId());
-                $state->id_zone = $command->getZoneId();
+            if (null !== $command->getZoneId()->getValue()) {
+                $state->id_zone = $command->getZoneId()->getValue();
             }
 
-            if ($command->getCountryId()) {
-                $this->assertCountryWithIdExists($command->getCountryId());
-                $state->id_country = $command->getCountryId();
+            if (null !== $command->getCountryId()->getValue()) {
+                $state->id_country = $command->getCountryId()->getValue();
             }
 
-            if ($command->getIsoCode()) {
-                $this->assertFieldContainsCleanHtml($command->getIsoCode(), StateConstraintException::INVALID_ISO_CODE);
+            if (null !== $command->getIsoCode()) {
                 $state->iso_code = $command->getIsoCode();
             }
 
-            if ($command->getName()) {
-                $this->assertFieldContainsCleanHtml($command->getName(), StateConstraintException::INVALID_NAME);
+            if (null !== $command->getName()) {
                 $state->name = $command->getName();
             }
 
-            if ($command->getActive()) {
-                $this->assertIsBool($command->getActive());
+            if (null !== $command->getActive()) {
                 $state->active = $command->getActive();
             }
 
             if (!$state->validateFields(false)) {
                 throw new StateConstraintException(
                     'State contains invalid field values',
-                    StateConstraintException::INVALID_FIELDS
+                    StateConstraintException::INVALID_FIELD_VALUES
                 );
             }
 

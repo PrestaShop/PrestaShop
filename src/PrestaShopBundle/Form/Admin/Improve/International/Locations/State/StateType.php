@@ -26,14 +26,17 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\International\Locations\State;
 
-use PrestaShopBundle\Form\Admin\Type\CountryChoiceType;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\UniqueStateIsoCode;
+use PrestaShopBundle\Form\Admin\Type\ConfigurableCountryChoiceType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\ZoneChoiceType;
-use PrestaShopBundle\Form\Validator\Constraints\UniqueStateIsoCode;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
@@ -51,17 +54,31 @@ class StateType extends AbstractType
                 'required' => true,
                 'constraints' => [
                     new NotBlank(),
+                    new TypedRegex([
+                        'type' => 'generic_name',
+                    ]),
+                    new Length([
+                        'max' => 32,
+                    ]),
+                    new CleanHtml(),
                 ],
             ])
             ->add('iso_code', TextType::class, [
                 'required' => true,
                 'constraints' => [
                     new NotBlank(),
+                    new Length([
+                        'max' => 7,
+                    ]),
+                    new TypedRegex([
+                        'type' => 'state_iso_code',
+                    ]),
+                    new CleanHtml(),
                 ],
             ])
-            ->add('id_country', CountryChoiceType::class, [
+            ->add('id_country', ConfigurableCountryChoiceType::class, [
                 'required' => true,
-                'containsStates' => true,
+                'contains_states' => true,
                 'constraints' => [
                     new NotBlank(),
                 ],
@@ -74,8 +91,7 @@ class StateType extends AbstractType
             ])
             ->add('active', SwitchType::class, [
                 'required' => true,
-            ])
-        ;
+            ]);
     }
 
     /**
@@ -83,6 +99,10 @@ class StateType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefault('constraints', new UniqueStateIsoCode());
+        $resolver->setDefaults([
+            'constraints' => [
+                new UniqueStateIsoCode(),
+            ],
+        ]);
     }
 }
