@@ -45,6 +45,7 @@ use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollectionInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use PrestaShopBundle\Form\Admin\Type\ConfigurableCountryChoiceType;
 use PrestaShopBundle\Form\Admin\Type\CountryChoiceType;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
@@ -218,9 +219,10 @@ final class StateGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ])
                     ->setAssociatedColumn('zone_name')
             )
-            ->add((new Filter('id_country', CountryChoiceType::class))
+            ->add((new Filter('id_country', ConfigurableCountryChoiceType::class))
                 ->setTypeOptions([
                     'required' => false,
+                    'contains_states' => true,
                     'choice_translation_domain' => false,
                 ])
                 ->setAssociatedColumn('country_name')
