@@ -7,7 +7,8 @@
         },
         "exclude-from-classmap": []
     },
-    "license": "MIT",
+    "license": "OSL-3.0",
     "type": "prestashop-module",
-    "require": {}
+    "require": {},
+    "author": "PrestaShop"
 }
