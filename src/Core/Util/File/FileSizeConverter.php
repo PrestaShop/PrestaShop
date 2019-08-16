@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Util\File;
 /**
  * Converts int value to formatted file size value
  */
-final class FileSizeConverter
+class FileSizeConverter
 {
     /**
      * @param int $bytes
