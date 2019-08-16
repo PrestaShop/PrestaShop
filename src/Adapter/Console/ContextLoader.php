@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Console;
 
-use Language;
 use Currency;
 use Employee;
 use ConsoleController;
@@ -88,7 +87,6 @@ final class ContextLoader implements ContextLoaderInterface
         if ($shopGroupId !== null) {
             $this->shopContext->setShopGroupContext($shopGroupId);
         }
-
 
         $this->legacyContext->getContext()->currency = new Currency();
     }
