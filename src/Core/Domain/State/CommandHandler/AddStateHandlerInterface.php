@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\State\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\State\Command\AddStateCommand;
+use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
 
 /**
  * Defines contract for add state handler
@@ -35,6 +36,8 @@ interface AddStateHandlerInterface
 {
     /**
      * @param AddStateCommand $command
+     *
+     * @return StateId
      */
-    public function handle(AddStateCommand $command);
+    public function handle(AddStateCommand $command): StateId;
 }
