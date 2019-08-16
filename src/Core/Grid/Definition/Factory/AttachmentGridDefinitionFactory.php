@@ -51,45 +51,14 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class AttachmentGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
-    /**
-     * @var string
-     */
-    private $resetActionUrl;
-
-    /**
-     * @var string
-     */
-    private $redirectActionUrl;
-
-    /**
-     * @var AccessibilityCheckerInterface
-     */
-    private $categoryForViewAccessibilityChecker;
-
-    /**
-     * @var MultistoreContextCheckerInterface
-     */
-    private $multistoreContextChecker;
+    public const GRID_ID = 'attachment';
 
     /**
      * @param HookDispatcherInterface $hookDispatcher
-     * @param string $resetActionUrl
-     * @param string $redirectActionUrl
-     * @param MultistoreContextCheckerInterface $multistoreContextChecker
-     * @param AccessibilityCheckerInterface $categoryForViewAccessibilityChecker
      */
-    public function __construct(
-        HookDispatcherInterface $hookDispatcher,
-        string $resetActionUrl,
-        string $redirectActionUrl,
-        MultistoreContextCheckerInterface $multistoreContextChecker,
-        AccessibilityCheckerInterface $categoryForViewAccessibilityChecker
-    ) {
+    public function __construct(HookDispatcherInterface $hookDispatcher)
+    {
         parent::__construct($hookDispatcher);
-        $this->resetActionUrl = $resetActionUrl;
-        $this->redirectActionUrl = $redirectActionUrl;
-        $this->categoryForViewAccessibilityChecker = $categoryForViewAccessibilityChecker;
-        $this->multistoreContextChecker = $multistoreContextChecker;
     }
 
     /**
@@ -97,7 +66,7 @@ final class AttachmentGridDefinitionFactory extends AbstractGridDefinitionFactor
      */
     protected function getId()
     {
-        return 'attachment';
+        return self::GRID_ID;
     }
 
     /**
@@ -252,10 +221,12 @@ final class AttachmentGridDefinitionFactory extends AbstractGridDefinitionFactor
                 (new Filter('actions', SearchAndResetType::class))
                     ->setAssociatedColumn('actions')
                     ->setTypeOptions([
-                        'attr' => [
-                            'data-url' => $this->resetActionUrl,
-                            'data-redirect' => $this->redirectActionUrl,
+                        'reset_route' => 'admin_common_reset_search',
+                        'reset_route_params' => [
+                            'controller' => 'attachment',
+                            'action' => 'index',
                         ],
+                        'redirect_route' => 'admin_attachments_index',
                     ])
             );
 
