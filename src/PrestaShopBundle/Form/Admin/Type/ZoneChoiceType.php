@@ -55,15 +55,16 @@ class ZoneChoiceType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
+        // Set normalizer enables to use closure for choice generation with options
         $resolver->setNormalizer(
             'choices', function (Options $options) {
                 $choices = array_merge(
-                ['--' => ''],
-                $this->zonesChoiceProvider->getChoices([
-                    'active' => $options['active'],
-                    'activeFirst' => $options['activeFirst'],
-                ])
-            );
+                    ['--' => ''],
+                    $this->zonesChoiceProvider->getChoices([
+                        'active' => $options['active'],
+                        'active_first' => $options['active_first'],
+                    ])
+                );
 
                 return $choices;
             }
@@ -71,7 +72,7 @@ class ZoneChoiceType extends AbstractType
 
         $resolver->setDefaults([
             'active' => false,
-            'activeFirst' => false,
+            'active_first' => false,
         ]);
     }
 
