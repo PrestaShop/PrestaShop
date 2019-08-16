@@ -298,7 +298,7 @@ class StateController extends FrameworkBundleAdminController
                     'An error occurred while updating the status.',
                     'Admin.Notifications.Error'
                 ),
-                UpdateStateException::FAILED_UPDATE_STATUS => $this->trans(
+                UpdateStateException::FAILED_TOGGLE_STATUS => $this->trans(
                     'An error occurred while updating the status.',
                     'Admin.Notifications.Error'
                 ),

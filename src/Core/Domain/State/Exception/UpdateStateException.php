@@ -33,5 +33,5 @@ class UpdateStateException extends StateException
 {
     const FAILED_BULK_UPDATE_STATUS = 1;
 
-    const FAILED_UPDATE_STATUS = 2;
+    const FAILED_TOGGLE_STATUS = 2;
 }

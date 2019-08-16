@@ -57,29 +57,13 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class StateGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
-    /**
-     * @var string
-     */
-    private $resetActionUrl;
-
-    /**
-     * @var string
-     */
-    private $redirectActionUrl;
+    public const GRID_ID = 'state';
 
     /**
      * @param HookDispatcherInterface $hookDispatcher
-     * @param string $resetActionUrl
-     * @param string $redirectActionUrl
      */
-    public function __construct(
-        HookDispatcherInterface $hookDispatcher,
-        string $resetActionUrl,
-        string $redirectActionUrl
-    ) {
+    public function __construct(HookDispatcherInterface $hookDispatcher) {
         parent::__construct($hookDispatcher);
-        $this->resetActionUrl = $resetActionUrl;
-        $this->redirectActionUrl = $redirectActionUrl;
     }
 
     /**
@@ -87,7 +71,7 @@ final class StateGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getId(): string
     {
-        return 'state';
+        return self::GRID_ID;
     }
 
     /**
@@ -249,10 +233,12 @@ final class StateGridDefinitionFactory extends AbstractGridDefinitionFactory
                 (new Filter('actions', SearchAndResetType::class))
                     ->setAssociatedColumn('actions')
                     ->setTypeOptions([
-                        'attr' => [
-                            'data-url' => $this->resetActionUrl,
-                            'data-redirect' => $this->redirectActionUrl,
+                        'reset_route' => 'admin_common_reset_search',
+                        'reset_route_params' => [
+                            'controller' => 'state',
+                            'action' => 'index',
                         ],
+                        'redirect_route' => 'admin_states_index',
                     ])
             );
 
