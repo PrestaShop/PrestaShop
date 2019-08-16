@@ -64,7 +64,7 @@ class StateId
      */
     private function assertPositiveInt(int $value)
     {
-        if (0 >= $value) {
+        if (0 > $value) {
             throw new StateConstraintException(
                 sprintf('Invalid state id "%s".', var_export($value, true)),
                 StateConstraintException::INVALID_ID
