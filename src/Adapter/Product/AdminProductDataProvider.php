@@ -373,7 +373,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
                 $product['id_product'],
                 true,
                 null,
-                (int) $localeCldr->getPriceDisplayPrecision($currency),
+                Context::getContext()->getComputingPrecision(),
                 null,
                 false,
                 false,

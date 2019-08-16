@@ -4846,7 +4846,7 @@ class ProductCore extends ObjectModel
                     true,
                     $quantity
                 ),
-                _PS_PRICE_COMPUTE_PRECISION_
+                Context::getContext()->getComputingPrecision()
             );
             $row['price_without_reduction'] = Product::getPriceStatic(
                 (int) $row['id_product'],
