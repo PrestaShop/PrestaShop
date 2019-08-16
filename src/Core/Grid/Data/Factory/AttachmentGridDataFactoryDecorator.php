@@ -121,7 +121,7 @@ final class AttachmentGridDataFactoryDecorator implements GridDataFactoryInterfa
                     [],
                     'Admin.Catalog.Notification'
                 );
-                $attachment['dynamic_message'] .= "\n\n" . $productNames;
+                $attachment['dynamic_message'] .= PHP_EOL . PHP_EOL . $productNames;
             }
 
             $attachment['file_size'] = $this->fileSizeConverter->convert((int) $attachment['file_size']);
