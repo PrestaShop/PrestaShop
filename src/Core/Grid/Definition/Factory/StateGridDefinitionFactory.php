@@ -46,7 +46,6 @@ use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollectionInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Form\Admin\Type\ConfigurableCountryChoiceType;
-use PrestaShopBundle\Form\Admin\Type\CountryChoiceType;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use PrestaShopBundle\Form\Admin\Type\ZoneChoiceType;
@@ -63,7 +62,8 @@ final class StateGridDefinitionFactory extends AbstractGridDefinitionFactory
     /**
      * @param HookDispatcherInterface $hookDispatcher
      */
-    public function __construct(HookDispatcherInterface $hookDispatcher) {
+    public function __construct(HookDispatcherInterface $hookDispatcher)
+    {
         parent::__construct($hookDispatcher);
     }
 
