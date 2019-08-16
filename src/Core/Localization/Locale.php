@@ -157,18 +157,6 @@ class Locale implements LocaleInterface
     }
 
     /**
-     * @param Currency $currency
-     *
-     * @return int
-     *
-     * @throws Exception\LocalizationException
-     */
-    public function getPriceDisplayPrecision($currency)
-    {
-        return $this->getPriceSpecification($currency->iso_code)->getMaxFractionDigits();
-    }
-
-    /**
      * Get price specification
      *
      * @param string $currencyCode Currency of the price
