@@ -42,7 +42,7 @@
 	var currency_format = 5;
 	var currency_sign = '';
 	var currency_blank = false;
-	var priceDisplayPrecision = {Tools::displayPricePrecision()|intval};
+	var priceDisplayPrecision = {$smarty.const._PS_PRICE_DISPLAY_PRECISION_|intval};
 
 	{foreach from=$defaults_order_state key='module' item='id_order_state'}
 		defaults_order_state['{$module}'] = '{$id_order_state}';
