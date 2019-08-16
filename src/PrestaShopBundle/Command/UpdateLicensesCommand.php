@@ -37,7 +37,7 @@ use Symfony\Component\Finder\SplFileInfo;
 class UpdateLicensesCommand extends Command
 {
     private $text = '/**
- * 2007-{currentYear} PrestaShop and Contributors
+ * 2007-{currentYear} PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
