@@ -2000,9 +2000,7 @@ class CartCore extends ObjectModel
 
         // ROUND AND RETURN
 
-        $compute_precision = Context::getContext()->getComputingPrecision();
-
-        return Tools::ps_round($value, $compute_precision);
+        return Tools::ps_round($value, $computePrecision);
     }
 
     /**
