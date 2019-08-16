@@ -242,7 +242,7 @@ final class AttachmentGridDefinitionFactory extends AbstractGridDefinitionFactor
                 (new Filter('products', NumberType::class))
                     ->setTypeOptions([
                         'attr' => [
-                            'placeholder' => $this->trans('Search file size', [], 'Admin.Actions'),
+                            'placeholder' => $this->trans('Products', [], 'Admin.Catalog.Feature'),
                         ],
                         'required' => false,
                     ])
