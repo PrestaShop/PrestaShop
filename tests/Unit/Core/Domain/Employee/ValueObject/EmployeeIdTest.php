@@ -24,52 +24,37 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject;
+namespace Tests\Unit\Core\Domain\Employee\ValueObject;
 
+use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\InvalidEmployeeIdException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
 
-/**
- * Defines Employee ID with it's constraints.
- */
-class EmployeeId
+class EmployeeIdTest extends TestCase
 {
-    /**
-     * @var int
-     */
-    private $employeeId;
-
-    /**
-     * @param int $employeeId
-     *
-     * @throws InvalidEmployeeIdException
-     */
-    public function __construct($employeeId)
+    public function testItCreatesEmployeeWithValidValues()
     {
-        $this->assertIntegerIsGreaterThanZero($employeeId);
+        $employeeId = new EmployeeId(1);
 
-        $this->employeeId = $employeeId;
+        $this->assertEquals(1, $employeeId->getValue());
     }
 
     /**
-     * @return int
-     */
-    public function getValue()
+     * @dataProvider testItExceptionThrownWithInvalidValuesData
+     ** */
+    public function testItExceptionThrownWithInvalidValues($employeId)
     {
-        return $this->employeeId;
+        $this->expectException(InvalidEmployeeIdException::class);
+        new EmployeeId($employeId);
     }
 
-    /**
-     * @param int $employeeId
-     *
-     * @throws InvalidEmployeeIdException
-     */
-    private function assertIntegerIsGreaterThanZero($employeeId)
+    public function testItExceptionThrownWithInvalidValuesData()
     {
-        if (!is_int($employeeId) || 0 > $employeeId) {
-            throw new InvalidEmployeeIdException(sprintf(
-                'Invalid employee id %s supplied. Employee id must be positive integer.',
-                var_export($employeeId, true)
-            ));
-        }
+        return [
+            'stringy -1' => ['-1'],
+            'stringy 1.1' => ['1.1'],
+            'stringy a' => ['a'],
+            'stringy +' => ['+'],
+        ];
     }
 }
