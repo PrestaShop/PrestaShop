@@ -273,7 +273,7 @@ class SearchCore
                         || !($sql_param_search = self::findClosestWeightestWord($context, $word)) ) {
                         break;
                     }
-                    echo "<br>Levenshtein loop: " . $debugNbLoop = 1;
+                    echo "<br>Levenshtein loop: " . $debugNbLoop;
                     echo "<br>Levenshtein nb search : " . $nbLevenshtein;
                     echo "<br>Levenshtein found: " . $sql_param_search;
                 };
