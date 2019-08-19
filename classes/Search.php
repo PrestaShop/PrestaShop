@@ -25,9 +25,9 @@
  */
 define('PS_SEARCH_MAX_WORD_LENGTH', 15);
 define('MAX_LEVENSHTEIN_BY_SEARCH', 10);
-define('MAX_WORDS_IN_TABLE',  100000); /* Max numer of words in ps_search_word, above which $coefs for target length will be everytime equal to 1 */
-define('COEF_MIN',  0.5);
-define('COEF_MAX',  2);
+define('MAX_WORDS_IN_TABLE', 100000); /* Max numer of words in ps_search_word, above which $coefs for target length will be everytime equal to 1 */
+define('COEF_MIN', 0.5);
+define('COEF_MAX', 2);
 
 /* Copied from Drupal search module, except for \x{0}-\x{2f} that has been replaced by \x{0}-\x{2c}\x{2e}-\x{2f} in order to keep the char '-' */
 define(
@@ -223,9 +223,9 @@ class SearchCore
         $use_cookie = true,
         Context $context = null
     ) {
-        echo "<br>------------<br>";
+        echo '<br>------------<br>';
         echo "Search::find() : $expr";
-        echo "<br>------------<br>";
+        echo '<br>------------<br>';
         $timeStartfind = microtime_float();
 
         if (!$context) {
@@ -253,9 +253,8 @@ class SearchCore
 
         header('Content-type: text/html; charset=utf-8');
         foreach ($words as $key => $word) {
-
             echo "<br><br>$word";
-            echo "<br>-------------";
+            echo '<br>-------------';
             $debugNbLoop = 1;
 
             if (!empty($word) && strlen($word) >= (int) Configuration::get('PS_SEARCH_MINWORDLEN')) {
@@ -266,24 +265,24 @@ class SearchCore
                             LEFT JOIN ' . _DB_PREFIX_ . 'search_index si ON sw.id_word = si.id_word
                             WHERE sw.id_lang = ' . (int) $id_lang . '
                                 AND sw.id_shop = ' . $context->shop->id . '
-                                AND sw.word LIKE' ;
+                                AND sw.word LIKE';
 
-                while (!($result = $db->executeS($sql . "'" . $sql_param_search . "';" , true, false))) {
-                    if ( $nbLevenshtein++ >= MAX_LEVENSHTEIN_BY_SEARCH
-                        || !($sql_param_search = self::findClosestWeightestWord($context, $word)) ) {
+                while (!($result = $db->executeS($sql . "'" . $sql_param_search . "';", true, false))) {
+                    if ($nbLevenshtein++ >= MAX_LEVENSHTEIN_BY_SEARCH
+                        || !($sql_param_search = self::findClosestWeightestWord($context, $word))) {
                         break;
                     }
-                    echo "<br>Levenshtein loop: " . $debugNbLoop;
-                    echo "<br>Levenshtein nb search : " . $nbLevenshtein;
-                    echo "<br>Levenshtein found: " . $sql_param_search;
+                    echo '<br>Levenshtein loop: ' . $debugNbLoop;
+                    echo '<br>Levenshtein nb search : ' . $nbLevenshtein;
+                    echo '<br>Levenshtein found: ' . $sql_param_search;
                 };
 
-                if(!$result) {
+                if (!$result) {
                     echo "<br>Levenshtein word doesn't gave any result";
                     unset($words[$key]);
                     continue;
                 }
-                echo "<br>Eligible Products 2 : ";
+                echo '<br>Eligible Products 2 : ';
                 foreach ($result as $row) {
                     $eligible_products2[] = $row['id_product'];
                     echo $row['id_product'] . ' ';
@@ -291,7 +290,7 @@ class SearchCore
                 $score_array[] = 'sw.word LIKE \'' . $sql_param_search . '\'';
             } else {
                 unset($words[$key]);
-                echo "<br>Too small or empty";
+                echo '<br>Too small or empty';
             }
         }
 
@@ -411,8 +410,8 @@ class SearchCore
 				LIMIT ' . (int) (($page_number - 1) * $page_size) . ',' . (int) $page_size;
         $result = $db->executeS($sql, true, false);
 
-        dump ($product_pool);
-        dump ($score);
+        dump($product_pool);
+        dump($score);
 
         $sql = 'SELECT COUNT(*)
 				FROM ' . _DB_PREFIX_ . 'product p
@@ -433,7 +432,8 @@ class SearchCore
 
         $timeEndfind = microtime_float();
         $timefind = $timeEndfind - $timeStartfind;
-        dump ($timefind);
+        dump($timefind);
+
         return array('total' => $total, 'result' => $result_properties);
     }
 
@@ -1003,6 +1003,7 @@ class SearchCore
      * @param $context , $queryString
      *
      * @return string
+     *
      * @throws PrestaShopDatabaseException
      */
     public static function findClosestWeightestWord($context, $queryString)
@@ -1016,12 +1017,9 @@ class SearchCore
          * If we use the auto-acale && self::$totalWordInSearchWordTable > MAX_WORDS_IN_TABLE,
          * we will get $coefMax < 1 following by $coefMax < $coefMin, this is a non-sense
          * so we test it before and assigne a right value for both target length */
-        if (self::$totalWordInSearchWordTable > MAX_WORDS_IN_TABLE)
-        {
+        if (self::$totalWordInSearchWordTable > MAX_WORDS_IN_TABLE) {
             self::$targetLenghtMin = self::$targetLenghtMax = (int) (strlen($queryString));
-        }
-        else
-        {
+        } else {
             /* This part of code could be see like an auto-scale.
             *  Of course, more the contante MAX_WORDS_IN_TABLE is elevate, more server resource is needed.
             *  So, we need an algorythm to reduce the server load depending the DB size.
@@ -1039,9 +1037,8 @@ class SearchCore
             *  60,000 words id DB give $coefMin : 0.8, $coefMax : 1.4
             *  80,000 words id DB give $coefMin : 0.9, $coefMax : 1.2
             *  100,000 words id DB give $coefMin : 1, $coefMax : 1*/
-            if (!self::$totalWordInSearchWordTable)
-            {
-                $sql = 'SELECT count(*) FROM `'._DB_PREFIX_.'search_word`;';
+            if (!self::$totalWordInSearchWordTable) {
+                $sql = 'SELECT count(*) FROM `' . _DB_PREFIX_ . 'search_word`;';
                 self::$totalWordInSearchWordTable = (int) Db::getInstance()->getValue($sql);
                 //self::$coefMin && self::$coefMax depend of the number of total words in ps_search_word table, need to calculate only for every search
                 self::$coefMin = 0.5 / MAX_WORDS_IN_TABLE * self::$totalWordInSearchWordTable + COEF_MIN; //y = ax + b
@@ -1060,6 +1057,7 @@ class SearchCore
             // Could happen when $queryString length * $coefMin > PS_SEARCH_MAX_WORD_LENGTH
             if (self::$targetLenghtMax < self::$targetLenghtMin) {
                 echo '<br>Break Levenshtein';
+
                 return '';
             }
             echo '<br>coefMin : ' . self::$coefMin;
@@ -1091,18 +1089,21 @@ class SearchCore
             if ($distance[$a['word']] != $distance[$b['word']]) {
                 return $distance[$a['word']] < $distance[$b['word']] ? $a : $b;
             }
+
             return $a['weight'] > $b['weight'] ? $a : $b;
         }, array('word' => 'initial', 'weight' => 0))['word'];
 
-        $timeEndfindClosestWeightestWord   = microtime_float();
+        $timeEndfindClosestWeightestWord = microtime_float();
         $time = $timeEndfindClosestWeightestWord - $timeStartfindClosestWeightestWord;
         echo "<br>Levenshtein search time : $time";
-        return $closestWord == 'initial' ?  '' : $closestWord;
+
+        return $closestWord == 'initial' ? '' : $closestWord;
     }
 }
 
 function microtime_float()
 {
-    list($usec, $sec) = explode(" ", microtime());
-    return ((float)$usec + (float)$sec);
+    list($usec, $sec) = explode(' ', microtime());
+
+    return (float) $usec + (float) $sec;
 }
