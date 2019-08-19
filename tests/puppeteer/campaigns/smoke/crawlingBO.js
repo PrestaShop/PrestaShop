@@ -3,7 +3,7 @@ const LoginPage = require('../../pages/BO/login');
 const DashboardPage = require('../../pages/BO/dashboard');
 const BOBasePage = require('../../pages/BO/BObasePage');
 const OrderPage = require('../../pages/BO/order');
-const ProductPage= require('../../pages/BO/product');
+const ProductPage = require('../../pages/BO/product');
 const CustomerPage = require('../../pages/BO/customer');
 
 let page;

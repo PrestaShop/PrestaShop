@@ -48,15 +48,15 @@ module.exports = class Install extends CommonPage {
 
     // Selectors for Final step
     this.installationProgressBar = '#install_process_form #progress_bar .installing';
-    this.generateSettingsFileStep = "#process_step_generateSettingsFile";
-    this.installDatabaseStep = "#process_step_installDatabase";
-    this.installDefaultDataStep = "#process_step_installDefaultData";
-    this.populateDatabaseStep = "#process_step_populateDatabase";
-    this.configureShopStep = "#process_step_configureShop";
-    this.installModulesStep = "#process_step_installModules";
-    this.installModulesAddons = "#process_step_installModulesAddons";
-    this.installThemeStep = "#process_step_installTheme";
-    this.installFixturesStep = "#process_step_installFixtures";
+    this.generateSettingsFileStep = '#process_step_generateSettingsFile';
+    this.installDatabaseStep = '#process_step_installDatabase';
+    this.installDefaultDataStep = '#process_step_installDefaultData';
+    this.populateDatabaseStep = '#process_step_populateDatabase';
+    this.configureShopStep = '#process_step_configureShop';
+    this.installModulesStep = '#process_step_installModules';
+    this.installModulesAddons = '#process_step_installModulesAddons';
+    this.installThemeStep = '#process_step_installTheme';
+    this.installFixturesStep = '#process_step_installFixtures';
     this.finalStepPageTitle = '#install_process_success h2';
     this.discoverFoButton = '#foBlock';
 
