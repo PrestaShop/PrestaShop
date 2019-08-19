@@ -1,6 +1,6 @@
-const CommonPage = require('../commonPage');
+const BOBasePage = require('../BO/BObasePage');
 
-module.exports = class Customer extends CommonPage {
+module.exports = class Customer extends BOBasePage {
   constructor(page) {
     super(page);
 
