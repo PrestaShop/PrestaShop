@@ -1,6 +1,6 @@
 // importing pages
-const BO_LOGIN_PAGE = require('../../pages/BO/BO_login');
-const BO_DASHBOARD_PAGE = require('../../pages/BO/BO_dashboard');
+const BO_LOGIN_PAGE = require('../../pages/BO/login');
+const BO_DASHBOARD_PAGE = require('../../pages/BO/dashboard');
 
 let page;
 let BO_LOGIN;
