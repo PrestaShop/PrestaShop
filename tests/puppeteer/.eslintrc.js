@@ -17,6 +17,6 @@ module.exports = {
   },
   rules: {
     'no-plusplus': [2, { allowForLoopAfterthoughts: true }],
-    "max-len": [2, {"code": 120}]
+    'max-len': [2, {code: 120}]
   },
 };
