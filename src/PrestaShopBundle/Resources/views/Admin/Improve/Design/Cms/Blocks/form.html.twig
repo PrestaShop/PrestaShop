@@ -25,6 +25,8 @@
 
 {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
 
+{% form_theme cmsPageForm '@PrestaShop/Admin/Improve/Design/Cms/Blocks/form_theme.html.twig' %}
+
 {{ form_start(cmsPageForm) }}
   <div class="card">
     <div class="card-header">
@@ -32,74 +34,6 @@
     </div>
     <div class="card-block row">
       <div class="card-text">
-        {{ form_errors(cmsPageForm) }}
-
-        {% set invalidCharsHint = 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>={}' %}
-
-        {{ ps.form_group_row(cmsPageForm.page_category_id, {}, {
-          'label': 'Page category'|trans({}, 'Admin.Design.Feature'),
-          }) }}
-
-        {{ ps.form_group_row(cmsPageForm.title, {}, {
-          'label': 'Title'|trans({}, 'Admin.Global'),
-          'help': 'Used in the h1 page tag, and as the default title tag value.'|trans({}, 'Admin.Design.Help')
-          ~ ' ' ~ invalidCharsHint
-          }) }}
-
-        {% block cms_tool_serp %}
-          <div class="form-group row">
-            <label class="form-control-label">
-              {{ 'SEO preview'|trans({}, 'Admin.Global') }}
-            </label>
-            <div class="col-sm">
-              <div id="serp-app" data-cms-url="{{ cmsUrl }}"></div>
-              <small class="form-text">
-                {{ 'Here is a preview of how your page will appear in search engine results.'|trans({}, 'Admin.Global') }}
-              </small>
-            </div>
-          </div>
-        {% endblock %}
-
-        {{ ps.form_group_row(cmsPageForm.meta_title, {}, {
-          'label': 'Meta title'|trans({}, 'Admin.Global'),
-          'help': 'Used to override the title tag value. If left blank, the default title value is used.'|trans({}, 'Admin.Design.Help')
-          ~ ' ' ~ invalidCharsHint
-          }) }}
-
-        {{ ps.form_group_row(cmsPageForm.meta_description, {}, {
-          'label': 'Meta description'|trans({}, 'Admin.Global'),
-          'help': invalidCharsHint
-          }) }}
-
-        {{ ps.form_group_row(cmsPageForm.meta_keyword, {}, {
-          'label': 'Meta keywords'|trans({}, 'Admin.Global'),
-          'help': 'To add tags, click in the field, write something, and then press the "Enter" key.'|trans({}, 'Admin.Shopparameters.Help')
-          ~ ' ' ~ invalidCharsHint
-          }) }}
-
-        {{ ps.form_group_row(cmsPageForm.friendly_url, {}, {
-          'label': 'Friendly URL'|trans({}, 'Admin.Global'),
-          'help': 'Only letters and the hyphen (-) character are allowed.'|trans({}, 'Admin.Design.Feature')
-          }) }}
-
-        {{ ps.form_group_row(cmsPageForm.content, {}, {
-          'label': 'Page content'|trans({}, 'Admin.Design.Feature'),
-          }) }}
-
-        {{ ps.form_group_row(cmsPageForm.is_indexed_for_search, {}, {
-          'label': 'Indexation by search engines'|trans({}, 'Admin.Design.Feature'),
-          }) }}
-
-        {{ ps.form_group_row(cmsPageForm.is_displayed, {}, {
-          'label': 'Displayed'|trans({}, 'Admin.Global'),
-          }) }}
-
-        {% if cmsPageForm.shop_association is defined %}
-          {{ ps.form_group_row(cmsPageForm.shop_association, {}, {
-            'label': 'Shop association'|trans({}, 'Admin.Global')
-            }) }}
-        {% endif %}
-
         {% block cms_page_form_rest %}
           {{ form_rest(cmsPageForm) }}
         {% endblock %}

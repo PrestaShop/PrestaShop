@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\IsUrlRewrite;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
+use PrestaShopBundle\Form\Admin\Type\FreeType;
 use PrestaShopBundle\Form\Admin\Type\Material\MaterialChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
@@ -81,13 +82,22 @@ class CmsPageType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $invalidCharsText = sprintf('%s <>={}', $this->trans('Invalid characters:', 'Admin.Notifications.Info'));
+
         $builder
             ->add('page_category_id', MaterialChoiceTreeType::class, [
+                'label' => $this->trans('Page category', 'Admin.Design.Feature'),
                 'required' => false,
                 'choices_tree' => $this->allCmsCategories,
                 'choice_value' => 'id_cms_category',
             ])
             ->add('title', TranslatableType::class, [
+                'label' => $this->trans('Title', 'Admin.Global'),
+                'help' => sprintf(
+                    '%s %s',
+                    $this->trans('Used in the h1 page tag, and as the default title tag value.', 'Admin.Design.Help'),
+                    $invalidCharsText
+                ),
                 'constraints' => [
                     new DefaultLanguage([
                         'message' => $this->trans(
@@ -121,7 +131,17 @@ class CmsPageType extends TranslatorAwareType
                     ],
                 ],
             ])
+            ->add('seo_preview', FreeType::class, [
+                'label' => $this->trans('SEO preview', 'Admin.Global'),
+                'help' => $this->trans('Here is a preview of how your page will appear in search engine results.', 'Admin.Global'),
+                'view_data' => [
+                    // @todo: should generate actual URL
+                    'cms_url' => 'http://prestashop.local/content/-',
+                ],
+            ])
             ->add('meta_title', TranslatableType::class, [
+                'label' => $this->trans('Meta title', 'Admin.Global'),
+                'help' => $this->trans('Used to override the title tag value. If left blank, the default title value is used.', 'Admin.Design.Help'),
                 'required' => false,
                 'options' => [
                     'constraints' => [
@@ -140,6 +160,8 @@ class CmsPageType extends TranslatorAwareType
                 ],
             ])
             ->add('meta_description', TranslatableType::class, [
+                'label' => $this->trans('Meta description', 'Admin.Global'),
+                'help' => $invalidCharsText,
                 'required' => false,
                 'options' => [
                     'constraints' => [
@@ -150,6 +172,12 @@ class CmsPageType extends TranslatorAwareType
                 ],
             ])
             ->add('meta_keyword', TranslatableType::class, [
+                'label' => $this->trans('Meta keywords', 'Admin.Global'),
+                'help' => sprintf(
+                    '%s %s',
+                    $this->trans('To add tags, click in the field, write something, and then press the "Enter" key.', 'Admin.Shopparameters.Help'),
+                    $invalidCharsText
+                ),
                 'type' => TextType::class,
                 'required' => false,
                 'options' => [
@@ -173,6 +201,8 @@ class CmsPageType extends TranslatorAwareType
                 ],
             ])
             ->add('friendly_url', TranslatableType::class, [
+                'label' => $this->trans('Friendly URL', 'Admin.Global'),
+                'help' => $this->trans('Only letters and the hyphen (-) character are allowed.', 'Admin.Design.Feature'),
                 'constraints' => [
                     new DefaultLanguage([
                         'message' => $this->trans(
@@ -205,6 +235,7 @@ class CmsPageType extends TranslatorAwareType
                 ],
             ])
             ->add('content', TranslateType::class, [
+                'label' => $this->trans('Page content', 'Admin.Design.Feature'),
                 'type' => FormattedTextareaType::class,
                 'locales' => $this->locales,
                 'hideTabs' => false,
@@ -221,14 +252,17 @@ class CmsPageType extends TranslatorAwareType
                 ],
             ])
             ->add('is_indexed_for_search', SwitchType::class, [
+                'label' => $this->trans('Indexation by search engines', 'Admin.Design.Feature'),
                 'required' => false,
             ])
             ->add('is_displayed', SwitchType::class, [
+                'label' => $this->trans('Displayed', 'Admin.Global'),
                 'required' => false,
             ]);
 
         if ($this->isMultiShopEnabled) {
             $builder->add('shop_association', ShopChoiceTreeType::class, [
+                'label' => $this->trans('Shop association', 'Admin.Global'),
                 'required' => false,
                 'attr' => [
                     'class' => 'js-shop-assoc-tree',
