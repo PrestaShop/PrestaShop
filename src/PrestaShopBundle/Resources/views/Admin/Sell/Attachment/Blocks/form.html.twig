@@ -50,11 +50,8 @@
               {{ 'File'|trans({}, 'Admin.Global') }}
             </label>
             <div class="col-sm">
-              {% include '@PrestaShop/Admin/Sell/Catalog/Categories/Blocks/thumbnail_image.html.twig' %}
-
               {{ form_widget(attachmentForm.file) }}
               {{ form_errors(attachmentForm.file) }}
-
             </div>
           </div>
 
@@ -64,11 +61,7 @@
         </div>
       </div>
       <div class="card-footer">
-        {% if (displayInIframe is defined and displayInIframe == true) %}
-          <a href="javascript:window.history.back();" class="btn btn-outline-secondary">
-        {% else %}
           <a href="{{ pathWithBackUrl('admin_attachments_index') }}" class="btn btn-outline-secondary">
-        {% endif %}
           {{ 'Cancel'|trans({}, 'Admin.Actions') }}
         </a>
         <button class="btn btn-primary float-right">
