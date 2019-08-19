@@ -8,6 +8,8 @@ module.exports = class BOBasePage extends CommonPage {
     this.headerLogoImage = '#header_logo';
     this.userProfileIcon = '#employee_infos';
     this.userProfileLogoutLink = 'a#header_logout';
+    this.shopVersionBloc = '#shop_version';
+    this.headerShopNameLink = '#header_shopname';
 
     // left navbar
     // SELL
@@ -20,9 +22,24 @@ module.exports = class BOBasePage extends CommonPage {
     this.customersParentLink = 'li#subtab-AdminParentCustomer';
     this.customersLink = '#subtab-AdminCustomers';
 
+    // Modules
+    this.modulesParentLink = '#subtab-AdminParentModulesSf';
+    this.moduleCatalogueLink = '#subtab-AdminParentModulesCatalog';
+    this.moduleManagerLink = '#subtab-AdminModulesSf';
+
+    // Shop Parameters
+    this.shopParametersParentLink = '#subtab-ShopParameters';
+    this.shopParametersGeneralLink = '#subtab-AdminParentPreferences';
+
     // welcome module
     this.onboardingCloseButton = 'button.onboarding-button-shut-down';
     this.onboardingStopButton = 'a.onboarding-button-stop';
+
+    // Growls
+    this.growlMessageBloc = '#growls .growl-message';
+
+    // Alert Text
+    this.alertSuccessBloc = 'div.alert.alert-success';
   }
 
   /*
@@ -68,5 +85,14 @@ module.exports = class BOBasePage extends CommonPage {
       await this.page.waitForSelector(this.onboardingStopButton, {visible: true});
       await this.page.click(this.onboardingStopButton);
     }
+  }
+
+  /**
+   * Click on View My Shop and wait for page to open in a new Tab
+   * @return FOPage, page opened
+   */
+  async viewMyShop() {
+    const FOPage = await this.openLinkWithTargetBlank(this.page, this.headerShopNameLink);
+    return FOPage;
   }
 };
