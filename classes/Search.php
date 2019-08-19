@@ -1018,7 +1018,7 @@ class SearchCore
          * To reduce the server load, we are looking only for words with same length that the query word.
          * If we use the auto-acale && self::$totalWordInSearchWordTable > MAX_WORDS_IN_TABLE,
          * we will get $coefMax < 1 following by $coefMax < $coefMin, this is a non-sense
-         * so we test it before and assigne a right value for both target length */
+         * so we test it before and assign a right value for both target length */
         if (self::$totalWordInSearchWordTable > MAX_WORDS_IN_TABLE) {
             self::$targetLenghtMin = self::$targetLenghtMax = (int) (strlen($queryString));
         } else {
