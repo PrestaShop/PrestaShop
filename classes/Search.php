@@ -1010,7 +1010,10 @@ class SearchCore
         $distance = array(); // cache levenshtein distance
         $searchMinWordLength = (int) Configuration::get('PS_SEARCH_MINWORDLEN');
         $timeStartfindClosestWeightestWord = microtime_float();
-
+        if (!self::$totalWordInSearchWordTable) {
+            $sql = 'SELECT count(*) FROM `' . _DB_PREFIX_ . 'search_word`;';
+            self::$totalWordInSearchWordTable = (int) Db::getInstance()->getValue($sql);
+        }
         /* If the ps_search_word table size is superior at MAX_WORDS_IN_TABLE, That mean that the DB is really huge.
          * To reduce the server load, we are looking only for words with same length that the query word.
          * If we use the auto-acale && self::$totalWordInSearchWordTable > MAX_WORDS_IN_TABLE,
@@ -1036,9 +1039,7 @@ class SearchCore
             *  60,000 words id DB give $coefMin : 0.8, $coefMax : 1.4
             *  80,000 words id DB give $coefMin : 0.9, $coefMax : 1.2
             *  100,000 words id DB give $coefMin : 1, $coefMax : 1*/
-            if (!self::$totalWordInSearchWordTable) {
-                $sql = 'SELECT count(*) FROM `' . _DB_PREFIX_ . 'search_word`;';
-                self::$totalWordInSearchWordTable = (int) Db::getInstance()->getValue($sql);
+            if (!self::$coefMin) {
                 //self::$coefMin && self::$coefMax depend of the number of total words in ps_search_word table, need to calculate only for every search
                 self::$coefMin = 0.5 / MAX_WORDS_IN_TABLE * self::$totalWordInSearchWordTable + COEF_MIN; //y = ax + b
                 self::$coefMax = -1 / MAX_WORDS_IN_TABLE * self::$totalWordInSearchWordTable + COEF_MAX; //y = ax + b
