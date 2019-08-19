@@ -1,8 +1,4 @@
 require('./globals');
-const chai = require('chai');
-chai.use(require('chai-string'));
-
-global.expect = chai.expect;
 
 const puppeteer = require('puppeteer');
 

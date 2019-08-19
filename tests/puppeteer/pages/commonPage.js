@@ -1,3 +1,6 @@
+// Using chai
+const {expect} = require('chai');
+
 module.exports = class CommonPage {
   constructor(page) {
     this.page = page;
@@ -81,11 +84,11 @@ module.exports = class CommonPage {
     switch (parameter) {
       case 'equal':
         await this.page.$eval(selector, el => el.innerText)
-          .then(text => global.expect(text.replace(/\s+/g, ' ').trim()).to.equal(textToCheckWith));
+          .then(text => expect(text.replace(/\s+/g, ' ').trim()).to.equal(textToCheckWith));
         break;
       case 'contain':
         await this.page.$eval(selector, el => el.innerText)
-          .then(text => global.expect(text).to.contain(textToCheckWith));
+          .then(text => expect(text).to.contain(textToCheckWith));
         break;
       default:
       // do nothing
@@ -103,6 +106,6 @@ module.exports = class CommonPage {
     await this.page.waitForSelector(selector);
     const value = await this.page.$eval(selector, (el, attribute) => el
       .getAttribute(attribute), attribute);
-    global.expect(value).to.be.equal(textToCheckWith);
+    expect(value).to.be.equal(textToCheckWith);
   }
 };

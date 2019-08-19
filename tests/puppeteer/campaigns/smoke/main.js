@@ -1,3 +1,6 @@
+// Using chai
+const expect = require('chai').expect;
+
 // importing pages
 const BO_LOGIN_PAGE = require('../../pages/BO/login');
 const BO_DASHBOARD_PAGE = require('../../pages/BO/dashboard');
@@ -24,6 +27,6 @@ global.scenario('should go to the BO', async () => {
   });
   test('should be on the dashboard', async () => {
     const pageTitle = await BO_DASHBOARD.getPageTitle();
-    await global.expect(pageTitle).to.equal(BO_DASHBOARD.pageTitle);
+    await expect(pageTitle).to.equal(BO_DASHBOARD.pageTitle);
   });
 }, init, true);
