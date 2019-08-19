@@ -39,12 +39,12 @@ export default class RangesContentSwitcher {
   }
 
   _handle() {
-    if (this.$billingSelector.find('input:checked').val() === '1') {
-      this._getWeightContentSelector().show();
-      this._getPriceContentSelector().hide();
-    } else {
+    if (this.$billingSelector.find('input:checked').val() === '2') {
       this._getPriceContentSelector().show();
       this._getWeightContentSelector().hide();
+    } else {
+      this._getWeightContentSelector().show();
+      this._getPriceContentSelector().hide();
     }
   }
 

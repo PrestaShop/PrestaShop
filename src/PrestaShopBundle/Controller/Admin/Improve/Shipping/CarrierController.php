@@ -61,6 +61,8 @@ class CarrierController extends FrameworkBundleAdminController
 
         return $this->render('@PrestaShop/Admin/Improve/Shipping/Carrier/add.html.twig', [
             'carrierForm' => $carrierForm->createView(),
+            'contextLangId' => $this->container->get('prestashop.adapter.legacy.context')->getContext()->language->id,
+            'defaultLangId' => $this->get('prestashop.adapter.legacy.configuration')->getInt('PS_LANG_DEFAULT'),
         ]);
     }
 }

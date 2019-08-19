@@ -23,31 +23,41 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import StepVisibilityHandler from '../../components/form/step-visibility-handler.js';
+import StepVisibilityHandler from './step-visibility-handler.js';
 import AddRangeHandler from './add-range-handler.js';
 import RangesContentSwitcher from './ranges-content-switcher.js';
 import CarrierMap from './carrier-map.js';
 import FreeShippingToggleHandler from './free-shipping-toggle-handler.js';
+import SummaryContentHandler from './summary-content-handler';
+import TranslatableInput from './../../components/translatable-input';
 
 const $ = window.$;
 
 $(document).ready(() => {
-  new StepVisibilityHandler(CarrierMap.carrierFormWrapperSelector);
+  new TranslatableInput();
+  new StepVisibilityHandler(CarrierMap.formWrapper);
   new AddRangeHandler(
-    CarrierMap.rangesTableSelector,
-    CarrierMap.rangesTemplateSelector,
-    CarrierMap.appendButtonsSelector
+    CarrierMap.rangesTable,
+    CarrierMap.rangesTemplate,
+    CarrierMap.appendButtons
   );
   new RangesContentSwitcher(
-    CarrierMap.rangePriceLabelSelector,
-    CarrierMap.rangeWeightLabelSelector,
-    CarrierMap.billingSelector
+    CarrierMap.rangePriceLabel,
+    CarrierMap.rangeWeightLabel,
+    CarrierMap.billing
   );
   new FreeShippingToggleHandler(
-    CarrierMap.freeShippingSelector,
-    CarrierMap.handlingCostSelector,
-    CarrierMap.rangesTableSelector,
-    CarrierMap.addRangeBtnSelector,
-    CarrierMap.rangeRowSelector
+    CarrierMap.freeShipping,
+    CarrierMap.handlingCost,
+    CarrierMap.rangesTable,
+    CarrierMap.addRangeBtn,
+    CarrierMap.rangeRow
+  );
+
+  new SummaryContentHandler(
+    CarrierMap.formWrapper,
+    CarrierMap.freeShipping,
+    CarrierMap.transitTimeInput,
+    CarrierMap.billing
   );
 });

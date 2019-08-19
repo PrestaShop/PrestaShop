@@ -26,31 +26,64 @@
 {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
 
 {% block carrier_form_step_summary %}
-<div class="form-step js-form-step" data-step="5">
+<div id="js-carrier-summary" class="form-step js-form-step" data-step="5">
   <div class="card-block row">
     <div class="card-text">
 
-        <div>
-          <div class="card">
-            <div class="card-block" id="carrier-summary">
-              <p>This carrier <span id="is-free"></span> and the transit time is <span id="transit-time"></span></p>
-              <p>Shipping costs are calculated according to the price and the tax rule US-AL Rate (4%) will be applied.</p>
-              <p>This carrier can deliver orders from [undefined] $ to [undefined] $. If the order is out of range, the behavior is to disable carrier.</p>
-              <p>This carrier will be proposed for those delivery zones:</p>
-              <p>And it will be proposed for those client groups:</p>
-            </div>
-          </div>
-          <div>
-            {{ ps.form_group_row(carrierForm.step_summary.is_enabled, {}, {
-              'label': 'Enabled'|trans({}, 'Admin.Global'),
-              'help': 'Enable the carrier in the front office.'|trans({}, 'Admin.Shipping.Help'),
-            }) }}
+      {% set TransDomain = 'Admin.Shipping.Feature' %}
 
-            {% block carrier_step_summary_form_rest %}
-              {{ form_rest(carrierForm.step_summary) }}
-            {% endblock %}
+      {% set isFree = 'free'|trans({}, 'Admin.Shipping.Feature') %}
+      {% set isNotFree = 'not free'|trans({}, 'Admin.Shipping.Feature') %}
+
+      {% set billingByPrice = 'according to the price'|trans({}, 'Admin.Shipping.Feature') %}
+      {% set billingByWeight = 'according to the weight'|trans({}, 'Admin.Shipping.Feature') %}
+
+      <div>
+        <div class="card">
+          <div class="card-block">
+            <p id="js-free-carrier-transit" class="summary-text" data-carrier-transit="{{
+              'This carrier is %1$s and the transit time is %2$s.'|trans({
+              '%1$s': isFree,
+              '%2$s': '__TRANSIT_TIME__'
+            }, TransDomain) }}">
+            </p>
+            <p id="js-paid-carrier-transit" class="summary-text" data-carrier-transit="{{
+            'This carrier is %1$s and the transit time is %2$s.'|trans({
+              '%1$s': isNotFree,
+              '%2$s': '__TRANSIT_TIME__'
+            },'Admin.Shipping.Feature') }}">
+            </p>
+
+            <p id="js-carrier-shipping-cost-price" class="summary-text" data-carrier-shipping-cost="
+              {{ 'The shipping cost is calculated %1$s and the tax rule %2$s will be applied.'|trans({
+              '%1$s': billingByPrice,
+              '%2$s': '__TAX_RULE__'
+              }, TransDomain) }},">
+            </p>
+            <p id="js-carrier-shipping-cost-weight" class="summary-text" data-carrier-shipping-cost="
+              {{ 'The shipping cost is calculated %1$s and the tax rule %2$s will be applied.'|trans({
+              '%1$s': billingByWeight,
+              '%2$s': '__TAX_RULE__'
+              }, TransDomain) }}">
+
+            </p>
+
+            <p>This carrier can deliver orders from [undefined] $ to [undefined] $. If the order is out of range, the behavior is to disable carrier.</p>
+            <p>This carrier will be proposed for those delivery zones:</p>
+            <p>And it will be proposed for those client groups:</p>
           </div>
         </div>
+        <div>
+          {{ ps.form_group_row(carrierForm.step_summary.is_enabled, {}, {
+            'label': 'Enabled'|trans({}, 'Admin.Global'),
+            'help': 'Enable the carrier in the front office.'|trans({}, 'Admin.Shipping.Help'),
+          }) }}
+
+          {% block carrier_step_summary_form_rest %}
+            {{ form_rest(carrierForm.step_summary) }}
+          {% endblock %}
+        </div>
+      </div>
 
       {% block carrier_form_rest %}
         {{ form_rest(carrierForm) }}

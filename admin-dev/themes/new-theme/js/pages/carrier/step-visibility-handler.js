@@ -44,6 +44,8 @@ export default class StepVisibilityHandler {
 
     $(document).find(`${this.formWrapperSelector} .js-form-step.active`).removeClass('active');
     $(document).find(`${this.formWrapperSelector} *[data-step=${stepToShow}].js-form-step`).addClass('active');
+
+    $(this.formWrapperSelector).trigger('step-switched');
   }
 
   _activateTab(stepToShow) {

@@ -24,15 +24,16 @@
  */
 
 export default {
-  carrierFormWrapperSelector: '#carrier-form',
-  rangePriceLabelSelector: '.js-range-label-case-price',
-  rangeWeightLabelSelector: '.js-range-label-case-weight',
-  rangeRowSelector: '.js-range-row',
-  billingSelector: '.js-billing',
-  freeShippingSelector: '.js-free-shipping',
-  handlingCostSelector: '.js-handling-cost',
-  rangesTableSelector: '#js-carrier-ranges table',
-  rangesTemplateSelector: '#js-carrier-range-templates',
-  addRangeBtnSelector: '.js-add-range',
-  appendButtonsSelector: '.js-append-buttons',
+  formWrapper: '#carrier-form',
+  rangePriceLabel: '.js-range-label-case-price',
+  rangeWeightLabel: '.js-range-label-case-weight',
+  rangeRow: '.js-range-row',
+  billing: '.js-billing',
+  freeShipping: '.js-free-shipping',
+  handlingCost: '.js-handling-cost',
+  rangesTable: '#js-carrier-ranges table',
+  rangesTemplate: '#js-carrier-range-templates',
+  addRangeBtn: '.js-add-range',
+  appendButtons: '.js-append-buttons',
+  transitTimeInput: 'input[name="carrier[step_general][transit_time]',
 };

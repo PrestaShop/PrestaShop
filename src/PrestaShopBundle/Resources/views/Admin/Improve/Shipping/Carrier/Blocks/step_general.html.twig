@@ -42,7 +42,9 @@
           'help': nameHelp
         }) }}
 
-        {{ ps.form_group_row(carrierForm.step_general.transit_time, {}, {
+        {{ ps.form_group_row(carrierForm.step_general.transit_time, {
+          'attr': {'class': 'js-transit'},
+        }, {
           'label': 'Transit time'|trans({}, 'Admin.Global'),
           'help': 'The delivery time will be displayed during checkout.'|trans({}, 'Admin.Shipping.Help')
         }) }}
