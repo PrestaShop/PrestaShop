@@ -1,3 +1,6 @@
+// Using chai
+const {expect} = require('chai');
+// Using CommonPage
 const CommonPage = require('../commonPage');
 
 module.exports = class Install extends CommonPage {
@@ -74,7 +77,7 @@ module.exports = class Install extends CommonPage {
   async checkStepTitle(selector, pageTitle) {
     await this.page.waitFor(selector, {visible: true, timeout: 90000});
     const title = await this.getTextContent(selector);
-    await global.expect(title).to.contains(pageTitle);
+    await expect(title).to.contains(pageTitle);
   }
 
   /**
