@@ -102,7 +102,6 @@ define('PREG_CLASS_CJK', '\x{3041}-\x{30ff}\x{31f0}-\x{31ff}\x{3400}-\x{4db5}\x{
 
 class SearchCore
 {
-
     public static $totalWordInSearchWordTable;
     public static $coefMin;
     public static $coefMax;
@@ -275,7 +274,7 @@ class SearchCore
                     echo '<br>Levenshtein loop: ' . $debugNbLoop;
                     echo '<br>Levenshtein nb search : ' . $nbLevenshtein;
                     echo '<br>Levenshtein found: ' . $sql_param_search;
-                };
+                }
 
                 if (!$result) {
                     echo "<br>Levenshtein word doesn't gave any result";
