@@ -105,4 +105,12 @@ module.exports = class CommonPage {
       .getAttribute(attribute), attribute);
     expect(value).to.be.equal(textToCheckWith);
   }
+
+  /**
+   * Reload actual browser page
+   * @return {Promise<void>}
+   */
+  async reloadPage() {
+    await this.page.reload({waitUntil: 'networkidle0'});
+  }
 };
