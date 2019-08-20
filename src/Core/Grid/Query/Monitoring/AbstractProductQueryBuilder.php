@@ -127,6 +127,10 @@ abstract class AbstractProductQueryBuilder extends AbstractDoctrineQueryBuilder
                 'p.id_product = ps.id_product AND ps.id_shop = p.id_shop_default'
         );
 
+        if ($isSingleShopContext) {
+            $qb->andWhere('ps.id_shop = :context_shop_id');
+        }
+
         $this->applyFilters($qb, $searchCriteria->getFilters());
 
         return $qb;
