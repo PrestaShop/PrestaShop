@@ -40,7 +40,7 @@ class StepShippingType extends AbstractType
     /**
      * @var array
      */
-    private $taxChoices;
+    private $taxRuleChoices;
 
     /**
      * @var array
@@ -76,7 +76,7 @@ class StepShippingType extends AbstractType
         TranslatorInterface $translator,
         array $zones
     ) {
-        $this->taxChoices = $taxChoices;
+        $this->taxRuleChoices = $taxChoices;
         $this->outOfRangeBehaviorChoices = $outOfRangeBehaviorChoices;
         $this->billingChoices = $billingChoices;
         $this->translator = $translator;
@@ -98,10 +98,10 @@ class StepShippingType extends AbstractType
                 'expanded' => true,
                 'choices' => $this->billingChoices,
             ])
-            ->add('tax', ChoiceType::class, [
+            ->add('tax_rule', ChoiceType::class, [
                 'placeholder' => false,
                 'required' => false,
-                'choices' => $this->getTaxChoices(),
+                'choices' => $this->getTaxRuleChoices(),
             ])
             ->add('out_of_range', ChoiceType::class, [
                 'required' => false,
@@ -115,10 +115,10 @@ class StepShippingType extends AbstractType
     /**
      * @return array
      */
-    private function getTaxChoices(): array
+    private function getTaxRuleChoices(): array
     {
         $choices[$this->translator->trans('No tax', [], 'Admin.International.Help')] = 0;
 
-        return array_merge($choices, $this->taxChoices);
+        return array_merge($choices, $this->taxRuleChoices);
     }
 }

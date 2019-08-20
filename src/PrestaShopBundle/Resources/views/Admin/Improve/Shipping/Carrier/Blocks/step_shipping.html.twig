@@ -42,7 +42,9 @@
           'label': 'Billing'|trans({}, 'Admin.Global'),
         }) }}
 
-        {{ ps.form_group_row(carrierForm.step_shipping.tax, {}, {
+        {{ ps.form_group_row(carrierForm.step_shipping.tax_rule, {
+          'attr': {'class': 'js-tax-rule'}
+        }, {
           'label': 'Tax'|trans({}, 'Admin.Global'),
         }) }}
 
