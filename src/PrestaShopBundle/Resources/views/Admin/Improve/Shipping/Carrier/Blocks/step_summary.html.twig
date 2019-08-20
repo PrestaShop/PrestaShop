@@ -30,16 +30,14 @@
   <div class="card-block row">
     <div class="card-text">
 
-      {% set transDomain = 'Admin.Shipping.Feature' %}
-
       {% set isFree = 'free'|trans({}, 'Admin.Shipping.Feature') %}
       {% set isNotFree = 'not free'|trans({}, 'Admin.Shipping.Feature') %}
 
       {% set billingByPrice = 'according to the price'|trans({}, 'Admin.Shipping.Feature') %}
       {% set billingByWeight = 'according to the weight'|trans({}, 'Admin.Shipping.Feature') %}
 
-      {% set outrangedHighest = 'Apply the cost of the highest defined range'|trans({}, transDomain) %}
-      {% set outrangedDisable = 'Disable carrier'|trans({}, transDomain) %}
+      {% set outrangedHighest = 'Apply the cost of the highest defined range'|trans({}, 'Admin.Shipping.Feature') %}
+      {% set outrangedDisable = 'Disable carrier'|trans({}, 'Admin.Shipping.Feature') %}
 
       <div>
         <div class="card">
@@ -48,7 +46,7 @@
               'This carrier is %1$s and the transit time is %2$s.'|trans({
               '%1$s': isFree,
               '%2$s': '__TRANSIT_TIME__'
-            }, transDomain) }}">
+            }, 'Admin.Shipping.Feature') }}">
             </p>
             <p id="js-priced-carrier-transit" class="summary-text" data-carrier-transit="{{
             'This carrier is %1$s and the transit time is %2$s.'|trans({
@@ -61,39 +59,38 @@
               {{ 'The shipping cost is calculated %1$s and the tax rule %2$s will be applied.'|trans({
               '%1$s': billingByPrice,
               '%2$s': '__TAX_RULE__'
-              }, transDomain) }},">
+              }, 'Admin.Shipping.Feature') }},">
             </p>
             <p id="js-carrier-shipping-cost-weight" class="summary-text" data-carrier-shipping-cost="
               {{ 'The shipping cost is calculated %1$s and the tax rule %2$s will be applied.'|trans({
               '%1$s': billingByWeight,
               '%2$s': '__TAX_RULE__'
-              }, transDomain) }}">
+              }, 'Admin.Shipping.Feature') }}">
             </p>
 
             <p id="js-ranges-summary" class="summary-text">
               <span id="js-range" class="summary-text" data-range-summary="{{
-                'This carrier can deliver orders from %1$s to %2$s.'|trans({}, transDomain)
+                'This carrier can deliver orders from %1$s to %2$s.'|trans({}, 'Admin.Shipping.Feature')
               }}"></span>
 
               <span id="js-outranged-disable" class="summary-text" data-outranged-summary="{{
                 'If the order is out of range, the behavior is to %3$s.'|trans({
                   '%3$s': outrangedDisable
-              }, transDomain) }}">
+              }, 'Admin.Shipping.Feature') }}">
               </span>
 
               <span id="js-outranged-highest" class="summary-text" data-outranged-summary="{{
                 'If the order is out of range, the behavior is to %3$s.'|trans({
                   '%3$s': outrangedHighest
-              }, transDomain) }}">
+              }, 'Admin.Shipping.Feature') }}">
             </span>
             </p>
 
-            <p>
-              {{ 'This carrier will be proposed for those delivery zones:'|trans({}, transDomain) }}
-              <ul id="js-zones-summary" class="delivery-zones-summary">
-              </ul>
-            </p>
-            <p>And it will be proposed for those client groups:</p>
+            <p>{{ 'This carrier will be proposed for those delivery zones:'|trans({}, 'Admin.Shipping.Feature') }}</p>
+            <ul id="js-zones-summary" class="zones-summary-list"></ul>
+
+            <p>{{ 'And it will be proposed for those client groups:'|trans({}, 'Admin.Shipping.Feature') }}</p>
+            <ul id="js-groups-summary" class="groups-summary-list"></ul>
           </div>
         </div>
         <div>

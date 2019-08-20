@@ -55,8 +55,9 @@
         }) }}
 
         {{ ps.form_group_row(carrierForm.step_properties_and_access.group_association, {}, {
+          'class': 'js-group-access',
           'label': 'Group access'|trans({}, 'Admin.Global'),
-          'help': 'Mark the groups that are allowed access to this carrier.'|trans({}, 'Admin.Shipping.Help')
+          'help': 'Mark the groups that are allowed access to this carrier.'|trans({}, 'Admin.Shipping.Help'),
         }) }}
       </div>
 

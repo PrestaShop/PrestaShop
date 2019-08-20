@@ -41,4 +41,6 @@ export default {
   outrangedSelect: '.js-outranged',
   zoneCheck: '.js-zone',
   zonesSummaryTarget: '#js-zones-summary',
+  groupChecks: '.js-group-access',
+  groupsSummaryTarget: '#js-groups-summary',
 };

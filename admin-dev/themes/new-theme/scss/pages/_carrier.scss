@@ -28,6 +28,9 @@
         margin-left: 5px;
       }
     }
+    .range-row:nth-child(2) {
+      border-bottom: .125rem solid $primary;
+    }
   }
   #carrier-steps-navigation {
     ul.nav-tab {
@@ -58,7 +61,7 @@
     display: none;
   }
 
-  .delivery-zones-summary {
+  .zones-summary-list, .groups-summary-list {
     list-style-type: none;
   }
 }

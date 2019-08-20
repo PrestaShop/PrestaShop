@@ -841,10 +841,20 @@
         </tr>
         {% for zone_id, zone in form.zones %}
           <tr data-zone-id="{{ zone_id }}">
-            <th>{{ form_widget(form.zones[zone_id], {'attr': {
-              'data-zone-name': zone.vars.label,
-              'class': 'js-zone'
-            }}) }}</th>
+            <th>
+              <div class="md-checkbox md-checkbox-inline">
+                <label>
+                  <input
+                    type="checkbox"
+                    id="{{ zone.vars.id }}"
+                    name="{{ zone.vars.name }}"
+                    value="{{ zone.vars.value }}"
+                    class="js-zone">
+                  <i class="md-checkbox-control"></i>
+                  {{ zone.vars.label }}
+                </label>
+              </div>
+            </th>
             {% if form.prices[0] is defined %}
               <td>
                 <div class="input-group">
@@ -866,7 +876,7 @@
           </tr>
         </tbody>
       </table>
-      <button type="button" class="js-add-range btn btn-outline-primary">
+      <button type="button" class="mt-3 js-add-range btn btn-outline-primary">
         {{ 'Add new range'|trans({}, 'Admin.Global') }}
       </button>
     </div>

@@ -40,6 +40,8 @@ export default class SummaryContentHandler {
     outrangedSelect,
     zoneCheck,
     zonesSummaryTarget,
+    groupChecks,
+    groupsSummaryTarget
   ) {
     this.$formWrapper = $(formWrapper);
     this.freeShippingInput = freeShippingInput;
@@ -51,6 +53,8 @@ export default class SummaryContentHandler {
     this.$outrangedSelect = $(outrangedSelect);
     this.$zoneCheck = $(zoneCheck);
     this.$zonesSummaryTarget = $(zonesSummaryTarget);
+    this.$groupChecks = $(groupChecks);
+    this.$groupsSummaryTarget = $(groupsSummaryTarget);
     this.handle();
 
     return {};
@@ -68,6 +72,7 @@ export default class SummaryContentHandler {
       this.summarizeShippingCost(isFreeShipping);
       this.summarizeShippingRanges(isFreeShipping);
       this.summarizeDeliveryZones();
+      this.summarizeClientGroups();
     });
   }
 
@@ -203,8 +208,19 @@ export default class SummaryContentHandler {
     $.each(this.$zoneCheck, ( i, zoneInput ) => {
       const $zoneInput = $(zoneInput);
       if ($zoneInput.is(':checked')) {
-        this.$zonesSummaryTarget.append(`<li><b>${$zoneInput.data('zone-name')}</b></li>`)
+        this.$zonesSummaryTarget.append(`<li><b>${$zoneInput.parent().text()}</b></li>`)
       }
+    });
+  }
+
+  /**
+   * Inserts client groups summary content
+   */
+  summarizeClientGroups() {
+    this.$groupsSummaryTarget.html('');
+
+    $.each(this.$groupChecks.find('input:checked'), ( i, groupInput ) => {
+      this.$groupsSummaryTarget.append(`<li><b>${$(groupInput).parent().text()}</b></li>`)
     });
   }
 }

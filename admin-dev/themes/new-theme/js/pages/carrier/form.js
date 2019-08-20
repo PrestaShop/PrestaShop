@@ -64,6 +64,8 @@ $(document).ready(() => {
     CarrierMap.rangesSummaryWrapper,
     CarrierMap.outrangedSelect,
     CarrierMap.zoneCheck,
-    CarrierMap.zonesSummaryTarget
+    CarrierMap.zonesSummaryTarget,
+    CarrierMap.groupChecks,
+    CarrierMap.groupsSummaryTarget
   );
 });
