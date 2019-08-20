@@ -18,6 +18,7 @@ services:
 
   prestashop.adapter.supplier.command_handler.abstract_delete_supplier_handler:
     class: PrestaShop\PrestaShop\Adapter\Supplier\CommandHandler\AbstractDeleteSupplierHandler
+    abstract: true
     arguments:
       - '@prestashop.adapter.supplier.supplier_order_validator'
       - '@prestashop.adapter.supplier.provider.supplier_address'
