@@ -44,11 +44,11 @@ $(document).ready(() => {
   new RangesContentSwitcher(
     CarrierMap.rangePriceLabel,
     CarrierMap.rangeWeightLabel,
-    CarrierMap.billing
+    CarrierMap.billingChoice
   );
   new FreeShippingToggleHandler(
-    CarrierMap.freeShipping,
-    CarrierMap.handlingCost,
+    CarrierMap.freeShippingChoice,
+    CarrierMap.handlingCostChoice,
     CarrierMap.rangesTable,
     CarrierMap.addRangeBtn,
     CarrierMap.rangeRow
@@ -56,8 +56,9 @@ $(document).ready(() => {
 
   new SummaryContentHandler(
     CarrierMap.formWrapper,
-    CarrierMap.freeShipping,
+    CarrierMap.freeShippingChoice,
     CarrierMap.transitTimeInput,
-    CarrierMap.billing
+    CarrierMap.billingChoice,
+    CarrierMap.taxRuleSelect
   );
 });

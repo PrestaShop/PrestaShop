@@ -26,19 +26,21 @@
 const $ = window.$;
 
 /**
- * Responsible for toggling/disabling form fields that are dependant from free-shipping field value
+ * Responsible for carrier summary content which depends from previous steps inputs
  */
 export default class SummaryContentHandler {
   constructor(
     formWrapper,
     freeShippingInput,
     transitTimeInput,
-    billing,
+    billingChoice,
+    taxRuleSelect
   ) {
     this.$formWrapper = $(formWrapper);
     this.freeShippingInput = freeShippingInput;
     this.transitTimeInput = transitTimeInput;
-    this.$billing = $(billing);
+    this.$billing = $(billingChoice);
+    this.$taxRuleSelect = $(taxRuleSelect);
     this._handle();
   }
 
@@ -95,15 +97,20 @@ export default class SummaryContentHandler {
       return;
     }
 
+    const selectedTaxRule = this.$taxRuleSelect.find(`option[value="${this.$taxRuleSelect.val()}"]`).text();
+
     // when billing by price is selected
     if (this.$billing.find('input:checked').val() === '2') {
-      //@todo: select input value instead of 'test'
-      const billingContent = billingCasePrice.data('carrier-shipping-cost').replace('__TAX_RULE__', 'test');
+      const billingContent = billingCasePrice.data('carrier-shipping-cost')
+        .replace('__TAX_RULE__', `<b>${selectedTaxRule}</b>`);
       billingCasePrice.html(billingContent);
       billingCasePrice.show();
       billingCaseWeight.hide();
+
+      // when nothing or billing by weight is selected
     } else {
-      const billingContent = billingCaseWeight.data('carrier-shipping-cost').replace('__TAX_RULE__', 'test');
+      const billingContent = billingCaseWeight.data('carrier-shipping-cost')
+        .replace('__TAX_RULE__', `<b>${selectedTaxRule}</b>`);
       billingCaseWeight.html(billingContent);
       billingCaseWeight.show();
       billingCasePrice.hide();
