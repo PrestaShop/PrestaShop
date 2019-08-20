@@ -110,12 +110,16 @@ abstract class AbstractFormCore implements FormInterface
             $this->smarty
         );
 
+        $context = Context::getContext();
+        $theme = $context->shop->theme->getName();
+
         $scope->assign($extraVariables);
         $scope->assign($this->getTemplateVariables());
 
         $tpl = $this->smarty->createTemplate(
             $this->getTemplate(),
-            $scope
+            $scope,
+            $theme
         );
 
         return $tpl->fetch();
