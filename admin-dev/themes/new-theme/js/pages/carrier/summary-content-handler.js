@@ -38,6 +38,8 @@ export default class SummaryContentHandler {
     rangeRow,
     rangesSummaryWrapper,
     outrangedSelect,
+    zoneCheck,
+    zonesSummaryTarget,
   ) {
     this.$formWrapper = $(formWrapper);
     this.freeShippingInput = freeShippingInput;
@@ -47,7 +49,11 @@ export default class SummaryContentHandler {
     this.$rangeRow = $(rangeRow);
     this.$rangesSummary = $(rangesSummaryWrapper);
     this.$outrangedSelect = $(outrangedSelect);
-    this._handle();
+    this.$zoneCheck = $(zoneCheck);
+    this.$zonesSummaryTarget = $(zonesSummaryTarget);
+    this.handle();
+
+    return {};
   }
 
   /**
@@ -55,12 +61,13 @@ export default class SummaryContentHandler {
    *
    * @private
    */
-  _handle() {
+  handle() {
     this.$formWrapper.bind('step-switched', () => {
       const isFreeShipping = $(`${this.freeShippingInput}:checked`).val() === '1';
       this.summarizeTransitTime(isFreeShipping);
       this.summarizeShippingCost(isFreeShipping);
       this.summarizeShippingRanges(isFreeShipping);
+      this.summarizeDeliveryZones();
     });
   }
 
@@ -185,5 +192,19 @@ export default class SummaryContentHandler {
     // insert and show content
     outrangedCase.html(outrangedCase.data('outranged-summary'));
     outrangedCase.show();
+  }
+
+  /**
+   * Inserts delivery zones summary content
+   */
+  summarizeDeliveryZones() {
+    this.$zonesSummaryTarget.html('');
+
+    $.each(this.$zoneCheck, ( i, zoneInput ) => {
+      const $zoneInput = $(zoneInput);
+      if ($zoneInput.is(':checked')) {
+        this.$zonesSummaryTarget.append(`<li><b>${$zoneInput.data('zone-name')}</b></li>`)
+      }
+    });
   }
 }

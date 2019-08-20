@@ -39,4 +39,6 @@ export default {
   taxRuleSelect: '.js-tax-rule',
   rangesSummaryWrapper: '#js-ranges-summary',
   outrangedSelect: '.js-outranged',
+  zoneCheck: '.js-zone',
+  zonesSummaryTarget: '#js-zones-summary',
 };

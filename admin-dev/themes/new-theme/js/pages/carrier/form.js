@@ -62,6 +62,8 @@ $(document).ready(() => {
     CarrierMap.taxRuleSelect,
     CarrierMap.rangeRow,
     CarrierMap.rangesSummaryWrapper,
-    CarrierMap.outrangedSelect
+    CarrierMap.outrangedSelect,
+    CarrierMap.zoneCheck,
+    CarrierMap.zonesSummaryTarget
   );
 });

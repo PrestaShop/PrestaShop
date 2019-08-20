@@ -88,7 +88,11 @@
             </span>
             </p>
 
-            <p>This carrier will be proposed for those delivery zones:</p>
+            <p>
+              {{ 'This carrier will be proposed for those delivery zones:'|trans({}, transDomain) }}
+              <ul id="js-zones-summary" class="delivery-zones-summary">
+              </ul>
+            </p>
             <p>And it will be proposed for those client groups:</p>
           </div>
         </div>

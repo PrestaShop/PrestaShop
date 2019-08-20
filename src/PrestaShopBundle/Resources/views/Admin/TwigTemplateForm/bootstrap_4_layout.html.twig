@@ -841,7 +841,10 @@
         </tr>
         {% for zone_id, zone in form.zones %}
           <tr data-zone-id="{{ zone_id }}">
-            <th>{{ form_widget(form.zones[zone_id]) }}</th>
+            <th>{{ form_widget(form.zones[zone_id], {'attr': {
+              'data-zone-name': zone.vars.label,
+              'class': 'js-zone'
+            }}) }}</th>
             {% if form.prices[0] is defined %}
               <td>
                 <div class="input-group">
