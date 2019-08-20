@@ -808,7 +808,7 @@
                       $
                     </span>
                 </div>
-                {{ form_widget(form.ranges[0].from) }}
+                {{ form_widget(form.ranges[0].from, {'attr': {'class': 'first-from'}}) }}
               </div>
             </td>
           {% endif %}
@@ -885,7 +885,7 @@
     </div>
 
 
-    <div id="js-range-from-template" class="input-group">
+    <div id="js-range-from-template" class="input-group js-range-from-group">
       <div class="js-range-label-case-weight input-group-prepend">
         <span class="input-group-text">
           kg
@@ -905,7 +905,7 @@
     </div>
 
 
-    <div id="js-range-to-template" class="input-group">
+    <div id="js-range-to-template" class="input-group js-range-to-group">
       <div class="js-range-label-case-weight input-group-prepend">
         <span class="input-group-text">
           kg

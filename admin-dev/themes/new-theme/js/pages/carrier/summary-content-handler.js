@@ -34,24 +34,41 @@ export default class SummaryContentHandler {
     freeShippingInput,
     transitTimeInput,
     billingChoice,
-    taxRuleSelect
+    taxRuleSelect,
+    rangeRow,
+    rangesSummaryWrapper,
+    outrangedSelect,
   ) {
     this.$formWrapper = $(formWrapper);
     this.freeShippingInput = freeShippingInput;
     this.transitTimeInput = transitTimeInput;
     this.$billing = $(billingChoice);
     this.$taxRuleSelect = $(taxRuleSelect);
+    this.$rangeRow = $(rangeRow);
+    this.$rangesSummary = $(rangesSummaryWrapper);
+    this.$outrangedSelect = $(outrangedSelect);
     this._handle();
   }
 
+  /**
+   * Initiates the handler
+   *
+   * @private
+   */
   _handle() {
     this.$formWrapper.bind('step-switched', () => {
       const isFreeShipping = $(`${this.freeShippingInput}:checked`).val() === '1';
       this.summarizeTransitTime(isFreeShipping);
       this.summarizeShippingCost(isFreeShipping);
+      this.summarizeShippingRanges(isFreeShipping);
     });
   }
 
+  /**
+   * Inserts free shipping and transit time summary content
+   *
+   * @param isFreeShipping
+   */
   summarizeTransitTime(isFreeShipping) {
     const contextLangId = this.$formWrapper.data('context-lang-id');
     const defaultLangId = this.$formWrapper.data('default-lang-id');
@@ -66,31 +83,36 @@ export default class SummaryContentHandler {
         .val();
     }
 
-    const transitCasePaid = this.$formWrapper.find('#js-paid-carrier-transit');
-    const transitCaseFree = this.$formWrapper.find('#js-free-carrier-transit');
+    // case when shipping is priced
+    let transitCase = this.$formWrapper.find('#js-priced-carrier-transit');
 
     if (isFreeShipping) {
-      const transitContent = transitCaseFree.data('carrier-transit').replace(
-        '__TRANSIT_TIME__', `<b>${transitValue}</b>`,
-      );
-      transitCaseFree.html(transitContent);
-      transitCaseFree.show();
-      transitCasePaid.hide();
-    } else {
-      const transitContent = transitCaseFree.data('carrier-transit').replace(
-        '__TRANSIT_TIME__', `<b>${transitValue}</b>`,
-      );
-      transitCasePaid.html(transitContent);
-      transitCasePaid.show();
-      transitCaseFree.hide();
+      transitCase.hide();
+      // case when shipping is free
+      transitCase = this.$formWrapper.find('#js-free-carrier-transit');
     }
+
+    // replace place holder with selected transit value
+    const transitContent = transitCase.data('carrier-transit').replace(
+      '__TRANSIT_TIME__', `<b>${transitValue}</b>`,
+    );
+
+    // show content
+    transitCase.html(transitContent);
+    transitCase.show();
   }
 
+  /**
+   * Inserts shipping cost and tax rule summary content
+   *
+   * @param isFreeShipping
+   */
   summarizeShippingCost(isFreeShipping) {
     const billingCasePrice = this.$formWrapper.find('#js-carrier-shipping-cost-price');
     const billingCaseWeight = this.$formWrapper.find('#js-carrier-shipping-cost-weight');
 
     if (isFreeShipping) {
+      // hide billing content when free shipping is selected
       billingCasePrice.hide();
       billingCaseWeight.hide();
 
@@ -99,21 +121,69 @@ export default class SummaryContentHandler {
 
     const selectedTaxRule = this.$taxRuleSelect.find(`option[value="${this.$taxRuleSelect.val()}"]`).text();
 
-    // when billing by price is selected
-    if (this.$billing.find('input:checked').val() === '2') {
-      const billingContent = billingCasePrice.data('carrier-shipping-cost')
-        .replace('__TAX_RULE__', `<b>${selectedTaxRule}</b>`);
-      billingCasePrice.html(billingContent);
-      billingCasePrice.show();
-      billingCaseWeight.hide();
+    // default case billing by weight
+    let billingCase = this.$formWrapper.find('#js-carrier-shipping-cost-weight');
 
-      // when nothing or billing by weight is selected
-    } else {
-      const billingContent = billingCaseWeight.data('carrier-shipping-cost')
-        .replace('__TAX_RULE__', `<b>${selectedTaxRule}</b>`);
-      billingCaseWeight.html(billingContent);
-      billingCaseWeight.show();
-      billingCasePrice.hide();
+    // case when billing by price is selected
+    if (this.$billing.find('input:checked').val() === '2') {
+      billingCase.hide();
+      billingCase = this.$formWrapper.find('#js-carrier-shipping-cost-price');
     }
+
+    // replace placeholder with selected tax rule in content
+    const billingContent = billingCase.data('carrier-shipping-cost')
+      .replace('__TAX_RULE__', `<b>${selectedTaxRule}</b>`);
+
+    // show the content
+    billingCase.html(billingContent);
+    billingCase.show();
+  }
+
+  /**
+   * Inserts shipping ranges and out of range behavior summary content
+   *
+   * @param isFreeShipping
+   */
+  summarizeShippingRanges(isFreeShipping) {
+    // whole ranges summary hidden by default
+    this.$rangesSummary.hide();
+
+    // show ranges summary if shipping is priced
+    if (!isFreeShipping) {
+      this.$rangesSummary.show();
+    }
+
+    const rangeFrom = $(this.$rangeRow).find('td:first-of-type').first().find('input').val();
+    const rangeTo = $(this.$rangeRow).find('td:last-of-type').last().find('input').val();
+
+    // range measure depends on selected billing type (price or weight ranges)
+    let measure = '$';
+    if (this.$billing.find('input:checked').val() === '2') {
+      measure = 'kg';
+    }
+
+    const $rangeSummary = this.$rangesSummary.find('#js-range');
+
+    // replace placeholders with range values
+    const rangeText = $rangeSummary.data('range-summary')
+      .replace('%1$s', `<b>${rangeFrom} ${measure}</b>`)
+      .replace('%2$s', `<b>${rangeTo} ${measure}</b>`);
+
+    // insert and show content
+    $rangeSummary.html(rangeText);
+    $rangeSummary.show();
+
+    // default case when out of range behavior is "apply highest range"
+    let outrangedCase = this.$rangesSummary.find('#js-outranged-highest');
+
+    if (this.$outrangedSelect.val() === '1') {
+      outrangedCase.hide();
+      // case when out of range behavior "disable carrier" is selected
+      outrangedCase = this.$rangesSummary.find('#js-outranged-disable');
+    }
+
+    // insert and show content
+    outrangedCase.html(outrangedCase.data('outranged-summary'));
+    outrangedCase.show();
   }
 }

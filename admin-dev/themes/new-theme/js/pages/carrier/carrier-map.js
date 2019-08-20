@@ -37,4 +37,6 @@ export default {
   appendButtons: '.js-append-buttons',
   transitTimeInput: 'input[name="carrier[step_general][transit_time]',
   taxRuleSelect: '.js-tax-rule',
+  rangesSummaryWrapper: '#js-ranges-summary',
+  outrangedSelect: '.js-outranged',
 };

@@ -48,7 +48,7 @@
           'label': 'Tax'|trans({}, 'Admin.Global'),
         }) }}
 
-        {{ ps.form_group_row(carrierForm.step_shipping.out_of_range, {}, {
+        {{ ps.form_group_row(carrierForm.step_shipping.out_of_range, {'attr': {'class': 'js-outranged'}}, {
           'label': 'Out of range behavior'|trans({}, 'Admin.Global'),
           'help': "Out-of-range behavior occurs when no defined range matches the customer's cart (e.g. when the weight of the cart is greater than the highest weight limit defined by the weight ranges)."
           |trans({}, 'Admin.Shipping.Help')

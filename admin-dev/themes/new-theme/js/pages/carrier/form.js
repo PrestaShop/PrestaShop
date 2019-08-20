@@ -59,6 +59,9 @@ $(document).ready(() => {
     CarrierMap.freeShippingChoice,
     CarrierMap.transitTimeInput,
     CarrierMap.billingChoice,
-    CarrierMap.taxRuleSelect
+    CarrierMap.taxRuleSelect,
+    CarrierMap.rangeRow,
+    CarrierMap.rangesSummaryWrapper,
+    CarrierMap.outrangedSelect
   );
 });
