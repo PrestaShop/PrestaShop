@@ -27,14 +27,11 @@ env:
   matrix:
     - PRESTASHOP_TEST_TYPE=unit
     - PRESTASHOP_TEST_TYPE=integration
-    - PRESTASHOP_TEST_TYPE=e2e
 
 matrix:
   include:
     - php: 7.2
       env: EXTRA_DEPS=phpHigh  PRESTASHOP_TEST_TYPE=unit
-    - php: 7.2
-      env: PRESTASHOP_TEST_TYPE=e2e EXTRA_TESTS=functional
     - stage: deploy
       php: 7.2
       before_install: skip
@@ -55,9 +52,6 @@ matrix:
         local-dir: "/tmp/ps-release"
         on:
           all_branches: true
-  exclude:
-    - php: 7.2 # Replaced with additional tests
-      env: PRESTASHOP_TEST_TYPE=e2e
   allow_failures:
     - php: 7.2
       env: EXTRA_DEPS=phpHigh  PRESTASHOP_TEST_TYPE=unit
@@ -93,10 +87,6 @@ script:
 
   - if [ "$PRESTASHOP_TEST_TYPE" = "integration" ]; then
         bash tests/check_integration.sh;
-    fi
-
-  - if [ $PRESTASHOP_TEST_TYPE = "e2e" ]; then
-        bash tests/check_e2e.sh;
     fi
 
 after_script:
