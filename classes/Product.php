@@ -5194,9 +5194,9 @@ class ProductCore extends ObjectModel
                 $product_update['customizationQuantityReturned'] = $customization_quantity_returned;
 
                 if ($customization_quantity) {
-                    $product_update['total_wt'] = $price_wt * ($product_quantity - $customization_quantity);
+                    $product_update['total_wt'] = $price_wt * $product_quantity;
                     $product_update['total_customization_wt'] = $price_wt * $customization_quantity;
-                    $product_update['total'] = $price * ($product_quantity - $customization_quantity);
+                    $product_update['total'] = $price * $product_quantity;
                     $product_update['total_customization'] = $price * $customization_quantity;
                 }
             }
