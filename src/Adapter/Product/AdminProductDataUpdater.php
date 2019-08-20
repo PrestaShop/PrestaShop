@@ -82,6 +82,9 @@ class AdminProductDataUpdater implements ProductInterface
             }
             $product->active = ($activate ? 1 : 0);
             $product->update();
+            if (in_array($product->visibility, array('both', 'search')) && Configuration::get('PS_SEARCH_INDEXATION')) {
+                Search::indexation(false, $product->id);
+            }
             $this->hookDispatcher->dispatchWithParameters('actionProductActivation', array('id_product' => (int) $product->id, 'product' => $product, 'activated' => $activate));
         }
 
