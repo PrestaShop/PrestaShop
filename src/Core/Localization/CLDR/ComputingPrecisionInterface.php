@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 2007-2019 PrestaShop and Contributors
  *
@@ -27,22 +26,19 @@
 
 namespace PrestaShop\PrestaShop\Core\Localization\CLDR;
 
-use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecisionInterface;
-
 /**
- * {@inheritdoc}
+ *  Will calculate the computing precision (fraction digits number used for computations) that should
+ * be used for a given display precision.
  */
-final class ComputingPrecision implements  ComputingPrecisionInterface
+interface ComputingPrecisionInterface
 {
-    const MULTIPLIER = 3;
-
     /**
-     * {@inheritdoc}
+     * Number of decimal digits to take into account when computing values
+     * for a given display precision
+     *
+     * @var int
+     *
+     * @return int
      */
-    public function getPrecision(int $displayPrecision)
-    {
-        $computingPrecision = $displayPrecision * self::MULTIPLIER;
-
-        return ($computingPrecision < 2) ? 2 : $computingPrecision;
-    }
+    public function getPrecision(int $displayPrecision);
 }
