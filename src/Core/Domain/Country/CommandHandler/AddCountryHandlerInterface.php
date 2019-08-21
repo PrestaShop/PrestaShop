@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Country\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Country\Command\AddCountryCommand;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 
 /**
  * Defines contract for add country handler
@@ -35,6 +36,8 @@ interface AddCountryHandlerInterface
 {
     /**
      * @param AddCountryCommand $command
+     *
+     * @return CountryId
      */
-    public function handle(AddCountryCommand $command);
+    public function handle(AddCountryCommand $command): CountryId;
 }

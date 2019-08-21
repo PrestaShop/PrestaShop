@@ -34,6 +34,7 @@
 
   <div class="card-block row">
     <div class="card-text">
+
       {{ form_errors(countryForm) }}
 
       <div class="form-group row">
@@ -54,9 +55,9 @@
         {{ ps.label_with_help(
           'ISO code'|trans({}, 'Admin.International.Feature'),
           'Two -- or three -- letter ISO code (e.g. "us" for United States).'|trans({}, 'Admin.International.Help'),
-        '',
-        '',
-        true
+          '',
+          '',
+          true
         ) }}
         <div class="col-sm">
           {{ form_widget(countryForm.iso_code) }}
@@ -68,9 +69,9 @@
         {{ ps.label_with_help(
           'Call prefix'|trans({}, 'Admin.International.Feature'),
           'International call prefix, (e.g. 1 for United States).'|trans({}, 'Admin.International.Help'),
-        '',
-        '',
-        true
+          '',
+          '',
+          true
         ) }}
         <div class="col-sm">
           {{ form_widget(countryForm.call_prefix) }}
@@ -86,9 +87,9 @@
         {{ ps.label_with_help(
           'Zone'|trans({}, 'Admin.Global'),
           ('Geographical region.'|trans({}, 'Admin.International.Help')),
-        '',
-        '',
-        true
+          '',
+          '',
+          true
         ) }}
         <div class="col-sm">
           {{ form_widget(countryForm.zone) }}
@@ -136,8 +137,8 @@
         {{ ps.label_with_help(
           'Active'|trans({}, 'Admin.Global'),
           'Display this country to your customers (the selected country will always be displayed in the Back Office).'|trans({}, 'Admin.International.Help'),
-        '',
-        ''
+          '',
+          ''
         ) }}
         <div class="col-sm">
           {{ form_widget(countryForm.is_enabled) }}
@@ -163,8 +164,8 @@
         }) }}
       {% endif %}
 
+      {{ form_rest(countryForm) }}
     </div>
-    {{ form_rest(countryForm) }}
   </div>
 
   <div class="card-footer">

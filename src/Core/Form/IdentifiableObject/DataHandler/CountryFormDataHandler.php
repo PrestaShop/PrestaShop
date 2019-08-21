@@ -98,7 +98,10 @@ final class CountryFormDataHandler implements FormDataHandlerInterface
             $addCountryCommand->setShopAssociation($data['shop_association']);
         }
 
-        $this->commandBus->handle($addCountryCommand);
+        /** @var CountryId $countryId */
+        $countryId = $this->commandBus->handle($addCountryCommand);
+
+        return $countryId->getValue();
     }
 
     /**
