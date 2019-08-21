@@ -79,7 +79,7 @@ final class CurrencyQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
 
         $qb
-            ->select('c.`id_currency`, c.`iso_code`, cs.`conversion_rate`, c.`active`, c.`edited`, c.`custom`, cl.`name`, cl.`symbol`')
+            ->select('c.`id_currency`, c.`iso_code`, cs.`conversion_rate`, c.`active`, c.`edited`, c.`unofficial`, cl.`name`, cl.`symbol`')
             ->groupBy('c.`id_currency`')
         ;
 

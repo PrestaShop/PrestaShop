@@ -27,10 +27,10 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Currency\Exception;
 
 /**
- * Class InvalidCustomCurrencyException is thrown when an invalid currency
+ * Class InvalidUnofficialCurrencyException is thrown when an invalid currency
  * is being added (for example matching a real ISO code or numeric ISO code)
  */
-class InvalidCustomCurrencyException extends CurrencyException
+class InvalidUnofficialCurrencyException extends CurrencyException
 {
     const INVALID_ISO_CODE = 1;
     const INVALID_NUMERIC_ISO_CODE = 2;

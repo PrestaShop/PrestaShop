@@ -30,7 +30,7 @@ use Currency;
 use Language;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\CurrencyCommandInterface;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\InvalidCustomCurrencyException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\InvalidUnofficialCurrencyException;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
 
 /**
@@ -74,11 +74,11 @@ abstract class AbstractCurrencyHandler extends AbstractObjectModelHandler
     /**
      * @param CurrencyCommandInterface $command
      *
-     * @throws InvalidCustomCurrencyException
+     * @throws InvalidUnofficialCurrencyException
      */
-    protected function assertCustomCurrencyDoesNotMatchAnyIsoCode(CurrencyCommandInterface $command)
+    protected function assertUnofficialCurrencyDoesNotMatchAnyIsoCode(CurrencyCommandInterface $command)
     {
-        if (!$command->isCustom() || null === $command->getIsoCode()) {
+        if (!$command->isUnofficial() || null === $command->getIsoCode()) {
             return;
         }
 
@@ -89,12 +89,12 @@ abstract class AbstractCurrencyHandler extends AbstractObjectModelHandler
             $cldrLocale = $this->localeRepoCLDR->getLocale($languageData['locale']);
             $cldrCurrency = $cldrLocale->getCurrency($isoCode);
             if (null !== $cldrCurrency) {
-                throw new InvalidCustomCurrencyException(
+                throw new InvalidUnofficialCurrencyException(
                     sprintf(
-                        'Custom currency with iso code "%s" is invalid because it matches a real currency',
+                        'Unofficial currency with iso code "%s" is invalid because it matches a real currency',
                         $isoCode
                     ),
-                    InvalidCustomCurrencyException::INVALID_ISO_CODE
+                    InvalidUnofficialCurrencyException::INVALID_ISO_CODE
                 );
             }
         }
@@ -103,11 +103,11 @@ abstract class AbstractCurrencyHandler extends AbstractObjectModelHandler
     /**
      * @param CurrencyCommandInterface $command
      *
-     * @throws InvalidCustomCurrencyException
+     * @throws InvalidUnofficialCurrencyException
      */
-    protected function assertCustomCurrencyDoesNotMatchAnyNumericIsoCode(CurrencyCommandInterface $command)
+    protected function assertUnofficialCurrencyDoesNotMatchAnyNumericIsoCode(CurrencyCommandInterface $command)
     {
-        if (!$command->isCustom() || null === $command->getIsoCode()) {
+        if (!$command->isUnofficial() || null === $command->getIsoCode()) {
             return;
         }
 
@@ -118,12 +118,12 @@ abstract class AbstractCurrencyHandler extends AbstractObjectModelHandler
             $cldrLocale = $this->localeRepoCLDR->getLocale($languageData['locale']);
             foreach ($cldrLocale->getAllCurrencies() as $cldrCurrency) {
                 if ($numericIsoCode == $cldrCurrency->getNumericIsoCode()) {
-                    throw new InvalidCustomCurrencyException(
+                    throw new InvalidUnofficialCurrencyException(
                         sprintf(
-                            'Custom currency with numeric iso code "%s" is invalid because it matches a real currency',
+                            'Unofficial currency with numeric iso code "%s" is invalid because it matches a real currency',
                             $numericIsoCode
                         ),
-                        InvalidCustomCurrencyException::INVALID_NUMERIC_ISO_CODE
+                        InvalidUnofficialCurrencyException::INVALID_NUMERIC_ISO_CODE
                     );
                 }
             }

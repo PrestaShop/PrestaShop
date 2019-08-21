@@ -69,7 +69,7 @@ class AddCurrencyCommand implements CurrencyCommandInterface
     /**
      * @var bool
      */
-    private $isCustom;
+    private $isUnofficial;
 
     /**
      * @var int[]
@@ -83,7 +83,7 @@ class AddCurrencyCommand implements CurrencyCommandInterface
      * @param string[] $localizedNames
      * @param string[] $localizedSymbols
      * @param bool $isEnabled
-     * @param bool $isCustom
+     * @param bool $isUnofficial
      *
      * @throws CurrencyConstraintException
      */
@@ -94,13 +94,13 @@ class AddCurrencyCommand implements CurrencyCommandInterface
         $localizedNames,
         $localizedSymbols,
         $isEnabled,
-        $isCustom
+        $isUnofficial
     ) {
         $this->isoCode = new AlphaIsoCode($isoCode);
         $this->numericIsoCode = new NumericIsoCode($numericIsoCode);
         $this->exchangeRate = new ExchangeRate($exchangeRate);
         $this->isEnabled = $isEnabled;
-        $this->isCustom = $isCustom;
+        $this->isUnofficial = $isUnofficial;
         $this
             ->setLocalizedNames($localizedNames)
             ->setLocalizedSymbols($localizedSymbols)
@@ -200,9 +200,9 @@ class AddCurrencyCommand implements CurrencyCommandInterface
     /**
      * @return bool
      */
-    public function isCustom()
+    public function isUnofficial()
     {
-        return $this->isCustom;
+        return $this->isUnofficial;
     }
 
     /**

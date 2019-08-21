@@ -376,20 +376,20 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Then /^currency "(.*)" should have custom (true|false)$/
+     * @Then /^currency "(.*)" should have unofficial (true|false)$/
      */
-    public function assertCurrencyCustom($reference, $custom)
+    public function assertCurrencyUnofficial($reference, $unofficial)
     {
         /** @var Currency $currency */
         $currency = SharedStorage::getStorage()->get($reference);
-        $expectedCustom = $custom === 'true';
+        $expectedUnofficial = $unofficial === 'true';
 
-        if ($currency->custom != $expectedCustom) {
+        if ($currency->unofficial != $expectedUnofficial) {
             throw new RuntimeException(sprintf(
-                'Currency "%s" has custom "%s", but "%s" was expected.',
+                'Currency "%s" has unofficial "%s", but "%s" was expected.',
                 $reference,
-                $currency->custom,
-                $expectedCustom
+                $currency->unofficial,
+                $expectedUnofficial
             ));
         }
     }
