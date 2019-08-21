@@ -401,12 +401,12 @@ class CurrencyCore extends ObjectModel
      *
      * @return array Currency data from database
      */
-    public static function findAll($active = true, $groupBy = false)
+    public static function findAll($active = true, $groupBy = false, $filterShop = true)
     {
         $currencies = Db::getInstance()->executeS('
             SELECT *
             FROM `' . _DB_PREFIX_ . 'currency` c
-            ' . Shop::addSqlAssociation('currency', 'c') . '
+            ' . ($filterShop ? Shop::addSqlAssociation('currency', 'c') : '') . '
                 WHERE `deleted` = 0' .
                 ($active ? ' AND c.`active` = 1' : '') .
                 ($groupBy ? ' GROUP BY c.`id_currency`' : '') .

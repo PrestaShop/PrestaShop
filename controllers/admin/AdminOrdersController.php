@@ -1705,11 +1705,6 @@ class AdminOrdersControllerCore extends AdminController
         if (!Validate::isLoadedObject($order)) {
             $this->errors[] = $this->trans('The order cannot be found within your database.', array(), 'Admin.Orderscustomers.Notification');
         }
-        if (!in_array($order->id_shop, Shop::getContextListShopID())) {
-            $this->errors[] = $this->trans('The order is not accessible in the current shop context.', array(), 'Admin.Orderscustomers.Notification');
-
-            return '';
-        }
 
         $customer = new Customer($order->id_customer);
         $carrier = new Carrier($order->id_carrier);
