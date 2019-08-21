@@ -18,7 +18,9 @@ docker-compose -f docker-compose.nightly.yml -f docker-compose.tests.yml exec -e
 ```
 ### Upgrade test
 For this specific test you need to specify which Prestashop Version you need to install.
+
 For that you can Add PS_VERSION_TO_INSTALL Env Variable and use docker-compose.ps-git.yml to install prestashop.
+
 To test an upgrade from 1.7.5.2 to last version
 
 ```bash
