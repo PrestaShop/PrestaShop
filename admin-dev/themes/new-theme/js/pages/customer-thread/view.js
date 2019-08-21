@@ -34,7 +34,7 @@ $(() => {
 
     const employeeId = $(event.currentTarget).val();
 
-    if (parseInt(employeeId) === 0) {
+    if (parseInt(employeeId, 10) === 0) {
       $someElseEmailFormGroup.removeClass('d-none');
     } else {
       $someElseEmailFormGroup.addClass('d-none');
