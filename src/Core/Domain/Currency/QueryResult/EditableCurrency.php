@@ -72,7 +72,7 @@ class EditableCurrency
     /**
      * @var bool
      */
-    private $isCustom;
+    private $isUnofficial;
 
     /**
      * @var int[]
@@ -87,7 +87,7 @@ class EditableCurrency
      * @param array $symbols
      * @param float $exchangeRate
      * @param bool $isEnabled
-     * @param bool $isCustom
+     * @param bool $isUnofficial
      * @param int[] $associatedShopIds
      *
      * @throws CurrencyException
@@ -100,7 +100,7 @@ class EditableCurrency
         $symbols,
         $exchangeRate,
         $isEnabled,
-        $isCustom,
+        $isUnofficial,
         array $associatedShopIds
     ) {
         $this->currencyId = new CurrencyId($currencyId);
@@ -110,7 +110,7 @@ class EditableCurrency
         $this->symbols = $symbols;
         $this->exchangeRate = $exchangeRate;
         $this->isEnabled = $isEnabled;
-        $this->isCustom = $isCustom;
+        $this->isUnofficial = $isUnofficial;
         $this->associatedShopIds = $associatedShopIds;
     }
 
@@ -173,9 +173,9 @@ class EditableCurrency
     /**
      * @return bool
      */
-    public function isCustom()
+    public function isUnofficial()
     {
-        return $this->isCustom;
+        return $this->isUnofficial;
     }
 
     /**

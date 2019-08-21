@@ -41,7 +41,7 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\AutomateExchangeRatesUpdateException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\ImmutableCurrencyFieldException;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\InvalidCustomCurrencyException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\InvalidUnofficialCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Query\GetCurrencyExchangeRate;
 use PrestaShop\PrestaShop\Core\Domain\Currency\QueryResult\ExchangeRate;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
@@ -271,7 +271,7 @@ class CurrencyController extends FrameworkBundleAdminController
             $logger = $this->container->get('logger');
             $logger->error(sprintf('Unable to find the exchange rate: %s', $e->getMessage()));
 
-            //Unable to find the exchange rate, either the currency doesn't exist (custom)
+            //Unable to find the exchange rate, either the currency doesn't exist (unofficial)
             //or the currency feed could not be fetched, use the default rate as a fallback
             $cldrCurrency['exchange_rate'] = \PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\ExchangeRate::DEFAULT_RATE;
         }
@@ -501,23 +501,23 @@ class CurrencyController extends FrameworkBundleAdminController
                 'You cannot disable the default currency',
                 'Admin.International.Notification'
             ),
-            InvalidCustomCurrencyException::class => [
-                InvalidCustomCurrencyException::INVALID_ISO_CODE => $this->trans(
-                    'You can not create a custom currency which ISO code matches a real one',
+            InvalidUnofficialCurrencyException::class => [
+                InvalidUnofficialCurrencyException::INVALID_ISO_CODE => $this->trans(
+                    'You can not create an unofficial currency which ISO code matches a real one',
                     'Admin.International.Notification'
                 ),
-                InvalidCustomCurrencyException::INVALID_NUMERIC_ISO_CODE => $this->trans(
-                    'You can not create a custom currency which numeric ISO code matches a real one',
+                InvalidUnofficialCurrencyException::INVALID_NUMERIC_ISO_CODE => $this->trans(
+                    'You can not create an unofficial currency which numeric ISO code matches a real one',
                     'Admin.International.Notification'
                 ),
             ],
             ImmutableCurrencyFieldException::class => [
-                ImmutableCurrencyFieldException::IMMUTABLE_CUSTOM => $this->trans(
-                    'You can not change a custom currency into a real one',
+                ImmutableCurrencyFieldException::IMMUTABLE_UNOFFICIAL => $this->trans(
+                    'You can not change an unofficial currency into a real one',
                     'Admin.International.Notification'
                 ),
                 ImmutableCurrencyFieldException::IMMUTABLE_REAL => $this->trans(
-                    'You can not change a real currency into a custom one',
+                    'You can not change a real currency into an unofficial one',
                     'Admin.International.Notification'
                 ),
                 ImmutableCurrencyFieldException::IMMUTABLE_ISO_CODE => $this->trans(

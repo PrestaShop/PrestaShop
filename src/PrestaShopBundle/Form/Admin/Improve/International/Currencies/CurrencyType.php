@@ -83,7 +83,7 @@ class CurrencyType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $newCurrency = !isset($options['data']['id']);
-        $customCurrency = isset($options['data']['custom']) ? (bool) $options['data']['custom'] : false;
+        $unofficialCurrency = isset($options['data']['unofficial']) ? (bool) $options['data']['unofficial'] : false;
         if ($newCurrency) {
             $builder
                 ->add('selected_iso_code', ChoiceType::class, [
@@ -92,9 +92,9 @@ class CurrencyType extends TranslatorAwareType
                     'required' => false,
                     'placeholder' => '--',
                 ])
-                ->add('custom', CheckboxType::class, [
+                ->add('unofficial', CheckboxType::class, [
                     'required' => false,
-                    'label' => $this->trans('Create custom currency', 'Admin.International.Feature'),
+                    'label' => $this->trans('Create new currency', 'Admin.International.Feature'),
                     'attr' => [
                         'material_design' => true,
                     ],
@@ -102,13 +102,13 @@ class CurrencyType extends TranslatorAwareType
             ;
         } else {
             $builder
-                ->add('custom', HiddenType::class, [
+                ->add('unofficial', HiddenType::class, [
                     'required' => false,
                 ])
             ;
         }
         $isoCodeAttrs = [];
-        if (!$newCurrency && !$customCurrency) {
+        if (!$newCurrency && !$unofficialCurrency) {
             $isoCodeAttrs['readonly'] = 1;
         }
 

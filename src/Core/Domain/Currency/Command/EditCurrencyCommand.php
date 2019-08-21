@@ -76,7 +76,7 @@ class EditCurrencyCommand implements CurrencyCommandInterface
     /**
      * @var bool
      */
-    private $isCustom;
+    private $isUnofficial;
 
     /**
      * @var int[]
@@ -248,19 +248,19 @@ class EditCurrencyCommand implements CurrencyCommandInterface
     /**
      * @return bool
      */
-    public function isCustom()
+    public function isUnofficial()
     {
-        return $this->isCustom;
+        return $this->isUnofficial;
     }
 
     /**
-     * @param bool $isCustom
+     * @param bool $isUnofficial
      *
      * @return self
      */
-    public function setIsCustom($isCustom)
+    public function setIsUnofficial($isUnofficial)
     {
-        $this->isCustom = $isCustom;
+        $this->isUnofficial = $isUnofficial;
 
         return $this;
     }
