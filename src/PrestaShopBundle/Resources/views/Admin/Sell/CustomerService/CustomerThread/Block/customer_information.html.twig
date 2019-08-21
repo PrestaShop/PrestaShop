@@ -71,7 +71,7 @@
         '[/2]': '</span>'
       }, 'Admin.Orderscustomers.Feature')|raw }}
     {% else %}
-      {{ 'No orders validated for the moment'|trans({}, 'Admin.Orderscustomers.Feature') }}
+      {{ 'No order validated for the moment. By default, an order is considered validated when its payment is accepted.'|trans({}, 'Admin.Orderscustomers.Feature') }}
     {% endif %}
 
     <p class="text-muted">

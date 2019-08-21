@@ -137,7 +137,7 @@ final class ForwardCustomerThreadHandler implements ForwardCustomerThreadHandler
                 $this->translator->trans('Message forwarded to', [], 'Admin.Catalog.Feature'),
                 $employee->firstname,
                 $employee->lastname,
-                $this->translator->trans('Comment:'),
+                $this->translator->trans('Comment:', [], 'Admin.Catalog.Feature'),
                 $command->getComment()
             );
 
@@ -191,7 +191,7 @@ final class ForwardCustomerThreadHandler implements ForwardCustomerThreadHandler
                 '%s %s \\n %s %s',
                 $this->translator->trans('Message forwarded to', [], 'Admin.Catalog.Feature'),
                 $command->getEmail()->getValue(),
-                $this->translator->trans('Comment:'),
+                $this->translator->trans('Comment:', [], 'Admin.Catalog.Feature'),
                 $command->getComment()
             );
             $customerMessage->add();
