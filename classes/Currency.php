@@ -87,11 +87,11 @@ class CurrencyCore extends ObjectModel
     public $unofficial;
 
     /**
-     * Is this currency edited ?
+     * Is this currency modified ?
      *
-     * @var int|bool edited
+     * @var int|bool modified
      */
-    public $edited;
+    public $modified;
 
     /**
      * Is this currency active ?
@@ -167,7 +167,7 @@ class CurrencyCore extends ObjectModel
             'deleted' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'active' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'unofficial' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'edited' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+            'modified' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 
             /* Lang fields */
             'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
@@ -895,7 +895,7 @@ class CurrencyCore extends ObjectModel
      */
     public function refreshLocalizedCurrencyData(array $languages, LocaleRepository $localeRepoCLDR)
     {
-        $this->edited = false;
+        $this->modified = false;
         $originalNames = $this->names;
         $originalSymbols = $this->symbols;
         $symbolsByLang = $namesByLang = [];
@@ -915,23 +915,23 @@ class CurrencyCore extends ObjectModel
                 // The currency may not be declared in the locale, eg with unofficial iso code
                 $namesByLang[$language->id] = $originalNames[$language->id];
                 $symbolsByLang[$language->id] = $originalSymbols[$language->id];
-                $this->edited = true;
+                $this->modified = true;
                 continue;
             }
 
-            // Symbol is localized, we check if it was manually edited
+            // Symbol is localized, we check if it was manually modified
             $symbol = (string) $cldrCurrency->getSymbol() ?: $this->iso_code;
             if (!empty($symbol) && !empty($originalSymbols[$language->id]) && $symbol != $originalSymbols[$language->id]) {
                 $symbol = $originalSymbols[$language->id];
-                $this->edited = true;
+                $this->modified = true;
             }
             $symbolsByLang[$language->id] = $symbol;
 
-            // Name is localized, we check if it was manually edited
+            // Name is localized, we check if it was manually modified
             $name = $cldrCurrency->getDisplayName();
             if (!empty($originalNames[$language->id]) && $name != $originalNames[$language->id]) {
                 $name = $originalNames[$language->id];
-                $this->edited = true;
+                $this->modified = true;
             }
             $namesByLang[$language->id] = $name;
         }

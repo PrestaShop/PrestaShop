@@ -97,10 +97,10 @@ final class CurrencyGridDataFactory implements GridDataFactoryInterface
                     ' (%s)',
                     $this->translator->trans('Unofficial', [], 'Admin.International.Feature')
                 );
-            } elseif (isset($result[$key]['edited']) && $result[$key]['edited']) {
+            } elseif (isset($result[$key]['modified']) && $result[$key]['modified']) {
                 $result[$key]['currency'] .= sprintf(
                     ' (%s)',
-                    $this->translator->trans('Edited', [], 'Admin.International.Feature')
+                    $this->translator->trans('Modified', [], 'Admin.International.Feature')
                 );
             }
             $result[$key]['conversion_rate'] = (float) $result[$key]['conversion_rate'];
