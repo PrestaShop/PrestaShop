@@ -30,9 +30,7 @@ use PrestaShop\PrestaShop\Adapter\Attachment\AbstractAttachmentHandler;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\BulkDeleteAttachmentsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\CommandHandler\BulkDeleteAttachmentsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentException;
-use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\BulkDeleteAttachmentsException;
-use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\DeleteAttachmentException;
 
 /**
  * Bulk delete attachments handler
@@ -61,7 +59,7 @@ final class BulkDeleteAttachmentsHandler extends AbstractAttachmentHandler imple
         }
 
         if (!empty($errors)) {
-            throw new BulkDeleteAttachmentsException(implode(", ", $errors));
+            throw new BulkDeleteAttachmentsException(implode(', ', $errors));
         }
     }
 }
