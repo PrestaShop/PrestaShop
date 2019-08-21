@@ -64,7 +64,7 @@ class NumericIsoCode
      */
     private function assertIsValidNumericIsoCode($numericIsoCode)
     {
-        if (!is_int($numericIsoCode) || (int) $numericIsoCode < 0) {
+        if (!is_int($numericIsoCode) || (int) $numericIsoCode <= 0) {
             throw new CurrencyConstraintException(
                 sprintf(
                     'Given numeric iso code "%s" is not valid. It must be a strictly positive integer',
