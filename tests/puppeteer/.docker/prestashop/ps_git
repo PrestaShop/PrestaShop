@@ -26,4 +26,4 @@ COPY ["./.docker/prestashop/wait-for-it.sh", "./.docker/prestashop/docker_run.sh
 WORKDIR /var/www/html
 
 RUN usermod -u 1000 www-data
-CMD /tmp/wait-for-it.sh --timeout=60 --strict db:3306 -- /tmp/docker_run.sh
+CMD /tmp/wait-for-it.sh --timeout=60 --strict db:3306 -- /tmp/docker_run_git.sh

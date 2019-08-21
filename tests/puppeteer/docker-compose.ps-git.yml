@@ -16,7 +16,7 @@ services:
       PS_FOLDER_INSTALL: install-dev
     depends_on:
       - "db"
-    command: ["/tmp/wait-for-it.sh", "--timeout=60", "--strict", "db:3306", "--", "/tmp/docker_run.sh"]
+    command: ["/tmp/wait-for-it.sh", "--timeout=60", "--strict", "db:3306", "--", "/tmp/docker_run_git.sh"]
     volumes:
       - .docker:/tmp/docker
     networks:
