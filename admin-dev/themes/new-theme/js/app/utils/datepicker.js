@@ -86,20 +86,6 @@ const init = function initDatePickers() {
       },
     );
   });
-  // $datePicker.datetimepicker(
-  //   {
-  //     locale: global.full_language_code,
-  //     format: $datePicker.data('format') ? $datePicker.data('format') : 'YYYY-MM-DD',
-  //   },
-  // ).on(
-  //   'dp.show',
-  //   replaceDatePicker,
-  // ).on(
-  //   'dp.hide',
-  //   () => {
-  //     $(window).off('resize', replaceDatePicker);
-  //   },
-  // );
 };
 
 export default init;
