@@ -74,6 +74,7 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
         if (!$currencyId) {
             $currency = new Currency();
             $currency->name = $currencyIsoCode;
+            $currency->precision = 2;
             $currency->iso_code = $currencyIsoCode;
             $currency->active = 1;
             $currency->conversion_rate = $changeRate;
@@ -81,6 +82,7 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
         } else {
             $currency = new Currency($currencyId);
             $currency->name = $currencyIsoCode;
+            $currency->precision = 2;
             $currency->active = 1;
             $currency->conversion_rate = $changeRate;
             $currency->save();
