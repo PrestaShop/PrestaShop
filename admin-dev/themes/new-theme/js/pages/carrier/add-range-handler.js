@@ -29,60 +29,100 @@ const $ = window.$;
  * Responsible for adding and removing range columns
  */
 export default class AddRangeHandler {
-  constructor(rangesTable, templatesSelector, appendBtnSelector) {
+  constructor(
+    rangesTable,
+    rangePriceTemplate,
+    rangeFromTemplate,
+    rangeToTemplate,
+    addRangeBtn,
+    removeRangeBtn,
+    rangeRemovingBtnRow
+  ) {
     this.rangeIndex = 1;
+    this.rangesTable = rangesTable;
+    this.rangeRemovingBtnRow = rangeRemovingBtnRow;
+    this.removeRangeBtn = removeRangeBtn;
 
-    $(document).on('click', '.js-add-range', () => {
-      this.rangesTableSelector = rangesTable;
-      this.appendButtonsSelector = appendBtnSelector;
+    this.$addRangeBtn = $(addRangeBtn);
+    this.$rows = $(`${rangesTable} tr:not(${rangeRemovingBtnRow})`);
+    this.$rangePriceTemplate = $(rangePriceTemplate);
+    this.$rangeFromTemplate = $(rangeFromTemplate);
+    this.$rangeToTemplate = $(rangeToTemplate);
 
-      this.$rows = $(`${rangesTable} tr:not(${appendBtnSelector})`);
-      this.$templates = $(templatesSelector);
-      this.addRangeColumn();
-    });
-    $(document).on('click', '.js-remove-range', (event) => {
-      this.removeRangeColumn(event);
-    });
+    this.handle();
 
     return {};
+  }
+
+  /**
+   * Initiates the handler
+   */
+  handle() {
+    this.$addRangeBtn.on('click', () => {
+      this.addRangeColumn();
+    });
+
+    $(document).on('click', this.removeRangeBtn, (event) => {
+      this.removeRangeColumn(event);
+    });
   }
 
   /**
    * Add new column of inputs to table
    */
   addRangeColumn() {
-    const $inputFrom = this.$templates.find('#js-range-from-template > div');
-    const $inputTo = this.$templates.find('#js-range-to-template > div');
-    const $inputPrice = this.$templates.find('#js-price-template > div');
 
     for (let i = 0; i < Object.keys(this.$rows).length; i++) {
       const $row = $(this.$rows[i]);
 
       if ($row.hasClass('js-range-from')) {
-        const inputFrom = ($inputFrom.get(0).outerHTML).replace(/__RANGE_INDEX__/, this.rangeIndex).replace(/disabled=""/, '');
+
+        // replace range-from index placeholder with actual value and enable input
+        const inputFrom = (this.$rangeFromTemplate.get(0).outerHTML)
+          .replace(/__RANGE_INDEX__/, this.rangeIndex)
+          .replace(/disabled=""/, '');
+
+        // append table data with input from template
         $row.append(`<td data-range-index="${this.rangeIndex}">${inputFrom}</td>`);
       } else if ($row.hasClass('js-range-to')) {
-        const inputTo = ($inputTo.get(0).outerHTML).replace(/__RANGE_INDEX__/, this.rangeIndex).replace(/disabled=""/, '');
+
+        // replace range-to index placeholder with actual value and enable input
+        const inputTo = (this.$rangeToTemplate.get(0).outerHTML)
+          .replace(/__RANGE_INDEX__/, this.rangeIndex)
+          .replace(/disabled=""/, '');
+
+        // append table data with input from template
         $row.append(`<td data-range-index="${this.rangeIndex}">${inputTo}</td>`);
       } else {
-        const inputPrice = ($inputPrice.get(0).outerHTML).replace(/__RANGE_INDEX__/, this.rangeIndex).replace(/disabled=""/, '')
+
+        // replace price index and zone id placeholders with actual values and enable input
+        const inputPrice = (this.$rangePriceTemplate.get(0).outerHTML)
+          .replace(/__RANGE_INDEX__/, this.rangeIndex)
+          .replace(/disabled=""/, '')
           .replace(/__ZONE_ID__/g, $row.data('zone-id'));
+
+        // append table data with input from template
         $row.append(`<td data-range-index="${this.rangeIndex}">${inputPrice}</td>`);
       }
     }
+
     this.appendRangeRemovalButton(this.rangeIndex);
+
+    // increment rangeIndex value by one to keep range identification unique
     this.rangeIndex += 1;
   }
 
+  // append button which removes corresponding range column
   appendRangeRemovalButton(rangeIndex) {
-    $(this.appendButtonsSelector).removeClass('d-none');
-    $(this.appendButtonsSelector).append(
-      `<td data-range-index="${rangeIndex}">${this.$templates.find('.js-remove-range').get(0).outerHTML}</td>`,
+    $(this.rangeRemovingBtnRow).removeClass('d-none');
+    $(this.rangeRemovingBtnRow).append(
+      `<td data-range-index="${rangeIndex}">${$(this.removeRangeBtn).get(0).outerHTML}</td>`,
     );
   }
 
+  // remove range column
   removeRangeColumn(event) {
-    $(this.rangesTableSelector).find(`*[data-range-index="${$(event.currentTarget.parentElement).data('range-index')}"]`)
+    $(this.rangesTable).find(`*[data-range-index="${$(event.currentTarget.parentElement).data('range-index')}"]`)
       .remove();
   }
 }

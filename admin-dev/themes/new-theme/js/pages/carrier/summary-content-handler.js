@@ -28,11 +28,12 @@ import { EventEmitter } from '../../components/event-emitter';
 const $ = window.$;
 
 /**
- * Responsible for carrier summary content which depends from previous steps inputs
+ * Responsible for carrier summary content which depends on form inputs
  */
 export default class SummaryContentHandler {
   constructor(
     formWrapper,
+    carrierNameInput,
     freeShippingInput,
     transitTimeInput,
     billingChoice,
@@ -47,9 +48,13 @@ export default class SummaryContentHandler {
     shopChecks,
     shopsSummaryTarget
   ) {
-    this.$formWrapper = $(formWrapper);
+    this.contextLangId = $(formWrapper).data('context-lang-id');
+    this.defaultLangId = $(formWrapper).data('default-lang-id');
+    this.carrierNameInput = carrierNameInput;
     this.freeShippingInput = freeShippingInput;
     this.transitTimeInput = transitTimeInput;
+
+    this.$formWrapper = $(formWrapper);
     this.$billing = $(billingChoice);
     this.$taxRuleSelect = $(taxRuleSelect);
     this.$rangeRow = $(rangeRow);
@@ -61,6 +66,9 @@ export default class SummaryContentHandler {
     this.$groupsSummaryTarget = $(groupsSummaryTarget);
     this.$shopChecks = $(shopChecks);
     this.$shopsSummaryTarget = $(shopsSummaryTarget);
+
+
+
     this.handle();
 
     return {};
@@ -74,6 +82,7 @@ export default class SummaryContentHandler {
   handle() {
     EventEmitter.on('formStepSwitched', () => {
       const isFreeShipping = $(`${this.freeShippingInput}:checked`).val() === '1';
+      this.summarizeName();
       this.summarizeTransitTime(isFreeShipping);
       this.summarizeShippingCost(isFreeShipping);
       this.summarizeShippingRanges(isFreeShipping);
@@ -84,21 +93,34 @@ export default class SummaryContentHandler {
   }
 
   /**
-   * Inserts free shipping and transit time summary content
+   * Inserts carrier name from input to summary
+   */
+  summarizeName() {
+    let nameValue = this.$formWrapper
+      .find(`${this.carrierNameInput.replace(/__LANG__/, this.contextLangId)}`)
+      .val();
+
+    if (nameValue === '') {
+      nameValue = this.$formWrapper
+        .find(`${this.carrierNameInput.replace(/__LANG__/, this.defaultLangId)}`)
+        .val();
+    }
+    this.$formWrapper.find('.js-name-summary').html(nameValue);
+  }
+
+  /**
+   * Inserts free shipping and transit time from corresponding inputs to summary
    *
    * @param isFreeShipping
    */
   summarizeTransitTime(isFreeShipping) {
-    const contextLangId = this.$formWrapper.data('context-lang-id');
-    const defaultLangId = this.$formWrapper.data('default-lang-id');
-
     let transitValue = this.$formWrapper
-      .find(`${this.transitTimeInput}[${contextLangId}]"]`)
+      .find(`${this.transitTimeInput.replace(/__LANG__/, this.contextLangId)}`)
       .val();
 
     if (transitValue === '') {
       transitValue = this.$formWrapper
-        .find(`${this.transitTimeInput}[${defaultLangId}]"]`)
+        .find(`${this.transitTimeInput.replace(/__LANG__/, this.defaultLangId)}`)
         .val();
     }
 
@@ -122,7 +144,7 @@ export default class SummaryContentHandler {
   }
 
   /**
-   * Inserts shipping cost and tax rule summary content
+   * Inserts shipping cost and tax rule from corresponding inputs to summary
    *
    * @param isFreeShipping
    */
@@ -159,7 +181,7 @@ export default class SummaryContentHandler {
   }
 
   /**
-   * Inserts shipping ranges and out of range behavior summary content
+   * Inserts shipping ranges and out of range behavior from corresponding inputs to summary
    *
    * @param isFreeShipping
    */
@@ -207,7 +229,7 @@ export default class SummaryContentHandler {
   }
 
   /**
-   * Inserts delivery zones summary content
+   * Lists selected delivery zones in summary
    */
   summarizeDeliveryZones() {
     this.$zonesSummaryTarget.html('');
@@ -221,19 +243,26 @@ export default class SummaryContentHandler {
   }
 
   /**
-   * Inserts client groups summary content
+   * Lists selected client groups in summary
    */
   summarizeClientGroups() {
+    // reset html content
     this.$groupsSummaryTarget.html('');
 
+    // append list item for each checked input in group choice table
     $.each(this.$groupChecks.find('input:checked'), (i, groupInput) => {
       this.$groupsSummaryTarget.append(`<li><b>${$(groupInput).parent().text()}</b></li>`)
     });
   }
 
+  /**
+   * Lists selected shop association in summary
+   */
   summarizeShops() {
+    // reset html content
     this.$shopsSummaryTarget.html('');
 
+    // append list item for each checked input in shop association choice table
     $.each(this.$shopChecks.find('input:checked'), (i, shopInput) => {
       this.$shopsSummaryTarget.append(`<li><b>${$(shopInput).parent().text()}</b></li>`)
     })

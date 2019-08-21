@@ -26,7 +26,7 @@
 import StepVisibilityHandler from './step-visibility-handler.js';
 import AddRangeHandler from './add-range-handler.js';
 import RangesContentSwitcher from './ranges-content-switcher.js';
-import CarrierMap from './carrier-map.js';
+import CarrierFormMap from './carrier-form-map.js';
 import FreeShippingToggleHandler from './free-shipping-toggle-handler.js';
 import SummaryContentHandler from './summary-content-handler.js';
 import TranslatableInput from './../../components/translatable-input.js';
@@ -38,42 +38,50 @@ const $ = window.$;
 
 $(() => {
   new TranslatableInput();
-  new StepVisibilityHandler(CarrierMap.formWrapper);
-  new ChoiceTree('#carrier_step_multi_shop_shop_association').enableAutoCheckChildren();
+  new StepVisibilityHandler(CarrierFormMap.formWrapper);
+  new ChoiceTree(CarrierFormMap.shopAssociation).enableAutoCheckChildren();
   new ChoiceTable();
-  new ZonesCheckHandler(CarrierMap.zoneCheck);
+  new ZonesCheckHandler(CarrierFormMap.zoneCheckbox);
+
   new AddRangeHandler(
-    CarrierMap.rangesTable,
-    CarrierMap.rangesTemplate,
-    CarrierMap.appendButtons,
+    CarrierFormMap.rangesTable,
+    CarrierFormMap.rangePriceTemplate,
+    CarrierFormMap.rangeFromTemplate,
+    CarrierFormMap.rangeToTemplate,
+    CarrierFormMap.addRangeBtn,
+    CarrierFormMap.removeRangeBtn,
+    CarrierFormMap.rangeRemovingBtnRow,
   );
+
   new RangesContentSwitcher(
-    CarrierMap.rangePriceLabel,
-    CarrierMap.rangeWeightLabel,
-    CarrierMap.billingChoice,
+    CarrierFormMap.rangePriceLabel,
+    CarrierFormMap.rangeWeightLabel,
+    CarrierFormMap.billingChoice,
   );
+
   new FreeShippingToggleHandler(
-    CarrierMap.freeShippingChoice,
-    CarrierMap.handlingCostChoice,
-    CarrierMap.rangesTable,
-    CarrierMap.addRangeBtn,
-    CarrierMap.rangeRow,
+    CarrierFormMap.freeShippingChoice,
+    CarrierFormMap.handlingCostChoice,
+    CarrierFormMap.rangesTable,
+    CarrierFormMap.addRangeBtn,
+    CarrierFormMap.rangeRow,
   );
 
   new SummaryContentHandler(
-    CarrierMap.formWrapper,
-    CarrierMap.freeShippingChoice,
-    CarrierMap.transitTimeInput,
-    CarrierMap.billingChoice,
-    CarrierMap.taxRuleSelect,
-    CarrierMap.rangeRow,
-    CarrierMap.rangesSummaryWrapper,
-    CarrierMap.outrangedSelect,
-    CarrierMap.zoneCheck,
-    CarrierMap.zonesSummaryTarget,
-    CarrierMap.groupChecks,
-    CarrierMap.groupsSummaryTarget,
-    CarrierMap.shopChecks,
-    CarrierMap.shopsSummaryTarget,
+    CarrierFormMap.formWrapper,
+    CarrierFormMap.carrierNameInput,
+    CarrierFormMap.freeShippingChoice,
+    CarrierFormMap.transitTimeInput,
+    CarrierFormMap.billingChoice,
+    CarrierFormMap.taxRuleSelect,
+    CarrierFormMap.rangeRow,
+    CarrierFormMap.rangesSummaryWrapper,
+    CarrierFormMap.outrangedBehaviorSelect,
+    CarrierFormMap.zoneCheckbox,
+    CarrierFormMap.zonesSummaryTarget,
+    CarrierFormMap.groupAccessTable,
+    CarrierFormMap.groupsSummaryTarget,
+    CarrierFormMap.shopAssociation,
+    CarrierFormMap.shopsSummaryTarget,
   );
 });

@@ -38,6 +38,7 @@
         %}
 
         {{ ps.form_group_row(carrierForm.step_general.name, {}, {
+          'class': 'js-carrier-name',
           'label': 'Carrier name'|trans({}, 'Admin.Global'),
           'help': nameHelp
         }) }}

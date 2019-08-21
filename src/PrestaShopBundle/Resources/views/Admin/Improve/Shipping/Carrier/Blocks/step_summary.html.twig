@@ -41,6 +41,12 @@
 
       <div>
         <div class="card">
+          <div class="card-header">
+            <p class="mb-0">
+              {{ 'Carrier name:'|trans({}, 'Admin.Shipping.Feature') }}
+              <strong class="js-name-summary"></strong>
+            </p>
+          </div>
           <div class="card-block">
             <p id="js-free-carrier-transit" class="not-displayable" data-carrier-transit="{{
               'This carrier is %1$s and the transit time is %2$s.'|trans({

@@ -26,59 +26,61 @@
 const $ = window.$;
 
 /**
- * Responsible for toggling/disabling form fields that are dependant from free-shipping field value
+ * Responsible for toggling/disabling form fields that depends on free-shipping choice value
  */
 export default class FreeShippingToggleHandler {
   constructor(
-    freeShippingSelector,
-    handlingCostSelector,
-    rangeTableRowsSelector,
-    addRangeBtnSelector,
-    rangeRowSelector
+    freeShippingChoice,
+    handlingCostChoice,
+    rangesTable,
+    addRangeBtn,
+    rangeRow
   ) {
-    this.freeShippingSelector = freeShippingSelector;
-    this.handlingCostSelector = handlingCostSelector;
-    this.rangesTableRowsSelector = rangeTableRowsSelector;
-    this.rangeRowSelector = rangeRowSelector;
+    this.freeShippingChoice = freeShippingChoice;
+    this.handlingCostChoice = handlingCostChoice;
+    this.rangesTableRows = rangesTable;
+    this.rangeRow = rangeRow;
 
-    this.$addRangeBtnSelector = $(addRangeBtnSelector);
-    this.$freeShippingSelector = $(freeShippingSelector);
-    this.$handlingCostSelector = $(handlingCostSelector);
+    this.$addRangeBtn = $(addRangeBtn);
+    this.$freeShippingChoice = $(freeShippingChoice);
+    this.$handlingCostChoice = $(handlingCostChoice);
 
-    this._handle();
-    this.$freeShippingSelector.change(event => this._handle(event));
+    this.handle();
+    this.$freeShippingChoice.change(event => this.handle(event));
   }
 
-  _handle() {
-    const isFreeShipping = $(`${this.freeShippingSelector}:checked`).val() === '1';
-    this._toggleHandlingCost(isFreeShipping);
-    this._toggleRangesVisibility(isFreeShipping);
-    this._disableAddingRange(isFreeShipping);
+  handle() {
+    const isFreeShipping = $(`${this.freeShippingChoice}:checked`).val() === '1';
+    this.toggleHandlingCost(isFreeShipping);
+    this.toggleDependenciesVisibility(isFreeShipping);
   }
 
-  _toggleHandlingCost(isFreeShipping) {
-    this.$handlingCostSelector.prop('disabled', isFreeShipping);
-    $(`${this.handlingCostSelector}:not(:checked)`).prop('checked', !isFreeShipping);
+  toggleHandlingCost(isFreeShipping) {
+    this.$handlingCostChoice.prop('disabled', isFreeShipping);
+    $(`${this.handlingCostChoice}:not(:checked)`).prop('checked', !isFreeShipping);
 
     if (isFreeShipping) {
-      $(`${this.handlingCostSelector}:checked`).prop('checked', false);
+      $(`${this.handlingCostChoice}:checked`).prop('checked', false);
     }
   }
 
-  _toggleRangesVisibility(isFreeShipping) {
-    const $tableRows = $(`${this.rangesTableRowsSelector}`);
+  toggleDependenciesVisibility(isFreeShipping) {
+    const $tableRows = $(`${this.rangesTableRows}`);
+
+    // show ranges and zone prices
     $tableRows.find('td').show();
-    $tableRows.find(this.rangeRowSelector).show();
-    if (isFreeShipping) {
-      $tableRows.find('td').hide();
-      $tableRows.find(this.rangeRowSelector).hide();
-    }
-  }
+    $tableRows.find(this.rangeRow).show();
 
-  _disableAddingRange(isFreeShipping) {
-    this.$addRangeBtnSelector.show();
+    // show add range button
+    this.$addRangeBtn.show();
+
     if (isFreeShipping) {
-      this.$addRangeBtnSelector.hide();
+      // hide ranges and zone prices
+      $tableRows.find('td').hide();
+      $tableRows.find(this.rangeRow).hide();
+
+      // hide add range button
+      this.$addRangeBtn.hide();
     }
   }
 }
