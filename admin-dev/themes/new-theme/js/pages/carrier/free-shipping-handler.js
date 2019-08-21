@@ -28,19 +28,25 @@ const $ = window.$;
 /**
  * Responsible for toggling/disabling form fields that depends on free-shipping choice value
  */
-export default class FreeShippingToggleHandler {
+export default class FreeShippingHandler {
   constructor(
     freeShippingChoice,
     handlingCostChoice,
     rangesTable,
     addRangeBtn,
-    rangeRow
+    rangeRow,
+    billingChoice,
+    taxRuleSelect,
+    outrangedBehaviorSelect,
   ) {
     this.freeShippingChoice = freeShippingChoice;
     this.handlingCostChoice = handlingCostChoice;
     this.rangesTableRows = rangesTable;
     this.rangeRow = rangeRow;
 
+    this.$billingChoice = $(billingChoice);
+    this.$taxRuleSelect = $(taxRuleSelect);
+    this.$outrangedBehaviorSelect = $(outrangedBehaviorSelect);
     this.$addRangeBtn = $(addRangeBtn);
     this.$freeShippingChoice = $(freeShippingChoice);
     this.$handlingCostChoice = $(handlingCostChoice);
@@ -49,38 +55,66 @@ export default class FreeShippingToggleHandler {
     this.$freeShippingChoice.change(event => this.handle(event));
   }
 
+  /**
+   * Initiate handler
+   */
   handle() {
     const isFreeShipping = $(`${this.freeShippingChoice}:checked`).val() === '1';
     this.toggleHandlingCost(isFreeShipping);
     this.toggleDependenciesVisibility(isFreeShipping);
   }
 
+  /**
+   * Toggles handling cost based on free shipping choice
+   *
+   * @param isFreeShipping
+   */
   toggleHandlingCost(isFreeShipping) {
+    // when free shipping is true, handling cost is disabled
     this.$handlingCostChoice.prop('disabled', isFreeShipping);
-    $(`${this.handlingCostChoice}:not(:checked)`).prop('checked', !isFreeShipping);
+
+    // when free shipping is false the unchecked handling cost choice gets checked
+    this.$handlingCostChoice.find('input[value="0"]').prop('checked', isFreeShipping);
 
     if (isFreeShipping) {
       $(`${this.handlingCostChoice}:checked`).prop('checked', false);
     }
   }
 
+  /**
+   * shows/hide items that depends on free shipping choice
+   *
+   * @param isFreeShipping
+   */
   toggleDependenciesVisibility(isFreeShipping) {
     const $tableRows = $(`${this.rangesTableRows}`);
 
-    // show ranges and zone prices
-    $tableRows.find('td').show();
-    $tableRows.find(this.rangeRow).show();
-
-    // show add range button
-    this.$addRangeBtn.show();
-
     if (isFreeShipping) {
       // hide ranges and zone prices
-      $tableRows.find('td').hide();
-      $tableRows.find(this.rangeRow).hide();
+      $tableRows.find('td').fadeOut();
+      $tableRows.find(this.rangeRow).fadeOut();
 
       // hide add range button
-      this.$addRangeBtn.hide();
+      this.$addRangeBtn.fadeOut();
+      //hide billing choices
+      this.$billingChoice.fadeOut();
+      // hide tax rule selections
+      this.$taxRuleSelect.fadeOut();
+      //hide out of range selections
+      this.$outrangedBehaviorSelect.fadeOut();
+    } else {
+      // show ranges and zone prices
+      $tableRows.find('td').fadeIn();
+      $tableRows.find(this.rangeRow).fadeIn();
+
+      // show add range button
+      this.$addRangeBtn.fadeIn();
+      //show billing choice list
+      this.$billingChoice.fadeIn();
+      //show tax rules selections
+      this.$taxRuleSelect.fadeIn();
+      //show out of range behavior selections
+      this.$outrangedBehaviorSelect.fadeIn();
     }
   }
 }

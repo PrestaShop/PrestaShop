@@ -25,9 +25,9 @@
 
 import StepVisibilityHandler from './step-visibility-handler.js';
 import AddRangeHandler from './add-range-handler.js';
-import RangesContentSwitcher from './ranges-content-switcher.js';
+import BillingChoiceHandler from './billing-choice-handler.js';
 import CarrierFormMap from './carrier-form-map.js';
-import FreeShippingToggleHandler from './free-shipping-toggle-handler.js';
+import FreeShippingHandler from './free-shipping-handler.js';
 import SummaryContentHandler from './summary-content-handler.js';
 import TranslatableInput from './../../components/translatable-input.js';
 import ChoiceTree from '../../components/form/choice-tree.js';
@@ -53,18 +53,21 @@ $(() => {
     CarrierFormMap.rangeRemovingBtnRow,
   );
 
-  new RangesContentSwitcher(
+  new BillingChoiceHandler(
     CarrierFormMap.rangePriceLabel,
     CarrierFormMap.rangeWeightLabel,
     CarrierFormMap.billingChoice,
   );
 
-  new FreeShippingToggleHandler(
+  new FreeShippingHandler(
     CarrierFormMap.freeShippingChoice,
     CarrierFormMap.handlingCostChoice,
     CarrierFormMap.rangesTable,
     CarrierFormMap.addRangeBtn,
     CarrierFormMap.rangeRow,
+    CarrierFormMap.billingChoice,
+    CarrierFormMap.taxRuleSelect,
+    CarrierFormMap.outrangedBehaviorSelect,
   );
 
   new SummaryContentHandler(

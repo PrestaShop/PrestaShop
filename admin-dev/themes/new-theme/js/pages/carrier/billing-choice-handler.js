@@ -25,33 +25,41 @@
 
 const $ = window.$;
 
-export default class RangesContentSwitcher {
-  constructor(priceContentSelector, weightContentSelector, billingSelector) {
-    this.priceContentSelector = priceContentSelector;
-    this.weightContentSelector = weightContentSelector;
+/**
+ * Responsible for manipulating fields that depends on selected billing choice
+ */
+export default class BillingChoiceHandler {
+  constructor(priceLabel, weightLabel, billingChoice) {
+    this.priceContent = priceLabel;
+    this.weightContent = weightLabel;
 
-    this.$billingSelector = $(billingSelector);
+    this.$billingSelector = $(billingChoice);
 
-    this._handle();
-    this.$billingSelector.change(event => this._handle(event));
+    this.handle();
+    this.$billingSelector.change(event => this.handle(event));
 
     return {};
   }
 
-  _handle() {
-    if (this.$billingSelector.find('input:checked').val() === '2') {
-      this._getPriceContentSelector().show();
-      this._getWeightContentSelector().hide();
-    } else {
-      this._getWeightContentSelector().show();
-      this._getPriceContentSelector().hide();
-    }
+  /**
+   * Initiates the handler
+   */
+  handle() {
+    this.switchRangeLabel();
   }
 
-  _getPriceContentSelector() {
-    return $(this.priceContentSelector);
-  }
-  _getWeightContentSelector() {
-    return $(this.weightContentSelector);
+  /**
+   * Switches range label text based on selected billing choice
+   */
+  switchRangeLabel() {
+    // by default show weight text
+    $(this.weightContent).show();
+    $(this.priceContent).hide();
+
+    // when billing by price is selected show price text
+    if (this.$billingSelector.find('input:checked').val() === '2') {
+      $(this.priceContent).show();
+      $(this.weightContent).hide();
+    }
   }
 }

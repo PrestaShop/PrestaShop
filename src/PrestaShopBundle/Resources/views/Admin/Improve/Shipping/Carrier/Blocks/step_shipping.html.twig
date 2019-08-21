@@ -29,33 +29,40 @@
 <div class="form-step js-form-step" data-step="3">
   <div class="card-block row">
     <div class="card-text">
-        {{ ps.form_group_row(carrierForm.step_shipping.include_handling_cost, {'attr': {'class': 'js-handling-cost'}}, {
+      <div class="js-handling-cost">
+        {{ ps.form_group_row(carrierForm.step_shipping.include_handling_cost, {}, {
           'label': 'Add handling costs'|trans({}, 'Admin.Global'),
           'help': 'Include the handling costs (as set in Shipping > Preferences) in the final carrier price.'|trans({}, 'Admin.Shipping.Help')
         }) }}
+      </div>
 
+      <div class="js-free-shipping">
         {{ ps.form_group_row(carrierForm.step_shipping.is_free_shipping, {'attr': {'class': 'js-free-shipping'}}, {
           'label': 'Free shipping'|trans({}, 'Admin.Global'),
         }) }}
+      </div>
 
-        {{ ps.form_group_row(carrierForm.step_shipping.billing, {'attr': {'class': 'js-billing'}}, {
+      <div class="js-billing">
+        {{ ps.form_group_row(carrierForm.step_shipping.billing, {}, {
           'label': 'Billing'|trans({}, 'Admin.Global'),
         }) }}
+      </div>
 
-        {{ ps.form_group_row(carrierForm.step_shipping.tax_rule, {
-          'attr': {'class': 'js-tax-rule'}
-        }, {
+      <div class="js-tax-rule">
+        {{ ps.form_group_row(carrierForm.step_shipping.tax_rule, {}, {
           'label': 'Tax'|trans({}, 'Admin.Global'),
         }) }}
+      </div>
 
-        {{ ps.form_group_row(carrierForm.step_shipping.out_of_range, {'attr': {'class': 'js-outranged'}}, {
+      <div class="js-outranged">
+        {{ ps.form_group_row(carrierForm.step_shipping.out_of_range, {}, {
           'label': 'Out of range behavior'|trans({}, 'Admin.Global'),
           'help': "Out-of-range behavior occurs when no defined range matches the customer's cart (e.g. when the weight of the cart is greater than the highest weight limit defined by the weight ranges)."
           |trans({}, 'Admin.Shipping.Help')
         }) }}
-
-        {{ form_widget(carrierForm.step_shipping.carrier_ranges, {'attr': {'class': 'js-shipping-ranges'}}) }}
       </div>
+      {{ form_widget(carrierForm.step_shipping.carrier_ranges, {}) }}
+    </div>
 
       {% block carrier_step_shipping_form_rest %}
         {{ form_rest(carrierForm.step_shipping) }}
