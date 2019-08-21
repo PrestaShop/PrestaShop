@@ -182,12 +182,12 @@ class AdminSearchConfControllerCore extends AdminController
                         ),
                     ),
                     'PS_SEARCH_ALLOW_SPELLING_ERROR' => array(
-                        'title' => $this->trans('Search within SPELLING ERROR', array(), 'Admin.Shopparameters.Feature'),
+                        'title' => $this->trans('Search with spellind error', array(), 'Admin.Shopparameters.Feature'),
                         'validation' => 'isBool',
                         'cast' => 'intval',
                         'type' => 'bool',
                         'desc' => $this->trans(
-                                'By default, spelling error are alowed. To search for “bird”, you can to enter “burd”, “bard”, “beerd” etc...',
+                                'By default, spelling error are allowed. To search “bird”, you can to enter “burd”, “bard”, “beerd” etc...',
                                 array(),
                                 'Admin.Shopparameters.Help'
                             ) . '<br/>' .
@@ -198,12 +198,12 @@ class AdminSearchConfControllerCore extends AdminController
                             ),
                         'hint' => array(
                             $this->trans(
-                                'Enable search within a whole word, rather than from its beginning only.',
+                                'Enable spelling error during search within a whole word.',
                                 array(),
                                 'Admin.Shopparameters.Help'
                             ),
                             $this->trans(
-                                'It checks if the searched term is contained in the indexed word. This may be resource-consuming.',
+                                'It checks if in all indexed word in database, a close word of the search word exist. This will be very resource-consuming.',
                                 array(),
                                 'Admin.Shopparameters.Help'
                             ),
