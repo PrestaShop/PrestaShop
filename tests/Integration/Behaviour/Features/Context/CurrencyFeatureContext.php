@@ -395,20 +395,20 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Then /^currency "(.*)" should have edited (true|false)$/
+     * @Then /^currency "(.*)" should have modified (true|false)$/
      */
-    public function assertCurrencyEdited($reference, $edited)
+    public function assertCurrencyModified($reference, $modified)
     {
         /** @var Currency $currency */
         $currency = SharedStorage::getStorage()->get($reference);
-        $expectedEdited = $edited === 'true';
+        $expectedModified = $modified === 'true';
 
-        if ($currency->edited != $expectedEdited) {
+        if ($currency->modified != $expectedModified) {
             throw new RuntimeException(sprintf(
-                'Currency "%s" has edited "%s", but "%s" was expected.',
+                'Currency "%s" has modified "%s", but "%s" was expected.',
                 $reference,
-                $currency->edited,
-                $expectedEdited
+                $currency->modified,
+                $expectedModified
             ));
         }
     }

@@ -599,7 +599,7 @@ CREATE TABLE `PREFIX_currency` (
   `deleted` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `active` tinyint(1) unsigned NOT NULL DEFAULT '1',
   `unofficial` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `edited` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `modified` tinyint(1) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_currency`),
   KEY `currency_iso_code` (`iso_code`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
