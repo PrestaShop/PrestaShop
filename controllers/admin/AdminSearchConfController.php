@@ -181,6 +181,34 @@ class AdminSearchConfControllerCore extends AdminController
                             ),
                         ),
                     ),
+                    'PS_SEARCH_ALLOW_SPELLING_ERROR' => array(
+                        'title' => $this->trans('Search within SPELLING ERROR', array(), 'Admin.Shopparameters.Feature'),
+                        'validation' => 'isBool',
+                        'cast' => 'intval',
+                        'type' => 'bool',
+                        'desc' => $this->trans(
+                                'By default, spelling error are alowed. To search for “bird”, you can to enter “burd”, “bard”, “beerd” etc...',
+                                array(),
+                                'Admin.Shopparameters.Help'
+                            ) . '<br/>' .
+                            $this->trans(
+                                'With this option disabled, to get good result, you need get exact writting contained in the word.',
+                                array(),
+                                'Admin.Shopparameters.Help'
+                            ),
+                        'hint' => array(
+                            $this->trans(
+                                'Enable search within a whole word, rather than from its beginning only.',
+                                array(),
+                                'Admin.Shopparameters.Help'
+                            ),
+                            $this->trans(
+                                'It checks if the searched term is contained in the indexed word. This may be resource-consuming.',
+                                array(),
+                                'Admin.Shopparameters.Help'
+                            ),
+                        ),
+                    ),
                     'PS_SEARCH_MINWORDLEN' => array(
                         'title' => $this->trans(
                             'Minimum word length (in characters)',
