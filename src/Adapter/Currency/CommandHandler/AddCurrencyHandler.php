@@ -98,7 +98,7 @@ final class AddCurrencyHandler extends AbstractCurrencyHandler implements AddCur
             if (!empty($command->getLocalizedSymbols())) {
                 $entity->symbol = $entity->symbols = $command->getLocalizedSymbols();
             }
-            //This method will insert the missing localized names/symbols and detect if the currency has been edited
+            //This method will insert the missing localized names/symbols and detect if the currency has been modified
             $entity->refreshLocalizedCurrencyData(Language::getLanguages(), $this->localeRepoCLDR);
 
             if (false === $entity->add()) {
