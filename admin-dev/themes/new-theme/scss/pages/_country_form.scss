@@ -1,0 +1,42 @@
+/**
+ * Country form CSS
+ */
+.address-format-tabs {
+  border: 1px solid #d3d8db;
+  padding-bottom: 1px;
+}
+
+.address-format-tabs-content {
+  border: solid #d3d8db;
+  border-width: 0 1px 1px 1px;
+}
+
+.address-format-tabs a.nav-link {
+  font-size: 14px;
+  padding: 5px 10px;
+}
+
+.address-format-actions > span > a {
+  margin: 1px 0;
+}
+
+.address-format-tabs-content a.add-pattern {
+  font-size: 12px;
+  border: 1px solid;
+  margin: 1px 0;
+  padding: 1px 5px;
+  border-radius: 5px;
+}
+
+.address-format-tabs-content a.add-pattern:hover {
+  border-radius: 4px;
+  color: #1383d4
+}
+
+.address-format-tabs a.nav-link {
+  &::before {
+    content: '\25bc';
+    font-size: 10px;
+  }
+}
+

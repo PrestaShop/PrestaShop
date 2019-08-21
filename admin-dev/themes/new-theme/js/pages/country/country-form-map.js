@@ -28,7 +28,7 @@
  */
 export default {
   customAddressFields: '#custom-address-fields',
-  patternSelect: '.addPattern',
+  patternSelect: '.add-pattern',
   formatInput: '#country_address_format',
   eraseCurrentLayout: '.reset-address-layout',
 }
