@@ -256,7 +256,7 @@ class SearchCore
                                 AND sw.word LIKE';
 
                 while (!($result = $db->executeS($sql . "'" . $sql_param_search . "';", true, false))) {
-                    if (!Configuration::get('PS_SEARCH_ALLOW_SPELLING_ERROR') ||
+                    if (!Configuration::get('PS_SEARCH_SPELLING_ERROR') ||
                         $nbLevenshteinLoop++ >= PS_SEARCH_LEVENSHTEIN_LOOP ||
                         !($sql_param_search = self::findClosestWeightestWord($context, $word))) {
                         break;
