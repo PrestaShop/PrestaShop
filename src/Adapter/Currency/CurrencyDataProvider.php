@@ -76,6 +76,14 @@ class CurrencyDataProvider implements CurrencyDataProviderInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function findAllAvailable()
+    {
+        return Currency::findAll(false, false, false);
+    }
+
+    /**
      * Get a Currency entity instance by ISO code.
      *
      * @param string $isoCode
