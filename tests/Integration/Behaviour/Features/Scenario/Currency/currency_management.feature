@@ -24,7 +24,7 @@ Feature: Currency Management
     And currency "currency1" name should be "My Euros"
     And currency "currency1" symbol should be "€€"
     And currency "currency1" should have unofficial false
-    And currency "currency1" should have edited true
+    And currency "currency1" should have modified true
     And currency "currency1" should have status enabled
     And currency "currency1" should be available in shop "shop1"
     And database contains 1 rows of currency "EUR"
@@ -67,7 +67,7 @@ Feature: Currency Management
     And currency "currency1" name should be "Euro"
     And currency "currency1" symbol should be "€"
     And currency "currency1" should have unofficial false
-    And currency "currency1" should have edited false
+    And currency "currency1" should have modified false
     And currency "currency1" should have status disabled
 
   Scenario: Disabling default currency should not be allowed
@@ -112,7 +112,7 @@ Feature: Currency Management
     And currency "currency5" name should be "British Pound"
     And currency "currency5" symbol should be "£"
     And currency "currency5" should have unofficial false
-    And currency "currency5" should have edited false
+    And currency "currency5" should have modified false
     And currency "currency5" should have status enabled
     And currency "currency5" should be available in shop "shop1"
 
@@ -154,7 +154,7 @@ Feature: Currency Management
     And currency "currency7" name should be "Unofficial Money"
     And currency "currency7" symbol should be "@"
     And currency "currency7" should have unofficial true
-    And currency "currency7" should have edited true
+    And currency "currency7" should have modified true
     And currency "currency7" should have status enabled
     And currency "currency7" should be available in shop "shop1"
     When I edit currency "currency7" with following properties:
@@ -170,7 +170,7 @@ Feature: Currency Management
     And currency "currency7" name should be "Unofficial Money"
     And currency "currency7" symbol should be "@"
     And currency "currency7" should have unofficial true
-    And currency "currency7" should have edited true
+    And currency "currency7" should have modified true
     And currency "currency7" should have status disabled
     And currency "currency7" should be available in shop "shop1"
 
@@ -190,7 +190,7 @@ Feature: Currency Management
     And currency "currency8" name should be "Unofficial Money"
     And currency "currency8" symbol should be "@"
     And currency "currency8" should have unofficial true
-    And currency "currency8" should have edited true
+    And currency "currency8" should have modified true
     And currency "currency8" should have status enabled
     And currency "currency8" should be available in shop "shop1"
     When I edit currency "currency8" with following properties:
