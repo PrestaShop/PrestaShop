@@ -22,7 +22,7 @@ window.country_form=function(e){function t(r){if(n[r])return n[r].exports;var o=
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-t.default={customAddressFields:"#custom-address-fields",patternSelect:".addPattern",formatInput:"#country_address_format",eraseCurrentLayout:".reset-address-layout"}},319:function(e,t,n){"use strict";function r(e){return e&&e.__esModule?e:{default:e}}var o=n(18),i=r(o),s=n(15),a=r(s),u=n(251),l=r(u);/**
+t.default={customAddressFields:"#custom-address-fields",patternSelect:".add-pattern",formatInput:"#country_address_format",eraseCurrentLayout:".reset-address-layout"}},319:function(e,t,n){"use strict";function r(e){return e&&e.__esModule?e:{default:e}}var o=n(18),i=r(o),s=n(15),a=r(s),u=n(251),l=r(u);/**
                    * 2007-2019 PrestaShop and Contributors
                    *
                    * NOTICE OF LICENSE
