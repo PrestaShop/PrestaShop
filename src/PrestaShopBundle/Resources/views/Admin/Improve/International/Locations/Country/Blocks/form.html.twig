@@ -23,10 +23,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-
-
 {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
 {% import '@PrestaShop/Admin/Improve/International/Locations/Country/Macros/address_format_macros.html.twig' as adr %}
+
 {{ form_start(countryForm) }}
 <div class="card">
   <div class="card-header">
@@ -83,7 +82,6 @@
         'label': 'Default currency'|trans({}, 'Admin.International.Feature')
       }) }}
 
-      {# Zone filed#}
       <div class="form-group row">
         {{ ps.label_with_help(
           'Zone'|trans({}, 'Admin.Global'),
@@ -117,6 +115,7 @@
           {{ adr.tabContent(displayValidFields) }}
         </div>
       </div>
+
       <div class="form-group row">
         {{ include('@PrestaShop/Admin/Improve/International/Locations/Country/Blocks/format_actions.html.twig',
           {
@@ -176,38 +175,3 @@
   </div>
 </div>
 {{ form_end(countryForm) }}
-
-{#{% block javascripts %}#}
-{#  <script>#}
-{#    var lastLayoutModified = null;#}
-
-{#    $(document).ready(function() {#}
-{#      $('.addPattern').click(function() {#}
-{#        alert($(this).attr("id"))#}
-{#        addFieldsToCursorPosition($(this).attr("id"));#}
-{#        lastLayoutModified = $("#country_address_format").val();#}
-{#      });#}
-
-{#      $('#country_address_format').keyup(function() {#}
-{#        lastLayoutModified = $(this).val();#}
-{#      });#}
-{#    });#}
-
-{#    function addFieldsToCursorPosition(pattern) {#}
-{#      $("#country_address_format").replaceSelection(pattern + " ");#}
-{#    }#}
-
-{#    function resetLayout(defaultLayout, confirmation) {#}
-{#      if (defaultLayout !== null) {#}
-{#        if (confirm(confirmation)) {#}
-{#          $("#country_address_format").val(unescape(defaultLayout.replace(/\+/g, " ")));#}
-{#        }#}
-{#      }#}
-{#    }#}
-
-    $('#custom-address-fields a').click(function (e) {
-      e.preventDefault();
-      $(this).tab('show')
-    })
-{#  </script>#}
-{#{% endblock %}#}

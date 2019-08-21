@@ -29,8 +29,14 @@ namespace PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\AddressFormatValidator;
 use Symfony\Component\Validator\Constraint;
 
+/**
+ * Address format validation constraint
+ */
 class AddressFormat extends Constraint
 {
+    /**
+     * @var string
+     */
     public $message = '%s is invalid.';
 
     /**
