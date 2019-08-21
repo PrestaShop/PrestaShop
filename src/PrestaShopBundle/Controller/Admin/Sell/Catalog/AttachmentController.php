@@ -190,6 +190,7 @@ class AttachmentController extends FrameworkBundleAdminController
 
     /**
      * @param string $originalExceptionMessage
+     *
      * @return array
      */
     private function getErrorMessages(string $originalExceptionMessage = ''): array
@@ -210,13 +211,13 @@ class AttachmentController extends FrameworkBundleAdminController
                 ),
             ],
             BulkDeleteAttachmentsException::class => sprintf(
-                "%s : %s",
+                '%s : %s',
                 $this->trans(
                     'An error occurred while deleting this selection.',
                     'Admin.Notifications.Error'
                 ),
                 $originalExceptionMessage
-            )
+            ),
         ];
     }
 
