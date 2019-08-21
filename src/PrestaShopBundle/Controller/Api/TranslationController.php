@@ -389,12 +389,4 @@ class TranslationController extends ApiController
 
         return $translationsTree;
     }
-
-    /**
-     * @return string
-     */
-    private function getCurrentThemeName()
-    {
-        return $this->container->get('prestashop.adapter.legacy.context')->getContext()->shop->theme->getName();
-    }
 }
