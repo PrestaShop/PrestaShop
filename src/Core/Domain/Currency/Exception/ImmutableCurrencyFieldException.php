@@ -28,11 +28,11 @@ namespace PrestaShop\PrestaShop\Core\Domain\Currency\Exception;
 
 /**
  * Class ImmutableCurrencyFieldException is thrown when you try to edit a field
- * that is immutable (like custom, or ISO code and numeric ISO code on real currencies)
+ * that is immutable (like unofficial, or ISO code and numeric ISO code on real currencies)
  */
 class ImmutableCurrencyFieldException extends CurrencyException
 {
-    const IMMUTABLE_CUSTOM = 1;
+    const IMMUTABLE_UNOFFICIAL = 1;
     const IMMUTABLE_REAL = 2;
     const IMMUTABLE_ISO_CODE = 3;
     const IMMUTABLE_NUMERIC_ISO_CODE = 4;
