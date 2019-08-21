@@ -87,7 +87,8 @@
           'Zone'|trans({}, 'Admin.Global'),
           ('Geographical region.'|trans({}, 'Admin.International.Help')),
         '',
-        ''
+        '',
+        true
         ) }}
         <div class="col-sm">
           {{ form_widget(countryForm.zone) }}
@@ -105,7 +106,10 @@
       }) }}
 
       <div class="form-group row">
-        {{ form_label(countryForm.address_format) }}
+        <label class="form-control-label">
+          <span class="text-danger">*</span>
+          {{ 'Address format'|trans({}, 'Admin.Global')}}
+        </label>
         <div class="col-sm">
           {{ form_widget(countryForm.address_format, {'attr': {'style': 'min-height: 200px'}}) }}
           {{ form_errors(countryForm.address_format) }}
