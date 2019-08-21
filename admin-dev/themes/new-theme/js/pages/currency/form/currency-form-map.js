@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -29,9 +29,9 @@
 export default {
   currencyForm: '#currency_form',
   currencySelector: '#currency_selected_iso_code',
-  isCustomCheckbox: '#currency_custom',
-  namesSelector: '#currency_names_LANG_ID',
-  symbolsSelector: '#currency_symbols_LANG_ID',
+  isUnofficialCheckbox: '#currency_unofficial',
+  namesSelectorPrefix: '#currency_names_',
+  symbolsSelectorPrefix: '#currency_symbols_',
   isoCodeSelector: '#currency_iso_code',
   numericIsoCodeSelector: '#currency_numeric_iso_code',
   exchangeRateSelector: '#currency_exchange_rate',

@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -41,19 +41,19 @@ $(() => {
   $currencySelector.change(() => {
     const selectedISOCode = $currencySelector.val();
     if ('' !== selectedISOCode) {
-      $(currencyFormMap.isCustomCheckbox).prop('checked', false);
+      $(currencyFormMap.isUnofficialCheckbox).prop('checked', false);
       $(currencyFormMap.isoCodeSelector).prop('readonly', true);
       $(currencyFormMap.numericIsoCodeSelector).prop('readonly', true);
       resetCurrencyData(selectedISOCode);
     } else {
-      $(currencyFormMap.isCustomCheckbox).prop('checked', true);
+      $(currencyFormMap.isUnofficialCheckbox).prop('checked', true);
       $(currencyFormMap.isoCodeSelector).prop('readonly', false);
       $(currencyFormMap.numericIsoCodeSelector).prop('readonly', false);
     }
   });
 
-  $(currencyFormMap.isCustomCheckbox).change(() => {
-    if ($(currencyFormMap.isCustomCheckbox).prop('checked')) {
+  $(currencyFormMap.isUnofficialCheckbox).change(() => {
+    if ($(currencyFormMap.isUnofficialCheckbox).prop('checked')) {
       $currencySelector.val('');
       $(currencyFormMap.isoCodeSelector).prop('readonly', false);
       $(currencyFormMap.numericIsoCodeSelector).prop('readonly', false);
@@ -73,11 +73,11 @@ $(() => {
     $.get(getCurrencyData)
       .then((currencyData) => {
         for (let langId in currencyData.names) {
-          let langNameSelector = currencyFormMap.namesSelector.replace('LANG_ID', langId);
+          let langNameSelector = `${currencyFormMap.namesSelectorPrefix}${langId}`;
           $(langNameSelector).val(currencyData.names[langId]);
         }
         for (let langId in currencyData.symbols) {
-          let langSymbolSelector = currencyFormMap.symbolsSelector.replace('LANG_ID', langId);
+          let langSymbolSelector = `${currencyFormMap.symbolsSelectorPrefix}${langId}`;
           $(langSymbolSelector).val(currencyData.symbols[langId]);
         }
         $(currencyFormMap.isoCodeSelector).val(currencyData.iso_code);
@@ -101,9 +101,9 @@ $(() => {
 
   function initFields() {
     const selectedISOCode = $currencySelector.val();
-    const isCustom = parseInt($(currencyFormMap.isCustomCheckbox).val());
-    if ('' !== selectedISOCode && !isCustom) {
-      $(currencyFormMap.isCustomCheckbox).prop('checked', false);
+    const isUnofficial = parseInt($(currencyFormMap.isUnofficialCheckbox).val());
+    if ('' !== selectedISOCode && !isUnofficial) {
+      $(currencyFormMap.isUnofficialCheckbox).prop('checked', false);
       $(currencyFormMap.isoCodeSelector).prop('readonly', true);
       $(currencyFormMap.numericIsoCodeSelector).prop('readonly', true);
     } else {
