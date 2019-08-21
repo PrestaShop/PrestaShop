@@ -58,12 +58,11 @@ class Environment implements EnvironmentInterface
             $this->isDebug = $isDebug;
         }
 
-        $this->name = $name;
-        if (null === $this->name) {
-            if (!empty($_SERVER['APP_ENV'])) {
-                $this->name = $_SERVER['APP_ENV'];
-            } elseif (defined('_PS_IN_TEST_') && _PS_IN_TEST_) {
-                $this->name = 'test';
+        if (null !== $this->name) {
+            $this->name = $name;
+        } else {
+            if (defined(_PS_ENV_)) {
+                $this->name = _PS_ENV_;
             } else {
                 $this->name = $this->isDebug ? 'dev' : 'prod';
             }
@@ -91,6 +90,10 @@ class Environment implements EnvironmentInterface
      */
     public function getCacheDir()
     {
+        if (defined('_PS_CACHE_DIR_')) {
+            return _PS_CACHE_DIR_;
+        }
+
         return _PS_ROOT_DIR_ . '/var/cache/' . $this->getName() . '/';
     }
 }
