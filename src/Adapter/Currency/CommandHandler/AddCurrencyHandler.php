@@ -124,7 +124,7 @@ final class AddCurrencyHandler extends AbstractCurrencyHandler implements AddCur
         if (Currency::exists($isoCode)) {
             throw new CurrencyConstraintException(
                 sprintf(
-                    'Currency with iso code "%s" already exist and cannot be created',
+                    'Currency with iso code "%s" already exists and cannot be created',
                     $isoCode
                 ),
                 CurrencyConstraintException::CURRENCY_ALREADY_EXISTS
@@ -143,7 +143,7 @@ final class AddCurrencyHandler extends AbstractCurrencyHandler implements AddCur
         if (Currency::getIdByNumericIsoCode($numericIsoCode)) {
             throw new CurrencyConstraintException(
                 sprintf(
-                    'Currency with numeric iso code "%s" already exist and cannot be created',
+                    'Currency with numeric iso code "%s" already exists and cannot be created',
                     $numericIsoCode
                 ),
                 CurrencyConstraintException::CURRENCY_ALREADY_EXISTS

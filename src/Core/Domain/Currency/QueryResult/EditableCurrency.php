@@ -133,7 +133,7 @@ class EditableCurrency
     /**
      * @return int
      */
-    public function getNumericIsoCode()
+    public function getNumericIsoCode(): int
     {
         return $this->numericIsoCode;
     }
