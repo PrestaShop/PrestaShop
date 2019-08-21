@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Country\CommandHandler\AddCountryHandlerIn
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CannotAddCountryException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryException;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShopException;
 
 /**
@@ -51,7 +52,7 @@ class AddCountryHandler implements AddCountryHandlerInterface
      * @throws CountryConstraintException
      * @throws CountryException
      */
-    public function handle(AddCountryCommand $command)
+    public function handle(AddCountryCommand $command): CountryId
     {
         try {
             $country = new Country();
@@ -107,5 +108,7 @@ class AddCountryHandler implements AddCountryHandlerInterface
         } catch (PrestaShopException $e) {
             throw new CountryException('An unexpected error occurred when adding country', 0, $e);
         }
+
+        return new CountryId($country->id);
     }
 }
