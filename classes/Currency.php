@@ -399,14 +399,20 @@ class CurrencyCore extends ObjectModel
     /**
      * Retrieve all currencies data from the database.
      *
+     * @param bool $active If true only active are returned
+     * @param bool $groupBy Group by id_currency
+     * @param bool $currentShopOnly If true returns only currencies associated to current shop
+     *
      * @return array Currency data from database
+     *
+     * @throws PrestaShopDatabaseException
      */
-    public static function findAll($active = true, $groupBy = false, $filterShop = true)
+    public static function findAll($active = true, $groupBy = false, $currentShopOnly = true)
     {
         $currencies = Db::getInstance()->executeS('
             SELECT *
             FROM `' . _DB_PREFIX_ . 'currency` c
-            ' . ($filterShop ? Shop::addSqlAssociation('currency', 'c') : '') . '
+            ' . ($currentShopOnly ? Shop::addSqlAssociation('currency', 'c') : '') . '
                 WHERE `deleted` = 0' .
                 ($active ? ' AND c.`active` = 1' : '') .
                 ($groupBy ? ' GROUP BY c.`id_currency`' : '') .
