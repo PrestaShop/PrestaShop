@@ -76,13 +76,14 @@ final class UniqueStateIsoCodeValidator extends ConstraintValidator
         $isFound = $this->queryBus->handle($isUniqueStateIsoCodeQuery);
 
         if ($isFound) {
-            $this->context->buildViolation(
-                $this->translator->trans(
-                    'This ISO code already exists. You cannot create two states with the same ISO code.',
-                    [],
-                    'Admin.International.Notification'
+            $this->context
+                ->buildViolation(
+                    $this->translator->trans(
+                        'This ISO code already exists. You cannot create two states with the same ISO code.',
+                        [],
+                        'Admin.International.Notification'
+                    )
                 )
-            )
                 ->atPath('[iso_code]')
                 ->addViolation();
         }

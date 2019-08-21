@@ -33,7 +33,7 @@ use PrestaShopException;
 use State;
 
 /**
- * Abstract state handler
+ * Abstract state handler for common state handler methods
  */
 abstract class AbstractStateHandler
 {
