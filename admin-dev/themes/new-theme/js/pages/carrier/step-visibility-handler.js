@@ -23,6 +23,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+import {EventEmitter} from '../../components/event-emitter';
+
 const $ = window.$;
 
 export default class StepVisibilityHandler {
@@ -45,7 +47,7 @@ export default class StepVisibilityHandler {
     $(document).find(`${this.formWrapperSelector} .js-form-step.active`).removeClass('active');
     $(document).find(`${this.formWrapperSelector} *[data-step=${stepToShow}].js-form-step`).addClass('active');
 
-    $(this.formWrapperSelector).trigger('step-switched');
+    EventEmitter.emit('formStepSwitched');
   }
 
   _activateTab(stepToShow) {

@@ -23,6 +23,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+import { EventEmitter } from '../../components/event-emitter';
+
 const $ = window.$;
 
 /**
@@ -41,7 +43,9 @@ export default class SummaryContentHandler {
     zoneCheck,
     zonesSummaryTarget,
     groupChecks,
-    groupsSummaryTarget
+    groupsSummaryTarget,
+    shopChecks,
+    shopsSummaryTarget
   ) {
     this.$formWrapper = $(formWrapper);
     this.freeShippingInput = freeShippingInput;
@@ -55,6 +59,8 @@ export default class SummaryContentHandler {
     this.$zonesSummaryTarget = $(zonesSummaryTarget);
     this.$groupChecks = $(groupChecks);
     this.$groupsSummaryTarget = $(groupsSummaryTarget);
+    this.$shopChecks = $(shopChecks);
+    this.$shopsSummaryTarget = $(shopsSummaryTarget);
     this.handle();
 
     return {};
@@ -66,13 +72,14 @@ export default class SummaryContentHandler {
    * @private
    */
   handle() {
-    this.$formWrapper.bind('step-switched', () => {
+    EventEmitter.on('formStepSwitched', () => {
       const isFreeShipping = $(`${this.freeShippingInput}:checked`).val() === '1';
       this.summarizeTransitTime(isFreeShipping);
       this.summarizeShippingCost(isFreeShipping);
       this.summarizeShippingRanges(isFreeShipping);
       this.summarizeDeliveryZones();
       this.summarizeClientGroups();
+      this.summarizeShops();
     });
   }
 
@@ -207,7 +214,7 @@ export default class SummaryContentHandler {
 
     $.each(this.$zoneCheck, ( i, zoneInput ) => {
       const $zoneInput = $(zoneInput);
-      if ($zoneInput.is(':checked')) {
+      if ($zoneInput.is(':checked') && $zoneInput.val() !== '0') {
         this.$zonesSummaryTarget.append(`<li><b>${$zoneInput.parent().text()}</b></li>`)
       }
     });
@@ -219,8 +226,16 @@ export default class SummaryContentHandler {
   summarizeClientGroups() {
     this.$groupsSummaryTarget.html('');
 
-    $.each(this.$groupChecks.find('input:checked'), ( i, groupInput ) => {
+    $.each(this.$groupChecks.find('input:checked'), (i, groupInput) => {
       this.$groupsSummaryTarget.append(`<li><b>${$(groupInput).parent().text()}</b></li>`)
     });
+  }
+
+  summarizeShops() {
+    this.$shopsSummaryTarget.html('');
+
+    $.each(this.$shopChecks.find('input:checked'), (i, shopInput) => {
+      this.$shopsSummaryTarget.append(`<li><b>${$(shopInput).parent().text()}</b></li>`)
+    })
   }
 }

@@ -28,30 +28,36 @@ import AddRangeHandler from './add-range-handler.js';
 import RangesContentSwitcher from './ranges-content-switcher.js';
 import CarrierMap from './carrier-map.js';
 import FreeShippingToggleHandler from './free-shipping-toggle-handler.js';
-import SummaryContentHandler from './summary-content-handler';
-import TranslatableInput from './../../components/translatable-input';
+import SummaryContentHandler from './summary-content-handler.js';
+import TranslatableInput from './../../components/translatable-input.js';
+import ChoiceTree from '../../components/form/choice-tree.js';
+import ChoiceTable from '../../components/choice-table.js';
+import ZonesCheckHandler from './zones-check-handler.js';
 
 const $ = window.$;
 
-$(document).ready(() => {
+$(() => {
   new TranslatableInput();
   new StepVisibilityHandler(CarrierMap.formWrapper);
+  new ChoiceTree('#carrier_step_multi_shop_shop_association').enableAutoCheckChildren();
+  new ChoiceTable();
+  new ZonesCheckHandler(CarrierMap.zoneCheck);
   new AddRangeHandler(
     CarrierMap.rangesTable,
     CarrierMap.rangesTemplate,
-    CarrierMap.appendButtons
+    CarrierMap.appendButtons,
   );
   new RangesContentSwitcher(
     CarrierMap.rangePriceLabel,
     CarrierMap.rangeWeightLabel,
-    CarrierMap.billingChoice
+    CarrierMap.billingChoice,
   );
   new FreeShippingToggleHandler(
     CarrierMap.freeShippingChoice,
     CarrierMap.handlingCostChoice,
     CarrierMap.rangesTable,
     CarrierMap.addRangeBtn,
-    CarrierMap.rangeRow
+    CarrierMap.rangeRow,
   );
 
   new SummaryContentHandler(
@@ -66,6 +72,8 @@ $(document).ready(() => {
     CarrierMap.zoneCheck,
     CarrierMap.zonesSummaryTarget,
     CarrierMap.groupChecks,
-    CarrierMap.groupsSummaryTarget
+    CarrierMap.groupsSummaryTarget,
+    CarrierMap.shopChecks,
+    CarrierMap.shopsSummaryTarget,
   );
 });

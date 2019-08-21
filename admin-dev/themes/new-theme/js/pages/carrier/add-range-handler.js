@@ -51,9 +51,9 @@ export default class AddRangeHandler {
    * Add new column of inputs to table
    */
   addRangeColumn() {
-    const $inputFrom = this.$templates.find('#js-range-from-template');
-    const $inputTo = this.$templates.find('#js-range-to-template');
-    const $inputPrice = this.$templates.find('#js-price-template');
+    const $inputFrom = this.$templates.find('#js-range-from-template > div');
+    const $inputTo = this.$templates.find('#js-range-to-template > div');
+    const $inputPrice = this.$templates.find('#js-price-template > div');
 
     for (let i = 0; i < Object.keys(this.$rows).length; i++) {
       const $row = $(this.$rows[i]);
@@ -66,7 +66,7 @@ export default class AddRangeHandler {
         $row.append(`<td data-range-index="${this.rangeIndex}">${inputTo}</td>`);
       } else {
         const inputPrice = ($inputPrice.get(0).outerHTML).replace(/__RANGE_INDEX__/, this.rangeIndex).replace(/disabled=""/, '')
-          .replace(/__ZONE_ID__/, $row.data('zone-id'));
+          .replace(/__ZONE_ID__/g, $row.data('zone-id'));
         $row.append(`<td data-range-index="${this.rangeIndex}">${inputPrice}</td>`);
       }
     }

@@ -857,13 +857,13 @@
             </th>
             {% if form.prices[0] is defined %}
               <td>
-                <div class="input-group">
+                <div class="input-group" data-zone-id="{{ zone_id }}">
                   <div class="input-group-prepend">
                     <span class="input-group-text">
                       $
                     </span>
                   </div>
-                  {{ form_widget(form.prices[0].price_by_zone[zone_id]) }}
+                  {{ form_widget(form.prices[0].price_by_zone[zone_id], {'attr': {'readonly': 'true'}}) }}
                 </div>
               </td>
             {% endif %}
@@ -884,60 +884,66 @@
 
   <div class="d-none" id="js-carrier-range-templates">
 
-    <div id="js-price-template" class="input-group">
-      <div class="input-group-prepend">
+    <div id="js-price-template">
+      <div class="input-group" data-zone-id="__ZONE_ID__">
+        <div class="input-group-prepend">
         <span class="input-group-text">
           $
         </span>
+        </div>
+        <input
+          type="text"
+          readonly
+          name="carrier[step_shipping][carrier_ranges][prices][__RANGE_INDEX__][price_by_zone][__ZONE_ID__]"
+          class="form-control">
       </div>
-      <input
-        type="text"
-        disabled
-        name="carrier[step_shipping][carrier_ranges][prices][__RANGE_INDEX__][price_by_zone][__ZONE_ID__]"
-        class="form-control">
     </div>
 
 
-    <div id="js-range-from-template" class="input-group js-range-from-group">
-      <div class="js-range-label-case-weight input-group-prepend">
+    <div id="js-range-from-template">
+      <div class="input-group js-range-from-group">
+        <div class="js-range-label-case-weight input-group-prepend">
         <span class="input-group-text">
           kg
         </span>
-      </div>
-      <div class="js-range-label-case-price input-group-prepend">
+        </div>
+        <div class="js-range-label-case-price input-group-prepend">
         <span class="input-group-text">
           $
         </span>
+        </div>
+        <input
+          type="number"
+          disabled
+          name="carrier[step_shipping][carrier_ranges][ranges][__RANGE_INDEX__][from]"
+          required="required"
+          class="form-control">
       </div>
-      <input
-        type="number"
-        disabled
-        name="carrier[step_shipping][carrier_ranges][ranges][__RANGE_INDEX__][from]"
-        required="required"
-        class="form-control">
     </div>
 
 
-    <div id="js-range-to-template" class="input-group js-range-to-group">
-      <div class="js-range-label-case-weight input-group-prepend">
+    <div id="js-range-to-template">
+      <div class="input-group js-range-to-group">
+        <div class="js-range-label-case-weight input-group-prepend">
         <span class="input-group-text">
           kg
         </span>
-      </div>
-      <div class="js-range-label-case-price input-group-prepend">
+        </div>
+        <div class="js-range-label-case-price input-group-prepend">
         <span class="input-group-text">
           $
         </span>
+        </div>
+        <input
+          type="number"
+          disabled
+          name="carrier[step_shipping][carrier_ranges][ranges][__RANGE_INDEX__][to]"
+          required="required"
+          class="form-control">
       </div>
-      <input
-        type="number"
-        disabled
-        name="carrier[step_shipping][carrier_ranges][ranges][__RANGE_INDEX__][to]"
-        required="required"
-        class="form-control">
     </div>
 
-    <button type="button" class="js-remove-range btn btn-outline-danger justify-content-center">
+    <button type="button" class="js-remove-range btn btn-block btn-outline-danger">
       {{ 'Delete'|trans({}, 'Admin.Global') }}
     </button>
   </div>

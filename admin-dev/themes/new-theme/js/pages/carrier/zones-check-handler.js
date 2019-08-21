@@ -23,26 +23,37 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-export default {
-  formWrapper: '#carrier-form',
-  rangePriceLabel: '.js-range-label-case-price',
-  rangeWeightLabel: '.js-range-label-case-weight',
-  rangeRow: '.js-range-row',
-  billingChoice: '.js-billing',
-  freeShippingChoice: '.js-free-shipping',
-  handlingCostChoice: '.js-handling-cost',
-  rangesTable: '#js-carrier-ranges table',
-  rangesTemplate: '#js-carrier-range-templates',
-  addRangeBtn: '.js-add-range',
-  appendButtons: '.js-append-buttons',
-  transitTimeInput: 'input[name="carrier[step_general][transit_time]',
-  taxRuleSelect: '.js-tax-rule',
-  rangesSummaryWrapper: '#js-ranges-summary',
-  outrangedSelect: '.js-outranged',
-  zoneCheck: '.js-zone',
-  zonesSummaryTarget: '#js-zones-summary',
-  groupChecks: '.js-group-access',
-  groupsSummaryTarget: '#js-groups-summary',
-  shopChecks: '.js-shop-assoc',
-  shopsSummaryTarget: '#js-shops-summary',
-};
+const $ = window.$;
+
+export default class ZonesCheckHandler {
+  constructor(zoneCheck) {
+    this.$zoneCheck = $(zoneCheck);
+    this.handle();
+
+
+    return {};
+  }
+
+  handle() {
+    this.$zoneCheck.change((e) => {
+      if ($(e.target).val() === '0') {
+        this.selectAll(e);
+      }
+      this.disableDependantInputs(e);
+    });
+  }
+
+  selectAll(event) {
+    const isSelectAllChecked = $(event.target).is(':checked');
+
+    this.$zoneCheck.not(event.target).prop('checked', isSelectAllChecked);
+  }
+
+  disableDependantInputs(event) {
+    $.each($(event.target), (i, input) => {
+      const isChecked = $(event.target).is(':checked');
+      const zoneId = $(input).val();
+      $('#js-carrier-ranges').find(`div[data-zone-id='${zoneId}'] input`).prop('readonly', !isChecked);
+    });
+  }
+}

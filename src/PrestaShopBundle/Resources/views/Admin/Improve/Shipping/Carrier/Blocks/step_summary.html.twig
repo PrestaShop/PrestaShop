@@ -42,44 +42,44 @@
       <div>
         <div class="card">
           <div class="card-block">
-            <p id="js-free-carrier-transit" class="summary-text" data-carrier-transit="{{
+            <p id="js-free-carrier-transit" class="not-displayable" data-carrier-transit="{{
               'This carrier is %1$s and the transit time is %2$s.'|trans({
               '%1$s': isFree,
               '%2$s': '__TRANSIT_TIME__'
             }, 'Admin.Shipping.Feature') }}">
             </p>
-            <p id="js-priced-carrier-transit" class="summary-text" data-carrier-transit="{{
+            <p id="js-priced-carrier-transit" class="not-displayable" data-carrier-transit="{{
             'This carrier is %1$s and the transit time is %2$s.'|trans({
               '%1$s': isNotFree,
               '%2$s': '__TRANSIT_TIME__'
             },'Admin.Shipping.Feature') }}">
             </p>
 
-            <p id="js-carrier-shipping-cost-price" class="summary-text" data-carrier-shipping-cost="
+            <p id="js-carrier-shipping-cost-price" class="not-displayable" data-carrier-shipping-cost="
               {{ 'The shipping cost is calculated %1$s and the tax rule %2$s will be applied.'|trans({
               '%1$s': billingByPrice,
               '%2$s': '__TAX_RULE__'
               }, 'Admin.Shipping.Feature') }},">
             </p>
-            <p id="js-carrier-shipping-cost-weight" class="summary-text" data-carrier-shipping-cost="
+            <p id="js-carrier-shipping-cost-weight" class="not-displayable" data-carrier-shipping-cost="
               {{ 'The shipping cost is calculated %1$s and the tax rule %2$s will be applied.'|trans({
               '%1$s': billingByWeight,
               '%2$s': '__TAX_RULE__'
               }, 'Admin.Shipping.Feature') }}">
             </p>
 
-            <p id="js-ranges-summary" class="summary-text">
-              <span id="js-range" class="summary-text" data-range-summary="{{
+            <p id="js-ranges-summary" class="not-displayable">
+              <span id="js-range" class="not-displayable" data-range-summary="{{
                 'This carrier can deliver orders from %1$s to %2$s.'|trans({}, 'Admin.Shipping.Feature')
               }}"></span>
 
-              <span id="js-outranged-disable" class="summary-text" data-outranged-summary="{{
+              <span id="js-outranged-disable" class="not-displayable" data-outranged-summary="{{
                 'If the order is out of range, the behavior is to %3$s.'|trans({
                   '%3$s': outrangedDisable
               }, 'Admin.Shipping.Feature') }}">
               </span>
 
-              <span id="js-outranged-highest" class="summary-text" data-outranged-summary="{{
+              <span id="js-outranged-highest" class="not-displayable" data-outranged-summary="{{
                 'If the order is out of range, the behavior is to %3$s.'|trans({
                   '%3$s': outrangedHighest
               }, 'Admin.Shipping.Feature') }}">
@@ -87,10 +87,16 @@
             </p>
 
             <p>{{ 'This carrier will be proposed for those delivery zones:'|trans({}, 'Admin.Shipping.Feature') }}</p>
-            <ul id="js-zones-summary" class="zones-summary-list"></ul>
+            <ul id="js-zones-summary" class="summary-list"></ul>
 
             <p>{{ 'And it will be proposed for those client groups:'|trans({}, 'Admin.Shipping.Feature') }}</p>
-            <ul id="js-groups-summary" class="groups-summary-list"></ul>
+            <ul id="js-groups-summary" class="summary-list"></ul>
+
+            {% if carrierForm.step_multi_shop is defined %}
+              <p>{{ 'Finally, this carrier will be proposed in those shops:'|trans({}, 'Admin.Shipping.Feature') }}</p>
+              <ul id="js-shops-summary" class="summary-list"></ul>
+            {% endif %}
+
           </div>
         </div>
         <div>
