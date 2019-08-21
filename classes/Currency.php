@@ -80,11 +80,11 @@ class CurrencyCore extends ObjectModel
     public $deleted = 0;
 
     /**
-     * Is this currency custom ?
+     * Is this currency unofficial ?
      *
-     * @var int|bool custom
+     * @var int|bool unofficial
      */
-    public $custom;
+    public $unofficial;
 
     /**
      * Is this currency edited ?
@@ -166,7 +166,7 @@ class CurrencyCore extends ObjectModel
             'conversion_rate' => array('type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat', 'required' => true, 'shop' => true),
             'deleted' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'active' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'custom' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+            'unofficial' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'edited' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 
             /* Lang fields */
@@ -912,7 +912,7 @@ class CurrencyCore extends ObjectModel
             $cldrCurrency = $cldrLocale->getCurrency($this->iso_code);
 
             if (empty($cldrCurrency)) {
-                // The currency may not be declared in the locale, eg with custom iso code
+                // The currency may not be declared in the locale, eg with unofficial iso code
                 $namesByLang[$language->id] = $originalNames[$language->id];
                 $symbolsByLang[$language->id] = $originalSymbols[$language->id];
                 $this->edited = true;

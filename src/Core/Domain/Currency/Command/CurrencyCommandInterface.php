@@ -48,5 +48,5 @@ interface CurrencyCommandInterface
     /**
      * @return bool
      */
-    public function isCustom();
+    public function isUnofficial();
 }
