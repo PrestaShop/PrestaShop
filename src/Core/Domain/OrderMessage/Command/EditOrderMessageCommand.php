@@ -60,6 +60,9 @@ class EditOrderMessageCommand
         $this->localizedMessage = $localizedMessage;
     }
 
+    /**
+     * @return OrderMessageId
+     */
     public function getOrderMessageId(): OrderMessageId
     {
         return $this->orderMessageId;

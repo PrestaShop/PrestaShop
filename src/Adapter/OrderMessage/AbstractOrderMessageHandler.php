@@ -37,6 +37,11 @@ use PrestaShop\PrestaShop\Core\Domain\OrderMessage\ValueObject\OrderMessageId;
  */
 abstract class AbstractOrderMessageHandler
 {
+    /**
+     * @param OrderMessageId $orderMessageId
+     *
+     * @return OrderMessage
+     */
     protected function getOrderMessage(OrderMessageId $orderMessageId): OrderMessage
     {
         $orderMessage = new OrderMessage($orderMessageId->getValue());

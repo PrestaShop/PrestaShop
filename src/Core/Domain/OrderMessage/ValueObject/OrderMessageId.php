@@ -36,11 +36,17 @@ class OrderMessageId
      */
     private $orderMessageId;
 
+    /**
+     * @param int $orderMessageId
+     */
     public function __construct(int $orderMessageId)
     {
         $this->orderMessageId = $orderMessageId;
     }
 
+    /**
+     * @return int
+     */
     public function getValue(): int
     {
         return $this->orderMessageId;

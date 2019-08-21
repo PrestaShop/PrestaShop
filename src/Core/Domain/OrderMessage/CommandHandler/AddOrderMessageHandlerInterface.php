@@ -34,5 +34,10 @@ use PrestaShop\PrestaShop\Core\Domain\OrderMessage\ValueObject\OrderMessageId;
  */
 interface AddOrderMessageHandlerInterface
 {
+    /**
+     * @param AddOrderMessageCommand $command
+     *
+     * @return OrderMessageId
+     */
     public function handle(AddOrderMessageCommand $command): OrderMessageId;
 }

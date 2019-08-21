@@ -39,6 +39,9 @@ use PrestaShopException;
  */
 final class EditOrderMessageHandler extends AbstractOrderMessageHandler implements EditOrderMessageHandlerInterface
 {
+    /**
+     * @param EditOrderMessageCommand $command
+     */
     public function handle(EditOrderMessageCommand $command): void
     {
         $orderMessage = $this->getOrderMessage($command->getOrderMessageId());
@@ -58,9 +61,17 @@ final class EditOrderMessageHandler extends AbstractOrderMessageHandler implemen
             throw new OrderMessageException('Order message contains invalid fields', 0, $e);
         }
 
-        if (false === $orderMessage->update()) {
+        try {
+            if (false === $orderMessage->update()) {
+                throw new OrderMessageException(
+                    sprintf('Failed to update order message with id "%s"', $command->getOrderMessageId()->getValue())
+                );
+            }
+        } catch (PrestaShopException $e) {
             throw new OrderMessageException(
-                sprintf('Failed to update order message with id "%s"', $command->getOrderMessageId()->getValue())
+                sprintf('Failed to update order message with id "%s"', $command->getOrderMessageId()->getValue()),
+                0,
+                $e
             );
         }
     }

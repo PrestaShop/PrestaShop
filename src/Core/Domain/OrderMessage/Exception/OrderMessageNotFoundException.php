@@ -39,6 +39,12 @@ class OrderMessageNotFoundException extends OrderMessageException
      */
     private $orderMessageId;
 
+    /**
+     * @param OrderMessageId $orderMessageId
+     * @param string $message
+     * @param int $code
+     * @param Throwable|null $previous
+     */
     public function __construct(
         OrderMessageId $orderMessageId,
         string $message = '',
@@ -50,6 +56,9 @@ class OrderMessageNotFoundException extends OrderMessageException
         $this->orderMessageId = $orderMessageId;
     }
 
+    /**
+     * @return OrderMessageId
+     */
     public function getOrderMessageId(): OrderMessageId
     {
         return $this->orderMessageId;

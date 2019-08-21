@@ -33,5 +33,8 @@ use PrestaShop\PrestaShop\Core\Domain\OrderMessage\Command\EditOrderMessageComma
  */
 interface EditOrderMessageHandlerInterface
 {
+    /**
+     * @param EditOrderMessageCommand $command
+     */
     public function handle(EditOrderMessageCommand $command): void;
 }

@@ -38,6 +38,9 @@ class GetOrderMessageForEditing
      */
     private $orderMessageId;
 
+    /**
+     * @param int $orderMessageId
+     */
     public function __construct(int $orderMessageId)
     {
         $this->orderMessageId = new OrderMessageId($orderMessageId);

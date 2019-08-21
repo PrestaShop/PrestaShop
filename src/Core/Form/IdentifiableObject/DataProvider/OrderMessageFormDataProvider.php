@@ -40,6 +40,9 @@ final class OrderMessageFormDataProvider implements FormDataProviderInterface
      */
     private $queryBus;
 
+    /**
+     * @param CommandBusInterface $queryBus
+     */
     public function __construct(CommandBusInterface $queryBus)
     {
         $this->queryBus = $queryBus;

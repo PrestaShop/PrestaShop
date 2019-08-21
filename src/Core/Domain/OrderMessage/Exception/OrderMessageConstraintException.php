@@ -24,20 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\OrderMessage\QueryHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\OrderMessage\Exception;
 
-use PrestaShop\PrestaShop\Core\Domain\OrderMessage\Query\GetOrderMessageForEditing;
-use PrestaShop\PrestaShop\Core\Domain\OrderMessage\QueryResult\EditableOrderMessage;
-
-/**
- * Interface for service that handles retrieving order message data
- */
-interface GetOrderMessageForEditingHandlerInterface
+class OrderMessageConstraintException extends OrderMessageException
 {
-    /**
-     * @param GetOrderMessageForEditing $query
-     *
-     * @return EditableOrderMessage
-     */
-    public function handle(GetOrderMessageForEditing $query): EditableOrderMessage;
 }

@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Adapter\OrderMessage\AbstractOrderMessageHandler;
 use PrestaShop\PrestaShop\Core\Domain\OrderMessage\Command\BulkDeleteOrderMessageCommand;
 use PrestaShop\PrestaShop\Core\Domain\OrderMessage\CommandHandler\BulkDeleteOrderMessageHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\OrderMessage\Exception\OrderMessageException;
+use PrestaShopException;
 
 /**
  * Deletes Order messages in bulk action using object model
@@ -38,15 +39,24 @@ use PrestaShop\PrestaShop\Core\Domain\OrderMessage\Exception\OrderMessageExcepti
  */
 final class BulkDeleteOrderMessageHandler extends AbstractOrderMessageHandler implements BulkDeleteOrderMessageHandlerInterface
 {
+    /**
+     * @param BulkDeleteOrderMessageCommand $command
+     */
     public function handle(BulkDeleteOrderMessageCommand $command): void
     {
         foreach ($command->getOrderMessageIds() as $orderMessageId) {
             $orderMessage = $this->getOrderMessage($orderMessageId);
 
-            if (false === $orderMessage->delete()) {
+            try {
+                if (false === $orderMessage->delete()) {
+                    throw new OrderMessageException(
+                        sprintf('Failed to delete Order message with id "%d" during bulk delete', $orderMessage->id),
+                        OrderMessageException::FAILED_BULK_DELETE
+                    );
+                }
+            } catch (PrestaShopException $e) {
                 throw new OrderMessageException(
-                    sprintf('Failed to delete Order message with id "%d" during bulk delete', $orderMessage->id),
-                    OrderMessageException::FAILED_BULK_DELETE
+                    sprintf('Failed to delete Order message with id "%s"', $orderMessage->id)
                 );
             }
         }

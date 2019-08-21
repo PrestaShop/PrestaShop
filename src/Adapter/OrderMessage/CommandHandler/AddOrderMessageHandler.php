@@ -40,6 +40,11 @@ use PrestaShopException;
  */
 final class AddOrderMessageHandler implements AddOrderMessageHandlerInterface
 {
+    /**
+     * @param AddOrderMessageCommand $command
+     *
+     * @return OrderMessageId
+     */
     public function handle(AddOrderMessageCommand $command): OrderMessageId
     {
         $orderMessage = new OrderMessage();
@@ -54,8 +59,12 @@ final class AddOrderMessageHandler implements AddOrderMessageHandlerInterface
             throw new OrderMessageException('Order message contains invalid fields', 0, $e);
         }
 
-        if (false === $orderMessage->add()) {
-            throw new OrderMessageException('Failed to add order message');
+        try {
+            if (false === $orderMessage->add()) {
+                throw new OrderMessageException('Failed to add order message');
+            }
+        } catch (PrestaShopException $e) {
+            throw new OrderMessageException('Failed to add order message', 0, $e);
         }
 
         return new OrderMessageId((int) $orderMessage->id);

@@ -33,5 +33,8 @@ use PrestaShop\PrestaShop\Core\Domain\OrderMessage\Command\BulkDeleteOrderMessag
  */
 interface BulkDeleteOrderMessageHandlerInterface
 {
+    /***
+     * @param BulkDeleteOrderMessageCommand $command
+     */
     public function handle(BulkDeleteOrderMessageCommand $command): void;
 }

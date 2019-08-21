@@ -38,11 +38,17 @@ class DeleteOrderMessageCommand
      */
     private $orderMessageId;
 
+    /**
+     * @param int $orderMessageId
+     */
     public function __construct(int $orderMessageId)
     {
         $this->orderMessageId = new OrderMessageId($orderMessageId);
     }
 
+    /**
+     * @return OrderMessageId
+     */
     public function getOrderMessageId(): OrderMessageId
     {
         return $this->orderMessageId;

@@ -38,6 +38,11 @@ use PrestaShop\PrestaShop\Core\Domain\OrderMessage\QueryResult\EditableOrderMess
  */
 final class GetOrderMessageForEditingHandler extends AbstractOrderMessageHandler implements GetOrderMessageForEditingHandlerInterface
 {
+    /**
+     * @param GetOrderMessageForEditing $query
+     *
+     * @return EditableOrderMessage
+     */
     public function handle(GetOrderMessageForEditing $query): EditableOrderMessage
     {
         $orderMessage = $this->getOrderMessage($query->getOrderMessageId());

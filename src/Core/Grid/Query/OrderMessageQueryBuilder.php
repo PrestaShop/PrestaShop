@@ -62,6 +62,13 @@ final class OrderMessageQueryBuilder implements DoctrineQueryBuilderInterface
      */
     private $doctrineSearchCriteriaApplicator;
 
+    /**
+     * @param Connection $connection
+     * @param string $dbPrefix
+     * @param int $contextLanguageId
+     * @param DoctrineFilterApplicatorInterface $doctrineFilterApplicator
+     * @param DoctrineSearchCriteriaApplicatorInterface $doctrineSearchCriteriaApplicator
+     */
     public function __construct(
         Connection $connection,
         string $dbPrefix,
@@ -103,6 +110,11 @@ final class OrderMessageQueryBuilder implements DoctrineQueryBuilderInterface
         return $qb;
     }
 
+    /**
+     * @param SearchCriteriaInterface $criteria
+     *
+     * @return QueryBuilder
+     */
     private function buildBaseQuery(SearchCriteriaInterface $criteria): QueryBuilder
     {
         $qb = $this->connection->createQueryBuilder();

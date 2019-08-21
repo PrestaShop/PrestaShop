@@ -33,5 +33,8 @@ use PrestaShop\PrestaShop\Core\Domain\OrderMessage\Command\DeleteOrderMessageCom
  */
 interface DeleteOrderMessageHandlerInterface
 {
+    /**
+     * @param DeleteOrderMessageCommand $command
+     */
     public function handle(DeleteOrderMessageCommand $command): void;
 }
