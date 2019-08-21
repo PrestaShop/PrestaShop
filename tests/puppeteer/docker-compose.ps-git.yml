@@ -4,7 +4,7 @@ services:
   prestashop:
     build:
       context: ./
-      dockerfile: ./.docker/prestashop/ps_v175
+      dockerfile: .docker/prestashop/ps_git
     environment:
       DB_SERVER: db
       PS_INSTALL_AUTO: 1
