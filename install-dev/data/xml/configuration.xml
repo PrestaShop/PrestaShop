@@ -7,6 +7,8 @@
   <entities>
   <configuration id="PS_SEARCH_INDEXATION" name="PS_SEARCH_INDEXATION">
     <value>1</value>
+  <configuration id="PS_SEARCH_ALLOW_SPELLING_ERROR" name="PS_SEARCH_ALLOW_SPELLING_ERROR">
+    <value>1</value>
   </configuration>
   <configuration id="PS_CARRIER_DEFAULT" name="PS_CARRIER_DEFAULT">
     <value>1</value>
