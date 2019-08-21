@@ -25,6 +25,7 @@
         "geoip2/geoip2": "~2.4.2",
         "greenlion/php-sql-parser": "^4.1",
         "guzzlehttp/guzzle": "~5.0",
+        "guzzlehttp/cache-subscriber": "dev-master",
         "incenteev/composer-parameter-handler": "~2.0",
         "ircmaxell/password-compat": "^1.0.4",
         "ircmaxell/random-lib": "^1.2.0",
