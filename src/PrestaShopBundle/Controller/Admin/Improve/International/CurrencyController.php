@@ -254,7 +254,7 @@ class CurrencyController extends FrameworkBundleAdminController
         if (empty($cldrCurrency)) {
             return new JsonResponse([
                 'error' => $this->trans(
-                    'Can not find CLDR data for currency %isoCode%',
+                    'Cannot find CLDR data for currency %isoCode%',
                     'Admin.International.Feature',
                     [
                         '%isoCode%' => $currencyIsoCode,
@@ -454,7 +454,7 @@ class CurrencyController extends FrameworkBundleAdminController
                     'Admin.International.Notification'
                 ),
                 CurrencyConstraintException::MISMATCHING_ISO_CODES => $this->trans(
-                    'Can not find a real currency matching this couple of ISO code and numeric ISO code',
+                    'Cannot find a real currency matching this couple of ISO code and numeric ISO code',
                     'Admin.International.Notification'
                 ),
             ],
@@ -503,29 +503,29 @@ class CurrencyController extends FrameworkBundleAdminController
             ),
             InvalidUnofficialCurrencyException::class => [
                 InvalidUnofficialCurrencyException::INVALID_ISO_CODE => $this->trans(
-                    'You can not create an unofficial currency which ISO code matches a real one',
+                    'You cannot create an unofficial currency which ISO code matches a real one',
                     'Admin.International.Notification'
                 ),
                 InvalidUnofficialCurrencyException::INVALID_NUMERIC_ISO_CODE => $this->trans(
-                    'You can not create an unofficial currency which numeric ISO code matches a real one',
+                    'You cannot create an unofficial currency which numeric ISO code matches a real one',
                     'Admin.International.Notification'
                 ),
             ],
             ImmutableCurrencyFieldException::class => [
                 ImmutableCurrencyFieldException::IMMUTABLE_UNOFFICIAL => $this->trans(
-                    'You can not change an unofficial currency into a real one',
+                    'You cannot change an unofficial currency into a real one',
                     'Admin.International.Notification'
                 ),
                 ImmutableCurrencyFieldException::IMMUTABLE_REAL => $this->trans(
-                    'You can not change a real currency into an unofficial one',
+                    'You cannot change a real currency into an unofficial one',
                     'Admin.International.Notification'
                 ),
                 ImmutableCurrencyFieldException::IMMUTABLE_ISO_CODE => $this->trans(
-                    'You can not modify ISO code of a real currency',
+                    'You cannot modify ISO code of a real currency',
                     'Admin.International.Notification'
                 ),
                 ImmutableCurrencyFieldException::IMMUTABLE_NUMERIC_ISO_CODE => $this->trans(
-                    'You can not modify numeric ISO code of a real currency',
+                    'You cannot modify numeric ISO code of a real currency',
                     'Admin.International.Notification'
                 ),
             ],
