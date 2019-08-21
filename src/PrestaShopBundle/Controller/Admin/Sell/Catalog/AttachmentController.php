@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\DeleteAttachmentCommand
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\BulkDeleteAttachmentsException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\DeleteAttachmentException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachment;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\Attachment;
@@ -181,18 +182,17 @@ class AttachmentController extends FrameworkBundleAdminController
                 $this->trans('Successful deletion.', 'Admin.Notifications.Success')
             );
         } catch (AttachmentException $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e->getMessage())));
         }
 
         return $this->redirectToRoute('admin_attachments_index');
     }
 
     /**
-     * Provides error messages for exceptions
-     *
+     * @param string $originalExceptionMessage
      * @return array
      */
-    private function getErrorMessages(): array
+    private function getErrorMessages(string $originalExceptionMessage = ''): array
     {
         return [
             DeleteAttachmentException::class => $this->trans(
@@ -209,6 +209,14 @@ class AttachmentController extends FrameworkBundleAdminController
                     'Admin.Notifications.Error'
                 ),
             ],
+            BulkDeleteAttachmentsException::class => sprintf(
+                "%s : %s",
+                $this->trans(
+                    'An error occurred while deleting this selection.',
+                    'Admin.Notifications.Error'
+                ),
+                $originalExceptionMessage
+            )
         ];
     }
 

@@ -29,6 +29,9 @@ namespace PrestaShop\PrestaShop\Adapter\Attachment\CommandHandler;
 use PrestaShop\PrestaShop\Adapter\Attachment\AbstractAttachmentHandler;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\BulkDeleteAttachmentsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\CommandHandler\BulkDeleteAttachmentsHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentException;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\BulkDeleteAttachmentsException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\DeleteAttachmentException;
 
 /**
@@ -38,17 +41,27 @@ final class BulkDeleteAttachmentsHandler extends AbstractAttachmentHandler imple
 {
     /**
      * {@inheritdoc}
+     *
+     * @throws BulkDeleteAttachmentsException
      */
     public function handle(BulkDeleteAttachmentsCommand $command)
     {
-        foreach ($command->getAttachmentIds() as $attachmentId) {
-            $attachment = $this->getAttachment($attachmentId);
+        $errors = [];
 
-            if (!$this->deleteAttachment($attachment)) {
-                throw new DeleteAttachmentException(
-                    sprintf('Cannot delete Attachment object with id "%s".', $attachment->id)
-                );
+        foreach ($command->getAttachmentIds() as $attachmentId) {
+            try {
+                $attachment = $this->getAttachment($attachmentId);
+
+                if (!$this->deleteAttachment($attachment)) {
+                    $errors[] = $attachment->id;
+                }
+            } catch (AttachmentException $e) {
+                $errors[] = $attachmentId->getValue();
             }
+        }
+
+        if (!empty($errors)) {
+            throw new BulkDeleteAttachmentsException(implode(", ", $errors));
         }
     }
 }
