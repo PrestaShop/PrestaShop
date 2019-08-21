@@ -191,10 +191,6 @@ class CountryType extends AbstractType
                 ],
             ])
             ->add('address_format', TextareaType::class, [
-                'label' => $this->translator->trans('Address format', [], 'Admin.Global'),
-                'label_attr' => [
-                    'class' => 'form-control-label',
-                ],
                 'required' => true,
                 'constraints' => [
                     new AddressFormat(),
