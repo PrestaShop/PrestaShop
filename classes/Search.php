@@ -998,7 +998,7 @@ class SearchCore
             self::$targetLenghtMin = self::$targetLenghtMax = (int) (strlen($queryString));
         } else {
             /* This part of code could be see like an auto-scale.
-            *  Of course, more the contante PS_SEARCH_MAX_WORDS_IN_TABLE is elevate, more server resource is needed.
+            *  Of course, more the contante ps_search_word table is elevate, more server resource is needed.
             *  So, we need an algorythm to reduce the server load depending the DB size.
             *  Here will be calculated a range of target length depanding the ps_search_word table size.
             *  If ps_search_word table size tends to PS_SEARCH_MAX_WORDS_IN_TABLE, $coefMax and $coefMin will tend to 1.
@@ -1031,19 +1031,18 @@ class SearchCore
             }
             // Could happen when $queryString length * $coefMin > PS_SEARCH_MAX_WORD_LENGTH
             if (self::$targetLenghtMax < self::$targetLenghtMin) {
-
                 return '';
             }
         }
 
         $sql = 'SELECT sw.`word`, SUM(weight) as weight
-                FROM `' . _DB_PREFIX_ . 'search_word` sw
-                LEFT JOIN `' . _DB_PREFIX_ . 'search_index` si ON (sw.`id_word` = si.`id_word`)
-                WHERE sw.`id_lang` = ' . (int) $context->language->id . '
-                AND sw.`id_shop` = ' . (int) $context->shop->id . '
-                AND LENGTH(sw.`word`) >= ' . self::$targetLenghtMin . '
-                AND LENGTH(sw.`word`) <= ' . self::$targetLenghtMax . '
-                GROUP BY sw.`word`;';
+                    FROM `' . _DB_PREFIX_ . 'search_word` sw
+                    LEFT JOIN `' . _DB_PREFIX_ . 'search_index` si ON (sw.`id_word` = si.`id_word`)
+                    WHERE sw.`id_lang` = ' . (int) $context->language->id . '
+                    AND sw.`id_shop` = ' . (int) $context->shop->id . '
+                    AND LENGTH(sw.`word`) >= ' . self::$targetLenghtMin . '
+                    AND LENGTH(sw.`word`) <= ' . self::$targetLenghtMax . '
+                    GROUP BY sw.`word`;';
 
         $selectedWords = Db::getInstance()->executeS($sql);
         $closestWord = array_reduce($selectedWords, function ($a, $b) use ($queryString, &$distance /* Cache */) {
