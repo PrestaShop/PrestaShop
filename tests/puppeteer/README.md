@@ -35,13 +35,6 @@ npm run linkchecker
 URL_BO="Your_Shop_URL_BO" URL_FO="Your_Shop_URL_FO" LOGIN="Your_Login" PASSWD="Your_Password" npm run linkchecker
 ```
 
-#### Run with docker-compose
-
-```bash
-#Create Shop and running test
-docker-compose up --build
-docker-compose exec -e COMMAND="linkchecker" tests bash /tmp/run-tests.sh
-```
 
 ## Smoke tests 
 This campaign includes a non-exhaustive set of tests and it will ensure that the most important functions work.
@@ -53,14 +46,6 @@ If you want to run all smoke tests, you can run the script **campaigns/smoke/***
 
 ```bash
 npm run smoke-tests
-```
-
-#### Run with docker-compose
-
-```bash
-#Create Shop and running test
-docker-compose up --build
-docker-compose exec -e COMMAND="smoke-tests" tests bash /tmp/run-tests.sh
 ```
 
 Enjoy :wink: :v:
