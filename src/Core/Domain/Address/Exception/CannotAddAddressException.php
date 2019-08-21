@@ -31,4 +31,8 @@ namespace PrestaShop\PrestaShop\Core\Domain\Address\Exception;
  */
 class CannotAddAddressException extends AddressException
 {
+    /**
+     * When address format creation failed
+     */
+    const ADDRESS_FORMAT = 1;
 }

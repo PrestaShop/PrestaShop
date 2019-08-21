@@ -24,15 +24,19 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Address\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Country\QueryHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountryForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\EditableCountry;
 
 /**
- * Thrown on failure to update address
+ * Defines contract for get country for editing handler
  */
-class CannotUpdateAddressException extends AddressException
+interface GetCountryForEditingHandlerInterface
 {
     /**
-     * When failed updating address format
+     * @param GetCountryForEditing $command
+     * @return EditableCountry
      */
-    const ADDRESS_FORMAT = 1;
+    public function handle(GetCountryForEditing $command): EditableCountry;
 }

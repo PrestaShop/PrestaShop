@@ -24,15 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Address\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Country\Exception;
 
 /**
- * Thrown on failure to update address
+ * Is thrown on failure to add new country
  */
-class CannotUpdateAddressException extends AddressException
+class CannotAddCountryException extends CountryException
 {
-    /**
-     * When failed updating address format
-     */
-    const ADDRESS_FORMAT = 1;
 }

@@ -32,7 +32,6 @@ services:
         - '@prestashop.adapter.cache.clearer.symfony_cache_clearer'
         - '@prestashop.adapter.cache.clearer.smarty_cache_clearer'
 
-
   prestashop.core.form.identifiable_object.data_handler.webservice_key_form_data_handler:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\WebserviceKeyFormDataHandler'
     arguments:
@@ -140,3 +139,8 @@ services:
     arguments:
       - '@prestashop.core.command_bus'
       - '@prestashop.adapter.data_provider.customer'
+
+  prestashop.core.form.identifiable_object.data_handler.country_form_data_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CountryFormDataHandler'
+    arguments:
+      - '@prestashop.core.command_bus'

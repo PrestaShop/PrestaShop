@@ -61,3 +61,9 @@ services:
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Address\Command\EditCustomerAddressCommand'
+
+  prestashop.adapter.address.query_handler.is_address_format_valid:
+      class: 'PrestaShop\PrestaShop\Adapter\Address\QueryHandler\IsAddressFormatValidHandler'
+      tags:
+        - name: tactician.handler
+          command: 'PrestaShop\PrestaShop\Core\Domain\Address\Query\IsValidAddressFormat'

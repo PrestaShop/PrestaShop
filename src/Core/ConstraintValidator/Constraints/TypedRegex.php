@@ -50,6 +50,7 @@ class TypedRegex extends Constraint
     const TYPE_CURRENCY_ISO_CODE = 'currency_iso_code';
     const TYPE_FILE_NAME = 'file_name';
     const TYPE_DNI_LITE = 'dni_lite';
+    const TYPE_ZIP_CODE_FORMAT = 'zip_code_format';
 
     /**
      * @var string

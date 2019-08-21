@@ -24,15 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Address\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Country\CommandHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\Country\Command\AddCountryCommand;
 
 /**
- * Thrown on failure to update address
+ * Defines contract for add country handler
  */
-class CannotUpdateAddressException extends AddressException
+interface AddCountryHandlerInterface
 {
     /**
-     * When failed updating address format
+     * @param AddCountryCommand $command
      */
-    const ADDRESS_FORMAT = 1;
+    public function handle(AddCountryCommand $command);
 }

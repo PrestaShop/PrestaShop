@@ -24,15 +24,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Address\Exception;
+namespace PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints;
 
-/**
- * Thrown on failure to update address
- */
-class CannotUpdateAddressException extends AddressException
+use PrestaShop\PrestaShop\Core\ConstraintValidator\AddressFormatValidator;
+use Symfony\Component\Validator\Constraint;
+
+class AddressFormat extends Constraint
 {
+    public $message = '%s is invalid.';
+
     /**
-     * When failed updating address format
+     * {@inheritdoc}
      */
-    const ADDRESS_FORMAT = 1;
+    public function validatedBy()
+    {
+        return AddressFormatValidator::class;
+    }
 }
