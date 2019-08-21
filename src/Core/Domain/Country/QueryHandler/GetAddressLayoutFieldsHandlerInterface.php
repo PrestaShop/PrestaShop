@@ -24,15 +24,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Address\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Country\QueryHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetAddressLayoutFields;
+use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\AddressLayoutFields;
 
 /**
- * Thrown on failure to update address
+ * Defines contract for address layout fields handler
  */
-class CannotUpdateAddressException extends AddressException
+interface GetAddressLayoutFieldsHandlerInterface
 {
     /**
-     * When failed updating address format
+     * @param GetAddressLayoutFields $command
+     *
+     * @return AddressLayoutFields
      */
-    const ADDRESS_FORMAT = 1;
+    public function handle(GetAddressLayoutFields $command): AddressLayoutFields;
 }

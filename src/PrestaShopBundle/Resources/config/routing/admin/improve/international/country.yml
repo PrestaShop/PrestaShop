@@ -1,0 +1,29 @@
+admin_countries_index:
+  path: /
+  methods: GET
+  defaults:
+    _controller: PrestaShopBundle:Admin\Improve\International\Country:index
+    _legacy_controller: AdminCountries
+#    _legacy_link: AdminCountries
+
+admin_countries_create:
+  path: /new
+  methods: [GET, POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Improve\International\Country:create
+    _legacy_controller: AdminCountries
+#    _legacy_link: AdminCountries:addcountry
+
+admin_countries_edit:
+  path: /{countryId}/edit
+  methods: [GET, POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Improve\International\Country:edit
+    _legacy_controller: AdminCountries
+#    _legacy_link: AdminCountries:updatecountry
+    _legacy_parameters:
+      id_country: countryId
+  requirements:
+    stateId: \d+
+
+

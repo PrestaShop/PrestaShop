@@ -24,15 +24,36 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Address\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Country\Query;
+
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 
 /**
- * Thrown on failure to update address
+ * Gets country information for editing.
  */
-class CannotUpdateAddressException extends AddressException
+class GetCountryForEditing
 {
     /**
-     * When failed updating address format
+     * @var CountryId
      */
-    const ADDRESS_FORMAT = 1;
+    private $countryId;
+
+    /**
+     * @param int $countryId
+     *
+     * @throws CountryConstraintException
+     */
+    public function __construct(int $countryId)
+    {
+        $this->countryId = new CountryId($countryId);
+    }
+
+    /**
+     * @return CountryId
+     */
+    public function getCountryId(): CountryId
+    {
+        return $this->countryId;
+    }
 }

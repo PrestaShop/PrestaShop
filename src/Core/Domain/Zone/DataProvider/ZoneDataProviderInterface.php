@@ -24,15 +24,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Address\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Zone\DataProvider;
 
 /**
- * Thrown on failure to update address
+ * Defines contract for zone data provider
  */
-class CannotUpdateAddressException extends AddressException
+interface ZoneDataProviderInterface
 {
     /**
-     * When failed updating address format
+     * Return available zones.
+     *
+     * @param bool $active only active zones
+     * @param bool $activeFirst order by active DESC
+     *
+     * @return array
      */
-    const ADDRESS_FORMAT = 1;
+    public function getZones($active = false, $activeFirst = false): array;
 }

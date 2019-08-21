@@ -1,0 +1,31 @@
+{% macro tabContent(data = []) %}
+  <div class="tab-content" >
+    {% for key, rows in data %}
+      <div class="tab-pane availableFieldsList panel {% if loop.index == 1 %} active {% endif %}" id="availableListFieldsFor_{{ key }}">
+        {% for row in rows %}
+          {% set value = row %}
+          {% if row|split(':')|length > 1 %}
+            {% set value = row|split(':')|last %}
+          {% endif %}
+          <a href="javascript:void(0);" class="addPattern btn btn-default btn-xs" id={{ row }}>
+            <i class="material-icons">add_circle_outline</i>{{ value }}
+          </a>
+        {% endfor %}
+      </div>
+    {% endfor %}
+  </div>
+{% endmacro %}
+
+{% macro tabNav(data = []) %}
+  {% set tabActive = 'active show' %}
+  <ul class="nav nav-tabs bordered" id="custom-address-fields">
+    {% for key, rows in data %}
+      {% if loop.index != 1 %}
+        {% set tabActive = '' %}
+      {% endif %}
+      <li class="nav-item">
+        <a href="#availableListFieldsFor_{{ key }}" class="nav-link  {{ tabActive }}"><i class="icon-caret-up"></i>{{ key }}</a>
+      </li>
+    {% endfor %}
+  </ul>
+{% endmacro %}

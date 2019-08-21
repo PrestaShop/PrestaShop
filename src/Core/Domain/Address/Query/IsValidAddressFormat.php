@@ -24,15 +24,31 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Address\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Address\Query;
 
 /**
- * Thrown on failure to update address
+ * Determines if address format field value is valid
  */
-class CannotUpdateAddressException extends AddressException
+class IsValidAddressFormat
 {
     /**
-     * When failed updating address format
+     * @var string
      */
-    const ADDRESS_FORMAT = 1;
+    private $format;
+
+    /**
+     * @param string $format
+     */
+    public function __construct(string $format)
+    {
+        $this->format = $format;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFormat(): string
+    {
+        return $this->format;
+    }
 }
