@@ -6,14 +6,15 @@ services:
       context: ./
       dockerfile: .docker/prestashop/ps_git
     environment:
-      DB_SERVER: db
-      PS_INSTALL_AUTO: 1
-      PS_COUNTRY: fr
-      PS_DEV_MODE: 0
-      PS_ERASE_DB: 1
-      PS_DOMAIN: prestashop-web
-      PS_FOLDER_ADMIN: admin-dev
-      PS_FOLDER_INSTALL: install-dev
+      - DB_SERVER=db
+      - PS_INSTALL_AUTO=1
+      - PS_COUNTRY=fr
+      - PS_DEV_MODE=0
+      - PS_ERASE_DB=1
+      - PS_DOMAIN=prestashop-web
+      - PS_FOLDER_ADMIN=admin-dev
+      - PS_FOLDER_INSTALL=install-dev
+      - PS_VERSION=${PS_VERSION}
     depends_on:
       - "db"
     command: ["/tmp/wait-for-it.sh", "--timeout=60", "--strict", "db:3306", "--", "/tmp/docker_run_git.sh"]
