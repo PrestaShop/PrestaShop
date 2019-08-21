@@ -29,7 +29,6 @@ namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
-use PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\AccessibilityCheckerInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
@@ -41,13 +40,12 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
-use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
- * Attachment grid definition
+ * Defines attachments list grid
  */
 final class AttachmentGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
