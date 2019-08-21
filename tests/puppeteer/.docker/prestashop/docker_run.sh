@@ -1,10 +1,10 @@
 #!/bin/sh
 
-if [ ! -z "$PS_VERSION" ]; then
-  echo "git checkout $PS_VERSION"
+if [ ! -z "$PS_VERSION_TO_INSTALL" ]; then
+  echo "git checkout $PS_VERSION_TO_INSTALL"
   cd /var/www/html
   git fetch && git fetch --tags
-  git checkout -f "$PS_VERSION"
+  git checkout -f "$PS_VERSION_TO_INSTALL"
 fi
 
 if [ "$DB_SERVER" = "<to be defined>" -a $PS_INSTALL_AUTO = 1 ]; then

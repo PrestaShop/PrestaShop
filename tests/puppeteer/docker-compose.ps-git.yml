@@ -14,7 +14,7 @@ services:
       - PS_DOMAIN=prestashop-web
       - PS_FOLDER_ADMIN=admin-dev
       - PS_FOLDER_INSTALL=install-dev
-      - PS_VERSION=${PS_VERSION}
+      - PS_VERSION_TO_INSTALL=${PS_VERSION_TO_INSTALL}
     depends_on:
       - "db"
     command: ["/tmp/wait-for-it.sh", "--timeout=60", "--strict", "db:3306", "--", "/tmp/docker_run_git.sh"]
