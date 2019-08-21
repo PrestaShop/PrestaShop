@@ -27,22 +27,12 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Address\Exception;
 
 /**
- * Is thrown when address constraint is violated
+ * Thrown on failure to update address
  */
-class AddressConstraintException extends AddressException
+class CannotUpdateAddressException extends AddressException
 {
     /**
-     * When address id is not valid
+     * When failed updating address format
      */
-    const INVALID_ID = 10;
-
-    /**
-     * When manufacturer id provided for address is not valid
-     */
-    const INVALID_MANUFACTURER_ID = 20;
-
-    /**
-     * When provided address format is invalid
-     */
-    const INVALID_FORMAT = 30;
+    const ADDRESS_FORMAT = 1;
 }

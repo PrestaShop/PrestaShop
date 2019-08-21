@@ -1,0 +1,32 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.adapter.country.command_handler.abstract_country_handler:
+    abstract:  true
+    class: 'PrestaShop\PrestaShop\Adapter\Country\AbstractCountryHandler'
+
+  prestashop.adapter.country.command_handler.create_country_handler:
+    public: true
+    class: 'PrestaShop\PrestaShop\Adapter\Country\CommandHandler\AddCountryHandler'
+    tags:
+      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Country\Command\AddCountryCommand' }
+
+  prestashop.adapter.country.command_handler.edit_country_handler:
+    public: true
+    class: 'PrestaShop\PrestaShop\Adapter\Country\CommandHandler\EditCountryHandler'
+    parent: 'prestashop.adapter.country.command_handler.abstract_country_handler'
+    tags:
+      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Country\Command\EditCountryCommand' }
+
+  prestashop.adapter.country.query_handler.get_address_layout:
+    public: true
+    class: 'PrestaShop\PrestaShop\Adapter\Country\QueryHandler\GetAddressLayoutFieldsHandler'
+    tags:
+      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Country\Query\GetAddressLayoutFields' }
+
+  prestashop.adapter.country.query_handler.get_editable_country:
+    public: true
+    class: 'PrestaShop\PrestaShop\Adapter\Country\QueryHandler\GetCountryForEditingHandler'
+    tags:
+      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountryForEditing' }

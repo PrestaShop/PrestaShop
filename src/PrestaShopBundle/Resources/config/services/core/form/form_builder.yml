@@ -119,3 +119,10 @@ services:
     arguments:
       - 'PrestaShopBundle\Form\Admin\Sell\Address\ManufacturerAddressType'
       - '@prestashop.core.form.identifiable_object.data_provider.manufacturer_address_form_data_provider'
+
+  prestashop.core.form.identifiable_object.builder.country_form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: 'prestashop.core.form.builder.form_builder_factory:create'
+    arguments:
+      - 'PrestaShopBundle\Form\Admin\Improve\International\Locations\Country\CountryType'
+      - '@prestashop.core.form.identifiable_object.data_provider.country_form_data_provider'

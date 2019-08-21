@@ -24,25 +24,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Address\Exception;
+namespace PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints;
 
-/**
- * Is thrown when address constraint is violated
- */
-class AddressConstraintException extends AddressException
+use PrestaShop\PrestaShop\Core\ConstraintValidator\AddressFormatValidator;
+use Symfony\Component\Validator\Constraint;
+
+class AddressFormat extends Constraint
 {
-    /**
-     * When address id is not valid
-     */
-    const INVALID_ID = 10;
+    public $message = '%s is invalid.';
 
     /**
-     * When manufacturer id provided for address is not valid
+     * {@inheritdoc}
      */
-    const INVALID_MANUFACTURER_ID = 20;
-
-    /**
-     * When provided address format is invalid
-     */
-    const INVALID_FORMAT = 30;
+    public function validatedBy()
+    {
+        return AddressFormatValidator::class;
+    }
 }

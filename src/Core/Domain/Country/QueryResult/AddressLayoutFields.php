@@ -24,25 +24,61 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Address\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Country\QueryResult;
 
 /**
- * Is thrown when address constraint is violated
+ * Stores data for address layout modification fields
  */
-class AddressConstraintException extends AddressException
+class AddressLayoutFields
 {
     /**
-     * When address id is not valid
+     * @var array
      */
-    const INVALID_ID = 10;
+    private $validFields;
 
     /**
-     * When manufacturer id provided for address is not valid
+     * @var string
      */
-    const INVALID_MANUFACTURER_ID = 20;
+    private $addressLayout;
 
     /**
-     * When provided address format is invalid
+     * @var string
      */
-    const INVALID_FORMAT = 30;
+    private $defaultLayout;
+
+    /**
+     * @param array $validFields
+     * @param string $addressLayout
+     * @param string $defaultLayout
+     */
+    public function __construct(array $validFields, string $addressLayout, string $defaultLayout)
+    {
+        $this->validFields = $validFields;
+        $this->addressLayout = $addressLayout;
+        $this->defaultLayout = $defaultLayout;
+    }
+
+    /**
+     * @return string
+     */
+    public function getValidFields(): array
+    {
+        return $this->validFields;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAddressLayout(): string
+    {
+        return $this->addressLayout;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDefaultLayout(): string
+    {
+        return $this->defaultLayout;
+    }
 }

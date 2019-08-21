@@ -24,25 +24,31 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Address\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Address\Query;
 
 /**
- * Is thrown when address constraint is violated
+ * Determines if address format field value is valid
  */
-class AddressConstraintException extends AddressException
+class IsValidAddressFormat
 {
     /**
-     * When address id is not valid
+     * @var string
      */
-    const INVALID_ID = 10;
+    private $format;
 
     /**
-     * When manufacturer id provided for address is not valid
+     * @param string $format
      */
-    const INVALID_MANUFACTURER_ID = 20;
+    public function __construct(string $format)
+    {
+        $this->format = $format;
+    }
 
     /**
-     * When provided address format is invalid
+     * @return string
      */
-    const INVALID_FORMAT = 30;
+    public function getFormat(): string
+    {
+        return $this->format;
+    }
 }

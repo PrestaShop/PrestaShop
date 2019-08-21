@@ -24,25 +24,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Address\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Country\Exception;
+
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 
 /**
- * Is thrown when address constraint is violated
+ * Base exception for countries subdomain
  */
-class AddressConstraintException extends AddressException
+class CountryException extends DomainException
 {
-    /**
-     * When address id is not valid
-     */
-    const INVALID_ID = 10;
-
-    /**
-     * When manufacturer id provided for address is not valid
-     */
-    const INVALID_MANUFACTURER_ID = 20;
-
-    /**
-     * When provided address format is invalid
-     */
-    const INVALID_FORMAT = 30;
 }

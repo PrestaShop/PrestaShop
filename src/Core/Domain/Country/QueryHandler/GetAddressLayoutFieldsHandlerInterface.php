@@ -24,25 +24,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Address\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Country\QueryHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetAddressLayoutFields;
+use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\AddressLayoutFields;
 
 /**
- * Is thrown when address constraint is violated
+ * Defines contract for address layout fields handler
  */
-class AddressConstraintException extends AddressException
+interface GetAddressLayoutFieldsHandlerInterface
 {
     /**
-     * When address id is not valid
+     * @param GetAddressLayoutFields $command
+     *
+     * @return AddressLayoutFields
      */
-    const INVALID_ID = 10;
-
-    /**
-     * When manufacturer id provided for address is not valid
-     */
-    const INVALID_MANUFACTURER_ID = 20;
-
-    /**
-     * When provided address format is invalid
-     */
-    const INVALID_FORMAT = 30;
+    public function handle(GetAddressLayoutFields $command): AddressLayoutFields;
 }

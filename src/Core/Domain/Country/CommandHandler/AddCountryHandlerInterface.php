@@ -24,25 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Address\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Country\CommandHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\Country\Command\AddCountryCommand;
 
 /**
- * Is thrown when address constraint is violated
+ * Defines contract for add country handler
  */
-class AddressConstraintException extends AddressException
+interface AddCountryHandlerInterface
 {
     /**
-     * When address id is not valid
+     * @param AddCountryCommand $command
      */
-    const INVALID_ID = 10;
-
-    /**
-     * When manufacturer id provided for address is not valid
-     */
-    const INVALID_MANUFACTURER_ID = 20;
-
-    /**
-     * When provided address format is invalid
-     */
-    const INVALID_FORMAT = 30;
+    public function handle(AddCountryCommand $command);
 }

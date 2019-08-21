@@ -24,25 +24,36 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Address\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Country\Query;
+
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 
 /**
- * Is thrown when address constraint is violated
+ * Provides data for address layout modification fields
  */
-class AddressConstraintException extends AddressException
+class GetAddressLayoutFields
 {
     /**
-     * When address id is not valid
+     * @var CountryId|null
      */
-    const INVALID_ID = 10;
+    private $countryId;
 
     /**
-     * When manufacturer id provided for address is not valid
+     * @param int $countryId
+     *
+     * @throws CountryConstraintException
      */
-    const INVALID_MANUFACTURER_ID = 20;
+    public function setCountryId(int $countryId)
+    {
+        $this->countryId = new CountryId($countryId);
+    }
 
     /**
-     * When provided address format is invalid
+     * @return CountryId|null
      */
-    const INVALID_FORMAT = 30;
+    public function getCountryId(): ?CountryId
+    {
+        return $this->countryId;
+    }
 }

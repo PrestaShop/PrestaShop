@@ -24,25 +24,21 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Address\Exception;
+namespace PrestaShop\PrestaShop\Adapter\Zone;
+
+use Zone;
+use PrestaShop\PrestaShop\Core\Domain\Zone\DataProvider\ZoneDataProviderInterface;
 
 /**
- * Is thrown when address constraint is violated
+ * This class will provide data from DB / ORM about Zone
  */
-class AddressConstraintException extends AddressException
+final class ZoneDataProvider implements ZoneDataProviderInterface
 {
     /**
-     * When address id is not valid
+     * {@inheritdoc}
      */
-    const INVALID_ID = 10;
-
-    /**
-     * When manufacturer id provided for address is not valid
-     */
-    const INVALID_MANUFACTURER_ID = 20;
-
-    /**
-     * When provided address format is invalid
-     */
-    const INVALID_FORMAT = 30;
+    public function getZones($active = false, $activeFirst = false): array
+    {
+        return Zone::getZones($active, $activeFirst);
+    }
 }

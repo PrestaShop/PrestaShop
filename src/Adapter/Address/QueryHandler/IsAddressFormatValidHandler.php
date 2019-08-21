@@ -24,25 +24,39 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Address\Exception;
+namespace PrestaShop\PrestaShop\Adapter\Address\QueryHandler;
+
+use AddressFormat;
+use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressException;
+use PrestaShop\PrestaShop\Core\Domain\Address\Query\IsValidAddressFormat;
+use PrestaShop\PrestaShop\Core\Domain\Address\QueryHandler\IsAddressFormatValidHandlerInterface;
+use PrestaShopException;
 
 /**
- * Is thrown when address constraint is violated
+ * Handles validation of address format field value
  */
-class AddressConstraintException extends AddressException
+class IsAddressFormatValidHandler implements IsAddressFormatValidHandlerInterface
 {
     /**
-     * When address id is not valid
+     * @param IsValidAddressFormat $command
+     *
+     * @return bool
+     *
+     * @throws AddressException
      */
-    const INVALID_ID = 10;
+    public function handle(IsValidAddressFormat $command): bool
+    {
+        try {
+            $addressFormat = new AddressFormat();
+        } catch (PrestaShopException $e) {
+            throw new AddressException('Failed to create AddressFormat object for validation');
+        }
 
-    /**
-     * When manufacturer id provided for address is not valid
-     */
-    const INVALID_MANUFACTURER_ID = 20;
+        $addressFormat->format = $command->getFormat();
+        $isValid = $addressFormat->checkFormatFields();
 
-    /**
-     * When provided address format is invalid
-     */
-    const INVALID_FORMAT = 30;
+        unset($addressFormat);
+
+        return $isValid;
+    }
 }

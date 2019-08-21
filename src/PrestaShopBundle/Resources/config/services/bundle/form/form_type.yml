@@ -887,3 +887,19 @@ services:
           - { method: setTranslator, arguments: ['@translator'] }
         tags:
           - { name: form.type }
+
+    form.type.international.locations.country:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Locations\Country\CountryType'
+        arguments:
+          - '@translator'
+          - '@=service("prestashop.core.form.choice_provider.currency_by_id").getChoices()'
+          - '@=service("prestashop.adapter.multistore_feature").isActive()'
+        tags:
+          - { name: form.type }
+
+    form.type.common.zone_choice:
+      class: 'PrestaShopBundle\Form\Admin\Type\ZoneChoiceType'
+      arguments:
+        - '@prestashop.core.form.choice_provider.zone_by_id'
+      tags:
+        - { name: form.type }
