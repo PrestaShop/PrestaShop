@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\ModalFormSubmitBulkAction;
@@ -47,6 +48,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\ColorColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
 use PrestaShopBundle\Form\Admin\Type\DateRangeType;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
@@ -79,6 +81,10 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
      * @var string
      */
     private $contextDateFormat;
+    /**
+     * @var FeatureInterface
+     */
+    private $multistoreFeature;
 
     /**
      * @param HookDispatcherInterface $dispatcher
@@ -86,13 +92,15 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
      * @param FormChoiceProviderInterface $orderCountriesChoiceProvider
      * @param FormChoiceProviderInterface $orderStatusesChoiceProvider
      * @param string $contextDateFormat
+     * @param FeatureInterface $multistoreFeature
      */
     public function __construct(
         HookDispatcherInterface $dispatcher,
         ConfigurationInterface $configuration,
         FormChoiceProviderInterface $orderCountriesChoiceProvider,
         FormChoiceProviderInterface $orderStatusesChoiceProvider,
-        $contextDateFormat
+        $contextDateFormat,
+        FeatureInterface $multistoreFeature
     ) {
         parent::__construct($dispatcher);
 
@@ -100,6 +108,7 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
         $this->orderCountriesChoiceProvider = $orderCountriesChoiceProvider;
         $this->orderStatusesChoiceProvider = $orderStatusesChoiceProvider;
         $this->contextDateFormat = $contextDateFormat;
+        $this->multistoreFeature = $multistoreFeature;
     }
 
     /**
@@ -226,6 +235,16 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setName($this->trans('Company', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'company',
+                ])
+            );
+        }
+
+        if ($this->multistoreFeature->isUsed()) {
+            $columns->addBefore('actions', (new DataColumn('shop_name'))
+                ->setName($this->trans('Shop', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'shop_name',
+                    'sortable' => false,
                 ])
             );
         }

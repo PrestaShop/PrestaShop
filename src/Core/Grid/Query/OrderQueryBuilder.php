@@ -55,23 +55,30 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
      * @var DoctrineSearchCriteriaApplicatorInterface
      */
     private $criteriaApplicator;
+    /**
+     * @var array
+     */
+    private $contextShopIds;
 
     /**
      * @param Connection $connection
      * @param string $dbPrefix
      * @param DoctrineSearchCriteriaApplicatorInterface $criteriaApplicator
      * @param int $contextLangId
+     * @param int[] $contextShopIds
      */
     public function __construct(
         Connection $connection,
         $dbPrefix,
         DoctrineSearchCriteriaApplicatorInterface $criteriaApplicator,
-        $contextLangId
+        $contextLangId,
+        array $contextShopIds
     ) {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
         $this->contextLangId = $contextLangId;
         $this->criteriaApplicator = $criteriaApplicator;
+        $this->contextShopIds = $contextShopIds;
     }
 
     /**
@@ -92,7 +99,7 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
             ->getBaseQueryBuilder($searchCriteria->getFilters())
             ->addSelect('o.id_order, o.reference, o.total_paid_tax_incl, os.paid, osl.name AS osname')
             ->addSelect('CONCAT(LEFT(cu.`firstname`, 1), \'. \', cu.`lastname`) AS `customer`')
-            ->addSelect('os.color, o.payment')
+            ->addSelect('os.color, o.payment, s.name AS shop_name')
             ->addSelect('o.date_add, cu.company, cl.name AS country_name, o.invoice_number, o.delivery_number')
             ->addSelect('IF ((' . $newCustomerSubSelect->getSQL() . ') > 0, 0, 1) AS new')
         ;
@@ -146,17 +153,19 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
                 'os.id_order_state = osl.id_order_state AND osl.id_lang = :context_lang_id'
             )
             ->leftJoin('o', $this->dbPrefix . 'shop', 's', 'o.id_shop = s.id_shop')
+            ->andWhere('o.`id_shop` IN (:contextShopIds)')
             ->setParameter('context_lang_id', $this->contextLangId, PDO::PARAM_INT)
+            ->setParameter('contextShopIds', $this->contextShopIds, Connection::PARAM_INT_ARRAY)
         ;
 
         $strictComparisonFilters = [
-            'id_order' => 'o.id_order',
             'country_name' => 'c.id_country',
             'total_paid_tax_incl' => 'o.total_paid_tax_incl',
             'osname' => 'os.id_order_state',
         ];
 
         $likeComparisonFilters = [
+            'id_order' => 'o.id_order',
             'reference' => 'o.`reference`',
             'company' => 'cu.`company`',
             'payment' => 'o.`payment`',
