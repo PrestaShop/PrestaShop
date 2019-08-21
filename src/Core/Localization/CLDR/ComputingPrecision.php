@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecisionInterface;
 final class ComputingPrecision implements  ComputingPrecisionInterface
 {
     const MULTIPLIER = 3;
+    const MINIMAL_VALUE = 2;
 
     /**
      * {@inheritdoc}
@@ -43,6 +44,6 @@ final class ComputingPrecision implements  ComputingPrecisionInterface
     {
         $computingPrecision = $displayPrecision * self::MULTIPLIER;
 
-        return ($computingPrecision < 2) ? 2 : $computingPrecision;
+        return ($computingPrecision < self::MINIMAL_VALUE) ? self::MINIMAL_VALUE : $computingPrecision;
     }
 }
