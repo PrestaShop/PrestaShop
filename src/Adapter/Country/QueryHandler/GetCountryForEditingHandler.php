@@ -29,12 +29,10 @@ namespace PrestaShop\PrestaShop\Adapter\Country\QueryHandler;
 use AddressFormat;
 use Country;
 use PrestaShop\PrestaShop\Adapter\Country\AbstractCountryHandler;
-use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Country\QueryHandler\GetCountryForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\EditableCountry;
-use PrestaShopException;
 
 /**
  * Handles editable country query

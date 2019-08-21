@@ -78,6 +78,7 @@ class GetAddressLayoutFieldsHandler implements GetAddressLayoutFieldsHandlerInte
      * Gets current country legacy address format layout
      *
      * @param int $countryId
+     *
      * @return string
      */
     protected function getAddressLayout(int $countryId): string
