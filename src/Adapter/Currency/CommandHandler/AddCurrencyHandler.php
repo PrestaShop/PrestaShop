@@ -66,8 +66,8 @@ final class AddCurrencyHandler extends AbstractCurrencyHandler implements AddCur
      */
     public function handle(AddCurrencyCommand $command)
     {
-        $this->assertCustomCurrencyDoesNotMatchAnyIsoCode($command);
-        $this->assertCustomCurrencyDoesNotMatchAnyNumericIsoCode($command);
+        $this->assertUnofficialCurrencyDoesNotMatchAnyIsoCode($command);
+        $this->assertUnofficialCurrencyDoesNotMatchAnyNumericIsoCode($command);
         $this->assertIsoCodesAreMatching($command);
 
         $this->assertCurrencyWithIsoCodeDoesNotExist($command);
@@ -79,7 +79,7 @@ final class AddCurrencyHandler extends AbstractCurrencyHandler implements AddCur
             $entity->iso_code = $command->getIsoCode()->getValue();
             $entity->numeric_iso_code = $command->getNumericIsoCode()->getValue();
             $entity->active = $command->isEnabled();
-            $entity->custom = $command->isCustom();
+            $entity->unofficial = $command->isUnofficial();
             $entity->conversion_rate = $command->getExchangeRate()->getValue();
 
             // CLDR locale give us the CLDR reference specification
@@ -87,7 +87,7 @@ final class AddCurrencyHandler extends AbstractCurrencyHandler implements AddCur
             // CLDR currency gives data from CLDR reference, for the given language
             $cldrCurrency = $cldrLocale->getCurrency($entity->iso_code);
             if (!empty($cldrCurrency)) {
-                // The currency may not be declared in the locale, eg with custom iso code
+                // The currency may not be declared in the locale, eg with unofficial iso code
                 $entity->precision = (int) $cldrCurrency->getDecimalDigits();
                 $entity->numeric_iso_code = $cldrCurrency->getNumericIsoCode();
             }
@@ -160,7 +160,7 @@ final class AddCurrencyHandler extends AbstractCurrencyHandler implements AddCur
     private function assertIsoCodesAreMatching(AddCurrencyCommand $command)
     {
         //Numeric is code will be deduced from iso code, only check real currencies
-        if (null === $command->getNumericIsoCode() || $command->isCustom()) {
+        if (null === $command->getNumericIsoCode() || $command->isUnofficial()) {
             return;
         }
 

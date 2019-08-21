@@ -72,7 +72,7 @@ final class CurrencyFormDataProvider implements FormDataProviderInterface
             'exchange_rate' => $result->getExchangeRate(),
             'shop_association' => $result->getAssociatedShopIds(),
             'active' => $result->isEnabled(),
-            'custom' => $result->isCustom(),
+            'unofficial' => $result->isUnofficial(),
         ];
     }
 
