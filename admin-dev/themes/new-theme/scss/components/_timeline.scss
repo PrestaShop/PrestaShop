@@ -90,29 +90,29 @@
       }
     }
   }
-}
 
-.arrow:after,
-.arrow:before {
-  border-color: transparent;
-  border-style: solid;
-  content: "";
-  display: inline-block;
-  position: absolute;
-}
+  .arrow:after,
+  .arrow:before {
+    border-color: transparent;
+    border-style: solid;
+    content: "";
+    display: inline-block;
+    position: absolute;
+  }
 
-.arrow-left:before {
-  border-right-color: #d1d4d7;
-  border-width: 7px 7px 7px 0;
-  left: 0;
-  margin-left: -7px;
-  top: 6px;
-}
+  .arrow-left:before {
+    border-right-color: #d1d4d7;
+    border-width: 7px 7px 7px 0;
+    left: 0;
+    margin-left: -7px;
+    top: 6px;
+  }
 
-.arrow-right:before {
-  border-left-color: #d1d4d7;
-  border-width: 7px 0 7px 7px;
-  margin-right: -7px;
-  right: 0;
-  top: 6px;
+  .arrow-right:before {
+    border-left-color: #d1d4d7;
+    border-width: 7px 0 7px 7px;
+    margin-right: -7px;
+    right: 0;
+    top: 6px;
+  }
 }
