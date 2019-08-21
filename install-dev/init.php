@@ -77,19 +77,9 @@ if (file_exists(_PS_CORE_DIR_.'/app/config/parameters.php')) {
     require_once _PS_CORE_DIR_.'/config/bootstrap.php';
 
     global $kernel;
-    try {
-        $kernel = new AppKernel(_PS_ENV_, _PS_MODE_DEV_);
-        $kernel->loadClassCache();
-        $kernel->boot();
-    } catch (DBALException $e) {
-        /**
-         * Doctrine couldn't be loaded because database settings point to a
-         * non existence database
-         */
-        if (strpos($e->getMessage(), 'You can circumvent this by setting a \'server_version\' configuration value') === false) {
-            throw $e;
-        }
-    }
+    $kernel = new AppKernel(_PS_ENV_, _PS_MODE_DEV_);
+    $kernel->loadClassCache();
+    $kernel->boot();
 }
 
 if (!defined('_THEME_NAME_')) {
