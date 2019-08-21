@@ -1,5 +1,5 @@
 {% set confirmation = 'Are you sure you want to restore the default address format for this country?'|trans({},'Admin.International.Feature') %}
-<div class="col-lg-24">
+<div class="col-8 address-format-actions">
   <span title=""
     data-toggle="tooltip"
     class="label-tooltip"
@@ -8,7 +8,7 @@
     <a id="useLastDefaultLayout" href="javascript:void(0)"
        data-confirmation="{{ confirmation }}"
        data-default-layout="{{ encodingAddressLayout }}"
-       class="btn btn-primary reset-address-layout">
+       class="btn btn-outline-secondary reset-address-layout">
       {{ 'Use the last registered format'|trans({}, 'Admin.International.Feature') }}
     </a>
   </span>
@@ -19,7 +19,7 @@
            href="javascript:void(0)"
            data-confirmation="{{ confirmation }}"
            data-default-layout="{{ defaultLayout }}"
-           class="btn btn-primary reset-address-layout">
+           class="btn btn-outline-secondary reset-address-layout">
           {{ 'Use the default format'|trans({}, 'Admin.International.Feature') }}
         </a>
   </span>
@@ -29,7 +29,7 @@
             <a id="useCurrentLastModifiedLayout"
                href="javascript:void(0)"
                data-confirmation="{{ confirmation }}"
-               class="btn btn-primary reset-address-layout">
+               class="btn btn-outline-secondary reset-address-layout">
               {{ 'Use my current modified format'|trans({}, 'Admin.International.Feature') }}
             </a>
   </span>
@@ -40,8 +40,8 @@
                href="javascript:void(0)"
                data-confirmation="{{ confirmation }}"
                data-default-layout=" "
-               class="btn btn-primary reset-address-layout">
-              <i class="icon-eraser"></i>  {{ 'Clear format'|trans({}, 'Admin.International.Feature') }}
+               class="btn btn-outline-secondary reset-address-layout">
+              <i class="material-icons">delete_sweep</i>  {{ 'Clear format'|trans({}, 'Admin.International.Feature') }}
             </a>
   </span>
 </div>
