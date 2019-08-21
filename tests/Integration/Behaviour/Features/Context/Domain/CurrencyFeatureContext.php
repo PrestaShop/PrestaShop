@@ -39,7 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDeleteDefaultCurr
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDisableDefaultCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\ImmutableCurrencyFieldException;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\InvalidCustomCurrencyException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\InvalidUnofficialCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
@@ -64,7 +64,7 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
             [$defaultLangId => $data['name']],
             [$defaultLangId => $data['symbol']],
             (bool) $data['is_enabled'],
-            (bool) $data['is_custom']
+            (bool) $data['is_unofficial']
         );
 
         $command->setShopIds([
@@ -111,8 +111,8 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
             $command->setIsEnabled((bool) $data['is_enabled']);
         }
 
-        if (isset($data['is_custom'])) {
-            $command->setIsCustom((bool) $data['is_custom']);
+        if (isset($data['is_unofficial'])) {
+            $command->setIsUnofficial((bool) $data['is_unofficial']);
         }
 
         if (isset($data['shop_association'])) {
@@ -186,17 +186,17 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then /^I should get error that custom currency has invalid (isoCode|numericIsoCode)$/
+     * @Then /^I should get error that unofficial currency has invalid (isoCode|numericIsoCode)$/
      */
-    public function assertLastErrorIsInvalidCustomCurrency($errorType)
+    public function assertLastErrorIsInvalidUnofficialCurrency($errorType)
     {
-        $errorCode = 'isoCode' == $errorType ? InvalidCustomCurrencyException::INVALID_ISO_CODE : InvalidCustomCurrencyException::INVALID_NUMERIC_ISO_CODE;
+        $errorCode = 'isoCode' == $errorType ? InvalidUnofficialCurrencyException::INVALID_ISO_CODE : InvalidUnofficialCurrencyException::INVALID_NUMERIC_ISO_CODE;
 
-        $this->assertLastErrorIs(InvalidCustomCurrencyException::class, $errorCode);
+        $this->assertLastErrorIs(InvalidUnofficialCurrencyException::class, $errorCode);
     }
 
     /**
-     * @Then /^I should get error that (isoCode|numericIsoCode|custom|real) is immutable$/
+     * @Then /^I should get error that (isoCode|numericIsoCode|unofficial|real) is immutable$/
      */
     public function assertLastErrorIsImmutableCurrencyField($errorType)
     {
@@ -207,8 +207,8 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
             case 'numericIsoCode':
                 $errorCode = ImmutableCurrencyFieldException::IMMUTABLE_NUMERIC_ISO_CODE;
                 break;
-            case 'custom':
-                $errorCode = ImmutableCurrencyFieldException::IMMUTABLE_CUSTOM;
+            case 'unofficial':
+                $errorCode = ImmutableCurrencyFieldException::IMMUTABLE_UNOFFICIAL;
                 break;
             case 'real':
                 $errorCode = ImmutableCurrencyFieldException::IMMUTABLE_REAL;

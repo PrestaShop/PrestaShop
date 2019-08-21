@@ -95,8 +95,8 @@ final class EditCurrencyHandler extends AbstractCurrencyHandler implements EditC
             $this->assertCurrencyImmutableFields($entity, $command);
             $this->assertDefaultCurrencyIsNotBeingRemovedOrDisabledFromShop($entity, $command->getShopIds());
 
-            $this->assertCustomCurrencyDoesNotMatchAnyIsoCode($command);
-            $this->assertCustomCurrencyDoesNotMatchAnyNumericIsoCode($command);
+            $this->assertUnofficialCurrencyDoesNotMatchAnyIsoCode($command);
+            $this->assertUnofficialCurrencyDoesNotMatchAnyNumericIsoCode($command);
 
             $this->assertOtherCurrencyWithIsoCodeDoesNotExist($entity, $command);
             $this->assertOtherCurrencyWithNumericIsoCodeDoesNotExist($entity, $command);
@@ -312,13 +312,13 @@ final class EditCurrencyHandler extends AbstractCurrencyHandler implements EditC
      */
     private function assertCurrencyImmutableFields(Currency $currency, EditCurrencyCommand $command)
     {
-        if ($currency->custom != $command->isCustom()) {
+        if ($currency->unofficial != $command->isUnofficial()) {
             throw new ImmutableCurrencyFieldException(
-                'You can not change custom field on a currency',
-                $currency->custom ? ImmutableCurrencyFieldException::IMMUTABLE_CUSTOM : ImmutableCurrencyFieldException::IMMUTABLE_REAL
+                'You can not change unofficial field on a currency',
+                $currency->unofficial ? ImmutableCurrencyFieldException::IMMUTABLE_UNOFFICIAL : ImmutableCurrencyFieldException::IMMUTABLE_REAL
             );
         }
-        if ($currency->custom) {
+        if ($currency->unofficial) {
             return;
         }
 
