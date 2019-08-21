@@ -25,5 +25,3 @@ admin_countries_edit:
       id_country: countryId
   requirements:
     stateId: \d+
-
-

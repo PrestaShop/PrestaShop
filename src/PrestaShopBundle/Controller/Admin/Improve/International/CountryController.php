@@ -33,7 +33,6 @@ use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CannotAddCountryExceptio
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Country\Exception\DeleteCountryException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\UpdateCountryException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetAddressLayoutFields;
 use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountryForEditing;
@@ -132,15 +131,16 @@ class CountryController extends FrameworkBundleAdminController
         $countryForm->handleRequest($request);
 
         try {
-        /** @var AddressLayoutFields $addressLayout */
-        $addressLayout = $this->getQueryBus()->handle(new GetAddressLayoutFields());
+            /** @var AddressLayoutFields $addressLayout */
+            $addressLayout = $this->getQueryBus()->handle(new GetAddressLayoutFields());
 
-        $handlerResult = $countryFormHandler->handle($countryForm);
-        if ($handlerResult->isSubmitted() && $handlerResult->isValid()) {
-            $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+            $handlerResult = $countryFormHandler->handle($countryForm);
 
-            return $this->redirectToRoute('admin_countries_index');
-        }
+            if ($handlerResult->isSubmitted() && $handlerResult->isValid()) {
+                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_countries_index');
+            }
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
 
