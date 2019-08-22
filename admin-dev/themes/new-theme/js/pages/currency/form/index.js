@@ -57,6 +57,9 @@ $(() => {
       $currencySelector.val('');
       $(currencyFormMap.isoCodeSelector).prop('readonly', false);
       $(currencyFormMap.numericIsoCodeSelector).prop('readonly', false);
+    } else {
+      $(currencyFormMap.isoCodeSelector).prop('readonly', true);
+      $(currencyFormMap.numericIsoCodeSelector).prop('readonly', true);
     }
   });
 
@@ -100,9 +103,8 @@ $(() => {
   }
 
   function initFields() {
-    const selectedISOCode = $currencySelector.val();
-    const isUnofficial = parseInt($(currencyFormMap.isUnofficialCheckbox).val());
-    if ('' !== selectedISOCode && !isUnofficial) {
+    const isUnofficial = $(currencyFormMap.isUnofficialCheckbox).prop('checked');
+    if (!isUnofficial) {
       $(currencyFormMap.isUnofficialCheckbox).prop('checked', false);
       $(currencyFormMap.isoCodeSelector).prop('readonly', true);
       $(currencyFormMap.numericIsoCodeSelector).prop('readonly', true);
