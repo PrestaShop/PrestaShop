@@ -52,7 +52,7 @@
           d='Shop.Theme.Global'
         }
       {/if}
-      {if $contact_infos.email}
+      {if $contact_infos.email && $display_email}
         <br>
         {* [1][/1] is for a HTML tag. *}
         {l
