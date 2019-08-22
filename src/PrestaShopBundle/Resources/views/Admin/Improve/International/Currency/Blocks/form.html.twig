@@ -42,13 +42,17 @@
         {{ form_errors(currencyForm) }}
 
         {% if not currencyForm.vars.data.id is defined %}
-        {{ ps.form_group_row(currencyForm.selected_iso_code, {}, {
-          'label': 'Select a currency'|trans({}, 'Admin.International.Feature'),
-        }) }}
+          {% set selectIsoCodeHelp %}
+            {{ 'By default, PrestaShop comes with a list of official currencies. If you want to use a local currency, you will have to add it manually. For example, to accept the Iranian Toman on your store, you need to create it before.'|trans({}, 'Admin.International.Help') }}
+          {% endset %}
+          {{ ps.form_group_row(currencyForm.selected_iso_code, {}, {
+            'label': 'Select a currency'|trans({}, 'Admin.International.Feature'),
+            'help': selectIsoCodeHelp
+          }) }}
 
-        {{ ps.form_group_row(currencyForm.unofficial, {}, {
-          'label': 'or'|trans({}, 'Admin.Global'),
-        }) }}
+          {{ ps.form_group_row(currencyForm.unofficial, {}, {
+            'label': 'or'|trans({}, 'Admin.Global'),
+          }) }}
         {% endif %}
 
         {{ ps.form_group_row(currencyForm.names, {}, {
@@ -61,21 +65,16 @@
 
         {{ ps.form_group_row(currencyForm.iso_code, {}, {
           'label': 'ISO code'|trans({}, 'Admin.International.Feature'),
-          'help': 'ISO code (e.g. USD for Dollars, EUR for Euros, etc.).'|trans({}, 'Admin.International.Help')
+          'help': 'ISO 4217 code (e.g. USD for Dollars, EUR for Euros, etc.)'|trans({}, 'Admin.International.Help')
         }) }}
 
-        {{ ps.form_group_row(currencyForm.numeric_iso_code, {}, {
-          'label': 'Numeric ISO code'|trans({}, 'Admin.International.Feature'),
-          'help': 'Numeric ISO code (e.g. 840 for Dollars, 978 for Euros, etc.).'|trans({}, 'Admin.International.Help')
-        }) }}
-
-        {% set exchangeRateLabel %}
+        {% set exchangeRateHelp %}
           {{ 'Exchange rates are calculated from one unit of your shop\'s default currency. For example, if the default currency is euros and your chosen currency is dollars, type "1.20" (1&euro; = $1.20).'|trans({}, 'Admin.International.Help') }}
         {% endset %}
 
         {{ ps.form_group_row(currencyForm.exchange_rate, {}, {
           'label': 'Exchange rate'|trans({}, 'Admin.International.Feature'),
-          'help': exchangeRateLabel
+          'help': exchangeRateHelp
         }) }}
 
         {{ ps.form_group_row(currencyForm.active, {}, {
@@ -100,6 +99,8 @@
             </div>
           </div>
         {% endif %}
+
+        {{ ps.form_group_row(currencyForm.numeric_iso_code) }}
 
         {% block currency_form_rest %}
           {{ form_rest(currencyForm) }}
