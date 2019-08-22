@@ -96,7 +96,7 @@ global.scenario('Upgrade Prestashop to last Stable', async () => {
     const pageTitle = await dashboardPage.getPageTitle();
     await expect(pageTitle).to.contains(dashboardPage.pageTitle);
     const version = await bOBasePage.getTextContent(bOBasePage.shopVersionBloc);
-    expect(version).to.be.equal('1.7.6.0');
+    expect(version).to.be.equal(global.PS_VERSION);
   });
 
   test('should enable Shop', async () => {

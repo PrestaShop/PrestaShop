@@ -10,3 +10,4 @@ global.db_user = process.env.DB_USER || 'root';
 global.db_passwd = process.env.DB_PASSWD || 'admin';
 global.INSTALL_LANGUAGE = process.env.INSTALL_LANGUAGE || 'en';
 global.INSTALL_COUNTRY = process.env.INSTALL_COUNTRY || 'fr';
+global.PS_VERSION = process.env.PS_VERSION || '1.7.6.0';
