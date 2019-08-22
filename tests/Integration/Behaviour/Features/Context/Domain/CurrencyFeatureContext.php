@@ -59,13 +59,22 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
 
         $command = new AddCurrencyCommand(
             $data['iso_code'],
-            (int) $data['numeric_iso_code'],
             (float) $data['exchange_rate'],
-            [$defaultLangId => $data['name']],
-            [$defaultLangId => $data['symbol']],
             (bool) $data['is_enabled'],
             (bool) $data['is_unofficial']
         );
+
+        if (isset($data['numeric_iso_code'])) {
+            $command->setNumericIsoCode((int) $data['numeric_iso_code']);
+        }
+
+        if (isset($data['name'])) {
+            $command->setLocalizedNames([$defaultLangId => $data['name']]);
+        }
+
+        if (isset($data['symbol'])) {
+            $command->setLocalizedSymbols([$defaultLangId => $data['symbol']]);
+        }
 
         $command->setShopIds([
             (int) $shop->id,

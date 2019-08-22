@@ -77,10 +77,14 @@ final class AddCurrencyHandler extends AbstractCurrencyHandler implements AddCur
             $entity = new Currency();
 
             $entity->iso_code = $command->getIsoCode()->getValue();
-            $entity->numeric_iso_code = $command->getNumericIsoCode()->getValue();
             $entity->active = $command->isEnabled();
             $entity->unofficial = $command->isUnofficial();
             $entity->conversion_rate = $command->getExchangeRate()->getValue();
+            if (null !== $command->getNumericIsoCode()) {
+                $entity->numeric_iso_code = $command->getNumericIsoCode()->getValue();
+            } else {
+                $this->deduceNumericIsoCode($entity, $command);
+            }
 
             // CLDR locale give us the CLDR reference specification
             $cldrLocale = $this->localeRepoCLDR->getLocale($this->defaultLanguage->getLocale());
@@ -140,6 +144,10 @@ final class AddCurrencyHandler extends AbstractCurrencyHandler implements AddCur
      */
     private function assertCurrencyWithNumericIsoCodeDoesNotExist(AddCurrencyCommand $command)
     {
+        if (null === $command->getNumericIsoCode()) {
+            return;
+        }
+
         $numericIsoCode = $command->getNumericIsoCode()->getValue();
         if (Currency::getIdByNumericIsoCode($numericIsoCode)) {
             throw new CurrencyConstraintException(
@@ -159,7 +167,7 @@ final class AddCurrencyHandler extends AbstractCurrencyHandler implements AddCur
      */
     private function assertIsoCodesAreMatching(AddCurrencyCommand $command)
     {
-        //Numeric is code will be deduced from iso code, only check real currencies
+        //Numeric ISO code will be deduced from ISO code, only check real currencies
         if (null === $command->getNumericIsoCode() || $command->isUnofficial()) {
             return;
         }
@@ -185,5 +193,85 @@ final class AddCurrencyHandler extends AbstractCurrencyHandler implements AddCur
                 CurrencyConstraintException::MISMATCHING_ISO_CODES
             );
         }
+    }
+
+    /**
+     * @param Currency $currency
+     * @param AddCurrencyCommand $command
+     *
+     * @throws CurrencyConstraintException
+     */
+    private function deduceNumericIsoCode(Currency $currency, AddCurrencyCommand $command)
+    {
+        if ($command->isUnofficial()) {
+            $this->deduceUnofficialNumericIsoCode($currency);
+        } else {
+            $this->deduceOfficialNumericIsoCode($currency, $command);
+        }
+    }
+
+    /**
+     * @param Currency $currency
+     */
+    private function deduceUnofficialNumericIsoCode(Currency $currency)
+    {
+        $defaultLocaleCLDR = $this->localeRepoCLDR->getLocale($this->defaultLanguage->getLocale());
+        $allCurrencies = $defaultLocaleCLDR->getAllCurrencies();
+
+        $realNumericIsoCodes = [];
+        foreach ($allCurrencies as $currencyData) {
+            if (!empty($currencyData->getNumericIsoCode()) && is_int($currencyData->getNumericIsoCode())) {
+                $realNumericIsoCodes[] = (int) $currencyData->getNumericIsoCode();
+            }
+        }
+
+        $databaseCurrencies = Currency::findAll(false);
+        $databaseNumericIsoCodes = [];
+        foreach ($databaseCurrencies as $databaseCurrency) {
+            if (!empty($databaseCurrency['numeric_iso_code']) && is_int($databaseCurrency['numeric_iso_code'])) {
+                $databaseNumericIsoCodes[] = $databaseCurrency['numeric_iso_code'];
+            }
+        }
+
+        $allowedNumericIsoCodes = [];
+        for ($i = 1; $i < 1000; $i++) {
+            if (!in_array($i, $realNumericIsoCodes) && !in_array($i, $databaseNumericIsoCodes)) {
+                $allowedNumericIsoCodes[] = $i;
+            }
+        }
+
+        $currency->numeric_iso_code = $allowedNumericIsoCodes[rand(0, count($allowedNumericIsoCodes) - 1)];
+    }
+
+    /**
+     * @param Currency $currency
+     * @param AddCurrencyCommand $command
+     *
+     * @throws CurrencyConstraintException
+     */
+    private function deduceOfficialNumericIsoCode(Currency $currency, AddCurrencyCommand $command)
+    {
+        $defaultLocaleCLDR = $this->localeRepoCLDR->getLocale($this->defaultLanguage->getLocale());
+        $allCurrencies = $defaultLocaleCLDR->getAllCurrencies();
+
+        $matchingRealCurrency = null;
+        foreach ($allCurrencies as $currencyData) {
+            if ($currencyData->getIsoCode() == $command->getIsoCode()->getValue()) {
+                $matchingRealCurrency = $currencyData;
+                break;
+            }
+        }
+
+        if (null === $matchingRealCurrency) {
+            throw new CurrencyConstraintException(
+                sprintf(
+                    'The is no real currency with iso code %s',
+                    $command->getIsoCode()->getValue()
+                ),
+                CurrencyConstraintException::INVALID_ISO_CODE
+            );
+        }
+
+        $currency->numeric_iso_code = $matchingRealCurrency->getNumericIsoCode();
     }
 }
