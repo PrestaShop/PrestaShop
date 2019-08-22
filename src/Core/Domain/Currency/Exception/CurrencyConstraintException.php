@@ -39,4 +39,5 @@ class CurrencyConstraintException extends CurrencyException
     const EMPTY_NAME = 6;
     const EMPTY_SYMBOL = 7;
     const MISMATCHING_ISO_CODES = 8;
+    const INVALID_PRECISION = 9;
 }

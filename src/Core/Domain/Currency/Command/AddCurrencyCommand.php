@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintExcep
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\ExchangeRate;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\AlphaIsoCode;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\NumericIsoCode;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\Precision;
 
 /**
  * Class AddCurrencyCommand
@@ -50,6 +51,11 @@ class AddCurrencyCommand implements CurrencyCommandInterface
      * @var ExchangeRate
      */
     private $exchangeRate;
+
+    /**
+     * @var Precision
+     */
+    private $precision;
 
     /**
      * @var string[]
@@ -114,6 +120,28 @@ class AddCurrencyCommand implements CurrencyCommandInterface
     public function setNumericIsoCode($numericIsoCode)
     {
         $this->numericIsoCode = new NumericIsoCode($numericIsoCode);
+
+        return $this;
+    }
+
+    /**
+     * @return Precision
+     */
+    public function getPrecision()
+    {
+        return $this->precision;
+    }
+
+    /**
+     * @param int|string $precision
+     *
+     * @return self
+     *
+     * @throws CurrencyConstraintException
+     */
+    public function setPrecision($precision)
+    {
+        $this->precision = new Precision($precision);
 
         return $this;
     }

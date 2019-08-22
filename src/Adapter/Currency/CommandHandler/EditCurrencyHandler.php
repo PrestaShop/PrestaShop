@@ -92,8 +92,6 @@ final class EditCurrencyHandler extends AbstractCurrencyHandler implements EditC
                     )
                 );
             }
-            $this->assertCurrencyImmutableFields($entity, $command);
-            $this->assertDefaultCurrencyIsNotBeingRemovedOrDisabledFromShop($entity, $command->getShopIds());
 
             if ($entity->unofficial) {
                 if (null !== $command->getIsoCode()) {
@@ -102,6 +100,8 @@ final class EditCurrencyHandler extends AbstractCurrencyHandler implements EditC
                 if (null !== $command->getNumericIsoCode()) {
                     $this->assertUnofficialCurrencyDoesNotMatchAnyRealNumericIsoCode($command->getNumericIsoCode()->getValue());
                 }
+            } else {
+                $this->assertCurrencyImmutableFields($entity, $command);
             }
 
             $this->assertOtherCurrencyWithIsoCodeDoesNotExist($entity, $command);
@@ -114,9 +114,13 @@ final class EditCurrencyHandler extends AbstractCurrencyHandler implements EditC
             if (null !== $command->getNumericIsoCode()) {
                 $entity->numeric_iso_code = $command->getNumericIsoCode()->getValue();
             }
+            if (null !== $command->getExchangeRate()) {
+                $entity->conversion_rate = $command->getExchangeRate()->getValue();
+            }
+            if (null !== $command->getPrecision()) {
+                $entity->precision = $command->getPrecision()->getValue();
+            }
             $entity->active = $command->isEnabled();
-
-            $entity->conversion_rate = $command->getExchangeRate()->getValue();
 
             if (!empty($command->getLocalizedNames())) {
                 $entity->name = $entity->names = $command->getLocalizedNames();
@@ -136,8 +140,11 @@ final class EditCurrencyHandler extends AbstractCurrencyHandler implements EditC
                 );
             }
 
-            $this->associateWithShops($entity, $command->getShopIds());
-            $this->associateConversionRateToShops($entity, $command->getShopIds());
+            if (!empty($command->getShopIds())) {
+                $this->assertDefaultCurrencyIsNotBeingRemovedOrDisabledFromShop($entity, $command->getShopIds());
+                $this->associateWithShops($entity, $command->getShopIds());
+                $this->associateConversionRateToShops($entity, $command->getShopIds());
+            }
         } catch (PrestaShopException $exception) {
             throw new CurrencyException(
                 sprintf(
@@ -318,16 +325,6 @@ final class EditCurrencyHandler extends AbstractCurrencyHandler implements EditC
      */
     private function assertCurrencyImmutableFields(Currency $currency, EditCurrencyCommand $command)
     {
-        if ($currency->unofficial != $command->isUnofficial()) {
-            throw new ImmutableCurrencyFieldException(
-                'You can not change unofficial field on a currency',
-                $currency->unofficial ? ImmutableCurrencyFieldException::IMMUTABLE_UNOFFICIAL : ImmutableCurrencyFieldException::IMMUTABLE_REAL
-            );
-        }
-        if ($currency->unofficial) {
-            return;
-        }
-
         if (null !== $command->getIsoCode() && $currency->iso_code != $command->getIsoCode()->getValue()) {
             throw new ImmutableCurrencyFieldException(
                 'You can not change iso code field on a real currency',
