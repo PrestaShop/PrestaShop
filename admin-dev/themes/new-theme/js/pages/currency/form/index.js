@@ -43,12 +43,10 @@ $(() => {
     if ('' !== selectedISOCode) {
       $(currencyFormMap.isUnofficialCheckbox).prop('checked', false);
       $(currencyFormMap.isoCodeSelector).prop('readonly', true);
-      $(currencyFormMap.numericIsoCodeSelector).prop('readonly', true);
       resetCurrencyData(selectedISOCode);
     } else {
       $(currencyFormMap.isUnofficialCheckbox).prop('checked', true);
       $(currencyFormMap.isoCodeSelector).prop('readonly', false);
-      $(currencyFormMap.numericIsoCodeSelector).prop('readonly', false);
     }
   });
 
@@ -56,10 +54,8 @@ $(() => {
     if ($(currencyFormMap.isUnofficialCheckbox).prop('checked')) {
       $currencySelector.val('');
       $(currencyFormMap.isoCodeSelector).prop('readonly', false);
-      $(currencyFormMap.numericIsoCodeSelector).prop('readonly', false);
     } else {
       $(currencyFormMap.isoCodeSelector).prop('readonly', true);
-      $(currencyFormMap.numericIsoCodeSelector).prop('readonly', true);
     }
   });
 
@@ -107,11 +103,9 @@ $(() => {
     if (!isUnofficial) {
       $(currencyFormMap.isUnofficialCheckbox).prop('checked', false);
       $(currencyFormMap.isoCodeSelector).prop('readonly', true);
-      $(currencyFormMap.numericIsoCodeSelector).prop('readonly', true);
     } else {
       $currencySelector.val('');
       $(currencyFormMap.isoCodeSelector).prop('readonly', false);
-      $(currencyFormMap.numericIsoCodeSelector).prop('readonly', false);
     }
   }
   initFields();
