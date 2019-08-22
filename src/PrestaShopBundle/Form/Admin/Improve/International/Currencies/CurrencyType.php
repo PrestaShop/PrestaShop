@@ -166,10 +166,7 @@ class CurrencyType extends TranslatorAwareType
                     ]),
                 ],
             ])
-            ->add('numeric_iso_code', IntegerType::class, [
-                'attr' => $isoCodeAttrs,
-                'required' => false,
-            ])
+            ->add('numeric_iso_code', HiddenType::class)
             ->add('exchange_rate', NumberType::class, [
                 'scale' => 6,
                 'constraints' => [
