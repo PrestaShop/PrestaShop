@@ -84,6 +84,7 @@ $(() => {
         if (currencyData.exchange_rate) {
           $(currencyFormMap.exchangeRateSelector).val(currencyData.exchange_rate);
         }
+        $(currencyFormMap.precisionSelector).val(currencyData.precision);
         $(currencyFormMap.loadingDataModalSelector).modal('hide');
         $(currencyFormMap.resetDefaultSettingsSelector).removeClass('spinner');
       })

@@ -77,6 +77,10 @@
           'help': exchangeRateHelp
         }) }}
 
+        {{ ps.form_group_row(currencyForm.precision, {}, {
+          'label': 'Decimals'|trans({}, 'Admin.International.Feature')
+        }) }}
+
         {{ ps.form_group_row(currencyForm.active, {}, {
           'label': 'Status'|trans({}, 'Admin.Global'),
         }) }}
