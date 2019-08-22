@@ -139,9 +139,8 @@ class AttachmentController extends FrameworkBundleAdminController
             }
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
-            if ($e instanceof AttachmentNotFoundException) {
-                return $this->redirectToRoute('admin_attachments_index');
-            }
+
+            return $this->redirectToRoute('admin_attachments_index');
         }
 
         return $this->render('@PrestaShop/Admin/Sell/Attachment/edit.html.twig', [

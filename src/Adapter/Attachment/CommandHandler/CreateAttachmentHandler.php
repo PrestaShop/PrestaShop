@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentConstraintE
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\CannotAddAttachmentException;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\ValueObject\AttachmentId;
 use PrestaShopException;
 
 /**
@@ -100,5 +101,7 @@ final class CreateAttachmentHandler extends AbstractAttachmentHandler implements
                 $e
             );
         }
+
+        return new AttachmentId($attachment->id);
     }
 }
