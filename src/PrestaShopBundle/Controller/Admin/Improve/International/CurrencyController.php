@@ -245,10 +245,11 @@ class CurrencyController extends FrameworkBundleAdminController
             }
 
             $currency = new Currency($currencyData);
-            $cldrCurrency['names'][$language['id_lang']] = $currency->getDisplayName();
-            $cldrCurrency['symbols'][$language['id_lang']] = $currency->getSymbol() ?: $currencyData->getIsoCode();
             $cldrCurrency['iso_code'] = $currencyData->getIsoCode();
             $cldrCurrency['numeric_iso_code'] = (int) $currencyData->getNumericIsoCode();
+            $cldrCurrency['precision'] = $currencyData->getDecimalDigits();
+            $cldrCurrency['names'][$language['id_lang']] = $currency->getDisplayName();
+            $cldrCurrency['symbols'][$language['id_lang']] = $currency->getSymbol() ?: $currencyData->getIsoCode();
         }
 
         if (empty($cldrCurrency)) {
@@ -519,14 +520,6 @@ class CurrencyController extends FrameworkBundleAdminController
                 ),
             ],
             ImmutableCurrencyFieldException::class => [
-                ImmutableCurrencyFieldException::IMMUTABLE_UNOFFICIAL => $this->trans(
-                    'You cannot change an unofficial currency into a real one',
-                    'Admin.International.Notification'
-                ),
-                ImmutableCurrencyFieldException::IMMUTABLE_REAL => $this->trans(
-                    'You cannot change a real currency into an unofficial one',
-                    'Admin.International.Notification'
-                ),
                 ImmutableCurrencyFieldException::IMMUTABLE_ISO_CODE => $this->trans(
                     'You cannot modify ISO code of a real currency',
                     'Admin.International.Notification'

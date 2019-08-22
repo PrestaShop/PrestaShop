@@ -16,7 +16,7 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2019 PrestaShop SA and Contributors
@@ -26,55 +26,49 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject;
 
+
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintException;
 
-/**
- * Class ExchangeRate
- */
-class ExchangeRate
+class Precision
 {
-    const DEFAULT_RATE = 1.0;
-
     /**
-     * @var float
+     * @var int
      */
-    private $exchangeRate;
+    private $precision;
 
     /**
-     * @param float $exchangeRate
+     * @param int|string $precision
      *
      * @throws CurrencyConstraintException
      */
-    public function __construct($exchangeRate)
+    public function __construct($precision)
     {
-        $this->assertIsNumberAndMoreThanZero($exchangeRate);
-        $this->exchangeRate = $exchangeRate;
+        $this->assertIsPositiveInteger($precision);
+        $this->precision = $precision;
     }
 
     /**
-     * @return float
+     * @return int
      */
     public function getValue()
     {
-        return $this->exchangeRate;
+        return $this->precision;
     }
 
     /**
-     * @param float|int $exchangeRate
+     * @param int|string $precision
      *
      * @throws CurrencyConstraintException
      */
-    private function assertIsNumberAndMoreThanZero($exchangeRate)
+    private function assertIsPositiveInteger($precision)
     {
-        $isIntegerOrFloat = is_int($exchangeRate) || is_float($exchangeRate);
-
-        if (!$isIntegerOrFloat || 0 >= $exchangeRate) {
+        if ((!is_int($precision) && !ctype_digit($precision)) || (int) $precision < 0) {
             throw new CurrencyConstraintException(
                 sprintf(
-                    'Given exchange rate %s is not valid. It must be more than 0',
-                    var_export($exchangeRate, true)
+                    'Given precision "%s" is not valid. It must be a positive integer',
+                    var_export($precision, true)
                 ),
-                CurrencyConstraintException::INVALID_EXCHANGE_RATE
+                CurrencyConstraintException::INVALID_PRECISION
             );
         }
     }
