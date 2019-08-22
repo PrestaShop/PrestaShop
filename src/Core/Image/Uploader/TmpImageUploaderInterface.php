@@ -24,13 +24,16 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Image\Uploader\Exception;
+namespace PrestaShop\PrestaShop\Core\Image\Uploader;
 
-use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-/**
- * Class ImageOptimizationException is thrown when resizing, cutting or optimizing image fails.
- */
-class ImageOptimizationException extends CoreException
+interface TmpImageUploaderInterface
 {
+    /**
+     * @param UploadedFile $file
+     *
+     * @return string uploaded image path
+     */
+    public function upload(UploadedFile $file): string;
 }

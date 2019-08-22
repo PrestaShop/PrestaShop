@@ -55,9 +55,12 @@
           'help': 'Enter "0" for a longest shipping delay, or "9" for the shortest shipping delay.'|trans({}, 'Admin.Shipping.Help')
         }) }}
 
-        {{ ps.form_group_row(carrierForm.step_general.logo, {}, {
-          'label': 'Logo'|trans({}, 'Admin.Global'),
-        }) }}
+        <div class="carrier-logo-upload" data-image-upload-url="{{ uploadImageUrl }}">
+          {{ ps.form_group_row(carrierForm.step_general.logo, {}, {
+            'label': 'Logo'|trans({}, 'Admin.Global'),
+          }) }}
+        </div>
+
 
         {{ ps.form_group_row(carrierForm.step_general.tracking_url, {}, {
           'label': 'Tracking url'|trans({}, 'Admin.Global'),

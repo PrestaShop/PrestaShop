@@ -33,6 +33,7 @@ import TranslatableInput from './../../components/translatable-input.js';
 import ChoiceTree from '../../components/form/choice-tree.js';
 import ChoiceTable from '../../components/choice-table.js';
 import ZonesCheckHandler from './zones-check-handler.js';
+import ImageUploader from './image-uploader.js';
 
 const $ = window.$;
 
@@ -94,5 +95,11 @@ $(() => {
     CarrierFormMap.shippingCostSummaryCaseWeight,
     CarrierFormMap.outrangedBehaviorSummaryCaseHighest,
     CarrierFormMap.outrangedBehaviorSummaryCaseDisable,
+  );
+
+  new ImageUploader(
+    CarrierFormMap.imageUploadBlock,
+    CarrierFormMap.imageTarget,
+    CarrierFormMap.formWrapper
   );
 });

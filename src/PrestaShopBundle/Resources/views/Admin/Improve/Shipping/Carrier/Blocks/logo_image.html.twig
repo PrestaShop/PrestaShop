@@ -1,5 +1,4 @@
-<?php
-/**
+{#**
  * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
@@ -22,15 +21,19 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- */
+ *#}
 
-namespace PrestaShop\PrestaShop\Core\Image\Uploader\Exception;
-
-use PrestaShop\PrestaShop\Core\Exception\CoreException;
-
-/**
- * Class ImageOptimizationException is thrown when resizing, cutting or optimizing image fails.
- */
-class ImageOptimizationException extends CoreException
-{
-}
+{% block carrier_logo %}
+  <div class="card" id="carrier-logo">
+    <div class="card-header">{{ 'Logo'|trans({}, 'Admin.Global') }}</div>
+    <div class="card-block text-center">
+      <img
+        src="{% if logoSrc is defined %}
+          {{ logoSrc }}
+        {% else %}
+          /img/admin/carrier-default.jpg
+        {% endif %}"
+      class="img-thumbnail">
+    </div>
+  </div>
+{% endblock %}

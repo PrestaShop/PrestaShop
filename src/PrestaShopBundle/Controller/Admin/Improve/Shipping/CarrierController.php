@@ -26,9 +26,13 @@
 
 namespace PrestaShopBundle\Controller\Admin\Improve\Shipping;
 
+use Exception;
+use PrestaShop\PrestaShop\Core\Image\Uploader\TmpImageUploaderInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier\CarrierType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -63,6 +67,42 @@ class CarrierController extends FrameworkBundleAdminController
             'carrierForm' => $carrierForm->createView(),
             'contextLangId' => $this->container->get('prestashop.adapter.legacy.context')->getContext()->language->id,
             'defaultLangId' => $this->get('prestashop.adapter.legacy.configuration')->getInt('PS_LANG_DEFAULT'),
+            'uploadImageUrl' => $this->generateUrl('admin_carriers_upload_image'),
         ]);
+    }
+
+    public function uploadImageAction(Request $request): JsonResponse
+    {
+        $carrierForm = $this->createForm(CarrierType::class);
+        $carrierForm->handleRequest($request);
+
+        $errorMsg = $this->trans(
+            'An error occurred during the image upload process.',
+            'Admin.Notifications.Error'
+        );
+
+        if ($carrierForm->isSubmitted() && $carrierForm->isValid()) {
+            /** @var UploadedFile $image */
+            $image = $carrierForm->getData()['step_general']['logo'];
+
+            /** @var TmpImageUploaderInterface $tmpImageUploader */
+            $tmpImageUploader = $this->container->get('prestashop.adapter.image.uploader.tmp_image_uploader');
+
+            try {
+                return $this->json([
+                    'img_path' => $tmpImageUploader->upload($image),
+                ]);
+            } catch (Exception $e) {
+                return $this->json(
+                    ['message' => $errorMsg],
+                    Response::HTTP_BAD_REQUEST
+                );
+            }
+        }
+
+        return $this->json(
+            ['message' => $errorMsg],
+            Response::HTTP_BAD_REQUEST
+        );
     }
 }

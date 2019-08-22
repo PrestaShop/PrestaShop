@@ -11,3 +11,10 @@ admin_carriers_create:
   defaults:
     _controller: 'PrestaShopBundle:Admin\Improve\Shipping\Carrier:create'
     _legacy_controller: AdminCarriers
+
+admin_carriers_upload_image:
+  path: carriers/upload-image
+  methods: [POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Improve\Shipping\Carrier:uploadImage'
+    _legacy_controller: AdminCarrierWizard:uploadLogo

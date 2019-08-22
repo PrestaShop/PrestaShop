@@ -57,4 +57,6 @@ export default {
   shippingCostSummaryCaseWeight: '#js-carrier-shipping-cost-weight',
   outrangedBehaviorSummaryCaseHighest: '#js-outranged-highest',
   outrangedBehaviorSummaryCaseDisable: '#js-outranged-disable',
+  imageTarget: '#carrier-logo img',
+  imageUploadBlock: '.carrier-logo-upload',
 };

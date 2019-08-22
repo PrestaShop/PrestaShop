@@ -1,4 +1,3 @@
-<?php
 /**
  * 2007-2019 PrestaShop and Contributors
  *
@@ -24,13 +23,48 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Image\Uploader\Exception;
-
-use PrestaShop\PrestaShop\Core\Exception\CoreException;
+const $ = window.$;
 
 /**
- * Class ImageOptimizationException is thrown when resizing, cutting or optimizing image fails.
+ * Responsible uploading and showing carrier temporary image
  */
-class ImageOptimizationException extends CoreException
-{
+export default class ImageUploader {
+  constructor(
+    imageUploadBlock,
+    imageTarget,
+    formWrapper,
+  ) {
+    this.$imageUploadBlock = $(imageUploadBlock);
+    this.$imageTarget = $(imageTarget);
+    this.form = document.querySelector(`${formWrapper} form`);
+
+    this.handle();
+
+    return {};
+  }
+
+  /**
+   * Initiates the handler
+   */
+  handle() {
+    $(this.$imageUploadBlock.find('input')).on('change', (e) => {
+      this.uploadImage(e);
+    });
+  }
+
+  uploadImage(e) {
+    $.ajax({
+      url: this.$imageUploadBlock.data('image-upload-url'),
+      method: 'POST',
+      processData: false,
+      contentType: false,
+      dataType: 'json',
+      data: new FormData(this.form),
+    }).then((response) => {
+      this.$imageTarget.prop('src', response.img_path);
+    }).catch((response) => {
+      showErrorMessage(response.responseJSON.message);
+    });
+  }
 }
+

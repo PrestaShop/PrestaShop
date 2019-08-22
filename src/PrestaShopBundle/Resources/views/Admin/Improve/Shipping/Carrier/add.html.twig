@@ -31,14 +31,9 @@
 {% block content %}
   <div class="row justify-content-center">
     <div class="col-3">
-      <div class="card">
-        <div class="card-block">
-          {#@todo: carrier logo #}
-          logo
-        </div>
-      </div>
+      {% include '@PrestaShop/Admin/Improve/Shipping/Carrier/Blocks/logo_image.html.twig' %}
     </div>
-    <div class="col-9" id="carrier_form">
+    <div class="col-9">
       {% include '@PrestaShop/Admin/Improve/Shipping/Carrier/Blocks/form.html.twig' %}
     </div>
   </div>
