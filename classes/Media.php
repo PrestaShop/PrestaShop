@@ -291,7 +291,9 @@ class MediaCore
      *
      * @param mixed $version
      *
-     * @return string
+     * @return array
+     *
+     * @deprecated 1.7.7
      */
     public static function getJqueryPath($version = null, $folder = null, $minifier = true)
     {
@@ -771,6 +773,12 @@ class MediaCore
         }
     }
 
+    /**
+     * @param $output
+     * @return string|string[]|null
+     *
+     * @deprecated 1.7.7
+     */
     public static function deferInlineScripts($output)
     {
         /* Try to enqueue in js_files inline scripts with src but without conditionnal comments */

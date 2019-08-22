@@ -76,4 +76,3 @@ Feature: Manufacturer management
   Scenario: Deleting multiple manufacturers in bulk action
     When I delete manufacturers: "baller, rocket" using bulk action
     Then manufacturers: "baller, rocket" should be deleted
- 
