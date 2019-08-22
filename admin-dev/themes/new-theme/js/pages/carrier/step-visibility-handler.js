@@ -28,30 +28,30 @@ import {EventEmitter} from '../../components/event-emitter';
 const $ = window.$;
 
 export default class StepVisibilityHandler {
-  constructor(formWrapperSelector) {
-    this.formWrapperSelector = formWrapperSelector;
-    this._handle();
+  constructor(formWrapper) {
+    this.formWrapper = formWrapper;
+    this.handle();
 
     return {};
   }
 
-  _handle() {
-    $(document).on('click', `${this.formWrapperSelector} .js-form-step-switch`, event => this._showStep(event));
+  handle() {
+    $(document).on('click', `${this.formWrapper} .js-form-step-switch`, event => this.showStep(event));
   }
 
-  _showStep(event) {
+  showStep(event) {
     const $this = $(event.currentTarget);
     const stepToShow = $this.data('step');
-    this._activateTab(stepToShow);
+    this.activateTab(stepToShow);
 
-    $(document).find(`${this.formWrapperSelector} .js-form-step.active`).removeClass('active');
-    $(document).find(`${this.formWrapperSelector} *[data-step=${stepToShow}].js-form-step`).addClass('active');
+    $(document).find(`${this.formWrapper} .js-form-step.active`).removeClass('active');
+    $(document).find(`${this.formWrapper} *[data-step=${stepToShow}].js-form-step`).addClass('active');
 
     EventEmitter.emit('formStepSwitched');
   }
 
-  _activateTab(stepToShow) {
-    $(document).find(`${this.formWrapperSelector} .nav-link`).removeClass('active');
-    $(document).find(`${this.formWrapperSelector} *[data-step=${stepToShow}].nav-link `).addClass('active');
+  activateTab(stepToShow) {
+    $(document).find(`${this.formWrapper} .nav-link`).removeClass('active');
+    $(document).find(`${this.formWrapper} *[data-step=${stepToShow}].nav-link `).addClass('active');
   }
 }

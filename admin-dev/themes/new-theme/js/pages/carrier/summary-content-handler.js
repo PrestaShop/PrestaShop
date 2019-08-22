@@ -32,6 +32,7 @@ const $ = window.$;
  */
 export default class SummaryContentHandler {
   constructor(
+    nameSummary,
     formWrapper,
     carrierNameInput,
     freeShippingInput,
@@ -40,13 +41,20 @@ export default class SummaryContentHandler {
     taxRuleSelect,
     rangeRow,
     rangesSummaryWrapper,
+    rangeSummary,
     outrangedSelect,
     zoneCheck,
     zonesSummaryTarget,
     groupChecks,
     groupsSummaryTarget,
     shopChecks,
-    shopsSummaryTarget
+    shopsSummaryTarget,
+    transitSummaryCaseFree,
+    transitSummaryCasePriced,
+    shippingCostCasePrice,
+    shippingCostCaseWeight,
+    outrangedBehaviorCaseHighest,
+    outrangedBehaviorCaseDisable,
   ) {
     this.contextLangId = $(formWrapper).data('context-lang-id');
     this.defaultLangId = $(formWrapper).data('default-lang-id');
@@ -54,11 +62,13 @@ export default class SummaryContentHandler {
     this.freeShippingInput = freeShippingInput;
     this.transitTimeInput = transitTimeInput;
 
+    this.$nameSummary = $(nameSummary);
     this.$formWrapper = $(formWrapper);
     this.$billing = $(billingChoice);
     this.$taxRuleSelect = $(taxRuleSelect);
     this.$rangeRow = $(rangeRow);
     this.$rangesSummary = $(rangesSummaryWrapper);
+    this.$rangeSummary = $(rangeSummary);
     this.$outrangedSelect = $(outrangedSelect);
     this.$zoneCheck = $(zoneCheck);
     this.$zonesSummaryTarget = $(zonesSummaryTarget);
@@ -66,8 +76,12 @@ export default class SummaryContentHandler {
     this.$groupsSummaryTarget = $(groupsSummaryTarget);
     this.$shopChecks = $(shopChecks);
     this.$shopsSummaryTarget = $(shopsSummaryTarget);
-
-
+    this.$transitSummaryCaseFree = $(transitSummaryCaseFree);
+    this.$transitSummaryCasePriced = $(transitSummaryCasePriced);
+    this.$shippingCostCasePrice = $(shippingCostCasePrice);
+    this.$shippingCostCaseWeight = $(shippingCostCaseWeight);
+    this.$outrangedBehaviorCaseHighest = $(outrangedBehaviorCaseHighest);
+    this.$outrangedBehaviorCaseDisable = $(outrangedBehaviorCaseDisable);
 
     this.handle();
 
@@ -105,7 +119,7 @@ export default class SummaryContentHandler {
         .find(`${this.carrierNameInput.replace(/__LANG__/, this.defaultLangId)}`)
         .val();
     }
-    this.$formWrapper.find('.js-name-summary').html(nameValue);
+    this.$nameSummary.html(nameValue);
   }
 
   /**
@@ -125,12 +139,12 @@ export default class SummaryContentHandler {
     }
 
     // case when shipping is priced
-    let transitCase = this.$formWrapper.find('#js-priced-carrier-transit');
+    let transitCase = this.$transitSummaryCasePriced;
 
     if (isFreeShipping) {
       transitCase.hide();
       // case when shipping is free
-      transitCase = this.$formWrapper.find('#js-free-carrier-transit');
+      transitCase = this.$transitSummaryCaseFree;
     }
 
     // replace place holder with selected transit value
@@ -149,26 +163,23 @@ export default class SummaryContentHandler {
    * @param isFreeShipping
    */
   summarizeShippingCost(isFreeShipping) {
-    const billingCasePrice = this.$formWrapper.find('#js-carrier-shipping-cost-price');
-    const billingCaseWeight = this.$formWrapper.find('#js-carrier-shipping-cost-weight');
-
     if (isFreeShipping) {
       // hide billing content when free shipping is selected
-      billingCasePrice.hide();
-      billingCaseWeight.hide();
+      this.$shippingCostCasePrice.hide();
+      this.$shippingCostCaseWeight.hide();
 
       return;
     }
 
-    const selectedTaxRule = this.$taxRuleSelect.find(`option[value="${this.$taxRuleSelect.val()}"]`).text();
+    const selectedTaxRule = this.$taxRuleSelect.find(`option[value="${this.$taxRuleSelect.find('select').val()}"]`).text();
 
     // default case billing by weight
-    let billingCase = this.$formWrapper.find('#js-carrier-shipping-cost-weight');
+    let billingCase = this.$shippingCostCaseWeight;
 
     // case when billing by price is selected
     if (this.$billing.find('input:checked').val() === '2') {
       billingCase.hide();
-      billingCase = this.$formWrapper.find('#js-carrier-shipping-cost-price');
+      billingCase = this.$shippingCostCasePrice;
     }
 
     // replace placeholder with selected tax rule in content
@@ -203,24 +214,22 @@ export default class SummaryContentHandler {
       measure = 'kg';
     }
 
-    const $rangeSummary = this.$rangesSummary.find('#js-range');
-
     // replace placeholders with range values
-    const rangeText = $rangeSummary.data('range-summary')
+    const rangeText = this.$rangeSummary.data('range-summary')
       .replace('%1$s', `<b>${rangeFrom} ${measure}</b>`)
       .replace('%2$s', `<b>${rangeTo} ${measure}</b>`);
 
     // insert and show content
-    $rangeSummary.html(rangeText);
-    $rangeSummary.show();
+    this.$rangeSummary.html(rangeText);
+    this.$rangeSummary.show();
 
     // default case when out of range behavior is "apply highest range"
-    let outrangedCase = this.$rangesSummary.find('#js-outranged-highest');
+    let outrangedCase = this.$outrangedBehaviorCaseHighest;
 
     if (this.$outrangedSelect.val() === '1') {
       outrangedCase.hide();
       // case when out of range behavior "disable carrier" is selected
-      outrangedCase = this.$rangesSummary.find('#js-outranged-disable');
+      outrangedCase = this.$outrangedBehaviorCaseDisable;
     }
 
     // insert and show content
@@ -264,7 +273,9 @@ export default class SummaryContentHandler {
 
     // append list item for each checked input in shop association choice table
     $.each(this.$shopChecks.find('input:checked'), (i, shopInput) => {
-      this.$shopsSummaryTarget.append(`<li><b>${$(shopInput).parent().text()}</b></li>`)
+      if (shopInput.hasAttribute('value') && shopInput.value !== '0') {
+        this.$shopsSummaryTarget.append(`<li><b>${$(shopInput).parent().text()}</b></li>`)
+      }
     })
   }
 }

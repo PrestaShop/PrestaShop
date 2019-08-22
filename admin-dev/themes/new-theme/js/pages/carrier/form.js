@@ -71,14 +71,16 @@ $(() => {
   );
 
   new SummaryContentHandler(
+    CarrierFormMap.nameSummary,
     CarrierFormMap.formWrapper,
-    CarrierFormMap.carrierNameInput,
+    CarrierFormMap.nameInput,
     CarrierFormMap.freeShippingChoice,
     CarrierFormMap.transitTimeInput,
     CarrierFormMap.billingChoice,
     CarrierFormMap.taxRuleSelect,
     CarrierFormMap.rangeRow,
     CarrierFormMap.rangesSummaryWrapper,
+    CarrierFormMap.rangeSummary,
     CarrierFormMap.outrangedBehaviorSelect,
     CarrierFormMap.zoneCheckbox,
     CarrierFormMap.zonesSummaryTarget,
@@ -86,5 +88,11 @@ $(() => {
     CarrierFormMap.groupsSummaryTarget,
     CarrierFormMap.shopAssociation,
     CarrierFormMap.shopsSummaryTarget,
+    CarrierFormMap.transitSummaryCaseFree,
+    CarrierFormMap.transitSummaryCasePriced,
+    CarrierFormMap.shippingCostSummaryCasePrice,
+    CarrierFormMap.shippingCostSummaryCaseWeight,
+    CarrierFormMap.outrangedBehaviorSummaryCaseHighest,
+    CarrierFormMap.outrangedBehaviorSummaryCaseDisable,
   );
 });
