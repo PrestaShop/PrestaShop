@@ -110,7 +110,6 @@ class CountryController extends FrameworkBundleAdminController
      * Toggles country status
      *
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_countries_index")
-     * @DemoRestricted(redirectRoute="admin_countries_index")
      *
      * @param int $countryId
      *
@@ -139,7 +138,6 @@ class CountryController extends FrameworkBundleAdminController
      * Enables states on bulk action
      *
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_countries_index")
-     * @DemoRestricted(redirectRoute="admin_countries_index")
      *
      * @param Request $request
      *
@@ -196,7 +194,6 @@ class CountryController extends FrameworkBundleAdminController
      *     "is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))",
      *     redirectRoute="admin_countries_index"
      * )
-     * @DemoRestricted(redirectRoute="admin_countries_index")
      *
      * @param Request $request
      *
@@ -328,7 +325,6 @@ class CountryController extends FrameworkBundleAdminController
      *     "is_granted('update', request.get('_legacy_controller'))",
      *     redirectRoute="admin_countries_index"
      * )
-     * @DemoRestricted(redirectRoute="admin_countries_index")
      *
      * @param int $countryId
      *
