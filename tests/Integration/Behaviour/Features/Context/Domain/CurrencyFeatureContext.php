@@ -30,6 +30,7 @@ use Behat\Gherkin\Node\TableNode;
 use Currency;
 use Configuration;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddCurrencyCommand;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddUnofficialCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\DeleteCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\EditCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\ToggleCurrencyStatusCommand;
@@ -55,12 +56,19 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
         /** @var \Shop $shop */
         $shop = SharedStorage::getStorage()->get($data['shop_association']);
 
-        $command = new AddCurrencyCommand(
-            $data['iso_code'],
-            (float) $data['exchange_rate'],
-            (bool) $data['is_enabled'],
-            (bool) $data['is_unofficial']
-        );
+        if ($data['is_unofficial']) {
+            $command = new AddUnofficialCurrencyCommand(
+                $data['iso_code'],
+                (float) $data['exchange_rate'],
+                (bool) $data['is_enabled']
+            );
+        } else {
+            $command = new AddCurrencyCommand(
+                $data['iso_code'],
+                (float) $data['exchange_rate'],
+                (bool) $data['is_enabled']
+            );
+        }
 
         if (isset($data['numeric_iso_code'])) {
             $command->setNumericIsoCode((int) $data['numeric_iso_code']);
