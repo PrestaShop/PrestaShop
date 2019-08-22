@@ -26,6 +26,14 @@ services:
         tags:
             - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddCurrencyCommand' }
 
+    prestashop.adapter.currency.command_handler.create_unofficial_currency:
+      class: 'PrestaShop\PrestaShop\Adapter\Currency\CommandHandler\AddUnofficialCurrencyHandler'
+      arguments:
+        - '@prestashop.core.localization.cldr.locale_repository'
+        - "@=service('prestashop.adapter.legacy.configuration').getInt('PS_LANG_DEFAULT')"
+      tags:
+        - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddUnofficialCurrencyCommand' }
+
     prestashop.adapter.currency.command_handler.update_currency:
         class: 'PrestaShop\PrestaShop\Adapter\Currency\CommandHandler\EditCurrencyHandler'
         arguments:
