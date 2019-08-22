@@ -29,7 +29,6 @@ namespace PrestaShop\PrestaShop\Adapter\Currency\CommandHandler;
 use Currency;
 use Language;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Command\CurrencyCommandInterface;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\InvalidUnofficialCurrencyException;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
 
@@ -72,17 +71,12 @@ abstract class AbstractCurrencyHandler extends AbstractObjectModelHandler
     }
 
     /**
-     * @param CurrencyCommandInterface $command
+     * @param string $isoCode
      *
      * @throws InvalidUnofficialCurrencyException
      */
-    protected function assertUnofficialCurrencyDoesNotMatchAnyIsoCode(CurrencyCommandInterface $command)
+    protected function assertUnofficialCurrencyDoesNotMatchAnyRealIsoCode($isoCode)
     {
-        if (!$command->isUnofficial() || null === $command->getIsoCode()) {
-            return;
-        }
-
-        $isoCode = $command->getIsoCode()->getValue();
         $allLanguages = Language::getLanguages(false);
         foreach ($allLanguages as $languageData) {
             // CLDR locale give us the CLDR reference specification
@@ -101,17 +95,12 @@ abstract class AbstractCurrencyHandler extends AbstractObjectModelHandler
     }
 
     /**
-     * @param CurrencyCommandInterface $command
+     * @param int $numericIsoCode
      *
      * @throws InvalidUnofficialCurrencyException
      */
-    protected function assertUnofficialCurrencyDoesNotMatchAnyNumericIsoCode(CurrencyCommandInterface $command)
+    protected function assertUnofficialCurrencyDoesNotMatchAnyRealNumericIsoCode($numericIsoCode)
     {
-        if (!$command->isUnofficial() || null === $command->getNumericIsoCode()) {
-            return;
-        }
-
-        $numericIsoCode = $command->getNumericIsoCode()->getValue();
         $allLanguages = Language::getLanguages(false);
         foreach ($allLanguages as $languageData) {
             // CLDR locale give us the CLDR reference specification
