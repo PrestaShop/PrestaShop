@@ -535,6 +535,8 @@ abstract class ControllerCore
      * @param string|null $version jQuery library version
      * @param string|null $folder jQuery file folder
      * @param bool $minifier if set tot true, a minified version will be included
+     *
+     * @deprecated 1.7.7
      */
     public function addJquery($version = null, $folder = null, $minifier = true)
     {
