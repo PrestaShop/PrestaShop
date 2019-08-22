@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 define('PS_SEARCH_MAX_WORD_LENGTH', 15);
-define('PS_SEARCH_LEVENSHTEIN_LOOP', 10);
+define('PS_SEARCH_LEVENSHTEIN_LOOP', 10); /* Max time Levenshtein algo is use by search*/
 define('PS_SEARCH_MAX_WORDS_IN_TABLE', 100000); /* Max numer of words in ps_search_word, above which $coefs for target length will be everytime equal to 1 */
 define('PS_SEARCH_ABSCISSA_MIN', 0.5);
 define('PS_SEARCH_ABSCISSA_MAX', 2);
