@@ -181,11 +181,6 @@ class AttachmentController extends FrameworkBundleAdminController
         ]);
     }
 
-    public function editAction(int $attachmentId, Request $request)
-    {
-        return new Response($attachmentId);
-    }
-
     /**
      * View attachment.
      *

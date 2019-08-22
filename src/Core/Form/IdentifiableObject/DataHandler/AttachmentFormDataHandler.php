@@ -51,18 +51,20 @@ final class AttachmentFormDataHandler implements FormDataHandlerInterface
     }
 
     /**
-     * @param array $data
+     * {@inheritdoc}
      */
     public function create(array $data)
     {
         $command = $this->createAddAttachmentCommand($data);
 
-        $this->commandBus->handle($command);
+        /** @var AttachmentId $attachmentId */
+        $attachmentId = $this->commandBus->handle($command);
+
+        return $attachmentId->getValue();
     }
 
     /**
-     * @param int $attachmentId
-     * @param array $data
+     * {@inheritdoc}
      */
     public function update($attachmentId, array $data)
     {
