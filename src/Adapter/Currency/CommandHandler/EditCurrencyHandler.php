@@ -95,8 +95,14 @@ final class EditCurrencyHandler extends AbstractCurrencyHandler implements EditC
             $this->assertCurrencyImmutableFields($entity, $command);
             $this->assertDefaultCurrencyIsNotBeingRemovedOrDisabledFromShop($entity, $command->getShopIds());
 
-            $this->assertUnofficialCurrencyDoesNotMatchAnyIsoCode($command);
-            $this->assertUnofficialCurrencyDoesNotMatchAnyNumericIsoCode($command);
+            if ($entity->unofficial) {
+                if (null !== $command->getIsoCode()) {
+                    $this->assertUnofficialCurrencyDoesNotMatchAnyRealIsoCode($command->getIsoCode()->getValue());
+                }
+                if (null !== $command->getNumericIsoCode()) {
+                    $this->assertUnofficialCurrencyDoesNotMatchAnyRealNumericIsoCode($command->getNumericIsoCode()->getValue());
+                }
+            }
 
             $this->assertOtherCurrencyWithIsoCodeDoesNotExist($entity, $command);
             $this->assertOtherCurrencyWithNumericIsoCodeDoesNotExist($entity, $command);
