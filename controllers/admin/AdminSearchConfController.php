@@ -181,7 +181,7 @@ class AdminSearchConfControllerCore extends AdminController
                             ),
                         ),
                     ),
-                    'PS_SEARCH_ALLOW_SPELLING_ERROR' => array(
+                    'PS_SEARCH_SPELLING_ERROR' => array(
                         'title' => $this->trans('Search with spellind error', array(), 'Admin.Shopparameters.Feature'),
                         'validation' => 'isBool',
                         'cast' => 'intval',
