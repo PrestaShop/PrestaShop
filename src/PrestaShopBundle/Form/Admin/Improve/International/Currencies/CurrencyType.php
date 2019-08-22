@@ -41,6 +41,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\GreaterThan;
+use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
@@ -192,6 +193,34 @@ class CurrencyType extends TranslatorAwareType
                 ],
                 'invalid_message' => $this->trans(
                     'This field is invalid, it must contain numeric values',
+                    'Admin.Notifications.Error'
+                ),
+            ])
+            ->add('precision', IntegerType::class, [
+                'constraints' => [
+                    new Type([
+                        'type' => 'integer',
+                        'message' => $this->trans(
+                            'This value should be of type {{ type }}.',
+                            'Admin.Notifications.Error',
+                            [
+                                '%value%' => 0,
+                            ]
+                        ),
+                    ]),
+                    new GreaterThanOrEqual([
+                        'value' => 0,
+                        'message' => $this->trans(
+                            'This value should be greater than or equal to %value%',
+                            'Admin.Notifications.Error',
+                            [
+                                '%value%' => 0,
+                            ]
+                        ),
+                    ]),
+                ],
+                'invalid_message' => $this->trans(
+                    'This field is invalid, it must contain positive integer',
                     'Admin.Notifications.Error'
                 ),
             ])

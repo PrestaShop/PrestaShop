@@ -74,6 +74,7 @@ final class CurrencyFormDataHandler implements FormDataHandlerInterface
         }
 
         $command
+            ->setPrecision((int) $data['precision'])
             ->setLocalizedNames($data['names'])
             ->setLocalizedSymbols($data['symbols'])
             ->setShopIds(is_array($data['shop_association']) ? $data['shop_association'] : [])
@@ -98,8 +99,8 @@ final class CurrencyFormDataHandler implements FormDataHandlerInterface
             ->setLocalizedNames($data['names'])
             ->setLocalizedSymbols($data['symbols'])
             ->setExchangeRate((float) $data['exchange_rate'])
+            ->setPrecision((int) $data['precision'])
             ->setIsEnabled($data['active'])
-            ->setIsUnofficial($data['unofficial'])
             ->setShopIds(is_array($data['shop_association']) ? $data['shop_association'] : [])
         ;
 
