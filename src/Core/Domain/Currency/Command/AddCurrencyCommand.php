@@ -78,10 +78,7 @@ class AddCurrencyCommand implements CurrencyCommandInterface
 
     /**
      * @param string $isoCode
-     * @param int $numericIsoCode
      * @param float $exchangeRate
-     * @param string[] $localizedNames
-     * @param string[] $localizedSymbols
      * @param bool $isEnabled
      * @param bool $isUnofficial
      *
@@ -89,22 +86,14 @@ class AddCurrencyCommand implements CurrencyCommandInterface
      */
     public function __construct(
         $isoCode,
-        $numericIsoCode,
         $exchangeRate,
-        $localizedNames,
-        $localizedSymbols,
         $isEnabled,
         $isUnofficial
     ) {
         $this->isoCode = new AlphaIsoCode($isoCode);
-        $this->numericIsoCode = new NumericIsoCode($numericIsoCode);
         $this->exchangeRate = new ExchangeRate($exchangeRate);
         $this->isEnabled = $isEnabled;
         $this->isUnofficial = $isUnofficial;
-        $this
-            ->setLocalizedNames($localizedNames)
-            ->setLocalizedSymbols($localizedSymbols)
-        ;
     }
 
     /**
@@ -121,6 +110,20 @@ class AddCurrencyCommand implements CurrencyCommandInterface
     public function getNumericIsoCode()
     {
         return $this->numericIsoCode;
+    }
+
+    /**
+     * @param int $numericIsoCode
+     *
+     * @return self
+     *
+     * @throws CurrencyConstraintException
+     */
+    public function setNumericIsoCode($numericIsoCode)
+    {
+        $this->numericIsoCode = new NumericIsoCode($numericIsoCode);
+
+        return $this;
     }
 
     /**
