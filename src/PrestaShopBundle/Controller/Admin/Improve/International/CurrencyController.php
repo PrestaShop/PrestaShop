@@ -439,7 +439,14 @@ class CurrencyController extends FrameworkBundleAdminController
                     'The %s field is not valid',
                     'Admin.Notifications.Error',
                     [
-                        sprintf('"%s"', $this->trans('Currency', 'Admin.Global')),
+                        sprintf('"%s"', $this->trans('ISO Code', 'Admin.International.Feature')),
+                    ]
+                ),
+                CurrencyConstraintException::INVALID_NUMERIC_ISO_CODE => $this->trans(
+                    'The %s field is not valid',
+                    'Admin.Notifications.Error',
+                    [
+                        sprintf('"%s"', $this->trans('Numeric ISO code', 'Admin.International.Feature')),
                     ]
                 ),
                 CurrencyConstraintException::INVALID_EXCHANGE_RATE => $this->trans(
