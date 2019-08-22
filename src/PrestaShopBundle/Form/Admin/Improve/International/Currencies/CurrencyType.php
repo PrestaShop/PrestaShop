@@ -168,41 +168,7 @@ class CurrencyType extends TranslatorAwareType
             ])
             ->add('numeric_iso_code', IntegerType::class, [
                 'attr' => $isoCodeAttrs,
-                'constraints' => [
-                    new NotBlank([
-                        'message' => $this->trans(
-                            'The %s field is required.',
-                            'Admin.Notifications.Error',
-                            [
-                                sprintf('"%s"', $this->trans('Numeric ISO code', 'Admin.International.Feature')),
-                            ]
-                        ),
-                    ]),
-                    new Type([
-                        'type' => 'integer',
-                        'message' => $this->trans(
-                            'This value should be of type {{ type }}.',
-                            'Admin.Notifications.Error',
-                            [
-                                '%value%' => 0,
-                            ]
-                        ),
-                    ]),
-                    new GreaterThan([
-                        'value' => 0,
-                        'message' => $this->trans(
-                            'This value should be greater than %value%',
-                            'Admin.Notifications.Error',
-                            [
-                                '%value%' => 0,
-                            ]
-                        ),
-                    ]),
-                ],
-                'invalid_message' => $this->trans(
-                    'This field is invalid, it must contain numeric values',
-                    'Admin.Notifications.Error'
-                ),
+                'required' => false,
             ])
             ->add('exchange_rate', NumberType::class, [
                 'scale' => 6,

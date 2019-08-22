@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddCurrencyCommand;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddUnofficialCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\EditCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 
@@ -54,16 +55,29 @@ final class CurrencyFormDataHandler implements FormDataHandlerInterface
      */
     public function create(array $data)
     {
-        $command = new AddCurrencyCommand(
-            $data['iso_code'],
-            (int) $data['numeric_iso_code'],
-            (float) $data['exchange_rate'],
-            $data['names'],
-            $data['symbols'],
-            $data['active'],
-            $data['unofficial']
-        );
-        $command->setShopIds(is_array($data['shop_association']) ? $data['shop_association'] : []);
+        if ($data['unofficial']) {
+            $command = new AddUnofficialCurrencyCommand(
+                $data['iso_code'],
+                (float) $data['exchange_rate'],
+                $data['active']
+            );
+        } else {
+            $command = new AddCurrencyCommand(
+                $data['iso_code'],
+                (float) $data['exchange_rate'],
+                $data['active']
+            );
+        }
+
+        if (!empty($data['numeric_iso_code'])) {
+            $command->setNumericIsoCode((int) $data['numeric_iso_code']);
+        }
+
+        $command
+            ->setLocalizedNames($data['names'])
+            ->setLocalizedSymbols($data['symbols'])
+            ->setShopIds(is_array($data['shop_association']) ? $data['shop_association'] : [])
+        ;
 
         /** @var CurrencyId $currencyId */
         $currencyId = $this->commandBus->handle($command);
