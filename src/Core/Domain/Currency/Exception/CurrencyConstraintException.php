@@ -37,6 +37,6 @@ class CurrencyConstraintException extends CurrencyException
     const INVALID_LIVE_EXCHANGE_RATES = 4;
     const INVALID_NUMERIC_ISO_CODE = 5;
     const EMPTY_NAME = 6;
-    const EMPTY_SYMBOL = 6;
-    const MISMATCHING_ISO_CODES = 7;
+    const EMPTY_SYMBOL = 7;
+    const MISMATCHING_ISO_CODES = 8;
 }
