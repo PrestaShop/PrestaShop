@@ -65,6 +65,11 @@ class EditableCurrency
     private $exchangeRate;
 
     /**
+     * @var int
+     */
+    private $precision;
+
+    /**
      * @var bool
      */
     private $isEnabled;
@@ -86,6 +91,7 @@ class EditableCurrency
      * @param array $names
      * @param array $symbols
      * @param float $exchangeRate
+     * @param int $precision
      * @param bool $isEnabled
      * @param bool $isUnofficial
      * @param int[] $associatedShopIds
@@ -99,6 +105,7 @@ class EditableCurrency
         $names,
         $symbols,
         $exchangeRate,
+        $precision,
         $isEnabled,
         $isUnofficial,
         array $associatedShopIds
@@ -109,6 +116,7 @@ class EditableCurrency
         $this->names = $names;
         $this->symbols = $symbols;
         $this->exchangeRate = $exchangeRate;
+        $this->precision = $precision;
         $this->isEnabled = $isEnabled;
         $this->isUnofficial = $isUnofficial;
         $this->associatedShopIds = $associatedShopIds;
@@ -160,6 +168,14 @@ class EditableCurrency
     public function getExchangeRate()
     {
         return $this->exchangeRate;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPrecision()
+    {
+        return $this->precision;
     }
 
     /**
