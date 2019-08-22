@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\ExchangeRate;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\AlphaIsoCode;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\NumericIsoCode;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\Precision;
 
 /**
  * Class EditCurrencyCommand
@@ -59,6 +60,11 @@ class EditCurrencyCommand implements CurrencyCommandInterface
     private $exchangeRate;
 
     /**
+     * @var Precision
+     */
+    private $precision;
+
+    /**
      * @var string[]
      */
     private $localizedNames;
@@ -72,11 +78,6 @@ class EditCurrencyCommand implements CurrencyCommandInterface
      * @var bool
      */
     private $isEnabled;
-
-    /**
-     * @var bool
-     */
-    private $isUnofficial;
 
     /**
      * @var int[]
@@ -168,6 +169,28 @@ class EditCurrencyCommand implements CurrencyCommandInterface
     }
 
     /**
+     * @return Precision
+     */
+    public function getPrecision()
+    {
+        return $this->precision;
+    }
+
+    /**
+     * @param int|string $precision
+     *
+     * @return self
+     *
+     * @throws CurrencyConstraintException
+     */
+    public function setPrecision($precision)
+    {
+        $this->precision = new Precision($precision);
+
+        return $this;
+    }
+
+    /**
      * @return string[]
      */
     public function getLocalizedNames()
@@ -241,26 +264,6 @@ class EditCurrencyCommand implements CurrencyCommandInterface
     public function setIsEnabled($isEnabled)
     {
         $this->isEnabled = $isEnabled;
-
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isUnofficial()
-    {
-        return $this->isUnofficial;
-    }
-
-    /**
-     * @param bool $isUnofficial
-     *
-     * @return self
-     */
-    public function setIsUnofficial($isUnofficial)
-    {
-        $this->isUnofficial = $isUnofficial;
 
         return $this;
     }
