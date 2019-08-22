@@ -6,7 +6,7 @@ module.exports = class Home extends CommonPage {
 
     // Selectors for home page
     this.logoHomePage = '#_desktop_logo';
-    this.productImg = '#content div:nth-child(%NUMBER) article img';
+    this.productImg = '#content .products div:nth-child(%NUMBER) article img';
     this.userInfoLink = '#_desktop_user_info';
     this.contactLink = '#contact-link';
   }
