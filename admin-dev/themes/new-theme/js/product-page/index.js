@@ -51,7 +51,7 @@ $(() => {
       watchedDescription: '.serp-watched-description',
       watchedMetaUrl: '.serp-watched-url:input',
     },
-    $('#product_form_preview_btn').data('redirect')
+    $('#product_form_preview_btn').data('seo-url')
   );
 
   // This is the only script for the module page so there is no specific file for it.

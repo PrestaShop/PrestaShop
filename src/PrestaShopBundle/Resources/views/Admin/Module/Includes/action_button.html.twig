@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-{% set displayAction = action|capitalize|replace({'_': " "})|trans({}, 'Admin.Actions') %}
+{% set displayAction = action|title|replace({'_': " "})|trans({}, transDomain[action]) %}
 
 {% if (action == 'configure') %}
 

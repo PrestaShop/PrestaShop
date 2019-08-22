@@ -222,18 +222,6 @@ class TranslateCore
         if (isset($langCache[$cacheKey])) {
             $ret = $langCache[$cacheKey];
         } else {
-            if ($_MODULES == null) {
-                if (
-                    $sprintf !== null &&
-                    (!is_array($sprintf) || !empty($sprintf)) &&
-                    !(count($sprintf) === 1 && isset($sprintf['legacy']))
-                ) {
-                    $string = Translate::checkAndReplaceArgs($string, $sprintf);
-                }
-
-                $ret = str_replace('"', '&quot;', $string);
-            }
-
             $currentKey = strtolower('<{' . $name . '}' . _THEME_NAME_ . '>' . $source) . '_' . $key;
             $defaultKey = strtolower('<{' . $name . '}prestashop>' . $source) . '_' . $key;
 

@@ -40,6 +40,8 @@ class EmployeeId
 
     /**
      * @param int $employeeId
+     *
+     * @throws InvalidEmployeeIdException
      */
     public function __construct($employeeId)
     {
@@ -63,7 +65,7 @@ class EmployeeId
      */
     private function assertIntegerIsGreaterThanZero($employeeId)
     {
-        if (!is_numeric($employeeId) || 0 > $employeeId) {
+        if (!is_int($employeeId) || 0 > $employeeId) {
             throw new InvalidEmployeeIdException(sprintf(
                 'Invalid employee id %s supplied. Employee id must be positive integer.',
                 var_export($employeeId, true)

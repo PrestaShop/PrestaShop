@@ -25,6 +25,131 @@ Release Notes for PrestaShop 1.7
 --------------------------------
 
 ####################################
+#   v1.7.6.0 - (2019-07-09)
+####################################
+- Back Office:
+  - Bug fix:
+    - #14532: Check if index.php file exists before ignoring it (by @jolelievre)
+- Core:
+  - Refactoring:
+    - #14552: Use variable instead of recomputing (by @jolelievre)
+
+####################################
+#   v1.7.6.0 RC 2 - (2019-07-05)
+####################################
+- Back Office:
+  - Bug fix:
+    - #14460: Ignore index.php files in Doctrine entities scanning
+    - #14401: Fix grid calendar
+
+- Front Office:
+  - Bug fix:
+    - #14444: Check if selected address belongs to user
+    - #14395: Classic theme force all type number to not have arrows
+
+- Core:
+  - Improvement:
+    - #14438: Testing the factory with number and price specifications
+  - Bug fix:
+    - #14453: Update facetedsearch to 3.0.6
+    - #14400: Wrong way to retrieve CLDR information
+
+####################################
+#   v1.7.6.0 RC 1 - (2019-06-25)
+####################################
+- Back Office:
+  - Improvement:
+    - #14239: Introduce the usage of Module user-displayable exceptions to handle module errors (part 2)
+    - #14008: Adds missing form data arguments in hooks
+    - #13779: Allow to overwrite theme mails if they have modules OR mail templates
+    - #13722: Filter themes without override in email generation form
+  - Bug fix:
+    - #14364: View button doesn't have href
+    - #14331: Handle bad theme error nicely
+    - #14290: Extend customer page
+    - #14259: Avoid bug when creating manually created a language
+    - #14248: Cannot use accented URL with arabic language
+    - #14242: Module form_rest() outside div
+    - #14220: Set schema form rendered when it contains no children
+    - #14189: Fix manufacturer controller using wrong DomainException ns
+    - #14172: Add missing form_errors for identifiable object forms
+    - #13984: Fix bo categories
+    - #14152: Adjust employee avatar size
+    - #14156: Add missing null check in EditCmsPageHandler
+    - #14101: Fix missing permission roles
+    - #14137: Adds missing form_rest in Shop Parameters > Preferences
+    - #14107: Do not allow the selection of any subcategories
+    - #14084: Fixes updating name and symbol for currency
+    - #14021: Improved error handling when theme is uploaded or activated
+    - #14091: Do not use specific prices when displaying price with tax in BO product catalog
+    - #14029: Missing legacy link for themes page
+    - #14028: Add explanations about SEO cards
+    - #14030: Add missing legacy link for translations routes
+    - #13875: Added help property (backported from Symfony 4 framework)
+    - #14007: Fix currency precision from CLDR at install
+    - #13774: Includes missing theme & logo page validation handling for logo and icon images
+    - #13916: Fixes saving private note about customer from order page
+    - #13820: Fixes form_rest placing
+    - #13956: Restore legacy controller and template files deleted late in beta
+    - #13840: Fix resetting sort and items per page on list filters reset action
+    - #13887: Fix saving customer with required fields
+    - #13813: Fixes toggling Category status in Monitoring page
+    - #13866: Fix cart rule calculation for free gift
+    - #13857: Missing legacy links fix for employess controller
+    - #13797: Adds missing legacy links for currency controller
+    - #13777: Incorrect translation arguments passed in cms page form
+    - #13690: Theme and logo page design fixes
+    - #13821: Fix manufacturers, taxes lists id filtering
+    - #13165: Fix multilanguage fields configuration
+    - #13764: Fixes customer view url in notifications bar
+    - #13763: Fix help sidebar display in Customers page
+    - #13765: Fix sql manager bulk actions
+
+- Front Office:
+  - Improvement:
+    - #14180: Improve right block on cart and checkout page
+    - #14138: Add comment in Customer registration form, add better error message
+  - Bug fix:
+    - #14325: Refresh product flags on ajax call when product page is refreshed
+    - #14298: Fix english mail generation on fresh install
+    - #14309: Simplify the installation language to its minimum
+    - #14296: Fix carrier display in order confirmation email
+    - #14251: Fix categories wordbreak
+    - #14190: You need to be authenticated to play with addresses
+    - #14166: Fix categories cover images which had an incorrect format
+    - #14163: Add missing quotes in error message
+    - #13370: Fix cart refresh after voucher removal
+    - #14075: Fix: If Ask for birth date option is disabled, an exception is displayed in the FO
+    - #13905: Step clickable and not - Checkout page
+    - #12891: Fix bug on block social in footer
+    - #13780: Fix displayed discount on tax excluded cart display
+
+- Core:
+  - Improvement:
+    - #14284: Update to Faceted search 3.0.5
+    - #13925: Add getter for current locale
+    - #14197: Update facetedsearch dependency
+    - #14010: Update some license headers that were outdated
+    - #14011: Update outdated CSS assets
+    - #13778: Add new hooks for Symfony migrated pages in XML install file and SQL upgrade
+  - Bug fix:
+    - #14324: Use Admin.Actions instead Admin.International.Help
+    - #14316: Reapply changes from PR switching on PHPSpreadsheet
+    - #14300: &= prevents result to be a boolean
+    - #13795: Updates to Domain
+    - #13919: Tax must be returned depending on PS_TAX_DISPLAY only
+    - #13923: Make sure index exist before getting value for gift message
+    - #14027: Fix BC break on Toggle column parameter
+    - #13885: Force array cache for doctrine
+    - #13808: Update Symfony to latest patch version to fix ICU version problem
+    - #13665: Final retail price is not displayed due to missing CLDR files
+
+- Installer:
+  - Bug fix:
+    - #14243: Fix translation catalogue
+    - #14225: Update facetedsearch cache
+
+####################################
 #   v1.7.6.0-beta.1 - (2019-05-13)
 ####################################
 - Back Office:

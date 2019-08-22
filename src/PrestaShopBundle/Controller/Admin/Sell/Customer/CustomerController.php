@@ -311,10 +311,11 @@ class CustomerController extends AbstractAdminController
      * )
      *
      * @param int $customerId
+     * @param Request $request
      *
      * @return RedirectResponse
      */
-    public function transformGuestToCustomerAction($customerId)
+    public function transformGuestToCustomerAction($customerId, Request $request)
     {
         try {
             $this->getCommandBus()->handle(new TransformGuestToCustomerCommand((int) $customerId));
@@ -322,6 +323,15 @@ class CustomerController extends AbstractAdminController
             $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
         } catch (CustomerException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        if ($request->query->get('id_order')) {
+            $legacyLink = $this->getAdminLink('AdminOrders', [
+                'id_order' => $request->query->get('id_order'),
+                'vieworder' => true,
+            ]);
+
+            return $this->redirect($legacyLink);
         }
 
         return $this->redirectToRoute('admin_customers_view', [
