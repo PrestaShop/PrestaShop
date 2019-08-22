@@ -242,6 +242,24 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
+     * @Then currency :reference precision should be :precision
+     */
+    public function assertCurrencyPrecision($reference, $precision)
+    {
+        /** @var Currency $currency */
+        $currency = SharedStorage::getStorage()->get($reference);
+
+        if ((int) $currency->precision != (int) $precision) {
+            throw new RuntimeException(sprintf(
+                'Currency "%s" has "%s" precision, but "%s" was expected.',
+                $reference,
+                $currency->precision,
+                $precision
+            ));
+        }
+    }
+
+    /**
      * @Then currency :currencyReference should be available in shop :shopReference
      */
     public function assertCurrencyIsAvailableInShop($currencyReference, $shopReference)

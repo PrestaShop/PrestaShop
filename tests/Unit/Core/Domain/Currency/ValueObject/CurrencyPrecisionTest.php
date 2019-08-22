@@ -26,24 +26,26 @@
 
 namespace Tests\Unit\Core\Domain\Currency\ValueObject;
 
+
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\NumericIsoCode;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\Precision;
 
-class CurrencyNumericIsoCodeTest extends TestCase
+class CurrencyPrecisionTest extends TestCase
 {
     /**
-     * @dataProvider getIncorrectNumericIsoCodes
+     * @dataProvider getIncorrectPrecision
      */
-    public function testItThrowsAnExceptionOnIncorrectIsoCodeRegex($incorrectNumericIsoCode)
+    public function testItThrowsAnExceptionOnIncorrectIsoCodeRegex($incorrectPrecision)
     {
         $this->expectException(CurrencyConstraintException::class);
-        $this->expectExceptionCode(CurrencyConstraintException::INVALID_NUMERIC_ISO_CODE);
+        $this->expectExceptionCode(CurrencyConstraintException::INVALID_PRECISION);
 
-        $currencyNumericIsoCode = new NumericIsoCode($incorrectNumericIsoCode);
+        new Precision($incorrectPrecision);
     }
 
-    public function getIncorrectNumericIsoCodes()
+    public function getIncorrectPrecision()
     {
         return [
             [
@@ -65,12 +67,6 @@ class CurrencyNumericIsoCodeTest extends TestCase
                 [],
             ],
             [
-                0,
-            ],
-            [
-                '0',
-            ],
-            [
                 '-51',
             ],
             [
@@ -82,9 +78,9 @@ class CurrencyNumericIsoCodeTest extends TestCase
     /**
      * @dataProvider getCorrectNumericIsoCodes
      */
-    public function testItReturnsRightIsoCode($correctNumericIsoCode, $expectedValue)
+    public function testItReturnsRightPrecision($correctNumericIsoCode, $expectedValue)
     {
-        $currencyNumericIsoCode = new NumericIsoCode($correctNumericIsoCode);
+        $currencyNumericIsoCode = new Precision($correctNumericIsoCode);
 
         $this->assertEquals($expectedValue, $currencyNumericIsoCode->getValue());
     }
@@ -109,12 +105,20 @@ class CurrencyNumericIsoCodeTest extends TestCase
                 49,
             ],
             [
+                '0',
+                0,
+            ],
+            [
                 8,
                 8,
             ],
             [
                 981,
                 981,
+            ],
+            [
+                0,
+                0,
             ],
         ];
     }
