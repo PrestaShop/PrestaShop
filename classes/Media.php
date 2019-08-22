@@ -291,7 +291,7 @@ class MediaCore
      *
      * @param mixed $version
      *
-     * @return string
+     * @return array
      */
     public static function getJqueryPath($version = null, $folder = null, $minifier = true)
     {
@@ -330,8 +330,9 @@ class MediaCore
         }
 
         // added jQuery migrate for compatibility with new version of jQuery
-        // will be removed when using latest version of jQuery
-        $return[] = Media::getJSPath(_PS_JS_DIR_ . 'jquery/jquery-migrate-1.2.1.min.js');
+        if ($version === _PS_JQUERY_VERSION_) {
+            $return[] = Media::getJSPath(_PS_JS_DIR_ . 'jquery/jquery-migrate-3.1.0.min.js');
+        }
 
         return $return;
     }
