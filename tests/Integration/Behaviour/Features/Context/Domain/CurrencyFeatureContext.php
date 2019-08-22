@@ -74,6 +74,10 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
             $command->setNumericIsoCode((int) $data['numeric_iso_code']);
         }
 
+        if (isset($data['precision'])) {
+            $command->setPrecision((int) $data['precision']);
+        }
+
         if (isset($data['name'])) {
             $command->setLocalizedNames([$defaultLangId => $data['name']]);
         }
@@ -122,12 +126,12 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
             $command->setExchangeRate((float) $data['exchange_rate']);
         }
 
-        if (isset($data['is_enabled'])) {
-            $command->setIsEnabled((bool) $data['is_enabled']);
+        if (isset($data['precision'])) {
+            $command->setPrecision((int) $data['precision']);
         }
 
-        if (isset($data['is_unofficial'])) {
-            $command->setIsUnofficial((bool) $data['is_unofficial']);
+        if (isset($data['is_enabled'])) {
+            $command->setIsEnabled((bool) $data['is_enabled']);
         }
 
         if (isset($data['shop_association'])) {
@@ -211,7 +215,7 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then /^I should get error that (isoCode|numericIsoCode|unofficial|real) is immutable$/
+     * @Then /^I should get error that (isoCode|numericIsoCode) is immutable$/
      */
     public function assertLastErrorIsImmutableCurrencyField($errorType)
     {
@@ -221,12 +225,6 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
                 break;
             case 'numericIsoCode':
                 $errorCode = ImmutableCurrencyFieldException::IMMUTABLE_NUMERIC_ISO_CODE;
-                break;
-            case 'unofficial':
-                $errorCode = ImmutableCurrencyFieldException::IMMUTABLE_UNOFFICIAL;
-                break;
-            case 'real':
-                $errorCode = ImmutableCurrencyFieldException::IMMUTABLE_REAL;
                 break;
             default:
                 $errorCode = null;
