@@ -24,20 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Currency\CommandHandler;
-
-use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddCurrencyCommand;
-use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
+namespace PrestaShop\PrestaShop\Core\Domain\Currency\Command;
 
 /**
- * Interface AddCurrencyHandlerInterface defines contract for AddCurrencyHandler
+ * Class AddUnofficialCurrencyCommand is used to add an unofficial currency
  */
-interface AddCurrencyHandlerInterface
+class AddUnofficialCurrencyCommand extends AddCurrencyCommand
 {
-    /**
-     * @param AddCurrencyCommand $command
-     *
-     * @return CurrencyId
-     */
-    public function handle(AddCurrencyCommand $command);
 }

@@ -44,9 +44,4 @@ interface CurrencyCommandInterface
      * @return NumericIsoCode
      */
     public function getNumericIsoCode();
-
-    /**
-     * @return bool
-     */
-    public function isUnofficial();
 }

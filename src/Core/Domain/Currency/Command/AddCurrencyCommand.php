@@ -67,11 +67,6 @@ class AddCurrencyCommand implements CurrencyCommandInterface
     private $isEnabled;
 
     /**
-     * @var bool
-     */
-    private $isUnofficial;
-
-    /**
      * @var int[]
      */
     private $shopIds;
@@ -80,20 +75,17 @@ class AddCurrencyCommand implements CurrencyCommandInterface
      * @param string $isoCode
      * @param float $exchangeRate
      * @param bool $isEnabled
-     * @param bool $isUnofficial
      *
      * @throws CurrencyConstraintException
      */
     public function __construct(
         $isoCode,
         $exchangeRate,
-        $isEnabled,
-        $isUnofficial
+        $isEnabled
     ) {
         $this->isoCode = new AlphaIsoCode($isoCode);
         $this->exchangeRate = new ExchangeRate($exchangeRate);
         $this->isEnabled = $isEnabled;
-        $this->isUnofficial = $isUnofficial;
     }
 
     /**
@@ -198,14 +190,6 @@ class AddCurrencyCommand implements CurrencyCommandInterface
     public function isEnabled()
     {
         return $this->isEnabled;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isUnofficial()
-    {
-        return $this->isUnofficial;
     }
 
     /**
