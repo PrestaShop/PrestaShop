@@ -329,7 +329,15 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
         /** @var Currency $currency */
         $currency = SharedStorage::getStorage()->get($reference);
 
-        if ((int) $currency->numeric_iso_code !== (int) $numericIsoCode) {
+        if ('valid' === $numericIsoCode) {
+            if ((int) $currency->numeric_iso_code <= 0) {
+                throw new RuntimeException(sprintf(
+                    'Currency "%s" has invalid numeric iso code "%s".',
+                    $reference,
+                    $currency->numeric_iso_code
+                ));
+            }
+        } elseif ((int) $currency->numeric_iso_code !== (int) $numericIsoCode) {
             throw new RuntimeException(sprintf(
                 'Currency "%s" has "%s" numeric iso code, but "%s" was expected.',
                 $reference,
@@ -369,7 +377,7 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
             throw new RuntimeException(sprintf(
                 'Currency "%s" has "%s" symbol, but "%s" was expected.',
                 $reference,
-                $currency->name,
+                $currency->symbol,
                 $symbol
             ));
         }
@@ -389,7 +397,7 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
                 'Currency "%s" has unofficial "%s", but "%s" was expected.',
                 $reference,
                 $currency->unofficial,
-                $expectedUnofficial
+                (int) $expectedUnofficial
             ));
         }
     }
@@ -408,7 +416,7 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
                 'Currency "%s" has modified "%s", but "%s" was expected.',
                 $reference,
                 $currency->modified,
-                $expectedModified
+                (int) $expectedModified
             ));
         }
     }

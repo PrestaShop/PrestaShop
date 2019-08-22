@@ -286,3 +286,37 @@ Feature: Currency Management
       | is_unofficial    | 0                 |
       | shop_association | shop1             |
     Then I should get error that currency iso codes don't match
+
+  Scenario: Adding real currency with basic input is automatically filled
+    When I add new currency "currency14" with following properties:
+      | iso_code         | AUD       |
+      | exchange_rate    | 0.88      |
+      | is_enabled       | 1         |
+      | is_unofficial    | 0         |
+      | shop_association | shop1     |
+    Then currency "currency14" should be "AUD"
+    And currency "currency14" exchange rate should be 0.88
+    And currency "currency14" numeric iso code should be 36
+    And currency "currency14" name should be "Australian Dollar"
+    And currency "currency14" symbol should be "$"
+    And currency "currency14" should have unofficial false
+    And currency "currency14" should have modified false
+    And currency "currency14" should have status enabled
+    And currency "currency14" should be available in shop "shop1"
+
+  Scenario: Adding unofficial currency with basic input
+    When I add new currency "currency15" with following properties:
+      | iso_code         | BTC       |
+      | exchange_rate    | 0.88      |
+      | is_enabled       | 1         |
+      | is_unofficial    | 1         |
+      | shop_association | shop1     |
+    Then currency "currency15" should be "BTC"
+    And currency "currency15" exchange rate should be 0.88
+    And currency "currency15" numeric iso code should be valid
+    And currency "currency15" name should be "BTC"
+    And currency "currency15" symbol should be "BTC"
+    And currency "currency15" should have unofficial true
+    And currency "currency15" should have modified true
+    And currency "currency15" should have status enabled
+    And currency "currency15" should be available in shop "shop1"
