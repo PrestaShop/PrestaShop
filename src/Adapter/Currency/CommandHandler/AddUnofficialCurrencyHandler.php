@@ -69,6 +69,9 @@ final class AddUnofficialCurrencyHandler extends AbstractAddCurrencyHandler impl
             } else {
                 $entity->numeric_iso_code = $this->getRandomNumericIsoCode();
             }
+            if (null !== $command->getPrecision()) {
+                $entity->precision = $command->getPrecision()->getValue();
+            }
 
             if (!empty($command->getLocalizedNames())) {
                 $entity->name = $entity->names = $command->getLocalizedNames();

@@ -23,6 +23,7 @@ Feature: Currency Management
     And currency "currency1" numeric iso code should be 978
     And currency "currency1" name should be "My Euros"
     And currency "currency1" symbol should be "€€"
+    And currency "currency1" precision should be 2
     And currency "currency1" should have unofficial false
     And currency "currency1" should have modified true
     And currency "currency1" should have status enabled
@@ -47,14 +48,6 @@ Feature: Currency Management
     When I edit currency "currency1" with following properties:
       | iso_code         | EUR       |
       | numeric_iso_code | 978       |
-      | exchange_rate    | 0.88      |
-      | is_enabled       | 1         |
-      | is_unofficial    | 1         |
-      | shop_association | shop1     |
-    Then I should get error that real is immutable
-    When I edit currency "currency1" with following properties:
-      | iso_code         | EUR       |
-      | numeric_iso_code | 978       |
       | exchange_rate    | 1.0       |
       | name             | Euro      |
       | symbol           | €         |
@@ -66,6 +59,18 @@ Feature: Currency Management
     And currency "currency1" numeric iso code should be 978
     And currency "currency1" name should be "Euro"
     And currency "currency1" symbol should be "€"
+    And currency "currency1" precision should be 2
+    And currency "currency1" should have unofficial false
+    And currency "currency1" should have modified false
+    And currency "currency1" should have status disabled
+    When I edit currency "currency1" with following properties:
+      | precision | 0 |
+    Then currency "currency1" should be "EUR"
+    And currency "currency1" exchange rate should be 1
+    And currency "currency1" numeric iso code should be 978
+    And currency "currency1" name should be "Euro"
+    And currency "currency1" symbol should be "€"
+    And currency "currency1" precision should be 0
     And currency "currency1" should have unofficial false
     And currency "currency1" should have modified false
     And currency "currency1" should have status disabled
@@ -101,6 +106,7 @@ Feature: Currency Management
       | iso_code         | GBP           |
       | numeric_iso_code | 826           |
       | exchange_rate    | 0.88          |
+      | precision        | 0             |
       | name             | British Pound |
       | symbol           | £             |
       | is_enabled       | 1             |
@@ -111,6 +117,7 @@ Feature: Currency Management
     And currency "currency5" numeric iso code should be 826
     And currency "currency5" name should be "British Pound"
     And currency "currency5" symbol should be "£"
+    And currency "currency5" precision should be 0
     And currency "currency5" should have unofficial false
     And currency "currency5" should have modified false
     And currency "currency5" should have status enabled
@@ -153,6 +160,7 @@ Feature: Currency Management
     And currency "currency7" numeric iso code should be 777
     And currency "currency7" name should be "Unofficial Money"
     And currency "currency7" symbol should be "@"
+    And currency "currency7" precision should be 0
     And currency "currency7" should have unofficial true
     And currency "currency7" should have modified true
     And currency "currency7" should have status enabled
@@ -161,6 +169,7 @@ Feature: Currency Management
       | iso_code         | CUS           |
       | numeric_iso_code | 666           |
       | exchange_rate    | 0.66          |
+      | precision        | 2             |
       | is_enabled       | 0             |
       | is_unofficial    | 1             |
       | shop_association | shop1         |
@@ -169,6 +178,7 @@ Feature: Currency Management
     And currency "currency7" numeric iso code should be 666
     And currency "currency7" name should be "Unofficial Money"
     And currency "currency7" symbol should be "@"
+    And currency "currency7" precision should be 2
     And currency "currency7" should have unofficial true
     And currency "currency7" should have modified true
     And currency "currency7" should have status disabled
@@ -176,19 +186,21 @@ Feature: Currency Management
 
   Scenario: Adding then editing invalid unofficial currency
     When I add new currency "currency8" with following properties:
-      | iso_code         | CST          |
-      | numeric_iso_code | 777          |
-      | exchange_rate    | 0.77         |
+      | iso_code         | CST              |
+      | numeric_iso_code | 777              |
+      | exchange_rate    | 0.77             |
+      | precision        | 1                |
       | name             | Unofficial Money |
-      | symbol           | @            |
-      | is_enabled       | 1            |
-      | is_unofficial    | 1            |
-      | shop_association | shop1        |
+      | symbol           | @                |
+      | is_enabled       | 1                |
+      | is_unofficial    | 1                |
+      | shop_association | shop1            |
     Then currency "currency8" should be "CST"
     And currency "currency8" exchange rate should be 0.77
     And currency "currency8" numeric iso code should be 777
     And currency "currency8" name should be "Unofficial Money"
     And currency "currency8" symbol should be "@"
+    And currency "currency8" precision should be 1
     And currency "currency8" should have unofficial true
     And currency "currency8" should have modified true
     And currency "currency8" should have status enabled
@@ -209,14 +221,6 @@ Feature: Currency Management
       | is_unofficial    | 1             |
       | shop_association | shop1         |
     Then I should get error that unofficial currency has invalid numericIsoCode
-    When I edit currency "currency8" with following properties:
-      | iso_code         | CST          |
-      | numeric_iso_code | 777          |
-      | exchange_rate    | 0.66          |
-      | is_enabled       | 0             |
-      | is_unofficial    | 0             |
-      | shop_association | shop1         |
-    Then I should get error that unofficial is immutable
 
   Scenario: Adding existing currency should not be allowed
     Given currency "currency9" with "USD" exists
@@ -299,6 +303,7 @@ Feature: Currency Management
     And currency "currency14" numeric iso code should be 36
     And currency "currency14" name should be "Australian Dollar"
     And currency "currency14" symbol should be "$"
+    And currency "currency14" precision should be 2
     And currency "currency14" should have unofficial false
     And currency "currency14" should have modified false
     And currency "currency14" should have status enabled
@@ -316,6 +321,7 @@ Feature: Currency Management
     And currency "currency15" numeric iso code should be valid
     And currency "currency15" name should be "BTC"
     And currency "currency15" symbol should be "BTC"
+    And currency "currency15" precision should be 0
     And currency "currency15" should have unofficial true
     And currency "currency15" should have modified true
     And currency "currency15" should have status enabled

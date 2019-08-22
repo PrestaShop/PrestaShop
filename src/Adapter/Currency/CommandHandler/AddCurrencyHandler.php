@@ -68,12 +68,13 @@ final class AddCurrencyHandler extends AbstractAddCurrencyHandler implements Add
                 $entity->numeric_iso_code = $this->getNumericIsoCode($command->getIsoCode()->getValue());
             }
 
-            // CLDR locale give us the CLDR reference specification
-            $cldrLocale = $this->localeRepoCLDR->getLocale($this->defaultLanguage->getLocale());
-            // CLDR currency gives data from CLDR reference, for the given language
-            $cldrCurrency = $cldrLocale->getCurrency($entity->iso_code);
-            if (!empty($cldrCurrency)) {
-                // The currency may not be declared in the locale, eg with unofficial iso code
+            if (null !== $command->getPrecision()) {
+                $entity->precision = $command->getPrecision()->getValue();
+            } else {
+                // CLDR locale give us the CLDR reference specification
+                $cldrLocale = $this->localeRepoCLDR->getLocale($this->defaultLanguage->getLocale());
+                // CLDR currency gives data from CLDR reference, for the given language
+                $cldrCurrency = $cldrLocale->getCurrency($entity->iso_code);
                 $entity->precision = (int) $cldrCurrency->getDecimalDigits();
                 $entity->numeric_iso_code = $cldrCurrency->getNumericIsoCode();
             }
