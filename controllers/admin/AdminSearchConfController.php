@@ -198,12 +198,12 @@ class AdminSearchConfControllerCore extends AdminController
                             ),
                         'hint' => array(
                             $this->trans(
-                                'Enable spelling error during search within a whole word.',
+                                'Enable spelling errors during search.',
                                 array(),
                                 'Admin.Shopparameters.Help'
                             ),
                             $this->trans(
-                                'It checks if in all indexed word in database, a close word of the search word exist. This will be very resource-consuming.',
+                                'It checks either in all indexed word in database, a close word of the search word exist. This will be very resource-consuming.',
                                 array(),
                                 'Admin.Shopparameters.Help'
                             ),
