@@ -1,10 +1,11 @@
-{% set confirmation = 'Are you sure you want to restore the default address format for this country?'|trans({},'Admin.International.Feature') %}
+{% set confirmation = 'Are you sure you want to restore the default address format for this country?'|trans({},'Admin.International.Notification') %}
 <div class="col-8 address-format-actions">
   <span title=""
-    data-toggle="tooltip"
-    class="label-tooltip"
-    data-original-title="{{ 'This will restore your last registered address format.'|trans({}, 'Admin.International.Help') }}"
-    data-html="true" data-placement="top">
+        class="label-tooltip"
+        data-toggle="pstooltip"
+        data-placement="top"
+        data-original-title="{{ 'This will restore your last registered address format.'|trans({}, 'Admin.International.Help') }}"
+        data-html="true">
     <a id="useLastDefaultLayout" href="javascript:void(0)"
        data-confirmation="{{ confirmation }}"
        data-default-layout="{{ encodingAddressLayout }}"
@@ -12,9 +13,12 @@
       {{ 'Use the last registered format'|trans({}, 'Admin.International.Feature') }}
     </a>
   </span>
-  <span title="" data-toggle="tooltip" class="label-tooltip"
-    data-original-title="{{ 'This will restore the default address format for this country'|trans({}, 'Admin.International.Help') }}"
-    data-html="true">
+  <span title=""
+        class="label-tooltip"
+        data-toggle="pstooltip"
+        data-placement="top"
+        data-original-title="{{ 'This will restore the default address format for this country'|trans({}, 'Admin.International.Help') }}"
+        data-html="true">
         <a id="useDefaultLayoutSystem"
            href="javascript:void(0)"
            data-confirmation="{{ confirmation }}"
@@ -23,7 +27,10 @@
           {{ 'Use the default format'|trans({}, 'Admin.International.Feature') }}
         </a>
   </span>
-  <span title="" data-toggle="tooltip" class="label-tooltip"
+  <span title=""
+        class="label-tooltip"
+        data-toggle="pstooltip"
+        data-placement="top"
         data-original-title="{{ 'This will restore your current address format.'|trans({}, 'Admin.International.Help') }}"
         data-html="true">
             <a id="useCurrentLastModifiedLayout"
@@ -33,7 +40,10 @@
               {{ 'Use my current modified format'|trans({}, 'Admin.International.Feature') }}
             </a>
   </span>
-  <span title="" data-toggle="tooltip" class="label-tooltip"
+  <span title=""
+        class="label-tooltip"
+        data-toggle="pstooltip"
+        data-placement="top"
         data-original-title="{{ 'This will delete the current address format'|trans({}, 'Admin.International.Help') }}"
         data-html="true">
             <a id="eraseCurrentLayout"
