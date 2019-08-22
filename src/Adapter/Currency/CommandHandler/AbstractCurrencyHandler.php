@@ -107,7 +107,7 @@ abstract class AbstractCurrencyHandler extends AbstractObjectModelHandler
      */
     protected function assertUnofficialCurrencyDoesNotMatchAnyNumericIsoCode(CurrencyCommandInterface $command)
     {
-        if (!$command->isUnofficial() || null === $command->getIsoCode()) {
+        if (!$command->isUnofficial() || null === $command->getNumericIsoCode()) {
             return;
         }
 
