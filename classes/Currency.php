@@ -189,9 +189,9 @@ class CurrencyCore extends ObjectModel
             }
 
             if (is_array($this->name)) {
-                $this->name = ucfirst($this->name[$idLang]);
+                $this->name = Tools::ucfirst($this->name[$idLang]);
             } else {
-                $this->name = ucfirst($this->name);
+                $this->name = Tools::ucfirst($this->name);
             }
 
             $this->iso_code_num = $this->numeric_iso_code;
@@ -359,6 +359,27 @@ class CurrencyCore extends ObjectModel
     }
 
     /**
+     * Returns the name of the currency (using the translated name base on the id_lang
+     * provided on creation). This method is useful when $this->name contains an array
+     * but you still need to get its name as a string.
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        if (is_string($this->name)) {
+            return $this->name;
+        }
+
+        $id_lang = $this->id_lang;
+        if ($id_lang === null) {
+            $id_lang = Configuration::get('PS_LANG_DEFAULT');
+        }
+
+        return Tools::ucfirst($this->name[$id_lang]);
+    }
+
+    /**
      * Return available currencies.
      *
      * @param bool $object
@@ -378,14 +399,20 @@ class CurrencyCore extends ObjectModel
     /**
      * Retrieve all currencies data from the database.
      *
+     * @param bool $active If true only active are returned
+     * @param bool $groupBy Group by id_currency
+     * @param bool $currentShopOnly If true returns only currencies associated to current shop
+     *
      * @return array Currency data from database
+     *
+     * @throws PrestaShopDatabaseException
      */
-    public static function findAll($active = true, $groupBy = false)
+    public static function findAll($active = true, $groupBy = false, $currentShopOnly = true)
     {
         $currencies = Db::getInstance()->executeS('
             SELECT *
             FROM `' . _DB_PREFIX_ . 'currency` c
-            ' . Shop::addSqlAssociation('currency', 'c') . '
+            ' . ($currentShopOnly ? Shop::addSqlAssociation('currency', 'c') : '') . '
                 WHERE `deleted` = 0' .
                 ($active ? ' AND c.`active` = 1' : '') .
                 ($groupBy ? ' GROUP BY c.`id_currency`' : '') .
