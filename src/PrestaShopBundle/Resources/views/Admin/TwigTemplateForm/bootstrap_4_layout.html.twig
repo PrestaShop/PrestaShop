@@ -798,3 +798,42 @@
   {{ form_widget(form['min_field'], { attr: {class: 'min-field'}}) }}
   {{ form_widget(form['max_field'], { attr: {class: 'max-field'}}) }}
 {% endblock %}
+
+{% block draggable_file_widget %}
+  <div
+    id="{{ form.vars.id }}"
+    data-url="{{ form.vars.url }}"
+    class="draggable-file-uploader with-hover with-defaults-hidden js-clickable-file-uploader"
+    data-max-file-size="{{ form.vars.max_file_size }}"
+
+    {% if form.vars.accepted_file_mime_types is defined %}
+      data-accepted-files="{{ form.vars.accepted_file_mime_types }}"
+    {% endif %}
+
+    data-param-name="{{ form.vars.full_name }}"
+  >
+    <div class="js-clickable-file-uploader clickable-file-uploader dz-preview dz-clickable d-none">
+      <div>
+        <span>+</span>
+      </div>
+    </div>
+
+    <div class="dz-default dz-message js-file-uploader-placeholder text-center">
+      <i class="material-icons">{{ placeholder_vars.icon|default('add_a_photo') }}</i><br/>
+
+      {% set defaultTitle %}
+        {{ "Drop images here"|trans({}, 'Admin.Catalog.Feature') }} <br/>
+        <b>{{ "or select files"|trans({}, 'Admin.Catalog.Feature') }}</b><br/>
+      {% endset %}
+
+      {{ placeholder_vars.title|default(defaultTitle) }}
+
+      {% if placeholder_vars.description is defined %}
+        <small>
+          {{ placeholder_vars.description }}
+        </small>
+      {% endif %}
+    </div>
+
+  </div>
+{% endblock %}
