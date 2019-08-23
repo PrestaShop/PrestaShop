@@ -26,10 +26,8 @@
 
 namespace Tests\Unit\Core\Domain\Currency\ValueObject;
 
-
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\NumericIsoCode;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\Precision;
 
 class CurrencyPrecisionTest extends TestCase
