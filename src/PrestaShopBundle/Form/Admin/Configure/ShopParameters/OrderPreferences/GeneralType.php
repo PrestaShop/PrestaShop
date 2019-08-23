@@ -76,7 +76,7 @@ class GeneralType extends TranslatorAwareType
             ->add('enable_final_summary', SwitchType::class, [
                 'required' => false,
                 'label' => $this->trans('Enable final summary', 'Admin.Shopparameters.Feature'),
-                'help' => $this->trans('Display an overview of the addresses, shipping method and cart just before the order button (required in some European countries).', 'Admin.Shopparameters.Help')
+                'help' => $this->trans('Display an overview of the addresses, shipping method and cart just before the order button (required in some European countries).', 'Admin.Shopparameters.Help'),
             ])
             ->add('enable_guest_checkout', SwitchType::class, [
                 'required' => false,
