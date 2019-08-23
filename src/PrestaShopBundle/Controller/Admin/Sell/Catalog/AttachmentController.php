@@ -191,6 +191,7 @@ class AttachmentController extends FrameworkBundleAdminController
 
     /**
      * @param Exception $e
+     *
      * @return array
      */
     private function getErrorMessages(Exception $e = null): array
