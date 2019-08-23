@@ -37,65 +37,29 @@
 
       {{ form_errors(countryForm) }}
 
-      <div class="form-group row">
-        {{ ps.label_with_help(
-          'Country'|trans({}, 'Admin.Global'),
-          'Country name'|trans({}, 'Admin.International.Feature') ~ ' - ' ~ 'Invalid characters:'|trans({}, 'Admin.Global') ~ ' <>;=#{} ',
-          '',
-          '',
-          true
-        ) }}
-        <div class="col-sm">
-          {{ form_widget(countryForm.country) }}
-          {{ form_errors(countryForm.country) }}
-        </div>
-      </div>
+      {{ ps.form_group_row(countryForm.country, {}, {
+        'label': 'Country'|trans({}, 'Admin.Global'),
+        'help' : 'Country name'|trans({}, 'Admin.International.Feature') ~ ' - ' ~ 'Invalid characters:'|trans({}, 'Admin.Global') ~ ' <>;=#{} '
+      }) }}
 
-      <div class="form-group row">
-        {{ ps.label_with_help(
-          'ISO code'|trans({}, 'Admin.International.Feature'),
-          'Two -- or three -- letter ISO code (e.g. "us" for United States).'|trans({}, 'Admin.International.Help'),
-          '',
-          '',
-          true
-        ) }}
-        <div class="col-sm">
-          {{ form_widget(countryForm.iso_code) }}
-          {{ form_errors(countryForm.iso_code) }}
-        </div>
-      </div>
+      {{ ps.form_group_row(countryForm.iso_code, {}, {
+        'label': 'ISO code'|trans({}, 'Admin.International.Feature'),
+        'help' : 'Two -- or three -- letter ISO code (e.g. "us" for United States).'|trans({}, 'Admin.International.Help')
+      }) }}
 
-      <div class="form-group row">
-        {{ ps.label_with_help(
-          'Call prefix'|trans({}, 'Admin.International.Feature'),
-          'International call prefix, (e.g. 1 for United States).'|trans({}, 'Admin.International.Help'),
-          '',
-          '',
-          true
-        ) }}
-        <div class="col-sm">
-          {{ form_widget(countryForm.call_prefix) }}
-          {{ form_errors(countryForm.call_prefix) }}
-        </div>
-      </div>
+      {{ ps.form_group_row(countryForm.call_prefix, {}, {
+        'label': 'Call prefix'|trans({}, 'Admin.International.Feature'),
+        'help' : 'International call prefix, (e.g. 1 for United States).'|trans({}, 'Admin.International.Help')
+      }) }}
 
       {{ ps.form_group_row(countryForm.default_currency, {}, {
         'label': 'Default currency'|trans({}, 'Admin.International.Feature')
       }) }}
 
-      <div class="form-group row">
-        {{ ps.label_with_help(
-          'Zone'|trans({}, 'Admin.Global'),
-          ('Geographical region.'|trans({}, 'Admin.International.Help')),
-          '',
-          '',
-          true
-        ) }}
-        <div class="col-sm">
-          {{ form_widget(countryForm.zone) }}
-          {{ form_errors(countryForm.zone) }}
-        </div>
-      </div>
+      {{ ps.form_group_row(countryForm.zone, {}, {
+        'label': 'Zone'|trans({}, 'Admin.Global'),
+        'help' : 'Geographical region.'|trans({}, 'Admin.International.Help')
+      }) }}
 
       {{ ps.form_group_row(countryForm.need_zip_code, {}, {
         'label': 'Does it need Zip/postal code?'|trans({}, 'Admin.International.Feature')
@@ -133,18 +97,10 @@
         ) }}
       </div>
 
-      <div class="form-group row">
-        {{ ps.label_with_help(
-          'Active'|trans({}, 'Admin.Global'),
-          'Display this country to your customers (the selected country will always be displayed in the back office).'|trans({}, 'Admin.International.Help'),
-          '',
-          ''
-        ) }}
-        <div class="col-sm">
-          {{ form_widget(countryForm.is_enabled) }}
-          {{ form_errors(countryForm.is_enabled) }}
-        </div>
-      </div>
+      {{ ps.form_group_row(countryForm.is_enabled, {}, {
+        'label': 'Active'|trans({}, 'Admin.Global'),
+        'help' : 'Display this country to your customers (the selected country will always be displayed in the back office).'|trans({}, 'Admin.International.Help')
+      }) }}
 
       {{ ps.form_group_row(countryForm.contains_states, {}, {
         'label': 'Contains states'|trans({}, 'Admin.International.Feature')
