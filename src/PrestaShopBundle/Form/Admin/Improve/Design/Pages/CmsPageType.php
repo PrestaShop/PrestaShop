@@ -40,6 +40,7 @@ use PrestaShopBundle\Form\Admin\Type\TranslateType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -69,8 +70,8 @@ class CmsPageType extends TranslatorAwareType
         TranslatorInterface $translator,
         array $locales,
         array $allCmsCategories,
-        $isMultiShopEnabled)
-    {
+        $isMultiShopEnabled
+    ) {
         parent::__construct($translator, $locales);
 
         $this->allCmsCategories = $allCmsCategories;
@@ -135,8 +136,7 @@ class CmsPageType extends TranslatorAwareType
                 'label' => $this->trans('SEO preview', 'Admin.Global'),
                 'help' => $this->trans('Here is a preview of how your page will appear in search engine results.', 'Admin.Global'),
                 'view_data' => [
-                    // @todo: should generate actual URL
-                    'cms_url' => 'http://prestashop.local/content/-',
+                    'cms_url' => $options['cms_preview_url'],
                 ],
             ])
             ->add('meta_title', TranslatableType::class, [
@@ -280,5 +280,18 @@ class CmsPageType extends TranslatorAwareType
                 ],
             ]);
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver
+            ->setDefaults([
+                'cms_preview_url' => '',
+            ])
+            ->setAllowedTypes('cms_preview_url', 'string')
+        ;
     }
 }

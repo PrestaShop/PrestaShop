@@ -192,7 +192,9 @@ class CmsPageController extends FrameworkBundleAdminController
         if ($categoryParentId) {
             $formData['page_category_id'] = $categoryParentId;
         }
-        $form = $formBuilder->getForm($formData);
+        $form = $formBuilder->getForm($formData, [
+            'cms_preview_url' => $this->get('prestashop.adapter.shop.url.cms_provider')->getUrl(0, '{friendy-url}'),
+        ]);
         $form->handleRequest($request);
 
         try {
@@ -227,8 +229,6 @@ class CmsPageController extends FrameworkBundleAdminController
                 'cmsCategoryParentId' => $categoryParentId,
                 'enableSidebar' => true,
                 'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
-                'cmsUrl' => $this->get('prestashop.adapter.shop.url.cms_provider')
-                ->getUrl(0, '{friendy-url}'),
             ]
         );
     }
@@ -255,6 +255,8 @@ class CmsPageController extends FrameworkBundleAdminController
                 'action' => $this->generateUrl('admin_cms_pages_edit', [
                     'cmsPageId' => $cmsPageId,
                 ]),
+                'cms_preview_url' => $this->get('prestashop.adapter.shop.url.cms_provider')
+                    ->getUrl($cmsPageId, '{friendy-url}'),
             ]);
             $form->handleRequest($request);
             $result = $this->getCmsPageFormHandler()->handleFor($cmsPageId, $form);
@@ -297,8 +299,6 @@ class CmsPageController extends FrameworkBundleAdminController
                 'enableSidebar' => true,
                 'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
                 'previewUrl' => $previewUrl,
-                'cmsUrl' => $this->get('prestashop.adapter.shop.url.cms_provider')
-                ->getUrl($cmsPageId, '{friendy-url}'),
             ]
         );
     }
