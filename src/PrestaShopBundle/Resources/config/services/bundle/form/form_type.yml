@@ -950,3 +950,10 @@ services:
         - '@prestashop.core.form.choice_provider.currency_by_id'
       tags:
         - { name: form.type }
+
+    form.type.address.required_fields:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Address\RequiredFieldsAddressType'
+        arguments:
+          - '@=service("prestashop.core.form.choice_provider.address_required_fields").getChoices()'
+        tags:
+          - { name: form.type }

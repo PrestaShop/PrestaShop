@@ -229,3 +229,8 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AttributeGroupGridDefinitionFactory'
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
         public: true
+
+    prestashop.core.grid.definition.factory.address:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AddressGridDefinitionFactory'
+      parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+      public: true
