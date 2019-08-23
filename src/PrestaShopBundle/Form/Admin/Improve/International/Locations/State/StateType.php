@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Form\Admin\Improve\International\Locations\State;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\UniqueStateIsoCode;
+use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
 use PrestaShopBundle\Form\Admin\Type\ConfigurableCountryChoiceType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\ZoneChoiceType;
@@ -44,11 +45,21 @@ use Symfony\Component\Validator\Constraints\NotBlank;
  */
 class StateType extends AbstractType
 {
+    /** @var int maximum number of characters for name */
+    public const MAX_NAME_LENGTH = 32;
+
+    /** @var int maximum number of characters for iso code */
+    public const MAX_ISO_CODE_LENGTH = 7;
+
     /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $stateIdValue = isset($builder->getData()['id_state']) && $builder->getData()['id_state'] instanceof StateId ?
+            $builder->getData()['id_state']->getValue() :
+            null;
+
         $builder
             ->add('name', TextType::class, [
                 'required' => true,
@@ -58,7 +69,7 @@ class StateType extends AbstractType
                         'type' => 'generic_name',
                     ]),
                     new Length([
-                        'max' => 32,
+                        'max' => self::MAX_NAME_LENGTH,
                     ]),
                     new CleanHtml(),
                 ],
@@ -68,12 +79,15 @@ class StateType extends AbstractType
                 'constraints' => [
                     new NotBlank(),
                     new Length([
-                        'max' => 7,
+                        'max' => self::MAX_ISO_CODE_LENGTH,
                     ]),
                     new TypedRegex([
                         'type' => 'state_iso_code',
                     ]),
                     new CleanHtml(),
+                    new UniqueStateIsoCode([
+                        'excludeId' => $stateIdValue
+                    ]),
                 ],
             ])
             ->add('id_country', ConfigurableCountryChoiceType::class, [
@@ -92,17 +106,5 @@ class StateType extends AbstractType
             ->add('active', SwitchType::class, [
                 'required' => true,
             ]);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver->setDefaults([
-            'constraints' => [
-                new UniqueStateIsoCode(),
-            ],
-        ]);
     }
 }

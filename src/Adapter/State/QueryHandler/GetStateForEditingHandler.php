@@ -55,13 +55,10 @@ final class GetStateForEditingHandler extends AbstractStateHandler implements Ge
         $stateId = $query->getStateId();
         $state = $this->getState($stateId);
 
-        $countryId = new CountryId($state->id_country);
-        $zoneId = new ZoneId($state->id_zone);
-
         return new EditableState(
             $stateId,
-            $countryId,
-            $zoneId,
+            new CountryId($state->id_country),
+            new ZoneId($state->id_zone),
             $state->name,
             $state->iso_code,
             (bool) $state->active

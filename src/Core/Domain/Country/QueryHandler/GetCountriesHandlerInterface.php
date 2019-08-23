@@ -24,19 +24,18 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\State\QueryHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Country\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\State\Query\isUniqueStateIsoCode;
+use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountries;
 
 /**
- * Defines contract for get unique state iso code handler
+ * Defines contract for countries handler
  */
-interface IsUniqueStateIsoCodeHandlerInterface
+interface GetCountriesHandlerInterface
 {
     /**
-     * @param IsUniqueStateIsoCode $query
-     *
-     * @return bool
+     * @param GetCountries $query
+     * @return array
      */
-    public function handle(IsUniqueStateIsoCode $query): bool;
+    public function handle(GetCountries $query): array;
 }

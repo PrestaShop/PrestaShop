@@ -2,28 +2,18 @@ services:
   _defaults:
     public: true
 
-  prestashop.adapter.state.command_handler.abstract_state_handler:
-    abstract:  true
-    class: 'PrestaShop\PrestaShop\Adapter\State\AbstractStateHandler'
-
   prestashop.adapter.state.command_handler.create_state_handler:
-    public: true
     class: 'PrestaShop\PrestaShop\Adapter\State\CommandHandler\AddStateHandler'
-    parent: 'prestashop.adapter.state.command_handler.abstract_state_handler'
     tags:
       - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\State\Command\AddStateCommand' }
 
   prestashop.adapter.state.command_handler.edit_state_handler:
-    public: true
     class: 'PrestaShop\PrestaShop\Adapter\State\CommandHandler\EditStateHandler'
-    parent: 'prestashop.adapter.state.command_handler.abstract_state_handler'
     tags:
       - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\State\Command\EditStateCommand' }
 
   prestashop.adapter.state.query_handler.get_state_for_editing:
-    public: true
     class: 'PrestaShop\PrestaShop\Adapter\State\QueryHandler\GetStateForEditingHandler'
-    parent: 'prestashop.adapter.state.command_handler.abstract_state_handler'
     arguments:
       - '@validator'
     tags:
@@ -32,5 +22,5 @@ services:
   prestashop.adapter.state.query_handler.get_state_with_iso_code_exists:
     class: 'PrestaShop\PrestaShop\Adapter\State\QueryHandler\GetStateWithIsoCodeExistsHandler'
     tags:
-      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\State\Query\IsUniqueStateIsoCode' }
+      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\State\Query\GetStateWithIsoCodeExists' }
 

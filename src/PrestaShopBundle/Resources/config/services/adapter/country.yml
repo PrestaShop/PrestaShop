@@ -1,0 +1,10 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.adapter.country.query_handler.get_countries:
+    class: 'PrestaShop\PrestaShop\Adapter\Country\QueryHandler\GetCountriesHandler'
+    arguments:
+      - '@prestashop.adapter.data_provider.country'
+    tags:
+      - { name: tactician.handler, command: 'PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountries' }

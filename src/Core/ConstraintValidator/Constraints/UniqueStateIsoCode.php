@@ -35,6 +35,11 @@ use Symfony\Component\Validator\Constraint;
 class UniqueStateIsoCode extends Constraint
 {
     /**
+     * @var int|null
+     */
+    public $excludeId = null;
+
+    /**
      * {@inheritdoc}
      */
     public function validatedBy()

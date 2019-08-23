@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,17 +22,21 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% set enableSidebar = true %}
-{% set layoutTitle = 'Edit: %value%'|trans({'%value%': stateName}, 'Admin.Actions') %}
+namespace PrestaShop\PrestaShop\Core\Domain\State\QueryHandler;
 
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
+use PrestaShop\PrestaShop\Core\Domain\State\Query\GetStateWithIsoCodeExists;
 
-{% block content %}
-  <div class="row justify-content-center">
-    <div class="col">
-      {{ include('@PrestaShop/Admin/Improve/International/Locations/State/Blocks/form.html.twig', {'stateForm': stateForm}) }}
-    </div>
-  </div>
-{% endblock %}
+/**
+ * Defines contract for get unique state iso code handler
+ */
+interface GetStateWithIsoCodeExistsHandlerInterface
+{
+    /**
+     * @param GetStateWithIsoCodeExists $query
+     *
+     * @return bool
+     */
+    public function handle(GetStateWithIsoCodeExists $query): bool;
+}
