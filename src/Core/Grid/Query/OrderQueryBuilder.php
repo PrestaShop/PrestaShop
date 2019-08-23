@@ -153,19 +153,19 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
                 'os.id_order_state = osl.id_order_state AND osl.id_lang = :context_lang_id'
             )
             ->leftJoin('o', $this->dbPrefix . 'shop', 's', 'o.id_shop = s.id_shop')
-            ->andWhere('o.`id_shop` IN (:contextShopIds)')
+            ->andWhere('o.`id_shop` IN (:context_shop_ids)')
             ->setParameter('context_lang_id', $this->contextLangId, PDO::PARAM_INT)
-            ->setParameter('contextShopIds', $this->contextShopIds, Connection::PARAM_INT_ARRAY)
+            ->setParameter('context_shop_ids', $this->contextShopIds, Connection::PARAM_INT_ARRAY)
         ;
 
         $strictComparisonFilters = [
+            'id_order' => 'o.id_order',
             'country_name' => 'c.id_country',
             'total_paid_tax_incl' => 'o.total_paid_tax_incl',
             'osname' => 'os.id_order_state',
         ];
 
         $likeComparisonFilters = [
-            'id_order' => 'o.id_order',
             'reference' => 'o.`reference`',
             'company' => 'cu.`company`',
             'payment' => 'o.`payment`',
@@ -247,10 +247,17 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
             ->createQueryBuilder()
             ->select('*')
             ->from('(' . $qb->getSQL() . ') tmp_table')
-            ->setParameters($qb->getParameters())
             ->andWhere('new = :new')
             ->setParameter('new', $filters['new'])
         ;
+
+        foreach ($qb->getParameters() as $name => $previousParam) {
+            $builder->setParameter(
+                $name,
+                $previousParam,
+                is_array($previousParam) ? Connection::PARAM_INT_ARRAY : null
+            );
+        }
 
         return $builder;
     }
