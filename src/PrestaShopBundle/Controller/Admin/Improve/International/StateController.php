@@ -180,7 +180,7 @@ class StateController extends FrameworkBundleAdminController
 
         return $this->render('@PrestaShop/Admin/Improve/International/Locations/State/edit.html.twig', [
             'stateForm' => $stateForm->createView(),
-            'stateInformation' => $editableState,
+            'stateName' => $editableState->getName(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
         ]);
     }

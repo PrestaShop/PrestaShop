@@ -26,19 +26,19 @@
 
 namespace PrestaShop\PrestaShop\Adapter\State\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\State\Query\isUniqueStateIsoCode;
-use PrestaShop\PrestaShop\Core\Domain\State\QueryHandler\IsUniqueStateIsoCodeHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\State\Query\GetStateWithIsoCodeExists;
+use PrestaShop\PrestaShop\Core\Domain\State\QueryHandler\GetStateWithIsoCodeExistsHandlerInterface;
 use State;
 
 /**
  * Handles query for determining if state with given iso code exists
  */
-final class GetStateWithIsoCodeExistsHandler implements IsUniqueStateIsoCodeHandlerInterface
+final class GetStateWithIsoCodeExistsHandler implements GetStateWithIsoCodeExistsHandlerInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function handle(IsUniqueStateIsoCode $query): bool
+    public function handle(GetStateWithIsoCodeExists $query): bool
     {
         /** @var int $stateId */
         $stateId = (int) State::getIdByIso($query->getIsoCode());

@@ -24,11 +24,41 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\State\Exception;
+namespace PrestaShop\PrestaShop\Adapter\Country\QueryHandler;
+
+use PrestaShop\PrestaShop\Adapter\Country\CountryDataProvider;
+use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountries;
+use PrestaShop\PrestaShop\Core\Domain\Country\QueryHandler\GetCountriesHandlerInterface;
 
 /**
- * Thrown on failure to update state
+ * Handles get countries query and returns countries array list
  */
-class CannotUpdateStateException extends StateException
+final class GetCountriesHandler implements GetCountriesHandlerInterface
 {
+    /**
+     * @var CountryDataProvider
+     */
+    private $countryDataProvider;
+
+    /**
+     * @param CountryDataProvider $countryDataProvider
+     *
+     */
+    public function __construct(CountryDataProvider $countryDataProvider)
+    {
+        $this->countryDataProvider = $countryDataProvider;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function handle(GetCountries $query): array
+    {
+        return $this->countryDataProvider->getCountries(
+            $query->getLangId(),
+            $query->isActive(),
+            $query->containsStates(),
+            $query->listStates()
+        );
+    }
 }

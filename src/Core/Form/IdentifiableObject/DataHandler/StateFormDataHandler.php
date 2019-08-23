@@ -87,7 +87,7 @@ final class StateFormDataHandler implements FormDataHandlerInterface
             ->setZoneId($data['id_zone'])
             ->setIsoCode($data['iso_code'])
             ->setName($data['name'])
-            ->setActive($data['active']);
+            ->setActive($data['active'] ?? false);
 
         $this->commandBus->handle($command);
     }

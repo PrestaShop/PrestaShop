@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\State\Query;
 /**
  * Gets bool value that determines if state with given iso code exists
  */
-class IsUniqueStateIsoCode
+class GetStateWithIsoCodeExists
 {
     /**
      * @var string
@@ -68,9 +68,9 @@ class IsUniqueStateIsoCode
     /**
      * @param int $stateId
      *
-     * @return IsUniqueStateIsoCode
+     * @return GetStateWithIsoCodeExists
      */
-    public function setExcludeStateId(int $stateId): IsUniqueStateIsoCode
+    public function setExcludeStateId(int $stateId): GetStateWithIsoCodeExists
     {
         $this->stateId = $stateId;
 
