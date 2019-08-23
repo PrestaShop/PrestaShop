@@ -54,4 +54,13 @@
               <i class="material-icons">delete_sweep</i>  {{ 'Clear format'|trans({}, 'Admin.International.Feature') }}
             </a>
   </span>
+  <small class="form-text">
+    {{ 'Want to set required fields in the customer\'s registration form? Go to [1]Customers > Addresses[/1] to configure it.'|trans(
+      {
+        '[1]': '<a href="' ~ getAdminLink('AdminAddresses', true) ~ '">',
+        '[/1]': '</a>'
+      },
+      'Admin.International.Help')|raw
+    }}
+  </small>
 </div>
