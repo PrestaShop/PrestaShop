@@ -816,10 +816,62 @@
 
     data-param-name="{{ form.vars.full_name }}"
   >
+    {#  todo: if coontains images then use display it  #}
+    {#  todo: should clickable extension be optional or not?  #}
+    {#  todo: add remove url.   #}
     <div class="js-clickable-file-uploader clickable-file-uploader dz-preview dz-clickable d-none">
       <div>
         <span>+</span>
       </div>
+    </div>
+    {# todo: make this accepted as property in type. Should be an object with id, url etc...   #}
+    <div
+      class="dz-preview dz-processing dz-image-preview dz-complete ui-sortable-handle"
+      data-id="1"
+    >
+      <div class="dz-image bg" style="background-image: url('/PrestaShop/img/p/8/3/83-home_default.jpg');">
+      </div>
+      <div class="dz-details">
+        <div class="dz-size"><span data-dz-size=""></span></div>
+        <div class="dz-filename"><span data-dz-name=""></span></div>
+      </div>
+
+      <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress="" style="width: 100%;"></span></div>
+      <div class="dz-error-message"><span data-dz-errormessage=""></span></div>
+      <div class="dz-success-mark"></div>
+      <div class="dz-error-mark"></div>
+    </div>
+    <div
+      class="dz-preview dz-processing dz-image-preview dz-complete ui-sortable-handle"
+      data-id="2"
+    >
+      <div class="dz-image bg" style="background-image: url('/PrestaShop/img/p/8/3/83-home_default.jpg');">
+      </div>
+      <div class="dz-details">
+        <div class="dz-size"><span data-dz-size=""></span></div>
+        <div class="dz-filename"><span data-dz-name=""></span></div>
+      </div>
+
+      <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress="" style="width: 100%;"></span></div>
+      <div class="dz-error-message"><span data-dz-errormessage=""></span></div>
+      <div class="dz-success-mark"></div>
+      <div class="dz-error-mark"></div>
+    </div>
+    <div
+      class="dz-preview dz-processing dz-image-preview dz-complete ui-sortable-handle"
+      data-id="3"
+    >
+      <div class="dz-image bg" style="background-image: url('/PrestaShop/img/p/8/3/83-home_default.jpg');">
+      </div>
+      <div class="dz-details">
+        <div class="dz-size"><span data-dz-size=""></span></div>
+        <div class="dz-filename"><span data-dz-name=""></span></div>
+      </div>
+
+      <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress="" style="width: 100%;"></span></div>
+      <div class="dz-error-message"><span data-dz-errormessage=""></span></div>
+      <div class="dz-success-mark"></div>
+      <div class="dz-error-mark"></div>
     </div>
 
     <div class="dz-default dz-message js-file-uploader-placeholder text-center">
