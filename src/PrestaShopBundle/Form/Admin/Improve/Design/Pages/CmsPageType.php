@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\IsUrlRewrite;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
-use PrestaShopBundle\Form\Admin\Type\FreeType;
+use PrestaShopBundle\Form\Admin\Type\CustomContentType;
 use PrestaShopBundle\Form\Admin\Type\Material\MaterialChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
@@ -131,7 +131,7 @@ class CmsPageType extends TranslatorAwareType
                     ],
                 ],
             ])
-            ->add('seo_preview', FreeType::class, [
+            ->add('seo_preview', CustomContentType::class, [
                 'label' => $this->trans('SEO preview', 'Admin.Global'),
                 'help' => $this->trans('Here is a preview of how your page will appear in search engine results.', 'Admin.Global'),
                 'view_data' => [

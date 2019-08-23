@@ -34,7 +34,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * Type is used to add any content in any position of the form rather than actual field.
  */
-final class FreeType extends AbstractType
+final class CustomContentType extends AbstractType
 {
     /**
      * {@inheritdoc}
