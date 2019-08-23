@@ -53,7 +53,6 @@ class GetCountries
 
     /**
      * @param int $langId
-     *
      */
     public function __construct(int $langId)
     {
@@ -78,6 +77,7 @@ class GetCountries
 
     /**
      * @param bool $active
+     *
      * @return GetCountries
      */
     public function setActive(bool $active): GetCountries
@@ -97,6 +97,7 @@ class GetCountries
 
     /**
      * @param bool $containsStates
+     *
      * @return GetCountries
      */
     public function setContainsStates(bool $containsStates): GetCountries
@@ -116,6 +117,7 @@ class GetCountries
 
     /**
      * @param bool $listStates
+     *
      * @return GetCountries
      */
     public function setListStates(bool $listStates): GetCountries
