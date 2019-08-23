@@ -29,7 +29,8 @@ namespace PrestaShop\PrestaShop\Adapter\State\CommandHandler;
 use PrestaShop\PrestaShop\Adapter\State\AbstractStateHandler;
 use PrestaShop\PrestaShop\Core\Domain\State\Command\BulkDeleteStatesCommand;
 use PrestaShop\PrestaShop\Core\Domain\State\CommandHandler\BulkDeleteStatesHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\State\Exception\DeleteStateException;
+use PrestaShop\PrestaShop\Core\Domain\State\Exception\BulkDeleteStatesException;
+use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateException;
 
 /**
  * Handles bulk states deletion
@@ -38,16 +39,27 @@ final class BulkDeleteStatesHandler extends AbstractStateHandler implements Bulk
 {
     /**
      * {@inheritdoc}
+     *
+     * @throws BulkDeleteStatesException
      */
     public function handle(BulkDeleteStatesCommand $command)
     {
+        $errors = [];
+
         foreach ($command->getStateIds() as $stateId) {
-            $state = $this->getState($stateId);
-            if (!$this->deleteState($state)) {
-                throw new DeleteStateException(
-                    sprintf('Cannot delete State object with id "%s".', $state->id)
-                );
+            try {
+                $state = $this->getState($stateId);
+
+                if (!$this->deleteState($state)) {
+                    $errors[] = $state->id;
+                }
+            } catch (StateException $e) {
+                $errors[] = $stateId->getValue();
             }
+        }
+
+        if (!empty($errors)) {
+            throw new BulkDeleteStatesException(implode(', ', $errors));
         }
     }
 }

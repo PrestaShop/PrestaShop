@@ -31,6 +31,8 @@ use PrestaShop\PrestaShop\Core\Domain\State\Command\BulkDeleteStatesCommand;
 use PrestaShop\PrestaShop\Core\Domain\State\Command\BulkToggleStateStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\State\Command\DeleteStateCommand;
 use PrestaShop\PrestaShop\Core\Domain\State\Command\ToggleStateStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\State\Exception\BulkDeleteStatesException;
+use PrestaShop\PrestaShop\Core\Domain\State\Exception\BulkUpdateStatesException;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\DeleteStateException;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateException;
@@ -152,7 +154,7 @@ class StateController extends FrameworkBundleAdminController
                 $this->trans('Successful deletion.', 'Admin.Notifications.Success')
             );
         } catch (StateException $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
         return $this->redirectToRoute('admin_states_index');
@@ -209,7 +211,7 @@ class StateController extends FrameworkBundleAdminController
                 $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
             );
         } catch (StateException $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
         return $this->redirectToRoute('admin_states_index');
@@ -237,7 +239,7 @@ class StateController extends FrameworkBundleAdminController
                 $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
             );
         } catch (StateException $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
         return $this->redirectToRoute('admin_states_index');
@@ -280,9 +282,11 @@ class StateController extends FrameworkBundleAdminController
     }
 
     /**
+     * @param Exception|null $e
+     *
      * @return array
      */
-    private function getErrorMessages(): array
+    private function getErrorMessages(Exception $e = null): array
     {
         return [
             DeleteStateException::class => $this->trans(
@@ -303,6 +307,22 @@ class StateController extends FrameworkBundleAdminController
                     'Admin.Notifications.Error'
                 ),
             ],
+            BulkDeleteStatesException::class => sprintf(
+                '%s : %s',
+                $this->trans(
+                    'An error occurred while deleting this selection.',
+                    'Admin.Notifications.Error'
+                ),
+                $e instanceof BulkDeleteStatesException ? $e->getMessage() : ''
+            ),
+            BulkUpdateStatesException::class => sprintf(
+                '%s : %s',
+                $this->trans(
+                    'An error occurred while updating the status.',
+                    'Admin.Notifications.Error'
+                ),
+                $e instanceof BulkUpdateStatesException ? $e->getMessage() : ''
+            ),
             StateConstraintException::class => [
                 StateConstraintException::INVALID_ID => $this->trans(
                     'The object cannot be loaded (the identifier is missing or invalid)',

@@ -29,7 +29,8 @@ namespace PrestaShop\PrestaShop\Adapter\State\CommandHandler;
 use PrestaShop\PrestaShop\Adapter\State\AbstractStateHandler;
 use PrestaShop\PrestaShop\Core\Domain\State\Command\BulkToggleStateStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\State\CommandHandler\BulkToggleStateStatusHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\State\Exception\UpdateStateException;
+use PrestaShop\PrestaShop\Core\Domain\State\Exception\BulkUpdateStatesException;
+use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateException;
 
 /**
  * Handles bulk states status toggle
@@ -38,18 +39,27 @@ final class BulkToggleStateStatusHandler extends AbstractStateHandler implements
 {
     /**
      * {@inheritdoc}
+     *
+     * @throws BulkUpdateStatesException
      */
     public function handle(BulkToggleStateStatusCommand $command)
     {
-        foreach ($command->getStateIds() as $stateId) {
-            $state = $this->getState($stateId);
+        $errors = [];
 
-            if (!$this->toggleStateStatus($state, $command->getExpectedStatus())) {
-                throw new UpdateStateException(
-                    sprintf('Unable to toggle state status with id "%s"', $state->id),
-                    UpdateStateException::FAILED_BULK_UPDATE_STATUS
-                );
+        foreach ($command->getStateIds() as $stateId) {
+            try {
+                $state = $this->getState($stateId);
+
+                if (!$this->toggleStateStatus($state, $command->getExpectedStatus())) {
+                    $errors[] = $state->id;
+                }
+            } catch (StateException $e) {
+                $errors[] = $stateId->getValue();
             }
+        }
+
+        if (!empty($errors)) {
+            throw new BulkUpdateStatesException(implode(', ', $errors));
         }
     }
 }
