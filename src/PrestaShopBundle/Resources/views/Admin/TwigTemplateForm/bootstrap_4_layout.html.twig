@@ -800,10 +800,14 @@
 {% endblock %}
 
 {% block draggable_file_widget %}
+  {# draggable-with-hover - enables hover effect #}
+  {# draggable-with-defaults-hidden - hides file name, default icons, file size and others... #}
+  {% set extraClasses = class|default('draggable-with-hover draggable-with-defaults-hidden') %}
+
   <div
     id="{{ form.vars.id }}"
     data-url="{{ form.vars.url }}"
-    class="draggable-file-uploader with-hover with-defaults-hidden js-clickable-file-uploader"
+    class="draggable-file-uploader js-clickable-file-uploader {{ extraClasses }}"
     data-max-file-size="{{ form.vars.max_file_size }}"
 
     {% if form.vars.accepted_file_mime_types is defined %}
@@ -823,12 +827,13 @@
 
       {% set defaultTitle %}
         {{ "Drop images here"|trans({}, 'Admin.Catalog.Feature') }} <br/>
-        <b>{{ "or select files"|trans({}, 'Admin.Catalog.Feature') }}</b><br/>
+        <b>{{ "or select files"|trans({}, 'Admin.Catalog.Feature') }}</b>
       {% endset %}
 
       {{ placeholder_vars.title|default(defaultTitle) }}
 
       {% if placeholder_vars.description is defined %}
+        <br/>
         <small>
           {{ placeholder_vars.description }}
         </small>

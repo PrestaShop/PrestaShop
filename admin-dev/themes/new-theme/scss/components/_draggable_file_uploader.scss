@@ -39,7 +39,7 @@
     }
   }
 
-  &.with-hover {
+  &.draggable-with-hover {
     .dz-preview {
       cursor: pointer;
       &:hover {
@@ -49,7 +49,7 @@
     }
   }
 
-  &.with-defaults-hidden {
+  &.draggable-with-defaults-hidden {
     .dz-preview {
       .dz-success-mark, .dz-error-mark, .dz-remove, .dz-details {
         display: none;

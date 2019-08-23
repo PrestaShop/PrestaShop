@@ -36,7 +36,7 @@ export default class DraggableFileUploader {
       this.getRequiredProperties($element),
       withDefaultProperties);
 
-    const dropzone = new Dropzone('#file-uploader', properties);
+    const dropzone = new Dropzone(elementSelector, properties);
 
     this._$fileUploader = dropzone;
     this._$element = $element;
