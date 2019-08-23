@@ -28,7 +28,6 @@ namespace PrestaShop\PrestaShop\Core\ConstraintValidator;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\State\Query\GetStateWithIsoCodeExists;
-use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;

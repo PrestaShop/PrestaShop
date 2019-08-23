@@ -36,7 +36,6 @@ use PrestaShopBundle\Form\Admin\Type\ZoneChoiceType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
@@ -86,7 +85,7 @@ class StateType extends AbstractType
                     ]),
                     new CleanHtml(),
                     new UniqueStateIsoCode([
-                        'excludeId' => $stateIdValue
+                        'excludeId' => $stateIdValue,
                     ]),
                 ],
             ])

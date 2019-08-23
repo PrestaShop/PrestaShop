@@ -35,6 +35,7 @@ interface GetCountriesHandlerInterface
 {
     /**
      * @param GetCountries $query
+     *
      * @return array
      */
     public function handle(GetCountries $query): array;

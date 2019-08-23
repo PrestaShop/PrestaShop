@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
-use PrestaShop\PrestaShop\Adapter\Country\CountryDataProvider;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountries;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;

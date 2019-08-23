@@ -42,7 +42,6 @@ final class GetCountriesHandler implements GetCountriesHandlerInterface
 
     /**
      * @param CountryDataProvider $countryDataProvider
-     *
      */
     public function __construct(CountryDataProvider $countryDataProvider)
     {
