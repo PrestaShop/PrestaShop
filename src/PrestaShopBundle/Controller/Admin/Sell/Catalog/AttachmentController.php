@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
+use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\BulkDeleteAttachmentsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\DeleteAttachmentCommand;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentConstraintException;
@@ -182,18 +183,17 @@ class AttachmentController extends FrameworkBundleAdminController
                 $this->trans('Successful deletion.', 'Admin.Notifications.Success')
             );
         } catch (AttachmentException $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e->getMessage())));
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
         return $this->redirectToRoute('admin_attachments_index');
     }
 
     /**
-     * @param string $originalExceptionMessage
-     *
+     * @param Exception $e
      * @return array
      */
-    private function getErrorMessages(string $originalExceptionMessage = ''): array
+    private function getErrorMessages(Exception $e = null): array
     {
         return [
             DeleteAttachmentException::class => $this->trans(
@@ -216,7 +216,7 @@ class AttachmentController extends FrameworkBundleAdminController
                     'An error occurred while deleting this selection.',
                     'Admin.Notifications.Error'
                 ),
-                $originalExceptionMessage
+                $e instanceof BulkDeleteAttachmentsException ? $e->getMessage() : ''
             ),
         ];
     }
