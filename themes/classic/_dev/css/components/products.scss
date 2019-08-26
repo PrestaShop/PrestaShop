@@ -336,7 +336,7 @@
       @include media-breakpoint-down(sm) {
         display: block;
         padding: 0 .5rem;
-      } 
+      }
     }
   }
   .modal-dialog {
@@ -361,19 +361,19 @@
   .product-name {
     color: $brand-primary;
     font-size: 1.125rem;
-    
+
     @include media-breakpoint-down(sm) {
       padding: 0 .5rem;
-    } 
+    }
   }
   .product-price {
     color: $gray-dark;
     display: block;
     @include media-breakpoint-down(sm) {
       padding: 0 .5rem;
-    } 
+    }
   }
-  
+
   .cart-content {
     padding-left: $extra-large-space;
     p {
@@ -528,7 +528,7 @@
   }
 }
 .product-flags {
-  width: 100%;
+  width: auto;
   position: absolute;
   top: 0;
   left: 0;
