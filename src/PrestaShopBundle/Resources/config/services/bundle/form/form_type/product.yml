@@ -1,0 +1,25 @@
+services:
+  _defaults:
+    public: true
+
+  form.type.product:
+    class: PrestaShopBundle\Form\Admin\Sell\Product\ProductType
+    arguments:
+      - '@translator'
+    tags:
+      - { name: form.type }
+
+  form.type.product.product_price:
+    class: PrestaShopBundle\Form\Admin\Sell\Product\ProductPriceType
+    arguments:
+      - '@prestashop.core.form.choice_provider.tax_rule_group_choice_provider'
+    tags:
+      - { name: form.type }
+
+  form.type.product.basic_settings_tab:
+    class: PrestaShopBundle\Form\Admin\Sell\Product\BasicSettingsTabType
+    arguments:
+      - '@translator'
+    tags:
+      - { name: form.type }
+

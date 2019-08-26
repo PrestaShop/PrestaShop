@@ -1,3 +1,7 @@
+_products_v2:
+  resource: "products_v2.yml"
+  prefix: /v2/
+
 _product:
     resource: "product.yml"
 

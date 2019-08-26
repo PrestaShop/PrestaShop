@@ -28,6 +28,10 @@
     }
   }
 
+  #product_type {
+    width: 80%;
+  }
+
   .table-fixed {
     table-layout: fixed;
     border: 0;
@@ -175,9 +179,7 @@
   }
 
   .summary-description-container {
-    overflow: hidden; // fixes horizontal scrolling on the product page
     .nav-tabs {
-      overflow: hidden; // fixes tab borders bleeding into the tab content
 
       &.bordered {
         .nav-link {
