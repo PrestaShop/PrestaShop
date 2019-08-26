@@ -49,7 +49,7 @@ class GetCountries
     /**
      * @var bool
      */
-    private $listStates = false;
+    private $includeStatesList = true;
 
     /**
      * @param int $langId
@@ -76,13 +76,13 @@ class GetCountries
     }
 
     /**
-     * @param bool $active
+     * @param bool $isActive
      *
      * @return GetCountries
      */
-    public function setActive(bool $active): GetCountries
+    public function setActive(bool $isActive): GetCountries
     {
-        $this->active = $active;
+        $this->active = $isActive;
 
         return $this;
     }
@@ -90,7 +90,7 @@ class GetCountries
     /**
      * @return bool
      */
-    public function containsStates(): bool
+    public function doesContainStates(): bool
     {
         return $this->containsStates;
     }
@@ -110,19 +110,19 @@ class GetCountries
     /**
      * @return bool
      */
-    public function listStates(): bool
+    public function doesIncludeStatesList(): bool
     {
-        return $this->listStates;
+        return $this->includeStatesList;
     }
 
     /**
-     * @param bool $listStates
+     * @var bool
      *
      * @return GetCountries
      */
-    public function setListStates(bool $listStates): GetCountries
+    public function setIncludeStatesList(bool $includeStatesList): GetCountries
     {
-        $this->listStates = $listStates;
+        $this->includeStatesList = $includeStatesList;
 
         return $this;
     }

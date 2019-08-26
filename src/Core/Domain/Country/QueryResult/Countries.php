@@ -24,43 +24,31 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Country\QueryHandler;
-
-use PrestaShop\PrestaShop\Adapter\Country\CountryDataProvider;
-use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountries;
-use PrestaShop\PrestaShop\Core\Domain\Country\QueryHandler\GetCountriesHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\Countries;
+namespace PrestaShop\PrestaShop\Core\Domain\Country\QueryResult;
 
 /**
- * Handles get countries query and returns countries array list
+ * Holds list of countries found by query configuration
  */
-final class GetCountriesHandler implements GetCountriesHandlerInterface
+class Countries
 {
     /**
-     * @var CountryDataProvider
+     * @var array
      */
-    private $countryDataProvider;
+    private $countries;
 
     /**
-     * @param CountryDataProvider $countryDataProvider
+     * @param array $countries
      */
-    public function __construct(CountryDataProvider $countryDataProvider)
+    public function __construct(array $countries)
     {
-        $this->countryDataProvider = $countryDataProvider;
+        $this->countries = $countries;
     }
 
     /**
-     * {@inheritdoc}
+     * @return array
      */
-    public function handle(GetCountries $query): Countries
+    public function getCountries(): array
     {
-        return new Countries(
-            $this->countryDataProvider->getCountries(
-                $query->getLangId(),
-                $query->isActive(),
-                $query->doesContainStates(),
-                $query->doesIncludeStatesList()
-            )
-        );
+        return $this->countries;
     }
 }

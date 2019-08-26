@@ -69,9 +69,10 @@ class StateController extends FrameworkBundleAdminController
                 'states' => $states,
             ]);
         } catch (Exception $e) {
-            return $this->json([
-                'message' => $this->getErrorMessageForException($e, []),
-            ],
+            return $this->json(
+                [
+                    'message' => $this->getErrorMessageForException($e, []),
+                ],
                 Response::HTTP_INTERNAL_SERVER_ERROR
             );
         }
@@ -124,6 +125,7 @@ class StateController extends FrameworkBundleAdminController
         }
 
         return $this->render('@PrestaShop/Admin/Improve/International/Locations/State/add.html.twig', [
+            'enableSidebar' => true,
             'stateForm' => $stateForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
         ]);
@@ -179,8 +181,9 @@ class StateController extends FrameworkBundleAdminController
         }
 
         return $this->render('@PrestaShop/Admin/Improve/International/Locations/State/edit.html.twig', [
+            'enableSidebar' => true,
+            'layoutTitle' => $this->trans('Edit: %value%', 'Admin.Actions', ['%value%' => $editableState->getName()]),
             'stateForm' => $stateForm->createView(),
-            'stateName' => $editableState->getName(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
         ]);
     }
