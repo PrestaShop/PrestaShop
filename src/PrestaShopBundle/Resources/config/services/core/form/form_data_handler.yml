@@ -131,3 +131,8 @@ services:
     arguments:
       - '@prestashop.core.command_bus'
       - '@prestashop.core.query_bus'
+
+  prestashop.core.form.identifiable_object.data_handler.address_form_data_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\AddressFormDataHandler'
+    arguments:
+      - '@prestashop.core.command_bus'

@@ -244,13 +244,37 @@ class AddressController extends FrameworkBundleAdminController
      *     message="You do not have permission to create this."
      * )
      *
+     * @param Request $request
      * @return Response
      */
-    public function createAction(): Response
+    public function createAction(Request $request): Response
     {
-        $link = $this->getAdminLink('AdminAddresses', ['addaddress' => 1]);
+        $addressFormBuilder = $this->get(
+            'prestashop.core.form.identifiable_object.builder.address_form_builder'
+        );
 
-        return $this->redirect($link);
+        $addressFormHandler = $this->get(
+            'prestashop.core.form.identifiable_object.handler.address_form_handler'
+        );
+
+        $addressForm = $addressFormBuilder->getForm();
+        $addressForm->handleRequest($request);
+
+        try {
+            $handlerResult = $addressFormHandler->handle($addressForm);
+            if ($handlerResult->isSubmitted() && $handlerResult->isValid()) {
+                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_addresses_index');
+            }
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->render('@PrestaShop/Admin/Sell/Address/add.html.twig', [
+            'addressForm' => $addressForm->createView(),
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+        ]);
     }
 
     /**

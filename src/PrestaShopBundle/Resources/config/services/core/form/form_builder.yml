@@ -161,3 +161,10 @@ services:
     arguments:
       - 'PrestaShopBundle\Form\Admin\Sell\Order\PartialRefundType'
       - '@prestashop.core.form.identifiable_object.data_provider.partial_refund_form_data_provider'
+
+  prestashop.core.form.identifiable_object.builder.address_form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: 'prestashop.core.form.builder.form_builder_factory:create'
+    arguments:
+      - 'PrestaShopBundle\Form\Admin\Sell\Address\CustomerAddressType'
+      - '@prestashop.core.form.identifiable_object.data_provider.address_form_data_provider'
