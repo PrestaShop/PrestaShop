@@ -408,6 +408,7 @@ GitHub contributors:
 - Matthieu Mota
 - MatthieuB
 - Matthieu Deroubaix
+- Matthieu Rolland
 - mauglee
 - MaX3315
 - Maxence
@@ -526,8 +527,10 @@ GitHub contributors:
 - Prestashark.eu
 - Prestaspirit
 - Priyank Bolia
+- Priyank Desai
 - ProBackup-nl
 - Profileo
+- Progi1984
 - Pronux
 - proydsl
 - psandmore
@@ -559,6 +562,7 @@ GitHub contributors:
 - Rimas Kudelis
 - Robbie Thompson
 - robert
+- Roja45
 - Rokas
 - Rokas Zygmantas
 - Roland Schütz
