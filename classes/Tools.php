@@ -32,6 +32,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem as PsFileSystem;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
+use PrestaShop\PrestaShop\Core\String\CharacterCleaner;
 
 class ToolsCore
 {
@@ -3795,10 +3796,12 @@ exit;
         $context = Context::getContext();
         $containerFinder = new ContainerFinder($context);
         $container = $containerFinder->getContainer();
-        if (null === $context->container) {
-            $context->container = $container;
+        if (null === $container) {
+            // Used in CLI where no container is instancied
+            $characterCleaner = new CharacterCleaner();
+        } else {
+            $characterCleaner = $container->get('prestashop.core.string.character_cleaner');
         }
-        $characterCleaner = $container->get('prestashop.core.string.character_cleaner');
 
         return $characterCleaner->cleanNonUnicodeSupport($pattern);
     }
