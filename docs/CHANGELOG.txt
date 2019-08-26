@@ -67,7 +67,7 @@ Release Notes for PrestaShop 1.7
     - #14739: Keep Composer.lock file in release (by @jolelievre)
 - Web Services:
   - Bug fix:
-    - #14953: Initialize container in WebService environment (Progi1984's work on 1.7.7) (by @matthieu-rolland)
+    - #14953: Initialize container in WebService environment (by @matthieu-rolland)
 - Localization:
   - Bug fix:
     - #15051: Fix translations (by @jolelievre)
