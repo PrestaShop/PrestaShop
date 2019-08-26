@@ -196,7 +196,7 @@ final class AddressGridDefinitionFactory extends AbstractGridDefinitionFactory
                 (new Filter('firstname', TextType::class))
                     ->setTypeOptions([
                         'attr' => [
-                            'placeholder' => $this->trans('Search first nam', [], 'Admin.Actions'),
+                            'placeholder' => $this->trans('Search first name', [], 'Admin.Actions'),
                         ],
                         'required' => false,
                     ])

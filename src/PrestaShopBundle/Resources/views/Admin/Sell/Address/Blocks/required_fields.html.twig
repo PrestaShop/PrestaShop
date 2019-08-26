@@ -27,12 +27,20 @@
   {{ form_start(requiredFieldsForm, {'action': path('admin_addresses_save_required_fields')}) }}
   <div class="card" >
     <h3 class="card-header">
-      {{ 'Required Fields'|trans }}
+      {{ 'Required Fields'|trans({}, 'Admin.Orderscustomers.Feature') }}
     </h3>
     <div class="card-body">
       <div class="alert alert-info" role="alert">
         <div class="alert-text">
-          <p>{{ 'Select the fields you would like to be required for this section.'|trans }}</p>
+          <p>
+            {{ 'Required fields apply to the customer\'s registration form, you should check the address formats in [1]International > Locations > Countries[/1] before.'|trans(
+              {
+                '[1]': '<a href="' ~ getAdminLink('AdminCountries', true) ~ '">',
+                '[/1]': '</a>'
+              },
+              'Admin.International.Help')|raw
+            }}
+          </p>
         </div>
       </div>
       {{ form_widget(requiredFieldsForm.required_fields) }}
