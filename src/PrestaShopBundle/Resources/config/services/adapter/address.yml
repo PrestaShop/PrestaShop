@@ -43,3 +43,9 @@ services:
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Address\Command\SetRequiredFieldsForAddressCommand'
+
+  prestashop.adapter.address.command_handler.add_customer_address_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Address\CommandHandler\AddCustomerAddressHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Address\Command\AddCustomerAddressCommand'
