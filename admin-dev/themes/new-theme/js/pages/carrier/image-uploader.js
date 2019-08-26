@@ -47,12 +47,14 @@ export default class ImageUploader {
    * Initiates the handler
    */
   handle() {
-    $(this.$imageUploadBlock.find('input')).on('change', (e) => {
-      this.uploadImage(e);
+    $(this.$imageUploadBlock.find('input')).on('change', () => {
+      if (e.target.files.length !== 0) {
+        this.uploadImage(e);
+      }
     });
   }
 
-  uploadImage(e) {
+  uploadImage() {
     $.ajax({
       url: this.$imageUploadBlock.data('image-upload-url'),
       method: 'POST',
@@ -62,6 +64,7 @@ export default class ImageUploader {
       data: new FormData(this.form),
     }).then((response) => {
       this.$imageTarget.prop('src', response.img_path);
+      $(this.$imageUploadBlock).find('input[type="hidden"]').val(response.img_path);
     }).catch((response) => {
       showErrorMessage(response.responseJSON.message);
     });

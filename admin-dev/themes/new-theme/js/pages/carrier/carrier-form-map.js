@@ -58,5 +58,5 @@ export default {
   outrangedBehaviorSummaryCaseHighest: '#js-outranged-highest',
   outrangedBehaviorSummaryCaseDisable: '#js-outranged-disable',
   imageTarget: '#carrier-logo img',
-  imageUploadBlock: '.carrier-logo-upload',
+  imageUploadBlock: '#js-carrier-logo-upload',
 };

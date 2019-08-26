@@ -1,4 +1,4 @@
-{#**
+/**
  * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,21 +21,51 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% block carrier_logo %}
-  <div class="card" id="carrier-logo">
-    <div class="card-header">
-      {{ 'Logo'|trans({}, 'Admin.Global') }}
-      <button type="button" class="float-right remove-logo js-remove-logo" title="{{ 'Delete'|trans({}, 'Admin.Global') }}">
-        <i class="material-icons">delete_forever</i>
-      </button>
-    </div>
-    <div class="card-block text-center">
-      <img
-        data-logo="{{ logo }}"
-        src="{{ logo }}"
-      class="img-thumbnail">
-    </div>
-  </div>
-{% endblock %}
+const $ = window.$;
+
+/**
+ * Responsible uploading and showing carrier temporary image
+ */
+export default class ImageUploader {
+  constructor(
+    imageUploadBlock,
+    imageTarget,
+    removalBtn,
+  ) {
+    this.$imageUploadBlock = $(imageUploadBlock);
+    this.$imageTarget = $(imageTarget);
+    this.$removalBtn = $(removalBtn);
+
+    this.handle();
+
+    return {};
+  }
+
+  /**
+   * Initiates the handler
+   */
+  handle() {
+    this.$removalBtn.on('click', () => {
+
+    })
+  }
+
+  uploadImage() {
+    $.ajax({
+      url: this.$imageUploadBlock.data('image-upload-url'),
+      method: 'POST',
+      processData: false,
+      contentType: false,
+      dataType: 'json',
+      data: new FormData(this.form),
+    }).then((response) => {
+      this.$imageTarget.prop('src', response.img_path);
+      $(this.$imageUploadBlock).find('input[type="hidden"]').val(response.img_path);
+    }).catch((response) => {
+      showErrorMessage(response.responseJSON.message);
+    });
+  }
+}
+

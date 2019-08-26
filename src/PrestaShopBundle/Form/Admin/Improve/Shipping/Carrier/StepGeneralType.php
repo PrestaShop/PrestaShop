@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -124,6 +125,7 @@ class StepGeneralType extends AbstractType
             ->add('logo', FileType::class, [
                 'required' => false,
             ])
+            ->add('logo_tmp_name', HiddenType::class)
             ->add('tracking_url', TextType::class, [
                 'required' => false,
                 'constraints' => [

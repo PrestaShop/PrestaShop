@@ -51,7 +51,9 @@ class CarrierType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('step_general', StepGeneralType::class)
+            ->add('step_general', StepGeneralType::class, [
+                'post_max_size_message' => 'test max size msg post',
+            ])
             ->add('step_shipping', StepShippingType::class)
             ->add('step_properties_and_access', StepPropertiesAndAccessType::class)
             ->add('step_summary', StepSummaryType::class);

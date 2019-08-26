@@ -52,6 +52,7 @@ $(() => {
     CarrierFormMap.addRangeBtn,
     CarrierFormMap.removeRangeBtn,
     CarrierFormMap.rangeRemovingBtnRow,
+    CarrierFormMap.zoneCheckbox,
   );
 
   new BillingChoiceHandler(

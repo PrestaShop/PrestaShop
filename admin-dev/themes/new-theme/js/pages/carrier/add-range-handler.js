@@ -36,12 +36,14 @@ export default class AddRangeHandler {
     rangeToTemplate,
     addRangeBtn,
     removeRangeBtn,
-    rangeRemovingBtnRow
+    rangeRemovingBtnRow,
+    zoneCheckbox
   ) {
     this.rangeIndex = 1;
     this.rangesTable = rangesTable;
     this.rangeRemovingBtnRow = rangeRemovingBtnRow;
     this.removeRangeBtn = removeRangeBtn;
+    this.zoneCheckbox = zoneCheckbox;
 
     this.$addRangeBtn = $(addRangeBtn);
     this.$rows = $(`${rangesTable} tr:not(${rangeRemovingBtnRow})`);
@@ -95,11 +97,18 @@ export default class AddRangeHandler {
         $row.append(`<td data-range-index="${this.rangeIndex}">${inputTo}</td>`);
       } else {
 
+
         // replace price index and zone id placeholders with actual values and enable input
-        const inputPrice = (this.$rangePriceTemplate.get(0).outerHTML)
+        let inputPrice = (this.$rangePriceTemplate.get(0).outerHTML)
           .replace(/__RANGE_INDEX__/, this.rangeIndex)
           .replace(/disabled=""/, '')
           .replace(/__ZONE_ID__/g, $row.data('zone-id'));
+
+
+        // check if corresponding zone is checked to remove readonly attr
+        if ($row.find(this.zoneCheckbox).is(':checked')) {
+          inputPrice = inputPrice.replace(/readonly=""/, '');
+        }
 
         // append table data with input from template
         $row.append(`<td data-range-index="${this.rangeIndex}">${inputPrice}</td>`);

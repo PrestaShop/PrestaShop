@@ -68,6 +68,7 @@ class CarrierController extends FrameworkBundleAdminController
             'contextLangId' => $this->container->get('prestashop.adapter.legacy.context')->getContext()->language->id,
             'defaultLangId' => $this->get('prestashop.adapter.legacy.configuration')->getInt('PS_LANG_DEFAULT'),
             'uploadImageUrl' => $this->generateUrl('admin_carriers_upload_image'),
+            'logo' => '/img/admin/carrier-default.jpg',
         ]);
     }
 
@@ -81,7 +82,7 @@ class CarrierController extends FrameworkBundleAdminController
             'Admin.Notifications.Error'
         );
 
-        if ($carrierForm->isSubmitted() && $carrierForm->isValid()) {
+        if ($carrierForm->isSubmitted() && $carrierForm['step_general']['logo']->isValid()) {
             /** @var UploadedFile $image */
             $image = $carrierForm->getData()['step_general']['logo'];
 
