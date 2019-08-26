@@ -218,6 +218,7 @@ GitHub contributors:
 - Fourat Achour
 - fram
 - Francisco Jiménez Cabrera
+- Franck Lefèvre
 - Franck Ribeiro
 - FrancMunoz
 - François Gaillard
@@ -530,7 +531,6 @@ GitHub contributors:
 - Priyank Desai
 - ProBackup-nl
 - Profileo
-- Progi1984
 - Pronux
 - proydsl
 - psandmore

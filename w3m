@@ -1,0 +1,116 @@
+<h1 id="cldr-remove-number-of-decimals-in-shop-parameter-general">[CLDR] Remove Number of decimals in Shop Parameter &gt; General</h1>
+<ul>
+<li>created by <span class="citation" data-cites="MatShir">@MatShir</span> on 2019-01-18 17:07:10 +0000 UTC</li>
+<li>assignees: matthieu-rolland, MatShir</li>
+</ul>
+<p><strong>SPECIFICATION</strong></p>
+<p>In Shop Parameter &gt; General, we need to remove Number of decimals input.</p>
+<p><strong>WHY</strong></p>
+<p>Since the CDLR handle every currency decimal, a general decimal parameter doesn’t make sense.</p>
+<p><strong>FAILING CASE</strong></p>
+<p>Need to study if there will be a technical impact.</p>
+<h2 id="comments">Comments:</h2>
+<h3 id="comment-by-matshir-on-2019-01-18-170925-0000-utc">comment by <span class="citation" data-cites="MatShir">@MatShir</span> on 2019-01-18 17:09:25 +0000 UTC</h3>
+<p>Next step after the PR #10455</p>
+<h3 id="comment-by-marionf-on-2019-02-01-155322-0000-utc">comment by <span class="citation" data-cites="marionf">@marionf</span> on 2019-02-01 15:53:22 +0000 UTC</h3>
+<p>Furthermore, this parameter currently doesn’t work</p>
+<h3 id="comment-by-kpodemski-on-2019-02-12-203506-0000-utc">comment by <span class="citation" data-cites="kpodemski">@kpodemski</span> on 2019-02-12 20:35:06 +0000 UTC</h3>
+<p><span class="citation" data-cites="marionf">@marionf</span> <span class="citation" data-cites="MatShir">@MatShir</span></p>
+<p>i’ve seen this parameter in some modules including ones for integration with third party ERP etc. but it was on 1.6, if this options is not working in 1.7 in my opinion it’s safe to remove it</p>
+<p>having fallback from CLDR when we’re getting Configuration::get(‘price_display_precision’) could be tricky</p>
+<h3 id="comment-by-matthieu-rolland-on-2019-07-17-151713-0000-utc">comment by <span class="citation" data-cites="matthieu-rolland">@matthieu-rolland</span> on 2019-07-17 15:17:13 +0000 UTC</h3>
+<p><span class="citation" data-cites="colinegin">@colinegin</span> <span class="citation" data-cites="marionf">@marionf</span> From what I see in the code, the “decimal” value that is set in the back office is used at several places in the code…</p>
+<p>Should I use a default decimal value everywhere, would that be 0 ? Or should I use the CLDR ?</p>
+<h3 id="comment-by-matthieu-rolland-on-2019-07-17-155254-0000-utc">comment by <span class="citation" data-cites="matthieu-rolland">@matthieu-rolland</span> on 2019-07-17 15:52:54 +0000 UTC</h3>
+<p>As seen with <span class="citation" data-cites="MatShir">@MatShir</span> , I’ll list all the places where the decimal prevision value from the back office is used, and write it in this issue. From there the technical impact will be clearer.</p>
+<h3 id="comment-by-matthieu-rolland-on-2019-07-18-164118-0000-utc">comment by <span class="citation" data-cites="matthieu-rolland">@matthieu-rolland</span> on 2019-07-18 16:41:18 +0000 UTC</h3>
+<p><span class="citation" data-cites="colinegin">@colinegin</span> <span class="citation" data-cites="marionf">@marionf</span> <span class="citation" data-cites="eternoendless">@eternoendless</span></p>
+<p>From what I’ve seen in the code, the number of decimals given by a user in the back office is used not only for display values in the backend, but also for calculations, as a computing value, determining the level of precision in basket calculations for example.</p>
+<p>I explained the issue to <span class="citation" data-cites="eternoendless">@eternoendless</span> , and here’s a solution that I could implement:</p>
+<p>1/ We do not remove the possibility to specify a decimal prevision value, maybe only reword it, saying that it will be used only for calculations.</p>
+<p>2/ For display values, we should use the standard number of decimals for a given currency, according to the CLDR.</p>
+<p>3/ The decimal precision value given by the user in the back office will keep being used for calculations.</p>
+<h3 id="comment-by-colinegin-on-2019-07-22-121922-0000-utc">comment by <span class="citation" data-cites="colinegin">@colinegin</span> on 2019-07-22 12:19:22 +0000 UTC</h3>
+<p>Let’s go with your recommendation <span class="citation" data-cites="matthieu-rolland">@matthieu-rolland</span>, it will be safer ! I ping <span class="citation" data-cites="LouiseBonnard">@LouiseBonnard</span> which will be in charge of the rewording. As for your point 2, just note that with the new feature in the currency page, it will be possible to override the CLDR rules.</p>
+<p>Thanks !</p>
+<h3 id="comment-by-eternoendless-on-2019-08-05-145627-0000-utc">comment by <span class="citation" data-cites="eternoendless">@eternoendless</span> on 2019-08-05 14:56:27 +0000 UTC</h3>
+<p>Is there a use case for “I want my cart calculations to be less precise than as much as possible”? –&gt; If not, then I suggest we drop this option altogether.</p>
+<h3 id="comment-by-matthieu-rolland-on-2019-08-06-090253-0000-utc">comment by <span class="citation" data-cites="matthieu-rolland">@matthieu-rolland</span> on 2019-08-06 09:02:53 +0000 UTC</h3>
+<p>That does make sense… I didn’t think about it this way, but why would someone want to make his calculations less precise, what is the added benefit?</p>
+<p><span class="citation" data-cites="marionf">@marionf</span> and <span class="citation" data-cites="samuel-pires">@samuel-pires</span> do you think we should do what <span class="citation" data-cites="eternoendless">@eternoendless</span> suggests?</p>
+<p>Basically we would drop the feature and the rules would be:</p>
+<p><strong>Display price precision</strong>: use the CLDR standard for the given currency.</p>
+<p><strong>Calculation price precision</strong>: use a default precision value (for example 6 digits precision)</p>
+<h3 id="comment-by-samuel-pires-on-2019-08-06-101310-0000-utc">comment by <span class="citation" data-cites="samuel-pires">@samuel-pires</span> on 2019-08-06 10:13:10 +0000 UTC</h3>
+<p>I agree it makes sense to me to drop it.</p>
+<p>Though what are the possible impacts of using 6 decimals for calculations vs 2 (I guess most users used to let 2 decimals in this field)?</p>
+<p><span class="citation" data-cites="marionf">@marionf</span> do you see a case where it could be needed?</p>
+<h3 id="comment-by-eternoendless-on-2019-08-06-112634-0000-utc">comment by <span class="citation" data-cites="eternoendless">@eternoendless</span> on 2019-08-06 11:26:34 +0000 UTC</h3>
+<p>Using more decimal positions leads to more precise calculations.</p>
+<h3 id="comment-by-marionf-on-2019-08-06-131847-0000-utc">comment by <span class="citation" data-cites="marionf">@marionf</span> on 2019-08-06 13:18:47 +0000 UTC</h3>
+<p>Like that, I do not see any case where the calculations would have to be less precise :thinking:</p>
+<h3 id="comment-by-samuel-pires-on-2019-08-06-132326-0000-utc">comment by <span class="citation" data-cites="samuel-pires">@samuel-pires</span> on 2019-08-06 13:23:26 +0000 UTC</h3>
+<p>Alright, then let’s do it <span class="citation" data-cites="matthieu-rolland">@matthieu-rolland</span> 👍</p>
+<h3 id="comment-by-matthieu-rolland-on-2019-08-06-135651-0000-utc">comment by <span class="citation" data-cites="matthieu-rolland">@matthieu-rolland</span> on 2019-08-06 13:56:51 +0000 UTC</h3>
+<p>ok !</p>
+<p>I will do that then. Thank you everyone for your input</p>
+<h3 id="comment-by-webmatter-on-2019-08-06-230535-0000-utc">comment by <span class="citation" data-cites="webmatter">@webmatter</span> on 2019-08-06 23:05:35 +0000 UTC</h3>
+<p>In PS 1.7.6 I can change the number of decimals. However, Switzerland is using a decimal point and not a comma. How can I change the comma to a point?</p>
+<h1 id="cldr-remove-number-of-decimals-in-shop-parameter-general">[CLDR] Remove Number of decimals in Shop Parameter &gt; General</h1>
+<ul>
+<li>created by <span class="citation" data-cites="MatShir">@MatShir</span> on 2019-01-18 17:07:10 +0000 UTC</li>
+<li>assignees: matthieu-rolland, MatShir</li>
+</ul>
+<p><strong>SPECIFICATION</strong></p>
+<p>In Shop Parameter &gt; General, we need to remove Number of decimals input.</p>
+<p><strong>WHY</strong></p>
+<p>Since the CDLR handle every currency decimal, a general decimal parameter doesn’t make sense.</p>
+<p><strong>FAILING CASE</strong></p>
+<p>Need to study if there will be a technical impact.</p>
+<h2 id="comments">Comments:</h2>
+<h3 id="comment-by-matshir-on-2019-01-18-170925-0000-utc">comment by <span class="citation" data-cites="MatShir">@MatShir</span> on 2019-01-18 17:09:25 +0000 UTC</h3>
+<p>Next step after the PR #10455</p>
+<h3 id="comment-by-marionf-on-2019-02-01-155322-0000-utc">comment by <span class="citation" data-cites="marionf">@marionf</span> on 2019-02-01 15:53:22 +0000 UTC</h3>
+<p>Furthermore, this parameter currently doesn’t work</p>
+<h3 id="comment-by-kpodemski-on-2019-02-12-203506-0000-utc">comment by <span class="citation" data-cites="kpodemski">@kpodemski</span> on 2019-02-12 20:35:06 +0000 UTC</h3>
+<p><span class="citation" data-cites="marionf">@marionf</span> <span class="citation" data-cites="MatShir">@MatShir</span></p>
+<p>i’ve seen this parameter in some modules including ones for integration with third party ERP etc. but it was on 1.6, if this options is not working in 1.7 in my opinion it’s safe to remove it</p>
+<p>having fallback from CLDR when we’re getting Configuration::get(‘price_display_precision’) could be tricky</p>
+<h3 id="comment-by-matthieu-rolland-on-2019-07-17-151713-0000-utc">comment by <span class="citation" data-cites="matthieu-rolland">@matthieu-rolland</span> on 2019-07-17 15:17:13 +0000 UTC</h3>
+<p><span class="citation" data-cites="colinegin">@colinegin</span> <span class="citation" data-cites="marionf">@marionf</span> From what I see in the code, the “decimal” value that is set in the back office is used at several places in the code…</p>
+<p>Should I use a default decimal value everywhere, would that be 0 ? Or should I use the CLDR ?</p>
+<h3 id="comment-by-matthieu-rolland-on-2019-07-17-155254-0000-utc">comment by <span class="citation" data-cites="matthieu-rolland">@matthieu-rolland</span> on 2019-07-17 15:52:54 +0000 UTC</h3>
+<p>As seen with <span class="citation" data-cites="MatShir">@MatShir</span> , I’ll list all the places where the decimal prevision value from the back office is used, and write it in this issue. From there the technical impact will be clearer.</p>
+<h3 id="comment-by-matthieu-rolland-on-2019-07-18-164118-0000-utc">comment by <span class="citation" data-cites="matthieu-rolland">@matthieu-rolland</span> on 2019-07-18 16:41:18 +0000 UTC</h3>
+<p><span class="citation" data-cites="colinegin">@colinegin</span> <span class="citation" data-cites="marionf">@marionf</span> <span class="citation" data-cites="eternoendless">@eternoendless</span></p>
+<p>From what I’ve seen in the code, the number of decimals given by a user in the back office is used not only for display values in the backend, but also for calculations, as a computing value, determining the level of precision in basket calculations for example.</p>
+<p>I explained the issue to <span class="citation" data-cites="eternoendless">@eternoendless</span> , and here’s a solution that I could implement:</p>
+<p>1/ We do not remove the possibility to specify a decimal prevision value, maybe only reword it, saying that it will be used only for calculations.</p>
+<p>2/ For display values, we should use the standard number of decimals for a given currency, according to the CLDR.</p>
+<p>3/ The decimal precision value given by the user in the back office will keep being used for calculations.</p>
+<h3 id="comment-by-colinegin-on-2019-07-22-121922-0000-utc">comment by <span class="citation" data-cites="colinegin">@colinegin</span> on 2019-07-22 12:19:22 +0000 UTC</h3>
+<p>Let’s go with your recommendation <span class="citation" data-cites="matthieu-rolland">@matthieu-rolland</span>, it will be safer ! I ping <span class="citation" data-cites="LouiseBonnard">@LouiseBonnard</span> which will be in charge of the rewording. As for your point 2, just note that with the new feature in the currency page, it will be possible to override the CLDR rules.</p>
+<p>Thanks !</p>
+<h3 id="comment-by-eternoendless-on-2019-08-05-145627-0000-utc">comment by <span class="citation" data-cites="eternoendless">@eternoendless</span> on 2019-08-05 14:56:27 +0000 UTC</h3>
+<p>Is there a use case for “I want my cart calculations to be less precise than as much as possible”? –&gt; If not, then I suggest we drop this option altogether.</p>
+<h3 id="comment-by-matthieu-rolland-on-2019-08-06-090253-0000-utc">comment by <span class="citation" data-cites="matthieu-rolland">@matthieu-rolland</span> on 2019-08-06 09:02:53 +0000 UTC</h3>
+<p>That does make sense… I didn’t think about it this way, but why would someone want to make his calculations less precise, what is the added benefit?</p>
+<p><span class="citation" data-cites="marionf">@marionf</span> and <span class="citation" data-cites="samuel-pires">@samuel-pires</span> do you think we should do what <span class="citation" data-cites="eternoendless">@eternoendless</span> suggests?</p>
+<p>Basically we would drop the feature and the rules would be:</p>
+<p><strong>Display price precision</strong>: use the CLDR standard for the given currency.</p>
+<p><strong>Calculation price precision</strong>: use a default precision value (for example 6 digits precision)</p>
+<h3 id="comment-by-samuel-pires-on-2019-08-06-101310-0000-utc">comment by <span class="citation" data-cites="samuel-pires">@samuel-pires</span> on 2019-08-06 10:13:10 +0000 UTC</h3>
+<p>I agree it makes sense to me to drop it.</p>
+<p>Though what are the possible impacts of using 6 decimals for calculations vs 2 (I guess most users used to let 2 decimals in this field)?</p>
+<p><span class="citation" data-cites="marionf">@marionf</span> do you see a case where it could be needed?</p>
+<h3 id="comment-by-eternoendless-on-2019-08-06-112634-0000-utc">comment by <span class="citation" data-cites="eternoendless">@eternoendless</span> on 2019-08-06 11:26:34 +0000 UTC</h3>
+<p>Using more decimal positions leads to more precise calculations.</p>
+<h3 id="comment-by-marionf-on-2019-08-06-131847-0000-utc">comment by <span class="citation" data-cites="marionf">@marionf</span> on 2019-08-06 13:18:47 +0000 UTC</h3>
+<p>Like that, I do not see any case where the calculations would have to be less precise :thinking:</p>
+<h3 id="comment-by-samuel-pires-on-2019-08-06-132326-0000-utc">comment by <span class="citation" data-cites="samuel-pires">@samuel-pires</span> on 2019-08-06 13:23:26 +0000 UTC</h3>
+<p>Alright, then let’s do it <span class="citation" data-cites="matthieu-rolland">@matthieu-rolland</span> 👍</p>
+<h3 id="comment-by-matthieu-rolland-on-2019-08-06-135651-0000-utc">comment by <span class="citation" data-cites="matthieu-rolland">@matthieu-rolland</span> on 2019-08-06 13:56:51 +0000 UTC</h3>
+<p>ok !</p>
+<p>I will do that then. Thank you everyone for your input</p>
+<h3 id="comment-by-webmatter-on-2019-08-06-230535-0000-utc">comment by <span class="citation" data-cites="webmatter">@webmatter</span> on 2019-08-06 23:05:35 +0000 UTC</h3>
+<p>In PS 1.7.6 I can change the number of decimals. However, Switzerland is using a decimal point and not a comma. How can I change the comma to a point?</p>
