@@ -74,7 +74,6 @@ class ContainerFinder
             return $container;
         }
 
-        debug_print_backtrace();
         throw new Exception('Kernel Container is not available');
     }
 }

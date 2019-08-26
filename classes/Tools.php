@@ -3795,12 +3795,12 @@ exit;
     {
         $context = Context::getContext();
         $containerFinder = new ContainerFinder($context);
-        $container = $containerFinder->getContainer();
-        if (null === $container) {
+        try {
+            $container = $containerFinder->getContainer();
+            $characterCleaner = $container->get('prestashop.core.string.character_cleaner');
+        } catch (Exception $e) {
             // Used in CLI where no container is instancied
             $characterCleaner = new CharacterCleaner();
-        } else {
-            $characterCleaner = $container->get('prestashop.core.string.character_cleaner');
         }
 
         return $characterCleaner->cleanNonUnicodeSupport($pattern);
