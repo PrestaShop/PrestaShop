@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountries;
+use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\Countries;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 
 /**
@@ -79,12 +80,13 @@ final class CountryByIdConfigurableChoiceProvider implements ConfigurableFormCho
         $query = (new GetCountries($this->langId))
             ->setActive($active)
             ->setContainsStates($containsStates)
-            ->setListStates($listStates);
+            ->setIncludeStatesList($listStates);
 
+        /** @var Countries $countries */
         $countries = $this->queryBud->handle($query);
         $choices = [];
 
-        foreach ($countries as $country) {
+        foreach ($countries->getCountries() as $country) {
             $choices[$country['name']] = (int) $country['id_country'];
         }
 

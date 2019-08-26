@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Country\QueryHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountries;
+use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\Countries;
 
 /**
  * Defines contract for countries handler
@@ -36,7 +37,7 @@ interface GetCountriesHandlerInterface
     /**
      * @param GetCountries $query
      *
-     * @return array
+     * @return Countries
      */
-    public function handle(GetCountries $query): array;
+    public function handle(GetCountries $query): Countries;
 }
