@@ -84,8 +84,8 @@ final class CatalogPriceRuleQueryBuilder extends AbstractDoctrineQueryBuilder
             pr.from_quantity,
             pr.reduction,
             pr.reduction_type,
-            pr.from,
-            pr.to,
+            pr.from date_from,
+            pr.to date_to,
             pr_shop.name shop,
             pr_currency.name currency,
             pr_country.name country,
@@ -184,8 +184,8 @@ final class CatalogPriceRuleQueryBuilder extends AbstractDoctrineQueryBuilder
             }
 
             if (in_array($filterName, $exactMatchFilters, true)) {
-                $qb->andWhere($allowedFiltersAliasMap[$filterName] . ' = :value');
-                $qb->setParameter('value', $value);
+                $qb->andWhere($allowedFiltersAliasMap[$filterName] . ' = :' . $filterName);
+                $qb->setParameter($filterName, $value);
 
                 continue;
             }
@@ -203,8 +203,8 @@ final class CatalogPriceRuleQueryBuilder extends AbstractDoctrineQueryBuilder
                 continue;
             }
 
-            $qb->andWhere($allowedFiltersAliasMap[$filterName] . ' LIKE :value');
-            $qb->setParameter('value', "%$value%");
+            $qb->andWhere($allowedFiltersAliasMap[$filterName] . ' LIKE :' . $filterName);
+            $qb->setParameter($filterName, "%$value%");
         }
     }
 }

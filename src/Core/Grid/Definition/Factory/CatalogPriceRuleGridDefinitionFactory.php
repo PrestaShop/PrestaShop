@@ -116,7 +116,7 @@ final class CatalogPriceRuleGridDefinitionFactory extends AbstractGridDefinition
                     'field' => 'country',
                 ])
             )
-            ->add((new DataColumn('group'))
+            ->add((new DataColumn('group_name'))
                 ->setName($this->trans('Group', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'group_name',
@@ -140,14 +140,14 @@ final class CatalogPriceRuleGridDefinitionFactory extends AbstractGridDefinition
                     'field' => 'reduction',
                 ])
             )
-            ->add((new DateTimeColumn('from'))
+            ->add((new DateTimeColumn('date_from'))
                 ->setName($this->trans('Beginning', [], 'Admin.Catalog.Feature'))
                 ->setOptions([
                     'format' => 'Y-m-d H:i',
                     'field' => 'from',
                 ])
             )
-            ->add((new DateTimeColumn('to'))
+            ->add((new DateTimeColumn('date_to'))
                 ->setName($this->trans('End', [], 'Admin.Catalog.Feature'))
                 ->setOptions([
                     'format' => 'Y-m-d H:i',
@@ -245,7 +245,7 @@ final class CatalogPriceRuleGridDefinitionFactory extends AbstractGridDefinition
                         'placeholder' => $this->trans('Group', [], 'Admin.Global'),
                     ],
                 ])
-                ->setAssociatedColumn('group')
+                ->setAssociatedColumn('group_name')
             )
             ->add((new Filter('from_quantity', TextType::class))
                 ->setTypeOptions([
@@ -275,7 +275,7 @@ final class CatalogPriceRuleGridDefinitionFactory extends AbstractGridDefinition
                 ])
                 ->setAssociatedColumn('reduction')
             )
-            ->add((new Filter('from', DateRangeType::class))
+            ->add((new Filter('date_from', DateRangeType::class))
                 ->setTypeOptions([
                     'required' => false,
                     'attr' => [
@@ -283,9 +283,9 @@ final class CatalogPriceRuleGridDefinitionFactory extends AbstractGridDefinition
                     ],
                     'date_format' => 'YYYY-MM-DD HH:mm:ss',
                 ])
-                ->setAssociatedColumn('from')
+                ->setAssociatedColumn('date_from')
             )
-            ->add((new Filter('to', DateRangeType::class))
+            ->add((new Filter('date_to', DateRangeType::class))
                 ->setTypeOptions([
                     'required' => false,
                     'attr' => [
@@ -293,7 +293,7 @@ final class CatalogPriceRuleGridDefinitionFactory extends AbstractGridDefinition
                     ],
                     'date_format' => 'YYYY-MM-DD HH:mm:ss',
                 ])
-                ->setAssociatedColumn('to')
+                ->setAssociatedColumn('date_to')
             )
             ->add((new Filter('actions', SearchAndResetType::class))
                 ->setAssociatedColumn('actions')
