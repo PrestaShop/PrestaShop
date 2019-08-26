@@ -887,3 +887,11 @@ services:
           - { method: setTranslator, arguments: ['@translator'] }
         tags:
           - { name: form.type }
+
+    form.type.draggable_file:
+        class: 'PrestaShopBundle\Form\Admin\Type\DraggableFileType'
+        arguments:
+          - '@prestashop.adapter.legacy.configuration'
+        public: true
+        tags:
+          - { name: form.type }
