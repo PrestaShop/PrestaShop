@@ -218,6 +218,7 @@ class AdminProductDataUpdater implements ProductInterface
             && Product::duplicateSpecificPrices($id_product_old, $product->id)
             && Pack::duplicate($id_product_old, $product->id)
             && Product::duplicateCustomizationFields($id_product_old, $product->id)
+            && Product::duplicatePrices($id_product_old, $product->id)
             && Product::duplicateTags($id_product_old, $product->id)
             && Product::duplicateTaxes($id_product_old, $product->id)
             && Product::duplicateDownload($id_product_old, $product->id)) {
