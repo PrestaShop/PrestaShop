@@ -1061,6 +1061,14 @@ services:
         tags:
             - { name: form.type }
 
+    form.type.customer_address:
+      class: 'PrestaShopBundle\Form\Admin\Sell\Address\CustomerAddressType'
+      arguments:
+        - '@translator'
+        - '@=service("prestashop.core.form.choice_provider.currency_by_id").getChoices()'
+      tags:
+        - { name: form.type }
+
     prestashop.bundle.form.admin.sell.attachment.attachment:
         class: 'PrestaShopBundle\Form\Admin\Sell\Attachment\AttachmentType'
         calls:
