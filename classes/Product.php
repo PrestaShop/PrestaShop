@@ -5560,7 +5560,7 @@ class ProductCore extends ObjectModel
             'context' => $context,
         ]);
 
-		$combination = new Combination($id_product_attribute);
+        $combination = new Combination($id_product_attribute);
 
         if (0 != $combination->unit_price_impact && 0 != $row['unit_price_ratio']) {
             $unitPrice = ($price_base_tax_exc / $row['unit_price_ratio']) + $combination->unit_price_impact;
