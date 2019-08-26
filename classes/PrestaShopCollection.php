@@ -336,7 +336,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
         $this->is_hydrated = true;
 
         $alias = $this->generateAlias();
-        $this->query->select('*, ' . $alias . '.`' . $this->definition['primary'] . '`');
+        $this->query->select($alias . '*');
         $this->query->from($this->definition['table'], $alias);
 
         // If multilang, create association to lang table
