@@ -105,3 +105,9 @@ services:
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Order\Command\BulkChangeOrderStatusCommand'
+
+  prestashop.adapter.order.query_handler.get_order_for_viewing_handler:
+    class: PrestaShop\PrestaShop\Adapter\Order\QueryHandler\GetOrderForViewingHandler
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing

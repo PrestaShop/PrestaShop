@@ -31,6 +31,8 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Command\BulkChangeOrderStatusCommand
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\ChangeOrderStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\OrderFilters;
@@ -213,6 +215,18 @@ class OrderController extends FrameworkBundleAdminController
             ->setData($data)
             ->setHeadersData($headers)
             ->setFileName('order_' . date('Y-m-d_His') . '.csv');
+    }
+
+    public function viewAction(int $orderId): Response
+    {
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+
+        dump($orderForViewing);
+
+        return $this->render('@PrestaShop/Admin/Sell/Order/Order/view.html.twig', [
+            'orderForViewing' => $orderForViewing,
+        ]);
     }
 
     /**
