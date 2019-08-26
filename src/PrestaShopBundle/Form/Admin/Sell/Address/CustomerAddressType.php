@@ -117,9 +117,6 @@ class CustomerAddressType extends AbstractType
                 'required' => false,
             ])
             ->add('other', TextareaType::class, [
-                'attr' => [
-                    'class' => 'textarea-autosize'
-                ],
                 'required' => false,
             ]);
 

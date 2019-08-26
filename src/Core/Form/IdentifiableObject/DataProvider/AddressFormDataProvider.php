@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressConstraintException;
 
 /**
  * Provides data for address add/edit form
@@ -56,29 +57,11 @@ final class AddressFormDataProvider implements FormDataProviderInterface
     /**
      * {@inheritdoc}
      *
-     * @throws CountryConstraintException
+     * @throws AddressConstraintException
      */
     public function getData($countryId)
     {
-        /** @var EditableCountry $editableCountry */
-        $editableCountry = $this->queryBus->handle(new GetCountryForEditing((int) $countryId));
-
-        $data = [
-            'country' => $editableCountry->getLocalisedNames(),
-            'iso_code' => $editableCountry->getIsoCode(),
-            'call_prefix' => $editableCountry->getCallPrefix(),
-            'default_currency' => $editableCountry->getDefaultCurrency(),
-            'zone' => $editableCountry->getZone(),
-            'need_zip_code' => $editableCountry->needZipCode(),
-            'zip_code_format' => $editableCountry->getZipCodeFormat(),
-            'address_format' => $editableCountry->getAddressFormat(),
-            'is_enabled' => $editableCountry->isEnabled(),
-            'contains_states' => $editableCountry->containsStates(),
-            'need_identification_number' => $editableCountry->needIdNumber(),
-            'display_tax_label' => $editableCountry->displayTaxLabel(),
-        ];
-
-        return $data;
+        return [];
     }
 
     /**
