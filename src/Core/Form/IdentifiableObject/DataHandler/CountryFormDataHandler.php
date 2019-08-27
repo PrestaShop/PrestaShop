@@ -112,9 +112,9 @@ final class CountryFormDataHandler implements FormDataHandlerInterface
     public function update($countryId, array $data)
     {
         /** @var CountryId $countryIdObject */
-        $stateIdObject = new CountryId((int) $countryId);
+        $countryIdObject = new CountryId((int) $countryId);
         $command = new EditCountryCommand(
-            $stateIdObject,
+            $countryIdObject,
             $data['country'],
             $data['iso_code'],
             (int) $data['call_prefix'],

@@ -898,8 +898,8 @@ services:
           - { name: form.type }
 
     form.type.common.zone_choice:
-      class: 'PrestaShopBundle\Form\Admin\Type\ZoneChoiceType'
-      arguments:
-        - '@prestashop.core.form.choice_provider.zone_by_id'
-      tags:
-        - { name: form.type }
+        class: 'PrestaShopBundle\Form\Admin\Type\ZoneChoiceType'
+        arguments:
+          - '@prestashop.core.form.choice_provider.zone_by_id'
+        tags:
+          - { name: form.type }

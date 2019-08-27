@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Country\Command;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 
 /**
- * Edit state with provided data
+ * Edit country with provided data
  */
 class EditCountryCommand
 {

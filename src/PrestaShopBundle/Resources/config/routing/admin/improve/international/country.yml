@@ -24,4 +24,4 @@ admin_countries_edit:
     _legacy_parameters:
       id_country: countryId
   requirements:
-    stateId: \d+
+    countryId: \d+
