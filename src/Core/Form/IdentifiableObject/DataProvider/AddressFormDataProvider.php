@@ -28,6 +28,8 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Address\Query\GetCustomerAddressForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Address\QueryResult\EditableCustomerAddress;
 
 /**
  * Provides data for address add/edit form
@@ -59,9 +61,32 @@ final class AddressFormDataProvider implements FormDataProviderInterface
      *
      * @throws AddressConstraintException
      */
-    public function getData($countryId)
+    public function getData($addressId)
     {
-        return [];
+        /** @var EditableCustomerAddress $editableAddress */
+        $editableAddress = $this->queryBus->handle(new GetCustomerAddressForEditing((int) $addressId));
+
+        $data = [
+            'id_customer' => $editableAddress->getCustomerId()->getValue(),
+            'customer_email' => $editableAddress->getCustomerEmail(),
+            'dni' => $editableAddress->getIdNumber(),
+            'alias' => $editableAddress->getAddressAlias(),
+            'firstname' => $editableAddress->getFirstName(),
+            'lastname' => $editableAddress->getLastName(),
+            'company' => $editableAddress->getCompany(),
+            'vat_number' => $editableAddress->getVatNumber(),
+            'address1' => $editableAddress->getAddress(),
+            'address2' => $editableAddress->getAddress2(),
+            'city' => $editableAddress->getCity(),
+            'postcode' => $editableAddress->getPostCode(),
+            'id_country' => $editableAddress->getCountryId()->getValue(),
+            'id_state' => $editableAddress->getStateId()->getValue(),
+            'phone' => $editableAddress->getHomePhone(),
+            'phone_mobile' => $editableAddress->getMobilePhone(),
+            'other' => $editableAddress->getOther(),
+        ];
+
+        return $data;
     }
 
     /**
