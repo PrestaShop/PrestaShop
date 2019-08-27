@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\QueryResult;
 
+use PrestaShop\PrestaShop\Adapter\Entity\OrderInvoice;
+
 /**
  * Contains data about order for viewing
  */
@@ -36,13 +38,44 @@ class OrderForViewing
      */
     private $customer;
 
-    public function __construct(OrderCustomerForViewing $customer)
-    {
+    /**
+     * @var OrderShippingAddressForViewing
+     */
+    private $shippingAddress;
+
+    /**
+     * @var OrderInvoiceAddressForViewing
+     */
+    private $invoiceAddress;
+
+    public function __construct(
+        OrderCustomerForViewing $customer,
+        OrderShippingAddressForViewing $shippingAddress,
+        OrderInvoiceAddressForViewing $invoiceAddress
+    ) {
         $this->customer = $customer;
+        $this->shippingAddress = $shippingAddress;
+        $this->invoiceAddress = $invoiceAddress;
     }
 
     public function getCustomer(): OrderCustomerForViewing
     {
         return $this->customer;
+    }
+
+    /**
+     * @return OrderShippingAddressForViewing
+     */
+    public function getShippingAddress(): OrderShippingAddressForViewing
+    {
+        return $this->shippingAddress;
+    }
+
+    /**
+     * @return OrderInvoiceAddressForViewing
+     */
+    public function getInvoiceAddress(): OrderInvoiceAddressForViewing
+    {
+        return $this->invoiceAddress;
     }
 }

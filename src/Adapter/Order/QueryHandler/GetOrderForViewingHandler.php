@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Order\QueryHandler;
 
+use Address;
+use Country;
 use Customer;
 use DateTimeImmutable;
 use Gender;
@@ -35,7 +37,10 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryHandler\GetOrderForViewingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderCustomerForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderInvoiceAddressForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderShippingAddressForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
+use State;
 use Tools;
 use Validate;
 
@@ -54,7 +59,9 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
         $order = $this->getOrder($query->getOrderId());
 
         return new OrderForViewing(
-            $this->getOrderCustomer($order)
+            $this->getOrderCustomer($order),
+            $this->getOrderShippingAddress($order),
+            $this->getOrderInvoiceAddress($order)
         );
     }
 
@@ -102,6 +109,62 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             new DateTimeImmutable($customer->date_add),
             Tools::displayPrice(Tools::ps_round(Tools::convertPrice($customerStats['total_orders'], $order->id_currency), PS_ROUND_HALF_UP), (int) $order->id_currency),
             $customerStats['nb_orders']
+        );
+    }
+
+    public function getOrderShippingAddress(Order $order): OrderShippingAddressForViewing
+    {
+        $address = new Address($order->id_address_delivery);
+        $country = new Country($address->id_country);
+        $stateName = '';
+
+        if ($address->id_state) {
+            $state = new State($address->id_state);
+
+            $stateName = $state->name;
+        }
+
+        return new OrderShippingAddressForViewing(
+            $address->id,
+            $address->firstname,
+            $address->lastname,
+            $address->company,
+            $address->address1,
+            $address->address2,
+            $stateName,
+            $address->city,
+            $country->name[$order->id_lang],
+            $address->postcode,
+            $address->phone,
+            $address->phone_mobile
+        );
+    }
+
+    public function getOrderInvoiceAddress(Order $order): OrderInvoiceAddressForViewing
+    {
+        $address = new Address($order->id_address_invoice);
+        $country = new Country($address->id_country);
+        $stateName = '';
+
+        if ($address->id_state) {
+            $state = new State($address->id_state);
+
+            $stateName = $state->name;
+        }
+
+        return new OrderInvoiceAddressForViewing(
+            $address->id,
+            $address->firstname,
+            $address->lastname,
+            $address->company,
+            $address->address1,
+            $address->address2,
+            $stateName,
+            $address->city,
+            $country->name[$order->id_lang],
+            $address->postcode,
+            $address->phone,
+            $address->phone_mobile
         );
     }
 }

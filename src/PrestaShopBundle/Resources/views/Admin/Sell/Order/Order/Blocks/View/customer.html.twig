@@ -96,12 +96,26 @@
           </a>
         </p>
 
-        <p class="mb-0">TODO</p>
-        <p class="mb-0">TODO</p>
-        <p class="mb-0">TODO</p>
-        <p class="mb-0">TODO</p>
-        <p class="mb-0">TODO</p>
-        <p>TODO</p>
+        <p class="mb-0">{{ orderForViewing.shippingAddress.fullName }}</p>
+        {% if orderForViewing.shippingAddress.companyName is not empty %}
+          <p class="mb-0">{{ orderForViewing.shippingAddress.companyName }}</p>
+        {% endif %}
+        <p class="mb-0">{{ orderForViewing.shippingAddress.address1 }}</p>
+        {% if orderForViewing.shippingAddress.address2 is not empty %}
+          <p class="mb-0">{{ orderForViewing.shippingAddress.address2 }}</p>
+        {% endif %}
+        <p class="mb-0">
+          {{ orderForViewing.shippingAddress.cityName }},
+          {% if orderForViewing.shippingAddress.stateName is not empty %}
+            {{ orderForViewing.shippingAddress.stateName }}
+          {% endif %}
+          {{ orderForViewing.shippingAddress.postCode }}
+        </p>
+        <p class="mb-0">{{ orderForViewing.shippingAddress.countryName }}</p>
+        <p>
+          {{ orderForViewing.shippingAddress.phoneNumber }}
+          {{ orderForViewing.shippingAddress.mobilePhoneNumber }}
+        </p>
 
         <p>
           <strong>{{ 'Invoice address'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
@@ -116,12 +130,26 @@
           </a>
         </p>
 
-        <p class="mb-0">TODO</p>
-        <p class="mb-0">TODO</p>
-        <p class="mb-0">TODO</p>
-        <p class="mb-0">TODO</p>
-        <p class="mb-0">TODO</p>
-        <p>TODO</p>
+        <p class="mb-0">{{ orderForViewing.invoiceAddress.fullName }}</p>
+        {% if orderForViewing.invoiceAddress.companyName is not empty %}
+          <p class="mb-0">{{ orderForViewing.invoiceAddress.companyName }}</p>
+        {% endif %}
+        <p class="mb-0">{{ orderForViewing.invoiceAddress.address1 }}</p>
+        {% if orderForViewing.invoiceAddress.address2 is not empty %}
+          <p class="mb-0">{{ orderForViewing.invoiceAddress.address2 }}</p>
+        {% endif %}
+        <p class="mb-0">
+          {{ orderForViewing.invoiceAddress.cityName }},
+          {% if orderForViewing.invoiceAddress.stateName is not empty %}
+            {{ orderForViewing.invoiceAddress.stateName }}
+          {% endif %}
+          {{ orderForViewing.invoiceAddress.postCode }}
+        </p>
+        <p class="mb-0">{{ orderForViewing.invoiceAddress.countryName }}</p>
+        <p>
+          {{ orderForViewing.invoiceAddress.phoneNumber }}
+          {{ orderForViewing.invoiceAddress.mobilePhoneNumber }}
+        </p>
       </div>
     </div>
     <div style="background-color: #F8F8F8; padding-top: 18px; padding-left: 18px; padding-right: 18px; padding-bottom: 16px;">
