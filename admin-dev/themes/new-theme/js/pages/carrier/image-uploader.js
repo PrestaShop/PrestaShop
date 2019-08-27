@@ -33,9 +33,11 @@ export default class ImageUploader {
     imageUploadBlock,
     imageTarget,
     formWrapper,
+    imageRemovalBtn,
   ) {
     this.$imageUploadBlock = $(imageUploadBlock);
     this.$imageTarget = $(imageTarget);
+    this.$removalBtn = $(imageRemovalBtn);
     this.form = document.querySelector(`${formWrapper} form`);
 
     this.handle();
@@ -47,9 +49,9 @@ export default class ImageUploader {
    * Initiates the handler
    */
   handle() {
-    $(this.$imageUploadBlock.find('input')).on('change', (e) => {
+    $(this.$imageUploadBlock.find('input[type="file"]')).on('change', (e) => {
       if (e.target.files.length !== 0) {
-        this.uploadImage(e);
+        this.uploadImage();
       }
     });
   }
@@ -60,14 +62,30 @@ export default class ImageUploader {
       method: 'POST',
       processData: false,
       contentType: false,
+      context: this,
       dataType: 'json',
       data: new FormData(this.form),
     }).then((response) => {
-      this.$imageTarget.prop('src', response.img_path);
-      $(this.$imageUploadBlock).find('input[type="hidden"]').val(response.img_path);
-    }).catch((response) => {
-      showErrorMessage(response.responseJSON.message);
+      this.presentImage(response.img_path);
+      this.showRemovalBtn();
+      this.logPreviousImgName(response.img_path);
+    }).catch((e) => {
+      showErrorMessage(e.responseJSON.message);
     });
+  }
+
+  presentImage(imagePath) {
+    this.$imageTarget.prop('src', imagePath);
+    $(this.$imageUploadBlock).find('input[type="hidden"]').val(imagePath);
+  }
+
+  showRemovalBtn() {
+    this.$removalBtn.show();
+  }
+
+  logPreviousImgName(imgPath) {
+    const fileName = imgPath.substr(imgPath.lastIndexOf('/') + 1);
+    $(this.$imageUploadBlock).find('input[type="hidden"]').val(fileName);
   }
 }
 

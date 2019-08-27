@@ -78,43 +78,45 @@ class CarrierController extends FrameworkBundleAdminController
         $carrierForm = $this->createForm(CarrierType::class);
         $carrierForm->handleRequest($request);
 
-        $errorMsg = $this->trans(
-            'An error occurred during the image upload process.',
-            'Admin.Notifications.Error'
-        );
+        $errors = [
+            'message' => $this->trans(
+                'An error occurred during the image upload process.',
+                'Admin.Notifications.Error'
+            ),
+        ];
 
         if ($carrierForm->isSubmitted() && $carrierForm['step_general']['logo']->isValid()) {
-            /** @var UploadedFile $image */
-            $image = $carrierForm->getData()['step_general']['logo'];
-
-            /** @var TmpImageUploaderInterface $tmpImageUploader */
-            $tmpImageUploader = $this->container->get('prestashop.adapter.image.uploader.tmp_image_uploader');
-
             try {
+                $uploadedImgPath = $this->uploadTmpImage($carrierForm->getData()['step_general']['logo']);
+
+                $previousImgName = $carrierForm->getData()['step_general']['logo_tmp_name'];
+                // remove previous image from tmp
+                if ($previousImgName) {
+                    $this->removeImage($previousImgName, true);
+                }
+
                 return $this->json([
-                    'img_path' => $tmpImageUploader->upload($image),
+                    'img_path' => $uploadedImgPath,
                 ]);
             } catch (Exception $e) {
-                return $this->returnErrorJsonResponse([$errorMsg], Response::HTTP_BAD_REQUEST);
+                return $this->returnErrorJsonResponse($errors, Response::HTTP_INTERNAL_SERVER_ERROR);
             }
         }
 
-        return $this->returnErrorJsonResponse([$errorMsg], Response::HTTP_BAD_REQUEST);
+        return $this->returnErrorJsonResponse($errors, Response::HTTP_BAD_REQUEST);
     }
 
     public function removeImageAction(Request $request): JsonResponse
     {
         $content = json_decode($request->getContent(), true);
-        $filePath = $_SERVER['DOCUMENT_ROOT'] . $content['img_path'];
 
-        if ($content['img_path'] !== '/img/admin/carrier-default.jpg'
-            && file_exists($filePath)
-            && unlink($filePath)
-        ) {
-            return $this->json([
-                'message' => $this->trans('Successful deletion.', 'Admin.Notifications.Success'),
-                'file_label' => $this->trans('%count% file(s)', 'Admin.Global', ['%count%' => 0]),
-            ]);
+        if (isset($content['image_name'], $content['is_tmp_image'])) {
+            if ($this->removeImage($content['image_name'], $content['is_tmp_image'])) {
+                return $this->json([
+                    'message' => $this->trans('Successful deletion.', 'Admin.Notifications.Success'),
+                    'file_label' => $this->trans('%count% file(s)', 'Admin.Global', ['%count%' => 0]),
+                ]);
+            }
         }
 
         return $this->returnErrorJsonResponse([
@@ -124,5 +126,24 @@ class CarrierController extends FrameworkBundleAdminController
             ],
             Response::HTTP_INTERNAL_SERVER_ERROR
         );
+    }
+
+    // @todo: move to RemoveCarrierLogoCommand
+    private function removeImage(string $imgName, bool $isTmpImage): bool
+    {
+        $imgPath = $isTmpImage === true ?
+            _PS_TMP_IMG_DIR_ . $imgName :
+            _PS_SHIP_IMG_DIR_ . $imgName
+        ;
+
+        return file_exists($imgPath) && unlink($imgPath);
+    }
+
+    private function uploadTmpImage(UploadedFile $image)
+    {
+        /** @var TmpImageUploaderInterface $tmpImageUploader */
+        $tmpImageUploader = $this->container->get('prestashop.adapter.image.uploader.tmp_image_uploader');
+
+        return $tmpImageUploader->upload($image);
     }
 }

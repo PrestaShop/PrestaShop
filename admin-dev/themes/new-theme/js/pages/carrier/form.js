@@ -35,6 +35,7 @@ import ChoiceTable from '../../components/choice-table.js';
 import ZonesCheckHandler from './zones-check-handler.js';
 import ImageUploader from './image-uploader.js';
 import ImageRemover from "./image-remover";
+import UnsavedFormWarning from "./unsaved-form-warning";
 
 const $ = window.$;
 
@@ -102,12 +103,15 @@ $(() => {
   new ImageUploader(
     CarrierFormMap.imageUploadBlock,
     CarrierFormMap.imageTarget,
-    CarrierFormMap.formWrapper
+    CarrierFormMap.formWrapper,
+    CarrierFormMap.imageRemoveBtn,
   );
 
   new ImageRemover(
     CarrierFormMap.imageUploadBlock,
     CarrierFormMap.imageTarget,
     CarrierFormMap.imageRemoveBtn,
-  )
+  );
+
+  new UnsavedFormWarning();
 });

@@ -47,13 +47,17 @@ export default class ImageRemover {
    * Initiates the handler
    */
   handle() {
-    this.$removalBtn.on('click', (e) => {
-      this.removeImage();
+    const isTmp = this.$removalBtn.data('is-tmp-image') === true;
+    this.removeImgOnPageReload();
+    this.$removalBtn.on('click', () => {
+      this.removeImage(isTmp);
     })
   }
 
-  removeImage() {
-    const self = this;
+  removeImage(isTmp) {
+    const src = this.$imageTarget.attr('src');
+    const imgName = src.substring(src.lastIndexOf('/') + 1);
+
     $.ajax({
       url: this.$removalBtn.data('remove-image-url'),
       method: 'POST',
@@ -62,16 +66,34 @@ export default class ImageRemover {
       context: this,
       dataType: 'json',
       data: JSON.stringify({
-        img_path: this.$imageTarget.attr('src'),
+        image_name: imgName,
+        is_tmp_image: isTmp,
       })
     }).then((response) => {
-      this.$imageTarget.attr('src', this.$imageTarget.data('default-logo'));
-      this.$imageUploadBlock.find('input[type="file"]').parent().find('label').text(response.file_label);
-      $(this.$imageUploadBlock).find('input[type="hidden"]').val('');
-      showSuccessMessage(response.message);
-    }).catch((response) => {
-      showErrorMessage(response.message);
+      this.clearImagePresentation(response.file_label);
+      this.hideRemoveBtn();
+    }).catch((e) => {
+      showErrorMessage(e.responseJSON.message);
     });
+  }
+
+  clearImagePresentation(emptyFileLabel) {
+    this.$imageTarget.attr('src', this.$imageTarget.data('default-logo'));
+    this.$imageUploadBlock.find('input[type="file"]').parent().find('label').text(emptyFileLabel);
+    this.$imageUploadBlock.find('input[type="hidden"]').val('');
+  }
+
+  hideRemoveBtn() {
+    this.$removalBtn.hide();
+  }
+
+  removeImgOnPageReload() {
+    window.onbeforeunload = () => {
+      const prevImg = this.$imageUploadBlock.find('input[type="hidden"]').val();
+      if (prevImg !== null && prevImg !== '') {
+        this.removeImage(true);
+      }
+    };
   }
 }
 

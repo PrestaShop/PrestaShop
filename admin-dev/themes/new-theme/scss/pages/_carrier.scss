@@ -57,10 +57,6 @@
     display: none;
   }
 
-  .not-displayable {
-    display: none;
-  }
-
   .summary-list {
     list-style-type: none;
   }
@@ -81,5 +77,11 @@
   }
   .remove-logo:focus {
     outline: none;
+  }
+}
+
+#carrier-form, #carrier-logo {
+  .not-displayable {
+    display: none;
   }
 }

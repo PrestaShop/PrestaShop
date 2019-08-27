@@ -1,4 +1,4 @@
-{#**
+/**
  * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,27 +21,14 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% block carrier_logo %}
-  {% set hasLogo = logo is defined and logo is not null %}
-  <div class="card" id="carrier-logo">
-    <div class="card-header">
-      {{ 'Logo'|trans({}, 'Admin.Global') }}
-      <button
-        type="button"
-        class="float-right remove-logo js-remove-logo {% if hasLogo == false %}not-displayable{% endif %}"
-        data-is-tmp-image="{% if hasLogo %}false{% else %}true{% endif %}"
-        data-remove-image-url="{{ removeImageUrl }}"
-        title="{{ 'Delete'|trans({}, 'Admin.Global') }}">
-        <i class="material-icons">delete_forever</i>
-      </button>
-    </div>
-    <div class="card-block text-center">
-      <img
-        data-default-logo="{{ defaultLogo }}"
-        src="{% if hasLogo %} {{ logo }} {% else %} {{ defaultLogo }} {% endif %}"
-      class="img-thumbnail">
-    </div>
-  </div>
-{% endblock %}
+export default class UnsavedFormWarning {
+  constructor() {
+    // before reloading the page shows warning message which depends from browser
+    // the warning text is not customizable in modern browsers due to security issues
+    window.onbeforeunload = () => 'Changes you made may not be saved.';
+
+    return {};
+  }
+}
