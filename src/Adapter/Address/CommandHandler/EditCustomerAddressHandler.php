@@ -27,17 +27,15 @@
 namespace PrestaShop\PrestaShop\Adapter\Address\CommandHandler;
 
 use Address;
-use PrestaShop\PrestaShop\Core\Domain\Address\Command\AddCustomerAddressCommand;
-use PrestaShop\PrestaShop\Core\Domain\Address\CommandHandler\AddCustomerAddressHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressException;
 use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
 use PrestaShopException;
 
 /**
- * Handles creation of customer address
+ * Handles update of customer address
  */
-final class AddCustomerAddressHandler implements AddCustomerAddressHandlerInterface
+final class EditCustomerAddressHandler implements EditCustomerAddressHandlerInterface
 {
     /**
      * {@inheritdoc}
@@ -45,7 +43,7 @@ final class AddCustomerAddressHandler implements AddCustomerAddressHandlerInterf
      * @throws AddressException
      * @throws AddressConstraintException
      */
-    public function handle(AddCustomerAddressCommand $command): AddressId
+    public function handle(EditCustomerAddressCommand $command): AddressId
     {
         $address = $this->createAddressFromCommand($command);
 
@@ -69,11 +67,11 @@ final class AddCustomerAddressHandler implements AddCustomerAddressHandlerInterf
     }
 
     /**
-     * @param AddCustomerAddressCommand $command
+     * @param EditCustomerAddressCommand $command
      *
      * @return Address
      */
-    private function createAddressFromCommand(AddCustomerAddressCommand $command)
+    private function createAddressFromCommand(EditCustomerAddressCommand $command)
     {
         $address = new Address();
 
