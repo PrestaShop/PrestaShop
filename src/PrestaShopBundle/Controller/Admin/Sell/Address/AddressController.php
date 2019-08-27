@@ -39,6 +39,10 @@ use PrestaShop\PrestaShop\Core\Domain\Address\Exception\InvalidAddressRequiredFi
 use PrestaShop\PrestaShop\Core\Domain\Address\Query\GetRequiredFieldsForAddress;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AddressGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\AddressFilters;
+use PrestaShop\PrestaShop\Core\Domain\Address\Query\GetCustomerAddressForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Address\QueryResult\EditableCustomerAddress;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForAddressCreation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\AddressCreationCustomer;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Address\RequiredFieldsAddressType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -47,6 +51,10 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 /**
  * Class manages "Sell > Customers > Addresses" page.
@@ -245,6 +253,7 @@ class AddressController extends FrameworkBundleAdminController
      * )
      *
      * @param Request $request
+     *
      * @return Response
      */
     public function createAction(Request $request): Response
@@ -272,6 +281,7 @@ class AddressController extends FrameworkBundleAdminController
         }
 
         return $this->render('@PrestaShop/Admin/Sell/Address/add.html.twig', [
+            'enableSidebar' => true,
             'addressForm' => $addressForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
         ]);
@@ -286,14 +296,86 @@ class AddressController extends FrameworkBundleAdminController
      * )
      *
      * @param int $addressId
+     * @param Request $request
      *
      * @return Response
      */
-    public function editAction(int $addressId): Response
+    public function editAction(int $addressId, Request $request): Response
     {
-        $link = $this->getAdminLink('AdminAddresses', ['id_address' => $addressId, 'updateaddress' => 1]);
+        try {
+            /** @var EditableCustomerAddress $editableAddress */
+            $editableAddress = $this->getQueryBus()->handle(new GetCustomerAddressForEditing((int) $addressId));
+        } catch (AddressException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
 
-        return $this->redirect($link);
+            return $this->redirectToRoute('admin_addresses_index');
+        }
+
+        $addressForm = null;
+
+        try {
+            $addressFormBuilder = $this->get(
+                'prestashop.core.form.identifiable_object.builder.address_form_builder'
+            );
+            $addressFormHandler = $this->get(
+                'prestashop.core.form.identifiable_object.handler.address_form_handler'
+            );
+
+            $addressForm = $addressFormBuilder->getFormFor($addressId);
+            $addressForm->handleRequest($request);
+            $result = $addressFormHandler->handleFor($addressId, $addressForm);
+
+            if ($result->isSubmitted() && $result->isValid()) {
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_addresses_index');
+            }
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+
+            return $this->redirectToRoute('admin_addresses_index');
+        }
+
+        $customerInfo = $editableAddress->getLastName() . ' ' .
+            $editableAddress->getFirstName() . ' (' .
+            $editableAddress->getCustomerEmail() . ')';
+
+        return $this->render('@PrestaShop/Admin/Sell/Address/edit.html.twig', [
+            'enableSidebar' => true,
+            'customerId' => $editableAddress->getCustomerId()->getValue(),
+            'customerInformation' => $customerInfo,
+            'layoutTitle' => $this->trans('Edit', 'Admin.Actions'),
+            'addressForm' => $addressForm->createView(),
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+        ]);
+    }
+
+    /**
+     * Provides customer information for address creation in json format
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function getCustomerInformationAction(Request $request)
+    {
+        try {
+            $email = $request->query->get('email');
+
+            /** @var AddressCreationCustomer $customerInformation */
+            $customerInformation = $this->getQueryBus()->handle(new GetCustomerForAddressCreation($email));
+
+            $normalizer = new ObjectNormalizer(null, new CamelCaseToSnakeCaseNameConverter());
+            $serializer = new Serializer([$normalizer], ['json' => new JsonEncoder()]);
+
+            return new Response($serializer->serialize($customerInformation, 'json'));
+        } catch (Exception $e) {
+            return $this->json([
+                'message' => $this->getErrorMessageForException($e, []),
+            ],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
     }
 
     /**
