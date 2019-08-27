@@ -225,6 +225,7 @@ class OrderController extends FrameworkBundleAdminController
         dump($orderForViewing);
 
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/view.html.twig', [
+            'showContentHeader' => false,
             'orderForViewing' => $orderForViewing,
         ]);
     }

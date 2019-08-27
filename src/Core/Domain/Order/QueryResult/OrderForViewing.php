@@ -47,15 +47,43 @@ class OrderForViewing
      * @var OrderInvoiceAddressForViewing
      */
     private $invoiceAddress;
+    /**
+     * @var string
+     */
+    private $reference;
+
+    /**
+     * @var OrderProductsForViewing
+     */
+    private $products;
+
+    /**
+     * @var string
+     */
+    private $taxMethod;
 
     public function __construct(
+        string $reference,
+        string $taxMethod,
         OrderCustomerForViewing $customer,
         OrderShippingAddressForViewing $shippingAddress,
-        OrderInvoiceAddressForViewing $invoiceAddress
+        OrderInvoiceAddressForViewing $invoiceAddress,
+        OrderProductsForViewing $products
     ) {
+        $this->reference = $reference;
         $this->customer = $customer;
         $this->shippingAddress = $shippingAddress;
         $this->invoiceAddress = $invoiceAddress;
+        $this->products = $products;
+        $this->taxMethod = $taxMethod;
+    }
+
+    /**
+     * @return string
+     */
+    public function getReference(): string
+    {
+        return $this->reference;
     }
 
     public function getCustomer(): OrderCustomerForViewing
@@ -77,5 +105,21 @@ class OrderForViewing
     public function getInvoiceAddress(): OrderInvoiceAddressForViewing
     {
         return $this->invoiceAddress;
+    }
+
+    /**
+     * @return OrderProductsForViewing
+     */
+    public function getProducts(): OrderProductsForViewing
+    {
+        return $this->products;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTaxMethod(): string
+    {
+        return $this->taxMethod;
     }
 }

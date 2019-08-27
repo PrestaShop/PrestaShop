@@ -23,22 +23,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
-
-{% block content %}
-  <div class="row">
-    <div class="col-md-12">
-      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/order_actions.html.twig' %}
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-md-4">
-      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/customer.html.twig' %}
-    </div>
-
-    <div class="col-md-8">
-      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/products.html.twig' %}
-    </div>
-  </div>
-{% endblock %}
+<div class="mb-3">
+  <button class="btn" style="background-color: white; border-radius: 4px; box-shadow: 0 0 10px 0 rgba(0,0,0,0.1);">
+    <i class="material-icons">print</i>
+    {{ 'Print order'|trans({}, 'Admin.Orderscustomers.Feature') }}
+  </button>
+</div>
