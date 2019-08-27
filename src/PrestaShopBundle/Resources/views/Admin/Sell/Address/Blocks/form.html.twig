@@ -36,9 +36,15 @@
     <div class="card-text">
       {{ form_errors(addressForm) }}
 
-      {{ ps.form_group_row(addressForm.customer_email, {}, {
-        'label': 'Customer'|trans({}, 'Admin.Global'),
-      }) }}
+      {% block customer_information %}
+        {% if addressForm.customer_email is defined %}
+          {{ ps.form_group_row(addressForm.customer_email, {'attr': {
+            'class': 'js-manufacturer-country-select',
+            'data-customer-information-url': path('admin_customer_for_address_information') }}, {
+            'label': 'Customer email'|trans({}, 'Admin.Orderscustomers.Feature'),
+          }) }}
+        {% endif %}
+      {% endblock %}
 
       {{ ps.form_group_row(addressForm.dni, {}, {
         'label': 'Identification number'|trans({}, 'Admin.Orderscustomers.Feature'),
@@ -50,12 +56,12 @@
         'help' : 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}'
       }) }}
 
-      {{ ps.form_group_row(addressForm.firstname, {}, {
+      {{ ps.form_group_row(addressForm.first_name, {}, {
         'label': 'First Name'|trans({}, 'Admin.Global'),
         'help' : 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' 0-9!<>,;?=+()@#"�{}_$%:'
       }) }}
 
-      {{ ps.form_group_row(addressForm.lastname, {}, {
+      {{ ps.form_group_row(addressForm.last_name, {}, {
         'label': 'Last Name'|trans({}, 'Admin.Global'),
         'help' : 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' 0-9!<>,;?=+()@#"�{}_$%:'
       }) }}
@@ -85,12 +91,14 @@
         'label': 'City'|trans({}, 'Admin.Global')
       }) }}
 
-      {{ ps.form_group_row(addressForm.id_country, {}, {
-        'label': 'Country'|trans({}, 'Admin.Global')
+      {{ ps.form_group_row(addressForm.id_country, {'attr': {
+        'data-states-url': path('admin_country_states') }}, {
+        'label': 'Country'|trans({}, 'Admin.Global'),
       }) }}
 
       {{ ps.form_group_row(addressForm.id_state, {}, {
-        'label': 'State'|trans({}, 'Admin.Global')
+        'label': 'State'|trans({}, 'Admin.Global'),
+        'class': 'js-address-state-select',
       }) }}
 
       {{ ps.form_group_row(addressForm.phone, {}, {

@@ -36,6 +36,7 @@ interface AddCustomerAddressHandlerInterface
 {
     /**
      * @param AddCustomerAddressCommand $command
+     *
      * @return AddressId
      */
     public function handle(AddCustomerAddressCommand $command): AddressId;

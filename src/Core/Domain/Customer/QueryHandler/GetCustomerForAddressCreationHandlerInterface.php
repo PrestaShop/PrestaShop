@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,20 +22,22 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\QueryHandler;
 
-{% block content %}
-  <div class="row justify-content-center">
-    <div class="col">
-      {{ include('@PrestaShop/Admin/Sell/Address/Blocks/form.html.twig', {'addressForm': addressForm}) }}
-    </div>
-  </div>
-{% endblock %}
+use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForAddressCreation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\AddressCreationCustomer;
 
-{% block javascripts %}
-  {{ parent() }}
-
-  <script src="{{ asset('themes/new-theme/public/customer_address_form.bundle.js') }}"></script>
-{% endblock %}
+/**
+ * Defines contract for customer by email search handler
+ */
+interface GetCustomerForAddressCreationHandlerInterface
+{
+    /**
+     * @param GetCustomerForAddressCreation $query
+     *
+     * @return AddressCreationCustomer
+     */
+    public function handle(GetCustomerForAddressCreation $query): AddressCreationCustomer;
+}
