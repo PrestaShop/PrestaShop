@@ -47,7 +47,7 @@ export default class ImageUploader {
    * Initiates the handler
    */
   handle() {
-    $(this.$imageUploadBlock.find('input')).on('change', () => {
+    $(this.$imageUploadBlock.find('input')).on('change', (e) => {
       if (e.target.files.length !== 0) {
         this.uploadImage(e);
       }
@@ -56,7 +56,7 @@ export default class ImageUploader {
 
   uploadImage() {
     $.ajax({
-      url: this.$imageUploadBlock.data('image-upload-url'),
+      url: this.$imageUploadBlock.data('upload-image-url'),
       method: 'POST',
       processData: false,
       contentType: false,

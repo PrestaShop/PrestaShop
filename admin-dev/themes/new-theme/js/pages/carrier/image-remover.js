@@ -28,7 +28,7 @@ const $ = window.$;
 /**
  * Responsible uploading and showing carrier temporary image
  */
-export default class ImageUploader {
+export default class ImageRemover {
   constructor(
     imageUploadBlock,
     imageTarget,
@@ -47,24 +47,30 @@ export default class ImageUploader {
    * Initiates the handler
    */
   handle() {
-    this.$removalBtn.on('click', () => {
-
+    this.$removalBtn.on('click', (e) => {
+      this.removeImage();
     })
   }
 
-  uploadImage() {
+  removeImage() {
+    const self = this;
     $.ajax({
-      url: this.$imageUploadBlock.data('image-upload-url'),
+      url: this.$removalBtn.data('remove-image-url'),
       method: 'POST',
       processData: false,
-      contentType: false,
+      contentType: 'application/json; charset=utf-8',
+      context: this,
       dataType: 'json',
-      data: new FormData(this.form),
+      data: JSON.stringify({
+        img_path: this.$imageTarget.attr('src'),
+      })
     }).then((response) => {
-      this.$imageTarget.prop('src', response.img_path);
-      $(this.$imageUploadBlock).find('input[type="hidden"]').val(response.img_path);
+      this.$imageTarget.attr('src', this.$imageTarget.data('default-logo'));
+      this.$imageUploadBlock.find('input[type="file"]').parent().find('label').text(response.file_label);
+      $(this.$imageUploadBlock).find('input[type="hidden"]').val('');
+      showSuccessMessage(response.message);
     }).catch((response) => {
-      showErrorMessage(response.responseJSON.message);
+      showErrorMessage(response.message);
     });
   }
 }

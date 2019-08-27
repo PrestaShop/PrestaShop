@@ -34,6 +34,7 @@ import ChoiceTree from '../../components/form/choice-tree.js';
 import ChoiceTable from '../../components/choice-table.js';
 import ZonesCheckHandler from './zones-check-handler.js';
 import ImageUploader from './image-uploader.js';
+import ImageRemover from "./image-remover";
 
 const $ = window.$;
 
@@ -103,4 +104,10 @@ $(() => {
     CarrierFormMap.imageTarget,
     CarrierFormMap.formWrapper
   );
+
+  new ImageRemover(
+    CarrierFormMap.imageUploadBlock,
+    CarrierFormMap.imageTarget,
+    CarrierFormMap.imageRemoveBtn,
+  )
 });

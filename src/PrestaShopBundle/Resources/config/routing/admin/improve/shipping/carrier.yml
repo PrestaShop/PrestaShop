@@ -18,3 +18,10 @@ admin_carriers_upload_image:
   defaults:
     _controller: 'PrestaShopBundle:Admin\Improve\Shipping\Carrier:uploadImage'
     _legacy_controller: AdminCarrierWizard:uploadLogo
+
+admin_carriers_remove_image:
+  path: carriers/remove-image
+  methods: [POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Improve\Shipping\Carrier:removeImage'
+    _legacy_controller: AdminCarrierWizard:uploadLogo

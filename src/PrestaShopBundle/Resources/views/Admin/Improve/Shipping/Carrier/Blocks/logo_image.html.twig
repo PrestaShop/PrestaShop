@@ -27,14 +27,18 @@
   <div class="card" id="carrier-logo">
     <div class="card-header">
       {{ 'Logo'|trans({}, 'Admin.Global') }}
-      <button type="button" class="float-right remove-logo js-remove-logo" title="{{ 'Delete'|trans({}, 'Admin.Global') }}">
+      <button
+        type="button"
+        class="float-right remove-logo js-remove-logo"
+        data-remove-image-url="{{ removeImageUrl }}"
+        title="{{ 'Delete'|trans({}, 'Admin.Global') }}">
         <i class="material-icons">delete_forever</i>
       </button>
     </div>
     <div class="card-block text-center">
       <img
-        data-logo="{{ logo }}"
-        src="{{ logo }}"
+        data-default-logo="{{ defaultLogo }}"
+        src="{{ defaultLogo }}"
       class="img-thumbnail">
     </div>
   </div>

@@ -59,4 +59,5 @@ export default {
   outrangedBehaviorSummaryCaseDisable: '#js-outranged-disable',
   imageTarget: '#carrier-logo img',
   imageUploadBlock: '#js-carrier-logo-upload',
+  imageRemoveBtn: '.js-remove-logo',
 };

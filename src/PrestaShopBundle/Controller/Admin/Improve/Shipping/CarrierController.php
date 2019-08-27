@@ -68,7 +68,8 @@ class CarrierController extends FrameworkBundleAdminController
             'contextLangId' => $this->container->get('prestashop.adapter.legacy.context')->getContext()->language->id,
             'defaultLangId' => $this->get('prestashop.adapter.legacy.configuration')->getInt('PS_LANG_DEFAULT'),
             'uploadImageUrl' => $this->generateUrl('admin_carriers_upload_image'),
-            'logo' => '/img/admin/carrier-default.jpg',
+            'removeImageUrl' => $this->generateUrl('admin_carriers_remove_image'),
+            'defaultLogo' => '/img/admin/carrier-default.jpg',
         ]);
     }
 
@@ -94,16 +95,34 @@ class CarrierController extends FrameworkBundleAdminController
                     'img_path' => $tmpImageUploader->upload($image),
                 ]);
             } catch (Exception $e) {
-                return $this->json(
-                    ['message' => $errorMsg],
-                    Response::HTTP_BAD_REQUEST
-                );
+                return $this->returnErrorJsonResponse([$errorMsg], Response::HTTP_BAD_REQUEST);
             }
         }
 
-        return $this->json(
-            ['message' => $errorMsg],
-            Response::HTTP_BAD_REQUEST
+        return $this->returnErrorJsonResponse([$errorMsg], Response::HTTP_BAD_REQUEST);
+    }
+
+    public function removeImageAction(Request $request): JsonResponse
+    {
+        $content = json_decode($request->getContent(), true);
+        $filePath = $_SERVER['DOCUMENT_ROOT'] . $content['img_path'];
+
+        if ($content['img_path'] !== '/img/admin/carrier-default.jpg'
+            && file_exists($filePath)
+            && unlink($filePath)
+        ) {
+            return $this->json([
+                'message' => $this->trans('Successful deletion.', 'Admin.Notifications.Success'),
+                'file_label' => $this->trans('%count% file(s)', 'Admin.Global', ['%count%' => 0]),
+            ]);
+        }
+
+        return $this->returnErrorJsonResponse([
+            'message' => $this->trans(
+                'An error occurred during the image removal process.',
+                'Admin.Notifications.Error'),
+            ],
+            Response::HTTP_INTERNAL_SERVER_ERROR
         );
     }
 }
