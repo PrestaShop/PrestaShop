@@ -37,7 +37,7 @@ use Tests\Integration\PrestaShopBundle\Translation\CatalogueVerifier;
  */
 class ExternalModuleLegacySystemProviderTest extends KernelTestCase
 {
-    const MODULE_NAME = 'translation_test';
+    const MODULE_NAME = 'translationtest';
 
     /**
      * @var ExternalModuleLegacySystemProvider

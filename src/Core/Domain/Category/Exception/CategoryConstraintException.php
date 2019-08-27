@@ -62,6 +62,11 @@ class CategoryConstraintException extends CategoryException
     const TOO_MANY_MENU_THUMBNAILS = 8;
 
     /**
+     * Code is used when invalid id is supplied.
+     */
+    const INVALID_ID = 10;
+
+    /**
      * Code is used when performing bulk delete of categories with empty data.
      */
     const EMPTY_BULK_DELETE_DATA = 12;

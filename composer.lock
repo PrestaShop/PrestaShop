@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "14237e2d05079ff7540791318ff6912c",
+    "content-hash": "d50140856a65aa2f513a310c9600da25",
     "packages": [
         {
             "name": "analog/analog",
@@ -3164,6 +3164,62 @@
             "time": "2017-06-29T07:28:29+00:00"
         },
         {
+            "name": "prestashop/circuit-breaker",
+            "version": "v3.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/circuit-breaker.git",
+                "reference": "8764540d470b533c9484534343688733bc363f77"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/circuit-breaker/zipball/8764540d470b533c9484534343688733bc363f77",
+                "reference": "8764540d470b533c9484534343688733bc363f77",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^5",
+                "php": ">=5.6"
+            },
+            "require-dev": {
+                "doctrine/cache": "^1.6.0",
+                "friendsofphp/php-cs-fixer": "^2.12",
+                "phpunit/phpunit": "^5.7.0",
+                "squizlabs/php_codesniffer": "3.*",
+                "symfony/cache": "^3.4.0",
+                "symfony/event-dispatcher": "^3.4",
+                "vimeo/psalm": "^1.1"
+            },
+            "suggest": {
+                "doctrine/cache": "Allows use of Doctrine Cache adapters to store transactions",
+                "ext-apcu": "Allows use of APCu adapter (performant) to store transactions",
+                "guzzlehttp/cache-subscriber": "Allow use of Guzzle cache (use dev-master for most recent changes)",
+                "symfony/cache": "Allows use of Symfony Cache adapters to store transactions"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "PrestaShop\\CircuitBreaker\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                },
+                {
+                    "name": "PrestaShop Community",
+                    "homepage": "http://contributors.prestashop.com/"
+                }
+            ],
+            "description": "A circuit breaker implementation for PHP",
+            "time": "2019-06-13T10:50:14+00:00"
+        },
+        {
             "name": "prestashop/contactform",
             "version": "v4.1.1",
             "source": {
@@ -3325,16 +3381,16 @@
         },
         {
             "name": "prestashop/decimal",
-            "version": "1.1.0",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/decimal.git",
-                "reference": "42e9bc8c2ec533dc2a247f9321b8f3ed55c5341f"
+                "reference": "11e0f87b101644614e61cfbea175548bdfb389f1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/decimal/zipball/42e9bc8c2ec533dc2a247f9321b8f3ed55c5341f",
-                "reference": "42e9bc8c2ec533dc2a247f9321b8f3ed55c5341f",
+                "url": "https://api.github.com/repos/PrestaShop/decimal/zipball/11e0f87b101644614e61cfbea175548bdfb389f1",
+                "reference": "11e0f87b101644614e61cfbea175548bdfb389f1",
                 "shasum": ""
             },
             "require": {
@@ -3369,7 +3425,7 @@
                 "precision",
                 "prestashop"
             ],
-            "time": "2017-08-22T14:23:19+00:00"
+            "time": "2019-07-17T13:14:07+00:00"
         },
         {
             "name": "prestashop/graphnvd3",
@@ -4967,16 +5023,16 @@
         },
         {
             "name": "prestashop/translationtools-bundle",
-            "version": "v3.1.0",
+            "version": "v3.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/TranslationToolsBundle.git",
-                "reference": "7ca162cee5a24359a33ada3eba13f94f23c1c926"
+                "reference": "d1e9b0b051aaebc934f59b880233571d7b865af9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/TranslationToolsBundle/zipball/7ca162cee5a24359a33ada3eba13f94f23c1c926",
-                "reference": "7ca162cee5a24359a33ada3eba13f94f23c1c926",
+                "url": "https://api.github.com/repos/PrestaShop/TranslationToolsBundle/zipball/d1e9b0b051aaebc934f59b880233571d7b865af9",
+                "reference": "d1e9b0b051aaebc934f59b880233571d7b865af9",
                 "shasum": ""
             },
             "require": {
@@ -5022,7 +5078,7 @@
                 "prestashop",
                 "translation"
             ],
-            "time": "2019-04-19T12:27:03+00:00"
+            "time": "2019-08-05T13:44:51+00:00"
         },
         {
             "name": "prestashop/welcome",

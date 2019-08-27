@@ -82,6 +82,9 @@ class AdminProductDataUpdater implements ProductInterface
             }
             $product->active = ($activate ? 1 : 0);
             $product->update();
+            if (in_array($product->visibility, array('both', 'search')) && Configuration::get('PS_SEARCH_INDEXATION')) {
+                Search::indexation(false, $product->id);
+            }
             $this->hookDispatcher->dispatchWithParameters('actionProductActivation', array('id_product' => (int) $product->id, 'product' => $product, 'activated' => $activate));
         }
 
@@ -215,6 +218,7 @@ class AdminProductDataUpdater implements ProductInterface
             && Product::duplicateSpecificPrices($id_product_old, $product->id)
             && Pack::duplicate($id_product_old, $product->id)
             && Product::duplicateCustomizationFields($id_product_old, $product->id)
+            && Product::duplicatePrices($id_product_old, $product->id)
             && Product::duplicateTags($id_product_old, $product->id)
             && Product::duplicateTaxes($id_product_old, $product->id)
             && Product::duplicateDownload($id_product_old, $product->id)) {

@@ -71,6 +71,21 @@ class SharedStorage
 
     /**
      * @param string $key
+     * @param mixed $default
+     *
+     * @return mixed
+     */
+    public function getWithDefault($key, $default)
+    {
+        if (!isset($this->storage[$key])) {
+            return $default;
+        }
+
+        return $this->storage[$key];
+    }
+
+    /**
+     * @param string $key
      * @param mixed $resource
      */
     public function set($key, $resource)

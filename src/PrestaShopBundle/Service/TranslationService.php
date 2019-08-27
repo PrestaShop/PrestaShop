@@ -30,6 +30,7 @@ use Exception;
 use PrestaShopBundle\Entity\Translation;
 use PrestaShopBundle\Translation\Constraints\PassVsprintf;
 use PrestaShopBundle\Translation\Provider\UseModuleInterface;
+use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Validator\Validation;
 
 class TranslationService
@@ -111,19 +112,16 @@ class TranslationService
     {
         $factory = $this->container->get('ps.translations_factory');
 
-        if ($selected !== 'classic' && $this->requiresThemeTranslationsFactory($selected, $type)) {
-            $factory = $this->container->get('ps.theme_translations_factory');
-        }
-
-        $locale = $this->langToLocale($lang);
-
         if ($this->requiresThemeTranslationsFactory($selected, $type)) {
             if ('classic' === $selected) {
                 $type = 'front';
             } else {
                 $type = $selected;
+                $factory = $this->container->get('ps.theme_translations_factory');
             }
         }
+
+        $locale = $this->langToLocale($lang);
 
         return $factory->createTranslationsArray($type, $locale, $selected, $search);
     }

@@ -3414,7 +3414,6 @@ class CartCore extends ObjectModel
             $id_carrier = (int) Configuration::get('PS_CARRIER_DEFAULT');
         }
 
-        $total_package_without_shipping_tax_inc = $this->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING, $product_list);
         if (empty($id_carrier)) {
             if ((int) $this->id_customer) {
                 $customer = new Customer((int) $this->id_customer);
@@ -3449,8 +3448,7 @@ class CartCore extends ObjectModel
                 if ($row['range_behavior']) {
                     $check_delivery_price_by_weight = Carrier::checkDeliveryPriceByWeight($row['id_carrier'], $this->getTotalWeight(), (int) $id_zone);
 
-                    $total_order = $total_package_without_shipping_tax_inc;
-                    $check_delivery_price_by_price = Carrier::checkDeliveryPriceByPrice($row['id_carrier'], $total_order, (int) $id_zone, (int) $this->id_currency);
+                    $check_delivery_price_by_price = Carrier::checkDeliveryPriceByPrice($row['id_carrier'], $order_total, (int) $id_zone, (int) $this->id_currency);
 
                     // Get only carriers that have a range compatible with cart
                     if (($shipping_method == Carrier::SHIPPING_METHOD_WEIGHT && !$check_delivery_price_by_weight)
@@ -3567,7 +3565,7 @@ class CartCore extends ObjectModel
 
             if (($shipping_method == Carrier::SHIPPING_METHOD_WEIGHT && !Carrier::checkDeliveryPriceByWeight($carrier->id, $this->getTotalWeight(), (int) $id_zone))
                 || (
-                    $shipping_method == Carrier::SHIPPING_METHOD_PRICE && !Carrier::checkDeliveryPriceByPrice($carrier->id, $total_package_without_shipping_tax_inc, $id_zone, (int) $this->id_currency)
+                    $shipping_method == Carrier::SHIPPING_METHOD_PRICE && !Carrier::checkDeliveryPriceByPrice($carrier->id, $order_total, $id_zone, (int) $this->id_currency)
                 )) {
                 $shipping_cost += 0;
             } else {

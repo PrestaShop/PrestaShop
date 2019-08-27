@@ -82,3 +82,6 @@ services:
             - '@translator'
             - '@prestashop.adapter.legacy.kpi_configuration'
             - '@=service("prestashop.adapter.legacy.context").getAdminLink("AdminStats", true, {"ajax": 1, "action": "getKpi", "kpi": "newsletter_registrations"})'
+
+    prestashop.adapter.kpi.shopping_cart_total_kpi:
+        class: 'PrestaShop\PrestaShop\Adapter\Kpi\ShoppingCartTotalKpi'

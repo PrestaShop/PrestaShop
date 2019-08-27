@@ -31,3 +31,9 @@ services:
 
     prestashop.adapter.product.list_parameters_updater:
         class: 'PrestaShop\PrestaShop\Adapter\Product\ListParametersUpdater'
+
+    prestashop:.adapter.product.command_handler.add_category_to_product_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\AssignProductToCategoryHandler
+        public: true
+        tags:
+            - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Product\Command\AssignProductToCategoryCommand }

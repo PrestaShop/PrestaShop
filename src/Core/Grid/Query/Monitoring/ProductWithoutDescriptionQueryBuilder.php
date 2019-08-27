@@ -69,8 +69,8 @@ final class ProductWithoutDescriptionQueryBuilder extends AbstractProductQueryBu
     private function getQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getProductsCommonQueryBuilder($searchCriteria);
-        $qb->andWhere('pl.description = ""')
-            ->andWhere('pl.description_short = ""');
+        $qb->andWhere('pl.description IS NULL OR pl.description = ""')
+            ->andWhere('pl.description_short IS NULL OR pl.description_short = ""');
 
         return $qb;
     }

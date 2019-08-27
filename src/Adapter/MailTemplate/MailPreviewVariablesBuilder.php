@@ -62,15 +62,20 @@ final class MailPreviewVariablesBuilder
     /** @var Context */
     private $context;
 
+    /** @var MailPartialTemplateRenderer */
+    private $mailPartialTemplateRenderer;
+
     public function __construct(
         ConfigurationInterface $configuration,
         LegacyContext $legacyContext,
-        ContextEmployeeProviderInterface $employeeProvider
+        ContextEmployeeProviderInterface $employeeProvider,
+        MailPartialTemplateRenderer $mailPartialTemplateRenderer
     ) {
         $this->configuration = $configuration;
         $this->legacyContext = $legacyContext;
         $this->context = $this->legacyContext->getContext();
         $this->employeeProvider = $employeeProvider;
+        $this->mailPartialTemplateRenderer = $mailPartialTemplateRenderer;
     }
 
     /**
@@ -128,15 +133,15 @@ final class MailPreviewVariablesBuilder
 
         if (self::ORDER_CONFIRMATION == $mailLayout->getName()) {
             $productTemplateList = $this->getProductList($order);
-            $productListTxt = $this->getEmailTemplateContent('order_conf_product_list.txt', $productTemplateList);
-            $productListHtml = $this->getEmailTemplateContent('order_conf_product_list.tpl', $productTemplateList);
+            $productListTxt = $this->mailPartialTemplateRenderer->render('order_conf_product_list.txt', $this->context->language, $productTemplateList);
+            $productListHtml = $this->mailPartialTemplateRenderer->render('order_conf_product_list.tpl', $this->context->language, $productTemplateList);
 
             $cartRulesList[] = array(
                 'voucher_name' => 'Promo code',
                 'voucher_reduction' => '-' . Tools::displayPrice(5, $this->context->currency, false),
             );
-            $cartRulesListTxt = $this->getEmailTemplateContent('order_conf_cart_rules.txt', $cartRulesList);
-            $cartRulesListHtml = $this->getEmailTemplateContent('order_conf_cart_rules.tpl', $cartRulesList);
+            $cartRulesListTxt = $this->mailPartialTemplateRenderer->render('order_conf_cart_rules.txt', $this->context->language, $cartRulesList);
+            $cartRulesListHtml = $this->mailPartialTemplateRenderer->render('order_conf_cart_rules.tpl', $this->context->language, $cartRulesList);
 
             $productVariables = [
                 '{products}' => $productListHtml,
@@ -344,39 +349,6 @@ final class MailPreviewVariablesBuilder
         }
 
         return $productTemplateList;
-    }
-
-    /**
-     * Fetch the content of $templateName inside the folder
-     * current_theme/mails/current_iso_lang/ if found, otherwise in
-     * mails/current_iso_lang.
-     *
-     * @param string $templateName template name with extension
-     * @param array $var sent to smarty as 'list'
-     *
-     * @return string
-     *
-     * @throws \SmartyException
-     */
-    private function getEmailTemplateContent($templateName, $var)
-    {
-        $pathToFindEmail = array(
-            _PS_THEME_DIR_ . 'mails' . DIRECTORY_SEPARATOR . $this->context->language->iso_code . DIRECTORY_SEPARATOR . $templateName,
-            _PS_THEME_DIR_ . 'mails' . DIRECTORY_SEPARATOR . 'en' . DIRECTORY_SEPARATOR . $templateName,
-            _PS_MAIL_DIR_ . $this->context->language->iso_code . DIRECTORY_SEPARATOR . $templateName,
-            _PS_MAIL_DIR_ . 'en' . DIRECTORY_SEPARATOR . $templateName,
-        );
-
-        foreach ($pathToFindEmail as $path) {
-            if (file_exists($path)) {
-                $smarty = $this->context->smarty;
-                $smarty->assign('list', $var);
-
-                return $smarty->fetch($path);
-            }
-        }
-
-        return '';
     }
 
     /**

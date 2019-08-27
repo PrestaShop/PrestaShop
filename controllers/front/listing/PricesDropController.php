@@ -66,4 +66,16 @@ class PricesDropControllerCore extends ProductListingFrontController
             'Shop.Theme.Catalog'
         );
     }
+
+    public function getBreadcrumbLinks()
+    {
+        $breadcrumb = parent::getBreadcrumbLinks();
+
+        $breadcrumb['links'][] = [
+            'title' => $this->trans('On sale', array(), 'Shop.Theme.Catalog'),
+            'url' => $this->context->link->getPageLink('prices-drop', true),
+        ];
+
+        return $breadcrumb;
+    }
 }
