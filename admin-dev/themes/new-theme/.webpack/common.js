@@ -95,6 +95,7 @@ module.exports = {
     merchandise_return: './js/pages/merchandise-return',
     tax_rules_group: './js/pages/tax-rules-group',
     address: './js/pages/address',
+    customer_address_form: './js/pages/address/form.js',
   },
   output: {
     path: path.resolve(__dirname, '../public'),
