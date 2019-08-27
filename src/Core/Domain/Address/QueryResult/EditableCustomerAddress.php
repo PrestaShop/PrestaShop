@@ -24,24 +24,32 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Address\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Address\QueryResult;
 
-use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
-use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
 
 /**
- * Adds new customer address
+ * Transfers customer address data for editing
  */
-class AddCustomerAddressCommand
+class EditableCustomerAddress
 {
+    /**
+     * @var AddressId
+     */
+    private $addressId;
+
     /**
      * @var CustomerId
      */
     private $customerId;
+
+    /**
+     * @var string
+     */
+    private $customerEmail;
 
     /**
      * @var string
@@ -79,76 +87,111 @@ class AddCustomerAddressCommand
     private $countryId;
 
     /**
-     * @var string|null
+     * @var string
      */
     private $idNumber;
 
     /**
-     * @var string|null
+     * @var string
      */
     private $company;
 
     /**
-     * @var string|null
+     * @var string
      */
     private $vatNumber;
 
     /**
-     * @var string|null
+     * @var string
      */
     private $address2;
 
     /**
-     * @var StateId|null
+     * @var StateId
      */
     private $stateId;
 
     /**
-     * @var string|null
+     * @var string
      */
     private $homePhone;
 
     /**
-     * @var string|null
+     * @var string
      */
     private $mobilePhone;
 
     /**
-     * @var string|null
+     * @var string
      */
     private $other;
 
     /**
-     * @param int $customerId
+     * @param AddressId $addressId
+     * @param CustomerId $customerId
+     * @param string $customerEmail
      * @param string $addressAlias
      * @param string $firstName
      * @param string $lastName
      * @param string $address
      * @param string $city
      * @param string $postCode
-     * @param int $countryId
-     *
-     * @throws CountryConstraintException
-     * @throws CustomerException
+     * @param CountryId $countryId
+     * @param string $idNumber
+     * @param string $company
+     * @param string $vatNumber
+     * @param string $address2
+     * @param StateId $stateId
+     * @param string $homePhone
+     * @param string $mobilePhone
+     * @param string $other
      */
     public function __construct(
-        int $customerId,
+        AddressId $addressId,
+        CustomerId $customerId,
+        string $customerEmail,
         string $addressAlias,
         string $firstName,
         string $lastName,
         string $address,
         string $city,
         string $postCode,
-        int $countryId
+        CountryId $countryId,
+        string $idNumber,
+        string $company,
+        string $vatNumber,
+        string $address2,
+        StateId $stateId,
+        string $homePhone,
+        string $mobilePhone,
+        string $other
     ) {
-        $this->customerId = new CustomerId($customerId);
+        $this->addressId = $addressId;
+        $this->customerId = $customerId;
+        $this->customerEmail = $customerEmail;
         $this->addressAlias = $addressAlias;
         $this->firstName = $firstName;
         $this->lastName = $lastName;
         $this->address = $address;
         $this->city = $city;
         $this->postCode = $postCode;
-        $this->countryId = new CountryId($countryId);
+        $this->countryId = $countryId;
+        $this->idNumber = $idNumber;
+        $this->company = $company;
+        $this->vatNumber = $vatNumber;
+        $this->address2 = $address2;
+        $this->stateId = $stateId;
+        $this->homePhone = $homePhone;
+        $this->mobilePhone = $mobilePhone;
+        $this->other = $other;
+    }
+
+    /**
+     * @return AddressId
+     */
+    public function getAddressId(): AddressId
+    {
+        return $this->addressId;
     }
 
     /**
@@ -157,6 +200,14 @@ class AddCustomerAddressCommand
     public function getCustomerId(): CustomerId
     {
         return $this->customerId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCustomerEmail(): string
+    {
+        return $this->customerEmail;
     }
 
     /**
@@ -216,164 +267,66 @@ class AddCustomerAddressCommand
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getIdNumber(): ?string
+    public function getIdNumber(): string
     {
         return $this->idNumber;
     }
 
     /**
-     * @param string $idNumber
-     *
-     * @return AddCustomerAddressCommand
+     * @return string
      */
-    public function setIdNumber(string $idNumber): AddCustomerAddressCommand
-    {
-        $this->idNumber = $idNumber;
-
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getCompany(): ?string
+    public function getCompany(): string
     {
         return $this->company;
     }
 
     /**
-     * @param string $company
-     *
-     * @return AddCustomerAddressCommand
+     * @return string
      */
-    public function setCompany(string $company): AddCustomerAddressCommand
-    {
-        $this->company = $company;
-
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getVatNumber(): ?string
+    public function getVatNumber(): string
     {
         return $this->vatNumber;
     }
 
     /**
-     * @param string $vatNumber
-     *
-     * @return AddCustomerAddressCommand
+     * @return string
      */
-    public function setVatNumber(string $vatNumber): AddCustomerAddressCommand
-    {
-        $this->vatNumber = $vatNumber;
-
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getAddress2(): ?string
+    public function getAddress2(): string
     {
         return $this->address2;
     }
 
     /**
-     * @param string $address2
-     *
-     * @return AddCustomerAddressCommand
+     * @return StateId
      */
-    public function setAddress2(string $address2): AddCustomerAddressCommand
-    {
-        $this->address2 = $address2;
-
-        return $this;
-    }
-
-    /**
-     * @return StateId|null
-     */
-    public function getStateId(): ?StateId
+    public function getStateId(): StateId
     {
         return $this->stateId;
     }
 
     /**
-     * @param int $stateId
-     *
-     * @return AddCustomerAddressCommand
-     *
-     * @throws StateConstraintException
+     * @return string
      */
-    public function setStateId(int $stateId): AddCustomerAddressCommand
-    {
-        $this->stateId = new StateId($stateId);
-
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getHomePhone(): ?string
+    public function getHomePhone(): string
     {
         return $this->homePhone;
     }
 
     /**
-     * @param string $homePhone
-     *
-     * @return AddCustomerAddressCommand
+     * @return string
      */
-    public function setHomePhone(string $homePhone): AddCustomerAddressCommand
-    {
-        $this->homePhone = $homePhone;
-
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getMobilePhone(): ?string
+    public function getMobilePhone(): string
     {
         return $this->mobilePhone;
     }
 
     /**
-     * @param string $mobilePhone
-     *
-     * @return AddCustomerAddressCommand
+     * @return string
      */
-    public function setMobilePhone(string $mobilePhone): AddCustomerAddressCommand
-    {
-        $this->mobilePhone = $mobilePhone;
-
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getOther(): ?string
+    public function getOther(): string
     {
         return $this->other;
-    }
-
-    /**
-     * @param string $other
-     *
-     * @return AddCustomerAddressCommand
-     */
-    public function setOther(string $other): AddCustomerAddressCommand
-    {
-        $this->other = $other;
-
-        return $this;
     }
 }
