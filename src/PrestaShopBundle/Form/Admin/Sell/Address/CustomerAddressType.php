@@ -32,6 +32,7 @@ use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
@@ -67,58 +68,169 @@ class CustomerAddressType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $data = $builder->getData();
+
+        if (!isset($data['id_customer'])) {
+            $builder->add('customer_email', EmailType::class, [
+                'required' => true,
+                'constraints' => [
+                    new NotBlank(),
+                ],
+            ]);
+        }
+
+        if ($this->isRequired('phone_mobile')) {
+            $builder->add('phone_mobile', TextType::class, [
+                'required' => true,
+                'constraints' => [
+                    new NotBlank(),
+                ],
+            ]);
+        }
+
         $builder
-            ->add('customer_email', EmailType::class, [
+            //TODO check if required by country
+            ->add('dni', TextType::class, [
+                'required' => $this->isRequired('dni'),
+                'constraints' => [
+                    new NotBlank(
+                        [
+                            'groups' => 'dni',
+                        ]
+                    ),
+                ],
+            ])
+            ->add('alias', TextType::class, [
                 'required' => true,
                 'constraints' => [
                     new NotBlank(),
                 ],
             ])
-            ->add('dni', TextType::class, [
-                'required' => false,
-            ])
-            ->add('alias', TextType::class, [
+            ->add('first_name', TextType::class, [
                 'required' => true,
+                'constraints' => [
+                    new NotBlank(),
+                ],
             ])
-            ->add('firstname', TextType::class, [
+            ->add('last_name', TextType::class, [
                 'required' => true,
-            ])
-            ->add('lastname', TextType::class, [
-                'required' => true,
+                'constraints' => [
+                    new NotBlank(),
+                ],
             ])
             ->add('company', TextType::class, [
-                'required' => false,
+                'required' => $this->isRequired('company'),
+                'constraints' => [
+                    new NotBlank(
+                        [
+                            'groups' => 'company',
+                        ]
+                    ),
+                ],
             ])
             ->add('vat_number', TextType::class, [
-                'required' => false,
+                'required' => $this->isRequired('vat_number'),
+                'constraints' => [
+                    new NotBlank(
+                        [
+                            'groups' => 'vat_number',
+                        ]
+                    ),
+                ],
             ])
             ->add('address1', TextType::class, [
                 'required' => true,
+                'constraints' => [
+                    new NotBlank(),
+                ],
             ])
             ->add('address2', TextType::class, [
-                'required' => false,
+                'required' => $this->isRequired('address2'),
+                'constraints' => [
+                    new NotBlank(
+                        [
+                            'groups' => 'address2',
+                        ]
+                    ),
+                ],
             ])
             ->add('city', TextType::class, [
                 'required' => true,
+                'constraints' => [
+                    new NotBlank(),
+                ],
             ])
+            //TODO check if needed by country and country zip code format
             ->add('postcode', TextType::class, [
-                'required' => true,
+                'required' => $this->isRequired('postcode'),
+                'constraints' => [
+                    new NotBlank(
+                        [
+                            'groups' => 'postcode',
+                        ]
+                    ),
+                ],
             ])
             ->add('id_country', CountryChoiceType::class, [
                 'required' => true,
+                'constraints' => [
+                    new NotBlank(),
+                ],
             ])
+            //TODO if country has sates, state has to be selected
+            //TODO Add check for initial display none
             ->add('id_state', CountryChoiceType::class, [
                 'required' => false,
-            ])
-            ->add('phone_mobile', TextType::class, [
-                'required' => false,
+                'disabled' => true,
             ])
             ->add('phone', TextType::class, [
-                'required' => false,
+                'required' => $this->isRequired('phone'),
+                'constraints' => [
+                    new NotBlank(
+                        [
+                            'groups' => 'phone',
+                        ]
+                    ),
+                ],
             ])
             ->add('other', TextareaType::class, [
-                'required' => false,
+                'required' => $this->isRequired('other'),
+                'constraints' => [
+                    new NotBlank(
+                        [
+                            'groups' => 'other',
+                        ]
+                    ),
+                ],
             ]);
+    }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults(
+            [
+                'validation_groups' => function () {
+                    $groups = ['Default'];
+
+                    //TODO add required fields as validation groups
+
+                    return $groups;
+                },
+            ]
+        );
+    }
+
+    /**
+     * @param string $field
+     *
+     * @return bool
+     */
+    private function isRequired(string $field): bool
+    {
+        //TODO implement required fields check
+        return true;
     }
 }
