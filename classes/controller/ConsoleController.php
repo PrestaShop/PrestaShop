@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 
 /**
  * Controller used in Console environment.
@@ -42,7 +43,7 @@ class ConsoleControllerCore extends Controller
      */
     public function checkAccess()
     {
-        // TODO: Implement checkAccess() method.
+        return true;
     }
 
     /**
@@ -50,7 +51,7 @@ class ConsoleControllerCore extends Controller
      */
     public function viewAccess()
     {
-        // TODO: Implement viewAccess() method.
+        return true;
     }
 
     /**
@@ -58,7 +59,7 @@ class ConsoleControllerCore extends Controller
      */
     public function postProcess()
     {
-        // TODO: Implement postProcess() method.
+        return null;
     }
 
     /**
@@ -122,7 +123,6 @@ class ConsoleControllerCore extends Controller
      */
     protected function buildContainer()
     {
-        // @todo: Should we return the back office container here ?
-        return null;
+        return SymfonyContainer::getInstance();
     }
 }
