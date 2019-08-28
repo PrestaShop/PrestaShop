@@ -96,9 +96,14 @@
         'label': 'Country'|trans({}, 'Admin.Global'),
       }) }}
 
+      {% if addressForm.id_state.vars.disabled is defined and addressForm.id_state.vars.disabled %}
+        {% set rowAttr = {'style': 'display:none'} %}
+      {% endif %}
+
       {{ ps.form_group_row(addressForm.id_state, {}, {
         'label': 'State'|trans({}, 'Admin.Global'),
         'class': 'js-address-state-select',
+        'row_attr': rowAttr|default({})
       }) }}
 
       {{ ps.form_group_row(addressForm.phone, {}, {

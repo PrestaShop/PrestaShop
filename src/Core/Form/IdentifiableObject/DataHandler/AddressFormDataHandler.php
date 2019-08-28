@@ -64,7 +64,7 @@ final class AddressFormDataHandler implements FormDataHandlerInterface
     public function create(array $data)
     {
         /** @var AddressCreationCustomer $addressCustomer */
-        $addressCustomer = $this->commandBus->handle(new GetCustomerForAddressCreation($data['alias']));
+        $addressCustomer = $this->commandBus->handle(new GetCustomerForAddressCreation($data['customer_email']));
 
         $addAddressCommand = new AddCustomerAddressCommand(
             $addressCustomer->getCustomerId()->getValue(),
@@ -73,9 +73,12 @@ final class AddressFormDataHandler implements FormDataHandlerInterface
             $data['last_name'],
             $data['address1'],
             $data['city'],
-            $data['postcode'],
             (int) $data['id_country']
         );
+
+        if (null !== $data['postcode']) {
+            $addAddressCommand->setPostCode($data['postcode']);
+        }
 
         if (null !== $data['dni']) {
             $addAddressCommand->setIdNumber($data['dni']);
@@ -101,7 +104,7 @@ final class AddressFormDataHandler implements FormDataHandlerInterface
             $addAddressCommand->setHomePhone($data['phone']);
         }
 
-        if (null !== $data['phone_mobile']) {
+        if (isset($data['phone_mobile']) && null !== $data['phone_mobile']) {
             $addAddressCommand->setMobilePhone($data['phone_mobile']);
         }
 
