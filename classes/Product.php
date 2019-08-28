@@ -6103,10 +6103,11 @@ class ProductCore extends ObjectModel
      */
     public function getWsPositionInCategory()
     {
-        $result = Db::getInstance()->executeS('SELECT position
+        $result = Db::getInstance()->executeS(
+            'SELECT `position`
             FROM `' . _DB_PREFIX_ . 'category_product`
-            WHERE id_category = ' . (int) $this->id_category_default . '
-            AND id_product = ' . (int) $this->id);
+            WHERE `id_category` = ' . (int) $this->id_category_default . '
+            AND `id_product` = ' . (int) $this->id);
         if (count($result) > 0) {
             return $result[0]['position'];
         }
@@ -6121,22 +6122,46 @@ class ProductCore extends ObjectModel
      */
     public function setWsPositionInCategory($position)
     {
-        if ($position < 0) {
-            WebserviceRequest::getInstance()->setError(500, $this->trans('You cannot set a negative position, the minimum for a position is 0.', array(), 'Admin.Catalog.Notification'), 134);
-        }
-        $result = Db::getInstance()->executeS('
-            SELECT `id_product`
-            FROM `' . _DB_PREFIX_ . 'category_product`
-            WHERE `id_category` = ' . (int) $this->id_category_default . '
-            ORDER BY `position`
-        ');
-        if (($position > 0) && ($position + 1 > count($result))) {
-            WebserviceRequest::getInstance()->setError(500, $this->trans('You cannot set a position greater than the total number of products in the category, minus 1 (position numbering starts at 0).', array(), 'Admin.Catalog.Notification'), 135);
+        if ($position <= 0) {
+            WebserviceRequest::getInstance()->setError(
+                500,
+                $this->trans(
+                    'You cannot set 0 or a negative position, the minimum is 1.',
+                    array(),
+                    'Admin.Catalog.Notification'
+                ),
+                134
+            );
+
+            return false;
         }
 
+        $result = Db::getInstance()->executeS(
+            'SELECT `id_product` ' .
+            'FROM `' . _DB_PREFIX_ . 'category_product` ' .
+            'WHERE `id_category` = ' . (int) $this->id_category_default . '  ' .
+            'ORDER BY `position`'
+        );
+
+        if ($position > count($result)) {
+            WebserviceRequest::getInstance()->setError(
+                500,
+                $this->trans(
+                    'You cannot set a position greater than the total number of products in the category, starting at 1.',
+                    array(),
+                    'Admin.Catalog.Notification'
+                ),
+                135
+            );
+
+            return false;
+        }
+
+        array_unshift($result, null);
         foreach ($result as &$value) {
             $value = $value['id_product'];
         }
+
         $current_position = $this->getWsPositionInCategory();
 
         if ($current_position && isset($result[$current_position])) {
