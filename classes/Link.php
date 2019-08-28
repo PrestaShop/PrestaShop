@@ -831,6 +831,27 @@ class LinkCore
     }
 
     /**
+     * @param array $tab
+     *
+     * @return string
+     *
+     * @throws PrestaShopException
+     */
+    public function getTabLink(array $tab)
+    {
+        if (!empty($tab['route_name'])) {
+            $sfContainer = SymfonyContainer::getInstance();
+            if (null !== $sfContainer) {
+                $sfRouter = $sfContainer->get('router');
+
+                return $sfRouter->generate($tab['route_name']);
+            }
+        }
+
+        return $this->getAdminLink($tab['class_name']);
+    }
+
+    /**
      * Used when you explicitly want to create a LEGACY admin link, this should be deprecated
      * in 1.8.0.
      *

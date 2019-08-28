@@ -99,4 +99,18 @@ class TabRepository extends EntityRepository
             $this->getEntityManager()->flush();
         }
     }
+
+    /**
+     * @param string $moduleName
+     * @param bool $enabled
+     */
+    public function changeEnabledByModuleName($moduleName, $enabled)
+    {
+        $tabs = $this->findByModule($moduleName);
+        /** @var Tab $tab */
+        foreach ($tabs as $tab) {
+            $tab->setEnabled($enabled);
+        }
+        $this->getEntityManager()->flush();
+    }
 }

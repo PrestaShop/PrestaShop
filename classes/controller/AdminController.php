@@ -581,17 +581,17 @@ class AdminControllerCore extends Controller
             'tab' => $dummy,
             'action' => $dummy,
         );
-        if (isset($tabs[0])) {
+        if (!empty($tabs[0])) {
             $this->addMetaTitle($tabs[0]['name']);
             $breadcrumbs2['tab']['name'] = $tabs[0]['name'];
-            $breadcrumbs2['tab']['href'] = $this->context->link->getAdminLink($tabs[0]['class_name']);
+            $breadcrumbs2['tab']['href'] = $this->context->link->getTabLink($tabs[0]);
             if (!isset($tabs[1])) {
                 $breadcrumbs2['tab']['icon'] = 'icon-' . $tabs[0]['class_name'];
             }
         }
-        if (isset($tabs[1])) {
+        if (!empty($tabs[1])) {
             $breadcrumbs2['container']['name'] = $tabs[1]['name'];
-            $breadcrumbs2['container']['href'] = $this->context->link->getAdminLink($tabs[1]['class_name']);
+            $breadcrumbs2['container']['href'] = $this->context->link->getTabLink($tabs[1]);
             $breadcrumbs2['container']['icon'] = 'icon-' . $tabs[1]['class_name'];
         }
 
@@ -2053,6 +2053,7 @@ class AdminControllerCore extends Controller
 
         foreach ($tabs as $index => $tab) {
             if (!Tab::checkTabRights($tab['id_tab'])
+                || !$tab['enabled']
                 || ($tab['class_name'] == 'AdminStock' && Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') == 0)
                 || $tab['class_name'] == 'AdminCarrierWizard') {
                 unset($tabs[$index]);
@@ -2068,7 +2069,7 @@ class AdminControllerCore extends Controller
                 $tabs[$index]['current'] = false;
             }
             $tabs[$index]['img'] = null;
-            $tabs[$index]['href'] = $this->context->link->getAdminLink($tab['class_name']);
+            $tabs[$index]['href'] = $this->context->link->getTabLink($tab);
             $tabs[$index]['sub_tabs'] = array_values($this->getTabs($tab['id_tab'], $level + 1));
 
             $subTabHref = $this->getTabLinkFromSubTabs($tabs[$index]['sub_tabs']);
@@ -4817,7 +4818,7 @@ class AdminControllerCore extends Controller
     private function getTabLinkFromSubTabs(array $subtabs)
     {
         foreach ($subtabs as $tab) {
-            if ($tab['active']) {
+            if ($tab['active'] && $tab['enabled']) {
                 return $tab['href'];
             }
         }

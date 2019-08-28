@@ -52,6 +52,13 @@ class ModuleTabRegisterTest extends UnitTestCase
                 'exception' => 'Class "AdminMissingController" not found in controllers/admin',
             ),
         ),
+        'symfony' => array(
+            // modules with routes are added regardless of the controller existing or not
+            array(
+                'class_name' => 'UnknownLegacyController',
+                'route_name' => 'some_fancy_symfony_route',
+            ),
+        ),
     );
 
     protected $moduleAdminControllers = array(
@@ -62,6 +69,7 @@ class ModuleTabRegisterTest extends UnitTestCase
     protected $expectedTabsToAdd = array(
         'gamification' => array('AdminGamification'),
         'doge' => array('Wololo', 'AdminMissing', 'AdminMy'),
+        'symfony' => array('UnknownLegacyController'),
     );
 
     protected $languages = array(
