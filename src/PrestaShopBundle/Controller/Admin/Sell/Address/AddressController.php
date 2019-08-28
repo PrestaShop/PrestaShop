@@ -41,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AddressGridDefinitionFact
 use PrestaShop\PrestaShop\Core\Search\Filters\AddressFilters;
 use PrestaShop\PrestaShop\Core\Domain\Address\Query\GetCustomerAddressForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Address\QueryResult\EditableCustomerAddress;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForAddressCreation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\AddressCreationCustomer;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -278,6 +279,8 @@ class AddressController extends FrameworkBundleAdminController
             }
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+
+            return $this->redirectToRoute('admin_addresses_index');
         }
 
         return $this->render('@PrestaShop/Admin/Sell/Address/add.html.twig', [
@@ -315,11 +318,11 @@ class AddressController extends FrameworkBundleAdminController
 
         try {
             $addressFormBuilder = $this->get(
-                'prestashop.core.form.identifiable_object.builder.address_form_builder'
-            );
+                    'prestashop.core.form.identifiable_object.builder.address_form_builder'
+                );
             $addressFormHandler = $this->get(
-                'prestashop.core.form.identifiable_object.handler.address_form_handler'
-            );
+                    'prestashop.core.form.identifiable_object.handler.address_form_handler'
+                );
 
             $addressForm = $addressFormBuilder->getFormFor($addressId);
             $addressForm->handleRequest($request);
@@ -370,10 +373,16 @@ class AddressController extends FrameworkBundleAdminController
 
             return new Response($serializer->serialize($customerInformation, 'json'));
         } catch (Exception $e) {
+            $code = Response::HTTP_INTERNAL_SERVER_ERROR;
+
+            if ($e instanceof CustomerException) {
+                $code = Response::HTTP_NOT_FOUND;
+            }
+
             return $this->json([
                 'message' => $this->getErrorMessageForException($e, []),
             ],
-                Response::HTTP_INTERNAL_SERVER_ERROR
+                $code
             );
         }
     }

@@ -26,7 +26,14 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Address;
 
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CustomerAddressCountryRequiredFields;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CustomerAddressZipCode;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\ExistingCustomerEmail;
+use PrestaShop\PrestaShop\Core\Domain\Address\Config\AddressConstraintConfiguration;
+use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\CountryChoiceType;
+use PrestaShopBundle\Form\EventSubscriber\CustomerAddressFormSubscriber;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -34,6 +41,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
@@ -47,20 +55,20 @@ class CustomerAddressType extends AbstractType
     private $translator;
 
     /**
-     * @var array
+     * @var ConfigurableFormChoiceProviderInterface
      */
-    private $currencyChoices;
+    private $stateChoiceProvider;
 
     /**
      * @param TranslatorInterface $translator
-     * @param array $currencyChoices
+     * @param ConfigurableFormChoiceProviderInterface $stateChoiceProvider
      */
     public function __construct(
         TranslatorInterface $translator,
-        array $currencyChoices
+        ConfigurableFormChoiceProviderInterface $stateChoiceProvider
     ) {
         $this->translator = $translator;
-        $this->currencyChoices = $currencyChoices;
+        $this->stateChoiceProvider = $stateChoiceProvider;
     }
 
     /**
@@ -74,7 +82,13 @@ class CustomerAddressType extends AbstractType
             $builder->add('customer_email', EmailType::class, [
                 'required' => true,
                 'constraints' => [
-                    new NotBlank(),
+                    new NotBlank([
+                        'message' => $this->translator->trans(
+                            'This field cannot be empty', [], 'Admin.Notifications.Error'
+                        ),
+                    ]),
+                    new CleanHtml(),
+                    new ExistingCustomerEmail(),
                 ],
             ]);
         }
@@ -83,19 +97,47 @@ class CustomerAddressType extends AbstractType
             $builder->add('phone_mobile', TextType::class, [
                 'required' => true,
                 'constraints' => [
-                    new NotBlank(),
+                    new NotBlank([
+                        'message' => $this->translator->trans(
+                            'This field cannot be empty', [], 'Admin.Notifications.Error'
+                        ),
+                    ]),
+                    new CleanHtml(),
+                    new Length(
+                        [
+                            'max' => AddressConstraintConfiguration::MAX_PHONE_LENGTH,
+                            'maxMessage' => $this->translator->trans(
+                                'This field cannot be longer than %limit% characters',
+                                ['%limit%' => AddressConstraintConfiguration::MAX_PHONE_LENGTH],
+                                'Admin.Notifications.Error'
+                            ),
+                        ]
+                    ),
                 ],
             ]);
         }
 
         $builder
-            //TODO check if required by country
             ->add('dni', TextType::class, [
                 'required' => $this->isRequired('dni'),
                 'constraints' => [
                     new NotBlank(
                         [
                             'groups' => 'dni',
+                            'message' => $this->translator->trans(
+                                'This field cannot be empty', [], 'Admin.Notifications.Error'
+                            ),
+                        ]
+                    ),
+                    new CleanHtml(),
+                    new Length(
+                        [
+                            'max' => AddressConstraintConfiguration::MAX_DNI_LENGTH,
+                            'maxMessage' => $this->translator->trans(
+                                'This field cannot be longer than %limit% characters',
+                                ['%limit%' => AddressConstraintConfiguration::MAX_DNI_LENGTH],
+                                'Admin.Notifications.Error'
+                            ),
                         ]
                     ),
                 ],
@@ -103,19 +145,64 @@ class CustomerAddressType extends AbstractType
             ->add('alias', TextType::class, [
                 'required' => true,
                 'constraints' => [
-                    new NotBlank(),
+                    new NotBlank([
+                        'message' => $this->translator->trans(
+                            'This field cannot be empty', [], 'Admin.Notifications.Error'
+                        ),
+                    ]),
+                    new CleanHtml(),
+                    new Length(
+                        [
+                            'max' => AddressConstraintConfiguration::MAX_ALIAS_LENGTH,
+                            'maxMessage' => $this->translator->trans(
+                                'This field cannot be longer than %limit% characters',
+                                ['%limit%' => AddressConstraintConfiguration::MAX_ALIAS_LENGTH],
+                                'Admin.Notifications.Error'
+                            ),
+                        ]
+                    ),
                 ],
             ])
             ->add('first_name', TextType::class, [
                 'required' => true,
                 'constraints' => [
-                    new NotBlank(),
+                    new NotBlank([
+                        'message' => $this->translator->trans(
+                            'This field cannot be empty', [], 'Admin.Notifications.Error'
+                        ),
+                    ]),
+                    new CleanHtml(),
+                    new Length(
+                        [
+                            'max' => AddressConstraintConfiguration::MAX_FIRST_NAME_LENGTH,
+                            'maxMessage' => $this->translator->trans(
+                                'This field cannot be longer than %limit% characters',
+                                ['%limit%' => AddressConstraintConfiguration::MAX_FIRST_NAME_LENGTH],
+                                'Admin.Notifications.Error'
+                            ),
+                        ]
+                    ),
                 ],
             ])
             ->add('last_name', TextType::class, [
                 'required' => true,
                 'constraints' => [
-                    new NotBlank(),
+                    new NotBlank([
+                        'message' => $this->translator->trans(
+                            'This field cannot be empty', [], 'Admin.Notifications.Error'
+                        ),
+                    ]),
+                    new CleanHtml(),
+                    new Length(
+                        [
+                            'max' => AddressConstraintConfiguration::MAX_LAST_NAME_LENGTH,
+                            'maxMessage' => $this->translator->trans(
+                                'This field cannot be longer than %limit% characters',
+                                ['%limit%' => AddressConstraintConfiguration::MAX_LAST_NAME_LENGTH],
+                                'Admin.Notifications.Error'
+                            ),
+                        ]
+                    ),
                 ],
             ])
             ->add('company', TextType::class, [
@@ -124,6 +211,20 @@ class CustomerAddressType extends AbstractType
                     new NotBlank(
                         [
                             'groups' => 'company',
+                            'message' => $this->translator->trans(
+                                'This field cannot be empty', [], 'Admin.Notifications.Error'
+                            ),
+                        ]
+                    ),
+                    new CleanHtml(),
+                    new Length(
+                        [
+                            'max' => AddressConstraintConfiguration::MAX_COMPANY_LENGTH,
+                            'maxMessage' => $this->translator->trans(
+                                'This field cannot be longer than %limit% characters',
+                                ['%limit%' => AddressConstraintConfiguration::MAX_COMPANY_LENGTH],
+                                'Admin.Notifications.Error'
+                            ),
                         ]
                     ),
                 ],
@@ -134,6 +235,20 @@ class CustomerAddressType extends AbstractType
                     new NotBlank(
                         [
                             'groups' => 'vat_number',
+                            'message' => $this->translator->trans(
+                                'This field cannot be empty', [], 'Admin.Notifications.Error'
+                            ),
+                        ]
+                    ),
+                    new CleanHtml(),
+                    new Length(
+                        [
+                            'max' => AddressConstraintConfiguration::MAX_VAT_LENGTH,
+                            'maxMessage' => $this->translator->trans(
+                                'This field cannot be longer than %limit% characters',
+                                ['%limit%' => AddressConstraintConfiguration::MAX_VAT_LENGTH],
+                                'Admin.Notifications.Error'
+                            ),
                         ]
                     ),
                 ],
@@ -141,7 +256,22 @@ class CustomerAddressType extends AbstractType
             ->add('address1', TextType::class, [
                 'required' => true,
                 'constraints' => [
-                    new NotBlank(),
+                    new NotBlank([
+                        'message' => $this->translator->trans(
+                            'This field cannot be empty', [], 'Admin.Notifications.Error'
+                        ),
+                    ]),
+                    new CleanHtml(),
+                    new Length(
+                        [
+                            'max' => AddressConstraintConfiguration::MAX_ADDRESS_LENGTH,
+                            'maxMessage' => $this->translator->trans(
+                                'This field cannot be longer than %limit% characters',
+                                ['%limit%' => AddressConstraintConfiguration::MAX_ADDRESS_LENGTH],
+                                'Admin.Notifications.Error'
+                            ),
+                        ]
+                    ),
                 ],
             ])
             ->add('address2', TextType::class, [
@@ -150,6 +280,20 @@ class CustomerAddressType extends AbstractType
                     new NotBlank(
                         [
                             'groups' => 'address2',
+                            'message' => $this->translator->trans(
+                                'This field cannot be empty', [], 'Admin.Notifications.Error'
+                            ),
+                        ]
+                    ),
+                    new CleanHtml(),
+                    new Length(
+                        [
+                            'max' => AddressConstraintConfiguration::MAX_ADDRESS_LENGTH,
+                            'maxMessage' => $this->translator->trans(
+                                'This field cannot be longer than %limit% characters',
+                                ['%limit%' => AddressConstraintConfiguration::MAX_ADDRESS_LENGTH],
+                                'Admin.Notifications.Error'
+                            ),
                         ]
                     ),
                 ],
@@ -157,16 +301,44 @@ class CustomerAddressType extends AbstractType
             ->add('city', TextType::class, [
                 'required' => true,
                 'constraints' => [
-                    new NotBlank(),
+                    new NotBlank([
+                        'message' => $this->translator->trans(
+                            'This field cannot be empty', [], 'Admin.Notifications.Error'
+                        ),
+                    ]),
+                    new CleanHtml(),
+                    new Length(
+                        [
+                            'max' => AddressConstraintConfiguration::MAX_CITY_LENGTH,
+                            'maxMessage' => $this->translator->trans(
+                                'This field cannot be longer than %limit% characters',
+                                ['%limit%' => AddressConstraintConfiguration::MAX_CITY_LENGTH],
+                                'Admin.Notifications.Error'
+                            ),
+                        ]
+                    ),
                 ],
             ])
-            //TODO check if needed by country and country zip code format
             ->add('postcode', TextType::class, [
                 'required' => $this->isRequired('postcode'),
                 'constraints' => [
                     new NotBlank(
                         [
                             'groups' => 'postcode',
+                            'message' => $this->translator->trans(
+                                'This field cannot be empty', [], 'Admin.Notifications.Error'
+                            ),
+                        ]
+                    ),
+                    new CleanHtml(),
+                    new Length(
+                        [
+                            'max' => AddressConstraintConfiguration::MAX_POSTCODE_LENGTH,
+                            'maxMessage' => $this->translator->trans(
+                                'This field cannot be longer than %limit% characters',
+                                ['%limit%' => AddressConstraintConfiguration::MAX_POSTCODE_LENGTH],
+                                'Admin.Notifications.Error'
+                            ),
                         ]
                     ),
                 ],
@@ -174,14 +346,12 @@ class CustomerAddressType extends AbstractType
             ->add('id_country', CountryChoiceType::class, [
                 'required' => true,
                 'constraints' => [
-                    new NotBlank(),
+                    new NotBlank([
+                        'message' => $this->translator->trans(
+                            'This field cannot be empty', [], 'Admin.Notifications.Error'
+                        ),
+                    ]),
                 ],
-            ])
-            //TODO if country has sates, state has to be selected
-            //TODO Add check for initial display none
-            ->add('id_state', CountryChoiceType::class, [
-                'required' => false,
-                'disabled' => true,
             ])
             ->add('phone', TextType::class, [
                 'required' => $this->isRequired('phone'),
@@ -189,6 +359,20 @@ class CustomerAddressType extends AbstractType
                     new NotBlank(
                         [
                             'groups' => 'phone',
+                            'message' => $this->translator->trans(
+                                'This field cannot be empty', [], 'Admin.Notifications.Error'
+                            ),
+                        ]
+                    ),
+                    new CleanHtml(),
+                    new Length(
+                        [
+                            'max' => AddressConstraintConfiguration::MAX_PHONE_LENGTH,
+                            'maxMessage' => $this->translator->trans(
+                                'This field cannot be longer than %limit% characters',
+                                ['%limit%' => AddressConstraintConfiguration::MAX_PHONE_LENGTH],
+                                'Admin.Notifications.Error'
+                            ),
                         ]
                     ),
                 ],
@@ -199,10 +383,26 @@ class CustomerAddressType extends AbstractType
                     new NotBlank(
                         [
                             'groups' => 'other',
+                            'message' => $this->translator->trans(
+                                'This field cannot be empty', [], 'Admin.Notifications.Error'
+                            ),
+                        ]
+                    ),
+                    new CleanHtml(),
+                    new Length(
+                        [
+                            'max' => AddressConstraintConfiguration::MAX_OTHER_LENGTH,
+                            'maxMessage' => $this->translator->trans(
+                                'This field cannot be longer than %limit% characters',
+                                ['%limit%' => AddressConstraintConfiguration::MAX_OTHER_LENGTH],
+                                'Admin.Notifications.Error'
+                            ),
                         ]
                     ),
                 ],
             ]);
+
+        $builder->addEventSubscriber(new CustomerAddressFormSubscriber($this->stateChoiceProvider));
     }
 
     /**
@@ -219,6 +419,10 @@ class CustomerAddressType extends AbstractType
 
                     return $groups;
                 },
+                'constraints' => [
+                    new CustomerAddressZipCode(),
+                    new CustomerAddressCountryRequiredFields(),
+                ],
             ]
         );
     }
@@ -231,6 +435,6 @@ class CustomerAddressType extends AbstractType
     private function isRequired(string $field): bool
     {
         //TODO implement required fields check
-        return true;
+        return false;
     }
 }
