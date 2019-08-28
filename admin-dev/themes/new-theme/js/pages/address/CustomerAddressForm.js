@@ -53,9 +53,6 @@ export default class CustomerAddressForm {
     const $countryDropdown = $(this.countrySelect);
     const $emailInput = $(this.emailInput);
 
-    // Initial check for country states. Should be handled in backend
-    this._handleCountryChange();
-
     $countryDropdown.on('change', () => this._handleCountryChange());
     $emailInput.on('blur', (event) => this._handleEmailChange(event));
   }
@@ -137,13 +134,8 @@ export default class CustomerAddressForm {
     const lastNameSelector = $(this.lastName);
     const companySelector = $(this.company);
 
-    if (0 > data.first_name.length) {
-      firstNameSelector.val(data.first_name);
-    }
-
-    if (0 > data.last_name.length) {
-      lastNameSelector.val(data.last_name);
-    }
+    firstNameSelector.val(data.first_name);
+    lastNameSelector.val(data.last_name);
 
     if (0 > data.company.length) {
       companySelector.val(data.company);
