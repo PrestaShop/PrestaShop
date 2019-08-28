@@ -87,6 +87,16 @@ class CustomerNameValidatorTest extends ConstraintValidatorTestCase
     }
 
     /**
+     */
+    public function testIfSucceedsWhenNoPoints()
+    {
+        $input = 'AZERTY';
+        $this->validator->validate($input, new CustomerName());
+
+        $this->assertNoViolation();
+    }
+
+    /**
      * @dataProvider getValidCharacters
      *
      * @param string $validChar

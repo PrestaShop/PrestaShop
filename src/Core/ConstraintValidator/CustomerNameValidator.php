@@ -96,6 +96,9 @@ class CustomerNameValidator extends ConstraintValidator
      */
     private function isPointSpacedValid($name)
     {
+        if (mb_strpos($name, '.') === false && mb_strpos($name, '。') === false) {
+            return true;
+        }
         $pattern = $this->characterCleaner->cleanNonUnicodeSupport(self::PATTERN_DOT_SPACED);
 
         return preg_match($pattern, $name);
