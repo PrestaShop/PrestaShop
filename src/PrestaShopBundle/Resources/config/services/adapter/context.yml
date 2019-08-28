@@ -18,4 +18,3 @@ services:
         arguments:
           - '@prestashop.adapter.legacy.context'
           - '@prestashop.adapter.shop.context'
-          - '%kernel.root_dir%'
