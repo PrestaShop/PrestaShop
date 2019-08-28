@@ -1065,7 +1065,7 @@ services:
       class: 'PrestaShopBundle\Form\Admin\Sell\Address\CustomerAddressType'
       arguments:
         - '@translator'
-        - '@=service("prestashop.core.form.choice_provider.currency_by_id").getChoices()'
+        - '@prestashop.adapter.form.choice_provider.country_state_by_id'
       tags:
         - { name: form.type }
 

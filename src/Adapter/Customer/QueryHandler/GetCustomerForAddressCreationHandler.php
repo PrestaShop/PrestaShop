@@ -59,7 +59,7 @@ class GetCustomerForAddressCreationHandler implements GetCustomerForAddressCreat
 
         if (empty($customer)) {
             throw new CustomerByEmailNotFoundException(
-                sprintf('Failed to find customer with email %s', $query->getCustomerEmail())
+                sprintf('Failed to find customer with email %s', $query->getCustomerEmail()->getValue())
             );
         }
 

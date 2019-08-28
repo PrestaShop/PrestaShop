@@ -69,7 +69,7 @@ class AddCustomerAddressCommand
     private $city;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $postCode;
 
@@ -125,7 +125,6 @@ class AddCustomerAddressCommand
      * @param string $lastName
      * @param string $address
      * @param string $city
-     * @param string $postCode
      * @param int $countryId
      *
      * @throws CountryConstraintException
@@ -138,7 +137,6 @@ class AddCustomerAddressCommand
         string $lastName,
         string $address,
         string $city,
-        string $postCode,
         int $countryId
     ) {
         $this->customerId = new CustomerId($customerId);
@@ -147,7 +145,6 @@ class AddCustomerAddressCommand
         $this->lastName = $lastName;
         $this->address = $address;
         $this->city = $city;
-        $this->postCode = $postCode;
         $this->countryId = new CountryId($countryId);
     }
 
@@ -200,11 +197,23 @@ class AddCustomerAddressCommand
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getPostCode(): string
+    public function getPostCode(): ?string
     {
         return $this->postCode;
+    }
+
+    /**
+     * @param string $postCode
+     *
+     * @return AddCustomerAddressCommand
+     */
+    public function setPostCode(string $postCode): AddCustomerAddressCommand
+    {
+        $this->postCode = $postCode;
+
+        return $this;
     }
 
     /**

@@ -1,0 +1,15 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.adapter.country.query_handler.get_country_zip_code_requirements:
+    class: 'PrestaShop\PrestaShop\Adapter\Country\QueryHandler\GetCountryZipCodeRequirementsHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountryZipCodeRequirements'
+
+  prestashop.adapter.country.query_handler.get_country_state_requirements:
+    class: 'PrestaShop\PrestaShop\Adapter\Country\QueryHandler\GetCountryRequiredFieldsHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountryHasStates'

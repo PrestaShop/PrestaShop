@@ -81,10 +81,13 @@ final class AddCustomerAddressHandler implements AddCustomerAddressHandlerInterf
         $address->lastname = $command->getLastName();
         $address->firstname = $command->getFirstName();
         $address->address1 = $command->getAddress();
-        $address->postcode = $command->getPostCode();
         $address->id_country = $command->getCountryId()->getValue();
         $address->city = $command->getCity();
         $address->alias = $command->getAddressAlias();
+
+        if (null !== $command->getPostCode()) {
+            $address->postcode = $command->getPostCode();
+        }
 
         if (null !== $command->getAddress2()) {
             $address->address2 = $command->getAddress2();
