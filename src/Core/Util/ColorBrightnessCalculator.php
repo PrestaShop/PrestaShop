@@ -24,39 +24,49 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Order\Exception;
-
-use Exception;
-use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
+namespace PrestaShop\PrestaShop\Core\Util;
 
 /**
- * Thrown when order is not found
+ * Calculates color brightness
  */
-class OrderNotFoundException extends OrderException
+final class ColorBrightnessCalculator
 {
     /**
-     * @var OrderId
+     * Minimum color value after which it's considered bright
      */
-    private $orderId;
+    const BRIGHT_COLOR_MIN = 129;
 
     /**
-     * @param OrderId $orderId
-     * @param string $message
-     * @param int $code
-     * @param Exception|null $previous
+     * @param string $hexColor
+     *
+     * @return bool
      */
-    public function __construct(OrderId $orderId, $message = '', $code = 0, $previous = null)
+    public function isBright($hexColor)
     {
-        parent::__construct($message, $code, $previous);
-
-        $this->orderId = $orderId;
+        return $this->calculate($hexColor) >= self::BRIGHT_COLOR_MIN;
     }
 
     /**
-     * @return OrderId
+     * @param $hexColor
+     *
+     * @return float|int
      */
-    public function getOrderId()
+    private function calculate($hexColor)
     {
-        return $this->orderId;
+        if (strtolower($hexColor) === 'transparent') {
+            return self::BRIGHT_COLOR_MIN;
+        }
+
+        $hexColor = str_replace('#', '', $hexColor);
+
+        if (strlen($hexColor) === 3) {
+            $hexColor .= $hexColor;
+        }
+
+        $r = hexdec(substr($hexColor, 0, 2));
+        $g = hexdec(substr($hexColor, 2, 2));
+        $b = hexdec(substr($hexColor, 4, 2));
+
+        return (($r * 299) + ($g * 587) + ($b * 114)) / 1000;
     }
 }

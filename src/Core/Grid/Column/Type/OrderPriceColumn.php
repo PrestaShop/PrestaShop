@@ -24,39 +24,38 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Order\Exception;
+namespace PrestaShop\PrestaShop\Core\Grid\Column\Type;
 
-use Exception;
-use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
+use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Thrown when order is not found
+ * Displays order price
  */
-class OrderNotFoundException extends OrderException
+final class OrderPriceColumn extends AbstractColumn
 {
     /**
-     * @var OrderId
+     * {@inheritdoc}
      */
-    private $orderId;
-
-    /**
-     * @param OrderId $orderId
-     * @param string $message
-     * @param int $code
-     * @param Exception|null $previous
-     */
-    public function __construct(OrderId $orderId, $message = '', $code = 0, $previous = null)
+    public function getType()
     {
-        parent::__construct($message, $code, $previous);
-
-        $this->orderId = $orderId;
+        return 'order_price';
     }
 
     /**
-     * @return OrderId
+     * {@inheritdoc}
      */
-    public function getOrderId()
+    protected function configureOptions(OptionsResolver $resolver)
     {
-        return $this->orderId;
+        parent::configureOptions($resolver);
+
+        $resolver
+            ->setRequired([
+                'field',
+                'is_paid_field',
+            ])
+            ->setAllowedTypes('field', 'string')
+            ->setAllowedTypes('is_paid_field', 'string')
+        ;
     }
 }

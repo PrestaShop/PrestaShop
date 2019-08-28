@@ -24,39 +24,38 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Order\Exception;
+namespace PrestaShop\PrestaShop\Core\Grid\Column\Type;
 
-use Exception;
-use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
+use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Thrown when order is not found
+ * Boolean column allows adding boolean columns (Yes/No, On/Off and etc) to grid
  */
-class OrderNotFoundException extends OrderException
+final class BooleanColumn extends AbstractColumn
 {
     /**
-     * @var OrderId
+     * {@inheritdoc}
      */
-    private $orderId;
-
-    /**
-     * @param OrderId $orderId
-     * @param string $message
-     * @param int $code
-     * @param Exception|null $previous
-     */
-    public function __construct(OrderId $orderId, $message = '', $code = 0, $previous = null)
+    public function getType()
     {
-        parent::__construct($message, $code, $previous);
-
-        $this->orderId = $orderId;
+        return 'boolean';
     }
 
     /**
-     * @return OrderId
+     * {@inheritdoc}
      */
-    public function getOrderId()
+    protected function configureOptions(OptionsResolver $resolver)
     {
-        return $this->orderId;
+        $resolver
+            ->setRequired([
+                'field',
+                'true_name',
+                'false_name',
+            ])
+            ->setAllowedTypes('field', 'string')
+            ->setAllowedTypes('true_name', 'string')
+            ->setAllowedTypes('true_name', 'string')
+        ;
     }
 }

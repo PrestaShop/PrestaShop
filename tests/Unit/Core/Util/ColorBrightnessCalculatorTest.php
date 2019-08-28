@@ -24,39 +24,40 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Order\Exception;
+namespace Tests\Unit\Core\Util;
 
-use Exception;
-use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
+use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator;
 
-/**
- * Thrown when order is not found
- */
-class OrderNotFoundException extends OrderException
+class ColorBrightnessCalculatorTest extends TestCase
 {
     /**
-     * @var OrderId
+     * @var ColorBrightnessCalculator
      */
-    private $orderId;
+    private $colorBrightnessCalculator;
 
-    /**
-     * @param OrderId $orderId
-     * @param string $message
-     * @param int $code
-     * @param Exception|null $previous
-     */
-    public function __construct(OrderId $orderId, $message = '', $code = 0, $previous = null)
+    public function setUp()
     {
-        parent::__construct($message, $code, $previous);
-
-        $this->orderId = $orderId;
+        $this->colorBrightnessCalculator = new ColorBrightnessCalculator();
     }
 
     /**
-     * @return OrderId
+     * @dataProvider getColors
      */
-    public function getOrderId()
+    public function testColorBrightness($hexColor, $isBright)
     {
-        return $this->orderId;
+        $this->assertEquals($isBright, $this->colorBrightnessCalculator->isBright($hexColor));
+    }
+
+    public function getColors()
+    {
+        yield ['#8B0000', false];
+        yield ['#FFD700', true];
+        yield ['#FFFFE0', true];
+        yield ['#6B8E23', false];
+        yield ['#E0FFFF', true];
+        yield ['#E0FFFF', true];
+        yield ['#00008B', false];
+        yield ['transparent', true];
     }
 }

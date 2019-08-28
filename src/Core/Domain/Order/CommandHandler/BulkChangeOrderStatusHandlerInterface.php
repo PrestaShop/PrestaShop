@@ -24,39 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Order\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler;
 
-use Exception;
-use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\BulkChangeOrderStatusCommand;
 
 /**
- * Thrown when order is not found
+ * Interface for service that handles changing orders status
  */
-class OrderNotFoundException extends OrderException
+interface BulkChangeOrderStatusHandlerInterface
 {
     /**
-     * @var OrderId
+     * @param BulkChangeOrderStatusCommand $command
      */
-    private $orderId;
-
-    /**
-     * @param OrderId $orderId
-     * @param string $message
-     * @param int $code
-     * @param Exception|null $previous
-     */
-    public function __construct(OrderId $orderId, $message = '', $code = 0, $previous = null)
-    {
-        parent::__construct($message, $code, $previous);
-
-        $this->orderId = $orderId;
-    }
-
-    /**
-     * @return OrderId
-     */
-    public function getOrderId()
-    {
-        return $this->orderId;
-    }
+    public function handle(BulkChangeOrderStatusCommand $command);
 }

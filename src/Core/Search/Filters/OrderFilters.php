@@ -24,39 +24,30 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Order\Exception;
+namespace PrestaShop\PrestaShop\Core\Search\Filters;
 
-use Exception;
-use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Search\Filters;
 
 /**
- * Thrown when order is not found
+ * Stores filters for Order grid
  */
-class OrderNotFoundException extends OrderException
+final class OrderFilters extends Filters
 {
-    /**
-     * @var OrderId
-     */
-    private $orderId;
+    /** @var string */
+    protected $filterId = OrderGridDefinitionFactory::GRID_ID;
 
     /**
-     * @param OrderId $orderId
-     * @param string $message
-     * @param int $code
-     * @param Exception|null $previous
+     * {@inheritdoc}
      */
-    public function __construct(OrderId $orderId, $message = '', $code = 0, $previous = null)
+    public static function getDefaults()
     {
-        parent::__construct($message, $code, $previous);
-
-        $this->orderId = $orderId;
-    }
-
-    /**
-     * @return OrderId
-     */
-    public function getOrderId()
-    {
-        return $this->orderId;
+        return [
+            'limit' => 50,
+            'offset' => 0,
+            'orderBy' => 'id_order',
+            'sortOrder' => 'DESC',
+            'filters' => [],
+        ];
     }
 }

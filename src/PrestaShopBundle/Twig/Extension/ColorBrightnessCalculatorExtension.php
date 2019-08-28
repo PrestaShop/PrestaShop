@@ -24,39 +24,40 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Order\Exception;
+namespace PrestaShopBundle\Twig\Extension;
 
-use Exception;
-use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
+use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator;
+use Twig\Extension\AbstractExtension;
+use Twig_SimpleFunction;
 
 /**
- * Thrown when order is not found
+ * Adds color calculation functions to Twig.
  */
-class OrderNotFoundException extends OrderException
+class ColorBrightnessCalculatorExtension extends AbstractExtension
 {
     /**
-     * @var OrderId
+     * @var ColorBrightnessCalculator
      */
-    private $orderId;
+    private $brightnessCalculator;
 
     /**
-     * @param OrderId $orderId
-     * @param string $message
-     * @param int $code
-     * @param Exception|null $previous
+     * @param ColorBrightnessCalculator $brightnessCalculator
      */
-    public function __construct(OrderId $orderId, $message = '', $code = 0, $previous = null)
+    public function __construct(ColorBrightnessCalculator $brightnessCalculator)
     {
-        parent::__construct($message, $code, $previous);
-
-        $this->orderId = $orderId;
+        $this->brightnessCalculator = $brightnessCalculator;
     }
 
     /**
-     * @return OrderId
+     * {@inheritdoc}
      */
-    public function getOrderId()
+    public function getFunctions()
     {
-        return $this->orderId;
+        return [
+            new Twig_SimpleFunction(
+                'is_color_bright',
+                [$this->brightnessCalculator, 'isBright']
+            ),
+        ];
     }
 }
