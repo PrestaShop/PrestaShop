@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CustomerAddressCountryRequiredFields;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CustomerAddressZipCode;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\ExistingCustomerEmail;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\Domain\Address\Config\AddressConstraintConfiguration;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\CountryChoiceType;
@@ -41,6 +42,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
@@ -88,6 +90,9 @@ class CustomerAddressType extends AbstractType
                         ),
                     ]),
                     new CleanHtml(),
+                    new Email([
+                        'message' => $this->translator->trans('This field is invalid', [], 'Admin.Notifications.Error'),
+                    ]),
                     new ExistingCustomerEmail(),
                 ],
             ]);
@@ -103,6 +108,7 @@ class CustomerAddressType extends AbstractType
                         ),
                     ]),
                     new CleanHtml(),
+                    new TypedRegex('phone_number'),
                     new Length(
                         [
                             'max' => AddressConstraintConfiguration::MAX_PHONE_LENGTH,
@@ -130,6 +136,7 @@ class CustomerAddressType extends AbstractType
                         ]
                     ),
                     new CleanHtml(),
+                    new TypedRegex('dni_lite'),
                     new Length(
                         [
                             'max' => AddressConstraintConfiguration::MAX_DNI_LENGTH,
@@ -151,6 +158,7 @@ class CustomerAddressType extends AbstractType
                         ),
                     ]),
                     new CleanHtml(),
+                    new TypedRegex('generic_name'),
                     new Length(
                         [
                             'max' => AddressConstraintConfiguration::MAX_ALIAS_LENGTH,
@@ -172,6 +180,7 @@ class CustomerAddressType extends AbstractType
                         ),
                     ]),
                     new CleanHtml(),
+                    new TypedRegex('name'),
                     new Length(
                         [
                             'max' => AddressConstraintConfiguration::MAX_FIRST_NAME_LENGTH,
@@ -193,6 +202,7 @@ class CustomerAddressType extends AbstractType
                         ),
                     ]),
                     new CleanHtml(),
+                    new TypedRegex('name'),
                     new Length(
                         [
                             'max' => AddressConstraintConfiguration::MAX_LAST_NAME_LENGTH,
@@ -217,6 +227,7 @@ class CustomerAddressType extends AbstractType
                         ]
                     ),
                     new CleanHtml(),
+                    new TypedRegex('generic_name'),
                     new Length(
                         [
                             'max' => AddressConstraintConfiguration::MAX_COMPANY_LENGTH,
@@ -241,6 +252,7 @@ class CustomerAddressType extends AbstractType
                         ]
                     ),
                     new CleanHtml(),
+                    new TypedRegex('generic_name'),
                     new Length(
                         [
                             'max' => AddressConstraintConfiguration::MAX_VAT_LENGTH,
@@ -262,6 +274,7 @@ class CustomerAddressType extends AbstractType
                         ),
                     ]),
                     new CleanHtml(),
+                    new TypedRegex('address'),
                     new Length(
                         [
                             'max' => AddressConstraintConfiguration::MAX_ADDRESS_LENGTH,
@@ -286,6 +299,7 @@ class CustomerAddressType extends AbstractType
                         ]
                     ),
                     new CleanHtml(),
+                    new TypedRegex('address'),
                     new Length(
                         [
                             'max' => AddressConstraintConfiguration::MAX_ADDRESS_LENGTH,
@@ -307,6 +321,7 @@ class CustomerAddressType extends AbstractType
                         ),
                     ]),
                     new CleanHtml(),
+                    new TypedRegex('city_name'),
                     new Length(
                         [
                             'max' => AddressConstraintConfiguration::MAX_CITY_LENGTH,
@@ -331,6 +346,7 @@ class CustomerAddressType extends AbstractType
                         ]
                     ),
                     new CleanHtml(),
+                    new TypedRegex('post_code'),
                     new Length(
                         [
                             'max' => AddressConstraintConfiguration::MAX_POSTCODE_LENGTH,
@@ -365,6 +381,7 @@ class CustomerAddressType extends AbstractType
                         ]
                     ),
                     new CleanHtml(),
+                    new TypedRegex('phone_number'),
                     new Length(
                         [
                             'max' => AddressConstraintConfiguration::MAX_PHONE_LENGTH,
@@ -389,6 +406,7 @@ class CustomerAddressType extends AbstractType
                         ]
                     ),
                     new CleanHtml(),
+                    new TypedRegex('message'),
                     new Length(
                         [
                             'max' => AddressConstraintConfiguration::MAX_OTHER_LENGTH,

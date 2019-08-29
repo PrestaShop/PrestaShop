@@ -30,6 +30,7 @@ use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\BulkDeleteAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\DeleteAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\SetRequiredFieldsForAddressCommand;
+use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\BulkDeleteAddressException;
@@ -39,11 +40,15 @@ use PrestaShop\PrestaShop\Core\Domain\Address\Exception\InvalidAddressRequiredFi
 use PrestaShop\PrestaShop\Core\Domain\Address\Query\GetRequiredFieldsForAddress;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AddressGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\AddressFilters;
+use PrestaShop\PrestaShop\Core\Domain\Address\Exception\CannotAddAddressException;
+use PrestaShop\PrestaShop\Core\Domain\Address\Exception\CannotUpdateAddressException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Query\GetCustomerAddressForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Address\QueryResult\EditableCustomerAddress;
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForAddressCreation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\AddressCreationCustomer;
+use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateConstraintException;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Address\RequiredFieldsAddressType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -314,8 +319,6 @@ class AddressController extends FrameworkBundleAdminController
             return $this->redirectToRoute('admin_addresses_index');
         }
 
-        $addressForm = null;
-
         try {
             $addressFormBuilder = $this->get(
                     'prestashop.core.form.identifiable_object.builder.address_form_builder'
@@ -428,6 +431,40 @@ class AddressController extends FrameworkBundleAdminController
                 'Invalid data supplied.',
                 'Admin.Notifications.Error'
             ),
+            AddressConstraintException::class => [
+                AddressConstraintException::INVALID_ID => $this->trans(
+                    'The object cannot be loaded (the identifier is missing or invalid)',
+                    'Admin.Notifications.Error'
+                ),
+                AddressConstraintException::INVALID_FIELDS => $this->trans(
+                    'An error occurred when attempting to update the required fields.',
+                    'Admin.Notifications.Error'
+                ),
+            ],
+            StateConstraintException::class => [
+                StateConstraintException::INVALID_ID => $this->trans(
+                    'The object cannot be loaded (the identifier is missing or invalid)',
+                    'Admin.Notifications.Error'
+                ),
+            ],
+            CannotUpdateAddressException::class => $this->trans(
+                'An error occurred while attempting to save.',
+                'Admin.Notifications.Error'
+            ),
+            CannotAddAddressException::class => $this->trans(
+                'An error occurred while attempting to save.',
+                'Admin.Notifications.Error'
+            ),
+            CustomerException::class => $this->trans(
+                'The object cannot be loaded (the identifier is missing or invalid)',
+                'Admin.Notifications.Error'
+            ),
+            CountryConstraintException::class => [
+                CountryConstraintException::INVALID_ID => $this->trans(
+                    'The object cannot be loaded (the identifier is missing or invalid)',
+                    'Admin.Notifications.Error'
+                ),
+            ],
         ];
     }
 }
