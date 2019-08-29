@@ -39,10 +39,13 @@ function setUpCheckout() {
 function handleCheckoutStepChange() {
   $('.checkout-step').off('click');
 
-  let currentStepClass = 'js-current-step';
-  let currentStepSelector = '.' + currentStepClass;
-
-  $(currentStepSelector).prevAll().on(
+  const currentStepClass = 'js-current-step';
+  const currentStepSelector = '.' + currentStepClass;
+  let $previousSteps = $(currentStepSelector).prevAll();
+  $previousSteps = $(currentStepSelector).add($previousSteps);
+  //We use this class to mark previously completed steps
+  $previousSteps.addClass('-clickable');
+  $previousSteps.on(
     'click',
     (event) => {
       const $clickedStep = $(event.target).closest('.checkout-step');
@@ -51,9 +54,17 @@ function handleCheckoutStepChange() {
         $clickedStep.toggleClass('-current');
         $clickedStep.toggleClass(currentStepClass);
 
-        const $nextSteps = $clickedStep.nextAll();
-        $nextSteps.addClass('-unreachable').removeClass('-complete');
-        $('.step-title', $nextSteps).addClass('not-allowed');
+        if ($('button.continue', $clickedStep).length == 0) {
+          //If the step has no continue button, the previously completed steps are clickable
+          const $nextSteps = $clickedStep.nextAll('.checkout-step.-clickable');
+          $nextSteps.removeClass('-unreachable').addClass('-complete');
+          $('.step-title', $nextSteps).removeClass('not-allowed');
+        } else {
+          //If the step has a continue button, all next steps are disabled in order to force the user to click on continue
+          const $nextSteps = $clickedStep.nextAll();
+          $nextSteps.addClass('-unreachable').removeClass('-complete');
+          $('.step-title', $nextSteps).addClass('not-allowed');
+        }
       }
       prestashop.emit('changedCheckoutStep', {event: event});
     }
