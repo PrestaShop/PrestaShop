@@ -26,7 +26,10 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Attachment;
 
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Config\AttachmentValidationConfiguration;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Translation\TranslatorAwareTrait;
 use Symfony\Component\Form\AbstractType;
@@ -35,10 +38,11 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
- * Class AttachmentType
+ * Attachment form type definition
  */
 class AttachmentType extends AbstractType
 {
@@ -53,6 +57,25 @@ class AttachmentType extends AbstractType
             ->add('name', TranslatableType::class, [
                 'type' => TextType::class,
                 'required' => true,
+                'options' => [
+                    'constraints' => [
+                        new TypedRegex(
+                            [
+                                'type' => 'generic_name',
+                            ]
+                        ),
+                    ],
+                    new Length(
+                        [
+                            'max' => AttachmentValidationConfiguration::MAX_NAME_LENGTH,
+                            'maxMessage' => $this->trans(
+                                'This field cannot be longer than %limit% characters',
+                                ['%limit%' => AttachmentValidationConfiguration::MAX_NAME_LENGTH],
+                                'Admin.Notifications.Error'
+                            ),
+                        ]
+                    ),
+                ],
                 'constraints' => [
                     new DefaultLanguage(),
                 ],
@@ -60,6 +83,11 @@ class AttachmentType extends AbstractType
             ->add('file_description', TranslatableType::class, [
                 'type' => TextType::class,
                 'required' => false,
+                'options' => [
+                    'constraints' => [
+                        new CleanHtml(),
+                    ],
+                ],
             ])
             ->add('file', FileType::class, [
                 'required' => !$options['is_edit_form'] ||
