@@ -87,6 +87,7 @@ export default class CustomerAddressForm {
       stateFormRowSelect.fadeIn();
 
       stateDropdown.empty();
+      stateDropdown.append($('<option></option>').attr('value', 0).text('-'));
       $.each(response.states, function (index, value) {
         stateDropdown.append($('<option></option>').attr('value', value).text(index));
       });
