@@ -29,6 +29,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\Customer\Query;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Email;
 
+/**
+ * Gets customer information for address creation.
+ */
 class GetCustomerForAddressCreation
 {
     /**

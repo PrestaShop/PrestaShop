@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\Address;
 
 use Exception;
+use PrestaShop\PrestaShop\Adapter\Country\CountryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\BulkDeleteAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\DeleteAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\SetRequiredFieldsForAddressCommand;
@@ -45,7 +46,9 @@ use PrestaShop\PrestaShop\Core\Domain\Address\Exception\CannotUpdateAddressExcep
 use PrestaShop\PrestaShop\Core\Domain\Address\Query\GetCustomerAddressForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Address\QueryResult\EditableCustomerAddress;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerByEmailNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForAddressCreation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\AddressCreationCustomer;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateConstraintException;
@@ -363,7 +366,7 @@ class AddressController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    public function getCustomerInformationAction(Request $request)
+    public function getCustomerInformationAction(Request $request): Response
     {
         try {
             $email = $request->query->get('email');
@@ -465,6 +468,18 @@ class AddressController extends FrameworkBundleAdminController
                     'Admin.Notifications.Error'
                 ),
             ],
+            CustomerNotFoundException::class => $this->trans(
+                'The object cannot be loaded (or found)',
+                'Admin.Notifications.Error'
+            ),
+            CountryNotFoundException::class => $this->trans(
+                'The object cannot be loaded (or found)',
+                'Admin.Notifications.Error'
+            ),
+            CustomerByEmailNotFoundException::class => $this->trans(
+                'The object cannot be loaded (or found)',
+                'Admin.Notifications.Error'
+            ),
         ];
     }
 }
