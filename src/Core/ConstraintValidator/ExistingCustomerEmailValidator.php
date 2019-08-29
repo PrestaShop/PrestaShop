@@ -29,7 +29,6 @@ namespace PrestaShop\PrestaShop\Core\ConstraintValidator;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\ExistingCustomerEmail;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerByEmailNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForAddressCreation;
 use Symfony\Component\Validator\Constraint;
@@ -69,15 +68,6 @@ class ExistingCustomerEmailValidator extends ConstraintValidator
             if ($e instanceof CustomerByEmailNotFoundException) {
                 $this->context->buildViolation($constraint->message)
                     ->setTranslationDomain('Admin.Orderscustomers.Notification')
-                    ->addViolation()
-                ;
-
-                return;
-            }
-
-            if ($e instanceof CustomerConstraintException) {
-                $this->context->buildViolation($constraint->invalidEmailMessage)
-                    ->setTranslationDomain('Admin.Notification.error')
                     ->addViolation()
                 ;
             }
