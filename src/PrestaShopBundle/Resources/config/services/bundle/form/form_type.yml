@@ -891,6 +891,6 @@ services:
     form.type.address.required_fields:
         class: 'PrestaShopBundle\Form\Admin\Sell\Address\RequiredFieldsAddressType'
         arguments:
-          - '@=service("prestashop.core.form.choice_provider.address_required_fields").getChoices()'
+          - '@prestashop.core.form.choice_provider.address_required_fields'
         tags:
           - { name: form.type }

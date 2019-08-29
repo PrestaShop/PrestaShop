@@ -99,15 +99,10 @@ class AddressController extends FrameworkBundleAdminController
 
             try {
                 $this->getCommandBus()->handle(new SetRequiredFieldsForAddressCommand($data['required_fields']));
+                $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
             } catch (AddressException $e) {
                 $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
-
-                return $this->redirectToRoute('admin_addresses_index');
             }
-
-            $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
-
-            return $this->redirectToRoute('admin_addresses_index');
         }
 
         return $this->redirectToRoute('admin_addresses_index');
