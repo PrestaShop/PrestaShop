@@ -168,8 +168,8 @@ final class CatalogPriceRuleQueryBuilder extends AbstractDoctrineQueryBuilder
             'from_quantity' => 'pr.from_quantity',
             'reduction' => 'pr.reduction',
             'reduction_type' => 'pr.reduction_type',
-            'from' => 'pr.from',
-            'to' => 'pr.to',
+            'date_from' => 'pr.from',
+            'date_to' => 'pr.to',
             'shop' => 'pr_shop.name',
             'currency' => 'pr_currency.name',
             'country' => 'pr_country.name',
@@ -190,7 +190,7 @@ final class CatalogPriceRuleQueryBuilder extends AbstractDoctrineQueryBuilder
                 continue;
             }
 
-            if ('from' === $filterName || 'to' === $filterName) {
+            if ('date_from' === $filterName || 'date_to' === $filterName) {
                 if (isset($value['from'])) {
                     $qb->andWhere($allowedFiltersAliasMap[$filterName] . ' >= :' . $filterName . '_from');
                     $qb->setParameter($filterName . '_from', $value['from']);

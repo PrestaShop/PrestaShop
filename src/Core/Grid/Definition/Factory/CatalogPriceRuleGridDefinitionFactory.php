@@ -144,14 +144,14 @@ final class CatalogPriceRuleGridDefinitionFactory extends AbstractGridDefinition
                 ->setName($this->trans('Beginning', [], 'Admin.Catalog.Feature'))
                 ->setOptions([
                     'format' => 'Y-m-d H:i',
-                    'field' => 'from',
+                    'field' => 'date_from',
                 ])
             )
             ->add((new DateTimeColumn('date_to'))
                 ->setName($this->trans('End', [], 'Admin.Catalog.Feature'))
                 ->setOptions([
                     'format' => 'Y-m-d H:i',
-                    'field' => 'to',
+                    'field' => 'date_to',
                 ])
             )
             ->add((new ActionColumn('actions'))
