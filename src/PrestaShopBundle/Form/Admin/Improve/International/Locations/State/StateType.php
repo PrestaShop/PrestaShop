@@ -29,10 +29,12 @@ namespace PrestaShopBundle\Form\Admin\Improve\International\Locations\State;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\UniqueStateIsoCode;
+use PrestaShop\PrestaShop\Core\Domain\State\Config\StateValidationConfiguration;
 use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
 use PrestaShopBundle\Form\Admin\Type\ConfigurableCountryChoiceType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\ZoneChoiceType;
+use PrestaShopBundle\Translation\TranslatorAwareTrait;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -44,11 +46,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
  */
 class StateType extends AbstractType
 {
-    /** @var int maximum number of characters for name */
-    public const MAX_NAME_LENGTH = 32;
-
-    /** @var int maximum number of characters for iso code */
-    public const MAX_ISO_CODE_LENGTH = 7;
+    use TranslatorAwareTrait;
 
     /**
      * {@inheritdoc}
@@ -67,9 +65,16 @@ class StateType extends AbstractType
                     new TypedRegex([
                         'type' => 'generic_name',
                     ]),
-                    new Length([
-                        'max' => self::MAX_NAME_LENGTH,
-                    ]),
+                    new Length(
+                        [
+                            'max' => StateValidationConfiguration::MAX_NAME_LENGTH,
+                            'maxMessage' => $this->trans(
+                                'This field cannot be longer than %limit% characters',
+                                ['%limit%' => StateValidationConfiguration::MAX_NAME_LENGTH],
+                                'Admin.Notifications.Error'
+                            ),
+                        ]
+                    ),
                     new CleanHtml(),
                 ],
             ])
@@ -77,9 +82,16 @@ class StateType extends AbstractType
                 'required' => true,
                 'constraints' => [
                     new NotBlank(),
-                    new Length([
-                        'max' => self::MAX_ISO_CODE_LENGTH,
-                    ]),
+                    new Length(
+                        [
+                            'max' => StateValidationConfiguration::MAX_ISO_CODE_LENGTH,
+                            'maxMessage' => $this->trans(
+                                'This field cannot be longer than %limit% characters',
+                                ['%limit%' => StateValidationConfiguration::MAX_ISO_CODE_LENGTH],
+                                'Admin.Notifications.Error'
+                            ),
+                        ]
+                    ),
                     new TypedRegex([
                         'type' => 'state_iso_code',
                     ]),
