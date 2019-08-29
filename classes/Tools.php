@@ -3799,7 +3799,7 @@ exit;
             $container = $containerFinder->getContainer();
             $characterCleaner = $container->get('prestashop.core.string.character_cleaner');
         } catch (Exception $e) {
-            // Used in CLI where no container is instancied
+            // Used when the container is not generated
             $characterCleaner = new CharacterCleaner();
         }
 
