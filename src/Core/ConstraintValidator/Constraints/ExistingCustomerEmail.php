@@ -36,8 +36,6 @@ class ExistingCustomerEmail extends Constraint
 {
     public $message = 'This email address is not registered.';
 
-    public $invalidEmailMessage = 'Invalid email address.';
-
     /**
      * {@inheritdoc}
      */
