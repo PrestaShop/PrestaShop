@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Form\Admin\Improve\International\Locations\Country;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\AddressFormat;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
+use PrestaShop\PrestaShop\Core\Domain\Country\Config\CountryConstraintConfiguration;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
@@ -100,7 +101,7 @@ class CountryType extends AbstractType
             ->add('iso_code', TextType::class, [
                 'required' => true,
                 'attr' => [
-                    'maxlength' => 3,
+                    'maxlength' => CountryConstraintConfiguration::MAX_ISO_CODE_LENGTH,
                 ],
                 'constraints' => [
                     new TypedRegex([
@@ -118,10 +119,10 @@ class CountryType extends AbstractType
                         ),
                     ]),
                     new Length([
-                        'max' => 3,
+                        'max' => CountryConstraintConfiguration::MAX_ISO_CODE_LENGTH,
                         'maxMessage' => $this->translator->trans(
                             'This field cannot be longer than %limit% characters',
-                            ['%limit%' => 3],
+                            ['%limit%' => CountryConstraintConfiguration::MAX_ISO_CODE_LENGTH],
                             'Admin.Notifications.Error'
                         ),
                     ]),
@@ -130,7 +131,7 @@ class CountryType extends AbstractType
             ->add('call_prefix', NumberType::class, [
                 'required' => true,
                 'attr' => [
-                    'maxlength' => 3,
+                    'maxlength' => CountryConstraintConfiguration::MAX_CALL_PREFIX_LENGTH,
                 ],
                 'constraints' => [
                     new NotBlank([
@@ -145,10 +146,10 @@ class CountryType extends AbstractType
                         ),
                     ]),
                     new Length([
-                        'max' => 3,
+                        'max' => CountryConstraintConfiguration::MAX_CALL_PREFIX_LENGTH,
                         'maxMessage' => $this->translator->trans(
                             'This field cannot be longer than %limit% characters',
-                            ['%limit%' => 3],
+                            ['%limit%' => CountryConstraintConfiguration::MAX_CALL_PREFIX_LENGTH],
                             'Admin.Notifications.Error'
                         ),
                     ]),
