@@ -901,3 +901,11 @@ services:
         - '@prestashop.core.form.choice_provider.configurable_country_by_id'
       tags:
         - { name: form.type }
+
+    form.type.states:
+      class: 'PrestaShopBundle\Form\Admin\Improve\International\Locations\State\StateType'
+      public: true
+      calls:
+        - { method: setTranslator, arguments: ['@translator'] }
+      tags:
+        - { name: form.type }
