@@ -622,9 +622,9 @@ class ProductLazyArray extends AbstractLazyArray
         $this->product['discount_amount_to_display'] = null;
 
         if ($settings->include_taxes) {
-            $price = $regular_price = $product['price'];
+            $price = $regular_price = (isset($product['price_amount']) ? $product['price_amount'] : $product['price']);
         } else {
-            $price = $regular_price = $product['price_tax_exc'];
+            $price = $regular_price = (isset($product['price_amount']) ? $product['price_amount'] : $product['price_tax_exc']);
         }
 
         if ($product['specific_prices']) {
