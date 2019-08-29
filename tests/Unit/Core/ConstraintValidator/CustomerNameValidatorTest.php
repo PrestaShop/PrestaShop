@@ -96,7 +96,6 @@ class CustomerNameValidatorTest extends ConstraintValidatorTestCase
         $input = 'AZERTY' . $invalidChar;
         $this->validator->validate($input, new CustomerName());
 
-
         $this->buildViolation((new CustomerName())->message)
             ->assertRaised()
         ;
@@ -117,8 +116,6 @@ class CustomerNameValidatorTest extends ConstraintValidatorTestCase
         ;
     }
 
-    /**
-     */
     public function testIfSucceedsWhenNoPoints()
     {
         $input = 'AZERTY';
