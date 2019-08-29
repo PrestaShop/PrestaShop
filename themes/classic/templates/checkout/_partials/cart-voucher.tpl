@@ -34,7 +34,9 @@
                   <span class="label">{$voucher.name}</span>
                   <div class="float-xs-right">
                     <span>{$voucher.reduction_formatted}</span>
-                    <a href="{$voucher.delete_url}" data-link-action="remove-voucher"><i class="material-icons">&#xE872;</i></a>
+                      {if !empty($voucher.code)}
+                        <a href="{$voucher.delete_url}" data-link-action="remove-voucher"><i class="material-icons">&#xE872;</i></a>
+                      {/if}
                   </div>
                 </li>
               {/foreach}
