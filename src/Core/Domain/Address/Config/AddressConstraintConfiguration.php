@@ -87,7 +87,7 @@ final class AddressConstraintConfiguration
     const MAX_DNI_LENGTH = 16;
 
     /**
-     * DNI field regexp validation pattern
+     * DNI field value regexp validation pattern
      */
     const DNI_LITE_PATTERN = '/^[0-9A-Za-z-.]{1,16}$/U';
 
