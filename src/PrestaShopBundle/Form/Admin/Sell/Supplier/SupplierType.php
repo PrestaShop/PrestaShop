@@ -139,6 +139,14 @@ class SupplierType extends AbstractType
                                 'Admin.Notifications.Error'
                             ),
                         ]),
+                        new TypedRegex([
+                            'type' => 'catalog_name',
+                            'message' => $this->translator->trans(
+                                '%s is invalid.',
+                                [],
+                                'Admin.Notifications.Error'
+                            ),
+                        ]),
                     ],
                 ],
             ])

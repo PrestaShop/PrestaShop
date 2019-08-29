@@ -47,9 +47,15 @@
         {{ 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>={}' }}
       {% endset %}
 
+      {% set descriptionHint %}
+        {% autoescape false %}
+          {{ 'Will appear in the list of suppliers.'|trans({}, 'Admin.Catalog.Help')~ invalidCatalogNameHint }}
+        {% endautoescape %}
+      {% endset %}
+
       {{ ps.form_group_row(supplierForm.description, {}, {
         'label': 'Description'|trans({}, 'Admin.Global'),
-        'help': 'Will appear in the list of suppliers.'|trans({}, 'Admin.Catalog.Help') ~ invalidCatalogNameHint
+        'help': descriptionHint
       }) }}
 
       {{ ps.form_group_row(supplierForm.phone, {}, {
