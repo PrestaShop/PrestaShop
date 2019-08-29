@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -27,22 +27,8 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Address\Exception;
 
 /**
- * Is thrown when address constraint is violated
+ * Thrown on failure to update address
  */
-class AddressConstraintException extends AddressException
+class CannotUpdateAddressException extends AddressException
 {
-    /**
-     * When address id is not valid
-     */
-    const INVALID_ID = 10;
-
-    /**
-     * When manufacturer id provided for address is not valid
-     */
-    const INVALID_MANUFACTURER_ID = 20;
-
-    /**
-     * When one or more unspecified fields in address are invalid
-     */
-    const INVALID_FIELDS = 30;
 }

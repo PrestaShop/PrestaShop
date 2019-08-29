@@ -67,4 +67,5 @@ admin_customer_for_address_information:
   methods: [GET]
   defaults:
     _controller: PrestaShopBundle:Admin\Sell\Address\Address:getCustomerInformation
-    _legacy_controller: AdminAddresses:loadNames
+    _legacy_controller: AdminAddresses
+#    _legacy_link: AdminAddresses:loadNames

@@ -27,62 +27,87 @@
 namespace PrestaShop\PrestaShop\Adapter\Address\CommandHandler;
 
 use Address;
+use PrestaShop\PrestaShop\Adapter\Address\AbstractAddressHandler;
+use PrestaShop\PrestaShop\Core\Domain\Address\Command\EditCustomerAddressCommand;
+use PrestaShop\PrestaShop\Core\Domain\Address\CommandHandler\EditCustomerAddressHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressException;
-use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
+use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Address\Exception\CannotUpdateAddressException;
 use PrestaShopException;
 
 /**
  * Handles update of customer address
  */
-final class EditCustomerAddressHandler implements EditCustomerAddressHandlerInterface
+final class EditCustomerAddressHandler extends AbstractAddressHandler implements EditCustomerAddressHandlerInterface
 {
     /**
      * {@inheritdoc}
      *
      * @throws AddressException
      * @throws AddressConstraintException
+     * @throws CannotUpdateAddressException
      */
-    public function handle(EditCustomerAddressCommand $command): AddressId
+    public function handle(EditCustomerAddressCommand $command)
     {
-        $address = $this->createAddressFromCommand($command);
-
         try {
+            $address = $this->getAddressFromCommand($command);
+
             if (false === $address->validateFields(false)) {
-                throw new AddressException('Address contains invalid field values');
+                throw new AddressConstraintException('Address contains invalid field values');
             }
 
-            if (false === $address->add()) {
-                throw new AddressException(
-                    sprintf('Failed to add new address "%s"', $command->getAddress())
+            if (false === $address->update()) {
+                throw new CannotUpdateAddressException(
+                    sprintf('Failed to update address "%s"', $address->id)
                 );
             }
         } catch (PrestaShopException $e) {
             throw new AddressException(
-                sprintf('An error occurred when adding new address "%s"', $command->getAddress())
+                sprintf('An error occurred when updating address "%s"', $command->getAddressId()->getValue())
             );
         }
-
-        return new AddressId((int) $address->id);
     }
 
     /**
      * @param EditCustomerAddressCommand $command
      *
      * @return Address
+     *
+     * @throws AddressException
+     * @throws AddressNotFoundException
      */
-    private function createAddressFromCommand(EditCustomerAddressCommand $command)
+    private function getAddressFromCommand(EditCustomerAddressCommand $command)
     {
-        $address = new Address();
+        $address = $this->getAddress($command->getAddressId());
 
-        $address->id_customer = $command->getCustomerId()->getValue();
-        $address->lastname = $command->getLastName();
-        $address->firstname = $command->getFirstName();
-        $address->address1 = $command->getAddress();
-        $address->postcode = $command->getPostCode();
-        $address->id_country = $command->getCountryId()->getValue();
-        $address->city = $command->getCity();
-        $address->alias = $command->getAddressAlias();
+        if (null !== $command->getLastName()) {
+            $address->lastname = $command->getLastName();
+        }
+
+        if (null !== $command->getFirstName()) {
+            $address->firstname = $command->getFirstName();
+        }
+
+        if (null !== $command->getAddress()) {
+            $address->address1 = $command->getAddress();
+        }
+
+        if (null !== $command->getPostCode()) {
+            $address->postcode = $command->getPostCode();
+        }
+
+        if (null !== $command->getCountryId()) {
+            $address->id_country = $command->getCountryId()->getValue();
+        }
+
+        if (null !== $command->getCity()) {
+            $address->city = $command->getCity();
+        }
+
+        if (null !== $command->getAddressAlias()) {
+            $address->alias = $command->getAddressAlias();
+        }
 
         if (null !== $command->getAddress2()) {
             $address->address2 = $command->getAddress2();

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -24,25 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Address\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Address\CommandHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\Address\Command\EditCustomerAddressCommand;
 
 /**
- * Is thrown when address constraint is violated
+ * Interface for services that handles command which edits customer address
  */
-class AddressConstraintException extends AddressException
+interface EditCustomerAddressHandlerInterface
 {
     /**
-     * When address id is not valid
+     * @param EditCustomerAddressCommand $command
      */
-    const INVALID_ID = 10;
-
-    /**
-     * When manufacturer id provided for address is not valid
-     */
-    const INVALID_MANUFACTURER_ID = 20;
-
-    /**
-     * When one or more unspecified fields in address are invalid
-     */
-    const INVALID_FIELDS = 30;
+    public function handle(EditCustomerAddressCommand $command);
 }
