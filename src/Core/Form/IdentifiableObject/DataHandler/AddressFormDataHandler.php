@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\AddCustomerAddressCommand;
+use PrestaShop\PrestaShop\Core\Domain\Address\Command\EditCustomerAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
@@ -122,8 +123,73 @@ final class AddressFormDataHandler implements FormDataHandlerInterface
      * {@inheritdoc}
      *
      * @throws AddressConstraintException
+     * @throws CountryConstraintException
+     * @throws StateConstraintException
      */
-    public function update($countryId, array $data)
+    public function update($addressId, array $data)
     {
+        $editAddressCommand = new EditCustomerAddressCommand($addressId);
+
+        if (null !== $data['alias']) {
+            $editAddressCommand->setAddressAlias($data['alias']);
+        }
+
+        if (null !== $data['first_name']) {
+            $editAddressCommand->setFirstName($data['first_name']);
+        }
+
+        if (null !== $data['last_name']) {
+            $editAddressCommand->setLastName($data['last_name']);
+        }
+
+        if (null !== $data['address1']) {
+            $editAddressCommand->setAddress($data['address1']);
+        }
+
+        if (null !== $data['city']) {
+            $editAddressCommand->setCity($data['city']);
+        }
+
+        if (null !== $data['id_country']) {
+            $editAddressCommand->setCountryId((int) $data['id_country']);
+        }
+
+        if (null !== $data['postcode']) {
+            $editAddressCommand->setPostCode($data['postcode']);
+        }
+
+        if (null !== $data['dni']) {
+            $editAddressCommand->setIdNumber($data['dni']);
+        }
+
+        if (null !== $data['company']) {
+            $editAddressCommand->setCompany($data['company']);
+        }
+
+        if (null !== $data['vat_number']) {
+            $editAddressCommand->setVatNumber($data['vat_number']);
+        }
+
+        if (null !== $data['address2']) {
+            $editAddressCommand->setAddress2($data['address2']);
+        }
+
+        if (null !== $data['id_state']) {
+            $editAddressCommand->setStateId((int) $data['id_state']);
+        }
+
+        if (null !== $data['phone']) {
+            $editAddressCommand->setHomePhone($data['phone']);
+        }
+
+        if (isset($data['phone_mobile']) && null !== $data['phone_mobile']) {
+            $editAddressCommand->setMobilePhone($data['phone_mobile']);
+        }
+
+        if (null !== $data['other']) {
+            $editAddressCommand->setOther($data['other']);
+        }
+
+        $this->commandBus->handle($editAddressCommand);
     }
 }

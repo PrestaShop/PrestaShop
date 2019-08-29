@@ -34,7 +34,7 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
- * Subscriber resolves state field options and validation
+ * Subscriber resolves dynamical customer address form fields options and validation
  */
 class CustomerAddressFormSubscriber implements EventSubscriberInterface
 {
@@ -75,14 +75,7 @@ class CustomerAddressFormSubscriber implements EventSubscriberInterface
      */
     public function onPreSubmit(FormEvent $event)
     {
-        $data = $event->getData();
-
-        $countryId = (int) $data['id_country'];
-        $choices = $this->stateChoiceProvider->getChoices(['id_country' => $countryId]);
-
-        if (!empty($choices)) {
-            $this->resolveStateField($event);
-        }
+        $this->resolveStateField($event);
     }
 
     /**
@@ -94,9 +87,14 @@ class CustomerAddressFormSubscriber implements EventSubscriberInterface
         $data = $event->getData();
 
         $countryId = (int) $data['id_country'];
-        $choices = $this->stateChoiceProvider->getChoices(['id_country' => $countryId]);
+        $choices = array_merge(
+            ['-' => 0],
+            $this->stateChoiceProvider->getChoices(['id_country' => $countryId])
+        );
         $options = [
             'required' => false,
+            'disabled' => true,
+            'choices' => [],
         ];
 
         if (!empty($choices)) {

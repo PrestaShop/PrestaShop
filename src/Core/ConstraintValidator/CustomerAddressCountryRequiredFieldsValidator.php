@@ -59,8 +59,8 @@ class CustomerAddressCountryRequiredFieldsValidator extends ConstraintValidator
     public function validate($value, Constraint $constraint)
     {
         $countryId = (int) $value['id_country'];
-        $stateId = $value['id_state'];
-        $dni = $value['dni'];
+        $stateId = isset($value['id_state']) ? $value['id_state'] : null;
+        $dni = isset($value['dni']) ? $value['dni'] : null;
 
         /** @var CountryRequiredFields $requiredFields */
         $requiredFields = $this->queryBus->handle(new GetCountryRequiredFields($countryId));
