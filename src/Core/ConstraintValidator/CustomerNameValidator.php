@@ -37,8 +37,8 @@ use Symfony\Component\Validator\ConstraintValidator;
  */
 class CustomerNameValidator extends ConstraintValidator
 {
-    const PATTERN_NAME = '/^(?:[^0-9!<>,;?=+()\/\\\\@#"°*`{}_^$%:¤\[\]|\.]|[\.](?:\s|$))*$/u';
-    const PATTERN_DOT_SPACED = '/[\.。](\s{1}([^\ ]|$))/';
+    const PATTERN_NAME = '/^(?:[^0-9!<>,;?=+()\/\\\\@#"°*`{}_^$%:¤\[\]|\.。]|[。\.](?:\s|$))*$/u';
+    const PATTERN_DOT_SPACED = '/[\.。](\s{1}[^\ ]|$)/';
 
     /**
      * @var CharacterCleaner

@@ -67,7 +67,7 @@ class CustomerNameValidatorTest extends ConstraintValidatorTestCase
     public function getValidCharacters()
     {
         return [
-            ['. '], ['。 '],
+            ['.'], ['。'],
         ];
     }
 
@@ -79,6 +79,37 @@ class CustomerNameValidatorTest extends ConstraintValidatorTestCase
     public function testIfFailsWhenBadCharactersAreGiven($invalidChar)
     {
         $input = 'AZE' . $invalidChar . 'RTY';
+        $this->validator->validate($input, new CustomerName());
+
+        $this->buildViolation((new CustomerName())->message)
+            ->assertRaised()
+        ;
+    }
+
+    /**
+     * @dataProvider getValidCharactersWithSpaces
+     *
+     * @param string $invalidChar
+     */
+    public function testIfFailsWhenSpacedPointsAreFinal($invalidChar)
+    {
+        $input = 'AZERTY' . $invalidChar;
+        $this->validator->validate($input, new CustomerName());
+
+
+        $this->buildViolation((new CustomerName())->message)
+            ->assertRaised()
+        ;
+    }
+
+    /**
+     * @dataProvider getValidCharacters
+     *
+     * @param string $invalidChar
+     */
+    public function testIfFailsWhenDoublePoints($invalidChar)
+    {
+        $input = 'AZE' . $invalidChar . 'RTY' . $invalidChar;
         $this->validator->validate($input, new CustomerName());
 
         $this->buildViolation((new CustomerName())->message)
