@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Address;
 
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\Material\MaterialChoiceTableType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -36,16 +37,16 @@ use Symfony\Component\Form\FormBuilderInterface;
 class RequiredFieldsAddressType extends AbstractType
 {
     /**
-     * @var array
+     * @var FormChoiceProviderInterface
      */
-    private $addressRequiredFieldsChoices;
+    private $addressRequiredFieldsChoicesProvider;
 
     /**
-     * @param array $addressRequiredFieldsChoices
+     * @param FormChoiceProviderInterface $addressRequiredFieldsChoicesProvider
      */
-    public function __construct(array $addressRequiredFieldsChoices)
+    public function __construct(FormChoiceProviderInterface $addressRequiredFieldsChoicesProvider)
     {
-        $this->addressRequiredFieldsChoices = $addressRequiredFieldsChoices;
+        $this->addressRequiredFieldsChoicesProvider = $addressRequiredFieldsChoicesProvider;
     }
 
     /**
@@ -56,7 +57,7 @@ class RequiredFieldsAddressType extends AbstractType
         $builder
             ->add('required_fields', MaterialChoiceTableType::class, [
                 'label' => false,
-                'choices' => $this->addressRequiredFieldsChoices,
+                'choices' => $this->addressRequiredFieldsChoicesProvider->getChoices(),
             ])
         ;
     }

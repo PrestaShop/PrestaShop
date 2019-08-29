@@ -27,12 +27,12 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Address\ValueObject;
 
 /**
- * Stores required field values for address.
+ * Stores configurable required field values for address.
  */
 class RequiredFields
 {
     /**
-     * Stores all allowed required fields
+     * Stores all allowed required fields to be configured for address
      */
     const ALLOWED_REQUIRED_FIELDS = [
         'company',

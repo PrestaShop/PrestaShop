@@ -43,7 +43,6 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollectionInterface;
-use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Form\Admin\Type\CountryChoiceType;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -55,14 +54,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 final class AddressGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
     public const GRID_ID = 'address';
-
-    /**
-     * @param HookDispatcherInterface $hookDispatcher
-     */
-    public function __construct(HookDispatcherInterface $hookDispatcher)
-    {
-        parent::__construct($hookDispatcher);
-    }
 
     /**
      * {@inheritdoc}

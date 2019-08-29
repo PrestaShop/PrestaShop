@@ -97,7 +97,6 @@ final class AddressQueryBuilder extends AbstractDoctrineQueryBuilder
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters())
             ->select('COUNT(DISTINCT a.`id_address`)')
-            ->where('a.`id_customer` != 0')
         ;
 
         return $qb;
