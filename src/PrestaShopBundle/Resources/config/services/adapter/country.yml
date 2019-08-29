@@ -12,4 +12,4 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Country\QueryHandler\GetCountryRequiredFieldsHandler'
     tags:
       - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountryHasStates'
+        command: 'PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountryRequiredFields'
