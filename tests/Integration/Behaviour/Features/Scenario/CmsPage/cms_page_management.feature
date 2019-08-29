@@ -28,7 +28,7 @@ Feature: CmsPage Management
   Scenario: Adding new CMS page for non existing category should not be allowed
     Given cms category with id "5000" does not exist
     When I create CMS page "cmspage-3" with cms category id "5000"
-    Then I should get error message 'Cms page contains invalid field values'
+    Then I should get error message 'Cms page category with id "5000" not found'
 
   Scenario: Editing cms page
     When I edit CMS page "cmspage-1" with following properties:
