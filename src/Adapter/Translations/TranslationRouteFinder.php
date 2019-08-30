@@ -172,7 +172,6 @@ class TranslationRouteFinder
 
             case self::MAILS:
                 $emailContentType = $propertyAccessor->getValue($routeProperties, '[email_content_type]');
-                $parameters['selected'] = $emailContentType;
 
                 if (self::BODY === $emailContentType) {
                     $parameters = [];
