@@ -31,6 +31,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Command\BulkDeleteA
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Command\DeleteAttributeGroupCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Exception\AttributeGroupNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Exception\DeleteAttributeGroupException;
+use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
+use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AttributeGroupGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\AttributeGroupFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -57,10 +59,16 @@ class AttributeGroupController extends FrameworkBundleAdminController
         $attributeGroupGridFactory = $this->get('prestashop.core.grid.factory.attribute_group');
         $attributeGroupGrid = $attributeGroupGridFactory->getGrid($attributeGroupFilters);
 
+        $showcaseCardIsClosed = $this->getQueryBus()->handle(
+            new GetShowcaseCardIsClosed((int) $this->getContext()->employee->id, ShowcaseCard::CATEGORIES_CARD)
+        );
+
         return $this->render('@PrestaShop/Admin/Sell/Catalog/AttributeGroup/index.html.twig', [
             'attributeGroupGrid' => $this->presentGrid($attributeGroupGrid),
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'showcaseCardName' => ShowcaseCard::ATTRIBUTES_CARD,
+            'isShowcaseCardClosed' => $showcaseCardIsClosed,
         ]);
     }
 

@@ -60,6 +60,11 @@ class ShowcaseCard
     const CMS_PAGES_CARD = 'cms-pages_card';
 
     /**
+     * Card shown in Sell -> Catalog -> Attributes & features -> Attributes
+     */
+    const ATTRIBUTES_CARD = 'attributes_card';
+
+    /**
      * List of supported card names
      */
     const SUPPORTED_NAMES = [
