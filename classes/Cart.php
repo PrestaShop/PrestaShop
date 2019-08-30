@@ -449,7 +449,7 @@ class CartCore extends ObjectModel
      *
      * @return array|false|mysqli_result|PDOStatement|resource|null Database result
      */
-    public function getCartRules($filter = CartRule::FILTER_ACTION_ALL, $autoAdd = true)
+    public function getCartRules($filter = CartRule::FILTER_ACTION_ALL, $autoAdd = true, $withValues = true)
     {
         // Define virtual context to prevent case where the cart is not the in the global context
         $virtual_context = Context::getContext()->cloneContext();
@@ -490,8 +490,10 @@ class CartCore extends ObjectModel
 
         foreach ($result as &$row) {
             $row['obj'] = new CartRule($row['id_cart_rule'], (int) $this->id_lang);
-            $row['value_real'] = $row['obj']->getContextualValue(true, $virtual_context, $filter);
-            $row['value_tax_exc'] = $row['obj']->getContextualValue(false, $virtual_context, $filter);
+            if ($withValues) {
+                $row['value_real'] = $row['obj']->getContextualValue(true, $virtual_context, $filter);
+                $row['value_tax_exc'] = $row['obj']->getContextualValue(false, $virtual_context, $filter);
+            }
             // Retro compatibility < 1.5.0.2
             $row['id_discount'] = $row['id_cart_rule'];
             $row['description'] = $row['name'];
@@ -744,9 +746,8 @@ class CartCore extends ObjectModel
         Product::cacheProductsFeatures($products_ids);
         Cart::cacheSomeAttributesLists($pa_ids, $this->id_lang);
 
+        $this->_products = array();
         if (empty($result)) {
-            $this->_products = array();
-
             return array();
         }
 
@@ -756,7 +757,7 @@ class CartCore extends ObjectModel
             $givenAwayProductsIds = array();
 
             if ($this->shouldSplitGiftProductsQuantity) {
-                $gifts = $this->getCartRules(CartRule::FILTER_ACTION_GIFT);
+                $gifts = $this->getCartRules(CartRule::FILTER_ACTION_GIFT, true, false);
                 if (count($gifts) > 0) {
                     foreach ($gifts as $gift) {
                         foreach ($result as $rowIndex => $row) {
@@ -782,8 +783,6 @@ class CartCore extends ObjectModel
                     }
                 }
             }
-
-            $this->_products = array();
 
             foreach ($result as &$row) {
                 if (!array_key_exists('is_gift', $row)) {
