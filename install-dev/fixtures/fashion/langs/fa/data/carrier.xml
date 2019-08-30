@@ -2,5 +2,6 @@
 <entity_carrier>
   <carrier id="My_carrier" id_shop="1">
     <delay>تحویل روز بعد!</delay>
+    <name>حامل</name>
   </carrier>
 </entity_carrier>

@@ -8,4 +8,4 @@ ALTER TABLE `PREFIX_search_word` MODIFY `word` VARCHAR(30) NOT NULL;
 /* localize carrier name */
 ALTER TABLE `PREFIX_carrier_lang` ADD `name` varchar(64) NOT NULL AFTER `delay`;
 
-/* PHP:ps_1760_copy_data_from_currency_to_currency_lang(); */;
+/* PHP:ps_1760_copy_name_from_carrier_to_carrier_lang(); */;

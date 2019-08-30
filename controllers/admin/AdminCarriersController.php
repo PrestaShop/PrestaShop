@@ -170,6 +170,7 @@ class AdminCarriersControllerCore extends AdminController
                     'type' => 'text',
                     'label' => $this->trans('Company', array(), 'Admin.Global'),
                     'name' => 'name',
+                    'lang' => true,
                     'required' => true,
                     'hint' => array(
                         $this->trans('Allowed characters: letters, spaces and "%special_chars%".', array('%special_chars%' => '().-'), 'Admin.Shipping.Help'),

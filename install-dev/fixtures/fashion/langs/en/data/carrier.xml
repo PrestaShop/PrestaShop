@@ -2,5 +2,6 @@
 <entity_carrier>
   <carrier id="My_carrier" id_shop="1">
     <delay>Delivery next day!</delay>
+    <name>My carrier</name>
   </carrier>
 </entity_carrier>
