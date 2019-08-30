@@ -77,7 +77,7 @@ final class MerchandiseReturnQueryBuilder extends AbstractDoctrineQueryBuilder
     {
         $qb = $this->getMerchandiseReturnQueryBuilder($searchCriteria);
         $qb
-            ->select('r.id_order_return, r.id_order, r.date_add, orsl.name status')
+            ->select('r.id_order_return, r.id_order, r.date_add, orsl.name status, ors.color')
             ->groupBy('r.id_order_return');
 
         $this->searchCriteriaApplicator
