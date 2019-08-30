@@ -203,7 +203,7 @@ class AdminSearchConfControllerCore extends AdminController
                                 'Admin.Shopparameters.Help'
                             ),
                             $this->trans(
-                                'It checks either in all indexed word in database, a close word of the search word exist. This will be very resource-consuming.',
+                                'Checks a close word of the search word exist in indexed words in database. This will be very resource-consuming.',
                                 array(),
                                 'Admin.Shopparameters.Help'
                             ),
