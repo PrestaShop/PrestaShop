@@ -78,13 +78,13 @@ class CustomerNameValidator extends ConstraintValidator
      *
      * @param string $name
      *
-     * @return false|int
+     * @return bool
      */
     private function isNameValid($name)
     {
         $pattern = $this->characterCleaner->cleanNonUnicodeSupport(self::PATTERN_NAME);
 
-        return preg_match($pattern, $name);
+        return (bool) preg_match($pattern, $name);
     }
 
     /**
@@ -101,6 +101,6 @@ class CustomerNameValidator extends ConstraintValidator
         }
         $pattern = $this->characterCleaner->cleanNonUnicodeSupport(self::PATTERN_DOT_SPACED);
 
-        return preg_match($pattern, $name);
+        return (bool) preg_match($pattern, $name);
     }
 }

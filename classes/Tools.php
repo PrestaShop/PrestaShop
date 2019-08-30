@@ -25,6 +25,7 @@
  */
 use Composer\CaBundle\CaBundle;
 use PrestaShop\PrestaShop\Adapter\ContainerFinder;
+use PrestaShop\PrestaShop\Adapter\ContainerNotFoundException;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
 use PHPSQLParser\PHPSQLParser;
@@ -3798,7 +3799,7 @@ exit;
         try {
             $container = $containerFinder->getContainer();
             $characterCleaner = $container->get('prestashop.core.string.character_cleaner');
-        } catch (Exception $e) {
+        } catch (ContainerNotFoundException $e) {
             // Used when the container is not generated
             $characterCleaner = new CharacterCleaner();
         }
