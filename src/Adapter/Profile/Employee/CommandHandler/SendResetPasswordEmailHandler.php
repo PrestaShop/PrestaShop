@@ -94,7 +94,7 @@ final class SendResetPasswordEmailHandler implements SendResetPasswordEmailHandl
         $canResetPassword = (strtotime($timeExpression) - time()) <= 0;
 
         if (!$canResetPassword) {
-            throw new PasswordResetTooFrequentException();
+            throw new PasswordResetTooFrequentException('Password has been reset too recently, you must wait.');
         }
 
         if (!$employee->hasRecentResetPasswordToken()) {
