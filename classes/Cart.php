@@ -979,12 +979,12 @@ class CartCore extends ObjectModel
             case Order::ROUND_ITEM:
             default:
                 $row['total'] = Tools::ps_round(
-                        $row['price_with_reduction_without_tax'],
-                        _PS_PRICE_COMPUTE_PRECISION_
+                    $row['price_with_reduction_without_tax'],
+                    _PS_PRICE_COMPUTE_PRECISION_
                     ) * $productQuantity;
                 $row['total_wt'] = Tools::ps_round(
-                        $row['price_with_reduction'],
-                        _PS_PRICE_COMPUTE_PRECISION_
+                    $row['price_with_reduction'],
+                    _PS_PRICE_COMPUTE_PRECISION_
                     ) * $productQuantity;
 
                 break;
