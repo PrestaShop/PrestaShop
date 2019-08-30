@@ -54,7 +54,7 @@ class CarrierCore extends ObjectModel
     /** @var int common id for carrier historization */
     public $id_reference;
 
-    /** @var string Name */
+    /** @var array of localized names where key represents language id */
     public $name;
 
     /** @var string URL with a '@' for */
@@ -122,7 +122,6 @@ class CarrierCore extends ObjectModel
         'fields' => array(
             /* Classic fields */
             'id_reference' => array('type' => self::TYPE_INT),
-            'name' => array('type' => self::TYPE_STRING, 'validate' => 'isCarrierName', 'required' => true, 'size' => 64),
             'active' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true),
             'is_free' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'url' => array('type' => self::TYPE_STRING, 'validate' => 'isAbsoluteUrl'),
@@ -143,6 +142,7 @@ class CarrierCore extends ObjectModel
 
             /* Lang fields */
             'delay' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 512),
+            'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCarrierName', 'required' => false, 'size' => 64],
         ),
     );
 
@@ -185,8 +185,8 @@ class CarrierCore extends ObjectModel
             $this->shipping_method = ((int) Configuration::get('PS_SHIPPING_METHOD') ? Carrier::SHIPPING_METHOD_WEIGHT : Carrier::SHIPPING_METHOD_PRICE);
         }
 
-        if ($this->name == '0') {
-            $this->name = Carrier::getCarrierNameFromShopName();
+        if ($this->name[Configuration::get('PS_LANG_DEFAULT')] == '0') {
+            $this->name[Configuration::get('PS_LANG_DEFAULT')] = Carrier::getCarrierNameFromShopName();
         }
 
         $this->image_dir = _PS_SHIP_IMG_DIR_;
