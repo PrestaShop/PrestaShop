@@ -39,18 +39,18 @@ import ColumnTogglingExtension from '../../components/grid/extension/column-togg
 const $ = window.$;
 
 $(() => {
-  const stateGrid = new Grid('country');
+  const countryGrid = new Grid('country');
 
-  stateGrid.addExtension(new FiltersResetExtension());
-  stateGrid.addExtension(new SortingExtension());
-  stateGrid.addExtension(new ExportToSqlManagerExtension());
-  stateGrid.addExtension(new ReloadListExtension());
-  stateGrid.addExtension(new BulkActionCheckboxExtension());
-  stateGrid.addExtension(new SubmitBulkExtension());
-  stateGrid.addExtension(new SubmitRowActionExtension());
-  stateGrid.addExtension(new LinkRowActionExtension());
-  stateGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
-  stateGrid.addExtension(new ColumnTogglingExtension());
+  countryGrid.addExtension(new FiltersResetExtension());
+  countryGrid.addExtension(new SortingExtension());
+  countryGrid.addExtension(new ExportToSqlManagerExtension());
+  countryGrid.addExtension(new ReloadListExtension());
+  countryGrid.addExtension(new BulkActionCheckboxExtension());
+  countryGrid.addExtension(new SubmitBulkExtension());
+  countryGrid.addExtension(new SubmitRowActionExtension());
+  countryGrid.addExtension(new LinkRowActionExtension());
+  countryGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
+  countryGrid.addExtension(new ColumnTogglingExtension());
 
   new FormSubmitButton();
 });
