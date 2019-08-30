@@ -53,7 +53,7 @@ class ContainerFinderTest extends TestCase
     }
 
     /**
-     * @expectedException \PrestaShop\PrestaShop\Adapter\ContainerNotFoundException
+     * @expectedException \PrestaShop\PrestaShop\Core\Exception\ContainerNotFoundException
      * @expectedExceptionMessage Kernel Container is not available
      */
     public function testGetContainerException()

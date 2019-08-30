@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter;
+namespace PrestaShop\PrestaShop\Core\Exception;
 
 class ContainerNotFoundException extends \Exception
 {

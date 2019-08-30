@@ -25,7 +25,7 @@
  */
 use Composer\CaBundle\CaBundle;
 use PrestaShop\PrestaShop\Adapter\ContainerFinder;
-use PrestaShop\PrestaShop\Adapter\ContainerNotFoundException;
+use PrestaShop\PrestaShop\Core\Exception\ContainerNotFoundException;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
 use PHPSQLParser\PHPSQLParser;
