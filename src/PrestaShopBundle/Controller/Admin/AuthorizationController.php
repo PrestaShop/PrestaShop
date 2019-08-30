@@ -226,7 +226,7 @@ class AuthorizationController extends FrameworkBundleAdminController
                 $newAdminDirectoryName = $adminDirectoryRenamer->renameToRandomName();
 
                 return $this->redirect(sprintf(
-                    '%s/%s/%s/',
+                    '%s/%s%s',
                     $tools->getShopDomainSsl(true),
                     $newAdminDirectoryName,
                     $this->generateUrl('_admin_login', [], UrlGeneratorInterface::RELATIVE_PATH)

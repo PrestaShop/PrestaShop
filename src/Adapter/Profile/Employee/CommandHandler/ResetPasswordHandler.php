@@ -107,7 +107,10 @@ final class ResetPasswordHandler implements ResetPasswordHandlerInterface
 
         if (Password::MIN_LENGTH > strlen($command->getNewPlainPassword())) {
             throw new EmployeeConstraintException(
-                'Password must be not shorter than 8 symbols',
+                sprintf(
+                    'Password must be not shorter than %d symbols',
+                    Password::MIN_LENGTH
+                ),
                 EmployeeConstraintException::INVALID_PASSWORD
             );
         }
@@ -120,7 +123,7 @@ final class ResetPasswordHandler implements ResetPasswordHandlerInterface
         $canResetPassword = (strtotime($timeExpression) - time()) <= 0;
 
         if (!$canResetPassword) {
-            throw new PasswordResetTooFrequentException('You cannot reset your password so frequently.');
+            throw new PasswordResetTooFrequentException('Password has been reset too recently, you must wait.');
         }
 
         if ($employee->getValidResetPasswordToken() !== $command->getResetToken()) {
