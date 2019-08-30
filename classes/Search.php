@@ -26,6 +26,8 @@
 define('PS_SEARCH_MAX_WORD_LENGTH', 15);
 define('PS_SEARCH_LEVENSHTEIN_LOOP', 10); /* Max time Levenshtein algo is use by search*/
 define('PS_SEARCH_MAX_WORDS_IN_TABLE', 100000); /* Max numer of words in ps_search_word, above which $coefs for target length will be everytime equal to 1 */
+define('PS_SEARCH_ORDINATE_MIN', 0.5);
+define('PS_SEARCH_ORDINATE_MAX', -1);
 define('PS_SEARCH_ABSCISSA_MIN', 0.5);
 define('PS_SEARCH_ABSCISSA_MAX', 2);
 
@@ -105,8 +107,8 @@ class SearchCore
     private static $totalWordInSearchWordTable;
     public static $coefMin;
     public static $coefMax;
-    public static $targetLenghtMin;
-    public static $targetLenghtMax;
+    public static $targetLengthMin;
+    public static $targetLengthMax;
 
     public static function extractKeyWords($string, $id_lang, $indexation = false, $iso_code = false)
     {
@@ -995,7 +997,7 @@ class SearchCore
          * we will get $coefMax < 1 following by $coefMax < $coefMin, this is a non-sense
          * so we test it before and assign a right value for both target length */
         if (self::$totalWordInSearchWordTable > PS_SEARCH_MAX_WORDS_IN_TABLE) {
-            self::$targetLenghtMin = self::$targetLenghtMax = (int) (strlen($queryString));
+            self::$targetLengthMin = self::$targetLengthMax = (int) (strlen($queryString));
         } else {
             /* This part of code could be see like an auto-scale.
             *  Of course, more the contante ps_search_word table is elevate, more server resource is needed.
@@ -1016,21 +1018,21 @@ class SearchCore
             *  100,000 words id DB give $coefMin : 1, $coefMax : 1*/
             if (!self::$coefMin) {
                 //self::$coefMin && self::$coefMax depend of the number of total words in ps_search_word table, need to calculate only for every search
-                self::$coefMin = 0.5 / PS_SEARCH_MAX_WORDS_IN_TABLE * self::$totalWordInSearchWordTable + PS_SEARCH_ABSCISSA_MIN; //y = ax + b
-                self::$coefMax = -1 / PS_SEARCH_MAX_WORDS_IN_TABLE * self::$totalWordInSearchWordTable + PS_SEARCH_ABSCISSA_MAX; //y = ax + b
+                self::$coefMin = PS_SEARCH_ORDINATE_MIN / PS_SEARCH_MAX_WORDS_IN_TABLE * self::$totalWordInSearchWordTable + PS_SEARCH_ABSCISSA_MIN; //y = ax + b
+                self::$coefMax = PS_SEARCH_ORDINATE_MAX / PS_SEARCH_MAX_WORDS_IN_TABLE * self::$totalWordInSearchWordTable + PS_SEARCH_ABSCISSA_MAX; //y = ax + b
             }
-            // self::$targetLenghtMin depends of the length of the $queryString, need to calculate for every word
-            self::$targetLenghtMin = (int) (strlen($queryString) * self::$coefMin);
-            self::$targetLenghtMax = (int) (strlen($queryString) * self::$coefMax);
+            // self::$targetLengthMin depends of the length of the $queryString, need to calculate for every word
+            self::$targetLengthMin = (int) (strlen($queryString) * self::$coefMin);
+            self::$targetLengthMax = (int) (strlen($queryString) * self::$coefMax);
 
-            if (self::$targetLenghtMin < $searchMinWordLength) {
-                self::$targetLenghtMin = $searchMinWordLength;
+            if (self::$targetLengthMin < $searchMinWordLength) {
+                self::$targetLengthMin = $searchMinWordLength;
             }
-            if (self::$targetLenghtMax > PS_SEARCH_MAX_WORD_LENGTH) {
-                self::$targetLenghtMax = PS_SEARCH_MAX_WORD_LENGTH;
+            if (self::$targetLengthMax > PS_SEARCH_MAX_WORD_LENGTH) {
+                self::$targetLengthMax = PS_SEARCH_MAX_WORD_LENGTH;
             }
             // Could happen when $queryString length * $coefMin > PS_SEARCH_MAX_WORD_LENGTH
-            if (self::$targetLenghtMax < self::$targetLenghtMin) {
+            if (self::$targetLengthMax < self::$targetLengthMin) {
                 return '';
             }
         }
@@ -1040,8 +1042,8 @@ class SearchCore
                     LEFT JOIN `' . _DB_PREFIX_ . 'search_index` si ON (sw.`id_word` = si.`id_word`)
                     WHERE sw.`id_lang` = ' . (int) $context->language->id . '
                     AND sw.`id_shop` = ' . (int) $context->shop->id . '
-                    AND LENGTH(sw.`word`) >= ' . self::$targetLenghtMin . '
-                    AND LENGTH(sw.`word`) <= ' . self::$targetLenghtMax . '
+                    AND LENGTH(sw.`word`) >= ' . self::$targetLengthMin . '
+                    AND LENGTH(sw.`word`) <= ' . self::$targetLengthMax . '
                     GROUP BY sw.`word`;';
 
         $selectedWords = Db::getInstance()->executeS($sql);
