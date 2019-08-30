@@ -86,8 +86,8 @@ class AdminTranslationsControllerCore extends AdminController
         $this->link_lang_pack = str_replace('%ps_version%', _PS_VERSION_, $this->link_lang_pack);
 
         $this->themes = (new ThemeManagerBuilder($this->context, Db::getInstance()))
-            ->buildRepository()
-            ->getList();
+                            ->buildRepository()
+                            ->getList();
     }
 
     /*
@@ -134,13 +134,13 @@ class AdminTranslationsControllerCore extends AdminController
         // Create a title for each translation page
         $title = $this->trans(
             '%1$s (Language: %2$s, Theme: %3$s)',
-            array(
-                '%1$s' => (empty($this->translations_informations[$this->type_selected]['name']) ? false : $this->translations_informations[$this->type_selected]['name']),
-                '%2$s' => $this->lang_selected->name,
-                '%3$s' => $this->theme_selected ? $this->theme_selected : $this->trans('None', array(), 'Admin.Global'),
-            ),
-            'Admin.International.Feature'
-        );
+                array(
+                    '%1$s' => (empty($this->translations_informations[$this->type_selected]['name']) ? false : $this->translations_informations[$this->type_selected]['name']),
+                    '%2$s' => $this->lang_selected->name,
+                    '%3$s' => $this->theme_selected ? $this->theme_selected : $this->trans('None', array(), 'Admin.Global'),
+                ),
+                'Admin.International.Feature'
+            );
 
         // Set vars for all forms
         $this->tpl_view_vars = array(
@@ -187,15 +187,15 @@ class AdminTranslationsControllerCore extends AdminController
     public function initMain()
     {
         if (
-        !in_array(
-            $this->authorizationLevel(),
-            array(
-                AdminController::LEVEL_VIEW,
-                AdminController::LEVEL_EDIT,
-                AdminController::LEVEL_ADD,
-                AdminController::LEVEL_DELETE,
+            !in_array(
+                $this->authorizationLevel(),
+                array(
+                    AdminController::LEVEL_VIEW,
+                    AdminController::LEVEL_EDIT,
+                    AdminController::LEVEL_ADD,
+                    AdminController::LEVEL_DELETE,
+                )
             )
-        )
         ) {
             Tools::redirectAdmin(Context::getContext()->link->getAdminLink('AdminDashboard'));
         }
@@ -2582,8 +2582,8 @@ class AdminTranslationsControllerCore extends AdminController
             $str_return .= '<p class="error">
                 ' . $this->trans('There was a problem getting the mail files.', array(), 'Admin.International.Notification') . '<br>
                 ' . $this->trans('English language files must exist in %folder% folder', array(
-                    '%folder%' => '<em>' . preg_replace('@/[a-z]{2}(/?)$@', '/en$1', $mails['directory']) . '</em>',
-                ), 'Admin.International.Notification') . '
+                '%folder%' => '<em>' . preg_replace('@/[a-z]{2}(/?)$@', '/en$1', $mails['directory']) . '</em>',
+            ), 'Admin.International.Notification') . '
             </p>';
         }
 
