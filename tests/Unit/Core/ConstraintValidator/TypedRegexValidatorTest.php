@@ -28,6 +28,7 @@ namespace Tests\Unit\Core\ConstraintValidator;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\TypedRegexValidator;
+use PrestaShop\PrestaShop\Core\String\CharacterCleaner;
 use Symfony\Component\Validator\Test\ConstraintValidatorTestCase;
 
 class TypedRegexValidatorTest extends ConstraintValidatorTestCase
@@ -339,6 +340,21 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
 
     protected function createValidator()
     {
-        return new TypedRegexValidator();
+        return new TypedRegexValidator($this->createCharacterCleanersMock());
+    }
+
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject|CharacterCleaner
+     */
+    private function createCharacterCleanersMock()
+    {
+        $toolsMock = $this->getMockBuilder(CharacterCleaner::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $toolsMock
+            ->method('cleanNonUnicodeSupport')
+            ->will($this->returnArgument(0));
+
+        return $toolsMock;
     }
 }
