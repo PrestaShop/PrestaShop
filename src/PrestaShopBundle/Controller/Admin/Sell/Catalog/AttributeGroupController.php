@@ -60,7 +60,7 @@ class AttributeGroupController extends FrameworkBundleAdminController
         $attributeGroupGrid = $attributeGroupGridFactory->getGrid($attributeGroupFilters);
 
         $showcaseCardIsClosed = $this->getQueryBus()->handle(
-            new GetShowcaseCardIsClosed((int) $this->getContext()->employee->id, ShowcaseCard::CATEGORIES_CARD)
+            new GetShowcaseCardIsClosed((int) $this->getContext()->employee->id, ShowcaseCard::ATTRIBUTES_CARD)
         );
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/AttributeGroup/index.html.twig', [

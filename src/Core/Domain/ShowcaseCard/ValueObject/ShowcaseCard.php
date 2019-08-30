@@ -73,6 +73,7 @@ class ShowcaseCard
         self::CUSTOMERS_CARD => true,
         self::EMPLOYEES_CARD => true,
         self::CMS_PAGES_CARD => true,
+        self::ATTRIBUTES_CARD => true,
     ];
 
     /**
