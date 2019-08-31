@@ -875,6 +875,7 @@ class HelperListCore extends Helper
     {
         $parameters = [
             $this->identifier => $id,
+            'id_'.$this->table => $id,
             'current_index' => $this->currentIndex,
             'token' => $token != null ? $token : $this->token,
         ];
