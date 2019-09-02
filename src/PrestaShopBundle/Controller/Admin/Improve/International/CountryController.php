@@ -210,6 +210,13 @@ class CountryController extends FrameworkBundleAdminController
                     'The object cannot be loaded (the identifier is missing or invalid)',
                     'Admin.Notifications.Error'
                 ),
+                CountryConstraintException::INVALID_ZIP_CODE => $this->trans(
+                    'The %s field is not valid',
+                    'Admin.Notifications.Error',
+                    [
+                        sprintf('"%s"', $this->trans('Exchange rate', 'Admin.International.Feature')),
+                    ]
+                ),
                 CountryConstraintException::class => $this->trans(
                     'An error occurred when attempting to update the required fields.',
                     'Admin.Notifications.Error'
