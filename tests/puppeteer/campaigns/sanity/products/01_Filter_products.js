@@ -40,7 +40,7 @@ global.scenario('Filter in Products Page', async () => {
     await expect(pageTitle).to.contains(productPage.pageTitle);
   });
   test('should reset all filters and get Number of products in BO', async () => {
-    if (await productPage.elementVisible(productPage.filterResetButton,2000)) await productPage.resetFilter();
+    if (await productPage.elementVisible(productPage.filterResetButton, 2000)) await productPage.resetFilter();
     await productPage.resetFilterCategory();
     numberOfProducts = await productPage.getNumberOfProductsFromList();
     await expect(numberOfProducts).to.be.above(0);

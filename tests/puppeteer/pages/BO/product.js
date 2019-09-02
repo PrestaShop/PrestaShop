@@ -19,13 +19,15 @@ module.exports = class Product extends BOBasePage {
     this.filterSearchButton = `${this.productListForm} button[name='products_filter_submit']`;
     this.filterResetButton = `${this.productListForm} button[name='products_filter_reset']`;
     // Filter Category
-    this.treeCategoriesBloc = `#tree-categories`;
-    this.filterByCategoriesButton = `#product_catalog_category_tree_filter button`;
+    this.treeCategoriesBloc = '#tree-categories';
+    this.filterByCategoriesButton = '#product_catalog_category_tree_filter button';
     this.filterByCategoriesExpandButton = `${this.treeCategoriesBloc} a#product_catalog_category_tree_filter_expand`;
     this.filterByCategoriesUnselectButton = `${this.treeCategoriesBloc} a#product_catalog_category_tree_filter_reset`;
     this.filterByCategoriesCategoryLabel = `${this.treeCategoriesBloc} label.category-label`;
     // HEADER buttons
-    this.addProductButton = `#page-header-desc-configuration-add`;
+    this.addProductButton = '#page-header-desc-configuration-add';
+    // pagination
+    this.paginationNextLink = '.page-item.next:not(.disabled) #pagination_next_url';
   }
 
   /*
@@ -78,9 +80,9 @@ module.exports = class Product extends BOBasePage {
     await this.page.click(this.filterByCategoriesExpandButton);
     // Choose category to filter with
     const found = await this.page.evaluate(async (allCategoriesSelector, value) => {
-      let allCategories = [...await document.querySelectorAll(allCategoriesSelector)];
-      let category = await allCategories.find(el => el.textContent.includes(value));
-      if(category === undefined) return false;
+      const allCategories = [...await document.querySelectorAll(allCategoriesSelector)];
+      const category = await allCategories.find(el => el.textContent.includes(value));
+      if (category === undefined) return false;
       await category.querySelector('input').click();
       return true;
     }, this.filterByCategoriesCategoryLabel, value);

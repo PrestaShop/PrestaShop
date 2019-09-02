@@ -124,7 +124,7 @@ module.exports = class CommonPage {
    */
   async closePage(tabId = -1) {
     await this.page.close();
-    if(tabId !== -1) {
+    if (tabId !== -1) {
       this.page = (await global.browser.pages())[tabId];
       await this.page.bringToFront();
       await this.page.waitFor(10000);

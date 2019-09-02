@@ -50,7 +50,7 @@ global.scenario('Create, read, update and delete a product', async () => {
     await expect(pageTitle).to.contains(productPage.pageTitle);
   });
   test('should reset all filters', async () => {
-    if (await productPage.elementVisible(productPage.filterResetButton,2000)) await productPage.resetFilter();
+    if (await productPage.elementVisible(productPage.filterResetButton, 2000)) await productPage.resetFilter();
     await productPage.resetFilterCategory();
     const numberOfProducts = await productPage.getNumberOfProductsFromList();
     await expect(numberOfProducts).to.be.above(0);
@@ -66,7 +66,7 @@ global.scenario('Create, read, update and delete a product', async () => {
     addProductPage.page = await foProductPage.closePage(1);
   });
   test('should edit Product', async () => {
-    const createProductMessage = await addProductPage.createEditProduct(editedProductData,false);
+    const createProductMessage = await addProductPage.createEditProduct(editedProductData, false);
     await expect(createProductMessage).to.equal('Settings updated.');
   });
   test('should preview and check product in FO', async () => {

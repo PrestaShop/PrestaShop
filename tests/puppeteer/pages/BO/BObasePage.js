@@ -39,11 +39,11 @@ module.exports = class BOBasePage extends CommonPage {
     this.growlMessageBloc = '#growls .growl-message';
 
     // Alert Text
-    this.alertSuccessBloc = `div.alert.alert-success:not([style='display: none;'])`;
+    this.alertSuccessBloc = 'div.alert.alert-success:not([style=\'display: none;\'])';
     this.alertSuccessBlocParagraph = `${this.alertSuccessBloc} div.alert-text p`;
 
     // Modal dialog
-    this.modalDialog = `#confirmation_modal.show .modal-dialog`;
+    this.modalDialog = '#confirmation_modal.show .modal-dialog';
     this.modalDialogYesButton = `${this.modalDialog} button.continue`;
     this.modalDialogNoButton = `${this.modalDialog} button.cancel`;
   }

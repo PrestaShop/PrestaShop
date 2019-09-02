@@ -5,19 +5,19 @@ module.exports = class AddProduct extends BOBasePage {
     super(page);
 
     // Selectors
-    this.productNameInput = `#form_step1_name_1`;
-    this.productTypeSelect = `#form_step1_type_product`;
-    this.productWithCombinationsInput = `#show_variations_selector div:nth-of-type(2) input`;
-    this.productReferenceInput = `#form_step6_reference`;
-    this.productQuantityInput = `#form_step1_qty_0_shortcut`;
-    this.productPriceTtcInput = `#form_step1_price_ttc_shortcut`;
-    this.productPriceHtInput = `#form_step1_price_shortcut`;
-    this.saveProductButton = `input#submit[value='Save']`;
-    this.previewProductLink = `a#product_form_preview_btn`;
-    this.productOnlineSwitch = `.product-footer div.switch-input`;
-    this.productDescriotionTab = `#tab_description a`;
-    this.productDescriptionIframe = `#form_step1_description_1_ifr`;
-    this.productDeleteLink = `.product-footer a.delete`;
+    this.productNameInput = '#form_step1_name_1';
+    this.productTypeSelect = '#form_step1_type_product';
+    this.productWithCombinationsInput = '#show_variations_selector div:nth-of-type(2) input';
+    this.productReferenceInput = '#form_step6_reference';
+    this.productQuantityInput = '#form_step1_qty_0_shortcut';
+    this.productPriceTtcInput = '#form_step1_price_ttc_shortcut';
+    this.productPriceHtInput = '#form_step1_price_shortcut';
+    this.saveProductButton = 'input#submit[value=\'Save\']';
+    this.previewProductLink = 'a#product_form_preview_btn';
+    this.productOnlineSwitch = '.product-footer div.switch-input';
+    this.productDescriotionTab = '#tab_description a';
+    this.productDescriptionIframe = '#form_step1_description_1_ifr';
+    this.productDeleteLink = '.product-footer a.delete';
 
     // Growls : override value from BObasePage
     this.growlMessageBloc = '#growls-default .growl-message';
@@ -42,15 +42,14 @@ module.exports = class AddProduct extends BOBasePage {
     await this.page.click(this.productQuantityInput, {clickCount: 3});
     await this.page.type(this.productQuantityInput, productData.quantity);
     await this.page.click(this.productPriceTtcInput, {clickCount: 3});
-    await this.page.type(this.productPriceTtcInput,productData.price);
+    await this.page.type(this.productPriceTtcInput, productData.price);
     // Set description value
     await this.page.click(this.productDescriotionTab);
-    await this.setValueOnTinymceInput(this.productDescriptionIframe,productData.description);
+    await this.setValueOnTinymceInput(this.productDescriptionIframe, productData.description);
     // Add combinations if exists
-    if(productData.withCombination === true)
-      await this.page.click(this.productWithCombinationsInput);
+    if (productData.withCombination === true) await this.page.click(this.productWithCombinationsInput);
     // Switch product online before save
-    if(switchProductOnline) {
+    if (switchProductOnline) {
       await Promise.all([
         this.page.waitForSelector(this.growlMessageBloc, {visible: true}),
         this.page.click(this.productOnlineSwitch),
