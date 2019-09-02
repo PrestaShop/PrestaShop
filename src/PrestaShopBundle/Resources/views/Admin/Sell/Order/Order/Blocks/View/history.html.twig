@@ -28,7 +28,9 @@
     {% for status in orderForViewing.history.statuses %}
     <tr>
       <td>
-        <span class="badge rounded" style="background-color: {{ status.color }}">
+        <span class="badge rounded"
+              style="background-color: {{ status.color }}; color: {{ is_color_bright(status.color) ? 'black' : 'white' }};"
+        >
           {{ status.name }}
         </span>
       </td>
