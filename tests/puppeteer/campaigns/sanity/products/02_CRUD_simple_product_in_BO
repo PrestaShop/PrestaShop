@@ -36,7 +36,7 @@ const init = async () => {
 
 
 // Create, read, update and delete simple product in BO
-global.scenario('Filter in Products Page', async () => {
+global.scenario('Create, read, update and delete a product', async () => {
   test('should login in BO', async () => {
     await BO_LOGIN.goTo(global.URL_BO);
     await BO_LOGIN.login(global.EMAIL, global.PASSWD);
