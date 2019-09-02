@@ -14,6 +14,8 @@ module.exports = class Product extends BOBasePage {
     // List of products
     this.productListForm = '#product_catalog_list';
     this.productRow = `${this.productListForm} table tbody tr`;
+    this.productListfooterRow = `${this.productListForm} div.row:nth-of-type(3)`;
+    this.productNumberBloc = `${this.productListfooterRow} label.col-form-label`;
     // Filters input
     this.productFilterInput = `${this.productListForm} input[name='filter_column_%FILTERBY']`;
     this.filterSearchButton = `${this.productListForm} button[name='products_filter_submit']`;
@@ -53,7 +55,13 @@ module.exports = class Product extends BOBasePage {
    * @return integer
    */
   async getNumberOfProductsFromList() {
-    return (await this.page.$$(this.productRow)).length;
+    const found = await this.elementVisible(this.paginationNextLink, 1000);
+    // In case we filter products and there is only one page, link next from pagination does not appear
+    if (!found) return (await this.page.$$(this.productRow)).length;
+
+    const footerText = await this.getTextContent(this.productNumberBloc);
+    const numberOfProduct = /\d+/g.exec(footerText.match(/out of ([0-9]+)/)).toString();
+    return parseFloat(numberOfProduct);
   }
 
   /**
