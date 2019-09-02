@@ -107,7 +107,7 @@
 			<div class="form-group">
 				<label class="control-label col-lg-3">{l s='Carrier' d='Admin.Shipping.Feature'}</label>
 				<div class="col-lg-9">
-					<p class="form-control-static"><strong>{$carrier->name}</strong></p>
+					<p class="form-control-static"><strong>{$carrier->name[$current_id_lang]}</strong></p>
 				</div>
 			</div>
 			<div class="form-group">
