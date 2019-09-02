@@ -2089,8 +2089,38 @@ class AdminOrdersControllerCore extends AdminController
             )));
         }
 
-        $old_cart_rules = Context::getContext()->cart->getCartRules();
+        $product_informations = $_POST['add_product'];
+        $invoice_informations = $_POST['add_invoice'] ?? [];
 
+        $result = $this->addProductToOrder($order, $product_informations, $invoice_informations, Tools::getValue('add_product_warehouse'));
+        die(json_encode(array(
+            'result' => true,
+            'view' => $this->createTemplate('_product_line.tpl')->fetch(),
+            'can_edit' => $this->access('add'),
+            'order' => $order,
+            'invoices' => $result['invoice_array'],
+            'documents_html' => $this->createTemplate('_documents.tpl')->fetch(),
+            'shipping_html' => $this->createTemplate('_shipping.tpl')->fetch(),
+            'discount_form_html' => $this->createTemplate('_discount_form.tpl')->fetch(),
+            'refresh' => $result['refresh'],
+        )));
+    }
+
+    /**
+     * @param Order $order
+     * @param array $product_informations
+     * @param array $invoice_informations
+     * @param bool $warehouseId
+     *
+     * @return array
+     *
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     * @throws \PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException
+     */
+    protected function addProductToOrder(Order $order, array $product_informations, array $invoice_informations = [], $warehouseId = false)
+    {
+        $old_cart_rules = Context::getContext()->cart->getCartRules();
         if ($order->hasBeenShipped()) {
             die(json_encode(array(
                 'result' => false,
@@ -2098,12 +2128,6 @@ class AdminOrdersControllerCore extends AdminController
             )));
         }
 
-        $product_informations = $_POST['add_product'];
-        if (isset($_POST['add_invoice'])) {
-            $invoice_informations = $_POST['add_invoice'];
-        } else {
-            $invoice_informations = array();
-        }
         $product = new Product($product_informations['product_id'], false, $order->id_lang);
         if (!Validate::isLoadedObject($product)) {
             die(json_encode(array(
@@ -2293,7 +2317,7 @@ class AdminOrdersControllerCore extends AdminController
 
         // Create Order detail information
         $order_detail = new OrderDetail();
-        $order_detail->createList($order, $cart, $order->getCurrentOrderState(), $cart->getProducts(), (isset($order_invoice) ? $order_invoice->id : 0), $use_taxes, (int) Tools::getValue('add_product_warehouse'));
+        $order_detail->createList($order, $cart, $order->getCurrentOrderState(), $cart->getProducts(), (isset($order_invoice) ? $order_invoice->id : 0), $use_taxes, (int) $warehouseId);
 
         // update totals amount of order
         $order->total_products += (float) $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
@@ -2369,6 +2393,7 @@ class AdminOrdersControllerCore extends AdminController
             $invoice_array[] = $invoice;
         }
 
+        /** @var Order $order */
         $order = $order->refreshShippingCost();
 
         // Assign to smarty informations in order to show the new product line
@@ -2403,34 +2428,22 @@ class AdminOrdersControllerCore extends AdminController
             $order_cart_rule = new OrderCartRule();
             $order_cart_rule->id_order = $order->id;
             $order_cart_rule->id_cart_rule = $cart_rule['id_cart_rule'];
-            $order_cart_rule->id_order_invoice = $order_invoice->id;
+            if ($order->hasInvoice()) {
+                $order_cart_rule->id_order_invoice = $order_invoice->id;
+            }
             $order_cart_rule->name = $cart_rule['name'];
             $order_cart_rule->value = $values['tax_incl'];
             $order_cart_rule->value_tax_excl = $values['tax_excl'];
             $res &= $order_cart_rule->add();
-
-            $order->total_discounts += $order_cart_rule->value;
-            $order->total_discounts_tax_incl += $order_cart_rule->value;
-            $order->total_discounts_tax_excl += $order_cart_rule->value_tax_excl;
-            $order->total_paid -= $order_cart_rule->value;
-            $order->total_paid_tax_incl -= $order_cart_rule->value;
-            $order->total_paid_tax_excl -= $order_cart_rule->value_tax_excl;
         }
 
         // Update Order
         $res &= $order->update();
 
-        die(json_encode(array(
-            'result' => true,
-            'view' => $this->createTemplate('_product_line.tpl')->fetch(),
-            'can_edit' => $this->access('add'),
-            'order' => $order,
-            'invoices' => $invoice_array,
-            'documents_html' => $this->createTemplate('_documents.tpl')->fetch(),
-            'shipping_html' => $this->createTemplate('_shipping.tpl')->fetch(),
-            'discount_form_html' => $this->createTemplate('_discount_form.tpl')->fetch(),
+        return [
+            'invoice_array' => $invoice_array,
             'refresh' => $refresh,
-        )));
+        ];
     }
 
     public function sendChangedNotification(Order $order = null)
