@@ -85,7 +85,9 @@ class DeliveryOptionsFinderCore
                         foreach ($carriers as $carrier) {
                             $carrier = array_merge($carrier, $this->objectPresenter->present($carrier['instance']));
                             $delay = $carrier['delay'][$this->context->language->id];
-                            unset($carrier['instance'], $carrier['delay']);
+                            $name = $carrier['name'][$this->context->language->id];
+                            unset($carrier['instance'], $carrier['delay'], $carrier['name']);
+                            $carrier['name'] = $name;
                             $carrier['delay'] = $delay;
                             if ($this->isFreeShipping($this->context->cart, $carriers_list)) {
                                 $carrier['price'] = $this->translator->trans(
