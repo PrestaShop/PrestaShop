@@ -46,8 +46,8 @@ final class GetTaxForEditingHandler extends AbstractTaxHandler implements GetTax
         return new EditableTax(
             $query->getTaxId(),
             $tax->name,
-            $tax->rate,
-            $tax->active
+            (float) $tax->rate,
+            (bool) $tax->active
         );
     }
 }
