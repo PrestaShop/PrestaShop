@@ -38,10 +38,10 @@ const init = async () => {
 // Create, read, update and delete simple product in BO
 global.scenario('Create, read, update and delete a product', async () => {
   test('should login in BO', async () => {
-    await BO_LOGIN.goTo(global.URL_BO);
-    await BO_LOGIN.login(global.EMAIL, global.PASSWD);
-    const pageTitle = await BO_DASHBOARD.getPageTitle();
-    await expect(pageTitle).to.contains(BO_DASHBOARD.pageTitle);
+    await loginPage.goTo(global.URL_BO);
+    await loginPage.login(global.EMAIL, global.PASSWD);
+    const pageTitle = await dashboardPage.getPageTitle();
+    await expect(pageTitle).to.contains(dashboardPage.pageTitle);
     await boBasePage.closeOnboardingModal();
   });
   test('should go to Products page', async () => {
