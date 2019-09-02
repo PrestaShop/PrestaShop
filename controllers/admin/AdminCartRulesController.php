@@ -640,7 +640,7 @@ class AdminCartRulesControllerCore extends AdminController
         $groups = $current_object->getAssociatedRestrictions('group', false, true);
         $shops = $current_object->getAssociatedRestrictions('shop', false, false);
         $cart_rules = $current_object->getAssociatedRestrictions('cart_rule', false, true, 0, $limit);
-        $carriers = $current_object->getAssociatedRestrictions('carrier', true, false);
+        $carriers = $current_object->getAssociatedRestrictions('carrier', true, true);
         foreach ($carriers as &$carriers2) {
             foreach ($carriers2 as &$carrier) {
                 foreach ($carrier as $field => &$value) {
