@@ -15,7 +15,7 @@ module.exports = class Product extends BOBasePage {
     this.productListForm = '#product_catalog_list';
     this.productRow = `${this.productListForm} table tbody tr`;
     // Filters input
-    this.productFilterInput = `${this.productListForm} input[name='filter_column_%FilterBy']`;
+    this.productFilterInput = `${this.productListForm} input[name='filter_column_%FILTERBY']`;
     this.filterSearchButton = `${this.productListForm} button[name='products_filter_submit']`;
     this.filterResetButton = `${this.productListForm} button[name='products_filter_reset']`;
     // Filter Category
@@ -39,7 +39,7 @@ module.exports = class Product extends BOBasePage {
    * @return {Promise<void>}
    */
   async filterProducts(filterBy, value = '') {
-    await this.page.type(this.productFilterInput.replace('%FilterBy', filterBy), value);
+    await this.page.type(this.productFilterInput.replace('%FILTERBY', filterBy), value);
     await Promise.all([
       this.page.waitForNavigation({waitUntil: 'networkidle0'}),
       this.page.click(this.filterSearchButton),
