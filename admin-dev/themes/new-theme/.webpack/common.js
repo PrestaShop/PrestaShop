@@ -55,6 +55,7 @@ module.exports = {
     error: './js/pages/error',
     monitoring: './js/pages/monitoring',
     order: './js/pages/order',
+    tax_rules_group: './js/pages/tax-rules-group',
   },
   output: {
     path: path.resolve(__dirname, '../public'),
