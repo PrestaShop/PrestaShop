@@ -2,8 +2,8 @@
 const {expect} = require('chai');
 
 // importing pages
-const BO_LOGIN_PAGE = require('../../../pages/BO/login');
-const BO_DASHBOARD_PAGE = require('../../../pages/BO/dashboard');
+const LoginPage = require('../../../pages/BO/login');
+const DashboardPage = require('../../../pages/BO/dashboard');
 const BOBasePage = require('../../../pages/BO/BObasePage');
 const ProductPage = require('../../../pages/BO/product');
 const AddProductPage = require('../../../pages/BO/addProduct');
@@ -12,8 +12,8 @@ const ProductFaker = require('../../data/faker/product');
 
 
 let page;
-let BO_LOGIN;
-let BO_DASHBOARD;
+let loginPage;
+let dashboardPage;
 let boBasePage;
 let productPage;
 let addProductPage;
@@ -24,8 +24,8 @@ let editedProductData;
 // creating pages objects in a function
 const init = async () => {
   page = await global.browser.newPage();
-  BO_LOGIN = await (new BO_LOGIN_PAGE(page));
-  BO_DASHBOARD = await (new BO_DASHBOARD_PAGE(page));
+  loginPage = await (new LoginPage(page));
+  dashboardPage = await (new DashboardPage(page));
   boBasePage = await (new BOBasePage(page));
   productPage = await (new ProductPage(page));
   addProductPage = await (new AddProductPage(page));

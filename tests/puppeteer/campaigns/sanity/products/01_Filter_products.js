@@ -2,14 +2,14 @@
 const {expect} = require('chai');
 
 // importing pages
-const BO_LOGIN_PAGE = require('../../../pages/BO/login');
-const BO_DASHBOARD_PAGE = require('../../../pages/BO/dashboard');
+const LoginPage = require('../../../pages/BO/login');
+const DashboardPage = require('../../../pages/BO/dashboard');
 const BOBasePage = require('../../../pages/BO/BObasePage');
 const ProductPage = require('../../../pages/BO/product');
 
 let page;
-let BO_LOGIN;
-let BO_DASHBOARD;
+let loginPage;
+let dashboardPage;
 let boBasePage;
 let productPage;
 let numberOfProducts;
@@ -17,8 +17,8 @@ let numberOfProducts;
 // creating pages objects in a function
 const init = async () => {
   page = await global.browser.newPage();
-  BO_LOGIN = await (new BO_LOGIN_PAGE(page));
-  BO_DASHBOARD = await (new BO_DASHBOARD_PAGE(page));
+  loginPage = await (new LoginPage(page));
+  dashboardPage = await (new DashboardPage(page));
   boBasePage = await (new BOBasePage(page));
   productPage = await (new ProductPage(page));
   numberOfProducts = 0;
@@ -28,10 +28,10 @@ const init = async () => {
 // Test of filters in products page
 global.scenario('Filter in Products Page', async () => {
   test('should login in BO', async () => {
-    await BO_LOGIN.goTo(global.URL_BO);
-    await BO_LOGIN.login(global.EMAIL, global.PASSWD);
-    const pageTitle = await BO_DASHBOARD.getPageTitle();
-    await expect(pageTitle).to.contains(BO_DASHBOARD.pageTitle);
+    await loginPage.goTo(global.URL_BO);
+    await loginPage.login(global.EMAIL, global.PASSWD);
+    const pageTitle = await dashboardPage.getPageTitle();
+    await expect(pageTitle).to.contains(dashboardPage.pageTitle);
     await boBasePage.closeOnboardingModal();
   });
   test('should go to Products page', async () => {
