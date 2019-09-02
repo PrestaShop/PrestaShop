@@ -1,0 +1,33 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.adapter.tax_rules_group.command_handler.delete_tax_rules_group_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\TaxRulesGroup\CommandHandler\DeleteTaxRulesGroupHandler'
+    tags:
+      - name: 'tactician.handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Command\DeleteTaxRulesGroupCommand'
+
+  prestashop.adapter.tax_rules_group.command_handler.bulk_delete_tax_rules_group_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\TaxRulesGroup\CommandHandler\BulkDeleteTaxRulesGroupHandler'
+    tags:
+      - name: 'tactician.handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Command\BulkDeleteTaxRulesGroupCommand'
+
+  prestashop.adapter.tax_rules_group.command_handler.bulk_toggle_tax_rules_group_status_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\TaxRulesGroup\CommandHandler\BulkToggleTaxRulesGroupStatusHandler'
+    tags:
+      - name: 'tactician.handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Command\BulkToggleTaxRulesGroupStatusCommand'
+
+  prestashop.adapter.tax_rules_group.query_handler.get_tax_rules_group_for_editing:
+    class: 'PrestaShop\PrestaShop\Adapter\TaxRulesGroup\QueryHandler\GetTaxRulesGroupForEditingHandler'
+    tags:
+      - name: 'tactician.handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Query\GetTaxRulesGroupForEditing'
+
+  prestashop.adapter.tax_rules_group.command_handler.toggle_tax_rules_group_status_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\TaxRulesGroup\CommandHandler\ToggleTaxRulesGroupStatusHandler'
+    tags:
+      - name: 'tactician.handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Command\ToggleTaxRulesGroupStatusCommand'
