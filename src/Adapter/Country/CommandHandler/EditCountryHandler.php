@@ -26,35 +26,34 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Country\CommandHandler;
 
-use AddressFormat;
 use Country;
 use PrestaShop\PrestaShop\Adapter\Country\AbstractCountryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Address\Exception\CannotUpdateAddressException;
+use PrestaShop\PrestaShop\Core\Domain\Address\Exception\CannotUpdateAddressFormatException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Command\EditCountryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Country\CommandHandler\EditCountryHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Country\Exception\UpdateCountryException;
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CannotUpdateCountryException;
 use PrestaShopException;
 
 /**
  * Handles editing of country and country address format
  */
-class EditCountryHandler extends AbstractCountryHandler implements EditCountryHandlerInterface
+final class EditCountryHandler extends AbstractCountryHandler implements EditCountryHandlerInterface
 {
     /**
      * {@inheritdoc}
      *
      * @throws AddressConstraintException
-     * @throws CannotUpdateAddressException
+     * @throws CannotUpdateAddressFormatException
+     * @throws CannotUpdateCountryException
      * @throws CountryConstraintException
      * @throws CountryException
      * @throws CountryNotFoundException
-     * @throws UpdateCountryException
      */
-    public function handle(EditCountryCommand $command)
+    public function handle(EditCountryCommand $command): void
     {
         try {
             $country = $this->getCountry($command->getCountryId());
@@ -74,44 +73,25 @@ class EditCountryHandler extends AbstractCountryHandler implements EditCountryHa
             }
 
             if (null !== $command->getZipCodeFormat()) {
-                $country->zip_code_format = $command->getZipCodeFormat();
+                $country->zip_code_format = $command->getZipCodeFormat()->getValue();
             }
 
             if (null !== $command->getShopAssociation()) {
                 $country->id_shop_list = $command->getShopAssociation();
             }
 
-            if (!$country->validateFields(false) || !$country->validateFieldsLang(false)) {
-                throw new CountryConstraintException(
-                    'Country contains invalid field values',
-                    CountryConstraintException::INVALID_FIELDS
-                );
-            }
-
-            $addressFormat = new AddressFormat($country->id);
-            $addressFormat->format = $command->getAddressFormat();
-
-            $isInvalidAddressFormat = !$addressFormat->checkFormatFields() ||
-                strlen($addressFormat->format) <= 0 ||
-                !$addressFormat->validateFields(false);
-
-            if ($isInvalidAddressFormat) {
-                throw new AddressConstraintException(
-                    sprintf('Address format: "%s" is invalid', $addressFormat->format),
-                    AddressConstraintException::INVALID_FORMAT
-                );
-            }
+            $this->validateCountryFields($country);
+            $addressFormat = $this->getValidAddressFormat((int) $country->id, $command->getAddressFormat());
 
             if (false === $country->update()) {
-                throw new UpdateCountryException(
+                throw new CannotUpdateCountryException(
                     'Failed to update country'
                 );
             }
 
             if (false === $addressFormat->update()) {
-                throw new CannotUpdateAddressException(
-                    'Failed to update address format',
-                    CannotUpdateAddressException::ADDRESS_FORMAT
+                throw new CannotUpdateAddressFormatException(
+                    'Failed to update address format'
                 );
             }
         } catch (PrestaShopException $e) {

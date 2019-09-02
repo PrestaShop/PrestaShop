@@ -29,6 +29,6 @@ namespace PrestaShop\PrestaShop\Core\Domain\Country\Exception;
 /**
  * Is thrown on failure to update country
  */
-class UpdateCountryException extends CountryException
+class CannotUpdateCountryException extends CountryException
 {
 }

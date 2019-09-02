@@ -24,15 +24,19 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Address\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Address\QueryHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\Address\Query\GetAddressFormatIsValid;
 
 /**
- * Thrown on failure to update address
+ * Defines contract for address format validation handler
  */
-class CannotUpdateAddressException extends AddressException
+interface GetAddressFormatIsValidHandlerInterface
 {
     /**
-     * When failed updating address format
+     * @param GetAddressFormatIsValid $command
+     *
+     * @return bool
      */
-    const ADDRESS_FORMAT = 1;
+    public function handle(GetAddressFormatIsValid $command): bool;
 }

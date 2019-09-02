@@ -51,7 +51,9 @@ final class CountryFormDataHandler implements FormDataHandlerInterface
     }
 
     /**
-     * {@inheritdoc]
+     * {@inheritdoc}
+     *
+     * @throws CountryConstraintException
      */
     public function create(array $data)
     {
@@ -111,10 +113,8 @@ final class CountryFormDataHandler implements FormDataHandlerInterface
      */
     public function update($countryId, array $data)
     {
-        /** @var CountryId $countryIdObject */
-        $countryIdObject = new CountryId((int) $countryId);
         $command = new EditCountryCommand(
-            $countryIdObject,
+            (int) $countryId,
             $data['country'],
             $data['iso_code'],
             (int) $data['call_prefix'],
@@ -124,12 +124,9 @@ final class CountryFormDataHandler implements FormDataHandlerInterface
             $data['is_enabled'],
             $data['contains_states'],
             $data['need_identification_number'],
-            $data['display_tax_label']
+            $data['display_tax_label'],
+            $data['default_currency']
         );
-
-        if (null !== $data['default_currency']) {
-            $command->setDefaultCurrency($data['default_currency']);
-        }
 
         if (null !== $data['zip_code_format']) {
             $command->setZipCodeFormat($data['zip_code_format']);

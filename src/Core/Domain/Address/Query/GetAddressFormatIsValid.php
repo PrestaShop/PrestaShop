@@ -24,20 +24,31 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Zone\DataProvider;
+namespace PrestaShop\PrestaShop\Core\Domain\Address\Query;
 
 /**
- * Defines contract for zone data provider
+ * Determines if address format field value is valid
  */
-interface ZoneDataProviderInterface
+class GetAddressFormatIsValid
 {
     /**
-     * Return available zones.
-     *
-     * @param bool $active only active zones
-     * @param bool $activeFirst order by active DESC
-     *
-     * @return array
+     * @var string
      */
-    public function getZones($active = false, $activeFirst = false): array;
+    private $format;
+
+    /**
+     * @param string $format
+     */
+    public function __construct(string $format)
+    {
+        $this->format = $format;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFormat(): string
+    {
+        return $this->format;
+    }
 }

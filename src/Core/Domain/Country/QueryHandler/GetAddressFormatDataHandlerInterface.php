@@ -24,27 +24,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Country\Config;
+namespace PrestaShop\PrestaShop\Core\Domain\Country\QueryHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetAddressFormatData;
+use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\AddressFormatData;
 
 /**
- * Stores country form constraints configuration values
+ * Defines contract for address layout fields handler
  */
-final class CountryConstraintConfiguration
+interface GetAddressFormatDataHandlerInterface
 {
     /**
-     * Maximum length for iso code (value is constrained by database)
+     * @param GetAddressFormatData $command
+     *
+     * @return AddressFormatData
      */
-    const MAX_ISO_CODE_LENGTH = 3;
-
-    /**
-     * Maximum length for call prefix
-     */
-    const MAX_CALL_PREFIX_LENGTH = 3;
-
-    /**
-     * Prevents class to be instantiated
-     */
-    private function __construct()
-    {
-    }
+    public function handle(GetAddressFormatData $command): AddressFormatData;
 }

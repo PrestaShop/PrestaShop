@@ -26,10 +26,10 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Country\CommandHandler;
 
-use AddressFormat;
 use Country;
+use PrestaShop\PrestaShop\Adapter\Country\AbstractCountryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Address\Exception\CannotAddAddressException;
+use PrestaShop\PrestaShop\Core\Domain\Address\Exception\CannotAddAddressFormatException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Command\AddCountryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Country\CommandHandler\AddCountryHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CannotAddCountryException;
@@ -39,15 +39,15 @@ use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShopException;
 
 /**
- * Handles creation of country
+ * Handles creation of country and address format for it
  */
-class AddCountryHandler implements AddCountryHandlerInterface
+final class AddCountryHandler extends AbstractCountryHandler implements AddCountryHandlerInterface
 {
     /**
      * {@inheritdoc}
      *
      * @throws AddressConstraintException
-     * @throws CannotAddAddressException
+     * @throws CannotAddAddressFormatException
      * @throws CannotAddCountryException
      * @throws CountryConstraintException
      * @throws CountryException
@@ -57,11 +57,11 @@ class AddCountryHandler implements AddCountryHandlerInterface
         try {
             $country = new Country();
 
-            $country->name = $command->getLocalisedNames();
+            $country->name = $command->getLocalizedNames();
             $country->iso_code = $command->getIsoCode();
             $country->call_prefix = $command->getCallPrefix();
             $country->need_zip_code = $command->needZipCode();
-            $country->zip_code_format = $command->getZipCodeFormat();
+            $country->zip_code_format = $command->getZipCodeFormat()->getValue();
             $country->active = $command->isEnabled();
             $country->need_identification_number = $command->needIdNumber();
             $country->display_tax_label = $command->displayTaxLabel();
@@ -76,22 +76,7 @@ class AddCountryHandler implements AddCountryHandlerInterface
                 $country->id_zone = $command->getZone();
             }
 
-            if (!$country->validateFields(false) || !$country->validateFieldsLang(false)) {
-                throw new CountryConstraintException(
-                    'Country contains invalid field values',
-                    CountryConstraintException::INVALID_FIELDS
-                );
-            }
-
-            $addressFormat = new AddressFormat($country->id);
-            $addressFormat->format = $command->getAddressFormat();
-
-            if (!$addressFormat->checkFormatFields() || strlen($addressFormat->format) <= 0 || !$addressFormat->validateFields(false)) {
-                throw new AddressConstraintException(
-                    sprintf('Address format: "%s" is invalid', $addressFormat->format),
-                    AddressConstraintException::INVALID_FORMAT
-                );
-            }
+            $this->validateCountryFields($country);
 
             if (false === $country->add()) {
                 throw new CannotAddCountryException(
@@ -99,10 +84,11 @@ class AddCountryHandler implements AddCountryHandlerInterface
                 );
             }
 
+            $addressFormat = $this->getValidAddressFormat((int) $country->id, $command->getAddressFormat());
+
             if (false === $addressFormat->add()) {
-                throw new CannotAddAddressException(
-                    'Failed to add address format',
-                    CannotAddAddressException::ADDRESS_FORMAT
+                throw new CannotAddAddressFormatException(
+                    'Failed to add address format'
                 );
             }
         } catch (PrestaShopException $e) {
