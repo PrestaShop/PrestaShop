@@ -27,14 +27,14 @@
 namespace PrestaShop\PrestaShop\Core\ConstraintValidator;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\Domain\Address\Query\IsValidAddressFormat;
+use PrestaShop\PrestaShop\Core\Domain\Address\Query\GetAddressFormatIsValid;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
 /**
  * Validates address format field value
  */
-class AddressFormatValidator extends ConstraintValidator
+final class AddressFormatValidator extends ConstraintValidator
 {
     /**
      * @var CommandBusInterface
@@ -54,7 +54,7 @@ class AddressFormatValidator extends ConstraintValidator
      */
     public function validate($value, Constraint $constraint)
     {
-        if (!$this->queryBus->handle(new IsValidAddressFormat($value))) {
+        if (!$this->queryBus->handle(new GetAddressFormatIsValid($value))) {
             $this->context->buildViolation($constraint->message)
                 ->setTranslationDomain('Admin.Notifications.Error')
                 ->setParameter('%s', $this->formatValue($value))

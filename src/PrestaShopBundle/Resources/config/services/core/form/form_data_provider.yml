@@ -101,4 +101,4 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\CountryFormDataProvider'
     arguments:
       - '@prestashop.core.query_bus'
-      - '@=service("prestashop.adapter.multistore_feature").isActive()'
+      - '@prestashop.adapter.multistore_feature'

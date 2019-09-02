@@ -24,19 +24,36 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Address\QueryHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Country\Query;
 
-use PrestaShop\PrestaShop\Core\Domain\Address\Query\IsValidAddressFormat;
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 
 /**
- * Defines contract for address format validation handler
+ * Provides data for address format modification
  */
-interface IsAddressFormatValidHandlerInterface
+class GetAddressFormatData
 {
     /**
-     * @param IsValidAddressFormat $command
-     *
-     * @return bool
+     * @var CountryId|null
      */
-    public function handle(IsValidAddressFormat $command): bool;
+    private $countryId;
+
+    /**
+     * @param int $countryId
+     *
+     * @throws CountryConstraintException
+     */
+    public function setCountryId(int $countryId): void
+    {
+        $this->countryId = new CountryId($countryId);
+    }
+
+    /**
+     * @return CountryId|null
+     */
+    public function getCountryId(): ?CountryId
+    {
+        return $this->countryId;
+    }
 }

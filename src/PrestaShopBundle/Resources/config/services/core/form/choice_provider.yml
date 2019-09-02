@@ -210,7 +210,7 @@ services:
     arguments:
       - '@prestashop.core.mail_template.theme_catalog'
 
-  prestashop.core.form.choice_provider.zone_by_id:
-    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ZoneByIdChoiceProvider'
+  prestashop.core.form.choice_provider.active_zone_by_id:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ActiveZoneByIdChoiceProvider'
     arguments:
       - '@prestashop.adapter.data_provider.zone'

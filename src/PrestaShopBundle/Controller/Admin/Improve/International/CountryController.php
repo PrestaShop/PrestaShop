@@ -27,16 +27,16 @@
 namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
 use Exception;
-use PrestaShop\PrestaShop\Core\Domain\Address\Exception\CannotAddAddressException;
-use PrestaShop\PrestaShop\Core\Domain\Address\Exception\CannotUpdateAddressException;
+use PrestaShop\PrestaShop\Core\Domain\Address\Exception\CannotAddAddressFormatException;
+use PrestaShop\PrestaShop\Core\Domain\Address\Exception\CannotUpdateAddressFormatException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CannotAddCountryException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Country\Exception\UpdateCountryException;
-use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetAddressLayoutFields;
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CannotUpdateCountryException;
+use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetAddressFormatData;
 use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountryForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\AddressLayoutFields;
+use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\AddressFormatData;
 use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\EditableCountry;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -60,49 +60,6 @@ class CountryController extends FrameworkBundleAdminController
         $indexLink = $this->getAdminLink('AdminCountries', []);
 
         return $this->redirect($indexLink);
-    }
-
-    /**
-     * @return array
-     */
-    private function getErrorMessages(): array
-    {
-        return [
-            CountryNotFoundException::class => $this->trans(
-                'The object cannot be loaded (or found)',
-                'Admin.Notifications.Error'
-            ),
-            UpdateCountryException::class => $this->trans(
-                'An error occurred while attempting to save.',
-                'Admin.Notifications.Error'
-            ),
-            CannotAddCountryException::class => $this->trans(
-                'An error occurred while attempting to save.',
-                'Admin.Notifications.Error'
-            ),
-            CannotUpdateAddressException::class => [
-                CannotUpdateAddressException::ADDRESS_FORMAT => $this->trans(
-                    'An error occurred while attempting to save.',
-                    'Admin.Notifications.Error'
-                ),
-            ],
-            CannotAddAddressException::class => [
-                CannotAddAddressException::ADDRESS_FORMAT => $this->trans(
-                    'An error occurred while attempting to save.',
-                    'Admin.Notifications.Error'
-                ),
-            ],
-            CountryConstraintException::class => [
-                CountryConstraintException::INVALID_ID => $this->trans(
-                    'The object cannot be loaded (the identifier is missing or invalid)',
-                    'Admin.Notifications.Error'
-                ),
-                CountryConstraintException::INVALID_FIELDS => $this->trans(
-                    'An error occurred when attempting to update the required fields.',
-                    'Admin.Notifications.Error'
-                ),
-            ],
-        ];
     }
 
     /**
@@ -131,8 +88,8 @@ class CountryController extends FrameworkBundleAdminController
         $countryForm->handleRequest($request);
 
         try {
-            /** @var AddressLayoutFields $addressLayout */
-            $addressLayout = $this->getQueryBus()->handle(new GetAddressLayoutFields());
+            /** @var AddressFormatData $addressFormat */
+            $addressFormat = $this->getQueryBus()->handle(new GetAddressFormatData());
 
             $handlerResult = $countryFormHandler->handle($countryForm);
 
@@ -151,10 +108,10 @@ class CountryController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'countryForm' => $countryForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
-            'addressLayout' => $addressLayout->getAddressLayout(),
-            'encodingAddressLayout' => urlencode($addressLayout->getAddressLayout()),
-            'encodingDefaultLayout' => urlencode($addressLayout->getDefaultLayout()),
-            'displayValidFields' => $addressLayout->getValidFields(),
+            'addressFormat' => $addressFormat->getAddressFormat(),
+            'encodingAddressFormat' => urlencode($addressFormat->getAddressFormat()),
+            'defaultFormat' => urlencode($addressFormat->getDefaultFormat()),
+            'availableFields' => $addressFormat->getAvailableFields(),
         ]);
     }
 
@@ -182,14 +139,12 @@ class CountryController extends FrameworkBundleAdminController
             return $this->redirectToRoute('admin_countries_index');
         }
 
-        $countryForm = null;
-
         try {
-            $getAddressLayoutFieldsCommand = new GetAddressLayoutFields();
-            $getAddressLayoutFieldsCommand->setCountryId($countryId);
+            $getAddressFormatDataQuery = new GetAddressFormatData();
+            $getAddressFormatDataQuery->setCountryId($countryId);
 
-            /** @var AddressLayoutFields $addressLayout */
-            $addressLayout = $this->getQueryBus()->handle($getAddressLayoutFieldsCommand);
+            /** @var AddressFormatData $addressFormat */
+            $addressFormat = $this->getQueryBus()->handle($getAddressFormatDataQuery);
 
             $countryFormBuilder = $this->get(
                 'prestashop.core.form.identifiable_object.builder.country_form_builder'
@@ -217,11 +172,49 @@ class CountryController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'countryForm' => $countryForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
-            'addressLayout' => $addressLayout->getAddressLayout(),
-            'encodingAddressLayout' => urlencode($addressLayout->getAddressLayout()),
-            'encodingDefaultLayout' => urlencode($addressLayout->getDefaultLayout()),
-            'displayValidFields' => $addressLayout->getValidFields(),
+            'addressFormat' => urlencode($addressFormat->getAddressFormat()),
+            'defaultFormat' => urlencode($addressFormat->getDefaultFormat()),
+            'availableFields' => $addressFormat->getAvailableFields(),
             'countryName' => $editableCountry->getLocalisedNames()[$this->getContextLangId()],
         ]);
+    }
+
+    /**
+     * @return array
+     */
+    private function getErrorMessages(): array
+    {
+        return [
+            CountryNotFoundException::class => $this->trans(
+                'The object cannot be loaded (or found)',
+                'Admin.Notifications.Error'
+            ),
+            CannotUpdateCountryException::class => $this->trans(
+                'An error occurred while attempting to save.',
+                'Admin.Notifications.Error'
+            ),
+            CannotAddCountryException::class => $this->trans(
+                'An error occurred while attempting to save.',
+                'Admin.Notifications.Error'
+            ),
+            CannotUpdateAddressFormatException::class => $this->trans(
+                'An error occurred while attempting to save.',
+                'Admin.Notifications.Error'
+            ),
+            CannotAddAddressFormatException::class => $this->trans(
+                'An error occurred while attempting to save.',
+                'Admin.Notifications.Error'
+            ),
+            CountryConstraintException::class => [
+                CountryConstraintException::INVALID_ID => $this->trans(
+                    'The object cannot be loaded (the identifier is missing or invalid)',
+                    'Admin.Notifications.Error'
+                ),
+                CountryConstraintException::class => $this->trans(
+                    'An error occurred when attempting to update the required fields.',
+                    'Admin.Notifications.Error'
+                ),
+            ],
+        ];
     }
 }

@@ -6,10 +6,10 @@
         data-placement="top"
         data-original-title="{{ 'This will restore your last registered address format.'|trans({}, 'Admin.International.Help') }}"
         data-html="true">
-    <a id="useLastDefaultLayout" href="javascript:void(0)"
-       data-confirmation="{{ confirmation }}"
-       data-default-layout="{{ encodingAddressLayout }}"
-       class="btn btn-outline-secondary reset-address-layout">
+    <a href="javascript:void(0)"
+       data-confirmation-message="{{ confirmation }}"
+       data-default-layout="{{ addressFormat }}"
+       class="btn btn-outline-secondary modify-address-layout">
       {{ 'Use the last registered format'|trans({}, 'Admin.International.Feature') }}
     </a>
   </span>
@@ -19,11 +19,10 @@
         data-placement="top"
         data-original-title="{{ 'This will restore the default address format for this country'|trans({}, 'Admin.International.Help') }}"
         data-html="true">
-        <a id="useDefaultLayoutSystem"
-           href="javascript:void(0)"
-           data-confirmation="{{ confirmation }}"
-           data-default-layout="{{ defaultLayout }}"
-           class="btn btn-outline-secondary reset-address-layout">
+        <a href="javascript:void(0)"
+           data-confirmation-message="{{ confirmation }}"
+           data-default-layout="{{ defaultFormat }}"
+           class="btn btn-outline-secondary modify-address-layout">
           {{ 'Use the default format'|trans({}, 'Admin.International.Feature') }}
         </a>
   </span>
@@ -33,10 +32,9 @@
         data-placement="top"
         data-original-title="{{ 'This will restore your current address format.'|trans({}, 'Admin.International.Help') }}"
         data-html="true">
-            <a id="useCurrentLastModifiedLayout"
-               href="javascript:void(0)"
-               data-confirmation="{{ confirmation }}"
-               class="btn btn-outline-secondary reset-address-layout">
+            <a href="javascript:void(0)"
+               data-confirmation-message="{{ confirmation }}"
+               class="btn btn-outline-secondary modify-address-layout">
               {{ 'Use my current modified format'|trans({}, 'Admin.International.Feature') }}
             </a>
   </span>
@@ -46,11 +44,10 @@
         data-placement="top"
         data-original-title="{{ 'This will delete the current address format'|trans({}, 'Admin.International.Help') }}"
         data-html="true">
-            <a id="eraseCurrentLayout"
-               href="javascript:void(0)"
-               data-confirmation="{{ confirmation }}"
+            <a href="javascript:void(0)"
+               data-confirmation-message="{{ confirmation }}"
                data-default-layout=" "
-               class="btn btn-outline-secondary reset-address-layout">
+               class="btn btn-outline-secondary modify-address-layout">
               <i class="material-icons">delete_sweep</i>  {{ 'Clear format'|trans({}, 'Admin.International.Feature') }}
             </a>
   </span>

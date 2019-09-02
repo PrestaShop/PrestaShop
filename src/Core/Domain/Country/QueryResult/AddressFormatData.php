@@ -24,27 +24,61 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Country\Config;
+namespace PrestaShop\PrestaShop\Core\Domain\Country\QueryResult;
 
 /**
- * Stores country form constraints configuration values
+ * Stores data for address layout modification fields
  */
-final class CountryConstraintConfiguration
+class AddressFormatData
 {
     /**
-     * Maximum length for iso code (value is constrained by database)
+     * @var string[]
      */
-    const MAX_ISO_CODE_LENGTH = 3;
+    private $availableFields;
 
     /**
-     * Maximum length for call prefix
+     * @var string
      */
-    const MAX_CALL_PREFIX_LENGTH = 3;
+    private $addressFormat;
 
     /**
-     * Prevents class to be instantiated
+     * @var string
      */
-    private function __construct()
+    private $defaultFormat;
+
+    /**
+     * @param string[] $availableFields
+     * @param string $addressFormat
+     * @param string $defaultFormat
+     */
+    public function __construct(array $availableFields, string $addressFormat, string $defaultFormat)
     {
+        $this->availableFields = $availableFields;
+        $this->addressFormat = $addressFormat;
+        $this->defaultFormat = $defaultFormat;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getAvailableFields(): array
+    {
+        return $this->availableFields;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAddressFormat(): string
+    {
+        return $this->addressFormat;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDefaultFormat(): string
+    {
+        return $this->defaultFormat;
     }
 }

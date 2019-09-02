@@ -26,6 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Country\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryZipCodeFormat;
+
 /**
  * Creates country with provided data
  */
@@ -34,7 +37,7 @@ class AddCountryCommand
     /**
      * @var string[]
      */
-    private $localisedNames;
+    private $localizedNames;
 
     /**
      * @var string
@@ -47,9 +50,9 @@ class AddCountryCommand
     private $callPrefix;
 
     /**
-     * @var int|null
+     * @var int
      */
-    private $defaultCurrency;
+    private $defaultCurrency = 0;
 
     /**
      * @var int|null
@@ -62,7 +65,7 @@ class AddCountryCommand
     private $needZipCode = false;
 
     /**
-     * @var string|null
+     * @var CountryZipCodeFormat|null
      */
     private $zipCodeFormat;
 
@@ -97,18 +100,18 @@ class AddCountryCommand
     private $shopAssociation = [];
 
     /**
-     * @param string[] $localisedNames
+     * @param string[] $localizedNames
      * @param string $isoCode
      * @param int $callPrefix
      * @param string $addressFormat
      */
     public function __construct(
-        array $localisedNames,
+        array $localizedNames,
         string $isoCode,
         int $callPrefix,
         string $addressFormat
     ) {
-        $this->localisedNames = $localisedNames;
+        $this->localizedNames = $localizedNames;
         $this->isoCode = $isoCode;
         $this->callPrefix = $callPrefix;
         $this->addressFormat = $addressFormat;
@@ -117,9 +120,9 @@ class AddCountryCommand
     /**
      * @return string[]
      */
-    public function getLocalisedNames(): array
+    public function getLocalizedNames(): array
     {
-        return $this->localisedNames;
+        return $this->localizedNames;
     }
 
     /**
@@ -139,9 +142,9 @@ class AddCountryCommand
     }
 
     /**
-     * @return string|null
+     * @return CountryZipCodeFormat|null
      */
-    public function getZipCodeFormat(): ?string
+    public function getZipCodeFormat(): ?CountryZipCodeFormat
     {
         return $this->zipCodeFormat;
     }
@@ -150,10 +153,12 @@ class AddCountryCommand
      * @param string $zipCodeFormat
      *
      * @return AddCountryCommand
+     *
+     * @throws CountryConstraintException
      */
     public function setZipCodeFormat(string $zipCodeFormat): AddCountryCommand
     {
-        $this->zipCodeFormat = $zipCodeFormat;
+        $this->zipCodeFormat = new CountryZipCodeFormat($zipCodeFormat);
 
         return $this;
     }
@@ -167,19 +172,19 @@ class AddCountryCommand
     }
 
     /**
-     * @return int|null
+     * @return int
      */
-    public function getDefaultCurrency(): ?int
+    public function getDefaultCurrency(): int
     {
         return $this->defaultCurrency;
     }
 
     /**
-     * @param int|null $defaultCurrency
+     * @param int $defaultCurrency
      *
      * @return AddCountryCommand
      */
-    public function setDefaultCurrency(?int $defaultCurrency): AddCountryCommand
+    public function setDefaultCurrency(int $defaultCurrency): AddCountryCommand
     {
         $this->defaultCurrency = $defaultCurrency;
 
@@ -195,11 +200,11 @@ class AddCountryCommand
     }
 
     /**
-     * @param int|null $zone
+     * @param int $zone
      *
      * @return AddCountryCommand
      */
-    public function setZone(?int $zone): AddCountryCommand
+    public function setZone(int $zone): AddCountryCommand
     {
         $this->zone = $zone;
 

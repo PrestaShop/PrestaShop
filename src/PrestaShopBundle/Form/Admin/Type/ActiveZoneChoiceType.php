@@ -24,61 +24,51 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Country\QueryResult;
+namespace PrestaShopBundle\Form\Admin\Type;
+
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Stores data for address layout modification fields
+ * Class is responsible for providing active zone choices with -- symbol in front of array.
  */
-class AddressLayoutFields
+class ActiveZoneChoiceType extends AbstractType
 {
     /**
-     * @var array
+     * @var FormChoiceProviderInterface
      */
-    private $validFields;
+    private $activeZonesChoiceProvider;
 
     /**
-     * @var string
+     * @param FormChoiceProviderInterface $activeZonesChoiceProvider
      */
-    private $addressLayout;
-
-    /**
-     * @var string
-     */
-    private $defaultLayout;
-
-    /**
-     * @param array $validFields
-     * @param string $addressLayout
-     * @param string $defaultLayout
-     */
-    public function __construct(array $validFields, string $addressLayout, string $defaultLayout)
+    public function __construct(FormChoiceProviderInterface $activeZonesChoiceProvider)
     {
-        $this->validFields = $validFields;
-        $this->addressLayout = $addressLayout;
-        $this->defaultLayout = $defaultLayout;
+        $this->activeZonesChoiceProvider = $activeZonesChoiceProvider;
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
-    public function getValidFields(): array
+    public function configureOptions(OptionsResolver $resolver)
     {
-        return $this->validFields;
+        $resolver->setDefaults(
+            [
+                'choices' => array_merge(
+                    ['--' => ''],
+                    $this->activeZonesChoiceProvider->getChoices()
+                ),
+            ]
+        );
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
-    public function getAddressLayout(): string
+    public function getParent()
     {
-        return $this->addressLayout;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDefaultLayout(): string
-    {
-        return $this->defaultLayout;
+        return ChoiceType::class;
     }
 }

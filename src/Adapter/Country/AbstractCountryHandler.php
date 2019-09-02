@@ -26,7 +26,10 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Country;
 
+use AddressFormat;
 use Country;
+use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShopException;
@@ -34,7 +37,7 @@ use PrestaShopException;
 /**
  * Abstract country handler provides common methods for country handlers
  */
-class AbstractCountryHandler
+abstract class AbstractCountryHandler
 {
     /**
      * Get legacy country
@@ -64,5 +67,56 @@ class AbstractCountryHandler
         }
 
         return $country;
+    }
+
+    /**
+     * @param int $countryId
+     * @param string $format
+     *
+     * @return AddressFormat
+     *
+     * @throws AddressConstraintException
+     */
+    protected function getValidAddressFormat(int $countryId, string $format): AddressFormat
+    {
+        try {
+            $addressFormat = new AddressFormat($countryId);
+
+            $addressFormat->format = $format;
+            $addressFormat->id_country = $addressFormat->id_country ?? $countryId;
+
+            $isInvalidAddressFormat = !$addressFormat->checkFormatFields() ||
+                strlen($addressFormat->format) <= 0 ||
+                !$addressFormat->validateFields(false);
+        } catch (PrestaShopException $e) {
+            throw new AddressConstraintException(
+                sprintf('Address format: "%s" is invalid', $format),
+                AddressConstraintException::INVALID_FORMAT
+            );
+        }
+
+        if ($isInvalidAddressFormat) {
+            throw new AddressConstraintException(
+                sprintf('Address format: "%s" is invalid', $addressFormat->format),
+                AddressConstraintException::INVALID_FORMAT
+            );
+        }
+
+        return $addressFormat;
+    }
+
+    /**
+     * @param Country $country
+     *
+     * @throws CountryConstraintException
+     * @throws PrestaShopException
+     */
+    protected function validateCountryFields(Country $country)
+    {
+        if (!$country->validateFields(false) || !$country->validateFieldsLang(false)) {
+            throw new CountryConstraintException(
+                'Country contains invalid field values'
+            );
+        }
     }
 }

@@ -27,34 +27,33 @@
 namespace PrestaShop\PrestaShop\Adapter\Country\QueryHandler;
 
 use AddressFormat;
-use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetAddressLayoutFields;
-use PrestaShop\PrestaShop\Core\Domain\Country\QueryHandler\GetAddressLayoutFieldsHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\AddressLayoutFields;
-use Tools;
+use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetAddressFormatData;
+use PrestaShop\PrestaShop\Core\Domain\Country\QueryHandler\GetAddressFormatDataHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\AddressFormatData;
 
 /**
  * Provides legacy address layout modification data
  */
-class GetAddressLayoutFieldsHandler implements GetAddressLayoutFieldsHandlerInterface
+final class GetAddressFormatDataHandler implements GetAddressFormatDataHandlerInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function handle(GetAddressLayoutFields $command): AddressLayoutFields
+    public function handle(GetAddressFormatData $command): AddressFormatData
     {
-        return new AddressLayoutFields(
-            $this->getValidFields(),
-            $this->getAddressLayout($command->getCountryId() ? $command->getCountryId()->getValue() : 0),
-            $this->getDefaultLayout()
+        return new AddressFormatData(
+            $this->getAvailableFields(),
+            $this->getAddressFormat($command->getCountryId() ? $command->getCountryId()->getValue() : 0),
+            $this->getDefaultFormat()
         );
     }
 
     /**
      * Gets legacy valid fields in array
      *
-     * @return array
+     * @return string[]
      */
-    protected function getValidFields(): array
+    private function getAvailableFields(): array
     {
         $objectList = AddressFormat::getLiableClass('Address');
         $objectList['Address'] = null;
@@ -81,12 +80,9 @@ class GetAddressLayoutFieldsHandler implements GetAddressLayoutFieldsHandlerInte
      *
      * @return string
      */
-    protected function getAddressLayout(int $countryId): string
+    private function getAddressFormat(int $countryId): string
     {
         $addressLayout = AddressFormat::getAddressCountryFormat($countryId);
-        if ($value = Tools::getValue('address_layout')) {
-            $addressLayout = $value;
-        }
 
         return $addressLayout;
     }
@@ -96,7 +92,7 @@ class GetAddressLayoutFieldsHandler implements GetAddressLayoutFieldsHandlerInte
      *
      * @return string
      */
-    protected function getDefaultLayout(): string
+    private function getDefaultFormat(): string
     {
         $defaultLayout = '';
 
@@ -112,7 +108,7 @@ class GetAddressLayoutFieldsHandler implements GetAddressLayoutFieldsHandlerInte
         ];
 
         foreach ($defaultLayoutTab as $line) {
-            $defaultLayout .= implode(' ', $line) . AddressFormat::FORMAT_NEW_LINE;
+            $defaultLayout .= implode(' ', $line) . PHP_EOL;
         }
 
         return $defaultLayout;

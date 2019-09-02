@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Country\QueryResult;
 
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryZipCodeFormat;
 
 /**
  * Stores editable country data
@@ -69,7 +70,7 @@ class EditableCountry
     private $needZipCode;
 
     /**
-     * @var string
+     * @var CountryZipCodeFormat
      */
     private $zipCodeFormat;
 
@@ -99,7 +100,7 @@ class EditableCountry
     private $displayTaxLabel;
 
     /**
-     * @var array
+     * @var int[]
      */
     private $shopAssociation;
 
@@ -111,13 +112,13 @@ class EditableCountry
      * @param int $defaultCurrency
      * @param int $zone
      * @param bool $needZipCode
-     * @param string $zipCodeFormat
+     * @param CountryZipCodeFormat $zipCodeFormat
      * @param string $addressFormat
      * @param bool $enabled
      * @param bool $containsStates
      * @param bool $needIdNumber
      * @param bool $displayTaxLabel
-     * @param array $shopAssociation
+     * @param int[] $shopAssociation
      */
     public function __construct(
         CountryId $countryId,
@@ -127,7 +128,7 @@ class EditableCountry
         int $defaultCurrency,
         int $zone,
         bool $needZipCode,
-        string $zipCodeFormat,
+        CountryZipCodeFormat $zipCodeFormat,
         string $addressFormat,
         bool $enabled,
         bool $containsStates,
@@ -208,9 +209,9 @@ class EditableCountry
     }
 
     /**
-     * @return string
+     * @return CountryZipCodeFormat
      */
-    public function getZipCodeFormat(): string
+    public function getZipCodeFormat(): CountryZipCodeFormat
     {
         return $this->zipCodeFormat;
     }
@@ -256,7 +257,7 @@ class EditableCountry
     }
 
     /**
-     * @return array
+     * @return int[]
      */
     public function getShopAssociation(): array
     {

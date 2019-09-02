@@ -24,20 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Country\QueryHandler;
-
-use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetAddressLayoutFields;
-use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\AddressLayoutFields;
+namespace PrestaShop\PrestaShop\Core\Domain\Address\Exception;
 
 /**
- * Defines contract for address layout fields handler
+ * Thrown on failure to add address format
  */
-interface GetAddressLayoutFieldsHandlerInterface
+class CannotAddAddressFormatException extends AddressException
 {
-    /**
-     * @param GetAddressLayoutFields $command
-     *
-     * @return AddressLayoutFields
-     */
-    public function handle(GetAddressLayoutFields $command): AddressLayoutFields;
 }

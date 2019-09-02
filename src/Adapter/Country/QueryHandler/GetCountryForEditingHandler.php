@@ -29,20 +29,23 @@ namespace PrestaShop\PrestaShop\Adapter\Country\QueryHandler;
 use AddressFormat;
 use Country;
 use PrestaShop\PrestaShop\Adapter\Country\AbstractCountryHandler;
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Country\QueryHandler\GetCountryForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\EditableCountry;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryZipCodeFormat;
 
 /**
  * Handles editable country query
  */
-class GetCountryForEditingHandler extends AbstractCountryHandler implements GetCountryForEditingHandlerInterface
+final class GetCountryForEditingHandler extends AbstractCountryHandler implements GetCountryForEditingHandlerInterface
 {
     /**
      * {@inheritdoc}
      *
      * @throws CountryNotFoundException
+     * @throws CountryConstraintException
      */
     public function handle(GetCountryForEditing $command): EditableCountry
     {
@@ -60,7 +63,7 @@ class GetCountryForEditingHandler extends AbstractCountryHandler implements GetC
             $country->id_currency,
             $country->id_zone,
             $country->need_zip_code,
-            $country->zip_code_format,
+            new CountryZipCodeFormat($country->zip_code_format),
             $format,
             $country->active,
             $country->contains_states,

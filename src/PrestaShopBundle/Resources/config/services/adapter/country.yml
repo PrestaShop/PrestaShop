@@ -21,9 +21,9 @@ services:
 
   prestashop.adapter.country.query_handler.get_address_layout:
     public: true
-    class: 'PrestaShop\PrestaShop\Adapter\Country\QueryHandler\GetAddressLayoutFieldsHandler'
+    class: 'PrestaShop\PrestaShop\Adapter\Country\QueryHandler\GetAddressFormatDataHandler'
     tags:
-      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Country\Query\GetAddressLayoutFields' }
+      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Country\Query\GetAddressFormatData' }
 
   prestashop.adapter.country.query_handler.get_editable_country:
     public: true

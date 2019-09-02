@@ -24,39 +24,43 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Address\QueryHandler;
+namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
-use AddressFormat;
-use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressException;
-use PrestaShop\PrestaShop\Core\Domain\Address\Query\IsValidAddressFormat;
-use PrestaShop\PrestaShop\Core\Domain\Address\QueryHandler\IsAddressFormatValidHandlerInterface;
-use PrestaShopException;
+use PrestaShop\PrestaShop\Core\Domain\Zone\DataProvider\ActiveZoneDataProviderInterface;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 
 /**
- * Handles validation of address format field value
+ * Class provides Zone choices with ID values.
  */
-class IsAddressFormatValidHandler implements IsAddressFormatValidHandlerInterface
+final class ActiveZoneByIdChoiceProvider implements FormChoiceProviderInterface
 {
     /**
-     * @param IsValidAddressFormat $command
-     *
-     * @return bool
-     *
-     * @throws AddressException
+     * @var ActiveZoneDataProviderInterface
      */
-    public function handle(IsValidAddressFormat $command): bool
+    private $activeZoneDataProvider;
+
+    /**
+     * @param ActiveZoneDataProviderInterface $activeZoneDataProvider
+     */
+    public function __construct(ActiveZoneDataProviderInterface $activeZoneDataProvider)
     {
-        try {
-            $addressFormat = new AddressFormat();
-        } catch (PrestaShopException $e) {
-            throw new AddressException('Failed to create AddressFormat object for validation');
+        $this->activeZoneDataProvider = $activeZoneDataProvider;
+    }
+
+    /**
+     * Get zone choices.
+     *
+     * {@inheritdoc}
+     */
+    public function getChoices(): array
+    {
+        $zones = $this->activeZoneDataProvider->getActiveZones();
+        $choices = [];
+
+        foreach ($zones as $zone) {
+            $choices[$zone['name']] = (int) $zone['id_zone'];
         }
 
-        $addressFormat->format = $command->getFormat();
-        $isValid = $addressFormat->checkFormatFields();
-
-        unset($addressFormat);
-
-        return $isValid;
+        return $choices;
     }
 }

@@ -26,7 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Country\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryZipCodeFormat;
 
 /**
  * Edit country with provided data
@@ -54,7 +56,7 @@ class EditCountryCommand
     private $callPrefix;
 
     /**
-     * @var int|null
+     * @var int
      */
     private $defaultCurrency;
 
@@ -69,7 +71,7 @@ class EditCountryCommand
     private $needZipCode;
 
     /**
-     * @var string|null
+     * @var CountryZipCodeFormat|null
      */
     private $zipCodeFormat;
 
@@ -104,8 +106,8 @@ class EditCountryCommand
     private $shopAssociation;
 
     /**
-     * @param CountryId $countryId
-     * @param string[] $localisedNames
+     * @param string $countryId
+     * @param array $localisedNames
      * @param string $isoCode
      * @param int $callPrefix
      * @param int $zone
@@ -115,9 +117,12 @@ class EditCountryCommand
      * @param bool $containsStates
      * @param bool $needIdNumber
      * @param bool $displayTaxLabel
+     * @param int $defaultCurrency
+     *
+     * @throws CountryConstraintException
      */
     public function __construct(
-        CountryId $countryId,
+        string $countryId,
         array $localisedNames,
         string $isoCode,
         int $callPrefix,
@@ -127,9 +132,10 @@ class EditCountryCommand
         bool $enabled,
         bool $containsStates,
         bool $needIdNumber,
-        bool $displayTaxLabel
+        bool $displayTaxLabel,
+        int $defaultCurrency
     ) {
-        $this->countryId = $countryId;
+        $this->countryId = new CountryId($countryId);
         $this->localisedNames = $localisedNames;
         $this->isoCode = $isoCode;
         $this->callPrefix = $callPrefix;
@@ -140,6 +146,7 @@ class EditCountryCommand
         $this->containsStates = $containsStates;
         $this->needIdNumber = $needIdNumber;
         $this->displayTaxLabel = $displayTaxLabel;
+        $this->defaultCurrency = $defaultCurrency;
     }
 
     /**
@@ -199,9 +206,9 @@ class EditCountryCommand
     }
 
     /**
-     * @return string|null
+     * @return CountryZipCodeFormat|null
      */
-    public function getZipCodeFormat(): ?string
+    public function getZipCodeFormat(): ?CountryZipCodeFormat
     {
         return $this->zipCodeFormat;
     }
@@ -255,25 +262,15 @@ class EditCountryCommand
     }
 
     /**
-     * @param int $defaultCurrency
-     *
-     * @return EditCountryCommand
-     */
-    public function setDefaultCurrency(int $defaultCurrency): EditCountryCommand
-    {
-        $this->defaultCurrency = $defaultCurrency;
-
-        return $this;
-    }
-
-    /**
      * @param string $zipCodeFormat
      *
      * @return EditCountryCommand
+     *
+     * @throws CountryConstraintException
      */
     public function setZipCodeFormat(string $zipCodeFormat): EditCountryCommand
     {
-        $this->zipCodeFormat = $zipCodeFormat;
+        $this->zipCodeFormat = new CountryZipCodeFormat($zipCodeFormat);
 
         return $this;
     }

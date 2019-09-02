@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\ConstraintValidator;
 
-use PrestaShop\PrestaShop\Core\Domain\Country\Config\CountryConstraintConfiguration;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryZipCodeFormat;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\IsoCode;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use Symfony\Component\Validator\Constraint;
@@ -88,7 +88,7 @@ class TypedRegexValidator extends ConstraintValidator
             'message' => '/[<>{}]/i',
             'language_iso_code' => IsoCode::PATTERN,
             'language_code' => '/^[a-zA-Z]{2}(-[a-zA-Z]{2})?$/',
-            'zip_code_format' => CountryConstraintConfiguration::ZIP_CODE_PATTERN,
+            'zip_code_format' => CountryZipCodeFormat::ZIP_CODE_PATTERN,
         ];
 
         if (isset($typePatterns[$type])) {

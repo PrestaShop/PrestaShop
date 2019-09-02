@@ -24,27 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Country\Config;
+namespace PrestaShop\PrestaShop\Core\Domain\Zone\DataProvider;
 
 /**
- * Stores country form constraints configuration values
+ * Defines contract for zone data provider
  */
-final class CountryConstraintConfiguration
+interface ActiveZoneDataProviderInterface
 {
     /**
-     * Maximum length for iso code (value is constrained by database)
+     * Return available zones.
+     *
+     * @return array
      */
-    const MAX_ISO_CODE_LENGTH = 3;
-
-    /**
-     * Maximum length for call prefix
-     */
-    const MAX_CALL_PREFIX_LENGTH = 3;
-
-    /**
-     * Prevents class to be instantiated
-     */
-    private function __construct()
-    {
-    }
+    public function getActiveZones(): array;
 }

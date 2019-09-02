@@ -32,8 +32,8 @@ services:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Address\Query\GetManufacturerAddressForEditing'
 
-  prestashop.adapter.address.query_handler.is_address_format_valid:
-      class: 'PrestaShop\PrestaShop\Adapter\Address\QueryHandler\IsAddressFormatValidHandler'
+  prestashop.adapter.address.query_handler.get_address_format_is_valid:
+      class: 'PrestaShop\PrestaShop\Adapter\Address\QueryHandler\GetAddressFormatIsValidHandler'
       tags:
         - name: tactician.handler
-          command: 'PrestaShop\PrestaShop\Core\Domain\Address\Query\IsValidAddressFormat'
+          command: 'PrestaShop\PrestaShop\Core\Domain\Address\Query\GetAddressFormatIsValid'

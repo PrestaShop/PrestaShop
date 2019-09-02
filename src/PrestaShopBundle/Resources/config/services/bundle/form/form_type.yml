@@ -892,14 +892,14 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Improve\International\Locations\Country\CountryType'
         arguments:
           - '@translator'
-          - '@=service("prestashop.core.form.choice_provider.currency_by_id").getChoices()'
-          - '@=service("prestashop.adapter.multistore_feature").isActive()'
+          - '@prestashop.core.form.choice_provider.currency_by_id'
+          - '@prestashop.adapter.multistore_feature'
         tags:
           - { name: form.type }
 
     form.type.common.zone_choice:
-        class: 'PrestaShopBundle\Form\Admin\Type\ZoneChoiceType'
+        class: 'PrestaShopBundle\Form\Admin\Type\ActiveZoneChoiceType'
         arguments:
-          - '@prestashop.core.form.choice_provider.zone_by_id'
+          - '@prestashop.core.form.choice_provider.active_zone_by_id'
         tags:
           - { name: form.type }
