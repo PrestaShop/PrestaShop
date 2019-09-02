@@ -3653,16 +3653,16 @@
         },
         {
             "name": "prestashop/ps_contactinfo",
-            "version": "v3.1.0",
+            "version": "v3.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_contactinfo.git",
-                "reference": "e28551a9c857262b214775312ce195818933bd7e"
+                "reference": "407bd65291e8f3c64084ab267af1d8c9476872ea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_contactinfo/zipball/e28551a9c857262b214775312ce195818933bd7e",
-                "reference": "e28551a9c857262b214775312ce195818933bd7e",
+                "url": "https://api.github.com/repos/PrestaShop/ps_contactinfo/zipball/407bd65291e8f3c64084ab267af1d8c9476872ea",
+                "reference": "407bd65291e8f3c64084ab267af1d8c9476872ea",
                 "shasum": ""
             },
             "require": {
@@ -3681,7 +3681,7 @@
             ],
             "description": "PrestaShop module ps_contactinfo",
             "homepage": "https://github.com/PrestaShop/ps_contactinfo",
-            "time": "2017-12-08T12:30:57+00:00"
+            "time": "2019-08-30T17:11:48+00:00"
         },
         {
             "name": "prestashop/ps_currencyselector",
