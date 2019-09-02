@@ -1153,13 +1153,16 @@ class OrderCore extends ObjectModel
      *
      * @param int $id_cart Cart id
      *
-     * @return OrderCore
+     * @return OrderCore|null
+     *
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
      */
     public static function getByCartId($id_cart)
     {
         $id_order = (int) self::getIdByCartId((int) $id_cart);
 
-        return ($id_order > 0) ? new self($id_order) : null;
+        return ($id_order > 0) ? new static($id_order) : null;
     }
 
     /**
