@@ -525,7 +525,7 @@ class CarrierCore extends ObjectModel
         }
 
         $sql = '
-		SELECT c.*, cl.delay
+		SELECT c.*, cl.delay, cl.name
 		FROM `' . _DB_PREFIX_ . 'carrier` c
 		LEFT JOIN `' . _DB_PREFIX_ . 'carrier_lang` cl ON (c.`id_carrier` = cl.`id_carrier` AND cl.`id_lang` = ' . (int) $id_lang . Shop::addSqlRestrictionOnLang('cl') . ')
 		LEFT JOIN `' . _DB_PREFIX_ . 'carrier_zone` cz ON (cz.`id_carrier` = c.`id_carrier`)' .

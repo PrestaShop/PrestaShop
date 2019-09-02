@@ -2,6 +2,6 @@
 <entity_carrier>
   <carrier id="carrier_1" id_shop="1">
     <delay>Pick up in-store</delay>
-    <name>My carrier</name>
+    <name>0</name>
   </carrier>
 </entity_carrier>
