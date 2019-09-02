@@ -170,7 +170,7 @@ class AddressController extends FrameworkBundleAdminController
         $toolbarButtons = [];
 
         $toolbarButtons['add'] = [
-            'href' => $this->generateUrl('admin_addresses_index'),
+            'href' => $this->generateUrl('admin_addresses_create'),
             'desc' => $this->trans('Add new address', 'Admin.Orderscustomers.Feature'),
             'icon' => 'add_circle_outline',
         ];
