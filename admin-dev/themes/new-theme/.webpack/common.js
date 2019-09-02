@@ -91,6 +91,7 @@ module.exports = {
     attribute: './js/pages/attribute',
     attribute_group: './js/pages/attribute-group',
     merchandise_return: './js/pages/merchandise-return',
+    tax_rules_group: './js/pages/tax-rules-group',
   },
   output: {
     path: path.resolve(__dirname, '../public'),
