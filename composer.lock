@@ -1,7 +1,7 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
     "content-hash": "d50140856a65aa2f513a310c9600da25",
@@ -3813,16 +3813,16 @@
         },
         {
             "name": "prestashop/ps_emailsubscription",
-            "version": "v2.3.0",
+            "version": "v2.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_emailsubscription.git",
-                "reference": "6120112d834a193bc56c448777081350cf0a18be"
+                "reference": "dddd04c9b0cab5908e71257ce662a07bcc8baee8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_emailsubscription/zipball/6120112d834a193bc56c448777081350cf0a18be",
-                "reference": "6120112d834a193bc56c448777081350cf0a18be",
+                "url": "https://api.github.com/repos/PrestaShop/ps_emailsubscription/zipball/dddd04c9b0cab5908e71257ce662a07bcc8baee8",
+                "reference": "dddd04c9b0cab5908e71257ce662a07bcc8baee8",
                 "shasum": ""
             },
             "require": {
@@ -3841,7 +3841,7 @@
             ],
             "description": "PrestaShop module ps_emailsubscription",
             "homepage": "https://github.com/PrestaShop/ps_emailsubscription",
-            "time": "2018-05-23T16:26:23+00:00"
+            "time": "2019-08-30T17:15:50+00:00"
         },
         {
             "name": "prestashop/ps_facetedsearch",
