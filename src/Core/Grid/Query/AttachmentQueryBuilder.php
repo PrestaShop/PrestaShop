@@ -31,7 +31,7 @@ use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
- * Attachment query builder builds search & count queries for attachment grid.
+ * Attachment query builder builds search & count data for attachment grid.
  */
 final class AttachmentQueryBuilder extends AbstractDoctrineQueryBuilder
 {
