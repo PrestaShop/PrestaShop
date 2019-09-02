@@ -116,4 +116,19 @@ module.exports = class CommonPage {
   async reloadPage() {
     await this.page.reload({waitUntil: 'networkidle0'});
   }
+
+  /**
+   * Close actual tab and goto another tab if wanted
+   * @param tabId
+   * @return {Promise<void>}
+   */
+  async closePage(tabId = -1) {
+    await this.page.close();
+    if(tabId !== -1) {
+      this.page = (await global.browser.pages())[tabId];
+      await this.page.bringToFront();
+      await this.page.waitFor(10000);
+    }
+    return this.page;
+  }
 };

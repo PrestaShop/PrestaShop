@@ -101,4 +101,15 @@ module.exports = class BOBasePage extends CommonPage {
     const FOPage = await this.openLinkWithTargetBlank(this.page, this.headerShopNameLink);
     return FOPage;
   }
+
+  /**
+   * Set value on tinyMce textareas
+   * @param iFrameSelector
+   * @param value
+   * @return {Promise<void>}
+   */
+  async setValueOnTinymceInput(iFrameSelector, value) {
+    await this.page.click(iFrameSelector, {clickCount: 3});
+    await this.page.keyboard.type(value);
+  }
 };
