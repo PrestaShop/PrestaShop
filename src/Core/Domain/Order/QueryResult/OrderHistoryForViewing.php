@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,26 +22,35 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
+namespace PrestaShop\PrestaShop\Core\Domain\Order\QueryResult;
 
-{% block content %}
-  <div class="row">
-    <div class="col-md-12">
-      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/order_actions.html.twig' %}
-    </div>
-  </div>
+class OrderHistoryForViewing
+{
+    /**
+     * @var OrderStatusForViewing[]
+     */
+    private $statuses;
 
-  <div class="row">
-    <div class="col-md-4">
-      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/customer.html.twig' %}
-    </div>
+    public function __construct()
+    {
+        $this->statuses = [];
+    }
 
-    <div class="col-md-8">
-      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/products.html.twig' %}
+    /**
+     * @param OrderStatusForViewing $orderStatusForViewing
+     */
+    public function add(OrderStatusForViewing $orderStatusForViewing): void
+    {
+        $this->statuses[] = $orderStatusForViewing;
+    }
 
-      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/details.html.twig' %}
-    </div>
-  </div>
-{% endblock %}
+    /**
+     * @return OrderStatusForViewing[]
+     */
+    public function getStatuses(): array
+    {
+        return $this->statuses;
+    }
+}

@@ -23,24 +23,18 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
+<div class="mt-2">
+  <ul class="nav nav nav-tabs" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active show" id="historyTab" data-toggle="pill" href="#historyTabContent" role="tab" aria-controls="historyTabContent" aria-expanded="true" aria-selected="false">
+        {{ 'Status'|trans({}, 'Admin.Global') }} ({{ orderForViewing.history.statuses|length }})
+      </a>
+    </li>
+  </ul>
 
-{% block content %}
-  <div class="row">
-    <div class="col-md-12">
-      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/order_actions.html.twig' %}
+  <div class="tab-content" id="historyTabContent">
+    <div class="tab-pane fade show active" id="orderHistory" role="tabpanel" aria-labelledby="historyTab">
+      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/history.html.twig' %}
     </div>
   </div>
-
-  <div class="row">
-    <div class="col-md-4">
-      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/customer.html.twig' %}
-    </div>
-
-    <div class="col-md-8">
-      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/products.html.twig' %}
-
-      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/details.html.twig' %}
-    </div>
-  </div>
-{% endblock %}
+</div>

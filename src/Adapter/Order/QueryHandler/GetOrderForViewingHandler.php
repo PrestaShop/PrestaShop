@@ -46,10 +46,12 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryHandler\GetOrderForViewingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderCustomerForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderHistoryForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderInvoiceAddressForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductsForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderShippingAddressForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderStatusForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Image\Parser\ImageTagSourceParserInterface;
 use Shop;
@@ -97,7 +99,8 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             $this->getOrderCustomer($order),
             $this->getOrderShippingAddress($order),
             $this->getOrderInvoiceAddress($order),
-            $this->getOrderProducts($order)
+            $this->getOrderProducts($order),
+            $this->getOrderHistory($order)
         );
     }
 
@@ -214,6 +217,11 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
         );
     }
 
+    /**
+     * @param Order $order
+     *
+     * @return OrderProductsForViewing
+     */
     private function getOrderProducts(Order $order): OrderProductsForViewing
     {
         $products = $order->getProducts();
@@ -289,7 +297,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
                     // @todo
                     // $this->displayWarning($this->trans('This product, included in package (' . $product['product_name'] . ') is out of stock: ', array(), 'Admin.Orderscustomers.Notification') . ' ' . $pack_item['product_name']);
                 }
-                $this->setProductImageInformations($pack_item);
+                $this->setProductImageInformation($pack_item);
                 if ($pack_item['image'] instanceof Image) {
                     $name = 'product_mini_' . (int) $pack_item['id_product'] . (isset($pack_item['id_product_attribute']) ? '_' . (int) $pack_item['id_product_attribute'] : '') . '.jpg';
                     // generate image cache, only for back office
@@ -343,7 +351,10 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
         return new OrderProductsForViewing($productsForViewing);
     }
 
-    private function setProductImageInformations(&$pack_item): void
+    /**
+     * @param $pack_item
+     */
+    private function setProductImageInformation(&$pack_item): void
     {
         if (isset($pack_item['id_product_attribute']) && $pack_item['id_product_attribute']) {
             $id_image = Db::getInstance()->getValue('
@@ -369,5 +380,32 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
         if ($id_image) {
             $pack_item['image'] = new Image($id_image);
         }
+    }
+
+    /**
+     * @param Order $order
+     *
+     * @return OrderHistoryForViewing
+     */
+    private function getOrderHistory(Order $order): OrderHistoryForViewing
+    {
+        $history = $order->getHistory(Context::getContext()->language->id);
+        $historyForViewing = new OrderHistoryForViewing();
+
+        foreach ($history as $item) {
+            $status = new OrderStatusForViewing(
+                (int) $item['id_order_state'],
+                $item['ostate_name'],
+                $item['color'],
+                new DateTimeImmutable($item['date_add']),
+                (bool) $item['send_email'],
+                $item['employee_firstname'],
+                $item['employee_lastname']
+            );
+
+            $historyForViewing->add($status);
+        }
+
+        return $historyForViewing;
     }
 }

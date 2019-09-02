@@ -23,24 +23,29 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
-
-{% block content %}
-  <div class="row">
-    <div class="col-md-12">
-      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/order_actions.html.twig' %}
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-md-4">
-      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/customer.html.twig' %}
-    </div>
-
-    <div class="col-md-8">
-      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/products.html.twig' %}
-
-      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/details.html.twig' %}
-    </div>
-  </div>
-{% endblock %}
+<table class="table">
+  <tbody>
+    {% for status in orderForViewing.history.statuses %}
+    <tr>
+      <td>
+        <span class="badge rounded" style="background-color: {{ status.color }}">
+          {{ status.name }}
+        </span>
+      </td>
+      <td class="text-right">
+        {% if status.employeeLastName is not empty %}
+          {{ status.employeeFirstName ~ ' ' ~ status.employeeLastName }}
+        {% endif %}
+      </td>
+      <td class="text-right">
+        {{ status.createdAt.format('Y-m-d H:i:s') }}
+      </td>
+      <td class="text-right">
+        {% if status.withEmail %}
+          <a href="#">{{ 'Resend email'|trans({}, 'Admin.Orderscustomers.Feature') }}</a>
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
