@@ -27,8 +27,8 @@
  * Defines all selectors that are used in country add/edit form.
  */
 export default {
-  customAddressFields: '#custom-address-fields',
-  patternSelect: '.add-pattern',
-  formatInput: '#country_address_format',
-  eraseCurrentLayout: '.reset-address-layout',
+  customAddressFieldsTabBtn: '#custom-address-fields',
+  addPatternBtn: '.add-pattern',
+  formatTextAreaField: '#country_address_format',
+  modifyAddressLayoutBtn: '.modify-address-layout',
 }

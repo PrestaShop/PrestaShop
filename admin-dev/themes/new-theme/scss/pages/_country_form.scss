@@ -11,9 +11,11 @@
   border-width: 0 1px 1px 1px;
 }
 
-.address-format-tabs a.nav-link {
-  font-size: 14px;
-  padding: 5px 10px;
+.address-format-tabs {
+  a.nav-link {
+    font-size: 14px;
+    padding: 5px 10px;
+  }
 }
 
 .address-format-actions > span > a {
@@ -30,7 +32,7 @@
 
 .address-format-tabs-content a.add-pattern:hover {
   border-radius: 4px;
-  color: #1383d4
+  color: #1383d4;
 }
 
 .address-format-tabs a.nav-link {

@@ -30,10 +30,6 @@ import countryFormMap from "./country-form-map";
  */
 export default class CountryForm {
   constructor() {
-    this.customAddressFields = countryFormMap.customAddressFields;
-    this.patternSelect = countryFormMap.patternSelect;
-    this.formatInput = countryFormMap.formatInput;
-    this.eraseCurrentLayout = countryFormMap.eraseCurrentLayout;
     this.lastLayoutModified = null;
 
     this._initEvents();
@@ -47,10 +43,10 @@ export default class CountryForm {
    * @private
    */
   _initEvents() {
-    $(this.patternSelect).on('click', (event) => this.handlePatternClick(event));
-    $(this.customAddressFields).on('click', (event) => this.handleTabShowClick(event));
-    $(this.formatInput).on('keyup', (event) => this.saveLastModified(event));
-    $(this.eraseCurrentLayout).on('click', (event) => this.resetLayout(event));
+    $(countryFormMap.addPatternBtn).on('click', (event) => this._handlePatternClick(event));
+    $(countryFormMap.customAddressFieldsTabBtn).on('click', (event) => this._handleTabShowClick(event));
+    $(countryFormMap.formatTextAreaField).on('keyup', (event) => this._saveLastModified(event));
+    $(countryFormMap.modifyAddressLayoutBtn).on('click', (event) => this._modifyLayout(event));
   }
 
   /**
@@ -58,9 +54,9 @@ export default class CountryForm {
    *
    * @param event
    */
-  handlePatternClick(event) {
-    this.addFieldsToCursorPosition($(event.target).attr("id"));
-    this.lastLayoutModified = $(this.formatInput).val();
+  _handlePatternClick(event) {
+    this._addFieldsToCursorPosition($(event.target).attr("id"));
+    this.lastLayoutModified = $(countryFormMap.formatTextAreaField).val();
   }
 
   /**
@@ -68,7 +64,7 @@ export default class CountryForm {
    *
    * @param event
    */
-  saveLastModified(event) {
+  _saveLastModified(event) {
     this.lastLayoutModified = $(event.target).val();
   }
 
@@ -77,7 +73,7 @@ export default class CountryForm {
    *
    * @param event
    */
-  handleTabShowClick(event) {
+  _handleTabShowClick(event) {
     event.preventDefault();
     $(event.target).tab('show');
   }
@@ -87,23 +83,23 @@ export default class CountryForm {
    *
    * @param pattern
    */
-  addFieldsToCursorPosition(pattern) {
-    const el = $(this.formatInput).get(0);
+  _addFieldsToCursorPosition(pattern) {
+    const $el = $(countryFormMap.formatTextAreaField).get(0);
     let pos = 0;
 
-    if ('selectionStart' in el) {
-      pos = el.selectionStart;
+    if ('selectionStart' in $el) {
+      pos = $el.selectionStart;
     } else if ('selection' in document) {
-      el.focus();
+      $el.focus();
       const sel = document.selection.createRange();
       const selLength = document.selection.createRange().text.length;
 
-      sel.moveStart('character', -el.value.length);
+      sel.moveStart('character', -$el.value.length);
       pos = sel.text.length - selLength;
     }
 
-    const content = $(this.formatInput).val();
-    $(this.formatInput).val(content.substr(0, pos) + pattern + ' ' + content.substr(pos));
+    const content = $(countryFormMap.formatTextAreaField).val();
+    $(countryFormMap.formatTextAreaField).val(content.substr(0, pos) + pattern + ' ' + content.substr(pos));
   }
 
   /**
@@ -111,8 +107,8 @@ export default class CountryForm {
    *
    * @param event
    */
-  resetLayout(event) {
-    const confirmation = $(event.target).data('confirmation');
+  _modifyLayout(event) {
+    const confirmation = $(event.target).data('confirmation-message');
     let defaultLayout = $(event.target).data('default-layout');
 
     if (typeof defaultLayout === 'undefined') {
@@ -121,7 +117,7 @@ export default class CountryForm {
 
     if (defaultLayout !== null) {
       if (confirm(confirmation)) {
-        $(this.formatInput).val(unescape(defaultLayout.replace(/\+/g, ' ')));
+        $(countryFormMap.formatTextAreaField).val(unescape(defaultLayout.replace(/\+/g, ' ')));
       }
     }
   }
