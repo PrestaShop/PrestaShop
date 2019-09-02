@@ -36,5 +36,5 @@ interface EditCountryHandlerInterface
     /**
      * @param EditCountryCommand $command
      */
-    public function handle(EditCountryCommand $command);
+    public function handle(EditCountryCommand $command): void;
 }

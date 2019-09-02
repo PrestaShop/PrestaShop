@@ -24,36 +24,37 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Country\Query;
+namespace PrestaShop\PrestaShop\Adapter\Address\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
+use AddressFormat;
+use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressException;
+use PrestaShop\PrestaShop\Core\Domain\Address\Query\GetAddressFormatIsValid;
+use PrestaShop\PrestaShop\Core\Domain\Address\QueryHandler\GetAddressFormatIsValidHandlerInterface;
+use PrestaShopException;
 
 /**
- * Provides data for address layout modification fields
+ * Handles validation of address format field value
  */
-class GetAddressLayoutFields
+final class GetAddressFormatIsValidHandler implements GetAddressFormatIsValidHandlerInterface
 {
     /**
-     * @var CountryId|null
-     */
-    private $countryId;
-
-    /**
-     * @param int $countryId
+     * @param GetAddressFormatIsValid $command
      *
-     * @throws CountryConstraintException
+     * @return bool
+     *
+     * @throws AddressException
      */
-    public function setCountryId(int $countryId)
+    public function handle(GetAddressFormatIsValid $command): bool
     {
-        $this->countryId = new CountryId($countryId);
-    }
+        try {
+            $addressFormat = new AddressFormat();
+        } catch (PrestaShopException $e) {
+            throw new AddressException('Failed to create AddressFormat object for validation');
+        }
 
-    /**
-     * @return CountryId|null
-     */
-    public function getCountryId(): ?CountryId
-    {
-        return $this->countryId;
+        $addressFormat->format = $command->getFormat();
+        $isValid = $addressFormat->checkFormatFields();
+
+        return $isValid;
     }
 }

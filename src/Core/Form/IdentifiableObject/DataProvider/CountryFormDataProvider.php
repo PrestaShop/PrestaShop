@@ -28,10 +28,11 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetAddressLayoutFields;
+use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetAddressFormatData;
 use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountryForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\AddressLayoutFields;
+use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\AddressFormatData;
 use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\EditableCountry;
+use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 
 /**
  * Provides data for country add/edit form
@@ -44,18 +45,18 @@ final class CountryFormDataProvider implements FormDataProviderInterface
     private $queryBus;
 
     /**
-     * @var bool
+     * @var FeatureInterface
      */
-    private $isMultistoreFeatureActive;
+    private $multistoreFeature;
 
     /**
      * @param CommandBusInterface $queryBus
-     * @param bool $isMultistoreFeatureActive
+     * @param FeatureInterface $multistoreFeature
      */
-    public function __construct(CommandBusInterface $queryBus, bool $isMultistoreFeatureActive)
+    public function __construct(CommandBusInterface $queryBus, FeatureInterface $multistoreFeature)
     {
         $this->queryBus = $queryBus;
-        $this->isMultistoreFeatureActive = $isMultistoreFeatureActive;
+        $this->multistoreFeature = $multistoreFeature;
     }
 
     /**
@@ -75,7 +76,7 @@ final class CountryFormDataProvider implements FormDataProviderInterface
             'default_currency' => $editableCountry->getDefaultCurrency(),
             'zone' => $editableCountry->getZone(),
             'need_zip_code' => $editableCountry->needZipCode(),
-            'zip_code_format' => $editableCountry->getZipCodeFormat(),
+            'zip_code_format' => $editableCountry->getZipCodeFormat()->getValue(),
             'address_format' => $editableCountry->getAddressFormat(),
             'is_enabled' => $editableCountry->isEnabled(),
             'contains_states' => $editableCountry->containsStates(),
@@ -83,7 +84,7 @@ final class CountryFormDataProvider implements FormDataProviderInterface
             'display_tax_label' => $editableCountry->displayTaxLabel(),
         ];
 
-        if ($this->isMultistoreFeatureActive) {
+        if ($this->multistoreFeature->isActive()) {
             $data['shop_association'] = $editableCountry->getShopAssociation();
         }
 
@@ -95,11 +96,11 @@ final class CountryFormDataProvider implements FormDataProviderInterface
      */
     public function getDefaultData()
     {
-        /** @var AddressLayoutFields $addressLayout */
-        $addressLayout = $this->queryBus->handle(new GetAddressLayoutFields());
+        /** @var AddressFormatData $addressFormat */
+        $addressFormat = $this->queryBus->handle(new GetAddressFormatData());
 
         return [
-            'address_format' => $addressLayout->getDefaultLayout(),
+            'address_format' => $addressFormat->getDefaultFormat(),
         ];
     }
 }

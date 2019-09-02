@@ -480,6 +480,12 @@ class FrameworkBundleAdminController extends Controller
             if (is_array($message) && isset($message[$exceptionCode])) {
                 return $message[$exceptionCode];
             }
+
+            // Allows generic error messages from exceptions without error codes
+            // to be shown along with specified code messages
+            if (is_array($message) && isset($message[$exceptionType])) {
+                return $message[$exceptionType];
+            }
         }
 
         return $this->getFallbackErrorMessage(

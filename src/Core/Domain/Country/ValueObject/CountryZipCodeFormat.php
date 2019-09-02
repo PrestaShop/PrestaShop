@@ -24,31 +24,56 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Address\Query;
+namespace PrestaShop\PrestaShop\Core\Domain\Country\ValueObject;
+
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
 
 /**
- * Determines if address format field value is valid
+ * Provides valid country zip code
  */
-class IsValidAddressFormat
+class CountryZipCodeFormat
 {
+    /**
+     * Zip code format regexp validation pattern
+     */
+    const ZIP_CODE_PATTERN = '/^[NLCnlc 0-9-]+$/';
+
     /**
      * @var string
      */
-    private $format;
+    private $zipCodeFormat;
 
     /**
-     * @param string $format
+     * @param string $zipCodeFormat
+     *
+     * @throws CountryConstraintException
      */
-    public function __construct(string $format)
+    public function __construct(string $zipCodeFormat)
     {
-        $this->format = $format;
+        $this->assertIsValidZipCodeFormat($zipCodeFormat);
+        $this->zipCodeFormat = $zipCodeFormat;
     }
 
     /**
      * @return string
      */
-    public function getFormat(): string
+    public function getValue(): string
     {
-        return $this->format;
+        return $this->zipCodeFormat;
+    }
+
+    /**
+     * @param string $zipCodeFormat
+     *
+     * @throws CountryConstraintException
+     */
+    private function assertIsValidZipCodeFormat(string $zipCodeFormat): void
+    {
+        if (!preg_match('/^[NLCnlc 0-9-]+$/', $zipCodeFormat)) {
+            throw new CountryConstraintException(
+                sprintf('Invalid country zip code format: %s', $zipCodeFormat),
+                CountryConstraintException::INVALID_ZIP_CODE
+            );
+        }
     }
 }

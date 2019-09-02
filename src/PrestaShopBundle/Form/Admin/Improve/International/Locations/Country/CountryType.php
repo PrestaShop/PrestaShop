@@ -30,10 +30,12 @@ use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\AddressFormat;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\Domain\Country\Config\CountryConstraintConfiguration;
+use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
-use PrestaShopBundle\Form\Admin\Type\ZoneChoiceType;
+use PrestaShopBundle\Form\Admin\Type\ActiveZoneChoiceType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -55,28 +57,28 @@ class CountryType extends AbstractType
     private $translator;
 
     /**
-     * @var array
+     * @var FormChoiceProviderInterface
      */
-    private $currencyChoices;
+    private $currencyChoiceProvider;
 
     /**
-     * @var bool
+     * @var FeatureInterface
      */
-    private $isMultistoreFeatureActive;
+    private $multistoreFeature;
 
     /**
      * @param TranslatorInterface $translator
-     * @param array $currencyChoices
-     * @param bool $isMultistoreFeatureActive
+     * @param FormChoiceProviderInterface $currencyChoiceProvider
+     * @param FeatureInterface $multistoreFeature
      */
     public function __construct(
         TranslatorInterface $translator,
-        array $currencyChoices,
-        bool $isMultistoreFeatureActive
+        FormChoiceProviderInterface $currencyChoiceProvider,
+        FeatureInterface $multistoreFeature
     ) {
         $this->translator = $translator;
-        $this->currencyChoices = $currencyChoices;
-        $this->isMultistoreFeatureActive = $isMultistoreFeatureActive;
+        $this->currencyChoiceProvider = $currencyChoiceProvider;
+        $this->multistoreFeature = $multistoreFeature;
     }
 
     /**
@@ -157,14 +159,19 @@ class CountryType extends AbstractType
             ])
             ->add('default_currency', ChoiceType::class, [
                 'required' => false,
-                'choices' => $this->currencyChoices,
-                'placeholder' => $this->translator->trans(
-                    'Default store currency',
-                    [],
-                    'Admin.International.Feature'
+                'choices' => array_merge(
+                    [
+                        $this->translator->trans(
+                            'Default store currency',
+                            [],
+                            'Admin.International.Feature'
+                        ) => 0,
+                    ],
+                    $this->currencyChoiceProvider->getChoices()
                 ),
+                'placeholder' => false,
             ])
-            ->add('zone', ZoneChoiceType::class, [
+            ->add('zone', ActiveZoneChoiceType::class, [
                 'required' => true,
                 'constraints' => [
                     new NotBlank([
@@ -199,7 +206,7 @@ class CountryType extends AbstractType
             ])
             ->add('is_enabled', SwitchType::class, [
                 'required' => false,
-                'data' => $this->getDataValue($builder->getData(), 'is_enabled'),
+                'data' => $this->getBoolValue($builder->getData(), 'is_enabled'),
             ])
             ->add('contains_states', SwitchType::class, [
                 'required' => false,
@@ -209,10 +216,10 @@ class CountryType extends AbstractType
             ])
             ->add('display_tax_label', SwitchType::class, [
                 'required' => false,
-                'data' => $this->getDataValue($builder->getData(), 'display_tax_label'),
+                'data' => $this->getBoolValue($builder->getData(), 'display_tax_label'),
             ]);
 
-        if ($this->isMultistoreFeatureActive) {
+        if ($this->multistoreFeature->isActive()) {
             $builder->add('shop_association', ShopChoiceTreeType::class, [
                 'required' => false,
             ]);
@@ -227,7 +234,7 @@ class CountryType extends AbstractType
      *
      * @return bool
      */
-    private function getDataValue(array $data, string $index): bool
+    private function getBoolValue(array $data, string $index): bool
     {
         return isset($data[$index]) && is_bool($data[$index]) ? $data[$index] : true;
     }

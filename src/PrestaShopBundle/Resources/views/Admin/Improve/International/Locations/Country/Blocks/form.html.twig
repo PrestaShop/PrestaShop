@@ -24,7 +24,6 @@
  *#}
 
 {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
-{% import '@PrestaShop/Admin/Improve/International/Locations/Country/Macros/address_format_macros.html.twig' as adr %}
 
 {{ form_start(countryForm) }}
 <div class="card">
@@ -81,21 +80,12 @@
           {{ form_errors(countryForm.address_format) }}
         </div>
         <div class="col-sm">
-          {{ adr.tabNav(displayValidFields) }}
-          {{ adr.tabContent(displayValidFields) }}
+          {% include '@PrestaShop/Admin/Improve/International/Locations/Country/Blocks/available_fields_content.html.twig' %}
         </div>
       </div>
 
       <div class="form-group row justify-content-end">
-        {{ include('@PrestaShop/Admin/Improve/International/Locations/Country/Blocks/format_actions.html.twig',
-          {
-            'countryForm': countryForm,
-            'displayValidFields': displayValidFields,
-            'addressLayout': addressLayout,
-            'defaultLayout': encodingDefaultLayout,
-            'encodingAddressLayout': encodingAddressLayout
-          }
-        ) }}
+        {% include '@PrestaShop/Admin/Improve/International/Locations/Country/Blocks/format_actions.html.twig' %}
       </div>
 
       {{ ps.form_group_row(countryForm.is_enabled, {}, {
