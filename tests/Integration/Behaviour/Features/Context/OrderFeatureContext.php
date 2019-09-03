@@ -27,6 +27,7 @@
 namespace Tests\Integration\Behaviour\Features\Context;
 
 use AppKernel;
+use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Configuration;
 use Exception;
 use LegacyTests\Unit\Core\Cart\CartToOrder\PaymentModuleFake;
@@ -42,6 +43,18 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
      * @var Order[]
      */
     protected $orders = [];
+
+    /**
+     * @var ProductFeatureContext
+     */
+    protected $productFeatureContext;
+
+    /** @BeforeScenario */
+    public function before(BeforeScenarioScope $scope)
+    {
+        $this->productFeatureContext = $scope->getEnvironment()->getContext(ProductFeatureContext::class);
+    }
+
 
     /**
      * @When /^I validate my cart using payment module (fake)$/
@@ -81,6 +94,46 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
         $this->orders[] = $order;
 
         $kernel = $previousKernel;
+    }
+
+    /**
+     * @When /^(\d+) items? of product "(.+)" are added in my cart order, with prices (\d+\.\d+) tax excluded and (\d+\.\d+) tax included$/
+     */
+    public function addProductInCartOrder($quantity, $productName, $priceTaxExcl, $priceTaxIncl)
+    {
+        $cart = $this->getCurrentCart();
+        $order = $this->getCurrentCartOrder();
+        $this->productFeatureContext->checkProductWithNameExists($productName);
+        $product = $this->productFeatureContext->getProductWithName($productName);
+        // need to disable some behaviour to avoid mocking the world !
+        $adminOrderController = new class() extends \AdminOrdersControllerCore {
+            public function access($action, $disable = false)
+            {
+                return true;
+            }
+            public function createTemplate($tpl_name)
+            {
+                return new class() {
+                    public function fetch()
+                    {
+                        return true;
+                    }
+                };
+            }
+        };
+        // expected arguments from ajax call
+        $productData = [
+            'product_id' => $product->id,
+            'product_price_tax_excl' => $priceTaxExcl,
+            'product_price_tax_incl' => $priceTaxIncl,
+            'product_quantity' => $quantity,
+        ];
+        $reflection = new \ReflectionClass(\AdminOrdersControllerCore::class);
+        $method = $reflection->getMethod('addProductToOrder');
+        $method->setAccessible(true);
+        $method->invokeArgs($adminOrderController, [$order, $productData]);
+        // restore correct cart since previous method has overridden it
+        Context::getContext()->cart = $cart;
     }
 
     /**
@@ -149,7 +202,179 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
             throw new RuntimeException(sprintf('Expects %s, got %s instead', $discountTaxIncluded, $orderCartRule->value));
         }
         if ((float) $discountTaxExcluded != (float) $orderCartRule->value_tax_excl) {
-            throw new RuntimeException(sprintf('Expects %s, got %s instead', $discountTaxExcluded, $orderCartRule->value_tax_excl));
+            throw new \RuntimeException(
+                sprintf(
+                    'Expects %s, got %s instead',
+                    $discountTaxExcluded,
+                    $orderCartRule->value_tax_excl
+                )
+            );
+        }
+    }
+
+    /**
+     * @Then /^current cart order should have no discount$/
+     */
+    public function checkOrderNoDiscount()
+    {
+        $order = $this->getCurrentCartOrder();
+        $orderCartRulesData = $order->getCartRules();
+        if (!empty($orderCartRulesData)) {
+            throw new Exception(
+                sprintf('Order should have no cart rule')
+            );
+        }
+    }
+    /**
+     * @Then order :reference should have :quantity products in total
+     */
+    public function assertOrderProductsQuantity($reference, $quantity)
+    {
+        $order = SharedStorage::getStorage()->get($reference);
+        $orderProducts = $order->getProductsDetail();
+
+        $totalQuantity = 0;
+
+        foreach ($orderProducts as $orderProduct) {
+            $totalQuantity += (int) $orderProduct['product_quantity'];
+        }
+
+        if ($totalQuantity !== (int) $quantity) {
+            throw new Exception(sprintf(
+                'Order should have "%d" products, but has "%d".',
+                $totalQuantity,
+                $quantity
+            ));
+        }
+    }
+
+    /**
+     * @Given there is order with reference :orderReference
+     */
+    public function thereIsOrderWithReference($orderReference)
+    {
+        $orders = Order::getByReference($orderReference);
+
+        if (0 === $orders->count()) {
+            throw new \Exception(sprintf('Order with reference "%s" does not exist.', $orderReference));
+        }
+    }
+
+    /**
+     * @Then order :reference should have free shipping
+     */
+    public function createdOrderShouldHaveFreeShipping($reference)
+    {
+        $order = SharedStorage::getStorage()->get($reference);
+
+        foreach ($order->getCartRules() as $cartRule) {
+            if ($cartRule['free_shipping']) {
+                return;
+            }
+        }
+
+        throw new Exception('Order should have free shipping.');
+    }
+
+    /**
+     * @Then order :reference should have :paymentModuleName payment method
+     */
+    public function createdOrderShouldHavePaymentMethod($reference, $paymentModuleName)
+    {
+        $order = SharedStorage::getStorage()->get($reference);
+
+        if ($order->module !== $paymentModuleName) {
+            throw new Exception(sprintf(
+                'Order should have "%s" payment method, but has "%s" instead.',
+                $paymentModuleName,
+                $order->payment
+            ));
+        }
+    }
+
+    /**
+     * @Given order with reference :orderReference does not contain product with reference :productReference
+     */
+    public function orderDoesNotContainProductWithReference($orderReference, $productReference)
+    {
+        $orders = Order::getByReference($orderReference);
+        /** @var Order $order */
+        $order = $orders->getFirst();
+
+        $productId = Product::getIdByReference($productReference);
+
+        if ($order->orderContainProduct($productId)) {
+            throw new \RuntimeException(
+                sprintf(
+                    'Order with reference "%s" contains product with reference "%s".',
+                    $orderReference,
+                    $productReference
+                )
+            );
+        }
+    }
+
+    /**
+     * @Then order :orderReference should contain :quantity products with reference :productReference
+     */
+    public function orderContainsProductWithReference($orderReference, $quantity, $productReference)
+    {
+        $orders = Order::getByReference($orderReference);
+        /** @var Order $order */
+        $order = $orders->getFirst();
+
+        $productId = (int) Product::getIdByReference($productReference);
+
+        if (!$order->orderContainProduct($productId)) {
+            throw new \RuntimeException(
+                sprintf(
+                    'Order with reference "%s" does not contain product with reference "%s".',
+                    $orderReference,
+                    $productReference
+                )
+            );
+        }
+
+        $orderDetails = $order->getOrderDetailList();
+
+        foreach ($orderDetails as $orderDetail) {
+            if ((int) $orderDetail['product_id'] === $productId &&
+                (int) $orderDetail['product_quantity'] === (int) $quantity
+            ) {
+                return;
+            }
+        }
+
+        throw new \RuntimeException(
+            sprintf('Order was expected to have "%d" products "%s" in it.', $quantity, $productReference)
+        );
+    }
+
+    /**
+     * @Given order :orderReference does not have any invoices
+     */
+    public function orderDoesNotHaveAnyInvoices($orderReference)
+    {
+        $orders = Order::getByReference($orderReference);
+        /** @var Order $order */
+        $order = $orders->getFirst();
+
+        if ($order->hasInvoice()) {
+            throw new \RuntimeException('Order should not have any invoices');
+        }
+    }
+
+    /**
+     * @Then order :orderReference should have invoice
+     */
+    public function orderShouldHaveInvoice($orderReference)
+    {
+        $orders = Order::getByReference($orderReference);
+        /** @var Order $order */
+        $order = $orders->getFirst();
+
+        if (false === $order->hasInvoice()) {
+            throw new \RuntimeException(sprintf('Order "%s" should have invoice', $orderReference));
         }
     }
 
