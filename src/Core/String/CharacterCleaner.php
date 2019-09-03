@@ -24,30 +24,23 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Tax\QueryHandler;
+namespace PrestaShop\PrestaShop\Core\String;
 
-use PrestaShop\PrestaShop\Adapter\Tax\AbstractTaxHandler;
-use PrestaShop\PrestaShop\Core\Domain\Tax\Query\GetTaxForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Tax\QueryHandler\GetTaxForEditingHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Tax\QueryResult\EditableTax;
-
-/**
- * Handles query which gets tax for editing
- */
-final class GetTaxForEditingHandler extends AbstractTaxHandler implements GetTaxForEditingHandlerInterface
+class CharacterCleaner
 {
     /**
-     * {@inheritdoc}
+     * Delete unicode class from regular expression patterns.
+     *
+     * @param string $pattern
+     *
+     * @return string pattern
      */
-    public function handle(GetTaxForEditing $query)
+    public function cleanNonUnicodeSupport($pattern)
     {
-        $tax = $this->getTax($query->getTaxId());
+        if (!defined('PREG_BAD_UTF8_OFFSET')) {
+            return $pattern;
+        }
 
-        return new EditableTax(
-            $query->getTaxId(),
-            $tax->name,
-            (float) $tax->rate,
-            (bool) $tax->active
-        );
+        return preg_replace('/\\\[px]\{[a-z]{1,2}\}|(\/[a-z]*)u([a-z]*)$/i', '$1$2', $pattern);
     }
 }

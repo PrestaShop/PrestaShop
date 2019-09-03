@@ -23,6 +23,11 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CustomerName;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Factory\CustomerNameValidatorFactory;
+use PrestaShop\PrestaShop\Core\String\CharacterCleaner;
+use Symfony\Component\Validator\Validation;
+
 class ValidateCore
 {
     const ADMIN_PASSWORD_LENGTH = 8;
@@ -165,11 +170,16 @@ class ValidateCore
      */
     public static function isCustomerName($name)
     {
-        $validityPattern = Tools::cleanNonUnicodeSupport(
-            '/^(?:[^0-9!<>,;?=+()\/\\@#"°*`{}_^$%:¤\[\]|\.。]|[\.。](?:\s|$))*$/u'
+        $validatorBuilder = Validation::createValidatorBuilder();
+        $validatorBuilder->setConstraintValidatorFactory(
+            new CustomerNameValidatorFactory(new CharacterCleaner())
         );
+        $validator = $validatorBuilder->getValidator();
+        $violations = $validator->validate($name, [
+            new CustomerName(),
+        ]);
 
-        return preg_match($validityPattern, $name);
+        return (count($violations) !== 0) ? 0 : 1;
     }
 
     /**

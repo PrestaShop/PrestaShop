@@ -24,30 +24,38 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Tax\QueryHandler;
+namespace PrestaShop\PrestaShop\Core\ConstraintValidator\Factory;
 
-use PrestaShop\PrestaShop\Adapter\Tax\AbstractTaxHandler;
-use PrestaShop\PrestaShop\Core\Domain\Tax\Query\GetTaxForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Tax\QueryHandler\GetTaxForEditingHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Tax\QueryResult\EditableTax;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\CustomerNameValidator;
+use PrestaShop\PrestaShop\Core\String\CharacterCleaner;
+use Symfony\Component\Validator\ConstraintValidatorFactoryInterface;
+use Symfony\Component\Validator\Constraint;
+use Symfony\Component\Validator\ConstraintValidatorInterface;
 
-/**
- * Handles query which gets tax for editing
- */
-final class GetTaxForEditingHandler extends AbstractTaxHandler implements GetTaxForEditingHandlerInterface
+class CustomerNameValidatorFactory implements ConstraintValidatorFactoryInterface
 {
     /**
-     * {@inheritdoc}
+     * @var CharacterCleaner
      */
-    public function handle(GetTaxForEditing $query)
-    {
-        $tax = $this->getTax($query->getTaxId());
+    private $characterCleaner;
 
-        return new EditableTax(
-            $query->getTaxId(),
-            $tax->name,
-            (float) $tax->rate,
-            (bool) $tax->active
-        );
+    /**
+     * CustomerNameValidatorFactory constructor.
+     *
+     * @param CharacterCleaner $characterCleaner
+     */
+    public function __construct(CharacterCleaner $characterCleaner)
+    {
+        $this->characterCleaner = $characterCleaner;
+    }
+
+    /**
+     * @param Constraint $constraint
+     *
+     * @return ConstraintValidatorInterface
+     */
+    public function getInstance(Constraint $constraint)
+    {
+        return new CustomerNameValidator($this->characterCleaner);
     }
 }

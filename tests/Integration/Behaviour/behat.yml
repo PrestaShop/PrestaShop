@@ -72,6 +72,12 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\WebserviceKeyFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\WebserviceKeyFeatureContext
+        tax:
+            paths:
+                features: Features/Scenario/Tax
+            contexts:
+                - Tests\Integration\Behaviour\Features\Context\Domain\TaxFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
         manufacturer:
             paths:
                 features: Features/Scenario/Manufacturer

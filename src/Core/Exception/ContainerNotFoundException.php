@@ -24,30 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Tax\QueryHandler;
+namespace PrestaShop\PrestaShop\Core\Exception;
 
-use PrestaShop\PrestaShop\Adapter\Tax\AbstractTaxHandler;
-use PrestaShop\PrestaShop\Core\Domain\Tax\Query\GetTaxForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Tax\QueryHandler\GetTaxForEditingHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Tax\QueryResult\EditableTax;
-
-/**
- * Handles query which gets tax for editing
- */
-final class GetTaxForEditingHandler extends AbstractTaxHandler implements GetTaxForEditingHandlerInterface
+class ContainerNotFoundException extends \Exception
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function handle(GetTaxForEditing $query)
-    {
-        $tax = $this->getTax($query->getTaxId());
-
-        return new EditableTax(
-            $query->getTaxId(),
-            $tax->name,
-            (float) $tax->rate,
-            (bool) $tax->active
-        );
-    }
 }

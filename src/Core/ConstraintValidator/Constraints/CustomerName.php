@@ -24,30 +24,23 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Tax\QueryHandler;
+namespace PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints;
 
-use PrestaShop\PrestaShop\Adapter\Tax\AbstractTaxHandler;
-use PrestaShop\PrestaShop\Core\Domain\Tax\Query\GetTaxForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Tax\QueryHandler\GetTaxForEditingHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Tax\QueryResult\EditableTax;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\CustomerNameValidator;
+use Symfony\Component\Validator\Constraint;
 
 /**
- * Handles query which gets tax for editing
+ * Class CustomerName is responsible of validating customer name according to several patterns.
  */
-final class GetTaxForEditingHandler extends AbstractTaxHandler implements GetTaxForEditingHandlerInterface
+final class CustomerName extends Constraint
 {
+    public $message = 'The %s field is invalid.';
+
     /**
      * {@inheritdoc}
      */
-    public function handle(GetTaxForEditing $query)
+    public function validatedBy()
     {
-        $tax = $this->getTax($query->getTaxId());
-
-        return new EditableTax(
-            $query->getTaxId(),
-            $tax->name,
-            (float) $tax->rate,
-            (bool) $tax->active
-        );
+        return CustomerNameValidator::class;
     }
 }
