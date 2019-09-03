@@ -24,20 +24,27 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Exception;
+namespace Tests\Integration\Behaviour\Features\Transform;
 
-/**
- * Class DomainConstraintException is responsible for holding exception codes which can be raised in reusable way.
- */
-class DomainConstraintException extends DomainException
+use Configuration;
+use Currency;
+use InvalidArgumentException;
+
+trait CurrencyTransform
 {
     /**
-     * @var int - raised when native php email validation fails. E.g filter_var($email, FILTER_VALIDATE_EMAIL)
+     * Transforms currency iso code to instance
+     *
+     * @Transform /^currency "([^"]+)"$/
      */
-    const INVALID_EMAIL = 1;
+    public function transformIsoToCurrency(string $currencyIso)
+    {
+        $currency = new Currency(Currency::getIdByIsoCode($currencyIso, Configuration::get('PS_SHOP_DEFAULT')));
 
-    /**
-     * Used when invalid money amount is provided
-     */
-    const INVALID_MONEY_AMOUNT = 2;
+        if (!$currency->id) {
+            throw new InvalidArgumentException(sprintf('Currency not found by iso code "%s"', $currencyIso));
+        }
+
+        return $currency;
+    }
 }

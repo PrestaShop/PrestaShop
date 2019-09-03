@@ -24,20 +24,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\CartRule\CommandHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\AddCartRuleCommand;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleId;
 
 /**
- * Class DomainConstraintException is responsible for holding exception codes which can be raised in reusable way.
+ * Interface for service that handles adding new cart rule.
  */
-class DomainConstraintException extends DomainException
+interface AddCartRuleHandlerInterface
 {
     /**
-     * @var int - raised when native php email validation fails. E.g filter_var($email, FILTER_VALIDATE_EMAIL)
+     * @param AddCartRuleCommand $command
+     *
+     * @return CartRuleId
      */
-    const INVALID_EMAIL = 1;
-
-    /**
-     * Used when invalid money amount is provided
-     */
-    const INVALID_MONEY_AMOUNT = 2;
+    public function handle(AddCartRuleCommand $command): CartRuleId;
 }

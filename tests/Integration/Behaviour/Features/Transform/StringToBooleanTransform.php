@@ -24,20 +24,26 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Exception;
+namespace Tests\Integration\Behaviour\Features\Transform;
 
 /**
- * Class DomainConstraintException is responsible for holding exception codes which can be raised in reusable way.
+ * Trait containing boolean transformations.
  */
-class DomainConstraintException extends DomainException
+trait StringToBooleanTransform
 {
     /**
-     * @var int - raised when native php email validation fails. E.g filter_var($email, FILTER_VALIDATE_EMAIL)
+     * @Transform /^(enabled|included|should|includes)$/
      */
-    const INVALID_EMAIL = 1;
+    public function transformTruthyStringToBoolean(string $string)
+    {
+        return true;
+    }
 
     /**
-     * Used when invalid money amount is provided
+     * @Transform /^(disabled|excluded|should not|excludes)$/
      */
-    const INVALID_MONEY_AMOUNT = 2;
+    public function transformFalsyStringToBoolean(string $string)
+    {
+        return false;
+    }
 }

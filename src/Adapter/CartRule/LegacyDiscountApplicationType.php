@@ -24,20 +24,32 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Exception;
+namespace PrestaShop\PrestaShop\Adapter\CartRule;
 
 /**
- * Class DomainConstraintException is responsible for holding exception codes which can be raised in reusable way.
+ * Legacy discount application types, used in cart rules, are defined in this class.
  */
-class DomainConstraintException extends DomainException
+final class LegacyDiscountApplicationType
 {
     /**
-     * @var int - raised when native php email validation fails. E.g filter_var($email, FILTER_VALIDATE_EMAIL)
+     * Discount is applied for selected products
      */
-    const INVALID_EMAIL = 1;
+    public const SELECTED_PRODUCTS = -2;
 
     /**
-     * Used when invalid money amount is provided
+     * Discount is applied to cheapest product
      */
-    const INVALID_MONEY_AMOUNT = 2;
+    public const CHEAPEST_PRODUCT = -1;
+
+    /**
+     * Discount is applied to order without shipping
+     */
+    public const ORDER_WITHOUT_SHIPPING = 0;
+
+    /**
+     * Class used only for constants.
+     */
+    private function __construct()
+    {
+    }
 }
