@@ -24,24 +24,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Product;
+namespace PrestaShop\PrestaShop\Core\Domain\CartRule\CommandHandler;
 
-use Product;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\AddCartRuleCommand;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleId;
 
 /**
- * Retrieve colors of a Product, if any.
+ * Interface for service that handles adding new cart rule.
  */
-class ProductColorsRetriever
+interface AddCartRuleHandlerInterface
 {
     /**
-     * @param int $id_product
+     * @param AddCartRuleCommand $command
      *
-     * @return mixed|null
+     * @return CartRuleId
      */
-    public function getColoredVariants($id_product)
-    {
-        $attributesColorList = Product::getAttributesColorList([$id_product]);
-
-        return (is_array($attributesColorList)) ? current($attributesColorList) : null;
-    }
+    public function handle(AddCartRuleCommand $command): CartRuleId;
 }

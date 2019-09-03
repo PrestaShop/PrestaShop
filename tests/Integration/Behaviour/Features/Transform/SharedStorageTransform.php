@@ -24,24 +24,22 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Product;
+namespace Tests\Integration\Behaviour\Features\Transform;
 
-use Product;
+use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
 /**
- * Retrieve colors of a Product, if any.
+ * Trait with common shared storage related transformations.
  */
-class ProductColorsRetriever
+trait SharedStorageTransform
 {
     /**
-     * @param int $id_product
+     * Helps access the latest resource that was put into storage.
      *
-     * @return mixed|null
+     * @Transform /^(it|its)$/
      */
-    public function getColoredVariants($id_product)
+    public function getLatestResource()
     {
-        $attributesColorList = Product::getAttributesColorList([$id_product]);
-
-        return (is_array($attributesColorList)) ? current($attributesColorList) : null;
+        return SharedStorage::getStorage()->getLatestResource();
     }
 }

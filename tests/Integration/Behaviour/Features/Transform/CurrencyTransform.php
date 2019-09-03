@@ -24,24 +24,27 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Product;
+namespace Tests\Integration\Behaviour\Features\Transform;
 
-use Product;
+use Configuration;
+use Currency;
+use InvalidArgumentException;
 
-/**
- * Retrieve colors of a Product, if any.
- */
-class ProductColorsRetriever
+trait CurrencyTransform
 {
     /**
-     * @param int $id_product
+     * Transforms currency iso code to instance
      *
-     * @return mixed|null
+     * @Transform /^currency "([^"]+)"$/
      */
-    public function getColoredVariants($id_product)
+    public function transformIsoToCurrency(string $currencyIso)
     {
-        $attributesColorList = Product::getAttributesColorList([$id_product]);
+        $currency = new Currency(Currency::getIdByIsoCode($currencyIso, Configuration::get('PS_SHOP_DEFAULT')));
 
-        return (is_array($attributesColorList)) ? current($attributesColorList) : null;
+        if (!$currency->id) {
+            throw new InvalidArgumentException(sprintf('Currency not found by iso code "%s"', $currencyIso));
+        }
+
+        return $currency;
     }
 }

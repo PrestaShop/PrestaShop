@@ -35,4 +35,9 @@ class DomainConstraintException extends DomainException
      * @var int - raised when native php email validation fails. E.g filter_var($email, FILTER_VALIDATE_EMAIL)
      */
     const INVALID_EMAIL = 1;
+
+    /**
+     * Used when invalid money amount is provided
+     */
+    const INVALID_MONEY_AMOUNT = 2;
 }

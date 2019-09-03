@@ -24,24 +24,26 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Product;
-
-use Product;
+namespace Tests\Integration\Behaviour\Features\Transform;
 
 /**
- * Retrieve colors of a Product, if any.
+ * Trait containing boolean transformations.
  */
-class ProductColorsRetriever
+trait StringToBooleanTransform
 {
     /**
-     * @param int $id_product
-     *
-     * @return mixed|null
+     * @Transform /^(enabled|included|should|includes)$/
      */
-    public function getColoredVariants($id_product)
+    public function transformTruthyStringToBoolean(string $string)
     {
-        $attributesColorList = Product::getAttributesColorList([$id_product]);
+        return true;
+    }
 
-        return (is_array($attributesColorList)) ? current($attributesColorList) : null;
+    /**
+     * @Transform /^(disabled|excluded|should not|excludes)$/
+     */
+    public function transformFalsyStringToBoolean(string $string)
+    {
+        return false;
     }
 }

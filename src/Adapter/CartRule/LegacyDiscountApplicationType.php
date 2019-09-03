@@ -24,24 +24,32 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Product;
-
-use Product;
+namespace PrestaShop\PrestaShop\Adapter\CartRule;
 
 /**
- * Retrieve colors of a Product, if any.
+ * Legacy discount application types, used in cart rules, are defined in this class.
  */
-class ProductColorsRetriever
+final class LegacyDiscountApplicationType
 {
     /**
-     * @param int $id_product
-     *
-     * @return mixed|null
+     * Discount is applied for selected products
      */
-    public function getColoredVariants($id_product)
-    {
-        $attributesColorList = Product::getAttributesColorList([$id_product]);
+    public const SELECTED_PRODUCTS = -2;
 
-        return (is_array($attributesColorList)) ? current($attributesColorList) : null;
+    /**
+     * Discount is applied to cheapest product
+     */
+    public const CHEAPEST_PRODUCT = -1;
+
+    /**
+     * Discount is applied to order without shipping
+     */
+    public const ORDER_WITHOUT_SHIPPING = 0;
+
+    /**
+     * Class used only for constants.
+     */
+    private function __construct()
+    {
     }
 }
