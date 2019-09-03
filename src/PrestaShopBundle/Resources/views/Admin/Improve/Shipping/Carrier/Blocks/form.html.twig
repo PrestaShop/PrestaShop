@@ -27,6 +27,7 @@
 
 <div id="carrier-form"
      class="card"
+     data-validate-steps-url="{{ validateStepsUrl }}"
      data-context-lang-id="{{ contextLangId }}"
      data-default-lang-id="{{ defaultLangId }}">
 
@@ -47,4 +48,15 @@
 
     {% include '@PrestaShop/Admin/Improve/Shipping/Carrier/Blocks/step_summary.html.twig' %}
   {{ form_end(carrierForm) }}
+
+  <div class="d-none" id="error-template">
+    <div class="error-content" id="error-content">
+      <div class="d-inline-block text-danger align-top">
+        <i class="material-icons form-error-icon">error_outline</i>
+      </div>
+      <div class="d-inline-block">
+        <div class="text-danger step_general_transit_name">__MESSAGE__</div>
+      </div>
+    </div>
+  </div>
 </div>

@@ -70,6 +70,7 @@ class CarrierController extends FrameworkBundleAdminController
             'uploadImageUrl' => $this->generateUrl('admin_carriers_upload_image'),
             'removeImageUrl' => $this->generateUrl('admin_carriers_remove_image'),
             'defaultLogo' => '/img/admin/carrier-default.jpg',
+            'validateStepsUrl' => $this->generateUrl('admin_carriers_validate_steps'),
         ]);
     }
 
@@ -126,6 +127,39 @@ class CarrierController extends FrameworkBundleAdminController
             ],
             Response::HTTP_INTERNAL_SERVER_ERROR
         );
+    }
+
+    public function validateStepsAction(Request $request)
+    {
+        $carrierForm = $this->createForm(CarrierType::class);
+        $carrierForm->handleRequest($request);
+
+        $formStepMap = [
+            1 => $carrierForm['step_general'],
+            3 => $carrierForm['step_shipping'],
+            4 => $carrierForm['step_properties_and_access'],
+            5 => $carrierForm['step_summary'],
+        ];
+
+        if (isset($carrierForm['step_multi_shop'])) {
+            $formStepMap[2] = $carrierForm['step_multi_shop'];
+        }
+
+        $errors = [];
+
+        foreach ($formStepMap as $stepNr => $stepForm) {
+            $stepToShow = $request->request->getInt('step');
+
+            if ($stepNr < $stepToShow) {
+                foreach ($this->getFormErrorsForJS($formStepMap[$stepNr]) as $errorField => $messages) {
+                    $errors[$errorField] = isset($messages[0]) ? $messages[0] : '';
+                }
+            }
+        }
+
+        return $this->json([
+            'errors' => $errors,
+        ]);
     }
 
     // @todo: move to RemoveCarrierLogoCommand

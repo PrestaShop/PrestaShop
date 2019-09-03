@@ -25,3 +25,10 @@ admin_carriers_remove_image:
   defaults:
     _controller: 'PrestaShopBundle:Admin\Improve\Shipping\Carrier:removeImage'
     _legacy_controller: AdminCarrierWizard:uploadLogo
+
+admin_carriers_validate_steps:
+  path: carriers/validate-steps
+  methods: [POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Improve\Shipping\Carrier:validateSteps'
+    _legacy_controller: AdminCarriers

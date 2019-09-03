@@ -37,18 +37,22 @@
           'For in-store pickup, enter 0 to replace the carrier name with your shop name.'|trans({}, 'Admin.Shipping.Help')
         %}
 
-        {{ ps.form_group_row(carrierForm.step_general.name, {}, {
-          'class': 'js-carrier-name',
-          'label': 'Carrier name'|trans({}, 'Admin.Global'),
-          'help': nameHelp
-        }) }}
+        <div class="step_general_name">
+          {{ ps.form_group_row(carrierForm.step_general.name, {}, {
+            'class': 'js-carrier-name',
+            'label': 'Carrier name'|trans({}, 'Admin.Global'),
+            'help': nameHelp
+          }) }}
+        </div>
 
-        {{ ps.form_group_row(carrierForm.step_general.transit_time, {
-          'attr': {'class': 'js-transit'},
-        }, {
-          'label': 'Transit time'|trans({}, 'Admin.Global'),
-          'help': 'The delivery time will be displayed during checkout.'|trans({}, 'Admin.Shipping.Help')
-        }) }}
+        <div class="step_general_transit_time">
+          {{ ps.form_group_row(carrierForm.step_general.transit_time, {
+            'attr': {'class': 'js-transit'},
+          }, {
+            'label': 'Transit time'|trans({}, 'Admin.Global'),
+            'help': 'The delivery time will be displayed during checkout.'|trans({}, 'Admin.Shipping.Help'),
+          }) }}
+        </div>
 
         {{ ps.form_group_row(carrierForm.step_general.speed_grade, {}, {
           'label': 'Speed grade'|trans({}, 'Admin.Global'),

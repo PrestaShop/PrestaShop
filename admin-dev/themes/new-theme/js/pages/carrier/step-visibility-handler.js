@@ -33,6 +33,7 @@ const $ = window.$;
 export default class StepVisibilityHandler {
   constructor(formWrapper) {
     this.formWrapper = formWrapper;
+    this.form = document.querySelector(`${formWrapper} form`);
     this.handle();
 
     return {};
@@ -42,8 +43,19 @@ export default class StepVisibilityHandler {
    * Initiates the handler
    */
   handle() {
-    $(document).on('click', `${this.formWrapper} .js-form-step-switch`, event => this.showStep(event));
+    $(document).on('click', `${this.formWrapper} .js-form-step-switch`, event => EventEmitter.emit(
+      'validateFormStep',
+      {
+        form: new FormData(this.form),
+        step: $(event.currentTarget).data('step'),
+      }
+    ));
+    EventEmitter.on('formStepValidated', (event) => {
+      debugger;
+      this.showStep(event);
+    });
   }
+
 
   /**
    * Shows form step

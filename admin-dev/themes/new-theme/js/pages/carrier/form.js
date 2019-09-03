@@ -37,6 +37,7 @@ import ImageUploader from './image-uploader.js';
 import ImageRemover from "./image-remover";
 import UnsavedFormWarning from "./unsaved-form-warning";
 import AllZonesPriceFiller from "./all-zones-price-filler";
+import FormStepValidator from "./form-step-validator";
 
 const $ = window.$;
 
@@ -120,4 +121,6 @@ $(() => {
   );
 
   new UnsavedFormWarning();
+
+  new FormStepValidator(CarrierFormMap.formWrapper);
 });
