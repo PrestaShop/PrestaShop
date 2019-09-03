@@ -121,7 +121,11 @@ export default class AddRangeHandler {
     this.rangeIndex += 1;
   }
 
-  // append button which removes corresponding range column
+  /**
+   * Append button which removes corresponding range column
+   *
+   * @param rangeIndex
+   */
   appendRangeRemovalButton(rangeIndex) {
     $(this.rangeRemovingBtnRow).removeClass('d-none');
     $(this.rangeRemovingBtnRow).append(
@@ -129,7 +133,11 @@ export default class AddRangeHandler {
     );
   }
 
-  // remove range column
+  /**
+   * Remove range column
+   *
+   * @param event
+   */
   removeRangeColumn(event) {
     $(this.rangesTable).find(`*[data-range-index="${$(event.currentTarget.parentElement).data('range-index')}"]`)
       .remove();

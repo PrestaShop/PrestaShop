@@ -54,6 +54,11 @@ export default class ImageRemover {
     })
   }
 
+  /**
+   * Removes the image from system and from showing up in img tag
+   *
+   * @param isTmp whether the image is temporary, or it was already saved to shipping dir.
+   */
   removeImage(isTmp) {
     const src = this.$imageTarget.attr('src');
     const imgName = src.substring(src.lastIndexOf('/') + 1);
@@ -77,16 +82,27 @@ export default class ImageRemover {
     });
   }
 
+  /**
+   * Clears the src attr value and the input label of selected files
+   *
+   * @param emptyFileLabel
+   */
   clearImagePresentation(emptyFileLabel) {
     this.$imageTarget.attr('src', this.$imageTarget.data('default-logo'));
     this.$imageUploadBlock.find('input[type="file"]').parent().find('label').text(emptyFileLabel);
     this.$imageUploadBlock.find('input[type="hidden"]').val('');
   }
 
+  /**
+   * Hides button which is responsible for removing the logo
+   */
   hideRemoveBtn() {
     this.$removalBtn.hide();
   }
 
+  /**
+   * Removes the tmp image from file system before page is refreshed
+   */
   removeImgOnPageReload() {
     window.onbeforeunload = () => {
       const prevImg = this.$imageUploadBlock.find('input[type="hidden"]').val();

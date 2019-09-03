@@ -56,6 +56,9 @@ export default class ImageUploader {
     });
   }
 
+  /**
+   * Uploads the temporary image to file system
+   */
   uploadImage() {
     $.ajax({
       url: this.$imageUploadBlock.data('upload-image-url'),
@@ -68,22 +71,35 @@ export default class ImageUploader {
     }).then((response) => {
       this.presentImage(response.img_path);
       this.showRemovalBtn();
-      this.logPreviousImgName(response.img_path);
+      this.logImgName(response.img_path);
     }).catch((e) => {
       showErrorMessage(e.responseJSON.message);
     });
   }
 
+  /**
+   * Presents the image in browser
+   *
+   * @param imagePath
+   */
   presentImage(imagePath) {
     this.$imageTarget.prop('src', imagePath);
     $(this.$imageUploadBlock).find('input[type="hidden"]').val(imagePath);
   }
 
+  /**
+   * Shows button which is responsible for logo removal
+   */
   showRemovalBtn() {
     this.$removalBtn.show();
   }
 
-  logPreviousImgName(imgPath) {
+  /**
+   * Saves image name in browser
+   *
+   * @param imgPath
+   */
+  logImgName(imgPath) {
     const fileName = imgPath.substr(imgPath.lastIndexOf('/') + 1);
     $(this.$imageUploadBlock).find('input[type="hidden"]').val(fileName);
   }

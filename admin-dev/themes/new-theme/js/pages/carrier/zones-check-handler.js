@@ -25,15 +25,20 @@
 
 const $ = window.$;
 
+/**
+ * Modifies fields (enables/disables/fills values etc.) depending on checked zones
+ */
 export default class ZonesCheckHandler {
   constructor(zoneCheck) {
     this.$zoneCheck = $(zoneCheck);
     this.handle();
 
-
     return {};
   }
 
+  /**
+   * Initiates the handler
+   */
   handle() {
     this.$zoneCheck.change((e) => {
       if ($(e.target).val() === '0') {
@@ -43,12 +48,22 @@ export default class ZonesCheckHandler {
     });
   }
 
+  /**
+   * Checks all fields when `all` option is selected
+   *
+   * @param event
+   */
   selectAll(event) {
     const isSelectAllChecked = $(event.target).is(':checked');
 
     this.$zoneCheck.not(event.target).prop('checked', isSelectAllChecked);
   }
 
+  /**
+   * Disables inputs that depends from checked value
+   *
+   * @param event
+   */
   disableDependantInputs(event) {
     $.each($(event.target), (i, input) => {
       const isChecked = $(event.target).is(':checked');

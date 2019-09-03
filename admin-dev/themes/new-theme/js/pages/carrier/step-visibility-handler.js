@@ -27,6 +27,9 @@ import {EventEmitter} from '../../components/event-emitter';
 
 const $ = window.$;
 
+/**
+ * Responsible for showing needed form steps while hiding others.
+ */
 export default class StepVisibilityHandler {
   constructor(formWrapper) {
     this.formWrapper = formWrapper;
@@ -35,10 +38,18 @@ export default class StepVisibilityHandler {
     return {};
   }
 
+  /**
+   * Initiates the handler
+   */
   handle() {
     $(document).on('click', `${this.formWrapper} .js-form-step-switch`, event => this.showStep(event));
   }
 
+  /**
+   * Shows form step
+   *
+   * @param event
+   */
   showStep(event) {
     const $this = $(event.currentTarget);
     const stepToShow = $this.data('step');
@@ -50,6 +61,11 @@ export default class StepVisibilityHandler {
     EventEmitter.emit('formStepSwitched');
   }
 
+  /**
+   * Activates tab which represents currently shown step
+   *
+   * @param stepToShow
+   */
   activateTab(stepToShow) {
     $(document).find(`${this.formWrapper} .nav-link`).removeClass('active');
     $(document).find(`${this.formWrapper} *[data-step=${stepToShow}].nav-link `).addClass('active');

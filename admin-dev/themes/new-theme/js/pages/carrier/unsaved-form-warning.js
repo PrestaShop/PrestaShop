@@ -23,6 +23,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+/**
+ * Warns user before leaving about unsaved changes
+ */
 export default class UnsavedFormWarning {
   constructor() {
     // before reloading the page shows warning message which depends from browser
