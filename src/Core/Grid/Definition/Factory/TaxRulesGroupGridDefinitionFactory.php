@@ -49,7 +49,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class TaxRulesGroupGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
-    const GRID_ID = 'tax_rules_group';
+    public const GRID_ID = 'tax_rules_group';
 
     /**
      * {@inheritdoc}

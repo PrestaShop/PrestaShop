@@ -36,6 +36,7 @@ interface GetTaxRulesGroupForEditingHandlerInterface
 {
     /**
      * @param GetTaxRulesGroupForEditing $query
+     *
      * @return EditableTaxRulesGroup
      */
     public function handle(GetTaxRulesGroupForEditing $query): EditableTaxRulesGroup;

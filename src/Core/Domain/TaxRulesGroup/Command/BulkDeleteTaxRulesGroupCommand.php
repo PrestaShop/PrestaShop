@@ -41,6 +41,7 @@ class BulkDeleteTaxRulesGroupCommand
 
     /**
      * @param int[] $taxRulesGroupIds
+     *
      * @throws TaxRulesGroupConstraintException
      */
     public function __construct(array $taxRulesGroupIds)
@@ -58,6 +59,7 @@ class BulkDeleteTaxRulesGroupCommand
 
     /**
      * @param int[] $taxRulesGroupIds
+     *
      * @throws TaxRulesGroupConstraintException
      */
     private function setTaxRulesGroupIds(array $taxRulesGroupIds)

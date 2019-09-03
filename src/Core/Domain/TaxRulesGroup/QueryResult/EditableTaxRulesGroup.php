@@ -47,10 +47,8 @@ class EditableTaxRulesGroup
      * @param TaxRulesGroupId $taxRulesGroupId
      * @param bool $active
      */
-    public function __construct(
-        TaxRulesGroupId $taxRulesGroupId,
-        bool $active
-    ) {
+    public function __construct(TaxRulesGroupId $taxRulesGroupId, bool $active)
+    {
         $this->taxRulesGroupId = $taxRulesGroupId;
         $this->active = $active;
     }
