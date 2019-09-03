@@ -29,6 +29,7 @@ namespace Tests\Integration\Behaviour\Features\Context;
 use AppKernel;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Configuration;
+use Context;
 use Exception;
 use LegacyTests\Unit\Core\Cart\CartToOrder\PaymentModuleFake;
 use Order;
