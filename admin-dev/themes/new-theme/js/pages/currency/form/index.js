@@ -25,89 +25,15 @@
 
 import ChoiceTree from '../../../components/form/choice-tree';
 import TranslatableInput from '../../../components/translatable-input';
-import { showGrowl } from '../../../app/utils/growl';
 import currencyFormMap from "./currency-form-map";
+import CurrencyForm from './currency-form';
 
 const $ = window.$;
 
 $(() => {
   new TranslatableInput();
-  const choiceTree = new ChoiceTree('#currency_shop_association');
+  const choiceTree = new ChoiceTree(currencyFormMap.shopAssociationTree);
   choiceTree.enableAutoCheckChildren();
-
-  const $currencyForm = $(currencyFormMap.currencyForm);
-  const getCLDRDataUrl = $currencyForm.data('get-cldr-data');
-  const $currencySelector = $(currencyFormMap.currencySelector);
-  $currencySelector.change(() => {
-    const selectedISOCode = $currencySelector.val();
-    if ('' !== selectedISOCode) {
-      $(currencyFormMap.isUnofficialCheckbox).prop('checked', false);
-      $(currencyFormMap.isoCodeSelector).prop('readonly', true);
-      resetCurrencyData(selectedISOCode);
-    } else {
-      $(currencyFormMap.isUnofficialCheckbox).prop('checked', true);
-      $(currencyFormMap.isoCodeSelector).prop('readonly', false);
-    }
-  });
-
-  $(currencyFormMap.isUnofficialCheckbox).change(() => {
-    if ($(currencyFormMap.isUnofficialCheckbox).prop('checked')) {
-      $currencySelector.val('');
-      $(currencyFormMap.isoCodeSelector).prop('readonly', false);
-    } else {
-      $(currencyFormMap.isoCodeSelector).prop('readonly', true);
-    }
-  });
-
-  $(currencyFormMap.resetDefaultSettingsSelector).click(() => {
-    resetCurrencyData($(currencyFormMap.isoCodeSelector).val());
-
-    return false;
-  });
-
-  function resetCurrencyData(selectedISOCode) {
-    $(currencyFormMap.loadingDataModalSelector).modal('show');
-    $(currencyFormMap.resetDefaultSettingsSelector).addClass('spinner');
-    const getCurrencyData = getCLDRDataUrl.replace('CURRENCY_ISO_CODE', selectedISOCode);
-    $.get(getCurrencyData)
-      .then((currencyData) => {
-        for (let langId in currencyData.names) {
-          let langNameSelector = `${currencyFormMap.namesSelectorPrefix}${langId}`;
-          $(langNameSelector).val(currencyData.names[langId]);
-        }
-        for (let langId in currencyData.symbols) {
-          let langSymbolSelector = `${currencyFormMap.symbolsSelectorPrefix}${langId}`;
-          $(langSymbolSelector).val(currencyData.symbols[langId]);
-        }
-        $(currencyFormMap.isoCodeSelector).val(currencyData.iso_code);
-        $(currencyFormMap.numericIsoCodeSelector).val(currencyData.numeric_iso_code);
-        if (currencyData.exchange_rate) {
-          $(currencyFormMap.exchangeRateSelector).val(currencyData.exchange_rate);
-        }
-        $(currencyFormMap.precisionSelector).val(currencyData.precision);
-        $(currencyFormMap.loadingDataModalSelector).modal('hide');
-        $(currencyFormMap.resetDefaultSettingsSelector).removeClass('spinner');
-      })
-      .fail((currencyData) => {
-        $(currencyFormMap.loadingDataModalSelector).modal('hide');
-        $(currencyFormMap.resetDefaultSettingsSelector).removeClass('spinner');
-        let errorMessage = 'Can not find CLDR data for currency ' + selectedISOCode;
-        if (currencyData && currencyData.responseJSON && currencyData.responseJSON.error) {
-          errorMessage = currencyData.responseJSON.error;
-        }
-        showGrowl('error', errorMessage, 3000);
-      })
-  }
-
-  function initFields() {
-    const isUnofficial = $(currencyFormMap.isUnofficialCheckbox).prop('checked');
-    if (!isUnofficial) {
-      $(currencyFormMap.isUnofficialCheckbox).prop('checked', false);
-      $(currencyFormMap.isoCodeSelector).prop('readonly', true);
-    } else {
-      $currencySelector.val('');
-      $(currencyFormMap.isoCodeSelector).prop('readonly', false);
-    }
-  }
-  initFields();
+  const currencyForm = new CurrencyForm(currencyFormMap);
+  currencyForm.init();
 });
