@@ -9,7 +9,7 @@ module.exports = class Home extends CommonPage {
     this.productImg = '#content .products div:nth-child(%NUMBER) article img';
     this.userInfoLink = '#_desktop_user_info';
     this.contactLink = '#contact-link';
-    this.allProductLink = '#content  a.all-product-link';
+    this.allProductLink = '#content a.all-product-link';
     this.totalProducts = '#js-product-list-top .total-products > p';
     this.categoryMenu = '#category-%ID > a'
   }
@@ -36,8 +36,8 @@ module.exports = class Home extends CommonPage {
    */
   async getNumberOfProducts() {
     const productNumber = await this.getTextContent(this.totalProducts);
-    const numberOfProduct = /\d+/g.exec(productNumber.match(/Il y a ([0-9]+)/)).toString();
-    return parseFloat(numberOfProduct);
+    const numberOfProduct = /\d+/g.exec(productNumber).toString();
+    return parseInt(numberOfProduct);
   }
 
   /**
@@ -45,7 +45,7 @@ module.exports = class Home extends CommonPage {
    * @param categoryID, category id from the BO
    */
   async filterByCategory(categoryID) {
-    await this.waitForSelectorAndClick(this.categoryMenu.replace('%ID', categoryID))
+    await this.waitForSelectorAndClick(this.categoryMenu.replace('%ID', categoryID));
   }
 
   /**
@@ -55,6 +55,6 @@ module.exports = class Home extends CommonPage {
    */
   async filterSubCategory(categoryID, subCategoryID) {
     await this.page.hover(this.categoryMenu.replace('%ID', categoryID));
-    await this.waitForSelectorAndClick(this.categoryMenu.replace('%ID', subCategoryID))
+    await this.waitForSelectorAndClick(this.categoryMenu.replace('%ID', subCategoryID));
   }
 };

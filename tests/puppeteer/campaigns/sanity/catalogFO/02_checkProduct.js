@@ -26,6 +26,6 @@ global.scenario('Check the Product page', () => {
     await homePage.goTo(global.URL_FO);
     await homePage.checkHomePage();
   });
-  test('should go to the first product page', () => homePage.goToProductPage('1'));
-  test('should check the product page', () => productPage.checkProduct(ProductData.firstProductData));
+  test('should go to the first product page', async () => await homePage.goToProductPage('1'));
+  test('should check the product page', async () => await productPage.checkProduct(ProductData.firstProductData));
 }, init, true);
