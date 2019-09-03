@@ -90,12 +90,13 @@ class AdminLinkBuilder implements EntityLinkBuilderInterface
      */
     private function buildActionParameters($action, $entity, array $parameters)
     {
+        unset($parameters['current_index']);
+        unset($parameters['token']);
         $editAction = $action . $entity;
-        $entityId = 'id_' . $entity;
 
         return array_merge(
             $parameters,
-            [$entityId => $parameters[$entityId], $editAction => 1]
+            [$editAction => 1]
         );
     }
 
