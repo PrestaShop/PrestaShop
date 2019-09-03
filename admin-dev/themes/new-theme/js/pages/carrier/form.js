@@ -36,6 +36,7 @@ import ZonesCheckHandler from './zones-check-handler.js';
 import ImageUploader from './image-uploader.js';
 import ImageRemover from "./image-remover";
 import UnsavedFormWarning from "./unsaved-form-warning";
+import AllZonesPriceFiller from "./all-zones-price-filler";
 
 const $ = window.$;
 
@@ -111,6 +112,11 @@ $(() => {
     CarrierFormMap.imageUploadBlock,
     CarrierFormMap.imageTarget,
     CarrierFormMap.imageRemoveBtn,
+  );
+
+  new AllZonesPriceFiller(
+    CarrierFormMap.rangesTable,
+    CarrierFormMap.rangeRow,
   );
 
   new UnsavedFormWarning();

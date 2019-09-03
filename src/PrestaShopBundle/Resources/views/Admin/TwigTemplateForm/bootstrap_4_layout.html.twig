@@ -863,7 +863,10 @@
                       $
                     </span>
                   </div>
-                  {{ form_widget(form.prices[0].price_by_zone[zone_id], {'attr': {'readonly': 'true'}}) }}
+                  {{ form_widget(form.prices[0].price_by_zone[zone_id], {'attr': {
+                    'readonly': 'true',
+                    'data-range-index': '0',
+                  }}) }}
                 </div>
               </td>
             {% endif %}
@@ -893,6 +896,7 @@
         </div>
         <input
           type="text"
+          data-range-index="__RANGE_INDEX__"
           disabled
           readonly
           name="carrier[step_shipping][carrier_ranges][prices][__RANGE_INDEX__][price_by_zone][__ZONE_ID__]"

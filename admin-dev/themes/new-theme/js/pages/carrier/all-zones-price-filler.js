@@ -26,11 +26,16 @@
 const $ = window.$;
 
 /**
- * Modifies fields (enables/disables) depending on checked zones
+ * Responsible for filling column prices with value from 'all' input
  */
-export default class ZonesCheckHandler {
-  constructor(zoneCheck) {
-    this.$zoneCheck = $(zoneCheck);
+export default class AllZonesPriceFiller {
+  constructor(
+    rangesTable,
+    rangeRow,
+  ) {
+    this.$rangesTable = $(rangesTable);
+    this.inputAllSelector = `tr:not(${rangeRow}) div[data-zone-id="0"] input`;
+
     this.handle();
 
     return {};
@@ -40,35 +45,19 @@ export default class ZonesCheckHandler {
    * Initiates the handler
    */
   handle() {
-    this.$zoneCheck.change((e) => {
-      if ($(e.target).val() === '0') {
-        this.selectAll(e);
-      }
-      this.disableDependantInputs(e);
+    this.$rangesTable.on('change', this.inputAllSelector, (e) => {
+      this.fillColumnInputs($(e.target).data('range-index'), e.target.value);
     });
   }
 
   /**
-   * Checks all fields when `all` option is selected
+   * Fills column inputs with provided value
    *
-   * @param event
+   * @param columnIndex
+   * @param value
    */
-  selectAll(event) {
-    const isSelectAllChecked = $(event.target).is(':checked');
-
-    this.$zoneCheck.not(event.target).prop('checked', isSelectAllChecked);
-  }
-
-  /**
-   * Disables inputs that depends from checked value
-   *
-   * @param event
-   */
-  disableDependantInputs(event) {
-    $.each($(event.target), (i, input) => {
-      const isChecked = $(event.target).is(':checked');
-      const zoneId = $(input).val();
-      $('#js-carrier-ranges').find(`div[data-zone-id='${zoneId}'] input`).prop('readonly', !isChecked);
-    });
+  fillColumnInputs(columnIndex, value) {
+    const inputsToFill = this.$rangesTable.find(`input[data-range-index="${columnIndex}"]`);
+    inputsToFill.val(value);
   }
 }

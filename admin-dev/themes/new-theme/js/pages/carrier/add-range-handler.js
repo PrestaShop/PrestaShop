@@ -96,14 +96,11 @@ export default class AddRangeHandler {
         // append table data with input from template
         $row.append(`<td data-range-index="${this.rangeIndex}">${inputTo}</td>`);
       } else {
-
-
         // replace price index and zone id placeholders with actual values and enable input
         let inputPrice = (this.$rangePriceTemplate.get(0).outerHTML)
           .replace(/__RANGE_INDEX__/, this.rangeIndex)
           .replace(/disabled=""/, '')
           .replace(/__ZONE_ID__/g, $row.data('zone-id'));
-
 
         // check if corresponding zone is checked to remove readonly attr
         if ($row.find(this.zoneCheckbox).is(':checked')) {
