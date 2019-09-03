@@ -23,5 +23,9 @@ _tax:
     prefix: /taxes/
 
 _state:
-  resource: "state.yml"
-  prefix: /states/
+    resource: "state.yml"
+    prefix: /states/
+
+_tax_rules_groups:
+    resource: "tax_rules_groups.yml"
+    prefix: /tax_rules_groups/

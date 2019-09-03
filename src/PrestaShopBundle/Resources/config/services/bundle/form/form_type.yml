@@ -895,3 +895,11 @@ services:
             - '@prestashop.core.form.choice_provider.order_state_by_id'
         tags:
             - { name: form.type }
+
+    form.type.international.tax_rules_group:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\TaxRulesGroup\TaxRulesGroupType'
+        arguments:
+          - '@translator'
+          - '@prestashop.adapter.feature.multistore'
+        tags:
+          - { name: form.type }

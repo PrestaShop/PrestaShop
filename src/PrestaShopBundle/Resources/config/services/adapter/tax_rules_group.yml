@@ -1,0 +1,52 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.adapter.tax_rules_group.query_handler.create_tax_rule_handler:
+    public: true
+    class: 'PrestaShop\PrestaShop\Adapter\TaxRulesGroup\CommandHandler\AddTaxRuleHandler'
+    tags:
+      - name: 'tactician.handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Command\AddTaxRuleCommand'
+
+  prestashop.adapter.tax_rules_group.query_handler.create_tax_rules_group_handler:
+    public: true
+    class: 'PrestaShop\PrestaShop\Adapter\TaxRulesGroup\CommandHandler\AddTaxRulesGroupHandler'
+    tags:
+      - name: 'tactician.handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Command\AddTaxRulesGroupCommand'
+
+  prestashop.adapter.tax_rules_group.query_handler.bulk_delete_tax_rule_handler:
+    public: true
+    class: 'PrestaShop\PrestaShop\Adapter\TaxRulesGroup\CommandHandler\BulkDeleteTaxRuleHandler'
+    tags:
+      - name: 'tactician.handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Command\BulkDeleteTaxRuleCommand'
+
+  prestashop.adapter.tax_rules_group.query_handler.update_tax_rule_handler:
+    public: true
+    class: 'PrestaShop\PrestaShop\Adapter\TaxRulesGroup\CommandHandler\UpdateTaxRuleHandler'
+    tags:
+      - name: 'tactician.handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Command\UpdateTaxRuleCommand'
+
+  prestashop.adapter.tax_rules_group.query_handler.update_tax_rules_group_handler:
+    public: true
+    class: 'PrestaShop\PrestaShop\Adapter\TaxRulesGroup\CommandHandler\UpdateTaxRulesGroupHandler'
+    tags:
+      - name: 'tactician.handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Command\UpdateTaxRulesGroupCommand'
+
+  prestashop.adapter.tax_rules_group.query_handler.get_editable_tax_rule:
+    public: true
+    class: 'PrestaShop\PrestaShop\Adapter\TaxRulesGroup\QueryHandler\GetTaxRuleForEditingHandler'
+    tags:
+      - name: 'tactician.handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Query\GetTaxRuleForEditing'
+
+  prestashop.adapter.tax_rules_group.query_handler.get_editable_tax_rules_group:
+    public: true
+    class: 'PrestaShop\PrestaShop\Adapter\TaxRulesGroup\QueryHandler\GetTaxRulesGroupForEditingHandler'
+    tags:
+      - name: 'tactician.handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Query\GetTaxRulesGroupForEditing'
