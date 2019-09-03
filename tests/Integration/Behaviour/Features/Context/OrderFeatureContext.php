@@ -135,10 +135,12 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
 
     /**
      * Duplicate from AdminOrderController::addProductToOrder
+     *
      * @param Order $order
      * @param array $product_informations
      * @param array $invoice_informations
      * @param bool $warehouseId
+     *
      * @return array
      */
     protected function addProductToOrder(Order $order, array $product_informations, array $invoice_informations = [], $warehouseId = false)
@@ -292,7 +294,6 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
                 } else {
                     $order_invoice->number = Order::getLastInvoiceNumber() + 1;
                 }
-
 
                 $invoice_address = new Address((int) $order->{Configuration::get('PS_TAX_ADDRESS_TYPE', null, null, $order->id_shop)});
                 $carrier = new Carrier((int) $order->id_carrier);
