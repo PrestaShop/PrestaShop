@@ -54,7 +54,6 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
         $this->productFeatureContext = $scope->getEnvironment()->getContext(ProductFeatureContext::class);
     }
 
-
     /**
      * @When /^I validate my cart using payment module (fake)$/
      */
@@ -110,6 +109,7 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
             {
                 return true;
             }
+
             public function createTemplate($tpl_name)
             {
                 return new class() {
@@ -256,6 +256,7 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
             );
         }
     }
+
     /**
      * @Then order :reference should have :quantity products in total
      */
