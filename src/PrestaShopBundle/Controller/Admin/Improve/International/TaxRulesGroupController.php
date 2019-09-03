@@ -26,13 +26,6 @@
 
 namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
-use Exception;
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
-use PrestaShop\PrestaShop\Core\Domain\Tax\Command\BulkToggleTaxStatusCommand;
-use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\DeleteTaxException;
-use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxException;
-use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\UpdateTaxException;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Command\BulkDeleteTaxRulesGroupCommand;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Command\BulkToggleTaxRulesGroupStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Command\DeleteTaxRulesGroupCommand;
@@ -157,13 +150,12 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
     {
         try {
             /** @var EditableTaxRulesGroup $editableTaxRulesGroup */
-            $editableTaxRulesGroup = $this->getQueryBus()->handle(new GetTaxRulesGroupForEditing((int) $taxRulesGroupId));
+            $editableTaxRulesGroup = $this->getQueryBus()->handle(
+                new GetTaxRulesGroupForEditing((int) $taxRulesGroupId)
+            );
 
             $this->getCommandBus()->handle(
-                new ToggleTaxRulesGroupStatusCommand(
-                    (int) $taxRulesGroupId,
-                    !$editableTaxRulesGroup->isActive()
-                )
+                new ToggleTaxRulesGroupStatusCommand((int) $taxRulesGroupId, !$editableTaxRulesGroup->isActive())
             );
 
             $this->addFlash(
@@ -304,6 +296,7 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
      * Gets error messages for exceptions
      *
      * @param TaxRulesGroupException $e
+     *
      * @return array
      */
     private function getErrorMessages(TaxRulesGroupException $e = null): array
