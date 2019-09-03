@@ -10,7 +10,6 @@ const AddProductPage = require('../../../pages/BO/addProduct');
 const FOProductPage = require('../../../pages/FO/product');
 const ProductFaker = require('../../data/faker/product');
 
-
 let page;
 let loginPage;
 let dashboardPage;
@@ -33,7 +32,6 @@ const init = async () => {
   productData = await (new ProductFaker());
   editedProductData = await (new ProductFaker());
 };
-
 
 // Create, read, update and delete simple product in BO
 global.scenario('Create, read, update and delete a product', async () => {

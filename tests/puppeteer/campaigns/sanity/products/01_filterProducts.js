@@ -24,7 +24,6 @@ const init = async () => {
   numberOfProducts = 0;
 };
 
-
 // Test of filters in products page
 global.scenario('Filter in Products Page', async () => {
   test('should login in BO', async () => {
