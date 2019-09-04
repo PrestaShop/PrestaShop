@@ -82,8 +82,14 @@ default:
             paths:
                 features: Features/Scenario/Manufacturer
             contexts:
+              - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+              - Tests\Integration\Behaviour\Features\Context\Domain\ManufacturerFeatureContext
+        cms_page:
+            paths:
+                features: Features/Scenario/CmsPage
+            contexts:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
-                - Tests\Integration\Behaviour\Features\Context\Domain\ManufacturerFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\CmsPageFeatureContext
         cart_rule:
             paths:
                 features: Features/Scenario/CartRule

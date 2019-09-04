@@ -86,7 +86,7 @@ final class EditCmsPageHandler extends AbstractCmsPageHandler implements EditCms
     private function createCmsFromCommand(EditCmsPageCommand $command)
     {
         $cms = $this->getCmsPageIfExistsById($command->getCmsPageId()->getValue());
-        $cmsCategoryId = $command->getCmsPageCategoryId()->getValue();
+        $cmsCategoryId = null === $command->getCmsPageCategoryId() ?: $command->getCmsPageCategoryId()->getValue();
 
         if (null !== $cmsCategoryId && $this->assertCmsCategoryExists($cmsCategoryId)) {
             $cms->id_cms_category = $cmsCategoryId;
