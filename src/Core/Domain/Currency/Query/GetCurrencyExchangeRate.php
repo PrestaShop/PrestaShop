@@ -41,7 +41,7 @@ class GetCurrencyExchangeRate
      *
      * @throws CurrencyException
      */
-    public function __construct($isoCode)
+    public function __construct(string $isoCode)
     {
         $this->isoCode = new AlphaIsoCode($isoCode);
     }
@@ -49,7 +49,7 @@ class GetCurrencyExchangeRate
     /**
      * @return AlphaIsoCode
      */
-    public function getIsoCode()
+    public function getIsoCode(): AlphaIsoCode
     {
         return $this->isoCode;
     }

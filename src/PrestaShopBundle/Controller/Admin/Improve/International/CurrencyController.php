@@ -48,6 +48,7 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterf
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CurrencyGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\Currency;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\CurrencyInterface;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\Reader;
 use PrestaShop\PrestaShop\Core\Search\Filters\CurrencyFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -249,7 +250,7 @@ class CurrencyController extends FrameworkBundleAdminController
             $cldrCurrency['numeric_iso_code'] = (int) $currencyData->getNumericIsoCode();
             $cldrCurrency['precision'] = $currencyData->getDecimalDigits();
             $cldrCurrency['names'][$language['id_lang']] = $currency->getDisplayName();
-            $cldrCurrency['symbols'][$language['id_lang']] = $currency->getSymbol() ?: $currencyData->getIsoCode();
+            $cldrCurrency['symbols'][$language['id_lang']] = $currency->getSymbol(CurrencyInterface::SYMBOL_TYPE_NARROW) ?: $currencyData->getIsoCode();
         }
 
         if (empty($cldrCurrency)) {
