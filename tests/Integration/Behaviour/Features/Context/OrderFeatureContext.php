@@ -441,7 +441,7 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
             'product' => $product,
             'order' => $order,
             'currency' => new Currency($order->id_currency),
-            'can_edit' => $this->access('edit'),
+            'can_edit' => true, // $this->access('edit'),
             'invoices_collection' => $invoice_collection,
             'current_id_lang' => Context::getContext()->language->id,
             'link' => Context::getContext()->link,
