@@ -157,4 +157,36 @@ module.exports = class CommonPage {
     }
     return this.page;
   }
+
+  /**
+   * Scroll to element
+   * @param selector
+   * @return {Promise<void>}
+   */
+  async scrollTo(selector) {
+    await this.page.$eval(selector, (el) => el.scrollIntoView());
+  }
+
+
+  /**
+   * Select option in select by visible text
+   * @param selector, id of select
+   * @param textValue, text in option to select
+   */
+  async selectByVisibleText(selector, textValue) {
+    let found = false;
+    const options = await this.page.$$(`${selector} option`);
+    for (let i = 0; i < options.length; i++) {
+      /*eslint-disable*/
+      const elementText = await (await options[i].getProperty('textContent')).jsonValue();
+      if (elementText === textValue) {
+        const elementValue = await (await options[i].getProperty('value')).jsonValue();
+        await this.page.select(selector, elementValue);
+        found = true;
+        break;
+      }
+      /* eslint-enable */
+    }
+    await expect(found, `${textValue} was not found as option of select`).to.be.true;
+  }
 };
