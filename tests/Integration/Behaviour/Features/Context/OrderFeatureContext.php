@@ -37,6 +37,7 @@ use Context;
 use Currency;
 use Customer;
 use Exception;
+use Hook;
 use ImageManager;
 use LegacyTests\Unit\Core\Cart\CartToOrder\PaymentModuleFake;
 use Order;
@@ -441,15 +442,20 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
             'product' => $product,
             'order' => $order,
             'currency' => new Currency($order->id_currency),
-            'can_edit' => true, // $this->access('edit'),
+            // 'can_edit' => $this->access('edit'),
             'invoices_collection' => $invoice_collection,
             'current_id_lang' => Context::getContext()->language->id,
             'link' => Context::getContext()->link,
-            'current_index' => self::$currentIndex,
+            // 'current_index' => self::$currentIndex,
             'display_warehouse' => (int) Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'),
         ));
 
-        $this->sendChangedNotification($order);
+        // Replace $this->sendChangedNotification($order);
+        if (null === $order) {
+            $order = new Order(Tools::getValue('id_order'));
+        }
+        Hook::exec('actionOrderEdited', array('order' => $order));
+
         $new_cart_rules = Context::getContext()->cart->getCartRules();
         sort($old_cart_rules);
         sort($new_cart_rules);
