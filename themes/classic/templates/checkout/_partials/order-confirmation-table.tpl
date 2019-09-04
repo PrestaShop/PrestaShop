@@ -126,7 +126,7 @@
         {/if}
         {if $subtotals.tax.label !== null}
           <tr class="sub taxes">
-            <td><span class="label">{l s='%label%:' sprintf=['%label%' => $subtotals.tax.label] d='Shop.Theme.Global'}</span>&nbsp;<span class="value">{$subtotals.tax.value}</span></td>
+            <td colspan="2"><span class="label">{l s='%label%:' sprintf=['%label%' => $subtotals.tax.label] d='Shop.Theme.Global'}</span>&nbsp;<span class="value">{$subtotals.tax.value}</span></td>
           </tr>
         {/if}
       </table>

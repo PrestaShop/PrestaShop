@@ -226,7 +226,7 @@ final class EditCurrencyHandler extends AbstractCurrencyHandler implements EditC
             if (!in_array($shopId, $shopIds)) {
                 $shop = new Shop($shopId);
                 throw new DefaultCurrencyInMultiShopException(
-                    $currency->name,
+                    $currency->getName(),
                     $shop->name,
                     sprintf(
                         'Currency with id %s cannot be unassigned from shop with id %s because its the default currency.',
@@ -240,7 +240,7 @@ final class EditCurrencyHandler extends AbstractCurrencyHandler implements EditC
             if (!$currency->active) {
                 $shop = new Shop($shopId);
                 throw new DefaultCurrencyInMultiShopException(
-                    $currency->name,
+                    $currency->getName(),
                     $shop->name,
                     sprintf(
                         'Currency with id %s cannot be disabled from shop with id %s because its the default currency.',
