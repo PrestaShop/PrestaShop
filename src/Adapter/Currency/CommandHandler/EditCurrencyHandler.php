@@ -123,10 +123,10 @@ final class EditCurrencyHandler extends AbstractCurrencyHandler implements EditC
             $entity->active = $command->isEnabled();
 
             if (!empty($command->getLocalizedNames())) {
-                $entity->name = $entity->names = $command->getLocalizedNames();
+                $entity->setNames($command->getLocalizedNames());
             }
             if (!empty($command->getLocalizedSymbols())) {
-                $entity->symbol = $entity->symbols = $command->getLocalizedSymbols();
+                $entity->setSymbols($command->getLocalizedSymbols());
             }
             //This method will insert the missing localized names/symbols and detect if the currency has been modified
             $entity->refreshLocalizedCurrencyData(Language::getLanguages(), $this->localeRepoCLDR);
