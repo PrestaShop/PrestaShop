@@ -30,18 +30,18 @@ class CurrencyCore extends ObjectModel
     public $id;
 
     /**
-     * Name of the currency.
+     * Currency's name for the current language.
      *
      * @var string
      */
     public $name;
 
     /**
-     * Names of the currency.
+     * Currency's names, indexed by language id.
      *
-     * @var array
+     * @var string[]
      */
-    public $names;
+    private $names;
 
     /**
      * Alphabetic ISO 4217 code of this currency.
@@ -110,18 +110,18 @@ class CurrencyCore extends ObjectModel
     public $sign;
 
     /**
-     * Currency's symbol.
+     * Currency's symbol for the current language.
      *
      * @var string
      */
     public $symbol;
 
     /**
-     * Currency's symbols.
+     * Currency's symbols, indexed by language id.
      *
-     * @var string
+     * @var string[]
      */
-    public $symbols;
+    private $symbols;
 
     /**
      * CLDR price formatting pattern
@@ -413,6 +413,46 @@ class CurrencyCore extends ObjectModel
         }
 
         return Tools::ucfirst($this->name[$id_lang]);
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getNames()
+    {
+        return $this->names;
+    }
+
+    /**
+     * @param string[] $names
+     *
+     * @return $this
+     */
+    public function setNames(array $names)
+    {
+        $this->names = $this->name = $names;
+
+        return $this;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getSymbols()
+    {
+        return $this->symbols;
+    }
+
+    /**
+     * @param string[] $symbols
+     *
+     * @return CurrencyCore
+     */
+    public function setSymbols(array $symbols)
+    {
+        $this->symbols = $this->symbol = $symbols;
+
+        return $this;
     }
 
     /**
