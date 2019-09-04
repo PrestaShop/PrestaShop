@@ -116,4 +116,30 @@ module.exports = class CommonPage {
   async reloadPage() {
     await this.page.reload({waitUntil: 'networkidle0'});
   }
+
+  /**
+   * Delete the existing text from input then set a value
+   * @param selector, input
+   * @param value, value to set in the input
+   * @return {Promise<void>}
+   */
+  async setValue(selector, value) {
+    await this.waitForSelectorAndClick(selector);
+    await this.page.click(selector, {clickCount: 3});
+    await this.page.type(selector, value);
+  }
+
+  /**
+   * To accept or dismiss a navigator dialog
+   * @param accept
+   * @return {Promise<void>}
+   */
+  async dialogListener(accept = true) {
+    this.page.once("dialog", (dialog) => {
+      if (accept)
+        dialog.accept();
+      else
+        dialog.dismiss();
+    });
+  }
 };
