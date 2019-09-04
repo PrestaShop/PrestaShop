@@ -33,8 +33,8 @@ const init = async () => {
   editedProductData = await (new ProductFaker());
 };
 
-// Create, read, update and delete simple product in BO
-global.scenario('Create, read, update and delete a product', async () => {
+// Create, read, update and delete Standard product in BO
+global.scenario('Create, read, update and delete Standard product in BO', async () => {
   test('should login in BO', async () => {
     await loginPage.goTo(global.URL_BO);
     await loginPage.login(global.EMAIL, global.PASSWD);
