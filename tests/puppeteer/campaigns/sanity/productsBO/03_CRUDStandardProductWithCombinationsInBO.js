@@ -30,8 +30,12 @@ const init = async () => {
   productsPage = await (new ProductsPage(page));
   addProductPage = await (new AddProductPage(page));
   foProductPage = await (new FOProductPage(page));
-  productWithCombinations = await (new ProductFaker('Standard product', false, '1', false, true));
-  editedProductWithCombinations = await (new ProductFaker('Standard product', false, '1', false, true));
+  const productToCreate = {
+    type: 'Standard product',
+    productHasCombinations: true,
+  };
+  productWithCombinations = await (new ProductFaker(productToCreate));
+  editedProductWithCombinations = await (new ProductFaker(productToCreate));
 };
 
 
@@ -50,8 +54,7 @@ global.scenario('Create, read, update and delete Standard product with combinati
     await expect(pageTitle).to.contains(productsPage.pageTitle);
   });
   test('should reset all filters', async () => {
-    if (await productsPage.elementVisible(productsPage.filterResetButton, 2000))
-      await productsPage.resetFilter();
+    if (await productsPage.elementVisible(productsPage.filterResetButton, 2000)) await productsPage.resetFilter();
     await productsPage.resetFilterCategory();
     const numberOfProducts = await productsPage.getNumberOfProductsFromList();
     await expect(numberOfProducts).to.be.above(0);

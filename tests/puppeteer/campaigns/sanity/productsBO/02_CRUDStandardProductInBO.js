@@ -29,8 +29,12 @@ const init = async () => {
   productsPage = await (new ProductsPage(page));
   addProductPage = await (new AddProductPage(page));
   foProductPage = await (new FOProductPage(page));
-  productData = await (new ProductFaker());
-  editedProductData = await (new ProductFaker());
+  const productToCreate = {
+    type: 'Standard product',
+    productHasCombinations: false,
+  };
+  productData = await (new ProductFaker(productToCreate));
+  editedProductData = await (new ProductFaker(productToCreate));
 };
 
 // Create, read, update and delete Standard product in BO
@@ -48,8 +52,7 @@ global.scenario('Create, read, update and delete Standard product in BO', async 
     await expect(pageTitle).to.contains(productsPage.pageTitle);
   });
   test('should reset all filters', async () => {
-    if (await productsPage.elementVisible(productsPage.filterResetButton, 2000))
-      await productsPage.resetFilter();
+    if (await productsPage.elementVisible(productsPage.filterResetButton, 2000)) await productsPage.resetFilter();
     await productsPage.resetFilterCategory();
     const numberOfProducts = await productsPage.getNumberOfProductsFromList();
     await expect(numberOfProducts).to.be.above(0);
