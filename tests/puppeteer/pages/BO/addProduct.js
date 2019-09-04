@@ -32,7 +32,7 @@ module.exports = class AddProduct extends BOBasePage {
     this.productCombinationTableRow = '#accordion_combinations tr:nth-of-type(%ID)';
     this.deleteCombinationsButton = '#delete-combinations';
     this.productCombinationsBulkForm = '#combinations-bulk-form';
-    this.productCombinationsBulkFormTitle= `${this.productCombinationsBulkForm} p[aria-controls='bulk-combinations-container']`;
+    this.productCombinationsBulkFormTitle = `${this.productCombinationsBulkForm} p[aria-controls]`;
 
     // Growls : override value from BObasePage
     this.growlMessageBloc = '#growls-default .growl-message';
@@ -63,8 +63,7 @@ module.exports = class AddProduct extends BOBasePage {
     if (productData.withCombination) {
       await this.page.click(this.productWithCombinationsInput);
       await this.setCombinationsInProduct(productData);
-    }
-    else {
+    } else {
       await this.page.click(this.productQuantityInput, {clickCount: 3});
       await this.page.type(this.productQuantityInput, productData.quantity);
     }
@@ -165,7 +164,7 @@ module.exports = class AddProduct extends BOBasePage {
    * @return {Promise<void>}
    */
   async deleteAllCombinations() {
-    if (await this.elementVisible(this.productCombinationTableRow.replace('%ID', '1'),2000)) {
+    if (await this.elementVisible(this.productCombinationTableRow.replace('%ID', '1'), 2000)) {
       await Promise.all([
         this.page.waitForSelector(this.deleteCombinationsButton, {visible: true}),
         this.page.click(this.productCombinationSelectAllCheckbox),

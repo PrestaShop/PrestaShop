@@ -164,7 +164,7 @@ module.exports = class CommonPage {
    * @return {Promise<void>}
    */
   async scrollTo(selector) {
-    await this.page.$eval(selector, (el) => el.scrollIntoView());
+    await this.page.$eval(selector, el => el.scrollIntoView());
   }
 
 
