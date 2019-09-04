@@ -31,6 +31,9 @@ use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
+/**
+ * Defines form for carrier shipping step zone price ranges table
+ */
 class CarrierZoneRangesType extends AbstractType
 {
     /**
@@ -56,7 +59,6 @@ class CarrierZoneRangesType extends AbstractType
     {
         $builder
             ->add('zones', ZoneCheckType::class, [
-                'required' => false,
                 'zones' => $this->getModifiedZones(),
             ])
             ->add('ranges', CollectionType::class, [

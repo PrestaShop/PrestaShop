@@ -74,6 +74,13 @@ class CarrierController extends FrameworkBundleAdminController
         ]);
     }
 
+    /**
+     * @todo: permissions?
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
     public function uploadImageAction(Request $request): JsonResponse
     {
         $carrierForm = $this->createForm(CarrierType::class);
@@ -107,6 +114,13 @@ class CarrierController extends FrameworkBundleAdminController
         return $this->returnErrorJsonResponse($errors, Response::HTTP_BAD_REQUEST);
     }
 
+    /**
+     * @todo: permissions?
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
     public function removeImageAction(Request $request): JsonResponse
     {
         $content = json_decode($request->getContent(), true);
@@ -129,11 +143,19 @@ class CarrierController extends FrameworkBundleAdminController
         );
     }
 
+    /**
+     * @todo: permissions?
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
     public function validateStepsAction(Request $request)
     {
         $carrierForm = $this->createForm(CarrierType::class);
         $carrierForm->handleRequest($request);
 
+        //@todo step constants and move to service
         $formStepMap = [
             1 => $carrierForm['step_general'],
             3 => $carrierForm['step_shipping'],
@@ -152,7 +174,7 @@ class CarrierController extends FrameworkBundleAdminController
 
             if ($stepNr < $stepToShow) {
                 foreach ($this->getFormErrorsForJS($formStepMap[$stepNr]) as $errorField => $messages) {
-                    $errors[$errorField] = isset($messages[0]) ? $messages[0] : '';
+                    $errors['carrier_' . $errorField] = isset($messages[0]) ? $messages[0] : '';
                 }
             }
         }
@@ -162,7 +184,7 @@ class CarrierController extends FrameworkBundleAdminController
         ]);
     }
 
-    // @todo: move to RemoveCarrierLogoCommand
+    // @todo: create RemoveCarrierLogoCommand for this
     private function removeImage(string $imgName, bool $isTmpImage): bool
     {
         $imgPath = $isTmpImage === true ?

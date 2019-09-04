@@ -39,6 +39,9 @@ export default class FormStepValidator {
     return {};
   }
 
+  /**
+   * Initiates the handler
+   */
   handle() {
     EventEmitter.on('validateFormStep', (e) => {
       e.form.append('step', e.step);
@@ -51,10 +54,10 @@ export default class FormStepValidator {
         dataType: 'json',
         data: e.form,
       }).then((response) => {
-        this.$formWrapper.find('.error-content:not(#error-content)').remove();
+        this.removeFormErrors();
 
         if (response.errors.length === 0) {
-          EventEmitter.emit('formStepValidated', e);
+          EventEmitter.emit('formStepValidated', e.step);
         } else {
           this.showFormErrors(response.errors);
         }
@@ -64,15 +67,33 @@ export default class FormStepValidator {
     });
   }
 
+  /**
+   * Shows error message under its specific field
+   *
+   * @param errors
+   */
   showFormErrors(errors) {
     for (const field in errors) {
       const errorTemplate = ($('#error-template').get(0).innerHTML)
-        .replace(/id="error-content"/, '')
+        .replace(/id="template"/, '')
         .replace(/__MESSAGE__/, errors[field]);
-      if (!document.querySelector(`.${field} .error-content`)) {
-        document.querySelector(`.${field}`).firstElementChild.lastElementChild
-          .insertAdjacentHTML('beforeend', errorTemplate);
+
+      const selectedField = document.querySelector(`#${field}`);
+
+
+      if (selectedField.tagName === 'INPUT') {
+        selectedField.parentElement.insertAdjacentHTML('beforeend', errorTemplate);
+      } else {
+        //@todo: more specific selector instead col-sm?
+        selectedField.querySelector('.col-sm').insertAdjacentHTML('beforeend', errorTemplate);
       }
     }
+  }
+
+  /**
+   * Removes all form errors that was added dynamically
+   */
+  removeFormErrors() {
+    this.$formWrapper.find('.error-content:not(#template)').remove();
   }
 }

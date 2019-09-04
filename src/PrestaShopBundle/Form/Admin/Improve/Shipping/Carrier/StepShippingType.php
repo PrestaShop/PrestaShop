@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier;
 
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CarrierZoneRanges;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -108,7 +109,11 @@ class StepShippingType extends AbstractType
                 'placeholder' => false,
                 'choices' => $this->outOfRangeBehaviorChoices,
             ])
-            ->add('carrier_ranges', CarrierZoneRangesType::class)
+            ->add('carrier_ranges', CarrierZoneRangesType::class, [
+                'constraints' => [
+                    new CarrierZoneRanges(),
+                ],
+            ])
         ;
     }
 

@@ -50,9 +50,8 @@ export default class StepVisibilityHandler {
         step: $(event.currentTarget).data('step'),
       }
     ));
-    EventEmitter.on('formStepValidated', (event) => {
-      debugger;
-      this.showStep(event);
+    EventEmitter.on('formStepValidated', (step) => {
+      this.showStep(step);
     });
   }
 
@@ -60,11 +59,11 @@ export default class StepVisibilityHandler {
   /**
    * Shows form step
    *
-   * @param event
+   * @param stepToShow
    */
-  showStep(event) {
-    const $this = $(event.currentTarget);
-    const stepToShow = $this.data('step');
+  showStep(stepToShow) {
+    // const $this = $(event.currentTarget);
+    // const stepToShow = $this.data('step');
     this.activateTab(stepToShow);
 
     $(document).find(`${this.formWrapper} .js-form-step.active`).removeClass('active');

@@ -37,7 +37,7 @@
           'For in-store pickup, enter 0 to replace the carrier name with your shop name.'|trans({}, 'Admin.Shipping.Help')
         %}
 
-        <div class="step_general_name">
+        <div id="carrier_step_general_name">
           {{ ps.form_group_row(carrierForm.step_general.name, {}, {
             'class': 'js-carrier-name',
             'label': 'Carrier name'|trans({}, 'Admin.Global'),
@@ -45,7 +45,7 @@
           }) }}
         </div>
 
-        <div class="step_general_transit_time">
+        <div id="carrier_step_general_transit_time">
           {{ ps.form_group_row(carrierForm.step_general.transit_time, {
             'attr': {'class': 'js-transit'},
           }, {

@@ -81,7 +81,7 @@ export default class AddRangeHandler {
 
         // replace range-from index placeholder with actual value and enable input
         const inputFrom = (this.$rangeFromTemplate.get(0).outerHTML)
-          .replace(/__RANGE_INDEX__/, this.rangeIndex)
+          .replace(/__RANGE_INDEX__/g, this.rangeIndex)
           .replace(/disabled=""/, '');
 
         // append table data with input from template
@@ -90,7 +90,7 @@ export default class AddRangeHandler {
 
         // replace range-to index placeholder with actual value and enable input
         const inputTo = (this.$rangeToTemplate.get(0).outerHTML)
-          .replace(/__RANGE_INDEX__/, this.rangeIndex)
+          .replace(/__RANGE_INDEX__/g, this.rangeIndex)
           .replace(/disabled=""/, '');
 
         // append table data with input from template
@@ -98,7 +98,7 @@ export default class AddRangeHandler {
       } else {
         // replace price index and zone id placeholders with actual values and enable input
         let inputPrice = (this.$rangePriceTemplate.get(0).outerHTML)
-          .replace(/__RANGE_INDEX__/, this.rangeIndex)
+          .replace(/__RANGE_INDEX__/g, this.rangeIndex)
           .replace(/disabled=""/, '')
           .replace(/__ZONE_ID__/g, $row.data('zone-id'));
 

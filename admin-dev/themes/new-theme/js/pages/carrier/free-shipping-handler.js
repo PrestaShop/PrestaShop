@@ -70,15 +70,9 @@ export default class FreeShippingHandler {
    * @param isFreeShipping
    */
   toggleHandlingCost(isFreeShipping) {
-    // when free shipping is true, handling cost is disabled
-    this.$handlingCostChoice.prop('disabled', isFreeShipping);
-
-    // when free shipping is false the unchecked handling cost choice gets checked
+    // when free shipping is true, handling cost falsy value is checked and choices are disabled
     this.$handlingCostChoice.find('input[value="0"]').prop('checked', isFreeShipping);
-
-    if (isFreeShipping) {
-      $(`${this.handlingCostChoice}:checked`).prop('checked', false);
-    }
+    this.$handlingCostChoice.find('input').prop('disabled', isFreeShipping);
   }
 
   /**

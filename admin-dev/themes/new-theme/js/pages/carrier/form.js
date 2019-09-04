@@ -44,6 +44,7 @@ const $ = window.$;
 $(() => {
   new TranslatableInput();
   new StepVisibilityHandler(CarrierFormMap.formWrapper);
+  new FormStepValidator(CarrierFormMap.formWrapper);
   new ChoiceTree(CarrierFormMap.shopAssociation).enableAutoCheckChildren();
   new ChoiceTable();
   new ZonesCheckHandler(CarrierFormMap.zoneCheckbox);
@@ -121,6 +122,4 @@ $(() => {
   );
 
   new UnsavedFormWarning();
-
-  new FormStepValidator(CarrierFormMap.formWrapper);
 });

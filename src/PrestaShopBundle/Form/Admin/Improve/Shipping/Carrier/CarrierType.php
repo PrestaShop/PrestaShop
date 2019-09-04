@@ -51,13 +51,23 @@ class CarrierType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('step_general', StepGeneralType::class)
-            ->add('step_shipping', StepShippingType::class)
-            ->add('step_properties_and_access', StepPropertiesAndAccessType::class)
-            ->add('step_summary', StepSummaryType::class);
+            ->add('step_general', StepGeneralType::class, [
+                'error_bubbling' => false,
+            ])
+            ->add('step_shipping', StepShippingType::class, [
+                'error_bubbling' => false,
+            ])
+            ->add('step_properties_and_access', StepPropertiesAndAccessType::class, [
+                'error_bubbling' => false,
+            ])
+            ->add('step_summary', StepSummaryType::class, [
+                'error_bubbling' => false,
+            ]);
 
         if ($this->isMultishopActive) {
-            $builder->add('step_multi_shop', StepMultiShopType::class);
+            $builder->add('step_multi_shop', StepMultiShopType::class, [
+                'error_bubbling' => false,
+            ]);
         }
     }
 }

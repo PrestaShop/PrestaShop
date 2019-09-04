@@ -24,41 +24,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier;
+namespace PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints;
 
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\CarrierZoneRangesValidator;
+use Symfony\Component\Validator\Constraint;
 
-/**
- * Defines zones checkbox form part for carrier create/edit action Shipping step
- */
-class ZoneCheckType extends AbstractType
+class CarrierZoneRanges extends Constraint
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-        foreach ($options['zones'] as $zone) {
-            $builder
-                ->add($zone['id_zone'], CheckboxType::class, [
-                    'label' => $zone['name'],
-                    'value' => $zone['id_zone'],
-                ])
-            ;
-        }
-    }
+    public $zoneSelectMessage = 'Please select at least one zone';
 
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function validatedBy()
     {
-        parent::configureOptions($resolver);
-
-        $resolver->setRequired([
-            'zones',
-        ]);
-
-        $resolver->setAllowedTypes('zones', 'array');
+        return CarrierZoneRangesValidator::class;
     }
 }
