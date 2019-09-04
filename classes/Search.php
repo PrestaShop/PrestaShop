@@ -25,7 +25,6 @@
  */
 
 define('PS_SEARCH_MAX_WORD_LENGTH', 15);
-define('PS_SEARCH_LEVENSHTEIN_LOOP', 10); /* Max time Levenshtein algo is use by search*/
 define('PS_SEARCH_MAX_WORDS_IN_TABLE', 100000); /* Max numer of words in ps_search_word, above which $coefs for target length will be everytime equal to 1 */
 define('PS_SEARCH_ORDINATE_MIN', 0.5);
 define('PS_SEARCH_ORDINATE_MAX', -1);
@@ -259,8 +258,8 @@ class SearchCore
                                 AND sw.word LIKE';
 
                 while (!($result = $db->executeS($sql . "'" . $sql_param_search . "';", true, false))) {
-                    if (!Configuration::get('PS_SEARCH_SPELLING_ERROR') ||
-                        $nbLevenshteinLoop++ >= PS_SEARCH_LEVENSHTEIN_LOOP ||
+                    if (!Configuration::get('PS_SEARCH_FUZZY') ||
+                        $nbLevenshteinLoop++ > Configuration::get('PS_SEARCH_FUZZY_MAX_LOOP') ||
                         !($sql_param_search = self::findClosestWeightestWord($context, $word))) {
                         break;
                     }
