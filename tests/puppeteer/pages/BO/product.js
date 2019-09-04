@@ -61,7 +61,7 @@ module.exports = class Product extends BOBasePage {
 
     const footerText = await this.getTextContent(this.productNumberBloc);
     const numberOfProduct = /\d+/g.exec(footerText.match(/out of ([0-9]+)/)).toString();
-    return parseFloat(numberOfProduct);
+    return parseInt(numberOfProduct);
   }
 
   /**
