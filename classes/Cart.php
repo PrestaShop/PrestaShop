@@ -436,7 +436,7 @@ class CartCore extends ObjectModel
     }
 
     /**
-     * Get Cart Rules.
+     * Get Cart Rules without Contextual Value.
      *
      *
      * @param int $filter Filter enum:
@@ -449,7 +449,7 @@ class CartCore extends ObjectModel
      *
      * @return array|false|mysqli_result|PDOStatement|resource|null Database result
      */
-    public function getCartRules($filter = CartRule::FILTER_ACTION_ALL, $autoAdd = true, $withValues = true)
+    public function getCartRulesWithoutContextualValue($filter = CartRule::FILTER_ACTION_ALL, $autoAdd = true)
     {
         // Define virtual context to prevent case where the cart is not the in the global context
         $virtual_context = Context::getContext()->cloneContext();
@@ -463,7 +463,7 @@ class CartCore extends ObjectModel
             CartRule::autoAddToCart($virtual_context);
         }
 
-        $cache_key = 'Cart::getCartRules_' . $this->id . '-' . $filter;
+        $cache_key = 'Cart::getCartRulesWithoutContextualValue_' . $this->id . '-' . $filter;
         if (!Cache::isStored($cache_key)) {
             $result = Db::getInstance()->executeS(
                 'SELECT cr.*, crl.`id_lang`, crl.`name`, cd.`id_cart`
@@ -479,24 +479,45 @@ class CartCore extends ObjectModel
                 ' . ($filter == CartRule::FILTER_ACTION_REDUCTION ? 'AND (reduction_percent != 0 OR reduction_amount != 0)' : '')
                 . ' ORDER by cr.priority ASC'
             );
+            foreach ($result as &$row) {
+                $row['obj'] = new CartRule($row['id_cart_rule'], (int) $this->id_lang);
+                // Retro compatibility < 1.5.0.2
+                $row['id_discount'] = $row['id_cart_rule'];
+                $row['description'] = $row['name'];
+            }
             Cache::store($cache_key, $result);
         } else {
             $result = Cache::retrieve($cache_key);
         }
+
+        return $result;
+    }
+
+    /**
+     * Get Cart Rules.
+     *
+     *
+     * @param int $filter Filter enum:
+     *                    - FILTER_ACTION_ALL
+     *                    - FILTER_ACTION_SHIPPING
+     *                    - FILTER_ACTION_REDUCTION
+     *                    - FILTER_ACTION_GIFT
+     *                    - FILTER_ACTION_ALL_NOCAP
+     * @param bool $autoAdd automaticaly adds cart ruls without code to cart
+     *
+     * @return array|false|mysqli_result|PDOStatement|resource|null Database result
+     */
+    public function getCartRules($filter = CartRule::FILTER_ACTION_ALL, $autoAdd = true)
+    {
+        $result = $this->getCartRulesWithoutContextualValue($filter, $autoAdd);
 
         // Define virtual context to prevent case where the cart is not the in the global context
         $virtual_context = Context::getContext()->cloneContext();
         $virtual_context->cart = $this;
 
         foreach ($result as &$row) {
-            $row['obj'] = new CartRule($row['id_cart_rule'], (int) $this->id_lang);
-            if ($withValues) {
-                $row['value_real'] = $row['obj']->getContextualValue(true, $virtual_context, $filter);
-                $row['value_tax_exc'] = $row['obj']->getContextualValue(false, $virtual_context, $filter);
-            }
-            // Retro compatibility < 1.5.0.2
-            $row['id_discount'] = $row['id_cart_rule'];
-            $row['description'] = $row['name'];
+            $row['value_real'] = $row['obj']->getContextualValue(true, $virtual_context, $filter);
+            $row['value_tax_exc'] = $row['obj']->getContextualValue(false, $virtual_context, $filter);
         }
 
         return $result;
@@ -757,7 +778,7 @@ class CartCore extends ObjectModel
             $givenAwayProductsIds = array();
 
             if ($this->shouldSplitGiftProductsQuantity) {
-                $gifts = $this->getCartRules(CartRule::FILTER_ACTION_GIFT, true, false);
+                $gifts = $this->getCartRulesWithoutContextualValue(CartRule::FILTER_ACTION_GIFT, true);
                 if (count($gifts) > 0) {
                     foreach ($gifts as $gift) {
                         foreach ($result as $rowIndex => $row) {
@@ -1159,10 +1180,10 @@ class CartCore extends ObjectModel
             return false;
         }
 
-        Cache::clean('Cart::getCartRules_' . $this->id . '-' . CartRule::FILTER_ACTION_ALL);
-        Cache::clean('Cart::getCartRules_' . $this->id . '-' . CartRule::FILTER_ACTION_SHIPPING);
-        Cache::clean('Cart::getCartRules_' . $this->id . '-' . CartRule::FILTER_ACTION_REDUCTION);
-        Cache::clean('Cart::getCartRules_' . $this->id . '-' . CartRule::FILTER_ACTION_GIFT);
+        Cache::clean('Cart::getCartRulesWithoutContextualValue_' . $this->id . '-' . CartRule::FILTER_ACTION_ALL);
+        Cache::clean('Cart::getCartRulesWithoutContextualValue_' . $this->id . '-' . CartRule::FILTER_ACTION_SHIPPING);
+        Cache::clean('Cart::getCartRulesWithoutContextualValue_' . $this->id . '-' . CartRule::FILTER_ACTION_REDUCTION);
+        Cache::clean('Cart::getCartRulesWithoutContextualValue_' . $this->id . '-' . CartRule::FILTER_ACTION_GIFT);
 
         Cache::clean('Cart::getOrderedCartRulesIds_' . $this->id . '-' . CartRule::FILTER_ACTION_ALL . '-ids');
         Cache::clean('Cart::getOrderedCartRulesIds_' . $this->id . '-' . CartRule::FILTER_ACTION_SHIPPING . '-ids');
@@ -1631,15 +1652,15 @@ class CartCore extends ObjectModel
      */
     public function removeCartRule($id_cart_rule)
     {
-        Cache::clean('Cart::getCartRules_' . $this->id . '-' . CartRule::FILTER_ACTION_ALL);
-        Cache::clean('Cart::getCartRules_' . $this->id . '-' . CartRule::FILTER_ACTION_SHIPPING);
-        Cache::clean('Cart::getCartRules_' . $this->id . '-' . CartRule::FILTER_ACTION_REDUCTION);
-        Cache::clean('Cart::getCartRules_' . $this->id . '-' . CartRule::FILTER_ACTION_GIFT);
+        Cache::clean('Cart::getCartRulesWithoutContextualValue_' . $this->id . '-' . CartRule::FILTER_ACTION_ALL);
+        Cache::clean('Cart::getCartRulesWithoutContextualValue_' . $this->id . '-' . CartRule::FILTER_ACTION_SHIPPING);
+        Cache::clean('Cart::getCartRulesWithoutContextualValue_' . $this->id . '-' . CartRule::FILTER_ACTION_REDUCTION);
+        Cache::clean('Cart::getCartRulesWithoutContextualValue_' . $this->id . '-' . CartRule::FILTER_ACTION_GIFT);
 
-        Cache::clean('Cart::getCartRules_' . $this->id . '-' . CartRule::FILTER_ACTION_ALL . '-ids');
-        Cache::clean('Cart::getCartRules_' . $this->id . '-' . CartRule::FILTER_ACTION_SHIPPING . '-ids');
-        Cache::clean('Cart::getCartRules_' . $this->id . '-' . CartRule::FILTER_ACTION_REDUCTION . '-ids');
-        Cache::clean('Cart::getCartRules_' . $this->id . '-' . CartRule::FILTER_ACTION_GIFT . '-ids');
+        Cache::clean('Cart::getOrderedCartRulesIds_' . $this->id . '-' . CartRule::FILTER_ACTION_ALL . '-ids');
+        Cache::clean('Cart::getOrderedCartRulesIds_' . $this->id . '-' . CartRule::FILTER_ACTION_SHIPPING . '-ids');
+        Cache::clean('Cart::getOrderedCartRulesIds_' . $this->id . '-' . CartRule::FILTER_ACTION_REDUCTION . '-ids');
+        Cache::clean('Cart::getOrderedCartRulesIds_' . $this->id . '-' . CartRule::FILTER_ACTION_GIFT . '-ids');
 
         $result = Db::getInstance()->delete('cart_cart_rule', '`id_cart_rule` = ' . (int) $id_cart_rule . ' AND `id_cart` = ' . (int) $this->id, 1);
 
