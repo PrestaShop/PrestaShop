@@ -72,7 +72,7 @@ if (!defined('_PS_CACHE_DIR_')) {
     if (defined('_PS_IN_TEST_')) {
         $env = 'test';
     } else {
-        $env = (_PS_MODE_DEV_) ? 'dev': 'prod';
+        $env = (_PS_MODE_DEV_) ? 'dev' : 'prod';
     }
 
     $prestashopCacheDir =  _PS_ROOT_DIR_.'/var/cache/'.$env. DIRECTORY_SEPARATOR;

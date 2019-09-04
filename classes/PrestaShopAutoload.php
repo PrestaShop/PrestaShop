@@ -91,7 +91,7 @@ class PrestaShopAutoload
         if (defined('_PS_IN_TEST_')) {
             $env = 'test';
         } else {
-            $env = (_PS_MODE_DEV_) ? 'dev': 'prod';
+            $env = (_PS_MODE_DEV_) ? 'dev' : 'prod';
         }
 
         return _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'var' . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . $env . DIRECTORY_SEPARATOR . 'class_index.php';
@@ -107,7 +107,7 @@ class PrestaShopAutoload
         if (defined('_PS_IN_TEST_')) {
             $env = 'test';
         } else {
-            $env = (_PS_MODE_DEV_) ? 'dev': 'prod';
+            $env = (_PS_MODE_DEV_) ? 'dev' : 'prod';
         }
 
         return _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'var' . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . $env . DIRECTORY_SEPARATOR . 'namespaced_class_stub.php';
@@ -123,7 +123,7 @@ class PrestaShopAutoload
         if (defined('_PS_IN_TEST_')) {
             $env = 'test';
         } else {
-            $env = (_PS_MODE_DEV_) ? 'dev': 'prod';
+            $env = (_PS_MODE_DEV_) ? 'dev' : 'prod';
         }
 
         return _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'var' . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . $env . DIRECTORY_SEPARATOR . 'class_stub.php';
