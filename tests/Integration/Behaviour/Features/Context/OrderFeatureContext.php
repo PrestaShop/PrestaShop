@@ -437,7 +437,7 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
         $order = $order->refreshShippingCost();
 
         // Assign to smarty informations in order to show the new product line
-        $this->context->smarty->assign(array(
+        Context::getContext()->smarty->assign(array(
             'product' => $product,
             'order' => $order,
             'currency' => new Currency($order->id_currency),
