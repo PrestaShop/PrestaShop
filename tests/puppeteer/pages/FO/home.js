@@ -6,6 +6,7 @@ module.exports = class Home extends CommonPage {
 
     // Selectors for home page
     this.logoHomePage = '#_desktop_logo';
+    this.cartProductsCount = '#_desktop_cart span.cart-products-count';
     this.productImg = '#content .products div:nth-child(%NUMBER) article img';
     this.userInfoLink = '#_desktop_user_info';
     this.contactLink = '#contact-link';
@@ -19,6 +20,13 @@ module.exports = class Home extends CommonPage {
    */
   async checkHomePage() {
     await this.page.waitForSelector(this.logoHomePage, {visible: true});
+  }
+
+  /**
+   * go to the home page
+   */
+  async goToHomePage() {
+    await this.waitForSelectorAndClick(this.logoHomePage);
   }
 
   /**
