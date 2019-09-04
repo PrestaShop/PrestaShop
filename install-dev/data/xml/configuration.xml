@@ -8,8 +8,11 @@
   <configuration id="PS_SEARCH_INDEXATION" name="PS_SEARCH_INDEXATION">
     <value>1</value>
   </configuration>
-  <configuration id="PS_SEARCH_SPELLING_ERROR" name="PS_SEARCH_SPELLING_ERROR">
+  <configuration id="PS_SEARCH_FUZZY" name="PS_SEARCH_SPELLING_ERROR">
     <value>1</value>
+  </configuration>
+  <configuration id="PS_SEARCH_FUZZY_MAX_LOOP" name="PS_SEARCH_LVST_MAX_LOOP">
+    <value>4</value>
   </configuration>
   <configuration id="PS_CARRIER_DEFAULT" name="PS_CARRIER_DEFAULT">
     <value>1</value>

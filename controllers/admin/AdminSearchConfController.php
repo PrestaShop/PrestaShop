@@ -181,13 +181,13 @@ class AdminSearchConfControllerCore extends AdminController
                             ),
                         ),
                     ),
-                    'PS_SEARCH_SPELLING_ERROR' => array(
-                        'title' => $this->trans('Search with spellind error', array(), 'Admin.Shopparameters.Feature'),
+                    'PS_SEARCH_FUZZY' => array(
+                        'title' => $this->trans('Fuzzy Search', array(), 'Admin.Shopparameters.Feature'),
                         'validation' => 'isBool',
                         'cast' => 'intval',
                         'type' => 'bool',
                         'desc' => $this->trans(
-                                'By default, spelling error are allowed. To search “bird”, you can to enter “burd”, “bard”, “beerd” etc...',
+                                'By default, fuzzy search is enabled and spelling error are allowed. To search “bird”, you can to enter “burd”, “bard”, “beerd” etc...',
                                 array(),
                                 'Admin.Shopparameters.Help'
                             ) . '<br/>' .
@@ -203,11 +203,26 @@ class AdminSearchConfControllerCore extends AdminController
                                 'Admin.Shopparameters.Help'
                             ),
                             $this->trans(
-                                'Checks a close word of the search word exist in indexed words in database. This will be very resource-consuming.',
+                                'Fuzzy search will check if a close word of the search word exist in indexed words in database. This will be very resource-consuming.',
                                 array(),
                                 'Admin.Shopparameters.Help'
                             ),
                         ),
+                    ),
+                    'PS_SEARCH_FUZZY_MAX_LOOP' => array(
+                        'title' => $this->trans(
+                            'Maximum words with spelling error allowed by search',
+                            array(),
+                            'Admin.Shopparameters.Feature'
+                        ),
+                        'hint' => $this->trans(
+                            'A fuzzy search is very resource-consuming. More words you have to solve, more a search could take time.',
+                            array(),
+                            'Admin.Shopparameters.Help'
+                        ),
+                        'validation' => 'isUnsignedInt',
+                        'type' => 'text',
+                        'cast' => 'intval',
                     ),
                     'PS_SEARCH_MINWORDLEN' => array(
                         'title' => $this->trans(
