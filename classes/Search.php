@@ -244,7 +244,7 @@ class SearchCore
         $eligible_products2 = array();
         $intersect_array = array();
         $score_array = array();
-        $nbLevenshteinLoop = 0;
+        $fuzzyLoop = 0;
         $words = Search::extractKeyWords($expr, $id_lang, false, $context->language->iso_code);
 
         foreach ($words as $key => $word) {
@@ -259,7 +259,7 @@ class SearchCore
 
                 while (!($result = $db->executeS($sql . "'" . $sql_param_search . "';", true, false))) {
                     if (!Configuration::get('PS_SEARCH_FUZZY') ||
-                        $nbLevenshteinLoop++ > Configuration::get('PS_SEARCH_FUZZY_MAX_LOOP') ||
+                        $fuzzyLoop++ > Configuration::get('PS_SEARCH_FUZZY_MAX_LOOP') ||
                         !($sql_param_search = self::findClosestWeightestWord($context, $word))) {
                         break;
                     }
