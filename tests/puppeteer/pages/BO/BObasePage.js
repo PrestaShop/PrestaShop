@@ -39,7 +39,13 @@ module.exports = class BOBasePage extends CommonPage {
     this.growlMessageBloc = '#growls .growl-message';
 
     // Alert Text
-    this.alertSuccessBloc = 'div.alert.alert-success';
+    this.alertSuccessBloc = 'div.alert.alert-success:not([style=\'display: none;\'])';
+    this.alertSuccessBlocParagraph = `${this.alertSuccessBloc} div.alert-text p`;
+
+    // Modal dialog
+    this.modalDialog = '#confirmation_modal.show .modal-dialog';
+    this.modalDialogYesButton = `${this.modalDialog} button.continue`;
+    this.modalDialogNoButton = `${this.modalDialog} button.cancel`;
   }
 
   /*
@@ -94,5 +100,16 @@ module.exports = class BOBasePage extends CommonPage {
   async viewMyShop() {
     const FOPage = await this.openLinkWithTargetBlank(this.page, this.headerShopNameLink);
     return FOPage;
+  }
+
+  /**
+   * Set value on tinyMce textareas
+   * @param iFrameSelector
+   * @param value
+   * @return {Promise<void>}
+   */
+  async setValueOnTinymceInput(iFrameSelector, value) {
+    await this.page.click(iFrameSelector, {clickCount: 3});
+    await this.page.keyboard.type(value);
   }
 };

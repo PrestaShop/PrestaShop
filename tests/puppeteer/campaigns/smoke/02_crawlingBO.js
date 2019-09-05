@@ -5,7 +5,7 @@ const LoginPage = require('../../pages/BO/login');
 const DashboardPage = require('../../pages/BO/dashboard');
 const BOBasePage = require('../../pages/BO/BObasePage');
 const OrderPage = require('../../pages/BO/order');
-const ProductPage = require('../../pages/BO/product');
+const ProductsPage = require('../../pages/BO/products');
 const CustomerPage = require('../../pages/BO/customer');
 
 let page;
@@ -13,7 +13,7 @@ let loginPage;
 let dashboardPage;
 let boBasePage;
 let orderPage;
-let productPage;
+let productsPage;
 let customerPage;
 // creating pages objects in a function
 const init = async () => {
@@ -22,7 +22,7 @@ const init = async () => {
   dashboardPage = await (new DashboardPage(page));
   boBasePage = await (new BOBasePage(page));
   orderPage = await (new OrderPage(page));
-  productPage = await (new ProductPage(page));
+  productsPage = await (new ProductsPage(page));
   customerPage = await (new CustomerPage(page));
 };
 
@@ -48,8 +48,8 @@ global.scenario('Crawl into BO and check a few key pages', async () => {
 
   test('should visit the Products page', async () => {
     await boBasePage.goToSubMenu(boBasePage.productsParentLink, boBasePage.productsLink);
-    const pageTitle = await productPage.getPageTitle();
-    await expect(pageTitle).to.contains(productPage.pageTitle);
+    const pageTitle = await productsPage.getPageTitle();
+    await expect(pageTitle).to.contains(productsPage.pageTitle);
   });
 
   test('should visit the Customers page', async () => {
