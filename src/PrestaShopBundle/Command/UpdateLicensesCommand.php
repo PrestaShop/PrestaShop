@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -107,13 +107,10 @@ class UpdateLicensesCommand extends Command
                 '.git',
                 '.github',
                 '.composer',
-                'composer.json',
                 // admin folders
                 'admin-dev/filemanager',
                 'admin-dev/themes/default/public/',
                 'admin-dev/themes/new-theme/public/',
-                'admin-dev/themes/default/css/font.css',
-                'admin-dev/themes/new-theme/package.json',
                 // js dependencies
                 'js/tiny_mce',
                 'js/jquery',
@@ -139,9 +136,14 @@ class UpdateLicensesCommand extends Command
                 'tests/E2E/',
                 'tests/Unit/Resources/assets/',
                 'tests/puppeteer/',
+                // ->exclude() only exclude directories, no files
+                // @todo: but we would like to ignore the following files too:
+                'composer.json',
+                'admin-dev/themes/default/css/font.css',
+                'admin-dev/themes/new-theme/package.json',
+                'tools/build/Library/InstallUnpacker/content/js-runner.js',
                 'themes/classic/_dev/package.json',
                 'tools/build/composer.json',
-                'tools/build/Library/InstallUnpacker/content/js-runner.js',
             ))
             ->ignoreDotFiles(false);
         $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
