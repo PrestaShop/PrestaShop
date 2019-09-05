@@ -191,6 +191,7 @@ module.exports = class CommonPage {
   /**
    * To get a number from text
    * @param selector
+   * @param timeout
    * @return integer
    */
   async getNumberFromText(selector, timeout = 0) {
