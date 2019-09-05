@@ -39,16 +39,6 @@ module.exports = class Home extends CommonPage {
   }
 
   /**
-   * Get number of products displayed in all products page
-   * @return integer
-   */
-  async getNumberOfProducts() {
-    const productNumber = await this.getTextContent(this.totalProducts);
-    const numberOfProduct = /\d+/g.exec(productNumber).toString();
-    return parseInt(numberOfProduct, 10);
-  }
-
-  /**
    * Filter by category
    * @param categoryID, category id from the BO
    */
