@@ -193,8 +193,8 @@ module.exports = class CommonPage {
    * @param selector
    * @return integer
    */
-  async getNumberFromText(selector) {
-    await this.page.waitFor(2000);
+  async getNumberFromText(selector, timeout = 0) {
+    await this.page.waitFor(timeout);
     const text = await this.getTextContent(selector);
     const number = /\d+/g.exec(text).toString();
     return parseInt(number, 10);

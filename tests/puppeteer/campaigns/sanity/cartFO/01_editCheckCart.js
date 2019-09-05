@@ -34,15 +34,25 @@ global.scenario('Check the Product page', () => {
     await homePage.goTo(global.URL_FO);
     await homePage.checkHomePage();
   });
-  test('should go to the first product page', () => homePage.goToProductPage('1'));
-  test('should add product to the cart', () => productPage.addProductToTheCart());
+  test('should go to the first product page', async () => {
+    await homePage.goToProductPage('1');
+  });
+  test('should add product to the cart', async () => {
+    await productPage.addProductToTheCart();
+  });
   test('should check that there is one notification', async () => {
     const notificationNumber = await homePage.getNumberFromText(homePage.cartProductsCount);
     await expect(notificationNumber).to.be.equal(1);
   });
-  test('should go to the home page', () => homePage.goToHomePage());
-  test('should go to the second product page', () => homePage.goToProductPage('2'));
-  test('should add product to the cart', () => productPage.addProductToTheCart());
+  test('should go to the home page', async () => {
+    await homePage.goToHomePage();
+  });
+  test('should go to the second product page', async () => {
+    await homePage.goToProductPage('2');
+  });
+  test('should add product to the cart', async () => {
+    await productPage.addProductToTheCart();
+  });
   test('should check that there are two notifications', async () => {
     const notificationNumber = await homePage.getNumberFromText(homePage.cartProductsCount);
     await expect(notificationNumber).to.be.equal(2);
@@ -66,7 +76,7 @@ global.scenario('Check the Product page', () => {
     await cartPage.editProductQuantity('2', '2');
   });
   test('should check that the Total order price is changed', async () => {
-    const numberOfProducts = await cartPage.getNumberFromText(cartPage.cartTotalTTC);
+    const numberOfProducts = await cartPage.getNumberFromText(cartPage.cartTotalTTC, 2000);
     await expect(numberOfProducts).to.be.above(totalTTC);
   });
   test('should check that the Items number is changed', async () => {
