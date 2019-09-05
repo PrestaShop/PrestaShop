@@ -139,6 +139,7 @@ class UpdateLicensesCommand extends Command
                 // ->exclude() only exclude directories, no files
                 // @todo: but we would like to ignore the following files too:
                 'composer.json',
+                'package.json',
                 'admin-dev/themes/default/css/font.css',
                 'admin-dev/themes/new-theme/package.json',
                 'tools/build/Library/InstallUnpacker/content/js-runner.js',
