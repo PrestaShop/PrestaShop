@@ -236,9 +236,25 @@ class AddressFormatCore extends ObjectModel
                     }
                 }
             }
+            $this->_checkRequiredFields($usedKeyList);
         }
 
         return (count($this->_errorFormatList)) ? false : true;
+    }
+
+    /**
+     * Checks that all required fields exist in a given fields list.
+     * Fills _errorFormatList array in case of absence of a required field.
+     *
+     * @param array $fieldList
+     */
+    protected function _checkRequiredFields($fieldList)
+    {
+        foreach (self::getFieldsRequired() as $requiredField) {
+            if (!in_array($requiredField, $fieldList)) {
+                $this->_errorFormatList[] = $this->trans('The field %s is required.', array($requiredField), 'Admin.Notifications.Error');
+            }
+        }
     }
 
     /**
