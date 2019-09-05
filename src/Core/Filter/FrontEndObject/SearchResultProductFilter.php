@@ -40,6 +40,7 @@ class SearchResultProductFilter extends HashMapWhitelistFilter
             'active',
             'add_to_cart_url',
             'canonical_url',
+            'category_name',
             'cover',
             'description_short',
             'discount_amount',
