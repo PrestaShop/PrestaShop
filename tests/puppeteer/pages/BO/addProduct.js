@@ -142,10 +142,10 @@ module.exports = class AddProduct extends BOBasePage {
     ]);
     await Promise.all([
       this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-      this.page.waitForSelector(this.alertSuccessBlocParagraph, {visible: true}),
+      this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true}),
       this.page.click(this.modalDialogYesButton),
     ]);
-    return this.getTextContent(this.alertSuccessBlocParagraph);
+    return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 
   /**
