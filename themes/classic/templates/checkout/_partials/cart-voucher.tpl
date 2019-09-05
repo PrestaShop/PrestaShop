@@ -34,7 +34,7 @@
                   <span class="label">{$voucher.name}</span>
                   <div class="float-xs-right">
                     <span>{$voucher.reduction_formatted}</span>
-                      {if !empty($voucher.code)}
+                      {if !empty($voucher.code) && $voucher.code != '0'}
                         <a href="{$voucher.delete_url}" data-link-action="remove-voucher"><i class="material-icons">&#xE872;</i></a>
                       {/if}
                   </div>
