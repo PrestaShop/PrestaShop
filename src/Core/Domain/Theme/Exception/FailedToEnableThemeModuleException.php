@@ -24,7 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 namespace PrestaShop\PrestaShop\Core\Domain\Theme\Exception;
 
 class FailedToEnableThemeModuleException extends ThemeException

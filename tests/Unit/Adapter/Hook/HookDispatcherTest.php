@@ -24,7 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 namespace Tests\Unit\Adapter\Hook;
 
 use PHPUnit\Framework\TestCase;
