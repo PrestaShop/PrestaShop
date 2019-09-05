@@ -55,7 +55,7 @@ global.scenario('Create Standard product in BO and Delete it with DropDown Menu'
   test('should create Product', async () => {
     await productsPage.goToAddProductPage();
     const createProductMessage = await addProductPage.createEditProduct(productData);
-    await expect(createProductMessage).to.equal('Settings updated.');
+    await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
   });
   test('should go to Products page', async () => {
     await boBasePage.goToSubMenu(boBasePage.productsParentLink, boBasePage.productsLink);

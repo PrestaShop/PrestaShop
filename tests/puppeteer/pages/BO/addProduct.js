@@ -4,6 +4,8 @@ module.exports = class AddProduct extends BOBasePage {
   constructor(page) {
     super(page);
 
+    // Text Message
+    this.settingUpdatedMessage = 'Settings updated.';
     // Selectors
     this.productNameInput = '#form_step1_name_1';
     this.productTypeSelect = '#form_step1_type_product';

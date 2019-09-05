@@ -62,7 +62,7 @@ global.scenario('Create, read, update and delete Standard product with combinati
   test('should create Product with Combinations', async () => {
     await productsPage.goToAddProductPage();
     const createProductMessage = await addProductPage.createEditProduct(productWithCombinations);
-    await expect(createProductMessage).to.equal('Settings updated.');
+    await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
     await productsPage.page.waitFor(10000);
   });
   test('should preview and check product in FO', async () => {
@@ -72,7 +72,7 @@ global.scenario('Create, read, update and delete Standard product with combinati
   });
   test('should edit Product', async () => {
     const createProductMessage = await addProductPage.createEditProduct(editedProductWithCombinations, false);
-    await expect(createProductMessage).to.equal('Settings updated.');
+    await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
   });
   test('should preview and check product in FO', async () => {
     foProductPage.page = await addProductPage.previewProduct();

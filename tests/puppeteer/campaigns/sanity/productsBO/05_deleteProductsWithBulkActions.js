@@ -59,7 +59,7 @@ global.scenario('Create Standard product in BO and Delete it with Bulk Actions',
   test('should create First Product', async () => {
     await productsPage.goToAddProductPage();
     const createProductMessage = await addProductPage.createEditProduct(firstProductData);
-    await expect(createProductMessage).to.equal('Settings updated.');
+    await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
   });
   test('should go to Products page', async () => {
     await boBasePage.goToSubMenu(boBasePage.productsParentLink, boBasePage.productsLink);
@@ -69,7 +69,7 @@ global.scenario('Create Standard product in BO and Delete it with Bulk Actions',
   test('should create Second Product', async () => {
     await productsPage.goToAddProductPage();
     const createProductMessage = await addProductPage.createEditProduct(secondProductData);
-    await expect(createProductMessage).to.equal('Settings updated.');
+    await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
   });
   test('should go to Products page', async () => {
     await boBasePage.goToSubMenu(boBasePage.productsParentLink, boBasePage.productsLink);
