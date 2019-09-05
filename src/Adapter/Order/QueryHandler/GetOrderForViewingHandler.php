@@ -38,6 +38,7 @@ use Gender;
 use Image;
 use ImageManager;
 use Order;
+use OrderInvoice;
 use OrderReturn;
 use OrderSlip;
 use Pack;
@@ -45,6 +46,8 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryHandler\GetOrderForViewingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderCustomerForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderDocumentForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderDocumentsForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderHistoryForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderInvoiceAddressForViewing;
@@ -57,6 +60,7 @@ use PrestaShop\PrestaShop\Core\Image\Parser\ImageTagSourceParserInterface;
 use Shop;
 use State;
 use StockAvailable;
+use Symfony\Component\Translation\TranslatorInterface;
 use Tools;
 use Validate;
 use Warehouse;
@@ -75,11 +79,19 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
     private $imageTagSourceParser;
 
     /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
      * @param ImageTagSourceParserInterface $imageTagSourceParser
      */
-    public function __construct(ImageTagSourceParserInterface $imageTagSourceParser)
-    {
+    public function __construct(
+        ImageTagSourceParserInterface $imageTagSourceParser,
+        TranslatorInterface $translator
+    ) {
         $this->imageTagSourceParser = $imageTagSourceParser;
+        $this->translator = $translator;
     }
 
     /**
@@ -100,7 +112,8 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             $this->getOrderShippingAddress($order),
             $this->getOrderInvoiceAddress($order),
             $this->getOrderProducts($order),
-            $this->getOrderHistory($order)
+            $this->getOrderHistory($order),
+            $this->getOrderDocuments($order)
         );
     }
 
@@ -116,7 +129,10 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
         $order = new Order($orderId->getValue());
 
         if ($order->id !== $orderId->getValue()) {
-            throw new OrderNotFoundException(sprintf('Order with id "%s" was not found.',$orderId->getValue()));
+            throw new OrderNotFoundException(
+                $orderId,
+                sprintf('Order with id "%s" was not found.',$orderId->getValue())
+            );
         }
 
         return $order;
@@ -319,8 +335,6 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
 
         ksort($products);
 
-        dump($products);
-
         $productsForViewing = [];
 
         $isOrderTaxExcluded = $order->getTaxCalculationMethod() == PS_TAX_EXC;
@@ -407,5 +421,80 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
         }
 
         return $historyForViewing;
+    }
+
+    private function getOrderDocuments(Order $order): OrderDocumentsForViewing
+    {
+        $currency = new Currency($order->id_currency);
+        $documents = $order->getDocuments();
+
+        $documentsForViewing = [];
+
+        /** @var OrderInvoice|OrderSlip $document */
+        foreach ($documents as $document) {
+            $type = null;
+            $number = null;
+            $amount = null;
+            $amountMismatch = null;
+
+            if (get_class($document) === 'OrderInvoice') {
+                $type = isset($document->is_delivery) ? 'delivery_slip' : 'invoice';
+            } elseif (get_class($document) === 'OrderSlip') {
+                $type = 'order_slip';
+            }
+
+            if ('invoice' === $type) {
+                $number = $document->getInvoiceNumberFormatted(
+                    Context::getContext()->language->id,
+                    $order->id_shop
+                );
+            } elseif ('delivery_slip' === $type) {
+                $number = sprintf(
+                    '%s%06d',
+                    Configuration::get('PS_DELIVERY_PREFIX', Context::getContext()->language->id, null, $order->id_shop),
+                    $document->delivery_number
+                );
+            } elseif ('credit_slip' === $type) {
+                $number = sprintf(
+                    '%s%06d',
+                    Configuration::get('PS_CREDIT_SLIP_PREFIX', Context::getContext()->language->id),
+                    $document->id
+                );
+            }
+
+            if ($type !== 'delivery_slip') {
+                $amount = Tools::displayPrice($document->total_paid_tax_incl, $currency);
+
+                if ($document->getTotalPaid()) {
+                    if ($document->getRestPaid() > 0) {
+                        $amountMismatch = sprintf(
+                            '%s %s',
+                            Tools::displayPrice($document->getRestPaid(), $currency),
+                            $this->translator->trans('not paid', [], 'Admin.Orderscustomers.Feature')
+                        );
+                    } elseif ($document->getRestPaid() < 0) {
+                        $amountMismatch = sprintf(
+                            '%s %s',
+                            Tools::displayPrice($document->getRestPaid(), $currency),
+                            $this->translator->trans('overpaid', [], 'Admin.Orderscustomers.Feature')
+                        );
+                    }
+                }
+            }
+
+            $documentsForViewing[] = new OrderDocumentForViewing(
+                $document->id,
+                $type,
+                new DateTimeImmutable($document->date_add),
+                $number,
+                $amount,
+                $amountMismatch
+            );
+        }
+
+        dump($documents);
+        dump($documentsForViewing);
+
+        return new OrderDocumentsForViewing($documentsForViewing);
     }
 }

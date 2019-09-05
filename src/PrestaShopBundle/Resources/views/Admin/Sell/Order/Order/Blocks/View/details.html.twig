@@ -26,15 +26,23 @@
 <div class="mt-2">
   <ul class="nav nav nav-tabs" role="tablist">
     <li class="nav-item">
-      <a class="nav-link active show" id="historyTab" data-toggle="pill" href="#historyTabContent" role="tab" aria-controls="historyTabContent" aria-expanded="true" aria-selected="false">
+      <a class="nav-link active show" id="historyTab" data-toggle="tab" href="#historyTabContent" role="tab" aria-controls="historyTabContent" aria-expanded="true" aria-selected="false">
         {{ 'Status'|trans({}, 'Admin.Global') }} ({{ orderForViewing.history.statuses|length }})
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="orderDocumentsTab" data-toggle="tab" href="#orderDocumentsTabContent" role="tab" aria-controls="orderDocumentsTabContent" aria-expanded="true" aria-selected="false">
+        {{ 'Documents'|trans({}, 'Admin.Orderscustomers.Feature') }} ({{ orderForViewing.documents.documents|length }})
       </a>
     </li>
   </ul>
 
-  <div class="tab-content" id="historyTabContent">
-    <div class="tab-pane fade show active" id="orderHistory" role="tabpanel" aria-labelledby="historyTab">
+  <div class="tab-content">
+    <div class="tab-pane fade show active" id="historyTabContent" role="tabpanel" aria-labelledby="historyTab">
       {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/history.html.twig' %}
+    </div>
+    <div class="tab-pane fade" id="orderDocumentsTabContent" role="tabpanel" aria-labelledby="orderDocumentsTab">
+      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/documents.html.twig' %}
     </div>
   </div>
 </div>

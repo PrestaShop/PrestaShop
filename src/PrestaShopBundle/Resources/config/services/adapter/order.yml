@@ -110,6 +110,7 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Order\QueryHandler\GetOrderForViewingHandler
     arguments:
       - '@prestashop.core.image.parser.image_tag_source_parser'
+      - '@translator'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -28,16 +28,13 @@ namespace PrestaShopBundle\Form\Admin\Sell\Order;
 
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 
-class ChangeOrdersStatusType extends AbstractType
+class ChangeOrderStatusType extends AbstractType
 {
     /**
-     * @var FormChoiceProvider\Interface
+     * @var FormChoiceProviderInterface
      */
     private $orderStatusChoiceProvider;
 
@@ -49,9 +46,6 @@ class ChangeOrdersStatusType extends AbstractType
         $this->orderStatusChoiceProvider = $orderStatusChoiceProvider;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -59,24 +53,6 @@ class ChangeOrdersStatusType extends AbstractType
                 'choices' => $this->orderStatusChoiceProvider->getChoices(),
                 'translation_domain' => false,
             ])
-            ->add('order_ids', CollectionType::class, [
-                'allow_add' => true,
-                'entry_type' => HiddenType::class,
-                'label' => false,
-            ])
-        ;
-
-        $builder->get('order_ids')
-            ->addModelTransformer(new CallbackTransformer(
-                static function ($orderIds) {
-                    return $orderIds;
-                },
-                static function (array $orderIds) {
-                    return array_map(static function ($orderId) {
-                        return (int) $orderId;
-                    }, $orderIds);
-                }
-            ))
         ;
     }
 }

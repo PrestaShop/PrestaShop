@@ -26,8 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\QueryResult;
 
-use PrestaShop\PrestaShop\Adapter\Entity\OrderInvoice;
-
 /**
  * Contains data about order for viewing
  */
@@ -67,6 +65,11 @@ class OrderForViewing
      */
     private $history;
 
+    /**
+     * @var OrderDocumentsForViewing
+     */
+    private $documents;
+
     public function __construct(
         string $reference,
         string $taxMethod,
@@ -74,7 +77,8 @@ class OrderForViewing
         OrderShippingAddressForViewing $shippingAddress,
         OrderInvoiceAddressForViewing $invoiceAddress,
         OrderProductsForViewing $products,
-        OrderHistoryForViewing $history
+        OrderHistoryForViewing $history,
+        OrderDocumentsForViewing $documents
     ) {
         $this->reference = $reference;
         $this->customer = $customer;
@@ -83,6 +87,7 @@ class OrderForViewing
         $this->products = $products;
         $this->taxMethod = $taxMethod;
         $this->history = $history;
+        $this->documents = $documents;
     }
 
     /**
@@ -93,6 +98,9 @@ class OrderForViewing
         return $this->reference;
     }
 
+    /**
+     * @return OrderCustomerForViewing
+     */
     public function getCustomer(): OrderCustomerForViewing
     {
         return $this->customer;
@@ -136,5 +144,13 @@ class OrderForViewing
     public function getHistory(): OrderHistoryForViewing
     {
         return $this->history;
+    }
+
+    /**
+     * @return OrderDocumentsForViewing
+     */
+    public function getDocuments(): OrderDocumentsForViewing
+    {
+        return $this->documents;
     }
 }
