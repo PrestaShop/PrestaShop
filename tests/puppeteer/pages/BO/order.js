@@ -17,7 +17,7 @@ module.exports = class Order extends BOBasePage {
     this.orderfirstLineReferenceTD = '#table-order td:nth-child(3)';
     this.orderfirstLineStatusTD = '#table-order td:nth-child(9)';
 
-    //Order page
+    // Order page
     this.editProductButton = '#orderProducts tr:nth-child(%ID) .edit_product_change_link';
     this.editProductQuantityInput = '#orderProducts tr:nth-child(%ID) span.product_quantity_edit > input';
     this.productQuantitySpan = '#orderProducts tr:nth-child(%ID) span.product_quantity_show.badge';
@@ -26,7 +26,7 @@ module.exports = class Order extends BOBasePage {
     this.orderStatusInput = '#id_order_state_chosen input[type="text"]';
     this.orderStatusSearchResult = '#id_order_state_chosen li:nth-child(1)';
     this.updateStatusButton = '#submit_state';
-    this.statusValidation = '#status tr:nth-child(1) > td:nth-child(2)'
+    this.statusValidation = '#status tr:nth-child(1) > td:nth-child(2)';
   }
 
   /*
@@ -43,7 +43,7 @@ module.exports = class Order extends BOBasePage {
   async filterTableByInput(selector, value, searchButton) {
     await this.page.waitForSelector(selector);
     await this.page.type(selector, value);
-    await this.page.click(searchButton)
+    await this.page.click(searchButton);
   }
 
   /**
@@ -81,6 +81,6 @@ module.exports = class Order extends BOBasePage {
     await this.page.type(this.orderStatusInput, status);
     await this.page.click(this.orderStatusSearchResult);
     await this.page.click(this.updateStatusButton);
-    await this.checkTextValue(this.statusValidation, status)
+    await this.checkTextValue(this.statusValidation, status);
   }
 };
