@@ -11,7 +11,7 @@ module.exports = class Home extends CommonPage {
     this.contactLink = '#contact-link';
     this.allProductLink = '#content a.all-product-link';
     this.totalProducts = '#js-product-list-top .total-products > p';
-    this.categoryMenu = '#category-%ID > a'
+    this.categoryMenu = '#category-%ID > a';
   }
 
   /**
@@ -37,7 +37,7 @@ module.exports = class Home extends CommonPage {
   async getNumberOfProducts() {
     const productNumber = await this.getTextContent(this.totalProducts);
     const numberOfProduct = /\d+/g.exec(productNumber).toString();
-    return parseInt(numberOfProduct);
+    return parseInt(numberOfProduct, 10);
   }
 
   /**

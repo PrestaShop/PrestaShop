@@ -3,18 +3,15 @@ const {expect} = require('chai');
 
 // Importing pages
 const HomePage = require('../../../pages/FO/home');
-const ProductPage = require('../../../pages/FO/product');
 
 let page;
 let homePage;
-let productPage;
 let allProductsNumber = 0;
 
 // creating pages objects in a function
 const init = async () => {
   page = await global.browser.newPage();
   homePage = await (new HomePage(page));
-  productPage = await (new ProductPage(page));
 };
 
 /*

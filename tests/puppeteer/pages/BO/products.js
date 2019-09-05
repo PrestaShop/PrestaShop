@@ -61,7 +61,7 @@ module.exports = class Product extends BOBasePage {
 
     const footerText = await this.getTextContent(this.productNumberBloc);
     const numberOfProduct = /\d+/g.exec(footerText.match(/out of ([0-9]+)/)).toString();
-    return parseInt(numberOfProduct);
+    return parseInt(numberOfProduct, 10);
   }
 
   /**
@@ -87,9 +87,9 @@ module.exports = class Product extends BOBasePage {
     // Click on expand button
     await this.page.click(this.filterByCategoriesExpandButton);
     // Choose category to filter with
-    const found = await this.page.evaluate(async (allCategoriesSelector, value) => {
+    const found = await this.page.evaluate(async (allCategoriesSelector, val) => {
       const allCategories = [...await document.querySelectorAll(allCategoriesSelector)];
-      const category = await allCategories.find(el => el.textContent.includes(value));
+      const category = await allCategories.find(el => el.textContent.includes(val));
       if (category === undefined) return false;
       await category.querySelector('input').click();
       return true;

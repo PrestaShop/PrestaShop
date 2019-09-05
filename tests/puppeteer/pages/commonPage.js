@@ -104,8 +104,8 @@ module.exports = class CommonPage {
    */
   async checkAttributeValue(selector, attribute, textToCheckWith) {
     await this.page.waitForSelector(selector);
-    const value = await this.page.$eval(selector, (el, attribute) => el
-      .getAttribute(attribute), attribute);
+    const value = await this.page.$eval(selector, (el, attr) => el
+      .getAttribute(attr), attribute);
     expect(value).to.be.equal(textToCheckWith);
   }
 
@@ -117,7 +117,7 @@ module.exports = class CommonPage {
     await this.page.reload({waitUntil: 'networkidle0'});
   }
 
-/**
+  /**
    * Delete the existing text from input then set a value
    * @param selector, input
    * @param value, value to set in the input
@@ -135,11 +135,9 @@ module.exports = class CommonPage {
    * @return {Promise<void>}
    */
   async dialogListener(accept = true) {
-    this.page.once("dialog", (dialog) => {
-      if (accept)
-        dialog.accept();
-      else
-        dialog.dismiss();
+    this.page.once('dialog', (dialog) => {
+      if (accept) dialog.accept();
+      else dialog.dismiss();
     });
   }
 

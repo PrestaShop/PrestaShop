@@ -43,13 +43,13 @@ global.scenario('Filter the Orders table by ID, REFERENCE, STATUS', async () => 
   test('should filter the Orders table by ID and check the result', async () => {
     await orderPage.filterTableByInput(orderPage.orderFilterIdInput, '1', orderPage.searchButton);
     await boBasePage.checkTextValue(orderPage.orderfirstLineIdTD, '1');
-    await orderPage.waitForSelectorAndClick(orderPage.resetButton)
+    await orderPage.waitForSelectorAndClick(orderPage.resetButton);
   });
 
   test('should filter the Orders table by REFERENCE and check the result', async () => {
     await orderPage.filterTableByInput(orderPage.orderFilterReferenceInput, 'FFATNOMMJ', orderPage.searchButton);
     await boBasePage.checkTextValue(orderPage.orderfirstLineReferenceTD, 'FFATNOMMJ');
-    await orderPage.waitForSelectorAndClick(orderPage.resetButton)
+    await orderPage.waitForSelectorAndClick(orderPage.resetButton);
   });
 
   test('should filter the Orders table by STATUS and check the result', async () => {
