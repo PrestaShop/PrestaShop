@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -29,7 +29,7 @@ namespace PrestaShopBundle\Entity\Repository;
 use Doctrine\DBAL\Connection;
 
 /**
- * Class OrderInvoiceRepository
+ * Class OrderInvoiceRepository.
  */
 class OrderInvoiceRepository
 {
@@ -53,7 +53,7 @@ class OrderInvoiceRepository
     }
 
     /**
-     * Count number of orders grouped by order state
+     * Count number of orders grouped by order state.
      *
      * @param array $shopIds
      *
@@ -61,15 +61,14 @@ class OrderInvoiceRepository
      */
     public function countByOrderState(array $shopIds)
     {
-        $sql = '
-            SELECT COUNT(o.id_order) AS nbOrders, o.current_state as id_order_state
-			FROM `{table_prefix}order_invoice` oi
-			LEFT JOIN `{table_prefix}orders` o ON oi.id_order = o.id_order
-			WHERE o.id_shop IN(:shopIds)
-			AND oi.number > 0
-			GROUP BY o.current_state'
-        ;
-
+        $sql = <<<'SQL'
+SELECT COUNT(o.id_order) AS nbOrders, o.current_state as id_order_state
+FROM `{table_prefix}order_invoice` oi
+LEFT JOIN `{table_prefix}orders` o ON oi.id_order = o.id_order
+WHERE o.id_shop IN(:shopIds)
+AND oi.number > 0
+GROUP BY o.current_state
+SQL;
         $sql = str_replace('{table_prefix}', $this->tablePrefix, $sql);
 
         $statement = $this->connection->prepare($sql);

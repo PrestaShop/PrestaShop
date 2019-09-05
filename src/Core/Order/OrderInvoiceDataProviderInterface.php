@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -29,12 +29,12 @@ namespace PrestaShop\PrestaShop\Core\Order;
 use DateTimeInterface;
 
 /**
- * Interface OrderInvoiceDataProviderInterface defines OrderInvoice data provider
+ * Interface OrderInvoiceDataProviderInterface defines OrderInvoice data provider.
  */
 interface OrderInvoiceDataProviderInterface
 {
     /**
-     * Returns all the order invoices that match the date interval
+     * Returns all the order invoices that match the date interval.
      *
      * @param DateTimeInterface $dateFrom
      * @param DateTimeInterface $dateTo
@@ -44,7 +44,7 @@ interface OrderInvoiceDataProviderInterface
     public function getByDateInterval(DateTimeInterface $dateFrom, DateTimeInterface $dateTo);
 
     /**
-     * Returns all the order invoices by given status
+     * Returns all the order invoices by given status.
      *
      * @param int $orderStateId
      *
@@ -53,7 +53,7 @@ interface OrderInvoiceDataProviderInterface
     public function getByStatus($orderStateId);
 
     /**
-     * Returns the next available invoice number
+     * Returns the next available invoice number.
      *
      * @return int
      */

@@ -70,7 +70,7 @@ services:
         arguments:
           - '@prestashop.adapter.memcache_server.manager'
           - '@prestashop.adapter.php_parameters'
-          - '@prestashop.adapter.cache_clearer'
+          - '@prestashop.adapter.cache.clearer.symfony_cache_clearer'
           - '%ps_cache_enable%'
           - '%ps_caching%'
 
@@ -123,6 +123,23 @@ services:
     prestashop.adapter.language.activator:
         class: 'PrestaShop\PrestaShop\Adapter\Language\LanguageActivator'
 
+    prestashop.adapter.language.language_pack_installer:
+        class: 'PrestaShop\PrestaShop\Adapter\Language\LanguagePackInstaller'
+        arguments:
+            - '@translator'
+            - '@prestashop.core.foundation.version'
+
+    prestashop.adapter.language.validator:
+        class: 'PrestaShop\PrestaShop\Adapter\Language\LanguageValidator'
+
+    prestashop.adapter.language.copier:
+        class: 'PrestaShop\PrestaShop\Adapter\Language\LanguageCopier'
+        arguments:
+            - '@prestashop.adapter.data_provider.language'
+            - '@translator'
+            - '@filesystem'
+            - '@=service("prestashop.core.addon.theme.repository").getListAsCollection()'
+
     prestashop.adapter.manager.currency:
         class: 'PrestaShop\PrestaShop\Adapter\Currency\CurrencyManager'
 
@@ -171,3 +188,61 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\Carrier\CarrierOptionsConfiguration'
         arguments:
             - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.core.email.email_configurator:
+        class: 'PrestaShop\PrestaShop\Core\Email\EmailDataConfigurator'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.core.email.smtp_configurator:
+        class: 'PrestaShop\PrestaShop\Core\Email\SmtpDataConfigurator'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.adapter.webservice.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Webservice\WebserviceConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.adapter.meta.set_up_urls.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Meta\SetUpUrlsDataConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+            - '@prestashop.adapter.file.htaccess_file_generator'
+            - '@translator'
+
+    prestashop.adapter.meta.shop_url.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Meta\ShopUrlDataConfiguration'
+        arguments:
+            - '@=service("prestashop.adapter.shop.shop_url").getMainShopUrl()'
+            - '@prestashop.adapter.legacy.configuration'
+            - '@prestashop.adapter.file.htaccess_file_generator'
+
+    prestashop.adapter.meta.url_schema.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Meta\UrlSchemaDataConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+            - '@=service("prestashop.adapter.data_provider.default_route").getRules()'
+
+    prestashop.adapter.meta.seo_options.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Meta\SEOOptionsDataConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.core.team.employee.configuration.employee_options_configuration:
+        class: 'PrestaShop\PrestaShop\Core\Team\Employee\Configuration\EmployeeOptionsConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+            - '@prestashop.core.team.employee.configuration.options_checker'
+
+    prestashop.core.tax.tax_options_configuration:
+        class: 'PrestaShop\PrestaShop\Core\Tax\TaxOptionsConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+            - '@prestashop.adapter.tax.ecotax.ecotax_resetter'
+
+    prestashop.core.mail_theme.configuration:
+      class: 'PrestaShop\PrestaShop\Core\MailTemplate\MailThemeConfiguration'
+      arguments:
+        - '@prestashop.adapter.legacy.configuration'
+        - '@prestashop.core.mail_template.theme_catalog'

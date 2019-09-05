@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,23 +16,22 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Adapter\Addons;
 
+use Exception;
+use PhpEncryption;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager;
 use PrestaShopBundle\Service\DataProvider\Admin\AddonsInterface;
 use PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient;
 use Symfony\Component\HttpFoundation\Request;
-use Configuration;
-use Exception;
-use Tools;
-use PhpEncryption;
 
 /**
  * Data provider for new Architecture, about Addons.
@@ -77,6 +76,7 @@ class AddonsDataProvider implements AddonsInterface
      * @param $module_id
      *
      * @return bool
+     *
      * @throws Exception
      */
     public function downloadModule($module_id)
@@ -100,6 +100,7 @@ class AddonsDataProvider implements AddonsInterface
         $temp_filename = tempnam($this->cacheDir, 'mod');
         if (file_put_contents($temp_filename, $module_data) !== false) {
             $this->zipManager->storeInModulesFolder($temp_filename);
+
             return true;
         } else {
             throw new Exception('Cannot store module content in temporary folder !');
@@ -172,6 +173,7 @@ class AddonsDataProvider implements AddonsInterface
                             ->setPassword($params['password_addons'])
                             ->getModuleZip($params['id_module']);
                     }
+
                     return $this->marketplaceClient->getModuleZip($params['id_module']);
                 case 'module':
                     return $this->marketplaceClient->getModule($params['id_module']);
@@ -182,12 +184,14 @@ class AddonsDataProvider implements AddonsInterface
             }
         } catch (Exception $e) {
             self::$is_addons_up = false;
+
             throw $e;
         }
     }
 
     /**
      * @return array
+     *
      * @throws Exception
      */
     protected function getAddonsCredentials()
@@ -197,8 +201,8 @@ class AddonsDataProvider implements AddonsInterface
         $password = $this->encryption->decrypt($request->cookies->get('password_addons'));
 
         return array(
-           'username_addons' => $username,
-           'password_addons' => $password,
+            'username_addons' => $username,
+            'password_addons' => $password,
         );
     }
 

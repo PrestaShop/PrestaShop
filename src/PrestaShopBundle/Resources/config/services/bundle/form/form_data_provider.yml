@@ -81,8 +81,17 @@ services:
     prestashop.admin.import.form_data_provider:
         class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import\ImportFormDataProvider'
         arguments:
-            - '@session'
             - '@prestashop.core.import.file_finder'
+            - '@session'
+
+    prestashop.admin.import_data_configuration.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import\ImportDataConfigurationFormDataProvider'
+        arguments:
+            - '@prestashop.core.import.dir'
+            - '@prestashop.core.import.factory.data_row.collection_factory'
+            - '@prestashop.core.admin.import_match.repository'
+            - '@prestashop.adapter.import.data_match_saver'
+            - '@=service("prestashop.core.form.choice_provider.import_entity_field").getChoices()'
 
     prestashop.adapter.order.delivery.slip.options.form_provider:
         class: 'PrestaShopBundle\Form\Admin\Sell\Order\Delivery\SlipOptionsFormDataProvider'
@@ -114,3 +123,62 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Improve\Payment\Preferences\PaymentPreferencesFormDataProvider'
         arguments:
             - '@prestashop.adapter.payment_module_preferences.configuration'
+
+    prestashop.admin.email_configuration.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email\EmailConfigurationFormDataProvider'
+        arguments:
+            - '@prestashop.core.email.email_configurator'
+            - '@prestashop.core.email.smtp_configurator'
+
+    prestashop.admin.request_sql_settings.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql\SqlRequestSettingsFormDataProvider'
+        arguments:
+          - '@prestashop.core.sql_manager.configuration.sql_request_configuration'
+
+    prestashop.admin.webservice.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Webservice\WebserviceFormDataProvider'
+        arguments:
+            - '@prestashop.adapter.webservice.configuration'
+
+    prestashop.admin.backup.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Backup\BackupDataProvider'
+        arguments:
+            - '@prestashop.core.backup.options_configuration'
+
+    prestashop.admin.traffic_seo.meta_settings.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\MetaSettingsFormDataProvider'
+        arguments:
+            - '@prestashop.adapter.meta.set_up_urls.configuration'
+            - '@prestashop.adapter.meta.shop_url.configuration'
+            - '@prestashop.adapter.meta.url_schema.configuration'
+            - '@prestashop.adapter.meta.seo_options.configuration'
+            - '@translator'
+            - '@prestashop.adapter.routes.route_validator'
+            - '@prestashop.adapter.validate'
+
+    prestashop.admin.employee_options.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Employee\EmployeeOptionsFormDataProvider'
+        arguments:
+            - '@prestashop.core.team.employee.configuration.employee_options_configuration'
+
+    prestashop.admin.currency.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Currencies\CurrencyFormDataProvider'
+        arguments:
+            - '@prestashop.core.command_bus'
+            - '@=service("prestashop.adapter.legacy.configuration").get("PS_ACTIVE_CRONJOB_EXCHANGE_RATE")'
+
+    prestashop.admin.tax_options.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Tax\TaxOptionsFormDataProvider'
+        arguments:
+            - '@prestashop.core.tax.tax_options_configuration'
+
+    prestashop.admin.improve.design.theme.shop_logos.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Improve\Design\Theme\ShopLogosFormDataProvider'
+        arguments:
+            - '@prestashop.core.command_bus'
+            - '@prestashop.adapter.theme.theme_multi_store_settings_form_data_provider'
+
+    prestashop.admin.mail_theme.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Improve\Design\MailTheme\MailThemeFormDataProvider'
+        arguments:
+            - '@prestashop.core.mail_theme.configuration'

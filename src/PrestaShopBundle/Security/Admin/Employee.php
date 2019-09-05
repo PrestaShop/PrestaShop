@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,21 +16,21 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Security\Admin;
 
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\EquatableInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Class Employee is used for Symfony security components to authenticate the user.
- * @package PrestaShopBundle\Security\Admin
  */
 class Employee implements UserInterface, EquatableInterface
 {
@@ -81,7 +81,7 @@ class Employee implements UserInterface, EquatableInterface
     }
 
     /**
-     * Returns roles for the current employee
+     * Returns roles for the current employee.
      *
      * @return array
      */
@@ -91,7 +91,7 @@ class Employee implements UserInterface, EquatableInterface
     }
 
     /**
-     * Get typed password
+     * Get typed password.
      *
      * @return string
      */
@@ -101,7 +101,7 @@ class Employee implements UserInterface, EquatableInterface
     }
 
     /**
-     * The salt used to hash the password
+     * The salt used to hash the password.
      *
      * @return string
      */
@@ -111,7 +111,7 @@ class Employee implements UserInterface, EquatableInterface
     }
 
     /**
-     * Get the login of the current employee
+     * Get the login of the current employee.
      *
      * @return string
      */
@@ -121,7 +121,7 @@ class Employee implements UserInterface, EquatableInterface
     }
 
     /**
-     * Get the id of the current employee
+     * Get the id of the current employee.
      *
      * @return int
      */
@@ -131,7 +131,7 @@ class Employee implements UserInterface, EquatableInterface
     }
 
     /**
-     * Get the data parameter of the current employee
+     * Get the data parameter of the current employee.
      *
      * @return object
      */
@@ -148,26 +148,28 @@ class Employee implements UserInterface, EquatableInterface
     }
 
     /**
-     *
      * @param array $roles
+     *
      * @return Employee
      */
     public function setRoles(array $roles)
     {
         $this->roles = $roles;
+
         return $this;
     }
 
     /**
      * Test equality between two Employee entities
-     * (instance of class, password, salt and username)
+     * (instance of class, password, salt and username).
      *
      * @param UserInterface $user
+     *
      * @return bool
      */
     public function isEqualTo(UserInterface $user)
     {
-        if (!$user instanceof Employee) {
+        if (!$user instanceof static) {
             return false;
         }
 

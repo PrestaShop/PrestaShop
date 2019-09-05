@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,26 +16,27 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\EventListener;
 
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
-use PrestaShopBundle\Security\Annotation\DemoRestricted;
-use Symfony\Component\Translation\TranslatorInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Routing\RouterInterface;
 use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Util\ClassUtils;
-use ReflectionObject;
+use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use ReflectionClass;
+use ReflectionObject;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Allow a redirection to the right url when using BetterSecurity annotation.
@@ -115,7 +116,13 @@ class DemoModeEnabledListener
         }
 
         $this->showNotificationMessage($demoRestricted);
-        $url = $this->router->generate($demoRestricted->getRedirectRoute());
+
+        $routeParametersToKeep = $this->getQueryParamsFromRequestQuery(
+            $demoRestricted->getRedirectQueryParamsToKeep(),
+            $event->getRequest()
+        );
+
+        $url = $this->router->generate($demoRestricted->getRedirectRoute(), $routeParametersToKeep);
 
         $event->setController(function () use ($url) {
             return new RedirectResponse($url);
@@ -144,6 +151,7 @@ class DemoModeEnabledListener
      *
      * @param Controller $controllerObject
      * @param string $methodName
+     *
      * @return DemoRestricted|null
      */
     private function getAnnotation($controllerObject, $methodName)
@@ -163,5 +171,27 @@ class DemoModeEnabledListener
         $reflectionMethod = $controllerReflectionObject->getMethod($methodName);
 
         return $this->annotationReader->getMethodAnnotation($reflectionMethod, $tokenAnnotation);
+    }
+
+    /**
+     * Gets query parameters by comparing them to the current request attributes.
+     *
+     * @param array $queryParametersToKeep
+     * @param Request $request
+     *
+     * @return array
+     */
+    private function getQueryParamsFromRequestQuery(array $queryParametersToKeep, Request $request)
+    {
+        $result = [];
+
+        foreach ($queryParametersToKeep as $queryParameterName) {
+            $value = $request->get($queryParameterName);
+            if (null !== $value) {
+                $result[$queryParameterName] = $value;
+            }
+        }
+
+        return $result;
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -33,7 +33,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Class PaymentModulePreferencesType defines form in "Improve > Payment > Preferences" page
+ * Class PaymentModulePreferencesType defines form in "Improve > Payment > Preferences" page.
  */
 class PaymentModulePreferencesType extends TranslatorAwareType
 {
@@ -122,12 +122,11 @@ class PaymentModulePreferencesType extends TranslatorAwareType
                 'label' => $this->trans('Carrier restrictions', 'Admin.Payment.Feature'),
                 'choices' => $this->carrierChoices,
                 'multiple_choices' => $this->getCarrierChoicesForPaymentModules(),
-            ])
-        ;
+            ]);
     }
 
     /**
-     * Get multiple currency choices for payment modules
+     * Get multiple currency choices for payment modules.
      *
      * @return array
      */
@@ -161,7 +160,7 @@ class PaymentModulePreferencesType extends TranslatorAwareType
     }
 
     /**
-     * Get multiple country choices for payment modules
+     * Get multiple country choices for payment modules.
      *
      * @return array
      */
@@ -190,7 +189,7 @@ class PaymentModulePreferencesType extends TranslatorAwareType
     }
 
     /**
-     * Get multiple group choices for payment modules
+     * Get multiple group choices for payment modules.
      *
      * @return array
      */
@@ -211,7 +210,7 @@ class PaymentModulePreferencesType extends TranslatorAwareType
     }
 
     /**
-     * Get multiple carrier choices for payment modules
+     * Get multiple carrier choices for payment modules.
      *
      * @return array
      */
@@ -232,7 +231,7 @@ class PaymentModulePreferencesType extends TranslatorAwareType
     }
 
     /**
-     * Get currency choices with specific addtional choices
+     * Get currency choices with specific addtional choices.
      *
      * @return array
      */
@@ -245,7 +244,7 @@ class PaymentModulePreferencesType extends TranslatorAwareType
     }
 
     /**
-     * Get payment preferences specific currency choices
+     * Get payment preferences specific currency choices.
      *
      * @return array
      */
@@ -258,7 +257,7 @@ class PaymentModulePreferencesType extends TranslatorAwareType
     }
 
     /**
-     * Get country choices by country ISO codes
+     * Get country choices by country ISO codes.
      *
      * @param array $limitedCountryIsoCodes
      *
@@ -280,7 +279,7 @@ class PaymentModulePreferencesType extends TranslatorAwareType
     }
 
     /**
-     * Sort payment modules by display name
+     * Sort payment modules by display name.
      *
      * @param array $paymentModules
      *

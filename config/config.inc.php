@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -28,12 +28,12 @@ $currentDir = dirname(__FILE__);
 
 /* Custom defines made by users */
 if (is_file($currentDir.'/defines_custom.inc.php')) {
-    include_once($currentDir.'/defines_custom.inc.php');
+    include_once $currentDir.'/defines_custom.inc.php';
 }
 
-require_once($currentDir.'/defines.inc.php');
+require_once $currentDir.'/defines.inc.php';
 
-require_once(_PS_CONFIG_DIR_.'autoload.php');
+require_once _PS_CONFIG_DIR_.'autoload.php';
 
 $start_time = microtime(true);
 
@@ -72,21 +72,21 @@ if (defined('_PS_CREATION_DATE_')) {
 
 /* Custom config made by users */
 if (is_file(_PS_CUSTOM_CONFIG_FILE_)) {
-    include_once(_PS_CUSTOM_CONFIG_FILE_);
+    include_once _PS_CUSTOM_CONFIG_FILE_;
 }
 
 if (_PS_DEBUG_PROFILING_) {
-    include_once(_PS_TOOL_DIR_.'profiling/Controller.php');
-    include_once(_PS_TOOL_DIR_.'profiling/ObjectModel.php');
-    include_once(_PS_TOOL_DIR_.'profiling/Db.php');
-    include_once(_PS_TOOL_DIR_.'profiling/Tools.php');
+    include_once _PS_TOOL_DIR_.'profiling/Controller.php';
+    include_once _PS_TOOL_DIR_.'profiling/ObjectModel.php';
+    include_once _PS_TOOL_DIR_.'profiling/Db.php';
+    include_once _PS_TOOL_DIR_.'profiling/Tools.php';
 }
 
 if (Tools::convertBytes(ini_get('upload_max_filesize')) < Tools::convertBytes('100M')) {
     ini_set('upload_max_filesize', '100M');
 }
 
-if (Tools::isPHPCLI() && isset($argc) && isset($argv)) {
+if (Tools::isPHPCLI() && isset($argc, $argv)) {
     Tools::argvToGET($argc, $argv);
 }
 
@@ -126,17 +126,13 @@ define('_PARENT_THEME_NAME_', $context->shop->theme->get('parent') ?: '');
 define('__PS_BASE_URI__', $context->shop->getBaseURI());
 
 /* Include all defines related to base uri and theme name */
-require_once($currentDir.'/defines_uri.inc.php');
+require_once $currentDir.'/defines_uri.inc.php';
 
 global $_MODULES;
 $_MODULES = array();
 
 define('_PS_PRICE_DISPLAY_PRECISION_', Configuration::get('PS_PRICE_DISPLAY_PRECISION'));
 define('_PS_PRICE_COMPUTE_PRECISION_', _PS_PRICE_DISPLAY_PRECISION_);
-
-if (Configuration::get('PS_USE_HTMLPURIFIER')) {
-    require_once(_PS_TOOL_DIR_.'htmlpurifier/HTMLPurifier.standalone.php');
-}
 
 /* Load all languages */
 Language::loadLanguages();
@@ -203,7 +199,7 @@ if (!isset($language) || !Validate::isLoadedObject($language)) {
 $context->language = $language;
 
 /* Get smarty */
-require_once($currentDir.'/smarty.config.inc.php');
+require_once $currentDir.'/smarty.config.inc.php';
 $context->smarty = $smarty;
 
 if (!defined('_PS_ADMIN_DIR_')) {

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,18 +16,19 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Service\Hook;
 
 use AppKernel;
-use Symfony\Component\EventDispatcher\Event;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use Symfony\Component\EventDispatcher\Event;
 
 /**
  * HookEvent is used in HookDispatcher.
@@ -41,12 +42,14 @@ class HookEvent extends Event
     /**
      * Sets the Hook parameters.
      *
-     * @param array Hook parameters.
-     * @return $this, for fluent use of object.
+     * @param array hook parameters
+     *
+     * @return $this, for fluent use of object
      */
     public function setHookParameters($parameters)
     {
         $this->hookParameters = $parameters;
+
         return $this;
     }
 
@@ -57,14 +60,14 @@ class HookEvent extends Event
      * - _ps_version contains PrestaShop version, and is here only if the Hook is triggered by Symfony architecture.
      * These values can either be overriden by setHookParameters using the same parameter key.
      *
-     * @return array The array of hook parameters, more default fixed values.
+     * @return array the array of hook parameters, more default fixed values
      */
     public function getHookParameters()
     {
         $globalParameters = array('_ps_version' => AppKernel::VERSION);
 
         $sfContainer = SymfonyContainer::getInstance();
-        if (!is_null($sfContainer) && !is_null($sfContainer->get('request_stack')->getCurrentRequest())) {
+        if (null !== $sfContainer && null !== $sfContainer->get('request_stack')->getCurrentRequest()) {
             $request = $sfContainer->get('request_stack')->getCurrentRequest();
             $globalParameters['request'] = $request;
             $globalParameters['route'] = $request->get('_route');

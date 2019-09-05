@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -33,6 +33,7 @@ use Symfony\Component\Form\Extension\Core\Type as FormType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -163,7 +164,9 @@ class ProductSpecificPrice extends CommonAbstractType
                 'sp_id_customer',
                 TypeaheadCustomerCollectionType::class,
                 [
-                    'remote_url' => $this->context->getAdminLink('AdminCustomers', true) . '&sf2=1&ajax=1&tab=AdminCustomers&action=searchCustomers&customer_search=%QUERY',
+                    // "%QUERY" is appended to url in order to avoid "%" sign being encoded into "%25",
+                    // it used as a placeholder to replace with actual query in JS
+                    'remote_url' => $this->router->generate('admin_customers_search', ['sf2' => 1]) . '&customer_search=%QUERY',
                     'mapping_value' => 'id_customer',
                     'mapping_name' => 'fullname_and_email',
                     'placeholder' => $this->translator->trans('All customers', [], 'Admin.Global'),
@@ -181,7 +184,11 @@ class ProductSpecificPrice extends CommonAbstractType
                     'required' => false,
                     'placeholder' => $this->translator->trans('Apply to all combinations', [], 'Admin.Catalog.Feature'),
                     'label' => $this->translator->trans('Combinations', [], 'Admin.Catalog.Feature'),
-                    'attr' => ['data-action' => $this->router->generate('admin_get_product_combinations', ['idProduct' => 1])],
+                    'attr' => [
+                        'data-action' => $this->router->generate('admin_get_product_combinations', ['idProduct' => $options['id_product']]),
+                        // used to force selected select option after options have been loaded
+                        'data-selected-attribute' => (array_keys($options, 'selected_product_attribute')) ? $options['selected_product_attribute'] : '0',
+                    ],
                 ]
             )
             ->add(
@@ -234,11 +241,10 @@ class ProductSpecificPrice extends CommonAbstractType
             )
             ->add(
                 'sp_reduction',
-                FormType\MoneyType::class,
+                FormType\NumberType::class,
                 [
                     'label' => $this->translator->trans('Reduction', [], 'Admin.Catalog.Feature'),
                     'required' => false,
-                    'currency' => $this->currency->iso_code,
                 ]
             )
             ->add(
@@ -247,7 +253,7 @@ class ProductSpecificPrice extends CommonAbstractType
                 [
                     'label' => $this->translator->trans('Reduction type', [], 'Admin.Catalog.Feature'),
                     'choices' => [
-                        '€' => 'amount',
+                        $this->currency->getSign() => 'amount',
                         $this->translator->trans('%', [], 'Admin.Global') => 'percentage',
                     ],
                     'required' => true,
@@ -306,6 +312,17 @@ class ProductSpecificPrice extends CommonAbstractType
                 ]
             );
         });
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults([
+            'id_product' => 1, // 1 is default value for new form
+            'selected_product_attribute' => '0', // used to force selected select option after options have been loaded
+        ]);
     }
 
     /**

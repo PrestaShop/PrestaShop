@@ -11,7 +11,7 @@ services:
 
     prestashop.dispatcher.legacy_hooks.subscriber:
         class: 'PrestaShopBundle\EventListener\ActionDispatcherLegacyHooksSubscriber'
-        arguments: ['@prestashop.hook.dispatcher']
+        arguments: ['@prestashop.core.hook.dispatcher']
         tags:
             - { name: kernel.event_subscriber }
 
@@ -24,6 +24,13 @@ services:
             - "@prestashop.adapter.legacy.context"
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
+    prestashop.legacy_url_listener:
+        class: PrestaShopBundle\EventListener\LegacyUrlListener
+        arguments:
+        - "@prestashop.bundle.routing.converter.legacy_url_converter"
+        tags:
+        - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 40 }
 
     prestashop.multishop_command_listener:
         class: PrestaShopBundle\EventListener\MultishopCommandListener
@@ -52,3 +59,35 @@ services:
             - "@=service('prestashop.adapter.legacy.configuration').getBoolean('_PS_MODE_DEMO_')"
         tags:
             - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
+
+    prestashop.module_activated.listener:
+        class: PrestaShopBundle\EventListener\ModuleActivatedListener
+        arguments:
+        - "@router"
+        - "@translator"
+        - "@session"
+        - "@annotation_reader"
+        - "@prestashop.core.admin.module.repository"
+        tags:
+        - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
+
+    prestashop.bundle.event_listener.filter_category_search_criteria:
+        class: PrestaShopBundle\EventListener\FilterCategorySearchCriteriaListener
+        arguments:
+            - '@prestashop.adapter.grid.search.factory.search_criteria_with_category_parent_id'
+        tags:
+            - { name: kernel.event_listener, event: prestashop.search_criteria.filter, method: onFilterSearchCriteria }
+
+    prestashop.bundle.event_listener.filter_cms_page_category_search_criteria:
+        class: PrestaShopBundle\EventListener\FilterCmsPageCategorySearchCriteriaListener
+        arguments:
+            - '@request_stack'
+        tags:
+            - { name: kernel.event_listener, event: prestashop.search_criteria.filter, method: onFilterSearchCriteria }
+
+    prestashop.bundle.event_listener.back_url_redirect_response_listener:
+        class: PrestaShopBundle\EventListener\BackUrlRedirectResponseListener
+        arguments:
+          - '@prestashop.core.uti.back_url_provider'
+        tags:
+          - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,40 +16,38 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Grid\Presenter;
 
-use PrestaShop\PrestaShop\Core\Grid\Column\ColumnFilterOption;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
-use PrestaShop\PrestaShop\Core\Grid\Definition\DefinitionInterface;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\PositionColumn;
+use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinitionInterface;
+use PrestaShop\PrestaShop\Core\Grid\Filter\FilterInterface;
+use Symfony\Component\DependencyInjection\Container;
 use PrestaShop\PrestaShop\Core\Grid\GridInterface;
-use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
-use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Component\Form\Extension\Core\Type\FormType;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use PrestaShop\PrestaShop\Core\Search\Filters;
 
 /**
- * Class GridPresenter is responsible for presenting grid
+ * Class GridPresenter is responsible for presenting grid.
  */
 final class GridPresenter implements GridPresenterInterface
 {
     /**
-     * @var FormFactoryInterface
+     * @var HookDispatcherInterface
      */
-    private $formFactory;
+    private $hookDispatcher;
 
-    /**
-     * @param FormFactoryInterface $formFactory
-     */
-    public function __construct(FormFactoryInterface $formFactory)
+    public function __construct(HookDispatcherInterface $hookDispatcher)
     {
-        $this->formFactory = $formFactory;
+        $this->hookDispatcher = $hookDispatcher;
     }
 
     /**
@@ -57,27 +55,25 @@ final class GridPresenter implements GridPresenterInterface
      */
     public function present(GridInterface $grid)
     {
+        $filterForm = $grid->getFilterForm();
+
         $definition = $grid->getDefinition();
         $searchCriteria = $grid->getSearchCriteria();
         $data = $grid->getData();
-
-        list(
-            $columns,
-            $filterForm
-        ) = $this->presentColumns($definition, $grid->getSearchCriteria());
-
-        return [
+        $presentedGrid = [
             'id' => $definition->getId(),
             'name' => $definition->getName(),
             'filter_form' => $filterForm->createView(),
-            'columns' => $columns,
+            'form_prefix' => '',
+            'columns' => $this->getColumns($grid),
+            'column_filters' => $this->getColumnFilters($definition),
             'actions' => [
                 'grid' => $definition->getGridActions()->toArray(),
                 'bulk' => $definition->getBulkActions()->toArray(),
             ],
             'data' => [
-                'rows' => $data->getRows(),
-                'rows_total' => $data->getRowsTotal(),
+                'records' => $data->getRecords(),
+                'records_total' => $data->getRecordsTotal(),
                 'query' => $data->getQuery(),
             ],
             'pagination' => [
@@ -88,53 +84,87 @@ final class GridPresenter implements GridPresenterInterface
                 'order_by' => $searchCriteria->getOrderBy(),
                 'order_way' => $searchCriteria->getOrderWay(),
             ],
+            'filters' => $searchCriteria->getFilters(),
+            'attributes' => [
+                'is_empty_state' => empty($filterForm->getData()) && $data->getRecords()->count() === 0,
+            ],
         ];
+
+        if ($searchCriteria instanceof Filters) {
+            $presentedGrid['form_prefix'] = $searchCriteria->getFilterId();
+        }
+
+        $this->hookDispatcher->dispatchWithParameters('action' . Container::camelize($definition->getId()) . 'GridPresenterModifier', [
+            'presented_grid' => &$presentedGrid,
+        ]);
+
+        return $presentedGrid;
     }
 
     /**
-     * Get presented columns with filter form
+     * Returns the columns formatted as array, adds an additional position handle
+     * column when needed.
      *
-     * @param DefinitionInterface $definition
-     * @param SearchCriteriaInterface $searchCriteria
+     * @param GridInterface $grid
      *
      * @return array
      */
-    private function presentColumns(
-        DefinitionInterface $definition,
-        SearchCriteriaInterface $searchCriteria
-    ) {
-        $formBuilder = $this->formFactory->createNamedBuilder(
-            $definition->getId(),
-            FormType::class,
-            $searchCriteria->getFilters()
-        );
-        $columnsArray = [];
+    private function getColumns(GridInterface $grid)
+    {
+        $columns = $grid->getDefinition()->getColumns()->toArray();
 
+        $positionColumn = $this->getOrderingPosition($grid);
+        if (null !== $positionColumn) {
+            array_unshift($columns, [
+                'id' => $positionColumn->getId() . '_handle',
+                'name' => $positionColumn->getName(),
+                'type' => 'position_handle',
+                'options' => $positionColumn->getOptions(),
+            ]);
+        }
+
+        return $columns;
+    }
+
+    /**
+     * @param GridInterface $grid
+     *
+     * @return ColumnInterface|null
+     */
+    public function getOrderingPosition(GridInterface $grid)
+    {
+        $searchCriteria = $grid->getSearchCriteria();
         /** @var ColumnInterface $column */
-        foreach ($definition->getColumns() as $column) {
-            $columnOptions = $column->getOptions();
-
-            $columnsArray[] = [
-                'id' => $column->getId(),
-                'name' => $column->getName(),
-                'type' => $column->getType(),
-                'options' => $columnOptions,
-            ];
-
-            if (isset($columnOptions['filter'])) {
-                /** @var ColumnFilterOption $columnOption */
-                $columnOption = $columnOptions['filter'];
-                $formBuilder->add(
-                    $column->getId(),
-                    $columnOption->getFilterType(),
-                    $columnOption->getFilterTypeOptions()
-                );
+        foreach ($grid->getDefinition()->getColumns() as $column) {
+            if ($column instanceof PositionColumn &&
+                strtolower($column->getId()) == strtolower($searchCriteria->getOrderBy()) &&
+                'asc' == strtolower($searchCriteria->getOrderWay())
+            ) {
+                return $column;
             }
         }
 
-        return [
-            $columnsArray,
-            $formBuilder->getForm(),
-        ];
+        return null;
+    }
+
+    /**
+     * Get filters that have associated columns.
+     *
+     * @param GridDefinitionInterface $definition
+     *
+     * @return array
+     */
+    private function getColumnFilters(GridDefinitionInterface $definition)
+    {
+        $columnFiltersMapping = [];
+
+        /** @var FilterInterface $filter */
+        foreach ($definition->getFilters()->all() as $filter) {
+            if (null !== $associatedColumn = $filter->getAssociatedColumn()) {
+                $columnFiltersMapping[$associatedColumn][] = $filter->getName();
+            }
+        }
+
+        return $columnFiltersMapping;
     }
 }

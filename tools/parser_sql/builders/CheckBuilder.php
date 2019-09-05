@@ -52,14 +52,15 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  *  
  */
 class CheckBuilder {
-
     protected function buildSelectBracketExpression($parsed) {
         $builder = new SelectBracketExpressionBuilder();
+
         return $builder->build($parsed);
     }
 
     protected function buildReserved($parsed) {
         $builder = new ReservedBuilder();
+
         return $builder->build($parsed);
     }
 
@@ -79,7 +80,7 @@ class CheckBuilder {
 
             $sql .= " ";
         }
+
         return substr($sql, 0, -1);
     }
 }
-?>

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,25 +16,24 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 namespace PrestaShop\PrestaShop\Adapter\Presenter\Order;
 
-use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
 use Cart;
 use Configuration;
 use Context;
 use HistoryController;
-use PrestaShopException;
 use Order;
+use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
 use PrestaShopBundle\Translation\TranslatorComponent;
+use PrestaShopException;
 use Tools;
 
 class OrderDetailLazyArray extends AbstractLazyArray
@@ -45,7 +44,7 @@ class OrderDetailLazyArray extends AbstractLazyArray
     /** @var Context */
     private $context;
 
-    /* @var TranslatorComponent */
+    /** @var TranslatorComponent */
     private $translator;
 
     /**
@@ -61,6 +60,7 @@ class OrderDetailLazyArray extends AbstractLazyArray
 
     /**
      * @arrayAccess
+     *
      * @return int
      */
     public function getId()
@@ -70,6 +70,7 @@ class OrderDetailLazyArray extends AbstractLazyArray
 
     /**
      * @arrayAccess
+     *
      * @return string
      */
     public function getReference()
@@ -79,7 +80,9 @@ class OrderDetailLazyArray extends AbstractLazyArray
 
     /**
      * @arrayAccess
+     *
      * @return string
+     *
      * @throws PrestaShopException
      */
     public function getOrderDate()
@@ -89,6 +92,7 @@ class OrderDetailLazyArray extends AbstractLazyArray
 
     /**
      * @arrayAccess
+     *
      * @return string
      */
     public function getDetailsUrl()
@@ -98,15 +102,17 @@ class OrderDetailLazyArray extends AbstractLazyArray
 
     /**
      * @arrayAccess
+     *
      * @return mixed
      */
     public function getReorderUrl()
     {
-        return HistoryController::getUrlToReorder((int)$this->order->id, $this->context);
+        return HistoryController::getUrlToReorder((int) $this->order->id, $this->context);
     }
 
     /**
      * @arrayAccess
+     *
      * @return mixed
      */
     public function getInvoiceUrl()
@@ -116,6 +122,7 @@ class OrderDetailLazyArray extends AbstractLazyArray
 
     /**
      * @arrayAccess
+     *
      * @return string
      */
     public function getGiftMessage()
@@ -125,15 +132,17 @@ class OrderDetailLazyArray extends AbstractLazyArray
 
     /**
      * @arrayAccess
+     *
      * @return int
      */
     public function getIsReturnable()
     {
-        return (int)$this->order->isReturnable();
+        return (int) $this->order->isReturnable();
     }
 
     /**
      * @arrayAccess
+     *
      * @return string
      */
     public function getPayment()
@@ -143,6 +152,7 @@ class OrderDetailLazyArray extends AbstractLazyArray
 
     /**
      * @arrayAccess
+     *
      * @return string
      */
     public function getModule()
@@ -152,15 +162,17 @@ class OrderDetailLazyArray extends AbstractLazyArray
 
     /**
      * @arrayAccess
+     *
      * @return bool
      */
     public function getRecyclable()
     {
-        return (bool)$this->order->recyclable;
+        return (bool) $this->order->recyclable;
     }
 
     /**
      * @arrayAccess
+     *
      * @return bool
      */
     public function getIsValid()
@@ -170,16 +182,19 @@ class OrderDetailLazyArray extends AbstractLazyArray
 
     /**
      * @arrayAccess
+     *
      * @return bool
      */
     public function getIsVirtual()
     {
         $cart = new Cart($this->order->id_cart);
+
         return $cart->isVirtualCart();
     }
 
     /**
      * @arrayAccess
+     *
      * @return array
      */
     public function getShipping()
@@ -195,7 +210,7 @@ class OrderDetailLazyArray extends AbstractLazyArray
                 $orderShipping[$shippingId]['shipping_date'] =
                     Tools::displayDate($shipping['date_add'], null, false);
                 $orderShipping[$shippingId]['shipping_weight'] =
-                    ($shipping['weight'] > 0) ? sprintf('%.3f', $shipping['weight']).' '.
+                    ($shipping['weight'] > 0) ? sprintf('%.3f', $shipping['weight']) . ' ' .
                         Configuration::get('PS_WEIGHT_UNIT') : '-';
                 $shippingCost =
                     (!$order->getTaxCalculationMethod()) ? $shipping['shipping_cost_tax_excl']
@@ -207,11 +222,11 @@ class OrderDetailLazyArray extends AbstractLazyArray
                 $tracking_line = '-';
                 if ($shipping['tracking_number']) {
                     if ($shipping['url'] && $shipping['tracking_number']) {
-                        $tracking_line = '<a href="'.str_replace(
+                        $tracking_line = '<a href="' . str_replace(
                             '@',
                             $shipping['tracking_number'],
                             $shipping['url']
-                        ).'" target="_blank">'.$shipping['tracking_number'].'</a>';
+                        ) . '" target="_blank">' . $shipping['tracking_number'] . '</a>';
                     } else {
                         $tracking_line = $shipping['tracking_number'];
                     }

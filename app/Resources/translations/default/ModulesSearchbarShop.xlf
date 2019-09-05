@@ -5,8 +5,7 @@
       <trans-unit id="13348442cc6a27032d2b4aa28b75a5d3">
         <source>Search</source>
         <target>Search</target>
-        <note>Context:
-File: modules/ps_searchbar/ps_searchbar.tpl:31</note>
+        <note>Line: 31</note>
       </trans-unit>
     </body>
   </file>

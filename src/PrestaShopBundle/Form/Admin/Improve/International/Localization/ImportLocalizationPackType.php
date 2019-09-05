@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -35,7 +35,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class ImportLocalizationPackType is responsible for building 'Import a localization pack' form
- * in 'Improve > International > Localization'
+ * in 'Improve > International > Localization'.
  */
 class ImportLocalizationPackType extends TranslatorAwareType
 {
@@ -67,6 +67,7 @@ class ImportLocalizationPackType extends TranslatorAwareType
         $builder
             ->add('iso_localization_pack', ChoiceType::class, [
                 'choices' => $this->localizationPackChoices,
+                'choice_translation_domain' => false,
             ])
             ->add('content_to_import', ChoiceType::class, [
                 'expanded' => true,
@@ -79,15 +80,15 @@ class ImportLocalizationPackType extends TranslatorAwareType
                     LocalizationPackImportConfigInterface::CONTENT_LANGUAGES,
                     LocalizationPackImportConfigInterface::CONTENT_UNITS,
                 ],
+                'choice_translation_domain' => false,
             ])
             ->add('download_pack_data', SwitchType::class, [
                 'data' => 1,
-            ])
-        ;
+            ]);
     }
 
     /**
-     * Get import content choices
+     * Get import content choices.
      *
      * @return array
      */

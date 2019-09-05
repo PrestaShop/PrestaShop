@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,26 +16,26 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Form\Admin\Sell\Order\Invoices;
 
-use PrestaShop\PrestaShop\Core\Order\OrderInvoiceDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormHandler;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use PrestaShop\PrestaShop\Core\Order\OrderInvoiceDataProviderInterface;
 use PrestaShop\PrestaShop\Core\PDF\PDFGeneratorInterface;
-use PrestaShopBundle\Service\Hook\HookDispatcher;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
  * Class InvoiceByStatusFormHandler manages the data manipulated using "By status" form
- * in "Sell > Orders > Invoices" page
+ * in "Sell > Orders > Invoices" page.
  */
 final class InvoiceByStatusFormHandler extends FormHandler
 {
@@ -51,7 +51,7 @@ final class InvoiceByStatusFormHandler extends FormHandler
 
     /**
      * @param FormBuilderInterface $formBuilder
-     * @param HookDispatcher $hookDispatcher
+     * @param HookDispatcherInterface $hookDispatcher
      * @param FormDataProviderInterface $formDataProvider
      * @param array $formTypes
      * @param string $hookName
@@ -60,7 +60,7 @@ final class InvoiceByStatusFormHandler extends FormHandler
      */
     public function __construct(
         FormBuilderInterface $formBuilder,
-        HookDispatcher $hookDispatcher,
+        HookDispatcherInterface $hookDispatcher,
         FormDataProviderInterface $formDataProvider,
         array $formTypes,
         $hookName,

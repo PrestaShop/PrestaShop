@@ -25,8 +25,10 @@ scenario('The shop installation', () => {
   }, 'installation');
 
   scenario('Rollback to the old version ', client => {
-    test('should go to "Module" page', () => client.goToSubtabMenuPage(Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_services_submenu));
-    test('should click on "Configure" button', () => client.waitForExistAndClick(ModulePage.configure_module_button.split('%moduleTechName').join("autoupgrade")));
+    test('should go to "Module manager" page', () => client.goToSubtabMenuPage(Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_manager_submenu));
+    test('should set the name of the module in the search input', () => client.waitAndSetValue(ModulePage.module_selection_input, 'autoupgrade'));
+    test('should click on "Search" button', () => client.waitForExistAndClick(ModulePage.selection_search_button));
+    test('should click on "Configure" button', () => client.waitForExistAndClick(ModulePage.configure_link.replace('%moduleTechName', 'autoupgrade')));
     test('should deactivate the shop', () => {
       return promise
         .then(() => client.waitForVisibleElement(ModulePage.confirm_maintenance_shop_icon))
@@ -35,7 +37,7 @@ scenario('The shop installation', () => {
     test('should choose the back up version', () => client.waitForExistAndClick(ModulePage.rollback_version));
     test('should click on the "ROLLBACK" button', () => client.waitForExistAndClick(ModulePage.rollback_button));
     test('should wait until the rollback is finished', () => client.waitForExist(ModulePage.loader_tag, 310000));
-    test('should check the success message appear', () => client.checkTextValue(ModulePage.success_msg, 'Restoration complete'));
+    test('should check the success message appear', () => client.checkTextValue(ModulePage.success_msg, 'Restoration complete.'));
   }, 'installation');
 
   scenario('logout successfully from the Back Office', client => {
@@ -59,7 +61,7 @@ scenario('The shop installation', () => {
     test('should login successfully in the Front Office', () => client.signInFO(AccessPageFO, UrlLastStableVersion));
   }, 'installation');
 
-  orderCommonScenarios.createOrderFO();
+  orderCommonScenarios.createOrderFO("connected");
 
   scenario('Logout from the back office', client => {
     test('should logout successfully from the Front Office', () => client.signOutFO(AccessPageFO));

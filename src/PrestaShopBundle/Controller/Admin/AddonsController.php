@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,31 +16,31 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 
 namespace PrestaShopBundle\Controller\Admin;
 
 use Configuration;
 use Exception;
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PhpEncryption;
 use Symfony\Component\HttpFoundation\Cookie;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use PhpEncryption;
+use Symfony\Component\HttpFoundation\Request;
 
 class AddonsController extends FrameworkBundleAdminController
 {
     /**
-     * Controller responsible of the authentication on PrestaShop Addons
-     * @param  Request $request
+     * Controller responsible of the authentication on PrestaShop Addons.
+     *
+     * @param Request $request
+     *
      * @return JsonResponse
      */
     public function loginAction(Request $request)
@@ -69,7 +69,7 @@ class AddonsController extends FrameworkBundleAdminController
             $response->headers->setCookie(
                 new Cookie('password_addons', $phpEncryption->encrypt($params['password_addons']))
             );
-            $response->headers->setCookie(new Cookie('is_contributor', (int)$json->is_contributor));
+            $response->headers->setCookie(new Cookie('is_contributor', (int) $json->is_contributor));
 
             $response->setData(['success' => 1, 'message' => '']);
             $modulesProvider->clearCatalogCache();
@@ -87,8 +87,10 @@ class AddonsController extends FrameworkBundleAdminController
     }
 
     /**
-     * Controller responsible of the authentication on PrestaShop Addons
-     * @param  Request $request
+     * Controller responsible of the authentication on PrestaShop Addons.
+     *
+     * @param Request $request
+     *
      * @return JsonResponse
      */
     public function logoutAction(Request $request)
@@ -100,7 +102,7 @@ class AddonsController extends FrameworkBundleAdminController
             $response = new JsonResponse();
             $response->setData([
                 'success' => 1,
-                'message' => ''
+                'message' => '',
             ]);
         } else {
             if ($request->server->get('HTTP_REFERER')) {

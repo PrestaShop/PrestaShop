@@ -1,5 +1,5 @@
 {#**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,31 +15,37 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
 {% trans_default_domain "Admin.Orderscustomers.Feature" %}
+{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
 
 {% form_theme generateByStatusForm _self %}
 
 {% block invoices_generate_by_status %}
-    <div id="by-status-block" class="col">
+    <div id="by-status-block" class="col-xl-10">
         {{ form_start(generateByStatusForm, {'method': 'POST', 'action': path('admin_order_invoices_generate_by_status')}) }}
         <div class="card">
             <h3 class="card-header">
                 <i class="material-icons">schedule</i> {{ 'By order status'|trans }}
             </h3>
-            <div class="card-block">
+            <div class="card-block row">
                 <div class="card-text">
+                  <div class="form-group row">
                     {{ ps.label_with_help(('Order statuses'|trans), ('You can also export orders which have not been charged yet.'|trans({}, 'Admin.Orderscustomers.Help'))) }}
-                    {{ form_errors(generateByStatusForm.order_states) }}
-                    {{ form_widget(generateByStatusForm.order_states) }}
+                    <div class="col-sm">
+                      {{ form_errors(generateByStatusForm.order_states) }}
+                      {{ form_widget(generateByStatusForm.order_states) }}
+                    </div>
+                  </div>
                 </div>
+                {{ form_rest(generateByStatusForm) }}
             </div>
             <div class="card-footer">
                 <div class="d-flex justify-content-end">
@@ -61,11 +67,7 @@
             <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
                 {{- widget|raw -}}
                 <i class="md-checkbox-control"></i>
-                {% if orders_count > 0 %}
-                    {% set badgeType = 'success' %}
-                {% else %}
-                    {% set badgeType = 'danger' %}
-                {% endif %}
+                {% set badgeType = orders_count > 0 ? 'success' : 'danger' %}
                 <span class="badge badge-{{ badgeType }}">{{ orders_count }}</span>
                 <span>
                     {{- label is not same as(false) ? label|raw -}}

@@ -1,13 +1,14 @@
 {
-    "name": "PrestaShop/PrestaShop",
+    "name": "prestashop/prestashop",
     "description": "PrestaShop offers a free, fully scalable, Open Source e-commerce solution.",
     "type": "project",
     "require": {
         "php": ">=5.6.0",
         "ext-curl": "*",
+        "ext-fileinfo": "*",
         "ext-intl": "*",
         "ext-zip": "*",
-        "beberlei/DoctrineExtensions": "^1.0",
+        "beberlei/doctrineextensions": "^1.0",
         "composer/ca-bundle": "^1.0",
         "composer/installers": "^1.0.21",
         "csa/guzzle-bundle": "~1.3",
@@ -19,29 +20,34 @@
         "doctrine/dbal": "^2.5.3",
         "doctrine/doctrine-bundle": "^1.6",
         "doctrine/orm": "~2.5.3",
+        "ezyang/htmlpurifier": "^4.10",
         "geoip2/geoip2": "~2.4.2",
+        "greenlion/php-sql-parser": "^4.1",
         "guzzlehttp/guzzle": "~5.0",
-        "icanboogie/cldr": "1.3.9",
         "incenteev/composer-parameter-handler": "~2.0",
         "ircmaxell/password-compat": "^1.0.4",
         "ircmaxell/random-lib": "^1.2.0",
         "jakeasmith/http_build_url": "^1",
+        "league/tactician-bundle": "^0.4.1",
         "matthiasmullie/minify": "~1.3.0",
         "mobiledetect/mobiledetectlib": "~2.8.22",
         "mrclay/minify": "~2.3.0",
-        "nikic/php-parser": "^2.1",
+        "nikic/php-parser": "^3",
         "paragonie/random_compat": "^1.4|^2.0",
-        "pear/archive_tar": "~1.4.2",
-        "phpoffice/phpexcel": "~1.8",
+        "pear/archive_tar": "^1.4.6",
+        "pelago/emogrifier": "^2.1",
+        "phpoffice/phpspreadsheet": "~1.5",
         "prestashop/blockreassurance": "^3",
+        "prestashop/circuit-breaker": "^3.0",
         "prestashop/contactform": "^4",
         "prestashop/dashactivity": "^2",
         "prestashop/dashgoals": "^2",
         "prestashop/dashproducts": "^2",
         "prestashop/dashtrends": "^2",
-        "prestashop/decimal": "^1.0.0",
+        "prestashop/decimal": "^1.2",
         "prestashop/graphnvd3": "^2",
         "prestashop/gridhtml": "^2",
+        "prestashop/gsitemap": "^4",
         "prestashop/pagesnotfound": "^2",
         "prestashop/ps_banner": "^2",
         "prestashop/ps_categorytree": "^2",
@@ -52,12 +58,12 @@
         "prestashop/ps_customersignin": "^2",
         "prestashop/ps_customtext": "^4",
         "prestashop/ps_emailsubscription": "^2",
-        "prestashop/ps_facetedsearch": "^2",
+        "prestashop/ps_facetedsearch": "^3",
+        "prestashop/ps_faviconnotificationbo": "^2",
         "prestashop/ps_featuredproducts": "^2",
         "prestashop/ps_imageslider": "^3",
         "prestashop/ps_languageselector": "^2",
-        "prestashop/ps_legalcompliance": "^3",
-        "prestashop/ps_linklist": "^2",
+        "prestashop/ps_linklist": "^3",
         "prestashop/ps_mainmenu": "^2",
         "prestashop/ps_searchbar": "^2",
         "prestashop/ps_sharebuttons": "^2",
@@ -88,19 +94,22 @@
         "prestashop/statssearch": "^2",
         "prestashop/statsstock": "^2",
         "prestashop/statsvisits": "^2",
-        "prestashop/translationtools-bundle": "~2.0",
-        "prestashop/welcome": "^5",
+        "prestashop/translationtools-bundle": "^3",
+        "prestashop/welcome": "^6",
         "sensio/distribution-bundle": "^5.0.19",
         "sensio/framework-extra-bundle": "^5.0.0",
         "shudrum/array-finder": "^1.1.0",
         "smarty/smarty": "^3.1.31",
+        "soundasleep/html2text": "^0.5.0",
         "swiftmailer/swiftmailer": "~5.4.3",
         "symfony/monolog-bundle": "^3.1.0",
         "symfony/polyfill-apcu": "^1.0",
+        "symfony/polyfill-php73": "^1.10",
         "symfony/swiftmailer-bundle": "^2.6.4",
-        "symfony/symfony": ">=3.4.8",
+        "symfony/symfony": ">=3.4.26",
         "tecnickcom/tcpdf": "^6.2.12",
-        "twig/twig": "^1.0||^2.0"
+        "tijsverkoyen/css-to-inline-styles": "^2.2",
+        "twig/twig": "^1.38||^2.6.2"
     },
     "repositories": [
         {
@@ -109,14 +118,17 @@
         }
     ],
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^1.10",
+        "behat/behat": "^3.5",
+        "friendsofphp/php-cs-fixer": "^2.15.1",
         "johnkary/phpunit-speedtrap": "^1.1",
+        "mikey179/vfsstream": "^1.6",
         "phake/phake": "@stable",
         "phpunit/phpunit": "~5.7",
         "symfony/phpunit-bridge": "^3.0"
     },
     "autoload-dev": {
         "psr-4": {
+            "LegacyTests\\": "tests-legacy/",
             "Tests\\": "tests/"
         },
         "files": [
@@ -132,48 +144,65 @@
     },
     "scripts": {
         "post-install-cmd": [
-            "PrestaShop\\PrestaShop\\Core\\Cldr\\Composer\\Hook::init",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
         ],
         "post-update-cmd": [
-            "PrestaShop\\PrestaShop\\Core\\Cldr\\Composer\\Hook::init",
             "PrestaShopBundle\\Install\\Upgrade::migrateSettingsFile",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
         ],
         "create-test-db": [
-            "Tests\\PrestaShopBundle\\Utils\\DatabaseCreator::createTestDB"
+            "@php ./tests-legacy/create-test-db.php",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache"
         ],
         "test-all": [
             "composer phpunit-legacy",
+            "composer unit-tests",
             "composer phpunit-admin",
             "composer phpunit-sf",
-            "composer phpunit-controllers"
+            "composer integration-tests",
+            "composer phpunit-controllers",
+            "composer phpunit-routing",
+            "composer integration-behaviour-tests"
         ],
         "phpunit-legacy": [
             "@composer create-test-db",
-            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/phpunit.xml"
+            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/phpunit.xml"
+        ],
+        "phpunit-endpoints": [
+            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/phpunit-endpoints.xml"
+        ],
+        "unit-tests": [
+            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/Unit/phpunit.xml"
+        ],
+        "integration-tests": [
+            "@composer create-test-db",
+            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/Integration/phpunit.xml"
         ],
         "phpunit-admin": [
             "@composer create-test-db",
-            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/phpunit-admin.xml"
+            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/phpunit-admin.xml"
+        ],
+        "phpunit-routing": [
+            "@composer create-test-db",
+            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/phpunit-routing.xml"
         ],
         "phpunit-sf": [
             "@composer create-test-db",
-            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/sf-tests.xml"
+            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/sf-tests.xml"
         ],
         "phpunit-controllers": [
             "@composer create-test-db",
-            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/old-controllers.xml"
+            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/old-controllers.xml"
+        ],
+        "integration-behaviour-tests": [
+            "@php -d date.timezone=UTC ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml"
         ],
         "create-release": "@php tools/build/CreateRelease.php",
         "git-hook-install": "@php .github/contrib/install.php",
-        "git-hook-uninstall": "@php .github/contrib/uninstall.php",
-        "cldr-init": "PrestaShop\\PrestaShop\\Core\\Cldr\\Composer\\Hook::init"
+        "git-hook-uninstall": "@php .github/contrib/uninstall.php"
     },
     "config": {
         "platform": {

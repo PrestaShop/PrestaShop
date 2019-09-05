@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,55 +16,53 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 namespace PrestaShop\PrestaShop\Adapter\Presenter\Order;
 
-use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
-use PrestaShop\PrestaShop\Adapter\Presenter\Cart\CartPresenter;
-use PrestaShop\PrestaShop\Adapter\Presenter\Object\ObjectPresenter;
-use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
-use Doctrine\Common\Annotations\AnnotationException;
-use ReflectionException;
-use PrestaShopException;
 use Address;
 use AddressFormat;
 use Carrier;
 use Cart;
 use Configuration;
 use Context;
+use Currency;
 use CustomerMessage;
-use HistoryController;
+use Doctrine\Common\Annotations\AnnotationException;
 use Order;
 use OrderReturn;
+use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
+use PrestaShop\PrestaShop\Adapter\Presenter\Cart\CartPresenter;
+use PrestaShop\PrestaShop\Adapter\Presenter\Object\ObjectPresenter;
+use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShopBundle\Translation\TranslatorComponent;
+use PrestaShopException;
 use ProductDownload;
+use ReflectionException;
 use TaxConfiguration;
 use Tools;
-use Currency;
 
 class OrderLazyArray extends AbstractLazyArray
 {
-    /* @var CartPresenter */
+    /** @var CartPresenter */
     private $cartPresenter;
 
-    /* @var ObjectPresenter */
+    /** @var ObjectPresenter */
     private $objectPresenter;
 
-    /* @var PriceFormatter */
+    /** @var PriceFormatter */
     private $priceFormatter;
 
-    /* @var TranslatorComponent */
+    /** @var TranslatorComponent */
     private $translator;
 
-    /* @var TaxConfiguration */
+    /** @var TaxConfiguration */
     private $taxConfiguration;
 
     /** @var Order */
@@ -75,6 +73,7 @@ class OrderLazyArray extends AbstractLazyArray
 
     /**
      * OrderArray constructor.
+     *
      * @throws AnnotationException
      * @throws ReflectionException
      */
@@ -92,16 +91,19 @@ class OrderLazyArray extends AbstractLazyArray
 
     /**
      * @arrayAccess
+     *
      * @return mixed
      */
     public function getTotals()
     {
         $amounts = $this->getAmounts();
+
         return $amounts['totals'];
     }
 
     /**
      * @arrayAccess
+     *
      * @return int
      */
     public function getIdAddressInvoice()
@@ -111,6 +113,7 @@ class OrderLazyArray extends AbstractLazyArray
 
     /**
      * @arrayAccess
+     *
      * @return int
      */
     public function getIdAddressDelivery()
@@ -120,6 +123,7 @@ class OrderLazyArray extends AbstractLazyArray
 
     /**
      * @arrayAccess
+     *
      * @return mixed
      */
     public function getSubtotals()
@@ -129,6 +133,7 @@ class OrderLazyArray extends AbstractLazyArray
 
     /**
      * @arrayAccess
+     *
      * @return int
      */
     public function getProductsCount()
@@ -138,17 +143,21 @@ class OrderLazyArray extends AbstractLazyArray
 
     /**
      * @arrayAccess
+     *
      * @return mixed
+     *
      * @throws PrestaShopException
      */
     public function getShipping()
     {
         $details = $this->getDetails();
+
         return $details['shipping'];
     }
 
     /**
      * @arrayAccess
+     *
      * @return array
      */
     public function getProducts()
@@ -170,11 +179,11 @@ class OrderLazyArray extends AbstractLazyArray
 
             $orderProduct['price'] = $this->priceFormatter->format(
                 $orderProduct[$productPrice],
-                Currency::getCurrencyInstance((int)$order->id_currency)
+                Currency::getCurrencyInstance((int) $order->id_currency)
             );
             $orderProduct['total'] = $this->priceFormatter->format(
                 $orderProduct[$totalPrice],
-                Currency::getCurrencyInstance((int)$order->id_currency)
+                Currency::getCurrencyInstance((int) $order->id_currency)
             );
 
             if ($orderPaid && $orderProduct['is_virtual']) {
@@ -183,7 +192,7 @@ class OrderLazyArray extends AbstractLazyArray
                 if ($product_download->display_filename != '') {
                     $orderProduct['download_link'] =
                         $product_download->getTextLink(false, $orderProduct['download_hash'])
-                        . '&id_order=' . (int)$order->id
+                        . '&id_order=' . (int) $order->id
                         . '&secure_key=' . $order->secure_key;
                 }
             }
@@ -211,13 +220,14 @@ class OrderLazyArray extends AbstractLazyArray
 
     /**
      * @arrayAccess
+     *
      * @return array
      */
     public function getAmounts()
     {
         $order = $this->order;
 
-        $amounts['subtotals'] =  $this->subTotals;
+        $amounts['subtotals'] = $this->subTotals;
 
         $amounts['totals'] = array();
         $amount = $this->includeTaxes() ? $order->total_paid : $order->total_paid_tax_excl;
@@ -225,7 +235,7 @@ class OrderLazyArray extends AbstractLazyArray
             'type' => 'total',
             'label' => $this->translator->trans('Total', array(), 'Shop.Theme.Checkout'),
             'amount' => $amount,
-            'value' => $this->priceFormatter->format($amount, Currency::getCurrencyInstance((int)$order->id_currency)),
+            'value' => $this->priceFormatter->format($amount, Currency::getCurrencyInstance((int) $order->id_currency)),
         );
 
         $amounts['totals']['total_paid'] = array(
@@ -234,7 +244,27 @@ class OrderLazyArray extends AbstractLazyArray
             'amount' => $order->total_paid_real,
             'value' => $this->priceFormatter->format(
                 $order->total_paid_real,
-                Currency::getCurrencyInstance((int)$order->id_currency)
+                Currency::getCurrencyInstance((int) $order->id_currency)
+            ),
+        );
+
+        $amounts['totals']['total_including_tax'] = array(
+            'type' => 'total_including_tax',
+            'label' => $this->translator->trans('Total (tax incl.)', array(), 'Shop.Theme.Checkout'),
+            'amount' => $order->total_paid_tax_incl,
+            'value' => $this->priceFormatter->format(
+                $order->total_paid_tax_incl,
+                Currency::getCurrencyInstance((int) $order->id_currency)
+            ),
+        );
+
+        $amounts['totals']['total_excluding_tax'] = array(
+            'type' => 'total_excluding_tax',
+            'label' => $this->translator->trans('Total (tax excl.)', array(), 'Shop.Theme.Checkout'),
+            'amount' => $order->total_paid_tax_excl,
+            'value' => $this->priceFormatter->format(
+                $order->total_paid_tax_excl,
+                Currency::getCurrencyInstance((int) $order->id_currency)
             ),
         );
 
@@ -243,6 +273,7 @@ class OrderLazyArray extends AbstractLazyArray
 
     /**
      * @arrayAccess
+     *
      * @return OrderDetailLazyArray
      */
     public function getDetails()
@@ -252,6 +283,7 @@ class OrderLazyArray extends AbstractLazyArray
 
     /**
      * @arrayAccess
+     *
      * @return array
      */
     public function getHistory()
@@ -280,6 +312,7 @@ class OrderLazyArray extends AbstractLazyArray
 
     /**
      * @arrayAccess
+     *
      * @return array
      */
     public function getMessages()
@@ -294,9 +327,9 @@ class OrderLazyArray extends AbstractLazyArray
             $messages[$cmId]['message'] = nl2br($customerMessage['message']);
             $messages[$cmId]['message_date'] = Tools::displayDate($customerMessage['date_add'], null, true);
             if (isset($customerMessage['elastname']) && $customerMessage['elastname']) {
-                $messages[$cmId]['name'] = $customerMessage['efirstname'].' '.$customerMessage['elastname'];
+                $messages[$cmId]['name'] = $customerMessage['efirstname'] . ' ' . $customerMessage['elastname'];
             } elseif ($customerMessage['clastname']) {
-                $messages[$cmId]['name'] = $customerMessage['cfirstname'].' '.$customerMessage['clastname'];
+                $messages[$cmId]['name'] = $customerMessage['cfirstname'] . ' ' . $customerMessage['clastname'];
             } else {
                 $messages[$cmId]['name'] = Configuration::get('PS_SHOP_NAME');
             }
@@ -307,6 +340,7 @@ class OrderLazyArray extends AbstractLazyArray
 
     /**
      * @arrayAccess
+     *
      * @return array
      */
     public function getCarrier()
@@ -323,6 +357,7 @@ class OrderLazyArray extends AbstractLazyArray
 
     /**
      * @arrayAccess
+     *
      * @return array
      */
     public function getAddresses()
@@ -351,6 +386,7 @@ class OrderLazyArray extends AbstractLazyArray
 
     /**
      * @arrayAccess
+     *
      * @return string
      */
     public function getFollowUp()
@@ -367,6 +403,7 @@ class OrderLazyArray extends AbstractLazyArray
 
     /**
      * @arrayAccess
+     *
      * @return array
      */
     public function getLabels()

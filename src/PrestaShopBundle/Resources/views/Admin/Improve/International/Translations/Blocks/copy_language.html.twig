@@ -1,0 +1,94 @@
+{#**
+ * 2007-2019 PrestaShop and Contributors
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+
+{% trans_default_domain 'Admin.International.Feature' %}
+
+{% block copy_language %}
+  {{ form_start(copyLanguageForm, {action: path('admin_international_translations_copy_language')}) }}
+
+  <div class="card">
+    <h3 class="card-header">
+      <i class="material-icons">file_copy</i> {{ 'Copy'|trans({}, 'Admin.Actions') }}
+    </h3>
+
+    <div class="card-block row">
+      <div class="card-text">
+        <div class="row">
+          <div class="col-sm">
+            <div class="alert alert-info" role="alert">
+              <div class="alert-text">
+                {{ 'Copies data from one language to another.'|trans({}, 'Admin.International.Help') }}<br>
+                {{ 'Warning: This will replace all of the existing data inside the destination language.'|trans({}, 'Admin.International.Help') }}<br>
+                {{ 'If necessary [1][2] you must first create a new language[/1].'|trans({}, 'Admin.International.Help')|replace({'[1]': '<a href="'~addLanguageUrl~'">','[2]': '<i class="material-icons">launch</i>','[/1]': '</a>'})|raw }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label class="form-control-label">
+            {{ ps.label_with_help('From'|trans({}, 'Admin.Global'), 'Language files must be complete to allow copying of translations.'|trans({}, 'Admin.International.Notification')) }}
+          </label>
+          <div class="col-sm">
+            <div class="input-group">
+              {{ form_errors(copyLanguageForm.from_language) }}
+              {{ form_widget(copyLanguageForm.from_language) }}
+
+              {{ form_errors(copyLanguageForm.from_theme) }}
+              {{ form_widget(copyLanguageForm.from_theme) }}
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label class="form-control-label">
+            {{ 'To'|trans({}, 'Admin.Global') }}
+          </label>
+          <div class="col-sm">
+            <div class="input-group">
+              {{ form_errors(copyLanguageForm.to_language) }}
+              {{ form_widget(copyLanguageForm.to_language) }}
+
+              {{ form_errors(copyLanguageForm.to_theme) }}
+              {{ form_widget(copyLanguageForm.to_theme) }}
+            </div>
+          </div>
+        </div>
+        {{ form_rest(copyLanguageForm) }}
+      </div>
+    </div>
+
+    <div class="card-footer">
+      <div class="d-flex justify-content-end">
+        <button class="btn btn-primary">
+          <i class="material-icons">file_copy</i>
+          <span>{{ 'Copy'|trans({}, 'Admin.Actions') }}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  {{ form_end(copyLanguageForm) }}
+{% endblock %}

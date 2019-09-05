@@ -1,5 +1,5 @@
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,10 +15,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -38,11 +38,11 @@
           break;
         case 'unfold':
           this.find('ul').show();
-          this.find('li').has('ul').addClass('less');
+          this.find('li').has('ul').removeClass('more').addClass('less');
           break;
         case 'fold':
           this.find('ul ul').hide();
-          this.find('li').has('ul').addClass('more');
+          this.find('li').has('ul').removeClass('less').addClass('more');
           break;
         default:
           throw 'Unknown method';
@@ -64,9 +64,9 @@
 
           $ui.next('ul').toggle();
           if ($ui.next('ul').is(':visible')) {
-            $ui.parent('li').removeClass().addClass('less');
+            $ui.parent('li').removeClass('more').addClass('less');
           } else {
-            $ui.parent('li').removeClass().addClass('more');
+            $ui.parent('li').removeClass('less').addClass('more');
           }
 
           return false;
@@ -77,9 +77,9 @@
         $inputWrapper.find('label').on('click', clickHandler);
 
         if ($(item).is(':visible')) {
-          $(item).parent('li').removeClass().addClass('less');
+          $(item).parent('li').removeClass('more').addClass('less');
         } else {
-          $(item).parent('li').removeClass().addClass('more');
+          $(item).parent('li').removeClass('less').addClass('more');
         }
       });
     }

@@ -1,5 +1,5 @@
 {#**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,10 +15,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
@@ -37,6 +37,8 @@
         <div class="search search-with-icon">
             <input type="text" id="{{ form.vars.id }}" class="form-control search typeahead {{ form.vars.id }}" placeholder="{{ placeholder }}" autocomplete="off">
         </div>
+        <small class="form-text text-muted text-right typeahead-hint">
+        </small>
         <ul id="{{ form.vars.id }}-data" class="typeahead-list nostyle col-sm-12 product-list">
             {% if collection is defined and collection|length > 0 %}
                 {% for item in collection %}
@@ -52,6 +54,7 @@
                 {% endfor %}
             {% endif %}
         </ul>
+
         <div class="invisible" id="tplcollection-{{ form.vars.id }}">
           {{ template_collection|raw }}
         </div>
@@ -211,7 +214,18 @@
 {% block typeahead_customer_collection_widget %}
     {{ form_errors(form) }}
     <input type="text" id="{{ form.vars.id }}" class="form-control typeahead {{ form.vars.id }}" placeholder="{{ placeholder }}" autocomplete="off" />
-    <ul id="{{ form.vars.id }}-data" class="typeahead-list product-list nostyle col-sm-12"></ul>
+    <ul id="{{ form.vars.id }}-data" class="typeahead-list product-list nostyle col-sm-12">
+      {% if collection is defined and collection|length > 0 %}
+        {% for item in collection %}
+            <li class="media">
+                <div class="media-body">
+                  {{ template_collection|format(item.name)|raw }}
+                </div>
+                <input type="hidden" name="{{ form.vars.full_name }}[data][]" value="{{ item.id }}" />
+            </li>
+        {% endfor %}
+      {% endif %}
+    </ul>
     <script>
         $( document ).ready(function() {
             //remove collection item
@@ -221,6 +235,7 @@
 
                 modalConfirmation.create(translate_javascripts['Are you sure to delete this?'], null, {
                     onContinue: function(){
+                        _this.closest('li').remove();
                         _this.parent().parent().hide();
                         _this.parent().remove();
                     }

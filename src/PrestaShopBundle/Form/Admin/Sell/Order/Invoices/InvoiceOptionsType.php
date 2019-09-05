@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -28,12 +28,12 @@ namespace PrestaShopBundle\Form\Admin\Sell\Order\Invoices;
 
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
-use PrestaShopBundle\Form\Admin\Type\TranslateTextType;
-use PrestaShopBundle\Form\Admin\Type\TranslateType;
+use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
@@ -82,13 +82,13 @@ class InvoiceOptionsType extends TranslatorAwareType
             ->add('enable_invoices', SwitchType::class)
             ->add('enable_tax_breakdown', SwitchType::class)
             ->add('enable_product_images', SwitchType::class)
-            ->add('invoice_prefix', TranslateTextType::class, [
-                'locales' => $this->locales,
+            ->add('invoice_prefix', TranslatableType::class, [
+                'type' => TextType::class,
             ])
             ->add('add_current_year', SwitchType::class)
             ->add('reset_number_annually', SwitchType::class)
             ->add('year_position', ChoiceType::class, [
-                'choices'  => [
+                'choices' => [
                     $this->trans('After the sequential number', 'Admin.Orderscustomers.Feature') => 0,
                     $this->trans('Before the sequential number', 'Admin.Orderscustomers.Feature') => 1,
                 ],
@@ -97,23 +97,17 @@ class InvoiceOptionsType extends TranslatorAwareType
             ->add('invoice_number', NumberType::class, [
                 'required' => false,
             ])
-            ->add('legal_free_text', TranslateType::class,
-                [
-                    'type' => TextareaType::class,
-                    'options' => [
-                        'required' => false,
-                    ],
-                    'locales' => $this->locales,
-                    'hideTabs' => false,
-                ])
-            ->add('footer_text', TranslateTextType::class, [
-                'locales' => $this->locales,
+            ->add('legal_free_text', TranslatableType::class, [
+                'type' => TextareaType::class,
+            ])
+            ->add('footer_text', TranslatableType::class, [
+                'type' => TextType::class,
             ])
             ->add('invoice_model', ChoiceType::class, [
-                'choices'  => $this->invoiceModelChoiceProvider->getChoices(),
+                'choices' => $this->invoiceModelChoiceProvider->getChoices(),
+                'translation_domain' => false,
             ])
-            ->add('use_disk_cache', SwitchType::class)
-        ;
+            ->add('use_disk_cache', SwitchType::class);
     }
 
     /**

@@ -1,0 +1,118 @@
+{#**
+ * 2007-2019 PrestaShop and Contributors
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+
+{% set enableSidebar = true %}
+{% set layoutTitle = 'Manage your Customers'|trans({}, 'Admin.Orderscustomers.Feature') %}
+
+{% if isSingleShopContext %}
+  {% set layoutHeaderToolbarBtn = {
+    'add': {
+      'href': path('admin_customers_create'),
+      'desc': 'Add new customer'|trans({}, 'Admin.Orderscustomers.Feature'),
+      'icon': 'add_circle_outline'
+    }
+  } %}
+{% endif %}
+
+{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
+
+{% block content %}
+  {% block employee_helper_card %}
+    <div class="row">
+      <div class="col">
+        {% include '@PrestaShop/Admin/Sell/Customer/Blocks/showcase_card.html.twig' %}
+      </div>
+    </div>
+  {% endblock %}
+
+  {% block customers_kpis %}
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="row">
+            {{ render(controller(
+              'PrestaShopBundle:Admin\\Common:renderKpiRow',
+              { 'kpiRow': customersKpi }
+            )) }}
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endblock %}
+
+  {% block customers_listing %}
+    {% if not isSingleShopContext %}
+      <div class="row">
+        <div class="col-md-12">
+          <div class="alert alert-info" role="alert">
+            <p class="alert-text">
+              {{ 'You have to select a shop if you want to create a customer.'|trans({}, 'Admin.Orderscustomers.Notification') }}
+            </p>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    <div class="row">
+      <div class="col-12">
+        {% embed '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': customerGrid} %}
+          {% block grid_panel_extra_content %}
+            {% include '@PrestaShop/Admin/Sell/Customer/Blocks/delete_modal.html.twig' %}
+          {% endblock %}
+        {% endembed %}
+      </div>
+    </div>
+  {% endblock %}
+
+  {% block customer_required_fields_form %}
+    <div class="row">
+      <div class="col-md-12">
+        <p>
+          <button class="btn btn-primary"
+                  type="button"
+                  data-toggle="collapse"
+                  data-target="#customerRequiredFieldsContainer"
+                  aria-expanded="false"
+                  aria-controls="customerRequiredFieldsContainer"
+          >
+            <i class="material-icons">add_circle</i>
+            {{ 'Set required fields for this section'|trans({}, 'Admin.Orderscustomers.Feature') }}
+          </button>
+        </p>
+      </div>
+
+      <div class="col-md-12">
+        {% include '@PrestaShop/Admin/Sell/Customer/Blocks/Index/required_fields.html.twig' %}
+      </div>
+    </div>
+  {% endblock %}
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+
+  {% include '@PrestaShop/Admin/Sell/Customer/Blocks/javascript.html.twig' %}
+{% endblock %}
+

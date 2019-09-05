@@ -24,7 +24,11 @@ services:
 
     prestashop.twig.extension.layout:
         class: PrestaShopBundle\Twig\LayoutExtension
-        arguments: ["@prestashop.adapter.legacy.context", "%kernel.environment%"]
+        arguments:
+          - "@prestashop.adapter.legacy.context"
+          - "%kernel.environment%"
+          - "@prestashop.adapter.legacy.configuration"
+          - "@prestashop.adapter.data_provider.currency"
         tags:
             - { name: twig.extension }
 
@@ -42,19 +46,53 @@ services:
         tags:
             - { name: twig.extension }
 
-    prestashop.twig.extension.admin:
-       class: PrestaShopBundle\Twig\AdminExtension
-       arguments:
-            - "@request_stack"
-            - "@service_container"
-       tags:
-            - { name: twig.extension }
-
     prestashop.twig.extension.hook:
         class: PrestaShopBundle\Twig\HookExtension
         arguments:
-            - "@prestashop.hook.dispatcher"
+            - "@prestashop.core.hook.dispatcher"
             - "@prestashop.adapter.data_provider.module"
             - "@=service('prestashop.adapter.legacy.context').getContext().employee?service('prestashop.core.admin.module.repository'):null"
         tags:
             - { name: twig.extension }
+
+    prestashop.bundle.twig.extension.column:
+        class: 'PrestaShopBundle\Twig\Extension\GridExtension'
+        arguments:
+            - '@twig'
+            - '@prestashop.static_cache.adapter'
+        tags:
+            - { name: twig.extension }
+
+    prestashop.bundle.twig.extension.documentation_link_provider_extension:
+        class: 'PrestaShopBundle\Twig\Extension\DocumentationLinkExtension'
+        arguments:
+            - '@prestashop.core.util.helper_card.documentation_link_provider'
+        tags:
+            - { name: twig.extension }
+
+    prestashop.twig.extension.context_iso_code_provider_extension:
+      class: PrestaShopBundle\Twig\ContextIsoCodeProviderExtension
+      arguments:
+        - "@=service('prestashop.adapter.legacy.context').getContext().language ? service('prestashop.adapter.legacy.context').getContext().language.iso_code : 'en'"
+      properties:
+        logger: "@logger"
+        translator: "@translator"
+      tags:
+        - { name: twig.extension }
+
+    prestashop.twig.extension.path_with_back_url_extension:
+      class: PrestaShopBundle\Twig\Extension\PathWithBackUrlExtension
+      arguments:
+        - '@twig.extension.routing'
+        - '@prestashop.core.uti.back_url_provider'
+        - '@=service("request_stack") ? service("request_stack") : null'
+      public: true
+      tags:
+        - { name: twig.extension }
+
+    prestashop.bundle.twig.extension.color_brightness_calculator_extension:
+      class: PrestaShopBundle\Twig\Extension\ColorBrightnessCalculatorExtension
+      arguments:
+        - '@prestashop.core.util.color_brightness_calculator'
+      tags:
+        - { name: twig.extension }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,23 +16,23 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Form\Admin\AdvancedParameters\Performance;
 
-use PrestaShop\PrestaShop\Adapter\OptionalFeatures\OptionalFeaturesConfiguration;
-use PrestaShop\PrestaShop\Adapter\Cache\CombineCompressCacheConfiguration;
-use PrestaShop\PrestaShop\Adapter\Smarty\SmartyCacheConfiguration;
-use PrestaShop\PrestaShop\Adapter\Media\MediaServerConfiguration;
-use PrestaShop\PrestaShop\Adapter\Debug\DebugModeConfiguration;
-use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use PrestaShop\PrestaShop\Adapter\Cache\CachingConfiguration;
+use PrestaShop\PrestaShop\Adapter\Cache\CombineCompressCacheConfiguration;
+use PrestaShop\PrestaShop\Adapter\Debug\DebugModeConfiguration;
+use PrestaShop\PrestaShop\Adapter\Media\MediaServerConfiguration;
+use PrestaShop\PrestaShop\Adapter\OptionalFeatures\OptionalFeaturesConfiguration;
+use PrestaShop\PrestaShop\Adapter\Smarty\SmartyCacheConfiguration;
+use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 
 /**
  * This class is responsible of managing the data manipulated using forms

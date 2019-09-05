@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,16 +16,17 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
+use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -33,17 +34,17 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Controller responsible of "Sell > Orders > Invoices" page
+ * Controller responsible of "Sell > Orders > Invoices" page.
  */
 class InvoicesController extends FrameworkBundleAdminController
 {
     /**
-     * Show order preferences page
+     * Show order preferences page.
      *
      * @param Request $request
      *
      * @Template("@PrestaShop/Admin/Sell/Order/Invoices/invoices.html.twig")
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')~'_')", message="Access denied.")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
      *
      * @return array Template parameters
      */
@@ -67,55 +68,35 @@ class InvoicesController extends FrameworkBundleAdminController
     }
 
     /**
-     * Action that generates invoices PDF by date interval
+     * Action that generates invoices PDF by date interval.
      *
      * @param Request $request
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')~'_')", message="Access denied.")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
      *
      * @return RedirectResponse
      */
     public function generatePdfByDateAction(Request $request)
     {
         $formHandler = $this->get('prestashop.admin.order.invoices.by_date.form_handler');
-
-        $form = $formHandler->getForm();
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted()) {
-            $data = $form->getData();
-
-            if ($errors = $formHandler->save($data)) {
-                $this->flashErrors($errors);
-            }
-        }
+        $this->processForm($formHandler, $request);
 
         return $this->redirectToRoute('admin_order_invoices');
     }
 
     /**
-     * Action that generates invoices PDF by order status
+     * Action that generates invoices PDF by order status.
      *
      * @param Request $request
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')~'_')", message="Access denied.")
-
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
+     *
      * @return RedirectResponse
      */
     public function generatePdfByStatusAction(Request $request)
     {
         $formHandler = $this->get('prestashop.admin.order.invoices.by_status.form_handler');
-
-        $form = $formHandler->getForm();
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted()) {
-            $data = $form->getData();
-
-            if ($errors = $formHandler->save($data)) {
-                $this->flashErrors($errors);
-            }
-        }
+        $this->processForm($formHandler, $request);
 
         return $this->redirectToRoute('admin_order_invoices');
     }
@@ -125,7 +106,7 @@ class InvoicesController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller')~'_')", message="Access denied.")
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="Access denied.")
      *
      * @return RedirectResponse
      */
@@ -133,17 +114,34 @@ class InvoicesController extends FrameworkBundleAdminController
     {
         $formHandler = $this->get('prestashop.admin.order.invoices.options.form_handler');
 
+        if ($this->processForm($formHandler, $request)) {
+            $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
+        }
+
+        return $this->redirectToRoute('admin_order_invoices');
+    }
+
+    /**
+     * Processes the form in a generic way.
+     *
+     * @param FormHandlerInterface $formHandler
+     * @param Request $request
+     *
+     * @return bool false if an error occurred, true otherwise
+     */
+    private function processForm(FormHandlerInterface $formHandler, Request $request)
+    {
         $form = $formHandler->getForm();
-        $form->handleRequest($request);
+        $form->submit($request->request->get($form->getName()));
 
         if ($form->isSubmitted()) {
             if ($errors = $formHandler->save($form->getData())) {
                 $this->flashErrors($errors);
-            } else {
-                $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
+
+                return false;
             }
         }
 
-        return $this->redirectToRoute('admin_order_invoices');
+        return true;
     }
 }

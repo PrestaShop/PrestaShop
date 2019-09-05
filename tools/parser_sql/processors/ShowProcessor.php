@@ -30,10 +30,10 @@
  * DAMAGE.
  */
 
-require_once(dirname(__FILE__) . '/../utils/PHPSQLParserConstants.php');
-require_once(dirname(__FILE__) . '/../utils/ExpressionType.php');
-require_once(dirname(__FILE__) . '/LimitProcessor.php');
-require_once(dirname(__FILE__) . '/AbstractProcessor.php');
+require_once dirname(__FILE__) . '/../utils/PHPSQLParserConstants.php';
+require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
+require_once dirname(__FILE__) . '/LimitProcessor.php';
+require_once dirname(__FILE__) . '/AbstractProcessor.php';
 
 /**
  * 
@@ -43,7 +43,6 @@ require_once(dirname(__FILE__) . '/AbstractProcessor.php');
  * 
  */
 class ShowProcessor extends AbstractProcessor {
-
     private $limitProcessor;
 
     public function __construct() {
@@ -70,6 +69,7 @@ class ShowProcessor extends AbstractProcessor {
                     continue;
                 }
                 $category = $upper;
+
                 break;
 
             case 'CREATE':
@@ -107,33 +107,42 @@ class ShowProcessor extends AbstractProcessor {
             case 'COLLATION':
                 $resultList[] = array('expr_type' => ExpressionType::RESERVED, 'base_expr' => trim($token));
                 $category = $upper;
+
                 break;
 
             default:
                 switch ($prev) {
                 case 'LIKE':
                     $resultList[] = array('expr_type' => ExpressionType::CONSTANT, 'base_expr' => $token);
+
                     break;
                 case 'LIMIT':
                     $limit = array_pop($resultList);
                     $limit['sub_tree'] = $this->limitProcessor->process(array_slice($tokens, $k));
                     $resultList[] = $limit;
+
                     break;
                 case 'FROM':
                 case 'DATABASE':
                     $resultList[] = array('expr_type' => ExpressionType::DATABASE, 'name' => $token,
-                                          'no_quotes' => $this->revokeQuotation($token), 'base_expr' => $token);
+                        'no_quotes' => $this->revokeQuotation($token), 'base_expr' => $token,
+                    );
+
                     break;
                 case 'FOR':
                     $resultList[] = array('expr_type' => ExpressionType::USER, 'name' => $token,
-                                          'no_quotes' => $this->revokeQuotation($token), 'base_expr' => $token);
+                        'no_quotes' => $this->revokeQuotation($token), 'base_expr' => $token,
+                    );
+
                     break;
                 case 'INDEX':
                 case 'COLUMNS':
                 case 'TABLE':
                     $resultList[] = array('expr_type' => ExpressionType::TABLE, 'table' => $token,
-                                          'no_quotes' => $this->revokeQuotation($token), 'base_expr' => $token);
+                        'no_quotes' => $this->revokeQuotation($token), 'base_expr' => $token,
+                    );
                     $category = "TABLENAME";
+
                     break;
                 case 'FUNCTION':
                     if (PHPSQLParserConstants::isAggregateFunction($upper)) {
@@ -142,25 +151,32 @@ class ShowProcessor extends AbstractProcessor {
                         $expr_type = ExpressionType::SIMPLE_FUNCTION;
                     }
                     $resultList[] = array('expr_type' => $expr_type, 'name' => $token,
-                                          'no_quotes' => $this->revokeQuotation($token), 'base_expr' => $token);
+                        'no_quotes' => $this->revokeQuotation($token), 'base_expr' => $token,
+                    );
+
                     break;
                 case 'PROCEDURE':
                     $resultList[] = array('expr_type' => ExpressionType::PROCEDURE, 'name' => $token,
-                                          'no_quotes' => $this->revokeQuotation($token), 'base_expr' => $token);
+                        'no_quotes' => $this->revokeQuotation($token), 'base_expr' => $token,
+                    );
+
                     break;
                 case 'ENGINE':
                     $resultList[] = array('expr_type' => ExpressionType::ENGINE, 'name' => $token,
-                                          'no_quotes' => $this->revokeQuotation($token), 'base_expr' => $token);
+                        'no_quotes' => $this->revokeQuotation($token), 'base_expr' => $token,
+                    );
+
                     break;
                 default:
                 // ignore
                     break;
                 }
+
                 break;
             }
             $prev = $category;
         }
+
         return $resultList;
     }
 }
-?>

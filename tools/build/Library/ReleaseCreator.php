@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -71,7 +71,15 @@ class ReleaseCreator
      *
      * @var array
      */
-    protected $filesRemoveList = ['.DS_Store', '.gitignore', '.gitmodules', '.travis.yml'];
+    protected $filesRemoveList = [
+        '.DS_Store',
+        '.gitignore',
+        '.gitmodules',
+        '.travis.yml',
+        'package-lock.json',
+        '.babelrc',
+        'postcss.config.js',
+    ];
 
     /**
      * Folders to remove.
@@ -86,7 +94,7 @@ class ReleaseCreator
      * @var array
      */
     protected $patternsRemoveList = [
-        'tests$',
+        'tests(\-legacy)?$',
         'tools/contrib$',
         'travis\-scripts$',
         'CONTRIBUTING\.md$',
@@ -111,13 +119,13 @@ class ReleaseCreator
         'app/cache/..*$',
         '\.t9n\.yml$',
         '\.scrutinizer\.yml$',
-        'admin\-dev/(.*/)?webpack\.config\.js$',
-        'admin\-dev/(.*/)?package\.json$',
-        'admin\-dev/(.*/)?bower\.json$',
-        'admin\-dev/(.*/)?config\.rb$',
-        'admin\-dev/themes/default/sass$',
-        'admin\-dev/themes/new\-theme/js$',
-        'admin\-dev/themes/new\-theme/scss$',
+        'admin/(.*/)?webpack\.config\.js$',
+        'admin/(.*/)?package\.json$',
+        'admin/(.*/)?bower\.json$',
+        'admin/(.*/)?config\.rb$',
+        'admin/themes/default/sass$',
+        //'admin/themes/new\-theme/js$',
+        //'admin/themes/new\-theme/scss$',
         'themes/_core$',
         'themes/classic/_dev',
         'themes/webpack\.config\.js$',
@@ -127,7 +135,14 @@ class ReleaseCreator
         'app/cache/..*$',
         '.idea',
         'tools/build$',
+        'tools/foreignkeyGenerator$',
         '.*node_modules.*',
+        '\.eslintignore$',
+        '\.eslintrc\.js$',
+        '\.php_cs\.dist$',
+        '\.docker-compose\.yml$',
+        'tools/assets$',
+        '\.webpack$',
     ];
 
     /**
@@ -195,7 +210,7 @@ class ReleaseCreator
      * @param bool $useZip
      * @param string $destinationDir
      */
-    public function __construct($version, $useInstaller = true, $useZip = true, $destinationDir = '')
+    public function __construct($version = null, $useInstaller = true, $useZip = true, $destinationDir = '')
     {
         $this->consoleWriter = new ConsoleWriter();
         $tmpDir = sys_get_temp_dir();
@@ -206,8 +221,12 @@ class ReleaseCreator
             ConsoleWriter::COLOR_GREEN
         );
         $this->projectPath = realpath(__DIR__ . '/../../..');
-        $this->version = $version;
+        $this->version = $version ? $version : $this->getCurrentVersion();
         $this->zipFileName = "prestashop_$this->version.zip";
+
+        if (empty($this->version)) {
+            throw new Exception('Version is not provided and cannot be found in project.');
+        }
 
         if (empty($destinationDir)) {
             $releasesDir = self::RELEASES_DIR_RELATIVE_PATH;
@@ -227,12 +246,12 @@ class ReleaseCreator
                 "--- Release will have the installer and will be zipped.{$this->lineSeparator}",
                 ConsoleWriter::COLOR_GREEN
             );
-        } else if ($this->useZip) {
+        } elseif ($this->useZip) {
             $this->consoleWriter->displayText(
                 "--- Release will be zipped.{$this->lineSeparator}",
                 ConsoleWriter::COLOR_GREEN
             );
-        } else if ($this->useInstaller) {
+        } elseif ($this->useInstaller) {
             $this->consoleWriter->displayText(
                 "--- Release will have the installer.{$this->lineSeparator}",
                 ConsoleWriter::COLOR_GREEN
@@ -258,6 +277,7 @@ class ReleaseCreator
         );
         $this->createTmpProjectDir()
             ->setFilesConstants()
+            ->setupShopVersion()
             ->generateLicensesFile()
             ->runComposerInstall()
             ->createPackage();
@@ -315,7 +335,6 @@ class ReleaseCreator
     {
         $this->consoleWriter->displayText("Setting files constants...", ConsoleWriter::COLOR_YELLOW);
         $this->setConfigDefinesConstants()
-            ->setConfigAutoloadConstants()
             ->setInstallDevConfigurationConstants()
             ->setInstallDevInstallVersionConstants();
         $this->consoleWriter->displayText(" DONE{$this->lineSeparator}", ConsoleWriter::COLOR_GREEN);
@@ -344,19 +363,65 @@ class ReleaseCreator
     }
 
     /**
-     * Define all config/autoload.php constants to the desired version.
+     * Get the current version in the project
      *
-     * @return $this
+     * @return string PrestaShop version
+     */
+    protected function getCurrentVersion()
+    {
+        $kernelFile = $this->projectPath.'/app/AppKernel.php';
+        $matches = [];
+
+        $kernelFileContent = file_get_contents($kernelFile);
+        $kernelFileContent = preg_match(
+            '~const VERSION = \'(.*)\';~',
+            $kernelFileContent,
+            $matches
+        );
+
+        return $matches[1];
+    }
+
+    /**
+     * Define the PrestaShop version to the desired version.
+     *
+     * @return self
      * @throws BuildException
      */
-    protected function setConfigAutoloadConstants()
+    protected function setupShopVersion()
     {
-        $configAutoloadPath = $this->tempProjectPath.'/config/autoload.php';
-        $configAutoloadContent = file_get_contents($configAutoloadPath);
-        $configAutoloadNewContent = preg_replace('#_PS_VERSION_\', \'(.*)\'\)#', '_PS_VERSION_\', \'' . $this->version . '\')', $configAutoloadContent);
+        $kernelFile = $this->tempProjectPath.'/app/AppKernel.php';
+        $version = new Version($this->version);
 
-        if (!file_put_contents($configAutoloadPath, $configAutoloadNewContent)) {
-            throw new BuildException("Unable to update contents of '$configAutoloadPath'");
+        $kernelFileContent = file_get_contents($kernelFile);
+        $kernelFileContent = preg_replace(
+            '~const VERSION = \'(.*)\';~',
+            "const VERSION = '".$version->getVersion()."';",
+            $kernelFileContent
+        );
+        $kernelFileContent = preg_replace(
+            '~const MAJOR_VERSION_STRING = \'(.*)\';~',
+            "const MAJOR_VERSION_STRING = '".$version->getMajorVersionString()."';",
+            $kernelFileContent
+        );
+        $kernelFileContent = preg_replace(
+            '~const MAJOR_VERSION = (.*);~',
+            "const MAJOR_VERSION = ".$version->getMajorVersion().";",
+            $kernelFileContent
+        );
+        $kernelFileContent = preg_replace(
+            '~const MINOR_VERSION = (.*);~',
+            "const MINOR_VERSION = ".$version->getMinorVersion().";",
+            $kernelFileContent
+        );
+        $kernelFileContent = preg_replace(
+            '~const RELEASE_VERSION = (.*);~',
+            "const RELEASE_VERSION = ".$version->getReleaseVersion().";",
+            $kernelFileContent
+        );
+
+        if (!file_put_contents($kernelFile, $kernelFileContent)) {
+            throw new BuildException("Unable to update contents of $kernelFile.");
         }
 
         return $this;
@@ -594,6 +659,7 @@ class ReleaseCreator
                     if ($folder.'/'.$file_to_remove == $value) {
                         unset($filesList[$key]);
                         exec("rm -f {$argValue}");
+
                         continue 2;
                     }
                 }
@@ -603,6 +669,7 @@ class ReleaseCreator
                     if ($folder.'/'.$folder_to_remove == $value) {
                         unset($filesList[$key]);
                         exec("rm -rf {$argValue}");
+
                         continue 2;
                     }
                 }
@@ -612,6 +679,7 @@ class ReleaseCreator
                     if (preg_match('#'.$pattern_to_remove.'#', $value) == 1) {
                         unset($filesList[$key]);
                         exec("rm -rf {$argValue}");
+
                         continue 2;
                     }
                 }
@@ -623,6 +691,7 @@ class ReleaseCreator
                     if ($folder.'/'.$folder_to_remove == $key) {
                         unset($filesList[$key]);
                         exec("rm -rf {$argKey}");
+
                         continue 2;
                     }
                 }
@@ -632,6 +701,7 @@ class ReleaseCreator
                     if (preg_match('#'.$pattern_to_remove.'#', $key) == 1) {
                         unset($filesList[$key]);
                         exec("rm -rf {$argKey}");
+
                         continue 2;
                     }
                 }
@@ -663,7 +733,7 @@ class ReleaseCreator
         exec($cmd);
 
         if ($this->useInstaller) {
-            exec("cd {$argProjectPath}/tools/build/Library/InstallUnpacker && php compile.php && cd -");
+            exec("cd {$argProjectPath}/tools/build/Library/InstallUnpacker && php compile.php {$this->version} && cd -");
             $zip = new ZipArchive();
             $zip->open("{$this->tempProjectPath}/{$this->zipFileName}", ZipArchive::CREATE | ZipArchive::OVERWRITE);
             $zip->addFile("{$this->tempProjectPath}/{$installerZipFilename}", $installerZipFilename);

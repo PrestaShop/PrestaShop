@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -31,7 +31,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * This class subscribes to the events module installation / uninstallation
- * in order to install or remove its tabs as well
+ * in order to install or remove its tabs as well.
  */
 class ModuleTabManagementSubscriber implements EventSubscriberInterface
 {
@@ -43,7 +43,7 @@ class ModuleTabManagementSubscriber implements EventSubscriberInterface
      * @var ModuleTabUnregister
      */
     private $moduleTabUnregister;
-    
+
     public function __construct(ModuleTabRegister $moduleTabRegister, ModuleTabUnregister $moduleTabUnregister)
     {
         $this->moduleTabRegister = $moduleTabRegister;
@@ -58,6 +58,8 @@ class ModuleTabManagementSubscriber implements EventSubscriberInterface
         return [
             ModuleManagementEvent::INSTALL => 'onModuleInstall',
             ModuleManagementEvent::UNINSTALL => 'onModuleUninstall',
+            ModuleManagementEvent::ENABLE => 'onModuleEnable',
+            ModuleManagementEvent::DISABLE => 'onModuleDisable',
         ];
     }
 
@@ -75,5 +77,21 @@ class ModuleTabManagementSubscriber implements EventSubscriberInterface
     public function onModuleUninstall(ModuleManagementEvent $event)
     {
         $this->moduleTabUnregister->unregisterTabs($event->getModule());
+    }
+
+    /**
+     * @param ModuleManagementEvent $event
+     */
+    public function onModuleEnable(ModuleManagementEvent $event)
+    {
+        $this->moduleTabRegister->enableTabs($event->getModule());
+    }
+
+    /**
+     * @param ModuleManagementEvent $event
+     */
+    public function onModuleDisable(ModuleManagementEvent $event)
+    {
+        $this->moduleTabUnregister->disableTabs($event->getModule());
     }
 }

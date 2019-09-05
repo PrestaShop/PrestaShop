@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -28,13 +28,13 @@ namespace PrestaShopBundle\Form\Admin\Product;
 
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use PrestaShopBundle\Form\Admin\Type\TranslateType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Form\Extension\Core\Type as FormType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * This form class is responsible to generate the product shipping form
+ * This form class is responsible to generate the product shipping form.
  */
 class ProductShipping extends CommonAbstractType
 {
@@ -43,7 +43,7 @@ class ProductShipping extends CommonAbstractType
     private $warehouses;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param object $translator
      * @param object $legacyContext
@@ -87,8 +87,8 @@ class ProductShipping extends CommonAbstractType
                 'label' => $this->translator->trans('Width', [], 'Admin.Catalog.Feature'),
                 'constraints' => [
                     new Assert\NotBlank(),
-                    new Assert\Type(['type' => 'numeric'])
-                ]
+                    new Assert\Type(['type' => 'numeric']),
+                ],
             ]
         )
             ->add(
@@ -99,8 +99,8 @@ class ProductShipping extends CommonAbstractType
                     'label' => $this->translator->trans('Height', [], 'Admin.Catalog.Feature'),
                     'constraints' => [
                         new Assert\NotBlank(),
-                        new Assert\Type(['type' => 'numeric'])
-                    ]
+                        new Assert\Type(['type' => 'numeric']),
+                    ],
                 ]
             )
             ->add(
@@ -111,8 +111,8 @@ class ProductShipping extends CommonAbstractType
                     'label' => $this->translator->trans('Depth', [], 'Admin.Catalog.Feature'),
                     'constraints' => [
                         new Assert\NotBlank(),
-                        new Assert\Type(['type' => 'numeric'])
-                    ]
+                        new Assert\Type(['type' => 'numeric']),
+                    ],
                 ]
             )
             ->add(
@@ -123,8 +123,8 @@ class ProductShipping extends CommonAbstractType
                     'label' => $this->translator->trans('Weight', [], 'Admin.Catalog.Feature'),
                     'constraints' => [
                         new Assert\NotBlank(),
-                        new Assert\Type(['type' => 'numeric'])
-                    ]
+                        new Assert\Type(['type' => 'numeric']),
+                    ],
                 ]
             )
             ->add(
@@ -136,8 +136,8 @@ class ProductShipping extends CommonAbstractType
                     'currency' => $this->currency->iso_code,
                     'constraints' => [
                         new Assert\NotBlank(),
-                        new Assert\Type(['type' => 'float'])
-                    ]
+                        new Assert\Type(['type' => 'float']),
+                    ],
                 ]
             )
             ->add(
@@ -148,7 +148,7 @@ class ProductShipping extends CommonAbstractType
                     'expanded' => true,
                     'multiple' => true,
                     'required' => false,
-                    'label' => $this->translator->trans('Available carriers', [], 'Admin.Catalog.Feature')
+                    'label' => $this->translator->trans('Available carriers', [], 'Admin.Catalog.Feature'),
                 ]
             )
             ->add(
@@ -176,7 +176,7 @@ class ProductShipping extends CommonAbstractType
                     'options' => [
                         'attr' => [
                             'placeholder' => $this->translator->trans('Delivered within 5-7 days', [], 'Admin.Catalog.Feature'),
-                        ]
+                        ],
                     ],
                     'locales' => $this->locales,
                     'hideTabs' => true,
@@ -196,7 +196,7 @@ class ProductShipping extends CommonAbstractType
                     'options' => [
                         'attr' => [
                             'placeholder' => $this->translator->trans('Delivered within 3-4 days', [], 'Admin.Catalog.Feature'),
-                        ]
+                        ],
                     ],
                     'locales' => $this->locales,
                     'hideTabs' => true,
@@ -204,7 +204,6 @@ class ProductShipping extends CommonAbstractType
                     'label' => $this->translator->trans('Delivery time of in-stock products:', [], 'Admin.Catalog.Feature'),
                 ]
             );
-
 
         foreach ($this->warehouses as $warehouse) {
             $builder->add(

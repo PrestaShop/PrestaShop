@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,25 +16,33 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Adapter;
 
+use Combination;
+use Configuration as ConfigurationLegacy;
+use Feature;
+use Language;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShopBundle\Exception\NotImplementedException;
-use Symfony\Component\HttpFoundation\ParameterBag;
 use Shop;
-use Combination;
-use Feature;
-use Configuration as ConfigurationLegacy;
+use Symfony\Component\HttpFoundation\ParameterBag;
 
+/**
+ * Adapter of Configuration ObjectModel.
+ */
 class Configuration extends ParameterBag implements ConfigurationInterface
 {
+    /**
+     * @var Shop
+     */
     private $shop;
 
     public function __construct(array $parameters = array())
@@ -52,7 +60,7 @@ class Configuration extends ParameterBag implements ConfigurationInterface
     {
         throw new NotImplementedException();
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -81,10 +89,11 @@ class Configuration extends ParameterBag implements ConfigurationInterface
 
     /**
      * Returns constant defined by given $key if exists or check directly into PrestaShop
-     * \Configuration
+     * \Configuration.
      *
      * @param string $key
      * @param mixed $default The default value if the parameter key does not exist
+     *
      * @return mixed
      */
     public function get($key, $default = null)
@@ -93,10 +102,14 @@ class Configuration extends ParameterBag implements ConfigurationInterface
             return constant($key);
         }
 
+        //If configuration has never been accessed it is still empty and hasKey/isLangKey will always return false
+        if (!ConfigurationLegacy::configurationIsLoaded()) {
+            ConfigurationLegacy::loadConfiguration();
+        }
+
         // if the key is multi lang related, we return an array with the value per language.
-        // getInt() meaning probably getInternational()
         if (ConfigurationLegacy::isLangKey($key)) {
-            return ConfigurationLegacy::getInt($key);
+            return $this->getLocalized($key);
         }
 
         if (ConfigurationLegacy::hasKey($key)) {
@@ -107,33 +120,39 @@ class Configuration extends ParameterBag implements ConfigurationInterface
     }
 
     /**
-     * Set configuration value
-     * @param $key
-     * @param $value
+     * Set configuration value.
+     *
+     * @param string $key
+     * @param mixed $value
+     * @param array $options Options
+     *
      * @return $this
+     *
      * @throws \Exception
      */
-    public function set($key, $value)
+    public function set($key, $value, array $options = [])
     {
         // By default, set a piece of configuration for all available shops and shop groups
-        $shopGroupId = 0;
-        $shopId = 0;
+        $shopGroupId = null;
+        $shopId = null;
 
         if ($this->shop instanceof Shop) {
             $shopGroupId = $this->shop->id_shop_group;
             $shopId = $this->shop->id;
         }
 
+        $html = isset($options['html']) ? (bool) $options['html'] : false;
+
         $success = ConfigurationLegacy::updateValue(
             $key,
             $value,
-            false,
+            $html,
             $shopGroupId,
             $shopId
         );
 
         if (!$success) {
-            throw new \Exception("Could not update configuration");
+            throw new \Exception('Could not update configuration');
         }
 
         return $this;
@@ -149,8 +168,9 @@ class Configuration extends ParameterBag implements ConfigurationInterface
 
     /**
      * Removes a configuration key.
-     * 
+     *
      * @param type $key
+     *
      * @return type
      */
     public function remove($key)
@@ -160,16 +180,19 @@ class Configuration extends ParameterBag implements ConfigurationInterface
         );
 
         if (!$success) {
-            throw new \Exception("Could not update configuration");
+            throw new \Exception('Could not update configuration');
         }
 
         return $this;
     }
 
     /**
-     * Unset configuration value
+     * Unset configuration value.
+     *
      * @param $key
+     *
      * @return $this
+     *
      * @throws \Exception
      *
      * @deprecated since version 1.7.4.0
@@ -196,7 +219,8 @@ class Configuration extends ParameterBag implements ConfigurationInterface
     }
 
     /**
-     * Return if Feature feature is active or not
+     * Return if Feature feature is active or not.
+     *
      * @return bool
      */
     public function featureIsActive()
@@ -205,7 +229,8 @@ class Configuration extends ParameterBag implements ConfigurationInterface
     }
 
     /**
-     * Return if Combination feature is active or not
+     * Return if Combination feature is active or not.
+     *
      * @return bool
      */
     public function combinationIsActive()
@@ -215,10 +240,29 @@ class Configuration extends ParameterBag implements ConfigurationInterface
 
     /**
      * Restrict updates of a piece of configuration to a single shop.
+     *
      * @param Shop $shop
      */
     public function restrictUpdatesTo(Shop $shop)
     {
         $this->shop = $shop;
+    }
+
+    /**
+     * Get localized configuration in all languages
+     *
+     * @param string $key
+     *
+     * @return array Array of langId => localizedConfiguration
+     */
+    private function getLocalized($key)
+    {
+        $configuration = [];
+
+        foreach (Language::getIDs(false) as $langId) {
+            $configuration[$langId] = ConfigurationLegacy::get($key, $langId);
+        }
+
+        return $configuration;
     }
 }

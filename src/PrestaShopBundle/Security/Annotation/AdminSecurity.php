@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,13 +16,14 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Security\Annotation;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -31,7 +32,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
  * Improves the existing Security annotation, adding:
  * `domain`: to translate the sent message using a PrestaShop domain;
  * `redirectRoute`: to select the route for redirection;
- * `url`: only available in 1.7.x, to redirect to legacy pages;
+ * `url`: only available in 1.7.x, to redirect to legacy pages;.
  *
  * @Annotation
  */
@@ -46,6 +47,7 @@ class AdminSecurity extends Security
 
     /**
      * The route for the redirection.
+     *
      * @todo: Once the onboarding page is migrated, set default to his route name.
      *
      * @var string
@@ -53,12 +55,19 @@ class AdminSecurity extends Security
     protected $redirectRoute;
 
     /**
-     * @deprecated Once the back office is migrated, rely only on route.
-     * The url for the redirection.
+     * @deprecated once the back office is migrated, rely only on route.
+     * The url for the redirection
      *
      * @return string
      */
     protected $url = 'admin_domain';
+
+    /**
+     * The route params which are used together to generate the redirect route.
+     *
+     * @var array
+     */
+    protected $redirectQueryParamsToKeep = [];
 
     /**
      * @return string
@@ -69,7 +78,7 @@ class AdminSecurity extends Security
     }
 
     /**
-     * @param string $domain The translation domain name.
+     * @param string $domain the translation domain name
      */
     public function setDomain($domain)
     {
@@ -85,7 +94,7 @@ class AdminSecurity extends Security
     }
 
     /**
-     * @param string $redirectRoute The route used for redirection.
+     * @param string $redirectRoute the route used for redirection
      */
     public function setRedirectRoute($redirectRoute)
     {
@@ -101,10 +110,26 @@ class AdminSecurity extends Security
     }
 
     /**
-     * @param string $url The url used for redirection.
+     * @param string $url the url used for redirection
      */
     public function setUrl($url)
     {
         $this->url = $url;
+    }
+
+    /**
+     * @return array
+     */
+    public function getRedirectQueryParamsToKeep()
+    {
+        return $this->redirectQueryParamsToKeep;
+    }
+
+    /**
+     * @param array $redirectQueryParamsToKeep
+     */
+    public function setRedirectQueryParamsToKeep($redirectQueryParamsToKeep)
+    {
+        $this->redirectQueryParamsToKeep = $redirectQueryParamsToKeep;
     }
 }

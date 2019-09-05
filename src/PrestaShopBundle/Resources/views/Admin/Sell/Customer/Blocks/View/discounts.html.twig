@@ -1,0 +1,104 @@
+{#**
+ * 2007-2019 PrestaShop and Contributors
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+
+<div class="card">
+  <h3 class="card-header">
+    <i class="material-icons">loyalty</i>
+    {{ 'Vouchers'|trans({}, 'Admin.Orderscustomers.Feature') }}
+    <span class="badge badge-primary rounded">{{ customerInformation.discountsInformation|length }}</span>
+  </h3>
+  <div class="card-body">
+    {% if customerInformation.discountsInformation is not empty %}
+      <table class="table">
+        <thead>
+          <tr>
+            <th>{{ 'ID'|trans({}, 'Admin.Global') }}</th>
+            <th>{{ 'Code'|trans({}, 'Admin.Global') }}</th>
+            <th>{{ 'Name'|trans({}, 'Admin.Global') }}</th>
+            <th>{{ 'Status'|trans({}, 'Admin.Global') }}</th>
+            <th>{{ 'Qty available'|trans({}, 'Admin.Orderscustomers.Feature') }}</th>
+            <th class="text-right">{{ 'Actions'|trans({}, 'Admin.Global') }}</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for discount in customerInformation.discountsInformation %}
+          {% set discountEditUrl = getAdminLink('AdminCartRules', true, {'id_cart_rule': discount.discountId, 'addcart_rule': 1, 'back': app.request.uri}) %}
+
+          <tr>
+            <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ discountEditUrl }}">{{ discount.discountId }}</td>
+            <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ discountEditUrl }}">{{ discount.code }}</td>
+            <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ discountEditUrl }}">{{ discount.name }}</td>
+            <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ discountEditUrl }}">
+              {% if discount.active %}
+                <i class="material-icons text-success">
+                  check
+                </i>
+              {% else %}
+                <i class="material-icons text-danger">
+                  clear
+                </i>
+              {% endif %}
+            </td>
+            <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ discountEditUrl }}">{{ discount.availableQuantity }}</td>
+            <td class="text-right">
+              <div class="btn-group-action">
+                <div class="btn-group">
+                  <a href="{{ getAdminLink('AdminCartRules', true, {'id_cart_rule': discount.discountId, 'addcart_rule': 1, 'back': app.request.uri}) }}"
+                     class="btn tooltip-link dropdown-item"
+                     data-toggle="pstooltip"
+                     data-placement="top"
+                     data-original-title="{{ 'Edit'|trans({}, 'Admin.Actions') }}"
+                  >
+                    <i class="material-icons">edit</i>
+                  </a>
+
+                  <a class="btn btn-link dropdown-toggle dropdown-toggle-dots dropdown-toggle-split"
+                     data-toggle="dropdown"
+                     aria-haspopup="true"
+                     aria-expanded="false"
+                  ></a>
+
+                  <div class="dropdown-menu dropdown-menu-right">
+                    <a class="btn tooltip-link dropdown-item"
+                       href="{{ getAdminLink('AdminCartRules', true, {'id_cart_rule': discount.discountId, 'deletecart_rule': 1, 'back': app.request.uri}) }}"
+                    >
+                      <i class="material-icons">delete</i>
+                      {{ 'Delete'|trans({}, 'Admin.Actions') }}
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p class="text-muted text-center mb-0">
+        {{ '%firstname% %lastname% has no discount vouchers'|trans({'%firstname%': customerInformation.personalInformation.firstName, '%lastname%': customerInformation.personalInformation.lastName}, 'Admin.Orderscustomers.Feature') }}
+      </p>
+    {% endif %}
+  </div>
+</div>

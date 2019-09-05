@@ -3,7 +3,7 @@ admin_addons_login:
     methods:  [POST]
     defaults:
         _controller: PrestaShopBundle:Admin/Addons:login
-        
+
 admin_addons_logout:
     path:     /logout
     methods:  [GET]

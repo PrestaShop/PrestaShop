@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -74,7 +74,7 @@ class PhpEncryptionLegacyEngineCore extends PhpEncryptionEngine
             $this->mode,
             $this->iv
         );
-        $cipherText = $this->iv.$cipherText;
+        $cipherText = $this->iv . $cipherText;
 
         return $this->generateHmac($cipherText) . ':' . base64_encode($cipherText);
     }
@@ -115,11 +115,12 @@ class PhpEncryptionLegacyEngineCore extends PhpEncryptionEngine
         );
 
         $pad = ord($data[strlen($data) - 1]);
+
         return substr($data, 0, -$pad);
     }
 
     /**
-     * Generate Hmac
+     * Generate Hmac.
      *
      * @param string $encrypted
      *
@@ -128,6 +129,7 @@ class PhpEncryptionLegacyEngineCore extends PhpEncryptionEngine
     protected function generateHmac($encrypted)
     {
         $macKey = $this->generateKeygenS2k('sha256', $this->key, $this->hmacIv, 32);
+
         return hash_hmac(
             'sha256',
             $this->hmacIv . $this->cipher . $encrypted,
@@ -139,10 +141,10 @@ class PhpEncryptionLegacyEngineCore extends PhpEncryptionEngine
      * Alternative to mhash_keygen_s2k for security reason
      * and php compatibilities.
      *
-     * @param string  $hash
-     * @param string  $password
-     * @param string  $salt
-     * @param integer $bytes
+     * @param string $hash
+     * @param string $password
+     * @param string $salt
+     * @param int $bytes
      *
      * @return string
      */
@@ -160,7 +162,7 @@ class PhpEncryptionLegacyEngineCore extends PhpEncryptionEngine
         return substr(
             $result,
             0,
-            intval($bytes)
+            (int) $bytes
         );
     }
 }

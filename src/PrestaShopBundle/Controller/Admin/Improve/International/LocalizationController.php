@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -32,25 +32,23 @@ use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Improve\International\Localization\ImportLocalizationPackType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Class LocalizationController is responsible for handling "Improve > International > Localization" page
+ * Class LocalizationController is responsible for handling "Improve > International > Localization" page.
  */
 class LocalizationController extends FrameworkBundleAdminController
 {
     /**
-     * Show localization settings page
+     * Show localization settings page.
      *
-     * @Template("@PrestaShop/Admin/Improve/International/Localization/localization.html.twig")
-     *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')~'_')", message="Access denied.")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
      *
      * @param Request $request
      *
-     * @return array|RedirectResponse
+     * @return Response
      */
     public function indexAction(Request $request)
     {
@@ -63,7 +61,7 @@ class LocalizationController extends FrameworkBundleAdminController
         $localizationPackImportForm = $this->createForm(ImportLocalizationPackType::class);
         $localizationForm = $this->getLocalizationFormHandler()->getForm();
 
-        return [
+        return $this->render('@PrestaShop/Admin/Improve/International/Localization/index.html.twig', [
             'layoutHeaderToolbarBtn' => [],
             'layoutTitle' => $this->trans('Localization', 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
@@ -71,20 +69,20 @@ class LocalizationController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink($legacyController),
             'localizationForm' => $localizationForm->createView(),
             'localizationPackImportForm' => $localizationPackImportForm->createView(),
-        ];
+        ]);
     }
 
     /**
-     * Save localization settings
+     * Save localization settings.
      *
-     * @AdminSecurity("is_granted(['read','update', 'create','delete'], request.get('_legacy_controller')~'_')", message="You do not have permission to edit this.")
-     * @DemoRestricted(redirectRoute="admin_localization_show_settings")
+     * @AdminSecurity("is_granted(['read','update', 'create','delete'], request.get('_legacy_controller'))", message="You do not have permission to edit this.")
+     * @DemoRestricted(redirectRoute="admin_localization_index")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
-    public function processFormAction(Request $request)
+    public function saveOptionsAction(Request $request)
     {
         $localizationFormHandler = $this->getLocalizationFormHandler();
 
@@ -98,26 +96,26 @@ class LocalizationController extends FrameworkBundleAdminController
             if (empty($errors)) {
                 $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
 
-                return $this->redirectToRoute('admin_localization_show_settings');
+                return $this->redirectToRoute('admin_localization_index');
             }
 
             $this->flashErrors($errors);
         }
 
-        return $this->redirectToRoute('admin_localization_show_settings');
+        return $this->redirectToRoute('admin_localization_index');
     }
 
     /**
-     * Handles localization pack import
+     * Handles localization pack import.
      *
-     * @AdminSecurity("is_granted(['read','update', 'create','delete'], request.get('_legacy_controller')~'_')", message="You do not have permission to edit this.")
-     * @DemoRestricted(redirectRoute="admin_localization_show_settings")
+     * @AdminSecurity("is_granted(['update', 'create','delete'], request.get('_legacy_controller'))", message="You do not have permission to edit this.")
+     * @DemoRestricted(redirectRoute="admin_localization_index")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
-    public function importLocalizationPackAction(Request $request)
+    public function importPackAction(Request $request)
     {
         $localizationPackImportForm = $this->createForm(ImportLocalizationPackType::class);
         $localizationPackImportForm->handleRequest($request);
@@ -140,7 +138,7 @@ class LocalizationController extends FrameworkBundleAdminController
                     $this->trans('Localization pack imported successfully.', 'Admin.International.Notification')
                 );
 
-                return $this->redirectToRoute('admin_localization_show_settings');
+                return $this->redirectToRoute('admin_localization_index');
             }
 
             foreach ($errors as $error) {
@@ -148,11 +146,11 @@ class LocalizationController extends FrameworkBundleAdminController
             }
         }
 
-        return $this->redirectToRoute('admin_localization_show_settings');
+        return $this->redirectToRoute('admin_localization_index');
     }
 
     /**
-     * Returns localization settings form handler
+     * Returns localization settings form handler.
      *
      * @return FormHandlerInterface
      */

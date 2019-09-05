@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,15 +16,15 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-use PrestaShop\PrestaShop\Core\Foundation\Templating\RenderableProxy;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
+use PrestaShop\PrestaShop\Core\Foundation\Templating\RenderableProxy;
 
 class OrderControllerCore extends FrontController
 {
@@ -44,7 +44,8 @@ class OrderControllerCore extends FrontController
     protected $cartChecksum;
 
     /**
-     * Initialize order controller
+     * Initialize order controller.
+     *
      * @see FrontController::init()
      */
     public function init()
@@ -64,7 +65,9 @@ class OrderControllerCore extends FrontController
                 $this->errors[] = $this->trans('Sorry. We cannot renew your order.', array(), 'Shop.Notifications.Error');
             } elseif (!$duplication['success']) {
                 $this->errors[] = $this->trans(
-                    'Some items are no longer available, and we are unable to renew your order.', array(), 'Shop.Notifications.Error'
+                    'Some items are no longer available, and we are unable to renew your order.',
+                    array(),
+                    'Shop.Notifications.Error'
                 );
             } else {
                 $this->context->cookie->id_cart = $duplication['cart']->id;
@@ -152,21 +155,20 @@ class OrderControllerCore extends FrontController
                     $this->context,
                     $translator
                 )
-            ))
-        ;
+            ));
     }
 
     /**
-     * Persists cart-related data in checkout session
+     * Persists cart-related data in checkout session.
      *
      * @param CheckoutProcess $process
      */
     protected function saveDataToPersist(CheckoutProcess $process)
     {
-        $data             = $process->getDataToPersist();
+        $data = $process->getDataToPersist();
         $addressValidator = new AddressValidator($this->context);
-        $customer         = $this->context->customer;
-        $cart             = $this->context->cart;
+        $customer = $this->context->customer;
+        $cart = $this->context->cart;
 
         $shouldGenerateChecksum = false;
 
@@ -185,35 +187,35 @@ class OrderControllerCore extends FrontController
 
         Db::getInstance()->execute(
             'UPDATE ' . _DB_PREFIX_ . 'cart SET checkout_session_data = "' . pSQL(json_encode($data)) . '"
-                WHERE id_cart = ' . (int)$cart->id
+                WHERE id_cart = ' . (int) $cart->id
         );
     }
 
     /**
-     * Restores from checkout session some previously persisted cart-related data
+     * Restores from checkout session some previously persisted cart-related data.
      *
      * @param CheckoutProcess $process
      */
     protected function restorePersistedData(CheckoutProcess $process)
     {
-        $cart     = $this->context->cart;
+        $cart = $this->context->cart;
         $customer = $this->context->customer;
-        $rawData  = Db::getInstance()->getValue(
-            'SELECT checkout_session_data FROM ' . _DB_PREFIX_ . 'cart WHERE id_cart = ' . (int)$cart->id
+        $rawData = Db::getInstance()->getValue(
+            'SELECT checkout_session_data FROM ' . _DB_PREFIX_ . 'cart WHERE id_cart = ' . (int) $cart->id
         );
-        $data     = json_decode($rawData, true);
+        $data = json_decode($rawData, true);
         if (!is_array($data)) {
             $data = array();
         }
 
-        $addressValidator  = new AddressValidator();
+        $addressValidator = new AddressValidator();
         $invalidAddressIds = $addressValidator->validateCartAddresses($cart);
 
         // Build the currently selected address' warning message (if relevant)
         if (!$customer->isGuest() && !empty($invalidAddressIds)) {
             $this->checkoutWarning['address'] = array(
-                'id_address' => (int)reset($invalidAddressIds),
-                'exception'  => $this->trans(
+                'id_address' => (int) reset($invalidAddressIds),
+                'exception' => $this->trans(
                     'Your address is incomplete, please update it.',
                     array(),
                     'Shop.Notifications.Error'
@@ -247,10 +249,8 @@ class OrderControllerCore extends FrontController
             'preview' => $this->render('checkout/_partials/cart-summary', array(
                 'cart' => $cart,
                 'static_token' => Tools::getToken(false),
-            ))
+            )),
         )));
-
-        return;
     }
 
     public function initContent()
@@ -299,6 +299,10 @@ class OrderControllerCore extends FrontController
             'cart' => $presentedCart,
         ]);
 
+        $this->context->smarty->assign([
+            'display_transaction_updated_info' => Tools::getIsset('updatedTransaction'),
+        ]);
+
         parent::initContent();
         $this->setTemplate('checkout/checkout');
     }
@@ -307,7 +311,7 @@ class OrderControllerCore extends FrontController
     {
         $addressForm = $this->makeAddressForm();
 
-        if (Tools::getIsset('id_address') && ($id_address = (int)Tools::getValue('id_address'))) {
+        if (Tools::getIsset('id_address') && ($id_address = (int) Tools::getValue('id_address'))) {
             $addressForm->loadAddressById($id_address);
         }
 
@@ -337,7 +341,5 @@ class OrderControllerCore extends FrontController
                 $templateParams
             ),
         )));
-
-        return;
     }
 }

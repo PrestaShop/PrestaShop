@@ -1,0 +1,17 @@
+// EMPTY STATES
+@keyframes showcase-img-appearance {
+  from {
+    -webkit-transform: translate(-20px);
+    -ms-transform: translate(-20px);
+    -webkit-transform: translate(-20px);
+    transform: translate(-20px);
+    opacity: 0;
+ }
+  to {
+    -webkit-transform: translate(0);
+    -ms-transform: translate(0);
+    -webkit-transform: translate(0);
+    transform: translate(0);
+    opacity: 1;
+ }
+}

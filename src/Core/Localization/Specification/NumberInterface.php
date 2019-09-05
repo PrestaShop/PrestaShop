@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Localization\Specification;
 
 /**
- * Number specification interface
+ * Number specification interface.
  *
  * Regroups rules and data used when formatting a decimal number in a given locale and a given numbering system
  * (latin, arab, ...).
@@ -44,17 +44,17 @@ interface NumberInterface
     public function getAllSymbols();
 
     /**
-     * Get the specified symbols list for a given numbering system
+     * Get the specified symbols list for a given numbering system.
      *
      * @param string $numberingSystem
-     *  Numbering system to use when formatting numbers. @see http://cldr.unicode.org/translation/numbering-systems
+     *                                Numbering system to use when formatting numbers. @see http://cldr.unicode.org/translation/numbering-systems
      *
      * @return NumberSymbolList
      */
     public function getSymbolsByNumberingSystem($numberingSystem = null);
 
     /**
-     * Get the formatting rules for this number (when positive)
+     * Get the formatting rules for this number (when positive).
      *
      * This pattern uses the Unicode CLDR number pattern syntax
      *
@@ -63,7 +63,7 @@ interface NumberInterface
     public function getPositivePattern();
 
     /**
-     * Get the formatting rules for this number (when negative)
+     * Get the formatting rules for this number (when negative).
      *
      * This pattern uses the Unicode CLDR number pattern syntax
      *
@@ -72,14 +72,14 @@ interface NumberInterface
     public function getNegativePattern();
 
     /**
-     * Get the maximum number of digits after decimal separator (rounding if needed)
+     * Get the maximum number of digits after decimal separator (rounding if needed).
      *
      * @return int
      */
     public function getMaxFractionDigits();
 
     /**
-     * Get the minimum number of digits after decimal separator (fill with "0" if needed)
+     * Get the minimum number of digits after decimal separator (fill with "0" if needed).
      *
      * @return int
      */
@@ -93,14 +93,14 @@ interface NumberInterface
     public function isGroupingUsed();
 
     /**
-     * Get the size of primary digits group in the number
+     * Get the size of primary digits group in the number.
      *
      * @return int
      */
     public function getPrimaryGroupSize();
 
     /**
-     * Get the size of secondary digits groups in the number
+     * Get the size of secondary digits groups in the number.
      *
      * @return int
      */

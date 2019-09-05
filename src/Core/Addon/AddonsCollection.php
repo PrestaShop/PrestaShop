@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,21 +16,21 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Addon;
 
-use PrestaShop\PrestaShop\Adapter\Module\Module as Addon;
 use ArrayAccess;
 use ArrayIterator;
 use Countable;
 use IteratorAggregate;
+use PrestaShop\PrestaShop\Adapter\Module\Module as Addon;
 
 /**
  * An ArrayCollection is a Collection implementation that wraps a regular PHP array.
@@ -60,7 +60,7 @@ class AddonsCollection implements ArrayAccess, Countable, IteratorAggregate
      * This method is provided for derived classes to specify how a new
      * instance should be created when constructor semantics have changed.
      *
-     * @param array $addons Elements.
+     * @param array $addons elements
      *
      * @return static
      */
@@ -112,6 +112,7 @@ class AddonsCollection implements ArrayAccess, Countable, IteratorAggregate
     {
         if (!isset($offset)) {
             $this->add($addon);
+
             return;
         }
 
@@ -121,7 +122,7 @@ class AddonsCollection implements ArrayAccess, Countable, IteratorAggregate
     /**
      * Required by interface ArrayAccess.
      *
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function offsetUnset($offset)
     {
@@ -132,6 +133,7 @@ class AddonsCollection implements ArrayAccess, Countable, IteratorAggregate
      * Returns true if the key is found in the collection.
      *
      * @param mixed $key the key, can be integer or string
+     *
      * @return bool
      */
     public function containsKey($key)
@@ -143,6 +145,7 @@ class AddonsCollection implements ArrayAccess, Countable, IteratorAggregate
      * Returns true if the addon is found in the collection.
      *
      * @param Addon $addon the addon
+     *
      * @return bool
      */
     public function contains(Addon $addon)
@@ -151,7 +154,7 @@ class AddonsCollection implements ArrayAccess, Countable, IteratorAggregate
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function indexOf(Addon $addon)
     {
@@ -159,7 +162,7 @@ class AddonsCollection implements ArrayAccess, Countable, IteratorAggregate
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function get($key)
     {
@@ -167,7 +170,7 @@ class AddonsCollection implements ArrayAccess, Countable, IteratorAggregate
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getKeys()
     {
@@ -175,7 +178,7 @@ class AddonsCollection implements ArrayAccess, Countable, IteratorAggregate
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getValues()
     {
@@ -197,6 +200,7 @@ class AddonsCollection implements ArrayAccess, Countable, IteratorAggregate
      * Add an Addon in the collection.
      *
      * @param Addon $addon the specified addon
+     *
      * @return bool
      */
     public function add(Addon $addon)
@@ -209,12 +213,13 @@ class AddonsCollection implements ArrayAccess, Countable, IteratorAggregate
     /**
      * Remove an addon from the collection by key.
      *
-     * @param mixed the key (can be int or string).
-     * @return bool true if the addon has been found and removed.
+     * @param mixed the key (can be int or string)
+     *
+     * @return bool true if the addon has been found and removed
      */
     public function removeByKey($key)
     {
-        if (! isset($this->addons[$key]) && ! array_key_exists($key, $this->addons)) {
+        if (!isset($this->addons[$key]) && !array_key_exists($key, $this->addons)) {
             return null;
         }
 
@@ -227,8 +232,9 @@ class AddonsCollection implements ArrayAccess, Countable, IteratorAggregate
     /**
      * Remove an addon from the collection by key.
      *
-     * @param Addon $addon the addon to be removed.
-     * @return bool true if the addon has been found and removed.
+     * @param Addon $addon the addon to be removed
+     *
+     * @return bool true if the addon has been found and removed
      */
     public function remove(Addon $addon)
     {
@@ -244,7 +250,7 @@ class AddonsCollection implements ArrayAccess, Countable, IteratorAggregate
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function isEmpty()
     {

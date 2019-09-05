@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,23 +16,22 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\EventListener;
 
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Service\Hook\HookDispatcher;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-use PrestaShopBundle\Service\Hook\HookEvent;
 
 /**
  * @todo Extract logic outside of EventSubscriber
@@ -43,7 +42,7 @@ class ActionDispatcherLegacyHooksSubscriber implements EventSubscriberInterface
     const DISPATCHER_AFTER_ACTION = 'actionDispatcherAfter';
 
     /**
-     * List of available front controllers types
+     * List of available front controllers types.
      */
     const FRONT_OFFICE_CONTROLLER = 1;
     const BACK_OFFICE_CONTROLLER = 2;
@@ -51,19 +50,19 @@ class ActionDispatcherLegacyHooksSubscriber implements EventSubscriberInterface
     const NA_CONTROLLER = 0;
 
     /**
-     * @var HookDispatcher
+     * @var HookDispatcherInterface
      */
-    private $hookDispacher;
+    private $hookDispatcher;
 
-    public function __construct(HookDispatcher $hookDispatcher)
+    public function __construct(HookDispatcherInterface $hookDispatcher)
     {
-        $this->hookDispacher = $hookDispatcher;
+        $this->hookDispatcher = $hookDispatcher;
     }
 
     public static function getSubscribedEvents()
     {
         return array(
-            KernelEvents::CONTROLLER => array (
+            KernelEvents::CONTROLLER => array(
                 array('callActionDispatcherBeforeHook', 100),
             ),
             KernelEvents::RESPONSE => array(
@@ -86,8 +85,8 @@ class ActionDispatcherLegacyHooksSubscriber implements EventSubscriberInterface
             $controllerType = self::BACK_OFFICE_CONTROLLER;
         }
 
-        $this->dispatchHook(self::DISPATCHER_BEFORE_ACTION, array(
-            'controller_type' => $controllerType
+        $this->hookDispatcher->dispatchWithParameters(self::DISPATCHER_BEFORE_ACTION, array(
+            'controller_type' => $controllerType,
         ));
 
         $requestAttributes->set('controller_type', $controllerType);
@@ -103,23 +102,11 @@ class ActionDispatcherLegacyHooksSubscriber implements EventSubscriberInterface
         $requestAttributes = $event->getRequest()->attributes;
 
         if ($requestAttributes->has('controller_type') && $requestAttributes->has('controller_name')) {
-            $this->dispatchHook(self::DISPATCHER_AFTER_ACTION, array(
+            $this->hookDispatcher->dispatchWithParameters(self::DISPATCHER_AFTER_ACTION, array(
                 'controller_type' => $requestAttributes->get('controller_type'),
                 'controller_class' => $requestAttributes->get('controller_name'),
                 'is_module' => 0,
             ));
         }
-    }
-
-    /**
-     * @param array $parameters
-     * @return HookEvent
-     */
-    private function dispatchHook($eventName, array $parameters = array())
-    {
-        $hookEvent = new HookEvent();
-        $hookEvent->setHookParameters($parameters);
-
-        $this->hookDispacher->dispatch($eventName, $hookEvent);
     }
 }

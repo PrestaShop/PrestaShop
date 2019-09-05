@@ -1,0 +1,174 @@
+{#**
+ * 2007-2019 PrestaShop and Contributors
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+
+{% trans_default_domain 'Admin.Advparameters.Feature' %}
+
+{{ form_start(importDataConfigurationForm, {attr: {class: 'import-data-configuration-form'}}) }}
+<div class="card">
+  <h3 class="card-header">
+    <i class="material-icons">list</i> {{ 'Match your data'|trans }}
+  </h3>
+  <div class="card-block row">
+    <div class="card-text">
+      <div class="row">
+        <div class="col">
+          <div class="alert alert-info" role="alert">
+            <p class="alert-text">
+              {{ 'Please match each column of your source file to one of the destination columns.'|trans }}
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="form-control-label">
+          {{ 'Load a data matching configuration'|trans }}
+        </label>
+        <div class="col-sm">
+          <div class="form-row">
+            <div class="col">
+              {{ form_widget(importDataConfigurationForm.matches) }}
+            </div>
+            <div class="col">
+              <button
+                class="btn btn-outline-primary js-load-import-match"
+                data-url="{{ path('admin_import_data_configuration_get') }}"
+              >
+                <i class="material-icons">settings</i> {{ 'Load'|trans({}, 'Admin.Actions') }}
+              </button>
+              <button
+                class="btn btn-outline-primary js-delete-import-match"
+                data-url="{{ path('admin_import_data_configuration_delete') }}"
+              >
+                <i class="material-icons">delete</i> {{ 'Delete'|trans({}, 'Admin.Actions') }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="form-control-label">
+          {{ 'Save your data matching configuration'|trans }}
+        </label>
+        <div class="col-sm">
+          <div class="form-row">
+            <div class="col">
+              {{ form_widget(importDataConfigurationForm.match_name, {'attr': {'class': 'js-import-match-input', 'type': 'button'}}) }}
+            </div>
+            <div class="col">
+              <button
+                class="btn btn-outline-primary js-save-import-match"
+                data-url="{{ path('admin_import_data_configuration_create') }}"
+              >
+                <i class="material-icons">save</i> {{ 'Save'|trans({}, 'Admin.Actions') }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="form-control-label">
+          {{ 'Rows to skip'|trans }}
+        </label>
+        <div class="col-sm">
+          {{ form_widget(importDataConfigurationForm.skip, {'attr': {'class': 'col-xs-12 col-md-4 js-rows-skip', 'min': 0}}) }}
+          <small class="form-text">{{ 'Indicate how many of the first rows of your file should be skipped when importing the data. For instance set it to 1 if the first row of your file contains headers.'|trans }}</small>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="alert alert-warning js-validation-error js-duplicate-columns-warning d-none" role="alert">
+            <p class="alert-text">
+              {{ 'Two columns cannot have the same type of values'|trans({}, 'Admin.Advparameters.Feature') }}
+            </p>
+          </div>
+          <div class="alert alert-warning js-validation-error js-missing-column-warning d-none" role="alert">
+            <p class="alert-text">
+              {{ 'This column must be set:'|trans({}, 'Admin.Advparameters.Feature') }}
+              <span class="js-missing-column">&nbsp;</span>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <table
+          class="table table-bordered js-import-data-table"
+          data-required-fields="{{ requiredFields|json_encode }}"
+        >
+          <thead>
+            <tr>
+              {% for importEntityField in importDataConfigurationForm.type_value %}
+                <th class="js-entity-field {% if loop.index > maxVisibleColumns %} d-none{% endif %}">
+                  {{ form_errors(importEntityField) }}
+                  {{ form_widget(importEntityField) }}
+                </th>
+              {% endfor %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in dataRowCollection.rows %}
+              <tr>
+                {% for cell in row %}
+                  <td{% if loop.index > maxVisibleColumns %} class="d-none"{% endif %}>{{ cell.value }}</td>
+                {% endfor %}
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <div class="row">
+        <div class="col text-left">
+          <button class="btn btn-outline-primary js-import-previous-page d-none" type="button">
+            <i class="material-icons">arrow_back</i>
+          </button>
+        </div>
+        <div class="col text-right">
+          <button
+            class="btn btn-outline-primary js-import-next-page{% if not showPagingArrows %} d-none{% endif %}"
+            type="button"
+          >
+            <i class="material-icons">arrow_forward</i>
+          </button>
+        </div>
+      </div>
+      {{ form_rest(importDataConfigurationForm) }}
+    </div>
+  </div>
+  <div class="card-footer">
+    <div class="d-flex justify-content-between">
+      <a class="btn btn-outline-secondary js-import-process-button"
+         href="{{ path('admin_import') }}"
+              data-import_url="{{ path('admin_import_process') }}"
+      >
+        <i class="material-icons">cancel</i>
+        {{ 'Cancel'|trans({}, 'Admin.Actions') }}
+      </a>
+      <button class="btn btn-primary js-process-import">
+        <i class="material-icons">check</i>
+        {{ 'Import'|trans({}, 'Admin.Actions') }}
+      </button>
+    </div>
+  </div>
+</div>
+{{ form_end(importDataConfigurationForm) }}

@@ -1,38 +1,44 @@
+imports:
+  - { resource: grid/*.yml }
+
+parameters:
+  prestashop.core.grid.data.factory.doctrine_grid_data_factory: PrestaShop\PrestaShop\Core\Grid\Data\Factory\DoctrineGridDataFactory
+
 services:
-    _defaults:
-        public: true
+  _defaults:
+    public: true
 
-    # Grid data providers
-    prestashop.core.grid.data_provider.log:
-        class: 'PrestaShop\PrestaShop\Core\Grid\DataProvider\DoctrineGridDataProvider'
-        arguments:
-            - '@prestashop.core.admin.log.repository'
+  prestashop.core.grid.presenter.grid_presenter:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Presenter\GridPresenter'
+    arguments:
+      - '@prestashop.core.hook.dispatcher'
 
-    # Grid definition factories
-    prestashop.core.grid.definition.factory.abstract_grid_definition:
-        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory'
-        abstract: true
-        calls:
-            - [setTranslator, ['@translator']]
+  prestashop.core.grid.query.doctrine_query_parser:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryParser'
 
-    prestashop.core.grid.definition.factory.log_definition:
-        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\LogGridDefinitionFactory'
-        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
-        arguments:
-          - "@=service('router').generate('admin_common_reset_search', {'controller': 'logs', 'action': 'index'})"
-          - "@=service('router').generate('admin_logs')"
-        public: true
+  prestashop.core.query.doctrine_search_criteria_applicator:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Query\DoctrineSearchCriteriaApplicator'
 
-    # Grid factories
-    prestashop.core.grid.log_factory:
-        class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
-        arguments:
-            - '@prestashop.core.grid.definition.factory.log_definition'
-            - '@prestashop.core.grid.data_provider.log'
-            - '@prestashop.hook.dispatcher'
+  # Grid position updater
+  prestashop.core.grid.position.position_update_factory:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Position\PositionUpdateFactory'
+    arguments:
+      - 'positions'
+      - 'rowId'
+      - 'oldPosition'
+      - 'newPosition'
+      - 'parentId'
 
-    # Grid presenter
-    prestashop.core.grid.presenter.grid_presenter:
-        class: 'PrestaShop\PrestaShop\Core\Grid\Presenter\GridPresenter'
-        arguments:
-            - '@form.factory'
+  prestashop.core.grid.position.update_handler.doctrine_position_update_handler:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Position\UpdateHandler\DoctrinePositionUpdateHandler'
+    arguments:
+      - '@doctrine.dbal.default_connection'
+      - '%database_prefix%'
+
+  prestashop.core.grid.position.doctrine_grid_position_updater:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Position\GridPositionUpdater'
+    arguments:
+      - '@prestashop.core.grid.position.update_handler.doctrine_position_update_handler'
+
+  prestashop.core.grid.query.filter.doctrine_filter_applicator:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Query\Filter\DoctrineFilterApplicator'

@@ -1,4 +1,10 @@
 <?php
+/**
+ * Note: This file has been modified for PHP 7.2 compatibility.
+ * See:
+ * - https://github.com/PrestaShop/PrestaShop/pull/9409
+ * - https://github.com/sensiolabs/SensioDistributionBundle/pull/336
+ */
 
 /*
  * This file is part of the Symfony package.
@@ -140,7 +146,8 @@ class PhpIniRequirement extends Requirement
             $fulfilled = call_user_func($evaluation, $cfgValue);
         } else {
             if (null === $testMessage) {
-                $testMessage = sprintf('%s %s be %s in php.ini',
+                $testMessage = sprintf(
+                    '%s %s be %s in php.ini',
                     $cfgName,
                     $optional ? 'should' : 'must',
                     $evaluation ? 'enabled' : 'disabled'
@@ -148,7 +155,8 @@ class PhpIniRequirement extends Requirement
             }
 
             if (null === $helpHtml) {
-                $helpHtml = sprintf('Set <strong>%s</strong> to <strong>%s</strong> in php.ini<a href="#phpini">*</a>.',
+                $helpHtml = sprintf(
+                    'Set <strong>%s</strong> to <strong>%s</strong> in php.ini<a href="#phpini">*</a>.',
                     $cfgName,
                     $evaluation ? 'on' : 'off'
                 );
@@ -403,9 +411,12 @@ class SymfonyRequirements extends RequirementCollection
             $this->addRequirement(
                 version_compare($installedPhpVersion, $requiredPhpVersion, '>='),
                 sprintf('PHP version must be at least %s (%s installed)', $requiredPhpVersion, $installedPhpVersion),
-                sprintf('You are running PHP version "<strong>%s</strong>", but Symfony needs at least PHP "<strong>%s</strong>" to run.
+                sprintf(
+                    'You are running PHP version "<strong>%s</strong>", but Symfony needs at least PHP "<strong>%s</strong>" to run.
                 Before using Symfony, upgrade your PHP installation, preferably to the latest version.',
-                    $installedPhpVersion, $requiredPhpVersion),
+                    $installedPhpVersion,
+                    $requiredPhpVersion
+                ),
                 sprintf('Install PHP %s or newer (installed version is %s)', $requiredPhpVersion, $installedPhpVersion)
             );
         }
@@ -441,7 +452,9 @@ class SymfonyRequirements extends RequirementCollection
 
         if (version_compare($installedPhpVersion, '7.0.0', '<')) {
             $this->addPhpIniRequirement(
-                'date.timezone', true, false,
+                'date.timezone',
+                true,
+                false,
                 'date.timezone setting must be set',
                 'Set the "<strong>date.timezone</strong>" setting in php.ini<a href="#phpini">*</a> (like Europe/Paris).'
             );
@@ -512,7 +525,7 @@ class SymfonyRequirements extends RequirementCollection
         if (extension_loaded('suhosin')) {
             $this->addPhpIniRequirement(
                 'suhosin.executor.include.whitelist',
-                create_function('$cfgValue', 'return false !== stripos($cfgValue, "phar");'),
+                function ($cfgValue) { return false !== stripos($cfgValue, "phar"); },
                 false,
                 'suhosin.executor.include.whitelist must be configured correctly in php.ini',
                 'Add "<strong>phar</strong>" to <strong>suhosin.executor.include.whitelist</strong> in php.ini<a href="#phpini">*</a>.'
@@ -521,16 +534,20 @@ class SymfonyRequirements extends RequirementCollection
 
         if (extension_loaded('xdebug')) {
             $this->addPhpIniRequirement(
-                'xdebug.show_exception_trace', false, true
+                'xdebug.show_exception_trace',
+                false,
+                true
             );
 
             $this->addPhpIniRequirement(
-                'xdebug.scream', false, true
+                'xdebug.scream',
+                false,
+                true
             );
 
             $this->addPhpIniRecommendation(
                 'xdebug.max_nesting_level',
-                create_function('$cfgValue', 'return $cfgValue > 100;'),
+                function ($cfgValue) { return $cfgValue > 100; },
                 true,
                 'xdebug.max_nesting_level should be above 100 in php.ini',
                 'Set "<strong>xdebug.max_nesting_level</strong>" to e.g. "<strong>250</strong>" in php.ini<a href="#phpini">*</a> to stop Xdebug\'s infinite recursion protection erroneously throwing a fatal error in your project.'
@@ -548,7 +565,7 @@ class SymfonyRequirements extends RequirementCollection
         if (extension_loaded('mbstring')) {
             $this->addPhpIniRequirement(
                 'mbstring.func_overload',
-                create_function('$cfgValue', 'return (int) $cfgValue === 0;'),
+                function ($cfgValue) { return (int) $cfgValue === 0; },
                 true,
                 'string functions should not be overloaded',
                 'Set "<strong>mbstring.func_overload</strong>" to <strong>0</strong> in php.ini<a href="#phpini">*</a> to disable function overloading by the mbstring extension.'
@@ -697,7 +714,7 @@ class SymfonyRequirements extends RequirementCollection
 
             $this->addPhpIniRecommendation(
                 'intl.error_level',
-                create_function('$cfgValue', 'return (int) $cfgValue === 0;'),
+                function ($cfgValue) { return (int) $cfgValue === 0; },
                 true,
                 'intl.error_level should be 0 in php.ini',
                 'Set "<strong>intl.error_level</strong>" to "<strong>0</strong>" in php.ini<a href="#phpini">*</a> to inhibit the messages when an error occurs in ICU functions.'
@@ -715,8 +732,7 @@ class SymfonyRequirements extends RequirementCollection
             ||
             (extension_loaded('xcache') && ini_get('xcache.cacher'))
             ||
-            (extension_loaded('wincache') && ini_get('wincache.ocenabled'))
-        ;
+            (extension_loaded('wincache') && ini_get('wincache.ocenabled'));
 
         $this->addRecommendation(
             $accelerator,

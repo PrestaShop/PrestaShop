@@ -6,12 +6,27 @@
 
   transition: padding .5s ease; // transition when collapsing the nav menu
 
-  .mobile & {
-    @include media-breakpoint-down(sm) {
-      padding-top: 10.4rem;
-    }
+  // with hidden navbar
+  @include media-breakpoint-down(md) {
+    padding-left: $grid-gutter-width / 2;
+  }
+
+  @include media-breakpoint-down(sm) {
+    padding-top: 10.4rem;
     padding-left: 0;
     padding-right: 0;
+
+    // remove gutters (except on product page)
+    // @todo remove the :not() once the product page has been made responsive
+    body:not(.adminproducts) & .row {
+      margin-left: 0;
+      margin-right: 0;
+
+      [class*="col-"] {
+        padding-left: 0;
+        padding-right: 0;
+      }
+    }
   }
 
   &.-notoolbar {

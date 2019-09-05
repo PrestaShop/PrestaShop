@@ -33,7 +33,7 @@ server {
     # [REQUIRED EDIT] Absolute path to your website root on the filesystem
     root /path/to/prestashop;
 
-    index index.php
+    index index.php;
 
     # Redirect 404 errors to prestashop
     error_page 404 /index.php?controller=404;
@@ -81,15 +81,18 @@ server {
     # add_header Strict-Transport-Security "max-age=63072000; includeSubDomains" preload; always;
 
     # Cloudflare / Max CDN fix
-    location ~* \.(eot|otf|ttf|woff|woff2)$ {
+    location ~* \.(eot|otf|ttf|woff(?:2)?)$ {
         add_header Access-Control-Allow-Origin *;
     }
 
     # Do not save logs for these
     location = /favicon.ico {
+        auth_basic off;
+        allow all;
         log_not_found off;
         access_log off;
     }
+
     location = /robots.txt {
         auth_basic off;
         allow all;
@@ -97,31 +100,38 @@ server {
         access_log off;
     }
 
-    location / {
-        # Redirect pretty urls to index.php
-        try_files $uri $uri/ /index.php?$args;
+    # [REQUIRED EDIT IF MULTILANG]
+    # rewrite ^/fr$ /fr/ redirect;
+    # rewrite ^/fr/(.*) /$1;
 
-        # Images
-        rewrite ^/([0-9])(-[_a-zA-Z0-9-]*)?(-[0-9]+)?/.+.jpg$ /img/p/$1/$1$2$3.jpg last;
-        rewrite ^/([0-9])([0-9])(-[_a-zA-Z0-9-]*)?(-[0-9]+)?/.+.jpg$ /img/p/$1/$2/$1$2$3$4.jpg last;
-        rewrite ^/([0-9])([0-9])([0-9])(-[_a-zA-Z0-9-]*)?(-[0-9]+)?/.+.jpg$ /img/p/$1/$2/$3/$1$2$3$4$5.jpg last;
-        rewrite ^/([0-9])([0-9])([0-9])([0-9])(-[_a-zA-Z0-9-]*)?(-[0-9]+)?/.+.jpg$ /img/p/$1/$2/$3/$4/$1$2$3$4$5$6.jpg last;
-        rewrite ^/([0-9])([0-9])([0-9])([0-9])([0-9])(-[_a-zA-Z0-9-]*)?(-[0-9]+)?/.+.jpg$ /img/p/$1/$2/$3/$4/$5/$1$2$3$4$5$6$7.jpg last;
-        rewrite ^/([0-9])([0-9])([0-9])([0-9])([0-9])([0-9])(-[_a-zA-Z0-9-]*)?(-[0-9]+)?/.+.jpg$ /img/p/$1/$2/$3/$4/$5/$6/$1$2$3$4$5$6$7$8.jpg last;
-        rewrite ^/([0-9])([0-9])([0-9])([0-9])([0-9])([0-9])([0-9])(-[_a-zA-Z0-9-]*)?(-[0-9]+)?/.+.jpg$ /img/p/$1/$2/$3/$4/$5/$6/$7/$1$2$3$4$5$6$7$8$9.jpg last;
-        rewrite ^/([0-9])([0-9])([0-9])([0-9])([0-9])([0-9])([0-9])([0-9])(-[_a-zA-Z0-9-]*)?(-[0-9]+)?/.+.jpg$ /img/p/$1/$2/$3/$4/$5/$6/$7/$8/$1$2$3$4$5$6$7$8$9$10.jpg last;
-        rewrite ^/c/([0-9]+)(-[.*_a-zA-Z0-9-]*)(-[0-9]+)?/.+.jpg$ /img/c/$1$2$3.jpg last;
-        rewrite ^/c/([a-zA-Z_-]+)(-[0-9]+)?/.+.jpg$ /img/c/$1$2.jpg last;
+    # Images
+    rewrite ^/([0-9])(-[_a-zA-Z0-9-]*)?(-[0-9]+)?/.+.jpg$ /img/p/$1/$1$2$3.jpg last;
+    rewrite ^/([0-9])([0-9])(-[_a-zA-Z0-9-]*)?(-[0-9]+)?/.+.jpg$ /img/p/$1/$2/$1$2$3$4.jpg last;
+    rewrite ^/([0-9])([0-9])([0-9])(-[_a-zA-Z0-9-]*)?(-[0-9]+)?/.+.jpg$ /img/p/$1/$2/$3/$1$2$3$4$5.jpg last;
+    rewrite ^/([0-9])([0-9])([0-9])([0-9])(-[_a-zA-Z0-9-]*)?(-[0-9]+)?/.+.jpg$ /img/p/$1/$2/$3/$4/$1$2$3$4$5$6.jpg last;
+    rewrite ^/([0-9])([0-9])([0-9])([0-9])([0-9])(-[_a-zA-Z0-9-]*)?(-[0-9]+)?/.+.jpg$ /img/p/$1/$2/$3/$4/$5/$1$2$3$4$5$6$7.jpg last;
+    rewrite ^/([0-9])([0-9])([0-9])([0-9])([0-9])([0-9])(-[_a-zA-Z0-9-]*)?(-[0-9]+)?/.+.jpg$ /img/p/$1/$2/$3/$4/$5/$6/$1$2$3$4$5$6$7$8.jpg last;
+    rewrite ^/([0-9])([0-9])([0-9])([0-9])([0-9])([0-9])([0-9])(-[_a-zA-Z0-9-]*)?(-[0-9]+)?/.+.jpg$ /img/p/$1/$2/$3/$4/$5/$6/$7/$1$2$3$4$5$6$7$8$9.jpg last;
+    rewrite ^/([0-9])([0-9])([0-9])([0-9])([0-9])([0-9])([0-9])([0-9])(-[_a-zA-Z0-9-]*)?(-[0-9]+)?/.+.jpg$ /img/p/$1/$2/$3/$4/$5/$6/$7/$8/$1$2$3$4$5$6$7$8$9$10.jpg last;
+    rewrite ^/c/([0-9]+)(-[.*_a-zA-Z0-9-]*)(-[0-9]+)?/.+.jpg$ /img/c/$1$2$3.jpg last;
+    rewrite ^/c/([a-zA-Z_-]+)(-[0-9]+)?/.+.jpg$ /img/c/$1$2.jpg last;
 
-        # AlphaImageLoader for IE and fancybox
-        rewrite ^images_ie/?([^/]+)\.(jpe?g|png|gif)$ js/jquery/plugins/fancybox/images/$1.$2 last;
+    # AlphaImageLoader for IE and fancybox
+    rewrite ^images_ie/?([^/]+)\.(jpe?g|png|gif)$ js/jquery/plugins/fancybox/images/$1.$2 last;
 
-        # Web service API
-        rewrite ^/api/?(.*)$ /webservice/dispatcher.php?url=$1 last;
+    # Web service API
+    rewrite ^/api/?(.*)$ /webservice/dispatcher.php?url=$1 last;
 
-        # Installation sandbox
-        rewrite ^(/install(?:-dev)?/sandbox)/(.*) /$1/test.php last;
+    # Installation sandbox
+    rewrite ^(/install(?:-dev)?/sandbox)/(.*) /$1/test.php last;
+
+    # [REQUIRED EDIT] Change this block to your admin folder
+    location /admin-dev/ {
+        if (!-e $request_filename) {
+            rewrite ^/.*$ /admin-dev/index.php last;
+        }
     }
+
 
     # File security
     # .htaccess .DS_Store .htpasswd etc
@@ -129,7 +139,7 @@ server {
         deny all;
     }
     # Source code directories
-    location ~ ^/(app|bin|cache|classes|config|controllers|docs|localization|override|src|tests|tools|translations|travis-scripts|vendor)/ {
+    location ~ ^/(app|bin|cache|classes|config|controllers|docs|localization|override|src|tests|tools|translations|travis-scripts|vendor|var)/ {
         deny all;
     }
     # Prevent exposing other sensitive files
@@ -150,13 +160,13 @@ server {
     }
 
     # PHP FPM part
-    location ~ [^/]\.php(/|$) {
+    location ~ \.php$ {
         # Verify that the file exists, redirect to index if not
-        try_files $fastcgi_script_name /index.php$uri&$args;
+        try_files $fastcgi_script_name /index.php$uri&$args =404;
 
         fastcgi_index  index.php;
 
-        # Envirnoment variables for PHP
+        # Environment variables for PHP
         fastcgi_split_path_info ^(.+\.php)(/.+)$;
 
         include       fastcgi_params;

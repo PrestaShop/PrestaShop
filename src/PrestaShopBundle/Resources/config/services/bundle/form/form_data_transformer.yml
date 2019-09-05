@@ -1,0 +1,11 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.bundle.form.data_transformer.string_array_to_integer_array:
+    class: 'PrestaShopBundle\Form\DataTransformer\StringArrayToIntegerArrayDataTransformer'
+
+  prestashop.bundle.form.data_transformer.default_language_to_filled_array:
+    class: 'PrestaShopBundle\Form\DataTransformer\DefaultLanguageToFilledArrayDataTransformer'
+    arguments:
+      - '@=service("prestashop.adapter.legacy.configuration").get("PS_LANG_DEFAULT")'

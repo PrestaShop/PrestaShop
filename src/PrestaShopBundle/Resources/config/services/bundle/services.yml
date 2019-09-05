@@ -3,6 +3,7 @@ parameters:
     ps_config_dir:            "%ps_root_dir%config"
     translations_dir:         "%kernel.root_dir%/Resources/translations"
     themes_translations_dir:  "%kernel.cache_dir%/themes"
+    modules_dir:              "%kernel.root_dir%/../modules"
     themes_dir:               "%kernel.root_dir%/../themes"
 
 services:
@@ -61,7 +62,7 @@ services:
 
     # DISPATCHERS
     prestashop.hook.dispatcher:
-        class: PrestaShopBundle\Service\Hook\HookDispatcher
+        class: PrestaShop\PrestaShop\Adapter\Hook\HookDispatcher
         calls:
             - [addSubscriber, ["@prestashop.adapter.legacy.hook.subscriber"]]
             - [addSubscriber, ["@prestashop.adapter.legacy.block.helper.subscriber"]]
@@ -100,3 +101,8 @@ services:
             - "@=service('prestashop.core.foundation.version').getVersion()"
         calls:
             - [ "setSslVerification", ["%prestashop.addons.api_client.verify_ssl%"]]
+
+    # Product CSV Exporter
+    prestashop.core.product.csv_exporter:
+        class: PrestaShop\PrestaShop\Core\Product\ProductCsvExporter
+        arguments: ['@translator', '@prestashop.core.admin.data_provider.product_interface']

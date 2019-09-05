@@ -42,10 +42,10 @@ require_once dirname(__FILE__) . '/../exceptions/UnableToCalculatePositionExcept
  * 
  */
 class PositionCalculator {
-
     private static $_allowedOnOperator = array("\t", "\n", "\r", " ", ",", "(", ")", "_", "'", "\"");
     private static $_allowedOnOther = array("\t", "\n", "\r", " ", ",", "(", ")", "<", ">", "*", "+", "-", "/", "|",
-                                            "&", "=", "!", ";");
+        "&", "=", "!", ";",
+    );
 
     private function _printPos($text, $sql, $charPos, $key, $parsed, $backtracking) {
         if (!isset($_ENV['DEBUG'])) {
@@ -68,6 +68,7 @@ class PositionCalculator {
         $charPos = 0;
         $backtracking = array();
         $this->lookForBaseExpression($sql, $charPos, $parsed, 0, $backtracking);
+
         return $parsed;
     }
 
@@ -107,6 +108,7 @@ class PositionCalculator {
 
                 if (!$ok) {
                     $offset = $pos + 1;
+
                     continue;
                 }
 
@@ -193,8 +195,11 @@ class PositionCalculator {
                 //$this->_printPos("0", $sql, $charPos, $key, $value, $backtracking);
 
                 $subject = substr($sql, $charPos);
-                $pos = $this->findPositionWithinString($subject, $value,
-                    isset($parsed['expr_type']) ? $parsed['expr_type'] : 'alias');
+                $pos = $this->findPositionWithinString(
+                    $subject,
+                    $value,
+                    isset($parsed['expr_type']) ? $parsed['expr_type'] : 'alias'
+                );
                 if ($pos === false) {
                     throw new UnableToCalculatePositionException($value, $subject);
                 }
@@ -217,5 +222,3 @@ class PositionCalculator {
         }
     }
 }
-
-?>

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,12 +27,12 @@
 namespace PrestaShop\PrestaShop\Core\Module\Configuration;
 
 /**
- * Interface PaymentRestrictionsConfigurator defines contract for payment module restrications configurator
+ * Interface PaymentRestrictionsConfigurator defines contract for payment module restrications configurator.
  */
 interface PaymentRestrictionsConfiguratorInterface
 {
     /**
-     * Configure payment module restrictions for currencies
+     * Configure payment module restrictions for currencies.
      *
      * @param array $currencyRestrictions
      *
@@ -41,7 +41,7 @@ interface PaymentRestrictionsConfiguratorInterface
     public function configureCurrencyRestrictions(array $currencyRestrictions);
 
     /**
-     * Configure payment module restrictions for countries
+     * Configure payment module restrictions for countries.
      *
      * @param array $countryRestrictions
      *
@@ -50,7 +50,7 @@ interface PaymentRestrictionsConfiguratorInterface
     public function configureCountryRestrictions(array $countryRestrictions);
 
     /**
-     * Configure payment module restrictions for customer groups
+     * Configure payment module restrictions for customer groups.
      *
      * @param array $groupRestrictions
      *
@@ -59,7 +59,7 @@ interface PaymentRestrictionsConfiguratorInterface
     public function configureGroupRestrictions(array $groupRestrictions);
 
     /**
-     * Configure payment module restrictions for carriers
+     * Configure payment module restrictions for carriers.
      *
      * @param array $groupRestrictions
      *

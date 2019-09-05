@@ -1,0 +1,165 @@
+{#**
+ * 2007-2019 PrestaShop and Contributors
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+
+{% trans_default_domain "Admin.Shopparameters.Feature" %}
+
+{% set urlSchemaForm = metaForm.url_schema %}
+
+{% block url_schema_configuration %}
+  {% if urlSchemaForm.children is not empty %}
+    <div class="card">
+      <h3 class="card-header">
+        <i class="material-icons">settings</i> {{ 'Schema of URLs'|trans }}
+      </h3>
+      <div class="card-block row">
+        <div class="card-text">
+          <div class="row">
+            <div class="col-sm">
+              <div class="alert alert-info" role="alert">
+                <div class="alert-text">
+                  {{ 'This section enables you to change the default pattern of your links. In order to use this functionality, PrestaShop\'s "Friendly URL" option must be enabled, and Apache\'s URL rewriting module (mod_rewrite) must be activated on your web server.'|trans({}, 'Admin.Shopparameters.Notification') }}<br>
+                  {{ 'There are several available keywords for each route listed below; note that keywords with * are required!'|trans({}, 'Admin.Shopparameters.Notification') }} <br>
+                  {{ 'To add a keyword in your URL, use the {keyword} syntax. If the keyword is not empty, you can add text before or after the keyword with syntax {prepend:keyword:append}. For example {-hey-:meta_title} will add "-hey-my-title" in the URL if the meta title is set.'|trans({}, 'Admin.Shopparameters.Notification') }}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="form-control-label">
+              {{ 'Route to products'|trans }}
+            </label>
+            <div class="col-sm">
+              {{ form_errors(urlSchemaForm.product_rule) }}
+              {{ form_widget(urlSchemaForm.product_rule) }}
+              <small class="form-text">
+                {{ include('@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/keyword.html.twig', {'idRoute': 'product_rule'}) }}
+              </small>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="form-control-label">
+              {{ 'Route to category'|trans }}
+            </label>
+            <div class="col-sm">
+              {{ form_errors(urlSchemaForm.category_rule) }}
+              {{ form_widget(urlSchemaForm.category_rule) }}
+              <small class="form-text">
+                {{ include('@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/keyword.html.twig', {'idRoute': 'category_rule'}) }}
+              </small>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="form-control-label">
+              {{ 'Route to category which has the "selected_filter" attribute for the "Layered Navigation" (blocklayered) module'|trans }}
+            </label>
+            <div class="col-sm">
+              {{ form_errors(urlSchemaForm.layered_rule) }}
+              {{ form_widget(urlSchemaForm.layered_rule) }}
+              <small class="form-text">
+                {{ include('@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/keyword.html.twig', {'idRoute': 'layered_rule'}) }}
+              </small>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="form-control-label">
+              {{ 'Route to supplier'|trans }}
+            </label>
+            <div class="col-sm">
+              {{ form_errors(urlSchemaForm.supplier_rule) }}
+              {{ form_widget(urlSchemaForm.supplier_rule) }}
+              <small class="form-text">
+                {{ include('@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/keyword.html.twig', {'idRoute': 'supplier_rule'}) }}
+              </small>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="form-control-label">
+              {{ 'Route to brand'|trans }}
+            </label>
+            <div class="col-sm">
+              {{ form_errors(urlSchemaForm.manufacturer_rule) }}
+              {{ form_widget(urlSchemaForm.manufacturer_rule) }}
+              <small class="form-text">
+                {{ include('@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/keyword.html.twig', {'idRoute': 'manufacturer_rule'}) }}
+              </small>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="form-control-label">
+              {{ 'Route to page'|trans }}
+            </label>
+            <div class="col-sm">
+              {{ form_errors(urlSchemaForm.cms_rule) }}
+              {{ form_widget(urlSchemaForm.cms_rule) }}
+              <small class="form-text">
+                {{ include('@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/keyword.html.twig', {'idRoute': 'cms_rule'}) }}
+              </small>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="form-control-label">
+              {{ 'Route to page category'|trans }}
+            </label>
+            <div class="col-sm">
+              {{ form_errors(urlSchemaForm.cms_category_rule) }}
+              {{ form_widget(urlSchemaForm.cms_category_rule) }}
+              <small class="form-text">
+                {{ include('@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/keyword.html.twig', {'idRoute': 'cms_category_rule'}) }}
+              </small>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="form-control-label">
+              {{ 'Route to modules'|trans }}
+            </label>
+            <div class="col-sm">
+              {{ form_errors(urlSchemaForm.module) }}
+              {{ form_widget(urlSchemaForm.module) }}
+              <small class="form-text">
+                {{ include('@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/keyword.html.twig', {'idRoute': 'module'}) }}
+              </small>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="d-flex justify-content-end">
+          <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+        </div>
+      </div>
+    </div>
+  {% else %}
+    {% do urlSchemaForm.setRendered %}
+  {% endif %}
+{% endblock %}

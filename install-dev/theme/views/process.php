@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -29,7 +29,7 @@
 <!--
 var install_is_done = '<?php echo addslashes($this->translator->trans('Done!', array(), 'Install')) ?>';
 var process_steps = <?php echo json_encode($this->process_steps) ?>;
-var admin = '<?php echo(file_exists('../admin-dev') ? '../admin-dev' : '../admin') ?>';
+var admin = '<?php echo file_exists('../admin-dev') ? '../admin-dev' : '../admin' ?>';
 -->
 </script>
 
@@ -66,7 +66,7 @@ var admin = '<?php echo(file_exists('../admin-dev') ? '../admin-dev' : '../admin
 			<tr class="odd">
 				<td class="label"><?php echo $this->translator->trans('E-mail', array(), 'Install') ?></td>
 				<td class="resultEnd"><?php echo htmlspecialchars($this->session->admin_email) ?></td>
-				<td rowspan="2" class="print" onclick="$('#password_content').html('<?php echo htmlspecialchars(addslashes($this->session->admin_password)) ?>'); $('#password_display').hide(); window.print();">
+				<td rowspan="2" class="print" onclick="$('#password_content').text('<?php echo htmlspecialchars(addslashes($this->session->admin_password)) ?>'); $('#password_display').hide(); window.print();">
 					<img src="theme/img/print.png" alt="" style="vertical-align:top">
 					<?php echo $this->translator->trans('Print my login information', array(), 'Install') ?>
 				</td>
@@ -76,7 +76,7 @@ var admin = '<?php echo(file_exists('../admin-dev') ? '../admin-dev' : '../admin
 				<td class="resultEnd">
 					<span id="password_content"><?php echo preg_replace('#.#', '*', $this->session->admin_password) ?></span>
 					<span id="password_display">
-						(<a href="#" onclick="$('#password_content').html('<?php echo htmlspecialchars(addslashes($this->session->admin_password)) ?>'); $('#password_display').hide(); return false"><?php echo $this->translator->trans('Display', array(), 'Install'); ?></a>)
+						(<a href="#" onclick="$('#password_content').text('<?php echo htmlspecialchars(addslashes($this->session->admin_password)) ?>'); $('#password_display').hide(); return false"><?php echo $this->translator->trans('Display', array(), 'Install'); ?></a>)
 					</span>
 				</td>
 			</tr>

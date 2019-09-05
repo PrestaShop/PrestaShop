@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 
 /**
- * Class CustomerConfiguration is responsible for saving & loading customer configuration
+ * Class CustomerConfiguration is responsible for saving & loading customer configuration.
  */
 class CustomerConfiguration implements DataConfigurationInterface
 {
@@ -51,7 +51,7 @@ class CustomerConfiguration implements DataConfigurationInterface
     {
         return [
             'redisplay_cart_at_login' => $this->configuration->getBoolean('PS_CART_FOLLOWING'),
-            'send_email_after_registration' =>$this->configuration->getBoolean('PS_CUSTOMER_CREATION_EMAIL'),
+            'send_email_after_registration' => $this->configuration->getBoolean('PS_CUSTOMER_CREATION_EMAIL'),
             'password_reset_delay' => $this->configuration->getInt('PS_PASSWD_TIME_FRONT'),
             'enable_b2b_mode' => $this->configuration->getBoolean('PS_B2B_ENABLE'),
             'ask_for_birthday' => $this->configuration->getBoolean('PS_CUSTOMER_BIRTHDATE'),

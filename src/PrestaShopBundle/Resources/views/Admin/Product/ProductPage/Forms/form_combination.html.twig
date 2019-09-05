@@ -1,5 +1,5 @@
 {#**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,10 +15,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
@@ -57,7 +57,7 @@
             </div>
             <div class="panel col-md-12 p-2">
                 <div class="float-left">
-                    <button id="back_to_product" type="button" class="btn btn-outline-secondary btn-back"><i class="material-icons">arrow_back</i> {{ 'Back to product'|trans({}, 'Admin.Catalog.Feature') }}</button>
+                    <button type="button" class="back-to-product btn btn-outline-secondary btn-back"><i class="material-icons">arrow_back</i> {{ 'Back to product'|trans({}, 'Admin.Catalog.Feature') }}</button>
                 </div>
                 <h2 class="title pt-2">
                   {{ "Combination details"|trans({}, 'Admin.Catalog.Feature') }} -
@@ -103,9 +103,16 @@
                     </div>
                 </div>
                 <h2 class="title">
-                  {{ 'Stock alerts'|trans({}, 'Admin.Catalog.Feature') }}
+                  {{ 'Stock'|trans({}, 'Admin.Catalog.Feature') }}
                 </h2>
                 <div class="row">
+                  <div class="col-md-3">
+                    <fieldset class="form-group">
+                      <label class="form-control-label">{{ form.attribute_location.vars.label }}</label>
+                      {{ form_errors(form.attribute_location) }}
+                      {{ form_widget(form.attribute_location) }}
+                    </fieldset>
+                  </div>
                   <div class="col-md-3">
                     <fieldset class="form-group">
                       <label class="form-control-label">{{ form.attribute_low_stock_threshold.vars.label }}</label>

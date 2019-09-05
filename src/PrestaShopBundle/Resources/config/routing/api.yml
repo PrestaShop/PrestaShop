@@ -33,3 +33,7 @@ _api_i18n:
 _api_translations:
     resource: "api/translations.yml"
     prefix: /translations
+
+_api_positions:
+    resource: "api/improve/design/positions.yml"
+    prefix: /improve/design/positions

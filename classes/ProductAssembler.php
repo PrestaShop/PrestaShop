@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,18 +16,17 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchContext;
 
 /**
- * Class ProductAssemblerCore
+ * Class ProductAssemblerCore.
  */
 class ProductAssemblerCore
 {
@@ -39,14 +38,14 @@ class ProductAssemblerCore
      *
      * @param \Context $context
      */
-    public function __construct(\Context $context)
+    public function __construct(Context $context)
     {
         $this->context = $context;
         $this->searchContext = new ProductSearchContext($context);
     }
 
     /**
-     * Add missing product fields
+     * Add missing product fields.
      *
      * @param array $rawProduct
      *
@@ -64,7 +63,7 @@ class ProductAssemblerCore
             $nbDaysNewProduct = 20;
         }
 
-        $now = date('Y-m-d').' 00:00:00';
+        $now = date('Y-m-d') . ' 00:00:00';
 
         $sql = "SELECT
                     p.*,
@@ -97,7 +96,7 @@ class ProductAssemblerCore
     }
 
     /**
-     * Assemble Product
+     * Assemble Product.
      *
      * @param array $rawProduct
      *

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,25 +16,26 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Adapter\Customer;
 
-use Symfony\Component\Process\Exception\LogicException;
 use Customer;
+use Symfony\Component\Process\Exception\LogicException;
 
 /**
- * This class will provide data from DB / ORM about Customer
+ * This class will provide data from DB / ORM about Customer.
  */
 class CustomerDataProvider
 {
     /**
-     * Get a customer
+     * Get a customer.
      *
      * @param int $id
      *
@@ -49,6 +50,7 @@ class CustomerDataProvider
         }
 
         $customer = new Customer($id);
+
         return $customer;
     }
 
@@ -57,7 +59,7 @@ class CustomerDataProvider
      *
      * @param int $idCustomer Customer ID
      *
-     * @return mixed|null|string
+     * @return mixed|string|null
      */
     public function getDefaultGroupId($idCustomer)
     {

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,18 +16,19 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Form\Admin\Sell\Order\Invoices;
 
-use PrestaShop\PrestaShop\Core\Order\OrderInvoiceDataProviderInterface;
+use DateTime;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
+use PrestaShop\PrestaShop\Core\Order\OrderInvoiceDataProviderInterface;
 
 /**
  * Class is responsible of managing the data manipulated using invoice generation by date form
@@ -50,10 +51,12 @@ final class InvoicesByDateDataProvider implements FormDataProviderInterface
      */
     public function getData()
     {
+        $date = (new DateTime())->format('Y-m-d');
+
         return [
             'generate_by_date' => [
-                'date_from' => date('Y-m-d'),
-                'date_to' => date('Y-m-d'),
+                'date_from' => $date,
+                'date_to' => $date,
             ],
         ];
     }
@@ -68,7 +71,7 @@ final class InvoicesByDateDataProvider implements FormDataProviderInterface
     }
 
     /**
-     * Perform validations on form data
+     * Perform validations on form data.
      *
      * @param array $data
      *

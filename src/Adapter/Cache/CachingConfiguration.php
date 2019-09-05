@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,27 +16,25 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Cache;
 
-use Symfony\Component\OptionsResolver\OptionsResolver;
-use PrestaShop\PrestaShop\Adapter\Cache\MemcacheServerManager;
 use PrestaShop\PrestaShop\Adapter\Configuration\PhpParameters;
+use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 
 /**
- * This class manages Caching configuration for a Shop
+ * This class manages Caching configuration for a Shop.
  */
 class CachingConfiguration implements DataConfigurationInterface
 {
-
     /**
      * @var MemcacheServerManager
      */
@@ -48,30 +46,37 @@ class CachingConfiguration implements DataConfigurationInterface
     private $phpParameters;
 
     /**
-     * @var CacheClearer
+     * @var CacheClearerInterface
      */
-    private $cacheClearer;
+    private $symfonyCacheClearer;
 
     /**
-     * @var bool Check if the caching is enabled.
+     * @var bool check if the caching is enabled
      */
     private $isCachingEnabled;
 
     /**
-     * @var string The selected Caching system: 'CacheApc' for instance.
+     * @var string the selected Caching system: 'CacheApc' for instance
      */
     private $cachingSystem;
 
+    /**
+     * @param MemcacheServerManager $memcacheServerManager
+     * @param PhpParameters $phpParameters
+     * @param CacheClearerInterface $symfonyCacheClearer
+     * @param $isCachingEnabled
+     * @param $cachingSystem
+     */
     public function __construct(
         MemcacheServerManager $memcacheServerManager,
         PhpParameters $phpParameters,
-        CacheClearer $cacheClearer,
+        CacheClearerInterface $symfonyCacheClearer,
         $isCachingEnabled,
         $cachingSystem
     ) {
         $this->memcacheServerManager = $memcacheServerManager;
         $this->phpParameters = $phpParameters;
-        $this->cacheClearer = $cacheClearer;
+        $this->symfonyCacheClearer = $symfonyCacheClearer;
         $this->isCachingEnabled = $isCachingEnabled;
         $this->cachingSystem = $cachingSystem;
     }
@@ -117,7 +122,7 @@ class CachingConfiguration implements DataConfigurationInterface
     /**
      * Update the Php configuration for Cache feature and system.
      *
-     * @return array the errors list during the update operation.
+     * @return array the errors list during the update operation
      */
     private function updatePhpCacheConfiguration(array $configuration)
     {
@@ -125,13 +130,13 @@ class CachingConfiguration implements DataConfigurationInterface
 
         if (
             $configuration['use_cache'] !== $this->isCachingEnabled
-            && !is_null($configuration['caching_system'])
+            && null !== $configuration['caching_system']
         ) {
             $this->phpParameters->setProperty('parameters.ps_cache_enable', $configuration['use_cache']);
         }
 
         if (
-            !is_null($configuration['caching_system'])
+            null !== $configuration['caching_system']
             && $configuration['caching_system'] !== $this->cachingSystem
         ) {
             $this->phpParameters->setProperty('parameters.ps_caching', $configuration['caching_system']);
@@ -145,7 +150,7 @@ class CachingConfiguration implements DataConfigurationInterface
             );
         }
 
-        $this->cacheClearer->clearSymfonyCache();
+        $this->symfonyCacheClearer->clear();
 
         return $errors;
     }
