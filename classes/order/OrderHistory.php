@@ -372,7 +372,7 @@ class OrderHistoryCore extends ObjectModel
 
             foreach ($invoices as $invoice) {
                 /** @var OrderInvoice $invoice */
-                if ((int)$invoice->number > 0) {
+                if ((int) $invoice->number > 0) {
                     $rest_paid = $invoice->getRestPaid();
                     if ($rest_paid > 0) {
                         $payment = new OrderPayment();
