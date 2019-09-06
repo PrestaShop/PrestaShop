@@ -775,6 +775,7 @@ class MediaCore
 
     /**
      * @param $output
+     *
      * @return string|string[]|null
      *
      * @deprecated 1.7.7
