@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter;
 use Combination;
 use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Adapter\Product\ProductDataProvider;
+use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Product;

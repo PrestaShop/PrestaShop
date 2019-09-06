@@ -39,7 +39,10 @@ use Image;
 use Language;
 use ObjectModel;
 use PrestaShop\PrestaShop\Adapter\Entity\Customization;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Foundation\Database\EntityNotFoundException;
+use PrestaShop\PrestaShop\Core\Localization\Locale;
+use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
 use PrestaShopBundle\Utils\FloatParser;
 use Product;
 use ProductDownload;
@@ -63,6 +66,11 @@ class AdminProductWrapper
     private $errors = array();
 
     /**
+     * @var Locale
+     */
+    private $locale;
+
+    /**
      * @var TranslatorInterface
      */
     private $translator;
@@ -76,11 +84,16 @@ class AdminProductWrapper
      * Constructor : Inject Symfony\Component\Translation Translator.
      *
      * @param object $translator
+     * @param LegacyContext $legacyContext
+     * @param LocaleRepository $repository
      */
-    public function __construct($translator, $legacyContext)
+    public function __construct($translator, $legacyContext, LocaleRepository $repository)
     {
         $this->translator = $translator;
         $this->legacyContext = $legacyContext->getContext();
+        $this->locale = $repository->getLocale(
+            $this->legacyContext->language->getLocale()
+        );
     }
 
     /**
@@ -429,7 +442,7 @@ class AdminProductWrapper
                 if ($specific_price['reduction_type'] == 'percentage') {
                     $impact = '- ' . ($specific_price['reduction'] * 100) . ' %';
                 } elseif ($specific_price['reduction'] > 0) {
-                    $impact = '- ' . Tools::displayPrice(Tools::ps_round($specific_price['reduction'], 2), $current_specific_currency) . ' ';
+                    $impact = '- ' . $this->locale->formatPrice(Tools::ps_round($specific_price['reduction'], 2), $current_specific_currency->iso_code) . ' ';
                     if ($specific_price['reduction_tax']) {
                         $impact .= '(' . $this->translator->trans('Tax incl.', array(), 'Admin.Global') . ')';
                     } else {
@@ -474,7 +487,7 @@ class AdminProductWrapper
                     }
 
                     $price = Tools::ps_round($specific_price['price'], 2);
-                    $fixed_price = (($price == Tools::ps_round($product->price, 2) && $current_specific_currency['id_currency'] == $defaultCurrency->id) || $specific_price['price'] == -1) ? '--' : Tools::displayPrice($price, $current_specific_currency);
+                    $fixed_price = (($price == Tools::ps_round($product->price, 2) && $current_specific_currency['id_currency'] == $defaultCurrency->id) || $specific_price['price'] == -1) ? '--' : $this->locale->formatPrice($price, $current_specific_currency->iso_code);
 
                     $content[] = [
                         'id_specific_price' => $specific_price['id_specific_price'],
