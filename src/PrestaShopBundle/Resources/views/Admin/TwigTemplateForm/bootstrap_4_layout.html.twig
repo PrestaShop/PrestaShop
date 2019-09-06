@@ -842,18 +842,7 @@
         {% for zone_id, zone in form.zones %}
           <tr data-zone-id="{{ zone_id }}">
             <th>
-              <div class="md-checkbox md-checkbox-inline">
-                <label>
-                  <input
-                    type="checkbox"
-                    id="{{ zone.vars.id }}"
-                    name="{{ zone.vars.name }}"
-                    value="{{ zone.vars.value }}"
-                    class="js-zone">
-                  <i class="md-checkbox-control"></i>
-                  {{ zone.vars.label }}
-                </label>
-              </div>
+              {{ form_widget(zone, {'material_design': true, 'attr': {'class': 'js-zone'}}) }}
             </th>
             {% if form.prices[0] is defined %}
               <td>
