@@ -436,6 +436,8 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             $number = null;
             $amount = null;
             $amountMismatch = null;
+            $availableAction = null;
+            $isAddPaymentAllowed = false;
 
             if (get_class($document) === 'OrderInvoice') {
                 $type = isset($document->is_delivery) ? 'delivery_slip' : 'invoice';
@@ -448,6 +450,10 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
                     Context::getContext()->language->id,
                     $order->id_shop
                 );
+
+                if ($document->getRestPaid()) {
+                    $isAddPaymentAllowed = true;
+                }
             } elseif ('delivery_slip' === $type) {
                 $number = sprintf(
                     '%s%06d',
@@ -488,7 +494,9 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
                 new DateTimeImmutable($document->date_add),
                 $number,
                 $amount,
-                $amountMismatch
+                $amountMismatch,
+                $document->note,
+                $isAddPaymentAllowed
             );
         }
 

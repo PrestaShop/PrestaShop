@@ -60,13 +60,25 @@ class OrderDocumentForViewing
      */
     private $amountMismatch;
 
+    /**
+     * @var string
+     */
+    private $note;
+
+    /**
+     * @var bool
+     */
+    private $isAddPaymentAllowed;
+
     public function __construct(
         int $id,
         string $type,
         DateTimeImmutable $createdAt,
         string $referenceNumber,
         ?string $amount,
-        ?string $amountMismatch
+        ?string $amountMismatch,
+        string $note,
+        bool $isAddPaymentAllowed
     ) {
         $this->id = $id;
         $this->type = $type;
@@ -74,6 +86,8 @@ class OrderDocumentForViewing
         $this->referenceNumber = $referenceNumber;
         $this->amount = $amount;
         $this->amountMismatch = $amountMismatch;
+        $this->note = $note;
+        $this->isAddPaymentAllowed = $isAddPaymentAllowed;
     }
 
     public function getId(): int
@@ -113,5 +127,21 @@ class OrderDocumentForViewing
     public function getAmountMismatch(): ?string
     {
         return $this->amountMismatch;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNote(): string
+    {
+        return $this->note;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAddPaymentAllowed(): bool
+    {
+        return $this->isAddPaymentAllowed;
     }
 }

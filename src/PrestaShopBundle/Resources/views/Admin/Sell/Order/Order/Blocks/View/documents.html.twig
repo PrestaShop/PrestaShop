@@ -86,7 +86,23 @@
           --
         {% endif %}
       </td>
-      <td></td>
+      <td class="text-right">
+        {% if document.addPaymentAllowed %}
+          <a href="#">
+            {{ 'Enter payment'|trans({}, 'Admin.Orderscustomers.Feature') }}
+          </a>
+        {% endif %}
+
+        {% if document.type == 'invoice' %}
+          <a href="#">
+            {% if document.note is empty %}
+              {{ 'Add note'|trans({}, 'Admin.Orderscustomers.Feature') }}
+            {% else %}
+              {{ 'Edit note'|trans({}, 'Admin.Orderscustomers.Feature') }}
+            {% endif %}
+          </a>
+        {% endif %}
+      </td>
     </tr>
   {% endfor %}
   </tbody>
