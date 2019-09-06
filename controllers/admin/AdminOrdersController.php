@@ -194,7 +194,7 @@ class AdminOrdersControllerCore extends AdminController
             $idCurrency = (int) $order->id_currency;
         }
 
-        return Tools::displayPrice($echo, $idCurrency);
+        return (new self())->context->getCurrentLocale()->formatPrice($echo, Currency::getCurrencyInstance($idCurrency)->iso_code);
     }
 
     public function initPageHeaderToolbar()
@@ -849,7 +849,7 @@ class AdminOrdersControllerCore extends AdminController
                                     $params['{firstname}'] = $customer->firstname;
                                     $params['{id_order}'] = $order->id;
                                     $params['{order_name}'] = $order->getUniqReference();
-                                    $params['{voucher_amount}'] = Tools::displayPrice($cart_rule->reduction_amount, $currency, false);
+                                    $params['{voucher_amount}'] = $this->context->getCurrentLocale()->formatPrice($cart_rule->reduction_amount, $currency->iso_code);
                                     $params['{voucher_num}'] = $cart_rule->code;
                                     $orderLanguage = new Language((int) $order->id_lang);
                                     @Mail::Send(
@@ -1126,7 +1126,7 @@ class AdminOrdersControllerCore extends AdminController
                                     $this->errors[] = $this->trans('You cannot generate a voucher.', array(), 'Admin.Orderscustomers.Notification');
                                 } else {
                                     $currency = $this->context->currency;
-                                    $params['{voucher_amount}'] = Tools::displayPrice($cartrule->reduction_amount, $currency, false);
+                                    $params['{voucher_amount}'] = $this->context->getCurrentLocale()->formatPrice($cartrule->reduction_amount, $currency->iso_code);
                                     $params['{voucher_num}'] = $cartrule->code;
                                     $orderLanguage = new Language((int) $order->id_lang);
                                     @Mail::Send(
@@ -1805,7 +1805,8 @@ class AdminOrdersControllerCore extends AdminController
             $product['quantity_refundable'] = $product['product_quantity'] - $resume['product_quantity'];
             $product['amount_refundable'] = $product['total_price_tax_excl'] - $resume['amount_tax_excl'];
             $product['amount_refundable_tax_incl'] = $product['total_price_tax_incl'] - $resume['amount_tax_incl'];
-            $product['amount_refund'] = $order->getTaxCalculationMethod() ? Tools::displayPrice($resume['amount_tax_excl'], $currency) : Tools::displayPrice($resume['amount_tax_incl'], $currency);
+            $resumeAmount = $order->getTaxCalculationMethod() ? 'amount_tax_excl' : 'amount_tax_incl';
+            $product['amount_refund'] = is_null($resume[$resumeAmount]) ? $resume[$resumeAmount] : $this->context->getCurrentLocale()->formatPrice($resume[$resumeAmount], $currency->iso_code);
             $product['refund_history'] = OrderSlip::getProductSlipDetail($product['id_order_detail']);
             $product['return_history'] = OrderReturn::getProductReturnDetail($product['id_order_detail']);
 
@@ -1962,7 +1963,7 @@ class AdminOrdersControllerCore extends AdminController
         if ($products = Product::searchByName((int) $this->context->language->id, pSQL(Tools::getValue('product_search')))) {
             foreach ($products as &$product) {
                 // Formatted price
-                $product['formatted_price'] = Tools::displayPrice(Tools::convertPrice($product['price_tax_incl'], $currency), $currency);
+                $product['formatted_price'] = $this->context->getCurrentLocale()->formatPrice(Tools::convertPrice($product['price_tax_incl'], $currency), $currency->iso_code);
                 // Concret price
                 $product['price_tax_incl'] = Tools::ps_round(Tools::convertPrice($product['price_tax_incl'], $currency), 2);
                 $product['price_tax_excl'] = Tools::ps_round(Tools::convertPrice($product['price_tax_excl'], $currency), 2);
@@ -1989,7 +1990,7 @@ class AdminOrdersControllerCore extends AdminController
                         $price_tax_excl = Product::getPriceStatic((int) $product['id_product'], false, $attribute['id_product_attribute']);
                         $combinations[$attribute['id_product_attribute']]['price_tax_incl'] = Tools::ps_round(Tools::convertPrice($price_tax_incl, $currency), 2);
                         $combinations[$attribute['id_product_attribute']]['price_tax_excl'] = Tools::ps_round(Tools::convertPrice($price_tax_excl, $currency), 2);
-                        $combinations[$attribute['id_product_attribute']]['formatted_price'] = Tools::displayPrice(Tools::convertPrice($price_tax_excl, $currency), $currency);
+                        $combinations[$attribute['id_product_attribute']]['formatted_price'] = $this->context->getCurrentLocale()->formatPrice(Tools::convertPrice($price_tax_excl, $currency), $currency->iso_code);
                     }
                     if (!isset($combinations[$attribute['id_product_attribute']]['qty_in_stock'])) {
                         $combinations[$attribute['id_product_attribute']]['qty_in_stock'] = StockAvailable::getQuantityAvailableByProduct((int) $product['id_product'], $attribute['id_product_attribute'], (int) $this->context->shop->id);
@@ -2341,7 +2342,7 @@ class AdminOrdersControllerCore extends AdminController
         $resume = OrderSlip::getProductSlipResume((int) $product['id_order_detail']);
         $product['quantity_refundable'] = $product['product_quantity'] - $resume['product_quantity'];
         $product['amount_refundable'] = $product['total_price_tax_excl'] - $resume['amount_tax_excl'];
-        $product['amount_refund'] = Tools::displayPrice($resume['amount_tax_incl']);
+        $product['amount_refund'] = is_null($resume['amount_tax_incl']) ? $resume['amount_tax_incl'] : $this->context->getCurrentLocale()->formatPrice($resume['amount_tax_incl'], $this->context->currency->iso_code);
         $product['return_history'] = OrderReturn::getProductReturnDetail((int) $product['id_order_detail']);
         $product['refund_history'] = OrderSlip::getProductSlipDetail((int) $product['id_order_detail']);
         if ($product['id_warehouse'] != 0) {
@@ -2600,7 +2601,7 @@ class AdminOrdersControllerCore extends AdminController
         $resume = OrderSlip::getProductSlipResume($order_detail->id);
         $product['quantity_refundable'] = $product['product_quantity'] - $resume['product_quantity'];
         $product['amount_refundable'] = $product['total_price_tax_excl'] - $resume['amount_tax_excl'];
-        $product['amount_refund'] = Tools::displayPrice($resume['amount_tax_incl']);
+        $product['amount_refund'] = is_null($resume['amount_tax_incl']) ? $resume['amount_tax_incl'] : $this->context->getCurrentLocale()->formatPrice($resume['amount_tax_incl'], $this->context->currency->iso_code);
         $product['refund_history'] = OrderSlip::getProductSlipDetail($order_detail->id);
         if ($product['id_warehouse'] != 0) {
             $warehouse = new Warehouse((int) $product['id_warehouse']);

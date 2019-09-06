@@ -90,6 +90,8 @@ services:
 
   prestashop.adapter.order.command_handler.issue_partial_refund_handler:
     class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\IssuePartialRefundHandler
+    arguments:
+      - "@prestashop.core.localization.locale.repository"
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Order\Command\IssuePartialRefundCommand
@@ -112,6 +114,7 @@ services:
       - '@prestashop.core.image.parser.image_tag_source_parser'
       - '@translator'
       - '@=service("prestashop.adapter.legacy.context").getContext()'
+      - "@prestashop.core.localization.locale.repository"
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing

@@ -36,13 +36,15 @@ use Mail;
 use OrderCarrier;
 use OrderDetail;
 use OrderSlip;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\IssuePartialRefundCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\IssuePartialRefundHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
+use PrestaShop\PrestaShop\Core\Localization\Locale;
+use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
 use StockAvailable;
 use Tax;
 use TaxCalculator;
-use Tools;
 use Validate;
 
 /**
@@ -50,6 +52,27 @@ use Validate;
  */
 final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implements IssuePartialRefundHandlerInterface
 {
+    /**
+     * @var LegacyContext
+     */
+    private $context;
+
+    /**
+     * @var Locale
+     */
+    private $locale;
+
+    /**
+     * @param LocaleRepository $repository
+     */
+    public function __construct(LocaleRepository $repository)
+    {
+        $this->context = new LegacyContext();
+        $this->locale = $repository->getLocale(
+            $this->context->getContext()->language->getLocale()
+        );
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -268,7 +291,7 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
                 '{firstname}' => $customer->firstname,
                 '{id_order}' => $order->id,
                 '{order_name}' => $order->getUniqReference(),
-                '{voucher_amount}' => Tools::displayPrice($cartRule->reduction_amount, $currency),
+                '{voucher_amount}' => $this->locale->formatPrice($cartRule->reduction_amount, $currency->iso_code),
                 '{voucher_num}' => $cartRule->code,
             ];
 
