@@ -40,14 +40,30 @@ class CartFeatureContext extends AbstractPrestaShopFeatureContext
     protected $cart;
 
     /**
+     * @Then there is no delivery options available for my cart
+     */
+    public function noDeliveryOptions()
+    {
+        if ($this->getCurrentCart() === null) {
+            throw new \RuntimeException('No current cart, cannot check available delivery options');
+        }
+
+        $deliveryOptions = $this->getCurrentCart()->getDeliveryOptionList();
+
+        if (!empty($deliveryOptions)) {
+            throw new \RuntimeException('Expected no available delivery options, but there are some !');
+        }
+    }
+
+    /**
      * @Given /^I have an empty default cart$/
      */
     public function iHaveAnEmptyDefaultCart()
     {
         $cart = new CartOld();
-        $cart->id_lang = (int) Context::getContext()->language->id;
-        $cart->id_currency = (int) Context::getContext()->currency->id;
-        $cart->id_shop = (int) Context::getContext()->shop->id;
+        $cart->id_lang = (int)Context::getContext()->language->id;
+        $cart->id_currency = (int)Context::getContext()->currency->id;
+        $cart->id_shop = (int)Context::getContext()->shop->id;
         $cart->add(); // required, else we cannot get the content when calculating total
         Context::getContext()->cart = $cart;
     }
@@ -139,7 +155,7 @@ class CartFeatureContext extends AbstractPrestaShopFeatureContext
     protected function expectsTotal($expectedTotal, $method, $withTax = true, $precisely = false)
     {
         $cart = $this->getCurrentCart();
-        $carrierId = (int) $cart->id_carrier <= 0 ? null : $cart->id_carrier;
+        $carrierId = (int)$cart->id_carrier <= 0 ? null : $cart->id_carrier;
         if ($method == 'v1') {
             $total = $cart->getOrderTotalV1($withTax, Cart::BOTH, null, $carrierId);
         } else {
