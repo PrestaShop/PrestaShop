@@ -40,7 +40,7 @@ module.exports = class BOBasePage extends CommonPage {
 
     // Alert Text
     this.alertSuccessBloc = 'div.alert.alert-success:not([style=\'display: none;\'])';
-    this.alertSuccessBlocParagraph = `${this.alertSuccessBloc} div.alert-text p`;
+    this.alertSuccessBlockParagraph = `${this.alertSuccessBloc} div.alert-text p`;
 
     // Modal dialog
     this.modalDialog = '#confirmation_modal.show .modal-dialog';

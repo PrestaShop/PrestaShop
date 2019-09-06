@@ -9,6 +9,7 @@ module.exports = class Product extends BOBasePage {
 
     this.pageTitle = 'Products •';
     this.productDeletedSuccessfulMessage = 'Product successfully deleted.';
+    this.productMultiDeletedSuccessfulMessage = 'Product(s) successfully deleted.';
 
     // Selectors
     // List of products
@@ -16,6 +17,13 @@ module.exports = class Product extends BOBasePage {
     this.productRow = `${this.productListForm} table tbody tr`;
     this.productListfooterRow = `${this.productListForm} div.row:nth-of-type(3)`;
     this.productNumberBloc = `${this.productListfooterRow} label.col-form-label`;
+    this.dropdownToggleButton = `${this.productRow}:nth-of-type(%ROW) button.dropdown-toggle`;
+    this.dropdownMenu = `${this.productRow}:nth-of-type(%ROW) div.dropdown-menu`;
+    this.dropdownMenuDeleteLink = `${this.dropdownMenu} a.product-edit[onclick*='delete']`;
+    this.selectAllBulkCheckboxLabel = '#catalog-actions div.md-checkbox label';
+    this.productBulkMenuButton = '#product_bulk_menu:not([disabled])';
+    this.productBulkDropdownMenu = 'div.bulk-catalog div.dropdown-menu.show';
+    this.productBulkDeleteLink = `${this.productBulkDropdownMenu} a[onclick*='delete_all']`;
     // Filters input
     this.productFilterInput = `${this.productListForm} input[name='filter_column_%FILTERBY']`;
     this.filterSearchButton = `${this.productListForm} button[name='products_filter_submit']`;
@@ -30,6 +38,9 @@ module.exports = class Product extends BOBasePage {
     this.addProductButton = '#page-header-desc-configuration-add';
     // pagination
     this.paginationNextLink = '.page-item.next:not(.disabled) #pagination_next_url';
+    // Modal Dialog
+    this.catalogDeletionModalDialog = '#catalog_deletion_modal div.modal-dialog';
+    this.modalDialogDeleteNowButton = `${this.catalogDeletionModalDialog} button[value='confirm']`;
   }
 
   /*
@@ -122,5 +133,56 @@ module.exports = class Product extends BOBasePage {
       this.page.waitForNavigation({waitUntil: 'networkidle0'}),
       this.page.click(this.addProductButton),
     ]);
+  }
+
+  /**
+   * Delete product with dropdown Menu
+   * @param productData
+   * @return {Promise<textContent>}
+   */
+  async deleteProduct(productData) {
+    // Filter By reference first
+    await this.filterProducts('reference', productData.reference);
+    // Then delete first product and only product shown
+    await Promise.all([
+      this.page.waitForSelector(`${this.dropdownToggleButton}[aria-expanded='true']`.replace('%ROW', '1')),
+      this.page.click(this.dropdownToggleButton.replace('%ROW', '1')),
+    ]);
+    await Promise.all([
+      this.page.waitForSelector(this.catalogDeletionModalDialog, {visible: true}),
+      this.page.click(this.dropdownMenuDeleteLink.replace('%ROW', '1')),
+    ]);
+    await Promise.all([
+      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
+      this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true}),
+      this.page.click(this.modalDialogDeleteNowButton),
+    ]);
+    return this.getTextContent(this.alertSuccessBlockParagraph);
+  }
+
+  /**
+   * Delete All products with Bulk Actions
+   * @return {Promise<textContent>}
+   */
+  async deleteAllProductsWithBulkActions() {
+    // Then delete first product and only product shown
+    await Promise.all([
+      this.page.waitForSelector(this.productBulkMenuButton, {visible: true}),
+      this.page.click(this.selectAllBulkCheckboxLabel.replace('%ROW', '1')),
+    ]);
+    await Promise.all([
+      this.page.waitForSelector(`${this.productBulkMenuButton}[aria-expanded='true']`, {visible: true}),
+      this.page.click(this.productBulkMenuButton.replace('%ROW', '1')),
+    ]);
+    await Promise.all([
+      this.page.waitForSelector(this.catalogDeletionModalDialog, {visible: true}),
+      this.page.click(this.productBulkDeleteLink.replace('%ROW', '1')),
+    ]);
+    await Promise.all([
+      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
+      this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true}),
+      this.page.click(this.modalDialogDeleteNowButton),
+    ]);
+    return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 };

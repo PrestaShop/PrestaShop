@@ -2,7 +2,7 @@ const faker = require('faker');
 
 module.exports = class Product {
   constructor(productToCreate) {
-    this.name = faker.commerce.productName().toUpperCase();
+    this.name = productToCreate.name || faker.commerce.productName().toUpperCase();
     this.description = faker.lorem.sentence();
     this.reference = faker.random.alphaNumeric(7);
     this.quantity = productToCreate.quantity || faker.random.number({min: 1, max: 9}).toString();

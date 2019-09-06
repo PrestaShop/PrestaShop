@@ -4,6 +4,8 @@ module.exports = class AddProduct extends BOBasePage {
   constructor(page) {
     super(page);
 
+    // Text Message
+    this.settingUpdatedMessage = 'Settings updated.';
     // Selectors
     this.productNameInput = '#form_step1_name_1';
     this.productTypeSelect = '#form_step1_type_product';
@@ -140,10 +142,10 @@ module.exports = class AddProduct extends BOBasePage {
     ]);
     await Promise.all([
       this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-      this.page.waitForSelector(this.alertSuccessBlocParagraph, {visible: true}),
+      this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true}),
       this.page.click(this.modalDialogYesButton),
     ]);
-    return this.getTextContent(this.alertSuccessBlocParagraph);
+    return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 
   /**

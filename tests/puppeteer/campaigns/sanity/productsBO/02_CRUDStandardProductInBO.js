@@ -60,7 +60,7 @@ global.scenario('Create, read, update and delete Standard product in BO', async 
   test('should create Product', async () => {
     await productsPage.goToAddProductPage();
     const createProductMessage = await addProductPage.createEditProduct(productData);
-    await expect(createProductMessage).to.equal('Settings updated.');
+    await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
   });
   test('should preview and check product in FO', async () => {
     foProductPage.page = await addProductPage.previewProduct();
@@ -69,7 +69,7 @@ global.scenario('Create, read, update and delete Standard product in BO', async 
   });
   test('should edit Product', async () => {
     const createProductMessage = await addProductPage.createEditProduct(editedProductData, false);
-    await expect(createProductMessage).to.equal('Settings updated.');
+    await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
   });
   test('should preview and check product in FO', async () => {
     foProductPage.page = await addProductPage.previewProduct();

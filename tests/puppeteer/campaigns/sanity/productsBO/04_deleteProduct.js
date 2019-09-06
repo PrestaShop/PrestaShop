@@ -7,9 +7,7 @@ const DashboardPage = require('../../../pages/BO/dashboard');
 const BOBasePage = require('../../../pages/BO/BObasePage');
 const ProductsPage = require('../../../pages/BO/products');
 const AddProductPage = require('../../../pages/BO/addProduct');
-const FOProductPage = require('../../../pages/FO/product');
 const ProductFaker = require('../../data/faker/product');
-
 
 let page;
 let loginPage;
@@ -17,9 +15,7 @@ let dashboardPage;
 let boBasePage;
 let productsPage;
 let addProductPage;
-let foProductPage;
-let productWithCombinations;
-let editedProductWithCombinations;
+let productData;
 
 // creating pages objects in a function
 const init = async () => {
@@ -29,18 +25,15 @@ const init = async () => {
   boBasePage = await (new BOBasePage(page));
   productsPage = await (new ProductsPage(page));
   addProductPage = await (new AddProductPage(page));
-  foProductPage = await (new FOProductPage(page));
   const productToCreate = {
     type: 'Standard product',
-    productHasCombinations: true,
+    productHasCombinations: false,
   };
-  productWithCombinations = await (new ProductFaker(productToCreate));
-  editedProductWithCombinations = await (new ProductFaker(productToCreate));
+  productData = await (new ProductFaker(productToCreate));
 };
 
-
-// Create, read, update and delete Standard product with combinations in BO
-global.scenario('Create, read, update and delete Standard product with combinations in BO', async () => {
+// Create Standard product in BO and Delete it with DropDown Menu
+global.scenario('Create Standard product in BO and Delete it with DropDown Menu', async () => {
   test('should login in BO', async () => {
     await loginPage.goTo(global.URL_BO);
     await loginPage.login(global.EMAIL, global.PASSWD);
@@ -59,30 +52,24 @@ global.scenario('Create, read, update and delete Standard product with combinati
     const numberOfProducts = await productsPage.getNumberOfProductsFromList();
     await expect(numberOfProducts).to.be.above(0);
   });
-  test('should create Product with Combinations', async () => {
+  test('should create Product', async () => {
     await productsPage.goToAddProductPage();
-    const createProductMessage = await addProductPage.createEditProduct(productWithCombinations);
-    await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
-    await productsPage.page.waitFor(10000);
-  });
-  test('should preview and check product in FO', async () => {
-    foProductPage.page = await addProductPage.previewProduct();
-    await foProductPage.checkProduct(productWithCombinations);
-    addProductPage.page = await foProductPage.closePage(1);
-  });
-  test('should edit Product', async () => {
-    const createProductMessage = await addProductPage.createEditProduct(editedProductWithCombinations, false);
+    const createProductMessage = await addProductPage.createEditProduct(productData);
     await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
   });
-  test('should preview and check product in FO', async () => {
-    foProductPage.page = await addProductPage.previewProduct();
-    await foProductPage.checkProduct(editedProductWithCombinations);
-    addProductPage.page = await foProductPage.closePage(1);
-  });
-  test('should delete Product and be on product list page', async () => {
-    const testResult = await addProductPage.deleteProduct();
-    await expect(testResult).to.equal(productsPage.productDeletedSuccessfulMessage);
+  test('should go to Products page', async () => {
+    await boBasePage.goToSubMenu(boBasePage.productsParentLink, boBasePage.productsLink);
     const pageTitle = await productsPage.getPageTitle();
     await expect(pageTitle).to.contains(productsPage.pageTitle);
+  });
+  test('should delete product with from DropDown Menu', async () => {
+    const deleteTextResult = await productsPage.deleteProduct(productData);
+    await expect(deleteTextResult).to.equal(productsPage.productDeletedSuccessfulMessage);
+  });
+  test('should reset all filters', async () => {
+    if (await productsPage.elementVisible(productsPage.filterResetButton, 2000)) await productsPage.resetFilter();
+    await productsPage.resetFilterCategory();
+    const numberOfProducts = await productsPage.getNumberOfProductsFromList();
+    await expect(numberOfProducts).to.be.above(0);
   });
 }, init, true);
