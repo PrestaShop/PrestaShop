@@ -505,4 +505,9 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
 
         return new OrderDocumentsForViewing($documentsForViewing);
     }
+
+    private function getOrderShipping(Order $order)
+    {
+        $shipping = $order->getShipping();
+    }
 }

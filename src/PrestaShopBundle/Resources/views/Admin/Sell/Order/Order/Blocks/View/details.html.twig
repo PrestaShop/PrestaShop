@@ -35,6 +35,11 @@
         {{ 'Documents'|trans({}, 'Admin.Orderscustomers.Feature') }} ({{ orderForViewing.documents.documents|length }})
       </a>
     </li>
+    <li class="nav-item">
+      <a class="nav-link" id="orderShippingTab" data-toggle="tab" href="#orderShippingTabContent" role="tab" aria-controls="orderShippingTabContent" aria-expanded="true" aria-selected="false">
+        {{ 'Shipping'|trans({}, 'Admin.Catalog.Feature') }}
+      </a>
+    </li>
   </ul>
 
   <div class="tab-content">
@@ -43,6 +48,9 @@
     </div>
     <div class="tab-pane fade" id="orderDocumentsTabContent" role="tabpanel" aria-labelledby="orderDocumentsTab">
       {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/documents.html.twig' %}
+    </div>
+    <div class="tab-pane fade" id="orderShippingTabContent" role="tabpanel" aria-labelledby="orderShippingTab">
+      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/shipping.html.twig' %}
     </div>
   </div>
 </div>
