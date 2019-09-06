@@ -1111,7 +1111,7 @@
                         </div>
                         <p class="help-block"><i class="icon-warning-sign"></i> {l
                             s='(Max %s %s)'
-                            sprintf=[Tools::displayPrice(Tools::ps_round($shipping_refundable, 2), $currency->id) , $smarty.capture.TaxMethod]
+                            sprintf=[Context::getContext()->getCurrentLocale()->formatPrice(Tools::ps_round($shipping_refundable, 2), Currency::getCurrencyInstance($currency->id)->iso_code) , $smarty.capture.TaxMethod]
                             d='Admin.Orderscustomers.Feature'
                             }
                         </p>

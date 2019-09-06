@@ -416,6 +416,9 @@ class AdminControllerCore extends Controller
         if (strpos($this->controller_name, 'ControllerOverride')) {
             $this->controller_name = substr($this->controller_name, 0, -18);
         }
+        if (strpos($this->controller_name, 'ControllerCore')) {
+            $this->controller_name = substr($this->controller_name, 0, -14);
+        }
         if (strpos($this->controller_name, 'Controller')) {
             $this->controller_name = substr($this->controller_name, 0, -10);
         }
