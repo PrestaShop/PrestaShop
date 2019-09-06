@@ -35,17 +35,40 @@ use Context;
 use Customer;
 use Message;
 use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartSummary;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryHandler\GetCartSummaryHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartSummary;
+use PrestaShop\PrestaShop\Core\Localization\Locale;
+use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
 use Product;
-use Tools;
 
 /**
  * @internal
  */
 final class GetCartSummaryHandler extends AbstractCartHandler implements GetCartSummaryHandlerInterface
 {
+    /**
+     * @var LegacyContext
+     */
+    private $context;
+
+    /**
+     * @var Locale
+     */
+    private $locale;
+
+    /**
+     * @param LocaleRepository $repository
+     */
+    public function __construct(LocaleRepository $repository)
+    {
+        $this->context = new LegacyContext();
+        $this->locale = $repository->getLocale(
+            $this->context->getContext()->language->getLocale()
+        );
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -76,8 +99,8 @@ final class GetCartSummaryHandler extends AbstractCartHandler implements GetCart
             foreach ($summary['products'] as &$product) {
                 $product['numeric_price'] = $product['price'];
                 $product['numeric_total'] = $product['total'];
-                $product['price'] = str_replace($currency->sign, '', Tools::displayPrice($product['price'], $currency));
-                $product['total'] = str_replace($currency->sign, '', Tools::displayPrice($product['total'], $currency));
+                $product['price'] = str_replace($currency->sign, '', $this->locale->formatPrice($product['price'], $currency->iso_code));
+                $product['total'] = str_replace($currency->sign, '', $this->locale->formatPrice($product['total'], $currency->iso_code));
 
                 $product['image_link'] = Context::getContext()->link->getImageLink(
                     $product['link_rewrite'],
@@ -101,7 +124,7 @@ final class GetCartSummaryHandler extends AbstractCartHandler implements GetCart
 
         if (count($summary['discounts'])) {
             foreach ($summary['discounts'] as &$voucher) {
-                $voucher['value_real'] = Tools::displayPrice($voucher['value_real'], $currency);
+                $voucher['value_real'] = $this->locale->formatPrice($voucher['value_real'], $currency->iso_code);
             }
         }
 

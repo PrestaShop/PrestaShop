@@ -69,7 +69,10 @@ class DiscountControllerCore extends FrontController
         foreach ($vouchers as $key => $voucher) {
             $cart_rules[$key] = $voucher;
             $cart_rules[$key]['voucher_date'] = Tools::displayDate($voucher['date_to'], null, false);
-            $cart_rules[$key]['voucher_minimal'] = ($voucher['minimum_amount'] > 0) ? Tools::displayPrice($voucher['minimum_amount'], (int) $voucher['minimum_amount_currency']) : $this->trans('None', array(), 'Shop.Theme.Global');
+            $cart_rules[$key]['voucher_minimal'] =
+                ($voucher['minimum_amount'] > 0)
+                    ? $this->context->getCurrentLocale()->formatPrice($voucher['minimum_amount'], Currency::getCurrencyInstance((int) $voucher['minimum_amount_currency'])->iso_code)
+                    : $this->trans('None', array(), 'Shop.Theme.Global');
             $cart_rules[$key]['voucher_cumulable'] = $this->getCombinableVoucherTranslation($voucher);
 
             $cartRuleValue = $this->accumulateCartRuleValue($voucher);
@@ -126,7 +129,7 @@ class DiscountControllerCore extends FrontController
 
         return sprintf(
             '%s ' . $taxTranslation,
-            Tools::displayPrice($amount, (int) $currencyId)
+            $this->context->getCurrentLocale()->formatPrice($amount, Currency::getCurrencyInstance((int) $currencyId)->iso_code)
         );
     }
 
