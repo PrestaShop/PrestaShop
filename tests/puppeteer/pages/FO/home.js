@@ -26,7 +26,8 @@ module.exports = class Home extends CommonPage {
    * go to the home page
    */
   async goToHomePage() {
-    await this.waitForSelectorAndClick(this.logoHomePage);
+      await this.waitForSelectorAndClick(this.logoHomePage);
+      this.page.waitForNavigation({waitUntil: 'networkidle0'});
   }
 
   /**
