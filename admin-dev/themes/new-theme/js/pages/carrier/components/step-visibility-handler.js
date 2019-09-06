@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import {EventEmitter} from '../../components/event-emitter';
+import {EventEmitter} from '../../../components/event-emitter';
 
 const $ = window.$;
 
@@ -48,7 +48,7 @@ export default class StepVisibilityHandler {
       {
         form: new FormData(this.form),
         step: $(event.currentTarget).data('step'),
-      }
+      },
     ));
     EventEmitter.on('formStepValidated', (step) => {
       this.showStep(step);

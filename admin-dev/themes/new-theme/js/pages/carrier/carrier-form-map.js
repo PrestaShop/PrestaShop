@@ -60,4 +60,5 @@ export default {
   imageTarget: '#carrier-logo img',
   imageUploadBlock: '#js-carrier-logo-upload',
   imageRemoveBtn: '.js-remove-logo',
+  stepSwitchSelector: '#carrier-form .js-form-step-switch',
 };

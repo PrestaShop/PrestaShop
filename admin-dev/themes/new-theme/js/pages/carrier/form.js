@@ -23,34 +23,30 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import StepVisibilityHandler from './step-visibility-handler.js';
-import AddRangeHandler from './add-range-handler.js';
-import BillingChoiceHandler from './billing-choice-handler.js';
+import StepVisibilityHandler from './components/step-visibility-handler.js';
+import AddRangeHandler from './components/add-range-handler.js';
+import BillingChoiceHandler from './components/billing-choice-handler.js';
 import CarrierFormMap from './carrier-form-map.js';
-import FreeShippingHandler from './free-shipping-handler.js';
-import SummaryContentHandler from './summary-content-handler.js';
+import FreeShippingHandler from './components/free-shipping-handler.js';
+import SummaryContentHandler from './components/summary-content-handler.js';
 import TranslatableInput from './../../components/translatable-input.js';
 import ChoiceTree from '../../components/form/choice-tree.js';
 import ChoiceTable from '../../components/choice-table.js';
-import ZonesCheckHandler from './zones-check-handler.js';
-import ImageUploader from './image-uploader.js';
-import ImageRemover from "./image-remover";
-import UnsavedFormWarning from "./unsaved-form-warning";
-import AllZonesPriceFiller from "./all-zones-price-filler";
-import FormStepValidator from "./form-step-validator";
+import ZonesCheckHandler from './components/zones-check-handler.js';
+import ImageUploader from './components/image-uploader.js';
+import ImageRemover from './components/image-remover';
+import UnsavedFormWarning from './components/unsaved-form-warning';
+import AllZonesPriceFiller from './components/all-zones-price-filler';
+import FormStepValidator from './components/form-step-validator';
+import RangesTable from "./ranges-table";
 
 const $ = window.$;
 
 $(() => {
-  new TranslatableInput();
-  new StepVisibilityHandler(CarrierFormMap.formWrapper);
-  new FormStepValidator(CarrierFormMap.formWrapper);
-  new ChoiceTree(CarrierFormMap.shopAssociation).enableAutoCheckChildren();
-  new ChoiceTable();
-  new ZonesCheckHandler(CarrierFormMap.zoneCheckbox);
 
-  new AddRangeHandler(
+  const rangesTable = new RangesTable(
     CarrierFormMap.rangesTable,
+    CarrierFormMap.rangeRow,
     CarrierFormMap.rangePriceTemplate,
     CarrierFormMap.rangeFromTemplate,
     CarrierFormMap.rangeToTemplate,
@@ -60,6 +56,19 @@ $(() => {
     CarrierFormMap.zoneCheckbox,
   );
 
+  new TranslatableInput();
+  new StepVisibilityHandler(CarrierFormMap.formWrapper);
+  new FormStepValidator(CarrierFormMap.formWrapper);
+  new ChoiceTree(CarrierFormMap.shopAssociation).enableAutoCheckChildren();
+  new ChoiceTable();
+  new ZonesCheckHandler(CarrierFormMap.zoneCheckbox);
+
+  new AddRangeHandler(
+    rangesTable,
+    CarrierFormMap.addRangeBtn,
+    CarrierFormMap.removeRangeBtn,
+  );
+
   new BillingChoiceHandler(
     CarrierFormMap.rangePriceLabel,
     CarrierFormMap.rangeWeightLabel,
@@ -67,6 +76,7 @@ $(() => {
   );
 
   new FreeShippingHandler(
+    rangesTable,
     CarrierFormMap.freeShippingChoice,
     CarrierFormMap.handlingCostChoice,
     CarrierFormMap.rangesTable,

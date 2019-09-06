@@ -26,54 +26,35 @@
 const $ = window.$;
 
 /**
- * Responsible for adding and removing range columns
+ * Responsible for manipulating ranges table
  */
-export default class AddRangeHandler {
+export default class RangesTable {
   constructor(
     rangesTable,
+    rangeRow,
     rangePriceTemplate,
     rangeFromTemplate,
     rangeToTemplate,
     addRangeBtn,
     removeRangeBtn,
     rangeRemovingBtnRow,
-    zoneCheckbox
+    zoneCheckbox,
   ) {
     this.rangeIndex = 1;
-    this.rangesTable = rangesTable;
     this.rangeRemovingBtnRow = rangeRemovingBtnRow;
     this.removeRangeBtn = removeRangeBtn;
-    this.zoneCheckbox = zoneCheckbox;
+    this.$zoneCheckbox = $(zoneCheckbox);
+    this.rangeRow = rangeRow;
 
     this.$addRangeBtn = $(addRangeBtn);
+    this.$rangesTable = $(rangesTable);
     this.$rows = $(`${rangesTable} tr:not(${rangeRemovingBtnRow})`);
     this.$rangePriceTemplate = $(rangePriceTemplate);
     this.$rangeFromTemplate = $(rangeFromTemplate);
     this.$rangeToTemplate = $(rangeToTemplate);
-
-    this.handle();
-
-    return {};
   }
 
-  /**
-   * Initiates the handler
-   */
-  handle() {
-    this.$addRangeBtn.on('click', () => {
-      this.addRangeColumn();
-    });
-
-    $(document).on('click', this.removeRangeBtn, (event) => {
-      this.removeRangeColumn(event);
-    });
-  }
-
-  /**
-   * Add new column of inputs to table
-   */
-  addRangeColumn() {
-
+  addRange() {
     for (let i = 0; i < Object.keys(this.$rows).length; i++) {
       const $row = $(this.$rows[i]);
 
@@ -112,10 +93,57 @@ export default class AddRangeHandler {
       }
     }
 
-    this.appendRangeRemovalButton(this.rangeIndex);
+    this._appendRangeRemovalButton(this.rangeIndex);
 
     // increment rangeIndex value by one to keep range identification unique
     this.rangeIndex += 1;
+  }
+
+  removeRange(event) {
+    this.$rangesTable.find(`*[data-range-index="${$(event.currentTarget.parentElement).data('range-index')}"]`)
+      .remove();
+  }
+
+  showZonesOnly() {
+    this.$rangesTable.find('td').fadeOut();
+    this.$rangesTable.find(this.rangeRow).fadeOut();
+    this.$addRangeBtn.fadeOut();
+  }
+
+  showWholeTable() {
+    this.$rangesTable.find('td').fadeIn();
+    this.$rangesTable.find(this.rangeRow).fadeIn();
+    this.$addRangeBtn.fadeIn();
+  }
+
+  selectAllZones(event) {
+    const isSelectAllChecked = $(event.target).is(':checked');
+
+    this.$zoneCheckbox.not(event.target).prop('checked', isSelectAllChecked);
+  }
+
+  /**
+   * Fills column inputs with provided value
+   *
+   * @param columnIndex
+   * @param value
+   */
+  fillAllZonesPrice(columnIndex, value) {
+    const inputsToFill = this.$rangesTable.find(`input[data-range-index="${columnIndex}"]`);
+    inputsToFill.val(value);
+  }
+
+  /**
+   * Disables inputs that depends from checked value
+   *
+   * @param event
+   */
+  disableZoneInputs(event) {
+    $.each($(event.target), (i, input) => {
+      const isChecked = $(event.target).is(':checked');
+      const zoneId = $(input).val();
+      $('#js-carrier-ranges').find(`div[data-zone-id='${zoneId}'] input`).prop('readonly', !isChecked);
+    });
   }
 
   /**
@@ -123,21 +151,11 @@ export default class AddRangeHandler {
    *
    * @param rangeIndex
    */
-  appendRangeRemovalButton(rangeIndex) {
+  _appendRangeRemovalButton(rangeIndex) {
     $(this.rangeRemovingBtnRow).removeClass('d-none');
     $(this.rangeRemovingBtnRow).append(
       `<td data-range-index="${rangeIndex}">${$(this.removeRangeBtn).get(0).outerHTML}</td>`,
     );
-  }
-
-  /**
-   * Remove range column
-   *
-   * @param event
-   */
-  removeRangeColumn(event) {
-    $(this.rangesTable).find(`*[data-range-index="${$(event.currentTarget.parentElement).data('range-index')}"]`)
-      .remove();
   }
 }
 

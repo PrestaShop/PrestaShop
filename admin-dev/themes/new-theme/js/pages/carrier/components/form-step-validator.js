@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import {EventEmitter} from '../../components/event-emitter';
+import {EventEmitter} from '../../../components/event-emitter';
 
 const $ = window.$;
 

@@ -30,6 +30,7 @@ const $ = window.$;
  */
 export default class FreeShippingHandler {
   constructor(
+    RangesTable,
     freeShippingChoice,
     handlingCostChoice,
     rangesTable,
@@ -39,6 +40,7 @@ export default class FreeShippingHandler {
     taxRuleSelect,
     outrangedBehaviorSelect,
   ) {
+    this.RangesTable = RangesTable;
     this.freeShippingChoice = freeShippingChoice;
     this.handlingCostChoice = handlingCostChoice;
     this.rangesTableRows = rangesTable;
@@ -84,12 +86,13 @@ export default class FreeShippingHandler {
     const $tableRows = $(`${this.rangesTableRows}`);
 
     if (isFreeShipping) {
+      this.RangesTable.showZonesOnly();
       // hide ranges and zone prices
-      $tableRows.find('td').fadeOut();
-      $tableRows.find(this.rangeRow).fadeOut();
+      // $tableRows.find('td').fadeOut();
+      // $tableRows.find(this.rangeRow).fadeOut();
 
       // hide add range button
-      this.$addRangeBtn.fadeOut();
+      // this.$addRangeBtn.fadeOut();
       //hide billing choices
       this.$billingChoice.fadeOut();
       // hide tax rule selections
@@ -98,11 +101,11 @@ export default class FreeShippingHandler {
       this.$outrangedBehaviorSelect.fadeOut();
     } else {
       // show ranges and zone prices
-      $tableRows.find('td').fadeIn();
-      $tableRows.find(this.rangeRow).fadeIn();
-
+      // $tableRows.find('td').fadeIn();
+      // $tableRows.find(this.rangeRow).fadeIn();
+      this.RangesTable.showWholeTable();
       // show add range button
-      this.$addRangeBtn.fadeIn();
+      // this.$addRangeBtn.fadeIn();
       //show billing choice list
       this.$billingChoice.fadeIn();
       //show tax rules selections
