@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\DeleteProductFromOrd
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\CommandHandler\DeleteProductFromOrderHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use Validate;
 
 /**
@@ -144,7 +145,7 @@ final class DeleteProductFromOrderHandler extends AbstractOrderCommandHandler im
         }
 
         if (!Validate::isLoadedObject($order)) {
-            throw new OrderNotFoundException('Order could not be found.');
+            throw new OrderNotFoundException(new OrderId((int) $order->id), 'Order could not be found.');
         }
 
         if ($orderDetail->id_order != $order->id) {

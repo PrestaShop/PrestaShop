@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -103,27 +103,27 @@ class TranslationService
     /**
      * @param $lang
      * @param $type
-     * @param $selected
+     * @param $theme
      * @param null $search
      *
      * @return array|mixed
      */
-    public function getTranslationsCatalogue($lang, $type, $selected, $search = null)
+    public function getTranslationsCatalogue($lang, $type, $theme, $search = null)
     {
         $factory = $this->container->get('ps.translations_factory');
 
-        if ($this->requiresThemeTranslationsFactory($selected, $type)) {
-            if ('classic' === $selected) {
+        if ($this->requiresThemeTranslationsFactory($theme, $type)) {
+            if ('classic' === $theme) {
                 $type = 'front';
             } else {
-                $type = $selected;
+                $type = $theme;
                 $factory = $this->container->get('ps.theme_translations_factory');
             }
         }
 
         $locale = $this->langToLocale($lang);
 
-        return $factory->createTranslationsArray($type, $locale, $selected, $search);
+        return $factory->createTranslationsArray($type, $locale, $theme, $search);
     }
 
     /**
@@ -185,9 +185,6 @@ class TranslationService
         }
 
         $xliffCatalog = current($translationProvider->getXliffCatalogue()->all());
-        if ('EmailsSubject' === $domain) {
-            $theme = 'subject';
-        }
         $dbCatalog = current($translationProvider->getDatabaseCatalogue($theme)->all());
 
         foreach ($defaultCatalog as $key => $message) {

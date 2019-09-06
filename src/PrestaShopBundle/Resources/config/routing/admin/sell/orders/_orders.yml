@@ -9,3 +9,7 @@ _invoices:
 _carts:
   resource: "carts.yml"
   prefix: /carts/
+
+_orders:
+  resource: "orders.yml"
+  prefix: /orders/

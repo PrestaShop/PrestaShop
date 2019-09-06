@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -37,7 +37,7 @@ use Symfony\Component\Finder\SplFileInfo;
 class UpdateLicensesCommand extends Command
 {
     private $text = '/**
- * 2007-{currentYear} PrestaShop and Contributors
+ * 2007-{currentYear} PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -103,21 +103,48 @@ class UpdateLicensesCommand extends Command
             ->name('*.' . $ext)
             ->in(_PS_ROOT_DIR_)
             ->exclude(array(
+                // versioning folders
                 '.git',
                 '.github',
                 '.composer',
+                // admin folders
                 'admin-dev/filemanager',
+                'admin-dev/themes/default/public/',
+                'admin-dev/themes/new-theme/public/',
+                // js dependencies
                 'js/tiny_mce',
                 'js/jquery',
                 'js/cropper',
-                'tests/resources/ModulesOverrideInstallUninstallTest',
+                // mails folder
+                'mails/themes/classic/',
+                'mails/themes/modern/',
+                // tools dependencies
                 'tools/htmlpurifier',
+                // dependencies
                 'vendor',
                 'node_modules',
+                // themes assets
                 'themes/classic/assets/',
                 'themes/starterTheme/assets/',
-                'admin-dev/themes/default/public/',
-                'admin-dev/themes/new-theme/public/',
+                // tests folders
+                'tests/Resources/modules/',
+                'tests/Resources/themes/',
+                'tests/Resources/translations/',
+                'tests/resources/ModulesOverrideInstallUninstallTest/',
+                'tests-legacy/PrestaShopBundle/Twig/Fixtures/',
+                'tests-legacy/resources/',
+                'tests/E2E/',
+                'tests/Unit/Resources/assets/',
+                'tests/puppeteer/',
+                // ->exclude() only exclude directories, no files
+                // @todo: but we would like to ignore the following files too:
+                'composer.json',
+                'package.json',
+                'admin-dev/themes/default/css/font.css',
+                'admin-dev/themes/new-theme/package.json',
+                'tools/build/Library/InstallUnpacker/content/js-runner.js',
+                'themes/classic/_dev/package.json',
+                'tools/build/composer.json',
             ))
             ->ignoreDotFiles(false);
         $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);

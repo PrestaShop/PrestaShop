@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -76,7 +76,7 @@ class CurrencyInstalled
      */
     public function getAvailableCurrencyCodes()
     {
-        $currencies = $this->dataProvider->findAll();
+        $currencies = $this->dataProvider->findAll(false);
         $currencyIds = array_column($currencies, 'iso_code');
 
         return $currencyIds;

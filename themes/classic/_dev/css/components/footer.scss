@@ -1,29 +1,3 @@
-.block_newsletter {
-  @include search-box;
-  font-size: $font-size-sm;
-  p {
-    padding-top: $small-space;
-  }
-  form {
-    .input-wrapper {
-      overflow: hidden;
-    }
-    input[type=email] {
-      padding: 11px;
-      &:focus {
-        border: 3px $brand-primary solid;
-        padding: 8px 8px 9px;
-        outline: 0;
-      }
-      width: 100%;
-    }
-    input {
-      height: 42px;
-      box-shadow: none;
-    }
-  }
-  margin-bottom: 0.625rem;
-}
 .block-contact {
   color: $gray;
   .block-contact-title{
@@ -52,7 +26,7 @@
   text-align: right;
   ul {
     display: flex;
-    @include media-breakpoint-down(sm) { 
+    @include media-breakpoint-down(sm) {
       flex-flow: wrap;
     }
     li {
@@ -64,14 +38,14 @@
       margin: 0.125rem;
       cursor: pointer;
 
-      @include media-breakpoint-down(sm) {  
+      @include media-breakpoint-down(sm) {
         height: 2rem;
         width: 2rem;
         margin-right: 1.3rem;
         margin-bottom: 1.3rem;
         background-size: contain;
       }
-      
+
       &:hover {
         background-color: $brand-primary;
       }
