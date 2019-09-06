@@ -40,9 +40,10 @@ global.scenario('Check the Product page', () => {
   test('should add product to the cart', async () => {
     await productPage.addProductToTheCart();
   });
-  test('should check that there is one notification', async () => {
-    const notificationNumber = await homePage.getNumberFromText(homePage.cartProductsCount);
-    await expect(notificationNumber).to.be.equal(1);
+  test('should check that the number of products in Cart was updated in header', async () => {
+    // getNumberFromText is used to get the notifications number in the cart
+    const notificationsNumber = await homePage.getNumberFromText(homePage.cartProductsCount);
+    await expect(notificationsNumber).to.be.equal(1);
   });
   test('should go to the home page', async () => {
     await homePage.goToHomePage();
@@ -53,9 +54,10 @@ global.scenario('Check the Product page', () => {
   test('should add product to the cart', async () => {
     await productPage.addProductToTheCart();
   });
-  test('should check that there are two notifications', async () => {
-    const notificationNumber = await homePage.getNumberFromText(homePage.cartProductsCount);
-    await expect(notificationNumber).to.be.equal(2);
+  test('should check that the number of products in Cart was updated in header', async () => {
+    // getNumberFromText is used to get the notifications number in the cart
+    const notificationsNumber = await homePage.getNumberFromText(homePage.cartProductsCount);
+    await expect(notificationsNumber).to.be.equal(2);
   });
   test('should check the first product details', async () => {
     await cartPage.checkProductInCart(CartData.customCartData.firstProduct, '1');
@@ -64,9 +66,11 @@ global.scenario('Check the Product page', () => {
     await cartPage.checkProductInCart(CartData.customCartData.secondProduct, '2');
   });
   test('should get the Total TTC', async () => {
+    // getNumberFromText is used to get the Total TTC price
     totalTTC = await cartPage.getNumberFromText(cartPage.cartTotalTTC);
   });
   test('should get the product number', async () => {
+    // getNumberFromText is used to get the products number
     itemsNumber = await cartPage.getNumberFromText(cartPage.itemsNumber);
   });
   test('should edit the quantity of the first product ordered', async () => {
@@ -76,11 +80,13 @@ global.scenario('Check the Product page', () => {
     await cartPage.editProductQuantity('2', '2');
   });
   test('should check that the Total order price is changed', async () => {
-    const numberOfProducts = await cartPage.getNumberFromText(cartPage.cartTotalTTC, 2000);
-    await expect(numberOfProducts).to.be.above(totalTTC);
+    // getNumberFromText is used to get the new Total TTC price
+    const totalPrice = await cartPage.getNumberFromText(cartPage.cartTotalTTC, 2000);
+    await expect(totalPrice).to.be.above(totalTTC);
   });
   test('should check that the Items number is changed', async () => {
-    const numberOfItems = await cartPage.getNumberFromText(cartPage.itemsNumber);
-    await expect(numberOfItems).to.be.above(itemsNumber);
+    // getNumberFromText is used to get the new products number
+    const productsNumber = await cartPage.getNumberFromText(cartPage.itemsNumber);
+    await expect(productsNumber).to.be.above(itemsNumber);
   });
 }, init, true);
