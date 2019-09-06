@@ -61,6 +61,9 @@ class UpdateLicensesCommand extends Command
  * International Registered Trademark & Property of PrestaShop SA
  */';
 
+    /**
+     * @var string
+     */
     private $license;
 
     private $aflLicense = array(
@@ -69,6 +72,9 @@ class UpdateLicensesCommand extends Command
         'modules/',
     );
 
+    /**
+     * {@inheritdoc}
+     */
     protected function configure()
     {
         $this
@@ -76,6 +82,9 @@ class UpdateLicensesCommand extends Command
             ->setDescription('Rewrite your licenses to be up-to-date');
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->text = str_replace('{currentYear}', date('Y'), $this->text);
@@ -95,6 +104,10 @@ class UpdateLicensesCommand extends Command
         }
     }
 
+    /**
+     * @param OutputInterface $output
+     * @param string $ext
+     */
     private function findAndCheckExtension(OutputInterface $output, $ext)
     {
         $finder = new Finder();
@@ -136,15 +149,6 @@ class UpdateLicensesCommand extends Command
                 'tests/E2E/',
                 'tests/Unit/Resources/assets/',
                 'tests/puppeteer/',
-                // ->exclude() only exclude directories, no files
-                // @todo: but we would like to ignore the following files too:
-                'composer.json',
-                'package.json',
-                'admin-dev/themes/default/css/font.css',
-                'admin-dev/themes/new-theme/package.json',
-                'tools/build/Library/InstallUnpacker/content/js-runner.js',
-                'themes/classic/_dev/package.json',
-                'tools/build/composer.json',
             ))
             ->ignoreDotFiles(false);
         $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
@@ -154,9 +158,23 @@ class UpdateLicensesCommand extends Command
         $progress->start();
         $progress->setRedrawFrequency(20);
 
+        $filesToIgnore = [
+            'composer.json',
+            'package.json',
+            'admin-dev/themes/default/css/font.css',
+            'admin-dev/themes/new-theme/package.json',
+            'tools/build/Library/InstallUnpacker/content/js-runner.js',
+            'themes/classic/_dev/package.json',
+            'tools/build/composer.json',
+        ];
+
         foreach ($finder as $file) {
             $this->license = $this->text;
             $this->makeGoodLicense($file);
+
+            if (in_array($file->getRelativePathName(), $filesToIgnore)) {
+                continue;
+            }
 
             switch ($file->getExtension()) {
                 case 'php':
@@ -245,6 +263,11 @@ class UpdateLicensesCommand extends Command
         $this->license = str_replace('{licenseLink}', 'https://opensource.org/licenses/AFL-3.0', $this->license);
     }
 
+    /**
+     * @param SplFileInfo $file
+     * @param string $startDelimiter
+     * @param string $endDelimiter
+     */
     private function addLicenseToFile($file, $startDelimiter = '\/', $endDelimiter = '\/')
     {
         $content = $file->getContents();
