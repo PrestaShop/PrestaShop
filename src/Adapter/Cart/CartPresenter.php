@@ -457,11 +457,13 @@ class CartPresenter implements PresenterInterface
 
             $vouchers[$cartVoucher['id_cart_rule']]['reduction_amount'] = $cartVoucher['reduction_amount'];
 
-            if (array_key_exists('gift_product', $cartVoucher) && $cartVoucher['gift_product']) {
+            if (((array_key_exists('gift_product', $cartVoucher) && $cartVoucher['gift_product'])) ||
+                    $cartVoucher['free_shipping']) {
                 $cartVoucher['reduction_amount'] = $cartVoucher['value_real'];
             }
 
-            if (isset($cartVoucher['reduction_percent']) && $cartVoucher['reduction_amount'] == '0.00') {
+            if (isset($cartVoucher['reduction_percent']) && $cartVoucher['reduction_amount'] == '0.00' &&
+                    !$cartVoucher['free_shipping']) {
                 $cartVoucher['reduction_formatted'] = $cartVoucher['reduction_percent'].'%';
             } elseif (isset($cartVoucher['reduction_amount']) && $cartVoucher['reduction_amount'] > 0) {
                 $cartVoucher['reduction_formatted'] = $this->priceFormatter->convertAndFormat($cartVoucher['reduction_amount']);
