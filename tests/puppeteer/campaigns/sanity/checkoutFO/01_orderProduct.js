@@ -21,7 +21,7 @@ let orderConfirmationPage;
 const init = async () => {
   page = await global.browser.newPage();
   await page.setExtraHTTPHeaders({
-    'Accept-Language': 'en-GB'
+    'Accept-Language': 'en-GB',
   });
   homePage = await (new HomePage(page));
   cartPage = await (new CartPage(page));
@@ -53,7 +53,7 @@ global.scenario('Order a product and check order confirmation', () => {
     await homePage.checkHomePage();
   });
   test('should add first product to cart and Proceed to checkout', async () => {
-    await homePage.addProductToCartByQuickView('1','1');
+    await homePage.addProductToCartByQuickView('1', '1');
     await homePage.proceedToCheckout();
     const pageTitle = await cartPage.getPageTitle();
     await expect(pageTitle).to.equal(cartPage.pageTitle);

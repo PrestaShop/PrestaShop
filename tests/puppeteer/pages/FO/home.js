@@ -84,7 +84,7 @@ module.exports = class Home extends CommonPage {
    * @return {Promise<boolean|true>}
    */
   async isCustomerConnected() {
-    return this.elementVisible(this.logoutLink,1000);
+    return this.elementVisible(this.logoutLink, 1000);
   }
 
   /**
@@ -94,12 +94,12 @@ module.exports = class Home extends CommonPage {
    */
   async quickViewProduct(id) {
     await Promise.all([
-      this.page.waitForSelector(`${this.productQuickViewLink.replace('%NUMBER', '1')}`),
-      this.page.hover(this.productImg.replace('%NUMBER', '1')),
+      this.page.waitForSelector(`${this.productQuickViewLink.replace('%NUMBER', id)}`),
+      this.page.hover(this.productImg.replace('%NUMBER', id)),
     ]);
     await Promise.all([
       this.page.waitForSelector(this.quickViewModalDiv),
-      this.page.$eval(this.productQuickViewLink.replace('%NUMBER', '1'), el => el.click()),
+      this.page.$eval(this.productQuickViewLink.replace('%NUMBER', id), el => el.click()),
     ]);
   }
 

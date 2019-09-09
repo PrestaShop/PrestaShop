@@ -4,7 +4,6 @@ module.exports = class Checkout extends CommonPage {
   constructor(page) {
     super(page);
 
-
     // Selectors
     this.checkoutPageBody = 'body#checkout';
     this.personalInformationStepSection = '#checkout-personal-information-step';
@@ -36,14 +35,14 @@ module.exports = class Checkout extends CommonPage {
    * @return {Promise<boolean|true>}
    */
   async isStepCompleted(stepSelector) {
-    return this.elementVisible(`${stepSelector}.-complete`, 1000)
+    return this.elementVisible(`${stepSelector}.-complete`, 1000);
   }
 
   /**
    * Go to Delivery Step and check that Address step is complete
    * @return {Promise<boolean|true>}
    */
-  async goToDeliveryStep (){
+  async goToDeliveryStep() {
     await Promise.all([
       this.page.waitForNavigation({waitUntil: 'networkidle0'}),
       this.page.click(this.addressStepContinueButton),
@@ -55,7 +54,7 @@ module.exports = class Checkout extends CommonPage {
    * Go to Payment Step and check that delivery step is complete
    * @return {Promise<boolean|true>}
    */
-  async goToPaymentStep (){
+  async goToPaymentStep() {
     await Promise.all([
       this.page.waitForNavigation({waitUntil: 'networkidle0'}),
       this.page.click(this.deleveryStepContinueButton),
