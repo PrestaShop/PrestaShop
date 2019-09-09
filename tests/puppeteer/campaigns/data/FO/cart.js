@@ -1,8 +1,8 @@
 module.exports = {
 
   customCartData: {
-    name: 'T-shirt imprimé colibri',
+    name: 'Hummingbird printed t-shirt',
     quantity: '1',
-    price: '22,94 €',
+    price: '€22.94',
   },
 };
