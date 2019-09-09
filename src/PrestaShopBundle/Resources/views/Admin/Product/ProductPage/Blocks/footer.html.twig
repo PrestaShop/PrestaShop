@@ -1,5 +1,5 @@
 {#**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -22,7 +22,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
- {% block product_footer %}
+{% block product_footer %}
   <div class="product-footer justify-content-md-center">
     <div class="col-lg-4">
       <a
@@ -38,6 +38,7 @@
       </a>
       <a
         href=""
+        data-seo-url="{{ seo_link }}"
         data-redirect="{{ preview_link }}"
         data-url-deactive="{{ preview_link_deactivate }}"
         target="_blank"
@@ -49,19 +50,19 @@
         {{ 'Preview'|trans({}, 'Admin.Actions')}}
       </a>
       {% if editable %}
-      <h2 class="for-switch online-title" {% if not is_active %}style="display:none;"{% endif %} data-toggle="pstooltip"
+        <h2 class="for-switch online-title" {% if not is_active %}style="display:none;"{% endif %} data-toggle="pstooltip"
           title="{{ 'Enable or disable the product on your shop: ALT+SHIFT+O'|trans({}, 'Admin.Catalog.Help') }}">{{ 'Online'|trans({}, 'Admin.Global') }}</h2>
-      <h2 class="for-switch offline-title" {% if is_active %}style="display:none;"{% endif %} data-toggle="pstooltip"
+        <h2 class="for-switch offline-title" {% if is_active %}style="display:none;"{% endif %} data-toggle="pstooltip"
           title="{{ 'Enable or disable the product on your shop: ALT+SHIFT+O'|trans({}, 'Admin.Catalog.Help') }}">{{ 'Offline'|trans({}, 'Admin.Global') }}</h2>
-      <input
-        class="switch-input-lg"
-        id="form_step1_active"
-        data-toggle="switch"
-        type="checkbox"
-        name="form[step1][active]"
-        value="1"
-        {{ is_active ? 'checked="checked"' : '' }}
-      />
+        <input
+          class="switch-input-lg"
+          id="form_step1_active"
+          data-toggle="switch"
+          type="checkbox"
+          name="form[step1][active]"
+          value="1"
+          {{ is_active ? 'checked="checked"' : '' }}
+        />
       {% endif %}
     </div>
     <div class="col-sm-5 col-lg-7 text-right">
@@ -72,7 +73,7 @@
         value="{{ 'Save'|trans({}, 'Admin.Actions') }}"
         data-toggle="pstooltip"
         title="{{ 'Save the product and stay on the current page: ALT+SHIFT+S'|trans({}, 'Admin.Catalog.Help') }}"
-        />
+      />
       {% if is_shop_context %}
         <button
           type="button"
@@ -81,7 +82,7 @@
           data-redirect="{{ path('admin_product_unit_action', {action: 'duplicate', id: productId}) }}"
           data-toggle="pstooltip"
           title="{{ 'Save and duplicate this product, then go to the new product: ALT+SHIFT+D'|trans({}, 'Admin.Catalog.Help') }}"
-          >
+        >
           {{ 'Duplicate'|trans({}, 'Admin.Actions')|raw }}
         </button>
       {% endif %}
@@ -92,7 +93,7 @@
         data-redirect="{{ path('admin_product_catalog', {'offset': 'last', 'limit': 'last'}) }}"
         data-toggle="pstooltip"
         title="{{ 'Save and go back to the catalog: ALT+SHIFT+Q'|trans({}, 'Admin.Catalog.Help') }}"
-        >
+      >
         {{ 'Go to catalog'|trans({}, 'Admin.Catalog.Feature')|raw }}
       </button>
       <button
@@ -102,45 +103,45 @@
         data-redirect="{{ path('admin_product_new') }}"
         data-toggle="pstooltip"
         title="{{ 'Save and create a new product: ALT+SHIFT+P'|trans({}, 'Admin.Catalog.Help') }}"
-        >
+      >
         {{ 'Add new product'|trans({}, 'Admin.Catalog.Feature')|raw }}
       </button>
 
-        <div class="js-spinner spinner hide btn-primary-reverse onclick mr-1 btn"></div>
-        <div class="btn-group hide dropdown">
-          <button
+      <div class="js-spinner spinner hide btn-primary-reverse onclick mr-1 btn"></div>
+      <div class="btn-group hide dropdown">
+        <button
           class="btn btn-primary js-btn-save ml-3"
           type="submit"
-          >
-            <span>{{ 'Save'|trans({}, 'Admin.Actions') }}</span>
-          </button><button
-            class="btn btn-primary dropdown-toggle dropdown-toggle-split"
-            type="button"
-            id="dropdownMenu"
-            data-toggle="dropdown"
-            aria-expanded="false"
-          >
-            <span class="sr-only">Toggle Dropdown</span>
-          </button>
-          <div class="dropdown-menu" aria-labelledby="dropdownMenu">
-            {% if is_shop_context %}
-              <a
+        >
+          <span>{{ 'Save'|trans({}, 'Admin.Actions') }}</span>
+        </button><button
+                   class="btn btn-primary dropdown-toggle dropdown-toggle-split"
+                   type="button"
+                   id="dropdownMenu"
+                   data-toggle="dropdown"
+                   aria-expanded="false"
+                 >
+          <span class="sr-only">Toggle Dropdown</span>
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenu">
+          {% if is_shop_context %}
+            <a
               class="dropdown-item duplicate js-btn-save"
               href="{{ path('admin_product_unit_action', {action: 'duplicate', id: productId}) }}"
-              >
+            >
               {{ 'Duplicate'|trans({}, 'Admin.Actions')|raw }}
-              </a>
-            {% endif %}
+            </a>
+          {% endif %}
           <a
             class="dropdown-item go-catalog js-btn-save"
             href="{{ path('admin_product_catalog', {'offset': 'last', 'limit': 'last'}) }}"
-            >
+          >
             {{ 'Go to catalog'|trans({}, 'Admin.Catalog.Feature')|raw }}
           </a>
           <a
             class="dropdown-item new-product js-btn-save"
             href="{{ path('admin_product_new') }}"
-            >
+          >
             {{ 'Add new product'|trans({}, 'Admin.Catalog.Feature')|raw }}
           </a>
         </div>

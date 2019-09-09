@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
-<!-- Copyright © 1991-2017 Unicode, Inc.
+<!-- Copyright © 1991-2019 Unicode, Inc.
 For terms of use, see http://www.unicode.org/copyright.html
 Unicode and the Unicode Logo are registered trademarks of Unicode, Inc. in the U.S. and other countries.
 CLDR data files are interpreted according to the LDML specification (http://unicode.org/reports/tr35/)
 -->
 <ldml>
 	<identity>
-		<version number="$Revision: 13701 $"/>
+		<version number="$Revision: 14782 $"/>
 		<language type="vai"/>
 	</identity>
 	<localeDisplayNames>
@@ -382,7 +382,7 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 				<months>
 					<monthContext type="format">
 						<monthWidth type="abbreviated">
-							<month type="1">ꖨꕪꖃ</month>
+							<month type="1">ꖨꖕꔞ</month>
 							<month type="2">ꕒꕡ</month>
 							<month type="3">ꕾꖺ</month>
 							<month type="4">ꖢꖕ</month>
@@ -393,10 +393,10 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 							<month type="9">ꕢꕌ</month>
 							<month type="10">ꕭꖃ</month>
 							<month type="11">ꔞꘋ</month>
-							<month type="12">ꖨꕪꕱ</month>
+							<month type="12">ꖨꖕꗏ</month>
 						</monthWidth>
 						<monthWidth type="wide">
-							<month type="1">ꖨꕪꖃ ꔞꕮ</month>
+							<month type="1">ꖨꖕ ꕪꕴ ꔞꔀꕮꕊ</month>
 							<month type="2">ꕒꕡꖝꖕ</month>
 							<month type="3">ꕾꖺ</month>
 							<month type="4">ꖢꖕ</month>
@@ -407,12 +407,12 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 							<month type="9">ꕢꕌ</month>
 							<month type="10">ꕭꖃ</month>
 							<month type="11">ꔞꘋꕔꕿ ꕸꖃꗏ</month>
-							<month type="12">ꖨꕪꕱ ꗏꕮ</month>
+							<month type="12">ꖨꖕ ꕪꕴ ꗏꖺꕮꕊ</month>
 						</monthWidth>
 					</monthContext>
 					<monthContext type="stand-alone">
 						<monthWidth type="abbreviated">
-							<month type="1">ꖨꕪꖃ</month>
+							<month type="1">ꖨꖕꔞ</month>
 							<month type="2">ꕒꕡ</month>
 							<month type="3">ꕾꖺ</month>
 							<month type="4">ꖢꖕ</month>
@@ -423,10 +423,10 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 							<month type="9">ꕢꕌ</month>
 							<month type="10">ꕭꖃ</month>
 							<month type="11">ꔞꘋ</month>
-							<month type="12">ꖨꕪꕱ</month>
+							<month type="12">ꖨꖕꗏ</month>
 						</monthWidth>
 						<monthWidth type="wide">
-							<month type="1">ꖨꕪꖃ ꔞꕮ</month>
+							<month type="1">ꖨꖕ ꕪꕴ ꔞꔀꕮꕊ</month>
 							<month type="2">ꕒꕡꖝꖕ</month>
 							<month type="3">ꕾꖺ</month>
 							<month type="4">ꖢꖕ</month>
@@ -437,7 +437,7 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 							<month type="9">ꕢꕌ</month>
 							<month type="10">ꕭꖃ</month>
 							<month type="11">ꔞꘋꕔꕿ ꕸꖃꗏ</month>
-							<month type="12">ꖨꕪꕱ ꗏꕮ</month>
+							<month type="12">ꖨꖕ ꕪꕴ ꗏꖺꕮꕊ</month>
 						</monthWidth>
 					</monthContext>
 				</months>
@@ -690,6 +690,9 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 				<displayName>ꕮꕞꕭꕌꔻ ꕉꔸꕩꔸ</displayName>
 			</currency>
 			<currency type="MRO">
+				<displayName>ꗞꔸꕚꕇꕰ ꖳꕅꕩ (1973–2017)</displayName>
+			</currency>
+			<currency type="MRU">
 				<displayName>ꗞꔸꕚꕇꕰ ꖳꕅꕩ</displayName>
 			</currency>
 			<currency type="MUR">
@@ -730,6 +733,9 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 				<displayName>ꖇꕮꔷ ꔻꔝꘋ</displayName>
 			</currency>
 			<currency type="STD">
+				<displayName>ꕢꕴ ꕿꔈ ꗪ ꕉ ꕗꕴ ꖁꖜꕟ (1977–2017)</displayName>
+			</currency>
+			<currency type="STN">
 				<displayName>ꕢꕴ ꕿꔈ ꗪ ꕉ ꕗꕴ ꖁꖜꕟ</displayName>
 			</currency>
 			<currency type="SZL">

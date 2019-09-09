@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -473,7 +473,7 @@ class AdminProductWrapper
                     }
 
                     $price = Tools::ps_round($specific_price['price'], 2);
-                    $fixed_price = ($price == Tools::ps_round($product->price, 2) || $specific_price['price'] == -1) ? '--' : Tools::displayPrice($price, $current_specific_currency);
+                    $fixed_price = (($price == Tools::ps_round($product->price, 2) && $current_specific_currency['id_currency'] == $defaultCurrency->id) || $specific_price['price'] == -1) ? '--' : Tools::displayPrice($price, $current_specific_currency);
 
                     $content[] = [
                         'id_specific_price' => $specific_price['id_specific_price'],

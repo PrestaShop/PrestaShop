@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -29,6 +29,9 @@ namespace PrestaShopBundle\Translation;
 
 use Symfony\Bundle\FrameworkBundle\Translation\Translator as BaseTranslator;
 
+/**
+ * Replacement for the original Symfony FrameworkBundle translator
+ */
 class Translator extends BaseTranslator
 {
     use PrestaShopTranslatorTrait;

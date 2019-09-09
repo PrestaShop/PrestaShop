@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -2593,8 +2593,8 @@ class ProductCore extends ObjectModel
         if (Group::isFeatureActive()) {
             $groups = FrontController::getCurrentCustomerGroups();
             $sql_groups = ' AND EXISTS(SELECT 1 FROM `' . _DB_PREFIX_ . 'category_product` cp
-                JOIN `' . _DB_PREFIX_ . 'category_group` cg ON (cp.id_category = cg.id_category AND cg.`id_group` ' . (count($groups) ? 'IN (' . implode(',', $groups) . ')' : '= ' . (int) Configuration::get('PS_UNIDENTIFIED_GROUP')) . ')
-                WHERE cp.`id_product` = p.`id_product`)';
+            JOIN `' . _DB_PREFIX_ . 'category_group` cg ON (cp.id_category = cg.id_category AND cg.`id_group` ' . (count($groups) ? 'IN (' . implode(',', $groups) . ')' : '=' . (int) Group::getCurrent()->id) . ')
+            WHERE cp.`id_product` = p.`id_product`)';
         }
 
         if (strpos($order_by, '.') > 0) {
@@ -2649,8 +2649,8 @@ class ProductCore extends ObjectModel
         if (Group::isFeatureActive()) {
             $groups = FrontController::getCurrentCustomerGroups();
             $sql->where('EXISTS(SELECT 1 FROM `' . _DB_PREFIX_ . 'category_product` cp
-                JOIN `' . _DB_PREFIX_ . 'category_group` cg ON (cp.id_category = cg.id_category AND cg.`id_group` ' . (count($groups) ? 'IN (' . implode(',', $groups) . ')' : '=' . (int) Configuration::get('PS_UNIDENTIFIED_GROUP')) . ')
-                WHERE cp.`id_product` = p.`id_product`)');
+            JOIN `' . _DB_PREFIX_ . 'category_group` cg ON (cp.id_category = cg.id_category AND cg.`id_group` ' . (count($groups) ? 'IN (' . implode(',', $groups) . ')' : '=' . (int) Group::getCurrent()->id) . ')
+            WHERE cp.`id_product` = p.`id_product`)');
         }
 
         $sql->orderBy((isset($order_by_prefix) ? pSQL($order_by_prefix) . '.' : '') . '`' . pSQL($order_by) . '` ' . pSQL($order_way));
@@ -2738,8 +2738,8 @@ class ProductCore extends ObjectModel
 
             $groups = FrontController::getCurrentCustomerGroups();
             $sql_groups = ' AND EXISTS(SELECT 1 FROM `' . _DB_PREFIX_ . 'category_product` cp
-                JOIN `' . _DB_PREFIX_ . 'category_group` cg ON (cp.id_category = cg.id_category AND cg.`id_group` ' . (count($groups) ? 'IN (' . implode(',', $groups) . ')' : '=' . (int) Configuration::get('PS_UNIDENTIFIED_GROUP')) . ')
-                WHERE cp.`id_product` = p.`id_product`)';
+            JOIN `' . _DB_PREFIX_ . 'category_group` cg ON (cp.id_category = cg.id_category AND cg.`id_group` ' . (count($groups) ? 'IN (' . implode(',', $groups) . ')' : '=' . (int) Group::getCurrent()->id) . ')
+            WHERE cp.`id_product` = p.`id_product`)';
 
             // Please keep 2 distinct queries because RAND() is an awful way to achieve this result
             $sql = 'SELECT product_shop.id_product, IFNULL(product_attribute_shop.id_product_attribute,0) id_product_attribute
@@ -2863,8 +2863,8 @@ class ProductCore extends ObjectModel
         if (Group::isFeatureActive()) {
             $groups = FrontController::getCurrentCustomerGroups();
             $sql_groups = ' AND EXISTS(SELECT 1 FROM `' . _DB_PREFIX_ . 'category_product` cp
-                JOIN `' . _DB_PREFIX_ . 'category_group` cg ON (cp.id_category = cg.id_category AND cg.`id_group` ' . (count($groups) ? 'IN (' . implode(',', $groups) . ')' : '=' . (int) Configuration::get('PS_UNIDENTIFIED_GROUP')) . ')
-                WHERE cp.`id_product` = p.`id_product`)';
+            JOIN `' . _DB_PREFIX_ . 'category_group` cg ON (cp.id_category = cg.id_category AND cg.`id_group` ' . (count($groups) ? 'IN (' . implode(',', $groups) . ')' : '=' . (int) Group::getCurrent()->id) . ')
+            WHERE cp.`id_product` = p.`id_product`)';
         }
 
         if ($count) {
@@ -4442,6 +4442,58 @@ class ProductCore extends ObjectModel
         }
 
         return Db::getInstance()->insert('product_tag', $data);
+    }
+
+    public static function duplicateTaxes($id_product_old, $id_product_new)
+    {
+        $query = new DbQuery();
+        $query->select('id_tax_rules_group, id_shop');
+        $query->from('product_shop');
+        $query->where('`id_product` = ' . (int) $id_product_old);
+
+        $results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query->build());
+
+        if (!empty($results)) {
+            foreach ($results as $result) {
+                if (!Db::getInstance()->update(
+                    'product_shop',
+                    array('id_tax_rules_group' => (int) $result['id_tax_rules_group']),
+                    'id_product=' . (int) $id_product_new . ' AND id_shop = ' . (int) $result['id_shop']
+                )) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Duplicate prices when duplicating a product.
+     *
+     * @param int $id_product_old Old product id
+     * @param int $id_product_new New product id
+     */
+    public static function duplicatePrices($id_product_old, $id_product_new)
+    {
+        $query = new DbQuery();
+        $query->select('price, unit_price_ratio, id_shop');
+        $query->from('product_shop');
+        $query->where('`id_product` = ' . (int) $id_product_old);
+        $results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query->build());
+        if (!empty($results)) {
+            foreach ($results as $result) {
+                if (!Db::getInstance()->update(
+                    'product_shop',
+                    array('price' => pSQL($result['price']), 'unit_price_ratio' => pSQL($result['unit_price_ratio'])),
+                    'id_product=' . (int) $id_product_new . ' AND id_shop = ' . (int) $result['id_shop']
+                )) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
     public static function duplicateDownload($id_product_old, $id_product_new)

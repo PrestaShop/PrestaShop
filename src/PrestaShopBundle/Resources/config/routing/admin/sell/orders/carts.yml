@@ -1,0 +1,15 @@
+admin_carts_index:
+  path: /
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Cart:index
+    _legacy_controller: AdminCarts
+
+admin_carts_view:
+  path: /{cartId}/view
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Cart:view
+    _legacy_controller: AdminCarts
+  requirements:
+    cartId: \d+

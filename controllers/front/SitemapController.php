@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -132,7 +132,7 @@ class SitemapControllerCore extends FrontController
         $links[] = array(
             'id' => 'register-page',
             'label' => $this->trans('Create new account', array(), 'Shop.Theme.Global'),
-            'url' => $this->context->link->getPageLink('authentication'),
+            'url' => $this->context->link->getPageLink('authentication', null, null, array('create_account' => 1)),
         );
 
         return $links;

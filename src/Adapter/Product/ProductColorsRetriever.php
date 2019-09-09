@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -40,6 +40,8 @@ class ProductColorsRetriever
      */
     public function getColoredVariants($id_product)
     {
-        return (is_array(Product::getAttributesColorList([$id_product]))) ? current(Product::getAttributesColorList([$id_product])) : null;
+        $attributesColorList = Product::getAttributesColorList([$id_product]);
+
+        return (is_array($attributesColorList)) ? current($attributesColorList) : null;
     }
 }

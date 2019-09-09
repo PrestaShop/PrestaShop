@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -27,9 +27,12 @@
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Behat\Context\Context;
+use Behat\Testwork\Hook\Scope\BeforeSuiteScope;
+use ObjectModel;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
+use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
 abstract class AbstractDomainFeatureContext implements Context
 {
@@ -37,6 +40,15 @@ abstract class AbstractDomainFeatureContext implements Context
      * @var \Exception|null
      */
     protected $lastException;
+
+    /**
+     * @BeforeSuite
+     */
+    public static function prepare(BeforeSuiteScope $scope)
+    {
+        // Disable legacy object model cache to prevent conflicts between scenarios.
+        ObjectModel::disableCache();
+    }
 
     /**
      * @return CommandBusInterface
@@ -52,6 +64,14 @@ abstract class AbstractDomainFeatureContext implements Context
     protected function getQueryBus()
     {
         return CommonFeatureContext::getContainer()->get('prestashop.core.query_bus');
+    }
+
+    /**
+     * @return SharedStorage
+     */
+    protected function getSharedStorage()
+    {
+        return SharedStorage::getStorage();
     }
 
     /**

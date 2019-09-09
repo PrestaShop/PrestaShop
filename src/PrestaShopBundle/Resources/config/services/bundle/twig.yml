@@ -89,3 +89,10 @@ services:
       public: true
       tags:
         - { name: twig.extension }
+
+    prestashop.bundle.twig.extension.color_brightness_calculator_extension:
+      class: PrestaShopBundle\Twig\Extension\ColorBrightnessCalculatorExtension
+      arguments:
+        - '@prestashop.core.util.color_brightness_calculator'
+      tags:
+        - { name: twig.extension }

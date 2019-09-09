@@ -146,3 +146,51 @@ services:
           - '@prestashop.adapter.shop.context'
           - '@=service("prestashop.adapter.multistore_feature").isUsed()'
         public: true
+
+    prestashop.core.grid.definition.factory.monitoring.empty_category:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\EmptyCategoryGridDefinitionFactory'
+      parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+      arguments:
+        - '@prestashop.adapter.grid.action.row.accessibility_checker.category_for_view'
+      public: true
+
+    prestashop.core.grid.definition.factory.monitoring.no_qty_product_with_combination:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\NoQtyProductWithCombinationGridDefinitionFactory'
+      parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+      public: true
+
+    prestashop.core.grid.definition.factory.monitoring.no_qty_product_without_combination:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\NoQtyProductWithoutCombinationGridDefinitionFactory'
+      parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+      public: true
+
+    prestashop.core.grid.definition.factory.monitoring.disabled_product:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\DisabledProductGridDefinitionFactory'
+      parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+      public: true
+
+    prestashop.core.grid.definition.factory.monitoring.product_without_image:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\ProductWithoutImageGridDefinitionFactory'
+      parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+      public: true
+
+    prestashop.core.grid.definition.factory.monitoring.product_without_description:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\ProductWithoutDescriptionGridDefinitionFactory'
+      parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+      public: true
+
+    prestashop.core.grid.definition.factory.monitoring.product_without_price:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\ProductWithoutPriceGridDefinitionFactory'
+      parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+      public: true
+
+    prestashop.core.grid.definition.factory.order:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderGridDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        arguments:
+          - '@prestashop.adapter.legacy.configuration'
+          - '@prestashop.adapter.form.choice_provider.order_countries'
+          - '@prestashop.core.form.choice_provider.order_state_by_id'
+          - '@=service("prestashop.adapter.legacy.context").getContext().language.date_format_full'
+          - '@prestashop.adapter.feature.multistore'
+        public: true

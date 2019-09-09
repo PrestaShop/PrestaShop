@@ -4,7 +4,7 @@ var fs = require('fs');
 module.exports = function initializePrestaShopBrowserCommands(browser) {
 
   /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *

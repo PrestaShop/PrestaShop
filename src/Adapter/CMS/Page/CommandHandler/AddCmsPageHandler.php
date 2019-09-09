@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -41,9 +41,6 @@ final class AddCmsPageHandler extends AbstractCmsPageHandler implements AddCmsPa
 {
     /**
      * {@inheritdoc}
-     *
-     * @throws CmsPageException
-     * @throws PrestaShopException
      */
     public function handle(AddCmsPageCommand $command)
     {
@@ -75,15 +72,16 @@ final class AddCmsPageHandler extends AbstractCmsPageHandler implements AddCmsPa
      * @param AddCmsPageCommand $command
      *
      * @return CMS
-     *
-     * @throws PrestaShopException
      */
     protected function createCmsFromCommand(AddCmsPageCommand $command)
     {
+        $cmsCategoryId = $command->getCmsPageCategory()->getValue();
+        $this->assertCmsCategoryExists($cmsCategoryId);
+
         $cms = new CMS();
+        $cms->id_cms_category = $cmsCategoryId;
         $cms->meta_title = $command->getLocalizedTitle();
         $cms->head_seo_title = $command->getLocalizedMetaTitle();
-        $cms->id_cms_category = $command->getCmsPageCategory()->getValue();
         $cms->meta_description = $command->getLocalizedMetaDescription();
         $cms->meta_keywords = $command->getLocalizedMetaKeyword();
         $cms->link_rewrite = $command->getLocalizedFriendlyUrl();

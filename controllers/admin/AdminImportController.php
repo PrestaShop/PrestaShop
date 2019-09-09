@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -1344,17 +1344,20 @@ class AdminImportControllerCore extends AdminController
             }
 
             $info = AdminImportController::getMaskedRow($line);
-
-            $this->categoryImportOne(
-                $info,
-                $default_language_id,
-                $id_lang,
-                $force_ids,
-                $regenerate,
-                $shop_is_feature_active,
-                $cat_moved, // by ref
-                $validateOnly
-            );
+            try {
+                $this->categoryImportOne(
+                    $info,
+                    $default_language_id,
+                    $id_lang,
+                    $force_ids,
+                    $regenerate,
+                    $shop_is_feature_active,
+                    $cat_moved, // by ref
+                    $validateOnly
+                );
+            } catch (Exception $exc) {
+                $this->errors[] = $exc->getMessage();
+            }
         }
 
         $this->closeCsvFile($handle);
@@ -2110,6 +2113,7 @@ class AdminImportControllerCore extends AdminController
                 $product_supplier->id_supplier = (int) $product->id_supplier;
                 $product_supplier->product_supplier_price_te = $product->wholesale_price;
                 $product_supplier->product_supplier_reference = $product->supplier_reference;
+                $product_supplier->id_currency = Currency::getDefaultCurrency()->id;
                 $product_supplier->save();
             }
 

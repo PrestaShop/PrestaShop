@@ -2,6 +2,9 @@ services:
     _defaults:
         public: true
 
+    prestashop.adapter.data_provider.country:
+        class: PrestaShop\PrestaShop\Adapter\Country\CountryDataProvider
+
     prestashop.adapter.data_provider.currency:
         class: PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider
         arguments:

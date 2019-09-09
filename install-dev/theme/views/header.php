@@ -18,7 +18,7 @@
 	<script type="text/javascript" src="../js/jquery/jquery-1.11.0.min.js"></script>
 	<script type="text/javascript" src="../js/jquery/plugins/jquery.chosen.js"></script>
 	<script type="text/javascript" src="theme/js/install.js"></script>
-	<script type="text/javascript" src="//www.prestashop.com/js/user-assistance.js"></script>
+	<script type="text/javascript" src="https://www.prestashop.com/js/user-assistance.js"></script>
 	<?php if (file_exists(_PS_INSTALL_PATH_.'theme/js/'.self::$steps->current()->getName().'.js')): ?>
 		<script type="text/javascript" src="theme/js/<?php echo self::$steps->current()->getName() ?>.js"></script>
 	<?php endif; ?>

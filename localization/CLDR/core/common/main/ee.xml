@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
-<!-- Copyright © 1991-2017 Unicode, Inc.
+<!-- Copyright © 1991-2019 Unicode, Inc.
 For terms of use, see http://www.unicode.org/copyright.html
 Unicode and the Unicode Logo are registered trademarks of Unicode, Inc. in the U.S. and other countries.
 CLDR data files are interpreted according to the LDML specification (http://unicode.org/reports/tr35/)
 -->
 <ldml>
 	<identity>
-		<version number="$Revision: 13701 $"/>
+		<version number="$Revision: 14782 $"/>
 		<language type="ee"/>
 	</identity>
 	<localeDisplayNames>
@@ -5593,6 +5593,11 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 				<displayName count="other">makanesega pataca</displayName>
 			</currency>
 			<currency type="MRO">
+				<displayName>mɔritaniaga ouguiya (1973–2017)</displayName>
+				<displayName count="one">mɔritaniaga ouguiya (1973–2017)</displayName>
+				<displayName count="other">mɔritaniaga ouguiya (1973–2017)</displayName>
+			</currency>
+			<currency type="MRU">
 				<displayName>mɔritaniaga ouguiya</displayName>
 				<displayName count="one">mɔritaniaga ouguiya</displayName>
 				<displayName count="other">mɔritaniaga ouguiya</displayName>
@@ -5879,6 +5884,11 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 				<displayName count="other" draft="unconfirmed">anyiehe sudanga pound</displayName>
 			</currency>
 			<currency type="STD">
+				<displayName>são tomé kple príncipega dobra (1977–2017)</displayName>
+				<displayName count="one">são tomé kple príncipega dobra (1977–2017)</displayName>
+				<displayName count="other">são tomé kple príncipega dobra (1977–2017)</displayName>
+			</currency>
+			<currency type="STN">
 				<displayName>são tomé kple príncipega dobra</displayName>
 				<displayName count="one">são tomé kple príncipega dobra</displayName>
 				<displayName count="other">são tomé kple príncipega dobra</displayName>
@@ -6044,11 +6054,16 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 				<displayName count="other">venezuelaga bolívar (1871–2008)</displayName>
 			</currency>
 			<currency type="VEF">
+				<displayName>venezuelaga bolívar (2008–2018)</displayName>
+				<displayName count="one">venezuelaga bolívar (2008–2018)</displayName>
+				<displayName count="other">venezuelaga bolívar (2008–2018)</displayName>
+				<symbol draft="contributed">VEF</symbol>
+				<symbol alt="narrow" draft="contributed">Bs</symbol>
+			</currency>
+			<currency type="VES">
 				<displayName>venezuelaga bolívar</displayName>
 				<displayName count="one">venezuelaga bolívar</displayName>
 				<displayName count="other">venezuelaga bolívar</displayName>
-				<symbol draft="contributed">VEF</symbol>
-				<symbol alt="narrow" draft="contributed">Bs</symbol>
 			</currency>
 			<currency type="VND">
 				<displayName>vietnamga dong</displayName>
@@ -6250,6 +6265,9 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 			<pattern type="atLeast">{0}+</pattern>
 			<pattern type="range">{0}–{1}</pattern>
 		</miscPatterns>
+		<minimalPairs>
+			<ordinalMinimalPairs ordinal="other" draft="contributed">{0}lia</ordinalMinimalPairs>
+		</minimalPairs>
 	</numbers>
 	<units>
 		<unitLength type="long">

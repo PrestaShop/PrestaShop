@@ -389,15 +389,6 @@ module.exports = {
         await client.pause(0);
       }
     });
-    test('should check that the "Updates number" is decremented with 1 if there is at least one module to update', async () => {
-      if (tab['notification_update'] > 0) {
-        return promise
-          .then(() => client.waitForVisible(ModulePage.update_notification_number_span))
-          .then(() => client.checkTextValue(ModulePage.update_notification_number_span, (tab['notification_update'] - 1).toString(), 'equal'));
-      } else {
-        await client.pause(0);
-      }
-    });
   },
   installAndCheckAbondonedCartProModule: function (ModulePage) {
     scenario('Install "abondoned cart pro" module by uploading a ZIP file', client => {

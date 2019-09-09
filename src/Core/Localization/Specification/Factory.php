@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -59,16 +59,18 @@ class Factory
     {
         $decimalPattern = $cldrLocale->getDecimalPattern();
         $numbersSymbols = $cldrLocale->getAllNumberSymbols();
+        // Use positive pattern to retrieve information
+        $positivePattern = $this->getPositivePattern($decimalPattern);
 
         return new NumberSpecification(
-            $this->getPositivePattern($decimalPattern),
+            $positivePattern,
             $this->getNegativePattern($decimalPattern),
             $this->computeNumberSymbolLists($numbersSymbols),
             $maxFractionDigits,
-            $this->getMinFractionDigits($decimalPattern),
+            $this->getMinFractionDigits($positivePattern),
             $numberGroupingUsed,
-            $this->getPrimaryGroupSize($decimalPattern),
-            $this->getSecondaryGroupSize($decimalPattern)
+            $this->getPrimaryGroupSize($positivePattern),
+            $this->getSecondaryGroupSize($positivePattern)
         );
     }
 
@@ -102,16 +104,18 @@ class Factory
     ) {
         $currencyPattern = $cldrLocale->getCurrencyPattern();
         $numbersSymbols = $cldrLocale->getAllNumberSymbols();
+        // Use positive pattern to retrieve information
+        $positivePattern = $this->getPositivePattern($currencyPattern);
 
         return new PriceSpecification(
-            $this->getPositivePattern($currencyPattern),
+            $positivePattern,
             $this->getNegativePattern($currencyPattern),
             $this->computeNumberSymbolLists($numbersSymbols),
-            $this->getMaxFractionDigits($currencyPattern),
-            $this->getMinFractionDigits($currencyPattern),
-            $numberGroupingUsed && $this->getPrimaryGroupSize($currencyPattern) > 1,
-            $this->getPrimaryGroupSize($currencyPattern),
-            $this->getSecondaryGroupSize($currencyPattern),
+            $this->getMaxFractionDigits($positivePattern),
+            $this->getMinFractionDigits($positivePattern),
+            $numberGroupingUsed && $this->getPrimaryGroupSize($positivePattern) > 1,
+            $this->getPrimaryGroupSize($positivePattern),
+            $this->getSecondaryGroupSize($positivePattern),
             $currencyDisplayType,
             $currency->getSymbol($localeCode),
             $currency->getIsoCode()

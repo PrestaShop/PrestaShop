@@ -1,5 +1,5 @@
 {#**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -35,7 +35,9 @@
         var data = {
             baseUrl: '{{ app.request.getBasePath() }}',
             locale: '{{ app.request.query.get('locale') }}',
-            selected: '{{ 'modules' == app.request.query.get('type') ? theme.name : app.request.query.get('selected') }}',
+            type: '{{ app.request.query.get('type') }}',
+            currentTheme: {{ theme.name|json_encode|raw }},
+            selected: '{{ app.request.query.get('selected') }}',
             domainsTreeUrl: '{{ url('api_translation_domains_tree', {
               'lang' : app.request.query.get('lang'),
               'type' : app.request.query.get('type'),

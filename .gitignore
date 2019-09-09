@@ -132,8 +132,8 @@ php-cs-fixer
 
 translations/*
 mails/*
-!mails/en/
 !mails/themes/
+!mails/_partials/
 themes/default-bootstrap/lang/*
 themes/default-bootstrap/modules/*/translations/*.php
 themes/default-bootstrap/mails/*

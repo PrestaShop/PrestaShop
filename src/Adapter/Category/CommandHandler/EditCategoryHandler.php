@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -105,10 +105,6 @@ final class EditCategoryHandler extends AbstractObjectModelHandler implements Ed
             $category->groupBox = $command->getAssociatedGroupIds();
         }
 
-        if ($command->getAssociatedShopIds()) {
-            $this->associateWithShops($category, $command->getAssociatedShopIds());
-        }
-
         if (false === $category->validateFields(false)) {
             throw new CategoryException('Invalid data when updating category');
         }
@@ -121,6 +117,10 @@ final class EditCategoryHandler extends AbstractObjectModelHandler implements Ed
             throw new CannotEditCategoryException(
                 sprintf('Failed to edit Category with id "%s".', $category->id)
             );
+        }
+
+        if ($command->getAssociatedShopIds()) {
+            $this->associateWithShops($category, $command->getAssociatedShopIds());
         }
     }
 }

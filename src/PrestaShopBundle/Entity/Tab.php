@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -69,9 +69,16 @@ class Tab
     /**
      * @var string
      *
-     * @ORM\Column(name="class_name", type="string", length=64, nullable=true)
+     * @ORM\Column(name="class_name", type="string", length=64)
      */
     private $className;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="route_name", type="string", length=256, nullable=true)
+     */
+    private $routeName;
 
     /**
      * @var bool
@@ -79,6 +86,13 @@ class Tab
      * @ORM\Column(name="active", type="boolean")
      */
     private $active;
+
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="enabled", type="boolean")
+     */
+    private $enabled = true;
 
     /**
      * @var bool
@@ -154,6 +168,46 @@ class Tab
     public function setActive($active)
     {
         $this->active = $active;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRouteName()
+    {
+        return $this->routeName;
+    }
+
+    /**
+     * @param string $routeName
+     *
+     * @return Tab
+     */
+    public function setRouteName($routeName)
+    {
+        $this->routeName = $routeName;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEnabled()
+    {
+        return $this->enabled;
+    }
+
+    /**
+     * @param bool $enabled
+     *
+     * @return Tab
+     */
+    public function setEnabled($enabled)
+    {
+        $this->enabled = $enabled;
 
         return $this;
     }

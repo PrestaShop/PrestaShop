@@ -12,3 +12,6 @@ services:
 
     prestashop.core.uti.back_url_provider:
         class: PrestaShop\PrestaShop\Core\Util\Url\BackUrlProvider
+
+    prestashop.core.util.color_brightness_calculator:
+        class: PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator

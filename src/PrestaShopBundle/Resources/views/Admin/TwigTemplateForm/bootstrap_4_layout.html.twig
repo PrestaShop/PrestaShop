@@ -1,5 +1,5 @@
 {#**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -659,6 +659,9 @@
         <button class="btn btn-outline-secondary dropdown-toggle js-locale-btn"
                 type="button"
                 data-toggle="dropdown"
+                {% if change_form_language_url is defined %}
+                  data-change-language-url="{{ form.vars.change_form_language_url }}"
+                {% endif %}
                 aria-haspopup="true"
                 aria-expanded="false"
                 id="{{ form.vars.id }}"
@@ -701,6 +704,11 @@
 {% endblock birthday_widget %}
 
 {% block file_widget %}
+  <style>
+    .custom-file-label:after {
+      content: "{{ "Browse"|trans({}, 'Admin.Actions')  }}";
+    }
+  </style>
   <div class="custom-file">
     {% set attr = attr|merge({
       class: (attr.class|default('') ~ ' custom-file-input')|trim,
@@ -780,3 +788,13 @@
     </em>
   </small>
 {% endblock text_with_recommended_length_widget %}
+
+{% block integer_min_max_filter_widget %}
+  {{ form_widget(form['min_field'], { attr: {class: 'min-field'}}) }}
+  {{ form_widget(form['max_field'], { attr: {class: 'max-field'}}) }}
+{% endblock %}
+
+{% block number_min_max_filter_widget %}
+  {{ form_widget(form['min_field'], { attr: {class: 'min-field'}}) }}
+  {{ form_widget(form['max_field'], { attr: {class: 'max-field'}}) }}
+{% endblock %}
