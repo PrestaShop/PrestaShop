@@ -39,7 +39,7 @@ services:
 
     form.type.product.feature:
         class: PrestaShopBundle\Form\Admin\Feature\ProductFeature
-        arguments
+        arguments:
             - "@translator"
             - "@prestashop.adapter.legacy.context"
             - "@router"
