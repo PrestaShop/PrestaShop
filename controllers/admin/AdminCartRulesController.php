@@ -654,10 +654,10 @@ class AdminCartRulesControllerCore extends AdminController
                 foreach ($carrier as $field => &$value) {
                     if ($field == 'name') {
                         if ($value == '0') {
-                            $value = Configuration::get('PS_SHOP_NAME');
+                            $value = $carrier['id_carrier'].' - '.Configuration::get('PS_SHOP_NAME');
+                        } else {
+                            $value = $carrier['id_carrier'].' - '.$carrier['name'].' ('.$carrier['delay'].')';
                         }
-
-                        $value = $carrier['id_carrier'].' - '.$carrier['name'].' ('.$carrier['delay'].')';
                     }
                 }
 
