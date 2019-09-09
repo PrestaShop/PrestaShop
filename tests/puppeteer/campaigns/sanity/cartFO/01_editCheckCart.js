@@ -18,7 +18,7 @@ let itemsNumber = 0;
 const init = async () => {
   page = await global.browser.newPage();
   await page.setExtraHTTPHeaders({
-    'Accept-Language': 'en-GB'
+    'Accept-Language': 'en-GB',
   });
   homePage = await (new HomePage(page));
   productPage = await (new ProductPage(page));
