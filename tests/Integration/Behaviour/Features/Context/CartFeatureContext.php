@@ -42,16 +42,32 @@ class CartFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @Then there is no delivery options available for my cart
      */
-    public function noDeliveryOptions()
+    public function noDeliveryOptionsAvailable()
     {
         if ($this->getCurrentCart() === null) {
             throw new \RuntimeException('No current cart, cannot check available delivery options');
         }
 
-        $deliveryOptions = $this->getCurrentCart()->getDeliveryOptionList();
+        $deliveryOptions = $this->getCurrentCart()->getDeliveryOptionList(null, true);
 
         if (!empty($deliveryOptions)) {
             throw new \RuntimeException('Expected no available delivery options, but there are some !');
+        }
+    }
+
+    /**
+     * @Then there is delivery options available for my cart
+     */
+    public function deliveryOptionsAvailable()
+    {
+        if ($this->getCurrentCart() === null) {
+            throw new \RuntimeException('No current cart, cannot check available delivery options');
+        }
+
+        $deliveryOptions = $this->getCurrentCart()->getDeliveryOptionList(null, true);
+
+        if (empty($deliveryOptions)) {
+            throw new \RuntimeException('Expected no available delivery options, but there are none !');
         }
     }
 

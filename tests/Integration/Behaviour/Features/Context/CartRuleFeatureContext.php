@@ -175,8 +175,9 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
 
     /**
      * @Given /^cart rule "(.+)" is disabled$/
+     * @When /^I disable cart rule "(.+)"$/
      */
-    public function cartRuleIsDisabled($cartRuleName)
+    public function disableCartRule($cartRuleName)
     {
         $this->checkCartRuleWithNameExists($cartRuleName);
         $this->cartRules[$cartRuleName]->active = 0;
@@ -184,6 +185,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
+     * @Given /^cart rule "(.+)" is enabled$/
      * @When /^I enable cart rule "(.+)"$/
      */
     public function enableCartRule($cartRuleName)

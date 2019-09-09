@@ -34,9 +34,6 @@ Feature: Compute correct delivery options
     When I add 1 items of product "product1" in my cart
     # Use discount code
     When I use the discount "free_shipping_1"
-    When I select address "address1" in my cart
     # Enables standard cart rule
     When I enable cart rule "bad_cart_rule"
-    When I select carrier "carrier1" in my cart
-    # Bad result T_T
-    Then there is no delivery options available for my cart
+    Then there is delivery options available for my cart
