@@ -36,7 +36,7 @@
 
 {% block content %}
   {% block supplier_grid %}
-    {{ ps.infotip(settingsTipMessage) }}
+    {{ ps.infotip(settingsTipMessage, '<a>') }}
     <div class="row">
       <div class="col">
         {% include'@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': supplierGrid} %}

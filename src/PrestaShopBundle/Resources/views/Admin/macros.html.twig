@@ -36,10 +36,14 @@
   </span>
 {% endmacro %}
 
-{% macro infotip(text)%}
+{% macro infotip(text, allowedTags = false)%}
 <div class="alert alert-info" role="alert">
   <p class="alert-text">
-    {{ text|raw }}
+    {%  if allowedTags %}
+      {{ text|striptags(allowedTags)|raw}}
+    {% else %}
+      {{ text }}
+    {% endif %}
   </p>
 </div>
 {% endmacro %}
