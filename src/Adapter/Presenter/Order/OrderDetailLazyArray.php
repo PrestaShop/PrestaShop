@@ -68,10 +68,29 @@ class OrderDetailLazyArray extends AbstractLazyArray
         $this->order = $order;
         $this->context = Context::getContext();
         $this->translator = Context::getContext()->getTranslator();
-        $this->locale = (new LocaleRepository())->getLocale(
+        $this->locale = $this->getCldrLocaleRepository()->getLocale(
             $this->context->language->getLocale()
         );
         parent::__construct();
+    }
+
+    /**
+     * @return LocaleRepository
+     * 
+     * @throws \Exception
+     */
+    protected function getCldrLocaleRepository()
+    {
+        $context = Context::getContext();
+        $container = isset($context->controller) ? $context->controller->getContainer() : null;
+        if (null === $container) {
+            $container = SymfonyContainer::getInstance();
+        }
+
+        /** @var LocaleRepository $localeRepoCLDR */
+        $localeRepoCLDR = $container->get('prestashop.core.localization.cldr.locale_repository');
+
+        return $localeRepoCLDR;
     }
 
     /**

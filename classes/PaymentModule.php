@@ -422,14 +422,14 @@ abstract class PaymentModuleCore extends Module
                             'id_product' => $product['id_product'],
                             'reference' => $product['reference'],
                             'name' => $product['name'] . (isset($product['attributes']) ? ' - ' . $product['attributes'] : ''),
-                            'price' => $this->context->getCurrentLocale()->formatPrice($product_price * $product['quantity'], $this->context->currency->iso_code),
+                            'price' => Tools::getContextLocale($this->context)->formatPrice($product_price * $product['quantity'], $this->context->currency->iso_code),
                             'quantity' => $product['quantity'],
                             'customization' => array(),
                         );
 
                         if (isset($product['price']) && $product['price']) {
-                            $product_var_tpl['unit_price'] = $this->context->getCurrentLocale()->formatPrice($product_price, $this->context->currency->iso_code);
-                            $product_var_tpl['unit_price_full'] = $this->context->getCurrentLocale()->formatPrice($product_price, $this->context->currency->iso_code)
+                            $product_var_tpl['unit_price'] = Tools::getContextLocale($this->context)->formatPrice($product_price, $this->context->currency->iso_code);
+                            $product_var_tpl['unit_price_full'] = Tools::getContextLocale($this->context)->formatPrice($product_price, $this->context->currency->iso_code)
                                 . ' ' . $product['unity'];
                         } else {
                             $product_var_tpl['unit_price'] = $product_var_tpl['unit_price_full'] = '';
@@ -455,7 +455,7 @@ abstract class PaymentModuleCore extends Module
                                 $product_var_tpl['customization'][] = array(
                                     'customization_text' => $customization_text,
                                     'customization_quantity' => $customization_quantity,
-                                    'quantity' => $this->context->getCurrentLocale()->formatPrice($customization_quantity * $product_price, $this->context->currency->iso_code),
+                                    'quantity' => Tools::getContextLocale($this->context)->formatPrice($customization_quantity * $product_price, $this->context->currency->iso_code),
                                 );
                             }
                         }
@@ -620,14 +620,14 @@ abstract class PaymentModuleCore extends Module
                             '{products_txt}' => $product_list_txt,
                             '{discounts}' => $cart_rules_list_html,
                             '{discounts_txt}' => $cart_rules_list_txt,
-                            '{total_paid}' => $this->context->getCurrentLocale()->formatPrice($order->total_paid, $this->context->currency->iso_code),
-                            '{total_products}' => $this->context->getCurrentLocale()->formatPrice(Product::getTaxCalculationMethod() == PS_TAX_EXC ? $order->total_products : $order->total_products_wt, $this->context->currency->iso_code),
-                            '{total_discounts}' => $this->context->getCurrentLocale()->formatPrice($order->total_discounts, $this->context->currency->iso_code),
-                            '{total_shipping}' => $this->context->getCurrentLocale()->formatPrice($order->total_shipping, $this->context->currency->iso_code),
-                            '{total_shipping_tax_excl}' => $this->context->getCurrentLocale()->formatPrice($order->total_shipping_tax_excl, $this->context->currency->iso_code),
-                            '{total_shipping_tax_incl}' => $this->context->getCurrentLocale()->formatPrice($order->total_shipping_tax_incl, $this->context->currency),
-                            '{total_wrapping}' => $this->context->getCurrentLocale()->formatPrice($order->total_wrapping, $this->context->currency->iso_code),
-                            '{total_tax_paid}' => $this->context->getCurrentLocale()->formatPrice(($order->total_products_wt - $order->total_products) + ($order->total_shipping_tax_incl - $order->total_shipping_tax_excl), $this->context->currency->iso_code),
+                            '{total_paid}' => Tools::getContextLocale($this->context)->formatPrice($order->total_paid, $this->context->currency->iso_code),
+                            '{total_products}' => Tools::getContextLocale($this->context)->formatPrice(Product::getTaxCalculationMethod() == PS_TAX_EXC ? $order->total_products : $order->total_products_wt, $this->context->currency->iso_code),
+                            '{total_discounts}' => Tools::getContextLocale($this->context)->formatPrice($order->total_discounts, $this->context->currency->iso_code),
+                            '{total_shipping}' => Tools::getContextLocale($this->context)->formatPrice($order->total_shipping, $this->context->currency->iso_code),
+                            '{total_shipping_tax_excl}' => Tools::getContextLocale($this->context)->formatPrice($order->total_shipping_tax_excl, $this->context->currency->iso_code),
+                            '{total_shipping_tax_incl}' => Tools::getContextLocale($this->context)->formatPrice($order->total_shipping_tax_incl, $this->context->currency->iso_code),
+                            '{total_wrapping}' => Tools::getContextLocale($this->context)->formatPrice($order->total_wrapping, $this->context->currency->iso_code),
+                            '{total_tax_paid}' => Tools::getContextLocale($this->context)->formatPrice(($order->total_products_wt - $order->total_products) + ($order->total_shipping_tax_incl - $order->total_shipping_tax_excl), $this->context->currency->iso_code),
                         );
 
                         if (is_array($extra_vars)) {
@@ -1130,7 +1130,7 @@ abstract class PaymentModuleCore extends Module
                     $orderLanguage = new Language((int) $order->id_lang);
 
                     $params = array(
-                        '{voucher_amount}' => $this->context->getCurrentLocale()->formatPrice($voucher->reduction_amount, $this->context->currency->iso_code),
+                        '{voucher_amount}' => Tools::getContextLocale($this->context)->formatPrice($voucher->reduction_amount, $this->context->currency->iso_code),
                         '{voucher_num}' => $voucher->code,
                         '{firstname}' => $this->context->customer->firstname,
                         '{lastname}' => $this->context->customer->lastname,
@@ -1176,7 +1176,7 @@ abstract class PaymentModuleCore extends Module
 
             $cart_rules_list[] = array(
                 'voucher_name' => $cartRule->name,
-                'voucher_reduction' => ($values['tax_incl'] != 0.00 ? '-' : '') . $this->context->getCurrentLocale()->formatPrice($values['tax_incl'], $this->context->currency->iso_code),
+                'voucher_reduction' => ($values['tax_incl'] != 0.00 ? '-' : '') . Tools::getContextLocale($this->context)->formatPrice($values['tax_incl'], $this->context->currency->iso_code),
             );
         }
 
