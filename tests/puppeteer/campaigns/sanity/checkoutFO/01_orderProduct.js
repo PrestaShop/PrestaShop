@@ -59,7 +59,7 @@ global.scenario('Order a product and check order confirmation', () => {
     await expect(pageTitle).to.equal(cartPage.pageTitle);
   });
   test('should check the cart details', async () => {
-    await cartPage.checkCartDetails(CartData.customCartData, '1');
+    await cartPage.checkProductInCart(CartData.customCartData.firstProduct, '1');
   });
   test('should proceed to checkout and check Step Address', async () => {
     await cartPage.clickOnProceedToCheckout();
