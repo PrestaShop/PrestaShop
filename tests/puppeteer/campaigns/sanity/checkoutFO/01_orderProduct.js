@@ -7,7 +7,7 @@ const CartPage = require('../../../pages/FO/cart');
 const LoginPage = require('../../../pages/FO/login');
 const CheckoutPage = require('../../../pages/FO/checkout');
 const OrderConfirmationPage = require('../../../pages/FO/orderConfirmation');
-let customer = require('../../data/FO/customer');
+const customer = require('../../data/FO/customer');
 const CartData = require('../../data/FO/cart');
 
 let page;
