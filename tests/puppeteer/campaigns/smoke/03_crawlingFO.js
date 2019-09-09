@@ -12,6 +12,9 @@ let cartPage;
 // creating pages objects in a function
 const init = async () => {
   page = await global.browser.newPage();
+  await page.setExtraHTTPHeaders({
+    'Accept-Language': 'en-GB',
+  });
   homePage = await (new HomePage(page));
   productPage = await (new ProductPage(page));
   cartPage = await (new CartPage(page));
@@ -29,6 +32,6 @@ global.scenario('Check the Front Office', () => {
   test('should go to the first product page', () => homePage.goToProductPage('1'));
   test('should check the product page', () => productPage.checkProduct(ProductData.firstProductData));
   test('should add product to the cart', () => productPage.addProductToTheCart());
-  test('should check the cart details', () => cartPage.checkCartDetails(CartData.customCartData, '1'));
+  test('should check the cart details', () => cartPage.checkProductInCart(CartData.customCartData.firstProduct, '1'));
   test('should checkout a product', () => cartPage.clickOnProceedToCheckout());
 }, init, true);

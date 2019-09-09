@@ -6,6 +6,7 @@ module.exports = class Home extends CommonPage {
 
     // Selectors for home page
     this.logoHomePage = '#_desktop_logo';
+    this.cartProductsCount = '#_desktop_cart span.cart-products-count';
     this.productArticle = '#content .products div:nth-child(%NUMBER) article';
     this.productImg = `${this.productArticle} img`;
     this.productQuickViewLink = `${this.productArticle} a.quick-view`;
@@ -32,22 +33,20 @@ module.exports = class Home extends CommonPage {
   }
 
   /**
+   * go to the home page
+   */
+  async goToHomePage() {
+    await this.waitForSelectorAndClick(this.logoHomePage);
+    this.page.waitForNavigation({waitUntil: 'networkidle0'});
+  }
+
+  /**
    * Go to the product page
    * @param id, product id
    */
   async goToProductPage(id) {
     await this.page.waitForSelector(this.logoHomePage, {visible: true});
     await this.waitForSelectorAndClick(this.productImg.replace('%NUMBER', id), 5000);
-  }
-
-  /**
-   * Get number of products displayed in all products page
-   * @return integer
-   */
-  async getNumberOfProducts() {
-    const productNumber = await this.getTextContent(this.totalProducts);
-    const numberOfProduct = /\d+/g.exec(productNumber).toString();
-    return parseInt(numberOfProduct, 10);
   }
 
   /**
