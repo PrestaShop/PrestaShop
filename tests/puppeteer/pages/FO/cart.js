@@ -4,6 +4,8 @@ module.exports = class Cart extends CommonPage {
   constructor(page) {
     super(page);
 
+    this.pageTitle = 'Cart';
+
     // Selectors for cart page
     this.productName = '#main li:nth-of-type(%NUMBER) div.product-line-info > a';
     this.productPrice = '#main li:nth-of-type(%NUMBER) div.current-price > span';
