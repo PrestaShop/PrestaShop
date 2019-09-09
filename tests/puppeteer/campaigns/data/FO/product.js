@@ -1,9 +1,9 @@
 module.exports = {
 
   firstProductData: {
-    name: 'T-SHIRT IMPRIMÉ COLIBRI',
+    name: 'HUMMINGBIRD PRINTED T-SHIRT',
     quantity_wanted: '1',
     price: '22.94',
-    description: 'Symbole de légèreté et de délicatesse',
+    description: 'Symbol of lightness and delicacy',
   },
 };

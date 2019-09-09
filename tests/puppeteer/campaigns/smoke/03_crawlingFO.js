@@ -12,6 +12,9 @@ let cartPage;
 // creating pages objects in a function
 const init = async () => {
   page = await global.browser.newPage();
+  await page.setExtraHTTPHeaders({
+    'Accept-Language': 'en-GB'
+  });
   homePage = await (new HomePage(page));
   productPage = await (new ProductPage(page));
   cartPage = await (new CartPage(page));
