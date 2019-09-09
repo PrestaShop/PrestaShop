@@ -14,7 +14,7 @@ module.exports = class Checkout extends CommonPage {
     this.paymentStepSection = '#checkout-payment-step';
     this.paymentOptionInput = `${this.paymentStepSection} input[name='payment-option'][data-module-name='%NAME']`;
     this.conditionToApproveLabel = `${this.paymentStepSection} #conditions-to-approve label`;
-    this.paymentConfirmationButton = `${this.paymentStepSection} #payment-confirmation button[type='submit']:not([disabled])`;
+    this.paymentConfirmationButton = `${this.paymentStepSection} #payment-confirmation button:not([disabled])`;
   }
 
   /*
