@@ -187,4 +187,17 @@ module.exports = class CommonPage {
     }
     await expect(found, `${textValue} was not found as option of select`).to.be.true;
   }
+
+  /**
+   * To get a number from text
+   * @param selector
+   * @param timeout
+   * @return integer
+   */
+  async getNumberFromText(selector, timeout = 0) {
+    await this.page.waitFor(timeout);
+    const text = await this.getTextContent(selector);
+    const number = /\d+/g.exec(text).toString();
+    return parseInt(number, 10);
+  }
 };
