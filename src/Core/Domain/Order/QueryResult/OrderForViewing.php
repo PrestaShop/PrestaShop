@@ -70,6 +70,11 @@ class OrderForViewing
      */
     private $documents;
 
+    /**
+     * @var OrderShippingForViewing
+     */
+    private $shipping;
+
     public function __construct(
         string $reference,
         string $taxMethod,
@@ -78,7 +83,8 @@ class OrderForViewing
         OrderInvoiceAddressForViewing $invoiceAddress,
         OrderProductsForViewing $products,
         OrderHistoryForViewing $history,
-        OrderDocumentsForViewing $documents
+        OrderDocumentsForViewing $documents,
+        OrderShippingForViewing $shipping
     ) {
         $this->reference = $reference;
         $this->customer = $customer;
@@ -88,6 +94,7 @@ class OrderForViewing
         $this->taxMethod = $taxMethod;
         $this->history = $history;
         $this->documents = $documents;
+        $this->shipping = $shipping;
     }
 
     /**
@@ -152,5 +159,13 @@ class OrderForViewing
     public function getDocuments(): OrderDocumentsForViewing
     {
         return $this->documents;
+    }
+
+    /**
+     * @return OrderShippingForViewing
+     */
+    public function getShipping(): OrderShippingForViewing
+    {
+        return $this->shipping;
     }
 }

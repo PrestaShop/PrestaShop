@@ -37,7 +37,7 @@
     </li>
     <li class="nav-item">
       <a class="nav-link" id="orderShippingTab" data-toggle="tab" href="#orderShippingTabContent" role="tab" aria-controls="orderShippingTabContent" aria-expanded="true" aria-selected="false">
-        {{ 'Shipping'|trans({}, 'Admin.Catalog.Feature') }}
+        {{ 'Shipping'|trans({}, 'Admin.Catalog.Feature') }} ({{ orderForViewing.shipping.carriers|length }})
       </a>
     </li>
   </ul>

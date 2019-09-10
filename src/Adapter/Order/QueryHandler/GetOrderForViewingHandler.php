@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Order\QueryHandler;
 
 use Address;
+use Carrier;
 use Configuration;
 use Context;
 use Country;
@@ -37,6 +38,7 @@ use Db;
 use Gender;
 use Image;
 use ImageManager;
+use Module;
 use Order;
 use OrderInvoice;
 use OrderReturn;
@@ -45,6 +47,7 @@ use Pack;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryHandler\GetOrderForViewingHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderCarrierForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderCustomerForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderDocumentForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderDocumentsForViewing;
@@ -54,6 +57,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderInvoiceAddressForVi
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductsForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderShippingAddressForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderShippingForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderStatusForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Image\Parser\ImageTagSourceParserInterface;
@@ -113,7 +117,8 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             $this->getOrderInvoiceAddress($order),
             $this->getOrderProducts($order),
             $this->getOrderHistory($order),
-            $this->getOrderDocuments($order)
+            $this->getOrderDocuments($order),
+            $this->getOrderShipping($order)
         );
     }
 
@@ -500,14 +505,61 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             );
         }
 
-        dump($documents);
-        dump($documentsForViewing);
-
         return new OrderDocumentsForViewing($documentsForViewing);
     }
 
-    private function getOrderShipping(Order $order)
+    private function getOrderShipping(Order $order): OrderShippingForViewing
     {
         $shipping = $order->getShipping();
+        $carriers = [];
+        $carrierModuleInfo = null;
+
+        $currency = new Currency($order->id_currency);
+        $carrier = new Carrier($order->id_carrier);
+        $carrierModuleInfo = null;
+
+        if ($carrier->is_module) {
+            $module = Module::getInstanceByName($carrier->external_module_name);
+            if (method_exists($module, 'displayInfoByCart')) {
+                $carrierModuleInfo = $module->displayInfoByCart($order->id_cart);
+            }
+        }
+
+        foreach ($shipping as $item) {
+            if ($order->getTaxCalculationMethod() == PS_TAX_INC) {
+                $price = Tools::displayPrice($item['shipping_cost_tax_incl'], $currency);
+            } else {
+                $price = Tools::displayPrice($item['shipping_cost_tax_excl'], $currency);
+            }
+
+            $trackingUrl = null;
+            $trackingNumber = null;
+
+            if ($item['url'] && $item['tracking_number']) {
+                $trackingUrl = str_replace('@', $item['tracking_number'], $item['url']);
+                $trackingNumber = $item['tracking_number'];
+            }
+
+            $weight = sprintf('%.3f %s', $item['weight'], Configuration::get('PS_WEIGHT_UNIT'));
+
+            $carriers[] = new OrderCarrierForViewing(
+                (int) $item['id_order_carrier'],
+                new DateTimeImmutable($item['date_add']),
+                $item['carrier_name'],
+                $weight,
+                (int) $item['id_carrier'],
+                $price,
+                $trackingUrl,
+                $trackingNumber,
+                $item['can_edit']
+            );
+        }
+
+        return new OrderShippingForViewing(
+            $carriers,
+            (bool) $order->recyclable,
+            (bool) $order->gift,
+            $carrierModuleInfo
+        );
     }
 }

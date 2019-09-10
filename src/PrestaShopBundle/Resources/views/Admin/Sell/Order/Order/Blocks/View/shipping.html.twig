@@ -35,4 +35,45 @@
       <th></th>
     </tr>
   </thead>
+  <tbody>
+    {% for carrier in orderForViewing.shipping.carriers %}
+      <tr>
+        <td>{{ carrier.date|date('Y-m-d') }}</td>
+        <td>&nbsp;</td>
+        <td>{{ carrier.name }}</td>
+        <td>{{ carrier.weight }}</td>
+        <td>{{ carrier.price }}</td>
+        <td>
+          {% if carrier.trackingNumber and carrier.trackingUrl %}
+            <a href="{{ carrier.trackingUrl }}">{{ carrier.trackingNumber }}</a>
+          {% endif %}
+        </td>
+        <td class="text-right">
+          {% if carrier.canEdit %}
+            <a href="#">
+              {{ 'Edit'|trans({}, 'Admin.Actions') }}
+            </a>
+          {% endif %}
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
 </table>
+
+{% if orderForViewing.shipping.carrierModuleInfo %}
+  {{ orderForViewing.shipping.carrierModuleInfo|raw }}
+{% endif %}
+
+{% if orderForViewing.shipping.recycledPackaging %}
+  <span class="badge badge-success">{{ 'Recycled packaging'|trans({}, 'Admin.Orderscustomers.Feature') }}</span>
+{% else %}
+  <span class="badge badge-secondary">
+    {{ 'Recycled packaging'|trans({}, 'Admin.Orderscustomers.Feature') }}
+  </span>
+{% endif %}
+
+{% if orderForViewing.shipping.giftWrapping %}
+  <span class="badge badge-success">{{ 'Gift wrapping'|trans({}, 'Admin.Orderscustomers.Feature') }}</span>
+{% else %}
+  <span class="badge badge-secondary">{{ 'Gift wrapping'|trans({}, 'Admin.Orderscustomers.Feature') }}</span>
+{% endif %}
