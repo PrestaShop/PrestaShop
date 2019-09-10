@@ -31,7 +31,7 @@ class OrderShippingForViewing
     /**
      * @var OrderCarrierForViewing[]
      */
-    private $carriers;
+    private $carriers = [];
 
     /**
      * @var bool
@@ -66,7 +66,6 @@ class OrderShippingForViewing
 
         $this->isRecycledPackaging = $isRecycledPackaging;
         $this->isGiftWrapping = $isGiftWrapping;
-        $this->carriers = $carriers;
         $this->carrierModuleInfo = $carrierModuleInfo;
     }
 

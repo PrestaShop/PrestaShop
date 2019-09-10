@@ -54,6 +54,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderDocumentsForViewing
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderHistoryForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderInvoiceAddressForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPaymentsForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductsForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderReturnForViewing;
@@ -600,5 +601,30 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
         }
 
         return new OrderReturnsForViewing($orderReturns);
+    }
+
+    private function getOrderPayments(Order $order): OrderPaymentsForViewing
+    {
+        $currency = new Currency($order->id_currency);
+        $payments = $order->getOrderPayments();
+
+        $currentState = $order->getCurrentOrderState();
+
+        $orderAmountToPay = null;
+        $orderAmountPaid = null;
+        $paymentMismatchOrders = [];
+
+        if (round($order->getOrdersTotalPaid(), 2) == round($order->getTotalPaid(), 2)
+            || ($currentState && $currentState->id == 6)
+        ) {
+            $orderAmountToPay = Tools::displayPrice($order->getOrdersTotalPaid(), $currency);
+            $orderAmountPaid = Tools::displayPrice($order->getTotalPaid(), $currency);
+
+            foreach ($order->getBrother() as $relatedOrder) {
+                $paymentMismatchOrders[] = $relatedOrder->id;
+            }
+        }
+
+        return new OrderPaymentsForViewing([]);
     }
 }
