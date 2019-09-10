@@ -30,7 +30,8 @@
     "eslint-config-prestashop": "0.0.2",
     "mocha": "^6.1.4",
     "mochawesome": "^4.0.1",
-    "puppeteer": "^1.18.1"
+    "puppeteer": "^1.18.1",
+    "faker": "^4.1.0"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.2",

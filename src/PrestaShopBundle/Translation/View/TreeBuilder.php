@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -137,11 +137,12 @@ class TreeBuilder
 
         foreach ($catalogue as $domain => $messages) {
             $tableisedDomain = Inflector::tableize($domain);
-            $parts = array_reverse(explode('_', $tableisedDomain));
+            // the third component of the domain may have underscores, so we need to limit pieces to 3
+            $parts = explode('_', $tableisedDomain, 3);
             $subtree = &$translationsTree;
 
-            while (count($parts) > 0) {
-                $subdomain = ucfirst(array_pop($parts));
+            foreach ($parts as $part) {
+                $subdomain = ucfirst($part);
 
                 if (!array_key_exists($subdomain, $subtree)) {
                     $subtree[$subdomain] = array();

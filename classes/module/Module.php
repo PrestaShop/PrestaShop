@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -1997,7 +1997,7 @@ abstract class ModuleCore implements ModuleInterface
     /**
      * Reposition module
      *
-     * @param bool $id_hook Hook ID
+     * @param int $id_hook Hook ID
      * @param bool $way Up (0) or Down (1)
      * @param int|null $position
      *

@@ -887,3 +887,11 @@ services:
           - { method: setTranslator, arguments: ['@translator'] }
         tags:
           - { name: form.type }
+
+    form.type.order.change_order_statuses:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrdersStatusType'
+        public: true
+        arguments:
+            - '@prestashop.core.form.choice_provider.order_state_by_id'
+        tags:
+            - { name: form.type }

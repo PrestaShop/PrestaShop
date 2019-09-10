@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -400,7 +400,8 @@ class AdminSuppliersControllerCore extends AdminController
                     0
                 );
                 $products[$i]->product_supplier_reference = $product_infos['product_supplier_reference'];
-                $products[$i]->product_supplier_price_te = Tools::displayPrice($product_infos['product_supplier_price_te'], new Currency($product_infos['id_currency']));
+                $currencyId = $product_infos['id_currency'] ?: Currency::getDefaultCurrency()->id;
+                $products[$i]->product_supplier_price_te = Tools::displayPrice($product_infos['product_supplier_price_te'], new Currency($currencyId));
             }
         }
 

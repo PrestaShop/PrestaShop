@@ -1,3 +1,6 @@
+// Using chai
+const {expect} = require('chai');
+// Using CommonPage
 const CommonPage = require('../commonPage');
 
 module.exports = class Install extends CommonPage {
@@ -48,15 +51,15 @@ module.exports = class Install extends CommonPage {
 
     // Selectors for Final step
     this.installationProgressBar = '#install_process_form #progress_bar .installing';
-    this.generateSettingsFileStep = "#process_step_generateSettingsFile";
-    this.installDatabaseStep = "#process_step_installDatabase";
-    this.installDefaultDataStep = "#process_step_installDefaultData";
-    this.populateDatabaseStep = "#process_step_populateDatabase";
-    this.configureShopStep = "#process_step_configureShop";
-    this.installModulesStep = "#process_step_installModules";
-    this.installModulesAddons = "#process_step_installModulesAddons";
-    this.installThemeStep = "#process_step_installTheme";
-    this.installFixturesStep = "#process_step_installFixtures";
+    this.generateSettingsFileStep = '#process_step_generateSettingsFile';
+    this.installDatabaseStep = '#process_step_installDatabase';
+    this.installDefaultDataStep = '#process_step_installDefaultData';
+    this.populateDatabaseStep = '#process_step_populateDatabase';
+    this.configureShopStep = '#process_step_configureShop';
+    this.installModulesStep = '#process_step_installModules';
+    this.installModulesAddons = '#process_step_installModulesAddons';
+    this.installThemeStep = '#process_step_installTheme';
+    this.installFixturesStep = '#process_step_installFixtures';
     this.finalStepPageTitle = '#install_process_success h2';
     this.discoverFoButton = '#foBlock';
 
@@ -74,7 +77,7 @@ module.exports = class Install extends CommonPage {
   async checkStepTitle(selector, pageTitle) {
     await this.page.waitFor(selector, {visible: true, timeout: 90000});
     const title = await this.getTextContent(selector);
-    await global.expect(title).to.contains(pageTitle);
+    await expect(title).to.contains(pageTitle);
   }
 
   /**

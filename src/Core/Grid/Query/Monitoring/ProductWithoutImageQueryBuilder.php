@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -72,9 +72,14 @@ final class ProductWithoutImageQueryBuilder extends AbstractProductQueryBuilder
 
         $imageSubQuery = $this->connection->createQueryBuilder()
             ->select(1)
-            ->from($this->dbPrefix . 'image', 'img')
-            ->andWhere('p.id_product = img.id_product')
-        ;
+            ->from($this->dbPrefix . 'image_shop', 'img')
+            ->andWhere('p.id_product = img.id_product');
+
+        if ($this->multistoreContextChecker->isSingleShopContext()) {
+            $imageSubQuery->andWhere('img.id_shop = :context_shop_id');
+        } else {
+            $imageSubQuery->andWhere('img.id_shop = p.id_shop_default');
+        }
 
         $qb->andWhere('NOT EXISTS(' . $imageSubQuery->getSQL() . ')');
 

@@ -35,13 +35,6 @@ npm run linkchecker
 URL_BO="Your_Shop_URL_BO" URL_FO="Your_Shop_URL_FO" LOGIN="Your_Login" PASSWD="Your_Password" npm run linkchecker
 ```
 
-#### Run with docker-compose
-
-```bash
-#Create Shop and running test
-docker-compose up --build
-docker-compose exec -e COMMAND="linkchecker" tests bash /tmp/run-tests.sh
-```
 
 ## Smoke tests 
 This campaign includes a non-exhaustive set of tests and it will ensure that the most important functions work.
@@ -55,12 +48,18 @@ If you want to run all smoke tests, you can run the script **campaigns/smoke/***
 npm run smoke-tests
 ```
 
-#### Run with docker-compose
+## Upgrade test
+This test will upgrade Prestashop version with the Autoupgrade module
+
+### Launch script
+Before testing it, you should install Prestashop version to upgrade from
+If you want to run this test, you can use command **specific-test**
+
+#### With default values
 
 ```bash
-#Create Shop and running test
-docker-compose up --build
-docker-compose exec -e COMMAND="smoke-tests" tests bash /tmp/run-tests.sh
+# You need to set PS_VERSION to check after upgrade, default to 1.7.6.0 
+PS_VERSION=1.7.6.0 TEST_PATH="upgrade/upgradeShop" npm run specific-test
 ```
 
 Enjoy :wink: :v:

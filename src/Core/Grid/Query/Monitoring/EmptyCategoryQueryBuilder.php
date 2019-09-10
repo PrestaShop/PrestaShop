@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -28,7 +28,6 @@ namespace PrestaShop\PrestaShop\Core\Grid\Query\Monitoring;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
-use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShop\PrestaShop\Core\Grid\Query\AbstractDoctrineQueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineSearchCriteriaApplicator;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
@@ -60,11 +59,6 @@ final class EmptyCategoryQueryBuilder extends AbstractDoctrineQueryBuilder
     private $multistoreContextChecker;
 
     /**
-     * @var FeatureInterface
-     */
-    private $multistoreFeature;
-
-    /**
      * @var int
      */
     private $rootCategoryId;
@@ -76,7 +70,6 @@ final class EmptyCategoryQueryBuilder extends AbstractDoctrineQueryBuilder
      * @param int $contextLangId
      * @param int $contextShopId
      * @param MultistoreContextCheckerInterface $multistoreContextChecker
-     * @param FeatureInterface $multistoreFeature
      * @param $rootCategoryId
      */
     public function __construct(
@@ -86,7 +79,6 @@ final class EmptyCategoryQueryBuilder extends AbstractDoctrineQueryBuilder
         $contextShopId,
         DoctrineSearchCriteriaApplicator $searchCriteriaApplicator,
         MultistoreContextCheckerInterface $multistoreContextChecker,
-        FeatureInterface $multistoreFeature,
         $rootCategoryId
     ) {
         parent::__construct($connection, $dbPrefix);
@@ -94,7 +86,6 @@ final class EmptyCategoryQueryBuilder extends AbstractDoctrineQueryBuilder
         $this->contextShopId = $contextShopId;
         $this->searchCriteriaApplicator = $searchCriteriaApplicator;
         $this->multistoreContextChecker = $multistoreContextChecker;
-        $this->multistoreFeature = $multistoreFeature;
         $this->rootCategoryId = $rootCategoryId;
     }
 
@@ -133,8 +124,7 @@ final class EmptyCategoryQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     private function getQueryBuilder(array $filters)
     {
-        $isSingleShopContext = $this->multistoreFeature->isUsed() &&
-            $this->multistoreContextChecker->isSingleShopContext();
+        $isSingleShopContext = $this->multistoreContextChecker->isSingleShopContext();
 
         $qb = $this->connection
             ->createQueryBuilder()

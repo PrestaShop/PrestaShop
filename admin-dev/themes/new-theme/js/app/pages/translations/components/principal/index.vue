@@ -1,5 +1,5 @@
 <!--**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -129,7 +129,9 @@
         return this.$store.state.currentDomain;
       },
       currentDomainTotalTranslations() {
-        return (this.$store.state.currentDomainTotalTranslations <= 1) ? `- ${this.trans('label_total_domain_singular').replace('%nb_translation%', this.$store.state.currentDomainTotalTranslations)}` : `- ${this.trans('label_total_domain').replace('%nb_translations%', this.$store.state.currentDomainTotalTranslations)}`;
+        return (this.$store.state.currentDomainTotalTranslations <= 1)
+          ? `- ${this.trans('label_total_domain_singular').replace('%nb_translation%', this.$store.state.currentDomainTotalTranslations)}`
+          : `- ${this.trans('label_total_domain').replace('%nb_translations%', this.$store.state.currentDomainTotalTranslations)}`;
       },
       currentDomainTotalMissingTranslations() {
         return this.$store.state.currentDomainTotalMissingTranslations;
@@ -137,13 +139,12 @@
       currentDomainTotalMissingTranslationsString() {
         let totalMissingTranslationsString = '';
 
-        if (
-          this.currentDomainTotalMissingTranslations
-          && this.currentDomainTotalMissingTranslations === 1
-        ) {
-          totalMissingTranslationsString = this.trans('label_missing_singular');
-        } else if (this.currentDomainTotalMissingTranslations) {
-          totalMissingTranslationsString = this.trans('label_missing').replace('%d', this.currentDomainTotalMissingTranslations);
+        if (this.currentDomainTotalMissingTranslations) {
+          if (this.currentDomainTotalMissingTranslations === 1) {
+            totalMissingTranslationsString = this.trans('label_missing_singular');
+          } else {
+            totalMissingTranslationsString = this.trans('label_missing').replace('%d', this.currentDomainTotalMissingTranslations);
+          }
         }
 
         return totalMissingTranslationsString;
@@ -158,14 +159,17 @@
         return this.$store.getters.searchTags.length;
       },
       searchInfo() {
-        return (this.$store.state.totalTranslations <= 1) ? this.trans('search_info_singular').replace('%s', this.$store.getters.searchTags.join(' - ')).replace('%d', this.$store.state.totalTranslations) : this.trans('search_info').replace('%s', this.$store.getters.searchTags.join(' - ')).replace('%d', this.$store.state.totalTranslations);
+        const transKey = (this.$store.state.totalTranslations <= 1) ? 'search_info_singular' : 'search_info';
+        return this.trans(transKey)
+          .replace('%s', this.$store.getters.searchTags.join(' - '))
+          .replace('%d', this.$store.state.totalTranslations);
       },
     },
     methods: {
       /**
        * Dispatch the event to change the page index,
        * get the translations and reset the modified translations into the state
-       * @param {Integer} pageIndex
+       * @param {Number} pageIndex
        */
       changePage: function changePage(pageIndex) {
         this.$store.dispatch('updatePageIndex', pageIndex);
@@ -223,13 +227,15 @@
       },
       getModifiedTranslations() {
         this.modifiedTranslations = [];
+        const targetTheme = (window.data.type === 'modules') ? '' : window.data.selected;
+
         this.$store.state.modifiedTranslations.forEach((translation) => {
           this.modifiedTranslations.push({
             default: translation.default,
             edited: translation.edited,
             domain: translation.tree_domain.join(''),
             locale: window.data.locale,
-            theme: window.data.selected,
+            theme: targetTheme,
           });
         });
 

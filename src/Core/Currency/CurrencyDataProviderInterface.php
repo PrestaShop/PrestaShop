@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -47,11 +47,13 @@ interface CurrencyDataProviderInterface
     public function getCurrencies($object = false, $active = true, $group_by = false);
 
     /**
-     * Return raw currencies data from the database reated to the current shop.
+     * Return raw currencies data from the database.
      *
-     * @return array Installed currencies
+     * @param bool $currentShopOnly If true returns only currencies associated to current shop
+     *
+     * @return array[] Installed currencies
      */
-    public function findAll();
+    public function findAll($currentShopOnly = true);
 
     /**
      * Get a Currency entity instance by ISO code.

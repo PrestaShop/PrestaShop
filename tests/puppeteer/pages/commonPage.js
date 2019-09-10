@@ -1,3 +1,6 @@
+// Using chai
+const {expect} = require('chai');
+
 module.exports = class CommonPage {
   constructor(page) {
     this.page = page;
@@ -101,8 +104,100 @@ module.exports = class CommonPage {
    */
   async checkAttributeValue(selector, attribute, textToCheckWith) {
     await this.page.waitForSelector(selector);
-    const value = await this.page.$eval(selector, (el, attribute) => el
-      .getAttribute(attribute), attribute);
+    const value = await this.page.$eval(selector, (el, attr) => el
+      .getAttribute(attr), attribute);
     expect(value).to.be.equal(textToCheckWith);
+  }
+
+  /**
+   * Reload actual browser page
+   * @return {Promise<void>}
+   */
+  async reloadPage() {
+    await this.page.reload({waitUntil: 'networkidle0'});
+  }
+
+  /**
+   * Delete the existing text from input then set a value
+   * @param selector, input
+   * @param value, value to set in the input
+   * @return {Promise<void>}
+   */
+  async setValue(selector, value) {
+    await this.waitForSelectorAndClick(selector);
+    await this.page.click(selector, {clickCount: 3});
+    await this.page.type(selector, value);
+  }
+
+  /**
+   * To accept or dismiss a navigator dialog
+   * @param accept
+   * @return {Promise<void>}
+   */
+  async dialogListener(accept = true) {
+    this.page.once('dialog', (dialog) => {
+      if (accept) dialog.accept();
+      else dialog.dismiss();
+    });
+  }
+
+  /**
+   * Close actual tab and goto another tab if wanted
+   * @param tabId
+   * @return {Promise<void>}
+   */
+  async closePage(tabId = -1) {
+    await this.page.close();
+    if (tabId !== -1) {
+      this.page = (await global.browser.pages())[tabId];
+      await this.page.bringToFront();
+      await this.page.waitFor(10000);
+    }
+    return this.page;
+  }
+
+  /**
+   * Scroll to element
+   * @param selector
+   * @return {Promise<void>}
+   */
+  async scrollTo(selector) {
+    await this.page.$eval(selector, el => el.scrollIntoView());
+  }
+
+
+  /**
+   * Select option in select by visible text
+   * @param selector, id of select
+   * @param textValue, text in option to select
+   */
+  async selectByVisibleText(selector, textValue) {
+    let found = false;
+    const options = await this.page.$$(`${selector} option`);
+    for (let i = 0; i < options.length; i++) {
+      /*eslint-disable*/
+      const elementText = await (await options[i].getProperty('textContent')).jsonValue();
+      if (elementText === textValue) {
+        const elementValue = await (await options[i].getProperty('value')).jsonValue();
+        await this.page.select(selector, elementValue);
+        found = true;
+        break;
+      }
+      /* eslint-enable */
+    }
+    await expect(found, `${textValue} was not found as option of select`).to.be.true;
+  }
+
+  /**
+   * To get a number from text
+   * @param selector
+   * @param timeout
+   * @return integer
+   */
+  async getNumberFromText(selector, timeout = 0) {
+    await this.page.waitFor(timeout);
+    const text = await this.getTextContent(selector);
+    const number = /\d+/g.exec(text).toString();
+    return parseInt(number, 10);
   }
 };

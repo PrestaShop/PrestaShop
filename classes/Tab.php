@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -35,6 +35,9 @@ class TabCore extends ObjectModel
     /** @var string Class and file name */
     public $class_name;
 
+    /** @var string Route name for Symfony */
+    public $route_name;
+
     public $module;
 
     /** @var int parent ID */
@@ -45,6 +48,9 @@ class TabCore extends ObjectModel
 
     /** @var bool active */
     public $active = true;
+
+    /** @var bool enabled */
+    public $enabled = true;
 
     /** @var int hide_host_mode */
     public $hide_host_mode = false;
@@ -66,7 +72,9 @@ class TabCore extends ObjectModel
             'position' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
             'module' => array('type' => self::TYPE_STRING, 'validate' => 'isTabName', 'size' => 64),
             'class_name' => array('type' => self::TYPE_STRING, 'required' => true, 'size' => 64),
+            'route_name' => array('type' => self::TYPE_STRING, 'required' => false, 'size' => 256),
             'active' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+            'enabled' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'hide_host_mode' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'icon' => array('type' => self::TYPE_STRING, 'size' => 64),
             /* Lang fields */
@@ -84,7 +92,7 @@ class TabCore extends ObjectModel
      * @param bool $autoDate
      * @param bool $nullValues
      *
-     * @return int id_tab
+     * @return bool true if success
      */
     public function add($autoDate = true, $nullValues = false)
     {
@@ -137,11 +145,23 @@ class TabCore extends ObjectModel
         $slug = 'ROLE_MOD_TAB_' . strtoupper(self::getClassNameById($idTab));
 
         foreach (array('CREATE', 'READ', 'UPDATE', 'DELETE') as $action) {
-            Db::getInstance()->execute('INSERT INTO `' . _DB_PREFIX_ . 'authorization_role` (`slug`) VALUES ("' . $slug . '_' . $action . '")');
+            /*
+             * Check if authorization role does not exist.
+             * This can happen if you want to create several tabs with the same class_name or route_name
+             */
+            $actionSlug = pSQL($slug . '_' . $action);
+            $authorizationRole = Db::getInstance()->getRow(
+                'SELECT slug FROM `' . _DB_PREFIX_ . 'authorization_role` ' .
+                'WHERE `slug` = "' . $actionSlug . '"'
+            );
+            if (empty($authorizationRole)) {
+                Db::getInstance()->execute(
+                    'INSERT INTO `' . _DB_PREFIX_ . 'authorization_role` (`slug`) VALUES ("' . $actionSlug . '")'
+                );
+            }
         }
 
         $access = new Access();
-
         foreach (array('view', 'add', 'edit', 'delete') as $action) {
             $access->updateLgcAccess('1', $idTab, $action, true);
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -828,6 +828,27 @@ class LinkCore
         $idLang = Context::getContext()->language->id;
 
         return $this->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . Dispatcher::getInstance()->createUrl($controller, $idLang, $params);
+    }
+
+    /**
+     * @param array $tab
+     *
+     * @return string
+     *
+     * @throws PrestaShopException
+     */
+    public function getTabLink(array $tab)
+    {
+        if (!empty($tab['route_name'])) {
+            $sfContainer = SymfonyContainer::getInstance();
+            if (null !== $sfContainer) {
+                $sfRouter = $sfContainer->get('router');
+
+                return $sfRouter->generate($tab['route_name']);
+            }
+        }
+
+        return $this->getAdminLink($tab['class_name']);
     }
 
     /**

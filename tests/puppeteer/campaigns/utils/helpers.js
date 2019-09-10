@@ -1,8 +1,4 @@
 require('./globals');
-const chai = require('chai');
-chai.use(require('chai-string'));
-
-global.expect = chai.expect;
 
 const puppeteer = require('puppeteer');
 
@@ -16,8 +12,8 @@ global.scenario = (name, tests, init, close = false) => describe(name, async () 
       slowMo: 25,
       args: ['--start-maximized', '--no-sandbox', '--lang=fr-FR'],
       defaultViewport: {
-        width: 1270,
-        height: 899,
+        width: 1680,
+        height: 900,
       },
     });
     await init();

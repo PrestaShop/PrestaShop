@@ -1,6 +1,6 @@
 {% extends '@MailThemes/modern/components/layout.html.twig' %}
         
-{% block title %}{{ 'Refferalprogram Invitation'|trans({}, 'Emails.Body', locale) }}{% endblock %}
+{% block title %}{{ 'Referral program Invitation'|trans({}, 'Emails.Body', locale) }}{% endblock %}
 
 {% block content %}
 <!--[if mso | IE]>
@@ -176,15 +176,15 @@
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ 'Your friend <span class="label">{firstname} {lastname}</span> wants to refer you on <a href="{shop_url}" target="_blank">{shop_name}</a>!'|trans({}, 'Emails.Body', locale)|raw }}
+                                          {{ 'Your friend [1]{firstname} {lastname}[/1] wants to refer you on <a href="{shop_url}" target="_blank">{shop_name}</a>!'|trans({'[1]': '<span class="label">', '[/1]': '</span>'}, 'Emails.Body', locale)|raw }}
                                         </div>
                                       </td>
                                     </tr>
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ 'We are pleased to offer you a voucher worth <span class="label">{discount}</span> that you can use on your next order.'|trans({}, 'Emails.Body', locale)|raw }}
-                                          {{ 'Get referred and earn a discount voucher of <span class="label">{discount}</span>!'|trans({}, 'Emails.Body', locale)|raw }}
+                                          {{ 'We are pleased to offer you a voucher worth [1]{discount}[/1] that you can use on your next order.'|trans({'[1]': '<span class="label">', '[/1]': '</span>'}, 'Emails.Body', locale)|raw }}
+                                          {{ 'Get referred and earn a discount voucher of [1]{discount}[/1]!'|trans({'[1]': '<span class="label">', '[/1]': '</span>'}, 'Emails.Body', locale)|raw }}
                                           <p>
                                             <a href="{link}" class="light" target="_blank">{{ 'It\'s very easy to sign up, just click here!'|trans({}, 'Emails.Body', locale)|raw }}</a>
                                           </p>
