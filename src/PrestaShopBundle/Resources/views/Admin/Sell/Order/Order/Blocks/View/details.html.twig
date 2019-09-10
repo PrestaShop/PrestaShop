@@ -40,6 +40,11 @@
         {{ 'Shipping'|trans({}, 'Admin.Catalog.Feature') }} ({{ orderForViewing.shipping.carriers|length }})
       </a>
     </li>
+    <li class="nav-item">
+      <a class="nav-link" id="orderReturnsTab" data-toggle="tab" href="#orderReturnsTabContent" role="tab" aria-controls="orderReturnsTabContent" aria-expanded="true" aria-selected="false">
+        {{ 'Merchandise Returns'|trans({}, 'Admin.Orderscustomers.Feature') }} ({{ orderForViewing.returns.orderReturns|length }})
+      </a>
+    </li>
   </ul>
 
   <div class="tab-content">
@@ -51,6 +56,9 @@
     </div>
     <div class="tab-pane fade" id="orderShippingTabContent" role="tabpanel" aria-labelledby="orderShippingTab">
       {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/shipping.html.twig' %}
+    </div>
+    <div class="tab-pane fade" id="orderReturnsTabContent" role="tabpanel" aria-labelledby="orderReturnsTab">
+      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/merchandise_returns.html.twig' %}
     </div>
   </div>
 </div>

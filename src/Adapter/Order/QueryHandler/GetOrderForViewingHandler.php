@@ -56,6 +56,8 @@ use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderHistoryForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderInvoiceAddressForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductsForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderReturnForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderReturnsForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderShippingAddressForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderShippingForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderStatusForViewing;
@@ -118,7 +120,8 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             $this->getOrderProducts($order),
             $this->getOrderHistory($order),
             $this->getOrderDocuments($order),
-            $this->getOrderShipping($order)
+            $this->getOrderShipping($order),
+            $this->getOrderReturns($order)
         );
     }
 
@@ -561,5 +564,41 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             (bool) $order->gift,
             $carrierModuleInfo
         );
+    }
+
+    private function getOrderReturns(Order $order): OrderReturnsForViewing
+    {
+        $returns = $order->getReturn();
+
+        if ($order->isVirtual()) {
+            return new OrderReturnsForViewing();
+        }
+
+        $orderReturns = [];
+
+        foreach ($returns as $orderReturn) {
+            $trackingUrl = null;
+            $trackingNumber = null;
+
+            if (isset($orderReturn['url'], $orderReturn['tracking_number'])) {
+                $trackingUrl = $orderReturn['url'];
+                $trackingNumber = $orderReturn['tracking_number'];
+            } elseif (isset($orderReturn['tracking_number'])) {
+                $trackingNumber = $orderReturn['tracking_number'];
+            }
+
+            $orderReturns[] = new OrderReturnForViewing(
+                (int) $orderReturn['id_order_return'],
+                isset($orderReturn['id_order_invoice']) ? (int) $orderReturn['id_order_invoice'] : 0,
+                isset($orderReturn['id_carrier']) ? (int) $orderReturn['id_carrier'] : 0,
+                new DateTimeImmutable($orderReturn['date_add']),
+                $orderReturn['type'],
+                $orderReturn['state_name'],
+                $trackingUrl,
+                $trackingNumber
+            );
+        }
+
+        return new OrderReturnsForViewing($orderReturns);
     }
 }
