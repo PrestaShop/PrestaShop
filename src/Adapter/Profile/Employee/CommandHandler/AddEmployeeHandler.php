@@ -94,7 +94,7 @@ final class AddEmployeeHandler extends AbstractEmployeeHandler implements AddEmp
 
         $this->associateWithShops($employee, $command->getShopAssociation());
 
-        return new EmployeeId($employee->id);
+        return new EmployeeId((int) $employee->id);
     }
 
     /**
