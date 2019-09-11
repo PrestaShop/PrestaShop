@@ -55,6 +55,8 @@ global_settings:
      - ps_linklist
   hooks:
     modules_to_hook:
+      displayAfterBodyOpeningTag:
+        - blockreassurance
       displayNav1:
         - ps_contactinfo
       displayNav2:
@@ -62,6 +64,8 @@ global_settings:
         - ps_currencyselector
         - ps_customersignin
         - ps_shoppingcart
+      displayNavFullWidth:
+        - blockreassurance
       displayTop:
         - ps_mainmenu
         - ps_searchbar
@@ -71,12 +75,15 @@ global_settings:
         - ps_banner
         - ps_customtext
       displayFooterBefore:
+        - blockreassurance
         - ps_emailsubscription
         - ps_socialfollow
       displayFooter:
         - ps_linklist
         - ps_customeraccountlinks
         - ps_contactinfo
+      displayFooterAfter:
+        - blockreassurance
       displayLeftColumn:
         - ps_categorytree
         - ps_facetedsearch
@@ -90,7 +97,6 @@ global_settings:
         - ps_featuredproducts
       displayCrossSellingShoppingCart:
         - ps_featuredproducts
-
   image_types:
     cart_default:
       width: 125
