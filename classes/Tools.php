@@ -482,34 +482,15 @@ class ToolsCore
      */
     public static function extractHost($url)
     {
-        if (PHP_VERSION_ID >= 50628) {
-            $parsed = parse_url($url);
-            if (!is_array($parsed)) {
-                return $url;
-            }
-            if (empty($parsed['host']) || empty($parsed['scheme'])) {
-                return '';
-            }
-
-            return $parsed['host'];
+        $parsed = parse_url($url);
+        if (!is_array($parsed)) {
+            return $url;
         }
-
-        // big workaround needed
-        // @see: https://bugs.php.net/bug.php?id=73192
-        // @see: https://3v4l.org/nFYJh
-
-        $matches = [];
-        if (!preg_match('/^[\w]+:\/\/(?<authority>[^\/?#$]+)/ui', $url, $matches)) {
-            // relative url
-            return '';
-        }
-        $authority = $matches['authority'];
-
-        if (!preg_match('/(?:(?<user>.+):(?<pass>.+)@)?(?<domain>[\w.-]+)(?::(?<port>\d+))?/ui', $authority, $matches)) {
+        if (empty($parsed['host']) || empty($parsed['scheme'])) {
             return '';
         }
 
-        return $matches['domain'];
+        return $parsed['host'];
     }
 
     /**
@@ -3016,10 +2997,6 @@ exit;
      */
     public static function jsonEncode($data, $options = 0, $depth = 512)
     {
-        if (PHP_VERSION_ID < 50500) { /* PHP version < 5.5.0 */
-            return json_encode($data, $options);
-        }
-
         return json_encode($data, $options, $depth);
     }
 
@@ -3778,11 +3755,7 @@ exit;
      */
     public static function arrayUnique($array)
     {
-        if (version_compare(PHP_VERSION, '5.2.9', '<')) {
-            return array_unique($array);
-        } else {
-            return array_unique($array, SORT_REGULAR);
-        }
+        return array_unique($array, SORT_REGULAR);
     }
 
     /**
