@@ -41,6 +41,7 @@ use ImageManager;
 use Module;
 use Order;
 use OrderInvoice;
+use OrderPayment;
 use OrderReturn;
 use OrderSlip;
 use Pack;
@@ -54,6 +55,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderDocumentsForViewing
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderHistoryForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderInvoiceAddressForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPaymentForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPaymentsForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductsForViewing;
@@ -92,6 +94,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
 
     /**
      * @param ImageTagSourceParserInterface $imageTagSourceParser
+     * @param TranslatorInterface $translator
      */
     public function __construct(
         ImageTagSourceParserInterface $imageTagSourceParser,
@@ -115,6 +118,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
         return new OrderForViewing(
             $order->reference,
             $taxMethod,
+            (bool) $order->valid,
             $this->getOrderCustomer($order),
             $this->getOrderShippingAddress($order),
             $this->getOrderInvoiceAddress($order),
@@ -122,7 +126,8 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             $this->getOrderHistory($order),
             $this->getOrderDocuments($order),
             $this->getOrderShipping($order),
-            $this->getOrderReturns($order)
+            $this->getOrderReturns($order),
+            $this->getOrderPayments($order)
         );
     }
 
@@ -614,17 +619,48 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
         $orderAmountPaid = null;
         $paymentMismatchOrders = [];
 
-        if (round($order->getOrdersTotalPaid(), 2) == round($order->getTotalPaid(), 2)
-            || ($currentState && $currentState->id == 6)
-        ) {
-            $orderAmountToPay = Tools::displayPrice($order->getOrdersTotalPaid(), $currency);
-            $orderAmountPaid = Tools::displayPrice($order->getTotalPaid(), $currency);
+        if (count($payments) > 0) {
+            $noPaymentMismatch = round($order->getOrdersTotalPaid(), 2) == round($order->getTotalPaid(), 2)
+                || ($currentState && $currentState->id == 6);
 
-            foreach ($order->getBrother() as $relatedOrder) {
-                $paymentMismatchOrders[] = $relatedOrder->id;
+            if (!$noPaymentMismatch) {
+                $orderAmountToPay = Tools::displayPrice($order->getOrdersTotalPaid(), $currency);
+                $orderAmountPaid = Tools::displayPrice($order->getTotalPaid(), $currency);
+
+                foreach ($order->getBrother() as $relatedOrder) {
+                    $paymentMismatchOrders[] = $relatedOrder->id;
+                }
             }
         }
 
-        return new OrderPaymentsForViewing([]);
+        $orderPayments = [];
+
+        /** @var OrderPayment $payment */
+        foreach ($order->getOrderPaymentCollection() as $payment) {
+            $invoice = $payment->getOrderInvoice($order->id);
+            $invoiceNumber = $invoice ?
+                $invoice->getInvoiceNumberFormatted(Context::getContext()->language->id, $order->id_shop) :
+                null;
+
+            $orderPayments[] = new OrderPaymentForViewing(
+                $payment->id,
+                new DateTimeImmutable($payment->date_add),
+                $payment->payment_method,
+                $payment->transaction_id,
+                Tools::displayPrice($payment->amount, (int) $payment->id_currency),
+                $invoiceNumber,
+                $payment->card_number,
+                $payment->card_brand,
+                $payment->card_expiration,
+                $payment->card_holder
+            );
+        }
+
+        return new OrderPaymentsForViewing(
+            $orderPayments,
+            $orderAmountToPay,
+            $orderAmountPaid,
+            $paymentMismatchOrders
+        );
     }
 }
