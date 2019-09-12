@@ -587,7 +587,7 @@ class CartControllerCore extends FrontController
             $this->customization_id
         );
 
-        return $productQuantity < 0;
+        return $productQuantity <= 0;
     }
 
     /**
