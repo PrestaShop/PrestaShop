@@ -26,6 +26,7 @@ const fs = require('fs');
 const path = require('path');
 const webpack = require('webpack');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const cssExtractedFileName = 'theme';
 
@@ -210,5 +211,8 @@ module.exports = {
       $: 'jquery', // needed for jquery-ui
       jQuery: 'jquery',
     }),
+    new CopyPlugin([
+      { from: 'static' },
+    ])
   ],
 };
