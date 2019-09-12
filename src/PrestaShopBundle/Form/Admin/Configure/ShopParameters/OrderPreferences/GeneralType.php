@@ -85,7 +85,7 @@ class GeneralType extends TranslatorAwareType
             ])
             ->add('disable_reordering_option', SwitchType::class, [
                 'required' => false,
-                'label' => $this->trans('Disable Reordering Option', 'Admin.Shopparameters.Feature'),
+                'label' => $this->trans('Disable reordering option', 'Admin.Shopparameters.Feature'),
                 'help' => $this->trans('Disable the option to allow customers to reorder in one click from the order history page (required in some European countries).', 'Admin.Shopparameters.Help'),
             ])
             ->add('purchase_minimum_value', MoneyWithSuffixType::class, [
