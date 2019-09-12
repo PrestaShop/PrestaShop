@@ -60,7 +60,7 @@ class Translation
     /**
      * @var string
      *
-     * @ORM\Column(name="`key`", type="text", length=65500)
+     * @ORM\Column(name="`key`", type="binary", length=65500)
      */
     private $key;
 
