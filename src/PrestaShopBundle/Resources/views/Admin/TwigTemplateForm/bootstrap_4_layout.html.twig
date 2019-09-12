@@ -805,3 +805,7 @@
     <small class="form-text">{{ help }}</small>
   {% endif %}
 {% endblock form_help %}
+
+{% block custom_content_widget %}
+  {% include template with data %}
+{% endblock %}

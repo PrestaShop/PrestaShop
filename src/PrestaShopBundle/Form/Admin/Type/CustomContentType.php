@@ -41,7 +41,8 @@ final class CustomContentType extends AbstractType
      */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        $view->vars['view_data'] = $options['view_data'];
+        $view->vars['data'] = $options['data'];
+        $view->vars['template'] = $options['template'];
     }
 
     /**
@@ -49,9 +50,16 @@ final class CustomContentType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
-            'required' => false,
-            'view_data' => [],
-        ]);
+        $resolver
+            ->setRequired([
+                'template',
+            ])
+            ->setDefaults([
+                'required' => false,
+                'data' => [],
+            ])
+            ->setAllowedTypes('template', 'string')
+            ->setAllowedTypes('data', 'array')
+        ;
     }
 }
