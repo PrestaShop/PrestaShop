@@ -4872,4 +4872,22 @@ class AdminControllerCore extends Controller
             $numberSpecification->toArray()
         );
     }
+
+    /**
+     * Adds jQuery library file to queued JS file list.
+     *
+     * @param string|null $version jQuery library version
+     * @param string|null $folder jQuery file folder
+     * @param bool $minifier if set tot true, a minified version will be included
+     *
+     * @deprecated 1.7.7 jQuery is always included, this method should no longer be used
+     */
+    public function addJquery($version = null, $folder = null, $minifier = true)
+    {
+        @trigger_error(
+            'AdminController->addJquery() is deprecated since version 1.7.7.0, calling this method has
+             no effect',
+            E_USER_DEPRECATED
+        );
+    }
 }
