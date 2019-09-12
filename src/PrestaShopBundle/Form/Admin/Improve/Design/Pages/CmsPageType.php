@@ -135,7 +135,8 @@ class CmsPageType extends TranslatorAwareType
             ->add('seo_preview', CustomContentType::class, [
                 'label' => $this->trans('SEO preview', 'Admin.Global'),
                 'help' => $this->trans('Here is a preview of how your page will appear in search engine results.', 'Admin.Global'),
-                'view_data' => [
+                'template' => '@PrestaShop/Admin/Improve/Design/Cms/Blocks/seo_preview.html.twig',
+                'data' => [
                     'cms_url' => $options['cms_preview_url'],
                 ],
             ])
