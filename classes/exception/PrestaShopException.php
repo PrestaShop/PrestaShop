@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -42,7 +42,7 @@ class PrestaShopExceptionCore extends Exception
         if (ToolsCore::isPHPCLI()) {
             echo get_class($this) . ' in ' . $this->getFile() . ' line ' . $this->getLine() . "\n";
             echo $this->getTraceAsString() . "\n";
-        } elseif (_PS_MODE_DEV_ || defined('_PS_ADMIN_DIR_')) {
+        } elseif (_PS_MODE_DEV_) {
             // Display error message
             echo '<style>
                 #psException{font-family: Verdana; font-size: 14px}
@@ -81,7 +81,8 @@ class PrestaShopExceptionCore extends Exception
                     $this->displayFileDebug($trace['file'], $trace['line'], $id);
                 }
                 if (isset($trace['args']) && count($trace['args'])) {
-                    $this->displayArgsDebug($trace['args'], $id);
+                    $args = $this->hideCriticalArgs($trace);
+                    $this->displayArgsDebug($args, $id);
                 }
                 echo '</li>';
             }
@@ -95,7 +96,8 @@ class PrestaShopExceptionCore extends Exception
         }
         // Log the error in the disk
         $this->logError();
-        exit;
+        //We only need the error code 1 in cli context
+        exit((int) ToolsCore::isPHPCLI());
     }
 
     /**
@@ -117,7 +119,7 @@ class PrestaShopExceptionCore extends Exception
         $lines = array_slice($lines, $offset, $total);
         ++$offset;
 
-        echo '<div class="psTrace" id="psTrace_' . $id . '" ' . ((is_null($id) ? 'style="display: block"' : '')) . '><pre>';
+        echo '<div class="psTrace" id="psTrace_' . $id . '" ' . ((null === $id ? 'style="display: block"' : '')) . '><pre>';
         foreach ($lines as $k => $l) {
             $string = ($offset + $k) . '. ' . htmlspecialchars($l);
             if ($offset + $k == $line) {
@@ -127,6 +129,54 @@ class PrestaShopExceptionCore extends Exception
             }
         }
         echo '</pre></div>';
+    }
+
+    /**
+     * Prevent critical arguments to be displayed in the debug trace page (e.g. database password)
+     * Returns the array of args with critical arguments replaced by placeholders.
+     *
+     * @param array $trace
+     *
+     * @return array
+     */
+    protected function hideCriticalArgs(array $trace)
+    {
+        $args = $trace['args'];
+        if (empty($trace['class']) || empty($trace['function'])) {
+            return $args;
+        }
+
+        $criticalParameters = [
+            'pwd',
+            'pass',
+            'passwd',
+            'password',
+            'database',
+            'server',
+        ];
+        $hiddenArgs = [];
+
+        try {
+            $class = new \ReflectionClass($trace['class']);
+            /** @var \ReflectionMethod $method */
+            $method = $class->getMethod($trace['function']);
+            /** @var \ReflectionParameter $parameter */
+            foreach ($method->getParameters() as $argIndex => $parameter) {
+                if ($argIndex >= count($args)) {
+                    break;
+                }
+
+                if (in_array(strtolower($parameter->getName()), $criticalParameters)) {
+                    $hiddenArgs[] = '**hidden_' . $parameter->getName() . '**';
+                } else {
+                    $hiddenArgs[] = $args[$argIndex];
+                }
+            }
+        } catch (ReflectionException $e) {
+            //In worst case scenario there are some critical args we could't detect so we return an empty array
+        }
+
+        return $hiddenArgs;
     }
 
     /**

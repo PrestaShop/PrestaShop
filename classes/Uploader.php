@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -120,7 +120,7 @@ class UploaderCore
      */
     public function setMaxSize($value)
     {
-        $this->_max_size = intval($value);
+        $this->_max_size = (int) $value;
 
         return $this;
     }
@@ -274,7 +274,7 @@ class UploaderCore
                 move_uploaded_file($file['tmp_name'], $filePath);
             } else {
                 // Non-multipart uploads (PUT method support)
-                file_put_contents($filePath, fopen('php://input', 'r'));
+                file_put_contents($filePath, fopen('php://input', 'rb'));
             }
 
             $fileSize = $this->_getFileSize($filePath, true);
@@ -302,24 +302,31 @@ class UploaderCore
         switch ($error_code) {
             case 1:
                 $error = Context::getContext()->getTranslator()->trans('The uploaded file exceeds %s', array(ini_get('upload_max_filesize')), 'Admin.Notifications.Error');
+
                 break;
             case 2:
                 $error = Context::getContext()->getTranslator()->trans('The uploaded file exceeds %s', array(ini_get('post_max_size')), 'Admin.Notifications.Error');
+
                 break;
             case 3:
                 $error = Context::getContext()->getTranslator()->trans('The uploaded file was only partially uploaded', array(), 'Admin.Notifications.Error');
+
                 break;
             case 4:
                 $error = Context::getContext()->getTranslator()->trans('No file was uploaded', array(), 'Admin.Notifications.Error');
+
                 break;
             case 6:
                 $error = Context::getContext()->getTranslator()->trans('Missing temporary folder', array(), 'Admin.Notifications.Error');
+
                 break;
             case 7:
                 $error = Context::getContext()->getTranslator()->trans('Failed to write file to disk', array(), 'Admin.Notifications.Error');
+
                 break;
             case 8:
                 $error = Context::getContext()->getTranslator()->trans('A PHP extension stopped the file upload', array(), 'Admin.Notifications.Error');
+
                 break;
             default:
                 break;

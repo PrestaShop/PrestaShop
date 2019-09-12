@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -130,7 +130,7 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
     /**
      * Get order taxes summary.
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return array|false|mysqli_result|PDOStatement|resource|null
      *
      * @throws PrestaShopDatabaseException
      */
@@ -174,7 +174,7 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
 
         $this->smarty->assign(array(
             'logo_path' => $path_logo,
-            'img_ps_dir' => 'http://' . Tools::getMediaServer(_PS_IMG_) . _PS_IMG_,
+            'img_ps_dir' => Tools::getShopProtocol() . Tools::getMediaServer(_PS_IMG_) . _PS_IMG_,
             'img_update_time' => Configuration::get('PS_IMG_UPDATE_TIME'),
             'title' => $this->title,
             'reference' => $this->supply_order->reference,

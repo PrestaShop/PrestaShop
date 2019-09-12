@@ -56,17 +56,18 @@ require_once dirname(__FILE__) . '/IndexTypeBuilder.php';
  *  
  */
 class IndexParserBuilder {
-
     protected function buildReserved($parsed) {
         $builder = new ReservedBuilder();
+
         return $builder->build($parsed);
     }
 
     protected function buildConstant($parsed) {
         $builder = new ConstantBuilder();
+
         return $builder->build($parsed);
     }
-    
+
     public function build($parsed) {
         if ($parsed['expr_type'] !== ExpressionType::INDEX_PARSER) {
             return "";
@@ -83,7 +84,7 @@ class IndexParserBuilder {
 
             $sql .= " ";
         }
+
         return substr($sql, 0, -1);
     }
 }
-?>

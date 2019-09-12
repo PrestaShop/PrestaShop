@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,22 +16,22 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Module;
 
+use Exception;
 use PrestaShopBundle\Event\ModuleZipManagementEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Translation\TranslatorInterface;
-use Exception;
 use Tools;
 use ZipArchive;
 
@@ -97,7 +97,9 @@ class ModuleZipManager
                 $this->translator->trans(
                     'Unable to find uploaded module at the following path: %file%',
                     array('%file%' => $source),
-                    'Admin.Modules.Notification'));
+                    'Admin.Modules.Notification'
+                )
+            );
         }
 
         $sandboxPath = $this->getSandboxPath($source);
@@ -109,7 +111,9 @@ class ModuleZipManager
                     array(
                         '%path%' => $sandboxPath,
                         '%error%' => $zip->getStatusString(), ),
-                    'Admin.Modules.Notification'));
+                    'Admin.Modules.Notification'
+                )
+            );
         }
 
         // Check the structure and get the module name
@@ -136,6 +140,7 @@ class ModuleZipManager
             foreach (iterator_to_array($moduleFolder) as $file) {
                 if ($file->getFileName() === $moduleName . '.php') {
                     $validModuleStructure = true;
+
                     break;
                 }
             }
@@ -143,10 +148,12 @@ class ModuleZipManager
 
         if (!$validModuleStructure) {
             $this->filesystem->remove($sandboxPath);
+
             throw new Exception($this->translator->trans(
                     'This file does not seem to be a valid module zip',
                     array(),
-                    'Admin.Modules.Notification'));
+                    'Admin.Modules.Notification'
+            ));
         }
 
         $this->getSource($source)->setName($moduleName);
@@ -176,8 +183,7 @@ class ModuleZipManager
             ->dispatch(
                 ModuleZipManagementEvent::DOWNLOAD,
                 new ModuleZipManagementEvent($this->getSource($source))
-            )
-        ;
+            );
 
         $this->filesystem->remove($sandboxPath);
     }
@@ -185,7 +191,7 @@ class ModuleZipManager
     /**
      * @param $source
      *
-     * @return null|string
+     * @return string|null
      */
     private function getSandboxPath($source)
     {
@@ -204,7 +210,7 @@ class ModuleZipManager
      *
      * @param string $source
      *
-     * @return null|ModuleZip
+     * @return ModuleZip|null
      */
     private function getSource($source)
     {

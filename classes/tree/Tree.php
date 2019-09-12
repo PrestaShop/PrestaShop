@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -283,7 +283,8 @@ class TreeCore
     {
         if (!isset($this->_template_directory)) {
             $this->_template_directory = $this->_normalizeDirectory(
-                self::DEFAULT_TEMPLATE_DIRECTORY);
+                self::DEFAULT_TEMPLATE_DIRECTORY
+            );
         }
 
         return $this->_template_directory;
@@ -296,11 +297,13 @@ class TreeCore
         }
 
         if ($this->getContext()->controller instanceof ModuleAdminController && isset($controller_name) && file_exists($this->_normalizeDirectory(
-                $this->getContext()->controller->getTemplatePath()) . $controller_name . DIRECTORY_SEPARATOR . $this->getTemplateDirectory() . $template)) {
+                $this->getContext()->controller->getTemplatePath()
+        ) . $controller_name . DIRECTORY_SEPARATOR . $this->getTemplateDirectory() . $template)) {
             return $this->_normalizeDirectory($this->getContext()->controller->getTemplatePath()) .
                 $controller_name . DIRECTORY_SEPARATOR . $this->getTemplateDirectory() . $template;
         } elseif ($this->getContext()->controller instanceof ModuleAdminController && file_exists($this->_normalizeDirectory(
-                $this->getContext()->controller->getTemplatePath()) . $this->getTemplateDirectory() . $template)) {
+                $this->getContext()->controller->getTemplatePath()
+        ) . $this->getTemplateDirectory() . $template)) {
             return $this->_normalizeDirectory($this->getContext()->controller->getTemplatePath())
                 . $this->getTemplateDirectory() . $template;
         } elseif ($this->getContext()->controller instanceof AdminController && isset($controller_name)
@@ -426,10 +429,11 @@ class TreeCore
                 $this->getContext()->smarty
             );
             $headerTemplate->assign($this->getAttributes())
-                ->assign(array(
-                    'title' => $this->getTitle(),
-                    'toolbar' => $this->useToolbar() ? $this->renderToolbar() : null,
-                )
+                ->assign(
+                    array(
+                        'title' => $this->getTitle(),
+                        'toolbar' => $this->useToolbar() ? $this->renderToolbar() : null,
+                    )
             );
             $template->assign('header', $headerTemplate->fetch());
         }

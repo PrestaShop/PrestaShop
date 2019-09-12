@@ -48,7 +48,6 @@
  *  
  */
 class CreateTableSelectOptionBuilder {
-
     public function build($parsed) {
         if (!isset($parsed['select-option']) || $parsed['select-option'] === false) {
             return "";
@@ -57,7 +56,7 @@ class CreateTableSelectOptionBuilder {
 
         $sql = ($option['duplicates'] === false ? '' : (' ' . $option['duplicates']));
         $sql .= ($option['as'] === false ? '' : ' AS');
+
         return $sql;
     }
 }
-?>

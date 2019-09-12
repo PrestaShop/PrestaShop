@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -496,6 +496,7 @@ class MediaCore
 
             if (array_key_exists('host', $urlData)) {
                 $externalCssFiles[$filename] = $media;
+
                 continue;
             }
 
@@ -536,6 +537,7 @@ class MediaCore
             if ($mediaInfos['date'] > $compressedCssFilesInfos[$media]['date']) {
                 if ($compressedCssFilesInfos[$media]['date']) {
                     Configuration::updateValue('PS_CCCCSS_VERSION', ++$version);
+
                     break;
                 }
             }
@@ -566,7 +568,6 @@ class MediaCore
                 $content = '@charset "UTF-8";' . "\n" . $content;
                 $content = implode('', $importUrl) . $content;
                 file_put_contents($cacheFilename, $content);
-                chmod($cacheFilename, 0777);
             }
             $compressedCssFiles[$media] = $cacheFilename;
         }
@@ -584,7 +585,7 @@ class MediaCore
     /**
      * Get backtrack limit.
      *
-     * @return int|null|string
+     * @return int|string|null
      */
     public static function getBackTrackLimit()
     {
@@ -675,7 +676,6 @@ class MediaCore
             }
 
             file_put_contents($compressedJsPath, $content);
-            chmod($compressedJsPath, 0777);
         }
 
         // rebuild the original js_files array

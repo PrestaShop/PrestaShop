@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -196,8 +196,10 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
             $order_detail['order_detail_tax'] = $taxes;
             $order_detail['order_detail_tax_label'] = implode(', ', $tax_temp);
         }
-        unset($tax_temp);
-        unset($order_detail);
+        unset(
+            $tax_temp,
+            $order_detail
+        );
 
         if (Configuration::get('PS_PDF_IMG_INVOICE')) {
             foreach ($order_details as &$order_detail) {
@@ -298,15 +300,19 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
         switch ($this->order->round_type) {
             case Order::ROUND_TOTAL:
                 $round_type = 'total';
+
                 break;
             case Order::ROUND_LINE:
                 $round_type = 'line';
+
                 break;
             case Order::ROUND_ITEM:
                 $round_type = 'item';
+
                 break;
             default:
                 $round_type = 'line';
+
                 break;
         }
 

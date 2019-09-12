@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -93,8 +93,11 @@ class PrestaShopBackupCore
     {
         $backupDir = PrestaShopBackup::getBackupPath($filename);
         if (!empty($this->customBackupDir)) {
-            $backupDir = str_replace((defined('_PS_HOST_MODE_') ? _PS_ROOT_DIR_ : _PS_ADMIN_DIR_) . self::$backupDir,
-                (defined('_PS_HOST_MODE_') ? _PS_ROOT_DIR_ : _PS_ADMIN_DIR_) . $this->customBackupDir, $backupDir);
+            $backupDir = str_replace(
+                (defined('_PS_HOST_MODE_') ? _PS_ROOT_DIR_ : _PS_ADMIN_DIR_) . self::$backupDir,
+                (defined('_PS_HOST_MODE_') ? _PS_ROOT_DIR_ : _PS_ADMIN_DIR_) . $this->customBackupDir,
+                $backupDir
+            );
 
             if (strrpos($backupDir, DIRECTORY_SEPARATOR)) {
                 $backupDir .= DIRECTORY_SEPARATOR;
@@ -116,7 +119,7 @@ class PrestaShopBackupCore
         $backupdir = realpath((defined('_PS_HOST_MODE_') ? _PS_ROOT_DIR_ : _PS_ADMIN_DIR_) . self::$backupDir);
 
         if ($backupdir === false) {
-            die(Context::getContext()->getTranslator()->trans('"Backup" directory does not exist.', array(), 'Admin.Advparameters.Notification'));
+            die(Tools::displayError(Context::getContext()->getTranslator()->trans('"Backup" directory does not exist.', array(), 'Admin.Advparameters.Notification')));
         }
 
         // Check the realpath so we can validate the backup file is under the backup directory
@@ -145,7 +148,7 @@ class PrestaShopBackupCore
         $backupdir = realpath((defined('_PS_HOST_MODE_') ? _PS_ROOT_DIR_ : _PS_ADMIN_DIR_) . self::$backupDir);
 
         if ($backupdir === false) {
-            die(Context::getContext()->getTranslator()->trans('"Backup" directory does not exist.', array(), 'Admin.Advparameters.Notification'));
+            die(Tools::displayError(Context::getContext()->getTranslator()->trans('"Backup" directory does not exist.', array(), 'Admin.Advparameters.Notification')));
         }
 
         return @filemtime($backupdir . DIRECTORY_SEPARATOR . $filename);
@@ -155,10 +158,25 @@ class PrestaShopBackupCore
      * Get the URL used to retrieve this backup file.
      *
      * @return string The url used to request the backup file
+     *
+     * @deprecated As the call has been duplicated in the new Controller. Get the URL from the router instead.
      */
     public function getBackupURL()
     {
-        return __PS_BASE_URI__ . basename(_PS_ADMIN_DIR_) . '/backup.php?filename=' . basename($this->id);
+        // Additionnal parameters (action, filename, ajax) are kept for backward compatibility, in case we disable the new controller
+        return Context::getContext()->link->getAdminLink(
+                'AdminBackup',
+                true,
+                [
+                    'route' => 'admin_backup_download',
+                    'downloadFileName' => basename($this->id),
+                ],
+                [
+                    'action' => 'backupContent',
+                    'ajax' => 1,
+                    'filename' => basename($this->id),
+                ]
+            );
     }
 
     /**
@@ -206,7 +224,8 @@ class PrestaShopBackupCore
     {
         if (!$this->psBackupAll) {
             $ignoreInsertTable = array(_DB_PREFIX_ . 'connections', _DB_PREFIX_ . 'connections_page', _DB_PREFIX_
-                . 'connections_source', _DB_PREFIX_ . 'guest', _DB_PREFIX_ . 'statssearch', );
+                . 'connections_source', _DB_PREFIX_ . 'guest', _DB_PREFIX_ . 'statssearch',
+            );
         } else {
             $ignoreInsertTable = array();
         }
@@ -224,7 +243,7 @@ class PrestaShopBackupCore
             $backupfile .= '.gz';
             $fp = @gzopen($backupfile, 'w');
         } else {
-            $fp = @fopen($backupfile, 'w');
+            $fp = @fopen($backupfile, 'wb');
         }
 
         if ($fp === false) {
@@ -294,6 +313,7 @@ class PrestaShopBackupCore
                                         } else {
                                             $s .= 'NULL,';
                                         }
+
                                         break;
                                     }
                                 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,17 +16,18 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-define('PS_SEARCH_MAX_WORD_LENGTH', 15);
+define('PS_SEARCH_MAX_WORD_LENGTH', 30);
 
 /* Copied from Drupal search module, except for \x{0}-\x{2f} that has been replaced by \x{0}-\x{2c}\x{2e}-\x{2f} in order to keep the char '-' */
-define('PREG_CLASS_SEARCH_EXCLUDE',
+define(
+    'PREG_CLASS_SEARCH_EXCLUDE',
 '\x{0}-\x{2c}\x{2e}-\x{2f}\x{3a}-\x{40}\x{5b}-\x{60}\x{7b}-\x{bf}\x{d7}\x{f7}\x{2b0}-' .
 '\x{385}\x{387}\x{3f6}\x{482}-\x{489}\x{559}-\x{55f}\x{589}-\x{5c7}\x{5f3}-' .
 '\x{61f}\x{640}\x{64b}-\x{65e}\x{66a}-\x{66d}\x{670}\x{6d4}\x{6d6}-\x{6ed}' .
@@ -53,9 +54,11 @@ define('PREG_CLASS_SEARCH_EXCLUDE',
 '\x{31cf}\x{3200}-\x{33ff}\x{4dc0}-\x{4dff}\x{a015}\x{a490}-\x{a716}\x{a802}' .
 '\x{e000}-\x{f8ff}\x{fb29}\x{fd3e}-\x{fd3f}\x{fdfc}-\x{fdfd}' .
 '\x{fd3f}\x{fdfc}-\x{fe6b}\x{feff}-\x{ff0f}\x{ff1a}-\x{ff20}\x{ff3b}-\x{ff40}' .
-'\x{ff5b}-\x{ff65}\x{ff70}\x{ff9e}\x{ff9f}\x{ffe0}-\x{fffd}');
+'\x{ff5b}-\x{ff65}\x{ff70}\x{ff9e}\x{ff9f}\x{ffe0}-\x{fffd}'
+);
 
-define('PREG_CLASS_NUMBERS',
+define(
+    'PREG_CLASS_NUMBERS',
 '\x{30}-\x{39}\x{b2}\x{b3}\x{b9}\x{bc}-\x{be}\x{660}-\x{669}\x{6f0}-\x{6f9}' .
 '\x{966}-\x{96f}\x{9e6}-\x{9ef}\x{9f4}-\x{9f9}\x{a66}-\x{a6f}\x{ae6}-\x{aef}' .
 '\x{b66}-\x{b6f}\x{be7}-\x{bf2}\x{c66}-\x{c6f}\x{ce6}-\x{cef}\x{d66}-\x{d6f}' .
@@ -64,9 +67,11 @@ define('PREG_CLASS_NUMBERS',
 '\x{1946}-\x{194f}\x{2070}\x{2074}-\x{2079}\x{2080}-\x{2089}\x{2153}-\x{2183}' .
 '\x{2460}-\x{249b}\x{24ea}-\x{24ff}\x{2776}-\x{2793}\x{3007}\x{3021}-\x{3029}' .
 '\x{3038}-\x{303a}\x{3192}-\x{3195}\x{3220}-\x{3229}\x{3251}-\x{325f}\x{3280}-' .
-'\x{3289}\x{32b1}-\x{32bf}\x{ff10}-\x{ff19}');
+'\x{3289}\x{32b1}-\x{32bf}\x{ff10}-\x{ff19}'
+);
 
-define('PREG_CLASS_PUNCTUATION',
+define(
+    'PREG_CLASS_PUNCTUATION',
 '\x{21}-\x{23}\x{25}-\x{2a}\x{2c}-\x{2f}\x{3a}\x{3b}\x{3f}\x{40}\x{5b}-\x{5d}' .
 '\x{5f}\x{7b}\x{7d}\x{a1}\x{ab}\x{b7}\x{bb}\x{bf}\x{37e}\x{387}\x{55a}-\x{55f}' .
 '\x{589}\x{58a}\x{5be}\x{5c0}\x{5c3}\x{5f3}\x{5f4}\x{60c}\x{60d}\x{61b}\x{61f}' .
@@ -81,7 +86,8 @@ define('PREG_CLASS_PUNCTUATION',
 '\x{30fb}\x{fd3e}\x{fd3f}\x{fe30}-\x{fe52}\x{fe54}-\x{fe61}\x{fe63}\x{fe68}' .
 '\x{fe6a}\x{fe6b}\x{ff01}-\x{ff03}\x{ff05}-\x{ff0a}\x{ff0c}-\x{ff0f}\x{ff1a}' .
 '\x{ff1b}\x{ff1f}\x{ff20}\x{ff3b}-\x{ff3d}\x{ff3f}\x{ff5b}\x{ff5d}\x{ff5f}-' .
-'\x{ff65}');
+'\x{ff65}'
+);
 
 /*
  * Matches all CJK characters that are candidates for auto-splitting
@@ -265,7 +271,7 @@ class SearchCore
         $sql_groups = '';
         if (Group::isFeatureActive()) {
             $groups = FrontController::getCurrentCustomerGroups();
-            $sql_groups = 'AND cg.`id_group` ' . (count($groups) ? 'IN (' . implode(',', $groups) . ')' : '= 1');
+            $sql_groups = 'AND cg.`id_group` ' . (count($groups) ? 'IN (' . implode(',', $groups) . ')' : '=' . (int) Group::getCurrent()->id);
         }
 
         $results = $db->executeS('
@@ -474,15 +480,19 @@ class SearchCore
                     switch ($key) {
                         case 'pa_reference':
                             $sql .= ', pa.reference AS pa_reference';
+
                             break;
                         case 'pa_supplier_reference':
                             $sql .= ', pa.supplier_reference AS pa_supplier_reference';
+
                             break;
                         case 'pa_ean13':
                             $sql .= ', pa.ean13 AS pa_ean13';
+
                             break;
                         case 'pa_upc':
                             $sql .= ', pa.upc AS pa_upc';
+
                             break;
                     }
                 }
@@ -520,30 +530,39 @@ class SearchCore
                     switch ($key) {
                         case 'pname':
                             $sql .= ', pl.name pname';
+
                             break;
                         case 'reference':
                             $sql .= ', p.reference';
+
                             break;
                         case 'supplier_reference':
                             $sql .= ', p.supplier_reference';
+
                             break;
                         case 'ean13':
                             $sql .= ', p.ean13';
+
                             break;
                         case 'upc':
                             $sql .= ', p.upc';
+
                             break;
                         case 'description_short':
                             $sql .= ', pl.description_short';
+
                             break;
                         case 'description':
                             $sql .= ', pl.description';
+
                             break;
                         case 'cname':
                             $sql .= ', cl.name cname';
+
                             break;
                         case 'mname':
                             $sql .= ', m.name mname';
+
                             break;
                     }
                 }
@@ -842,7 +861,7 @@ class SearchCore
         $sql_groups = '';
         if (Group::isFeatureActive()) {
             $groups = FrontController::getCurrentCustomerGroups();
-            $sql_groups = 'AND cg.`id_group` ' . (count($groups) ? 'IN (' . implode(',', $groups) . ')' : '= 1');
+            $sql_groups = 'AND cg.`id_group` ' . (count($groups) ? 'IN (' . implode(',', $groups) . ')' : '=' . (int) Group::getCurrent()->id);
         }
 
         if ($count) {
@@ -860,7 +879,8 @@ class SearchCore
 			AND product_shop.`visibility` IN (\'both\', \'search\')
 			AND cs.`id_shop` = ' . (int) Context::getContext()->shop->id . '
 			' . $sql_groups . '
-			AND t.`name` LIKE \'%' . pSQL($tag) . '%\'');
+			AND t.`name` LIKE \'%' . pSQL($tag) . '%\''
+            );
         }
 
         $sql = 'SELECT DISTINCT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, pl.`description_short`, pl.`link_rewrite`, pl.`name`, pl.`available_now`, pl.`available_later`,

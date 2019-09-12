@@ -1,5 +1,5 @@
 {#**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,16 +15,16 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 {% trans_default_domain "Admin.Shopparameters.Feature" %}
-{% import 'PrestaShopBundle:Admin:macros.html.twig' as ps %}
+{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
 
 {%
   set generalForm = form.general
@@ -76,6 +76,14 @@
                                     {{ form_errors(generalForm.enable_token) }}
                                     {{ form_widget(generalForm.enable_token) }}
                                     <small class="form-text">{{ 'Enable or disable token in the Front Office to improve PrestaShop\'s security.'|trans({}, 'Admin.Shopparameters.Help') }}</small>
+
+                                    {% if generalForm.enable_token.vars.disabled %}
+                                      <div class="alert alert-warning mt-2 mb-0" role="alert">
+                                        <p class="alert-text">
+                                          {{ 'You can\'t change the value of this configuration field in the context of this shop.'|trans({}, 'Admin.Notifications.Warning') }}
+                                        </p>
+                                      </div>
+                                    {% endif %}
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -140,6 +148,14 @@
                                     {{ form_errors(generalForm.multishop_feature_active) }}
                                     {{ form_widget(generalForm.multishop_feature_active) }}
                                     <small class="form-text">{{ 'The multistore feature allows you to manage several e-shops with one Back Office. If this feature is enabled, a "Multistore" page will be available in the "Advanced Parameters" menu.'|trans({}, 'Admin.Shopparameters.Help') }}</small>
+
+                                    {% if generalForm.multishop_feature_active.vars.disabled %}
+                                      <div class="alert alert-warning mt-2 mb-0" role="alert">
+                                        <p class="alert-text">
+                                          {{ 'You can\'t change the value of this configuration field in the context of this shop.'|trans({}, 'Admin.Notifications.Warning') }}
+                                        </p>
+                                      </div>
+                                    {% endif %}
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -149,6 +165,9 @@
                                     {{ form_widget(generalForm.shop_activity) }}
                                 </div>
                             </div>
+                            {% block shop_preferences_form_rest %}
+                              {{ form_rest(form) }}
+                            {% endblock %}
                         </div>
                     </div>
                     <div class="card-footer">

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,17 +16,19 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Form\Admin\Product;
 
+use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShopBundle\Form\Admin\Category\SimpleCategory;
+use PrestaShopBundle\Form\Admin\Feature\ProductFeature;
 use PrestaShopBundle\Form\Admin\Type\ChoiceCategoriesTreeType;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
@@ -34,7 +36,6 @@ use PrestaShopBundle\Form\Admin\Type\TranslateType;
 use PrestaShopBundle\Form\Admin\Type\TypeaheadProductCollectionType;
 use PrestaShopBundle\Form\Admin\Type\TypeaheadProductPackCollectionType;
 use PrestaShopBundle\Form\Validator\Constraints\TinyMceMaxLength;
-use PrestaShop\PrestaShop\Adapter\Configuration;
 use Symfony\Component\Form\Extension\Core\Type as FormType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormError;
@@ -142,7 +143,7 @@ class ProductInformation extends CommonAbstractType
             'required' => true,
         ])
             ->add('inputPackItems', TypeaheadProductPackCollectionType::class, [
-                'remote_url' => $this->context->getAdminLink('', false) . 'ajax_products_list.php?forceJson=1&excludeVirtuals=1&limit=20&q=%QUERY',
+                'remote_url' => $this->context->getLegacyAdminLink('AdminProducts', true, ['ajax' => 1, 'action' => 'productsList', 'forceJson' => 1, 'excludeVirtuals' => 1, 'limit' => 20]) . '&q=%QUERY',
                 'mapping_value' => 'id',
                 'mapping_name' => 'name',
                 'placeholder' => $this->translator->trans('Search for a product', [], 'Admin.Catalog.Help'),
@@ -168,7 +169,7 @@ class ProductInformation extends CommonAbstractType
                     ],
                     'attr' => [
                         'placeholder' => $this->translator->trans('Enter your product name', [], 'Admin.Catalog.Help'),
-                        'class' => 'edit js-edit',
+                        'class' => 'edit js-edit serp-default-title',
                     ],
                 ],
                 'locales' => $this->locales,
@@ -179,6 +180,14 @@ class ProductInformation extends CommonAbstractType
                 'type' => FormattedTextareaType::class,
                 'options' => [
                     'required' => false,
+                    'attr' => [
+                        'class' => 'serp-default-description',
+                    ],
+                    'constraints' => [
+                        new TinyMceMaxLength([
+                            'max' => FormattedTextareaType::LIMIT_TEXT_UTF8,
+                        ]),
+                    ],
                 ],
                 'locales' => $this->locales,
                 'hideTabs' => true,
@@ -207,7 +216,7 @@ class ProductInformation extends CommonAbstractType
             ])
             //FEATURES & ATTRIBUTES
             ->add('features', FormType\CollectionType::class, [
-                'entry_type' => 'PrestaShopBundle\Form\Admin\Feature\ProductFeature',
+                'entry_type' => ProductFeature::class,
                 'prototype' => true,
                 'allow_add' => true,
                 'allow_delete' => true,
@@ -276,7 +285,7 @@ class ProductInformation extends CommonAbstractType
                 'mapped' => false,
             ])
             ->add('related_products', TypeaheadProductCollectionType::class, [
-                'remote_url' => $this->context->getAdminLink('', false) . 'ajax_products_list.php?forceJson=1&disableCombination=1&exclude_packs=0&excludeVirtuals=0&limit=20&q=%QUERY',
+                'remote_url' => $this->context->getLegacyAdminLink('AdminProducts', true, ['ajax' => 1, 'action' => 'productsList', 'forceJson' => 1, 'disableCombination' => 1, 'exclude_packs' => 0, 'excludeVirtuals' => 0, 'limit' => 20]) . '&q=%QUERY',
                 'mapping_value' => 'id',
                 'mapping_name' => 'name',
                 'placeholder' => $this->translator->trans('Search and add a related product', [], 'Admin.Catalog.Help'),
@@ -290,6 +299,27 @@ class ProductInformation extends CommonAbstractType
 
             if (!isset($data['type_product'])) {
                 $data['type_product'] = 0;
+                $event->setData($data);
+            }
+
+            /*
+             * Remove duplicates to prevent SQL errors.
+             */
+            if (isset($data['features'])) {
+                $ids = [];
+                foreach ($data['features'] as $idx => $feature) {
+                    if (empty($feature['value'])) {
+                        continue;
+                    }
+
+                    $id = sprintf('%d-%d', $feature['feature'], $feature['value']);
+                    if (in_array($id, $ids)) {
+                        unset($data['features'][$idx]);
+                    } else {
+                        $ids[] = $id;
+                    }
+                }
+
                 $event->setData($data);
             }
 

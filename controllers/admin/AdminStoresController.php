@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -50,8 +50,8 @@ class AdminStoresControllerCore extends AdminController
 
         $this->fields_list = array(
             'id_store' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'align' => 'center', 'class' => 'fixed-width-xs'),
-            'name' => array('title' => $this->trans('Name', array(), 'Admin.Global'), 'filter_key' => 'a!name'),
-            'address1' => array('title' => $this->trans('Address', array(), 'Admin.Global'), 'filter_key' => 'a!address1'),
+            'name' => array('title' => $this->trans('Name', array(), 'Admin.Global'), 'filter_key' => 'sl!name'),
+            'address1' => array('title' => $this->trans('Address', array(), 'Admin.Global'), 'filter_key' => 'sl!address1'),
             'city' => array('title' => $this->trans('City', array(), 'Admin.Global')),
             'postcode' => array('title' => $this->trans('Zip/postal code', array(), 'Admin.Global')),
             'state' => array('title' => $this->trans('State', array(), 'Admin.Global'), 'filter_key' => 'st!name'),
@@ -137,8 +137,14 @@ class AdminStoresControllerCore extends AdminController
         }
 
         $image = _PS_STORE_IMG_DIR_ . $obj->id . '.jpg';
-        $image_url = ImageManager::thumbnail($image, $this->table . '_' . (int) $obj->id . '.' . $this->imageType, 350,
-            $this->imageType, true, true);
+        $image_url = ImageManager::thumbnail(
+            $image,
+            $this->table . '_' . (int) $obj->id . '.' . $this->imageType,
+            350,
+            $this->imageType,
+            true,
+            true
+        );
         $image_size = file_exists($image) ? filesize($image) / 1000 : false;
 
         $tmp_addr = new Address();
@@ -403,15 +409,19 @@ class AdminStoresControllerCore extends AdminController
         if (($id_store = (int) Tools::getValue('id_store')) && isset($_FILES) && count($_FILES) && file_exists(_PS_STORE_IMG_DIR_ . $id_store . '.jpg')) {
             $images_types = ImageType::getImagesTypes('stores');
             foreach ($images_types as $image_type) {
-                ImageManager::resize(_PS_STORE_IMG_DIR_ . $id_store . '.jpg',
+                ImageManager::resize(
+                    _PS_STORE_IMG_DIR_ . $id_store . '.jpg',
                     _PS_STORE_IMG_DIR_ . $id_store . '-' . stripslashes($image_type['name']) . '.jpg',
-                    (int) $image_type['width'], (int) $image_type['height']
+                    (int) $image_type['width'],
+                    (int) $image_type['height']
                 );
 
                 if ($generate_hight_dpi_images) {
-                    ImageManager::resize(_PS_STORE_IMG_DIR_ . $id_store . '.jpg',
+                    ImageManager::resize(
+                        _PS_STORE_IMG_DIR_ . $id_store . '.jpg',
                         _PS_STORE_IMG_DIR_ . $id_store . '-' . stripslashes($image_type['name']) . '2x.jpg',
-                        (int) $image_type['width'] * 2, (int) $image_type['height'] * 2
+                        (int) $image_type['width'] * 2,
+                        (int) $image_type['height'] * 2
                     );
                 }
             }
@@ -585,7 +595,7 @@ class AdminStoresControllerCore extends AdminController
      *
      * @return array
      */
-    private function adaptHoursFormat($value)
+    protected function adaptHoursFormat($value)
     {
         $separator = array_fill(0, count($value), ' | ');
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -169,7 +169,8 @@ class CustomizationCore extends ObjectModel
             return 0;
         }
 
-        return (float) Db::getInstance()->getValue('
+        return (float) Db::getInstance()->getValue(
+            '
             SELECT SUM(`price`) FROM `' . _DB_PREFIX_ . 'customized_data`
             WHERE `id_customization` = ' . (int) $idCustomization
         );
@@ -188,7 +189,8 @@ class CustomizationCore extends ObjectModel
             return 0;
         }
 
-        return (float) Db::getInstance()->getValue('
+        return (float) Db::getInstance()->getValue(
+            '
             SELECT SUM(`weight`) FROM `' . _DB_PREFIX_ . 'customized_data`
             WHERE `id_customization` = ' . (int) $idCustomization
         );
@@ -218,7 +220,7 @@ class CustomizationCore extends ObjectModel
      * @param int $idLang Language IOD
      * @param int|null $idShop Shop ID
      *
-     * @return bool|false|null|string
+     * @return bool|false|string|null
      */
     public static function getLabel($idCustomization, $idLang, $idShop = null)
     {
@@ -229,7 +231,8 @@ class CustomizationCore extends ObjectModel
             $idShop = (int) Context::getContext()->shop->id;
         }
 
-        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+            '
 		SELECT `name`
 		FROM `' . _DB_PREFIX_ . 'customization_field_lang`
 		WHERE `id_customization_field` = ' . (int) $idCustomization . ((int) $idShop ? ' AND `id_shop` = ' . (int) $idShop : '') . '
@@ -262,7 +265,8 @@ class CustomizationCore extends ObjectModel
             $results = Db::getInstance()->executeS(
                             'SELECT `id_customization`, `id_product`, `quantity`, `quantity_refunded`, `quantity_returned`
 							 FROM `' . _DB_PREFIX_ . 'customization`
-							 WHERE `id_customization` IN (' . $inValues . ')');
+							 WHERE `id_customization` IN (' . $inValues . ')'
+            );
 
             foreach ($results as $row) {
                 $quantities[$row['id_customization']] = $row;
@@ -331,7 +335,7 @@ class CustomizationCore extends ObjectModel
      * Get customized text fields
      * (for webservice).
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return array|false|mysqli_result|PDOStatement|resource|null
      */
     public function getWsCustomizedDataTextFields()
     {
@@ -341,7 +345,7 @@ class CustomizationCore extends ObjectModel
 			LEFT JOIN `' . _DB_PREFIX_ . 'customized_data` cd ON (cf.id_customization_field = cd.index)
 			WHERE `id_product` = ' . (int) $this->id_product . '
 			AND id_customization = ' . (int) $this->id . '
-			AND cf.type = 1')) {
+			AND cf.type = ' . (int) Product::CUSTOMIZE_TEXTFIELD)) {
             return array();
         }
 
@@ -352,7 +356,7 @@ class CustomizationCore extends ObjectModel
      * Get customized images data
      * (for webservice).
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return array|false|mysqli_result|PDOStatement|resource|null
      */
     public function getWsCustomizedDataImages()
     {
@@ -362,7 +366,7 @@ class CustomizationCore extends ObjectModel
 			LEFT JOIN `' . _DB_PREFIX_ . 'customized_data` cd ON (cf.id_customization_field = cd.index)
 			WHERE `id_product` = ' . (int) $this->id_product . '
 			AND id_customization = ' . (int) $this->id . '
-			AND cf.type = 0')) {
+			AND cf.type = ' . (int) Product::CUSTOMIZE_FILE)) {
             return array();
         }
 
@@ -388,10 +392,10 @@ class CustomizationCore extends ObjectModel
         Db::getInstance()->execute('
 		DELETE FROM `' . _DB_PREFIX_ . 'customized_data`
 		WHERE id_customization = ' . (int) $this->id . '
-		AND type = 1');
+		AND type = ' . (int) Product::CUSTOMIZE_TEXTFIELD);
         foreach ($values as $value) {
             $query = 'INSERT INTO `' . _DB_PREFIX_ . 'customized_data` (`id_customization`, `type`, `index`, `value`)
-				VALUES (' . (int) $this->id . ', 1, ' . (int) $value['id_customization_field'] . ', \'' . pSQL($value['value']) . '\')';
+				VALUES (' . (int) $this->id . ', ' . (int) Product::CUSTOMIZE_TEXTFIELD . ', ' . (int) $value['id_customization_field'] . ', \'' . pSQL($value['value']) . '\')';
 
             if (!Db::getInstance()->execute($query)) {
                 return false;

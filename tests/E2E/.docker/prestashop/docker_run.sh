@@ -10,14 +10,19 @@ fi
 cp -n -R /tmp/data-ps/prestashop/* /var/www/html
 
 if [ -f /var/www/html/config/settings.inc.php -o -f /var/www/html/app/config/parameters.php ]; then
-  echo "\n* Remove PrestaShop configuraiton files...";
+  echo "\n* Remove PrestaShop configuration files...";
   rm -f /var/www/html/config/settings.inc.php
   rm -f /var/www/html/app/config/parameters.php
+  rm -f /var/www/html/app/config/parameters.yml
+  rm -rf /var/www/html/var/cache/*
 fi
 
 if [ $PS_DEV_MODE -ne 0 ]; then
   echo "\n* Enabling DEV mode ...";
   sed -ie "s/define('_PS_MODE_DEV_', false);/define('_PS_MODE_DEV_',\ true);/g" /var/www/html/config/defines.inc.php
+else
+  echo "\n* Disabling DEV mode ...";
+  sed -ie "s/define('_PS_MODE_DEV_', true);/define('_PS_MODE_DEV_',\ false);/g" /var/www/html/config/defines.inc.php
 fi
 
 if [ $PS_HOST_MODE -ne 0 -a ! $(grep "define('_PS_HOST_MODE_', true);" /var/www/html/config/defines.inc.php) ]; then
@@ -69,7 +74,7 @@ if [ $PS_INSTALL_AUTO = 1 ]; then
 
   cd /var/www/html
   echo "\n* Install Dependencies...";
-  /usr/bin/composer install
+  /usr/bin/composer install --no-suggest --ansi --prefer-dist --no-interaction --no-progress --quiet
 
   echo "\n* Install PrestaShop...";
   php /var/www/html/$PS_FOLDER_INSTALL/index_cli.php --domain="$PS_DOMAIN" --db_server=$DB_SERVER:$DB_PORT --db_name="$DB_NAME" --db_user=$DB_USER \

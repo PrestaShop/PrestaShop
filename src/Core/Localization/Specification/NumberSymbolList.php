@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -312,67 +312,91 @@ class NumberSymbolList
         if (!isset($this->decimal)
             || !is_string($this->decimal)
         ) {
-            throw new LocalizationException('Invalid decimal');
+            throw new LocalizationException('Invalid decimal : ' . print_r($this->decimal, true));
         }
 
         if (!isset($this->group)
             || !is_string($this->group)
         ) {
-            throw new LocalizationException('Invalid group');
+            throw new LocalizationException('Invalid group : ' . print_r($this->group, true));
         }
 
         if (!isset($this->list)
             || !is_string($this->list)
         ) {
-            throw new LocalizationException('Invalid list');
+            throw new LocalizationException('Invalid symbols list : ' . print_r($this->list, true));
         }
 
         if (!isset($this->percentSign)
             || !is_string($this->percentSign)
         ) {
-            throw new LocalizationException('Invalid percentSign');
+            throw new LocalizationException('Invalid percentSign : ' . print_r($this->percentSign, true));
         }
 
         if (!isset($this->minusSign)
             || !is_string($this->minusSign)
         ) {
-            throw new LocalizationException('Invalid minusSign');
+            throw new LocalizationException('Invalid minusSign : ' . print_r($this->minusSign, true));
         }
 
         if (!isset($this->plusSign)
             || !is_string($this->plusSign)
         ) {
-            throw new LocalizationException('Invalid plusSign');
+            throw new LocalizationException('Invalid plusSign : ' . print_r($this->plusSign, true));
         }
 
         if (!isset($this->exponential)
             || !is_string($this->exponential)
         ) {
-            throw new LocalizationException('Invalid exponential');
+            throw new LocalizationException('Invalid exponential : ' . print_r($this->exponential, true));
         }
 
         if (!isset($this->superscriptingExponent)
             || !is_string($this->superscriptingExponent)
         ) {
-            throw new LocalizationException('Invalid superscriptingExponent');
+            throw new LocalizationException(
+                'Invalid superscriptingExponent : ' . print_r($this->superscriptingExponent, true)
+            );
         }
 
         if (!isset($this->perMille)
             || !is_string($this->perMille)
         ) {
-            throw new LocalizationException('Invalid perMille');
+            throw new LocalizationException('Invalid perMille : ' . print_r($this->perMille, true));
         }
 
         if (!isset($this->infinity)
             || !is_string($this->infinity)
         ) {
-            throw new LocalizationException('Invalid infinity');
+            throw new LocalizationException('Invalid infinity : ' . print_r($this->infinity, true));
         }
 
         if (!isset($this->nan)
             || !is_string($this->nan)
         ) {
-            throw new LocalizationException('Invalid nan');
+            throw new LocalizationException('Invalid nan : ' . print_r($this->nan, true));
         }
+    }
+
+    /**
+     * To array function
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        return [
+            $this->getDecimal(),
+            $this->getGroup(),
+            $this->getList(),
+            $this->getPercentSign(),
+            $this->getMinusSign(),
+            $this->getPlusSign(),
+            $this->getExponential(),
+            $this->getSuperscriptingExponent(),
+            $this->getPerMille(),
+            $this->getInfinity(),
+            $this->getNaN(),
+        ];
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -35,6 +35,7 @@ use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -46,7 +47,7 @@ class BackupController extends FrameworkBundleAdminController
     /**
      * Show backup page.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')~'_')")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param Request $request
      * @param BackupFilters $filters
@@ -73,10 +74,8 @@ class BackupController extends FrameworkBundleAdminController
         $backupsGridFactory = $this->get('prestashop.core.grid.factory.backup');
         $backupGrid = $backupsGridFactory->getGrid($filters);
 
-        $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
-
-        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Backup/backup.html.twig', [
-            'backupGrid' => $gridPresenter->present($backupGrid),
+        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Backup/index.html.twig', [
+            'backupGrid' => $this->presentGrid($backupGrid),
             'backupForm' => $backupForm->createView(),
             'isHostMode' => $configuration->get('_PS_HOST_MODE_'),
             'dbPrefix' => $configuration->get('_DB_PREFIX_'),
@@ -90,8 +89,8 @@ class BackupController extends FrameworkBundleAdminController
     /**
      * Show file download view.
      *
-     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller')~'_')")
-     * @DemoRestricted(redirectRoute="admin_backup")
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     * @DemoRestricted(redirectRoute="admin_backups_index")
      *
      * @param Request $request
      * @param string $downloadFileName
@@ -114,16 +113,33 @@ class BackupController extends FrameworkBundleAdminController
     }
 
     /**
+     * Return a backup content as a download.
+     *
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller')~'_')")
+     * @DemoRestricted(redirectRoute="admin_backup")
+     *
+     * @param string $downloadFileName
+     *
+     * @return BinaryFileResponse
+     */
+    public function downloadContentAction($downloadFileName)
+    {
+        $backup = new Backup($downloadFileName);
+
+        return new BinaryFileResponse($backup->getFilePath());
+    }
+
+    /**
      * Process backup options saving.
      *
-     * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller')~'_')")
-     * @DemoRestricted(redirectRoute="admin_backup")
+     * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))")
+     * @DemoRestricted(redirectRoute="admin_backups_index")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
-    public function processFormAction(Request $request)
+    public function saveOptionsAction(Request $request)
     {
         $backupFormHandler = $this->getBackupFormHandler();
 
@@ -140,18 +156,18 @@ class BackupController extends FrameworkBundleAdminController
             }
         }
 
-        return $this->redirectToRoute('admin_backup');
+        return $this->redirectToRoute('admin_backups_index');
     }
 
     /**
      * Create new backup.
      *
-     * @AdminSecurity("is_granted(['create'], request.get('_legacy_controller')~'_')")
-     * @DemoRestricted(redirectRoute="admin_backup")
+     * @AdminSecurity("is_granted(['create'], request.get('_legacy_controller'))")
+     * @DemoRestricted(redirectRoute="admin_backups_index")
      *
      * @return RedirectResponse
      */
-    public function processBackupCreateAction()
+    public function createAction()
     {
         try {
             $backupCreator = $this->get('prestashop.adapter.backup.database_creator');
@@ -165,7 +181,7 @@ class BackupController extends FrameworkBundleAdminController
                 )
             );
 
-            return $this->redirectToRoute('admin_backup', ['download_filename' => $backup->getFileName()]);
+            return $this->redirectToRoute('admin_backups_index', ['download_filename' => $backup->getFileName()]);
         } catch (DirectoryIsNotWritableException $e) {
             $this->addFlash(
                 'error',
@@ -178,20 +194,20 @@ class BackupController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->trans('The backup file does not exist', 'Admin.Advparameters.Notification'));
         }
 
-        return $this->redirectToRoute('admin_backup');
+        return $this->redirectToRoute('admin_backups_index');
     }
 
     /**
      * Process backup file deletion.
      *
-     * @AdminSecurity("is_granted(['delete'], request.get('_legacy_controller')~'_')")
-     * @DemoRestricted(redirectRoute="admin_backup")
+     * @AdminSecurity("is_granted(['delete'], request.get('_legacy_controller'))")
+     * @DemoRestricted(redirectRoute="admin_backups_index")
      *
      * @param string $deleteFileName
      *
      * @return RedirectResponse
      */
-    public function processDeleteAction($deleteFileName)
+    public function deleteAction($deleteFileName)
     {
         $backup = new Backup($deleteFileName);
         $backupRemover = $this->get('prestashop.adapter.backup.backup_remover');
@@ -206,25 +222,25 @@ class BackupController extends FrameworkBundleAdminController
                 )
             );
 
-            return $this->redirectToRoute('admin_backup');
+            return $this->redirectToRoute('admin_backups_index');
         }
 
         $this->addFlash('success', $this->trans('Successful deletion.', 'Admin.Notifications.Success'));
 
-        return $this->redirectToRoute('admin_backup');
+        return $this->redirectToRoute('admin_backups_index');
     }
 
     /**
      * Process bulk backup deletion.
      *
-     * @AdminSecurity("is_granted(['delete'], request.get('_legacy_controller')~'_')")
-     * @DemoRestricted(redirectRoute="admin_backup")
+     * @AdminSecurity("is_granted(['delete'], request.get('_legacy_controller'))")
+     * @DemoRestricted(redirectRoute="admin_backups_index")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
-    public function processBulkDeleteAction(Request $request)
+    public function bulkDeleteAction(Request $request)
     {
         $backupsToDelete = $request->request->get('backup_backup_bulk_file_names', []);
 
@@ -234,7 +250,7 @@ class BackupController extends FrameworkBundleAdminController
                 $this->trans('You must select at least one element to delete.', 'Admin.Notifications.Error')
             );
 
-            return $this->redirectToRoute('admin_backup');
+            return $this->redirectToRoute('admin_backups_index');
         }
 
         $backupRemover = $this->get('prestashop.adapter.backup.backup_remover');
@@ -261,7 +277,7 @@ class BackupController extends FrameworkBundleAdminController
                 );
             }
 
-            return $this->redirectToRoute('admin_backup');
+            return $this->redirectToRoute('admin_backups_index');
         }
 
         $this->addFlash(
@@ -269,7 +285,7 @@ class BackupController extends FrameworkBundleAdminController
             $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
         );
 
-        return $this->redirectToRoute('admin_backup');
+        return $this->redirectToRoute('admin_backups_index');
     }
 
     /**

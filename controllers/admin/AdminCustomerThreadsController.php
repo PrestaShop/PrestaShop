@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -147,16 +147,16 @@ class AdminCustomerThreadsControllerCore extends AdminController
                 'title' => $this->trans('Contact options', array(), 'Admin.Catalog.Feature'),
                 'fields' => array(
                     'PS_CUSTOMER_SERVICE_FILE_UPLOAD' => array(
-                            'title' => $this->trans('Allow file uploading', array(), 'Admin.Catalog.Feature'),
-                            'hint' => $this->trans('Allow customers to upload files using the contact page.', array(), 'Admin.Catalog.Help'),
-                            'type' => 'bool',
-                        ),
+                        'title' => $this->trans('Allow file uploading', array(), 'Admin.Catalog.Feature'),
+                        'hint' => $this->trans('Allow customers to upload files using the contact page.', array(), 'Admin.Catalog.Help'),
+                        'type' => 'bool',
+                    ),
                     'PS_CUSTOMER_SERVICE_SIGNATURE' => array(
-                            'title' => $this->trans('Default message', array(), 'Admin.Catalog.Feature'),
-                            'hint' => $this->trans('Please fill out the message fields that appear by default when you answer a thread on the customer service page.', array(), 'Admin.Catalog.Help'),
-                            'type' => 'textareaLang',
-                            'lang' => true,
-                        ),
+                        'title' => $this->trans('Default message', array(), 'Admin.Catalog.Feature'),
+                        'hint' => $this->trans('Please fill out the message fields that appear by default when you answer a thread on the customer service page.', array(), 'Admin.Catalog.Help'),
+                        'type' => 'textareaLang',
+                        'lang' => true,
+                    ),
                 ),
                 'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions')),
             ),
@@ -167,6 +167,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                         'title' => $this->trans('IMAP URL', array(), 'Admin.Catalog.Feature'),
                         'hint' => $this->trans('URL for your IMAP server (ie.: mail.server.com).', array(), 'Admin.Catalog.Help'),
                         'type' => 'text',
+                        'validation' => 'isValidImapUrl',
                     ),
                     'PS_SAV_IMAP_PORT' => array(
                         'title' => $this->trans('IMAP port', array(), 'Admin.Catalog.Feature'),
@@ -182,7 +183,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                     'PS_SAV_IMAP_PWD' => array(
                         'title' => $this->trans('IMAP password', array(), 'Admin.Catalog.Feature'),
                         'hint' => $this->trans('Password to use to connect your IMAP server.', array(), 'Admin.Catalog.Help'),
-                        'type' => 'text',
+                        'type' => 'password',
                     ),
                     'PS_SAV_IMAP_DELETE_MSG' => array(
                         'title' => $this->trans('Delete messages', array(), 'Admin.Catalog.Feature'),
@@ -244,7 +245,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
         $this->addRowAction('delete');
 
         $this->_select = '
-			CONCAT(c.`firstname`," ",c.`lastname`) as customer, cl.`name` as contact, l.`name` as language, group_concat(message) as messages, cm.private,
+			CONCAT(c.`firstname`," ",c.`lastname`) as customer, cl.`name` as contact, l.`name` as language, group_concat(cm.`message`) as messages, cm.private,
 			(
 				SELECT IFNULL(CONCAT(LEFT(e.`firstname`, 1),". ",e.`lastname`), "--")
 				FROM `' . _DB_PREFIX_ . 'customer_message` cm2
@@ -310,7 +311,8 @@ class AdminCustomerThreadsControllerCore extends AdminController
     {
         if ($id_customer_thread = (int) Tools::getValue('id_customer_thread')) {
             if (($id_contact = (int) Tools::getValue('id_contact'))) {
-                $result = Db::getInstance()->execute('
+                $result = Db::getInstance()->execute(
+                    '
 					UPDATE ' . _DB_PREFIX_ . 'customer_thread
 					SET id_contact = ' . $id_contact . '
 					WHERE id_customer_thread = ' . $id_customer_thread
@@ -381,7 +383,11 @@ class AdminCustomerThreadsControllerCore extends AdminController
                         $employee->firstname . ' ' . $employee->lastname,
                         $current_employee->email,
                         $current_employee->firstname . ' ' . $current_employee->lastname,
-                        null, null, _PS_MAIL_DIR_, true)) {
+                        null,
+                        null,
+                        _PS_MAIL_DIR_,
+                        true
+                    )) {
                         $cm->private = 1;
                         $cm->message = $this->trans('Message forwarded to', array(), 'Admin.Catalog.Feature') . ' ' . $employee->firstname . ' ' . $employee->lastname . "\n" . $this->trans('Comment:') . ' ' . $message;
                         $cm->add();
@@ -404,9 +410,16 @@ class AdminCustomerThreadsControllerCore extends AdminController
                             'Emails.Subject',
                             $this->context->language->locale
                         ),
-                        $params, $email, null,
-                        $current_employee->email, $current_employee->firstname . ' ' . $current_employee->lastname,
-                        null, null, _PS_MAIL_DIR_, true)) {
+                        $params,
+                        $email,
+                        null,
+                        $current_employee->email,
+                        $current_employee->firstname . ' ' . $current_employee->lastname,
+                        null,
+                        null,
+                        _PS_MAIL_DIR_,
+                        true
+                    )) {
                         $cm->message = $this->trans('Message forwarded to', array(), 'Admin.Catalog.Feature') . ' ' . $email . "\n" . $this->trans('Comment:') . ' ' . $message;
                         $cm->add();
                     }
@@ -470,8 +483,17 @@ class AdminCustomerThreadsControllerCore extends AdminController
                             'Emails.Subject',
                             $language->locale
                         ),
-                        $params, Tools::getValue('msg_email'), null, $from_email, $from_name, $file_attachment, null,
-                        _PS_MAIL_DIR_, true, $ct->id_shop)) {
+                        $params,
+                        Tools::getValue('msg_email'),
+                        null,
+                        $from_email,
+                        $from_name,
+                        $file_attachment,
+                        null,
+                        _PS_MAIL_DIR_,
+                        true,
+                        $ct->id_shop
+                    )) {
                         $ct->status = 'closed';
                         $ct->update();
                     }
@@ -517,6 +539,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
         foreach ($extensions as $key => $val) {
             if (substr(Tools::strtolower($filename), -4) == $key || substr(Tools::strtolower($filename), -5) == $key) {
                 $extension = $val;
+
                 break;
             }
         }
@@ -818,8 +841,11 @@ class AdminCustomerThreadsControllerCore extends AdminController
         $message['message'] = preg_replace(
             '/(https?:\/\/[a-z0-9#%&_=\(\)\.\? \+\-@\/]{6,1000})([\s\n<])/Uui',
             '<a href="\1">\1</a>\2',
-            html_entity_decode($message['message'],
-            ENT_QUOTES, 'UTF-8')
+            html_entity_decode(
+                $message['message'],
+            ENT_QUOTES,
+                'UTF-8'
+            )
         );
 
         $is_valid_order_id = true;
@@ -1053,7 +1079,8 @@ class AdminCustomerThreadsControllerCore extends AdminController
             $exist = Db::getInstance()->getValue(
                 'SELECT `md5_header`
 						 FROM `' . _DB_PREFIX_ . 'customer_message_sync_imap`
-						 WHERE `md5_header` = \'' . pSQL($md5) . '\'');
+						 WHERE `md5_header` = \'' . pSQL($md5) . '\''
+            );
             if ($exist) {
                 if (Configuration::get('PS_SAV_IMAP_DELETE_MSG')) {
                     if (!imap_delete($mbox, $overview->msgno)) {
@@ -1065,7 +1092,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                 preg_match('/\#ct([0-9]*)/', $subject, $matches1);
                 preg_match('/\#tc([0-9-a-z-A-Z]*)/', $subject, $matches2);
                 $match_found = false;
-                if (isset($matches1[1]) && isset($matches2[1])) {
+                if (isset($matches1[1], $matches2[1])) {
                     $match_found = true;
                 }
 
@@ -1080,6 +1107,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                             || (!preg_match('/<(' . Tools::cleanNonUnicodeSupport('[a-z\p{L}0-9!#$%&\'*+\/=?^`{}|~_-]+[.a-z\p{L}0-9!#$%&\'*+\/=?^`{}|~_-]*@[a-z\p{L}0-9]+[._a-z\p{L}0-9-]*\.[a-z0-9]+') . ')>/', $overview->from, $from_parsed)
                             && !Validate::isEmail($overview->from))) {
                             $message_errors[] = $this->trans('Cannot create message in a new thread.', array(), 'Admin.Orderscustomers.Notification');
+
                             continue;
                         }
 
@@ -1136,9 +1164,11 @@ class AdminCustomerThreadsControllerCore extends AdminController
                         switch ($structure->encoding) {
                             case 3:
                                 $message = imap_base64($message);
+
                                 break;
                             case 4:
                                 $message = imap_qprint($message);
+
                                 break;
                         }
                         $message = iconv($this->getEncoding($structure), 'utf-8', $message);
@@ -1146,6 +1176,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                         if (!$message || strlen($message) == 0) {
                             $message_errors[] = $this->trans('The message body is empty, cannot import it.', array(), 'Admin.Orderscustomers.Notification');
                             $fetch_succeed = false;
+
                             continue;
                         }
                         $cm = new CustomerMessage();
@@ -1159,6 +1190,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                             } catch (PrestaShopException $pse) {
                                 $message_errors[] = $this->trans('The message content is not valid, cannot import it.', array(), 'Admin.Orderscustomers.Notification');
                                 $fetch_succeed = false;
+
                                 continue;
                             }
                         }
@@ -1171,7 +1203,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
         }
         imap_expunge($mbox);
         imap_close($mbox);
-        if (sizeof($message_errors) > 0) {
+        if (count($message_errors) > 0) {
             if (($more_error = $str_errors . $str_error_delete) && strlen($more_error) > 0) {
                 $message_errors = array_merge(array($more_error), $message_errors);
             }

@@ -5,7 +5,7 @@
   display: block;
   top: 136px;
   bottom: 0px;
-  z-index: 399;
+  z-index: 1000;
   overflow: auto;
   right: -3em;
   padding: 0 3em 0 0;

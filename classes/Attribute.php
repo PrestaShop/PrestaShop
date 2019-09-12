@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -79,9 +79,8 @@ class AttributeCore extends ObjectModel
      */
     public function __construct($id = null, $idLang = null, $idShop = null)
     {
-        $this->image_dir = _PS_COL_IMG_DIR_;
-
         parent::__construct($id, $idLang, $idShop);
+        $this->image_dir = _PS_COL_IMG_DIR_;
     }
 
     /**
@@ -282,7 +281,8 @@ class AttributeCore extends ObjectModel
      */
     public static function getAttributeMinimalQty($idProductAttribute)
     {
-        $minimalQuantity = Db::getInstance()->getValue('
+        $minimalQuantity = Db::getInstance()->getValue(
+            '
 			SELECT `minimal_quantity`
 			FROM `' . _DB_PREFIX_ . 'product_attribute_shop` pas
 			WHERE `id_shop` = ' . (int) Context::getContext()->shop->id . '
@@ -333,7 +333,8 @@ class AttributeCore extends ObjectModel
         // < and > statements rather than BETWEEN operator
         // since BETWEEN is treated differently according to databases
 
-        $res1 = Db::getInstance()->execute('
+        $res1 = Db::getInstance()->execute(
+            '
 			UPDATE `' . _DB_PREFIX_ . 'attribute`
 			SET `position`= `position` ' . ($direction ? '- 1' : '+ 1') . '
 			WHERE `position`
@@ -343,7 +344,8 @@ class AttributeCore extends ObjectModel
 			AND `id_attribute_group`=' . (int) $movedAttribute['id_attribute_group']
         );
 
-        $res2 = Db::getInstance()->execute('
+        $res2 = Db::getInstance()->execute(
+            '
 			UPDATE `' . _DB_PREFIX_ . 'attribute`
 			SET `position` = ' . (int) $position . '
 			WHERE `id_attribute` = ' . (int) $movedAttribute['id_attribute'] . '

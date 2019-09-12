@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -45,17 +45,53 @@ class CustomerThreadCore extends ObjectModel
         'table' => 'customer_thread',
         'primary' => 'id_customer_thread',
         'fields' => array(
-            'id_lang' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_contact' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_shop' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'id_customer' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'id_order' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'id_product' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'email' => array('type' => self::TYPE_STRING, 'validate' => 'isEmail', 'size' => 254),
-            'token' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true),
-            'status' => array('type' => self::TYPE_STRING),
-            'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-            'date_upd' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+            'id_lang' => array(
+                'type' => self::TYPE_INT,
+                'validate' => 'isUnsignedId',
+                'required' => true,
+            ),
+            'id_contact' => array(
+                'type' => self::TYPE_INT,
+                'validate' => 'isUnsignedId',
+                'required' => true,
+            ),
+            'id_shop' => array(
+                'type' => self::TYPE_INT,
+                'validate' => 'isUnsignedId',
+            ),
+            'id_customer' => array(
+                'type' => self::TYPE_INT,
+                'validate' => 'isUnsignedId',
+            ),
+            'id_order' => array(
+                'type' => self::TYPE_INT,
+                'validate' => 'isUnsignedId',
+            ),
+            'id_product' => array(
+                'type' => self::TYPE_INT,
+                'validate' => 'isUnsignedId',
+            ),
+            'email' => array(
+                'type' => self::TYPE_STRING,
+                'validate' => 'isEmail',
+                'size' => 255,
+            ),
+            'token' => array(
+                'type' => self::TYPE_STRING,
+                'validate' => 'isGenericName',
+                'required' => true,
+            ),
+            'status' => array(
+                'type' => self::TYPE_STRING,
+            ),
+            'date_add' => array(
+                'type' => self::TYPE_DATE,
+                'validate' => 'isDate',
+            ),
+            'date_upd' => array(
+                'type' => self::TYPE_DATE,
+                'validate' => 'isDate',
+            ),
         ),
     );
 
@@ -80,7 +116,10 @@ class CustomerThreadCore extends ObjectModel
         'associations' => array(
             'customer_messages' => array(
                 'resource' => 'customer_message',
-                'id' => array('required' => true), ),
+                'id' => array(
+                    'required' => true,
+                ),
+            ),
         ),
     );
 
@@ -99,7 +138,8 @@ class CustomerThreadCore extends ObjectModel
         }
 
         $return = true;
-        $result = Db::getInstance()->executeS('
+        $result = Db::getInstance()->executeS(
+            '
 			SELECT `id_customer_message`
 			FROM `' . _DB_PREFIX_ . 'customer_message`
 			WHERE `id_customer_thread` = ' . (int) $this->id
@@ -140,7 +180,8 @@ class CustomerThreadCore extends ObjectModel
 
     public static function getIdCustomerThreadByEmailAndIdOrder($email, $id_order)
     {
-        return Db::getInstance()->getValue('
+        return Db::getInstance()->getValue(
+            '
 			SELECT cm.id_customer_thread
 			FROM ' . _DB_PREFIX_ . 'customer_thread cm
 			WHERE cm.email = \'' . pSQL($email) . '\'
@@ -173,14 +214,16 @@ class CustomerThreadCore extends ObjectModel
 
     public static function getTotalCustomerThreads($where = null)
     {
-        if (is_null($where)) {
-            return (int) Db::getInstance()->getValue('
+        if (null === $where) {
+            return (int) Db::getInstance()->getValue(
+                '
 				SELECT COUNT(*)
 				FROM ' . _DB_PREFIX_ . 'customer_thread
 				WHERE 1 ' . Shop::addSqlRestriction()
             );
         } else {
-            return (int) Db::getInstance()->getValue('
+            return (int) Db::getInstance()->getValue(
+                '
 				SELECT COUNT(*)
 				FROM ' . _DB_PREFIX_ . 'customer_thread
 				WHERE ' . $where . Shop::addSqlRestriction()

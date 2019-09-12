@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -63,10 +63,23 @@ class AdminSearchConfControllerCore extends AdminController
             'active' => array('title' => $this->trans('Status', array(), 'Admin.Global'), 'class' => 'fixed-width-sm', 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false),
         );
 
+        $params = [
+            'action' => 'searchCron',
+            'ajax' => 1,
+            'full' => 1,
+            'token' => $this->getTokenForCron(),
+        ];
+        if (Shop::getContext() == Shop::CONTEXT_SHOP) {
+            $params['id_shop'] = (int) Context::getContext()->shop->id;
+        }
+
         // Search options
-        $current_file_name = array_reverse(explode('/', $_SERVER['SCRIPT_NAME']));
-        $cron_url = Tools::getHttpHost(true, true) . __PS_BASE_URI__ . basename(_PS_ADMIN_DIR_) .
-            '/searchcron.php?full=1&token=' . substr(_COOKIE_KEY_, 34, 8) . (Shop::getContext() == Shop::CONTEXT_SHOP ? '&id_shop=' . (int) Context::getContext()->shop->id : '');
+        $cron_url = Context::getContext()->link->getAdminLink(
+            'AdminSearch',
+            false,
+            [],
+            $params
+        );
 
         list($total, $indexed) = Db::getInstance()->getRow('SELECT COUNT(*) as "0", SUM(product_shop.indexed) as "1" FROM ' . _DB_PREFIX_ . 'product p ' . Shop::addSqlAssociation('product', 'p') . ' WHERE product_shop.`visibility` IN ("both", "search") AND product_shop.`active` = 1');
 
@@ -82,11 +95,11 @@ class AdminSearchConfControllerCore extends AdminController
 						' . $this->trans('Building the product index may take a few minutes.', array(), 'Admin.Shopparameters.Feature') . '
 						' . $this->trans('If your server stops before the process ends, you can resume the indexing by clicking "Add missing products to the index".', array(), 'Admin.Shopparameters.Feature') . '
 					</p>
-					<a href="searchcron.php?token=' . substr(_COOKIE_KEY_, 34, 8) . '&amp;redirect=1' . (Shop::getContext() == Shop::CONTEXT_SHOP ? '&id_shop=' . (int) Context::getContext()->shop->id : '') . '" class="btn-link">
+					<a href="' . Context::getContext()->link->getAdminLink('AdminSearch', false) . '&action=searchCron&ajax=1&token=' . $this->getTokenForCron() . '&amp;redirect=1' . (Shop::getContext() == Shop::CONTEXT_SHOP ? '&id_shop=' . (int) Context::getContext()->shop->id : '') . '" class="btn-link">
 						<i class="icon-external-link-sign"></i>
 						' . $this->trans('Add missing products to the index', array(), 'Admin.Shopparameters.Feature') . '
 					</a><br />
-					<a href="searchcron.php?full=1&amp;token=' . substr(_COOKIE_KEY_, 34, 8) . '&amp;redirect=1' . (Shop::getContext() == Shop::CONTEXT_SHOP ? '&id_shop=' . (int) Context::getContext()->shop->id : '') . '" class="btn-link">
+					<a href="' . Context::getContext()->link->getAdminLink('AdminSearch', false) . '&action=searchCron&ajax=1&full=1&amp;token=' . $this->getTokenForCron() . '&amp;redirect=1' . (Shop::getContext() == Shop::CONTEXT_SHOP ? '&id_shop=' . (int) Context::getContext()->shop->id : '') . '" class="btn-link">
 						<i class="icon-external-link-sign"></i>
 						' . $this->trans('Re-build the entire index', array(), 'Admin.Shopparameters.Feature') . '
 					</a><br /><br />
@@ -371,8 +384,8 @@ class AdminSearchConfControllerCore extends AdminController
 
     public function processSave()
     {
-        $search = strval(Tools::getValue('search'));
-        $string = strval(Tools::getValue('alias'));
+        $search = (string) Tools::getValue('search');
+        $string = (string) Tools::getValue('alias');
         $aliases = explode(',', $string);
         if (empty($search) || empty($string)) {
             $this->errors[] = $this->trans('Aliases and results are both required.', array(), 'Admin.Shopparameters.Notification');
@@ -396,5 +409,19 @@ class AdminSearchConfControllerCore extends AdminController
         if (empty($this->errors)) {
             $this->confirmations[] = $this->trans('Creation successful', array(), 'Admin.Shopparameters.Notification');
         }
+    }
+
+    /**
+     * Retrieve a part of the cookie key for token check. (needs to be static).
+     *
+     * @return string Token
+     */
+    private function getTokenForCron()
+    {
+        return substr(
+            _COOKIE_KEY_,
+            AdminSearchController::TOKEN_CHECK_START_POS,
+            AdminSearchController::TOKEN_CHECK_LENGTH
+        );
     }
 }

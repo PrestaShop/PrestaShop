@@ -50,9 +50,9 @@ require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
  *  
  */
 class SelectBracketExpressionBuilder {
-
     protected function buildSubTree($parsed, $delim) {
         $builder = new SubTreeBuilder();
+
         return $builder->build($parsed, $delim);
     }
 
@@ -62,7 +62,7 @@ class SelectBracketExpressionBuilder {
         }
         $sql = $this->buildSubTree($parsed, " ");
         $sql = "(" . $sql . ")";
+
         return $sql;
     }
 }
-?>

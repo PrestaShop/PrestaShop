@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -44,7 +44,7 @@ class AdminCartsControllerCore extends AdminController
         $this->allow_export = true;
         $this->_orderWay = 'DESC';
 
-        $this->_select = 'CONCAT(LEFT(c.`firstname`, 1), \'. \', c.`lastname`) `customer`, a.id_cart total, ca.name carrier,
+        $this->_select = 'CONCAT(LEFT(c.`firstname`, 1), \'. \', c.`lastname`) `customer`, a.id_cart total, ca.name carrier, o.id_order,
 		IF (IFNULL(o.id_order, \'' . $this->trans('Non ordered', array(), 'Admin.Orderscustomers.Feature') . '\') = \'' . $this->trans('Non ordered', array(), 'Admin.Orderscustomers.Feature') . '\', IF(TIME_TO_SEC(TIMEDIFF(\'' . pSQL(date('Y-m-d H:i:00', time())) . '\', a.`date_add`)) > 86400, \'' . $this->trans('Abandoned cart', array(), 'Admin.Orderscustomers.Feature') . '\', \'' . $this->trans('Non ordered', array(), 'Admin.Orderscustomers.Feature') . '\'), o.id_order) AS status, IF(o.id_order, 1, 0) badge_success, IF(o.id_order, 0, 1) badge_danger, IF(co.id_guest, 1, 0) id_guest';
         $this->_join = 'LEFT JOIN ' . _DB_PREFIX_ . 'customer c ON (c.id_customer = a.id_customer)
 		LEFT JOIN ' . _DB_PREFIX_ . 'currency cu ON (cu.id_currency = a.id_currency)
@@ -401,6 +401,7 @@ class AdminCartsControllerCore extends AdminController
                             if ($customization_field['required']) {
                                 $errors[] = $this->trans('Please fill in all the required fields.', array(), 'Admin.Notifications.Error');
                             }
+
                             continue;
                         }
                         if (!Validate::isMessage(Tools::getValue($field_id))) {
@@ -412,6 +413,7 @@ class AdminCartsControllerCore extends AdminController
                             if ($customization_field['required']) {
                                 $errors[] = $this->trans('Please fill in all the required fields.', array(), 'Admin.Notifications.Error');
                             }
+
                             continue;
                         }
                         if ($error = ImageManager::validateUpload($_FILES[$field_id], (int) Configuration::get('PS_PRODUCT_PICTURE_MAX_SIZE'))) {
@@ -420,12 +422,10 @@ class AdminCartsControllerCore extends AdminController
                         if (!($tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !move_uploaded_file($_FILES[$field_id]['tmp_name'], $tmp_name)) {
                             $errors[] = $this->trans('An error occurred during the image upload process.', array(), 'Admin.Catalog.Notification');
                         }
-                        $file_name = md5(uniqid(rand(), true));
+                        $file_name = md5(uniqid(mt_rand(0, mt_getrandmax()), true));
                         if (!ImageManager::resize($tmp_name, _PS_UPLOAD_DIR_ . $file_name)) {
                             continue;
                         } elseif (!ImageManager::resize($tmp_name, _PS_UPLOAD_DIR_ . $file_name . '_small', (int) Configuration::get('PS_PRODUCT_PICTURE_WIDTH'), (int) Configuration::get('PS_PRODUCT_PICTURE_HEIGHT'))) {
-                            $errors[] = $this->trans('An error occurred during the image upload process.', array(), 'Admin.Catalog.Notification');
-                        } elseif (!chmod(_PS_UPLOAD_DIR_ . $file_name, 0777) || !chmod(_PS_UPLOAD_DIR_ . $file_name . '_small', 0777)) {
                             $errors[] = $this->trans('An error occurred during the image upload process.', array(), 'Admin.Catalog.Notification');
                         } else {
                             $this->context->cart->addPictureToProduct((int) $product->id, (int) $customization_field['id_customization_field'], Product::CUSTOMIZE_FILE, $file_name);
@@ -437,7 +437,7 @@ class AdminCartsControllerCore extends AdminController
             $this->setMedia(false);
             $this->initFooter();
             $this->context->smarty->assign(array('customization_errors' => implode('<br />', $errors),
-                                                            'css_files' => $this->css_files, ));
+                'css_files' => $this->css_files, ));
 
             return $this->smartyOutputContent('controllers/orders/form_customization_feedback.tpl');
         }
@@ -757,6 +757,7 @@ class AdminCartsControllerCore extends AdminController
                 $cart_obj = new Cart((int) $cart['id_cart']);
                 if ($cart['id_cart'] == $this->context->cart->id) {
                     unset($carts[$key]);
+
                     continue;
                 }
                 $currency = new Currency((int) $cart['id_currency']);
@@ -769,7 +770,8 @@ class AdminCartsControllerCore extends AdminController
             }
         }
         if ($orders || $carts) {
-            $to_return = array_merge($this->ajaxReturnVars(),
+            $to_return = array_merge(
+                $this->ajaxReturnVars(),
                 array(
                     'carts' => $carts,
                     'orders' => $orders,
@@ -797,6 +799,7 @@ class AdminCartsControllerCore extends AdminController
             foreach ($cart_rules as $cart_rule) {
                 if ($cart_rule['id_cart_rule'] == CartRule::getIdByCode(CartRule::BO_ORDER_CODE_PREFIX . (int) $this->context->cart->id)) {
                     $free_shipping = true;
+
                     break;
                 }
             }
@@ -818,7 +821,8 @@ class AdminCartsControllerCore extends AdminController
             'id_cart' => $id_cart,
             'order_message' => $message_content,
             'link_order' => $this->context->link->getPageLink(
-                'order', false,
+                'order',
+                false,
                 (int) $this->context->cart->id_lang,
                 'step=3&recover_cart=' . $id_cart . '&token_cart=' . md5(_COOKIE_KEY_ . 'recover_cart_' . $id_cart)
             ),
@@ -830,6 +834,26 @@ class AdminCartsControllerCore extends AdminController
     {
         parent::initToolbar();
         unset($this->toolbar_btn['new']);
+    }
+
+    /**
+     * Display an image as a download.
+     */
+    public function displayAjaxCustomizationImage()
+    {
+        if (!Tools::isSubmit('img') || !Tools::isSubmit('name')) {
+            return;
+        }
+
+        $img = Tools::getValue('img');
+        $name = Tools::getValue('name');
+        $path = _PS_UPLOAD_DIR_ . $img;
+
+        if (Validate::isMd5($img) && Validate::isGenericName($path)) {
+            header('Content-type: image/jpeg');
+            header('Content-Disposition: attachment; filename="' . $name . '.jpg"');
+            readfile($path);
+        }
     }
 
     public function displayAjaxGetSummary()

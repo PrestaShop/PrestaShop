@@ -1,5 +1,5 @@
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,15 +15,15 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import ColumnToggling from '../../../app/utils/column-toggling';
+const $ = global.$;
 
 /**
  * Class ReloadListExtension extends grid with "Column toggling" feature
@@ -37,7 +37,34 @@ export default class ColumnTogglingExtension {
    */
   extend(grid) {
     const $table = grid.getContainer().find('table.table');
+    $table.find('.ps-togglable-row').on('click', (e) => {
+      e.preventDefault();
+      this._toggleValue($(e.delegateTarget));
+    });
+  }
 
-    new ColumnToggling($table).attach();
+  /**
+   * @param {jQuery} row
+   * @private
+   */
+  _toggleValue(row) {
+    const toggleUrl = row.data('toggleUrl');
+
+    this._submitAsForm(toggleUrl);
+  }
+
+  /**
+   * Submits request url as form
+   *
+   * @param {string} toggleUrl
+   * @private
+   */
+  _submitAsForm(toggleUrl) {
+    const $form = $('<form>', {
+      action: toggleUrl,
+      method: 'POST',
+    }).appendTo('body');
+
+    $form.submit();
   }
 }

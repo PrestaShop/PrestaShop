@@ -50,7 +50,6 @@ require_once dirname(__FILE__) . '/../exceptions/UnsupportedFeatureException.php
  *  
  */
 class JoinBuilder {
-
     public function build($parsed) {
         if ($parsed === 'CROSS') {
             return ", ";
@@ -68,4 +67,3 @@ class JoinBuilder {
         throw new UnsupportedFeatureException($parsed);
     }
 }
-?>

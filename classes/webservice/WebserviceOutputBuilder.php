@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -161,7 +161,7 @@ class WebserviceOutputBuilderCore
     }
 
     /**
-     * @param null|string $key if null get all header params otherwise the params specified by the key
+     * @param string|null $key if null get all header params otherwise the params specified by the key
      * @throw WebserviceException if the key is corrupted (use Validate::isCleanHtml method)
      * @throw WebserviceException if the asked key does'nt exists.
      *
@@ -171,7 +171,7 @@ class WebserviceOutputBuilderCore
     {
         $return = '';
 
-        if (!is_null($key)) {
+        if (null !== $key) {
             if (!Validate::isCleanHtml($key)) {
                 throw new WebserviceException('the key you write is a corrupted text.', array(95, 500));
             }
@@ -222,39 +222,51 @@ class WebserviceOutputBuilderCore
         switch ($num) {
             case 200:
                 $this->status = $_SERVER['SERVER_PROTOCOL'] . ' 200 OK';
+
                 break;
             case 201:
                 $this->status = $_SERVER['SERVER_PROTOCOL'] . ' 201 Created';
+
                 break;
             case 204:
                 $this->status = $_SERVER['SERVER_PROTOCOL'] . ' 204 No Content';
+
                 break;
             case 304:
                 $this->status = $_SERVER['SERVER_PROTOCOL'] . ' 304 Not Modified';
+
                 break;
             case 400:
                 $this->status = $_SERVER['SERVER_PROTOCOL'] . ' 400 Bad Request';
+
                 break;
             case 401:
                 $this->status = $_SERVER['SERVER_PROTOCOL'] . ' 401 Unauthorized';
+
                 break;
             case 403:
                 $this->status = $_SERVER['SERVER_PROTOCOL'] . ' 403 Forbidden';
+
                 break;
             case 404:
                 $this->status = $_SERVER['SERVER_PROTOCOL'] . ' 404 Not Found';
+
                 break;
             case 405:
                 $this->status = $_SERVER['SERVER_PROTOCOL'] . ' 405 Method Not Allowed';
+
                 break;
             case 500:
                 $this->status = $_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error';
+
                 break;
             case 501:
                 $this->status = $_SERVER['SERVER_PROTOCOL'] . ' 501 Not Implemented';
+
                 break;
             case 503:
                 $this->status = $_SERVER['SERVER_PROTOCOL'] . ' 503 Service Unavailable';
+
                 break;
         }
     }
@@ -297,7 +309,7 @@ class WebserviceOutputBuilderCore
      */
     public function getResourcesList($key_permissions)
     {
-        if (is_null($this->wsResource)) {
+        if (null === $this->wsResource) {
             throw new WebserviceException('You must set web service resource for get the resources list.', array(82, 500));
         }
         $output = '';
@@ -356,7 +368,7 @@ class WebserviceOutputBuilderCore
      *
      *        @see WebserviceOutputBuilder::executeEntityGetAndHead
      *
-     * @param null|string $schema_to_display if null display the entities list or entity details
+     * @param string|null $schema_to_display if null display the entities list or entity details
      * @param string|array $fields_to_display the fields allow for the output
      * @param int $depth depth for the tree diagram output
      * @param int $type_of_view use the 2 constants WebserviceOutputBuilder::VIEW_LIST WebserviceOutputBuilder::VIEW_DETAILS
@@ -393,7 +405,7 @@ class WebserviceOutputBuilderCore
             $output .= $this->setIndent($depth) . $this->objectRender->renderNodeHeader($ws_params['objectsNodeName'], $ws_params);
         }
 
-        if (is_null($this->schemaToDisplay)) {
+        if (null === $this->schemaToDisplay) {
             foreach ($objects as $key => $object) {
                 if ($key !== 'empty') {
                     if ($this->fieldsToDisplay === 'minimum') {
@@ -578,7 +590,7 @@ class WebserviceOutputBuilderCore
                 $field['value'] = '';
             }
             // delete the xlink except for schemas
-            if (isset($field['xlink_resource']) && is_null($this->schemaToDisplay)) {
+            if (isset($field['xlink_resource']) && null === $this->schemaToDisplay) {
                 unset($field['xlink_resource']);
             }
         }
@@ -617,10 +629,10 @@ class WebserviceOutputBuilderCore
                 }
 
                 $parent_details = array(
-                        'object_id' => $object->id,
-                        'entity_name' => $ws_params['objectNodeName'],
-                        'entities_name' => $ws_params['objectsNodeName'],
-                    );
+                    'object_id' => $object->id,
+                    'entity_name' => $ws_params['objectNodeName'],
+                    'entities_name' => $ws_params['objectsNodeName'],
+                );
 
                 if (is_array($getter)) {
                     $association_resources = call_user_func($getter, $object);
@@ -630,7 +642,7 @@ class WebserviceOutputBuilderCore
                         }
                     }
                 } else {
-                    if (method_exists($object, $getter) && is_null($this->schemaToDisplay)) {
+                    if (method_exists($object, $getter) && null === $this->schemaToDisplay) {
                         $association_resources = $object->$getter();
                         if (is_array($association_resources) && !empty($association_resources)) {
                             foreach ($association_resources as $association_resource) {
@@ -684,7 +696,7 @@ class WebserviceOutputBuilderCore
     {
         $output = '';
         $more_attr = array();
-        if (isset($this->wsResource[$assoc_name]) && is_null($this->schemaToDisplay)) {
+        if (isset($this->wsResource[$assoc_name]) && null === $this->schemaToDisplay) {
             if ($assoc_name == 'images') {
                 if ($parent_details['entities_name'] == 'combinations') {
                     $more_attr['xlink_resource'] = $this->wsUrl . $assoc_name . '/products/' . $object->id_product . '/' . $object_assoc['id'];
@@ -709,7 +721,7 @@ class WebserviceOutputBuilderCore
                 $field['entities_name'] = $assoc_name;
                 $field['entity_name'] = $resource_name;
 
-                if (!is_null($this->schemaToDisplay)) {
+                if (null !== $this->schemaToDisplay) {
                     $field['synopsis_details'] = $this->getSynopsisDetails($field);
                 }
                 $field['is_association'] = true;

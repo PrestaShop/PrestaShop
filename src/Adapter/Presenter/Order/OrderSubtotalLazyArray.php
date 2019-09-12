@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,25 +16,25 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Presenter\Order;
 
-use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
-use PrestaShopBundle\Translation\TranslatorComponent;
-use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use Cart;
 use Configuration;
 use Context;
-use Order;
-use TaxConfiguration;
 use Currency;
+use Order;
+use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
+use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
+use PrestaShopBundle\Translation\TranslatorComponent;
+use TaxConfiguration;
 
 class OrderSubtotalLazyArray extends AbstractLazyArray
 {
@@ -161,24 +161,25 @@ class OrderSubtotalLazyArray extends AbstractLazyArray
      */
     public function getTax()
     {
-        $tax = $this->order->total_paid_tax_incl - $this->order->total_paid_tax_excl;
-        if ((float) $tax && Configuration::get('PS_TAX_DISPLAY')) {
+        if (!Configuration::get('PS_TAX_DISPLAY')) {
             return array(
                 'type' => 'tax',
-                'label' => $this->translator->trans('Tax', array(), 'Shop.Theme.Checkout'),
-                'amount' => $tax,
-                'value' => $this->priceFormatter->format(
-                    $tax,
-                    Currency::getCurrencyInstance((int) $this->order->id_currency)
-                ),
+                'label' => null,
+                'amount' => null,
+                'value' => '',
             );
         }
 
+        $tax = $this->order->total_paid_tax_incl - $this->order->total_paid_tax_excl;
+
         return array(
             'type' => 'tax',
-            'label' => null,
-            'amount' => null,
-            'value' => '',
+            'label' => $this->translator->trans('Tax', array(), 'Shop.Theme.Checkout'),
+            'amount' => $tax,
+            'value' => $this->priceFormatter->format(
+                $tax,
+                Currency::getCurrencyInstance((int) $this->order->id_currency)
+            ),
         );
     }
 

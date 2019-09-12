@@ -1,5 +1,5 @@
 {**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,10 +15,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -71,6 +71,7 @@
 		{if $display_warehouse}<td>&nbsp;</td>{/if}
 		{if ($order->hasBeenPaid())}<td class="productQuantity text-center">{$product['customizationQuantityRefunded']}</td>{/if}
 		{if ($order->hasBeenDelivered() || $order->hasProductReturned())}<td class="productQuantity text-center">{$product['customizationQuantityReturned']}</td>{/if}
+		{if $stock_location_is_available}<td class="productQuantity location text-center">{$product['location']}</td>{/if}
 		{if $stock_management}<td class="text-center">{$product['current_stock']}</td>{/if}
 		<td class="total_product">
 		{if ($order->getTaxCalculationMethod() == $smarty.const.PS_TAX_EXC)}
@@ -128,7 +129,7 @@
 									<div class="form-group">
 										<span class="col-lg-4 control-label"><strong>{if $data['name']}{$data['name']}{else}{l s='Picture #' d='Admin.Orderscustomers.Feature'}{$data@iteration}{/if}</strong></span>
 										<div class="col-lg-8">
-											<a href="displayImage.php?img={$data['value']}&amp;name={$order->id|intval}-file{$data@iteration}" class="_blank">
+											<a href="{$link->getAdminLink('AdminCarts', true, [], ['ajax' => 1, 'action' => 'customizationImage', 'img' => $data['value'], 'name' => $order->id|intval|cat:'-file'|cat:$data@iteration])}" class="_blank">
 												<img class="img-thumbnail" src="{$smarty.const._THEME_PROD_PIC_DIR_}{$data['value']}_small" alt=""/>
 											</a>
 										</div>
@@ -168,6 +169,7 @@
 				{/if}
 				{if ($order->hasBeenDelivered())}<td class="text-center">{$customization['quantity_returned']}</td>{/if}
 				<td class="text-center">-</td>
+				{if $stock_location_is_available}<td class="text-center">-</td>{$product['location']}</td>{/if}
 				<td class="total_product">
 					{if ($order->getTaxCalculationMethod() == $smarty.const.PS_TAX_EXC)}
 						{displayPrice price=Tools::ps_round($product['product_price'] * $customization['quantity'], 2) currency=$currency->id|intval}

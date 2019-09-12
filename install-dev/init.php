@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -35,7 +35,7 @@ require_once 'install_version.php';
 $memory_limit = ini_get('memory_limit');
 if (substr($memory_limit, -1) != 'G'
     && ((substr($memory_limit, -1) == 'M' && substr($memory_limit, 0, -1) < 128)
-        || is_numeric($memory_limit) && (intval($memory_limit) < 131072) && $memory_limit > 0)
+        || is_numeric($memory_limit) && ((int) $memory_limit < 131072) && $memory_limit > 0)
 ) {
     @ini_set('memory_limit', '128M');
 }
@@ -70,19 +70,41 @@ if ((!is_dir(_PS_CORE_DIR_.DIRECTORY_SEPARATOR.'vendor') ||
     die('Error : please install <a href="https://getcomposer.org/">composer</a>. Then run "php composer.phar install"');
 }
 
-$themes = glob(dirname(dirname(__FILE__)).'/themes/*/config/theme.yml', GLOB_NOSORT);
-usort($themes, function ($a, $b) {
-    return strcmp($b, $a);
-});
-if (!defined('_THEME_NAME_')) {
-    define('_THEME_NAME_', basename(substr($themes[0], 0, -strlen('/config/theme.yml'))));
-}
-
 require_once _PS_CORE_DIR_.'/config/defines.inc.php';
 require_once _PS_CORE_DIR_.'/config/autoload.php';
+
 if (file_exists(_PS_CORE_DIR_.'/app/config/parameters.php')) {
     require_once _PS_CORE_DIR_.'/config/bootstrap.php';
+
+    if (defined('_PS_IN_TEST_') && _PS_IN_TEST_) {
+        $env = 'test';
+    } else {
+        $env = _PS_MODE_DEV_ ? 'dev' : 'prod';
+    }
+    global $kernel;
+    $kernel = new AppKernel($env, _PS_MODE_DEV_);
+    $kernel->loadClassCache();
+    $kernel->boot();
 }
+
+if (!defined('_THEME_NAME_')) {
+    // @see app/config.yml _PS_THEME_NAME default value is "classic".
+    if (getenv('PS_THEME_NAME') !== false) {
+        define('_THEME_NAME_', getenv('PS_THEME_NAME'));
+    } else {
+        /**
+         * @deprecated since 1.7.5.x to be removed in 1.8.x
+         * Rely on "PS_THEME_NAME" environment variable value
+         */
+        $themes = glob(dirname(__DIR__).'/themes/*/config/theme.yml', GLOB_NOSORT);
+        usort($themes, function ($a, $b) {
+            return strcmp($b, $a);
+        });
+
+        define('_THEME_NAME_', basename(substr($themes[0], 0, -strlen('/config/theme.yml'))));
+    }
+}
+
 require_once _PS_CORE_DIR_.'/config/defines_uri.inc.php';
 
 // Generate common constants
@@ -102,8 +124,10 @@ require_once _PS_INSTALL_PATH_.'classes/exception.php';
 require_once _PS_INSTALL_PATH_.'classes/session.php';
 
 @set_time_limit(0);
-if (!@ini_get('date.timezone')) {
-    @date_default_timezone_set('Europe/Paris');
+// Work around lack of validation for timezone
+// standards conformance, mandatory in PHP 7
+if (!in_array(@ini_get('date.timezone'), timezone_identifiers_list())) {
+    @date_default_timezone_set('UTC');
     ini_set('date.timezone', 'UTC');
 }
 

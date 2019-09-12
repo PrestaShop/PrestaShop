@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,17 +16,18 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class LinkCore
 {
@@ -131,7 +132,7 @@ class LinkCore
         $ean13 = null,
         $idLang = null,
         $idShop = null,
-        $ipa = 0,
+        $ipa = null,
         $force_routes = false,
         $relativeProtocol = false,
         $addAnchor = false,
@@ -160,6 +161,10 @@ class LinkCore
             $params['id'] = $product->id;
         }
 
+        //Attribute equal to 0 or empty is useless, so we force it to null so that it won't be inserted in query parameters
+        if (empty($ipa)) {
+            $ipa = null;
+        }
         $params['id_product_attribute'] = $ipa;
         if (!$alias) {
             $product = $this->getProductObject($product, $idLang, $idShop);
@@ -320,7 +325,7 @@ class LinkCore
             'token' => Tools::getToken(false),
         );
 
-        if (!is_null($op)) {
+        if (null !== $op) {
             $params['op'] = $op;
         }
 
@@ -423,7 +428,7 @@ class LinkCore
         }
 
         // Selected filters is used by the module ps_facetedsearch
-        $selectedFilters = is_null($selectedFilters) ? '' : $selectedFilters;
+        $selectedFilters = null === $selectedFilters ? '' : $selectedFilters;
 
         if (empty($selectedFilters)) {
             $rule = 'category_rule';
@@ -704,6 +709,10 @@ class LinkCore
             return '';
         }
 
+        if (!is_array($sfRouteParams)) {
+            $sfRouteParams = [];
+        }
+
         if ($withToken && !TokenInUrls::isDisabled()) {
             $params['token'] = Tools::getAdminTokenLite($controller);
         }
@@ -711,11 +720,21 @@ class LinkCore
         // Even if URL rewriting is not enabled, the page handled by Symfony must work !
         // For that, we add an 'index.php' in the URL before the route
         $sfContainer = SymfonyContainer::getInstance();
-        if (!is_null($sfContainer)) {
+        $sfRouter = null;
+        $legacyUrlConverter = null;
+        if (null !== $sfContainer) {
             $sfRouter = $sfContainer->get('router');
+            $legacyUrlConverter = $sfContainer->get('prestashop.bundle.routing.converter.legacy_url_converter');
         }
 
-        $routeName = null;
+        if (!empty($sfRouteParams['route']) && null !== $sfRouter) {
+            $sfRoute = $sfRouteParams['route'];
+            unset($sfRouteParams['route']);
+
+            return $sfRouter->generate($sfRoute, $sfRouteParams, UrlGeneratorInterface::ABSOLUTE_URL);
+        }
+
+        $routeName = '';
         switch ($controller) {
             case 'AdminProducts':
                 // New architecture modification: temporary behavior to switch between old and new controllers.
@@ -751,6 +770,7 @@ class LinkCore
                 } else {
                     $params = array_merge($params, $sfRouteParams);
                 }
+
                 break;
 
             case 'AdminTranslations':
@@ -765,57 +785,89 @@ class LinkCore
                     break;
                 }
 
-                $routeName = 'admin_international_translations_show_settings';
+                // When params are empty or only token exists we want to use default translations route.
+                if (empty($params) || 1 === count($params) && isset($params['token'])) {
+                    $routeName = 'admin_international_translations_show_settings';
+                }
 
                 break;
 
-            default:
-                $routes = array(
-                    'AdminAddonsCatalog' => 'admin_module_addons_store',
-                    'AdminAdminPreferences' => 'admin_administration',
-                    'AdminCustomerPreferences' => 'admin_customer_preferences',
-                    'AdminDeliverySlip' => 'admin_order_delivery_slip',
-                    'AdminImport' => 'admin_import',
-                    'AdminInformation' => 'admin_system_information',
-                    'AdminLogs' => 'admin_logs',
-                    'AdminMaintenance' => 'admin_maintenance',
-                    'AdminModulesCatalog' => 'admin_module_catalog',
-                    'AdminModulesManage' => 'admin_module_manage',
-                    'AdminModulesNotifications' => 'admin_module_notification',
-                    'AdminModulesUpdates' => 'admin_module_updates',
-                    'AdminModulesPositions' => 'admin_modules_positions',
-                    'AdminModulesSf' => 'admin_module_manage',
-                    'AdminOrderPreferences' => 'admin_order_preferences',
-                    'AdminPPreferences' => 'admin_product_preferences',
-                    'AdminPerformance' => 'admin_performance',
-                    'AdminPreferences' => 'admin_preferences',
-                    'AdminShipping' => 'admin_shipping_preferences',
-                    'AdminStockManagement' => 'admin_stock_overview',
-                    'AdminThemesCatalog' => 'admin_theme_catalog',
-                    'AdminTranslationSf' => 'admin_international_translation_overview',
-                    'AdminPayment' => 'admin_payment_methods',
-                    'AdminLocalization' => 'admin_localization_show_settings',
-                    'AdminGeolocation' => 'admin_geolocation',
-                    'AdminPaymentPreferences' => 'admin_payment_preferences',
-                    'AdminInvoices' => 'admin_order_invoices',
-                    'AdminEmails' => 'admin_email',
-                    'AdminRequestSql' => 'admin_sql_request',
-                    // 'AdminWebservice' => 'admin_webservice', @todo: uncomment when grid and entity form are done.
-                    'AdminBackup' => 'admin_backup',
-                );
-
-                if (isset($routes[$controller])) {
-                    $routeName = $routes[$controller];
+            case 'AdminEmployees':
+                if (!isset($params['action'])) {
+                    break;
                 }
+
+                if ('toggleMenu' === $params['action']) {
+                    // Linking legacy toggle menu action to migrated action.
+                    $routeName = 'admin_employees_toggle_navigation';
+                } elseif ('formLanguage' === $params['action']) {
+                    // Linking legacy change form language action to migrated action.
+                    $routeName = 'admin_employees_change_form_language';
+                }
+
+                break;
         }
 
-        if (!is_null($routeName)) {
+        if (!empty($routeName) && null !== $sfRouter) {
             $sfRoute = array_key_exists('route', $sfRouteParams) ? $sfRouteParams['route'] : $routeName;
 
             return $sfRouter->generate($sfRoute, $sfRouteParams, UrlGeneratorInterface::ABSOLUTE_URL);
         }
 
+        if (empty($routeName) && null !== $legacyUrlConverter) {
+            try {
+                $conversionParameters = array_merge(['controller' => $controller], $sfRouteParams, $params);
+                unset($conversionParameters['token']);
+
+                return $legacyUrlConverter->convertByParameters($conversionParameters);
+            } catch (CoreException $e) {
+                //The url could not be converted so we fallback on legacy url
+            }
+        }
+
         $idLang = Context::getContext()->language->id;
+
+        return $this->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . Dispatcher::getInstance()->createUrl($controller, $idLang, $params);
+    }
+
+    /**
+     * @param array $tab
+     *
+     * @return string
+     *
+     * @throws PrestaShopException
+     */
+    public function getTabLink(array $tab)
+    {
+        if (!empty($tab['route_name'])) {
+            $sfContainer = SymfonyContainer::getInstance();
+            if (null !== $sfContainer) {
+                $sfRouter = $sfContainer->get('router');
+
+                return $sfRouter->generate($tab['route_name']);
+            }
+        }
+
+        return $this->getAdminLink($tab['class_name']);
+    }
+
+    /**
+     * Used when you explicitly want to create a LEGACY admin link, this should be deprecated
+     * in 1.8.0.
+     *
+     * @param $controller
+     * @param bool $withToken
+     * @param array $params
+     *
+     * @return string
+     */
+    public function getLegacyAdminLink($controller, $withToken = true, $params = array())
+    {
+        $idLang = Context::getContext()->language->id;
+
+        if ($withToken && !TokenInUrls::isDisabled()) {
+            $params['token'] = Tools::getAdminTokenLite($controller);
+        }
 
         return $this->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . Dispatcher::getInstance()->createUrl($controller, $idLang, $params);
     }
@@ -888,6 +940,7 @@ class LinkCore
                 // A shop matching current URL was found
                 if (preg_match('#^' . preg_quote($row['uri'], '#') . '#i', $request_uri)) {
                     $this->urlShopId = $row['id_shop'];
+
                     break;
                 }
             }
@@ -1068,7 +1121,7 @@ class LinkCore
                 unset($request['controller']);
             }
         } else {
-            // @FIXME html_entity_decode has been added due to '&amp;' => '%3B' ...
+            /** @FIXME html_entity_decode has been added due to '&amp;' => '%3B' ... */
             $request = html_entity_decode($request);
             if ($requestUrlEncode) {
                 $request = urlencode($request);
@@ -1400,6 +1453,7 @@ class LinkCore
         switch ($params['entity']) {
             case 'language':
                 $link = $context->link->getLanguageLink($params['id']);
+
                 break;
             case 'product':
                 $link = $context->link->getProductLink(
@@ -1413,6 +1467,7 @@ class LinkCore
                     false,
                     $params['relative_protocol']
                 );
+
                 break;
             case 'category':
                 $params = array_merge(array('selected_filters' => null), $params);
@@ -1424,6 +1479,7 @@ class LinkCore
                     $params['id_shop'],
                     $params['relative_protocol']
                 );
+
                 break;
             case 'categoryImage':
                 $params = array_merge(array('selected_filters' => null), $params);
@@ -1432,6 +1488,7 @@ class LinkCore
                     $params['id'],
                     $params['type'] = (isset($params['type']) ? $params['type'] : null)
                 );
+
                 break;
             case 'cms':
                 $link = $context->link->getCMSLink(
@@ -1442,6 +1499,7 @@ class LinkCore
                     $params['id_shop'],
                     $params['relative_protocol']
                 );
+
                 break;
             case 'module':
                 $params = array_merge(array(
@@ -1458,6 +1516,7 @@ class LinkCore
                     $params['id_shop'],
                     $params['relative_protocol']
                 );
+
                 break;
             case 'sf':
                 if (!array_key_exists('route', $params)) {
@@ -1465,7 +1524,7 @@ class LinkCore
                 }
 
                 $sfContainer = SymfonyContainer::getInstance();
-                if (!is_null($sfContainer)) {
+                if (null !== $sfContainer) {
                     $sfRouter = $sfContainer->get('router');
 
                     if (array_key_exists('sf-params', $params)) {
@@ -1475,6 +1534,7 @@ class LinkCore
                 } else {
                     throw new \InvalidArgumentException('You can\'t use Symfony router in legacy context.');
                 }
+
                 break;
             default:
                 $link = $context->link->getPageLink(
@@ -1486,6 +1546,7 @@ class LinkCore
                     $params['id_shop'],
                     $params['relative_protocol']
                 );
+
                 break;
         }
 

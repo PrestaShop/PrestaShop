@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,24 +16,24 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\EventListener;
 
+use Employee;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use Symfony\Component\Security\Csrf\CsrfTokenManager;
-use Symfony\Component\Routing\RouterInterface;
+use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Csrf\CsrfToken;
-use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
-use Employee;
+use Symfony\Component\Security\Csrf\CsrfTokenManager;
 use Symfony\CS\Tokenizer\Token;
 use Tools;
 
@@ -60,7 +60,7 @@ class TokenizedUrlsListener
         $this->username = $username;
         $context = $legacyContext->getContext();
 
-        if (!is_null($context)) {
+        if (null !== $context) {
             if ($context->employee instanceof Employee) {
                 $this->employeeId = $context->employee->id;
             }

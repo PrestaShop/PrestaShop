@@ -1,4 +1,5 @@
 <?php
+
 define('lang_Select', 'Wybierz');
 define('lang_Erase', 'Wyczyść');
 define('lang_Open', 'Otwórz');
@@ -16,7 +17,7 @@ define('lang_Music', 'Muzyka');
 define('lang_New_Folder', 'Dodaj nowy folder');
 define('lang_Folder_Created', 'Folder został utworzony poprawnie');
 define('lang_Existing_Folder', 'Istniejący folder');
-define('lang_Confirm_Folder_del', 'Czy jesteś pewien, że chcesz usunąć folder i wszystko co znajduje się w nim?');
+define('lang_Confirm_Folder_del', 'Czy jesteś pewien, że chcesz usunąć folder i wszystko co znajduje się w nim?');
 define('lang_Return_Files_List', 'Powrót do listy plików');
 define('lang_Preview', 'Podgląd');
 define('lang_Download', 'Pobierz');

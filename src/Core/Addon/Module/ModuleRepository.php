@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -29,8 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Addon\Module;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\CacheProvider;
 use Exception;
-use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
-use Psr\Log\LoggerInterface;
+use Module as LegacyModule;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
@@ -40,9 +39,10 @@ use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
+use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Translation\TranslatorInterface;
-use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 
 class ModuleRepository implements ModuleRepositoryInterface
 {
@@ -226,6 +226,7 @@ class ModuleRepository implements ModuleRepositoryInterface
                 }
                 if (!isset($productType) || $productType & ~$filter->type) {
                     unset($modules[$key]);
+
                     continue;
                 }
             }
@@ -236,6 +237,7 @@ class ModuleRepository implements ModuleRepositoryInterface
                     && ($filter->hasStatus(AddonListFilterStatus::UNINSTALLED)
                         || !$filter->hasStatus(AddonListFilterStatus::INSTALLED))) {
                     unset($modules[$key]);
+
                     continue;
                 }
 
@@ -243,6 +245,7 @@ class ModuleRepository implements ModuleRepositoryInterface
                     && (!$filter->hasStatus(AddonListFilterStatus::UNINSTALLED)
                         || $filter->hasStatus(AddonListFilterStatus::INSTALLED))) {
                     unset($modules[$key]);
+
                     continue;
                 }
 
@@ -251,6 +254,7 @@ class ModuleRepository implements ModuleRepositoryInterface
                     && !$filter->hasStatus(AddonListFilterStatus::DISABLED)
                     && $filter->hasStatus(AddonListFilterStatus::ENABLED)) {
                     unset($modules[$key]);
+
                     continue;
                 }
 
@@ -259,6 +263,7 @@ class ModuleRepository implements ModuleRepositoryInterface
                     && !$filter->hasStatus(AddonListFilterStatus::ENABLED)
                     && $filter->hasStatus(AddonListFilterStatus::DISABLED)) {
                     unset($modules[$key]);
+
                     continue;
                 }
             }
@@ -269,12 +274,14 @@ class ModuleRepository implements ModuleRepositoryInterface
                     !$filter->hasOrigin(AddonListFilterOrigin::DISK)
                 ) {
                     unset($modules[$key]);
+
                     continue;
                 }
                 if ($module->attributes->has('origin_filter_value') &&
                     !$filter->hasOrigin($module->attributes->get('origin_filter_value'))
                 ) {
                     unset($modules[$key]);
+
                     continue;
                 }
             }
@@ -469,10 +476,8 @@ class ModuleRepository implements ModuleRepositoryInterface
             $main_class_attributes = array();
 
             if (!$skip_main_class_attributes && $this->moduleProvider->isModuleMainClassValid($name)) {
-                require_once $php_file_path;
-
                 // We load the main class of the module, and get its properties
-                $tmp_module = ServiceLocator::get($name);
+                $tmp_module = LegacyModule::getInstanceByName($name);
                 foreach (array('warning', 'name', 'tab', 'displayName', 'description', 'author', 'author_address',
                     'limited_countries', 'need_instance', 'confirmUninstall', ) as $data_to_get) {
                     if (isset($tmp_module->{$data_to_get})) {
@@ -560,6 +565,7 @@ class ModuleRepository implements ModuleRepositoryInterface
             if (!file_exists($this->modulePath . $moduleName . '/' . $moduleName . '.php')) {
                 continue;
             }
+
             try {
                 $module = $this->getModule($moduleName, $skip_main_class_attributes);
                 if ($module instanceof Module) {
@@ -572,7 +578,9 @@ class ModuleRepository implements ModuleRepositoryInterface
                         array(
                             '%module%' => $moduleName,
                             '%error_details%' => $e->getMessage(), ),
-                        'Admin.Modules.Notification'));
+                        'Admin.Modules.Notification'
+                    )
+                );
             } catch (Exception $e) {
                 $this->logger->critical(
                     $this->translator->trans(
@@ -580,7 +588,9 @@ class ModuleRepository implements ModuleRepositoryInterface
                         array(
                             '%module%' => $moduleName,
                             '%error_details%' => $e->getMessage(), ),
-                        'Admin.Modules.Notification'));
+                        'Admin.Modules.Notification'
+                    )
+                );
             }
         }
 

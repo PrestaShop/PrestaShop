@@ -66,9 +66,6 @@ i.mce-i-checkbox {
     background-color: #eee !important;
 }
 
-.mce-btn:focus, .mce-btn:hover {
-    background-color: transparent !important;
-}
 
 .mce-container-body .mce-flow-layout {
     border-bottom: solid 1px #eee;

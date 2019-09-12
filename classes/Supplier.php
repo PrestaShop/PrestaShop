@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -76,8 +76,8 @@ class SupplierCore extends ObjectModel
 
             /* Lang fields */
             'description' => array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'),
-            'meta_title' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 128),
-            'meta_description' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
+            'meta_title' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
+            'meta_description' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 512),
             'meta_keywords' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
         ),
     );
@@ -144,10 +144,11 @@ class SupplierCore extends ObjectModel
             $sqlGroups = '';
             if (!$allGroups) {
                 $groups = FrontController::getCurrentCustomerGroups();
-                $sqlGroups = (count($groups) ? 'IN (' . implode(',', $groups) . ')' : '= 1');
+                $sqlGroups = (count($groups) ? 'IN (' . implode(',', $groups) . ')' : '=' . (int) Group::getCurrent()->id);
             }
 
-            $results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+            $results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
+                '
 					SELECT  ps.`id_supplier`, COUNT(DISTINCT ps.`id_product`) as nb_products
 					FROM `' . _DB_PREFIX_ . 'product_supplier` ps
 					JOIN `' . _DB_PREFIX_ . 'product` p ON (ps.`id_product`= p.`id_product`)
@@ -199,7 +200,7 @@ class SupplierCore extends ObjectModel
      */
     public static function getLiteSuppliersList($idLang = null, $format = 'default')
     {
-        $idLang = is_null($idLang) ? Context::getContext()->language->id : (int) $idLang;
+        $idLang = null === $idLang ? Context::getContext()->language->id : (int) $idLang;
 
         $suppliersList = array();
         $suppliers = Supplier::getSuppliers(false, $idLang, true);
@@ -307,7 +308,7 @@ class SupplierCore extends ObjectModel
         $sqlGroups = '';
         if (Group::isFeatureActive()) {
             $groups = FrontController::getCurrentCustomerGroups();
-            $sqlGroups = 'WHERE cg.`id_group` ' . (count($groups) ? 'IN (' . implode(',', $groups) . ')' : '= 1');
+            $sqlGroups = 'WHERE cg.`id_group` ' . (count($groups) ? 'IN (' . implode(',', $groups) . ')' : '=' . (int) Group::getCurrent()->id);
         }
 
         /* Return only the number of products */
@@ -412,7 +413,7 @@ class SupplierCore extends ObjectModel
      *
      * @param int $idLang Language ID
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return array|false|mysqli_result|PDOStatement|resource|null
      */
     public function getProductsLite($idLang)
     {

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,40 +16,41 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
-use Attachment;
-use PrestaShop\PrestaShop\Adapter\Entity\Customization;
-use PrestaShop\PrestaShop\Core\Foundation\Database\EntityNotFoundException;
-use SpecificPrice;
-use Customer;
-use Combination;
-use Image;
-use SpecificPriceRule;
-use Product;
-use ProductDownload;
 use AdminProductsController;
-use Symfony\Component\Translation\TranslatorInterface;
-use Tools;
-use StockAvailable;
-use Hook;
-use Validate;
-use Db;
-use Shop;
-use Language;
-use ObjectModel;
+use Attachment;
+use Category;
+use Combination;
 use Configuration;
 use Context;
+use Customer;
+use Db;
+use Hook;
+use Image;
+use Language;
+use ObjectModel;
+use PrestaShop\PrestaShop\Adapter\Entity\Customization;
+use PrestaShop\PrestaShop\Core\Foundation\Database\EntityNotFoundException;
+use PrestaShopBundle\Utils\FloatParser;
+use Product;
+use ProductDownload;
+use Shop;
 use ShopUrl;
-use Category;
+use SpecificPrice;
+use SpecificPriceRule;
+use StockAvailable;
+use Symfony\Component\Translation\TranslatorInterface;
+use Tools;
+use Validate;
 
 /**
  * Admin controller wrapper for new Architecture, about Product admin controller.
@@ -163,6 +164,7 @@ class AdminProductWrapper
 
         StockAvailable::setProductDependsOnStock((int) $product->id, $product->depends_on_stock, null, $id_product_attribute);
         StockAvailable::setProductOutOfStock((int) $product->id, $product->out_of_stock, null, $id_product_attribute);
+        StockAvailable::setLocation((int) $product->id, $combinationValues['attribute_location'], null, $id_product_attribute);
 
         $product->checkDefaultAttributes();
 
@@ -215,6 +217,15 @@ class AdminProductWrapper
     }
 
     /**
+     * @param Product $product
+     * @param string $location
+     */
+    public function processLocation(Product $product, $location)
+    {
+        StockAvailable::setLocation($product->id, $location);
+    }
+
+    /**
      * Set if a product depends on stock (ASM). For a product or a combination.
      *
      * Does work only in Advanced stock management.
@@ -239,6 +250,8 @@ class AdminProductWrapper
      */
     public function processProductSpecificPrice($id_product, $specificPriceValues, $idSpecificPrice = null)
     {
+        $floatParser = new FloatParser();
+
         // ---- data formatting ----
         $id_product_attribute = $specificPriceValues['sp_id_product_attribute'];
         $id_shop = $specificPriceValues['sp_id_shop'] ? $specificPriceValues['sp_id_shop'] : 0;
@@ -246,9 +259,9 @@ class AdminProductWrapper
         $id_country = $specificPriceValues['sp_id_country'] ? $specificPriceValues['sp_id_country'] : 0;
         $id_group = $specificPriceValues['sp_id_group'] ? $specificPriceValues['sp_id_group'] : 0;
         $id_customer = !empty($specificPriceValues['sp_id_customer']['data']) ? $specificPriceValues['sp_id_customer']['data'][0] : 0;
-        $price = isset($specificPriceValues['leave_bprice']) ? '-1' : $specificPriceValues['sp_price'];
+        $price = isset($specificPriceValues['leave_bprice']) ? '-1' : $floatParser->fromString($specificPriceValues['sp_price']);
         $from_quantity = $specificPriceValues['sp_from_quantity'];
-        $reduction = (float) $specificPriceValues['sp_reduction'];
+        $reduction = $floatParser->fromString($specificPriceValues['sp_reduction']);
         $reduction_tax = $specificPriceValues['sp_reduction_tax'];
         $reduction_type = !$reduction ? 'amount' : $specificPriceValues['sp_reduction_type'];
         $reduction_type = $reduction_type == '-' ? 'amount' : $reduction_type;
@@ -287,7 +300,7 @@ class AdminProductWrapper
             $isThisAnUpdate
         );
 
-        if (false === $validationResult) {
+        if (false === $validationResult || count($this->errors)) {
             return $this->errors;
         }
 
@@ -460,7 +473,7 @@ class AdminProductWrapper
                     }
 
                     $price = Tools::ps_round($specific_price['price'], 2);
-                    $fixed_price = ($price == Tools::ps_round($product->price, 2) || $specific_price['price'] == -1) ? '--' : Tools::displayPrice($price, $current_specific_currency);
+                    $fixed_price = (($price == Tools::ps_round($product->price, 2) && $current_specific_currency['id_currency'] == $defaultCurrency->id) || $specific_price['price'] == -1) ? '--' : Tools::displayPrice($price, $current_specific_currency);
 
                     $content[] = [
                         'id_specific_price' => $specific_price['id_specific_price'],
@@ -539,7 +552,7 @@ class AdminProductWrapper
     /**
      * Get price priority.
      *
-     * @param null|int $idProduct
+     * @param int|null $idProduct
      *
      * @return array
      */
@@ -662,7 +675,7 @@ class AdminProductWrapper
                     )
                 );
 
-                if ($customization['type'] == 0) {
+                if ($customization['type'] == Product::CUSTOMIZE_FILE) {
                     ++$countFieldFile;
                 } else {
                     ++$countFieldText;

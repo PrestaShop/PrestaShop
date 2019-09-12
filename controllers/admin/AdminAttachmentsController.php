@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -233,7 +233,7 @@ class AdminAttachmentsControllerCore extends AdminController
                         }
                         $_POST['file_name'] = $_FILES['file']['name'];
                         @unlink($_FILES['file']['tmp_name']);
-                        if (!sizeof($this->errors) && isset($a) && file_exists(_PS_DOWNLOAD_DIR_ . $a->file)) {
+                        if (!count($this->errors) && isset($a) && file_exists(_PS_DOWNLOAD_DIR_ . $a->file)) {
                             unlink(_PS_DOWNLOAD_DIR_ . $a->file);
                         }
                         $_POST['file'] = $uniqid;
@@ -243,9 +243,11 @@ class AdminAttachmentsControllerCore extends AdminController
                     $max_upload = (int) ini_get('upload_max_filesize');
                     $max_post = (int) ini_get('post_max_size');
                     $upload_mb = min($max_upload, $max_post);
-                    $this->errors[] = $this->trans('The file %file% exceeds the size allowed by the server. The limit is set to %size% MB.',
+                    $this->errors[] = $this->trans(
+                        'The file %file% exceeds the size allowed by the server. The limit is set to %size% MB.',
                         array('%file%' => '<b>' . $_FILES['file']['name'] . '</b> ', '%size%' => '<b>' . $upload_mb . '</b>'),
-                        'Admin.Catalog.Notification');
+                        'Admin.Catalog.Notification'
+                    );
                 } elseif (!isset($a) || (isset($a) && !file_exists(_PS_DOWNLOAD_DIR_ . $a->file))) {
                     $this->errors[] = $this->trans('Upload error. Please check your server configurations for the maximum upload size allowed.', array(), 'Admin.Catalog.Notification');
                 }

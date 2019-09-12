@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -186,6 +186,10 @@ class AdminGroupsControllerCore extends AdminController
             if (isset($_POST['submitReset' . $this->list_id])) {
                 $this->processResetFilters();
             }
+
+            if (Tools::isSubmit('submitFilter')) {
+                self::$currentIndex .= '&id_group=' . (int) Tools::getValue('id_group') . '&viewgroup';
+            }
         } else {
             $this->list_id = 'group';
         }
@@ -230,14 +234,53 @@ class AdminGroupsControllerCore extends AdminController
         $this->explicitSelect = true;
 
         $this->fields_list = (array(
-            'id_customer' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'align' => 'center', 'filter_key' => 'c!id_customer', 'class' => 'fixed-width-xs'),
-            'id_gender' => array('title' => $this->trans('Social title', array(), 'Admin.Global'), 'icon' => $genders_icon, 'list' => $genders),
-            'firstname' => array('title' => $this->trans('First name', array(), 'Admin.Global')),
-            'lastname' => array('title' => $this->trans('Last name', array(), 'Admin.Global')),
-            'email' => array('title' => $this->trans('Email address', array(), 'Admin.Global'), 'filter_key' => 'c!email', 'orderby' => true),
-            'birthday' => array('title' => $this->trans('Date of birth', array(), 'Admin.Global'), 'type' => 'date', 'class' => 'fixed-width-md', 'align' => 'center'),
-            'date_add' => array('title' => $this->trans('Registration date', array(), 'Admin.Shopparameters.Feature'), 'type' => 'date', 'class' => 'fixed-width-md', 'align' => 'center'),
-            'active' => array('title' => $this->trans('Enabled', array(), 'Admin.Global'), 'align' => 'center', 'class' => 'fixed-width-sm', 'type' => 'bool', 'search' => false, 'orderby' => false, 'filter_key' => 'c!active', 'callback' => 'printOptinIcon'),
+            'id_customer' => array(
+                'title' => $this->trans('ID', array(), 'Admin.Global'),
+                'align' => 'center',
+                'filter_key' => 'c!id_customer',
+                'class' => 'fixed-width-xs',
+            ),
+            'id_gender' => array(
+                'title' => $this->trans('Social title', array(), 'Admin.Global'),
+                'icon' => $genders_icon,
+                'list' => $genders,
+            ),
+            'firstname' => array(
+                'title' => $this->trans('First name', array(), 'Admin.Global'),
+                'maxlength' => 30,
+            ),
+            'lastname' => array(
+                'title' => $this->trans('Last name', array(), 'Admin.Global'),
+                'maxlength' => 30,
+            ),
+            'email' => array(
+                'title' => $this->trans('Email address', array(), 'Admin.Global'),
+                'filter_key' => 'c!email',
+                'orderby' => true,
+                'maxlength' => 50,
+            ),
+            'birthday' => array(
+                'title' => $this->trans('Date of birth', array(), 'Admin.Global'),
+                'type' => 'date',
+                'class' => 'fixed-width-md',
+                'align' => 'center',
+            ),
+            'date_add' => array(
+                'title' => $this->trans('Registration date', array(), 'Admin.Shopparameters.Feature'),
+                'type' => 'date',
+                'class' => 'fixed-width-md',
+                'align' => 'center',
+            ),
+            'active' => array(
+                'title' => $this->trans('Enabled', array(), 'Admin.Global'),
+                'align' => 'center',
+                'class' => 'fixed-width-sm',
+                'type' => 'bool',
+                'search' => false,
+                'orderby' => false,
+                'filter_key' => 'c!active',
+                'callback' => 'printOptinIcon',
+            ),
         ));
         $this->_select = 'c.*, a.id_group';
         $this->_join = 'LEFT JOIN `' . _DB_PREFIX_ . 'customer` c ON (a.`id_customer` = c.`id_customer`)';
@@ -328,6 +371,7 @@ class AdminGroupsControllerCore extends AdminController
                         ),
                     ),
                     'hint' => $this->trans('Customers in this group can view prices.', array(), 'Admin.Shopparameters.Help'),
+                    'desc' => $this->trans('Need to hide prices for all groups? Save time, enable catalog mode in Product Settings instead.', array(), 'Admin.Shopparameters.Help'),
                 ),
                 array(
                     'type' => 'group_discount_category',
@@ -405,8 +449,10 @@ class AdminGroupsControllerCore extends AdminController
         $auth_modules = array();
         $unauth_modules = array();
 
+        $shops = Shop::getContextListShopID();
+
         if ($id_group) {
-            $authorized_modules = Module::getAuthorizedModules($id_group);
+            $authorized_modules = Module::getAuthorizedModules($id_group, $shops);
         }
 
         if (is_array($authorized_modules)) {
@@ -500,11 +546,10 @@ class AdminGroupsControllerCore extends AdminController
         $auth_modules = Tools::getValue('modulesBoxAuth');
         $return = true;
         if ($id_group) {
-            Group::truncateModulesRestrictions((int) $id_group);
-        }
-        $shops = Shop::getShops(true, null, true);
-        if (is_array($auth_modules)) {
-            $return &= Group::addModulesRestrictions($id_group, $auth_modules, $shops);
+            $shops = Shop::getContextListShopID();
+            if (is_array($auth_modules)) {
+                $return &= Group::addModulesRestrictions($id_group, $auth_modules, $shops);
+            }
         }
 
         // update module list by hook cache
@@ -516,11 +561,13 @@ class AdminGroupsControllerCore extends AdminController
     protected function updateCategoryReduction()
     {
         $category_reduction = Tools::getValue('category_reduction');
-        Db::getInstance()->execute('
+        Db::getInstance()->execute(
+            '
 			DELETE FROM `' . _DB_PREFIX_ . 'group_reduction`
 			WHERE `id_group` = ' . (int) Tools::getValue('id_group')
         );
-        Db::getInstance()->execute('
+        Db::getInstance()->execute(
+            '
 			DELETE FROM `' . _DB_PREFIX_ . 'product_group_reduction_cache`
 			WHERE `id_group` = ' . (int) Tools::getValue('id_group')
         );
@@ -591,7 +638,11 @@ class AdminGroupsControllerCore extends AdminController
         $href = self::$currentIndex . '&' . $this->identifier . '=' . $id . '&update' . $this->table . '&token=' . ($token != null ? $token : $this->token);
 
         if ($this->display == 'view') {
-            $href = Context::getContext()->link->getAdminLink('AdminCustomers') . '&id_customer=' . (int) $id . '&updatecustomer&back=' . urlencode($href);
+            $href = Context::getContext()->link->getAdminLink('AdminCustomers', true, [], [
+                'id_customer' => $id,
+                'updatecustomer' => 1,
+                'back' => urlencode($href),
+            ]);
         }
 
         $tpl->assign(array(

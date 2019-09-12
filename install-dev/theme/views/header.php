@@ -18,7 +18,7 @@
 	<script type="text/javascript" src="../js/jquery/jquery-1.11.0.min.js"></script>
 	<script type="text/javascript" src="../js/jquery/plugins/jquery.chosen.js"></script>
 	<script type="text/javascript" src="theme/js/install.js"></script>
-	<script type="text/javascript" src="//www.prestashop.com/js/user-assistance.js"></script>
+	<script type="text/javascript" src="https://www.prestashop.com/js/user-assistance.js"></script>
 	<?php if (file_exists(_PS_INSTALL_PATH_.'theme/js/'.self::$steps->current()->getName().'.js')): ?>
 		<script type="text/javascript" src="theme/js/<?php echo self::$steps->current()->getName() ?>.js"></script>
 	<?php endif; ?>
@@ -34,10 +34,10 @@
 <!-- Header -->
 <div id="header" class="clearfix">
 	<ul id="headerLinks">
-		<li class="lnk_forum"><a href="<?php echo $this->getForumLink() ?>" target="_blank"><?php echo $this->translator->trans('Forum', array(), 'Install'); ?></a></li>
-		<li class="lnk_forum"><a href="<?php echo $this->getSupportLink() ?>" target="_blank"><?php echo $this->translator->trans('Support', array(), 'Install'); ?></a></li>
-		<li class="lnk_forum"><a href="<?php echo $this->getDocumentationLink() ?>" target="_blank"><?php echo $this->translator->trans('Documentation', array(), 'Install'); ?></a></li>
-		<li class="lnk_blog last"><a href="<?php echo $this->getBlogLink() ?>" target="_blank"><?php echo $this->translator->trans('Blog', array(), 'Install') ?></a></li>
+		<li class="lnk_forum"><a href="<?php echo $this->getForumLink() ?>" target="_blank" rel="noopener noreferrer"><?php echo $this->translator->trans('Forum', array(), 'Install'); ?></a></li>
+		<li class="lnk_forum"><a href="<?php echo $this->getSupportLink() ?>" target="_blank" rel="noopener noreferrer"><?php echo $this->translator->trans('Support', array(), 'Install'); ?></a></li>
+		<li class="lnk_forum"><a href="<?php echo $this->getDocumentationLink() ?>" target="_blank" rel="noopener noreferrer"><?php echo $this->translator->trans('Documentation', array(), 'Install'); ?></a></li>
+		<li class="lnk_blog last"><a href="<?php echo $this->getBlogLink() ?>" target="_blank" rel="noopener noreferrer"><?php echo $this->translator->trans('Blog', array(), 'Install') ?></a></li>
 		<!--
 		<?php if ($this->getPhone()): ?>
 			<li id="phone_block" class="last">
@@ -93,7 +93,7 @@
 	<noscript>
 		<h4 class="errorBlock" style="margin-bottom:10px">
 			<?php echo $this->translator->trans('To install PrestaShop, you need to have JavaScript enabled in your browser.', array(), 'Install'); ?>
-			<a href="<?php echo $this->translator->trans('http://enable-javascript.com/', array(), 'Install'); ?>" target="_blank">
+			<a href="<?php echo $this->translator->trans('https://enable-javascript.com/', array(), 'Install'); ?>" target="_blank" rel="noopener noreferrer">
 				<img src="theme/img/help.png" style="height:16px;width:16px" />
 			</a>
 		</h4>

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,16 +16,18 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Command;
 
+use Employee;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -82,6 +84,14 @@ class ModuleCommand extends ContainerAwareCommand
         $this->input = $input;
         $this->output = $output;
         require $this->getContainer()->get('kernel')->getRootDir() . '/../config/config.inc.php';
+        /** @var LegacyContext $legacyContext */
+        $legacyContext = $this->getContainer()->get('prestashop.adapter.legacy.context');
+        //We need to have an employee or the module hooks don't work
+        //see LegacyHookSubscriber
+        if (!$legacyContext->getContext()->employee) {
+            //Even a non existing employee is fine
+            $legacyContext->getContext()->employee = new Employee(42);
+        }
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -97,8 +107,10 @@ class ModuleCommand extends ContainerAwareCommand
                 $this->translator->trans(
                     'Unknown module action. It must be one of these values: %actions%',
                     array('%actions%' => implode(' / ', $this->allowedActions)),
-                    'Admin.Modules.Notification'),
-                'error');
+                    'Admin.Modules.Notification'
+                ),
+                'error'
+            );
 
             return;
         }
@@ -138,7 +150,8 @@ class ModuleCommand extends ContainerAwareCommand
         $moduleSelfConfigurator->configure();
         $this->displayMessage(
             $this->translator->trans('Configuration successfully applied.', array(), 'Admin.Modules.Notification'),
-            'info');
+            'info'
+        );
     }
 
     protected function executeGenericModuleAction($action, $moduleName)
@@ -154,7 +167,8 @@ class ModuleCommand extends ContainerAwareCommand
                     array(
                         '%action%' => ucfirst(str_replace('_', ' ', $action)),
                         '%module%' => $moduleName, ),
-                    'Admin.Modules.Notification')
+                    'Admin.Modules.Notification'
+                )
             );
 
             return;
@@ -169,7 +183,8 @@ class ModuleCommand extends ContainerAwareCommand
                     '%module%' => $moduleName,
                     '%error_details%' => $error, ),
                 'Admin.Modules.Notification'
-            ), 'error'
+            ),
+            'error'
         );
     }
 

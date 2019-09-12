@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -530,7 +530,8 @@ class SupplyOrderCore extends ObjectModel
 
     public function getAllExpectedQuantity()
     {
-        return Db::getInstance()->getValue('
+        return Db::getInstance()->getValue(
+            '
 			SELECT SUM(`quantity_expected`)
 			FROM `' . _DB_PREFIX_ . 'supply_order_detail`
 			WHERE `id_supply_order` = ' . (int) $this->id
@@ -539,7 +540,8 @@ class SupplyOrderCore extends ObjectModel
 
     public function getAllReceivedQuantity()
     {
-        return Db::getInstance()->getValue('
+        return Db::getInstance()->getValue(
+            '
 			SELECT SUM(`quantity_received`)
 			FROM `' . _DB_PREFIX_ . 'supply_order_detail`
 			WHERE `id_supply_order` = ' . (int) $this->id
@@ -548,7 +550,8 @@ class SupplyOrderCore extends ObjectModel
 
     public function getAllPendingQuantity()
     {
-        return Db::getInstance()->getValue('
+        return Db::getInstance()->getValue(
+            '
 			SELECT (SUM(`quantity_expected`) - SUM(`quantity_received`))
 			FROM `' . _DB_PREFIX_ . 'supply_order_detail`
 			WHERE `id_supply_order` = ' . (int) $this->id

@@ -1,0 +1,3 @@
+_catalog:
+  resource: "customers.yml"
+  prefix: /customers/

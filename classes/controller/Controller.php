@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -32,6 +32,8 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  */
 abstract class ControllerCore
 {
+    const SERVICE_LOCALE_REPOSITORY = 'prestashop.core.localization.locale.repository';
+
     /**
      * @var Context
      */
@@ -161,6 +163,8 @@ abstract class ControllerCore
 
     /**
      * Initialize the page.
+     *
+     * @throws Exception
      */
     public function init()
     {
@@ -176,7 +180,14 @@ abstract class ControllerCore
             define('_PS_BASE_URL_SSL_', Tools::getShopDomainSsl(true));
         }
 
-        $this->container = $this->buildContainer();
+        if (null === $this->getContainer()) {
+            $this->container = $this->buildContainer();
+        }
+
+        $localeRepo = $this->get(self::SERVICE_LOCALE_REPOSITORY);
+        $this->context->currentLocale = $localeRepo->getLocale(
+            $this->context->language->getLocale()
+        );
     }
 
     /**
@@ -210,13 +221,13 @@ abstract class ControllerCore
 
     public function __construct()
     {
-        if (is_null($this->display_header)) {
+        if (null === $this->display_header) {
             $this->display_header = true;
         }
-        if (is_null($this->display_header_javascript)) {
+        if (null === $this->display_header_javascript) {
             $this->display_header_javascript = true;
         }
-        if (is_null($this->display_footer)) {
+        if (null === $this->display_footer) {
             $this->display_footer = true;
         }
         $this->context = Context::getContext();
@@ -587,8 +598,7 @@ abstract class ControllerCore
     {
         return
             !empty($_SERVER['HTTP_X_REQUESTED_WITH'])
-            && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'
-        ;
+            && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
     }
 
     public function getLayout()
@@ -663,17 +673,21 @@ abstract class ControllerCore
             case E_USER_ERROR:
             case E_ERROR:
                 die('Fatal error: ' . $errstr . ' in ' . $errfile . ' on line ' . $errline);
+
                 break;
             case E_USER_WARNING:
             case E_WARNING:
                 $type = 'Warning';
+
                 break;
             case E_USER_NOTICE:
             case E_NOTICE:
                 $type = 'Notice';
+
                 break;
             default:
                 $type = 'Unknown error';
+
                 break;
         }
 
@@ -770,5 +784,15 @@ abstract class ControllerCore
     public function getParameter($parameterId)
     {
         return $this->container->getParameter($parameterId);
+    }
+
+    /**
+     * Gets the dependency container.
+     *
+     * @return ContainerBuilder
+     */
+    public function getContainer()
+    {
+        return $this->container;
     }
 }

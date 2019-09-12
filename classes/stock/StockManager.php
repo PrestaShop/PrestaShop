@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -137,6 +137,7 @@ class StockManagerCore implements StockManagerInterface
                     $mvt_params['last_wa'] = 0;
                     $mvt_params['current_wa'] = $price_te;
                 }
+
                 break;
 
             // case FIFO / LIFO mode
@@ -169,6 +170,7 @@ class StockManagerCore implements StockManagerInterface
 
             default:
                 return false;
+
                 break;
         }
 
@@ -270,7 +272,8 @@ class StockManagerCore implements StockManagerInterface
 
                 if ($product->pack_stock_type == Pack::STOCK_TYPE_PACK_ONLY
                     || $product->pack_stock_type == Pack::STOCK_TYPE_PACK_BOTH
-                    || ($product->pack_stock_type == Pack::STOCK_TYPE_DEFAULT
+                    || (
+                        $product->pack_stock_type == Pack::STOCK_TYPE_DEFAULT
                         && (Configuration::get('PS_PACK_STOCK_TYPE') == Pack::STOCK_TYPE_PACK_ONLY
                             || Configuration::get('PS_PACK_STOCK_TYPE') == Pack::STOCK_TYPE_PACK_BOTH)
                     )
@@ -362,7 +365,8 @@ class StockManagerCore implements StockManagerInterface
                             continue;
                         }
 
-                        $resource = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+                        $resource = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
+                            '
 							SELECT sm.`id_stock_mvt`, sm.`date_add`, sm.`physical_quantity`,
 								IF ((sm2.`physical_quantity` is null), sm.`physical_quantity`, (sm.`physical_quantity` - SUM(sm2.`physical_quantity`))) as qty
 							FROM `' . _DB_PREFIX_ . 'stock_mvt` sm
@@ -370,7 +374,8 @@ class StockManagerCore implements StockManagerInterface
 							WHERE sm.`sign` = 1
 							AND sm.`id_stock` = ' . (int) $stock->id . '
 							GROUP BY sm.`id_stock_mvt`
-							ORDER BY sm.`date_add` DESC', false
+							ORDER BY sm.`date_add` DESC',
+                            false
                         );
 
                         while ($row = Db::getInstance()->nextRow($resource)) {
@@ -463,6 +468,7 @@ class StockManagerCore implements StockManagerInterface
                             $stock->update();
                         }
                     }
+
                     break;
             }
 
@@ -505,7 +511,8 @@ class StockManagerCore implements StockManagerInterface
 
         // if we remove a usable quantity, exec hook
         if ($is_usable) {
-            Hook::exec('actionProductCoverage',
+            Hook::exec(
+                'actionProductCoverage',
                     array(
                         'id_product' => $id_product,
                         'id_product_attribute' => $id_product_attribute,
@@ -522,7 +529,7 @@ class StockManagerCore implements StockManagerInterface
      */
     public function getProductPhysicalQuantities($id_product, $id_product_attribute, $ids_warehouse = null, $usable = false)
     {
-        if (!is_null($ids_warehouse)) {
+        if (null !== $ids_warehouse) {
             // in case $ids_warehouse is not an array
             if (!is_array($ids_warehouse)) {
                 $ids_warehouse = array($ids_warehouse);
@@ -557,7 +564,7 @@ class StockManagerCore implements StockManagerInterface
      */
     public function getProductRealQuantities($id_product, $id_product_attribute, $ids_warehouse = null, $usable = false)
     {
-        if (!is_null($ids_warehouse)) {
+        if (null !== $ids_warehouse) {
             // in case $ids_warehouse is not an array
             if (!is_array($ids_warehouse)) {
                 $ids_warehouse = array($ids_warehouse);
@@ -573,7 +580,8 @@ class StockManagerCore implements StockManagerInterface
         if (!Pack::isPack($id_product) && $in_pack = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
             'SELECT id_product_pack, quantity FROM ' . _DB_PREFIX_ . 'pack
 			WHERE id_product_item = ' . (int) $id_product . '
-			AND id_product_attribute_item = ' . ($id_product_attribute ? (int) $id_product_attribute : '0'))) {
+			AND id_product_attribute_item = ' . ($id_product_attribute ? (int) $id_product_attribute : '0')
+        )) {
             foreach ($in_pack as $value) {
                 if (Validate::isLoadedObject($product = new Product((int) $value['id_product_pack'])) &&
                     ($product->pack_stock_type == Pack::STOCK_TYPE_PRODUCTS_ONLY || $product->pack_stock_type == Pack::STOCK_TYPE_PACK_BOTH || ($product->pack_stock_type == Pack::STOCK_TYPE_DEFAULT && Configuration::get('PS_PACK_STOCK_TYPE') > 0))) {
@@ -640,7 +648,7 @@ class StockManagerCore implements StockManagerInterface
         $query->leftjoin('supply_order_state', 'sos', 'sos.id_supply_order_state = so.id_supply_order_state');
         $query->where('sos.pending_receipt = 1');
         $query->where('sod.id_product = ' . (int) $id_product . ' AND sod.id_product_attribute = ' . (int) $id_product_attribute);
-        if (!is_null($ids_warehouse) && count($ids_warehouse)) {
+        if (null !== $ids_warehouse && count($ids_warehouse)) {
             $query->where('so.id_warehouse IN(' . implode(', ', $ids_warehouse) . ')');
         }
 
@@ -690,12 +698,14 @@ class StockManagerCore implements StockManagerInterface
         }
 
         // Removes from warehouse_from
-        $stocks = $this->removeProduct($id_product,
+        $stocks = $this->removeProduct(
+            $id_product,
                                        $id_product_attribute,
                                        $warehouse_from,
                                        $quantity,
                                        Configuration::get('PS_STOCK_MVT_TRANSFER_FROM'),
-                                       $usable_from);
+                                       $usable_from
+        );
         if (!count($stocks)) {
             return false;
         }
@@ -713,13 +723,15 @@ class StockManagerCore implements StockManagerInterface
                 $price = Tools::convertPrice($price_converted_to_default_currency, $warehouse_to->id_currency, true);
             }
 
-            if (!$this->addProduct($id_product,
+            if (!$this->addProduct(
+                $id_product,
                                    $id_product_attribute,
                                    $warehouse_to,
                                    $stock['quantity'],
                                    Configuration::get('PS_STOCK_MVT_TRANSFER_TO'),
                                    $price,
-                                   $usable_to)) {
+                                   $usable_to
+            )) {
                 return false;
             }
         }
@@ -769,10 +781,12 @@ class StockManagerCore implements StockManagerInterface
         }
 
         $quantity_per_day = Tools::ps_round($quantity_out / $coverage);
-        $physical_quantity = $this->getProductPhysicalQuantities($id_product,
+        $physical_quantity = $this->getProductPhysicalQuantities(
+            $id_product,
                                                                  $id_product_attribute,
                                                                  ($id_warehouse ? array($id_warehouse) : null),
-                                                                 true);
+                                                                 true
+        );
         $time_left = ($quantity_per_day == 0) ? (-1) : Tools::ps_round($physical_quantity / $quantity_per_day);
 
         return $time_left;

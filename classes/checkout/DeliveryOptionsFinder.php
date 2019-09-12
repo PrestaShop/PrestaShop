@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,16 +16,16 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-use Symfony\Component\Translation\TranslatorInterface;
-use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Presenter\Object\ObjectPresenter;
+use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class DeliveryOptionsFinderCore
 {
@@ -56,6 +56,7 @@ class DeliveryOptionsFinderCore
             foreach ($cart->getCartRules() as $rule) {
                 if ($rule['free_shipping'] && !$rule['carrier_restriction']) {
                     $free_shipping = true;
+
                     break;
                 }
             }
@@ -88,7 +89,9 @@ class DeliveryOptionsFinderCore
                             $carrier['delay'] = $delay;
                             if ($this->isFreeShipping($this->context->cart, $carriers_list)) {
                                 $carrier['price'] = $this->translator->trans(
-                                    'Free', array(), 'Shop.Theme.Checkout'
+                                    'Free',
+                                    array(),
+                                    'Shop.Theme.Checkout'
                                 );
                             } else {
                                 if ($include_taxes) {

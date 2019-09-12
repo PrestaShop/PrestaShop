@@ -1,5 +1,5 @@
 {#**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,14 +15,14 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
-{% use "PrestaShopBundle:Admin/TwigTemplateForm:bootstrap_4_layout.html.twig" %}
+{% use '@PrestaShop/Admin/TwigTemplateForm/bootstrap_4_layout.html.twig' %}
 {% block form_start -%}
     {% set attr = attr|merge({class: (attr.class|default('') ~ ' form-horizontal')|trim}) %}
     {{- parent() -}}
@@ -49,7 +49,7 @@
 
 {% block form_row -%}
     {% spaceless %}
-        <div class="form-group{% if (not compound or force_error|default(false)) and not valid %} has-error{% endif %}">
+        <div class="{{ block('form_row_class') }} {% if (not compound or force_error|default(false)) and not valid %} has-error{% endif %}">
             {{ form_label(form) }}
             <div class="{{ block('form_group_class') }}">
                 {{ form_widget(form) }}
@@ -94,6 +94,10 @@
     col-sm-10
 {%- endblock form_group_class %}
 
+{% block form_row_class -%}
+    form-group
+{%- endblock form_row_class %}
+
 {% block text_with_unit_widget %}
 <div class="input-group">
     {{- block('form_widget_simple') -}}
@@ -119,3 +123,29 @@
     {{- parent() -}}
 </div>
 {% endblock switch_widget %}
+
+{% block text_with_length_counter_widget %}
+  <div class="input-group js-text-with-length-counter">
+    {% set current_length = form.vars.max_length - form.vars.value|length %}
+
+    {% if form.vars.position == 'before' %}
+      <div class="input-group-prepend">
+        <span class="input-group-text js-countable-text">{{ current_length }}</span>
+      </div>
+    {% endif %}
+
+    {% set attr = attr|merge({'data-max-length': form.vars.max_length, 'maxlength': form.vars.max_length, 'class': 'js-countable-input'}) -%}
+
+    {% if form.vars.input == 'textarea' %}
+      {{- block('textarea_widget') -}}
+    {% else %}
+      {{- block('form_widget_simple') -}}
+    {% endif %}
+
+    {% if form.vars.position == 'after' %}
+      <div class="input-group-append">
+        <span class="input-group-text js-countable-text">{{ current_length }}</span>
+      </div>
+    {% endif %}
+  </div>
+{% endblock text_with_length_counter_widget %}

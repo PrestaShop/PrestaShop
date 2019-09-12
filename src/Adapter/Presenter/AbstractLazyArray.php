@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,25 +16,25 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Presenter;
 
-use Doctrine\Common\Util\Inflector;
-use ArrayObject;
-use ArrayIterator;
-use Iterator;
 use ArrayAccess;
+use ArrayIterator;
+use ArrayObject;
 use Countable;
+use Doctrine\Common\Util\Inflector;
+use Iterator;
 use JsonSerializable;
-use ReflectionException;
 use ReflectionClass;
+use ReflectionException;
 use ReflectionMethod;
 use RuntimeException;
 
@@ -211,6 +211,15 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
     public function __unset($name)
     {
         $this->offsetUnset($name);
+    }
+
+    /**
+     * Needed to ensure that any changes to this object won't bleed to other instances
+     */
+    public function __clone()
+    {
+        $this->arrayAccessList = clone $this->arrayAccessList;
+        $this->arrayAccessIterator = clone $this->arrayAccessIterator;
     }
 
     /**

@@ -9,9 +9,9 @@ https://devdocs.prestashop.com/1.7/contribute/contribution-guidelines/#pull-requ
 
 | Questions     | Answers
 | ------------- | -------------------------------------------------------
-| Branch?       | develop / 1.7.4.x / 1.6.1.x
+| Branch?       | develop / 1.7.6.x / 1.6.1.x
 | Description?  | Please be specific when describing the PR. <br> Every detail helps: versions, browser/server configuration, specific module/theme, etc.
-| Type?         | bug fix / improvement / new feature
+| Type?         | bug fix / improvement / new feature / refacto / critical
 | Category?     | FO / BO / CO / IN / WS / TE
 | BC breaks?    | Does it break backward compatibility? yes/no
 | Deprecations? | Does it deprecate an existing feature? yes/no

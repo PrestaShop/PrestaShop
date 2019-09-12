@@ -1,9 +1,9 @@
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {OrderPage} = require('../../../selectors/BO/order');
 const {CreateOrder} = require('../../../selectors/BO/order');
-const {OnBoarding} = require('../../../selectors/BO/onboarding.js');
 const orderScenarios = require('../../common_scenarios/order');
 const common_scenarios = require('../../common_scenarios/product');
+const welcomeScenarios = require('../../common_scenarios/welcome');
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
 let promise = Promise.resolve();
 
@@ -15,8 +15,10 @@ let productData = {
   reference: 'test_1',
   type: 'combination',
   attribute: {
-    name: 'color',
-    variation_quantity: '10'
+    1: {
+      name: 'color',
+      variation_quantity: '10'
+    }
   }
 };
 
@@ -26,13 +28,7 @@ scenario('Create order in the Back Office', () => {
       test('should open the browser', () => client.open());
       test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
     }, 'order');
-    scenario('Close the onboarding modal if exist ', client => {
-      test('should close the onboarding modal if exist', () => {
-        return promise
-          .then(() => client.isVisible(OnBoarding.welcome_modal))
-          .then(() => client.closeBoarding(OnBoarding.popup_close_button));
-      });
-    }, 'order');
+    welcomeScenarios.findAndCloseWelcomeModal();
     common_scenarios.createProduct(AddProductPage, productData);
     scenario('Logout from the Back Office', client => {
       test('should logout successfully from the Back Office', () => client.signOutBO());
@@ -58,7 +54,7 @@ scenario('Create order in the Back Office', () => {
     test('should click on "UPDATE STATUS" button', () => client.waitForExistAndClick(OrderPage.update_status_button));
     test('should check that the status is "Payment accepted"', () => client.checkTextValue(OrderPage.order_status, 'Payment accepted'));
     test('should check that the "shipping cost" is equal to €8.40', () => client.checkTextValue(OrderPage.shipping_cost, '€8.40'));
-    test('should check that the "order message" is equal to "Order message test"', () => client.checkTextValue(OrderPage.message_order, 'Order message test'));
+    test('should check that the "order message" is equal to "Order message test"', () => client.checkTextValue(OrderPage.message_order, 'Order message test', 'contain', 5000));
     test('should check "the product information"', () => client.checkTextValue(OrderPage.product_Url, ('Beige', productData.name, productData.reference, 'M'), 'contain'));
     test('should check that the "quantity" is  equal to "4"', () => client.checkTextValue(OrderPage.order_quantity.replace("%NUMBER", 1), '4'));
     test('should check "basic price" ', () => {
@@ -66,7 +62,7 @@ scenario('Create order in the Back Office', () => {
         .then(() => client.scrollWaitForExistAndClick(OrderPage.edit_product_button, 50))
         .then(() => client.checkTextValue(OrderPage.product_basic_price.replace("%NUMBER", 1), global.basic_price));
     });
-    test('should check that the "customer" is equal to "John DOE"', () => client.checkTextValue(OrderPage.customer_name, 'John DOE', "contain"));
+    test('should check that the "customer" is equal to "John DOE"', () => client.checkTextValue(OrderPage.customer_name, 'John DOE', "contain", 5000));
     test('should set order status to Payment accepted ', () => client.updateStatus('Delivered'));
     test('should click on "UPDATE STATUS" button', () => client.waitForExistAndClick(OrderPage.update_status_button));
     test('should check status to be equal to "Payment Delivered"', () => client.checkTextValue(OrderPage.order_status, 'Delivered'));
@@ -74,20 +70,31 @@ scenario('Create order in the Back Office', () => {
     scenario('Print invoice', client => {
       test('should click on "DOCUMENTS" subtab', () => client.waitForVisibleAndClick(OrderPage.document_submenu));
       test('should download the invoice document', () => client.downloadDocument(OrderPage.download_invoice_button));
-      test('should check the "invoice file name" ', () => client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, global.invoiceFileName));
-      test('should check that the "invoice customer" is "John Doe"', () => client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, 'John DOE'));
-      test('should check  the "invoice basic price"  ', () => client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, global.basic_price));
-      test('should check that the "invoice product information" is : "P1' + global.date_time + ' - Size : M- Color : Beige"', () => client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, "P1" + global.date_time + " - Size : M- Color : Beige"));
+      test('should check the "invoice file" information ', async () => {
+        await client.checkFile(global.downloadsFolderPath, global.invoiceFileName + ".pdf");
+        if (global.existingFile) {
+          await client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, global.invoiceFileName);
+          await client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, 'John DOE');
+          await client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, global.basic_price);
+          await client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, "P1" + global.date_time + " - Size : M- Color : Beige");
+          await client.deleteFile(global.downloadsFolderPath, global.invoiceFileName, '.pdf', 2000);
+        }
+      });
     }, 'order');
 
     scenario('Print delivery invoice', client => {
       test('should download the delivery invoice document', () => client.downloadDocument(OrderPage.download_delivery_button));
-      test('should check the "delivery invoice file name"', () => client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, global.invoiceFileName));
-      test('should check that the "delivery invoice customer" is : Johan DOE', () => client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, 'John DOE'));
-      test('should check that the "delivery invoice product information" is : "P1' + global.date_time + ' - Size : M- Color : Beige"', () => client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, "P1" + global.date_time + " - Size : M- Color : Beige"));
-      test('should check that the "delivery invoice product carrier" is : My carrier"', () => client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, "My carrier"));
+      test('should check the "delivery file" information', async () => {
+        await client.checkFile(global.downloadsFolderPath, global.invoiceFileName + ".pdf");
+        if (global.existingFile) {
+          await client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, global.invoiceFileName);
+          await client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, 'John DOE');
+          await client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, "P1" + global.date_time + " - Size : M- Color : Beige");
+          await client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, "My carrier");
+          await client.deleteFile(global.downloadsFolderPath, global.invoiceFileName, ".pdf", 2000);
+        }
+      });
     }, 'order');
-
   }, 'order');
 }, 'order', true);
 

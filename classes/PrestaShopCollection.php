@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -171,12 +171,14 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
                 case '=':
                 case 'in':
                     $this->query->$method($this->parseField($field) . ' IN(' . implode(', ', $this->formatValue($value, $field)) . ')');
+
                     break;
 
                 case '!=':
                 case '<>':
                 case 'notin':
                     $this->query->$method($this->parseField($field) . ' NOT IN(' . implode(', ', $this->formatValue($value, $field)) . ')');
+
                     break;
 
                 default:
@@ -195,14 +197,17 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
                 case 'like':
                 case 'regexp':
                     $this->query->$method($this->parseField($field) . ' ' . $operator . ' ' . $this->formatValue($value, $field));
+
                     break;
 
                 case 'notlike':
                     $this->query->$method($this->parseField($field) . ' NOT LIKE ' . $this->formatValue($value, $field));
+
                     break;
 
                 case 'notregexp':
                     $this->query->$method($this->parseField($field) . ' NOT REGEXP ' . $this->formatValue($value, $field));
+
                     break;
 
                 default:
@@ -348,14 +353,17 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
             switch ($data['type']) {
                 case self::LEFT_JOIN:
                     $this->query->leftJoin($data['table'], $data['alias'], $on);
+
                     break;
 
                 case self::INNER_JOIN:
                     $this->query->innerJoin($data['table'], $data['alias'], $on);
+
                     break;
 
                 case self::LEFT_OUTER_JOIN:
                     $this->query->leftOuterJoin($data['table'], $data['alias'], $on);
+
                     break;
             }
         }
@@ -381,7 +389,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
     /**
      * Retrieve the first result.
      *
-     * @return ObjectModel
+     * @return ObjectModel|false
      */
     public function getFirst()
     {
@@ -528,7 +536,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
         }
 
         $this->getAll();
-        if (is_null($offset)) {
+        if (null === $offset) {
             $this->results[] = $value;
         } else {
             $this->results[$offset] = $value;
@@ -577,6 +585,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
                 // Special case for lang alias
                 if ($asso == self::LANG_ALIAS) {
                     $is_lang = true;
+
                     break;
                 }
 

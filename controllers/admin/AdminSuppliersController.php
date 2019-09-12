@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -97,8 +97,14 @@ class AdminSuppliersControllerCore extends AdminController
         }
 
         $image = _PS_SUPP_IMG_DIR_ . $obj->id . '.jpg';
-        $image_url = ImageManager::thumbnail($image, $this->table . '_' . (int) $obj->id . '.' . $this->imageType, 350,
-            $this->imageType, true, true);
+        $image_url = ImageManager::thumbnail(
+            $image,
+            $this->table . '_' . (int) $obj->id . '.' . $this->imageType,
+            350,
+            $this->imageType,
+            true,
+            true
+        );
         $image_size = file_exists($image) ? filesize($image) / 1000 : false;
 
         $tmp_addr = new Address();
@@ -126,7 +132,8 @@ class AdminSuppliersControllerCore extends AdminController
                     'col' => 4,
                     'hint' => $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
                 ),
-                (in_array('company', $required_fields) ?
+                (
+                    in_array('company', $required_fields) ?
                     array(
                         'type' => 'text',
                         'label' => $this->trans('Company', array(), 'Admin.Global'),
@@ -256,7 +263,7 @@ class AdminSuppliersControllerCore extends AdminController
                     'lang' => true,
                     'col' => 6,
                     'hint' => array(
-                        $this->trans('To add "tags" click in the field, write something and then press "Enter".', array(), 'Admin.Catalog.Help'),
+                        $this->trans('To add tags, click in the field, write something, and then press the "Enter" key.', array(), 'Admin.Shopparameters.Help'),
                         $this->trans('Invalid characters:', array(), 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
                     ),
                 ),
@@ -358,9 +365,11 @@ class AdminSuppliersControllerCore extends AdminController
             // Build attributes combinations
             $combinations = $products[$i]->getAttributeCombinations($this->context->language->id);
             foreach ($combinations as $combination) {
-                $comb_infos = Supplier::getProductInformationsBySupplier($this->object->id,
-                                                                         $products[$i]->id,
-                                                                         $combination['id_product_attribute']);
+                $comb_infos = Supplier::getProductInformationsBySupplier(
+                    $this->object->id,
+                    $products[$i]->id,
+                    $combination['id_product_attribute']
+                );
                 $comb_array[$combination['id_product_attribute']]['product_supplier_reference'] = $comb_infos['product_supplier_reference'];
                 $comb_array[$combination['id_product_attribute']]['product_supplier_price_te'] = Tools::displayPrice($comb_infos['product_supplier_price_te'], new Currency($comb_infos['id_currency']));
                 $comb_array[$combination['id_product_attribute']]['reference'] = $combination['reference'];
@@ -385,11 +394,14 @@ class AdminSuppliersControllerCore extends AdminController
                 isset($comb_array) ? $products[$i]->combination = $comb_array : '';
                 unset($comb_array);
             } else {
-                $product_infos = Supplier::getProductInformationsBySupplier($this->object->id,
-                                                                            $products[$i]->id,
-                                                                            0);
+                $product_infos = Supplier::getProductInformationsBySupplier(
+                    $this->object->id,
+                    $products[$i]->id,
+                    0
+                );
                 $products[$i]->product_supplier_reference = $product_infos['product_supplier_reference'];
-                $products[$i]->product_supplier_price_te = Tools::displayPrice($product_infos['product_supplier_price_te'], new Currency($product_infos['id_currency']));
+                $currencyId = $product_infos['id_currency'] ?: Currency::getDefaultCurrency()->id;
+                $products[$i]->product_supplier_price_te = Tools::displayPrice($product_infos['product_supplier_price_te'], new Currency($currencyId));
             }
         }
 

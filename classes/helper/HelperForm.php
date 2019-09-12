@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -70,7 +70,7 @@ class HelperFormCore extends Helper
     public function generate()
     {
         $this->tpl = $this->createTemplate($this->base_tpl);
-        if (is_null($this->submit_action)) {
+        if (null === $this->submit_action) {
             $this->submit_action = 'submitAdd' . $this->table;
         }
 
@@ -98,6 +98,7 @@ class HelperFormCore extends Helper
                             if (isset($params['multiple']) && $params['multiple'] && stripos($field_name, '[]') === false) {
                                 $params['name'] .= '[]';
                             }
+
                             break;
 
                         case 'categories':
@@ -139,6 +140,7 @@ class HelperFormCore extends Helper
                                 $this->context->smarty->assign('categories_tree', $tree->render());
                                 $categories = false;
                             }
+
                             break;
 
                         case 'file':
@@ -185,6 +187,7 @@ class HelperFormCore extends Helper
 
                             $uploader->setTitle(isset($params['title']) ? $params['title'] : null);
                             $params['file'] = $uploader->render();
+
                             break;
 
                         case 'color':
@@ -194,6 +197,7 @@ class HelperFormCore extends Helper
                                 $this->tpl_vars['color'] = true;
                                 $color = false;
                             }
+
                             break;
 
                         case 'date':
@@ -201,6 +205,7 @@ class HelperFormCore extends Helper
                                 $this->context->controller->addJqueryUI('ui.datepicker');
                                 $date = false;
                             }
+
                             break;
 
                         case 'textarea':
@@ -220,6 +225,7 @@ class HelperFormCore extends Helper
                                 $this->context->controller->addJqueryPlugin('autosize');
                                 $textarea_autosize = false;
                             }
+
                             break;
 
                         case 'shop':
@@ -230,6 +236,7 @@ class HelperFormCore extends Helper
                                     unset($this->fields_form[$fieldset_key]['form']['input'][$key]);
                                 }
                             }
+
                             break;
                     }
                 }
@@ -263,7 +270,7 @@ class HelperFormCore extends Helper
             'vat_number' => $moduleManager->isInstalled('vatnumber') && file_exists(_PS_MODULE_DIR_ . 'vatnumber/ajax.php'),
             'module_dir' => _MODULE_DIR_,
             'base_url' => $this->context->shop->getBaseURL(),
-            'contains_states' => (isset($this->fields_value['id_country']) && isset($this->fields_value['id_state'])) ? Country::containsStates($this->fields_value['id_country']) : null,
+            'contains_states' => (isset($this->fields_value['id_country'], $this->fields_value['id_state'])) ? Country::containsStates($this->fields_value['id_country']) : null,
             'show_cancel_button' => $this->show_cancel_button,
             'back_url' => $this->back_url,
         ));
@@ -313,18 +320,21 @@ class HelperFormCore extends Helper
             switch (Shop::getContext()) {
                 case Shop::CONTEXT_SHOP:
                         $assos[Shop::getContextShopID()] = Shop::getContextShopID();
+
                     break;
 
                 case Shop::CONTEXT_GROUP:
                     foreach (Shop::getShops(false, Shop::getContextShopGroupID(), true) as $id_shop) {
                         $assos[$id_shop] = $id_shop;
                     }
+
                     break;
 
                 default:
                     foreach (Shop::getShops(false, null, true) as $id_shop) {
                         $assos[$id_shop] = $id_shop;
                     }
+
                     break;
             }
         }

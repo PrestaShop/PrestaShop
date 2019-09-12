@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,15 +16,15 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-use PrestaShop\PrestaShop\Core\Foundation\Templating\RenderableProxy;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
+use PrestaShop\PrestaShop\Core\Foundation\Templating\RenderableProxy;
 
 class OrderControllerCore extends FrontController
 {
@@ -65,7 +65,9 @@ class OrderControllerCore extends FrontController
                 $this->errors[] = $this->trans('Sorry. We cannot renew your order.', array(), 'Shop.Notifications.Error');
             } elseif (!$duplication['success']) {
                 $this->errors[] = $this->trans(
-                    'Some items are no longer available, and we are unable to renew your order.', array(), 'Shop.Notifications.Error'
+                    'Some items are no longer available, and we are unable to renew your order.',
+                    array(),
+                    'Shop.Notifications.Error'
                 );
             } else {
                 $this->context->cookie->id_cart = $duplication['cart']->id;
@@ -153,8 +155,7 @@ class OrderControllerCore extends FrontController
                     $this->context,
                     $translator
                 )
-            ))
-        ;
+            ));
     }
 
     /**
@@ -250,8 +251,6 @@ class OrderControllerCore extends FrontController
                 'static_token' => Tools::getToken(false),
             )),
         )));
-
-        return;
     }
 
     public function initContent()
@@ -300,6 +299,10 @@ class OrderControllerCore extends FrontController
             'cart' => $presentedCart,
         ]);
 
+        $this->context->smarty->assign([
+            'display_transaction_updated_info' => Tools::getIsset('updatedTransaction'),
+        ]);
+
         parent::initContent();
         $this->setTemplate('checkout/checkout');
     }
@@ -338,7 +341,5 @@ class OrderControllerCore extends FrontController
                 $templateParams
             ),
         )));
-
-        return;
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -67,7 +67,7 @@ class WarehouseCore extends ObjectModel
         'primary' => 'id_warehouse',
         'fields' => array(
             'id_address' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'reference' => array('type' => self::TYPE_STRING, 'validate' => 'isString', 'required' => true, 'size' => 45),
+            'reference' => array('type' => self::TYPE_STRING, 'validate' => 'isString', 'required' => true, 'size' => 64),
             'name' => array('type' => self::TYPE_STRING, 'validate' => 'isString', 'required' => true, 'size' => 45),
             'id_employee' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
             'management_type' => array('type' => self::TYPE_STRING, 'validate' => 'isStockManagement', 'required' => true),
@@ -352,7 +352,7 @@ class WarehouseCore extends ObjectModel
     public static function getWarehouses($ignore_shop = false, $id_shop = null)
     {
         if (!$ignore_shop) {
-            if (is_null($id_shop)) {
+            if (null === $id_shop) {
                 $id_shop = Context::getContext()->shop->id;
             }
         }
@@ -518,7 +518,7 @@ class WarehouseCore extends ObjectModel
             return false;
         }
 
-        if (is_null($id_shop)) {
+        if (null === $id_shop) {
             $id_shop = Context::getContext()->shop->id;
         }
 

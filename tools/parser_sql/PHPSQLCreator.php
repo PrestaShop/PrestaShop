@@ -55,7 +55,6 @@ require_once dirname(__FILE__) . '/builders/ShowStatementBuilder.php';
  *  
  */
 class PHPSQLCreator {
-
     public function __construct($parsed = false) {
         if ($parsed) {
             $this->create($parsed);
@@ -69,38 +68,48 @@ class PHPSQLCreator {
         case "UNION":
         case "UNION ALL":
             throw new UnsupportedFeatureException($k);
+
             break;
         case "SELECT":
             $builder = new SelectStatementBuilder($parsed);
             $this->created = $builder->build($parsed);
+
             break;
         case "INSERT":
             $builder = new InsertStatementBuilder($parsed);
             $this->created = $builder->build($parsed);
+
             break;
         case "DELETE":
             $builder = new DeleteStatementBuilder($parsed);
             $this->created = $builder->build($parsed);
+
             break;
         case "UPDATE":
             $builder = new UpdateStatementBuilder($parsed);
             $this->created = $builder->build($parsed);
+
             break;
         case "RENAME":
             $this->created = $this->processRenameTableStatement($parsed);
+
             break;
         case "SHOW":
             $builder = new ShowStatementBuilder($parsed);
             $this->created = $builder->build($parsed);
+
             break;
         case "CREATE":
             $builder = new CreateStatementBuilder($parsed);
             $this->created = $builder->build($parsed);
+
             break;
         default:
             throw new UnsupportedFeatureException($k);
+
             break;
         }
+
         return $this->created;
     }
 
@@ -120,6 +129,7 @@ class PHPSQLCreator {
             $sql .= ",";
         }
         $sql = substr($sql, 0, -1);
+
         return "RENAME TABLE " . $sql;
     }
 
@@ -127,7 +137,7 @@ class PHPSQLCreator {
         if (!isset($v['source']) || !isset($v['destination'])) {
             return "";
         }
+
         return $v['source']['base_expr'] . " TO " . $v['destination']['base_expr'];
     }
 }
-?>

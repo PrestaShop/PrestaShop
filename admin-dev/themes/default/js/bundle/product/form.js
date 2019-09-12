@@ -1,5 +1,5 @@
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,10 +15,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -74,7 +74,23 @@ $(document).ready(function() {
     $('[data-toggle="tooltip"]').tooltip('hide');
     $('[data-toggle="popover"]').popover('hide');
   });
+
+  $('.summary-description-container a[data-toggle="tab"]').on('shown.bs.tab', resetEditor);
 });
+
+/**
+ * Reset active tinyMce editor (triggered when switch language, or switching tabs)
+ */
+function resetEditor() {
+  const languageEditorsSelector = '.summary-description-container .panel.active div.translation-field.active textarea.autoload_rte';
+  $(languageEditorsSelector).each(function(index, textarea) {
+    const editor = tinyMCE.get(textarea.id);
+    if (editor) {
+      //Reset content to force refresh of editor
+      editor.setContent(editor.getContent());
+    }
+  });
+}
 
 /**
  * Manage show or hide fields
@@ -361,11 +377,13 @@ var formCategory = (function() {
 var featuresCollection = (function() {
 
   var collectionHolder = $('.feature-collection');
+  var maxCollectionChildren = collectionHolder.children('.row').length;
 
   /** Add a feature */
   function add() {
-    var newForm = collectionHolder.attr('data-prototype').replace(/__name__/g, collectionHolder.children('.row').length);
+    var newForm = collectionHolder.attr('data-prototype').replace(/__name__/g, maxCollectionChildren);
     collectionHolder.append(newForm);
+    maxCollectionChildren += 1;
     prestaShopUiKit.initSelects();
   }
 
@@ -390,6 +408,11 @@ var featuresCollection = (function() {
         }).show();
       });
 
+      function replaceEndingIdFromUrl(url, newId)
+      {
+        return url.replace(/\/\d+(?!.*\/\d+)((?=\?.*))?/, '/' + newId);
+      }
+
       /** On feature selector event change, refresh possible values list */
       $(document).on('change', '.feature-collection select.feature-selector', function(event) {
         var that = event.currentTarget;
@@ -398,7 +421,7 @@ var featuresCollection = (function() {
 
         if('' !== $(this).val()) {
           $.ajax({
-            url: $(this).attr('data-action').replace(/\/\d+(?=\?.*)/, '/' + $(this).val()),
+            url: replaceEndingIdFromUrl($(this).attr('data-action'), $(this).val()),
             success: function(response) {
               $selector.prop('disabled', response.length === 0);
               $selector.empty();
@@ -634,6 +657,7 @@ var form = (function() {
         $('ul.text-danger').remove();
         $('*.has-danger').removeClass('has-danger');
         $('#form-nav li.has-error').removeClass('has-error');
+        updateDisplayGlobalErrors(null);
       },
       success: function(response) {
         if (callBack) {
@@ -643,7 +667,7 @@ var form = (function() {
         //update the customization ids
         if (typeof response.customization_fields_ids != "undefined") {
           $.each(response.customization_fields_ids, function (k, v) {
-              $("#form_step6_custom_fields_" + k + "_id_customization_field").val(v);
+            $("#form_step6_custom_fields_" + k + "_id_customization_field").val(v);
           });
         }
 
@@ -680,12 +704,14 @@ var form = (function() {
           tabsWithErrors.push(key);
 
           var html = '<ul class="list-unstyled text-danger">';
-          $.each(errors, function(key, error) {
+          $.each(errors, function(unusedKey, error) {
             html += '<li>' + error + '</li>';
           });
           html += '</ul>';
 
-          if (key.match(/^combination_.*/)) {
+          if (0 === key.localeCompare('error')) {
+            updateDisplayGlobalErrors(html);
+          } else if (key.match(/^combination_.*/)) {
             $('#' + key).parent().addClass('has-danger').append(html);
           } else {
             $('#form_' + key).parent().addClass('has-danger').append(html);
@@ -735,21 +761,38 @@ var form = (function() {
 
   function switchLanguage(iso_code) {
     $('div.translations.tabbable > div > div.translation-field:not(.translation-label-' + iso_code + ')').removeClass('show active');
-    $('div.translations.tabbable > div > div.translation-field.translation-label-' + iso_code).addClass('show active');
+
+    const langueTabSelector = 'div.translations.tabbable > div > div.translation-field.translation-label-' + iso_code;
+    $(langueTabSelector).addClass('show active');
+    resetEditor();
   }
 
   function updateMissingTranslatedNames() {
-      var namesDiv = $('#form_step1_names');
-      var defaultLanguageValue = null;
-      $("input[id^='form_step1_name_']", namesDiv).each(function(index) {
-          var value = $(this).val();
-          // The first language is ALWAYS the employee language
-          if (0 === index) {
-              defaultLanguageValue = value;
-          } else if (0 === value.length) {
-              $(this).val(defaultLanguageValue);
-          }
-      });
+    var namesDiv = $('#form_step1_names');
+    var defaultLanguageValue = null;
+    $("input[id^='form_step1_name_']", namesDiv).each(function(index) {
+      var value = $(this).val();
+      // The first language is ALWAYS the employee language
+      if (0 === index) {
+        defaultLanguageValue = value;
+      } else if (0 === value.length) {
+        $(this).val(defaultLanguageValue);
+      }
+    });
+  }
+
+  /**
+   * Depending on the provided params, this method displays or hides
+   * an error panel with the form errors not linked to a specific field.
+   *
+   * @param {string} content The HTML content to display
+   */
+  function updateDisplayGlobalErrors(content) {
+    const target = $("#form_bubbling_errors");
+    target.html('');
+    if (content) {
+      target.html(`<div class="alert alert-danger">${content}</div>`);
+    }
   }
 
   return {
@@ -924,10 +967,12 @@ var form = (function() {
 var customFieldCollection = (function() {
 
   var collectionHolder = $('ul.customFieldCollection');
+  var maxCollectionChildren = collectionHolder.children().length;
 
   /** Add a custom field */
   function add() {
-    var newForm = collectionHolder.attr('data-prototype').replace(/__name__/g, collectionHolder.children().length);
+    var newForm = collectionHolder.attr('data-prototype').replace(/__name__/g, maxCollectionChildren);
+    maxCollectionChildren += 1;
     collectionHolder.append('<li>' + newForm + '</li>');
   }
 
@@ -1130,6 +1175,11 @@ var attachmentProduct = (function() {
         $('#form_step6_attachment_product_description').val('');
       }
 
+      function replaceEndingIdFromUrl(url, newId)
+      {
+        return url.replace(/\/\d+(?!.*\/\d+)((?=\?.*))?/, '/' + newId);
+      }
+
       /** add attachment */
       $('#form_step6_attachment_product_add').click(function() {
         var _this = $(this);
@@ -1143,7 +1193,7 @@ var attachmentProduct = (function() {
 
         $.ajax({
           type: 'POST',
-          url: $('#form_step6_attachment_product').attr('data-action').replace(/\/\d+(?=\?.*)/, '/' + id_product),
+          url: replaceEndingIdFromUrl($('#form_step6_attachment_product').attr('data-action'), id_product),
           data: data,
           contentType: false,
           processData: false,
@@ -1269,6 +1319,7 @@ var imagesProduct = (function() {
         thumbnailWidth: 250,
         thumbnailHeight: null,
         acceptedFiles: 'image/*',
+        timeout: 0,
         dictRemoveFile: translate_javascripts['Delete'],
         dictFileTooBig: translate_javascripts['ToLargeFile'],
         dictCancelUpload: translate_javascripts['Delete'],

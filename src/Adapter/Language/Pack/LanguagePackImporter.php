@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,21 +16,18 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Language\Pack;
 
-use Exception;
-use PrestaShop\PrestaShop\Adapter\Cache\CacheClearer;
 use PrestaShop\PrestaShop\Adapter\Language\LanguageDataProvider;
-use PrestaShop\PrestaShop\Adapter\Language\LanguagePackInstaller;
-use PrestaShop\PrestaShop\Core\Cldr\Update;
+use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
 use PrestaShop\PrestaShop\Core\Language\Pack\Import\LanguagePackImporterInterface;
 use PrestaShop\PrestaShop\Core\Language\Pack\LanguagePackInstallerInterface;
 
@@ -40,7 +37,7 @@ use PrestaShop\PrestaShop\Core\Language\Pack\LanguagePackInstallerInterface;
 final class LanguagePackImporter implements LanguagePackImporterInterface
 {
     /**
-     * @var LanguagePackInstaller
+     * @var LanguagePackInstallerInterface
      */
     private $languagePack;
 
@@ -50,9 +47,9 @@ final class LanguagePackImporter implements LanguagePackImporterInterface
     private $languageProvider;
 
     /**
-     * @var CacheClearer
+     * @var CacheClearerInterface
      */
-    private $cacheClearer;
+    private $entireCacheClearer;
 
     /**
      * @var string
@@ -62,18 +59,18 @@ final class LanguagePackImporter implements LanguagePackImporterInterface
     /**
      * @param LanguagePackInstallerInterface $languagePack
      * @param LanguageDataProvider $languageProvider
-     * @param CacheClearer $cacheClearer
+     * @param CacheClearerInterface $entireCacheClearer
      * @param string $translationsDir
      */
     public function __construct(
         LanguagePackInstallerInterface $languagePack,
         LanguageDataProvider $languageProvider,
-        CacheClearer $cacheClearer,
+        CacheClearerInterface $entireCacheClearer,
         $translationsDir
     ) {
         $this->languagePack = $languagePack;
         $this->languageProvider = $languageProvider;
-        $this->cacheClearer = $cacheClearer;
+        $this->entireCacheClearer = $entireCacheClearer;
         $this->translationsDir = $translationsDir;
     }
 
@@ -88,27 +85,9 @@ final class LanguagePackImporter implements LanguagePackImporterInterface
             return $result;
         }
 
-        $this->updateCldr($isoCode);
+        $this->entireCacheClearer->clear();
 
         return [];
-    }
-
-    /**
-     * Fetches CLDR data for currently updated or added language.
-     *
-     * @param $isoCode
-     *
-     * @throws Exception
-     */
-    private function updateCldr($isoCode)
-    {
-        $this->cacheClearer->clearAllCaches();
-
-        $languageCode = $this->languageProvider->getLanguageCodeByIso($isoCode);
-        $languageCode = $this->getFormattedLanguageCode($languageCode);
-
-        $cldrUpdate = new Update($this->translationsDir);
-        $cldrUpdate->fetchLocale($languageCode);
     }
 
     /**

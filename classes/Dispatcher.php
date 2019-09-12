@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -36,6 +36,8 @@ class DispatcherCore
     const FC_FRONT = 1;
     const FC_ADMIN = 2;
     const FC_MODULE = 3;
+
+    const REWRITE_PATTERN = '[_a-zA-Z0-9\x{0600}-\x{06FF}\pL\pS-]*';
 
     /**
      * @var Dispatcher
@@ -56,7 +58,7 @@ class DispatcherCore
             'rule' => '{id}-{rewrite}',
             'keywords' => array(
                 'id' => array('regexp' => '[0-9]+', 'param' => 'id_category'),
-                'rewrite' => array('regexp' => '[_a-zA-Z0-9\pL\pS-]*'),
+                'rewrite' => array('regexp' => self::REWRITE_PATTERN),
                 'meta_keywords' => array('regexp' => '[_a-zA-Z0-9-\pL]*'),
                 'meta_title' => array('regexp' => '[_a-zA-Z0-9-\pL]*'),
             ),
@@ -66,7 +68,7 @@ class DispatcherCore
             'rule' => 'supplier/{id}-{rewrite}',
             'keywords' => array(
                 'id' => array('regexp' => '[0-9]+', 'param' => 'id_supplier'),
-                'rewrite' => array('regexp' => '[_a-zA-Z0-9\pL\pS-]*'),
+                'rewrite' => array('regexp' => self::REWRITE_PATTERN),
                 'meta_keywords' => array('regexp' => '[_a-zA-Z0-9-\pL]*'),
                 'meta_title' => array('regexp' => '[_a-zA-Z0-9-\pL]*'),
             ),
@@ -76,7 +78,7 @@ class DispatcherCore
             'rule' => 'brand/{id}-{rewrite}',
             'keywords' => array(
                 'id' => array('regexp' => '[0-9]+', 'param' => 'id_manufacturer'),
-                'rewrite' => array('regexp' => '[_a-zA-Z0-9\pL\pS-]*'),
+                'rewrite' => array('regexp' => self::REWRITE_PATTERN),
                 'meta_keywords' => array('regexp' => '[_a-zA-Z0-9-\pL]*'),
                 'meta_title' => array('regexp' => '[_a-zA-Z0-9-\pL]*'),
             ),
@@ -86,7 +88,7 @@ class DispatcherCore
             'rule' => 'content/{id}-{rewrite}',
             'keywords' => array(
                 'id' => array('regexp' => '[0-9]+', 'param' => 'id_cms'),
-                'rewrite' => array('regexp' => '[_a-zA-Z0-9\pL\pS-]*'),
+                'rewrite' => array('regexp' => self::REWRITE_PATTERN),
                 'meta_keywords' => array('regexp' => '[_a-zA-Z0-9-\pL]*'),
                 'meta_title' => array('regexp' => '[_a-zA-Z0-9-\pL]*'),
             ),
@@ -96,7 +98,7 @@ class DispatcherCore
             'rule' => 'content/category/{id}-{rewrite}',
             'keywords' => array(
                 'id' => array('regexp' => '[0-9]+', 'param' => 'id_cms_category'),
-                'rewrite' => array('regexp' => '[_a-zA-Z0-9\pL\pS-]*'),
+                'rewrite' => array('regexp' => self::REWRITE_PATTERN),
                 'meta_keywords' => array('regexp' => '[_a-zA-Z0-9-\pL]*'),
                 'meta_title' => array('regexp' => '[_a-zA-Z0-9-\pL]*'),
             ),
@@ -118,7 +120,7 @@ class DispatcherCore
             'keywords' => array(
                 'id' => array('regexp' => '[0-9]+', 'param' => 'id_product'),
                 'id_product_attribute' => array('regexp' => '[0-9]+', 'param' => 'id_product_attribute'),
-                'rewrite' => array('regexp' => '[_a-zA-Z0-9\pL\pS-]*', 'param' => 'rewrite'),
+                'rewrite' => array('regexp' => self::REWRITE_PATTERN, 'param' => 'rewrite'),
                 'ean13' => array('regexp' => '[0-9\pL]*'),
                 'category' => array('regexp' => '[_a-zA-Z0-9-\pL]*'),
                 'categories' => array('regexp' => '[/_a-zA-Z0-9-\pL]*'),
@@ -139,7 +141,7 @@ class DispatcherCore
                 'id' => array('regexp' => '[0-9]+', 'param' => 'id_category'),
                 /* Selected filters is used by the module blocklayered */
                 'selected_filters' => array('regexp' => '.*', 'param' => 'selected_filters'),
-                'rewrite' => array('regexp' => '[_a-zA-Z0-9\pL\pS-]*'),
+                'rewrite' => array('regexp' => self::REWRITE_PATTERN),
                 'meta_keywords' => array('regexp' => '[_a-zA-Z0-9-\pL]*'),
                 'meta_title' => array('regexp' => '[_a-zA-Z0-9-\pL]*'),
             ),
@@ -292,9 +294,11 @@ class DispatcherCore
                         $defaultController = $tabClassName;
                     }
                 }
+
                 break;
             case self::FC_MODULE:
                 $defaultController = 'default';
+
                 break;
             default:
                 $defaultController = 'index';
@@ -374,6 +378,7 @@ class DispatcherCore
                     'controller_class' => $controller_class,
                     'is_module' => 0,
                 );
+
                 break;
 
             // Dispatch module controller for front office
@@ -400,6 +405,7 @@ class DispatcherCore
                     'controller_class' => $controller_class,
                     'is_module' => 1,
                 );
+
                 break;
 
             // Dispatch back office controller + module back office controller
@@ -805,8 +811,7 @@ class DispatcherCore
             $id_shop = (int) Context::getContext()->shop->id;
         }
 
-        return isset($this->routes[$id_shop]) && isset($this->routes[$id_shop][$id_lang])
-            && isset($this->routes[$id_shop][$id_lang][$route_id]);
+        return isset($this->routes[$id_shop][$id_lang][$route_id]);
     }
 
     /**
@@ -1061,6 +1066,7 @@ class DispatcherCore
                             if (isset($_GET['fc']) && $_GET['fc'] == 'module') {
                                 $this->front_controller = self::FC_MODULE;
                             }
+
                             break;
                         }
                     }
@@ -1110,7 +1116,7 @@ class DispatcherCore
     public static function getModuleControllers($type = 'all', $module = null)
     {
         $modules_controllers = array();
-        if (is_null($module)) {
+        if (null === $module) {
             $modules = Module::getModulesOnDisk(true);
         } elseif (!is_array($module)) {
             $modules = array(Module::getInstanceByName($module));

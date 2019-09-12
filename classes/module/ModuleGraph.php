@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -305,7 +305,9 @@ abstract class ModuleGraphCore extends Module
         $url_params['module'] = Tools::getValue('module');
         $url_params['id_employee'] = $id_employee;
         $url_params['id_lang'] = $id_lang;
-        $drawer = 'drawer.php?' . http_build_query(array_map('Tools::safeOutput', $url_params), '', '&');
+        $url_params['ajax'] = 1;
+        $url_params['action'] = 'graphDraw';
+        $drawer = Context::getContext()->link->getAdminLink('AdminStats', true, [], array_map('Tools::safeOutput', $url_params));
 
         require_once _PS_ROOT_DIR_ . '/modules/' . $render . '/' . $render . '.php';
 

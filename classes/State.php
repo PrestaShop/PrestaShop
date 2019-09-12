@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -89,7 +89,8 @@ class StateCore extends ObjectModel
         }
         $cacheId = 'State::getNameById_' . (int) $idState;
         if (!Cache::isStored($cacheId)) {
-            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+                '
 				SELECT `name`
 				FROM `' . _DB_PREFIX_ . 'state`
 				WHERE `id_state` = ' . (int) $idState
@@ -187,7 +188,8 @@ class StateCore extends ObjectModel
      */
     public function countUsed()
     {
-        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+            '
 			SELECT COUNT(*)
 			FROM `' . _DB_PREFIX_ . 'address`
 			WHERE `' . $this->def['primary'] . '` = ' . (int) $this->id
@@ -202,7 +204,7 @@ class StateCore extends ObjectModel
      * @param int $idCountry Country ID
      * @param bool $active true if the state must be active
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return array|false|mysqli_result|PDOStatement|resource|null
      */
     public static function getStatesByIdCountry($idCountry, $active = false)
     {
@@ -210,7 +212,8 @@ class StateCore extends ObjectModel
             die(Tools::displayError());
         }
 
-        return Db::getInstance()->executeS('
+        return Db::getInstance()->executeS(
+            '
 			SELECT *
 			FROM `' . _DB_PREFIX_ . 'state` s
 			WHERE s.`id_country` = ' . (int) $idCountry . ($active ? ' AND s.active = 1' : '')
@@ -234,7 +237,7 @@ class StateCore extends ObjectModel
      *
      * @param int $idState State ID
      *
-     * @return false|null|string
+     * @return false|string|null
      */
     public static function getIdZone($idState)
     {
@@ -242,7 +245,8 @@ class StateCore extends ObjectModel
             die(Tools::displayError());
         }
 
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+            '
 			SELECT `id_zone`
 			FROM `' . _DB_PREFIX_ . 'state`
 			WHERE `id_state` = ' . (int) $idState

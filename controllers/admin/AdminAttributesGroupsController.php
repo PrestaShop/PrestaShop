@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -81,6 +81,8 @@ class AdminAttributesGroupsControllerCore extends AdminController
             ),
         );
         $this->fieldImageSettings = array('name' => 'texture', 'dir' => 'co');
+
+        $this->image_dir = 'co';
     }
 
     /**
@@ -406,14 +408,19 @@ class AdminAttributesGroupsControllerCore extends AdminController
             /** @var AttributeGroup $object */
             $object = new $this->className();
             foreach (Language::getLanguages(false) as $language) {
-                if ($object->isAttribute((int) Tools::getValue('id_attribute_group'),
-                    Tools::getValue('name_' . $language['id_lang']), $language['id_lang'])) {
-                    $this->errors['name_' . $language['id_lang']] = $this->trans('The attribute value "%1$s" already exist for %2$s language',
+                if ($object->isAttribute(
+                    (int) Tools::getValue('id_attribute_group'),
+                    Tools::getValue('name_' . $language['id_lang']),
+                    $language['id_lang']
+                )) {
+                    $this->errors['name_' . $language['id_lang']] = $this->trans(
+                        'The attribute value "%1$s" already exist for %2$s language',
                         array(
                             Tools::getValue('name_' . $language['id_lang']),
                             $language['name'],
                         ),
-                        'Admin.Catalog.Notification');
+                        'Admin.Catalog.Notification'
+                    );
                 }
             }
 
@@ -561,30 +568,32 @@ class AdminAttributesGroupsControllerCore extends AdminController
                 }
 
                 $this->toolbar_btn['back'] = array(
-                    'href' => self::$currentIndex . '&token=' . $this->token,
+                    'href' => $this->context->link->getAdminLink('AdminAttributesGroups'),
                     'desc' => $this->trans('Back to list', array(), 'Admin.Actions'),
                 );
+
                 break;
             case 'view':
                 $this->toolbar_btn['newAttributes'] = array(
-                    'href' => self::$currentIndex . '&updateattribute&id_attribute_group=' . (int) Tools::getValue('id_attribute_group') . '&token=' . $this->token,
+                    'href' => $this->context->link->getAdminLink('AdminAttributesGroups', true, array(), array('updateattribute' => 1, 'id_attribute_group' => (int) Tools::getValue('id_attribute_group'))),
                     'desc' => $this->trans('Add New Values', array(), 'Admin.Catalog.Feature'),
                     'class' => 'toolbar-new',
                 );
 
                 $this->toolbar_btn['back'] = array(
-                    'href' => self::$currentIndex . '&token=' . $this->token,
+                    'href' => $this->context->link->getAdminLink('AdminAttributesGroups'),
                     'desc' => $this->trans('Back to list', array(), 'Admin.Actions'),
                 );
+
                 break;
             default: // list
                 $this->toolbar_btn['new'] = array(
-                    'href' => self::$currentIndex . '&add' . $this->table . '&token=' . $this->token,
+                    'href' => $this->context->link->getAdminLink('AdminAttributesGroups', true, array(), array('add' . $this->table => 1)),
                     'desc' => $this->trans('Add New Attributes', array(), 'Admin.Catalog.Feature'),
                 );
                 if ($this->can_import) {
                     $this->toolbar_btn['import'] = array(
-                        'href' => $this->context->link->getAdminLink('AdminImport', true) . '&import_type=combinations',
+                        'href' => $this->context->link->getAdminLink('AdminImport', true, array(), array('import_type' => 'combinations')),
                         'desc' => $this->trans('Import', array(), 'Admin.Actions'),
                     );
                 }
@@ -598,10 +607,12 @@ class AdminAttributesGroupsControllerCore extends AdminController
         switch ($this->display) {
             case 'edit':
                 $bread_extended[] = $this->trans('Edit New Attribute', array(), 'Admin.Catalog.Feature');
+
                 break;
 
             case 'add':
                 $bread_extended[] = $this->trans('Add New Attribute', array(), 'Admin.Catalog.Feature');
+
                 break;
 
             case 'view':
@@ -614,6 +625,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
                 } else {
                     $bread_extended[] = $this->attribute_name[$this->context->employee->id_lang];
                 }
+
                 break;
 
             case 'editAttributes':
@@ -627,7 +639,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
                                 'Edit: %value%',
                                 array(
                                     '%value%' => $obj->name[$this->context->employee->id_lang],
-                                    ),
+                                ),
                                 'Admin.Catalog.Feature'
                             );
                         }
@@ -637,6 +649,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
                 } else {
                     $bread_extended[] = $this->trans('Add New Value', array(), 'Admin.Catalog.Feature');
                 }
+
                 break;
         }
 
@@ -783,12 +796,6 @@ class AdminAttributesGroupsControllerCore extends AdminController
                 }
                 $_POST['id_parent'] = 0;
                 $this->processSave($this->token);
-            }
-
-            if (Tools::getValue('id_attribute') && Tools::isSubmit('submitAddattribute') && Tools::getValue('color') && !Tools::getValue('filename')) {
-                if (file_exists(_PS_IMG_DIR_ . $this->fieldImageSettings['dir'] . '/' . (int) Tools::getValue('id_attribute') . '.jpg')) {
-                    unlink(_PS_IMG_DIR_ . $this->fieldImageSettings['dir'] . '/' . (int) Tools::getValue('id_attribute') . '.jpg');
-                }
             }
         } else {
             if (Tools::isSubmit('submitBulkdelete' . $this->table)) {
@@ -948,7 +955,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
             foreach ($positions as $position => $value) {
                 $pos = explode('_', $value);
 
-                if ((isset($pos[1]) && isset($pos[2])) && (int) $pos[2] === $id_attribute) {
+                if ((isset($pos[1], $pos[2])) && (int) $pos[2] === $id_attribute) {
                     if ($attribute = new Attribute((int) $pos[2])) {
                         if (isset($position) && $attribute->updatePosition($way, $position)) {
                             echo 'ok position ' . (int) $position . ' for attribute ' . (int) $pos[2] . '\r\n';

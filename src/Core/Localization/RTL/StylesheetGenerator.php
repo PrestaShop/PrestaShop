@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,18 +16,19 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Localization\RTL;
 
-use PrestaShop\PrestaShop\Core\Localization\RTL\Exception\GenerationException;
 use CSSJanus;
+use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
+use PrestaShop\PrestaShop\Core\Localization\RTL\Exception\GenerationException;
 use Tools;
 
 /**
@@ -111,8 +112,7 @@ class StylesheetGenerator
             // does not end with .rtlfix
             && substr(rtrim($file, '.' . $this->fileType), -4) !== $this->rtlSuffix
             // RTL file does not exist or we are regenerating them
-            && ($regenerate || !file_exists($this->getRtlFileName($file)))
-        ;
+            && ($regenerate || !file_exists($this->getRtlFileName($file)));
     }
 
     /**
@@ -244,6 +244,6 @@ class StylesheetGenerator
             );
         }
 
-        @chmod($rtlFilePath, 0644);
+        @chmod($rtlFilePath, FileSystem::DEFAULT_MODE_FILE);
     }
 }

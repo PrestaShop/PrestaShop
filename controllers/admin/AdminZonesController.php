@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -139,5 +139,22 @@ class AdminZonesControllerCore extends AdminController
         );
 
         return parent::renderForm();
+    }
+
+    /**
+     * Get all zones displayed in a select input.
+     */
+    public function displayAjaxZones()
+    {
+        $this->context->smarty->assign(array(
+            'zones' => Zone::getZones(),
+        ));
+
+        $array = array(
+            'hasError' => false,
+            'errors' => '',
+            'data' => $this->context->smarty->fetch('controllers/zones/select.tpl'),
+        );
+        $this->ajaxRender(json_encode($array));
     }
 }

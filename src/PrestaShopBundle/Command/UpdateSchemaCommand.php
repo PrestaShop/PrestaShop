@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,21 +16,21 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Command;
 
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Tools\SchemaTool;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Doctrine\ORM\Tools\SchemaTool;
-use Doctrine\ORM\EntityManagerInterface;
 
 class UpdateSchemaCommand extends ContainerAwareCommand
 {
@@ -161,8 +161,11 @@ class UpdateSchemaCommand extends ContainerAwareCommand
                 if (preg_match_all('/([^\s,]*?) CHANGE (.+?) (.+?)(,|$)/', $sql, $matches)) {
                     foreach ($matches[2] as $matchKey => $fieldName) {
                         // remove table name
-                        $matches[0][$matchKey] = preg_replace('/(.+?) CHANGE/',
-                            ' CHANGE', $matches[0][$matchKey]);
+                        $matches[0][$matchKey] = preg_replace(
+                            '/(.+?) CHANGE/',
+                            ' CHANGE',
+                            $matches[0][$matchKey]
+                        );
                         // remove quote
                         $originalFieldName = $fieldName;
                         $fieldName = str_replace('`', '', $fieldName);
@@ -195,8 +198,11 @@ class UpdateSchemaCommand extends ContainerAwareCommand
                                         $oldDefaultValue . ' ' . $extra . '$2', $matches[0][$matchKey]);
                             }
                         }
-                        $updateSchemaSql[$key] = preg_replace('/ CHANGE ' . $originalFieldName . ' (.+?)(,|$)/uis',
-                            $matches[0][$matchKey], $updateSchemaSql[$key]);
+                        $updateSchemaSql[$key] = preg_replace(
+                            '/ CHANGE ' . $originalFieldName . ' (.+?)(,|$)/uis',
+                            $matches[0][$matchKey],
+                            $updateSchemaSql[$key]
+                        );
                     }
                 }
             }
@@ -210,6 +216,7 @@ class UpdateSchemaCommand extends ContainerAwareCommand
                 $conn->executeQuery($sql);
             } catch (\Exception $e) {
                 $conn->rollBack();
+
                 throw($e);
             }
         }

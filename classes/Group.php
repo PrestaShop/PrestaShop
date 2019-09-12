@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -164,7 +164,8 @@ class GroupCore extends ObjectModel
     public static function getPriceDisplayMethod($id_group)
     {
         if (!isset(Group::$group_price_display_method[$id_group])) {
-            self::$group_price_display_method[$id_group] = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+            self::$group_price_display_method[$id_group] = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+                '
                 SELECT `price_display_method`
                 FROM `' . _DB_PREFIX_ . 'group`
                 WHERE `id_group` = ' . (int) $id_group
@@ -322,7 +323,13 @@ class GroupCore extends ObjectModel
         }
 
         // Delete all record for this group
-        Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'module_group` WHERE `id_group` = ' . (int) $id_group);
+        Db::getInstance()->execute(
+            'DELETE FROM `' . _DB_PREFIX_ . 'module_group`
+            WHERE `id_group` = ' . (int) $id_group . '
+            AND `id_shop` IN ('
+              . (implode(',', array_map('intval', $shops)))
+            . ')'
+        );
 
         $sql = 'INSERT INTO `' . _DB_PREFIX_ . 'module_group` (`id_module`, `id_shop`, `id_group`) VALUES ';
         foreach ($modules as $module) {

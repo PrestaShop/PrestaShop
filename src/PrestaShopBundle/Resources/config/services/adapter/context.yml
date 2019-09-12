@@ -2,9 +2,6 @@ services:
     _defaults:
         public: true
 
-    prestashop.adapter.legacy.context:
-        class: PrestaShop\PrestaShop\Adapter\LegacyContext
-
     #SECURITY
     #@todo: is this service used?
     prestashop.adapter.security.admin:

@@ -1,0 +1,211 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.core.form.choice_provider.language_by_id:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\LanguageByIdChoiceProvider'
+    arguments:
+      - '@prestashop.adapter.data_provider.language'
+
+  prestashop.core.form.choice_provider.all_languages:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\LanguageChoiceProvider'
+    arguments:
+      - '@=service("prestashop.adapter.data_provider.language").getLanguages(false)'
+
+  prestashop.core.form.choice_provider.country_by_id:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CountryByIdChoiceProvider'
+    arguments:
+      - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
+      - '@prestashop.adapter.data_provider.country'
+
+  prestashop.core.form.choice_provider.currency_by_id:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CurrencyByIdChoiceProvider'
+    arguments:
+      - '@prestashop.adapter.data_provider.currency'
+
+  prestashop.core.form.choice_provider.timezone_by_name:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\TimezoneByNameChoiceProvider'
+    arguments:
+      - '@prestashop.core.admin.timezone.repository'
+
+  prestashop.core.form.choice_provider.localization_pack_by_iso_code:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\LocalizationPackByIsoCodeChoiceProvider'
+    arguments:
+      - '@prestashop.core.localization.pack.loader.remote'
+      - '@prestashop.core.localization.pack.loader.local'
+      - '@prestashop.adapter.legacy.configuration'
+      - '@translator'
+
+  prestashop.core.form.choice_provider.non_installed_localization:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\NonInstalledLocalizationChoiceProvider'
+    arguments:
+      - '@=service("prestashop.core.language.pack.loader.remote").getLanguagePackList()'
+      - '@prestashop.adapter.language.validator'
+      - '@prestashop.adapter.data_provider.language'
+
+  prestashop.core.form.choice_provider.country_by_iso_code:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CountryByIsoCodeChoiceProvider'
+    arguments:
+      - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
+      - '@prestashop.adapter.data_provider.country'
+
+  prestashop.core.form.choice_provider.group_by_id:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\GroupByIdChoiceProvider'
+    arguments:
+      - '@prestashop.adapter.data_provider.group'
+      - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
+
+  prestashop.core.form.choice_provider.carrier_by_reference_id:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CarrierByReferenceChoiceProvider'
+    arguments:
+      - '@prestashop.adapter.data_provider.carrier'
+      - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
+
+  prestashop.core.form.choice_provider.order_state_by_id:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\OrderStateByIdChoiceProvider'
+    arguments:
+      - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
+      - '@prestashop.adapter.data_provider.order_state'
+
+  prestashop.core.form.choice_provider.invoice_model_by_name:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\InvoiceModelByNameChoiceProvider'
+    arguments:
+      - '@prestashop.core.file.cached_finder.invoice_model'
+
+  prestashop.core.form.choice_provider.mail_method:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\MailMethodChoiceProvider'
+    arguments:
+      - '@prestashop.adapter.legacy.configuration'
+      - '@translator'
+
+  prestashop.core.form.choice_provider.contact_by_id:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ContactByIdChoiceProvider'
+    arguments:
+      - '@prestashop.adapter.contact.repository'
+      - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
+
+  prestashop.core.form.choice_provider.translation_type:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\TranslationTypeChoiceProvider'
+    arguments:
+      - '@translator'
+
+  prestashop.core.form.choice_provider.email_content_type:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\EmailContentTypeChoiceProvider'
+    arguments:
+      - '@translator'
+
+  prestashop.core.form.choice_provider.theme_by_name:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ThemeByNameChoiceProvider'
+    arguments:
+      - '@=service("prestashop.core.addon.theme.repository").getListAsCollection()'
+
+  prestashop.core.form.choice_provider.theme_by_name_with_emails:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ThemeByNameWithEmailsChoiceProvider'
+    arguments:
+      - '@=service("prestashop.core.addon.theme.repository").getListAsCollection()'
+
+  prestashop.core.form.choice_provider.module_by_name:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ModuleByNameChoiceProvider'
+    arguments:
+      - '@=service("prestashop.core.admin.module.repository").getInstalledModulesCollection()'
+
+  prestashop.core.form.choice_provider.status:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\StatusChoiceProvider'
+    arguments:
+      - '@translator'
+
+  prestashop.core.form.choice_provider.canonical_redirect_type:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CanonicalRedirectTypeChoiceProvider'
+    arguments:
+      - '@translator'
+
+  prestashop.core.form.choice_provider.category_delete_mode:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CategoryDeleteModeChoiceProvider'
+    arguments:
+      - '@translator'
+
+  prestashop.core.form.choice_provider.customer_required_fields:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CustomerRequiredFieldsChoiceProvider'
+    arguments:
+      - '@translator'
+
+  prestashop.core.form.choice_provider.import_match_configuration:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ImportMatchConfigurationChoiceProvider'
+    arguments:
+      - '@=service("prestashop.core.admin.import_match.repository").findAll()'
+
+  prestashop.core.form.choice_provider.import_entity_field:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ImportEntityFieldChoiceProvider'
+    arguments:
+      - '@=service("prestashop.core.import.fields_provider_finder")'
+      - '@=service("session").get("entity")'
+
+  prestashop.core.form.choice_provider.customer_delete_method:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CustomerDeleteMethodChoiceProvider'
+    arguments:
+      - '@translator'
+
+  prestashop.core.form.choice_provider.theme_page_layouts:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ThemePageLayoutsChoiceProvider'
+    arguments:
+      - '@=service("prestashop.adapter.legacy.context").getContext().shop.theme'
+
+  prestashop.core.form.choice_provider.theme_zip:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ThemeZipChoiceProvider'
+    arguments:
+      - '@prestashop.adapter.legacy.configuration'
+
+  prestashop.core.form.choice_provider.theme:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ThemeChoiceProvider'
+    arguments:
+      - '@prestashop.core.addon.theme.theme_provider'
+
+  prestashop.core.form.choice_provider.currency_name_by_iso_code:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CurrencyNameByIsoCodeChoiceProvider'
+    arguments:
+      - '@=service("prestashop.core.localization.cldr.locale_repository").getLocale(service("prestashop.adapter.legacy.context").getContext().language.getLocale()).getAllCurrencies()'
+
+  prestashop.core.form.choice_provider.permissions_choice_provider:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\PermissionsChoiceProvider'
+    arguments:
+      - '@translator'
+
+  prestashop.core.form.choice_provider.default_meta_page_name:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\DefaultMetaPageNameChoiceProvider'
+    arguments:
+      - '@request_stack'
+      - '@prestashop.adapter.meta.data_provider'
+
+  prestashop.core.form.choice_provider.module_meta_page_name:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ModuleMetaPageNameChoiceProvider'
+    arguments:
+      - '@request_stack'
+      - '@prestashop.adapter.meta.data_provider'
+
+  prestashop.core.form.choice_provider.tax_address_type_choice_provider:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\TaxAddressTypeChoiceProvider'
+    arguments:
+      - '@translator'
+
+  prestashop.core.form.choice_provider.tax_rule_group_choice_provider:
+    class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\TaxRuleGroupChoiceProvider'
+
+  prestashop.core.form.choice_provider.cms_categories:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CmsCategoriesChoiceProvider'
+    arguments:
+      - '@=service("prestashop.adapter.cms_page.categories_provider").getAllNestedCategories()'
+
+  prestashop.core.form.choice_provider.accessible_tab:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\TabChoiceProvider'
+    arguments:
+      - '@=service("prestashop.adapter.data_provider.tab").getViewableTabsForContextEmployee(service("prestashop.adapter.legacy.context").getLanguage().id)'
+
+  prestashop.core.form.choice_provider.profile:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ProfileChoiceProvider'
+    arguments:
+      - '@=service("prestashop.adapter.data_provider.profile").getProfiles(service("prestashop.adapter.legacy.context").getLanguage().id)'
+
+  prestashop.core.form.choice_provider.mail_themes:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\MailThemeChoiceProvider'
+    arguments:
+      - '@prestashop.core.mail_template.theme_catalog'

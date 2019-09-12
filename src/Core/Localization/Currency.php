@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -47,7 +47,7 @@ class Currency implements CurrencyInterface
      *
      * Price in currency A * currency A's conversion rate = price in default currency
      *
-     * Example :
+     * Example:
      * Given the Euro as default shop's currency,
      * If 1 dollar = 1.31 euros,
      * Then conversion rate for Dollar will be 1.31
@@ -101,20 +101,13 @@ class Currency implements CurrencyInterface
     protected $names;
 
     /**
-     * @param bool $isActive
-     *                       Is this currency active ?
-     * @param float $conversionRate
-     *                              Conversion rate of this currency against the default shop's currency
-     * @param string $isoCode
-     *                        Currency's alphabetic ISO code (ISO 4217)
-     * @param int $numericIsoCode
-     *                            Currency's numeric ISO code (ISO 4217)
-     * @param string[] $symbols
-     *                          Currency's symbols, by locale code
-     * @param int $precision
-     *                       Number of decimal digits to use with this currency
-     * @param string [] $names
-     *                         the currency's name, by locale code
+     * @param bool $isActive Is this currency active ?
+     * @param float $conversionRate Conversion rate of this currency against the default shop's currency
+     * @param string $isoCode Currency's alphabetic ISO code (ISO 4217)
+     * @param int $numericIsoCode Currency's numeric ISO code (ISO 4217)
+     * @param string[] $symbols Currency's symbols, by locale code
+     * @param int $precision Number of decimal digits to use with this currency
+     * @param string [] $names the currency's name, by locale code
      */
     public function __construct(
         $isActive,
@@ -173,8 +166,8 @@ class Currency implements CurrencyInterface
      */
     public function getSymbol($localeCode)
     {
-        if (!isset($this->symbols[$localeCode])) {
-            throw new LocalizationException('Unknown locale code');
+        if (!array_key_exists($localeCode, $this->symbols)) {
+            throw new LocalizationException('Unknown locale code: ' . $localeCode);
         }
 
         return $this->symbols[$localeCode];
@@ -196,7 +189,7 @@ class Currency implements CurrencyInterface
     public function getName($localeCode)
     {
         if (!isset($this->names[$localeCode])) {
-            throw new LocalizationException('Unknown locale code');
+            throw new LocalizationException('Unknown locale code: ' . $localeCode);
         }
 
         return $this->names[$localeCode];

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,23 +16,26 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Shop;
 
+use Context as LegacyContext;
+use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
+use PrestaShop\PrestaShop\Core\Shop\ShopContextInterface;
 use Shop;
 use ShopGroup;
 
 /**
  * This class will provide legacy shop context.
  */
-class Context
+class Context implements MultistoreContextCheckerInterface, ShopContextInterface
 {
     /**
      * Get shops list.
@@ -73,10 +76,12 @@ class Context
      * Get if it's a GroupShop context.
      *
      * @return bool
+     *
+     * @deprecated since 1.7.6.0, to be removed in 1.8. Use $this->isGroupShopContext() instead.
      */
     public function isShopGroupContext()
     {
-        return Shop::getContext() === Shop::CONTEXT_GROUP;
+        return $this->isGroupShopContext();
     }
 
     /**
@@ -93,10 +98,12 @@ class Context
      * Get if it's a All context.
      *
      * @return bool
+     *
+     * @deprecated since 1.7.6.0, to be removed in 1.8. Use $this->isAllShopContext() instead.
      */
     public function isAllContext()
     {
-        return Shop::getContext() === Shop::CONTEXT_ALL;
+        return $this->isAllShopContext();
     }
 
     /**
@@ -169,5 +176,39 @@ class Context
     public function ShopGroup($shopGroupId)
     {
         return new ShopGroup($shopGroupId);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isAllShopContext()
+    {
+        return Shop::getContext() === Shop::CONTEXT_ALL;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isGroupShopContext()
+    {
+        return Shop::getContext() === Shop::CONTEXT_GROUP;
+    }
+
+    /**
+     * Get list of all shop IDs.
+     *
+     * @return array
+     */
+    public function getAllShopIds()
+    {
+        return Shop::getCompleteListOfShopsID();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getShopName()
+    {
+        return LegacyContext::getContext()->shop->name;
     }
 }

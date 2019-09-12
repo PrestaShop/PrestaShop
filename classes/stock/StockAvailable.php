@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -54,6 +54,9 @@ class StockAvailableCore extends ObjectModel
     /** @var bool determine if a product is out of stock - it was previously in Product class */
     public $out_of_stock = false;
 
+    /** @var string the location of the stock for this product / combination */
+    public $location = '';
+
     /**
      * @see ObjectModel::$definition
      */
@@ -68,6 +71,7 @@ class StockAvailableCore extends ObjectModel
             'quantity' => array('type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true),
             'depends_on_stock' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true),
             'out_of_stock' => array('type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true),
+            'location' => array('type' => self::TYPE_STRING, 'validate' => 'isString', 'size' => 255),
         ),
     );
 
@@ -197,13 +201,14 @@ class StockAvailableCore extends ObjectModel
 
                     $product_quantity = $manager->getProductRealQuantities($id_product, null, $allowed_warehouse_for_product_clean, true);
 
-                    Hook::exec('actionUpdateQuantity',
+                    Hook::exec(
+                        'actionUpdateQuantity',
                                     array(
                                         'id_product' => $id_product,
                                         'id_product_attribute' => 0,
                                         'quantity' => $product_quantity,
                                         'id_shop' => $id_shop,
-                                        )
+                                    )
                     );
                 } else {
                     // else this product has attributes, hence loops on $ids_product_attribute
@@ -251,7 +256,8 @@ class StockAvailableCore extends ObjectModel
 
                         $product_quantity += $quantity;
 
-                        Hook::exec('actionUpdateQuantity',
+                        Hook::exec(
+                            'actionUpdateQuantity',
                                     array(
                                         'id_product' => $id_product,
                                         'id_product_attribute' => $id_product_attribute,
@@ -354,6 +360,59 @@ class StockAvailableCore extends ObjectModel
     }
 
     /**
+     * @param int $id_product
+     * @param string $location
+     * @param int $id_shop Optional
+     * @param int $id_product_attribute Optional
+     *
+     * @return bool
+     *
+     * @throws PrestaShopDatabaseException
+     */
+    public static function setLocation($id_product, $location, $id_shop = null, $id_product_attribute = 0)
+    {
+        if (
+            false === Validate::isUnsignedId($id_product)
+            || (((false === Validate::isUnsignedId($id_shop)) && (null !== $id_shop)))
+            || (false === Validate::isUnsignedId($id_product_attribute))
+            || (false === Validate::isString($location))
+        ) {
+            $serializedInputData = [
+                'id_product' => $id_product,
+                'id_shop' => $id_shop,
+                'id_product_attribute' => $id_product_attribute,
+                'location' => $location,
+            ];
+
+            throw new \InvalidArgumentException(sprintf(
+                'Could not update location as input data is not valid: %s',
+                json_encode($serializedInputData)
+            ));
+        }
+
+        $existing_id = StockAvailable::getStockAvailableIdByProductId($id_product, $id_product_attribute, $id_shop);
+
+        if ($existing_id > 0) {
+            Db::getInstance()->update(
+                'stock_available',
+                array('location' => $location),
+                'id_product = ' . $id_product .
+                (($id_product_attribute) ? ' AND id_product_attribute = ' . $id_product_attribute : '') .
+                StockAvailable::addSqlShopRestriction(null, $id_shop)
+            );
+        } else {
+            $params = array(
+                'location' => $location,
+                'id_product' => $id_product,
+                'id_product_attribute' => $id_product_attribute,
+            );
+
+            StockAvailable::addSqlShopParams($params, $id_shop);
+            Db::getInstance()->insert('stock_available', $params, false, true, Db::ON_DUPLICATE_KEY);
+        }
+    }
+
+    /**
      * For a given id_product and id_product_attribute, gets its stock available.
      *
      * @param int $id_product
@@ -444,13 +503,15 @@ class StockAvailableCore extends ObjectModel
                 foreach ($colors as $color) {
                     if ($product->isColorUnavailable((int) $color['id_attribute'], (int) $this->id_shop)) {
                         Tools::clearColorListCache($product->id);
+
                         break;
                     }
                 }
             }
         }
 
-        $total_quantity = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+        $total_quantity = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+            '
 			SELECT SUM(quantity) as quantity
 			FROM ' . _DB_PREFIX_ . 'stock_available
 			WHERE id_product = ' . (int) $this->id_product . '
@@ -554,7 +615,8 @@ class StockAvailableCore extends ObjectModel
                 }
             }
 
-            Hook::exec('actionUpdateQuantity',
+            Hook::exec(
+                'actionUpdateQuantity',
                 array(
                     'id_product' => $id_product,
                     'id_product_attribute' => $id_product_attribute,
@@ -699,6 +761,34 @@ class StockAvailableCore extends ObjectModel
     }
 
     /**
+     * @param int $id_product
+     * @param int id_product_attribute Optional
+     * @param int $id_shop Optional
+     *
+     * @return bool|string
+     */
+    public static function getLocation($id_product, $id_product_attribute = null, $id_shop = null)
+    {
+        $id_product = (int) $id_product;
+
+        if (null === $id_product_attribute) {
+            $id_product_attribute = 0;
+        } else {
+            $id_product_attribute = (int) $id_product_attribute;
+        }
+
+        $query = new DbQuery();
+        $query->select('location');
+        $query->from('stock_available');
+        $query->where('id_product = ' . $id_product);
+        $query->where('id_product_attribute = ' . $id_product_attribute);
+
+        $query = StockAvailable::addSqlShopRestriction($query, $id_shop);
+
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+    }
+
+    /**
      * Add an sql restriction for shops fields - specific to StockAvailable.
      *
      * @param DbQuery|string|null $sql Reference to the query object
@@ -818,10 +908,11 @@ class StockAvailableCore extends ObjectModel
 				id_shop_group,
 				quantity,
 				depends_on_stock,
-				out_of_stock
+				out_of_stock,
+				location
 			)
 			(
-				SELECT id_product, id_product_attribute, ' . (int) $dst_shop_id . ', 0, quantity, depends_on_stock, out_of_stock
+				SELECT id_product, id_product_attribute, ' . (int) $dst_shop_id . ', 0, quantity, depends_on_stock, out_of_stock, location
 				FROM ' . _DB_PREFIX_ . 'stock_available
 				WHERE id_shop = ' . (int) $src_shop_id .
             ')';
