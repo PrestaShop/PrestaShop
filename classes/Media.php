@@ -781,15 +781,9 @@ class MediaCore
      * @param $output
      *
      * @return string|string[]|null
-     *
-     * @deprecated 1.7.7 This method is no longer used
      */
     public static function deferInlineScripts($output)
     {
-        @trigger_error(
-            'Media::deferInlineScripts() is deprecated since version 1.7.7.0, it is no longer used',
-            E_USER_DEPRECATED
-        );
         /* Try to enqueue in js_files inline scripts with src but without conditionnal comments */
         $dom = new DOMDocument();
         libxml_use_internal_errors(true);
