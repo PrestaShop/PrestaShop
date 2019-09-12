@@ -293,10 +293,14 @@ class MediaCore
      *
      * @return array
      *
-     * @deprecated 1.7.7
+     * @deprecated 1.7.7 jQuery is always included, this method should no longer be used
      */
     public static function getJqueryPath($version = null, $folder = null, $minifier = true)
     {
+        @trigger_error(
+            'Media::getJqueryPath() is deprecated since version 1.7.7.0, jquery is always included',
+            E_USER_DEPRECATED
+        );
         $addNoConflict = false;
         if ($version === null) {
             $version = _PS_JQUERY_VERSION_;
@@ -778,10 +782,14 @@ class MediaCore
      *
      * @return string|string[]|null
      *
-     * @deprecated 1.7.7
+     * @deprecated 1.7.7 This method is no longer used
      */
     public static function deferInlineScripts($output)
     {
+        @trigger_error(
+            'Media::deferInlineScripts() is deprecated since version 1.7.7.0, it is no longer used',
+            E_USER_DEPRECATED
+        );
         /* Try to enqueue in js_files inline scripts with src but without conditionnal comments */
         $dom = new DOMDocument();
         libxml_use_internal_errors(true);
