@@ -33,27 +33,22 @@ global.scenario('Edit Order BO', async () => {
     await expect(pageTitle).to.contains(dashboardPage.pageTitle);
     await boBasePage.closeOnboardingModal();
   });
-
   test('should go to the Orders page', async () => {
     await boBasePage.goToSubMenu(boBasePage.ordersParentLink, orderPage.ordersLink);
     const pageTitle = await orderPage.getPageTitle();
     await expect(pageTitle).to.contains(orderPage.pageTitle);
   });
-
   test('should go to the first order page', async () => {
     await boBasePage.waitForSelectorAndClick(orderPage.orderfirstLineIdTD);
     const pageTitle = await orderPage.getPageTitle();
     await expect(pageTitle).to.contains(orderPage.orderPageTitle);
   });
-
   test('should modify the product quantity and check the validation', async () => {
     await orderPage.modifyProductQuantity('1', '5');
   });
-
   test('should modify the order status and check the validation', async () => {
     await orderPage.modifyOrderStatus('Payment accepted');
   });
-
   test('should logout from the BO', async () => {
     await boBasePage.logoutBO();
     const pageTitle = await loginPage.getPageTitle();
