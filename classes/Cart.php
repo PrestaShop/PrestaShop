@@ -1712,7 +1712,7 @@ class CartCore extends ObjectModel
                 WHERE `id_cart` = ' . (int) $this->id . '
                 AND `id_product` = ' . (int) $id_product . '
                 AND `id_customization` = ' . (int) $id_customization .
-                (int) $id_product_attribute ? ' AND `id_product_attribute` = ' . (int) $id_product_attribute : '')
+                ((int) $id_product_attribute ? ' AND `id_product_attribute` = ' . (int) $id_product_attribute : '')
             );
         }
 
