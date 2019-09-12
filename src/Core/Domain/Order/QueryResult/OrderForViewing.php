@@ -90,6 +90,11 @@ class OrderForViewing
      */
     private $isValid;
 
+    /**
+     * @var OrderMessagesForViewing
+     */
+    private $messages;
+
     public function __construct(
         string $reference,
         string $taxMethod,
@@ -102,7 +107,8 @@ class OrderForViewing
         OrderDocumentsForViewing $documents,
         OrderShippingForViewing $shipping,
         OrderReturnsForViewing $returns,
-        OrderPaymentsForViewing $payments
+        OrderPaymentsForViewing $payments,
+        OrderMessagesForViewing $messages
     ) {
         $this->reference = $reference;
         $this->customer = $customer;
@@ -116,6 +122,7 @@ class OrderForViewing
         $this->returns = $returns;
         $this->payments = $payments;
         $this->isValid = $isValid;
+        $this->messages = $messages;
     }
 
     /**
@@ -212,5 +219,13 @@ class OrderForViewing
     public function getPayments(): OrderPaymentsForViewing
     {
         return $this->payments;
+    }
+
+    /**
+     * @return OrderMessagesForViewing
+     */
+    public function getMessages(): OrderMessagesForViewing
+    {
+        return $this->messages;
     }
 }

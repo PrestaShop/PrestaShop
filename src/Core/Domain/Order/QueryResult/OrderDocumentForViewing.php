@@ -77,7 +77,7 @@ class OrderDocumentForViewing
         string $referenceNumber,
         ?string $amount,
         ?string $amountMismatch,
-        string $note,
+        ?string $note,
         bool $isAddPaymentAllowed
     ) {
         $this->id = $id;
@@ -132,7 +132,7 @@ class OrderDocumentForViewing
     /**
      * @return string
      */
-    public function getNote(): string
+    public function getNote(): ?string
     {
         return $this->note;
     }

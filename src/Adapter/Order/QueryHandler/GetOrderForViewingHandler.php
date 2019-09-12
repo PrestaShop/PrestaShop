@@ -33,6 +33,7 @@ use Context;
 use Country;
 use Currency;
 use Customer;
+use CustomerThread;
 use DateTimeImmutable;
 use Db;
 use Gender;
@@ -41,6 +42,7 @@ use ImageManager;
 use Module;
 use Order;
 use OrderInvoice;
+use OrderMessage;
 use OrderPayment;
 use OrderReturn;
 use OrderSlip;
@@ -55,6 +57,8 @@ use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderDocumentsForViewing
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderHistoryForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderInvoiceAddressForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderMessageForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderMessagesForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPaymentForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPaymentsForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductForViewing;
@@ -115,6 +119,8 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             Context::getContext()->getTranslator()->trans('Tax excluded', [], 'Admin.Global') :
             Context::getContext()->getTranslator()->trans('Tax included', [], 'Admin.Global');
 
+        $this->getOrderMessages($order);
+
         return new OrderForViewing(
             $order->reference,
             $taxMethod,
@@ -127,7 +133,8 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             $this->getOrderDocuments($order),
             $this->getOrderShipping($order),
             $this->getOrderReturns($order),
-            $this->getOrderPayments($order)
+            $this->getOrderPayments($order),
+            $this->getOrderMessages($order)
         );
     }
 
@@ -456,7 +463,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             if (get_class($document) === 'OrderInvoice') {
                 $type = isset($document->is_delivery) ? 'delivery_slip' : 'invoice';
             } elseif (get_class($document) === 'OrderSlip') {
-                $type = 'order_slip';
+                $type = 'credit_slip';
             }
 
             if ('invoice' === $type) {
@@ -482,7 +489,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
                 );
             }
 
-            if ($type !== 'delivery_slip') {
+            if ($document instanceof OrderInvoice && !isset($document->is_delivery)) {
                 $amount = Tools::displayPrice($document->total_paid_tax_incl, $currency);
 
                 if ($document->getTotalPaid()) {
@@ -500,6 +507,11 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
                         );
                     }
                 }
+            } elseif ($document instanceof OrderSlip) {
+                $amount = Tools::displayPrice(
+                    $document->total_products_tax_incl + $document->total_shipping_tax_incl,
+                    $currency
+                );
             }
 
             $documentsForViewing[] = new OrderDocumentForViewing(
@@ -509,7 +521,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
                 $number,
                 $amount,
                 $amountMismatch,
-                $document->note,
+                $document instanceof OrderInvoice ? $document->note : null,
                 $isAddPaymentAllowed
             );
         }
@@ -662,5 +674,27 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             $orderAmountPaid,
             $paymentMismatchOrders
         );
+    }
+
+    private function getOrderMessages(Order $order): OrderMessagesForViewing
+    {
+        $orderMessages = CustomerThread::getCustomerMessagesOrder($order->id_customer, $order->id);
+
+        $messages = [];
+
+        foreach ($orderMessages as $orderMessage) {
+            $messages[] = new OrderMessageForViewing(
+                (int) $orderMessage['id_customer_message'],
+                $orderMessage['message'],
+                new DateTimeImmutable($orderMessage['date_add']),
+                (int) $orderMessage['id_employee'],
+                $orderMessage['efirstname'],
+                $orderMessage['elastname'],
+                $orderMessage['cfirstname'],
+                $orderMessage['clastname']
+            );
+        }
+
+        return new OrderMessagesForViewing($messages);
     }
 }

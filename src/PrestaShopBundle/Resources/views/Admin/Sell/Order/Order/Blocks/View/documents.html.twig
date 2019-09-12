@@ -61,16 +61,18 @@
       <td>
         {% if document.type == 'invoice' %}
           <a class="_blank"
-             title="{l s='See the document'}"
              href="{{ getAdminLink('AdminPdf', true, {'submitAction': 'generateInvoicePDF', 'id_order_invoice': document.id}) }}"
           >
             {{ document.referenceNumber }}
           </a>
         {% elseif document.type == 'delivery_slip' %}
           <a class="_blank"
-             title="{l s='See the document'}"
              href="{{ getAdminLink('AdminPdf', true, {'submitAction': 'generateDeliverySlipPDF', 'id_order_invoice': document.id}) }}"
           >
+            {{ document.referenceNumber }}
+          </a>
+        {% elseif document.type == 'credit_slip' %}
+          <a href="{{ getAdminLink('AdminPdf', true, {'submitAction': 'generateOrderSlipPDF', 'id_order_slip': document.id}) }}">
             {{ document.referenceNumber }}
           </a>
         {% endif %}
