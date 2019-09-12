@@ -1667,7 +1667,7 @@ class OrderCore extends ObjectModel
         $history = new OrderHistory();
         $history->id_order = (int) $this->id;
         $history->id_employee = (int) $id_employee;
-        $use_existings_payment = false;
+        $use_existings_payment = !$this->hasInvoice();
         if (!$this->hasInvoice()) {
             $use_existings_payment = true;
         }
