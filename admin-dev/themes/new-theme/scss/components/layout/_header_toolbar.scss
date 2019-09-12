@@ -4,7 +4,7 @@
   top: $size-header-height;
   left: $size-navbar-width;
   right: 0;
-  z-index: 1;
+  z-index: 990; // popup menus' z-index is 1000, so it has to be just below that
   border-bottom: 0.0625rem solid $color-separator;
 
   transition: left .5s ease; // transition when collapsing the nav menu
@@ -79,13 +79,22 @@
   }
 
   .tab {
+    position: relative;
+
     .notification-container {
       @include notification_container(1.5rem)
+      position: absolute;
+      bottom: -5px;
+      right: 15px;
 
       .notification-counter {
         @include notification_counter();
-        top: -0.5625rem;
+        top: -1.75rem;
         right: -0.9375rem;
+
+        &:empty {
+          border: none;
+        }
       }
     }
   }

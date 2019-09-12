@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -94,19 +94,27 @@ class ConfigurationValidator
 
         list($fileCreationTestPath, $createFileResult) = $this->createFileTest($dirPath);
         if (false === $createFileResult) {
+            $this->deleteDirectoryTest($dirPath);
+
             return ['Cannot write files'];
         }
 
         if (false === $this->downloadFileTest($dirPath)) {
+            $this->deleteDirectoryTest($dirPath);
+
             return ['Cannot download files from network'];
         }
 
         list($fileMoveTestPath, $moveResult) = $this->moveFileTest($fileCreationTestPath);
         if (false === $moveResult) {
+            $this->deleteDirectoryTest($dirPath);
+
             return ['Cannot move files into prestashop root directory'];
         }
 
         if (false === $this->deleteFileTest($fileMoveTestPath)) {
+            $this->deleteDirectoryTest($dirPath);
+
             return ['Cannot delete files in prestashop root directory'];
         }
 
@@ -161,8 +169,7 @@ class ConfigurationValidator
     private function downloadFileTest($dirPath)
     {
         $downloadTestPath = $dirPath . DIRECTORY_SEPARATOR . 'test-download.txt';
-        // @todo: use another file from the network ?
-        $target = 'https://raw.githubusercontent.com/PrestaShop/PrestaShop/develop/robots.txt';
+        $target = 'https://www.google.com/robots.txt';
 
         return (bool) @file_put_contents($downloadTestPath, Download::fileGetContents($target));
     }

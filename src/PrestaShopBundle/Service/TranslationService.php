@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Service;
 use Exception;
 use PrestaShopBundle\Entity\Translation;
 use PrestaShopBundle\Translation\Constraints\PassVsprintf;
+use PrestaShopBundle\Translation\Provider\UseModuleInterface;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Validator\Validation;
 
@@ -40,7 +41,7 @@ class TranslationService
     public $container;
 
     /**
-     * @param $lang
+     * @param string $lang
      *
      * @return mixed
      */
@@ -52,7 +53,7 @@ class TranslationService
     }
 
     /**
-     * @param $locale
+     * @param string $locale
      *
      * @return mixed
      *
@@ -102,30 +103,27 @@ class TranslationService
     /**
      * @param $lang
      * @param $type
-     * @param $selected
+     * @param $theme
      * @param null $search
      *
      * @return array|mixed
      */
-    public function getTranslationsCatalogue($lang, $type, $selected, $search = null)
+    public function getTranslationsCatalogue($lang, $type, $theme, $search = null)
     {
         $factory = $this->container->get('ps.translations_factory');
 
-        if ($selected !== 'classic' && $this->requiresThemeTranslationsFactory($selected, $type)) {
-            $factory = $this->container->get('ps.theme_translations_factory');
+        if ($this->requiresThemeTranslationsFactory($theme, $type)) {
+            if ('classic' === $theme) {
+                $type = 'front';
+            } else {
+                $type = $theme;
+                $factory = $this->container->get('ps.theme_translations_factory');
+            }
         }
 
         $locale = $this->langToLocale($lang);
 
-        if ($this->requiresThemeTranslationsFactory($selected, $type)) {
-            if ('classic' === $selected) {
-                $type = 'front';
-            } else {
-                $type = $selected;
-            }
-        }
-
-        return $factory->createTranslationsArray($type, $locale, $selected, $search);
+        return $factory->createTranslationsArray($type, $locale, $theme, $search);
     }
 
     /**
@@ -136,28 +134,34 @@ class TranslationService
      */
     private function requiresThemeTranslationsFactory($theme, $type)
     {
-        return $type === 'themes' && !is_null($theme);
+        return $type === 'themes' && null !== $theme;
     }
 
     /**
-     * List translation for domain.
+     * List translations for a specific domain.
+     *
+     * @todo: we need module information here
+     * @todo: we need to improve the Vuejs application to send the information
      *
      * @param $locale
      * @param $domain
      * @param null $theme
      * @param null $search
+     * @param null $module
      *
      * @return array
      */
-    public function listDomainTranslation($locale, $domain, $theme = null, $search = null)
+    public function listDomainTranslation($locale, $domain, $theme = null, $search = null, $module = null)
     {
         if (!empty($theme) && 'classic' !== $theme) {
             $translationProvider = $this->container->get('prestashop.translation.theme_provider');
             $translationProvider->setThemeName($theme);
         } else {
             $translationProvider = $this->container->get('prestashop.translation.search_provider');
+            if ($module !== null && $translationProvider instanceof UseModuleInterface) {
+                $translationProvider->setModuleName($module);
+            }
         }
-
         if ('Messages' === $domain) {
             $domain = 'messages';
         }
@@ -174,7 +178,6 @@ class TranslationService
             'data' => array(),
         );
         $treeDomain = preg_split('/(?=[A-Z])/', $domain, -1, PREG_SPLIT_NO_EMPTY);
-
         if (!empty($theme) && 'classic' !== $theme) {
             $defaultCatalog = current($translationProvider->getThemeCatalogue()->all());
         } else {
@@ -182,10 +185,6 @@ class TranslationService
         }
 
         $xliffCatalog = current($translationProvider->getXliffCatalogue()->all());
-
-        if ('EmailsSubject' === $domain) {
-            $theme = 'subject';
-        }
         $dbCatalog = current($translationProvider->getDatabaseCatalogue($theme)->all());
 
         foreach ($defaultCatalog as $key => $message) {
@@ -195,7 +194,6 @@ class TranslationService
                 'database' => (array_key_exists($key, (array) $dbCatalog) ? $dbCatalog[$key] : null),
                 'tree_domain' => $treeDomain,
             );
-
             // if search is empty or is in catalog default|xlf|database
             if (empty($search) || $this->dataContainsSearchWord($search, $data)) {
                 if (empty($data['xliff']) && empty($data['database'])) {
@@ -271,7 +269,7 @@ class TranslationService
                 'theme' => $theme,
             ));
 
-        if (is_null($translation)) {
+        if (null === $translation) {
             $translation = new Translation();
             $translation->setDomain($domain);
             $translation->setLang($lang);
@@ -338,7 +336,7 @@ class TranslationService
         $translation = $entityManager->getRepository('PrestaShopBundle:Translation')->findOneBy($searchTranslation);
 
         $resetTranslationSuccessfully = false;
-        if (is_null($translation)) {
+        if (null === $translation) {
             $resetTranslationSuccessfully = true;
         }
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -67,13 +67,38 @@ class AdminAddressesControllerCore extends AdminController
         }
 
         $this->fields_list = array(
-            'id_address' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'align' => 'center', 'class' => 'fixed-width-xs'),
-            'firstname' => array('title' => $this->trans('First Name', array(), 'Admin.Global'), 'filter_key' => 'a!firstname'),
-            'lastname' => array('title' => $this->trans('Last Name', array(), 'Admin.Global'), 'filter_key' => 'a!lastname'),
-            'address1' => array('title' => $this->trans('Address', array(), 'Admin.Global')),
-            'postcode' => array('title' => $this->trans('Zip/postal code', array(), 'Admin.Global'), 'align' => 'right'),
-            'city' => array('title' => $this->trans('City', array(), 'Admin.Global')),
-            'country' => array('title' => $this->trans('Country', array(), 'Admin.Global'), 'type' => 'select', 'list' => $this->countries_array, 'filter_key' => 'cl!id_country'), );
+            'id_address' => array(
+                'title' => $this->trans('ID', array(), 'Admin.Global'),
+                'align' => 'center',
+                'class' => 'fixed-width-xs',
+            ),
+            'firstname' => array(
+                'title' => $this->trans('First Name', array(), 'Admin.Global'),
+                'filter_key' => 'a!firstname',
+                'maxlength' => 30,
+            ),
+            'lastname' => array(
+                'title' => $this->trans('Last Name', array(), 'Admin.Global'),
+                'filter_key' => 'a!lastname',
+                'maxlength' => 30,
+            ),
+            'address1' => array(
+                'title' => $this->trans('Address', array(), 'Admin.Global'),
+            ),
+            'postcode' => array(
+                'title' => $this->trans('Zip/postal code', array(), 'Admin.Global'),
+                'align' => 'right',
+            ),
+            'city' => array(
+                'title' => $this->trans('City', array(), 'Admin.Global'),
+            ),
+            'country' => array(
+                'title' => $this->trans('Country', array(), 'Admin.Global'),
+                'type' => 'select',
+                'list' => $this->countries_array,
+                'filter_key' => 'cl!id_country',
+            ),
+        );
 
         $this->_select = 'cl.`name` as country';
         $this->_join = '
@@ -90,7 +115,7 @@ class AdminAddressesControllerCore extends AdminController
 
         if (!$this->display && $this->can_import) {
             $this->toolbar_btn['import'] = array(
-                'href' => $this->context->link->getAdminLink('AdminImport', true) . '&import_type=addresses',
+                'href' => $this->context->link->getAdminLink('AdminImport', true, array(), array('import_type' => 'addresses')),
                 'desc' => $this->trans('Import', array(), 'Admin.Actions'),
             );
         }
@@ -100,7 +125,7 @@ class AdminAddressesControllerCore extends AdminController
     {
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_address'] = array(
-                'href' => self::$currentIndex . '&addaddress&token=' . $this->token,
+                'href' => $this->context->link->getAdminLink('AdminAddresses', true, array(), array('addaddress' => 1)),
                 'desc' => $this->trans('Add new address', array(), 'Admin.Orderscustomers.Feature'),
                 'icon' => 'process-icon-new',
             );
@@ -174,12 +199,14 @@ class AdminAddressesControllerCore extends AdminController
         }
         if ($id_customer) {
             $customer = new Customer((int) $id_customer);
-            $token_customer = Tools::getAdminToken('AdminCustomers' . (int) (Tab::getIdFromClassName('AdminCustomers')) . (int) $this->context->employee->id);
         }
 
         $this->tpl_form_vars = array(
             'customer' => isset($customer) ? $customer : null,
-            'tokenCustomer' => isset($token_customer) ? $token_customer : null,
+            'customer_view_url' => $this->context->link->getAdminLink('AdminCustomers', true, [], [
+                'viewcustomer' => 1,
+                'id_customer' => $id_customer,
+            ]),
             'back_url' => urldecode(Tools::getValue('back')),
         );
 
@@ -418,6 +445,18 @@ class AdminAddressesControllerCore extends AdminController
                 //update order shipping cost
                 $order = new Order($id_order);
                 $order->refreshShippingCost();
+
+                // update cart
+                $cart = Cart::getCartByOrderId($id_order);
+                if (Validate::isLoadedObject($cart)) {
+                    if ($address_type == 'invoice') {
+                        $cart->id_address_invoice = (int) $this->object->id;
+                    } else {
+                        $cart->id_address_delivery = (int) $this->object->id;
+                    }
+                    $cart->update();
+                }
+                // redirect
                 Tools::redirectAdmin(urldecode(Tools::getValue('back')) . '&conf=4');
             }
         }
@@ -515,6 +554,7 @@ class AdminAddressesControllerCore extends AdminController
                 $to_delete = new Address((int) $id);
                 if ($to_delete->isUsed()) {
                     $deleted = true;
+
                     break;
                 }
             }

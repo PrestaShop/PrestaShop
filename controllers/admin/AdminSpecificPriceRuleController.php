@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -38,7 +38,6 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
         $this->className = 'SpecificPriceRule';
         $this->lang = false;
         $this->multishop_context = Shop::CONTEXT_ALL;
-        $this->cldr = Tools::getCldr(Context::getContext());
 
         parent::__construct();
 
@@ -123,11 +122,15 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
                 'title' => $this->trans('Beginning', array(), 'Admin.Catalog.Feature'),
                 'align' => 'right',
                 'type' => 'datetime',
+                'filter_key' => 'a!from',
+                'order_key' => 'a!from',
             ),
             'to' => array(
                 'title' => $this->trans('End', array(), 'Admin.Catalog.Feature'),
                 'align' => 'right',
                 'type' => 'datetime',
+                'filter_key' => 'a!to',
+                'order_key' => 'a!to',
             ),
         );
     }
@@ -150,9 +153,9 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
         parent::getList($id_lang, $order_by, $order_way, $start, $limit, $id_lang_shop);
 
         foreach ($this->_list as $k => $list) {
-            if (!is_null($this->_list[$k]['currency_iso_code'])) {
-                $currency = $this->cldr->getCurrency($this->_list[$k]['currency_iso_code']);
-                $this->_list[$k]['currency_name'] = ucfirst($currency['name']);
+            if (null !== $this->_list[$k]['currency_iso_code']) {
+                $currency = new Currency(Currency::getIdByIsoCode($this->_list[$k]['currency_iso_code']));
+                $this->_list[$k]['currency_name'] = $currency->name;
             }
 
             if ($list['reduction_type'] == 'amount') {
@@ -282,9 +285,9 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
                     'align' => 'center',
                     'options' => array(
                         'query' => array(
-                                        array('lab' => $this->trans('Tax included', array(), 'Admin.Global'), 'val' => 1),
-                                        array('lab' => $this->trans('Tax excluded', array(), 'Admin.Global'), 'val' => 0),
-                                    ),
+                            array('lab' => $this->trans('Tax included', array(), 'Admin.Global'), 'val' => 1),
+                            array('lab' => $this->trans('Tax excluded', array(), 'Admin.Global'), 'val' => 0),
+                        ),
                         'id' => 'val',
                         'name' => 'lab',
                     ),
@@ -341,7 +344,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
             'categories' => Category::getSimpleCategories((int) $this->context->language->id),
             'conditions' => $this->object->getConditions(),
             'is_multishop' => Shop::isFeatureActive(),
-            );
+        );
 
         return parent::renderForm();
     }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,28 +16,30 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
+use Exception;
+use PrestaShop\PrestaShop\Core\Domain\Webservice\Exception\DuplicateWebserviceKeyException;
+use PrestaShop\PrestaShop\Core\Domain\Webservice\Exception\WebserviceConstraintException;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
-use PrestaShop\PrestaShop\Core\Search\Filters\WebserviceFilters;
-use PrestaShop\PrestaShop\Core\Webservice\WebserviceCanBeEnabledConfigurationChecker;
+use PrestaShop\PrestaShop\Core\Search\Filters\WebserviceKeyFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Responsible of "Configure > Advanced Parameters > Webservice" page display.
+ * Responsible of "Configure > Advanced Parameters > Webservice" page.
  *
  * @todo: add unit tests
  */
@@ -48,90 +50,106 @@ class WebserviceController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
-     * @param WebserviceFilters $filters - filters for webservice list
+     * @param WebserviceKeyFilters $filters - filters for webservice list
      * @param Request $request
      *
      * @return Response
      */
-    public function indexAction(WebserviceFilters $filters, Request $request)
+    public function indexAction(WebserviceKeyFilters $filters, Request $request)
     {
         $form = $this->getFormHandler()->getForm();
-        $gridWebserviceFactory = $this->get('prestashop.core.grid.factory.webservice');
+        $gridWebserviceFactory = $this->get('prestashop.core.grid.factory.webservice_key');
         $grid = $gridWebserviceFactory->getGrid($filters);
 
         $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
         $presentedGrid = $gridPresenter->present($grid);
 
-        $configurationWarnings = $this->lookForWarnings($request);
+        $configurationWarnings = $this->lookForWarnings();
 
-        if (false === empty($configurationWarnings)) {
-            foreach ($configurationWarnings as $warningMessage) {
-                $this->addFlash('warning', $warningMessage);
-            }
-        }
-
-        $twigValues = [
-            'layoutHeaderToolbarBtn' => [
-                'add' => [
-                    'href' => $this->generateUrl('admin_webservice_list_create'),
-                    'desc' => $this->trans('Add new webservice key', 'Admin.Advparameters.Feature'),
-                    'icon' => 'add_circle_outline',
-                ],
-            ],
-            'layoutTitle' => $this->trans('Webservice', 'Admin.Navigation.Menu'),
-            'requireAddonsSearch' => false,
-            'requireBulkActions' => false, // temporary
-            'showContentHeader' => true,
-            'enableSidebar' => true,
-            'help_link' => $this->generateSidebarLink($request->get('_legacy_controller')),
-            'requireFilterStatus' => false,
-            'form' => $form->createView(),
-            'grid' => $presentedGrid,
-        ];
-
-        return $this->render('@AdvancedParameters/WebservicePage/webservice.html.twig', $twigValues);
+        return $this->render(
+            '@PrestaShop/Admin/Configure/AdvancedParameters/Webservice/index.html.twig',
+            [
+                'help_link' => $this->generateSidebarLink($request->get('_legacy_controller')),
+                'form' => $form->createView(),
+                'grid' => $presentedGrid,
+                'configurationWarnings' => $configurationWarnings,
+            ]
+        );
     }
 
     /**
-     * Redirects to webservice account form where new webservice account record can be created.
+     * Shows Webservice Key form and handles its submit
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
      *
-     * @return RedirectResponse
+     * @param Request $request
+     *
+     * @return Response
      */
-    public function listCreateAction()
+    public function createAction(Request $request)
     {
-        $legacyContext = $this->get('prestashop.adapter.legacy.context');
-        //@todo: this action should point to new add page
-        $legacyLink = $legacyContext->getAdminLink(
-                'AdminWebservice'
-            ) . '&addwebservice_account';
+        $formHandler = $this->get('prestashop.core.form.identifiable_object.handler.webservice_key_form_handler');
+        $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.webservice_key_form_builder');
 
-        return $this->redirect($legacyLink);
+        $form = $formBuilder->getForm();
+        $form->handleRequest($request);
+
+        try {
+            $result = $formHandler->handle($form);
+
+            if (null !== $result->getIdentifiableObjectId()) {
+                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_webservice_keys_index');
+            }
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        return $this->render(
+            '@PrestaShop/Admin/Configure/AdvancedParameters/Webservice/create.html.twig',
+            [
+                'webserviceKeyForm' => $form->createView(),
+            ]
+        );
     }
 
     /**
      * Redirects to webservice account form where existing webservice account record can be edited.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
      *
-     * @param $webserviceAccountId
+     * @param int $webserviceKeyId
+     * @param Request $request
      *
-     * @return RedirectResponse
+     * @return Response
      */
-    public function listEditAction($webserviceAccountId)
+    public function editAction($webserviceKeyId, Request $request)
     {
-        $legacyContext = $this->get('prestashop.adapter.legacy.context');
-        //@todo: this action should point to new edit page
-        $legacyLink = $legacyContext->getAdminLink(
-            'AdminWebservice',
-            true,
-            [
-                'id_webservice_account' => $webserviceAccountId,
-            ]
-        ) . '&updatewebservice_account';
+        $formHandler = $this->get('prestashop.core.form.identifiable_object.handler.webservice_key_form_handler');
+        $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.webservice_key_form_builder');
 
-        return $this->redirect($legacyLink);
+        $form = $formBuilder->getFormFor((int) $webserviceKeyId);
+        $form->handleRequest($request);
+
+        try {
+            $result = $formHandler->handleFor((int) $webserviceKeyId, $form);
+
+            if ($result->isSubmitted() && $result->isValid()) {
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_webservice_keys_index');
+            }
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        return $this->render(
+            '@PrestaShop/Admin/Configure/AdvancedParameters/Webservice/edit.html.twig',
+            [
+                'webserviceKeyForm' => $form->createView(),
+            ]
+        );
     }
 
     /**
@@ -145,7 +163,7 @@ class WebserviceController extends FrameworkBundleAdminController
      */
     public function searchAction(Request $request)
     {
-        $definitionFactory = $this->get('prestashop.core.grid.definition.factory.webservice');
+        $definitionFactory = $this->get('prestashop.core.grid.definition.factory.webservice_key');
         $webserviceDefinition = $definitionFactory->getDefinition();
 
         $gridFilterFormFactory = $this->get('prestashop.core.grid.filter.form_factory');
@@ -158,25 +176,23 @@ class WebserviceController extends FrameworkBundleAdminController
             $filters = $searchParametersForm->getData();
         }
 
-        return $this->redirectToRoute('admin_webservice', ['filters' => $filters]);
+        return $this->redirectToRoute('admin_webservice_keys_index', ['filters' => $filters]);
     }
 
     /**
      * Deletes single record.
      *
-     * @DemoRestricted(redirectRoute="admin_webservice")
+     * @DemoRestricted(redirectRoute="admin_webservice_keys_index")
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="You do not have permission to delete this.")
      *
-     * @param int $webserviceAccountId
+     * @param int $webserviceKeyId
      *
      * @return RedirectResponse
-     *
-     * @throws \PrestaShopException
      */
-    public function deleteSingleWebserviceAction($webserviceAccountId)
+    public function deleteAction($webserviceKeyId)
     {
-        $webserviceEraser = $this->get('prestashop.adapter.webservice.webservice_account_eraser');
-        $errors = $webserviceEraser->erase([$webserviceAccountId]);
+        $webserviceEraser = $this->get('prestashop.adapter.webservice.webservice_key_eraser');
+        $errors = $webserviceEraser->erase([$webserviceKeyId]);
 
         if (!empty($errors)) {
             $this->flashErrors($errors);
@@ -187,26 +203,24 @@ class WebserviceController extends FrameworkBundleAdminController
             );
         }
 
-        return $this->redirectToRoute('admin_webservice');
+        return $this->redirectToRoute('admin_webservice_keys_index');
     }
 
     /**
      * Deletes selected records.
      *
-     * @DemoRestricted(redirectRoute="admin_webservice")
+     * @DemoRestricted(redirectRoute="admin_webservice_keys_index")
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="You do not have permission to delete this.")
      *
      * @param Request $request
      *
      * @return RedirectResponse
-     *
-     * @throws \PrestaShopException
      */
-    public function deleteMultipleWebserviceAction(Request $request)
+    public function bulkDeleteAction(Request $request)
     {
-        $webserviceToDelete = $request->request->get('webservice_bulk_action');
+        $webserviceToDelete = $request->request->get('webservice_key_bulk_action');
 
-        $webserviceEraser = $this->get('prestashop.adapter.webservice.webservice_account_eraser');
+        $webserviceEraser = $this->get('prestashop.adapter.webservice.webservice_key_eraser');
         $errors = $webserviceEraser->erase($webserviceToDelete);
 
         if (!empty($errors)) {
@@ -218,72 +232,63 @@ class WebserviceController extends FrameworkBundleAdminController
             );
         }
 
-        return $this->redirectToRoute('admin_webservice');
+        return $this->redirectToRoute('admin_webservice_keys_index');
     }
 
     /**
      * Enables status for selected rows.
      *
-     * @DemoRestricted(redirectRoute="admin_webservice")
+     * @DemoRestricted(redirectRoute="admin_webservice_keys_index")
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to edit this.")
      *
      * @param Request $request
      *
      * @return RedirectResponse
-     *
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
      */
-    public function enableMultipleStatusAction(Request $request)
+    public function bulkEnableAction(Request $request)
     {
-        $webserviceToEnable = $request->request->get('webservice_bulk_action');
-        $statusModifier = $this->get('prestashop.adapter.webservice.webservice_account_status_modifier');
+        $webserviceToEnable = $request->request->get('webservice_key_bulk_action');
+        $statusModifier = $this->get('prestashop.adapter.webservice.webservice_key_status_modifier');
 
-        $statusModifier->toggleMultipleStatus($webserviceToEnable, 1);
+        $statusModifier->setStatus($webserviceToEnable, 1);
 
-        return $this->redirectToRoute('admin_webservice');
+        return $this->redirectToRoute('admin_webservice_keys_index');
     }
 
     /**
      * Disables status for selected rows.
      *
-     * @DemoRestricted(redirectRoute="admin_webservice")
+     * @DemoRestricted(redirectRoute="admin_webservice_keys_index")
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to edit this.")
      *
      * @param Request $request
      *
      * @return RedirectResponse
-     *
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
      */
-    public function disableMultipleStatusAction(Request $request)
+    public function bulkDisableAction(Request $request)
     {
-        $webserviceToEnable = $request->request->get('webservice_bulk_action');
-        $statusModifier = $this->get('prestashop.adapter.webservice.webservice_account_status_modifier');
+        $webserviceToEnable = $request->request->get('webservice_key_bulk_action');
+        $statusModifier = $this->get('prestashop.adapter.webservice.webservice_key_status_modifier');
 
-        $statusModifier->toggleMultipleStatus($webserviceToEnable, 0);
+        $statusModifier->setStatus($webserviceToEnable, 0);
 
-        return $this->redirectToRoute('admin_webservice');
+        return $this->redirectToRoute('admin_webservice_keys_index');
     }
 
     /**
      * Toggles webservice account status.
      *
-     * @DemoRestricted(redirectRoute="admin_webservice")
+     * @DemoRestricted(redirectRoute="admin_webservice_keys_index")
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to edit this.")
      *
-     * @param int $webserviceAccountId
+     * @param int $webserviceKeyId
      *
      * @return RedirectResponse
-     *
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
      */
-    public function toggleStatusAction($webserviceAccountId)
+    public function toggleStatusAction($webserviceKeyId)
     {
-        $statusModifier = $this->get('prestashop.adapter.webservice.webservice_account_status_modifier');
-        $errors = $statusModifier->toggleStatus($webserviceAccountId);
+        $statusModifier = $this->get('prestashop.adapter.webservice.webservice_key_status_modifier');
+        $errors = $statusModifier->toggleStatus($webserviceKeyId);
 
         if (!empty($errors)) {
             $this->flashErrors($errors);
@@ -294,24 +299,22 @@ class WebserviceController extends FrameworkBundleAdminController
             );
         }
 
-        return $this->redirectToRoute('admin_webservice');
+        return $this->redirectToRoute('admin_webservice_keys_index');
     }
 
     /**
      * Process the Webservice configuration form.
      *
-     * @DemoRestricted(redirectRoute="admin_webservice")
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to edit this.")
+     * @DemoRestricted(redirectRoute="admin_webservice_keys_index")
+     * @AdminSecurity("is_granted(['create', 'update', 'delete'], request.get('_legacy_controller'))", message="You do not have permission to edit this.")
      *
      * @param Request $request
      *
      * @return RedirectResponse
-     *
-     * @throws \Exception
      */
-    public function processSettingsFormAction(Request $request)
+    public function saveSettingsAction(Request $request)
     {
-        $this->dispatchHook('actionAdminAdminWebserviceControllerPostProcessBefore', array('controller' => $this));
+        $this->dispatchHook('actionAdminAdminWebserviceControllerPostProcessBefore', ['controller' => $this]);
 
         $form = $this->getFormHandler()->getForm();
         $form->handleRequest($request);
@@ -324,11 +327,9 @@ class WebserviceController extends FrameworkBundleAdminController
             } else {
                 $this->flashErrors($saveErrors);
             }
-
-            return $this->redirectToRoute('admin_webservice');
         }
 
-        return $this->redirectToRoute('admin_webservice');
+        return $this->redirectToRoute('admin_webservice_keys_index');
     }
 
     /**
@@ -340,17 +341,25 @@ class WebserviceController extends FrameworkBundleAdminController
     }
 
     /**
-     * @param Request $request
-     *
      * @return string[]
      */
-    private function lookForWarnings(Request $request)
+    private function lookForWarnings()
     {
-        /** @var WebserviceCanBeEnabledConfigurationChecker $configurationChecker */
-        $configurationChecker = $this->get('prestashop.core.configuration.webservice_can_be_enabled_configuration_checker');
+        $configurationChecker = $this->get('prestashop.core.webservice.server_requirements_checker');
 
-        $warningMessages = $configurationChecker->getErrors($request);
+        return $configurationChecker->checkForErrors();
+    }
 
-        return $warningMessages;
+    /**
+     * @return array
+     */
+    private function getErrorMessages()
+    {
+        return [
+            WebserviceConstraintException::class => [
+                WebserviceConstraintException::INVALID_KEY => $this->trans('Key length must be 32 character long.', 'Admin.Advparameters.Notification'),
+            ],
+            DuplicateWebserviceKeyException::class => $this->trans('This key already exists.', 'Admin.Advparameters.Notification'),
+        ];
     }
 }

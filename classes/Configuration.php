@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -364,7 +364,7 @@ class ConfigurationCore extends ObjectModel
     public static function set($key, $values, $idShopGroup = null, $idShop = null)
     {
         if (!Validate::isConfigName($key)) {
-            die(Context::getContext()->getTranslator()->trans('[%s] is not a valid configuration key', array(Tools::htmlentitiesUTF8($key)), 'Admin.Notifications.Error'));
+            die(Tools::displayError(Context::getContext()->getTranslator()->trans('[%s] is not a valid configuration key', array(Tools::htmlentitiesUTF8($key)), 'Admin.Notifications.Error')));
         }
 
         if ($idShop === null) {
@@ -425,7 +425,7 @@ class ConfigurationCore extends ObjectModel
     public static function updateValue($key, $values, $html = false, $idShopGroup = null, $idShop = null)
     {
         if (!Validate::isConfigName($key)) {
-            die(Context::getContext()->getTranslator()->trans('[%s] is not a valid configuration key', array(Tools::htmlentitiesUTF8($key)), 'Admin.Notifications.Error'));
+            die(Tools::displayError(Context::getContext()->getTranslator()->trans('[%s] is not a valid configuration key', array(Tools::htmlentitiesUTF8($key)), 'Admin.Notifications.Error')));
         }
 
         if ($idShop === null || !Shop::isFeatureActive()) {

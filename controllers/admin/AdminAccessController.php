@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -29,7 +29,7 @@
  */
 class AdminAccessControllerCore extends AdminController
 {
-    /* @var array : Black list of id_tab that do not have access */
+    /** @var array : Black list of id_tab that do not have access */
     public $accesses_black_list = array();
 
     public function __construct()
@@ -194,22 +194,31 @@ class AdminAccessControllerCore extends AdminController
         return (isset($_GET['id_profile']) && !empty($_GET['id_profile']) && is_numeric($_GET['id_profile'])) ? (int) $_GET['id_profile'] : 1;
     }
 
-    private function sortModuleByName($a, $b)
+    /**
+     * @param array $a module data
+     * @param array $b module data
+     *
+     * @return int
+     */
+    protected function sortModuleByName($a, $b)
     {
-        return strnatcmp($a['name'], $b['name']);
+        $moduleAName = isset($a['name']) ? $a['name'] : null;
+        $moduleBName = isset($b['name']) ? $b['name'] : null;
+
+        return strnatcmp($moduleAName, $moduleBName);
     }
 
     /**
      * return human readable Tabs hierarchy for display.
      */
-    private function displayTabs(array $tabs)
+    protected function displayTabs(array $tabs)
     {
         $tabsTree = $this->getChildrenTab($tabs);
 
         return $tabsTree;
     }
 
-    private function getChildrenTab(array &$tabs, $id_parent = 0)
+    protected function getChildrenTab(array &$tabs, $id_parent = 0)
     {
         $children = [];
         foreach ($tabs as &$tab) {

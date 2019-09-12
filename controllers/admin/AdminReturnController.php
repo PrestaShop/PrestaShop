@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -167,7 +167,10 @@ class AdminReturnControllerCore extends AdminController
 
         $this->tpl_form_vars = array(
             'customer' => new Customer($this->object->id_customer),
-            'url_customer' => 'index.php?tab=AdminCustomers&id_customer=' . (int) $this->object->id_customer . '&viewcustomer&token=' . Tools::getAdminToken('AdminCustomers' . (int) (Tab::getIdFromClassName('AdminCustomers')) . (int) $this->context->employee->id),
+            'url_customer' => $this->context->link->getAdminLink('AdminCustomers', true, [], [
+                'id_customer' => $this->object->id_customer,
+                'viewcustomer' => 1,
+            ]),
             'text_order' => $this->trans(
                 'Order #%id% from %date%',
                 array(
@@ -246,10 +249,11 @@ class AdminReturnControllerCore extends AdminController
                     if ($orderReturn->save()) {
                         $orderReturnState = new OrderReturnState($orderReturn->state);
                         $vars = array(
-                        '{lastname}' => $customer->lastname,
-                        '{firstname}' => $customer->firstname,
-                        '{id_order_return}' => $id_order_return,
-                        '{state_order_return}' => (isset($orderReturnState->name[(int) $order->id_lang]) ? $orderReturnState->name[(int) $order->id_lang] : $orderReturnState->name[(int) Configuration::get('PS_LANG_DEFAULT')]), );
+                            '{lastname}' => $customer->lastname,
+                            '{firstname}' => $customer->firstname,
+                            '{id_order_return}' => $id_order_return,
+                            '{state_order_return}' => (isset($orderReturnState->name[(int) $order->id_lang]) ? $orderReturnState->name[(int) $order->id_lang] : $orderReturnState->name[(int) Configuration::get('PS_LANG_DEFAULT')]),
+                        );
                         Mail::Send(
                             (int) $order->id_lang,
                             'order_return_state',

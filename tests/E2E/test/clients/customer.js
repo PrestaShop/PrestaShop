@@ -34,6 +34,21 @@ class Customer extends CommonClient {
     }
   }
 
+  getAddressNumberInVar(selector, globalVar) {
+    return this.client
+      .execute(function (selector) {
+        return (document.querySelectorAll(selector).length);
+      }, selector)
+      .then((variable) => global.tab[globalVar] = variable.value);
+  }
+
+  async deleteAddresses(selector) {
+    for (let j = 1; j <= (parseInt(tab['address_number'])); j++) {
+      await this.client.waitForExistAndClick(selector)
+    }
+    return await this.client.pause(1000)
+  }
+
 }
 
 module.exports = Customer;

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,16 +16,18 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-use PrestaShop\PrestaShop\Core\Cldr;
-use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
 use PrestaShop\PrestaShop\Adapter\ContainerBuilder;
+use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
+use PrestaShop\PrestaShop\Core\Localization\Locale;
+use PrestaShop\PrestaShop\Core\Localization\Specification\Price as PriceSpecification;
+use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecification;
 
 class AdminControllerCore extends Controller
 {
@@ -227,7 +229,7 @@ class AdminControllerCore extends Controller
     /** @var array List of row ids associated with a given action for witch this action have to not be available */
     protected $list_skip_actions = array();
 
-    /* @var bool Don't show header & footer */
+    /** @var bool Don't show header & footer */
     protected $lite_display = false;
 
     /** @var bool List content lines are clickable if true */
@@ -264,8 +266,8 @@ class AdminControllerCore extends Controller
      *
      * array(
      *      'actionName' => array(
-     *      'text' => $this->l('Message displayed on the submit button (mandatory)'),
-     *      'confirm' => $this->l('If set, this confirmation message will pop-up (optional)')),
+     *      'text' => $this->trans('Message displayed on the submit button (mandatory)'),
+     *      'confirm' => $this->trans('If set, this confirmation message will pop-up (optional)')),
      *      'anotherAction' => array(...)
      * );
      *
@@ -275,7 +277,7 @@ class AdminControllerCore extends Controller
      */
     protected $bulk_actions;
 
-    /* @var array Ids of the rows selected */
+    /** @var array Ids of the rows selected */
     protected $boxes;
 
     /** @var string Do not automatically select * anymore but select only what is necessary */
@@ -420,27 +422,27 @@ class AdminControllerCore extends Controller
             $this->multishop_context = Shop::CONTEXT_ALL | Shop::CONTEXT_GROUP | Shop::CONTEXT_SHOP;
         }
 
-        if (defined('_PS_BO_DEFAULT_THEME_') && _PS_BO_DEFAULT_THEME_
-            && @filemtime(_PS_BO_ALL_THEMES_DIR_ . _PS_BO_DEFAULT_THEME_ . DIRECTORY_SEPARATOR . 'template')) {
-            $default_theme_name = _PS_BO_DEFAULT_THEME_;
-        }
-
-        $this->bo_theme = $default_theme_name;
-
-        if (!@filemtime(_PS_BO_ALL_THEMES_DIR_ . $this->bo_theme . DIRECTORY_SEPARATOR . 'template')) {
-            $this->bo_theme = 'default';
-        }
-
-        $this->bo_css = ((Validate::isLoadedObject($this->context->employee)
-            && $this->context->employee->bo_css) ? $this->context->employee->bo_css : 'theme.css');
-
-        $adminThemeCSSFile = _PS_BO_ALL_THEMES_DIR_ . $this->bo_theme . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . $this->bo_css;
-
-        if (file_exists($adminThemeCSSFile)) {
-            $this->bo_css = 'theme.css';
-        }
-
         if (defined('_PS_BO_ALL_THEMES_DIR_')) {
+            if (defined('_PS_BO_DEFAULT_THEME_') && _PS_BO_DEFAULT_THEME_
+                && @filemtime(_PS_BO_ALL_THEMES_DIR_ . _PS_BO_DEFAULT_THEME_ . DIRECTORY_SEPARATOR . 'template')) {
+                $default_theme_name = _PS_BO_DEFAULT_THEME_;
+            }
+
+            $this->bo_theme = $default_theme_name;
+
+            if (!@filemtime(_PS_BO_ALL_THEMES_DIR_ . $this->bo_theme . DIRECTORY_SEPARATOR . 'template')) {
+                $this->bo_theme = 'default';
+            }
+
+            $this->bo_css = ((Validate::isLoadedObject($this->context->employee)
+                && $this->context->employee->bo_css) ? $this->context->employee->bo_css : 'theme.css');
+
+            $adminThemeCSSFile = _PS_BO_ALL_THEMES_DIR_ . $this->bo_theme . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . $this->bo_css;
+
+            if (file_exists($adminThemeCSSFile)) {
+                $this->bo_css = 'theme.css';
+            }
+
             $this->context->smarty->setTemplateDir(array(
                 _PS_BO_ALL_THEMES_DIR_ . $this->bo_theme . DIRECTORY_SEPARATOR . 'template',
                 _PS_OVERRIDE_DIR_ . 'controllers' . DIRECTORY_SEPARATOR . 'admin' . DIRECTORY_SEPARATOR . 'templates',
@@ -525,7 +527,7 @@ class AdminControllerCore extends Controller
 
         // Check if logged on Addons
         $this->logged_on_addons = false;
-        if (isset($this->context->cookie->username_addons) && isset($this->context->cookie->password_addons) && !empty($this->context->cookie->username_addons) && !empty($this->context->cookie->password_addons)) {
+        if (isset($this->context->cookie->username_addons, $this->context->cookie->password_addons) && !empty($this->context->cookie->username_addons) && !empty($this->context->cookie->password_addons)) {
             $this->logged_on_addons = true;
         }
 
@@ -567,7 +569,7 @@ class AdminControllerCore extends Controller
             $tabs = array();
         }
 
-        if (is_null($tab_id)) {
+        if (null === $tab_id) {
             $tab_id = $this->id;
         }
 
@@ -579,47 +581,53 @@ class AdminControllerCore extends Controller
             'tab' => $dummy,
             'action' => $dummy,
         );
-        if (isset($tabs[0])) {
+        if (!empty($tabs[0])) {
             $this->addMetaTitle($tabs[0]['name']);
             $breadcrumbs2['tab']['name'] = $tabs[0]['name'];
-            $breadcrumbs2['tab']['href'] = $this->context->link->getAdminLink($tabs[0]['class_name']);
+            $breadcrumbs2['tab']['href'] = $this->context->link->getTabLink($tabs[0]);
             if (!isset($tabs[1])) {
                 $breadcrumbs2['tab']['icon'] = 'icon-' . $tabs[0]['class_name'];
             }
         }
-        if (isset($tabs[1])) {
+        if (!empty($tabs[1])) {
             $breadcrumbs2['container']['name'] = $tabs[1]['name'];
-            $breadcrumbs2['container']['href'] = $this->context->link->getAdminLink($tabs[1]['class_name']);
+            $breadcrumbs2['container']['href'] = $this->context->link->getTabLink($tabs[1]);
             $breadcrumbs2['container']['icon'] = 'icon-' . $tabs[1]['class_name'];
         }
 
         /* content, edit, list, add, details, options, view */
         switch ($this->display) {
             case 'add':
-                $breadcrumbs2['action']['name'] = $this->l('Add', null, null, false);
+                $breadcrumbs2['action']['name'] = $this->trans('Add');
                 $breadcrumbs2['action']['icon'] = 'icon-plus';
+
                 break;
             case 'edit':
-                $breadcrumbs2['action']['name'] = $this->l('Edit', null, null, false);
+                $breadcrumbs2['action']['name'] = $this->trans('Edit');
                 $breadcrumbs2['action']['icon'] = 'icon-pencil';
+
                 break;
             case '':
             case 'list':
-                $breadcrumbs2['action']['name'] = $this->l('List', null, null, false);
+                $breadcrumbs2['action']['name'] = $this->trans('List');
                 $breadcrumbs2['action']['icon'] = 'icon-th-list';
+
                 break;
             case 'details':
             case 'view':
-                $breadcrumbs2['action']['name'] = $this->l('View details', null, null, false);
+                $breadcrumbs2['action']['name'] = $this->trans('View details');
                 $breadcrumbs2['action']['icon'] = 'icon-zoom-in';
+
                 break;
             case 'options':
-                $breadcrumbs2['action']['name'] = $this->l('Options', null, null, false);
+                $breadcrumbs2['action']['name'] = $this->trans('Options');
                 $breadcrumbs2['action']['icon'] = 'icon-cogs';
+
                 break;
             case 'generator':
-                $breadcrumbs2['action']['name'] = $this->l('Generator', null, null, false);
+                $breadcrumbs2['action']['name'] = $this->trans('Generator');
                 $breadcrumbs2['action']['icon'] = 'icon-flask';
+
                 break;
         }
 
@@ -645,18 +653,21 @@ class AdminControllerCore extends Controller
 
         switch ($this->display) {
             case 'edit':
-                $this->toolbar_title[] = $this->l('Edit', null, null, false);
-                $this->addMetaTitle($this->l('Edit', null, null, false));
+                $this->toolbar_title[] = $this->trans('Edit');
+                $this->addMetaTitle($this->trans('Edit'));
+
                 break;
 
             case 'add':
-                $this->toolbar_title[] = $this->l('Add new', null, null, false);
-                $this->addMetaTitle($this->l('Add new', null, null, false));
+                $this->toolbar_title[] = $this->trans('Add new');
+                $this->addMetaTitle($this->trans('Add new'));
+
                 break;
 
             case 'view':
-                $this->toolbar_title[] = $this->l('View', null, null, false);
-                $this->addMetaTitle($this->l('View', null, null, false));
+                $this->toolbar_title[] = $this->trans('View');
+                $this->addMetaTitle($this->trans('View'));
+
                 break;
         }
 
@@ -682,7 +693,7 @@ class AdminControllerCore extends Controller
                     if (!is_array($val)) {
                         $filter_value = '';
                         if (isset($t['type']) && $t['type'] == 'bool') {
-                            $filter_value = ((bool) $val) ? $this->l('yes') : $this->l('no');
+                            $filter_value = ((bool) $val) ? $this->trans('yes') : $this->trans('no');
                         } elseif (isset($t['type']) && $t['type'] == 'date' || isset($t['type']) && $t['type'] == 'datetime') {
                             $date = json_decode($val, true);
                             if (isset($date[0])) {
@@ -695,7 +706,7 @@ class AdminControllerCore extends Controller
                             $filter_value = htmlspecialchars($val, ENT_QUOTES, 'UTF-8');
                         }
                         if (!empty($filter_value)) {
-                            $filters[] = sprintf($this->l('%s: %s'), $t['title'], $filter_value);
+                            $filters[] = $this->trans('%s: %s', [$t['title'], $filter_value]);
                         }
                     } else {
                         $filter_value = '';
@@ -706,14 +717,14 @@ class AdminControllerCore extends Controller
                         }
                         $filter_value = ltrim($filter_value, ' -');
                         if (!empty($filter_value)) {
-                            $filters[] = sprintf($this->l('%s: %s'), $t['title'], $filter_value);
+                            $filters[] = $this->trans('%s: %s', [$t['title'], $filter_value]);
                         }
                     }
                 }
             }
 
             if (count($filters)) {
-                return sprintf($this->l('filter by %s'), implode(', ', $filters));
+                return $this->trans('filter by %s', [implode(', ', $filters)]);
             }
         }
     }
@@ -764,11 +775,11 @@ class AdminControllerCore extends Controller
         }
 
         $token = Tools::getValue('token');
-        if (!empty($token) && $token === $this->token) {
+        if ($token === $this->token) {
             return true;
         }
 
-        if (count($_POST) || !isset($_GET['controller']) || !Validate::isControllerName($_GET['controller']) || $token) {
+        if (count($_POST) || !isset($_GET['controller']) || !Validate::isControllerName($_GET['controller']) || !$token) {
             return false;
         }
 
@@ -961,6 +972,7 @@ class AdminControllerCore extends Controller
                     Hook::exec('action' . get_class($this) . ucfirst($this->action) . 'Before', array('controller' => $this));
                     // Call process
                     $return = $this->{'process' . Tools::toCamelCase($this->action)}();
+
                     // Hook After Action
                     Hook::exec('actionAdmin' . ucfirst($this->action) . 'After', array('controller' => $this, 'return' => $return));
                     Hook::exec('action' . get_class($this) . ucfirst($this->action) . 'After', array('controller' => $this, 'return' => $return));
@@ -1099,7 +1111,15 @@ class AdminControllerCore extends Controller
                 }
                 $this->errors[] = $this->trans('An error occurred during deletion.', array(), 'Admin.Notifications.Error');
                 if ($res) {
-                    PrestaShopLogger::addLog(sprintf($this->l('%s deletion', 'AdminTab', false, false), $this->className), 1, null, $this->className, (int) $this->object->id, true, (int) $this->context->employee->id);
+                    PrestaShopLogger::addLog(
+                        $this->trans('%s deletion', [$this->className]),
+                        1,
+                        null,
+                        $this->className,
+                        (int) $this->object->id,
+                        true,
+                        (int) $this->context->employee->id
+                    );
                 }
             }
         } else {
@@ -1150,7 +1170,15 @@ class AdminControllerCore extends Controller
                 $this->errors[] = $this->trans('An error occurred while creating an object.', array(), 'Admin.Notifications.Error') .
                     ' <b>' . $this->table . ' (' . Db::getInstance()->getMsgError() . ')</b>';
             } elseif (($_POST[$this->identifier] = $this->object->id /* voluntary do affectation here */) && $this->postImage($this->object->id) && !count($this->errors) && $this->_redirect) {
-                PrestaShopLogger::addLog(sprintf($this->l('%s addition', 'AdminTab', false, false), $this->className), 1, null, $this->className, (int) $this->object->id, true, (int) $this->context->employee->id);
+                PrestaShopLogger::addLog(
+                    $this->trans('%s addition', [$this->className]),
+                    1,
+                    null,
+                    $this->className,
+                    (int) $this->object->id,
+                    true,
+                    (int) $this->context->employee->id
+                );
                 $parent_id = (int) Tools::getValue('id_parent', 1);
                 $this->afterAdd($this->object);
                 $this->updateAssoShop($this->object->id);
@@ -1250,7 +1278,15 @@ class AdminControllerCore extends Controller
                             $this->redirect_after = self::$currentIndex . ($parent_id ? '&' . $this->identifier . '=' . $object->id : '') . '&conf=4&token=' . $this->token;
                         }
                     }
-                    PrestaShopLogger::addLog(sprintf($this->l('%s modification', 'AdminTab', false, false), $this->className), 1, null, $this->className, (int) $object->id, true, (int) $this->context->employee->id);
+                    PrestaShopLogger::addLog(
+                        $this->trans('%s modification', [$this->className]),
+                        1,
+                        null,
+                        $this->className,
+                        (int) $object->id,
+                        true,
+                        (int) $this->context->employee->id
+                    );
                 } else {
                     $this->errors[] = $this->trans('An error occurred while updating an object.', array(), 'Admin.Notifications.Error') .
                         ' <b>' . $this->table . '</b> ' . $this->trans('(cannot load object)', array(), 'Admin.Notifications.Error');
@@ -1268,8 +1304,6 @@ class AdminControllerCore extends Controller
         if (isset($object)) {
             return $object;
         }
-
-        return;
     }
 
     /**
@@ -1387,8 +1421,10 @@ class AdminControllerCore extends Controller
 
         $_POST = array();
         $this->_filter = false;
-        unset($this->_filterHaving);
-        unset($this->_having);
+        unset(
+            $this->_filterHaving,
+            $this->_having
+        );
     }
 
     /**
@@ -1431,8 +1467,8 @@ class AdminControllerCore extends Controller
                 }
 
                 // Check if field is required
-                if ((!Shop::isFeatureActive() && isset($values['required']) && $values['required'])
-                    || (Shop::isFeatureActive() && isset($_POST['multishopOverrideOption'][$field]) && isset($values['required']) && $values['required'])) {
+                if ((!Shop::isFeatureActive() && !empty($values['required']))
+                    || (Shop::isFeatureActive() && isset($_POST['multishopOverrideOption'][$field]) && !empty($values['required']))) {
                     if (isset($values['type']) && $values['type'] == 'textLang') {
                         foreach ($languages as $language) {
                             if (($value = Tools::getValue($field . '_' . $language['id_lang'])) == false && (string) $value != '0') {
@@ -1475,6 +1511,7 @@ class AdminControllerCore extends Controller
 
                     if (!$hide_multishop_checkbox && Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_ALL && empty($options['no_multishop_checkbox']) && empty($_POST['multishopOverrideOption'][$key])) {
                         Configuration::deleteFromContext($key);
+
                         continue;
                     }
 
@@ -1495,7 +1532,7 @@ class AdminControllerCore extends Controller
                                 }
                             }
                         }
-                        Configuration::updateValue($key, $list, isset($values['validation']) && isset($options['validation']) && $options['validation'] == 'isCleanHtml' ? true : false);
+                        Configuration::updateValue($key, $list, isset($options['validation']) && $options['validation'] == 'isCleanHtml' ? true : false);
                     } else {
                         $val = (isset($options['cast']) ? $options['cast'](Tools::getValue($key)) : Tools::getValue($key));
                         if ($this->validateField($val, $options)) {
@@ -1539,7 +1576,7 @@ class AdminControllerCore extends Controller
                 if (!$this->lite_display) {
                     $this->page_header_toolbar_btn['back'] = array(
                         'href' => $back,
-                        'desc' => $this->l('Back to list'),
+                        'desc' => $this->trans('Back to list'),
                     );
                 }
                 $obj = $this->loadObject(true);
@@ -1549,15 +1586,26 @@ class AdminControllerCore extends Controller
                     $this->toolbar_title[] = is_array($obj->{$this->identifier_name}) ? $obj->{$this->identifier_name}[$this->context->employee->id_lang] : $obj->{$this->identifier_name};
                     $this->addMetaTitle($this->toolbar_title[count($this->toolbar_title) - 1]);
                 }
+
                 break;
             case 'edit':
                 $obj = $this->loadObject(true);
                 if (Validate::isLoadedObject($obj) && isset($obj->{$this->identifier_name}) && !empty($obj->{$this->identifier_name})) {
                     array_pop($this->toolbar_title);
                     array_pop($this->meta_title);
-                    $this->toolbar_title[] = sprintf($this->l('Edit: %s'), (is_array($obj->{$this->identifier_name}) && isset($obj->{$this->identifier_name}[$this->context->employee->id_lang])) ? $obj->{$this->identifier_name}[$this->context->employee->id_lang] : $obj->{$this->identifier_name});
+                    $this->toolbar_title[] = $this->trans(
+                        'Edit: %s',
+                        [
+                            (is_array($obj->{$this->identifier_name})
+                                && isset($obj->{$this->identifier_name}[$this->context->employee->id_lang])
+                            )
+                                ? $obj->{$this->identifier_name}[$this->context->employee->id_lang]
+                                : $obj->{$this->identifier_name},
+                        ]
+                    );
                     $this->addMetaTitle($this->toolbar_title[count($this->toolbar_title) - 1]);
                 }
+
                 break;
         }
 
@@ -1589,7 +1637,7 @@ class AdminControllerCore extends Controller
                 // Default save button - action dynamically handled in javascript
                 $this->toolbar_btn['save'] = array(
                     'href' => '#',
-                    'desc' => $this->l('Save'),
+                    'desc' => $this->trans('Save'),
                 );
                 $back = Tools::safeOutput(Tools::getValue('back', ''));
                 if (empty($back)) {
@@ -1601,9 +1649,10 @@ class AdminControllerCore extends Controller
                 if (!$this->lite_display) {
                     $this->toolbar_btn['cancel'] = array(
                         'href' => $back,
-                        'desc' => $this->l('Cancel'),
+                        'desc' => $this->trans('Cancel'),
                     );
                 }
+
                 break;
             case 'view':
                 // Default cancel button - like old back link
@@ -1617,26 +1666,28 @@ class AdminControllerCore extends Controller
                 if (!$this->lite_display) {
                     $this->toolbar_btn['back'] = array(
                         'href' => $back,
-                        'desc' => $this->l('Back to list'),
+                        'desc' => $this->trans('Back to list'),
                     );
                 }
+
                 break;
             case 'options':
                 $this->toolbar_btn['save'] = array(
                     'href' => '#',
-                    'desc' => $this->l('Save'),
+                    'desc' => $this->trans('Save'),
                 );
+
                 break;
             default:
                 // list
                 $this->toolbar_btn['new'] = array(
                     'href' => self::$currentIndex . '&add' . $this->table . '&token=' . $this->token,
-                    'desc' => $this->l('Add new'),
+                    'desc' => $this->trans('Add new'),
                 );
                 if ($this->allow_export) {
                     $this->toolbar_btn['export'] = array(
                         'href' => self::$currentIndex . '&export' . $this->table . '&token=' . $this->token,
-                        'desc' => $this->l('Export'),
+                        'desc' => $this->trans('Export'),
                     );
                 }
         }
@@ -1765,6 +1816,9 @@ class AdminControllerCore extends Controller
             'display_header_javascript' => $this->display_header_javascript,
             'display_footer' => $this->display_footer,
             'js_def' => Media::getJsDef(),
+            'toggle_navigation_url' => $this->context->link->getAdminLink('AdminEmployees', true, [], [
+                'action' => 'toggleMenu',
+            ]),
         ));
 
         // Use page title from meta_title if it has been set else from the breadcrumbs array
@@ -1785,7 +1839,7 @@ class AdminControllerCore extends Controller
         $header_tpl = file_exists($dir . 'header.tpl') ? $dir . 'header.tpl' : 'header.tpl';
         $page_header_toolbar = file_exists($dir . 'page_header_toolbar.tpl') ? $dir . 'page_header_toolbar.tpl' : 'page_header_toolbar.tpl';
         $footer_tpl = file_exists($dir . 'footer.tpl') ? $dir . 'footer.tpl' : 'footer.tpl';
-        $modal_module_list = file_exists($module_list_dir . 'modal.tpl') ? $module_list_dir . 'modal.tpl' : 'modal.tpl';
+        $modal_module_list = file_exists($module_list_dir . 'modal.tpl') ? $module_list_dir . 'modal.tpl' : '';
         $tpl_action = $this->tpl_folder . $this->display . '.tpl';
 
         // Check if action template has been overridden
@@ -1795,6 +1849,7 @@ class AdminControllerCore extends Controller
                     $this->{$this->display . Tools::toCamelCase($this->className)}();
                 }
                 $this->context->smarty->assign('content', $this->context->smarty->fetch($tpl_action));
+
                 break;
             }
         }
@@ -1825,9 +1880,15 @@ class AdminControllerCore extends Controller
             $this->context->smarty->assign(
                 array(
                     'page_header_toolbar' => $this->context->smarty->fetch($page_header_toolbar),
-                    'modal_module_list' => $this->context->smarty->fetch($modal_module_list),
                 )
             );
+            if (!empty($modal_module_list)) {
+                $this->context->smarty->assign(
+                    array(
+                        'modal_module_list' => $this->context->smarty->fetch($modal_module_list),
+                    )
+                );
+            }
         }
 
         $this->context->smarty->assign('baseAdminUrl', __PS_BASE_URI__ . basename(_PS_ADMIN_DIR_) . '/');
@@ -1837,7 +1898,8 @@ class AdminControllerCore extends Controller
                 'page' => $this->json ? json_encode($page) : $page,
                 'header' => $this->context->smarty->fetch($header_tpl),
                 'footer' => $this->context->smarty->fetch($footer_tpl),
-        ));
+            )
+        );
 
         $this->smartyOutputContent($this->layout);
     }
@@ -1910,6 +1972,7 @@ class AdminControllerCore extends Controller
                 'multishop_context' => $this->multishop_context,
                 'default_tab_link' => $this->context->link->getAdminLink(Tab::getClassNameById((int) Context::getContext()->employee->default_tab)),
                 'login_link' => $this->context->link->getAdminLink('AdminLogin'),
+                'logout_link' => $this->context->link->getAdminLink('AdminLogin', true, [], ['logout' => 1]),
                 'collapse_menu' => isset($this->context->cookie->collapse_menu) ? (int) $this->context->cookie->collapse_menu : 0,
             ));
         } else {
@@ -1918,8 +1981,6 @@ class AdminControllerCore extends Controller
 
         // Shop::initialize() in config.php may empty $this->context->shop->virtual_uri so using a new shop instance for getBaseUrl()
         $this->context->shop = new Shop((int) $this->context->shop->id);
-
-        $cldrRepository = new Cldr\Repository($this->context->language->language_code);
 
         $this->context->smarty->assign(array(
             'img_dir' => _PS_IMG_,
@@ -1931,7 +1992,7 @@ class AdminControllerCore extends Controller
             'version' => _PS_VERSION_,
             'lang_iso' => $this->context->language->iso_code,
             'full_language_code' => $this->context->language->language_code,
-            'full_cldr_language_code' => $cldrRepository->getCulture(),
+            'full_cldr_language_code' => $this->context->getCurrentLocale()->getCode(),
             'link' => $this->context->link,
             'shop_name' => Configuration::get('PS_SHOP_NAME'),
             'base_url' => $this->context->shop->getBaseURL(),
@@ -1959,8 +2020,8 @@ class AdminControllerCore extends Controller
                         array(
                             '[1]' => '<strong>',
                             '[/1]' => '</strong>',
-                            '[2]' => '<a href="' . $this->context->link->getAdminLink('AdminCarts') . '&action=filterOnlyAbandonedCarts">',
-                             '[/2]' => '</a>',
+                            '[2]' => '<a href="' . $this->context->link->getAdminLink('AdminCarts', true, array(), array('action' => 'filterOnlyAbandonedCarts')) . '">',
+                            '[/2]' => '</a>',
                             '[3]' => '<br>',
                         ),
                         'Admin.Navigation.Notification'
@@ -1992,6 +2053,7 @@ class AdminControllerCore extends Controller
 
         foreach ($tabs as $index => $tab) {
             if (!Tab::checkTabRights($tab['id_tab'])
+                || !$tab['enabled']
                 || ($tab['class_name'] == 'AdminStock' && Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') == 0)
                 || $tab['class_name'] == 'AdminCarrierWizard') {
                 unset($tabs[$index]);
@@ -2007,11 +2069,12 @@ class AdminControllerCore extends Controller
                 $tabs[$index]['current'] = false;
             }
             $tabs[$index]['img'] = null;
-            $tabs[$index]['href'] = $this->context->link->getAdminLink($tab['class_name']);
+            $tabs[$index]['href'] = $this->context->link->getTabLink($tab);
             $tabs[$index]['sub_tabs'] = array_values($this->getTabs($tab['id_tab'], $level + 1));
 
-            if (isset($tabs[$index]['sub_tabs'][0])) {
-                $tabs[$index]['href'] = $tabs[$index]['sub_tabs'][0]['href'];
+            $subTabHref = $this->getTabLinkFromSubTabs($tabs[$index]['sub_tabs']);
+            if (!empty($subTabHref)) {
+                $tabs[$index]['href'] = $subTabHref;
             } elseif (0 == $tabs[$index]['id_parent'] && '' == $tabs[$index]['icon']) {
                 unset($tabs[$index]);
             } elseif (empty($tabs[$index]['icon'])) {
@@ -2161,7 +2224,7 @@ class AdminControllerCore extends Controller
         if (is_array($this->tab_modules_list['slider_list']) && count($this->tab_modules_list['slider_list'])) {
             $this->page_header_toolbar_btn['modules-list'] = array(
                 'href' => $this->getAdminModulesUrl(),
-                'desc' => $this->l('Recommended Modules'),
+                'desc' => $this->trans('Recommended Modules'),
             );
         }
     }
@@ -2173,7 +2236,7 @@ class AdminControllerCore extends Controller
         if (is_array($this->tab_modules_list['slider_list']) && count($this->tab_modules_list['slider_list'])) {
             $this->toolbar_btn['modules-list'] = array(
                 'href' => $this->getAdminModulesUrl(),
-                'desc' => $this->l('Recommended Modules'),
+                'desc' => $this->trans('Recommended Modules'),
             );
         }
     }
@@ -2376,11 +2439,11 @@ class AdminControllerCore extends Controller
 
             $this->bulk_actions = array_merge(array(
                 'enableSelection' => array(
-                    'text' => $this->l('Enable selection'),
+                    'text' => $this->trans('Enable selection'),
                     'icon' => 'icon-power-off text-success',
                 ),
                 'disableSelection' => array(
-                    'text' => $this->l('Disable selection'),
+                    'text' => $this->trans('Disable selection'),
                     'icon' => 'icon-power-off text-danger',
                 ),
                 'divider' => array(
@@ -2393,7 +2456,7 @@ class AdminControllerCore extends Controller
 
         // Empty list is ok
         if (!is_array($this->_list)) {
-            $this->displayWarning($this->l('Bad SQL query', 'Helper') . '<br />' . htmlspecialchars($this->_list_error));
+            $this->displayWarning($this->trans('Bad SQL query') . '<br />' . htmlspecialchars($this->_list_error));
 
             return false;
         }
@@ -2433,7 +2496,7 @@ class AdminControllerCore extends Controller
         $helper = new HelperView($this);
         $this->setHelperDisplay($helper);
         $helper->tpl_vars = $this->getTemplateViewVars();
-        if (!is_null($this->base_tpl_view)) {
+        if (null !== $this->base_tpl_view) {
             $helper->base_tpl = $this->base_tpl_view;
         }
         $view = $helper->generateView();
@@ -2509,7 +2572,7 @@ class AdminControllerCore extends Controller
             }
 
             $helper->back_url = $back;
-            !is_null($this->base_tpl_form) ? $helper->base_tpl = $this->base_tpl_form : '';
+            null !== $this->base_tpl_form ? $helper->base_tpl = $this->base_tpl_form : '';
             if ($this->access('view')) {
                 if (Tools::getValue('back')) {
                     $helper->tpl_vars['back'] = Tools::safeOutput(Tools::getValue('back'));
@@ -2663,10 +2726,10 @@ class AdminControllerCore extends Controller
             if (defined('_PS_HOST_MODE_') && _PS_HOST_MODE_) {
                 $this->addJS('https://cdn.statuspage.io/se-v2.js');
 
-                Media::addJsDefL('status_operational', $this->l('Operational', null, true, false));
-                Media::addJsDefL('status_degraded_performance', $this->l('Degraded Performance', null, true, false));
-                Media::addJsDefL('status_partial_outage', $this->l('Partial Outage', null, true, false));
-                Media::addJsDefL('status_major_outage', $this->l('Major Outage', null, true, false));
+                Media::addJsDefL('status_operational', $this->trans('Operational'));
+                Media::addJsDefL('status_degraded_performance', $this->trans('Degraded Performance'));
+                Media::addJsDefL('status_partial_outage', $this->trans('Partial Outage'));
+                Media::addJsDefL('status_major_outage', $this->trans('Major Outage'));
                 Media::addJsDef(array('host_cluster' => defined('_PS_HOST_CLUSTER_') ? _PS_HOST_CLUSTER_ : 'fr1'));
             }
 
@@ -2676,11 +2739,19 @@ class AdminControllerCore extends Controller
 
         $this->addJS(array(
             _PS_JS_DIR_ . 'admin.js?v=' . _PS_VERSION_, // TODO: SEE IF REMOVABLE
-            _PS_JS_DIR_ . 'cldr.js',
+            __PS_BASE_URI__ . $this->admin_webpath . '/themes/new-theme/public/cldr.bundle.js',
             _PS_JS_DIR_ . 'tools.js?v=' . _PS_VERSION_,
             __PS_BASE_URI__ . $this->admin_webpath . '/public/bundle.js',
         ));
 
+        Media::addJsDef([
+            'changeFormLanguageUrl' => $this->context->link->getAdminLink(
+                'AdminEmployees',
+                true,
+                [],
+                ['action' => 'formLanguage']
+            ),
+        ]);
         Media::addJsDef(array('host_mode' => (defined('_PS_HOST_MODE_') && _PS_HOST_MODE_)));
         Media::addJsDef(array('baseDir' => __PS_BASE_URI__));
         Media::addJsDef(array('baseAdminDir' => __PS_BASE_URI__ . basename(_PS_ADMIN_DIR_) . '/'));
@@ -2690,6 +2761,12 @@ class AdminControllerCore extends Controller
             'name' => Context::getContext()->currency->name,
             'format' => Context::getContext()->currency->format,
         )));
+        Media::addJsDef(
+            array(
+                'currency_specifications' => $this->preparePriceSpecifications($this->context),
+                'number_specifications' => $this->prepareNumberSpecifications($this->context),
+            )
+        );
 
         // Execute Hook AdminController SetMedia
         Hook::exec('actionAdminControllerSetMedia');
@@ -2735,7 +2812,7 @@ class AdminControllerCore extends Controller
             $this->ajax = '1';
         }
 
-        if (is_null($this->context->link)) {
+        if (null === $this->context->link) {
             $protocol_link = (Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
             $protocol_content = (Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
             $this->context->link = new Link($protocol_link, $protocol_content);
@@ -2976,7 +3053,7 @@ class AdminControllerCore extends Controller
             } else {
                 $this->errors[] = $this->trans('You do not have permission to add this.', array(), 'Admin.Notifications.Error');
             }
-        } elseif (isset($_GET['update' . $this->table]) && isset($_GET[$this->identifier])) {
+        } elseif (isset($_GET['update' . $this->table], $_GET[$this->identifier])) {
             $this->display = 'edit';
             if (!$this->access('edit')) {
                 $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
@@ -3017,11 +3094,11 @@ class AdminControllerCore extends Controller
         } elseif (is_array($this->bulk_actions)) {
             $submit_bulk_actions = array_merge(array(
                 'enableSelection' => array(
-                    'text' => $this->l('Enable selection'),
+                    'text' => $this->trans('Enable selection'),
                     'icon' => 'icon-power-off text-success',
                 ),
                 'disableSelection' => array(
-                    'text' => $this->l('Disable selection'),
+                    'text' => $this->trans('Disable selection'),
                     'icon' => 'icon-power-off text-danger',
                 ),
             ), $this->bulk_actions);
@@ -3037,6 +3114,7 @@ class AdminControllerCore extends Controller
                         } else {
                             $this->errors[] = $this->trans('You do not have permission to delete this.', array(), 'Admin.Notifications.Error');
                         }
+
                         break;
                     } elseif ($this->access('edit')) {
                         $this->action = 'bulk' . $bulk_action;
@@ -3044,6 +3122,7 @@ class AdminControllerCore extends Controller
                     } else {
                         $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
                     }
+
                     break;
                 } elseif (Tools::isSubmit('submitBulk')) {
                     if ($bulk_action === 'delete') {
@@ -3053,6 +3132,7 @@ class AdminControllerCore extends Controller
                         } else {
                             $this->errors[] = $this->trans('You do not have permission to delete this.', array(), 'Admin.Notifications.Error');
                         }
+
                         break;
                     } elseif ($this->access('edit')) {
                         $this->action = 'bulk' . Tools::getValue('select_submitBulk');
@@ -3060,6 +3140,7 @@ class AdminControllerCore extends Controller
                     } else {
                         $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
                     }
+
                     break;
                 }
             }
@@ -3219,6 +3300,7 @@ class AdminControllerCore extends Controller
 
             if ($this->_list === false) {
                 $this->_list_error = Db::getInstance()->getMsgError();
+
                 break;
             }
 
@@ -3359,7 +3441,7 @@ class AdminControllerCore extends Controller
             $this->fields_list[$orderBy]['order_key'] = $this->fields_list[$orderBy]['filter_key'];
         }
 
-        if (isset($this->fields_list[$orderBy]) && isset($this->fields_list[$orderBy]['order_key'])) {
+        if (isset($this->fields_list[$orderBy]['order_key'])) {
             $orderBy = $this->fields_list[$orderBy]['order_key'];
         }
 
@@ -3477,11 +3559,11 @@ class AdminControllerCore extends Controller
      */
     public function getModulesList($filter_modules_list, $tracking_source = false)
     {
-        if (!is_array($filter_modules_list) && !is_null($filter_modules_list)) {
+        if (!is_array($filter_modules_list) && null !== $filter_modules_list) {
             $filter_modules_list = array($filter_modules_list);
         }
 
-        if (is_null($filter_modules_list) || !count($filter_modules_list)) {
+        if (null === $filter_modules_list || !count($filter_modules_list)) {
             return false;
         } //if there is no modules to display just return false;
 
@@ -3647,9 +3729,11 @@ class AdminControllerCore extends Controller
                     $value = Tools::getValue($field . '_' . $default_language->id);
                     // !isset => not exist || "" == $value can be === 0 (before, empty $value === 0 returned true)
                     if (!isset($value) || '' == $value) {
-                        $this->errors[$field . '_' . $default_language->id] = $this->trans('The field %field_name% is required at least in %lang%.',
+                        $this->errors[$field . '_' . $default_language->id] = $this->trans(
+                            'The field %field_name% is required at least in %lang%.',
                             array('%field_name%' => $object->displayFieldName($field, $class_name), '%lang%' => $default_language->name),
-                            'Admin.Notifications.Error');
+                            'Admin.Notifications.Error'
+                        );
                     }
                 }
 
@@ -3680,9 +3764,11 @@ class AdminControllerCore extends Controller
                             $res = Validate::$function($value);
                         }
                         if (!$res) {
-                            $this->errors[$field_lang . '_' . $language['id_lang']] = $this->trans('The %field_name% field (%lang%) is invalid.',
+                            $this->errors[$field_lang . '_' . $language['id_lang']] = $this->trans(
+                                'The %field_name% field (%lang%) is invalid.',
                                 array('%field_name%' => call_user_func(array($class_name, 'displayFieldName'), $field_lang, $class_name), '%lang%' => $language['name']),
-                                'Admin.Notifications.Error');
+                                'Admin.Notifications.Error'
+                            );
                         }
                     }
                 }
@@ -3911,11 +3997,11 @@ class AdminControllerCore extends Controller
      */
     protected function postImage($id)
     {
-        if (isset($this->fieldImageSettings['name']) && isset($this->fieldImageSettings['dir'])) {
+        if (isset($this->fieldImageSettings['name'], $this->fieldImageSettings['dir'])) {
             return $this->uploadImage($id, $this->fieldImageSettings['name'], $this->fieldImageSettings['dir'] . '/');
         } elseif (!empty($this->fieldImageSettings)) {
             foreach ($this->fieldImageSettings as $image) {
-                if (isset($image['name']) && isset($image['dir'])) {
+                if (isset($image['name'], $image['dir'])) {
                     $this->uploadImage($id, $image['name'], $image['dir'] . '/');
                 }
             }
@@ -3961,7 +4047,7 @@ class AdminControllerCore extends Controller
 
             // Evaluate the memory required to resize the image: if it's too much, you can't resize it.
             if (!ImageManager::checkImageMemoryLimit($tmp_name)) {
-                $this->errors[] = $this->trans('Due to memory limit restrictions, this image cannot be loaded. Please increase your memory_limit value via your server\'s configuration settings. ', array(), 'Admin.Notifications.Error');
+                $this->errors[] = $this->trans('Due to memory limit restrictions, this image cannot be loaded. Please increase your memory_limit value via your server\'s configuration settings.', array(), 'Admin.Notifications.Error');
             }
 
             // Copy new image
@@ -4021,7 +4107,15 @@ class AdminControllerCore extends Controller
                     }
 
                     if ($delete_ok) {
-                        PrestaShopLogger::addLog(sprintf($this->l('%s deletion', 'AdminTab', false, false), $this->className), 1, null, $this->className, (int) $to_delete->id, true, (int) $this->context->employee->id);
+                        PrestaShopLogger::addLog(
+                            $this->trans('%s deletion', [$this->className]),
+                            1,
+                            null,
+                            $this->className,
+                            (int) $to_delete->id,
+                            true,
+                            (int) $this->context->employee->id
+                        );
                     } else {
                         $this->errors[] = $this->trans('Can\'t delete #%id%', array('%id%' => $id), 'Admin.Notifications.Error');
                     }
@@ -4292,7 +4386,7 @@ class AdminControllerCore extends Controller
         }
 
         $module->options['uninstall_onclick'] = ((!$module->onclick_option) ?
-            ((empty($module->confirmUninstall)) ? 'return confirm(\'' . $this->l('Do you really want to uninstall this module?') . '\');' : 'return confirm(\'' . addslashes($module->confirmUninstall) . '\');') :
+            ((empty($module->confirmUninstall)) ? 'return confirm(\'' . $this->trans('Do you really want to uninstall this module?') . '\');' : 'return confirm(\'' . addslashes($module->confirmUninstall) . '\');') :
             $obj->onclickOption('uninstall', $module->options['uninstall_url']));
 
         if ((Tools::getValue('module_name') == $module->name || in_array($module->name, explode('|', Tools::getValue('modules_list')))) && (int) Tools::getValue('conf') > 0) {
@@ -4323,27 +4417,27 @@ class AdminControllerCore extends Controller
             $module->enable_device = Context::DEVICE_COMPUTER | Context::DEVICE_TABLET | Context::DEVICE_MOBILE;
         }
 
-        $this->translationsTab['confirm_uninstall_popup'] = (isset($module->confirmUninstall) ? $module->confirmUninstall : $this->l('Do you really want to uninstall this module?'));
+        $this->translationsTab['confirm_uninstall_popup'] = (isset($module->confirmUninstall) ? $module->confirmUninstall : $this->trans('Do you really want to uninstall this module?'));
         if (!isset($this->translationsTab['Disable this module'])) {
-            $this->translationsTab['Disable this module'] = $this->l('Disable this module');
-            $this->translationsTab['Enable this module for all shops'] = $this->l('Enable this module for all shops');
-            $this->translationsTab['Disable'] = $this->l('Disable');
-            $this->translationsTab['Enable'] = $this->l('Enable');
-            $this->translationsTab['Disable on mobiles'] = $this->l('Disable on mobiles');
-            $this->translationsTab['Disable on tablets'] = $this->l('Disable on tablets');
-            $this->translationsTab['Disable on computers'] = $this->l('Disable on computers');
-            $this->translationsTab['Display on mobiles'] = $this->l('Display on mobiles');
-            $this->translationsTab['Display on tablets'] = $this->l('Display on tablets');
-            $this->translationsTab['Display on computers'] = $this->l('Display on computers');
-            $this->translationsTab['Reset'] = $this->l('Reset');
-            $this->translationsTab['Configure'] = $this->l('Configure');
-            $this->translationsTab['Delete'] = $this->l('Delete');
-            $this->translationsTab['Install'] = $this->l('Install');
-            $this->translationsTab['Uninstall'] = $this->l('Uninstall');
-            $this->translationsTab['Would you like to delete the content related to this module ?'] = $this->l('Would you like to delete the content related to this module ?');
-            $this->translationsTab['This action will permanently remove the module from the server. Are you sure you want to do this?'] = $this->l('This action will permanently remove the module from the server. Are you sure you want to do this?');
-            $this->translationsTab['Remove from Favorites'] = $this->l('Remove from Favorites');
-            $this->translationsTab['Mark as Favorite'] = $this->l('Mark as Favorite');
+            $this->translationsTab['Disable this module'] = $this->trans('Disable this module');
+            $this->translationsTab['Enable this module for all shops'] = $this->trans('Enable this module for all shops');
+            $this->translationsTab['Disable'] = $this->trans('Disable');
+            $this->translationsTab['Enable'] = $this->trans('Enable');
+            $this->translationsTab['Disable on mobiles'] = $this->trans('Disable on mobiles');
+            $this->translationsTab['Disable on tablets'] = $this->trans('Disable on tablets');
+            $this->translationsTab['Disable on computers'] = $this->trans('Disable on computers');
+            $this->translationsTab['Display on mobiles'] = $this->trans('Display on mobiles');
+            $this->translationsTab['Display on tablets'] = $this->trans('Display on tablets');
+            $this->translationsTab['Display on computers'] = $this->trans('Display on computers');
+            $this->translationsTab['Reset'] = $this->trans('Reset');
+            $this->translationsTab['Configure'] = $this->trans('Configure');
+            $this->translationsTab['Delete'] = $this->trans('Delete');
+            $this->translationsTab['Install'] = $this->trans('Install');
+            $this->translationsTab['Uninstall'] = $this->trans('Uninstall');
+            $this->translationsTab['Would you like to delete the content related to this module ?'] = $this->trans('Would you like to delete the content related to this module ?');
+            $this->translationsTab['This action will permanently remove the module from the server. Are you sure you want to do this?'] = $this->trans('This action will permanently remove the module from the server. Are you sure you want to do this?');
+            $this->translationsTab['Remove from Favorites'] = $this->trans('Remove from Favorites');
+            $this->translationsTab['Mark as Favorite'] = $this->trans('Mark as Favorite');
         }
 
         $link_admin_modules = $this->context->link->getAdminLink('AdminModules', true);
@@ -4424,7 +4518,7 @@ class AdminControllerCore extends Controller
 
         $install = array(
             'href' => $link_admin_modules . '&install=' . urlencode($module->name) . '&tab_module=' . $module->tab . '&module_name=' . $module->name . '&anchor=' . ucfirst($module->name)
-                . (!is_null($back) ? '&back=' . urlencode($back) : '') . ($install_source_tracking ? '&source=' . $install_source_tracking : ''),
+                . (null !== $back ? '&back=' . urlencode($back) : '') . ($install_source_tracking ? '&source=' . $install_source_tracking : ''),
             'onclick' => '',
             'title' => $this->translationsTab['Install'],
             'text' => $this->translationsTab['Install'],
@@ -4433,7 +4527,7 @@ class AdminControllerCore extends Controller
         );
 
         $uninstall = array(
-            'href' => $link_admin_modules . '&uninstall=' . urlencode($module->name) . '&tab_module=' . $module->tab . '&module_name=' . $module->name . '&anchor=' . ucfirst($module->name) . (!is_null($back) ? '&back=' . urlencode($back) : ''),
+            'href' => $link_admin_modules . '&uninstall=' . urlencode($module->name) . '&tab_module=' . $module->tab . '&module_name=' . $module->name . '&anchor=' . ucfirst($module->name) . (null !== $back ? '&back=' . urlencode($back) : ''),
             'onclick' => (isset($module->onclick_option_content['uninstall']) ? $module->onclick_option_content['uninstall'] : 'return confirm(\'' . $this->translationsTab['confirm_uninstall_popup'] . '\');'),
             'title' => $this->translationsTab['Uninstall'],
             'text' => $this->translationsTab['Uninstall'],
@@ -4511,7 +4605,7 @@ class AdminControllerCore extends Controller
             }
         }
 
-        if (isset($module->preferences) && isset($module->preferences['favorite']) && $module->preferences['favorite'] == 1) {
+        if (isset($module->preferences, $module->preferences['favorite']) && $module->preferences['favorite'] == 1) {
             $remove_from_favorite['style'] = '';
             $mark_as_favorite['style'] = 'display:none;';
             $modules_options[] = $remove_from_favorite;
@@ -4536,7 +4630,7 @@ class AdminControllerCore extends Controller
             if ($option['cond']) {
                 if ($output_type == 'link') {
                     $return .= '<li><a class="' . $option_name . ' action_module';
-                    $return .= '" href="' . $option['href'] . (!is_null($back) ? '&back=' . urlencode($back) : '') . '"';
+                    $return .= '" href="' . $option['href'] . (null !== $back ? '&back=' . urlencode($back) : '') . '"';
                     $return .= ' onclick="' . $option['onclick'] . '"  title="' . $option['title'] . '"><i class="icon-' . (isset($option['icon']) && $option['icon'] ? $option['icon'] : 'cog') . '"></i>&nbsp;' . $option['text'] . '</a></li>';
                 } elseif ($output_type == 'array') {
                     if (!is_array($return)) {
@@ -4571,10 +4665,10 @@ class AdminControllerCore extends Controller
                         $html .= ' style="' . $option['style'] . '"';
                     }
 
-                    $html .= ' href="' . htmlentities($option['href']) . (!is_null($back) ? '&back=' . urlencode($back) : '') . '" onclick="' . $option['onclick'] . '"  title="' . $option['title'] . '"><i class="icon-' . (isset($option['icon']) && $option['icon'] ? $option['icon'] : 'cog') . '"></i> ' . $option['text'] . '</a>';
+                    $html .= ' href="' . htmlentities($option['href']) . (null !== $back ? '&back=' . urlencode($back) : '') . '" onclick="' . $option['onclick'] . '"  title="' . $option['title'] . '"><i class="icon-' . (isset($option['icon']) && $option['icon'] ? $option['icon'] : 'cog') . '"></i> ' . $option['text'] . '</a>';
                     $return[] = $html;
                 } elseif ($output_type == 'select') {
-                    $return .= '<option id="' . $option_name . '" data-href="' . htmlentities($option['href']) . (!is_null($back) ? '&back=' . urlencode($back) : '') . '" data-onclick="' . $option['onclick'] . '">' . $option['text'] . '</option>';
+                    $return .= '<option id="' . $option_name . '" data-href="' . htmlentities($option['href']) . (null !== $back ? '&back=' . urlencode($back) : '') . '" data-onclick="' . $option['onclick'] . '">' . $option['text'] . '</option>';
                 }
             }
         }
@@ -4712,5 +4806,67 @@ class AdminControllerCore extends Controller
         } else {
             return 0;
         }
+    }
+
+    /**
+     * Get the url of the first active sub-tab.
+     *
+     * @param array[] $subtabs
+     *
+     * @return string Url, or empty if no active sub-tab
+     */
+    private function getTabLinkFromSubTabs(array $subtabs)
+    {
+        foreach ($subtabs as $tab) {
+            if ($tab['active'] && $tab['enabled']) {
+                return $tab['href'];
+            }
+        }
+
+        return '';
+    }
+
+    /**
+     * Prepare price specifications to display cldr prices in javascript context.
+     *
+     * @param Context $context
+     *
+     * @return array
+     */
+    private function preparePriceSpecifications(Context $context)
+    {
+        /* @var Currency */
+        $currency = $context->currency;
+        /* @var PriceSpecification */
+        $priceSpecification = $context->getCurrentLocale()->getPriceSpecification($currency->iso_code);
+        if (empty($priceSpecification)) {
+            return [];
+        }
+
+        return array_merge(
+            ['symbol' => $priceSpecification->getSymbolsByNumberingSystem(Locale::NUMBERING_SYSTEM_LATIN)->toArray()],
+            $priceSpecification->toArray()
+        );
+    }
+
+    /**
+     * Prepare number specifications to display cldr numbers in javascript context.
+     *
+     * @param Context $context
+     *
+     * @return array
+     */
+    private function prepareNumberSpecifications(Context $context)
+    {
+        /* @var NumberSpecification */
+        $numberSpecification = $context->getCurrentLocale()->getNumberSpecification();
+        if (empty($numberSpecification)) {
+            return [];
+        }
+
+        return array_merge(
+            ['symbol' => $numberSpecification->getSymbolsByNumberingSystem(Locale::NUMBERING_SYSTEM_LATIN)->toArray()],
+            $numberSpecification->toArray()
+        );
     }
 }

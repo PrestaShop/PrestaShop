@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -33,14 +33,14 @@ use Context;
 use DateTime;
 use Employee;
 use Mail;
-use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use Pack;
+use PrestaShop\PrestaShop\Adapter\LegacyContext as ContextAdapter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductDataProvider;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
-use PrestaShop\PrestaShop\Adapter\LegacyContext as ContextAdapter;
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShopBundle\Entity\StockMvt;
 use Product;
 use StockAvailable;
-use Pack;
 
 /**
  * Class StockManager Refactored features about product stocks.
@@ -57,7 +57,7 @@ class StockManager
      */
     public function updatePackQuantity($product, $stock_available, $delta_quantity, $id_shop = null)
     {
-        // @TODO We should call the needed classes with the Symfony dependency injection instead of the Homemade Service Locator
+        /** @TODO We should call the needed classes with the Symfony dependency injection instead of the Homemade Service Locator */
         $serviceLocator = new ServiceLocator();
         $configuration = $serviceLocator::get('\\PrestaShop\\PrestaShop\\Core\\ConfigurationInterface');
 
@@ -84,7 +84,8 @@ class StockManager
 
         if ($product->pack_stock_type == Pack::STOCK_TYPE_PACK_ONLY
             || $product->pack_stock_type == Pack::STOCK_TYPE_PACK_BOTH
-            || ($product->pack_stock_type == Pack::STOCK_TYPE_DEFAULT
+            || (
+                $product->pack_stock_type == Pack::STOCK_TYPE_DEFAULT
                 && ($configuration->get('PS_PACK_STOCK_TYPE') == Pack::STOCK_TYPE_PACK_ONLY
                     || $configuration->get('PS_PACK_STOCK_TYPE') == Pack::STOCK_TYPE_PACK_BOTH)
             )
@@ -104,7 +105,7 @@ class StockManager
      */
     public function updatePacksQuantityContainingProduct($product, $id_product_attribute, $stock_available, $id_shop = null)
     {
-        // @TODO We should call the needed classes with the Symfony dependency injection instead of the Homemade Service Locator
+        /** @TODO We should call the needed classes with the Symfony dependency injection instead of the Homemade Service Locator */
         $serviceLocator = new ServiceLocator();
 
         $configuration = $serviceLocator::get('\\PrestaShop\\PrestaShop\\Core\\ConfigurationInterface');
@@ -151,7 +152,7 @@ class StockManager
      */
     public function updateQuantity($product, $id_product_attribute, $delta_quantity, $id_shop = null, $add_movement = false, $params = array())
     {
-        // @TODO We should call the needed classes with the Symfony dependency injection instead of the Homemade Service Locator
+        /** @TODO We should call the needed classes with the Symfony dependency injection instead of the Homemade Service Locator */
         $serviceLocator = new ServiceLocator();
         $stockManager = $serviceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\StockManager');
         $packItemsManager = $serviceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\Product\\PackItemsManager');
@@ -183,7 +184,8 @@ class StockManager
             $this->saveMovement($product->id, $id_product_attribute, $delta_quantity, $params);
         }
 
-        $hookManager->exec('actionUpdateQuantity',
+        $hookManager->exec(
+            'actionUpdateQuantity',
             array(
                 'id_product' => $product->id,
                 'id_product_attribute' => $id_product_attribute,
@@ -326,7 +328,7 @@ class StockManager
                 (string) $configuration['PS_SHOP_NAME'],
                 null,
                 null,
-                dirname(__FILE__) . '/mails/',
+                __DIR__ . '/mails/',
                 false,
                 $idShop
             );
@@ -350,7 +352,7 @@ class StockManager
 
             if ($stockMvt) {
                 $sfContainer = SymfonyContainer::getInstance();
-                if (!is_null($sfContainer)) {
+                if (null !== $sfContainer) {
                     $stockMvtRepository = $sfContainer->get('prestashop.core.api.stock_movement.repository');
 
                     return $stockMvtRepository->saveStockMvt($stockMvt);

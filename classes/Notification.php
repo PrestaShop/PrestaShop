@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -86,6 +86,7 @@ class NotificationCore
                     Shop::addSqlRestriction(false, 'o') . '
 					ORDER BY `id_order` DESC
 					LIMIT 5';
+
                 break;
 
             case 'customer_message':
@@ -99,6 +100,7 @@ class NotificationCore
 						AND ct.id_shop IN (' . implode(', ', Shop::getContextListShopID()) . ')
 					ORDER BY c.`id_customer_message` DESC
 					LIMIT 5';
+
                 break;
             default:
                 $sql = '
@@ -108,6 +110,7 @@ class NotificationCore
                     Shop::addSqlRestriction(false, 't') . '
 					ORDER BY t.`id_' . bqSQL($type) . '` DESC
 					LIMIT 5';
+
                 break;
         }
 
@@ -116,7 +119,7 @@ class NotificationCore
         $json = array('total' => $total, 'results' => array());
         foreach ($result as $value) {
             $customerName = '';
-            if (isset($value['firstname']) && isset($value['lastname'])) {
+            if (isset($value['firstname'], $value['lastname'])) {
                 $customerName = Tools::safeOutput($value['firstname'] . ' ' . $value['lastname']);
             } elseif (isset($value['email'])) {
                 $customerName = Tools::safeOutput($value['email']);
@@ -134,6 +137,14 @@ class NotificationCore
                 'status' => ((!empty($value['status'])) ? Tools::safeOutput($value['status']) : ''),
                 'customer_name' => $customerName,
                 'date_add' => isset($value['date_add']) ? Tools::displayDate($value['date_add']) : 0,
+                'customer_view_url' => Context::getContext()->link->getAdminLink(
+                    'AdminCustomers',
+                    true,
+                    [
+                        'customerId' => $value['id_customer'],
+                        'viewcustomer' => true,
+                    ]
+                ),
             );
         }
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -68,7 +68,7 @@ class ProductSupplierCore extends ObjectModel
         'table' => 'product_supplier',
         'primary' => 'id_product_supplier',
         'fields' => array(
-            'product_supplier_reference' => array('type' => self::TYPE_STRING, 'validate' => 'isReference', 'size' => 32),
+            'product_supplier_reference' => array('type' => self::TYPE_STRING, 'validate' => 'isReference', 'size' => 64),
             'id_product' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
             'id_product_attribute' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
             'id_supplier' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
@@ -126,7 +126,8 @@ class ProductSupplierCore extends ObjectModel
         $query = new DbQuery();
         $query->select('ps.product_supplier_reference');
         $query->from('product_supplier', 'ps');
-        $query->where('ps.id_product = ' . (int) $idProduct . '
+        $query->where(
+            'ps.id_product = ' . (int) $idProduct . '
 			AND ps.id_product_attribute = ' . (int) $idProductAttribute . '
 			AND ps.id_supplier = ' . (int) $idSupplier
         );
@@ -153,7 +154,8 @@ class ProductSupplierCore extends ObjectModel
             $query->select('ps.id_currency');
         }
         $query->from('product_supplier', 'ps');
-        $query->where('ps.id_product = ' . (int) $idProduct . '
+        $query->where(
+            'ps.id_product = ' . (int) $idProduct . '
 			AND ps.id_product_attribute = ' . (int) $idProductAttribute . '
 			AND ps.id_supplier = ' . (int) $idSupplier
         );
@@ -185,7 +187,8 @@ class ProductSupplierCore extends ObjectModel
         $query = new DbQuery();
         $query->select('ps.id_product_supplier');
         $query->from('product_supplier', 'ps');
-        $query->where('ps.id_product = ' . (int) $idProduct . '
+        $query->where(
+            'ps.id_product = ' . (int) $idProduct . '
 			AND ps.id_product_attribute = ' . (int) $idProductAttribute . '
 			AND ps.id_supplier = ' . (int) $idSupplier
         );
@@ -224,7 +227,7 @@ class ProductSupplierCore extends ObjectModel
      */
     public static function getProductPrice($idSupplier, $idProduct, $idProductAttribute = 0, $convertedPrice = false)
     {
-        if (is_null($idSupplier) || is_null($idProduct)) {
+        if (null === $idSupplier || null === $idProduct) {
             return;
         }
 
@@ -257,7 +260,8 @@ class ProductSupplierCore extends ObjectModel
         $query = new DbQuery();
         $query->select('ps.product_supplier_reference, ps.product_supplier_price_te as price, ps.id_currency');
         $query->from('product_supplier', 'ps');
-        $query->where('ps.id_product = ' . (int) $idProduct . '
+        $query->where(
+            'ps.id_product = ' . (int) $idProduct . '
 			AND ps.id_product_attribute = ' . (int) $idProductAttribute . '
 			AND ps.id_supplier = ' . (int) $idSupplier
         );

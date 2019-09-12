@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,21 +16,21 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
+use PrestaShop\PrestaShop\Core\Product\Search\Facet;
+use PrestaShop\PrestaShop\Core\Product\Search\FacetsRendererInterface;
 use PrestaShop\PrestaShop\Core\Product\Search\Pagination;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchContext;
-use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchResult;
-use PrestaShop\PrestaShop\Core\Product\Search\Facet;
-use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchProviderInterface;
-use PrestaShop\PrestaShop\Core\Product\Search\FacetsRendererInterface;
+use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
+use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchResult;
+use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
 
 /**
  * This class is the base class for all front-end "product listing" controllers,
@@ -51,8 +51,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
     private function prepareProductForTemplate(array $rawProduct)
     {
         $product = (new ProductAssembler($this->context))
-            ->assembleProduct($rawProduct)
-        ;
+            ->assembleProduct($rawProduct);
 
         $presenter = $this->getProductPresenter();
         $settings = $this->getProductPresentationSettings();
@@ -94,8 +93,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
                 $this->context->customer ?
                     $this->context->customer->id :
                     null
-            )
-        ;
+            );
     }
 
     /**
@@ -242,8 +240,6 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
                 return $provider;
             }
         }
-
-        return;
     }
 
     /**
@@ -306,10 +302,15 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
 
         // We're ready to run the actual query!
 
+        /** @var ProductSearchResult $result */
         $result = $provider->runQuery(
             $context,
             $query
         );
+
+        if (Configuration::get('PS_CATALOG_MODE') && !Configuration::get('PS_CATALOG_MODE_WITH_PRICES')) {
+            $this->disablePriceControls($result);
+        }
 
         // sort order is useful for template,
         // add it if undefined - it should be the same one
@@ -364,6 +365,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
             foreach ($sort_orders as $order) {
                 if (isset($order['current']) && true === $order['current']) {
                     $sort_selected = $order['label'];
+
                     break;
                 }
             }
@@ -391,6 +393,39 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
     }
 
     /**
+     * Removes price information from result (in facet collection and available sorters)
+     * Usually used for catalog mode.
+     *
+     * @param ProductSearchResult $result
+     */
+    protected function disablePriceControls(ProductSearchResult $result)
+    {
+        if ($result->getFacetCollection()) {
+            $filteredFacets = [];
+            /** @var Facet $facet */
+            foreach ($result->getFacetCollection()->getFacets() as $facet) {
+                if ('price' === $facet->getType()) {
+                    continue;
+                }
+                $filteredFacets[] = $facet;
+            }
+            $result->getFacetCollection()->setFacets($filteredFacets);
+        }
+
+        if ($result->getAvailableSortOrders()) {
+            $filteredOrders = [];
+            /** @var SortOrder $sortOrder */
+            foreach ($result->getAvailableSortOrders() as $sortOrder) {
+                if ('price' === $sortOrder->getField()) {
+                    continue;
+                }
+                $filteredOrders[] = $sortOrder;
+            }
+            $result->setAvailableSortOrders($filteredOrders);
+        }
+    }
+
+    /**
      * Pagination is HARD. We let the core do the heavy lifting from
      * a simple representation of the pagination.
      *
@@ -400,7 +435,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
      * @param ProductSearchQuery $query
      * @param ProductSearchResult $result
      *
-     * @return an array that makes rendering the pagination very easy
+     * @return array An array that makes rendering the pagination very easy
      */
     protected function getTemplateVarPagination(
         ProductSearchQuery $query,
@@ -410,7 +445,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
         $pagination
             ->setPage($query->getPage())
             ->setPagesCount(
-                ceil($result->getTotalProductsCount() / $query->getResultsPerPage())
+                (int) ceil($result->getTotalProductsCount() / $query->getResultsPerPage())
             )
         ;
 

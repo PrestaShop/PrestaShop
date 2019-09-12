@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -89,6 +89,7 @@ class ConfigurationTestCore
                 'simplexml' => false,
                 'zip' => false,
                 'fileinfo' => false,
+                'intl' => false,
             ));
         }
 
@@ -110,6 +111,7 @@ class ConfigurationTestCore
             'dom' => false,
             'pdo_mysql' => false,
             'fopen' => false,
+            'intl' => false,
         );
     }
 
@@ -141,7 +143,7 @@ class ConfigurationTestCore
 
     public static function test_phpversion()
     {
-        return version_compare(substr(phpversion(), 0, 5), '5.6.0', '>=');
+        return version_compare(PHP_VERSION, '7.1.3', '>=');
     }
 
     public static function test_apache_mod_rewrite()
@@ -156,12 +158,17 @@ class ConfigurationTestCore
 
     public static function test_new_phpversion()
     {
-        return version_compare(substr(phpversion(), 0, 5), '5.6.0', '>=');
+        return version_compare(PHP_VERSION, '7.1.3', '>=');
     }
 
     public static function test_mysql_support()
     {
         return extension_loaded('mysql') || extension_loaded('mysqli') || extension_loaded('pdo_mysql');
+    }
+
+    public static function test_intl()
+    {
+        return extension_loaded('intl');
     }
 
     public static function test_pdo_mysql()

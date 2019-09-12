@@ -6,7 +6,7 @@ module.exports = {
         orders_menu: '//*[@id="subtab-AdminParentOrders"]/a',
         orders_submenu: '#subtab-AdminOrders',
         invoices_submenu: '#subtab-AdminInvoices',
-        credit_slips_submenu: '#subtab-AdminSlip',
+        credit_slips_submenu: '#subtab-AdminSlip a',
         delivery_slips_submenu: '#subtab-AdminDeliverySlip',
         shopping_carts_submenu: '#subtab-AdminCarts'
       },
@@ -16,12 +16,12 @@ module.exports = {
         category_submenu: '#subtab-AdminCategories',
         monitoring_submenu: '#subtab-AdminTracking',
         attributes_features_submenu: '#subtab-AdminParentAttributesGroups',
-        feature_tab: '//*[@id="content"]//div[@class="page-head-tabs"]//a[text()="Features"]',
+        feature_tab: '//*[@id="subtab-AdminFeatures"]',
         manufacturers_submenu: '#subtab-AdminParentManufacturers',
-        supplier_tab: '//*[@id="content"]//div[@class="page-head-tabs"]//a[text()="Suppliers"]',
+        supplier_tab: '//*[@id="subtab-AdminSuppliers"]',
         files_submenu: '#subtab-AdminAttachments',
         discounts_submenu: '#subtab-AdminParentCartRules',
-        catalog_price_rules_tab: '//*[@id="content"]//div[@class="page-head-tabs"]//a[text()="Catalog Price Rules"]',
+        catalog_price_rules_tab: '#subtab-AdminSpecificPriceRule',
         stocks_submenu: '#subtab-AdminStockManagement',
         stock_tab: '//*[@id="head_tabs"]//a[text()="Stock"]',
         movement_tab: '//*[@id="head_tabs"]//a[text()="Movements"]'
@@ -38,26 +38,31 @@ module.exports = {
         merchandise_returns_submenu: '#subtab-AdminReturn'
       },
       Stats: {
-        stats_menu: '//*[@id="subtab-AdminStats"]/a',
+        stats_menu: '//*[@id="subtab-AdminStats"]/a'
       }
     },
     Improve: {
       Modules: {
         modules_menu: '//*[@id="subtab-AdminParentModulesSf"]/a',
-        modules_services_submenu: '#subtab-AdminModulesSf',
+        modules_manager_submenu: '#subtab-AdminModulesSf > a',
+        modules_catalog_submenu: '#subtab-AdminParentModulesCatalog > a',
         installed_modules_tabs: '//*[@id="subtab-AdminModulesManage"]',
-        notifications_tabs: '//*[@id="subtab-AdminModulesNotifications"]',
-        selection_tab: '//*[@id="subtab-AdminModulesCatalog"]',
-        modules_catalog_submenu: '#subtab-AdminAddonsCatalog',
+        catalog_tab: '//*[@id="subtab-AdminModulesCatalog"] | //*[@id="subtab-AdminPsMboModule"]',
+        modules_selections_submenu: '#subtab-AdminAddonsCatalog',
+        selection_tab: '#subtab-AdminAddonsCatalog',
+        alerts_subTab: '//*[@id="subtab-AdminModulesNotifications"]',
+        updates_subTab: '//*[@id="subtab-AdminModulesUpdates"]',
       },
       Design: {
         design_menu: '//*[@id="subtab-AdminParentThemes"]/a',
         theme_logo_submenu: '#subtab-AdminThemesParent',
-        theme_catalog_submenu: '#subtab-AdminThemesCatalog',
+        theme_catalog_submenu: '#subtab-AdminPsMboTheme , #subtab-AdminThemesCatalog',
         pages_submenu: '#subtab-AdminCmsContent',
         positions_submenu: '#subtab-AdminModulesPositions',
         image_settings_submenu: '#subtab-AdminImages',
-        link_widget_submenu: '#subtab-AdminLinkWidget'
+        link_widget_submenu: '#subtab-AdminLinkWidget',
+        homepage_configuration_subTab: '//*[@id="subtab-AdminPsThemeCustoConfiguration"]',
+        advanced_customization_subTab: '//*[@id="subtab-AdminPsThemeCustoAdvanced"]',
       },
       Shipping: {
         shipping_menu: '//*[@id="subtab-AdminParentShipping"]/a',
@@ -72,14 +77,15 @@ module.exports = {
       International: {
         international_menu: '//*[@id="subtab-AdminInternational"]/a',
         localization_submenu: '#subtab-AdminParentLocalization',
-        languages_tab: '//*[@id="main"]//div[@class="page-head-tabs"]//a[text()="Languages"]',
-        currencies_tab: '//*[@id="main"]//div[@class="page-head-tabs"]//a[text()="Currencies"]',
-        geolocation_tab: '//*[@id="main"]//div[@class="page-head-tabs"]//a[text()="Geolocation"]',
+        languages_tab: '//*[@id="subtab-AdminLanguages"]',
+        currencies_tab: '//*[@id="subtab-AdminCurrencies"]',
+        active_currencies_tab: '//*[@id="subtab-AdminCurrencies" and contains(@class,"active")]',
+        geolocation_tab: '//*[@id="subtab-AdminGeolocation"]',
         locations_submenu: '#subtab-AdminParentCountries',
-        countries_tab: '//*[@id="main"]//div[@class="page-head-tabs"]//a[text()="Countries"]',
-        states_tab: '//*[@id="main"]//div[@class="page-head-tabs"]//a[text()="States"]',
+        countries_tab: '//*[@id="subtab-AdminCountries"]',
+        states_tab: '//*[@id="subtab-AdminStates"]',
         taxes_submenu: '#subtab-AdminParentTaxes',
-        taxe_rules_tab: '//*[@id="main"]//div[@class="page-head-tabs"]//a[text()="Tax Rules"]',
+        taxe_rules_tab: '#subtab-AdminTaxRulesGroup',
         translations_submenu: '#subtab-AdminTranslations'
       }
     },
@@ -87,21 +93,21 @@ module.exports = {
       ShopParameters: {
         shop_parameters_menu: '//*[@id="subtab-ShopParameters"]/a',
         general_submenu: '#subtab-AdminParentPreferences',
-        maintenance_tab: '//a[text() = "Maintenance"]',
+        maintenance_tab: '//*[@id="subtab-AdminMaintenance"]',
         order_settings_submenu: '#subtab-AdminParentOrderPreferences',
-        statuses_tab: '//*[@id="head_tabs"]//a[text()="Statuses"]',
+        statuses_tab: '//*[@id="subtab-AdminStatuses"]',
         product_settings_submenu: '#subtab-AdminPPreferences',
         customer_settings_submenu: '#subtab-AdminParentCustomerPreferences',
-        groups_tab: '//*[@id="head_tabs"]//a[text()="Groups"]',
-        titles_tab: '//*[@id="head_tabs"]//a[text()="Titles"]',
+        groups_tab: '//*[@id="subtab-AdminGroups"]',
+        titles_tab: '//*[@id="subtab-AdminGenders"]',
         contact_submenu: '#subtab-AdminParentStores',
-        stores_tab: '//*[@id="main"]//div[@class="page-head-tabs"]//a[text()="Stores"]',
-        traffic_seo_submenu: '#subtab-AdminParentMeta',
-        search_engines_tab: '//*[@id="main"]//div[@class="page-head-tabs"]//a[text()="Search Engines"]',
-        referrers_tab: '//*[@id="main"]//div[@class="page-head-tabs"]//a[text()="Referrers"]',
+        stores_tab: '#subtab-AdminStores',
+        search_engines_tab: '//*[@id="subtab-AdminSearchEngines"]',
+        referrers_tab: '//*[@id="subtab-AdminReferrers"]',
         search_submenu: '#subtab-AdminParentSearchConf',
-        tags_tab: '//*[@id="main"]//div[@class="page-head-tabs"]//a[text()="Tags"]',
-        merchant_expertise_submenu: '#subtab-AdminGamification'
+        tags_tab: '//*[@id="subtab-AdminTags"]',
+        merchant_expertise_submenu: '#subtab-AdminGamification',
+        traffic_seo_submenu: '#subtab-AdminParentMeta',
       },
       AdvancedParameters: {
         advanced_parameters_menu: '//*[@id="subtab-AdminAdvancedParameters"]/a',
@@ -111,12 +117,13 @@ module.exports = {
         email_submenu: '#subtab-AdminEmails',
         import_submenu: '#subtab-AdminImport',
         team_submenu: '#subtab-AdminParentEmployees',
-        profiles_tab: '//*[@id="main"]//div[@class="page-head-tabs"]//a[text()="Profiles"]',
-        permissions_tab: '//*[@id="main"]//div[@class="page-head-tabs"]//a[text()="Permissions"]',
+        profiles_tab: '//*[@id="subtab-AdminProfiles"]',
+        permissions_tab: '//*[@id="subtab-AdminAccess"]',
         database_submenu: '#subtab-AdminParentRequestSql',
         logs_submenu: '#subtab-AdminLogs',
         webservice_submenu: '#subtab-AdminWebservice',
-        multistore_submenu: '#subtab-AdminShopGroup'
+        multistore_submenu: '#subtab-AdminShopGroup',
+        db_backup_tab: '#subtab-AdminBackup',
       }
     }
   }

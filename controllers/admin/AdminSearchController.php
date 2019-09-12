@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,15 +16,18 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 class AdminSearchControllerCore extends AdminController
 {
+    const TOKEN_CHECK_START_POS = 34;
+    const TOKEN_CHECK_LENGTH = 8;
+
     public function __construct()
     {
         $this->bootstrap = true;
@@ -34,6 +37,23 @@ class AdminSearchControllerCore extends AdminController
     public function getTabSlug()
     {
         return 'ROLE_MOD_TAB_ADMINSEARCHCONF_';
+    }
+
+    public function checkToken()
+    {
+        // Specific check for the ajax request 'searchCron'
+        if (Tools::isSubmit('action')
+            && 'searchCron' === Tools::getValue('action')
+            && substr(
+                _COOKIE_KEY_,
+                static::TOKEN_CHECK_START_POS,
+                static::TOKEN_CHECK_LENGTH
+            ) === Tools::getValue('token')
+        ) {
+            return true;
+        }
+
+        return parent::checkToken();
     }
 
     public function postProcess()
@@ -75,7 +95,15 @@ class AdminSearchControllerCore extends AdminController
                     /* Handle customer ID */
                     if ($searchType && (int) $this->query && Validate::isUnsignedInt((int) $this->query)) {
                         if (($customer = new Customer($this->query)) && Validate::isLoadedObject($customer)) {
-                            Tools::redirectAdmin('index.php?tab=AdminCustomers&id_customer=' . (int) $customer->id . '&viewcustomer' . '&token=' . Tools::getAdminToken('AdminCustomers' . (int) Tab::getIdFromClassName('AdminCustomers') . (int) $this->context->employee->id));
+                            Tools::redirectAdmin($this->context->link->getAdminLink(
+                                'AdminCustomers',
+                                true,
+                                [],
+                                [
+                                    'id_customer' => $customer->id,
+                                    'viewcustomer' => 1,
+                                ]
+                            ));
                         }
                     }
 
@@ -170,7 +198,7 @@ class AdminSearchControllerCore extends AdminController
     /**
      * Search a specific string in the products and categories.
      *
-     * @params string $query String to find in the catalog
+     * @param string $query String to find in the catalog
      */
     public function searchCatalog()
     {
@@ -182,7 +210,7 @@ class AdminSearchControllerCore extends AdminController
     /**
      * Search a specific name in the customers.
      *
-     * @params string $query String to find in the catalog
+     * @param string $query String to find in the catalog
      */
     public function searchCustomer()
     {
@@ -217,7 +245,7 @@ class AdminSearchControllerCore extends AdminController
     /**
      * Search a feature in all store.
      *
-     * @params string $query String to find in the catalog
+     * @param string $query String to find in the catalog
      */
     public function searchFeatures()
     {
@@ -230,7 +258,8 @@ class AdminSearchControllerCore extends AdminController
 
         $tabs = array();
         $key_match = array();
-        $result = Db::getInstance()->executeS('
+        $result = Db::getInstance()->executeS(
+            '
 		SELECT class_name, name
 		FROM ' . _DB_PREFIX_ . 'tab t
 		INNER JOIN ' . _DB_PREFIX_ . 'tab_lang tl ON (t.id_tab = tl.id_tab AND tl.id_lang = ' . (int) $this->context->employee->id_lang . ')
@@ -431,6 +460,7 @@ class AdminSearchControllerCore extends AdminController
 
                 $view = $helper->generateList($this->_list['orders'], $this->fields_list['orders']);
                 $this->tpl_view_vars['orders'] = $view;
+                $this->tpl_view_vars['orderCount'] = count($this->_list['orders']);
             }
 
             if ($this->isCountableAndNotEmpty($this->_list, 'modules')) {
@@ -456,10 +486,29 @@ class AdminSearchControllerCore extends AdminController
     protected function isCountableAndNotEmpty(array $array, $key)
     {
         return isset($array[$key]) &&
-            (
-                $array[$key] instanceof Countable ||
-                is_array($array[$key])
-            ) &&
+            is_countable($array[$key]) &&
             count($array[$key]);
+    }
+
+    /**
+     * Request triggering the search indexation.
+     *
+     * Kept as GET request for backward compatibility purpose, but should be modified as POST when migrated.
+     * NOTE the token is different for that method, check the method checkToken() for more details.
+     */
+    public function displayAjaxSearchCron()
+    {
+        if (!Tools::getValue('id_shop')) {
+            Context::getContext()->shop->setContext(Shop::CONTEXT_ALL);
+        } else {
+            Context::getContext()->shop->setContext(Shop::CONTEXT_SHOP, (int) Tools::getValue('id_shop'));
+        }
+
+        // Considering the indexing task can be really long, we ask the PHP process to not stop before 2 hours.
+        ini_set('max_execution_time', 7200);
+        Search::indexation(Tools::getValue('full'));
+        if (Tools::getValue('redirect')) {
+            Tools::redirectAdmin($_SERVER['HTTP_REFERER'] . '&conf=4');
+        }
     }
 }

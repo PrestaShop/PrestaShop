@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/watermark/watermark.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ee20bb60493f049175fc10c35acd2272">
+        <source>Watermark</source>
+        <target>Watermark</target>
+        <note>Line: 70</note>
+      </trans-unit>
+      <trans-unit id="3717c75195da585e8599f21e99813bd4">
+        <source>Protect images by watermark.</source>
+        <target>Protect images by watermark.</target>
+        <note>Line: 71</note>
+      </trans-unit>
+      <trans-unit id="69a1a3ad8dd5da6db3c4da838a0cf9c7">
+        <source>Are you sure you want to delete your details?</source>
+        <target>Are you sure you want to delete your details?</target>
+        <note>Line: 72</note>
+      </trans-unit>
+      <trans-unit id="20bb5552b02b2e330230063727db74b2">
+        <source>Watermark image must be uploaded for this module to work properly.</source>
+        <target>Watermark image must be uploaded for this module to work properly.</target>
+        <note>Line: 104</note>
+      </trans-unit>
+      <trans-unit id="db96c144e227424d86ba48f5b4a7b24c">
+        <source>You have to enable the GD extension on your server to install this module</source>
+        <target>You have to enable the GD extension on your server to install this module</target>
+        <note>Line: 114</note>
+      </trans-unit>
+      <trans-unit id="842262778d363362c95aa210c9752c25">
+        <source>Opacity required.</source>
+        <target>Opacity required.</target>
+        <note>Line: 167</note>
+      </trans-unit>
+      <trans-unit id="9d1e7d4f41c6bcac92fa25f7f615c43e">
+        <source>Opacity is not in allowed range.</source>
+        <target>Opacity is not in allowed range.</target>
+        <note>Line: 169</note>
+      </trans-unit>
+      <trans-unit id="d31c2d99614d8e16430d2d8c99c1f2b0">
+        <source>Y-Align is required.</source>
+        <target>Y-Align is required.</target>
+        <note>Line: 173</note>
+      </trans-unit>
+      <trans-unit id="8fe9c39f4bf87082caabcf3650970c71">
+        <source>Y-Align is not in allowed range.</source>
+        <target>Y-Align is not in allowed range.</target>
+        <note>Line: 175</note>
+      </trans-unit>
+      <trans-unit id="c2cf8e33c907a4cc689881dc8fa571c2">
+        <source>X-Align is required.</source>
+        <target>X-Align is required.</target>
+        <note>Line: 179</note>
+      </trans-unit>
+      <trans-unit id="3a1f788dbe8957be92048606cf0d3fcb">
+        <source>X-Align is not in allowed range.</source>
+        <target>X-Align is not in allowed range.</target>
+        <note>Line: 181</note>
+      </trans-unit>
+      <trans-unit id="a9cac4be0fa0b815376b96f49e1435d7">
+        <source>At least one image type is required.</source>
+        <target>At least one image type is required.</target>
+        <note>Line: 184</note>
+      </trans-unit>
+      <trans-unit id="130aab6764f25267c79cef371270eb2a">
+        <source>An error occurred while uploading watermark: %1$s to %2$s</source>
+        <target>An error occurred while uploading watermark: %1$s to %2$s</target>
+        <note>Line: 237</note>
+      </trans-unit>
+      <trans-unit id="5a6d7938875a082fdd753591ce24b7e8">
+        <source>Unable to add watermark section to the .htaccess file</source>
+        <target>Unable to add watermark section to the .htaccess file</target>
+        <note>Line: 307</note>
+      </trans-unit>
+      <trans-unit id="5feb2b84a116fb6ad74ce2b89e179374">
+        <source>Watermark image format is unsupported, allowed file types are: .gif, .jpg, .png</source>
+        <target>Watermark image format is unsupported, allowed file types are: .gif, .jpg, .png</target>
+        <note>Line: 420</note>
+      </trans-unit>
+      <trans-unit id="c70c40fc9e2fb15f56df02cddda66962">
+        <source>Once the module set up, regenerate your images with the dedicated tool in the Preferences section. Watermark will automatically be applied to new images.</source>
+        <target>Once the module set up, regenerate your images with the dedicated tool in the Preferences section. Watermark will automatically be applied to new images.</target>
+        <note>Line: 482</note>
+      </trans-unit>
+      <trans-unit id="3dad9d209b698755340cd82c93fa299d">
+        <source>Watermark file:</source>
+        <target>Watermark file:</target>
+        <note>Line: 486</note>
+      </trans-unit>
+      <trans-unit id="e61514a08d28de6659551c6dce37dbed">
+        <source>Watermark opacity (1-100)</source>
+        <target>Watermark opacity (1-100)</target>
+        <note>Line: 493</note>
+      </trans-unit>
+      <trans-unit id="e4a60affa613d035430ab5b1f2c2dc40">
+        <source>Watermark X align:</source>
+        <target>Watermark X align:</target>
+        <note>Line: 499</note>
+      </trans-unit>
+      <trans-unit id="7c60ca861e403259d8a41b5e6577788c">
+        <source>Watermark Y align:</source>
+        <target>Watermark Y align:</target>
+        <note>Line: 523</note>
+      </trans-unit>
+      <trans-unit id="27bd5f34e4375356363346e90dbbe2ca">
+        <source>Choose image types for watermark protection:</source>
+        <target>Choose image types for watermark protection:</target>
+        <note>Line: 548</note>
+      </trans-unit>
+      <trans-unit id="808eab3f4b3216d5e5b2c4ecbc90452a">
+        <source>Logged in customers can see images without watermark</source>
+        <target>Logged in customers can see images without watermark</target>
+        <note>Line: 558</note>
+      </trans-unit>
+      <trans-unit id="52d64d6b501f39da58f81dccebc9ebb6">
+        <source>Unable to remove watermark section from .htaccess file</source>
+        <target>Unable to remove watermark section from .htaccess file</target>
+        <note>Line: 136</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

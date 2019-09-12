@@ -4,7 +4,6 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "postinstall": "webpack --progress",
         "build": "webpack --bail --progress --mode production",
         "watch": "webpack --bail --progress --watch --mode development"
     },
@@ -29,5 +28,8 @@
         "uglify-save-license": "^0.4.1",
         "webpack": "^4.17.0",
         "webpack-cli": "^3.1.0"
+    },
+    "dependencies": {
+        "perfect-scrollbar": "^1.4.0"
     }
 }

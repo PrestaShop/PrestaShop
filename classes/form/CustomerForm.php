@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -109,22 +109,24 @@ class CustomerFormCore extends AbstractForm
         $customer = $this->getCustomer();
         if ($id_customer && $id_customer != $customer->id) {
             $emailField->addError($this->translator->trans(
-                'The email "%mail%" is already used, please choose another one or sign in', array('%mail%' => $emailField->getValue()), 'Shop.Notifications.Error'
+                'The email is already used, please choose another one or sign in',
+                array(),
+                'Shop.Notifications.Error'
             ));
         }
 
-        // birthday is from input type text..., so we need to convert to a valid date
+        // check birthdayField against null case is mandatory.
         $birthdayField = $this->getField('birthday');
-        if (!empty($birthdayField)) {
-            $birthdayValue = $birthdayField->getValue();
-            if (!empty($birthdayValue)) {
-                $dateBuilt = DateTime::createFromFormat(Context::getContext()->language->date_format_lite, $birthdayValue);
-                if (!empty($dateBuilt)) {
-                    $birthdayField->setValue($dateBuilt->format('Y-m-d'));
-                }
-            }
+        if (!empty($birthdayField) &&
+            !empty($birthdayField->getValue()) &&
+            Validate::isBirthDate($birthdayField->getValue(), Context::getContext()->language->date_format_lite)
+        ) {
+            $dateBuilt = DateTime::createFromFormat(
+                Context::getContext()->language->date_format_lite,
+                $birthdayField->getValue()
+            );
+            $birthdayField->setValue($dateBuilt->format('Y-m-d'));
         }
-
         $this->validateFieldsLengths();
         $this->validateByModules();
 
@@ -133,7 +135,7 @@ class CustomerFormCore extends AbstractForm
 
     protected function validateFieldsLengths()
     {
-        $this->validateFieldLength('email', 128, $this->getEmailMaxLengthViolationMessage());
+        $this->validateFieldLength('email', 255, $this->getEmailMaxLengthViolationMessage());
         $this->validateFieldLength('firstname', 255, $this->getFirstNameMaxLengthViolationMessage());
         $this->validateFieldLength('lastname', 255, $this->getLastNameMaxLengthViolationMessage());
     }
@@ -158,7 +160,7 @@ class CustomerFormCore extends AbstractForm
     {
         return $this->translator->trans(
             'The %1$s field is too long (%2$d chars max).',
-            array('email', 128),
+            array('email', 255),
             'Shop.Notifications.Error'
         );
     }

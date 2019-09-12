@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -34,7 +34,7 @@ class AdminCarriersControllerCore extends AdminController
     public function __construct()
     {
         if ($id_carrier = Tools::getValue('id_carrier') && !Tools::isSubmit('deletecarrier') && !Tools::isSubmit('statuscarrier') && !Tools::isSubmit('isFreecarrier')) {
-            Tools::redirectAdmin(Context::getContext()->link->getAdminLink('AdminCarrierWizard') . '&id_carrier=' . (int) $id_carrier);
+            Tools::redirectAdmin(Context::getContext()->link->getAdminLink('AdminCarrierWizard', true, array(), array('id_carrier' => (int) $id_carrier)));
         }
 
         $this->bootstrap = true;
@@ -679,7 +679,7 @@ class AdminCarriersControllerCore extends AdminController
             }
 
             $tpl->assign(array(
-                'href' => $this->context->link->getAdminLink('AdminCarrierWizard') . '&id_carrier=' . (int) $id,
+                'href' => $this->context->link->getAdminLink('AdminCarrierWizard', true, array(), array('id_carrier' => (int) $id)),
                 'action' => self::$cache_lang['Edit'],
                 'id' => $id,
             ));
@@ -707,18 +707,18 @@ class AdminCarriersControllerCore extends AdminController
                 self::$cache_lang['Name'] = $this->trans('Name:', array(), 'Admin.Shipping.Feature');
             }
 
-            if (!is_null($name)) {
+            if (null !== $name) {
                 $name = '\n\n' . self::$cache_lang['Name'] . ' ' . $name;
             }
 
             $data = array(
                 $this->identifier => $id,
-                'href' => $this->context->link->getAdminLink('AdminCarriers') . '&id_carrier=' . (int) $id . '&deletecarrier=1',
+                'href' => $this->context->link->getAdminLink('AdminCarriers', true, array(), array('id_carrier' => (int) $id, 'deletecarrier' => 1)),
                 'action' => self::$cache_lang['Delete'],
             );
 
             if ($this->specificConfirmDelete !== false) {
-                $data['confirm'] = !is_null($this->specificConfirmDelete) ? '\r' . $this->specificConfirmDelete : addcslashes(Tools::htmlentitiesDecodeUTF8(self::$cache_lang['DeleteItem'] . $name), '\'');
+                $data['confirm'] = null !== $this->specificConfirmDelete ? '\r' . $this->specificConfirmDelete : addcslashes(Tools::htmlentitiesDecodeUTF8(self::$cache_lang['DeleteItem'] . $name), '\'');
             }
 
             $tpl->assign(array_merge($this->tpl_delete_link_vars, $data));

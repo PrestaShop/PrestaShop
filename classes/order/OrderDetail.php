@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -296,7 +296,7 @@ class OrderDetailCore extends ObjectModel
         $sql = 'SELECT *
         FROM `' . _DB_PREFIX_ . 'order_detail` od
         LEFT JOIN `' . _DB_PREFIX_ . 'product_download` pd ON (od.`product_id`=pd.`id_product`)
-        WHERE od.`download_hash` = \'' . pSQL(strval($hash)) . '\'
+        WHERE od.`download_hash` = \'' . pSQL((string) $hash) . '\'
         AND pd.`active` = 1';
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
@@ -387,6 +387,7 @@ class OrderDetailCore extends ObjectModel
         foreach ($order->getCartRules() as $cart_rule) {
             if ($cart_rule['free_shipping']) {
                 $shipping_tax_amount = $order->total_shipping_tax_excl;
+
                 break;
             }
         }
@@ -401,14 +402,17 @@ class OrderDetailCore extends ObjectModel
                 case Order::ROUND_ITEM:
                     $unit_amount = (float) Tools::ps_round($amount, _PS_PRICE_COMPUTE_PRECISION_);
                     $total_amount = $unit_amount * $this->product_quantity;
+
                     break;
                 case Order::ROUND_LINE:
                     $unit_amount = $amount;
                     $total_amount = Tools::ps_round($unit_amount * $this->product_quantity, _PS_PRICE_COMPUTE_PRECISION_);
+
                     break;
                 case Order::ROUND_TOTAL:
                     $unit_amount = $amount;
                     $total_amount = $unit_amount * $this->product_quantity;
+
                     break;
             }
 
@@ -461,8 +465,9 @@ class OrderDetailCore extends ObjectModel
         return Db::getInstance()->executeS($sql);
     }
 
-    /*
+    /**
      * Set virtual product information
+     *
      * @param array $product
      */
     protected function setVirtualProductInformation($product)
@@ -513,7 +518,7 @@ class OrderDetailCore extends ObjectModel
      */
     protected function setProductTax(Order $order, $product)
     {
-        $this->ecotax = Tools::convertPrice(floatval($product['ecotax']), intval($order->id_currency));
+        $this->ecotax = Tools::convertPrice((float) ($product['ecotax']), (int) ($order->id_currency));
 
         // Exclude VAT
         if (!Tax::excludeTaxeOption()) {
@@ -547,6 +552,7 @@ class OrderDetailCore extends ObjectModel
             switch ($this->specificPrice['reduction_type']) {
                 case 'percentage':
                     $this->reduction_percent = (float) $this->specificPrice['reduction'] * 100;
+
                     break;
 
                 case 'amount':
@@ -566,6 +572,7 @@ class OrderDetailCore extends ObjectModel
                         $this->reduction_amount_tax_incl = Tools::ps_round($this->tax_calculator->addTaxes($this->reduction_amount), _PS_PRICE_COMPUTE_PRECISION_);
                         $this->reduction_amount_tax_excl = $this->reduction_amount;
                     }
+
                     break;
             }
         }
@@ -620,7 +627,7 @@ class OrderDetailCore extends ObjectModel
         $unit_price = Product::getPriceStatic(
             (int) $product['id_product'],
             true,
-            ($product['id_product_attribute'] ? intval($product['id_product_attribute']) : null),
+            ($product['id_product_attribute'] ? (int) ($product['id_product_attribute']) : null),
             2,
             null,
             false,
@@ -733,9 +740,10 @@ class OrderDetailCore extends ObjectModel
             $this->create($order, $cart, $product, $id_order_state, $id_order_invoice, $use_taxes, $id_warehouse);
         }
 
-        unset($this->vat_address);
-        unset($products);
-        unset($this->customer);
+        unset(
+            $this->vat_address,
+            $products, $this->customer
+        );
     }
 
     /**

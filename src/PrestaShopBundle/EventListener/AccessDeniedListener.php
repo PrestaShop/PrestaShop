@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,23 +16,26 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\EventListener;
 
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Allow a redirection to the right url when using BetterSecurity annotation.
@@ -77,10 +80,9 @@ class AccessDeniedListener
             if ($securityConfiguration instanceof AdminSecurity) {
                 $event->allowCustomResponseCode();
 
-                $this->showNotificationMessage($securityConfiguration);
-                $url = $this->computeRedirectionUrl($securityConfiguration);
-
-                $event->setResponse(new RedirectResponse($url));
+                $event->setResponse(
+                    $this->getAccessDeniedResponse($event->getRequest(), $securityConfiguration)
+                );
 
                 return;
             }
@@ -88,36 +90,85 @@ class AccessDeniedListener
     }
 
     /**
+     * @param Request $request
+     * @param AdminSecurity $adminSecurity
+     *
+     * @return Response
+     */
+    private function getAccessDeniedResponse(Request $request, AdminSecurity $adminSecurity)
+    {
+        if ($request->isXmlHttpRequest()) {
+            return new JsonResponse([
+                'status' => false,
+                'message' => $this->getErrorMessage($adminSecurity),
+            ], Response::HTTP_FORBIDDEN);
+        }
+
+        $this->session->getFlashBag()->add('error', $this->getErrorMessage($adminSecurity));
+
+        return new RedirectResponse(
+            $this->computeRedirectionUrl($adminSecurity, $request)
+        );
+    }
+
+    /**
      * Compute the url for the redirection.
      *
      * @param AdminSecurity $adminSecurity
+     * @param Request $request
      *
      * @return string
      */
-    private function computeRedirectionUrl(AdminSecurity $adminSecurity)
+    private function computeRedirectionUrl(AdminSecurity $adminSecurity, Request $request)
     {
         $route = $adminSecurity->getRedirectRoute();
+
         if ($route !== null) {
-            return $this->router->generate($route);
+            $redirectQueryParameters = $adminSecurity->getRedirectQueryParamsToKeep();
+            $routeParamsToKeep = $this->getQueryParamsFromRequestQuery(
+                $redirectQueryParameters,
+                $request
+            );
+
+            return $this->router->generate($route, $routeParamsToKeep);
         }
 
         return $adminSecurity->getUrl();
     }
 
     /**
-     * Send an error message when redirected, will only work on migrated pages.
+     * Gets query parameters by comparing them to the current request attributes.
      *
-     * @param AdminSecurity $adminSecurity
+     * @param array $queryParametersToKeep
+     * @param Request $request
+     *
+     * @return array
      */
-    private function showNotificationMessage(AdminSecurity $adminSecurity)
+    private function getQueryParamsFromRequestQuery(array $queryParametersToKeep, Request $request)
     {
-        $this->session->getFlashBag()->add(
-            'error',
-            $this->translator->trans(
-                $adminSecurity->getMessage(),
-                [],
-                $adminSecurity->getDomain()
-            )
+        $result = [];
+
+        foreach ($queryParametersToKeep as $queryParameterName) {
+            $value = $request->get($queryParameterName);
+            if (null !== $value) {
+                $result[$queryParameterName] = $value;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param AdminSecurity $adminSecurity
+     *
+     * @return string
+     */
+    private function getErrorMessage(AdminSecurity $adminSecurity)
+    {
+        return $this->translator->trans(
+            $adminSecurity->getMessage(),
+            [],
+            $adminSecurity->getDomain()
         );
     }
 }

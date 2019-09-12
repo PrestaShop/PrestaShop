@@ -1,5 +1,5 @@
  {#**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,10 +15,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
@@ -87,6 +87,7 @@
               'formStockQuantity': formStockQuantity,
               'formStockMinimalQuantity': form.step3.minimal_quantity,
               'formLowStockThreshold': form.step3.low_stock_threshold,
+              'formLocation': form.step3.location,
               'formLowStockAlert': form.step3.low_stock_alert,
               'formVirtualProduct': form.step3.virtual_product,
               'asm_globally_activated': asm_globally_activated,
@@ -263,7 +264,7 @@
   </form>
 
 
-  {% embed 'PrestaShopBundle:Admin/Helpers:bootstrap_popup.html.twig' with {
+  {% embed '@PrestaShop/Admin/Helpers/bootstrap_popup.html.twig' with {
     'id': 'confirmation_modal',
     'title': "Warning"|trans({}, 'Admin.Notifications.Warning'),
     'closable': false,
@@ -289,6 +290,7 @@
 
 {% block javascripts %}
   {{ parent() }}
+
   <script src="{{ asset('themes/default/js/bundle/product/form.js') }}"></script>
   <script src="{{ asset('themes/new-theme/public/catalog_product.bundle.js') }}"></script>
 
@@ -300,6 +302,7 @@
   <script src="{{ asset('themes/default/js/bundle/category-tree.js') }}"></script>
   <script src="{{ asset('themes/default/js/bundle/module/module_card.js') }}"></script>
   <script src="{{ asset('themes/default/js/bundle/modal-confirmation.js') }}"></script>
+  <script src="{{ asset('themes/new-theme/public/product_page.bundle.js') }}"></script>
   <script src="{{ asset('../js/tiny_mce/tiny_mce.js') }}"></script>
   <script src="{{ asset('../js/admin/tinymce.inc.js') }}"></script>
   <script src="{{ asset('../js/admin/tinymce_loader.js') }}"></script>

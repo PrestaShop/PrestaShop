@@ -1,22 +1,12 @@
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
+const {Addresses} = require('../../../selectors/BO/customers/addresses');
 
-const common_scenarios = require('../../common_scenarios/addresses');
+const common_scenarios = require('../../common_scenarios/address');
 
-let addressData = {
-  email: 'pub@prestashop.com',
-  id_number: '123456789',
-  address_alias: 'Ma super address',
-  first_name: 'John',
-  last_name: 'DOE',
-  company: 'prestashop',
-  vat_number: '0123456789',
-  address: '12 rue d\'amsterdam',
-  second_address: 'RDC',
-  ZIP: '75009',
-  city: 'Paris',
-  country: 'France',
-  home_phone: '0123456789',
-  other: 'azerty'
+let customerData = {
+  first_name: 'demo',
+  last_name: 'demo',
+  email_address: 'demo@prestashop.com',
 };
 
 scenario('Create "Address"', () => {
@@ -25,9 +15,12 @@ scenario('Create "Address"', () => {
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'customer');
 
-  common_scenarios.createAddress(addressData);
-  common_scenarios.checkAddressBO(addressData);
+  common_scenarios.createCustomerAddress(customerData);
 
+  scenario('Check the address creation', client => {
+    test('should check the existence of the filter address input', () => client.isVisible(Addresses.filter_by_address_input));
+    test('should search the customer by address', () => client.searchByAddress(Addresses, date_time));
+  }, 'customer');
   scenario('Logout from the Back Office', client => {
     test('should logout successfully from the Back Office', () => client.signOutBO());
   }, 'customer');

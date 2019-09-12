@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,53 +16,53 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Presenter\Order;
 
-use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
-use PrestaShop\PrestaShop\Adapter\Presenter\Cart\CartPresenter;
-use PrestaShop\PrestaShop\Adapter\Presenter\Object\ObjectPresenter;
-use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
-use Doctrine\Common\Annotations\AnnotationException;
-use ReflectionException;
-use PrestaShopException;
 use Address;
 use AddressFormat;
 use Carrier;
 use Cart;
 use Configuration;
 use Context;
+use Currency;
 use CustomerMessage;
+use Doctrine\Common\Annotations\AnnotationException;
 use Order;
 use OrderReturn;
+use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
+use PrestaShop\PrestaShop\Adapter\Presenter\Cart\CartPresenter;
+use PrestaShop\PrestaShop\Adapter\Presenter\Object\ObjectPresenter;
+use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShopBundle\Translation\TranslatorComponent;
+use PrestaShopException;
 use ProductDownload;
+use ReflectionException;
 use TaxConfiguration;
 use Tools;
-use Currency;
 
 class OrderLazyArray extends AbstractLazyArray
 {
-    /* @var CartPresenter */
+    /** @var CartPresenter */
     private $cartPresenter;
 
-    /* @var ObjectPresenter */
+    /** @var ObjectPresenter */
     private $objectPresenter;
 
-    /* @var PriceFormatter */
+    /** @var PriceFormatter */
     private $priceFormatter;
 
-    /* @var TranslatorComponent */
+    /** @var TranslatorComponent */
     private $translator;
 
-    /* @var TaxConfiguration */
+    /** @var TaxConfiguration */
     private $taxConfiguration;
 
     /** @var Order */
@@ -244,6 +244,26 @@ class OrderLazyArray extends AbstractLazyArray
             'amount' => $order->total_paid_real,
             'value' => $this->priceFormatter->format(
                 $order->total_paid_real,
+                Currency::getCurrencyInstance((int) $order->id_currency)
+            ),
+        );
+
+        $amounts['totals']['total_including_tax'] = array(
+            'type' => 'total_including_tax',
+            'label' => $this->translator->trans('Total (tax incl.)', array(), 'Shop.Theme.Checkout'),
+            'amount' => $order->total_paid_tax_incl,
+            'value' => $this->priceFormatter->format(
+                $order->total_paid_tax_incl,
+                Currency::getCurrencyInstance((int) $order->id_currency)
+            ),
+        );
+
+        $amounts['totals']['total_excluding_tax'] = array(
+            'type' => 'total_excluding_tax',
+            'label' => $this->translator->trans('Total (tax excl.)', array(), 'Shop.Theme.Checkout'),
+            'amount' => $order->total_paid_tax_excl,
+            'value' => $this->priceFormatter->format(
+                $order->total_paid_tax_excl,
                 Currency::getCurrencyInstance((int) $order->id_currency)
             ),
         );

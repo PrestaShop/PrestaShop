@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -456,7 +456,7 @@ abstract class DbCore
                 if ($value['type'] == 'sql') {
                     $values[] = $string_value = $value['value'];
                 } else {
-                    $values[] = $string_value = $null_values && ($value['value'] === '' || is_null($value['value'])) ? 'NULL' : "'{$value['value']}'";
+                    $values[] = $string_value = $null_values && ($value['value'] === '' || null === $value['value']) ? 'NULL' : "'{$value['value']}'";
                 }
 
                 if ($type == Db::ON_DUPLICATE_KEY) {
@@ -507,7 +507,7 @@ abstract class DbCore
             if ($value['type'] == 'sql') {
                 $sql .= '`' . bqSQL($key) . "` = {$value['value']},";
             } else {
-                $sql .= ($null_values && ($value['value'] === '' || is_null($value['value']))) ? '`' . bqSQL($key) . '` = NULL,' : '`' . bqSQL($key) . "` = '{$value['value']}',";
+                $sql .= ($null_values && ($value['value'] === '' || null === $value['value'])) ? '`' . bqSQL($key) . '` = NULL,' : '`' . bqSQL($key) . "` = '{$value['value']}',";
             }
         }
 
@@ -578,7 +578,7 @@ abstract class DbCore
      * @param bool $array Return an array instead of a result object (deprecated since 1.5.0.1, use query method instead)
      * @param bool $use_cache
      *
-     * @return array|false|null|mysqli_result|PDOStatement|resource
+     * @return array|false|mysqli_result|PDOStatement|resource|null
      *
      * @throws PrestaShopDatabaseException
      */
@@ -669,7 +669,7 @@ abstract class DbCore
 
         $this->last_cached = false;
 
-        if (is_null($result)) {
+        if (null === $result) {
             $result = false;
         }
 

@@ -30,7 +30,7 @@
  * DAMAGE.
  */
 
-require_once(dirname(__FILE__) . '/AbstractProcessor.php');
+require_once dirname(__FILE__) . '/AbstractProcessor.php';
 
 /**
  * 
@@ -40,7 +40,6 @@ require_once(dirname(__FILE__) . '/AbstractProcessor.php');
  * 
  */
 class DeleteProcessor extends AbstractProcessor {
-
     public function process($tokens) {
         $tables = array();
         $del = $tokens['DELETE'];
@@ -58,7 +57,7 @@ class DeleteProcessor extends AbstractProcessor {
         }
 
         $tokens['DELETE'] = array('TABLES' => $tables);
+
         return $tokens;
     }
 }
-?>

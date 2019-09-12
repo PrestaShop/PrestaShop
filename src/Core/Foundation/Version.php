@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -63,41 +63,121 @@ class Version
     private $minorVersion;
 
     /**
-     * Release version.
+     * Patch version.
      *
      * @var int
      */
-    private $releaseVersion;
+    private $patchVersion;
+
+    /**
+     * Pre release version, (eg. "dev", "beta"...)
+     *
+     * @var string
+     */
+    private $preReleaseVersion;
+
+    /**
+     * Build metadata (eg. build number)
+     *
+     * @var string
+     */
+    private $buildMetadata;
 
     /**
      * Initialize version data.
      *
      * @param string $version Version
-     * @param string $majorVersionString Major version in string format
+     * @param string $majorVersionString Legacy major version in string format (eg. "1.7")
      * @param int $majorVersion Major version
-     * @param int $minorVersion Minor version
-     * @param int $releaseVersion Release version
+     * @param int $minorVersion [default=0] Minor version
+     * @param int $patchVersion [default=0] Patch version
+     * @param string $preReleaseVersion [default=''] Pre release version (eg. "dev", "beta"...)
+     * @param string $buildMetadata [default=''] Build metadata (eg. build number)
      */
     public function __construct(
         $version,
         $majorVersionString,
         $majorVersion,
         $minorVersion = 0,
-        $releaseVersion = 0
+        $patchVersion = 0,
+        $preReleaseVersion = '',
+        $buildMetadata = ''
     ) {
-        $this->version = $version;
+        $this->version = $this->removeLegacyPrefix($version, $majorVersionString);
         $this->majorVersionString = $majorVersionString;
         $this->majorVersion = $majorVersion;
         $this->minorVersion = $minorVersion;
-        $this->releaseVersion = $releaseVersion;
+        $this->patchVersion = $patchVersion;
+        $this->preReleaseVersion = $preReleaseVersion;
+        $this->buildMetadata = $buildMetadata;
     }
 
     /**
-     * Returns the current version.
+     * Builds an instance form a version string
      *
-     * @return string For example "1.7.4.0"
+     * @param string $version
+     *
+     * @return self
+     *
+     * @throws InvalidVersionException If the version is invalid
      */
-    public function getVersion()
+    public static function buildFromString($version)
+    {
+        $matches = [];
+        $regex = '/^([\d]+)(?:\.([\d]+))?(?:\.([\d]+))?(?:\.(?<legacy>[\d]+))?(?:-(?<prerelease>[0-9A-Za-z-.]+))?(?:\+(?<build>[0-9A-Za-z-.]+))?$/';
+
+        if (!preg_match($regex, $version, $matches)) {
+            throw new InvalidVersionException($version);
+        }
+
+        if (isset($matches['legacy']) && '' !== $matches['legacy']) {
+            // legacy version like "1.7.5.0"
+            $major = (int) $matches[2];
+            $minor = (int) $matches[3];
+            $patch = (int) $matches['legacy'];
+            $version = substr($version, strpos($version, '.') + 1);
+        } else {
+            $major = (int) $matches[1];
+            $minor = isset($matches[2]) ? (int) $matches[2] : 0;
+            $patch = isset($matches[3]) ? (int) $matches[3] : 0;
+        }
+
+        return new self(
+            $version,
+            "1.$major",
+            $major,
+            $minor,
+            $patch,
+            isset($matches['prerelease']) ? $matches['prerelease'] : '',
+            isset($matches['build']) ? $matches['build'] : ''
+        );
+    }
+
+    /**
+     * Returns the current version in legacy format (eg. "1.7.6.0")
+     *
+     * @param bool $full [default=false] If true, include pre-release and build metadata (eg. "1.7.6.0-dev+build.1")
+     *
+     * @return string
+     */
+    public function getVersion($full = false)
+    {
+        $version = '1.' . $this->version;
+
+        if (!$full) {
+            // remove extra parts
+            return preg_replace('/[-\+].*/', '', $version);
+        }
+
+        return $version;
+    }
+
+    /**
+     * Returns SemVer compliant version (eg. "7.6.0")
+     *
+     * @return string
+     */
+    public function getSemVersion()
     {
         return $this->version;
     }
@@ -133,13 +213,50 @@ class Version
     }
 
     /**
+     * Returns the current patch version.
+     *
+     * @return int
+     */
+    public function getPatchVersion()
+    {
+        return $this->patchVersion;
+    }
+
+    /**
      * Returns the current release version.
+     *
+     * @deprecated Since 1.7.6.0, use getPatchVersion();
      *
      * @return int
      */
     public function getReleaseVersion()
     {
-        return $this->releaseVersion;
+        @trigger_error(
+            'getReleaseVersion() is deprecated since version 1.7.6.0 Use getPatchVersion() instead.',
+            E_USER_DEPRECATED
+        );
+
+        return $this->getPatchVersion();
+    }
+
+    /**
+     * Returns the current pre release version (if any)
+     *
+     * @return string
+     */
+    public function getPreReleaseVersion()
+    {
+        return $this->preReleaseVersion;
+    }
+
+    /**
+     * Returns the current build metadata (if any)
+     *
+     * @return string
+     */
+    public function getBuildMetadata()
+    {
+        return $this->buildMetadata;
     }
 
     /**
@@ -227,11 +344,19 @@ class Version
     }
 
     /**
+     * Returns the semantic version string
+     */
+    public function __toString()
+    {
+        return $this->getSemVersion();
+    }
+
+    /**
      * Compares the current version with the provided version depending on the provided operator.
      * It sanitized both version to have a.
      *
-     * @param $version  Must be a valid version string, for example "1.7.4.0"
-     * @param $operator Operator for version_compare(),
+     * @param $version  string Must be a valid version string, for example "1.7.4.0"
+     * @param $operator string Operator for version_compare(),
      *                  allowed values are: <, lt, <=, le, >, gt, >=, ge, ==, =, eq, !=, <>, ne
      *
      * @return bool result of the comparison
@@ -240,36 +365,30 @@ class Version
      */
     private function versionCompare($version, $operator)
     {
-        if ($this->checkVersion($version)) {
-            $first = intval(trim(str_replace('.', '', $this->version)));
-            $second = intval(trim(str_replace('.', '', $version)));
-            $firstLen = strlen($first);
-            $secondLen = strlen($second);
-            if ($firstLen > $secondLen) {
-                $second = str_pad($second, $firstLen, 0);
-            } elseif ($firstLen < $secondLen) {
-                $first = str_pad($first, $secondLen, 0);
-            }
+        $otherVersion = self::buildFromString($version);
 
-            return version_compare((string) $first, (string) $second, $operator);
-        }
+        $first = $this->getSemVersion();
+        $other = $otherVersion->getSemVersion();
+
+        $result = version_compare($first, $other, $operator);
+
+        return $result;
     }
 
     /**
-     * Checks if a given version is a valid version string.
+     * Remove legacy 1.x prefix if needed
      *
-     * @param $version
+     * @param string $version
+     * @param string $majorVersionString
      *
-     * @return bool true only if version is valid, else throw an exception
-     *
-     * @throws InvalidVersionException If the provided version is invalid
+     * @return bool|string
      */
-    private function checkVersion($version)
+    private function removeLegacyPrefix($version, $majorVersionString)
     {
-        if (!preg_match('~^\d+(\.\d+){0,}$~', $version)) {
-            throw new InvalidVersionException($version);
+        if ('1.' === substr($version, 0, 2) && substr($version, 0, strlen($majorVersionString)) === $majorVersionString) {
+            $version = substr($version, 2);
         }
 
-        return true;
+        return $version;
     }
 }

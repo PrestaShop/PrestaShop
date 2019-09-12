@@ -1,5 +1,5 @@
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,10 +15,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -30,6 +30,7 @@ class SpecificPriceFormHandler {
   constructor() {
     this.prefixCreateForm = 'form_step2_specific_price_';
     this.prefixEditForm = 'form_modal_';
+    this.editModalIsOpen = false;
 
     this.$createPriceFormDefaultValues = new Object();
     this.storePriceFormDefaultValues();
@@ -41,6 +42,8 @@ class SpecificPriceFormHandler {
     this.configureEditPriceModalBehavior();
 
     this.configureDeletePriceButtonsBehavior();
+
+    this.configureMultipleModalsBehavior();
   }
 
   /**
@@ -138,8 +141,6 @@ class SpecificPriceFormHandler {
 
     $('#js-open-create-specific-price-form').on('click', () => this.loadAndFillOptionsForSelectCombinationInput(usePrefixForCreate));
 
-    $(selectorPrefix + 'sp_reduction_type').change(() => this.showSpecificPriceTaxFieldIfEligible(usePrefixForCreate));
-
     $(selectorPrefix + 'leave_bprice').on('click', () => this.enableSpecificPriceFieldIfEligible(usePrefixForCreate));
 
     $(selectorPrefix + 'sp_reduction_type').on('change', () => this.enableSpecificPriceTaxFieldIfEligible(usePrefixForCreate));
@@ -153,12 +154,11 @@ class SpecificPriceFormHandler {
     var selectorPrefix = this.getPrefixSelector(usePrefixForCreate);
 
     $('#form_modal_cancel').click(() => this.closeEditPriceModalAndRemoveForm());
+    $('#form_modal_close').click(() => this.closeEditPriceModalAndRemoveForm());
 
     $('#form_modal_save').click(() => this.submitEditPriceForm());
 
     this.loadAndFillOptionsForSelectCombinationInput(usePrefixForCreate);
-
-    $(selectorPrefix + 'sp_reduction_type').change(() => this.showSpecificPriceTaxFieldIfEligible(usePrefixForCreate));
 
     $(selectorPrefix + 'leave_bprice').on('click', () => this.enableSpecificPriceFieldIfEligible(usePrefixForCreate));
 
@@ -167,6 +167,7 @@ class SpecificPriceFormHandler {
     this.reinitializeDatePickers();
 
     this.initializeLeaveBPriceField(usePrefixForCreate);
+    this.enableSpecificPriceTaxFieldIfEligible(usePrefixForCreate);
   }
 
   /**
@@ -214,6 +215,16 @@ class SpecificPriceFormHandler {
     });
   }
 
+  /**
+   * @see https://vijayasankarn.wordpress.com/2017/02/24/quick-fix-scrolling-and-focus-when-multiple-bootstrap-modals-are-open/
+   */
+  configureMultipleModalsBehavior() {
+    $('.modal').on('hidden.bs.modal', () => {
+      if (this.editModalIsOpen) {
+        $('body').addClass('modal-open');
+      }
+    });
+  }
 
   /**
    * @private
@@ -361,7 +372,7 @@ class SpecificPriceFormHandler {
    *
    * @private
    */
-  showSpecificPriceTaxFieldIfEligible(usePrefixForCreate) {
+  enableSpecificPriceTaxFieldIfEligible(usePrefixForCreate) {
 
     var selectorPrefix = this.getPrefixSelector(usePrefixForCreate);
 
@@ -406,22 +417,6 @@ class SpecificPriceFormHandler {
   }
 
   /**
-   * @param boolean usePrefixForCreate
-   *
-   * @private
-   */
-  enableSpecificPriceTaxFieldIfEligible(usePrefixForCreate) {
-    var selectorPrefix = this.getPrefixSelector(usePrefixForCreate);
-    const uglySelect2Selector = $('#select2-' + selectorPrefix + 'sp_reduction_tax-container').parent().parent();
-
-    if ($(selectorPrefix + 'sp_reduction_type').val() === 'amount') {
-      uglySelect2Selector.show();
-    } else {
-      uglySelect2Selector.hide();
-    }
-  }
-
-  /**
    * Open 'edit specific price' form into a modal
    *
    * @param integer specificPriceId
@@ -432,6 +427,7 @@ class SpecificPriceFormHandler {
     const url = $('#js-specific-price-list').data('actionEdit').replace(/form\/\d+/, 'form/' + specificPriceId);
 
     $('#edit-specific-price-modal').modal("show");
+    this.editModalIsOpen = true;
 
     $.ajax({
       type: 'GET',
@@ -452,6 +448,7 @@ class SpecificPriceFormHandler {
    */
   closeEditPriceModalAndRemoveForm() {
     $('#edit-specific-price-modal').modal("hide");
+    this.editModalIsOpen = false;
 
     var formLocationHolder = $('#edit-specific-price-modal-form');
 

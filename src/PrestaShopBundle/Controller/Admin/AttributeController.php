@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,19 +16,19 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Controller\Admin;
 
+use Product;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Product;
 
 /**
  * Admin controller for the attribute / attribute group.
@@ -174,8 +174,20 @@ class AttributeController extends FrameworkBundleAdminController
         if (count($combinations)) {
             $defaultProductAttributeId = $product->getDefaultIdProductAttribute();
             if (!$defaultProductAttributeId) {
-                list(, $firstAttributeCombination) = each($combinations[0]);
-                $product->setDefaultAttribute($firstAttributeCombination['id_product_attribute']);
+                /*
+                 * Combinations indexed by position, then attribute id
+                 * ex: $combinations = [
+                 *  3 => [ //4th position attribute
+                 *      45 => [ //product_attribute id
+                 *      ]
+                 *  ]
+                 * ]
+                 */
+                $firstPosition = array_keys($combinations)[0];
+                if (!empty($combinations[$firstPosition])) {
+                    $firstAttributeId = array_keys($combinations[$firstPosition])[0];
+                    $product->setDefaultAttribute($firstAttributeId);
+                }
             }
         }
     }
@@ -243,6 +255,7 @@ class AttributeController extends FrameworkBundleAdminController
 
             if ($res['status'] == 'error') {
                 $response->setStatusCode(400);
+
                 break;
             }
         }

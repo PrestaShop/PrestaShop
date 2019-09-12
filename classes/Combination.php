@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -82,8 +82,8 @@ class CombinationCore extends ObjectModel
             'isbn' => array('type' => self::TYPE_STRING, 'validate' => 'isIsbn', 'size' => 32),
             'upc' => array('type' => self::TYPE_STRING, 'validate' => 'isUpc', 'size' => 12),
             'quantity' => array('type' => self::TYPE_INT, 'validate' => 'isInt', 'size' => 10),
-            'reference' => array('type' => self::TYPE_STRING, 'size' => 32),
-            'supplier_reference' => array('type' => self::TYPE_STRING, 'size' => 32),
+            'reference' => array('type' => self::TYPE_STRING, 'size' => 64),
+            'supplier_reference' => array('type' => self::TYPE_STRING, 'size' => 64),
 
             /* Shop fields */
             'wholesale_price' => array('type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isPrice', 'size' => 27),
@@ -93,7 +93,7 @@ class CombinationCore extends ObjectModel
             'unit_price_impact' => array('type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isNegativePrice', 'size' => 20),
             'minimal_quantity' => array('type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedId', 'required' => true),
             'low_stock_threshold' => array('type' => self::TYPE_INT, 'shop' => true, 'allow_null' => true, 'validate' => 'isInt'),
-            'low_stock_alert' => array('type' => self::TYPE_BOOL, 'shop' => true, 'allow_null' => true, 'validate' => 'isBool'),
+            'low_stock_alert' => array('type' => self::TYPE_BOOL, 'shop' => true, 'validate' => 'isBool'),
             'default_on' => array('type' => self::TYPE_BOOL, 'allow_null' => true, 'shop' => true, 'validate' => 'isBool'),
             'available_date' => array('type' => self::TYPE_DATE, 'shop' => true, 'validate' => 'isDateFormat'),
         ),
@@ -226,6 +226,9 @@ class CombinationCore extends ObjectModel
      */
     public function deleteAssociations()
     {
+        if ((int) $this->id === 0) {
+            return false;
+        }
         $result = Db::getInstance()->delete('product_attribute_combination', '`id_product_attribute` = ' . (int) $this->id);
         $result &= Db::getInstance()->delete('cart_product', '`id_product_attribute` = ' . (int) $this->id);
         $result &= Db::getInstance()->delete('product_attribute_image', '`id_product_attribute` = ' . (int) $this->id);
@@ -251,7 +254,8 @@ class CombinationCore extends ObjectModel
                 $sqlValues[] = '(' . (int) $value . ', ' . (int) $this->id . ')';
             }
 
-            $result = Db::getInstance()->execute('
+            $result = Db::getInstance()->execute(
+                '
 				INSERT INTO `' . _DB_PREFIX_ . 'product_attribute_combination` (`id_attribute`, `id_product_attribute`)
 				VALUES ' . implode(',', $sqlValues)
             );
@@ -279,7 +283,7 @@ class CombinationCore extends ObjectModel
     }
 
     /**
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return array|false|mysqli_result|PDOStatement|resource|null
      */
     public function getWsProductOptionValues()
     {
@@ -293,7 +297,7 @@ class CombinationCore extends ObjectModel
     }
 
     /**
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return array|false|mysqli_result|PDOStatement|resource|null
      */
     public function getWsImages()
     {
@@ -326,7 +330,8 @@ class CombinationCore extends ObjectModel
             }
 
             if (is_array($sqlValues) && count($sqlValues)) {
-                Db::getInstance()->execute('
+                Db::getInstance()->execute(
+                    '
 					INSERT INTO `' . _DB_PREFIX_ . 'product_attribute_image` (`id_product_attribute`, `id_image`)
 					VALUES ' . implode(',', $sqlValues)
                 );
@@ -354,7 +359,7 @@ class CombinationCore extends ObjectModel
     /**
      * @param $idLang
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return array|false|mysqli_result|PDOStatement|resource|null
      */
     public function getAttributesName($idLang)
     {
@@ -422,7 +427,7 @@ class CombinationCore extends ObjectModel
     }
 
     /**
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return array|false|mysqli_result|PDOStatement|resource|null
      */
     public function getColorsAttributes()
     {
@@ -446,7 +451,8 @@ class CombinationCore extends ObjectModel
      */
     public static function getPrice($idProductAttribute)
     {
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+            '
 			SELECT product_attribute_shop.`price`
 			FROM `' . _DB_PREFIX_ . 'product_attribute` pa
 			' . Shop::addSqlAssociation('product_attribute', 'pa') . '

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -30,9 +30,9 @@ use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class GeolocationController is responsible for "Improve > International > Localization > Geolocation" page.
@@ -42,13 +42,11 @@ class GeolocationController extends FrameworkBundleAdminController
     /**
      * Show geolocation page.
      *
-     * @Template("@PrestaShop/Admin/Improve/International/Geolocation/geolocation.html.twig")
-     *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
      *
      * @param Request $request
      *
-     * @return array
+     * @return Response
      */
     public function indexAction(Request $request)
     {
@@ -57,13 +55,13 @@ class GeolocationController extends FrameworkBundleAdminController
         $geolocationForm = $this->getGeolocationFormHandler()->getForm();
         $geoLiteCityChecker = $this->get('prestashop.core.geolocation.geo_lite_city.checker');
 
-        return [
+        return $this->render('@PrestaShop/Admin/Improve/International/Geolocation/index.html.twig', [
             'layoutTitle' => $this->trans('Geolocation', 'Admin.Navigation.Menu'),
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($legacyController),
             'geolocationForm' => $geolocationForm->createView(),
             'geolocationDatabaseAvailable' => $geoLiteCityChecker->isAvailable(),
-        ];
+        ]);
     }
 
     /**
@@ -74,13 +72,13 @@ class GeolocationController extends FrameworkBundleAdminController
      *     message="You do not have permission to edit this.",
      *     redirectRoute="admin_geolocation"
      * )
-     * @DemoRestricted(redirectRoute="admin_geolocation")
+     * @DemoRestricted(redirectRoute="admin_geolocation_index")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
-    public function processFormAction(Request $request)
+    public function saveOptionsAction(Request $request)
     {
         $geolocationFormHandler = $this->getGeolocationFormHandler();
 
@@ -93,13 +91,13 @@ class GeolocationController extends FrameworkBundleAdminController
             if (empty($errors)) {
                 $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
 
-                return $this->redirectToRoute('admin_geolocation');
+                return $this->redirectToRoute('admin_geolocation_index');
             }
 
             $this->flashErrors($errors);
         }
 
-        return $this->redirectToRoute('admin_geolocation');
+        return $this->redirectToRoute('admin_geolocation_index');
     }
 
     /**

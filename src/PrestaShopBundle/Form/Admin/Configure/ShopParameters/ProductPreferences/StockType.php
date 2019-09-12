@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,9 +27,10 @@
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences;
 
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
-use PrestaShopBundle\Form\Admin\Type\TranslateTextType;
+use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -47,20 +48,25 @@ class StockType extends TranslatorAwareType
         $builder
             ->add('allow_ordering_oos', SwitchType::class)
             ->add('stock_management', SwitchType::class)
-            ->add('in_stock_label', TranslateTextType::class, [
-                'locales' => $this->locales,
+            ->add('in_stock_label', TranslatableType::class, [
+                'type' => TextType::class,
+                'only_enabled_locales' => false,
             ])
-            ->add('oos_allowed_backorders', TranslateTextType::class, [
-                'locales' => $this->locales,
+            ->add('oos_allowed_backorders', TranslatableType::class, [
+                'type' => TextType::class,
+                'only_enabled_locales' => false,
             ])
-            ->add('oos_denied_backorders', TranslateTextType::class, [
-                'locales' => $this->locales,
+            ->add('oos_denied_backorders', TranslatableType::class, [
+                'type' => TextType::class,
+                'only_enabled_locales' => false,
             ])
-            ->add('delivery_time', TranslateTextType::class, [
-                'locales' => $this->locales,
+            ->add('delivery_time', TranslatableType::class, [
+                'type' => TextType::class,
+                'only_enabled_locales' => false,
             ])
-            ->add('oos_delivery_time', TranslateTextType::class, [
-                'locales' => $this->locales,
+            ->add('oos_delivery_time', TranslatableType::class, [
+                'type' => TextType::class,
+                'only_enabled_locales' => false,
             ])
             ->add('pack_stock_management', ChoiceType::class, [
                 'choices' => [

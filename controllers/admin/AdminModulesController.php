@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,7 +27,7 @@ use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 
 class AdminModulesControllerCore extends AdminController
 {
-    private $_modules_ad = array(
+    protected $_modules_ad = array(
         'blockcart' => array('cartabandonmentpro'),
         /* 'bloctopmenu' => array('advancedtopmenu'), */
         'blocklayered' => array('pm_advancedsearch4'),
@@ -82,35 +82,35 @@ class AdminModulesControllerCore extends AdminController
         register_shutdown_function('displayFatalError');
 
         // Set the modules categories
-        $this->list_modules_categories['administration']['name'] = $this->l('Administration');
-        $this->list_modules_categories['advertising_marketing']['name'] = $this->l('Advertising and Marketing');
-        $this->list_modules_categories['analytics_stats']['name'] = $this->l('Analytics and Stats');
-        $this->list_modules_categories['billing_invoicing']['name'] = $this->l('Taxes & Invoicing');
-        $this->list_modules_categories['checkout']['name'] = $this->l('Checkout');
-        $this->list_modules_categories['content_management']['name'] = $this->l('Content Management');
-        $this->list_modules_categories['customer_reviews']['name'] = $this->l('Customer Reviews');
-        $this->list_modules_categories['export']['name'] = $this->trans('Export', array(), 'Admin.Actions');
-        $this->list_modules_categories['front_office_features']['name'] = $this->l('Front office Features');
-        $this->list_modules_categories['i18n_localization']['name'] = $this->l('Internationalization and Localization');
-        $this->list_modules_categories['merchandizing']['name'] = $this->l('Merchandising');
-        $this->list_modules_categories['migration_tools']['name'] = $this->l('Migration Tools');
-        $this->list_modules_categories['payments_gateways']['name'] = $this->l('Payments and Gateways');
-        $this->list_modules_categories['payment_security']['name'] = $this->l('Site certification & Fraud prevention');
-        $this->list_modules_categories['pricing_promotion']['name'] = $this->l('Pricing and Promotion');
-        $this->list_modules_categories['quick_bulk_update']['name'] = $this->l('Quick / Bulk update');
-        /* 		$this->list_modules_categories['search_filter']['name'] = $this->l('Search and Filter'); */
-        $this->list_modules_categories['seo']['name'] = $this->l('SEO');
-        $this->list_modules_categories['shipping_logistics']['name'] = $this->l('Shipping and Logistics');
-        $this->list_modules_categories['slideshows']['name'] = $this->l('Slideshows');
-        $this->list_modules_categories['smart_shopping']['name'] = $this->l('Comparison site & Feed management');
-        $this->list_modules_categories['market_place']['name'] = $this->l('Marketplace');
-        $this->list_modules_categories['others']['name'] = $this->l('Other Modules');
-        $this->list_modules_categories['mobile']['name'] = $this->l('Mobile');
-        $this->list_modules_categories['dashboard']['name'] = $this->l('Dashboard');
-        $this->list_modules_categories['i18n_localization']['name'] = $this->l('Internationalization & Localization');
-        $this->list_modules_categories['emailing']['name'] = $this->l('Emailing & SMS');
-        $this->list_modules_categories['social_networks']['name'] = $this->l('Social Networks');
-        $this->list_modules_categories['social_community']['name'] = $this->l('Social & Community');
+        $this->list_modules_categories['administration']['name'] = $this->trans('Administration', [], 'Admin.Modules.Feature');
+        $this->list_modules_categories['advertising_marketing']['name'] = $this->trans('Advertising & Marketing', [], 'Admin.Modules.Feature');
+        $this->list_modules_categories['analytics_stats']['name'] = $this->trans('Analytics & Stats', [], 'Admin.Modules.Feature');
+        $this->list_modules_categories['billing_invoicing']['name'] = $this->trans('Taxes & Invoicing', [], 'Admin.Modules.Feature');
+        $this->list_modules_categories['checkout']['name'] = $this->trans('Checkout', [], 'Admin.Modules.Feature');
+        $this->list_modules_categories['content_management']['name'] = $this->trans('Content Management', [], 'Admin.Modules.Feature');
+        $this->list_modules_categories['customer_reviews']['name'] = $this->trans('Customer Reviews', [], 'Admin.Modules.Feature');
+        $this->list_modules_categories['export']['name'] = $this->trans('Export', [], 'Admin.Actions');
+        $this->list_modules_categories['front_office_features']['name'] = $this->trans('Front office Features', [], 'Admin.Modules.Feature');
+        $this->list_modules_categories['i18n_localization']['name'] = $this->trans('Internationalization & Localization', [], 'Admin.Modules.Feature');
+        $this->list_modules_categories['merchandizing']['name'] = $this->trans('Merchandising', [], 'Admin.Modules.Feature');
+        $this->list_modules_categories['migration_tools']['name'] = $this->trans('Migration Tools', [], 'Admin.Modules.Feature');
+        $this->list_modules_categories['payments_gateways']['name'] = $this->trans('Payments & Gateways', [], 'Admin.Modules.Feature');
+        $this->list_modules_categories['payment_security']['name'] = $this->trans('Site certification & Fraud prevention', [], 'Admin.Modules.Feature');
+        $this->list_modules_categories['pricing_promotion']['name'] = $this->trans('Pricing & Promotion', [], 'Admin.Modules.Feature');
+        $this->list_modules_categories['quick_bulk_update']['name'] = $this->trans('Quick / Bulk update', [], 'Admin.Modules.Feature');
+        /* 		$this->list_modules_categories['search_filter']['name'] = $this->trans('Search & Filter', [], 'Admin.Modules.Feature'); */
+        $this->list_modules_categories['seo']['name'] = $this->trans('SEO', [], 'Admin.Catalog.Feature');
+        $this->list_modules_categories['shipping_logistics']['name'] = $this->trans('Shipping & Logistics', [], 'Admin.Modules.Feature');
+        $this->list_modules_categories['slideshows']['name'] = $this->trans('Slideshows', [], 'Admin.Modules.Feature');
+        $this->list_modules_categories['smart_shopping']['name'] = $this->trans('Comparison site & Feed management', [], 'Admin.Modules.Feature');
+        $this->list_modules_categories['market_place']['name'] = $this->trans('Marketplace', [], 'Admin.Modules.Feature');
+        $this->list_modules_categories['others']['name'] = $this->trans('Other Modules', [], 'Admin.Modules.Feature');
+        $this->list_modules_categories['mobile']['name'] = $this->trans('Mobile', [], 'Admin.Global');
+        $this->list_modules_categories['dashboard']['name'] = $this->trans('Dashboard', [], 'Admin.Global');
+        $this->list_modules_categories['i18n_localization']['name'] = $this->trans('Internationalization & Localization', [], 'Admin.Modules.Feature');
+        $this->list_modules_categories['emailing']['name'] = $this->trans('Emailing & SMS', [], 'Admin.Modules.Feature');
+        $this->list_modules_categories['social_networks']['name'] = $this->trans('Social Networks', [], 'Admin.Modules.Feature');
+        $this->list_modules_categories['social_community']['name'] = $this->trans('Social & Community', [], 'Admin.Modules.Feature');
 
         uasort($this->list_modules_categories, array($this, 'checkCategoriesNames'));
 
@@ -150,7 +150,7 @@ class AdminModulesControllerCore extends AdminController
 
     public function checkCategoriesNames($a, $b)
     {
-        if ($a['name'] === $this->l('Other Modules')) {
+        if ($a['name'] === $this->trans('Other Modules')) {
             return true;
         }
 
@@ -303,7 +303,7 @@ class AdminModulesControllerCore extends AdminController
         $modules_list_sort = array(
             'installed' => $installed,
             'not_installed' => $uninstalled,
-            );
+        );
 
         $this->context->smarty->assign(array(
             'currentIndex' => self::$currentIndex,
@@ -583,15 +583,19 @@ class AdminModulesControllerCore extends AdminController
                     case UPLOAD_ERR_INI_SIZE:
                     case UPLOAD_ERR_FORM_SIZE:
                         $this->errors[] = $this->trans('File too large (limit of %s bytes).', array(Tools::getMaxUploadSize()), 'Admin.Notifications.Error');
+
                         break;
                     case UPLOAD_ERR_PARTIAL:
                         $this->errors[] = $this->trans('File upload was not completed.', array(), 'Admin.Notifications.Error');
+
                         break;
                     case UPLOAD_ERR_NO_FILE:
                         $this->errors[] = $this->trans('No file was uploaded.', array(), 'Admin.Notifications.Error');
+
                         break;
                     default:
                         $this->errors[] = $this->trans('Internal error #%s', array($_FILES['newfile']['error']), 'Admin.Notifications.Error');
+
                         break;
                 }
             } elseif (!isset($_FILES['file']['tmp_name']) || empty($_FILES['file']['tmp_name'])) {
@@ -752,9 +756,7 @@ class AdminModulesControllerCore extends AdminController
             } elseif ($key == 'updateAll') {
                 $loggedOnAddons = false;
 
-                if (isset($this->context->cookie->username_addons)
-                    && isset($this->context->cookie->password_addons)
-                    && !empty($this->context->cookie->username_addons)
+                if (!empty($this->context->cookie->username_addons)
                     && !empty($this->context->cookie->password_addons)) {
                     $loggedOnAddons = true;
                 }
@@ -801,7 +803,7 @@ class AdminModulesControllerCore extends AdminController
                         }
 
                         foreach ($module_to_update as $name => $attr) {
-                            if ((is_null($attr) && $this->logged_on_addons == 0) || ($attr['need_loggedOnAddons'] == 1 && $this->logged_on_addons == 0)) {
+                            if ((null === $attr && $this->logged_on_addons == 0) || ($attr['need_loggedOnAddons'] == 1 && $this->logged_on_addons == 0)) {
                                 $this->errors[] = $this->trans(
                                     'You need to be logged in to your PrestaShop Addons account in order to update the %s module. %s',
                                     array(
@@ -812,7 +814,7 @@ class AdminModulesControllerCore extends AdminController
                                     ),
                                     'Admin.Modules.Notification'
                                 );
-                            } elseif (!is_null($attr['id'])) {
+                            } elseif (null !== $attr['id']) {
                                 $download_ok = false;
                                 if ($attr['need_loggedOnAddons'] == 0
                                         && file_put_contents(
@@ -855,7 +857,7 @@ class AdminModulesControllerCore extends AdminController
 
                     // Check potential error
                     if (!($module = Module::getInstanceByName(urldecode($name)))) {
-                        $this->errors[] = $this->l('Module not found');
+                        $this->errors[] = $this->trans('Module not found');
                     } elseif (($this->context->mode >= Context::MODE_HOST_CONTRIB) && in_array($module->name, Module::$hosted_modules_blacklist)) {
                         $this->errors[] = $this->trans('You do not have permission to access this module.', array(), 'Admin.Modules.Notification');
                     } elseif ($key == 'install' && !$this->access('add')) {
@@ -1348,7 +1350,7 @@ class AdminModulesControllerCore extends AdminController
         if ($show_country_modules && (isset($module->limited_countries) && !empty($module->limited_countries)
                 && ((is_array($module->limited_countries) && count($module->limited_countries)
                 && !in_array(strtolower($this->iso_default_country), $module->limited_countries))
-                || (!is_array($module->limited_countries) && strtolower($this->iso_default_country) != strval($module->limited_countries))))) {
+                || (!is_array($module->limited_countries) && strtolower($this->iso_default_country) != (string) ($module->limited_countries))))) {
             return true;
         }
 
@@ -1367,7 +1369,7 @@ class AdminModulesControllerCore extends AdminController
         $helper->id = 'box-installed-modules';
         $helper->icon = 'icon-puzzle-piece';
         $helper->color = 'color1';
-        $helper->title = $this->l('Installed Modules', null, null, false);
+        $helper->title = $this->trans('Installed modules', [], 'Admin.Modules.Feature');
         if (ConfigurationKPI::get('INSTALLED_MODULES') !== false && ConfigurationKPI::get('INSTALLED_MODULES') != '') {
             $helper->value = ConfigurationKPI::get('INSTALLED_MODULES');
         }
@@ -1379,7 +1381,7 @@ class AdminModulesControllerCore extends AdminController
         $helper->id = 'box-disabled-modules';
         $helper->icon = 'icon-off';
         $helper->color = 'color2';
-        $helper->title = $this->l('Disabled Modules', null, null, false);
+        $helper->title = $this->trans('Disabled modules', [], 'Admin.Modules.Feature');
         if (ConfigurationKPI::get('DISABLED_MODULES') !== false && ConfigurationKPI::get('DISABLED_MODULES') != '') {
             $helper->value = ConfigurationKPI::get('DISABLED_MODULES');
         }
@@ -1391,7 +1393,7 @@ class AdminModulesControllerCore extends AdminController
         $helper->id = 'box-update-modules';
         $helper->icon = 'icon-refresh';
         $helper->color = 'color3';
-        $helper->title = $this->l('Modules to update', null, null, false);
+        $helper->title = $this->trans('Modules to update');
         if (ConfigurationKPI::get('UPDATE_MODULES') !== false && ConfigurationKPI::get('UPDATE_MODULES') != '') {
             $helper->value = ConfigurationKPI::get('UPDATE_MODULES');
         }
@@ -1445,7 +1447,7 @@ class AdminModulesControllerCore extends AdminController
         $this->modals[] = array(
             'modal_id' => 'moduleTradLangSelect',
             'modal_class' => 'modal-sm',
-            'modal_title' => $this->l('Translate this module'),
+            'modal_title' => $this->trans('Translate this module'),
             'modal_content' => $modal_content,
         );
 
@@ -1453,7 +1455,7 @@ class AdminModulesControllerCore extends AdminController
         $this->modals[] = array(
             'modal_id' => 'moduleNotTrusted',
             'modal_class' => 'modal-lg',
-            'modal_title' => ($this->context->mode == Context::MODE_HOST) ? $this->l('This module cannot be installed') : $this->l('Important Notice'),
+            'modal_title' => ($this->context->mode == Context::MODE_HOST) ? $this->trans('This module cannot be installed') : $this->trans('Important Notice'),
             'modal_content' => $modal_content,
         );
 
@@ -1461,7 +1463,7 @@ class AdminModulesControllerCore extends AdminController
         $this->modals[] = array(
             'modal_id' => 'moduleNotTrustedCountry',
             'modal_class' => 'modal-lg',
-            'modal_title' => $this->l('This module is Untrusted for your country'),
+            'modal_title' => $this->trans('This module is Untrusted for your country', [], 'Admin.Modules.Feature'),
             'modal_content' => $modal_content,
         );
     }

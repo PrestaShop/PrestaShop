@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -180,7 +180,7 @@ class AdminCountriesControllerCore extends AdminController
         ];
 
         foreach ($default_layout_tab as $line) {
-            $default_layout .= implode(' ', $line) . "\r\n";
+            $default_layout .= implode(' ', $line) . AddressFormat::FORMAT_NEW_LINE;
         }
 
         $this->fields_form = array(
@@ -206,9 +206,9 @@ class AdminCountriesControllerCore extends AdminController
                     'required' => true,
                     'hint' => $this->trans('Two -- or three -- letter ISO code (e.g. "us" for United States).', array(), 'Admin.International.Help'),
                     /* @TODO - add two lines for the hint? */
-                    /*'desc' => $this->l('Two -- or three -- letter ISO code (e.g. U.S. for United States)').'.
+                    /*'desc' => $this->trans('Two -- or three -- letter ISO code (e.g. U.S. for United States)', [], 'Admin.International.Help').'.
                             <a href="http://www.iso.org/iso/country_codes/iso_3166_code_lists/country_names_and_code_elements.htm" target="_blank">'.
-                                $this->l('Official list here').'
+                                $this->trans('Official list here', [], 'Admin.International.Feature').'
                             </a>.'*/
                 ),
                 array(
@@ -390,7 +390,8 @@ class AdminCountriesControllerCore extends AdminController
                     $res = Db::getInstance()->execute(
                             'UPDATE `' . _DB_PREFIX_ . 'state`
 							SET `id_zone` = ' . (int) Tools::getValue('id_zone') . '
-							WHERE `id_state` IN (' . implode(',', $ids) . ')');
+							WHERE `id_state` IN (' . implode(',', $ids) . ')'
+                    );
                 }
             }
         }
@@ -437,7 +438,7 @@ class AdminCountriesControllerCore extends AdminController
         $country = parent::processSave();
 
         if (!count($this->errors)) {
-            if (is_null($tmp_addr_format->id_country)) {
+            if (null === $tmp_addr_format->id_country) {
                 $tmp_addr_format->id_country = $country->id;
             }
 
@@ -474,18 +475,16 @@ class AdminCountriesControllerCore extends AdminController
         if (Tools::getIsset('submitBulkAffectZonecountry')) {
             $this->tpl_list_vars['assign_zone'] = true;
         }
-
-        return;
     }
 
     protected function displayValidFields()
     {
         /* The following translations are needed later - don't remove the comments!
         $this->trans('Customer', array(), 'Admin.Global');
-        $this->l('Warehouse');
+        $this->trans('Warehouse', [], 'Admin.Global');
         $this->trans('Country', array(), 'Admin.Global');
-        $this->l('State');
-        $this->l('Address');
+        $this->trans('State', [], 'Admin.Global');
+        $this->trans('Address', [], 'Admin.Global');
         */
 
         $html_tabnav = '<ul class="nav nav-tabs" id="custom-address-fields">';

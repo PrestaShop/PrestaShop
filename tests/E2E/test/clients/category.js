@@ -63,7 +63,7 @@ class Category extends CommonClient {
       .execute(function (selector) {
         let count = document.querySelector(selector).getElementsByTagName("ol")[0].children.length;
         let breadcrumb = '';
-        for(let i = 0; i < count; i++) {
+        for (let i = 0; i < count; i++) {
           breadcrumb += document.querySelector(selector).getElementsByTagName("ol")[0].children[i].innerText + '/ '
         }
         return breadcrumb;

@@ -1,0 +1,8 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.core.shop.logo_uploader:
+    class: 'PrestaShop\PrestaShop\Core\Shop\LogoUploader'
+    arguments:
+      - '@=service("prestashop.adapter.legacy.context").getContext().shop'

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -73,7 +73,7 @@ class SpecificPriceCore extends ObjectModel
     protected $webserviceParameters = array(
         'objectsNodeName' => 'specific_prices',
         'objectNodeName' => 'specific_price',
-            'fields' => array(
+        'fields' => array(
             'id_shop_group' => array('xlink_resource' => 'shop_groups'),
             'id_shop' => array('xlink_resource' => 'shops', 'required' => true),
             'id_cart' => array('xlink_resource' => 'carts', 'required' => true),
@@ -83,7 +83,7 @@ class SpecificPriceCore extends ObjectModel
             'id_country' => array('xlink_resource' => 'countries', 'required' => true),
             'id_group' => array('xlink_resource' => 'groups', 'required' => true),
             'id_customer' => array('xlink_resource' => 'customers', 'required' => true),
-            ),
+        ),
     );
 
     /**
@@ -226,7 +226,7 @@ class SpecificPriceCore extends ObjectModel
         $priority = SpecificPrice::getPriority($id_product);
         foreach (array_reverse($priority) as $k => $field) {
             if (!empty($field)) {
-                $select .= ' IF (`' . bqSQL($field) . '` = ' . (int) $$field . ', ' . pow(2, $k + 1) . ', 0) + ';
+                $select .= ' IF (`' . bqSQL($field) . '` = ' . (int) $$field . ', ' . 2 ** ($k + 1) . ', 0) + ';
             }
         }
 
@@ -480,10 +480,18 @@ class SpecificPriceCore extends ObjectModel
      *
      * @return array
      */
-    public static function getSpecificPrice($id_product, $id_shop, $id_currency, $id_country, $id_group, $quantity,
-                                            $id_product_attribute = null, $id_customer = 0, $id_cart = 0,
-                                            $real_quantity = 0)
-    {
+    public static function getSpecificPrice(
+        $id_product,
+        $id_shop,
+        $id_currency,
+        $id_country,
+        $id_group,
+        $quantity,
+        $id_product_attribute = null,
+        $id_customer = 0,
+        $id_cart = 0,
+        $real_quantity = 0
+    ) {
         if (!SpecificPrice::isFeatureActive()) {
             return array();
         }

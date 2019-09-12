@@ -4,6 +4,7 @@ admin_modules_positions:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Improve\Design\Positions:index'
         _legacy_controller: AdminModulesPositions
+        _legacy_link: AdminModulesPositions
 
 admin_modules_positions_unhook:
     path: /unhook
@@ -11,3 +12,4 @@ admin_modules_positions_unhook:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Improve\Design\Positions:unhook'
         _legacy_controller: AdminModulesPositions
+        _legacy_link: AdminModulesPositions:unhook

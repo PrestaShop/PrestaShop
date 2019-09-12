@@ -25,7 +25,7 @@
       position: fixed;
       right: 5px;
       top: 40px;
-      z-index: 502; // above header toolbar
+      z-index: 1000; // above header toolbar
     }
     .fade-enter-active, .fade-leave-active {
       transition: opacity .5s;

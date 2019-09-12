@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -35,7 +35,7 @@ if (!file_exists($parametersFilepath)) {
     }
 }
 
-$parameters = require($parametersFilepath);
+$parameters = require $parametersFilepath;
 
 if (!array_key_exists('parameters', $parameters)) {
     throw new \Exception('Missing "parameters" key in "parameters.php" configuration file');
@@ -50,11 +50,14 @@ if (!defined('_PS_IN_TEST_') && isset($_SERVER['argv'])) {
     }
 }
 
-foreach ($parameters['parameters'] as $key => $value) {
-    if (defined('_PS_IN_TEST_') && $key === 'database_name') {
-        $value = 'test_'.$value;
+if ($container instanceof \Symfony\Component\DependencyInjection\Container) {
+    foreach ($parameters['parameters'] as $key => $value) {
+        if (defined('_PS_IN_TEST_') && $key === 'database_name') {
+            $value = 'test_'.$value;
+        }
+        $container->setParameter($key, $value);
     }
-    $container->setParameter($key, $value);
+
+    $container->setParameter('cache.driver', extension_loaded('apc') ? 'apc': 'array');
 }
 
-$container->setParameter('cache.driver', extension_loaded('apc') ? 'apc': 'array');

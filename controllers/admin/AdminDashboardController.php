@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -99,7 +99,7 @@ class AdminDashboardControllerCore extends AdminController
                         array(
                             '%currency' => $currency->iso_code,
                             '%module%' => $module->displayName,
-                            ),
+                        ),
                         'Admin.Dashboard.Help'
                     ),
                     'validation' => 'isPrice',
@@ -133,7 +133,8 @@ class AdminDashboardControllerCore extends AdminController
                             array(
                                 '%module%' => $module->displayName,
                             ),
-                            'Admin.Dashboard.Help'),
+                            'Admin.Dashboard.Help'
+                        ),
                         'validation' => 'isPrice',
                         'cast' => 'floatval',
                         'type' => 'text',
@@ -179,7 +180,7 @@ class AdminDashboardControllerCore extends AdminController
                     'For the carrier named %s, indicate the overseas delivery costs in percentage of the price charged to customers.',
                     array(
                         '%s' => $carrier['name'],
-                ),
+                    ),
                     'Admin.Dashboard.Help'
                 ),
                 'validation' => 'isPercentage',
@@ -213,9 +214,9 @@ class AdminDashboardControllerCore extends AdminController
         );
 
         Media::addJsDef(array(
-                'dashboard_ajax_url' => $this->context->link->getAdminLink('AdminDashboard'),
-                'read_more' => '',
-            ));
+            'dashboard_ajax_url' => $this->context->link->getAdminLink('AdminDashboard'),
+            'read_more' => '',
+        ));
 
         return $forms;
     }
@@ -242,27 +243,33 @@ class AdminDashboardControllerCore extends AdminController
                 case 'day':
                     $date_from = date('Y-m-d');
                     $date_to = date('Y-m-d');
+
                     break;
                 case 'prev-day':
                     $date_from = date('Y-m-d', strtotime('-1 day'));
                     $date_to = date('Y-m-d', strtotime('-1 day'));
+
                     break;
                 case 'month':
                 default:
                     $date_from = date('Y-m-01');
                     $date_to = date('Y-m-d');
+
                     break;
                 case 'prev-month':
                     $date_from = date('Y-m-01', strtotime('-1 month'));
                     $date_to = date('Y-m-t', strtotime('-1 month'));
+
                     break;
                 case 'year':
                     $date_from = date('Y-01-01');
                     $date_to = date('Y-m-d');
+
                     break;
                 case 'prev-year':
                     $date_from = date('Y-m-01', strtotime('-1 year'));
                     $date_to = date('Y-12-t', strtotime('-1 year'));
+
                     break;
             }
             $this->context->employee->stats_date_from = $date_from;
@@ -280,11 +287,11 @@ class AdminDashboardControllerCore extends AdminController
         $stats_compare_from = $this->context->employee->stats_compare_from;
         $stats_compare_to = $this->context->employee->stats_compare_to;
 
-        if (is_null($stats_compare_from) || $stats_compare_from == '0000-00-00') {
+        if (null === $stats_compare_from || $stats_compare_from == '0000-00-00') {
             $stats_compare_from = null;
         }
 
-        if (is_null($stats_compare_to) || $stats_compare_to == '0000-00-00') {
+        if (null === $stats_compare_to || $stats_compare_to == '0000-00-00') {
             $stats_compare_to = null;
         }
 
@@ -315,6 +322,7 @@ class AdminDashboardControllerCore extends AdminController
             'datepickerFrom' => Tools::getValue('datepickerFrom', $this->context->employee->stats_date_from),
             'datepickerTo' => Tools::getValue('datepickerTo', $this->context->employee->stats_date_to),
             'preselect_date_range' => Tools::getValue('preselectDateRange', $this->context->employee->preselect_date_range),
+            'help_center_link' => $this->getHelpCenterLink($this->context->language->iso_code),
         );
 
         return parent::renderView();
@@ -438,64 +446,19 @@ class AdminDashboardControllerCore extends AdminController
         die('k' . Configuration::get('PS_DASHBOARD_SIMULATION') . 'k');
     }
 
-    public function ajaxProcessGetBlogRss()
+    /**
+     * Returns last news from the blog
+     *
+     * @throws PrestaShopException
+     */
+    public function displayAjaxGetBlogRss()
     {
-        $return = array('has_errors' => false, 'rss' => array());
-        if (!$this->isFresh('/config/xml/blog-' . $this->context->language->iso_code . '.xml', 86400)) {
-            if (!$this->refresh('/config/xml/blog-' . $this->context->language->iso_code . '.xml', _PS_API_URL_ . '/rss/blog/blog-' . $this->context->language->iso_code . '.xml')) {
-                $return['has_errors'] = true;
-            }
-        }
+        $newsFetcher = $this->get('prestashop.adapter.news.provider');
+        $return = $newsFetcher->getData($this->context->language->iso_code);
 
-        if (!$return['has_errors']) {
-            $rss = @simplexml_load_file(_PS_ROOT_DIR_ . '/config/xml/blog-' . $this->context->language->iso_code . '.xml');
-            if (!$rss) {
-                $return['has_errors'] = true;
-            }
-            $articles_limit = 2;
-            if ($rss) {
-                foreach ($rss->channel->item as $item) {
-                    if ($articles_limit > 0 && Validate::isCleanHtml((string) $item->title) && Validate::isCleanHtml((string) $item->description)
-                        && isset($item->link) && isset($item->title)) {
-                        if (in_array($this->context->mode, array(Context::MODE_HOST, Context::MODE_HOST_CONTRIB))) {
-                            $utm_content = 'cloud';
-                        } else {
-                            $utm_content = 'download';
-                        }
-
-                        $shop_default_country_id = (int) Configuration::get('PS_COUNTRY_DEFAULT');
-                        $shop_default_iso_country = (string) Tools::strtoupper(Country::getIsoById($shop_default_country_id));
-                        $analytics_params = array('utm_source' => 'back-office',
-                                                'utm_medium' => 'rss',
-                                                'utm_campaign' => 'back-office-' . $shop_default_iso_country,
-                                                'utm_content' => $utm_content,
-                                            );
-                        $url_query = parse_url($item->link, PHP_URL_QUERY);
-                        parse_str($url_query, $link_query_params);
-
-                        if ($link_query_params) {
-                            $full_url_params = array_merge($link_query_params, $analytics_params);
-                            $base_url = explode('?', (string) $item->link);
-                            $base_url = (string) $base_url[0];
-                            $article_link = $base_url . '?' . http_build_query($full_url_params);
-                        } else {
-                            $article_link = (string) $item->link . '?' . http_build_query($analytics_params);
-                        }
-
-                        $return['rss'][] = array(
-                            'date' => Tools::displayDate(date('Y-m-d', strtotime((string) $item->pubDate))),
-                            'title' => (string) Tools::htmlentitiesUTF8($item->title),
-                            'short_desc' => Tools::truncateString(strip_tags((string) $item->description), 150),
-                            'link' => (string) $article_link,
-                        );
-                    } else {
-                        break;
-                    }
-                    --$articles_limit;
-                }
-            }
-        }
-        die(json_encode($return));
+        // Response
+        header('Content-Type: application/json');
+        $this->ajaxRender(json_encode($return));
     }
 
     public function ajaxProcessSaveDashConfig()
@@ -534,5 +497,28 @@ class AdminDashboardControllerCore extends AdminController
         }
 
         die(json_encode($return));
+    }
+
+    /**
+     * Returns the Help center link for the provided locale
+     *
+     * @param string $languageCode 2-letter locale code
+     *
+     * @return string
+     */
+    private function getHelpCenterLink($languageCode)
+    {
+        $links = [
+            'fr' => 'https://www.prestashop.com/fr/contact?utm_source=back-office&utm_medium=links&utm_campaign=help-center-fr&utm_content=download17',
+            'en' => 'https://www.prestashop.com/en/contact?utm_source=back-office&utm_medium=links&utm_campaign=help-center-en&utm_content=download17',
+            'es' => 'https://www.prestashop.com/es/contacto?utm_source=back-office&utm_medium=links&utm_campaign=help-center-es&utm_content=download17',
+            'de' => 'https://www.prestashop.com/de/kontakt?utm_source=back-office&utm_medium=links&utm_campaign=help-center-de&utm_content=download17',
+            'it' => 'https://www.prestashop.com/it/contatti?utm_source=back-office&utm_medium=links&utm_campaign=help-center-it&utm_content=download17',
+            'nl' => 'https://www.prestashop.com/nl/contacteer-ons?utm_source=back-office&utm_medium=links&utm_campaign=help-center-nl&utm_content=download17',
+            'pt' => 'https://www.prestashop.com/pt/contato?utm_source=back-office&utm_medium=links&utm_campaign=help-center-pt&utm_content=download17',
+            'pl' => 'https://www.prestashop.com/pl/kontakt?utm_source=back-office&utm_medium=links&utm_campaign=help-center-pl&utm_content=download17',
+        ];
+
+        return isset($links[$languageCode]) ? $links[$languageCode] : $links['en'];
     }
 }

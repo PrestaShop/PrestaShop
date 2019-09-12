@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -71,7 +71,8 @@ class FeatureValueCore extends ObjectModel
      */
     public static function getFeatureValues($idFeature)
     {
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
+            '
 			SELECT *
 			FROM `' . _DB_PREFIX_ . 'feature_value`
 			WHERE `id_feature` = ' . (int) $idFeature
@@ -147,7 +148,7 @@ class FeatureValueCore extends ObjectModel
     public static function addFeatureValueImport($idFeature, $value, $idProduct = null, $idLang = null, $custom = false)
     {
         $idFeatureValue = false;
-        if (!is_null($idProduct) && $idProduct) {
+        if (null !== $idProduct && $idProduct) {
             $idFeatureValue = Db::getInstance()->getValue('
 				SELECT fp.`id_feature_value`
 				FROM ' . _DB_PREFIX_ . 'feature_product fp
@@ -156,7 +157,7 @@ class FeatureValueCore extends ObjectModel
 				AND fv.`custom` = ' . (int) $custom . '
 				AND fp.`id_product` = ' . (int) $idProduct);
 
-            if ($custom && $idFeatureValue && !is_null($idLang) && $idLang) {
+            if ($custom && $idFeatureValue && null !== $idLang && $idLang) {
                 Db::getInstance()->execute('
 				UPDATE ' . _DB_PREFIX_ . 'feature_value_lang
 				SET `value` = \'' . pSQL($value) . '\'
@@ -242,7 +243,8 @@ class FeatureValueCore extends ObjectModel
     public function delete()
     {
         /* Also delete related products */
-        Db::getInstance()->execute('
+        Db::getInstance()->execute(
+            '
 			DELETE FROM `' . _DB_PREFIX_ . 'feature_product`
 			WHERE `id_feature_value` = ' . (int) $this->id
         );

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
-<!-- Copyright © 1991-2017 Unicode, Inc.
+<!-- Copyright © 1991-2019 Unicode, Inc.
 For terms of use, see http://www.unicode.org/copyright.html
 Unicode and the Unicode Logo are registered trademarks of Unicode, Inc. in the U.S. and other countries.
 CLDR data files are interpreted according to the LDML specification (http://unicode.org/reports/tr35/)
@@ -10,7 +10,7 @@ terms of use, see http://www.unicode.org/copyright.html
 -->
 <ldml>
 	<identity>
-		<version number="$Revision: 13701 $"/>
+		<version number="$Revision: 14782 $"/>
 		<language type="dsb"/>
 	</identity>
 	<localeDisplayNames>
@@ -4076,6 +4076,13 @@ terms of use, see http://www.unicode.org/copyright.html
 				<displayName count="other">macaoskich pataca</displayName>
 			</currency>
 			<currency type="MRO">
+				<displayName>mauretański ouguiya (1973–2017)</displayName>
+				<displayName count="one">mauretański ouguiya (1973–2017)</displayName>
+				<displayName count="two">mauretańskej ouguiya (1973–2017)</displayName>
+				<displayName count="few">mauretańske ouguiya (1973–2017)</displayName>
+				<displayName count="other">mauretański ouguiya (1973–2017)</displayName>
+			</currency>
+			<currency type="MRU">
 				<displayName>mauretański ouguiya</displayName>
 				<displayName count="one">mauretański ouguiya</displayName>
 				<displayName count="two">mauretańskej ouguiya</displayName>
@@ -4352,6 +4359,13 @@ terms of use, see http://www.unicode.org/copyright.html
 				<displayName count="other">pódpołdnjowosudańskich puntow</displayName>
 			</currency>
 			<currency type="STD">
+				<displayName>são-tomeska dobra (1977–2017)</displayName>
+				<displayName count="one">são-tomeska dobra (1977–2017)</displayName>
+				<displayName count="two">são-tomeskej dobrje (1977–2017)</displayName>
+				<displayName count="few">são-tomeske dobry (1977–2017)</displayName>
+				<displayName count="other">são-tomeskich dobrow (1977–2017)</displayName>
+			</currency>
+			<currency type="STN">
 				<displayName>são-tomeska dobra</displayName>
 				<displayName count="one">são-tomeska dobra</displayName>
 				<displayName count="two">são-tomeskej dobrje</displayName>
@@ -4481,6 +4495,13 @@ terms of use, see http://www.unicode.org/copyright.html
 				<displayName count="other">usbekiskich sumow</displayName>
 			</currency>
 			<currency type="VEF">
+				<displayName>venezuelski bolívar (2008–2018)</displayName>
+				<displayName count="one">venezuelski bolívar (2008–2018)</displayName>
+				<displayName count="two">venezuelskej bolívara (2008–2018)</displayName>
+				<displayName count="few">venezuelske bolívary (2008–2018)</displayName>
+				<displayName count="other">venezuelskich bolívarow (2008–2018)</displayName>
+			</currency>
+			<currency type="VES">
 				<displayName>venezuelski bolívar</displayName>
 				<displayName count="one">venezuelski bolívar</displayName>
 				<displayName count="two">venezuelskej bolívara</displayName>

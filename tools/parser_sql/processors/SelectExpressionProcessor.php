@@ -30,9 +30,9 @@
  * DAMAGE.
  */
 
-require_once(dirname(__FILE__) . '/AbstractProcessor.php');
-require_once(dirname(__FILE__) . '/ExpressionListProcessor.php');
-require_once(dirname(__FILE__) . '/../utils/ExpressionType.php');
+require_once dirname(__FILE__) . '/AbstractProcessor.php';
+require_once dirname(__FILE__) . '/ExpressionListProcessor.php';
+require_once dirname(__FILE__) . '/../utils/ExpressionType.php';
 
 /**
  * 
@@ -42,7 +42,6 @@ require_once(dirname(__FILE__) . '/../utils/ExpressionType.php');
  * 
  */
 class SelectExpressionProcessor extends AbstractProcessor {
-
     private $expressionListProcessor;
 
     public function __construct() {
@@ -80,6 +79,7 @@ class SelectExpressionProcessor extends AbstractProcessor {
                 $alias = array('as' => true, "name" => "", "base_expr" => $token);
                 $tokens[$i] = "";
                 $capture = true;
+
                 continue;
             }
 
@@ -96,6 +96,7 @@ class SelectExpressionProcessor extends AbstractProcessor {
                 }
                 $alias['base_expr'] .= $token;
                 $tokens[$i] = "";
+
                 continue;
             }
 
@@ -121,16 +122,17 @@ class SelectExpressionProcessor extends AbstractProcessor {
                     || $this->isColumnReference($prev) || $this->isBracketExpression($prev)) {
 
                 $alias = array('as' => false, 'name' => trim($last['base_expr']),
-                               'no_quotes' => $this->revokeQuotation($last['base_expr']),
-                               'base_expr' => trim($last['base_expr']));
+                    'no_quotes' => $this->revokeQuotation($last['base_expr']),
+                    'base_expr' => trim($last['base_expr']),
+                );
                 // remove the last token
                 array_pop($tokens);
-                $base_expr = join("", $tokens);
+                $base_expr = implode("", $tokens);
             }
         }
 
         if (!$alias) {
-            $base_expr = join("", $tokens);
+            $base_expr = implode("", $tokens);
         } else {
             /* remove escape from the alias */
             $alias['no_quotes'] = $this->revokeQuotation($alias['name']);
@@ -163,8 +165,7 @@ class SelectExpressionProcessor extends AbstractProcessor {
             $result['no_quotes'] = $no_quotes;
         }
         $result['sub_tree'] = $processed;
+
         return $result;
     }
-
 }
-?>

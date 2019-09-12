@@ -47,7 +47,7 @@
       <unity/>
       <location/>
     </product>
-    <product id="Hummingbird_printed_sweater" id_supplier="Fashion_Supplier" id_manufacturer="Studio_Design" id_category_default="Home" on_sale="0" online_only="0" ean13="" upc="" ecotax="0.000000" quantity="0" minimal_quantity="1" price="35.900000" wholesale_price="0.000000" unit_price_ratio="0.000000" additional_shipping_cost="0.00" reference="demo_3" supplier_reference="" width="0.000000" height="0.000000" depth="0.000000" weight="0.000000" out_of_stock="2" quantity_discount="0" customizable="0" uploadable_files="0" text_fields="0" active="1" redirect_type="301-category" id_type_redirected="0" available_for_order="1" available_date="0000-00-00" condition="new" show_price="1" indexed="1" cache_is_pack="0" cache_has_attachments="0" is_virtual="0" cache_default_attribute="62" advanced_stock_management="0">
+    <product id="Hummingbird_printed_sweater" id_supplier="Fashion_Supplier" id_manufacturer="Studio_Design" id_category_default="Women" on_sale="0" online_only="0" ean13="" upc="" ecotax="0.000000" quantity="0" minimal_quantity="1" price="35.900000" wholesale_price="0.000000" unit_price_ratio="0.000000" additional_shipping_cost="0.00" reference="demo_3" supplier_reference="" width="0.000000" height="0.000000" depth="0.000000" weight="0.000000" out_of_stock="2" quantity_discount="0" customizable="0" uploadable_files="0" text_fields="0" active="1" redirect_type="404" id_type_redirected="0" available_for_order="1" available_date="0000-00-00" condition="new" show_price="1" indexed="1" cache_is_pack="0" cache_has_attachments="0" is_virtual="0" cache_default_attribute="62" advanced_stock_management="0">
       <unity/>
       <location/>
     </product>
@@ -55,7 +55,7 @@
       <unity/>
       <location/>
     </product>
-    <product id="The_adventure_begins_Framed_poster" id_supplier="Fashion_Supplier" id_manufacturer="Graphic_Corner" id_category_default="Home" on_sale="0" online_only="0" ean13="" upc="" ecotax="0.000000" quantity="0" minimal_quantity="1" price="29.000000" wholesale_price="0.000000" unit_price_ratio="0.000000" additional_shipping_cost="0.00" reference="demo_5" supplier_reference="" width="0.000000" height="0.000000" depth="0.000000" weight="0.000000" out_of_stock="2" quantity_discount="0" customizable="0" uploadable_files="0" text_fields="0" active="1" redirect_type="301-category" id_type_redirected="0" available_for_order="1" available_date="0000-00-00" condition="new" show_price="1" indexed="1" cache_is_pack="0" cache_has_attachments="0" is_virtual="0" cache_default_attribute="73" advanced_stock_management="0">
+    <product id="The_adventure_begins_Framed_poster" id_supplier="Fashion_Supplier" id_manufacturer="Graphic_Corner" id_category_default="Art" on_sale="0" online_only="0" ean13="" upc="" ecotax="0.000000" quantity="0" minimal_quantity="1" price="29.000000" wholesale_price="0.000000" unit_price_ratio="0.000000" additional_shipping_cost="0.00" reference="demo_5" supplier_reference="" width="0.000000" height="0.000000" depth="0.000000" weight="0.000000" out_of_stock="2" quantity_discount="0" customizable="0" uploadable_files="0" text_fields="0" active="1" redirect_type="404" id_type_redirected="0" available_for_order="1" available_date="0000-00-00" condition="new" show_price="1" indexed="1" cache_is_pack="0" cache_has_attachments="0" is_virtual="0" cache_default_attribute="73" advanced_stock_management="0">
       <unity/>
       <location/>
     </product>
@@ -71,7 +71,7 @@
       <unity/>
       <location/>
     </product>
-    <product id="Mug_Today_is_a_good_day" id_supplier="Fashion_Supplier" id_manufacturer="Studio_Design" id_category_default="Home" on_sale="0" online_only="0" ean13="" upc="" ecotax="0.000000" quantity="0" minimal_quantity="1" price="11.900000" wholesale_price="0.000000" unit_price_ratio="0.000000" additional_shipping_cost="0.00" reference="demo_13" supplier_reference="" width="0.000000" height="0.000000" depth="0.000000" weight="0.000000" out_of_stock="2" quantity_discount="0" customizable="0" uploadable_files="0" text_fields="0" active="1" redirect_type="301-category" id_type_redirected="0" available_for_order="1" available_date="0000-00-00" condition="new" show_price="1" indexed="1" cache_is_pack="0" cache_has_attachments="0" is_virtual="0" cache_default_attribute="0" advanced_stock_management="0">
+    <product id="Mug_Today_is_a_good_day" id_supplier="Fashion_Supplier" id_manufacturer="Studio_Design" id_category_default="Home_Accessories" on_sale="0" online_only="0" ean13="" upc="" ecotax="0.000000" quantity="0" minimal_quantity="1" price="11.900000" wholesale_price="0.000000" unit_price_ratio="0.000000" additional_shipping_cost="0.00" reference="demo_13" supplier_reference="" width="0.000000" height="0.000000" depth="0.000000" weight="0.000000" out_of_stock="2" quantity_discount="0" customizable="0" uploadable_files="0" text_fields="0" active="1" redirect_type="404" id_type_redirected="0" available_for_order="1" available_date="0000-00-00" condition="new" show_price="1" indexed="1" cache_is_pack="0" cache_has_attachments="0" is_virtual="0" cache_default_attribute="0" advanced_stock_management="0">
       <unity/>
       <location/>
     </product>

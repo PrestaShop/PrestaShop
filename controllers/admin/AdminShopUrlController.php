@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -66,6 +66,7 @@ class AdminShopUrlControllerCore extends AdminController
                 'title' => $this->trans('URL', array(), 'Admin.Global'),
                 'filter_key' => 'url',
                 'havingFilter' => true,
+                'remove_onclick' => true,
             ),
             'main' => array(
                 'title' => $this->trans('Is it the main URL?', array(), 'Admin.Advparameters.Feature'),
@@ -232,7 +233,8 @@ class AdminShopUrlControllerCore extends AdminController
         );
 
         if (!defined('_PS_HOST_MODE_')) {
-            $this->fields_form[1]['form']['input'] = array_merge($this->fields_form[1]['form']['input'],
+            $this->fields_form[1]['form']['input'] = array_merge(
+                $this->fields_form[1]['form']['input'],
                 array(
                     array(
                         'type' => 'text',
@@ -245,7 +247,8 @@ class AdminShopUrlControllerCore extends AdminController
             );
         }
 
-        $this->fields_form[1]['form']['input'] = array_merge($this->fields_form[1]['form']['input'],
+        $this->fields_form[1]['form']['input'] = array_merge(
+            $this->fields_form[1]['form']['input'],
             array(
                 array(
                     'type' => 'text',
@@ -368,12 +371,14 @@ class AdminShopUrlControllerCore extends AdminController
                     'Collapse All',
                     '#',
                     '$(\'#' . $shops_tree->getId() . '\').tree(\'collapseAll\'); return false;',
-                    'icon-collapse-alt'),
+                    'icon-collapse-alt'
+                ),
                 new TreeToolbarLink(
                     'Expand All',
                     '#',
                     '$(\'#' . $shops_tree->getId() . '\').tree(\'expandAll\'); return false;',
-                    'icon-expand-alt'),
+                    'icon-expand-alt'
+                ),
             ))
             ->setAttribute('url_shop_group', $this->context->link->getAdminLink('AdminShopGroup'))
             ->setAttribute('url_shop', $this->context->link->getAdminLink('AdminShop'))
@@ -465,6 +470,7 @@ class AdminShopUrlControllerCore extends AdminController
         $return = parent::processSave();
         if (!$this->errors) {
             Tools::generateHtaccess();
+            Tools::generateRobotsFile();
             Tools::clearSmartyCache();
             Media::clearCache();
         }
@@ -520,7 +526,7 @@ class AdminShopUrlControllerCore extends AdminController
         }
 
         if ($this->redirect_shop_url) {
-            $this->redirect_after = $object->getBaseURI() . basename(_PS_ADMIN_DIR_) . '/' . $this->context->link->getAdminLink('AdminShopUrl');
+            $this->redirect_after = $this->context->link->getAdminLink('AdminShopUrl');
         }
     }
 
@@ -547,7 +553,7 @@ class AdminShopUrlControllerCore extends AdminController
             self::$cache_lang['Name'] = $this->trans('Name:', array(), 'Admin.Global');
         }
 
-        if (!is_null($name)) {
+        if (null !== $name) {
             $name = '\n\n' . self::$cache_lang['Name'] . ' ' . $name;
         }
 
@@ -558,7 +564,7 @@ class AdminShopUrlControllerCore extends AdminController
         );
 
         if ($this->specificConfirmDelete !== false) {
-            $data['confirm'] = !is_null($this->specificConfirmDelete) ? '\r' . $this->specificConfirmDelete : self::$cache_lang['DeleteItem'] . $name;
+            $data['confirm'] = null !== $this->specificConfirmDelete ? '\r' . $this->specificConfirmDelete : self::$cache_lang['DeleteItem'] . $name;
         }
 
         $tpl->assign(array_merge($this->tpl_delete_link_vars, $data));

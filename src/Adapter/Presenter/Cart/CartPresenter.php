@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,31 +16,31 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Presenter\Cart;
 
+use Cart;
+use CartRule;
+use Configuration;
+use Context;
+use Hook;
+use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Presenter\PresenterInterface;
 use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingPresenter;
-use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
-use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
-use Context;
-use Cart;
+use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
 use Product;
-use Configuration;
 use Symfony\Component\Translation\TranslatorInterface;
 use TaxConfiguration;
-use CartRule;
 use Tools;
-use Hook;
 
 class CartPresenter implements PresenterInterface
 {
@@ -97,6 +97,7 @@ class CartPresenter implements PresenterInterface
         $settings = new ProductPresentationSettings();
 
         $settings->catalog_mode = Configuration::isCatalogMode();
+        $settings->catalog_mode_with_prices = (int) Configuration::get('PS_CATALOG_MODE_WITH_PRICES');
         $settings->include_taxes = $this->includeTaxes();
         $settings->allow_add_variant_to_cart_from_listing = (int) Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY');
         $settings->stock_management_enabled = Configuration::get('PS_STOCK_MANAGEMENT');
@@ -131,6 +132,7 @@ class CartPresenter implements PresenterInterface
             'customizable',
             'online_only',
             'reduction',
+            'reduction_without_tax',
             'new',
             'condition',
             'pack',
@@ -214,10 +216,12 @@ class CartPresenter implements PresenterInterface
                                                 $field['image'] = $this->imageRetriever->getCustomizationImage(
                                                     $data['value']
                                                 );
+
                                                 break;
                                             case Product::CUSTOMIZE_TEXTFIELD:
                                                 $field['type'] = 'text';
                                                 $field['text'] = $data['value'];
+
                                                 break;
                                             default:
                                                 $field['type'] = null;
@@ -322,7 +326,7 @@ class CartPresenter implements PresenterInterface
         $productsTotalExcludingTax = $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
         $total_excluding_tax = $cart->getOrderTotal(false);
         $total_including_tax = $cart->getOrderTotal(true);
-        $total_discount = $cart->getDiscountSubtotalWithoutGifts();
+        $total_discount = $cart->getDiscountSubtotalWithoutGifts($this->includeTaxes());
         $totalCartAmount = $cart->getOrderTotal($this->includeTaxes(), Cart::ONLY_PRODUCTS);
 
         $subtotals['products'] = array(
@@ -335,7 +339,7 @@ class CartPresenter implements PresenterInterface
         if ($total_discount) {
             $subtotals['discounts'] = array(
                 'type' => 'discount',
-                'label' => $this->translator->trans('Discount', array(), 'Shop.Theme.Checkout'),
+                'label' => $this->translator->trans('Discount(s)', array(), 'Shop.Theme.Checkout'),
                 'amount' => $total_discount,
                 'value' => $this->priceFormatter->format($total_discount),
             );
@@ -414,8 +418,7 @@ class CartPresenter implements PresenterInterface
 
         $summary_string = $products_count === 1 ?
             $this->translator->trans('1 item', array(), 'Shop.Theme.Checkout') :
-            $this->translator->trans('%count% items', array('%count%' => $products_count), 'Shop.Theme.Checkout')
-        ;
+            $this->translator->trans('%count% items', array('%count%' => $products_count), 'Shop.Theme.Checkout');
 
         $minimalPurchase = $this->priceFormatter->convertAmount((float) Configuration::get('PS_PURCHASE_MINIMUM'));
 
@@ -460,12 +463,12 @@ class CartPresenter implements PresenterInterface
             'vouchers' => $vouchers,
             'discounts' => $discounts,
             'minimalPurchase' => $minimalPurchase,
-            'minimalPurchaseRequired' => ($this->priceFormatter->convertAmount($productsTotalExcludingTax) < $minimalPurchase) ?
+            'minimalPurchaseRequired' => ($productsTotalExcludingTax < $minimalPurchase) ?
                 $this->translator->trans(
                     'A minimum shopping cart total of %amount% (tax excl.) is required to validate your order. Current cart total is %total% (tax excl.).',
                     array(
-                        '%amount%' => $this->priceFormatter->convertAndFormat($minimalPurchase),
-                        '%total%' => $this->priceFormatter->convertAndFormat($productsTotalExcludingTax),
+                        '%amount%' => $this->priceFormatter->format($minimalPurchase),
+                        '%total%' => $this->priceFormatter->format($productsTotalExcludingTax),
                     ),
                     'Shop.Theme.Checkout'
                 ) :
@@ -478,11 +481,12 @@ class CartPresenter implements PresenterInterface
         $cartVouchers = $cart->getCartRules();
         $vouchers = array();
 
-        $cartHasTax = is_null($cart->id) ? false : $cart::getTaxesAverageUsed($cart);
+        $cartHasTax = null === $cart->id ? false : $cart::getTaxesAverageUsed($cart);
 
         foreach ($cartVouchers as $cartVoucher) {
             $vouchers[$cartVoucher['id_cart_rule']]['id_cart_rule'] = $cartVoucher['id_cart_rule'];
             $vouchers[$cartVoucher['id_cart_rule']]['name'] = $cartVoucher['name'];
+            $vouchers[$cartVoucher['id_cart_rule']]['code'] = $cartVoucher['code'];
             $vouchers[$cartVoucher['id_cart_rule']]['reduction_percent'] = $cartVoucher['reduction_percent'];
             $vouchers[$cartVoucher['id_cart_rule']]['reduction_currency'] = $cartVoucher['reduction_currency'];
 
@@ -501,7 +505,22 @@ class CartPresenter implements PresenterInterface
             if (isset($cartVoucher['reduction_percent']) && $cartVoucher['reduction_amount'] == '0.00') {
                 $cartVoucher['reduction_formatted'] = $cartVoucher['reduction_percent'] . '%';
             } elseif (isset($cartVoucher['reduction_amount']) && $cartVoucher['reduction_amount'] > 0) {
-                $cartVoucher['reduction_formatted'] = $this->priceFormatter->convertAndFormat($cartVoucher['reduction_amount']);
+                $value = $this->includeTaxes() ? $cartVoucher['reduction_amount'] : $cartVoucher['value_tax_exc'];
+                $currencyFrom = new \Currency($cartVoucher['reduction_currency']);
+                $currencyTo = new \Currency($cart->id_currency);
+                if ($currencyFrom->conversion_rate == 0) {
+                    $value = 0;
+                } else {
+                    // convert to default currency
+                    $defaultCurrencyId = (int) Configuration::get('PS_CURRENCY_DEFAULT');
+                    $value /= $currencyFrom->conversion_rate;
+                    if ($defaultCurrencyId == $currencyTo->id) {
+                        // convert to destination currency
+                        $value *= $currencyTo->conversion_rate;
+                    }
+                }
+                // following will do currency conversion to current one
+                $cartVoucher['reduction_formatted'] = $this->priceFormatter->convertAndFormat($value);
             }
 
             $vouchers[$cartVoucher['id_cart_rule']]['reduction_formatted'] = '-' . $cartVoucher['reduction_formatted'];

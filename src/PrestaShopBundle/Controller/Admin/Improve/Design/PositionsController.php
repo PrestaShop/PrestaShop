@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,9 +27,9 @@
 namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 
 use Hook;
+use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use PrestaShop\PrestaShop\Adapter\Module\Module;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -61,7 +61,7 @@ class PositionsController extends FrameworkBundleAdminController
         $installedModules = $moduleAdapter->getModulesInstalled();
 
         $selectedModule = $request->get('show_modules');
-        if ($selectedModule && strval($selectedModule) != 'all') {
+        if ($selectedModule && (string) $selectedModule != 'all') {
             $this->selectedModule = (int) $selectedModule;
         }
 
@@ -84,6 +84,7 @@ class PositionsController extends FrameworkBundleAdminController
             // No module found, no need to continue
             if (!is_array($hooks[$key]['modules'])) {
                 unset($hooks[$key]);
+
                 continue;
             }
 
@@ -97,6 +98,7 @@ class PositionsController extends FrameworkBundleAdminController
             // No module remaining after the check, no need to continue
             if ($hooks[$key]['modules_count'] === 0) {
                 unset($hooks[$key]);
+
                 continue;
             }
 
@@ -104,16 +106,21 @@ class PositionsController extends FrameworkBundleAdminController
         }
 
         $legacyContextService = $this->get('prestashop.adapter.legacy.context');
+        $saveUrlParams = [
+            'addToHook' => '',
+        ];
+        if ($this->selectedModule) {
+            $saveUrlParams['show_modules'] = $this->selectedModule;
+        }
+        $saveUrl = $legacyContextService->getAdminLink('AdminModulesPositions', true, $saveUrlParams);
 
         return [
             'layoutHeaderToolbarBtn' => [
                 'save' => [
-                    'href' => $legacyContextService->getAdminLink('AdminModulesPositions') .
-                    '&addToHook' . ($this->selectedModule ? '&show_modules=' . $this->selectedModule : ''),
+                    'href' => $saveUrl,
                     'desc' => $this->trans('Transplant a module', 'Admin.Design.Feature'),
                 ],
             ],
-            'selectedModule' => $this->selectedModule,
             'selectedModule' => $this->selectedModule,
             'layoutTitle' => $this->trans('Positions', 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => false,
@@ -157,11 +164,12 @@ class PositionsController extends FrameworkBundleAdminController
             $module = $this->get('prestashop.adapter.legacy.module')->getInstanceById($moduleId);
             $hook = new Hook($hookId);
 
-            if (!$validateAdapter->isLoadedObject($module)) {
+            if (!$module) {
                 $errors[] = $this->trans(
                     'This module cannot be loaded.',
                     'Admin.Modules.Notification'
                 );
+
                 continue;
             }
 
@@ -170,6 +178,7 @@ class PositionsController extends FrameworkBundleAdminController
                     'Hook cannot be loaded.',
                     'Admin.Modules.Notification'
                 );
+
                 continue;
             }
 

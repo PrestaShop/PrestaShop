@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -300,7 +300,7 @@ class AdminStatusesControllerCore extends AdminController
                     'values' => array(
                         'query' => array(
                             array('id' => 'on', 'name' => $this->trans('Consider the associated order as validated.', array(), 'Admin.Shopparameters.Feature'), 'val' => '1'),
-                            ),
+                        ),
                         'id' => 'id',
                         'name' => 'name',
                     ),
@@ -311,7 +311,7 @@ class AdminStatusesControllerCore extends AdminController
                     'values' => array(
                         'query' => array(
                             array('id' => 'on', 'name' => $this->trans('Allow a customer to download and view PDF versions of his/her invoices.', array(), 'Admin.Shopparameters.Feature'), 'val' => '1'),
-                            ),
+                        ),
                         'id' => 'id',
                         'name' => 'name',
                     ),
@@ -322,7 +322,7 @@ class AdminStatusesControllerCore extends AdminController
                     'values' => array(
                         'query' => array(
                             array('id' => 'on', 'name' => $this->trans('Hide this status in all customer orders.', array(), 'Admin.Shopparameters.Feature'), 'val' => '1'),
-                            ),
+                        ),
                         'id' => 'id',
                         'name' => 'name',
                     ),
@@ -333,7 +333,7 @@ class AdminStatusesControllerCore extends AdminController
                     'values' => array(
                         'query' => array(
                             array('id' => 'on', 'name' => $this->trans('Send an email to the customer when his/her order status has changed.', array(), 'Admin.Shopparameters.Feature'), 'val' => '1'),
-                            ),
+                        ),
                         'id' => 'id',
                         'name' => 'name',
                     ),
@@ -344,7 +344,7 @@ class AdminStatusesControllerCore extends AdminController
                     'values' => array(
                         'query' => array(
                             array('id' => 'on',  'name' => $this->trans('Attach invoice PDF to email.', array(), 'Admin.Shopparameters.Feature'), 'val' => '1'),
-                            ),
+                        ),
                         'id' => 'id',
                         'name' => 'name',
                     ),
@@ -355,7 +355,7 @@ class AdminStatusesControllerCore extends AdminController
                     'values' => array(
                         'query' => array(
                             array('id' => 'on',  'name' => $this->trans('Attach delivery slip PDF to email.', array(), 'Admin.Shopparameters.Feature'), 'val' => '1'),
-                            ),
+                        ),
                         'id' => 'id',
                         'name' => 'name',
                     ),
@@ -366,7 +366,7 @@ class AdminStatusesControllerCore extends AdminController
                     'values' => array(
                         'query' => array(
                             array('id' => 'on',  'name' => $this->trans('Set the order as shipped.', array(), 'Admin.Shopparameters.Feature'), 'val' => '1'),
-                            ),
+                        ),
                         'id' => 'id',
                         'name' => 'name',
                     ),
@@ -377,7 +377,7 @@ class AdminStatusesControllerCore extends AdminController
                     'values' => array(
                         'query' => array(
                             array('id' => 'on', 'name' => $this->trans('Set the order as paid.', array(), 'Admin.Shopparameters.Feature'), 'val' => '1'),
-                            ),
+                        ),
                         'id' => 'id',
                         'name' => 'name',
                     ),
@@ -388,7 +388,7 @@ class AdminStatusesControllerCore extends AdminController
                     'values' => array(
                         'query' => array(
                             array('id' => 'on', 'name' => $this->trans('Show delivery PDF.', array(), 'Admin.Shopparameters.Feature'), 'val' => '1'),
-                            ),
+                        ),
                         'id' => 'id',
                         'name' => 'name',
                     ),
@@ -522,9 +522,9 @@ class AdminStatusesControllerCore extends AdminController
                 if (!strncmp(strrev($template), 'lmth.', 5)) {
                     $search_result = array_search($template, $theme_templates);
                     $array[$iso_code][] = array(
-                                'id' => substr($template, 0, -5),
-                                'name' => substr($template, 0, -5),
-                                'folder' => ((!empty($search_result) ? $theme_path : $default_path)),
+                        'id' => substr($template, 0, -5),
+                        'name' => substr($template, 0, -5),
+                        'folder' => ((!empty($search_result) ? $theme_path : $default_path)),
                     );
                 }
             }
@@ -609,6 +609,7 @@ class AdminStatusesControllerCore extends AdminController
                 $order_state = new OrderState((int) $selection, $this->context->language->id);
                 if (!$order_state->isRemovable()) {
                     $this->errors[] = $this->trans('For security reasons, you cannot delete default order statuses.', array(), 'Admin.Shopparameters.Notification');
+
                     break;
                 }
             }

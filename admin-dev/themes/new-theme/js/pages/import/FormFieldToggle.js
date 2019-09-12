@@ -1,5 +1,5 @@
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,10 +15,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -37,7 +37,7 @@ const entityStoreContacts = 8;
 
 export default class FormFieldToggle {
   constructor() {
-    $('.js-entity-select').on('change', this.toggleForm.bind(this));
+    $('.js-entity-select').on('change', () => this.toggleForm());
 
     this.toggleForm();
   }
@@ -130,26 +130,74 @@ export default class FormFieldToggle {
    * @param {int} entity
    */
   loadAvailableFields(entity) {
-    const url = -1 === window.location.href.indexOf('index.php') ? '../../../ajax.php' : '../../../../ajax.php';
+    const $availableFields = $('.js-available-fields');
 
     $.ajax({
-      url: url,
+      url: $availableFields.data('url'),
       data: {
-        getAvailableFields: 1,
         entity: entity
       },
       dataType: 'json',
     }).then(response => {
-      let fields = '';
-      let $availableFields = $('.js-available-fields');
-      $availableFields.empty();
+      this._removeAvailableFields($availableFields);
 
       for (let i = 0; i < response.length; i++) {
-        fields += response[i].field;
+        this._appendAvailableField(
+          $availableFields,
+          response[i].label + (response[i].required ? '*' : ''),
+          response[i].description
+        );
       }
 
-      $availableFields.html(fields);
       $availableFields.find('[data-toggle="popover"]').popover();
     });
+  }
+
+  /**
+   * Remove available fields content from given container.
+   *
+   * @param {jQuery} $container
+   * @private
+   */
+  _removeAvailableFields($container) {
+    $container.find('[data-toggle="popover"]').popover('hide');
+    $container.empty();
+  }
+
+  /**
+   * Append a help box to given field.
+   *
+   * @param {jQuery} $field
+   * @param {String} helpBoxContent
+   * @private
+   */
+  _appendHelpBox($field, helpBoxContent) {
+    let $helpBox = $('.js-available-field-popover-template').clone();
+
+    $helpBox.attr('data-content', helpBoxContent);
+    $helpBox.removeClass('js-available-field-popover-template d-none');
+    $field.append($helpBox);
+  }
+
+  /**
+   * Append available field to given container.
+   *
+   * @param {jQuery} $appendTo field will be appended to this container.
+   * @param {String} fieldText
+   * @param {String} helpBoxContent
+   * @private
+   */
+  _appendAvailableField($appendTo, fieldText, helpBoxContent) {
+    let $field = $('.js-available-field-template').clone();
+
+    $field.text(fieldText);
+
+    if (helpBoxContent) {
+      // Append help box next to the field
+      this._appendHelpBox($field, helpBoxContent);
+    }
+
+    $field.removeClass('js-available-field-template d-none');
+    $field.appendTo($appendTo);
   }
 }

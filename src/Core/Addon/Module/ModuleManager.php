@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager;
 use PrestaShop\PrestaShop\Core\Addon\AddonManagerInterface;
 use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
 use PrestaShop\PrestaShop\Core\Addon\Module\Exception\UnconfirmedModuleActionException;
+use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
 use PrestaShopBundle\Event\ModuleManagementEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -95,6 +96,18 @@ class ModuleManager implements AddonManagerInterface
     private $actionParams;
 
     /**
+     * @var CacheClearerInterface
+     */
+    private $symfonyCacheClearer;
+
+    /**
+     * Used to check if the cache has already been cleaned.
+     *
+     * @var bool
+     */
+    private $cacheCleared = false;
+
+    /**
      * @param AdminModuleDataProvider $adminModuleProvider
      * @param ModuleDataProvider $modulesProvider
      * @param ModuleDataUpdater $modulesUpdater
@@ -102,6 +115,7 @@ class ModuleManager implements AddonManagerInterface
      * @param ModuleZipManager $moduleZipManager
      * @param TranslatorInterface $translator
      * @param EventDispatcherInterface $eventDispatcher
+     * @param CacheClearerInterface $symfonyCacheClearer
      */
     public function __construct(
         AdminModuleDataProvider $adminModuleProvider,
@@ -110,7 +124,8 @@ class ModuleManager implements AddonManagerInterface
         ModuleRepository $moduleRepository,
         ModuleZipManager $moduleZipManager,
         TranslatorInterface $translator,
-        EventDispatcherInterface $eventDispatcher
+        EventDispatcherInterface $eventDispatcher,
+        CacheClearerInterface $symfonyCacheClearer
     ) {
         $this->adminModuleProvider = $adminModuleProvider;
         $this->moduleProvider = $modulesProvider;
@@ -119,7 +134,7 @@ class ModuleManager implements AddonManagerInterface
         $this->moduleZipManager = $moduleZipManager;
         $this->translator = $translator;
         $this->eventDispatcher = $eventDispatcher;
-
+        $this->symfonyCacheClearer = $symfonyCacheClearer;
         $this->actionParams = new ParameterBag();
     }
 
@@ -292,6 +307,7 @@ class ModuleManager implements AddonManagerInterface
         $this->checkConfirmationGiven(__FUNCTION__, $module);
         $result = $module->onInstall();
 
+        $this->checkAndClearCache($result);
         $this->dispatch(ModuleManagementEvent::INSTALL, $module);
 
         return $result;
@@ -329,9 +345,10 @@ class ModuleManager implements AddonManagerInterface
         $result = $module->onUninstall();
 
         if ($result && $this->actionParams->get('deletion', false)) {
-            $result &= $this->removeModuleFromDisk($name);
+            $result = $result && $this->removeModuleFromDisk($name);
         }
 
+        $this->checkAndClearCache($result);
         $this->dispatch(ModuleManagementEvent::UNINSTALL, $module);
 
         return $result;
@@ -377,6 +394,8 @@ class ModuleManager implements AddonManagerInterface
 
         // Load and execute upgrade files
         $result = $this->moduleUpdater->upgrade($name) && $module->onUpgrade($version);
+
+        $this->checkAndClearCache($result);
         $this->dispatch(ModuleManagementEvent::UPGRADE, $module);
 
         return $result;
@@ -407,6 +426,7 @@ class ModuleManager implements AddonManagerInterface
         $this->checkIsInstalled($name);
 
         $module = $this->moduleRepository->getModule($name);
+
         try {
             $result = $module->onDisable();
         } catch (Exception $e) {
@@ -424,6 +444,7 @@ class ModuleManager implements AddonManagerInterface
             );
         }
 
+        $this->checkAndClearCache($result);
         $this->dispatch(ModuleManagementEvent::DISABLE, $module);
 
         return $result;
@@ -453,6 +474,7 @@ class ModuleManager implements AddonManagerInterface
         $this->checkIsInstalled($name);
 
         $module = $this->moduleRepository->getModule($name);
+
         try {
             $result = $module->onEnable();
         } catch (Exception $e) {
@@ -469,6 +491,8 @@ class ModuleManager implements AddonManagerInterface
                 $e
             );
         }
+
+        $this->checkAndClearCache($result);
         $this->dispatch(ModuleManagementEvent::ENABLE, $module);
 
         return $result;
@@ -514,8 +538,9 @@ class ModuleManager implements AddonManagerInterface
         $this->checkIsInstalled($name);
 
         $module = $this->moduleRepository->getModule($name);
+
         try {
-            return $module->onMobileDisable();
+            $result = $module->onMobileDisable();
         } catch (Exception $e) {
             throw new Exception(
                 $this->translator->trans(
@@ -530,6 +555,10 @@ class ModuleManager implements AddonManagerInterface
                 $e
             );
         }
+
+        $this->checkAndClearCache($result);
+
+        return $result;
     }
 
     /**
@@ -572,8 +601,9 @@ class ModuleManager implements AddonManagerInterface
         $this->checkIsInstalled($name);
 
         $module = $this->moduleRepository->getModule($name);
+
         try {
-            return $module->onMobileEnable();
+            $result = $module->onMobileEnable();
         } catch (Exception $e) {
             throw new Exception(
                 $this->translator->trans(
@@ -588,6 +618,10 @@ class ModuleManager implements AddonManagerInterface
                 $e
             );
         }
+
+        $this->checkAndClearCache($result);
+
+        return $result;
     }
 
     /**
@@ -614,8 +648,9 @@ class ModuleManager implements AddonManagerInterface
         $this->checkIsInstalled($name);
 
         $module = $this->moduleRepository->getModule($name);
+
         try {
-            if ((bool) $keep_data && method_exists($this, 'reset')) {
+            if ((bool) $keep_data && method_exists($module->getInstance(), 'reset')) {
                 $this->dispatch(ModuleManagementEvent::UNINSTALL, $module);
                 $status = $module->onReset();
                 $this->dispatch(ModuleManagementEvent::INSTALL, $module);
@@ -662,6 +697,19 @@ class ModuleManager implements AddonManagerInterface
     public function isInstalled($name)
     {
         return $this->moduleProvider->isInstalled($name);
+    }
+
+    /**
+     * Shortcut to the module data provider in order to know the module id depends
+     * on its name.
+     *
+     * @param string $name The technical module name
+     *
+     * @return int the Module Id, or 0 if not found
+     */
+    public function getModuleIdByName($name)
+    {
+        return $this->moduleProvider->getModuleIdByName($name);
     }
 
     /**
@@ -751,5 +799,28 @@ class ModuleManager implements AddonManagerInterface
                     ->setSubject('PrestaTrust');
             }
         }
+    }
+
+    /**
+     * @param bool $result
+     */
+    private function checkAndClearCache($result)
+    {
+        if ($result && $this->actionParams->get('cacheClearEnabled', true)) {
+            $this->clearCache();
+        }
+    }
+
+    /**
+     * Clear smarty and Symfony cache (the sf2 cache is remove on the process shutdown).
+     */
+    private function clearCache()
+    {
+        if ($this->cacheCleared) {
+            return;
+        }
+
+        $this->symfonyCacheClearer->clear();
+        $this->cacheCleared = true;
     }
 }

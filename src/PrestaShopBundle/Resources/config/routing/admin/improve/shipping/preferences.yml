@@ -5,6 +5,7 @@ admin_shipping_preferences:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Improve\Shipping\Preferences:index'
         _legacy_controller: AdminShipping
+        _legacy_link: AdminShipping
 
 admin_shipping_preferences_save:
     path: preferences
@@ -12,3 +13,4 @@ admin_shipping_preferences_save:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Improve\Shipping\Preferences:processForm'
         _legacy_controller: AdminShipping
+        _legacy_link: AdminShipping:update

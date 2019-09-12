@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -37,12 +37,12 @@ use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecif
 class Price extends NumberSpecification
 {
     /**
-     * Currency display option : symbol notation.
+     * Currency display option: symbol notation.
      */
     const CURRENCY_DISPLAY_SYMBOL = 'symbol';
 
     /**
-     * Currency display option : ISO code notation.
+     * Currency display option: ISO code notation.
      */
     const CURRENCY_DISPLAY_CODE = 'code';
 
@@ -91,7 +91,7 @@ class Price extends NumberSpecification
      * @param string $currencySymbol
      *                               Currency symbol of this price (eg. : €)
      * @param $currencyCode
-     *  Currency code of this price (eg. : EUR)
+     *  Currency code of this price (e.g.: EUR)
      *
      * @throws LocalizationException
      */
@@ -136,7 +136,7 @@ class Price extends NumberSpecification
 
     /**
      * Get the currency symbol
-     * eg. : €.
+     * e.g.: €.
      *
      * @return string
      */
@@ -147,7 +147,7 @@ class Price extends NumberSpecification
 
     /**
      * Get the currency ISO code
-     * eg. : EUR.
+     * e.g.: EUR.
      *
      * @return string
      */
@@ -170,5 +170,21 @@ class Price extends NumberSpecification
         ) {
             throw new LocalizationException('Invalid currencyDisplay');
         }
+    }
+
+    /**
+     * To array function
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        return array_merge(
+            [
+                'currencyCode' => $this->getCurrencyCode(),
+                'currencySymbol' => $this->getCurrencySymbol(),
+            ],
+            parent::toArray()
+        );
     }
 }

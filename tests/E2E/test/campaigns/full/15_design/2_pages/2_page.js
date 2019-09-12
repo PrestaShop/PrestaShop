@@ -1,8 +1,17 @@
+/**
+ * This script is based on scenarios described in this combination of the following tests link
+ * [id="PS-123"][Name="Create a CMS page"]
+ * [id="PS-124"][Name="Edit a CMS page"]
+ * [id="PS-125"][Name="Delete a CMS page"]
+ * [id="PS-126"][Name="Bulk actions"]
+ **/
+
 const {AccessPageBO} = require('../../../../selectors/BO/access_page');
 const {Pages} = require('../../../../selectors/BO/design/pages');
 const {Menu} = require('../../../../selectors/BO/menu.js');
 const {AccessPageFO} = require('../../../../selectors/FO/access_page');
 const common_scenarios = require('../../../common_scenarios/pages');
+const welcomeScenarios = require('../../../common_scenarios/welcome');
 
 let promise = Promise.resolve();
 
@@ -42,10 +51,11 @@ scenario('Create, edit, delete "CMS page"', () => {
   scenario('Login in the Back Office and go to "Design > Pages" page', client => {
     test('should open the browser', () => client.open());
     test('should log in successfully in the Back Office', () => client.signInBO(AccessPageBO));
-    test('should go to "Design > Pages" page', () => client.goToSubtabMenuPage(Menu.Improve.Design.design_menu, Menu.Improve.Design.pages_submenu));
   }, 'design');
 
+  welcomeScenarios.findAndCloseWelcomeModal();
   scenario('Create CMS page then check it in the Back Office and the Front Office', client => {
+    test('should go to "Design > Pages" page', () => client.goToSubtabMenuPage(Menu.Improve.Design.design_menu, Menu.Improve.Design.pages_submenu));
     common_scenarios.createAndPreviewPage(pageData, "", 1);
     common_scenarios.checkPageBO(pageData.meta_title);
   }, 'design');
@@ -59,13 +69,13 @@ scenario('Create, edit, delete "CMS page"', () => {
           .then(() => client.isVisible(Pages.Category.name_filter))
           .then(() => client.search(Pages.Category.name_filter, categoryDataWithoutSubCategory.name + date_time));
       });
-      test('should click on "View" button', () => client.waitForExistAndClick(Pages.Category.view_button));
+      test('should click on "View" button', () => client.scrollWaitForExistAndClick(Pages.Category.view_button));
     }, 'design');
     common_scenarios.createAndPreviewPage(pageWithCategory, categoryDataWithoutSubCategory.name + date_time, 2);
     common_scenarios.checkCategoryBO(categoryDataWithoutSubCategory);
     scenario('Reset page filter and go to "Design > Pages" page', client => {
-      test('should click on "Reset" button', () => client.waitForExistAndClick(Pages.Page.reset_button));
-      test('should click on the created category "View" button', () => client.waitForExistAndClick(Pages.Category.view_button));
+      test('should click on "Reset" button', () => client.scrollWaitForVisibleAndClick(Pages.Page.reset_button));
+      test('should click on the created category "View" button', () => client.scrollWaitForExistAndClick(Pages.Category.view_button));
     }, 'design');
     common_scenarios.checkPageBO(pageWithCategory.meta_title);
   }, 'design');
@@ -77,7 +87,10 @@ scenario('Create, edit, delete "CMS page"', () => {
         .then(() => client.isVisible(Pages.Page.title_filter_input))
         .then(() => client.search(Pages.Page.title_filter_input, pageData.meta_title + date_time));
     });
-    test('should click on "Edit" button', () => client.waitForExistAndClick(Pages.Page.edit_button));
+    test('should click on "Edit" button', async () => {
+      await client.scrollWaitForVisibleAndClick(Pages.Page.edit_button);
+      await client.waitForVisible(Pages.Page.title_input);
+    });
     common_scenarios.editPage(pageData, newPageData, "", 3);
   }, 'design');
 
@@ -88,14 +101,14 @@ scenario('Create, edit, delete "CMS page"', () => {
         .then(() => client.isVisible(Pages.Category.name_filter))
         .then(() => client.search(Pages.Category.name_filter, categoryDataWithoutSubCategory.name + date_time));
     });
-    test('should click on "Reset" button', () => client.waitForExistAndClick(Pages.Page.reset_button));
-    test('should click on the created category "View" button', () => client.waitForExistAndClick(Pages.Category.view_button));
+    test('should click on "Reset" button', () => client.scrollWaitForExistAndClick(Pages.Page.reset_button));
+    test('should click on the created category "View" button', () => client.scrollWaitForExistAndClick(Pages.Category.view_button));
     test('should search for the page in "pages list"', () => {
       return promise
         .then(() => client.isVisible(Pages.Page.title_filter_input))
         .then(() => client.search(Pages.Page.title_filter_input, pageWithCategory.meta_title + date_time));
     });
-    test('should click on "Edit" button', () => client.waitForExistAndClick(Pages.Page.edit_button));
+    test('should click on "Edit" button', () => client.scrollWaitForExistAndClick(Pages.Page.edit_button));
     common_scenarios.editPage(pageWithCategory, newPageData, categoryDataWithoutSubCategory.name + date_time, 4);
   }, 'design');
 
@@ -109,7 +122,7 @@ scenario('Create, edit, delete "CMS page"', () => {
     common_scenarios.deletePage();
     scenario('Check the review page', client => {
       test('should go to the review page in the Front Office', () => client.switchWindow(1));
-      test('should check that "page-not-found" appear', () => client.checkTextValue(AccessPageFO.not_found_erreur_message, 'The page you are looking for was not found.'));
+      test('should check that "page-not-found" appear', () => client.checkTextValue(AccessPageFO.not_found_error_message, 'The page you are looking for was not found.'));
       test('should go to the Back Office', () => client.switchWindow(0));
     }, 'design');
   }, 'design');
@@ -121,12 +134,12 @@ scenario('Create, edit, delete "CMS page"', () => {
         .then(() => client.isVisible(Pages.Category.name_filter))
         .then(() => client.search(Pages.Category.name_filter, categoryDataWithoutSubCategory.name + date_time));
     });
-    test('should click on "Reset" button', () => client.waitForExistAndClick(Pages.Page.reset_button));
-    test('should click on the created category "View" button', () => client.waitForExistAndClick(Pages.Category.view_button));
+    //test('should click on "Reset" button', () => client.scrollWaitForExistAndClick(Pages.Page.reset_button));
+    test('should click on the created category "View" button', () => client.scrollWaitForExistAndClick(Pages.Category.view_button));
     test('should search for the page in "pages list"', () => {
       return promise
         .then(() => client.isVisible(Pages.Page.title_filter_input))
-        .then(() => client.search(Pages.Page.title_filter_input, pageWithCategory.meta_title + date_time));
+        .then(() => client.search(Pages.Page.title_filter_input, newPageData.meta_title + date_time));
     });
     common_scenarios.deletePage();
     scenario('Check the review page', client => {

@@ -9,11 +9,12 @@ services:
     depends_on:
       - "prestashop"
       - "selenium-chrome"
-    command: ["/tmp/wait-for-it.sh", "--timeout=360", "--strict", "prestashop-web:80", "--", "/tmp/prepare-prestashop.sh"]
+    command: ["/tmp/wait-for-it.sh", "--timeout=360", "--strict", "prestashop-web:80", "--", "/bin/bash"]
     tty: true
     volumes:
       - .docker:/tmp/docker
-      - ../../:/tmp/data-ps/prestashop/
+      - ../../:/var/www/html/
+      - selenium-downloads:/home/seluser/Downloads
     networks:
       - default
 
@@ -40,11 +41,13 @@ services:
           - prestashop-web
 
   selenium-chrome:
-    image: selenium/standalone-chrome
+    image: selenium/standalone-chrome:3.141.5
+    user: "root:root"
     depends_on:
       - "prestashop"
     volumes:
-      - /dev/shm:/dev/shm
+      - selenium-downloads:/home/seluser/Downloads
+    shm_size: 2gb
     networks:
       default:
         aliases:
@@ -56,3 +59,6 @@ services:
       MYSQL_ROOT_PASSWORD: admin
     networks:
       - default
+
+volumes:
+  selenium-downloads:

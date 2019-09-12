@@ -1,3 +1,6 @@
+imports:
+  - { resource: ./common.yml }
+
 services:
     _defaults:
         public: true
@@ -25,8 +28,14 @@ services:
 
     prestashop.adapter.check_missing_files:
         class: 'PrestaShop\PrestaShop\Adapter\Requirement\CheckMissingOrUpdatedFiles'
+
     prestashop.adapter.cache_clearer:
         class: 'PrestaShop\PrestaShop\Adapter\Cache\CacheClearer'
+        arguments:
+            - '@prestashop.core.cache.clearer.cache_clearer_chain'
+            - '@prestashop.adapter.cache.clearer.symfony_cache_clearer'
+            - '@prestashop.adapter.cache.clearer.media_cache_clearer'
+            - '@prestashop.adapter.cache.clearer.smarty_cache_clearer'
 
     prestashop.adapter.debug_mode:
         class: 'PrestaShop\PrestaShop\Adapter\Debug\DebugMode'
@@ -42,23 +51,14 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\Configuration\PhpParameters'
         arguments: ['%kernel.root_dir%/config/parameters.php']
 
-    prestashop.adapter.legacy.configuration:
-        class: PrestaShop\PrestaShop\Adapter\Configuration
-
     prestashop.adapter.legacy.kpi_configuration:
         class: PrestaShop\PrestaShop\Adapter\Configuration\KpiConfiguration
-
-    prestashop.adapter.legacy.context:
-        class: PrestaShop\PrestaShop\Adapter\LegacyContext
 
     prestashop.adapter.legacy.logger:
         class: PrestaShop\PrestaShop\Adapter\LegacyLogger
 
     prestashop.adapter.legacy.hook:
         class: PrestaShop\PrestaShop\Adapter\Hook\HookInformationProvider
-
-    prestashop.adapter.validate:
-        class: PrestaShop\PrestaShop\Adapter\Validate
 
     # SSL middleware
     prestashop.adapter.middleware.ssl:
@@ -85,9 +85,6 @@ services:
     prestashop.adapter.shop.context:
         class: PrestaShop\PrestaShop\Adapter\Shop\Context
 
-    prestashop.adapter.tools:
-        class: PrestaShop\PrestaShop\Adapter\Tools
-
     prestashop.adapter.image_manager:
         class: PrestaShop\PrestaShop\Adapter\ImageManager
         arguments: ["@prestashop.adapter.legacy.context"]
@@ -111,6 +108,7 @@ services:
             - "@prestashop.adapter.data_provider.pack"
             - "@prestashop.adapter.shop.context"
             - "@prestashop.adapter.data_provider.tax"
+            - "@router"
 
     prestashop.adapter.translation_route_finder:
         class: PrestaShop\PrestaShop\Adapter\Translations\TranslationRouteFinder
@@ -118,3 +116,18 @@ services:
             - '@prestashop.service.translation'
             - '@=service("prestashop.adapter.legacy.context").getContext().link'
             - '@prestashop.core.admin.module.repository'
+
+    prestashop.adapter.shop.shop_url:
+        class: 'PrestaShop\PrestaShop\Adapter\Shop\ShopUrlDataProvider'
+        arguments:
+            - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
+
+    prestashop.adapter.file.htaccess_file_generator:
+        class: 'PrestaShop\PrestaShop\Adapter\File\HtaccessFileGenerator'
+        arguments:
+            - '@prestashop.adapter.cache_clearer'
+            - '@prestashop.adapter.tools'
+            - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_HTACCESS_DISABLE_MULTIVIEWS')"
+
+    prestashop.adapter.file.robots_text_file_generator:
+        class: 'PrestaShop\PrestaShop\Adapter\File\RobotsTextFileGenerator'

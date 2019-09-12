@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,13 +27,12 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Responsible of "Configure > Advanced Parameters > Performance" page display.
@@ -50,7 +49,7 @@ class PerformanceController extends FrameworkBundleAdminController
      *
      * @param FormInterface $form
      *
-     * @return Response
+     * @return array
      */
     public function indexAction(FormInterface $form = null)
     {
@@ -62,7 +61,7 @@ class PerformanceController extends FrameworkBundleAdminController
             ],
         ];
 
-        $form = is_null($form) ? $this->get('prestashop.adapter.performance.form_handler')->getForm() : $form;
+        $form = null === $form ? $this->get('prestashop.adapter.performance.form_handler')->getForm() : $form;
 
         return [
             'layoutHeaderToolbarBtn' => $toolbarButtons,
@@ -112,11 +111,16 @@ class PerformanceController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity("is_granted(['delete'], request.get('_legacy_controller'))",
+     *     message="You do not have permission to update this.",
+     *     redirectRoute="admin_performance"
+     * )
+     *
      * @return RedirectResponse
      */
     public function clearCacheAction()
     {
-        $this->get('prestashop.adapter.cache_clearer')->clearAllCaches();
+        $this->get('prestashop.core.cache.clearer.cache_clearer_chain')->clear();
         $this->addFlash('success', $this->trans('All caches cleared successfully', 'Admin.Advparameters.Notification'));
 
         return $this->redirectToRoute('admin_performance');

@@ -63,6 +63,8 @@
     <tab id="Login" name="Login" />
     <tab id="Logs" name="Logs" />
     <tab id="Look_feel" name="Design" />
+    <tab id="Mail_Theme" name="Email Theme" />
+    <tab id="Mail_Theme_Parent" name="Email Theme" />
     <tab id="Maintenance" name="Maintenance" />
     <tab id="Manufacturers_and_suppliers" name="Brands &amp; Suppliers" />
     <tab id="Manufacturers" name="Brands" />
@@ -129,5 +131,5 @@
     <tab id="Warehouses" name="Warehouses" />
     <tab id="Webservice" name="Webservice" />
     <tab id="Zones" name="Zones" />
-    <tab id="Marketing_tools" name="Modules Selections" />
+    <tab id="Marketing_tools" name="Module Selections" />
 </entity_tab>

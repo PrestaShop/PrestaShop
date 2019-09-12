@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,17 +16,20 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Module;
 
+use Context;
 use Doctrine\Common\Cache\CacheProvider;
+use Employee;
+use Module as LegacyModule;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
 use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
 use PrestaShopBundle\Service\DataProvider\Admin\AddonsInterface;
@@ -35,9 +38,6 @@ use PrestaShopBundle\Service\DataProvider\Admin\ModuleInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Translation\TranslatorInterface;
-use Module as LegacyModule;
-use Context;
-use Employee;
 use Tools;
 
 /**
@@ -51,6 +51,21 @@ class AdminModuleDataProvider implements ModuleInterface
     const _CACHEKEY_MODULES_ = '_addons_modules';
 
     const _DAY_IN_SECONDS_ = 86400; /* Cache for One Day */
+
+    /**
+     * @const array giving a translation domain key for each module action
+     */
+    const _ACTIONS_TRANSLATION_DOMAINS_ = array(
+        'install' => 'Admin.Actions',
+        'uninstall' => 'Admin.Actions',
+        'enable' => 'Admin.Actions',
+        'disable' => 'Admin.Actions',
+        'enable_mobile' => 'Admin.Modules.Feature',
+        'disable_mobile' => 'Admin.Modules.Feature',
+        'reset' => 'Admin.Actions',
+        'upgrade' => 'Admin.Actions',
+        'configure' => 'Admin.Actions',
+    );
 
     /**
      * @var array of defined and callable module actions
@@ -167,7 +182,8 @@ class AdminModuleDataProvider implements ModuleInterface
      */
     public function getAllModules()
     {
-        return LegacyModule::getModulesOnDisk(true,
+        return LegacyModule::getModulesOnDisk(
+            true,
             $this->addonsDataProvider->isAddonsAuthenticated(),
             (int) Context::getContext()->employee->id
         );
@@ -185,7 +201,8 @@ class AdminModuleDataProvider implements ModuleInterface
         }
 
         return $this->applyModuleFilters(
-                $this->catalog_modules, $filters
+                $this->catalog_modules,
+            $filters
         );
     }
 
@@ -246,9 +263,9 @@ class AdminModuleDataProvider implements ModuleInterface
 
     /**
      * @param AddonsCollection $addons
-     * @param null $specific_action
+     * @param string|null $specific_action
      *
-     * @return array
+     * @return AddonsCollection
      */
     public function generateAddonsUrls(AddonsCollection $addons, $specific_action = null)
     {
@@ -329,6 +346,7 @@ class AdminModuleDataProvider implements ModuleInterface
 
             $urls = $this->filterAllowedActions($urls, $addon->attributes->get('name'));
             $addon->attributes->set('urls', $urls);
+            $addon->attributes->set('actionTranslationDomains', self::_ACTIONS_TRANSLATION_DOMAINS_);
             if ($specific_action && array_key_exists($specific_action, $urls)) {
                 $addon->attributes->set('url_active', $specific_action);
             } elseif ($url_active === 'buy' || array_key_exists($url_active, $urls)) {
@@ -390,10 +408,12 @@ class AdminModuleDataProvider implements ModuleInterface
                             }
                         }
                     }
+
                     break;
                 case 'name':
                     // exact given name (should return 0 or 1 result)
                     $search_result[] = $value;
+
                     break;
                 default:
                     // "the switch statement is considered a looping structure for the purposes of continue."
@@ -448,8 +468,7 @@ class AdminModuleDataProvider implements ModuleInterface
                         $addon->origin = $action;
                         $addon->origin_filter_value = $action_filter_value;
                         $addon->categoryParent = $this->categoriesProvider
-                            ->getParentCategory($addon->categoryName)
-                        ;
+                            ->getParentCategory($addon->categoryName);
                         if (isset($addon->version)) {
                             $addon->version_available = $addon->version;
                         }
@@ -462,14 +481,16 @@ class AdminModuleDataProvider implements ModuleInterface
                     }
                 }
 
-                $this->catalog_modules = $listAddons;
-                if ($this->cacheProvider) {
-                    $this->cacheProvider->save($this->languageISO . self::_CACHEKEY_MODULES_, $this->catalog_modules, self::_DAY_IN_SECONDS_);
+                if (!empty($listAddons)) {
+                    $this->catalog_modules = $listAddons;
+                    if ($this->cacheProvider) {
+                        $this->cacheProvider->save($this->languageISO . self::_CACHEKEY_MODULES_, $this->catalog_modules, self::_DAY_IN_SECONDS_);
+                    }
+                } else {
+                    $this->fallbackOnCatalogCache();
                 }
             } catch (\Exception $e) {
                 if (!$this->fallbackOnCatalogCache()) {
-                    $this->catalog_modules = array();
-                    $this->failed = true;
                     $this->logger->error('Data from PrestaShop Addons is invalid, and cannot fallback on cache. ', array('exception' => $e->getMessage()));
                 }
             }
@@ -479,7 +500,7 @@ class AdminModuleDataProvider implements ModuleInterface
     /**
      * If cache exists, get the Catalogue from the cache.
      *
-     * @return array|false|mixed
+     * @return array Module loaded from the cache
      */
     protected function fallbackOnCatalogCache()
     {
@@ -487,6 +508,12 @@ class AdminModuleDataProvider implements ModuleInterface
         if ($this->cacheProvider) {
             $this->catalog_modules = $this->cacheProvider->fetch($this->languageISO . self::_CACHEKEY_MODULES_);
         }
+
+        if (!$this->catalog_modules) {
+            $this->catalog_modules = array();
+        }
+
+        $this->failed = true;
 
         return $this->catalog_modules;
     }

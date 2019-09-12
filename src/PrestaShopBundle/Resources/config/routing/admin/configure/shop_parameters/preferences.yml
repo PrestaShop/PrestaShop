@@ -4,6 +4,7 @@ admin_preferences:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Preferences:index'
         _legacy_controller: AdminPreferences
+        _legacy_link: AdminPreferences
 
 admin_preferences_save:
     path: preferences
@@ -11,3 +12,4 @@ admin_preferences_save:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Preferences:processForm'
         _legacy_controller: AdminPreferences
+        _legacy_link: AdminPreferences:update

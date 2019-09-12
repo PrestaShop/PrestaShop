@@ -70,7 +70,7 @@ services:
         arguments:
           - '@prestashop.adapter.memcache_server.manager'
           - '@prestashop.adapter.php_parameters'
-          - '@prestashop.adapter.cache_clearer'
+          - '@prestashop.adapter.cache.clearer.symfony_cache_clearer'
           - '%ps_cache_enable%'
           - '%ps_caching%'
 
@@ -199,29 +199,50 @@ services:
         arguments:
             - '@prestashop.adapter.legacy.configuration'
 
-    prestashop.adapter.sql_manager_settings.configuration:
-        class: 'PrestaShop\PrestaShop\Adapter\Configuration\SqlRequestConfiguration'
-        arguments:
-            - '@prestashop.core.command_bus'
-            - '@prestashop.core.query_bus'
-
     prestashop.adapter.webservice.configuration:
         class: 'PrestaShop\PrestaShop\Adapter\Webservice\WebserviceConfiguration'
         arguments:
             - '@prestashop.adapter.legacy.configuration'
 
-    prestashop.adapter.language.pack.importer:
-        class: 'PrestaShop\PrestaShop\Adapter\Language\Pack\LanguagePackImporter'
+    prestashop.adapter.meta.set_up_urls.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Meta\SetUpUrlsDataConfiguration'
         arguments:
-            - '@prestashop.adapter.language.language_pack_installer'
-            - '@prestashop.adapter.data_provider.language'
-            - '@prestashop.adapter.cache_clearer'
-            - '@=service("prestashop.adapter.legacy.configuration").get("_PS_TRANSLATIONS_DIR_")'
-
-    prestashop.adapter.webservice.webservice_account_eraser:
-        class: 'PrestaShop\PrestaShop\Adapter\Webservice\WebserviceAccountEraser'
-
-    prestashop.adapter.webservice.webservice_account_status_modifier:
-        class: 'PrestaShop\PrestaShop\Adapter\Webservice\WebserviceAccountStatusModifier'
-        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+            - '@prestashop.adapter.file.htaccess_file_generator'
             - '@translator'
+
+    prestashop.adapter.meta.shop_url.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Meta\ShopUrlDataConfiguration'
+        arguments:
+            - '@=service("prestashop.adapter.shop.shop_url").getMainShopUrl()'
+            - '@prestashop.adapter.legacy.configuration'
+            - '@prestashop.adapter.file.htaccess_file_generator'
+
+    prestashop.adapter.meta.url_schema.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Meta\UrlSchemaDataConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+            - '@=service("prestashop.adapter.data_provider.default_route").getRules()'
+
+    prestashop.adapter.meta.seo_options.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Meta\SEOOptionsDataConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.core.team.employee.configuration.employee_options_configuration:
+        class: 'PrestaShop\PrestaShop\Core\Team\Employee\Configuration\EmployeeOptionsConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+            - '@prestashop.core.team.employee.configuration.options_checker'
+
+    prestashop.core.tax.tax_options_configuration:
+        class: 'PrestaShop\PrestaShop\Core\Tax\TaxOptionsConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+            - '@prestashop.adapter.tax.ecotax.ecotax_resetter'
+
+    prestashop.core.mail_theme.configuration:
+      class: 'PrestaShop\PrestaShop\Core\MailTemplate\MailThemeConfiguration'
+      arguments:
+        - '@prestashop.adapter.legacy.configuration'
+        - '@prestashop.core.mail_template.theme_catalog'

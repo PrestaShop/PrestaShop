@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -58,9 +58,9 @@ class CMSCore extends ObjectModel
             'active' => array('type' => self::TYPE_BOOL),
 
             /* Lang fields */
-            'meta_description' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
+            'meta_description' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 512),
             'meta_keywords' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
-            'meta_title' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
+            'meta_title' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 255),
             'head_seo_title' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
             'link_rewrite' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isLinkRewrite', 'required' => true, 'size' => 128),
             'content' => array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml', 'size' => 3999999999999),
@@ -167,7 +167,7 @@ class CMSCore extends ObjectModel
      * @param bool $idBlock
      * @param bool $active
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return array|false|mysqli_result|PDOStatement|resource|null
      */
     public static function listCms($idLang = null, $idBlock = false, $active = true)
     {
@@ -194,7 +194,8 @@ class CMSCore extends ObjectModel
      */
     public function updatePosition($way, $position)
     {
-        if (!$res = Db::getInstance()->executeS('
+        if (!$res = Db::getInstance()->executeS(
+            '
 			SELECT cp.`id_cms`, cp.`position`, cp.`id_cms_category`
 			FROM `' . _DB_PREFIX_ . 'cms` cp
 			WHERE cp.`id_cms_category` = ' . (int) $this->id_cms_category . '
@@ -259,7 +260,7 @@ class CMSCore extends ObjectModel
     /**
      * @param $idCategory
      *
-     * @return false|null|string
+     * @return false|string|null
      */
     public static function getLastPosition($idCategory)
     {
@@ -277,7 +278,7 @@ class CMSCore extends ObjectModel
      * @param bool $active
      * @param null $idShop
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return array|false|mysqli_result|PDOStatement|resource|null
      */
     public static function getCMSPages($idLang = null, $idCmsCategory = null, $active = true, $idShop = null)
     {
@@ -313,7 +314,7 @@ class CMSCore extends ObjectModel
     /**
      * @param $idCms
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return array|false|mysqli_result|PDOStatement|resource|null
      */
     public static function getUrlRewriteInformations($idCms)
     {
@@ -331,14 +332,14 @@ class CMSCore extends ObjectModel
      * @param int|null $idLang
      * @param int|null $idShop
      *
-     * @return array|bool|null|object
+     * @return array|bool|object|null
      */
     public static function getCMSContent($idCms, $idLang = null, $idShop = null)
     {
-        if (is_null($idLang)) {
+        if (null === $idLang) {
             $idLang = (int) Configuration::get('PS_LANG_DEFAULT');
         }
-        if (is_null($idShop)) {
+        if (null === $idShop) {
             $idShop = (int) Configuration::get('PS_SHOP_DEFAULT');
         }
 

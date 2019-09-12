@@ -1,0 +1,160 @@
+//local mixins
+@mixin theme-card-overlay() {
+  width:100%;
+  height:100%;
+  position:absolute;
+  background-color:#000000;
+  opacity:0.25;
+}
+
+@mixin card-width() {
+  max-width: 24.1875rem;
+
+  @include media-breakpoint-down(sm) {
+    max-width: 100%;
+  }
+}
+
+@mixin card-width-and-height() {
+  height: 15.125rem;
+  @include card-width;
+}
+
+@mixin action-button {
+  height: 2.5rem;
+  border-radius: 1.65rem;
+  background-color: #ffffff;
+}
+
+@mixin theme-name-and-version() {
+  font-size: 1rem;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: -0.01875rem;
+  text-align: center;
+  color: #363a41;
+}
+
+.theme-card-container {
+  .theme-card {
+    position: relative;
+
+    .active-card-overlay {
+      &.active {
+        display: block;
+      }
+      display: none;
+      @include theme-card-overlay;
+    }
+
+    .actions-container {
+      &.active {
+        display: block;
+      }
+      display: none;
+    }
+
+    @include card-width-and-height;
+
+    overflow-y: hidden;
+    border-radius: 0.25rem;
+
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    .actions-container {
+      width: 100%;
+      text-align: center;
+      position: absolute;
+      top: 80%;
+      left: 50%;
+      transform: translate(-50%, -80%);
+
+      .action-button {
+        @include action-button;
+        font-weight: normal;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: normal;
+        letter-spacing: -0.0125rem;
+        text-align: center;
+        color: #363a41;
+
+        .icon-current-theme {
+          color: #25b9d7;
+        }
+      }
+
+      .action-button:disabled {
+        i,
+        span {
+          opacity: 0.5;
+        }
+
+      }
+
+      .delete-button {
+        @include action-button;
+        position: relative;
+        width: 2.5rem;
+        i {
+          position: absolute;
+          bottom: 25%;
+          right: 25%;
+        }
+      }
+
+      .action-button:not(:first-child):not(:disabled):hover,
+      .delete-button:hover {
+        box-shadow: 0 0 0.9375rem 0 rgba(0, 0, 0, 0.2);
+        background-color: #3ed1f0;
+        color: #ffffff;
+      }
+    }
+  }
+
+  .theme-card-description {
+    @include card-width;
+  }
+
+  .theme-name {
+    font-weight: bold;
+    @include theme-name-and-version;
+  }
+
+  .theme-version {
+    @include theme-name-and-version;
+  }
+
+  .theme-author {
+    font-size: 0.8125rem;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: -0.01875rem;
+    text-align: center;
+    color: #618596;
+    padding-bottom: 1.6875rem;
+  }
+
+  .theme-catalog-card {
+    background-color: #f8f8f8;
+    .catalog-image {
+      padding-top: 3.7rem;
+    }
+    .catalog-description {
+      padding-top: 0.975rem;
+    }
+  }
+}
+
+// actions
+.theme-card:hover .active-card-overlay,
+.theme-card:hover .actions-container
+{
+  display: block;
+}

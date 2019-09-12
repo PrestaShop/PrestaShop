@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,26 +16,25 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-use Doctrine\DBAL\DriverManager;
-use Symfony\Component\HttpKernel\Kernel;
-use PrestaShopBundle\Kernel\ModuleRepository;
+use PrestaShopBundle\Kernel\ModuleRepositoryFactory;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpKernel\Kernel;
 
 class AppKernel extends Kernel
 {
-    const VERSION = '1.7.5.0';
+    const VERSION = '1.7.7.0';
     const MAJOR_VERSION_STRING = '1.7';
     const MAJOR_VERSION = 17;
-    const MINOR_VERSION = 5;
+    const MINOR_VERSION = 7;
     const RELEASE_VERSION = 0;
 
     /**
@@ -71,9 +70,10 @@ class AppKernel extends Kernel
         }
 
         /* Will not work until PrestaShop is installed */
-        if ($this->parametersFileExists()) {
+        $activeModules = $this->getActiveModules();
+        if (!empty($activeModules)) {
             try {
-                $this->enableComposerAutoloaderOnModules($this->getActiveModules());
+                $this->enableComposerAutoloaderOnModules($activeModules);
             } catch (\Exception $e) {
             }
         }
@@ -88,20 +88,9 @@ class AppKernel extends Kernel
     {
         $kernelParameters = parent::getKernelParameters();
 
-        $activeModules = array();
-
-        /* Will not work until PrestaShop is installed */
-        if ($this->parametersFileExists()) {
-            try {
-                $this->getConnection()->connect();
-                $activeModules = $this->getActiveModules();
-            } catch (\Exception $e) {
-            }
-        }
-
         return array_merge(
             $kernelParameters,
-            array('kernel.active_modules' => $activeModules)
+            array('kernel.active_modules' => $this->getActiveModules())
         );
     }
 
@@ -148,73 +137,29 @@ class AppKernel extends Kernel
      * Return all active modules.
      *
      * @return array list of modules names.
-     * @throws \Doctrine\DBAL\DBALException
      */
     private function getActiveModules()
     {
-        $databasePrefix = $this->getParameters()['database_prefix'];
-
-        $modulesRepository = new ModuleRepository(
-            $this->getConnection(),
-            $databasePrefix
-        );
-
-        return $modulesRepository->getActiveModules();
-    }
-
-    /**
-     * @return array The root parameters of PrestaShop.
-     */
-    private function getParameters()
-    {
-        if ($this->parametersFileExists()) {
-            $config = require($this->getParametersFile());
-
-            return $config['parameters'];
+        $activeModules = [];
+        try {
+            if ($modulesRepository = ModuleRepositoryFactory::getInstance()->getRepository()) {
+                $activeModules = $modulesRepository->getActiveModules();
+            }
+        } catch (\Exception $e) {
+            //Do nothing because the modules retrieval must not block the kernel, and it won't work
+            //during the installation process
         }
 
-        return array();
-    }
 
-    /**
-     * @var bool
-     * @return bool
-     */
-    private function parametersFileExists()
-    {
-        return file_exists($this->getParametersFile());
-    }
-
-    /**
-     * @return string file path to PrestaShop configuration parameters.
-     */
-    private function getParametersFile()
-    {
-        return $this->getRootDir().'/config/parameters.php';
-    }
-
-    /**
-     * @return \Doctrine\DBAL\Connection
-     * @throws \Doctrine\DBAL\DBALException
-     */
-    private function getConnection()
-    {
-        $parameters = $this->getParameters();
-
-        return DriverManager::getConnection(array(
-            'dbname' => $parameters['database_name'],
-            'user' => $parameters['database_user'],
-            'password' => $parameters['database_password'],
-            'host' => $parameters['database_host'],
-            'port' => $parameters['database_port'],
-            'charset' => 'utf8',
-            'driver' => 'pdo_mysql',
-        ));
+        return $activeModules;
     }
 
     /**
      * Enable auto loading of module Composer autoloader if needed.
      * Need to be done as earlier as possible in application lifecycle.
+     *
+     * Note: this feature is also manage in PrestaShop\PrestaShop\Adapter\ContainerBuilder
+     * for non Symfony environments.
      *
      * @param array $modules the list of modules
      */

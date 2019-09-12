@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -104,13 +104,13 @@ class AdminImagesControllerCore extends AdminController
                         'type' => 'text',
                     ),
                     'PS_PNG_QUALITY' => array(
-                         'title' => $this->trans('PNG compression', array(), 'Admin.Design.Feature'),
-                         'hint' => $this->trans('PNG compression is lossless: unlike JPG, you do not lose image quality with a high compression ratio. However, photographs will compress very badly.', array(), 'Admin.Design.Help') . ' ' . $this->trans('Ranges from 0 (biggest file) to 9 (smallest file, slowest decompression).', array(), 'Admin.Design.Help') . ' ' . $this->trans('Recommended: 7.', array(), 'Admin.Design.Help'),
-                         'validation' => 'isUnsignedId',
-                         'required' => true,
-                         'cast' => 'intval',
-                         'type' => 'text',
-                     ),
+                        'title' => $this->trans('PNG compression', array(), 'Admin.Design.Feature'),
+                        'hint' => $this->trans('PNG compression is lossless: unlike JPG, you do not lose image quality with a high compression ratio. However, photographs will compress very badly.', array(), 'Admin.Design.Help') . ' ' . $this->trans('Ranges from 0 (biggest file) to 9 (smallest file, slowest decompression).', array(), 'Admin.Design.Help') . ' ' . $this->trans('Recommended: 7.', array(), 'Admin.Design.Help'),
+                        'validation' => 'isUnsignedId',
+                        'required' => true,
+                        'cast' => 'intval',
+                        'type' => 'text',
+                    ),
                     'PS_IMAGE_GENERATION_METHOD' => array(
                         'title' => $this->trans('Generate images based on one side of the source image', array(), 'Admin.Design.Feature'),
                         'validation' => 'isUnsignedId',
@@ -658,7 +658,7 @@ class AdminImagesControllerCore extends AdminController
             // Getting format generation
             $formats = ImageType::getImagesTypes($proc['type']);
             if ($type != 'all') {
-                $format = strval(Tools::getValue('format_' . $type));
+                $format = (string) (Tools::getValue('format_' . $type));
                 if ($format != 'all') {
                     foreach ($formats as $k => $form) {
                         if ($form['id_image_type'] != $format) {

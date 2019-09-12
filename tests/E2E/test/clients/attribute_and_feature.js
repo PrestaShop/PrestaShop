@@ -2,17 +2,6 @@ var CommonClient = require('./common_client');
 
 class AttributeAndFeature extends CommonClient {
 
-  addValueToAttribute(attributeSubMenu, values) {
-    return this.client
-      .waitForExistAndClick(attributeSubMenu.add_value_button)
-      .waitAndSetValue(attributeSubMenu.value_input, values[1])
-      .waitForExistAndClick(attributeSubMenu.save_and_add)
-      .waitAndSetValue(attributeSubMenu.value_input, values[2])
-      .waitForExistAndClick(attributeSubMenu.save_and_add)
-      .waitAndSetValue(attributeSubMenu.value_input, values[3])
-      .waitForExistAndClick(attributeSubMenu.save_value_button)
-  }
-
   clickOnAction(groupActionSelector, actionSelector, action = 'edit') {
     if (action === 'delete') {
       return this.client
@@ -31,6 +20,20 @@ class AttributeAndFeature extends CommonClient {
       .pause(3000)
       .then(() => this.client.isExisting(selector))
       .then((value) => expect(value).to.be.false);
+  }
+
+  checkOneExistence(valueToCheckWith, column = 'id') {
+    let occurence = 0;
+    for (let i = 0; i < elementsTable.length; i++) {
+      if (elementsTable[i] === valueToCheckWith) {
+        occurence = occurence + 1;
+      }
+    }
+    if (column === 'position') {
+      expect(occurence, 'there is no records or more than one having position 2').to.be.equal(1);
+    } else {
+      expect(occurence, 'there is no records or more than one having id 3').to.be.equal(1);
+    }
   }
 }
 

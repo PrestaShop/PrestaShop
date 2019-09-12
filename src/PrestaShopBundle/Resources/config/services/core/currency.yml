@@ -1,0 +1,8 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.core.currency.grid_data_factory:
+        class: 'PrestaShop\PrestaShop\Core\Currency\CurrencyGridDataFactory'
+        arguments:
+            - '@prestashop.core.grid.data_provider.currency'

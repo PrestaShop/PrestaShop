@@ -1,4 +1,4 @@
-Copyright (c) 2007-2018 PrestaShop.
+Copyright (c) 2007-2019 PrestaShop.
 
 Open Software License v. 3.0 (OSL-3.0)
 

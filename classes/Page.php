@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -54,8 +54,11 @@ class PageCore extends ObjectModel
         $controller = Dispatcher::getInstance()->getController();
         $pageTypeId = Page::getPageTypeByName($controller);
 
-        // Some pages must be distinguished in order to record exactly what is being seen
-        // @todo dispatcher module
+        /**
+         * Some pages must be distinguished in order to record exactly what is being seen
+         *
+         * @todo dispatcher module
+         */
         $specialArray = array(
             'product' => 'id_product',
             'category' => 'id_category',
@@ -94,7 +97,8 @@ class PageCore extends ObjectModel
      */
     public static function getPageTypeByName($name)
     {
-        if ($value = Db::getInstance()->getValue('
+        if ($value = Db::getInstance()->getValue(
+            '
 				SELECT id_page_type
 				FROM ' . _DB_PREFIX_ . 'page_type
 				WHERE name = \'' . pSQL($name) . '\''

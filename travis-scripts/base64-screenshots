@@ -1,6 +1,8 @@
 #!/bin/bash
 
-FILES=$TRAVIS_BUILD_DIR/tests/Selenium/errorShots/*
+PROJECT_PATH=$(cd "$( dirname "$0" )/../" && pwd)
+
+FILES=$PROJECT_PATH/tests/Selenium/errorShots/*
 for f in $FILES
 do
   echo "--- Displaying content of $f ...\n"

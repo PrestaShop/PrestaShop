@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,23 +16,23 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use PrestaShop\PrestaShop\Core\Form\FormHandler;
-use Symfony\Component\HttpFoundation\Request;
+use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\Form;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Admin controller for the Order Delivery.
@@ -51,9 +51,9 @@ class DeliveryController extends FrameworkBundleAdminController
      */
     public function slipAction(Request $request)
     {
-        /* @var $formHandler FormHandler */
+        /** @var $formHandler FormHandler */
         $formHandler = $this->get('prestashop.adapter.order.delivery.slip.options.form_handler');
-        /* @var $form Form */
+        /** @var $form Form */
         $form = $formHandler->getForm();
 
         $form->handleRequest($request);
@@ -94,9 +94,9 @@ class DeliveryController extends FrameworkBundleAdminController
      */
     public function generatePdfAction(Request $request)
     {
-        /* @var $formHandler FormHandler */
+        /** @var $formHandler FormHandler */
         $formHandler = $this->get('prestashop.adapter.order.delivery.slip.pdf.form_handler');
-        /* @var $form Form */
+        /** @var $form Form */
         $form = $formHandler->getForm();
 
         $form->handleRequest($request);

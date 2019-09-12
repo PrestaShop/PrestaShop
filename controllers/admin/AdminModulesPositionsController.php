@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,8 +27,16 @@ class AdminModulesPositionsControllerCore extends AdminController
 {
     protected $display_key = 0;
 
+    /**
+     * @deprecated since 1.7.6, to be removed in the next minor
+     */
     public function __construct()
     {
+        @trigger_error(
+            'The AdminModulesPositionsController is deprecated and will be removed in the next minor',
+            E_USER_DEPRECATED
+        );
+
         $this->bootstrap = true;
         parent::__construct();
     }
@@ -36,7 +44,7 @@ class AdminModulesPositionsControllerCore extends AdminController
     public function postProcess()
     {
         // Getting key value for display
-        if (Tools::getValue('show_modules') && strval(Tools::getValue('show_modules')) != 'all') {
+        if (Tools::getValue('show_modules') && (string) (Tools::getValue('show_modules')) != 'all') {
             $this->display_key = (int) Tools::getValue('show_modules');
         }
 
@@ -438,7 +446,7 @@ class AdminModulesPositionsControllerCore extends AdminController
                     . $this->trans('___________ CUSTOM ___________', array(), 'Admin.Design.Feature')
                     . '</option>';
 
-        // @todo do something better with controllers
+        /** @todo do something better with controllers */
         $controllers = Dispatcher::getControllers(_PS_FRONT_CONTROLLER_DIR_);
         ksort($controllers);
 
@@ -477,7 +485,7 @@ class AdminModulesPositionsControllerCore extends AdminController
             $id_module = (int) (Tools::getValue('id_module'));
             $id_hook = (int) (Tools::getValue('id_hook'));
             $way = (int) (Tools::getValue('way'));
-            $positions = Tools::getValue(strval($id_hook));
+            $positions = Tools::getValue((string) $id_hook);
             $position = (is_array($positions)) ? array_search($id_hook . '_' . $id_module, $positions) : null;
             $module = Module::getInstanceById($id_module);
             if (Validate::isLoadedObject($module)) {

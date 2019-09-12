@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,23 +16,24 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter;
 
+use Combination;
+use Configuration as ConfigurationLegacy;
+use Feature;
+use Language;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShopBundle\Exception\NotImplementedException;
-use Symfony\Component\HttpFoundation\ParameterBag;
 use Shop;
-use Combination;
-use Feature;
-use Configuration as ConfigurationLegacy;
+use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * Adapter of Configuration ObjectModel.
@@ -101,10 +102,14 @@ class Configuration extends ParameterBag implements ConfigurationInterface
             return constant($key);
         }
 
+        //If configuration has never been accessed it is still empty and hasKey/isLangKey will always return false
+        if (!ConfigurationLegacy::configurationIsLoaded()) {
+            ConfigurationLegacy::loadConfiguration();
+        }
+
         // if the key is multi lang related, we return an array with the value per language.
-        // getInt() meaning probably getInternational()
         if (ConfigurationLegacy::isLangKey($key)) {
-            return ConfigurationLegacy::getInt($key);
+            return $this->getLocalized($key);
         }
 
         if (ConfigurationLegacy::hasKey($key)) {
@@ -241,5 +246,23 @@ class Configuration extends ParameterBag implements ConfigurationInterface
     public function restrictUpdatesTo(Shop $shop)
     {
         $this->shop = $shop;
+    }
+
+    /**
+     * Get localized configuration in all languages
+     *
+     * @param string $key
+     *
+     * @return array Array of langId => localizedConfiguration
+     */
+    private function getLocalized($key)
+    {
+        $configuration = [];
+
+        foreach (Language::getIDs(false) as $langId) {
+            $configuration[$langId] = ConfigurationLegacy::get($key, $langId);
+        }
+
+        return $configuration;
     }
 }

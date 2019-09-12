@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -56,7 +56,7 @@ class ReferrerCore extends ObjectModel
         'primary' => 'id_referrer',
         'fields' => array(
             'name' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
-            'passwd' => array('type' => self::TYPE_STRING, 'validate' => 'isPasswd', 'size' => 32),
+            'passwd' => array('type' => self::TYPE_STRING, 'validate' => 'isPasswd', 'size' => 255),
             'http_referer_regexp' => array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'size' => 64),
             'request_uri_regexp' => array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'size' => 64),
             'http_referer_like' => array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'size' => 64),
@@ -140,7 +140,7 @@ class ReferrerCore extends ObjectModel
      * @param int $idProduct
      * @param int $employee
      *
-     * @return array|bool|null|object
+     * @return array|bool|object|null
      */
     public function getStatsVisits($idProduct, $employee)
     {
@@ -164,7 +164,7 @@ class ReferrerCore extends ObjectModel
 			LEFT JOIN ' . _DB_PREFIX_ . 'connections_page cp ON cp.id_connections = c.id_connections
 			' . $join . '
 			WHERE 1' .
-            ((isset($employee->stats_date_from) && isset($employee->stats_date_to)) ? ' AND cs.date_add BETWEEN \'' . pSQL($employee->stats_date_from) . ' 00:00:00\' AND \'' . pSQL($employee->stats_date_to) . ' 23:59:59\'' : '') .
+            ((isset($employee->stats_date_from, $employee->stats_date_to)) ? ' AND cs.date_add BETWEEN \'' . pSQL($employee->stats_date_from) . ' 00:00:00\' AND \'' . pSQL($employee->stats_date_to) . ' 23:59:59\'' : '') .
             Shop::addSqlRestriction(false, 'rs') .
             Shop::addSqlRestriction(false, 'c') .
             ' AND rc.id_referrer = ' . (int) $this->id .
@@ -216,7 +216,7 @@ class ReferrerCore extends ObjectModel
      * @param int $idProduct
      * @param int $employee
      *
-     * @return array|bool|null|object
+     * @return array|bool|object|null
      */
     public function getStatsSales($idProduct, $employee)
     {
@@ -265,7 +265,7 @@ class ReferrerCore extends ObjectModel
             }
 
             $sql .= ' FROM `' . _DB_PREFIX_ . 'orders`
-                WHERE `id_order` IN (' . implode($implode, ',') . ')
+                WHERE `id_order` IN (' . implode(',', $implode) . ')
                 ' . Shop::addSqlRestriction(Shop::SHARE_ORDER) . '
                 AND `valid` = 1';
 
@@ -366,7 +366,7 @@ class ReferrerCore extends ObjectModel
 
         // If it's a product and it has no visits nor orders
         if ((int) $idProduct && !$statsVisits['visits'] && !$statsSales['orders']) {
-            exit;
+            return;
         }
 
         $jsonArray = array(
@@ -387,6 +387,6 @@ class ReferrerCore extends ObjectModel
             'percent_fee' => Tools::displayPrice($statsSales['sales'] * $referrer->percent_fee / 100, $currency),
         );
 
-        die('[' . json_encode($jsonArray) . ']');
+        return json_encode([$jsonArray]);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,33 +16,33 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
+use AppKernel;
+use Configuration;
+use Context;
+use Currency;
+use Db;
+use DbQuery;
 use Doctrine\ORM\EntityManager;
+use Hook;
 use PrestaShop\PrestaShop\Adapter\Admin\AbstractAdminQueryBuilder;
 use PrestaShop\PrestaShop\Adapter\ImageManager;
 use PrestaShop\PrestaShop\Adapter\Validate;
 use PrestaShopBundle\Entity\AdminFilter;
 use PrestaShopBundle\Service\DataProvider\Admin\ProductInterface;
-use Psr\Cache\CacheItemPoolInterface;
-use AppKernel;
-use Db;
-use Context;
-use Hook;
 use Product;
-use Tools;
-use Configuration;
-use Currency;
-use DbQuery;
+use Psr\Cache\CacheItemPoolInterface;
 use StockAvailable;
+use Tools;
 
 /**
  * Data provider for new Architecture, about Product object model.
@@ -96,8 +96,8 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
                 'action' => 'catalogAction',
             ));
 
-            /* @var $filter AdminFilter */
-            if (is_null($filter)) {
+            /** @var $filter AdminFilter */
+            if (null === $filter) {
                 $filters = AdminFilter::getProductCatalogEmptyFilter();
             } else {
                 $filters = $filter->getProductCatalogFilter();
@@ -117,7 +117,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
     {
         $filters = $this->getPersistedFilterParameters();
 
-        return isset($filters['filter_category']) && $filters['filter_category'] > 0;
+        return !empty($filters['filter_category']) && $filters['filter_category'] > 0;
     }
 
     /**
@@ -163,6 +163,12 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
         }
 
         $this->entityManager->flush();
+
+        //Flush cache
+        $employee = Context::getContext()->employee;
+        $employeeId = $employee->id ?: 0;
+
+        $this->cache->deleteItem("app.product_filters_${employeeId}");
     }
 
     /**
@@ -224,7 +230,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
         $sqlSelect = array(
             'id_product' => array('table' => 'p', 'field' => 'id_product', 'filtering' => ' %s '),
             'reference' => array('table' => 'p', 'field' => 'reference', 'filtering' => self::FILTERING_LIKE_BOTH),
-            'price' => array('table' => 'p', 'field' => 'price', 'filtering' => ' %s '),
+            'price' => array('table' => 'sa', 'field' => 'price', 'filtering' => ' %s '),
             'id_shop_default' => array('table' => 'p', 'field' => 'id_shop_default'),
             'is_virtual' => array('table' => 'p', 'field' => 'is_virtual'),
             'name' => array('table' => 'pl', 'field' => 'name', 'filtering' => self::FILTERING_LIKE_BOTH),
@@ -361,9 +367,23 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
         $currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
         foreach ($products as &$product) {
             $product['total'] = $total; // total product count (filtered)
-            $product['price_final'] = Product::getPriceStatic($product['id_product'], true, null,
-                (int) Configuration::get('PS_PRICE_DISPLAY_PRECISION'), null, false, true, 1,
-                true, null, null, null, $nothing, true, true);
+            $product['price_final'] = Product::getPriceStatic(
+                $product['id_product'],
+                true,
+                null,
+                (int) Configuration::get('PS_PRICE_DISPLAY_PRECISION'),
+                null,
+                false,
+                false,
+                1,
+                true,
+                null,
+                null,
+                null,
+                $nothing,
+                true,
+                true
+            );
             if ($formatCldr) {
                 $product['price'] = Tools::displayPrice($product['price'], $currency);
                 $product['price_final'] = Tools::displayPrice($product['price_final'], $currency);

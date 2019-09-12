@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,28 +16,26 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter;
 
+use AdminController;
+use AdminLegacyLayoutControllerCore;
+use Context;
+use Currency;
 use Employee;
+use Language;
 use RuntimeException;
 use Smarty;
 use Symfony\Component\Process\Exception\LogicException;
-use Context;
-use Language;
-use AdminController;
-use Link;
 use Tab;
-use Tools as ToolsLegacy;
-use Dispatcher;
-use AdminLegacyLayoutControllerCore;
 
 /**
  * This adapter will complete the new architecture Context with legacy values.
@@ -46,6 +44,27 @@ use AdminLegacyLayoutControllerCore;
  */
 class LegacyContext
 {
+    /** @var Currency */
+    private $employeeCurrency;
+
+    /** @var string Contains the base uri for mail themes (by default https://domain.com/mails/themes/). Used for mails assets. */
+    private $mailThemesUri;
+
+    /** @var Tools */
+    private $tools;
+
+    /**
+     * @param string|null $mailThemesUri
+     * @param Tools|null $tools
+     */
+    public function __construct(
+        $mailThemesUri = null,
+        Tools $tools = null
+    ) {
+        $this->mailThemesUri = $mailThemesUri;
+        $this->tools = null !== $tools ? $tools : new Tools();
+    }
+
     /**
      * To be used only in Adapters. Should not been called by Core classes. Prefer to use Core\context class,
      * that will contains all you need in the Core architecture.
@@ -58,7 +77,7 @@ class LegacyContext
     {
         static $legacyContext = null;
 
-        if (is_null($legacyContext)) {
+        if (null === $legacyContext) {
             $legacyContext = Context::getContext();
 
             if ($legacyContext && !empty($legacyContext->shop) && !isset($legacyContext->controller) && isset($legacyContext->employee)) {
@@ -102,21 +121,29 @@ class LegacyContext
      */
     public function getAdminLink($controller, $withToken = true, $extraParams = array())
     {
-        $id_lang = Context::getContext()->language->id;
-        $params = $extraParams;
-        if ($withToken) {
-            $params['token'] = ToolsLegacy::getAdminTokenLite($controller);
-        }
+        return $this->getContext()->link->getAdminLink($controller, $withToken, $extraParams, $extraParams);
+    }
 
-        $link = new Link();
-
-        return $link->getBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . Dispatcher::getInstance()->createUrl($controller, $id_lang, $params, false);
+    /**
+     * Returns the controller link in its legacy form, without trying to convert it in symfony url.
+     *
+     * @param string $controller
+     * @param bool $withToken
+     * @param array $extraParams
+     *
+     * @return string
+     */
+    public function getLegacyAdminLink($controller, $withToken = true, $extraParams = array())
+    {
+        return $this->getContext()->link->getLegacyAdminLink($controller, $withToken, $extraParams);
     }
 
     /**
      * Adapter to get Front controller HTTP link.
      *
      * @param string $controller the controller name
+     *
+     * @return string
      */
     public function getFrontUrl($controller)
     {
@@ -133,6 +160,16 @@ class LegacyContext
     public function getRootUrl()
     {
         return __PS_BASE_URI__;
+    }
+
+    /**
+     * Url to the mail themes folder
+     *
+     * @return string
+     */
+    public function getMailThemesUrl()
+    {
+        return $this->tools->getShopDomainSsl(true) . __PS_BASE_URI__ . $this->mailThemesUri;
     }
 
     /**
@@ -224,16 +261,16 @@ class LegacyContext
 
     /**
      * Returns Currency set for the current employee.
+     *
+     * @return Currency
      */
     public function getEmployeeCurrency()
     {
-        static $employeeCurrency;
-
-        if (null === $employeeCurrency) {
-            $employeeCurrency = $this->getContext()->currency->sign;
+        if (null === $this->employeeCurrency && $this->getContext()->currency) {
+            $this->employeeCurrency = $this->getContext()->currency->sign;
         }
 
-        return $employeeCurrency;
+        return $this->employeeCurrency;
     }
 
     /**
@@ -265,9 +302,25 @@ class LegacyContext
             throw new RuntimeException('Cannot retrieve default employee tab. Employee does not exist in context!');
         }
 
-        $idTab = $idTab = $employee->default_tab;
+        $idTab = $employee->default_tab;
         $tab = new Tab($idTab);
 
         return $tab->class_name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMailThemesUri()
+    {
+        return $this->mailThemesUri;
+    }
+
+    /**
+     * @return array Returns both enabled and disabled languages
+     */
+    public function getAvailableLanguages()
+    {
+        return $this->getLanguages(false);
     }
 }

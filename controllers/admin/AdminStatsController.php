@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,16 +16,16 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 
 class AdminStatsControllerCore extends AdminStatsTabController
 {
@@ -158,7 +158,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
     {
         $context = Context::getContext();
         $logged_on_addons = false;
-        if (isset($context->cookie->username_addons) && isset($context->cookie->password_addons)
+        if (isset($context->cookie->username_addons, $context->cookie->password_addons)
             && !empty($context->cookie->username_addons) && !empty($context->cookie->password_addons)
         ) {
             $logged_on_addons = true;
@@ -265,7 +265,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
             $sales = array();
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
                 '
-			SELECT LEFT(`invoice_date`, 10) AS date, SUM(total_products / o.conversion_rate) AS sales
+			SELECT LEFT(`invoice_date`, 10) AS date, SUM((total_paid_tax_excl - total_shipping_tax_excl) / o.conversion_rate) AS sales
 			FROM `' . _DB_PREFIX_ . 'orders` o
 			LEFT JOIN `' . _DB_PREFIX_ . 'order_state` os ON o.current_state = os.id_order_state
 			WHERE `invoice_date` BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59" AND os.logable = 1
@@ -281,7 +281,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
             $sales = array();
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
                 '
-			SELECT LEFT(`invoice_date`, 7) AS date, SUM(total_products / o.conversion_rate) AS sales
+			SELECT LEFT(`invoice_date`, 7) AS date, SUM((total_paid_tax_excl - total_shipping_tax_excl) / o.conversion_rate) AS sales
 			FROM `' . _DB_PREFIX_ . 'orders` o
 			LEFT JOIN `' . _DB_PREFIX_ . 'order_state` os ON o.current_state = os.id_order_state
 			WHERE `invoice_date` BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59" AND os.logable = 1
@@ -296,7 +296,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
         } else {
             return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
                 '
-			SELECT SUM(total_products / o.conversion_rate)
+			SELECT SUM((total_paid_tax_excl - total_shipping_tax_excl) / o.conversion_rate)
 			FROM `' . _DB_PREFIX_ . 'orders` o
 			LEFT JOIN `' . _DB_PREFIX_ . 'order_state` os ON o.current_state = os.id_order_state
 			WHERE `invoice_date` BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59" AND os.logable = 1
@@ -377,8 +377,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 		SELECT COUNT(*)
 		FROM `' . _DB_PREFIX_ . 'category` c
 		' . Shop::addSqlAssociation('category', 'c') . '
-		AND c.active = 1
-		AND c.nright = c.nleft + 1'
+		AND c.`id_category` != ' . (int) Configuration::get('PS_ROOT_CATEGORY')
         );
         $used = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
             '
@@ -386,11 +385,10 @@ class AdminStatsControllerCore extends AdminStatsTabController
 		FROM `' . _DB_PREFIX_ . 'category` c
 		LEFT JOIN `' . _DB_PREFIX_ . 'category_product` cp ON c.id_category = cp.id_category
 		' . Shop::addSqlAssociation('category', 'c') . '
-		AND c.active = 1
-		AND c.nright = c.nleft + 1'
+		AND c.`id_category` != ' . (int) Configuration::get('PS_ROOT_CATEGORY')
         );
 
-        return intval($total - $used);
+        return (int) ($total - $used);
     }
 
     public static function getCustomerMainGender()
@@ -673,6 +671,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
                     'CONVERSION_RATE_EXPIRE',
                     strtotime(date('Y-m-d 00:00:00', strtotime('+1 day')))
                 );
+
                 break;
 
             case 'abandoned_cart':
@@ -682,30 +681,35 @@ class AdminStatsControllerCore extends AdminStatsTabController
                 );
                 ConfigurationKPI::updateValue('ABANDONED_CARTS', $value);
                 ConfigurationKPI::updateValue('ABANDONED_CARTS_EXPIRE', strtotime('+1 hour'));
+
                 break;
 
             case 'installed_modules':
                 $value = AdminStatsController::getInstalledModules();
                 ConfigurationKPI::updateValue('INSTALLED_MODULES', $value);
                 ConfigurationKPI::updateValue('INSTALLED_MODULES_EXPIRE', strtotime('+2 min'));
+
                 break;
 
             case 'disabled_modules':
                 $value = AdminStatsController::getDisabledModules();
                 ConfigurationKPI::updateValue('DISABLED_MODULES', $value);
                 ConfigurationKPI::updateValue('DISABLED_MODULES_EXPIRE', strtotime('+2 min'));
+
                 break;
 
             case 'update_modules':
                 $value = AdminStatsController::getModulesToUpdate();
                 ConfigurationKPI::updateValue('UPDATE_MODULES', $value);
                 ConfigurationKPI::updateValue('UPDATE_MODULES_EXPIRE', strtotime('+2 min'));
+
                 break;
 
             case 'percent_product_stock':
                 $value = AdminStatsController::getPercentProductStock();
                 ConfigurationKPI::updateValue('PERCENT_PRODUCT_STOCK', $value);
                 ConfigurationKPI::updateValue('PERCENT_PRODUCT_STOCK_EXPIRE', strtotime('+4 hour'));
+
                 break;
 
             case 'percent_product_out_of_stock':
@@ -717,6 +721,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
                 );
                 ConfigurationKPI::updateValue('PERCENT_PRODUCT_OUT_OF_STOCK', $value);
                 ConfigurationKPI::updateValue('PERCENT_PRODUCT_OUT_OF_STOCK_EXPIRE', strtotime('+4 hour'));
+
                 break;
 
             case 'product_avg_gross_margin':
@@ -728,12 +733,14 @@ class AdminStatsControllerCore extends AdminStatsTabController
                 );
                 ConfigurationKPI::updateValue('PRODUCT_AVG_GROSS_MARGIN', $value);
                 ConfigurationKPI::updateValue('PRODUCT_AVG_GROSS_MARGIN_EXPIRE', strtotime('+6 hour'));
+
                 break;
 
             case 'disabled_categories':
                 $value = AdminStatsController::getDisabledCategories();
                 ConfigurationKPI::updateValue('DISABLED_CATEGORIES', $value);
                 ConfigurationKPI::updateValue('DISABLED_CATEGORIES_EXPIRE', strtotime('+2 hour'));
+
                 break;
 
             case 'disabled_products':
@@ -748,6 +755,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
                 );
                 ConfigurationKPI::updateValue('DISABLED_PRODUCTS', $value);
                 ConfigurationKPI::updateValue('DISABLED_PRODUCTS_EXPIRE', strtotime('+2 hour'));
+
                 break;
 
             case '8020_sales_catalog':
@@ -760,12 +768,14 @@ class AdminStatsControllerCore extends AdminStatsTabController
                 $value = $this->trans('%value%% of your Catalog', array('%value%' => $value), 'Admin.Stats.Feature');
                 ConfigurationKPI::updateValue('8020_SALES_CATALOG', $value);
                 ConfigurationKPI::updateValue('8020_SALES_CATALOG_EXPIRE', strtotime('+12 hour'));
+
                 break;
 
             case 'empty_categories':
                 $value = AdminStatsController::getEmptyCategories();
                 ConfigurationKPI::updateValue('EMPTY_CATEGORIES', $value);
                 ConfigurationKPI::updateValue('EMPTY_CATEGORIES_EXPIRE', strtotime('+2 hour'));
+
                 break;
 
             case 'customer_main_gender':
@@ -786,6 +796,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
                     'CUSTOMER_MAIN_GENDER_EXPIRE',
                     array($this->context->language->id => strtotime('+1 day'))
                 );
+
                 break;
 
             case 'avg_customer_age':
@@ -795,12 +806,14 @@ class AdminStatsControllerCore extends AdminStatsTabController
                     'AVG_CUSTOMER_AGE_EXPIRE',
                     array($this->context->language->id => strtotime('+1 day'))
                 );
+
                 break;
 
             case 'pending_messages':
                 $value = (int) AdminStatsController::getPendingMessages();
                 ConfigurationKPI::updateValue('PENDING_MESSAGES', $value);
                 ConfigurationKPI::updateValue('PENDING_MESSAGES_EXPIRE', strtotime('+5 min'));
+
                 break;
 
             case 'avg_msg_response_time':
@@ -810,6 +823,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
                 )), 'Admin.Stats.Feature');
                 ConfigurationKPI::updateValue('AVG_MSG_RESPONSE_TIME', $value);
                 ConfigurationKPI::updateValue('AVG_MSG_RESPONSE_TIME_EXPIRE', strtotime('+4 hour'));
+
                 break;
 
             case 'messages_per_thread':
@@ -822,6 +836,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
                 );
                 ConfigurationKPI::updateValue('MESSAGES_PER_THREAD', $value);
                 ConfigurationKPI::updateValue('MESSAGES_PER_THREAD_EXPIRE', strtotime('+12 hour'));
+
                 break;
 
             case 'newsletter_registrations':
@@ -847,12 +862,14 @@ class AdminStatsControllerCore extends AdminStatsTabController
 
                 ConfigurationKPI::updateValue('NEWSLETTER_REGISTRATIONS', $value);
                 ConfigurationKPI::updateValue('NEWSLETTER_REGISTRATIONS_EXPIRE', strtotime('+6 hour'));
+
                 break;
 
             case 'enabled_languages':
                 $value = Language::countActiveLanguages();
                 ConfigurationKPI::updateValue('ENABLED_LANGUAGES', $value);
                 ConfigurationKPI::updateValue('ENABLED_LANGUAGES_EXPIRE', strtotime('+1 min'));
+
                 break;
 
             case 'frontoffice_translations':
@@ -876,6 +893,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
                 $value .= '%';
                 ConfigurationKPI::updateValue('FRONTOFFICE_TRANSLATIONS', $value);
                 ConfigurationKPI::updateValue('FRONTOFFICE_TRANSLATIONS_EXPIRE', strtotime('+2 min'));
+
                 break;
 
             case 'main_country':
@@ -899,6 +917,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
                     'MAIN_COUNTRY_EXPIRE',
                     array($this->context->language->id => strtotime('+1 day'))
                 );
+
                 break;
 
             case 'orders_per_customer':
@@ -922,6 +941,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 
                 ConfigurationKPI::updateValue('ORDERS_PER_CUSTOMER', $value);
                 ConfigurationKPI::updateValue('ORDERS_PER_CUSTOMER_EXPIRE', strtotime('+1 day'));
+
                 break;
 
             case 'average_order_value':
@@ -945,6 +965,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
                     'AVG_ORDER_VALUE_EXPIRE',
                     strtotime(date('Y-m-d 00:00:00', strtotime('+1 day')))
                 );
+
                 break;
 
             case 'netprofit_visit':
@@ -969,6 +990,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
                     'NETPROFIT_VISIT_EXPIRE',
                     strtotime(date('Y-m-d 00:00:00', strtotime('+1 day')))
                 );
+
                 break;
 
             case 'products_per_category':
@@ -977,6 +999,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
                 $value = round($products / $categories);
                 ConfigurationKPI::updateValue('PRODUCTS_PER_CATEGORY', $value);
                 ConfigurationKPI::updateValue('PRODUCTS_PER_CATEGORY_EXPIRE', strtotime('+1 hour'));
+
                 break;
 
             case 'top_category':
@@ -995,6 +1018,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
                     'TOP_CATEGORY_EXPIRE',
                     array($this->context->language->id => strtotime('+1 day'))
                 );
+
                 break;
 
             default:
@@ -1008,5 +1032,72 @@ class AdminStatsControllerCore extends AdminStatsTabController
             die(json_encode($array));
         }
         die(json_encode(array('has_errors' => true)));
+    }
+
+    /**
+     * Display graphs on the stats page from module data.
+     */
+    public function displayAjaxGraphDraw()
+    {
+        $module = Tools::getValue('module');
+        $render = Tools::getValue('render');
+        $type = Tools::getValue('type');
+        $option = Tools::getValue('option');
+        $layers = Tools::getValue('layers');
+        $width = Tools::getValue('width');
+        $height = Tools::getValue('height');
+        $id_employee = Tools::getValue('id_employee');
+        $id_lang = Tools::getValue('id_lang');
+
+        $graph = Module::getInstanceByName($module);
+        if (false === $graph) {
+            $this->ajaxRender(Tools::displayError());
+
+            return;
+        }
+
+        $graph->setEmployee($id_employee);
+        $graph->setLang($id_lang);
+        if ($option) {
+            $graph->setOption($option, $layers);
+        }
+
+        $graph->create($render, $type, $width, $height, $layers);
+        $graph->draw();
+    }
+
+    /**
+     * Display grid with module data on the stats page.
+     */
+    public function displayAjaxGraphGrid()
+    {
+        $module = Tools::getValue('module');
+        $render = Tools::getValue('render');
+        $type = Tools::getValue('type');
+        $option = Tools::getValue('option');
+        $width = (int) (Tools::getValue('width', 600));
+        $height = (int) (Tools::getValue('height', 920));
+        $start = (int) (Tools::getValue('start', 0));
+        $limit = (int) (Tools::getValue('limit', 40));
+        $sort = Tools::getValue('sort', 0); // Should be a String. Default value is an Integer because we don't know what can be the name of the column to sort.
+        $dir = Tools::getValue('dir', 0); // Should be a String : Either ASC or DESC
+        $id_employee = (int) (Tools::getValue('id_employee'));
+        $id_lang = (int) (Tools::getValue('id_lang'));
+
+        $grid = Module::getInstanceByName($module);
+        if (false === $grid) {
+            $this->ajaxRender(Tools::displayError());
+
+            return;
+        }
+
+        $grid->setEmployee($id_employee);
+        $grid->setLang($id_lang);
+        if ($option) {
+            $grid->setOption($option);
+        }
+
+        $grid->create($render, $type, $width, $height, $start, $limit, $sort, $dir);
+        $grid->render();
     }
 }

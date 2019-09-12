@@ -1,6 +1,14 @@
+/**
+ * This script is based on scenarios described in this combination of the following tests link
+ * [id="PS-120"][Name="Create a category"]
+ * [id="PS-121"][Name="Edit a category"]
+ * [id="PS-122"][Name="Delete a category"]
+ **/
+
 const {AccessPageBO} = require('../../../../selectors/BO/access_page');
 const {Menu} = require('../../../../selectors/BO/menu.js');
 const common_scenarios = require('../../../common_scenarios/pages');
+const welcomeScenarios = require('../../../common_scenarios/welcome');
 
 let categoryDataWithoutSubCategory = {
   name: 'Category',
@@ -59,6 +67,7 @@ scenario('Create, edit and delete "CATEGORIES"', () => {
     test('should log in successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'design');
 
+  welcomeScenarios.findAndCloseWelcomeModal();
   common_scenarios.createCategory(categoryDataWithSubCategory);
   common_scenarios.checkCategoryBO(categoryDataWithSubCategory);
   common_scenarios.editCategory(categoryDataWithSubCategory, newCategoryData);

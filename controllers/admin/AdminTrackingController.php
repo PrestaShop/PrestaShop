@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,13 +16,14 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 
 /**
  * @property Product|Category $object
@@ -92,8 +93,6 @@ class AdminTrackingControllerCore extends AdminController
 
         $this->addRowAction('edit');
         $this->addRowAction('view');
-        $this->addRowAction('delete');
-        $this->addRowActionSkipList('delete', array((int) Configuration::get('PS_ROOT_CATEGORY')));
         $this->addRowActionSkipList('edit', array((int) Configuration::get('PS_ROOT_CATEGORY')));
 
         $this->fields_list = (array(
@@ -324,7 +323,7 @@ class AdminTrackingControllerCore extends AdminController
             'id_product' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'class' => 'fixed-width-xs', 'align' => 'center'),
             'reference' => array('title' => $this->trans('Reference', array(), 'Admin.Global')),
             'name' => array('title' => $this->trans('Name', array(), 'Admin.Global'), 'filter_key' => 'b!name'),
-            'active' => array('title' => $this->trans('Status', array(), 'Admin.Global'), 'type' => 'bool', 'active' => 'status', 'align' => 'center', 'class' => 'fixed-width-xs'),
+            'active' => array('title' => $this->trans('Status', array(), 'Admin.Global'), 'type' => 'bool', 'active' => 'status', 'align' => 'center', 'class' => 'fixed-width-xs', 'ajax' => true),
         );
         $this->clearFilters();
         $this->_join = Shop::addSqlAssociation('product', 'a');
@@ -382,6 +381,29 @@ class AdminTrackingControllerCore extends AdminController
         $this->_helper_list->currentIndex = $this->_list_index;
         $this->_helper_list->identifier = $this->identifier;
         $this->_helper_list->table = $this->table;
+
+        // Since Categories controller is migrated to Symfony
+        // it makes use of new endpoint instead of relaying on legacy controller
+        if ($this->list_id === 'empty_categories') {
+            $url = SymfonyContainer::getInstance()->get('router')->generate('admin_categories_toggle_status', [
+                'categoryId' => $id,
+            ]);
+            $this->context->smarty->assign('migrated_url_enable', $url);
+
+            $html = $this->_helper_list->displayEnableLink(
+                $this->_list_token,
+                $id,
+                $value,
+                $active,
+                $id_category,
+                $id_product,
+                true
+            );
+
+            $this->context->smarty->clearAssign('migrated_url_enable');
+
+            return $html;
+        }
 
         return $this->_helper_list->displayEnableLink($this->_list_token, $id, $value, $active, $id_category, $id_product);
     }
