@@ -107,6 +107,8 @@ function updateProduct(event, eventType, updateUrl) {
   const $quantityWantedInput = $productActions.find('#quantity_wanted');
   const formSerialized = $productActions.find('form:first').serialize();
   let preview = psGetRequestParameter('preview');
+  // Use a parent variable to define if we are at quickview modal window or at main producto page
+  const parent = ($(".modal.quickview").length > 0) ? $(".modal.quickview .product-actions") : $("#product .product-actions");
 
   if (preview !== null) {
     preview = '&preview=' + preview;
@@ -174,16 +176,16 @@ function updateProduct(event, eventType, updateUrl) {
         const $newImagesContainer = $('<div>').append(data.product_cover_thumbnails);
 
         // Used to avoid image blinking if same image = epileptic friendly
-        if ($('.images-container').html() !== $newImagesContainer.find('.images-container').html()) {
-          $('.images-container').replaceWith(data.product_cover_thumbnails);
+        if (parent.find('.images-container').html() !== $newImagesContainer.find('.images-container').html()) {
+          parent.find('.images-container').replaceWith(data.product_cover_thumbnails);
         }
-        $('.product-prices').replaceWith(data.product_prices);
-        $('.product-customization').replaceWith(data.product_customization);
-        $('.product-variants').replaceWith(data.product_variants);
-        $('.product-discounts').replaceWith(data.product_discounts);
-        $('.product-additional-info').replaceWith(data.product_additional_info);
-        $('#product-details').replaceWith(data.product_details);
-        $('.product-flags').replaceWith(data.product_flags);
+        parent.find('.product-prices').replaceWith(data.product_prices);
+        parent.find('.product-customization').replaceWith(data.product_customization);
+        parent.find('.product-variants').replaceWith(data.product_variants);
+        parent.find('.product-discounts').replaceWith(data.product_discounts);
+        parent.find('.product-additional-info').replaceWith(data.product_additional_info);
+        parent.find('#product-details').replaceWith(data.product_details);
+        parent.find('.product-flags').replaceWith(data.product_flags);
         replaceAddToCartSections(data);
         const minimalProductQuantity = parseInt(data.product_minimal_quantity, 10);
 
@@ -212,6 +214,7 @@ function updateProduct(event, eventType, updateUrl) {
  */
 function replaceAddToCartSections(data) {
   let $productAddToCart = null;
+  const parent = ($(".modal.quickview").length > 0) ? $(".modal.quickview .product-actions") : $("#product .product-actions");
 
   $(data.product_add_to_cart).each((index, value) => {
     if ($(value).hasClass('product-add-to-cart')) {
@@ -224,7 +227,7 @@ function replaceAddToCartSections(data) {
   if ($productAddToCart === null) {
     showErrorNextToAddtoCartButton();
   }
-  const $addProductToCart = $('.product-add-to-cart');
+  const $addProductToCart = parent.find('.product-add-to-cart');
   const productAvailabilitySelector = '.add';
   const productAvailabilityMessageSelector = '#product-availability';
   const productMinimalQuantitySelector = '.product-minimal-quantity';
