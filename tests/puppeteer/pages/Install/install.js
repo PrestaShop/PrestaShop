@@ -138,7 +138,6 @@ module.exports = class Install extends CommonPage {
     if (await this.elementVisible(this.createDbButton, 3000)) {
       await this.page.click(this.createDbButton);
     }
-    await this.page.screenshot({path: '../Selenium/errorShots/example.png'});
     await this.page.waitForSelector(this.dbResultCheckOkBlock);
   }
 
