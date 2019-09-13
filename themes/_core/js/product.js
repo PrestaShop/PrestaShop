@@ -107,7 +107,7 @@ function updateProduct(event, eventType, updateUrl) {
   const $quantityWantedInput = $productActions.find('#quantity_wanted');
   const formSerialized = $productActions.find('form:first').serialize();
   let preview = psGetRequestParameter('preview');
-  // Use a parent variable to define if we are at quickview modal window or at main producto page
+  // Use a parent constant to define if we are at quickview modal window or at main producto page
   const parent = ($(".modal.quickview").length > 0) ? $(".modal.quickview .product-actions") : $("#product .product-actions");
 
   if (preview !== null) {
