@@ -28,6 +28,7 @@ export default class Form {
   init(){
     this.parentFocus();
     this.togglePasswordVisibility();
+    this.trimWhiteSpaces();
   }
 
   parentFocus() {
@@ -50,6 +51,12 @@ export default class Form {
         $(this).text($(this).data('textShow'));
       }
 
+    });
+  }
+
+  trimWhiteSpaces(){
+    $("input[name='firstname'], input[name='lastname']").on('blur', function() {
+      this.value = this.value.trim();
     });
   }
 }
