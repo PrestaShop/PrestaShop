@@ -1,13 +1,9 @@
 #!/bin/bash
 
-bash travis-scripts/run-selenium-tests;
-SELENIUM=$?
-
-# run-functional-tests must run before starter theme
 bash travis-scripts/run-functional-tests;
 FUNCTIONAL=$?
 
-if [[ "$SELENIUM" == "0" && "$FUNCTIONAL" == "0" ]]; then
+if [[ "$FUNCTIONAL" == "0" ]]; then
   echo -e "\e[92mE2E TESTS OK"
   exit 0;
 else
