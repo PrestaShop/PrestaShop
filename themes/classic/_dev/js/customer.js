@@ -40,3 +40,8 @@ function setupCustomerScripts() {
 }
 
 $(document).ready(setupCustomerScripts);
+
+//trim unnecessary white spaces from customer name
+$("input[name='firstname'], input[name='lastname']").on('blur', function() {
+  this.value = this.value.trim();
+});
