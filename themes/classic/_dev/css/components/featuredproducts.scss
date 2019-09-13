@@ -6,6 +6,9 @@ $product-description-height: 70px;
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
+    @include media-breakpoint-down(sm) {
+      justify-content: center;
+    }
   }
   .product-thumbnail {
     display: block;
