@@ -33,30 +33,25 @@ global.scenario('Filter the Orders table by ID, REFERENCE, STATUS', async () => 
     await expect(pageTitle).to.contains(dashboardPage.pageTitle);
     await boBasePage.closeOnboardingModal();
   });
-
   test('should go to the Orders page', async () => {
     await boBasePage.goToSubMenu(boBasePage.ordersParentLink, orderPage.ordersLink);
     const pageTitle = await orderPage.getPageTitle();
     await expect(pageTitle).to.contains(orderPage.pageTitle);
   });
-
   test('should filter the Orders table by ID and check the result', async () => {
     await orderPage.filterTableByInput(orderPage.orderFilterIdInput, '1', orderPage.searchButton);
     await boBasePage.checkTextValue(orderPage.orderfirstLineIdTD, '1');
     await orderPage.waitForSelectorAndClick(orderPage.resetButton);
   });
-
   test('should filter the Orders table by REFERENCE and check the result', async () => {
     await orderPage.filterTableByInput(orderPage.orderFilterReferenceInput, 'FFATNOMMJ', orderPage.searchButton);
     await boBasePage.checkTextValue(orderPage.orderfirstLineReferenceTD, 'FFATNOMMJ');
     await orderPage.waitForSelectorAndClick(orderPage.resetButton);
   });
-
   test('should filter the Orders table by STATUS and check the result', async () => {
     await orderPage.filterTableBySelect(orderPage.orderFilterStatusSelect, '8');
     await orderPage.checkTextValue(orderPage.orderfirstLineStatusTD, 'Payment error');
   });
-
   test('should logout from the BO', async () => {
     await boBasePage.logoutBO();
     const pageTitle = await loginPage.getPageTitle();

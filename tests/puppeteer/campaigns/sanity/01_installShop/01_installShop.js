@@ -1,5 +1,5 @@
 // Importing pages
-const InstallPage = require('../../pages/Install/install');
+const InstallPage = require('../../../pages/Install/install');
 
 let page;
 let installPage;

@@ -25,19 +25,16 @@ global.scenario('Filter Products by categories in Home page', () => {
     await homePage.goTo(global.URL_FO);
     await homePage.checkHomePage();
   });
-
   test('should check and get the products number', async () => {
     await homePage.waitForSelectorAndClick(homePage.allProductLink);
     allProductsNumber = await homePage.getNumberFromText(homePage.totalProducts);
     await expect(allProductsNumber).to.be.above(0);
   });
-
   test('should filter products by the category "Accessories" and check result', async () => {
     await homePage.filterByCategory('6');
     const numberOfProducts = await homePage.getNumberFromText(homePage.totalProducts);
     await expect(numberOfProducts).to.be.below(allProductsNumber);
   });
-
   test('should filter products by the subcategory "Stationery" and check result', async () => {
     await homePage.filterSubCategory('6', '7');
     const numberOfProducts = await homePage.getNumberFromText(homePage.totalProducts);

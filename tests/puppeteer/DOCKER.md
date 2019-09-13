@@ -9,12 +9,12 @@ docker-compose -f docker-compose.nightly.yml -f docker-compose.tests.yml up --bu
 docker-compose -f docker-compose.nightly.yml -f docker-compose.tests.yml exec -e COMMAND="linkchecker" tests bash /tmp/run-tests.sh
 ```
 
-### Smoke tests
+### Sanity tests
 
 ```bash
 # Create Shop and running test
 docker-compose -f docker-compose.nightly.yml -f docker-compose.tests.yml up --build
-docker-compose -f docker-compose.nightly.yml -f docker-compose.tests.yml exec -e COMMAND="smoke-tests" tests bash /tmp/run-tests.sh
+docker-compose -f docker-compose.nightly.yml -f docker-compose.tests.yml exec -e COMMAND="sanity-tests" tests bash /tmp/run-tests.sh
 ```
 ### Upgrade test
 For this specific test you need to specify which Prestashop Version you need to install.
