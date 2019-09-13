@@ -52,12 +52,13 @@ module.exports = class CommonPage {
    * @param selector, where to click
    * @return newPage, what was opened by the browser
    */
-  async openLinkWithTargetBlank(currentPage, selector) {
+  async openLinkWithTargetBlank(currentPage, selector, waitForNavigation = true) {
     const [newPage] = await Promise.all([
       new Promise(resolve => this.page.once('popup', resolve)),
       currentPage.click(selector),
     ]);
-    await newPage.waitForNavigation({waitUntil: 'networkidle0'});
+    if(waitForNavigation)
+      await newPage.waitForNavigation({waitUntil: 'networkidle0'});
     await newPage.waitForSelector('body', {visible: true});
     return newPage;
   }

@@ -165,7 +165,7 @@ module.exports = class Install extends CommonPage {
    */
   async goAndCheckFOAfterInstall() {
     await this.page.waitForSelector(this.discoverFoButton, {visible: true});
-    const FOPage = await this.openLinkWithTargetBlank(this.page, this.discoverFoButton);
+    const FOPage = await this.openLinkWithTargetBlank(this.page, this.discoverFoButton, false);
     await FOPage.bringToFront();
     await FOPage.waitForSelector(this.FOLogo, {visible: true});
     await FOPage.waitForSelector(this.userInfoHeaderIcon, {visible: true});
