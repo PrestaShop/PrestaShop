@@ -7,7 +7,7 @@ PROJECT_PATH=$(cd "$( dirname "$0" )/../" && pwd)
 cd $PROJECT_PATH/tests/puppeteer && npm install
 
 echo "* Running puppeteer sanity tests ...";
-DISPLAY=:10 HEADLESS=true URL_FO="http://localhost/" npm run sanity-tests
+DISPLAY=:10 HEADLESS=true URL_FO="http://localhost/" DB_USER="root" DB_USER="" npm run sanity-tests
 status=$?
 popd
 
