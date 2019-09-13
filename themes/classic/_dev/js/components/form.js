@@ -55,7 +55,7 @@ export default class Form {
   }
 
   trimWhiteSpaces(){
-    $("input[name='firstname'], input[name='lastname']").on('blur', function() {
+    $('input[name="firstname"], input[name="lastname"]').on('blur', function() {
       this.value = this.value.trim();
     });
   }
