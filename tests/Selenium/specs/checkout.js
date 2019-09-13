@@ -31,10 +31,6 @@ const existingCustomerScenario = Object.assign({}, guestScenario, {
 });
 
 const scenarios = [
-  existingCustomerScenario,
-  guestScenario,
-  guestScenarioDifferentAddresses,
-  registrationScenario
 ];
 
 describe("The Checkout Process", function () {
