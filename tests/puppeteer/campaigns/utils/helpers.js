@@ -18,12 +18,10 @@ global.scenario = (name, tests, init, close = false) => describe(name, async () 
     });
     await init();
   });
+  after(async () => {
+    if(close)
+      await global.browser.close();
+  });
 
   await tests();
-
-  if (close) {
-    await after(async () => {
-      await global.browser.close();
-    });
-  }
 });
