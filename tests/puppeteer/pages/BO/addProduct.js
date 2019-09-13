@@ -128,7 +128,15 @@ module.exports = class AddProduct extends BOBasePage {
    * @return page opened
    */
   async previewProduct() {
-    return this.openLinkWithTargetBlank(this.page, this.previewProductLink);
+    this.page = await this.openLinkWithTargetBlank(this.page, this.previewProductLink);
+    const textBody = await this.getTextContent('body');
+    if(await textBody.includes('[Debug] This page has moved')) {
+      await Promise.all([
+        this.page.waitForNavigation({waitUntil: 'networkidle0'}),
+        this.page.click('a'),
+      ]);
+    }
+    return this.page;
   }
 
   /**
