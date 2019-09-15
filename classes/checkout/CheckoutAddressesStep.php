@@ -315,6 +315,7 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
                 ));
             }
         }
+        
         return parent::setComplete($step_is_complete);
     }
 }
