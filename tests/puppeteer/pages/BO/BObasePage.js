@@ -122,7 +122,8 @@ module.exports = class BOBasePage extends CommonPage {
    * @return {Promise<void>}
    */
   async closeSfToolBar() {
-    if(await this.elementVisible(`${this.sfToolbarMainContentDiv}[style='display: block;']`, 1000))
+    if (await this.elementVisible(`${this.sfToolbarMainContentDiv}[style='display: block;']`, 1000)) {
       await this.page.click(this.sfCloseToolbarLink);
+    }
   }
 };

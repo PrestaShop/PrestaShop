@@ -57,8 +57,7 @@ module.exports = class CommonPage {
       new Promise(resolve => this.page.once('popup', resolve)),
       currentPage.click(selector),
     ]);
-    if(waitForNavigation)
-      await newPage.waitForNavigation({waitUntil: 'networkidle0'});
+    if (waitForNavigation) await newPage.waitForNavigation({waitUntil: 'networkidle0'});
     await newPage.waitForSelector('body', {visible: true});
     return newPage;
   }
