@@ -9,6 +9,5 @@ cd $PROJECT_PATH/tests/puppeteer && npm install
 echo "* Running puppeteer sanity tests ...";
 DISPLAY=:10 HEADLESS=true URL_FO="http://localhost/" DB_USER="root" DB_PASSWD="empty_string" npm run sanity-tests
 status=$?
-popd
 
 exit $status
