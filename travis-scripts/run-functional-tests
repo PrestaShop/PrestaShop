@@ -19,7 +19,7 @@ sleep 5
 
 echo "* Running functional tests ...";
 
-npm test -- --MODULE=ps_legalcompliance
+npm test --verbose -- --MODULE=ps_legalcompliance
 status=$?
 
 popd
