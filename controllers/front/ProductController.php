@@ -890,10 +890,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 // The price may be directly set
 
                 /** @var float $currentPriceDefaultCurrency current price with taxes in default currency */
-                $currentPriceDefaultCurrency = $row['price'];
-                if (Product::$_taxCalculationMethod == PS_TAX_INC && $row['reduction_tax']) {
-                    $currentPriceDefaultCurrency *= (1 + $tax_rate / 100) + (float) $ecotax_amount;
-                }
+                $currentPriceDefaultCurrency = $this->calculatePriceDefaultCurrency($row, $tax_rate, $ecotax_amount);
 
                 // Since this price is set in default currency,
                 // we need to convert it into current currency
@@ -956,6 +953,25 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         }
 
         return $specific_prices;
+    }
+
+    /**
+     * @param array $specificPrice
+     * @param float $taxRate
+     * @param float $ecoTaxAmount
+     *
+     * @return mixed
+     */
+    private function calculatePriceDefaultCurrency($specificPrice, $taxRate, $ecoTaxAmount)
+    {
+        $priceDefaultCurrency = $specificPrice['price'];
+
+        // only apply tax rate when tax calculation method is set to PS_TAX_INC
+        if (Product::$_taxCalculationMethod == PS_TAX_INC && $specificPrice['reduction_tax']) {
+            $priceDefaultCurrency *= (1 + $taxRate / 100) + (float) $ecoTaxAmount;
+        }
+
+        return $priceDefaultCurrency;
     }
 
     public function getProduct()
