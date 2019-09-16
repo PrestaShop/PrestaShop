@@ -22,6 +22,7 @@ echo "* Running functional tests ...";
 npm test --verbose -- --MODULE=ps_legalcompliance
 status=$?
 
+
 popd
 
 exit $status
