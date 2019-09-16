@@ -81,10 +81,12 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
         }
 
         // Can't really hurt to set the firstname and lastname.
-        $this->addressForm->fillWith(array(
+        $this->addressForm->fillWith(
+            array(
             'firstname' => $this->getCheckoutSession()->getCustomer()->firstname,
             'lastname' => $this->getCheckoutSession()->getCustomer()->lastname,
-        ));
+            )
+        );
 
         if (isset($requestParams['saveAddress'])) {
             $saved = $this->addressForm->fillWith($requestParams)->submit();
@@ -305,15 +307,16 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
     
     public function setComplete($step_is_complete)
     {
-        if ($step_is_complete && $this->context->cart->id_carrier == 0) {
-            $deliveryOptionSelected = $this->getCheckoutSession()->getSelectedDeliveryOption();
+        if ($step_is_complete &&
+                $this->context->cart->id_carrier == 0 &&
+                ($deliveryOptionSelected =
+                    $this->getCheckoutSession()->getSelectedDeliveryOption())) {
             $id_address = $this->context->cart->id_address_delivery;
-
-            if ($deliveryOptionSelected) {
-                $this->getCheckoutSession()->setDeliveryOption(array(
-                    $id_address => $deliveryOptionSelected,
-                ));
-            }
+            $this->getCheckoutSession()->setDeliveryOption(
+                array(
+                    $id_address => $deliveryOptionSelected
+                )
+            );
         }
         
         return parent::setComplete($step_is_complete);
