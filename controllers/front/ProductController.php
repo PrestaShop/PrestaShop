@@ -976,7 +976,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $priceDefaultCurrency = $specificPriceValue;
 
         // only apply tax rate when tax calculation method is set to PS_TAX_INC
-        if (Product::$_taxCalculationMethod == PS_TAX_INC && $specificPriceReductionTax) {
+        if (Product::$_taxCalculationMethod === PS_TAX_INC && $specificPriceReductionTax) {
             $priceDefaultCurrency *= (1 + $taxRate / 100) + (float) $ecoTaxAmount;
         }
 
