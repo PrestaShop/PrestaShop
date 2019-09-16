@@ -1206,7 +1206,19 @@ class CartRuleCore extends ObjectModel
                 $selected_products = $this->checkProductRestrictionsFromCart($context->cart, true);
                 if (is_array($selected_products)) {
                     foreach ($package_products as $product) {
-                        if ((in_array($product['id_product'] . '-' . $product['id_product_attribute'], $selected_products)
+if (
+    (
+        in_array($product['id_product'] . '-' . $product['id_product_attribute'], $selected_products)
+        || in_array($product['id_product'] . '-0', $selected_products)
+    )
+    && (
+        (
+            $this->reduction_exclude_special
+            && !$product['reduction_applies']
+        )
+        || !$this->reduction_exclude_special
+    )
+) {
                             || in_array($product['id_product'] . '-0', $selected_products))
                             && (($this->reduction_exclude_special && !$product['reduction_applies']) || !$this->reduction_exclude_special)) {
                             $price = $product['price'];
