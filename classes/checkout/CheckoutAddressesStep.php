@@ -308,15 +308,17 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
     public function setComplete($step_is_complete)
     {
         if ($step_is_complete &&
-                $this->context->cart->id_carrier == 0 &&
-                ($deliveryOptionSelected =
-                    $this->getCheckoutSession()->getSelectedDeliveryOption())) {
-            $id_address = $this->context->cart->id_address_delivery;
-            $this->getCheckoutSession()->setDeliveryOption(
-                array(
-                    $id_address => $deliveryOptionSelected
-                )
-            );
+                $this->context->cart->id_carrier == 0) {
+            $deliveryOptionSelected =
+                    $this->getCheckoutSession()->getSelectedDeliveryOption();
+            if ($deliveryOptionSelected) {
+                $id_address = $this->context->cart->id_address_delivery;
+                $this->getCheckoutSession()->setDeliveryOption(
+                    array(
+                        $id_address => $deliveryOptionSelected
+                    )
+                );
+            }
         }
         
         return parent::setComplete($step_is_complete);
