@@ -963,6 +963,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     /**
      * @param float $specificPriceValue
      * @param bool $specificPriceReductionTax
+     * @param float $taxRate
      * @param float $ecoTaxAmount
      *
      * @return mixed
