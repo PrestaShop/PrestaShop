@@ -2,10 +2,6 @@
 
 PROJECT_PATH=$(cd "$( dirname "$0" )/../" && pwd)
 
-if [[ $EXTRA_TESTS != *"functional"* ]]; then
-  exit 0
-fi
-
 bash $PROJECT_PATH/travis-scripts/install-prestashop
 
 echo "* Installing functional tests ...";
