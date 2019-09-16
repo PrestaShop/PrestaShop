@@ -4,13 +4,24 @@ PROJECT_PATH=$(cd "$( dirname "$0" )/../" && pwd)
 
 bash $PROJECT_PATH/travis-scripts/install-prestashop
 
-echo "* Installing functional tests ...";
+echo "* Installing functional tests...";
 
-cd $PROJECT_PATH/tests/E2E && npm install
+pushd $PROJECT_PATH/tests/E2E
+npm install --silent
 
-echo "* Running functional tests ...";
+echo "* Preparing environment...";
 
 /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_10.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :10 -ac -screen 0 1600x1200x16
 
+DISPLAY=:10 npm start-selenium &> /dev/null &
+
+sleep 5
+
+echo "* Running functional tests ...";
+
 npm test -- --MODULE=ps_legalcompliance
-exit $?
+status=$?
+
+popd
+
+exit $status
