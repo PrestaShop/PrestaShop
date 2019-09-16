@@ -1,7 +1,7 @@
 #!/bin/bash
 
-#bash travis-scripts/run-sanity-tests;
-SANITY=0
+bash travis-scripts/run-sanity-tests;
+SANITY=$?
 
 
 if [[ "$SANITY" == "0" ]]; then
