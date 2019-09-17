@@ -124,7 +124,7 @@
         "mikey179/vfsstream": "^1.6",
         "phake/phake": "@stable",
         "phpunit/phpunit": "~5.7",
-        "symfony/phpunit-bridge": "^3.0"
+        "symfony/phpunit-bridge": "^3.4.31"
     },
     "autoload-dev": {
         "psr-4": {
