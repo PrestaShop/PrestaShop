@@ -91,7 +91,7 @@ script:
     fi
 
   - if [ "$PRESTASHOP_TEST_TYPE" = "sanity" ]; then
-    bash tests/check_sanity.sh;
+        bash tests/check_sanity.sh;
     fi
 
 after_script:
