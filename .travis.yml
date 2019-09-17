@@ -1,7 +1,9 @@
 language: php
 
 addons:
-  chrome: beta
+  chrome: stable
+    env:
+    - SKIP_LOCAL_BROWSERS=true
   apt:
     packages:
       - apache2
