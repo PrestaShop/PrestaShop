@@ -125,7 +125,7 @@ module.exports = class Install extends CommonPage {
     await this.page.click(this.dbLoginInput, {clickCount: 3});
     await this.page.type(this.dbLoginInput, global.db_user);
     await this.page.click(this.dbPasswordInput, {clickCount: 3});
-    await this.page.type(this.dbPasswordInput, global.db_passwd.replace('empty_string', ''));
+    await this.page.type(this.dbPasswordInput, global.db_passwd);
   }
 
   /**
