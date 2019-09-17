@@ -71,6 +71,8 @@ class SpecificPriceFormatter
     }
 
     /**
+     * This is legacy code extracted from ProductController and it should be refactored
+     *
      * @param float $initialPrice
      * @param float $tax_rate
      * @param float $ecotax_amount
