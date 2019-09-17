@@ -1,5 +1,8 @@
 language: php
 
+services:
+  - mysql
+
 addons:
   chrome: stable
   apt:
@@ -34,8 +37,6 @@ matrix:
   include:
     - php: 7.2
       env: EXTRA_DEPS=phpHigh  PRESTASHOP_TEST_TYPE=unit
-    - php: 7.2
-      env: PRESTASHOP_TEST_TYPE=e2e EXTRA_TESTS=functional
     - stage: deploy
       php: 7.2
       before_install: skip
@@ -57,13 +58,14 @@ matrix:
         on:
           all_branches: true
   exclude:
-    - php: 7.2 # Replaced with additional tests
+    - php: 5.6 # Replaced with additional tests
       env: PRESTASHOP_TEST_TYPE=e2e
   allow_failures:
     - php: 7.2
       env: EXTRA_DEPS=phpHigh  PRESTASHOP_TEST_TYPE=unit
 
 before_install:
+  - /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_10.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :10 -ac -screen 0 1600x1200x16
   # Avoid Composer authentication issues
   - if [[ "$TRAVIS_REPO_SLUG" = PrestaShop/PrestaShop ]]; then cp travis-scripts/.composer-auth.json ~/.composer/auth.json; fi;
   # Apache & php-fpm configuration
@@ -110,7 +112,6 @@ after_failure:
   - sudo cat /var/log/php-fpm.log
   - sudo ls -l /var/log/apache2
   - sudo cat /var/log/apache2/other_vhosts_access.log
-  - if [ ! -z "$PRESTASTHOP_SCREENHOST" ]; then bash ./travis-scripts/base64-screenshots; fi # As we cannot upload file, we display the base64 encoded content of the screenshots
   - cat $TRAVIS_BUILD_DIR/var/log/dev.log
 
 before_deploy:
