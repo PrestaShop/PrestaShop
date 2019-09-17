@@ -1188,7 +1188,14 @@ class LinkCore
         }
 
         if ($controller == 'product' && isset($params['id_product'])) {
-            return $this->getProductLink((int) $params['id_product'], null, null, null, (int) $idLang);
+            if (array_key_exists('id_product_attribute', $params)) {
+                $id_product_attribute = $params['id_product_attribute'];
+            } else {
+                $id_product_attribute = 0;
+            }
+            $url = $this->getProductLink((int) $params['id_product'], null, null, null, (int) $idLangnull, (int)$id_product_attribute);
+            $url = explode('#', $url);
+            return $url[0];
         } elseif ($controller == 'category' && isset($params['id_category'])) {
             return $this->getCategoryLink((int) $params['id_category'], null, (int) $idLang);
         } elseif ($controller == 'supplier' && isset($params['id_supplier'])) {
