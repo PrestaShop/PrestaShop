@@ -4,7 +4,6 @@ import fixtures from '../fixtures';
 import * as checkout from '../helpers/checkout';
 
 describe("The shopping cart", function () {
-    runScenario();
 });
 
 function runScenario () {
