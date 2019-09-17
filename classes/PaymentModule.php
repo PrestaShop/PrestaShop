@@ -193,7 +193,7 @@ abstract class PaymentModuleCore extends Module
      * Function called from a payment module.
      *
      * @param int $id_cart
-     * @param int $id_order_state
+     * @param string $id_order_state
      * @param float $amount_paid Amount really paid by customer (in the default currency)
      * @param string $payment_method Payment method (eg. 'Credit card')
      * @param string|null $message Message to attach to order
