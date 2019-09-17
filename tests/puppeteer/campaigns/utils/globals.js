@@ -4,7 +4,6 @@ global.URL_INSTALL = process.env.URL_INSTALL || `${global.URL_FO}install-dev/`;
 global.EMAIL = process.env.LOGIN || 'demo@prestashop.com';
 global.PASSWD = process.env.PASSWD || 'prestashop_demo';
 global.HEADLESS = process.env.HEADLESS || true;
-global.browser = null;
 global.SHOPNAME = process.env.SHOPNAME || 'Prestashop';
 global.db_user = process.env.DB_USER || 'root';
 global.db_passwd = process.env.DB_PASSWD || '';

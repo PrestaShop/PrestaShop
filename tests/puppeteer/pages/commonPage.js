@@ -147,12 +147,11 @@ module.exports = class CommonPage {
    * @param tabId
    * @return {Promise<void>}
    */
-  async closePage(tabId = -1) {
+  async closePage(browser, tabId = -1) {
     await this.page.close();
     if (tabId !== -1) {
-      this.page = (await global.browser.pages())[tabId];
+      this.page = (await browser.pages())[tabId];
       await this.page.bringToFront();
-      await this.page.waitFor(10000);
     }
     return this.page;
   }
