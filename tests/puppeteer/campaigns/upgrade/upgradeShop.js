@@ -1,5 +1,5 @@
 const {expect} = require('chai');
-const helper = require('../../utils/helpers');
+const helper = require('../utils/helpers');
 // Using chai
 // importing pages
 const LoginPage = require('../../pages/BO/login');
@@ -40,6 +40,7 @@ const init = async function () {
 
 // Upgrade shop from a version to the last stable one
 describe('Upgrade Prestashop to last Stable', async () => {
+  // before and after functions
   before(async () => {
     browser = await helper.createBrowser();
     page = await browser.newPage();
@@ -51,6 +52,7 @@ describe('Upgrade Prestashop to last Stable', async () => {
   after(async () => {
     await browser.close();
   });
+  // Steps
   it('should login into BO', async () => {
     await loginPage.goTo(global.URL_BO);
     await loginPage.login(global.EMAIL, global.PASSWD);

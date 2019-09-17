@@ -31,6 +31,7 @@ const init = async function () {
 
 // Create 2 Standard products in BO and Delete it with Bulk Actions
 describe('Create Standard product in BO and Delete it with Bulk Actions', async () => {
+  // before and after functions
   before(async () => {
     browser = await helper.createBrowser();
     page = await browser.newPage();
@@ -47,6 +48,7 @@ describe('Create Standard product in BO and Delete it with Bulk Actions', async 
   after(async () => {
     await browser.close();
   });
+  // Steps
   it('should login in BO', async () => {
     await loginPage.goTo(global.URL_BO);
     await loginPage.login(global.EMAIL, global.PASSWD);

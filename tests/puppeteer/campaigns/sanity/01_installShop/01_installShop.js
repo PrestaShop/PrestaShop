@@ -12,6 +12,7 @@ const init = async function () {
 };
 
 describe('Install Prestashop', async () => {
+  // before and after functions
   before(async () => {
     browser = await helper.createBrowser();
     page = await browser.newPage();
@@ -20,7 +21,7 @@ describe('Install Prestashop', async () => {
   after(async () => {
     await browser.close();
   });
-
+  // Steps
   it('should open the Install page', async () => {
     await installPage.goTo(global.URL_INSTALL);
     await installPage.checkStepTitle(installPage.firstStepPageTitle, installPage.firstStepFrTitle);

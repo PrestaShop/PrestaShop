@@ -31,6 +31,7 @@ const init = async function () {
   Edit the cart and check it
  */
 describe('Check the Product page', async () => {
+  // before and after functions
   before(async () => {
     browser = await helper.createBrowser();
     page = await browser.newPage();
@@ -42,6 +43,7 @@ describe('Check the Product page', async () => {
   after(async () => {
     await browser.close();
   });
+  // Steps
   it('should open the shop page', async () => {
     await homePage.goTo(global.URL_FO);
     await homePage.checkHomePage();

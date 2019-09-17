@@ -33,6 +33,7 @@ const init = async function () {
 };
 // Create, read, update and delete Standard product in BO
 describe('Create, read, update and delete Standard product in BO', async () => {
+  // before and after functions
   before(async () => {
     browser = await helper.createBrowser();
     page = await browser.newPage();
@@ -47,7 +48,7 @@ describe('Create, read, update and delete Standard product in BO', async () => {
   after(async () => {
     await browser.close();
   });
-
+  // Steps
   it('should login in BO', async () => {
     await loginPage.goTo(global.URL_BO);
     await loginPage.login(global.EMAIL, global.PASSWD);

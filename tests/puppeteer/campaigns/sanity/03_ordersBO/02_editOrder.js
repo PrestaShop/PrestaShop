@@ -27,6 +27,7 @@ const init = async function () {
   Logout from the BO
  */
 describe('Edit Order BO', async () => {
+  // before and after functions
   before(async () => {
     browser = await helper.createBrowser();
     page = await browser.newPage();
@@ -35,6 +36,7 @@ describe('Edit Order BO', async () => {
   after(async () => {
     await browser.close();
   });
+  // Steps
   it('should login into BO', async () => {
     await loginPage.goTo(global.URL_BO);
     await loginPage.login(global.EMAIL, global.PASSWD);

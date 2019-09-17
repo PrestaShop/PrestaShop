@@ -22,6 +22,7 @@ const init = async function () {
   Filter products by a subcategory
  */
 describe('Filter Products by categories in Home page', async () => {
+  // before and after functions
   before(async () => {
     browser = await helper.createBrowser();
     page = await browser.newPage();
@@ -30,6 +31,7 @@ describe('Filter Products by categories in Home page', async () => {
   after(async () => {
     await browser.close();
   });
+  // Steps
   it('should open the shop page', async () => {
     await homePage.goTo(global.URL_FO);
     await homePage.checkHomePage();

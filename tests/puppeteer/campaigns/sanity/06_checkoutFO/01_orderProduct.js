@@ -32,6 +32,7 @@ const init = async function () {
   Order a product and check order confirmation
  */
 describe('Order a product and check order confirmation', async () => {
+  // before and after functions
   before(async () => {
     browser = await helper.createBrowser();
     page = await browser.newPage();
@@ -43,6 +44,7 @@ describe('Order a product and check order confirmation', async () => {
   after(async () => {
     await browser.close();
   });
+  // Steps
   it('should open the shop page', async () => {
     await homePage.goTo(global.URL_FO);
     await homePage.checkHomePage();

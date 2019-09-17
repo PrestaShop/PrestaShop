@@ -26,6 +26,7 @@ const init = async function () {
 
 // Test of filters in products page
 describe('Filter in Products Page', async () => {
+  // before and after functions
   before(async () => {
     browser = await helper.createBrowser();
     page = await browser.newPage();
@@ -34,6 +35,7 @@ describe('Filter in Products Page', async () => {
   after(async () => {
     await browser.close();
   });
+  // Steps
   it('should login in BO', async () => {
     await loginPage.goTo(global.URL_BO);
     await loginPage.login(global.EMAIL, global.PASSWD);
