@@ -27,6 +27,7 @@ env:
   matrix:
     - PRESTASHOP_TEST_TYPE=unit
     - PRESTASHOP_TEST_TYPE=integration
+    - PRESTASHOP_TEST_TYPE=sanity
 
 matrix:
   include:
@@ -87,6 +88,10 @@ script:
 
   - if [ "$PRESTASHOP_TEST_TYPE" = "integration" ]; then
         bash tests/check_integration.sh;
+    fi
+
+  - if [ "$PRESTASHOP_TEST_TYPE" = "sanity" ]; then
+        bash tests/check_sanity.sh;
     fi
 
 after_script:

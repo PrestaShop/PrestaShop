@@ -9,7 +9,8 @@
     "linkchecker": "node campaigns/linkchecker.js",
     "lint": "eslint  --fix --ignore-path .gitignore .",
     "specific-test": "./node_modules/mocha/bin/mocha campaigns/$TEST_PATH",
-    "sanity-tests": "./node_modules/mocha/bin/mocha campaigns/sanity/*"
+    "sanity-tests": "./node_modules/mocha/bin/mocha campaigns/sanity/*",
+    "sanity-travis": "./node_modules/mocha/bin/mocha --bail campaigns/sanity/*"
   },
   "repository": {
     "type": "git",

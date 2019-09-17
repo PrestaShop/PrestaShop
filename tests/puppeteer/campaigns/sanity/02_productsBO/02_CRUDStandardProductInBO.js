@@ -48,6 +48,7 @@ global.scenario('Create, read, update and delete Standard product in BO', async 
   });
   test('should go to Products page', async () => {
     await boBasePage.goToSubMenu(boBasePage.productsParentLink, boBasePage.productsLink);
+    await boBasePage.closeSfToolBar();
     const pageTitle = await productsPage.getPageTitle();
     await expect(pageTitle).to.contains(productsPage.pageTitle);
   });
