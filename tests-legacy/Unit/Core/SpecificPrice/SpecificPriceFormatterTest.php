@@ -24,39 +24,29 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace LegacyTests\Unit\Controller\FrontController;
+namespace LegacyTests\Unit\Core\SpecificPrice;
 
+use Context;
 use Currency;
 use Language;
-use LocalizationPack;
 use LegacyTests\Unit\ContextMocker;
+use LocalizationPack;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShopBundle\Cache\LocalizationWarmer;
-use ProductControllerCore;
-use ReflectionClass;
 use Tests\TestCase\SymfonyIntegrationTestCase;
+use PrestaShop\PrestaShop\Core\SpecificPrice\SpecificPriceFormatter;
 
-class ProductControllerTest extends SymfonyIntegrationTestCase
+class SpecificPriceFormatterTest extends SymfonyIntegrationTestCase
 {
     /**
      * @var ContextMocker
      */
     protected $contextMocker;
 
-    private $controller;
-
-    private static $languagesPackInstalled = false;
-
     protected function setUp()
     {
         parent::setUp();
-
-        // Done here as we require the kernel to be instanciated.
-        if (!self::$languagesPackInstalled) {
-            self::installTestedLanguagePacks();
-            self::$languagesPackInstalled = true;
-        }
-        $this->controller = new ProductControllerCore();
+        self::installTestedLanguagePacks();
     }
 
     protected function tearDown()
@@ -84,85 +74,43 @@ class ProductControllerTest extends SymfonyIntegrationTestCase
     }
 
     /**
-     * Call protected/private method of a class.
-     *
-     * @param object $object     Instantiated object that we will run method on.
-     * @param string $methodName Method name to call
-     * @param array  $parameters Array of parameters to pass into method.
-     *
-     * @return mixed Method return.
-     */
-    public function invokeMethod($object, $methodName, array $parameters = array())
-    {
-        $reflection = new ReflectionClass(get_class($object));
-        $method     = $reflection->getMethod($methodName);
-        $method->setAccessible(true);
-
-        return $method->invokeArgs($object, $parameters);
-    }
-
-    /**
-     * here we test that for a given dataset of specific prices, currency, ecotax... we get the correct discount result
      *
      * @dataProvider specificPricesProvider
      *
-     * @param $price
-     * @param $taxRate
-     * @param $ecotaxAmount
-     * @param $currencyData
-     * @param $specificPrices
-     * @param $expected
      */
-    public function testFormatQuantityDiscounts(
+    public function testFormatSpecificPrice(
         $price,
         $taxRate,
         $ecotaxAmount,
         $currencyData,
         $specificPrices,
+        $isTaxIncluded,
         $expected
     ) {
-        $class    = new ReflectionClass(get_class($this->controller));
-        $property = $class->getProperty("context");
-        $property->setAccessible(true);
+        $context = Context::getContext();
 
         $currency                  = new Currency();
         $currency->active          = true;
         $currency->conversion_rate = $currencyData['conversion_rate'];
         $currency->sign            = $currencyData['sign'];
         $currency->iso_code        = $currencyData['code'];
+        $context->currency = $currency;
 
-        /** @var \Context $context */
-        $context            = $property->getValue($this->controller);
-        $context->currency  = $currency;
         $language           = new Language();
         $language->iso_code = 'EN';
         $language->locale   = 'en-US';
         $context->language  = $language;
-        $result             = $this->invokeMethod(
-            $this->controller,
-            'formatQuantityDiscounts',
-            array(
-                $specificPrices,
-                $price,
-                $taxRate,
-                $ecotaxAmount,
-            )
-        );
+
+        $specificPriceFormatter = new SpecificPriceFormatter($specificPrices[0], $isTaxIncluded, $context);
+        $formattedSpecificPrice = $specificPriceFormatter->formatSpecificPrice($price, $taxRate, $ecotaxAmount);
 
         $priceFormatter = new PriceFormatter();
-
-        foreach ($expected as $expectedLevel => $expectedValues) {
-            $this->assertArrayHasKey($expectedLevel, $result);
-            foreach ($expectedValues as $expectedKey => $expectedValue) {
-                $this->assertArrayHasKey($expectedKey, $result[$expectedLevel]);
-                $this->assertEquals($priceFormatter->format($expectedValue), $result[$expectedLevel][$expectedKey]);
-            }
-        }
+        $this->assertEquals($priceFormatter->format($expected[0]['discount']), $formattedSpecificPrice['discount']);
+        $this->assertEquals($priceFormatter->format($expected[0]['save']), $formattedSpecificPrice['save']);
     }
 
     public function specificPricesProvider()
     {
-
         $specificPrices = array(
             0 => array(
                 'id_specific_price'      => '9',
@@ -207,6 +155,7 @@ class ProductControllerTest extends SymfonyIntegrationTestCase
                 'ecotax_amount'   => 0,
                 'currency'        => $currencyDol,
                 'specific_prices' => $specificPrices,
+                'isTaxIncluded'   => true,
                 'expected'        => array(
                     array(
                         'discount' => 7.80,
@@ -220,6 +169,7 @@ class ProductControllerTest extends SymfonyIntegrationTestCase
                 'ecotax_amount'   => 0,
                 'currency'        => $currencyEur,
                 'specific_prices' => $specificPrices,
+                'isTaxIncluded'   => true,
                 'expected'        => array(
                     array(
                         'discount' => 6.00,
@@ -233,6 +183,7 @@ class ProductControllerTest extends SymfonyIntegrationTestCase
                 'ecotax_amount'   => 0.9,
                 'currency'        => $currencyDol,
                 'specific_prices' => $specificPrices,
+                'isTaxIncluded'   => true,
                 'expected'        => array(
                     array(
                         'discount' => 6.63,
@@ -246,10 +197,39 @@ class ProductControllerTest extends SymfonyIntegrationTestCase
                 'ecotax_amount'   => 0.9,
                 'currency'        => $currencyEur,
                 'specific_prices' => $specificPrices,
+                'isTaxIncluded'   => true,
                 'expected'        => array(
                     array(
                         'discount' => 5.10,
                         'save'     => 76.50,
+                    ),
+                ),
+            ),
+            'EUR to USD, without any tax' => array(
+                'price'           => 31.2,
+                'tax_rate'        => 20,
+                'ecotax_amount'   => 0,
+                'currency'        => $currencyDol,
+                'specific_prices' => $specificPrices,
+                'isTaxIncluded'   => false,
+                'expected'        => array(
+                    array(
+                        'discount' => 11.70,
+                        'save'     => 175.50,
+                    ),
+                ),
+            ),
+            'EUR to EUR, without any tax' => array(
+                'price'           => 24,
+                'tax_rate'        => 20,
+                'ecotax_amount'   => 0,
+                'currency'        => $currencyEur,
+                'specific_prices' => $specificPrices,
+                'isTaxIncluded'   => false,
+                'expected'        => array(
+                    array(
+                        'discount' => 9.00,
+                        'save'     => 135.00,
                     ),
                 ),
             ),
