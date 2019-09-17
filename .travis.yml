@@ -4,6 +4,7 @@ addons:
   chrome: stable
   apt:
     packages:
+      - dpkg
       - apache2
       - postfix
       - libapache2-mod-fastcgi
