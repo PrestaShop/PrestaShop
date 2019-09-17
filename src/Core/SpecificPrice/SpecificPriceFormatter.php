@@ -28,6 +28,13 @@ namespace PrestaShop\PrestaShop\Core\SpecificPrice;
 
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 
+/**
+ * This class is an extract of the ProductController->formatQuantityDiscounts() method
+ * It is still legacy code and need some heavy refactoring.
+ * This code has been extracted here for unit testing purpose
+ *
+ * @todo Refactor this class
+ */
 class SpecificPriceFormatter
 {
     /**
