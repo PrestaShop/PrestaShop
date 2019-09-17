@@ -15,7 +15,7 @@ cache:
     - $HOME/.composer/cache
 
 sudo: required
-dist: trusty
+dist: xenial
 
 php:
   - 7.1
