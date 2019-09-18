@@ -1193,7 +1193,7 @@ class LinkCore
             } else {
                 $id_product_attribute = 0;
             }
-            $url = $this->getProductLink((int) $params['id_product'], null, null, null, (int) $idLangnull, (int)$id_product_attribute);
+            $url = $this->getProductLink((int) $params['id_product'], null, null, null, (int) $idLang, null, (int)$id_product_attribute);
             $url = explode('#', $url);
             return $url[0];
         } elseif ($controller == 'category' && isset($params['id_category'])) {
