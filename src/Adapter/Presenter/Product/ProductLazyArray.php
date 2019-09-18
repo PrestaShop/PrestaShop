@@ -672,6 +672,10 @@ class ProductLazyArray extends AbstractLazyArray
         } else {
             $this->product['unit_price'] = $this->product['unit_price_full'] = '';
         }
+
+        Hook::exec('overrideProductPrices', array(
+            'product' => &$this->product,
+        ));
     }
 
     /**
