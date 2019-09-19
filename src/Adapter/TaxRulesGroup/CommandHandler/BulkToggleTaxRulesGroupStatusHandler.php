@@ -59,7 +59,10 @@ final class BulkToggleTaxRulesGroupStatusHandler extends AbstractTaxRulesGroupHa
         }
 
         if (!empty($errors)) {
-            throw new CannotBulkUpdateTaxRulesGroupException(implode(', ', $errors));
+            throw new CannotBulkUpdateTaxRulesGroupException(
+                $errors,
+                'Failed to toggle all tax rules groups statuses without errors'
+            );
         }
     }
 }
