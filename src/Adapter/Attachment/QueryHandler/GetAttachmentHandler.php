@@ -44,7 +44,6 @@ final class GetAttachmentHandler extends AbstractAttachmentHandler implements Ge
 
     /**
      * @param string $downloadDirectory
-     *
      */
     public function __construct(string $downloadDirectory)
     {

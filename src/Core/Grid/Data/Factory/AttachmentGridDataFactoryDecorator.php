@@ -143,7 +143,7 @@ final class AttachmentGridDataFactoryDecorator implements GridDataFactoryInterfa
     {
         $qb = $this->connection->createQueryBuilder();
 
-        $qb->select("DISTINCT pl.`name`")
+        $qb->select('DISTINCT pl.`name`')
             ->from($this->dbPrefix . 'product_attachment', 'pa')
             ->leftJoin(
                 'pa',
