@@ -26,12 +26,21 @@
 
 namespace PrestaShop\PrestaShop\Adapter\TaxRulesGroup;
 
-use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\CannotDeleteTaxRulesGroupException;
+use PrestaShop\PrestaShop\Adapter\Country\CountryDataProvider;
+use PrestaShop\PrestaShop\Adapter\Country\CountryNotFoundException;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\UniqueTaxRuleBehavior;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\ZipCodeRange;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\CannotDeleteTaxRuleException;
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\TaxRuleConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\TaxRuleNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\TaxRulesGroupConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\TaxRulesGroupException;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\TaxRulesGroupNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRuleId;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 use PrestaShopException;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
+use TaxRule;
 use TaxRulesGroup;
 
 /**
@@ -39,6 +48,19 @@ use TaxRulesGroup;
  */
 abstract class AbstractTaxRulesGroupHandler
 {
+    /**
+     * @var ValidatorInterface
+     */
+    private $validator;
+
+    /**
+     * @param ValidatorInterface $validator
+     */
+    public function __construct(ValidatorInterface $validator)
+    {
+        $this->validator = $validator;
+    }
+
     /**
      * Gets legacy TaxRuleGroup object
      *
@@ -70,46 +92,52 @@ abstract class AbstractTaxRulesGroupHandler
     }
 
     /**
-     * Deletes legacy TaxRulesGroup
+     * Gets legacy TaxRuleGroup object
      *
-     * @param TaxRulesGroup $taxRulesGroup
+     * @param TaxRuleId $taxRuleId
+     *
+     * @return TaxRule
+     *
+     * @throws TaxRuleNotFoundException
+     */
+    protected function getTaxRule(TaxRuleId $taxRuleId): TaxRule
+    {
+        $taxRuleIdValue = $taxRuleId->getValue();
+
+        try {
+            $taxRule = new TaxRule($taxRuleIdValue);
+        } catch (PrestaShopException $e) {
+            throw new TaxRuleNotFoundException(
+                sprintf('Tax rule with id "%s" was not found.', $taxRuleIdValue)
+            );
+        }
+
+        if ($taxRule->id !== $taxRuleIdValue) {
+            throw new TaxRuleNotFoundException(
+                sprintf('Tax rule with id "%s" was not found.', $taxRuleIdValue)
+            );
+        }
+
+        return $taxRule;
+    }
+
+    /**
+     * Deletes legacy TaxRule
+     *
+     * @param TaxRule $taxRule
      *
      * @return bool
      *
      * @throws CannotDeleteTaxRuleException
      */
-    protected function deleteTaxRule(TaxRulesGroup $taxRulesGroup): bool
+    protected function deleteTaxRule(TaxRule $taxRule): bool
     {
         try {
-            return $taxRulesGroup->delete();
+            return $taxRule->delete();
         } catch (PrestaShopException $e) {
-            throw new CannotDeleteTaxRulesGroupException(
-                sprintf('An error occurred when deleting tax rules group object with id "%s".', $taxRulesGroup->id)
+            throw new CannotDeleteTaxRuleException(
+                sprintf('An error occurred when deleting tax rule object with id "%s".', $taxRule->id)
             );
-        }
-    }
-
-    /**
-     * Toggles legacy tax rules group status
-     *
-     * @param TaxRulesGroup $taxRulesGroup
-     * @param bool $newStatus
-     *
-     * @return bool
-     *
-     * @throws TaxRulesGroupException
-     */
-    protected function toggleTaxRulesGroupStatus(TaxRulesGroup $taxRulesGroup, bool $newStatus)
-    {
-        $taxRulesGroup->active = $newStatus;
-
-        try {
-            return $taxRulesGroup->save();
-        } catch (PrestaShopException $e) {
-            throw new TaxRulesGroupException(sprintf(
-                'An error occurred when updating tax rules group status with id "%s"',
-                $taxRulesGroup->id
-            ));
         }
     }
 
@@ -119,12 +147,103 @@ abstract class AbstractTaxRulesGroupHandler
      * @throws TaxRulesGroupConstraintException
      * @throws PrestaShopException
      */
-    protected function validateTaxRulesGroupFields(TaxRulesGroup $taxRulesGroup)
+    protected function validateTaxRulesGroupFields(TaxRulesGroup $taxRulesGroup): void
     {
         if (!$taxRulesGroup->validateFields(false)) {
             throw new TaxRulesGroupConstraintException(
                 'Tax rules group contains invalid field values'
             );
         }
+    }
+
+    /**
+     * @param TaxRule $taxRule
+     *
+     * @throws PrestaShopException
+     * @throws TaxRuleConstraintException
+     */
+    protected function validateTaxRuleFields(TaxRule $taxRule): void
+    {
+        if (!$taxRule->validateFields(false)) {
+            throw new TaxRuleConstraintException(
+                'Tax rule contains invalid field values'
+            );
+        }
+    }
+
+    /**
+     * @param int $taxRulesGroupId
+     * @param int $countryId
+     * @param int $stateId
+     * @param int|null $taxRuleId
+     *
+     * @return bool
+     */
+    protected function assertUniqueBehaviorTaxRuleForCountry(
+        int $taxRulesGroupId,
+        int $countryId,
+        int $stateId,
+        ?int $taxRuleId = null
+    ): bool {
+        $errors = $this->validator->validate([
+            'taxRulesGroupId' => $taxRulesGroupId,
+            'country' => $countryId,
+            'state' => $stateId,
+            'taxRuleId' => $taxRuleId,
+        ], new UniqueTaxRuleBehavior());
+
+        return 0 !== count($errors);
+    }
+
+    /**
+     * @param string $zipCode
+     * @param int $countryId
+     *
+     * @return bool
+     */
+    protected function assertIsValidZipCode(
+        string $zipCode,
+        int $countryId
+    ): bool {
+        $errors = $this->validator->validate([
+            'zipCode' => $zipCode,
+            'country' => $countryId,
+        ], new ZipCodeRange());
+
+        return 0 !== count($errors);
+    }
+
+    /**
+     * @param CountryDataProvider $countryDataProvider
+     * @param int $langId
+     * @param CountryId|null $countryId
+     *
+     * @return int[]
+     *
+     * @throws CountryNotFoundException
+     */
+    protected function getCountryForTaxRule(
+        CountryDataProvider $countryDataProvider,
+        int $langId,
+        ?CountryId $countryId
+    ): array {
+        $selectedCountries = [];
+
+        if ($countryId !== null && $countryId->getValue() > 0) {
+            $selectedCountries[] = $countryId->getValue();
+        }
+
+        if (empty($selectedCountries)) {
+            try {
+                $countries = $countryDataProvider->getCountries($langId);
+                $selectedCountries = array_map(function (array $countries) {
+                    return (int) $countries['id_country'];
+                }, $countries);
+            } catch (PrestaShopException $e) {
+                throw new CountryNotFoundException('Countries for tax rule creation failed to load');
+            }
+        }
+
+        return $selectedCountries;
     }
 }

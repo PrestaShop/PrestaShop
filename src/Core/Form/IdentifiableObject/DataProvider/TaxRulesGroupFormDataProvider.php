@@ -54,10 +54,10 @@ final class TaxRulesGroupFormDataProvider implements FormDataProviderInterface
      *
      * @throws TaxRulesGroupConstraintException
      */
-    public function getData($taxId)
+    public function getData($taxRulesGroupId)
     {
         /** @var EditableTaxRulesGroup $editableTaxRulesGroup */
-        $editableTaxRulesGroup = $this->queryBus->handle(new GetTaxRulesGroupForEditing($taxId));
+        $editableTaxRulesGroup = $this->queryBus->handle(new GetTaxRulesGroupForEditing($taxRulesGroupId));
 
         return [
             'name' => $editableTaxRulesGroup->getName(),

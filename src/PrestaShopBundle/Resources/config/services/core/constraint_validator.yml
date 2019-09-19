@@ -29,3 +29,20 @@ services:
       - '@prestashop.core.string.character_cleaner'
     tags:
       - { name: validator.constraint_validator }
+
+  prestashop.core.constraint_validator.zip_code_range_validator:
+    class: 'PrestaShop\PrestaShop\Core\ConstraintValidator\ZipCodeRangeValidator'
+    arguments:
+      - '@translator'
+      - '@prestashop.core.query_bus'
+      - '@prestashop.core.form.choice_provider.country_by_id'
+    tags:
+      - { name: validator.constraint_validator }
+
+  prestashop.core.constraint_validator.unique_tax_rule_behavior_validator:
+    class: 'PrestaShop\PrestaShop\Core\ConstraintValidator\UniqueTaxRuleBehaviorValidator'
+    arguments:
+      - '@prestashop.bundle.repository.tax_rule'
+      - '@prestashop.core.form.choice_provider.country_by_id'
+    tags:
+      - { name: validator.constraint_validator }

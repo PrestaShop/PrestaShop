@@ -1,0 +1,92 @@
+{#**
+ * 2007-2019 PrestaShop and Contributors
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+
+{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+
+{{ form_start(taxRuleForm, {'attr': {'id': 'tax-rule-form', 'class': 'hidden-element'}}) }}
+
+<div class="card">
+  <div class="card-header">
+    <i class="material-icons">money</i>
+    {{ 'New tax rule'|trans({}, 'Admin.International.Feature') }}
+  </div>
+  <div class="card-block row js-hidden-content">
+    <div class="card-text">
+      {{ form_errors(taxRuleForm) }}
+
+      {{ ps.form_group_row(taxRuleForm.country, {'attr': {
+        'data-states-url': path('admin_country_states') }}, {
+        'label': 'Country'|trans({}, 'Admin.Global'),
+      }) }}
+
+      <div class="form-group row js-state-form-row {% if taxRuleForm.state.vars.disabled %} hidden-element {% endif %}">
+        {{ form_label(taxRuleForm.state, 'State'|trans({}, 'Admin.Global'), {'label_attr': {'class': 'form-control-label'}}) }}
+        <div class="col-sm">
+          {{ ps.form_widget_with_error(taxRuleForm.state, {'attr': {
+            'data-all-translation': 'All'|trans({}, 'Admin.Global') }}
+          ) }}
+        </div>
+      </div>
+
+      {{ ps.form_group_row(taxRuleForm.zipCode, {}, {
+        'label': 'Zip/postal code range'|trans({}, 'Admin.International.Feature'),
+        'help': 'You can define a range of Zip/postal codes (e.g., 75000-75015) or simply use one Zip/postal code.'|trans({}, 'Admin.International.Help'),
+      }) }}
+
+      <div class="form-group row">
+        {{ form_label(taxRuleForm.behavior, 'Behavior'|trans({}, 'Admin.International.Feature'), {'label_attr': {'class': 'form-control-label'}}) }}
+        <div class="col-sm">
+          {{ form_widget(taxRuleForm.behavior) }}
+          <small class="form-text">
+            {{ ('You must define the behavior if an address matches multiple rules:'|trans({}, 'Admin.International.Help') ~ '<br>' ~
+            '- This tax only: Will apply only this tax'|trans({}, 'Admin.International.Help') ~ '<br>' ~
+            '- Combine: Combine taxes (e.g.: 10% + 5% = 15%)'|trans({}, 'Admin.International.Help') ~ '<br>' ~
+            '- One after another: Apply taxes one after another (e.g.: 100 + 10% => 110 + 5% = 115.5)'|trans({}, 'Admin.International.Help'))|raw }}
+          </small>
+          {{ ps.form_error_with_popover(taxRuleForm.behavior) }}
+        </div>
+      </div>
+
+      {{ ps.form_group_row(taxRuleForm.tax, {}, {
+        'label': 'Tax'|trans({}, 'Admin.Global'),
+        'help' : '(Total tax: 9%)'|trans({}, 'Admin.International.Help')
+      }) }}
+
+      {{ ps.form_group_row(taxRuleForm.description, {}, {
+        'label': 'Description'|trans({}, 'Admin.Global'),
+      }) }}
+
+      {{ form_rest(taxRuleForm) }}
+    </div>
+  </div>
+
+  <div class="card-footer js-hidden-content">
+    <div class="d-inline-flex float-right">
+      <button id="tax-rule-submit-btn" class="btn btn-primary">{{ 'Save and stay'|trans({}, 'Admin.Actions') }}</button>
+    </div>
+    <div class="clearfix"></div>
+  </div>
+</div>
+{{ form_end(taxRuleForm) }}

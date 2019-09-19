@@ -29,11 +29,37 @@ namespace PrestaShop\PrestaShop\Adapter\TaxRulesGroup\CommandHandler;
 use PrestaShop\PrestaShop\Adapter\TaxRulesGroup\AbstractTaxRulesGroupHandler;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Command\BulkDeleteTaxRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\CommandHandler\BulkDeleteTaxRuleHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\CannotBulkDeleteTaxRulesException;
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\TaxRulesGroupException;
 
+/**
+ * Class responsible for bulk deletion of tax rules
+ */
 final class BulkDeleteTaxRuleHandler extends AbstractTaxRulesGroupHandler implements BulkDeleteTaxRuleHandlerInterface
 {
+    /**
+     * {@inheritdoc}
+     *
+     * @throws CannotBulkDeleteTaxRulesException
+     */
     public function handle(BulkDeleteTaxRuleCommand $command): void
     {
-        // TODO: Implement handle() method.
+        $errors = [];
+
+        foreach ($command->getTaxRuleIds() as $taxRuleId) {
+            try {
+                $taxRule = $this->getTaxRule($taxRuleId);
+
+                if (!$this->deleteTaxRule($taxRule)) {
+                    $errors[] = $taxRule->id;
+                }
+            } catch (TaxRulesGroupException $e) {
+                $errors[] = $taxRuleId->getValue();
+            }
+        }
+
+        if (!empty($errors)) {
+            throw new CannotBulkDeleteTaxRulesException($errors, 'Failed to bulk delete without errors');
+        }
     }
 }

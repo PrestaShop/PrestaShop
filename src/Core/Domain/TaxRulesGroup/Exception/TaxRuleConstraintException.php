@@ -35,4 +35,9 @@ class TaxRuleConstraintException extends TaxRulesGroupException
      * Thrown when provided tax rules group id value is not valid
      */
     public const INVALID_ID = 1;
+
+    /**
+     * Thrown when provided tax rule behavior id value is not valid
+     */
+    public const INVALID_BEHAVIOR_ID = 2;
 }

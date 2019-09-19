@@ -260,4 +260,10 @@ services:
         - '@prestashop.core.grid.query_builder.tax_rule'
         - '@prestashop.core.hook.dispatcher'
         - '@prestashop.core.grid.query.doctrine_query_parser'
-        - 'tax_rule'
+        - 'tax_rule_grid'
+
+    prestashop.core.grid.data.factory.tax_rule_decorator:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Data\Factory\TaxRuleGridDataFactory'
+      arguments:
+        - '@prestashop.core.grid.data_factory.tax_rule'
+        - '@prestashop.core.form.choice_provider.behavior'

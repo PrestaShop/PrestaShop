@@ -26,9 +26,36 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception;
 
+use Exception;
+
 /**
  * Thrown on failure to delete multiple tax rules without errors
  */
 class CannotBulkDeleteTaxRulesException extends TaxRulesGroupException
 {
+    /**
+     * @var int[]
+     */
+    private $ids;
+
+    /**
+     * @param int[] $ids
+     * @param string $message
+     * @param int $code
+     * @param Exception|null $previous
+     */
+    public function __construct(array $ids, $message = '', $code = 0, $previous = null)
+    {
+        $this->ids = $ids;
+
+        parent::__construct($message, $code, $previous);
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getIds(): array
+    {
+        return $this->ids;
+    }
 }

@@ -72,7 +72,8 @@ final class TaxRuleQueryBuilder extends AbstractDoctrineQueryBuilder
 
         $qb
             ->select('cl.`name` as country_name, s.`name` as state_name')
-            ->addSelect('tr.`zipcode_from`, tr.`zipcode_to`, tr.`behavior`, tr.`description`')
+            ->addSelect('tr.`id_tax_rule`, tr.`zipcode_from`, tr.`zipcode_to`')
+            ->addSelect('CONCAT(t.`rate`, "%") as rate, tr.`behavior`, tr.`description`')
         ;
 
         $this->searchCriteriaApplicator
@@ -118,6 +119,12 @@ final class TaxRuleQueryBuilder extends AbstractDoctrineQueryBuilder
                 $this->dbPrefix . 'state',
                 's',
                 'tr.`id_state` = s.`id_state`'
+            )
+            ->leftJoin(
+                'tr',
+                $this->dbPrefix . 'tax',
+                't',
+                'tr.`id_tax` = t.`id_tax`'
             );
 
         $qb->setParameter('employeeIdLang', $this->employeeIdLang);

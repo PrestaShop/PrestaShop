@@ -26,6 +26,214 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\QueryResult;
 
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
+use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
+use PrestaShop\PrestaShop\Core\Domain\Tax\ValueObject\TaxId;
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\BehaviorId;
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRuleId;
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
+
+/**
+ * Transfers tax rule data for editing
+ */
 class EditableTaxRule
 {
+    /**
+     * @var TaxRuleId
+     */
+    private $taxRuleId;
+
+    /**
+     * @var TaxRulesGroupId
+     */
+    private $taxRulesGroupId;
+
+    /**
+     * @var CountryId
+     */
+    private $countryId;
+
+    /**
+     * @var BehaviorId
+     */
+    private $behaviorId;
+
+    /**
+     * @var StateId|null
+     */
+    private $stateId;
+
+    /**
+     * @var string|null
+     */
+    private $zipCodeForm;
+
+    /**
+     * @var string|null
+     */
+    private $zipCodeTo;
+
+    /**
+     * @var TaxId|null
+     */
+    private $taxId;
+
+    /**
+     * @var string|null
+     */
+    private $description;
+
+    /**
+     * @param TaxRuleId $taxRuleId
+     * @param TaxRulesGroupId $taxRulesGroupId
+     * @param CountryId $countryId
+     * @param BehaviorId $behaviorId
+     */
+    public function __construct(
+        TaxRuleId $taxRuleId,
+        TaxRulesGroupId $taxRulesGroupId,
+        CountryId $countryId,
+        BehaviorId $behaviorId
+    ) {
+        $this->taxRuleId = $taxRuleId;
+        $this->taxRulesGroupId = $taxRulesGroupId;
+        $this->countryId = $countryId;
+        $this->behaviorId = $behaviorId;
+    }
+
+    /**
+     * @return TaxRuleId
+     */
+    public function getTaxRuleId(): TaxRuleId
+    {
+        return $this->taxRuleId;
+    }
+
+    /**
+     * @return TaxRulesGroupId
+     */
+    public function getTaxRulesGroupId(): TaxRulesGroupId
+    {
+        return $this->taxRulesGroupId;
+    }
+
+    /**
+     * @return CountryId
+     */
+    public function getCountryId(): CountryId
+    {
+        return $this->countryId;
+    }
+
+    /**
+     * @return BehaviorId
+     */
+    public function getBehaviorId(): BehaviorId
+    {
+        return $this->behaviorId;
+    }
+
+    /**
+     * @return StateId|null
+     */
+    public function getStateId(): ?StateId
+    {
+        return $this->stateId;
+    }
+
+    /**
+     * @param StateId $stateId
+     *
+     * @return EditableTaxRule
+     */
+    public function setStateId(StateId $stateId): EditableTaxRule
+    {
+        $this->stateId = $stateId;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getZipCode(): string
+    {
+        if (!empty($this->zipCodeForm) && !empty($this->zipCodeTo)) {
+            return $this->zipCodeForm . '-' . $this->zipCodeTo;
+        }
+
+        if (!empty($this->zipCodeTo)) {
+            return $this->zipCodeTo;
+        }
+
+        if (!empty($this->zipCodeForm)) {
+            return $this->zipCodeForm;
+        }
+
+        return '0';
+    }
+
+    /**
+     * @param string $zipCodeForm
+     *
+     * @return EditableTaxRule
+     */
+    public function setZipCodeForm(string $zipCodeForm): EditableTaxRule
+    {
+        $this->zipCodeForm = $zipCodeForm;
+
+        return $this;
+    }
+
+    /**
+     * @param string $zipCodeTo
+     *
+     * @return EditableTaxRule
+     */
+    public function setZipCodeTo(string $zipCodeTo): EditableTaxRule
+    {
+        $this->zipCodeTo = $zipCodeTo;
+
+        return $this;
+    }
+
+    /**
+     * @return TaxId|null
+     */
+    public function getTaxId(): ?TaxId
+    {
+        return $this->taxId;
+    }
+
+    /**
+     * @param TaxId $taxId
+     *
+     * @return EditableTaxRule
+     */
+    public function setTaxId(TaxId $taxId): EditableTaxRule
+    {
+        $this->taxId = $taxId;
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param string $description
+     *
+     * @return EditableTaxRule
+     */
+    public function setDescription(string $description): EditableTaxRule
+    {
+        $this->description = $description;
+
+        return $this;
+    }
 }

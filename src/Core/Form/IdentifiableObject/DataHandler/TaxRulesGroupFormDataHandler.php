@@ -42,6 +42,9 @@ final class TaxRulesGroupFormDataHandler implements FormDataHandlerInterface
      */
     private $commandBus;
 
+    /**
+     * @param CommandBusInterface $commandBus
+     */
     public function __construct(CommandBusInterface $commandBus)
     {
         $this->commandBus = $commandBus;

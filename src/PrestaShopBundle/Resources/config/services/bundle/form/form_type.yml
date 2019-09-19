@@ -903,3 +903,33 @@ services:
           - '@prestashop.adapter.feature.multistore'
         tags:
           - { name: form.type }
+
+    form.type.international.tax_rule:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\TaxRulesGroup\TaxRuleType'
+        arguments:
+          - '@translator'
+          - '@prestashop.adapter.form.choice_provider.country_state_by_id'
+        tags:
+          - { name: form.type }
+
+    form.type.common.behavior_choice:
+        class: 'PrestaShopBundle\Form\Admin\Type\BehaviorChoiceType'
+        arguments:
+          - '@prestashop.core.form.choice_provider.behavior'
+        tags:
+          - { name: form.type }
+
+    form.type.common.country_and_all_choice:
+        class: 'PrestaShopBundle\Form\Admin\Type\CountryAndAllChoiceType'
+        arguments:
+          - '@prestashop.core.form.choice_provider.country_by_id'
+          - '@translator'
+        tags:
+          - { name: form.type }
+
+    form.type.common.tax_choice:
+        class: 'PrestaShopBundle\Form\Admin\Type\TaxChoiceType'
+        arguments:
+          - "@prestashop.core.form.choice_provider.tax"
+        tags:
+          - { name: form.type }

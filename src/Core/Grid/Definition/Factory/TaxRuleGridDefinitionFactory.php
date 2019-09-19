@@ -41,7 +41,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
  */
 final class TaxRuleGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
-    public const GRID_ID = 'tax_rule_group';
+    public const GRID_ID = 'tax_rule_grid';
 
     /**
      * {@inheritdoc}
@@ -72,38 +72,51 @@ final class TaxRuleGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ])
             )
             ->add(
-                (new DataColumn('country_name'))
-                    ->setName($this->trans('Name', [], 'Admin.Global'))
+                (new DataColumn('country'))
+                    ->setName($this->trans('Country', [], 'Admin.Global'))
                     ->setOptions([
-                        'field' => 'name',
+                        'field' => 'country_name',
+                        'sortable' => false,
                     ])
             )
             ->add(
-                (new DataColumn('state_name'))
-                    ->setName($this->trans('Rate', [], 'Admin.International.Feature'))
+                (new DataColumn('state'))
+                    ->setName($this->trans('State', [], 'Admin.Global'))
                     ->setOptions([
-                        'field' => 'rate',
+                        'field' => 'state_name',
+                        'sortable' => false,
                     ])
             )
             ->add(
-                (new DataColumn('zipcode_from'))
-                    ->setName($this->trans('Rate', [], 'Admin.International.Feature'))
+                (new DataColumn('zipcode'))
+                    ->setName($this->trans('Zip/Postal code', [], 'Admin.Global'))
                     ->setOptions([
-                        'field' => 'rate',
+                        'field' => 'zipcode',
+                        'sortable' => false,
                     ])
             )
             ->add(
                 (new DataColumn('behavior'))
-                    ->setName($this->trans('Rate', [], 'Admin.International.Feature'))
+                    ->setName($this->trans('Behavior', [], 'Admin.International.Feature'))
+                    ->setOptions([
+                        'field' => 'behavior',
+                        'sortable' => false,
+                    ])
+            )
+            ->add(
+                (new DataColumn('tax'))
+                    ->setName($this->trans('Tax', [], 'Admin.Global'))
                     ->setOptions([
                         'field' => 'rate',
+                        'sortable' => false,
                     ])
             )
             ->add(
                 (new DataColumn('description'))
-                    ->setName($this->trans('Rate', [], 'Admin.International.Feature'))
+                    ->setName($this->trans('Description', [], 'Admin.Global'))
                     ->setOptions([
-                        'field' => 'rate',
+                        'field' => 'description',
+                        'sortable' => false,
                     ])
             )
             ->add(
@@ -116,9 +129,9 @@ final class TaxRuleGridDefinitionFactory extends AbstractGridDefinitionFactory
                                     ->setName($this->trans('Edit', [], 'Admin.Actions'))
                                     ->setIcon('edit')
                                     ->setOptions([
-                                        'route' => 'admin_taxes_edit',
-                                        'route_param_name' => 'taxId',
-                                        'route_param_field' => 'id_tax',
+                                        'route' => 'admin_tax_rules_edit',
+                                        'route_param_name' => 'taxRuleId',
+                                        'route_param_field' => 'id_tax_rule',
                                     ])
                             )
                             ->add(
@@ -131,9 +144,9 @@ final class TaxRuleGridDefinitionFactory extends AbstractGridDefinitionFactory
                                             [],
                                             'Admin.Notifications.Warning'
                                         ),
-                                        'route' => 'admin_taxes_delete',
-                                        'route_param_name' => 'taxId',
-                                        'route_param_field' => 'id_tax',
+                                        'route' => 'admin_tax_rules_delete',
+                                        'route_param_name' => 'taxRuleId',
+                                        'route_param_field' => 'id_tax_rule',
                                     ])
                             ),
                     ])
@@ -150,7 +163,7 @@ final class TaxRuleGridDefinitionFactory extends AbstractGridDefinitionFactory
                 (new SubmitBulkAction('delete_selection'))
                     ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
                     ->setOptions([
-                        'submit_route' => 'admin_taxes_bulk_delete',
+                        'submit_route' => 'admin_tax_rules_bulk_delete',
                         'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
                     ])
             );

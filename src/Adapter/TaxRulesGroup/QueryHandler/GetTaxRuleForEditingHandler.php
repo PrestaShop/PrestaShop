@@ -27,17 +27,68 @@
 namespace PrestaShop\PrestaShop\Adapter\TaxRulesGroup\QueryHandler;
 
 use PrestaShop\PrestaShop\Adapter\TaxRulesGroup\AbstractTaxRulesGroupHandler;
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
+use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
+use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Tax\ValueObject\TaxId;
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\TaxRuleConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\TaxRuleNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\TaxRulesGroupConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Query\GetTaxRuleForEditing;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\QueryHandler\GetTaxRuleForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\QueryResult\EditableTaxRule;
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\BehaviorId;
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 
 /**
  * Handles query which gets tax rule for editing
  */
 final class GetTaxRuleForEditingHandler extends AbstractTaxRulesGroupHandler implements GetTaxRuleForEditingHandlerInterface
 {
+    /**
+     * {@inheritdoc}
+     *
+     * @throws CountryConstraintException
+     * @throws StateConstraintException
+     * @throws TaxConstraintException
+     * @throws TaxRuleNotFoundException
+     * @throws TaxRulesGroupConstraintException
+     * @throws TaxRuleConstraintException
+     */
     public function handle(GetTaxRuleForEditing $query): EditableTaxRule
     {
-        // TODO: Implement handle() method.
+        $taxRuleId = $query->getTaxRuleId();
+        $taxRule = $this->getTaxRule($taxRuleId);
+
+        $editableTaxRule = new EditableTaxRule(
+            $taxRuleId,
+            new TaxRulesGroupId((int) $taxRule->id_tax_rules_group),
+            new CountryId((int) $taxRule->id_country),
+            new BehaviorId($taxRule->behavior)
+        );
+
+        if (null !== $taxRule->zipcode_from) {
+            $editableTaxRule->setZipCodeForm($taxRule->zipcode_from);
+        }
+
+        if (null !== $taxRule->zipcode_to) {
+            $editableTaxRule->setZipCodeTo($taxRule->zipcode_to);
+        }
+
+        if (null !== $taxRule->id_state) {
+            $editableTaxRule->setStateId(new StateId((int) $taxRule->id_state));
+        }
+
+        if (null !== $taxRule->id_tax && (int) $taxRule->id_tax !== 0) {
+            $editableTaxRule->setTaxId(new TaxId((int) $taxRule->id_tax));
+        }
+
+        if (null !== $taxRule->description) {
+            $editableTaxRule->setDescription($taxRule->description);
+        }
+
+        return $editableTaxRule;
     }
 }

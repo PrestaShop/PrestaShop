@@ -121,3 +121,9 @@ services:
         arguments:
             - "@doctrine.dbal.default_connection"
             - "%database_prefix%"
+
+    prestashop.bundle.repository.tax_rule:
+      class: PrestaShopBundle\Entity\Repository\TaxRuleRepository
+      arguments:
+        - '@doctrine.dbal.default_connection'
+        - '%database_prefix%'

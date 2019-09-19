@@ -37,6 +37,16 @@ final class TaxRulesGroupConstraint
     public const MAX_NAME_LENGTH = 64;
 
     /**
+     * Maximum length for tax rule description
+     */
+    public const MAX_TAX_RULE_DESCRIPTION_LENGTH = 100;
+
+    /**
+     * Maximum length for tax rule zip code range including "-"
+     */
+    public const MAX_TAX_RULE_ZIP_CODE_RANGE_LENGTH = 25;
+
+    /**
      * Prevents class to be instantiated
      */
     private function __construct()

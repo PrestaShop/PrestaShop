@@ -126,3 +126,10 @@ services:
     arguments:
       - 'PrestaShopBundle\Form\Admin\Improve\International\TaxRulesGroup\TaxRulesGroupType'
       - '@prestashop.core.form.identifiable_object.data_provider.tax_rules_group_form_data_provider'
+
+  prestashop.core.form.identifiable_object.builder.tax_rule_form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: 'prestashop.core.form.builder.form_builder_factory:create'
+    arguments:
+      - 'PrestaShopBundle\Form\Admin\Improve\International\TaxRulesGroup\TaxRuleType'
+      - '@prestashop.core.form.identifiable_object.data_provider.tax_rule_form_data_provider'

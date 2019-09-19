@@ -10,3 +10,8 @@ services:
         arguments:
           - "@prestashop.adapter.legacy.configuration"
           - "@=service('prestashop.adapter.legacy.context').getContext().shop?service('prestashop.adapter.legacy.context').getContext().shop.id"
+
+    prestashop.adapter.data_provider.tax_data:
+        class: PrestaShop\PrestaShop\Adapter\Tax\TaxDataProvider
+        arguments:
+          - '@=service("prestashop.adapter.legacy.context").getLanguage().id'

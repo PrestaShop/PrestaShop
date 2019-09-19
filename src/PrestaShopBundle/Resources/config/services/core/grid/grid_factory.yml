@@ -227,6 +227,6 @@ services:
       class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
       arguments:
         - '@prestashop.core.grid.definition.factory.tax_rule'
-        - '@prestashop.core.grid.data_factory.tax_rule'
+        - '@prestashop.core.grid.data.factory.tax_rule_decorator'
         - '@prestashop.core.grid.filter.form_factory'
         - '@prestashop.core.hook.dispatcher'

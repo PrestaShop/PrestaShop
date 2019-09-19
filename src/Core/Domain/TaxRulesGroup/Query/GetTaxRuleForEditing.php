@@ -52,7 +52,7 @@ class GetTaxRuleForEditing
     /**
      * @return TaxRuleId $taxRuleId
      */
-    public function getTaxRulesGroupId(): TaxRuleId
+    public function getTaxRuleId(): TaxRuleId
     {
         return $this->taxRuleId;
     }

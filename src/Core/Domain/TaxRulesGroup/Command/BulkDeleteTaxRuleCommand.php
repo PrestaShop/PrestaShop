@@ -54,18 +54,18 @@ class BulkDeleteTaxRuleCommand
      */
     public function getTaxRuleIds(): array
     {
-        return $this->taxRulesGroupIds;
+        return $this->taxRuleIds;
     }
 
     /**
      * @param int[] $taxRuleIds
      *
-     * @throws TaxRulesGroupConstraintException
+     * @throws TaxRuleConstraintException
      */
-    private function setTaxRuleIds(array $taxRuleIds)
+    private function setTaxRuleIds(array $taxRuleIds): void
     {
         foreach ($taxRuleIds as $taxRuleId) {
-            $this->$taxRuleId[] = new TaxRuleId($taxRuleId);
+            $this->taxRuleIds[] = new TaxRuleId($taxRuleId);
         }
     }
 }

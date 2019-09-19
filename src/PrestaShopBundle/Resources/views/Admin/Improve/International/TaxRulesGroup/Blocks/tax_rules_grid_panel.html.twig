@@ -1,0 +1,26 @@
+{% embed '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': taxRuleGrid} %}
+  {% block grid_panel_header %}
+  {% endblock %}
+  {% block grid_panel_body %}
+    <div class="card-body">
+      {% block grid_view_block %}
+        {% embed '@PrestaShop/Admin/Common/Grid/grid.html.twig' with {'grid': taxRuleGrid } %}
+          {% block grid_bulk_actions_block %}
+            <div class="col-sm">
+              <div class="row">
+                <div class="col-sm">
+                  {{ include('@PrestaShop/Admin/Improve/International/TaxRulesGroup/Grid/Blocks/bulk_actions.html.twig', {'grid': taxRuleGrid}) }}
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm">
+                  {{ include('@PrestaShop/Admin/Common/Grid/Blocks/bulk_actions_select_all.html.twig', {'grid': taxRuleGrid}) }}
+                </div>
+              </div>
+            </div>
+          {% endblock %}
+        {% endembed %}
+      {% endblock %}
+    </div>
+  {% endblock %}
+{% endembed %}

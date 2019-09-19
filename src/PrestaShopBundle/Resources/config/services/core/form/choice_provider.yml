@@ -209,3 +209,13 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\MailThemeChoiceProvider'
     arguments:
       - '@prestashop.core.mail_template.theme_catalog'
+
+  prestashop.core.form.choice_provider.behavior:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\BehaviorChoiceProvider'
+    arguments:
+      - '@translator'
+
+  prestashop.core.form.choice_provider.tax:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\TaxChoiceProvider'
+    arguments:
+      - '@prestashop.adapter.data_provider.tax_data'
