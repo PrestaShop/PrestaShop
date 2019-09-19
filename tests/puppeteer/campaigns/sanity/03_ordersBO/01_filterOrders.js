@@ -1,6 +1,7 @@
+// Using chai
 const {expect} = require('chai');
 const helper = require('../../utils/helpers');
-// Using chai
+
 // importing pages
 const LoginPage = require('../../../pages/BO/login');
 const DashboardPage = require('../../../pages/BO/dashboard');
