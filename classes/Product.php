@@ -3695,6 +3695,7 @@ class ProductCore extends ObjectModel
         Cart $cart = null,
         $idCustomization = null
     ) {
+        // pack usecase: Pack::getQuantity() returns the pack quantity after cart quantities have been removed from stock
         if (Pack::isPack((int) $idProduct)) {
             return Pack::getQuantity($idProduct, $idProductAttribute, $cacheIsPack, $cart, $idCustomization);
         }
