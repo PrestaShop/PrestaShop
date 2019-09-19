@@ -34,18 +34,19 @@ use PrestaShop\PrestaShop\Core\Domain\ValueObject\Money;
 
 class MoneyTest extends TestCase
 {
-    public function testCreateWithValidValue()
+    public function testCreateWithPositiveValue()
     {
         $money = new Money(new Number('100'), new CurrencyId(10));
 
         $this->assertEquals('100', (string) $money->getAmount());
+        $this->assertEquals('', $money->getAmount()->getSign());
     }
 
-    public function testCreateWithBadValue()
+    public function testCreateWithNegativeValue()
     {
-        $this->expectException(DomainConstraintException::class);
-        $this->expectExceptionCode(DomainConstraintException::INVALID_MONEY_AMOUNT);
+        $money = new Money(new Number('-100'), new CurrencyId(10));
 
-        $money = new Money(new Number('-1'), new CurrencyId(10));
+        $this->assertEquals('-100', (string) $money->getAmount());
+        $this->assertEquals('-', $money->getAmount()->getSign());
     }
 }
