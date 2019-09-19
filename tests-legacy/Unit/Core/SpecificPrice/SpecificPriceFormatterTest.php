@@ -63,7 +63,7 @@ class SpecificPriceFormatterTest extends SymfonyIntegrationTestCase
             'us',
             'fr',
         ];
-        $cacheDir  = _PS_CACHE_DIR_ . 'sandbox' . DIRECTORY_SEPARATOR;
+        $cacheDir = _PS_CACHE_DIR_ . 'sandbox' . DIRECTORY_SEPARATOR;
 
         foreach ($countries as $country) {
             $xmlContent = (new LocalizationWarmer(_PS_VERSION_, $country))
@@ -74,9 +74,15 @@ class SpecificPriceFormatterTest extends SymfonyIntegrationTestCase
     }
 
     /**
-     *
      * @dataProvider specificPricesProvider
      *
+     * @param $price
+     * @param $taxRate
+     * @param $ecotaxAmount
+     * @param $currencyData
+     * @param $specificPrices
+     * @param $isTaxIncluded
+     * @param $expected
      */
     public function testFormatSpecificPrice(
         $price,
@@ -89,17 +95,17 @@ class SpecificPriceFormatterTest extends SymfonyIntegrationTestCase
     ) {
         $context = Context::getContext();
 
-        $currency                  = new Currency();
-        $currency->active          = true;
+        $currency = new Currency();
+        $currency->active = true;
         $currency->conversion_rate = $currencyData['conversion_rate'];
-        $currency->sign            = $currencyData['sign'];
-        $currency->iso_code        = $currencyData['code'];
+        $currency->sign = $currencyData['sign'];
+        $currency->iso_code = $currencyData['code'];
         $context->currency = $currency;
 
-        $language           = new Language();
+        $language = new Language();
         $language->iso_code = 'EN';
-        $language->locale   = 'en-US';
-        $context->language  = $language;
+        $language->locale = 'en-US';
+        $context->language = $language;
 
         $specificPriceFormatter = new SpecificPriceFormatter($specificPrices[0], $isTaxIncluded, $context);
         $formattedSpecificPrice = $specificPriceFormatter->formatSpecificPrice($price, $taxRate, $ecotaxAmount);
@@ -113,123 +119,123 @@ class SpecificPriceFormatterTest extends SymfonyIntegrationTestCase
     {
         $specificPrices = array(
             0 => array(
-                'id_specific_price'      => '9',
+                'id_specific_price' => '9',
                 'id_specific_price_rule' => '0',
-                'id_cart'                => '0',
-                'id_product'             => '10',
-                'id_shop'                => '1',
-                'id_shop_group'          => '0',
-                'id_currency'            => '0',
-                'id_country'             => '0',
-                'id_group'               => '0',
-                'id_customer'            => '0',
-                'id_product_attribute'   => '0',
-                'price'                  => '15.000000',
-                'from_quantity'          => '15',
-                'reduction'              => 0,
-                'reduction_tax'          => '1',
-                'reduction_type'         => 'amount',
-                'from'                   => '0000-00-00 00:00:00',
-                'to'                     => '0000-00-00 00:00:00',
-                'score'                  => '48',
-                'quantity'               => '15',
-                'reduction_with_tax'     => 0,
-                'nextQuantity'           => -1,
+                'id_cart' => '0',
+                'id_product' => '10',
+                'id_shop' => '1',
+                'id_shop_group' => '0',
+                'id_currency' => '0',
+                'id_country' => '0',
+                'id_group' => '0',
+                'id_customer' => '0',
+                'id_product_attribute' => '0',
+                'price' => '15.000000',
+                'from_quantity' => '15',
+                'reduction' => 0,
+                'reduction_tax' => '1',
+                'reduction_type' => 'amount',
+                'from' => '0000-00-00 00:00:00',
+                'to' => '0000-00-00 00:00:00',
+                'score' => '48',
+                'quantity' => '15',
+                'reduction_with_tax' => 0,
+                'nextQuantity' => -1,
             ),
         );
-        $currencyEur    = array(
+        $currencyEur = array(
             'conversion_rate' => 1.0,
-            'sign'            => '€',
-            'code'            => 'EUR',
+            'sign' => '€',
+            'code' => 'EUR',
         );
-        $currencyDol    = array(
+        $currencyDol = array(
             'conversion_rate' => 1.3,
-            'sign'            => '$',
-            'code'            => 'USD',
+            'sign' => '$',
+            'code' => 'USD',
         );
 
         return array(
             'EUR to USD, without ecotax' => array(
-                'price'           => 31.2,
-                'tax_rate'        => 20,
-                'ecotax_amount'   => 0,
-                'currency'        => $currencyDol,
+                'price' => 31.2,
+                'tax_rate' => 20,
+                'ecotax_amount' => 0,
+                'currency' => $currencyDol,
                 'specific_prices' => $specificPrices,
-                'isTaxIncluded'   => true,
-                'expected'        => array(
+                'isTaxIncluded' => true,
+                'expected' => array(
                     array(
                         'discount' => 7.80,
-                        'save'     => 117.00,
+                        'save' => 117.00,
                     ),
                 ),
             ),
             'EUR to EUR, without ecotax' => array(
-                'price'           => 24,
-                'tax_rate'        => 20,
-                'ecotax_amount'   => 0,
-                'currency'        => $currencyEur,
+                'price' => 24,
+                'tax_rate' => 20,
+                'ecotax_amount' => 0,
+                'currency' => $currencyEur,
                 'specific_prices' => $specificPrices,
-                'isTaxIncluded'   => true,
-                'expected'        => array(
+                'isTaxIncluded' => true,
+                'expected' => array(
                     array(
                         'discount' => 6.00,
-                        'save'     => 90.00,
+                        'save' => 90.00,
                     ),
                 ),
             ),
-            'EUR to USD, with ecotax'    => array(
-                'price'           => 31.2,
-                'tax_rate'        => 20,
-                'ecotax_amount'   => 0.9,
-                'currency'        => $currencyDol,
+            'EUR to USD, with ecotax' => array(
+                'price' => 31.2,
+                'tax_rate' => 20,
+                'ecotax_amount' => 0.9,
+                'currency' => $currencyDol,
                 'specific_prices' => $specificPrices,
-                'isTaxIncluded'   => true,
-                'expected'        => array(
+                'isTaxIncluded' => true,
+                'expected' => array(
                     array(
                         'discount' => 6.63,
-                        'save'     => 99.45,
+                        'save' => 99.45,
                     ),
                 ),
             ),
-            'EUR to EUR, with ecotax'    => array(
-                'price'           => 24,
-                'tax_rate'        => 20,
-                'ecotax_amount'   => 0.9,
-                'currency'        => $currencyEur,
+            'EUR to EUR, with ecotax' => array(
+                'price' => 24,
+                'tax_rate' => 20,
+                'ecotax_amount' => 0.9,
+                'currency' => $currencyEur,
                 'specific_prices' => $specificPrices,
-                'isTaxIncluded'   => true,
-                'expected'        => array(
+                'isTaxIncluded' => true,
+                'expected' => array(
                     array(
                         'discount' => 5.10,
-                        'save'     => 76.50,
+                        'save' => 76.50,
                     ),
                 ),
             ),
             'EUR to USD, without any tax' => array(
-                'price'           => 31.2,
-                'tax_rate'        => 20,
-                'ecotax_amount'   => 0,
-                'currency'        => $currencyDol,
+                'price' => 31.2,
+                'tax_rate' => 20,
+                'ecotax_amount' => 0,
+                'currency' => $currencyDol,
                 'specific_prices' => $specificPrices,
-                'isTaxIncluded'   => false,
-                'expected'        => array(
+                'isTaxIncluded' => false,
+                'expected' => array(
                     array(
                         'discount' => 11.70,
-                        'save'     => 175.50,
+                        'save' => 175.50,
                     ),
                 ),
             ),
             'EUR to EUR, without any tax' => array(
-                'price'           => 24,
-                'tax_rate'        => 20,
-                'ecotax_amount'   => 0,
-                'currency'        => $currencyEur,
+                'price' => 24,
+                'tax_rate' => 20,
+                'ecotax_amount' => 0,
+                'currency' => $currencyEur,
                 'specific_prices' => $specificPrices,
-                'isTaxIncluded'   => false,
-                'expected'        => array(
+                'isTaxIncluded' => false,
+                'expected' => array(
                     array(
                         'discount' => 9.00,
-                        'save'     => 135.00,
+                        'save' => 135.00,
                     ),
                 ),
             ),
