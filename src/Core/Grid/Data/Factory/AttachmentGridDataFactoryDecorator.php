@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Data\Factory;
 
 use Doctrine\DBAL\Connection;
+use PDO;
 use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollectionInterface;
@@ -115,7 +116,7 @@ final class AttachmentGridDataFactoryDecorator implements GridDataFactoryInterfa
         foreach ($attachments as $attachment) {
             if ((int) $attachment['products'] > 0) {
                 $productNamesArray = $this->getProductNames($attachment['id_attachment']);
-                $productNames = $productNamesArray['product_names'] ?? '';
+                $productNames = implode(', ', $productNamesArray);
                 $attachment['dynamic_message'] = $this->trans(
                     'This file is associated with the following products. Are you sure you want to delete it?',
                     [],
@@ -142,7 +143,7 @@ final class AttachmentGridDataFactoryDecorator implements GridDataFactoryInterfa
     {
         $qb = $this->connection->createQueryBuilder();
 
-        $qb->select("GROUP_CONCAT(DISTINCT pl.`name` SEPARATOR ', ') as product_names")
+        $qb->select("DISTINCT pl.`name`")
             ->from($this->dbPrefix . 'product_attachment', 'pa')
             ->leftJoin(
                 'pa',
@@ -152,9 +153,8 @@ final class AttachmentGridDataFactoryDecorator implements GridDataFactoryInterfa
             )
             ->where('pa.`id_attachment` = :attachmentId')
             ->setParameter('attachmentId', $attachmentId)
-            ->setParameter('langId', $this->employeeIdLang)
-            ->setMaxResults(1);
+            ->setParameter('langId', $this->employeeIdLang);
 
-        return $qb->execute()->fetch();
+        return $qb->execute()->fetchAll(PDO::FETCH_COLUMN);
     }
 }

@@ -212,12 +212,12 @@ class AttachmentController extends FrameworkBundleAdminController
                 ),
             ],
             BulkDeleteAttachmentsException::class => sprintf(
-                '%s : %s',
+                '%s: %s',
                 $this->trans(
                     'An error occurred while deleting this selection.',
                     'Admin.Notifications.Error'
                 ),
-                $e instanceof BulkDeleteAttachmentsException ? $e->getMessage() : ''
+                $e instanceof BulkDeleteAttachmentsException ? implode(', ', $e->getAttachmentIds()) : ''
             ),
         ];
     }

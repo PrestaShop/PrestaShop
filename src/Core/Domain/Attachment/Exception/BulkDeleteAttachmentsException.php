@@ -26,9 +26,36 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Attachment\Exception;
 
+use Exception;
+
 /**
  * Exception is thrown on attachments bulk delete failure
  */
 class BulkDeleteAttachmentsException extends AttachmentException
 {
+    /**
+     * @var int[]
+     */
+    private $attachmentIds;
+
+    /**
+     * @param int[] $attachmentIds
+     * @param string $message
+     * @param int $code
+     * @param Exception $previous
+     */
+    public function __construct(array $attachmentIds, $message = '', $code = 0, $previous = null)
+    {
+        parent::__construct($message, $code, $previous);
+
+        $this->attachmentIds = $attachmentIds;
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getAttachmentIds(): array
+    {
+        return $this->attachmentIds;
+    }
 }

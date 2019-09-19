@@ -38,6 +38,20 @@ use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\Attachment;
 final class GetAttachmentHandler extends AbstractAttachmentHandler implements GetAttachmentHandlerInterface
 {
     /**
+     * @var string
+     */
+    private $downloadDirectory;
+
+    /**
+     * @param string $downloadDirectory
+     *
+     */
+    public function __construct(string $downloadDirectory)
+    {
+        $this->downloadDirectory = $downloadDirectory;
+    }
+
+    /**
      * {@inheritdoc}
      *
      * @throws AttachmentNotFoundException
@@ -45,10 +59,10 @@ final class GetAttachmentHandler extends AbstractAttachmentHandler implements Ge
     public function handle(GetAttachment $query): Attachment
     {
         $attachment = $this->getAttachment($query->getAttachmentId());
-        $path = _PS_DOWNLOAD_DIR_ . $attachment->file;
+        $path = $this->downloadDirectory . $attachment->file;
 
         if (!file_exists($path)) {
-            throw new AttachmentNotFoundException('Attachment file was not found');
+            throw new AttachmentNotFoundException(sprintf('Attachment file was not found at %s', $path));
         }
 
         return new Attachment(

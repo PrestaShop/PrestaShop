@@ -14,5 +14,7 @@ services:
 
   prestashop.adapter.attachment.query_handler.get_attachment_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Attachment\QueryHandler\GetAttachmentHandler'
+    arguments:
+      - !php/const _PS_DOWNLOAD_DIR_
     tags:
       - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachment' }
