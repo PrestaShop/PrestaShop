@@ -25,11 +25,21 @@
 
 import ChoiceTree from '../../components/form/choice-tree';
 import TaxRulesGroupForm from './TaxRulesGroupForm';
+import Grid from '../../components/grid/grid';
+import BulkActionCheckboxExtension from '../../components/grid/extension/bulk-action-checkbox-extension';
+import SubmitRowActionExtension from '../../components/grid/extension/action/row/submit-row-action-extension';
+import SubmitBulkExtension from '../../components/grid/extension/submit-bulk-action-extension';
 
 const $ = window.$;
 
 $(() => {
+  const taxRuleGrid = new Grid('tax_rule_grid');
+
   // needed for shop association input in form
   new ChoiceTree('#tax_rules_group_shop_association').enableAutoCheckChildren();
+  taxRuleGrid.addExtension(new BulkActionCheckboxExtension());
+  taxRuleGrid.addExtension(new SubmitBulkExtension());
+  taxRuleGrid.addExtension(new SubmitRowActionExtension());
+
   new TaxRulesGroupForm();
 });

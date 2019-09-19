@@ -27,8 +27,29 @@
  * Defines all selectors that are used in tax rules group add/edit form.
  */
 export default {
-  customAddressFieldsTabBtn: '#custom-address-fields',
-  addPatternBtn: '.add-pattern',
-  formatTextAreaField: '#country_address_format',
-  modifyAddressLayoutBtn: '.modify-address-layout',
+  countrySelect: '#tax_rule_country',
+  stateFormRow: '.js-state-form-row',
+  stateFormSelect: '#tax_rule_state',
+  editTaxRuleLink: 'a.js-link-row-action',
+  addTaxRuleBtn: '#page-header-desc-configuration-add',
+  submitTaxRuleBtn: '#tax-rule-submit-btn',
+  taxRuleForm: '#tax-rule-form',
+  zipCodeInput: '#tax_rule_zipCode',
+  behaviorSelect: '#tax_rule_behavior',
+  taxSelect: '#tax_rule_tax',
+  descriptionInput: '#tax_rule_description',
+  spinnerContainer: '#spinner-container',
+  addLink: '#page-header-desc-configuration-add',
+  taxRulesHiddenContent: '.js-hidden-content',
+  taxRuleErrorPopoverContent: '.js-popover-error-content',
+  taxRuleInvalidFeedbackContainer: '.invalid-feedback-container',
+  taxRuleFormPopoverErrorContainers: [
+    '.popover-error-container-tax_rule_description',
+    '.popover-error-container-tax_rule_tax',
+    '.popover-error-container-tax_rule_behavior',
+    '.popover-error-container-tax_rule_state',
+    '.popover-error-container-tax_rule_country',
+  ],
+  taxRuleFormErrorAlert: '.alert.alert-danger',
+  taxRulesGrid: 'form[name="tax_rule_grid"]',
 }
