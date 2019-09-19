@@ -59,7 +59,7 @@ final class BulkDeleteAttachmentsHandler extends AbstractAttachmentHandler imple
         }
 
         if (!empty($errors)) {
-            throw new BulkDeleteAttachmentsException(implode(', ', $errors));
+            throw new BulkDeleteAttachmentsException($errors, 'Failed to delete all of selected attachments');
         }
     }
 }
