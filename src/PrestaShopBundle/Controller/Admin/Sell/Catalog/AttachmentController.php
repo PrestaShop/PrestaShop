@@ -127,7 +127,7 @@ class AttachmentController extends FrameworkBundleAdminController
             $attachment = $this->getCommandBus()->handle(new GetAttachment((int) $attachmentId));
 
             return $this->file($attachment->getPath(), $attachment->getName());
-        } catch (AttachmentException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
@@ -152,7 +152,7 @@ class AttachmentController extends FrameworkBundleAdminController
                 'success',
                 $this->trans('Successful deletion.', 'Admin.Notifications.Success')
             );
-        } catch (AttachmentException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
@@ -182,7 +182,7 @@ class AttachmentController extends FrameworkBundleAdminController
                 'success',
                 $this->trans('Successful deletion.', 'Admin.Notifications.Success')
             );
-        } catch (AttachmentException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
@@ -190,7 +190,7 @@ class AttachmentController extends FrameworkBundleAdminController
     }
 
     /**
-     * @param Exception|null $e
+     * @param Exception $e
      *
      * @return array
      */
