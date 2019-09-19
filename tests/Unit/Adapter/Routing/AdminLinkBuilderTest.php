@@ -89,8 +89,15 @@ class AdminLinkBuilderTest extends TestCase
 
     public function testCleanTokenInLink()
     {
-        $builder = new AdminLinkBuilder($this->getLinkMock(), ['product' => 'AdminProducts', 'token' => 'toto']);
-        $editLink = $builder->getEditLink('product', ['id_product' => 42]);
+        $builder = new AdminLinkBuilder($this->getLinkMock(), ['product' => 'AdminProducts']);
+        $editLink = $builder->getEditLink('product', ['id_product' => 42, 'token' => 'toto']);
+        $this->assertEquals('?controller=AdminProducts&id_product=42&updateproduct=1', $editLink);
+    }
+
+    public function testCleanCurrentIndex()
+    {
+        $builder = new AdminLinkBuilder($this->getLinkMock(), ['product' => 'AdminProducts']);
+        $editLink = $builder->getEditLink('product', ['id_product' => 42, 'current_index' => '/admin-dev/index.php/sell/customers/?_token=mYY9DFadRSfPTsJR-XXHHMQl_MXOCTZQ8n2bVlbeUMA']);
         $this->assertEquals('?controller=AdminProducts&id_product=42&updateproduct=1', $editLink);
     }
 
