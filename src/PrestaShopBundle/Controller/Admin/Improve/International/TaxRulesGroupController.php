@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
+use Exception;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Command\BulkDeleteTaxRulesGroupCommand;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Command\BulkToggleTaxRulesGroupStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Command\DeleteTaxRulesGroupCommand;
@@ -35,7 +36,6 @@ use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\CannotBulkUpdateTa
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\CannotDeleteTaxRulesGroupException;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\CannotUpdateTaxRulesGroupException;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\TaxRulesGroupConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\TaxRulesGroupException;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\TaxRulesGroupNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Query\GetTaxRulesGroupForEditing;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\QueryResult\EditableTaxRulesGroup;
@@ -127,7 +127,7 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
                 'success',
                 $this->trans('Successful deletion.', 'Admin.Notifications.Success')
             );
-        } catch (TaxRulesGroupException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
@@ -162,7 +162,7 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
                 'success',
                 $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
             );
-        } catch (TaxRulesGroupException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
@@ -191,7 +191,7 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
                 'success',
                 $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
             );
-        } catch (TaxRulesGroupException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
@@ -220,7 +220,7 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
                 'success',
                 $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
             );
-        } catch (TaxRulesGroupException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
@@ -249,7 +249,7 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
                 'success',
                 $this->trans('Successful deletion.', 'Admin.Notifications.Success')
             );
-        } catch (TaxRulesGroupException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
@@ -295,11 +295,11 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
     /**
      * Gets error messages for exceptions
      *
-     * @param TaxRulesGroupException $e
+     * @param Exception $e
      *
      * @return array
      */
-    private function getErrorMessages(TaxRulesGroupException $e = null): array
+    private function getErrorMessages(Exception $e = null): array
     {
         return [
             CannotDeleteTaxRulesGroupException::class => $this->trans(
@@ -317,20 +317,20 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
                 ),
             ],
             CannotBulkDeleteTaxRulesGroupException::class => sprintf(
-                '%s : %s',
+                '%s: %s',
                 $this->trans(
                     'An error occurred while deleting this selection.',
                     'Admin.Notifications.Error'
                 ),
-                $e instanceof CannotBulkDeleteTaxRulesGroupException ? $e->getMessage() : ''
+                $e instanceof CannotBulkDeleteTaxRulesGroupException ? implode(', ', $e->getTaxRulesGroupsIds()) : ''
             ),
             CannotBulkUpdateTaxRulesGroupException::class => sprintf(
-                '%s : %s',
+                '%s: %s',
                 $this->trans(
                     'An error occurred while updating the status.',
                     'Admin.Notifications.Error'
                 ),
-                $e instanceof CannotBulkUpdateTaxRulesGroupException ? $e->getMessage() : ''
+                $e instanceof CannotBulkUpdateTaxRulesGroupException ? implode(', ', $e->getTaxRulesGroupsIds()) : ''
             ),
             TaxRulesGroupConstraintException::class => [
                 TaxRulesGroupConstraintException::INVALID_ID => $this->trans(

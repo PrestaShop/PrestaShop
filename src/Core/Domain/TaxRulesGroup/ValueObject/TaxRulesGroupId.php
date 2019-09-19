@@ -62,7 +62,7 @@ class TaxRulesGroupId
      *
      * @throws TaxRulesGroupConstraintException
      */
-    private function assertPositiveInt(int $value)
+    private function assertPositiveInt(int $value): void
     {
         if (0 > $value) {
             throw new TaxRulesGroupConstraintException(
