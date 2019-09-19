@@ -82,9 +82,14 @@ class CustomerNameValidator extends ConstraintValidator
      */
     private function isNameValid($name)
     {
+        $cleanedName = trim($name);
+        if (empty($cleanedName)) {
+            return false;
+        }
+
         $pattern = $this->characterCleaner->cleanNonUnicodeSupport(self::PATTERN_NAME);
 
-        return (bool) preg_match($pattern, $name);
+        return (bool) preg_match($pattern, $cleanedName);
     }
 
     /**
