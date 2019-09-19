@@ -242,6 +242,11 @@ export default class TaxRulesGroupForm {
     $stateFormRow.fadeIn(fadeSpeed);
   }
 
+  /**
+   * Removes form errors if new form data is loaded
+   *
+   * @private
+   */
   _removeTaxRuleFormErrors() {
     if ($(taxRulesGroupFormMap.taxRuleForm).find(taxRulesGroupFormMap.taxRuleFormErrorAlert).length) {
       $(taxRulesGroupFormMap.taxRuleForm).find(taxRulesGroupFormMap.taxRuleFormErrorAlert).remove();
@@ -253,6 +258,7 @@ export default class TaxRulesGroupForm {
       $(value).remove();
     });
   }
+
   /**
    * Fills tax rule form fields with response data
    *
