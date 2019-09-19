@@ -929,6 +929,7 @@ class CarrierCore extends ObjectModel
      * Add new delivery prices.
      *
      * @param array $priceList Prices list in multiple arrays (changed to array since 1.5.0)
+     * @param bool $delete
      *
      * @return bool Insertion result
      */
@@ -946,6 +947,25 @@ class CarrierCore extends ObjectModel
             $keys[] = 'id_shop_group';
         }
 
+        $old_carrier_record_ids = array();
+        if ($delete) {
+            // When carrier is edited, it is duplicated
+            // The new carrier is updated with new informations.
+            // The old, unmodified record stays hidden in database.
+
+            $old_carrier_records = Db::getInstance()->executeS('
+                SELECT `id_carrier` 
+                FROM `' . _DB_PREFIX_ . 'carrier` 
+                WHERE `id_reference` = ' . (int) $this->id_reference
+            );
+            if (is_array($old_carrier_records) && count($old_carrier_records) > 0) {
+                $old_carrier_record_ids = array_map(
+                    function ($record) {return $record['id_carrier']; },
+                    $old_carrier_records
+                );
+            }
+        }
+
         $sql = 'INSERT INTO `' . _DB_PREFIX_ . 'delivery` (' . implode(', ', $keys) . ') VALUES ';
         foreach ($price_list as $values) {
             if (!isset($values['id_shop'])) {
@@ -959,8 +979,9 @@ class CarrierCore extends ObjectModel
                 Db::getInstance()->execute(
                     'DELETE FROM `' . _DB_PREFIX_ . 'delivery`
                     WHERE ' . (null === $values['id_shop'] ? 'ISNULL(`id_shop`) ' : 'id_shop = ' . (int) $values['id_shop']) . '
-                    AND ' . (null === $values['id_shop_group'] ? 'ISNULL(`id_shop`) ' : 'id_shop_group=' . (int) $values['id_shop_group']) . '
-                    AND id_carrier=' . (int) $values['id_carrier'] .
+                    AND ' . (null === $values['id_shop_group'] ? 'ISNULL(`id_shop_group`) ' : 'id_shop_group=' . (int) $values['id_shop_group']) .
+                    // delete delivery records related to old carrier records
+                    'AND id_carrier IN (' . implode('","', $old_carrier_record_ids) .
                     ($values['id_range_price'] !== null ? ' AND id_range_price=' . (int) $values['id_range_price'] : ' AND (ISNULL(`id_range_price`) OR `id_range_price` = 0)') .
                     ($values['id_range_weight'] !== null ? ' AND id_range_weight=' . (int) $values['id_range_weight'] : ' AND (ISNULL(`id_range_weight`) OR `id_range_weight` = 0)') . '
 					AND id_zone=' . (int) $values['id_zone']
