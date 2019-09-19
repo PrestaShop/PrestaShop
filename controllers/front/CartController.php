@@ -562,7 +562,13 @@ class CartControllerCore extends FrontController
     }
 
     /**
-     * Check product quantity availability.
+     * Check product quantity availability to acknowledge whether
+     * an availability error should be raised.
+     *
+     * If shop has been configured to oversell, answer is no.
+     * If there is no items available (no stock), answer is yes.
+     * If there is items available, but the Cart already contains more than the quantity,
+     * answer is yes.
      *
      * @param Product $product
      * @param int $qtyToCheck
@@ -578,8 +584,21 @@ class CartControllerCore extends FrontController
             return false;
         }
 
-        // product quantity is the available quantity after decreasing products in cart
-        $productQuantity = Product::getQuantity(
+        // Check if this product is out-of-stock
+        $availableProductQuantity = Product::getAvailableQuantityInStock(
+            $this->id_product,
+            $this->id_product_attribute,
+            null,
+            $this->context->cart,
+            $this->customization_id
+        );
+        if ($availableProductQuantity <= 0) {
+            return true;
+        }
+
+        // Check if this product is out-of-stock after cart quantities have been removed from stock
+        // Be aware that Product::getQuantity() returns the available quantity after decreasing products in cart
+        $productQuantityAvailableAfterCartItemsHaveBeenRemovedFromStock = Product::getQuantity(
             $this->id_product,
             $this->id_product_attribute,
             null,
@@ -587,7 +606,7 @@ class CartControllerCore extends FrontController
             $this->customization_id
         );
 
-        return $productQuantity < 0;
+        return $productQuantityAvailableAfterCartItemsHaveBeenRemovedFromStock < 0;
     }
 
     /**

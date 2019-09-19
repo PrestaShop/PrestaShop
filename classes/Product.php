@@ -3678,6 +3678,34 @@ class ProductCore extends ObjectModel
     }
 
     /**
+     * Get available product quantities from the stock.
+     *
+     * @param int $idProduct Product id
+     * @param int $idProductAttribute Product attribute id (optional)
+     * @param bool|null $cacheIsPack
+     * @param Cart|null $cart
+     * @param int $idCustomization Product customization id (optional)
+     *
+     * @return int
+     */
+    public static function getAvailableQuantityInStock(
+        $idProduct,
+        $idProductAttribute = null,
+        $cacheIsPack = null,
+        Cart $cart = null,
+        $idCustomization = null
+    )
+    {
+        if (Pack::isPack((int) $idProduct)) {
+            $availableQuantity = Pack::getQuantity($idProduct, $idProductAttribute, $cacheIsPack, $cart, $idCustomization);
+        } else {
+            $availableQuantity = StockAvailable::getQuantityAvailableByProduct($idProduct, $idProductAttribute);
+        }
+
+        return $availableQuantity;
+    }
+
+    /**
      * Get available product quantities (this method already have decreased products in cart).
      *
      * @param int $idProduct Product id
@@ -3695,6 +3723,7 @@ class ProductCore extends ObjectModel
         Cart $cart = null,
         $idCustomization = null
     ) {
+        // @todo: check whether getAvailableQuantityInStock() can be used
         if (Pack::isPack((int) $idProduct)) {
             return Pack::getQuantity($idProduct, $idProductAttribute, $cacheIsPack, $cart, $idCustomization);
         }
