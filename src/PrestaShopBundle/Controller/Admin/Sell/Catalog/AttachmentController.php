@@ -189,7 +189,7 @@ class AttachmentController extends FrameworkBundleAdminController
     }
 
     /**
-     * @param Exception|null $e
+     * @param Exception $e
      *
      * @return array
      */
