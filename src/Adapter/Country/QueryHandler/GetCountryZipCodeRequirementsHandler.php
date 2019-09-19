@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Country\QueryHandler;
 
-use Country;
 use PrestaShop\PrestaShop\Adapter\Country\AbstractCountryHandler;
 use PrestaShop\PrestaShop\Adapter\Country\CountryNotFoundException;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;

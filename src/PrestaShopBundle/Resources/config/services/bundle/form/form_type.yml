@@ -931,5 +931,6 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Type\TaxChoiceType'
         arguments:
           - "@prestashop.core.form.choice_provider.tax"
+          - "@translator"
         tags:
           - { name: form.type }

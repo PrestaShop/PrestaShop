@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Displays tax choices
@@ -42,11 +43,18 @@ class TaxChoiceType extends AbstractType
     private $taxesChoiceProvider;
 
     /**
-     * @param FormChoiceProviderInterface $taxesChoiceProvider
+     * @var TranslatorInterface
      */
-    public function __construct(FormChoiceProviderInterface $taxesChoiceProvider)
+    private $translator;
+
+    /**
+     * @param FormChoiceProviderInterface $taxesChoiceProvider
+     * @param TranslatorInterface $translator
+     */
+    public function __construct(FormChoiceProviderInterface $taxesChoiceProvider, TranslatorInterface $translator)
     {
         $this->taxesChoiceProvider = $taxesChoiceProvider;
+        $this->translator = $translator;
     }
 
     /**
@@ -55,7 +63,7 @@ class TaxChoiceType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $choices = array_merge(
-            ['No tax' => 0],
+            [$this->translator->trans('No tax', [], 'Admin.Catalog.Feature') => 0],
             $this->taxesChoiceProvider->getChoices()
         );
 

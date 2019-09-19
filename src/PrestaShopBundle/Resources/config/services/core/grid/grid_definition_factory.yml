@@ -185,15 +185,15 @@ services:
       public: true
 
     prestashop.core.grid.definition.factory.order:
-        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderGridDefinitionFactory'
-        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
-        arguments:
-          - '@prestashop.adapter.legacy.configuration'
-          - '@prestashop.adapter.form.choice_provider.order_countries'
-          - '@prestashop.core.form.choice_provider.order_state_by_id'
-          - '@=service("prestashop.adapter.legacy.context").getContext().language.date_format_full'
-          - '@prestashop.adapter.feature.multistore'
-        public: true
+      class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderGridDefinitionFactory'
+      parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+      arguments:
+        - '@prestashop.adapter.legacy.configuration'
+        - '@prestashop.adapter.form.choice_provider.order_countries'
+        - '@prestashop.core.form.choice_provider.order_state_by_id'
+        - '@=service("prestashop.adapter.legacy.context").getContext().language.date_format_full'
+        - '@prestashop.adapter.feature.multistore'
+      public: true
 
     prestashop.core.grid.definition.factory.tax_rule:
       class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\TaxRuleGridDefinitionFactory'

@@ -103,7 +103,7 @@ final class TaxRuleQueryBuilder extends AbstractDoctrineQueryBuilder
      *
      * @return QueryBuilder
      */
-    private function getQueryBuilder(array $filters)
+    private function getQueryBuilder(array $filters): QueryBuilder
     {
         $qb = $this->connection
             ->createQueryBuilder()
@@ -133,7 +133,11 @@ final class TaxRuleQueryBuilder extends AbstractDoctrineQueryBuilder
         return $qb;
     }
 
-    private function applyFilters(QueryBuilder $qb, array $filters)
+    /**
+     * @param QueryBuilder $qb
+     * @param array $filters
+     */
+    private function applyFilters(QueryBuilder $qb, array $filters): void
     {
         $allowedFiltersMap = [
             'tax_rules_group_id' => 'id_tax_rules_group',

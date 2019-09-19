@@ -31,8 +31,4 @@ namespace PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception;
  */
 class CannotUpdateTaxRulesGroupException extends TaxRulesGroupException
 {
-    /**
-     * Thrown when status toggling fails
-     */
-    public const FAILED_TOGGLE_STATUS = 1;
 }

@@ -73,10 +73,10 @@ class UniqueTaxRuleBehaviorValidator extends ConstraintValidator
 
         foreach ($selectedCountries as $country) {
             $taxRuleWithUniqueBehaviorExists = $this->taxRuleRepository->hasUniqueBehaviorTaxRule(
-                $this->getIntegerValues($value, 'taxRulesGroupId'),
+                $this->getIntegerValue($value, 'taxRulesGroupId'),
                 $country,
-                $this->getIntegerValues($value, 'state'),
-                $this->getIntegerValues($value, 'taxRuleId')
+                $this->getIntegerValue($value, 'state'),
+                $this->getIntegerValue($value, 'taxRuleId')
             );
 
             if ($taxRuleWithUniqueBehaviorExists) {
@@ -97,7 +97,7 @@ class UniqueTaxRuleBehaviorValidator extends ConstraintValidator
      *
      * @return int
      */
-    private function getIntegerValues(array $data, string $key): int
+    private function getIntegerValue(array $data, string $key): int
     {
         return array_key_exists($key, $data) && $data[$key] !== null ? (int) $data[$key] : 0;
     }
