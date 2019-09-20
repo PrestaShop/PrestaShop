@@ -13,19 +13,16 @@ const CartData = require('../../data/FO/cart');
 
 let browser;
 let page;
-let homePage;
-let cartPage;
-let loginPage;
-let checkoutPage;
-let orderConfirmationPage;
 
 // creating pages objects in a function
 const init = async function () {
-  homePage = await (new HomePage(page));
-  cartPage = await (new CartPage(page));
-  loginPage = await (new LoginPage(page));
-  checkoutPage = await (new CheckoutPage(page));
-  orderConfirmationPage = await (new OrderConfirmationPage(page));
+  return {
+    homePage: new HomePage(page),
+    cartPage: new CartPage(page),
+    loginPage: new LoginPage(page),
+    checkoutPage: new CheckoutPage(page),
+    orderConfirmationPage: new OrderConfirmationPage(page),
+  };
 };
 
 /*
@@ -33,65 +30,67 @@ const init = async function () {
  */
 describe('Order a product and check order confirmation', async () => {
   // before and after functions
-  before(async () => {
+  before(async function () {
     browser = await helper.createBrowser();
-    page = await browser.newPage();
+    page = await helper.newTab(browser);
     await page.setExtraHTTPHeaders({
       'Accept-Language': 'en-GB',
     });
-    await init();
+    this.pageObjects = await init();
   });
   after(async () => {
-    await browser.close();
+    await helper.closeBrowser(browser);
   });
   // Steps
-  it('should open the shop page', async () => {
-    await homePage.goTo(global.URL_FO);
-    await homePage.checkHomePage();
+  it('should open the shop page', async function () {
+    await this.pageObjects.homePage.goTo(global.URL_FO);
+    await this.pageObjects.homePage.checkHomePage();
   });
-  it('should go to login page', async () => {
-    await homePage.goToLoginPage();
-    const pageTitle = await loginPage.getPageTitle();
-    await expect(pageTitle).to.equal(loginPage.pageTitle);
+  it('should go to login page', async function () {
+    await this.pageObjects.homePage.goToLoginPage();
+    const pageTitle = await this.pageObjects.loginPage.getPageTitle();
+    await expect(pageTitle).to.equal(this.pageObjects.loginPage.pageTitle);
   });
-  it('should sign In in FO With default account', async () => {
-    await loginPage.customerLogin(customer.defaultAccount);
-    const connected = await homePage.isCustomerConnected();
+  it('should sign In in FO With default account', async function () {
+    await this.pageObjects.loginPage.customerLogin(customer.defaultAccount);
+    const connected = await this.pageObjects.homePage.isCustomerConnected();
     await expect(connected, 'Customer is not connected in FO').to.be.true;
   });
-  it('should go to home page', async () => {
-    await homePage.goTo(global.URL_FO);
-    await homePage.checkHomePage();
+  it('should go to home page', async function () {
+    await this.pageObjects.homePage.goTo(global.URL_FO);
+    await this.pageObjects.homePage.checkHomePage();
   });
-  it('should add first product to cart and Proceed to checkout', async () => {
-    await homePage.addProductToCartByQuickView('1', '1');
-    await homePage.proceedToCheckout();
-    const pageTitle = await cartPage.getPageTitle();
-    await expect(pageTitle).to.equal(cartPage.pageTitle);
+  it('should add first product to cart and Proceed to checkout', async function () {
+    await this.pageObjects.homePage.addProductToCartByQuickView('1', '1');
+    await this.pageObjects.homePage.proceedToCheckout();
+    const pageTitle = await this.pageObjects.cartPage.getPageTitle();
+    await expect(pageTitle).to.equal(this.pageObjects.cartPage.pageTitle);
   });
-  it('should check the cart details', async () => {
-    await cartPage.checkProductInCart(CartData.customCartData.firstProduct, '1');
+  it('should check the cart details', async function () {
+    await this.pageObjects.cartPage.checkProductInCart(CartData.customCartData.firstProduct, '1');
   });
-  it('should proceed to checkout and check Step Address', async () => {
-    await cartPage.clickOnProceedToCheckout();
-    const isCheckoutPage = await checkoutPage.isCheckoutPage();
+  it('should proceed to checkout and check Step Address', async function () {
+    await this.pageObjects.cartPage.clickOnProceedToCheckout();
+    const isCheckoutPage = await this.pageObjects.checkoutPage.isCheckoutPage();
     await expect(isCheckoutPage, 'Browser is not in checkout Page').to.be.true;
-    const isStepPIComplete = await checkoutPage.isStepCompleted(checkoutPage.personalInformationStepSection);
+    const isStepPIComplete = await this.pageObjects.checkoutPage
+      .isStepCompleted(this.pageObjects.checkoutPage.personalInformationStepSection);
     await expect(isStepPIComplete, 'Step Personal information is not complete').to.be.true;
   });
-  it('should validate Step Address and go to Delivery Step', async () => {
-    const isStepAddressComplete = await checkoutPage.goToDeliveryStep();
+  it('should validate Step Address and go to Delivery Step', async function () {
+    const isStepAddressComplete = await this.pageObjects.checkoutPage.goToDeliveryStep();
     await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
   });
-  it('should validate Step Delivery and go to Payment Step', async () => {
-    const isStepDeliveryComplete = await checkoutPage.goToPaymentStep();
+  it('should validate Step Delivery and go to Payment Step', async function () {
+    const isStepDeliveryComplete = await this.pageObjects.checkoutPage.goToPaymentStep();
     await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
   });
-  it('should Pay by back wire and confirm order', async () => {
-    await checkoutPage.choosePaymentAndOrder('ps_wirepayment');
-    const pageTitle = await orderConfirmationPage.getPageTitle();
-    await expect(pageTitle).to.equal(orderConfirmationPage.pageTitle);
-    const cardTitle = await orderConfirmationPage.getTextContent(orderConfirmationPage.orderConfirmationCardTitleH3);
-    await expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+  it('should Pay by back wire and confirm order', async function () {
+    await this.pageObjects.checkoutPage.choosePaymentAndOrder('ps_wirepayment');
+    const pageTitle = await this.pageObjects.orderConfirmationPage.getPageTitle();
+    await expect(pageTitle).to.equal(this.pageObjects.orderConfirmationPage.pageTitle);
+    const cardTitle = await this.pageObjects.orderConfirmationPage
+      .getTextContent(this.pageObjects.orderConfirmationPage.orderConfirmationCardTitleH3);
+    await expect(cardTitle).to.contains(this.pageObjects.orderConfirmationPage.orderConfirmationCardTitle);
   });
 });
