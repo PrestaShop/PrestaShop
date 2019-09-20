@@ -50,10 +50,11 @@ interface CurrencyDataProviderInterface
      * Return raw currencies data from the database.
      *
      * @param bool $currentShopOnly If true returns only currencies associated to current shop
+     * @param bool $filterDeleted If true deleted currencies are filtered
      *
      * @return array[] Installed currencies
      */
-    public function findAll($currentShopOnly = true);
+    public function findAll($currentShopOnly = true, $filterDeleted = true);
 
     /**
      * Get a Currency entity instance by ISO code.
