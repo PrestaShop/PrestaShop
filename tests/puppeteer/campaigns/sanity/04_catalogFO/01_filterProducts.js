@@ -1,16 +1,17 @@
 // Using chai
 const {expect} = require('chai');
+const helper = require('../../utils/helpers');
 
 // Importing pages
 const HomePage = require('../../../pages/FO/home');
 
+let browser;
 let page;
 let homePage;
 let allProductsNumber = 0;
 
 // creating pages objects in a function
-const init = async () => {
-  page = await global.browser.newPage();
+const init = async function () {
   homePage = await (new HomePage(page));
 };
 
@@ -20,24 +21,34 @@ const init = async () => {
   Filter products by a category
   Filter products by a subcategory
  */
-global.scenario('Filter Products by categories in Home page', () => {
-  test('should open the shop page', async () => {
+describe('Filter Products by categories in Home page', async () => {
+  // before and after functions
+  before(async () => {
+    browser = await helper.createBrowser();
+    page = await browser.newPage();
+    await init();
+  });
+  after(async () => {
+    await browser.close();
+  });
+  // Steps
+  it('should open the shop page', async () => {
     await homePage.goTo(global.URL_FO);
     await homePage.checkHomePage();
   });
-  test('should check and get the products number', async () => {
+  it('should check and get the products number', async () => {
     await homePage.waitForSelectorAndClick(homePage.allProductLink);
     allProductsNumber = await homePage.getNumberFromText(homePage.totalProducts);
     await expect(allProductsNumber).to.be.above(0);
   });
-  test('should filter products by the category "Accessories" and check result', async () => {
+  it('should filter products by the category "Accessories" and check result', async () => {
     await homePage.filterByCategory('6');
     const numberOfProducts = await homePage.getNumberFromText(homePage.totalProducts);
     await expect(numberOfProducts).to.be.below(allProductsNumber);
   });
-  test('should filter products by the subcategory "Stationery" and check result', async () => {
+  it('should filter products by the subcategory "Stationery" and check result', async () => {
     await homePage.filterSubCategory('6', '7');
     const numberOfProducts = await homePage.getNumberFromText(homePage.totalProducts);
     await expect(numberOfProducts).to.be.below(allProductsNumber);
   });
-}, init, true);
+});

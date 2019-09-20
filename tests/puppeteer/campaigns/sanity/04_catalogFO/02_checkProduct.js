@@ -1,15 +1,16 @@
+const helper = require('../../utils/helpers');
 // Importing pages
 const HomePage = require('../../../pages/FO/home');
 const ProductPage = require('../../../pages/FO/product');
 const ProductData = require('../../data/FO/product');
 
+let browser;
 let page;
 let homePage;
 let productPage;
 
 // creating pages objects in a function
-const init = async () => {
-  page = await global.browser.newPage();
+const init = async function () {
   await page.setExtraHTTPHeaders({
     'Accept-Language': 'en-GB',
   });
@@ -21,15 +22,25 @@ const init = async () => {
   Open the FO home page
   Check the first product page
  */
-global.scenario('Check the Product page', () => {
-  test('should open the shop page', async () => {
+describe('Check the Product page', async () => {
+  // before and after functions
+  before(async () => {
+    browser = await helper.createBrowser();
+    page = await browser.newPage();
+    await init();
+  });
+  after(async () => {
+    await browser.close();
+  });
+  // Steps
+  it('should open the shop page', async () => {
     await homePage.goTo(global.URL_FO);
     await homePage.checkHomePage();
   });
-  test('should go to the first product page', async () => {
+  it('should go to the first product page', async () => {
     await homePage.goToProductPage('1');
   });
-  test('should check the product page', async () => {
+  it('should check the product page', async () => {
     await productPage.checkProduct(ProductData.firstProductData);
   });
-}, init, true);
+});
