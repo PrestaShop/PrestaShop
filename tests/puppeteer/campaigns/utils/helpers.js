@@ -18,4 +18,7 @@ module.exports = {
   async newTab(browser) {
     return browser.newPage();
   },
+  async closeBrowser(browser) {
+    return browser.close();
+  },
 };
