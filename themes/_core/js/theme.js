@@ -3,6 +3,7 @@ import $ from 'jquery';
 window.$ = $;
 window.jQuery = $;
 
+import 'jquery-migrate';
 import './cart';
 import './checkout';
 import './facets';
