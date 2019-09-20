@@ -1,6 +1,7 @@
 // Using chai
 const {expect} = require('chai');
 const helper = require('../../utils/helpers');
+const loginCommon = require('../../commonTests/loginBO');
 
 // importing pages
 const LoginPage = require('../../../pages/BO/login');
@@ -10,78 +11,73 @@ const ProductsPage = require('../../../pages/BO/products');
 
 let browser;
 let page;
-let loginPage;
-let dashboardPage;
-let boBasePage;
-let productsPage;
 let numberOfProducts = 0;
 
 // creating pages objects in a function
 const init = async function () {
-  loginPage = await (new LoginPage(page));
-  dashboardPage = await (new DashboardPage(page));
-  boBasePage = await (new BOBasePage(page));
-  productsPage = await (new ProductsPage(page));
+  return {
+    loginPage: new LoginPage(page),
+    dashboardPage: new DashboardPage(page),
+    boBasePage: new BOBasePage(page),
+    productsPage: new ProductsPage(page),
+  };
 };
 
 // Test of filters in products page
 describe('Filter in Products Page', async () => {
   // before and after functions
-  before(async () => {
+  before(async function () {
     browser = await helper.createBrowser();
-    page = await browser.newPage();
-    await init();
+    page = await helper.newTab(browser);
+    this.pageObjects = await init();
   });
   after(async () => {
-    await browser.close();
+    await helper.closeBrowser(browser);
   });
   // Steps
-  it('should login in BO', async () => {
-    await loginPage.goTo(global.URL_BO);
-    await loginPage.login(global.EMAIL, global.PASSWD);
-    const pageTitle = await dashboardPage.getPageTitle();
-    await expect(pageTitle).to.contains(dashboardPage.pageTitle);
-    await boBasePage.closeOnboardingModal();
+  loginCommon.loginBO();
+  it('should go to Products page', async function () {
+    await this.pageObjects.boBasePage.goToSubMenu(this.pageObjects.boBasePage.productsParentLink,
+      this.pageObjects.boBasePage.productsLink);
+    const pageTitle = await this.pageObjects.productsPage.getPageTitle();
+    await expect(pageTitle).to.contains(this.pageObjects.productsPage.pageTitle);
   });
-  it('should go to Products page', async () => {
-    await boBasePage.goToSubMenu(boBasePage.productsParentLink, boBasePage.productsLink);
-    const pageTitle = await productsPage.getPageTitle();
-    await expect(pageTitle).to.contains(productsPage.pageTitle);
-  });
-  it('should reset all filters and get Number of products in BO', async () => {
-    if (await productsPage.elementVisible(productsPage.filterResetButton, 2000)) await productsPage.resetFilter();
-    await productsPage.resetFilterCategory();
-    numberOfProducts = await productsPage.getNumberOfProductsFromList();
+  it('should reset all filters and get Number of products in BO', async function () {
+    if (await this.pageObjects.productsPage.elementVisible(this.pageObjects.productsPage.filterResetButton, 2000)) {
+      await this.pageObjects.productsPage.resetFilter();
+    }
+    await this.pageObjects.productsPage.resetFilterCategory();
+    numberOfProducts = await this.pageObjects.productsPage.getNumberOfProductsFromList();
     await expect(numberOfProducts).to.be.above(0);
   });
-  it('should filter list by Name and check result', async () => {
-    await productsPage.filterProducts('name', 'Customizable mug');
-    const numberOfProductsAfterFilter = await productsPage.getNumberOfProductsFromList();
+  it('should filter list by Name and check result', async function () {
+    await this.pageObjects.productsPage.filterProducts('name', 'Customizable mug');
+    const numberOfProductsAfterFilter = await this.pageObjects.productsPage.getNumberOfProductsFromList();
     await expect(numberOfProductsAfterFilter).to.be.below(numberOfProducts);
   });
-  it('should reset filter and check result', async () => {
-    await productsPage.resetFilter();
-    const numberOfProductsAfterReset = await productsPage.getNumberOfProductsFromList();
+  it('should reset filter and check result', async function () {
+    await this.pageObjects.productsPage.resetFilter();
+    const numberOfProductsAfterReset = await this.pageObjects.productsPage.getNumberOfProductsFromList();
     await expect(numberOfProductsAfterReset).to.equal(numberOfProducts);
   });
-  it('should filter by Reference and check result', async () => {
-    await productsPage.filterProducts('reference', 'demo_1');
-    const numberOfProductsAfterFilter = await productsPage.getNumberOfProductsFromList();
+  it('should filter by Reference and check result', async function () {
+    await this.pageObjects.productsPage.filterProducts('reference', 'demo_1');
+    const numberOfProductsAfterFilter = await this.pageObjects.productsPage.getNumberOfProductsFromList();
     await expect(numberOfProductsAfterFilter).to.be.below(numberOfProducts);
   });
-  it('should reset filter and check result', async () => {
-    await productsPage.resetFilter();
-    const numberOfProductsAfterReset = await productsPage.getNumberOfProductsFromList();
+  it('should reset filter and check result', async function () {
+    await this.pageObjects.productsPage.resetFilter();
+    const numberOfProductsAfterReset = await this.pageObjects.productsPage.getNumberOfProductsFromList();
     await expect(numberOfProductsAfterReset).to.equal(numberOfProducts);
   });
-  it('should filter by Category and check result', async () => {
-    await productsPage.filterProductsByCategory('Men');
-    const numberOfProductsAfterFilter = await productsPage.getNumberOfProductsFromList();
+  it('should filter by Category and check result', async function () {
+    await this.pageObjects.productsPage.filterProductsByCategory('Men');
+    const numberOfProductsAfterFilter = await this.pageObjects.productsPage.getNumberOfProductsFromList();
     await expect(numberOfProductsAfterFilter).to.be.below(numberOfProducts);
   });
-  it('should reset filter Category and check result', async () => {
-    await productsPage.resetFilterCategory();
-    const numberOfProductsAfterReset = await productsPage.getNumberOfProductsFromList();
+  it('should reset filter Category and check result', async function () {
+    await this.pageObjects.productsPage.resetFilterCategory();
+    const numberOfProductsAfterReset = await this.pageObjects.productsPage.getNumberOfProductsFromList();
     await expect(numberOfProductsAfterReset).to.equal(numberOfProducts);
   });
 });
