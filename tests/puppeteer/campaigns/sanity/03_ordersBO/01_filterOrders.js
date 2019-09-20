@@ -8,6 +8,7 @@ const LoginPage = require('../../../pages/BO/login');
 const DashboardPage = require('../../../pages/BO/dashboard');
 const BOBasePage = require('../../../pages/BO/BObasePage');
 const OrderPage = require('../../../pages/BO/order');
+const {Orders, Statuses} = require('../../data/demo/orders');
 
 let browser;
 let page;
@@ -45,20 +46,24 @@ describe('Filter the Orders table by ID, REFERENCE, STATUS', async () => {
     await expect(pageTitle).to.contains(this.pageObjects.orderPage.pageTitle);
   });
   it('should filter the Orders table by ID and check the result', async function () {
-    await this.pageObjects.orderPage.filterTableByInput(this.pageObjects.orderPage.orderFilterIdInput, '1',
-      this.pageObjects.orderPage.searchButton);
-    await this.pageObjects.boBasePage.checkTextValue(this.pageObjects.orderPage.orderfirstLineIdTD, '1');
+    await this.pageObjects.orderPage.filterTableByInput(this.pageObjects.orderPage.orderFilterIdInput,
+      Orders.firstOrder.id, this.pageObjects.orderPage.searchButton);
+    await this.pageObjects.boBasePage.checkTextValue(this.pageObjects.orderPage.orderfirstLineIdTD,
+      Orders.firstOrder.id);
     await this.pageObjects.orderPage.waitForSelectorAndClick(this.pageObjects.orderPage.resetButton);
   });
   it('should filter the Orders table by REFERENCE and check the result', async function () {
     await this.pageObjects.orderPage.filterTableByInput(this.pageObjects.orderPage.orderFilterReferenceInput,
-      'FFATNOMMJ', this.pageObjects.orderPage.searchButton);
-    await this.pageObjects.boBasePage.checkTextValue(this.pageObjects.orderPage.orderfirstLineReferenceTD, 'FFATNOMMJ');
+      Orders.fourthOrder.ref, this.pageObjects.orderPage.searchButton);
+    await this.pageObjects.boBasePage.checkTextValue(this.pageObjects.orderPage.orderfirstLineReferenceTD,
+      Orders.fourthOrder.ref);
     await this.pageObjects.orderPage.waitForSelectorAndClick(this.pageObjects.orderPage.resetButton);
   });
   it('should filter the Orders table by STATUS and check the result', async function () {
-    await this.pageObjects.orderPage.filterTableBySelect(this.pageObjects.orderPage.orderFilterStatusSelect, '8');
-    await this.pageObjects.orderPage.checkTextValue(this.pageObjects.orderPage.orderfirstLineStatusTD, 'Payment error');
+    await this.pageObjects.orderPage.filterTableBySelect(this.pageObjects.orderPage.orderFilterStatusSelect,
+      Statuses.paymentError.index);
+    await this.pageObjects.orderPage.checkTextValue(this.pageObjects.orderPage.orderfirstLineStatusTD,
+      Statuses.paymentError.status);
   });
   it('should logout from the BO', async function () {
     await this.pageObjects.boBasePage.logoutBO();

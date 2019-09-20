@@ -4,6 +4,7 @@ const helper = require('../../utils/helpers');
 
 // Importing pages
 const HomePage = require('../../../pages/FO/home');
+const {Categories} = require('../../data/demo/categories');
 
 let browser;
 let page;
@@ -43,12 +44,12 @@ describe('Filter Products by categories in Home page', async () => {
     await expect(allProductsNumber).to.be.above(0);
   });
   it('should filter products by the category "Accessories" and check result', async () => {
-    await this.pageObjects.homePage.filterByCategory('6');
+    await this.pageObjects.homePage.filterByCategory(Categories.accessories.id);
     const numberOfProducts = await this.pageObjects.homePage.getNumberFromText(this.pageObjects.homePage.totalProducts);
     await expect(numberOfProducts).to.be.below(allProductsNumber);
   });
   it('should filter products by the subcategory "Stationery" and check result', async () => {
-    await this.pageObjects.homePage.filterSubCategory('6', '7');
+    await this.pageObjects.homePage.filterSubCategory(Categories.accessories.id, Categories.stationery.id);
     const numberOfProducts = await this.pageObjects.homePage.getNumberFromText(this.pageObjects.homePage.totalProducts);
     await expect(numberOfProducts).to.be.below(allProductsNumber);
   });
