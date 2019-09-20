@@ -654,4 +654,14 @@ class ImageManagerCore
 
         return $mimeType;
     }
+    
+    /**
+     * Get if the imagick library is installed
+     *
+     * @param true|false
+     */
+    public static function isImagick()
+    {
+		return extension_loaded('imagick');
+    }
 }
