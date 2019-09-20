@@ -1,6 +1,7 @@
 // Using chai
 const {expect} = require('chai');
 const helper = require('../../utils/helpers');
+const loginCommon = require('../../commonTests/loginBO');
 
 // importing pages
 const LoginPage = require('../../../pages/BO/login');
@@ -10,16 +11,14 @@ const OrderPage = require('../../../pages/BO/order');
 
 let browser;
 let page;
-let loginPage;
-let dashboardPage;
-let boBasePage;
-let orderPage;
 // creating pages objects in a function
 const init = async function () {
-  loginPage = await (new LoginPage(page));
-  dashboardPage = await (new DashboardPage(page));
-  boBasePage = await (new BOBasePage(page));
-  orderPage = await (new OrderPage(page));
+  return {
+    loginPage: new LoginPage(page),
+    dashboardPage: new DashboardPage(page),
+    boBasePage: new BOBasePage(page),
+    orderPage: new OrderPage(page),
+  };
 };
 
 /*
@@ -27,46 +26,43 @@ const init = async function () {
   Filter the Orders table
   Logout from the BO
  */
-describe('Filter the Orders table by ID, REFERENCE, STATUS', async () => {
+describe('Filter the Orders table by ID, REFERENCE, STATUS', async function () {
   // before and after functions
-  before(async () => {
+  before(async function () {
     browser = await helper.createBrowser();
-    page = await browser.newPage();
-    await init();
+    page = await helper.newTab(browser);
+    this.pageObjects = await init();
   });
-  after(async () => {
+  after(async function () {
     await browser.close();
   });
   // Steps
-  it('should login into BO', async () => {
-    await loginPage.goTo(global.URL_BO);
-    await loginPage.login(global.EMAIL, global.PASSWD);
-    const pageTitle = await dashboardPage.getPageTitle();
-    await expect(pageTitle).to.contains(dashboardPage.pageTitle);
-    await boBasePage.closeOnboardingModal();
+  loginCommon.loginBO();
+  it('should go to the Orders page', async function () {
+    await this.pageObjects.boBasePage.goToSubMenu(this.pageObjects.boBasePage.ordersParentLink,
+      this.pageObjects.orderPage.ordersLink);
+    const pageTitle = await this.pageObjects.orderPage.getPageTitle();
+    await expect(pageTitle).to.contains(this.pageObjects.orderPage.pageTitle);
   });
-  it('should go to the Orders page', async () => {
-    await boBasePage.goToSubMenu(boBasePage.ordersParentLink, orderPage.ordersLink);
-    const pageTitle = await orderPage.getPageTitle();
-    await expect(pageTitle).to.contains(orderPage.pageTitle);
+  it('should filter the Orders table by ID and check the result', async function () {
+    await this.pageObjects.orderPage.filterTableByInput(this.pageObjects.orderPage.orderFilterIdInput, '1',
+      this.pageObjects.orderPage.searchButton);
+    await this.pageObjects.boBasePage.checkTextValue(this.pageObjects.orderPage.orderfirstLineIdTD, '1');
+    await this.pageObjects.orderPage.waitForSelectorAndClick(this.pageObjects.orderPage.resetButton);
   });
-  it('should filter the Orders table by ID and check the result', async () => {
-    await orderPage.filterTableByInput(orderPage.orderFilterIdInput, '1', orderPage.searchButton);
-    await boBasePage.checkTextValue(orderPage.orderfirstLineIdTD, '1');
-    await orderPage.waitForSelectorAndClick(orderPage.resetButton);
+  it('should filter the Orders table by REFERENCE and check the result', async function () {
+    await this.pageObjects.orderPage.filterTableByInput(this.pageObjects.orderPage.orderFilterReferenceInput,
+      'FFATNOMMJ', this.pageObjects.orderPage.searchButton);
+    await this.pageObjects.boBasePage.checkTextValue(this.pageObjects.orderPage.orderfirstLineReferenceTD, 'FFATNOMMJ');
+    await this.pageObjects.orderPage.waitForSelectorAndClick(this.pageObjects.orderPage.resetButton);
   });
-  it('should filter the Orders table by REFERENCE and check the result', async () => {
-    await orderPage.filterTableByInput(orderPage.orderFilterReferenceInput, 'FFATNOMMJ', orderPage.searchButton);
-    await boBasePage.checkTextValue(orderPage.orderfirstLineReferenceTD, 'FFATNOMMJ');
-    await orderPage.waitForSelectorAndClick(orderPage.resetButton);
+  it('should filter the Orders table by STATUS and check the result', async function () {
+    await this.pageObjects.orderPage.filterTableBySelect(this.pageObjects.orderPage.orderFilterStatusSelect, '8');
+    await this.pageObjects.orderPage.checkTextValue(this.pageObjects.orderPage.orderfirstLineStatusTD, 'Payment error');
   });
-  it('should filter the Orders table by STATUS and check the result', async () => {
-    await orderPage.filterTableBySelect(orderPage.orderFilterStatusSelect, '8');
-    await orderPage.checkTextValue(orderPage.orderfirstLineStatusTD, 'Payment error');
-  });
-  it('should logout from the BO', async () => {
-    await boBasePage.logoutBO();
-    const pageTitle = await loginPage.getPageTitle();
-    await expect(pageTitle).to.contains(loginPage.pageTitle);
+  it('should logout from the BO', async function () {
+    await this.pageObjects.boBasePage.logoutBO();
+    const pageTitle = await this.pageObjects.loginPage.getPageTitle();
+    await expect(pageTitle).to.contains(this.pageObjects.loginPage.pageTitle);
   });
 });

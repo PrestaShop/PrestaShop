@@ -1,6 +1,7 @@
 // Using chai
 const {expect} = require('chai');
 const helper = require('../../utils/helpers');
+const loginCommon = require('../../commonTests/loginBO');
 
 // importing pages
 const LoginPage = require('../../../pages/BO/login');
@@ -10,16 +11,14 @@ const OrderPage = require('../../../pages/BO/order');
 
 let browser;
 let page;
-let loginPage;
-let dashboardPage;
-let boBasePage;
-let orderPage;
 // creating pages objects in a function
 const init = async function () {
-  loginPage = await (new LoginPage(page));
-  dashboardPage = await (new DashboardPage(page));
-  boBasePage = await (new BOBasePage(page));
-  orderPage = await (new OrderPage(page));
+  return {
+    loginPage: new LoginPage(page),
+    dashboardPage: new DashboardPage(page),
+    boBasePage: new BOBasePage(page),
+    orderPage: new OrderPage(page),
+  };
 };
 
 /*
@@ -27,43 +26,38 @@ const init = async function () {
   Edit the first order
   Logout from the BO
  */
-describe('Edit Order BO', async () => {
+describe('Edit Order BO', async function () {
   // before and after functions
-  before(async () => {
+  before(async function () {
     browser = await helper.createBrowser();
-    page = await browser.newPage();
-    await init();
+    page = await helper.newTab(browser);
+    this.pageObjects = await init();
   });
-  after(async () => {
+  after(async function () {
     await browser.close();
   });
   // Steps
-  it('should login into BO', async () => {
-    await loginPage.goTo(global.URL_BO);
-    await loginPage.login(global.EMAIL, global.PASSWD);
-    const pageTitle = await dashboardPage.getPageTitle();
-    await expect(pageTitle).to.contains(dashboardPage.pageTitle);
-    await boBasePage.closeOnboardingModal();
+  loginCommon.loginBO();
+  it('should go to the Orders page', async function () {
+    await this.pageObjects.boBasePage.goToSubMenu(this.pageObjects.boBasePage.ordersParentLink,
+      this.pageObjects.orderPage.ordersLink);
+    const pageTitle = await this.pageObjects.orderPage.getPageTitle();
+    await expect(pageTitle).to.contains(this.pageObjects.orderPage.pageTitle);
   });
-  it('should go to the Orders page', async () => {
-    await boBasePage.goToSubMenu(boBasePage.ordersParentLink, orderPage.ordersLink);
-    const pageTitle = await orderPage.getPageTitle();
-    await expect(pageTitle).to.contains(orderPage.pageTitle);
+  it('should go to the first order page', async function () {
+    await this.pageObjects.boBasePage.waitForSelectorAndClick(this.pageObjects.orderPage.orderfirstLineIdTD);
+    const pageTitle = await this.pageObjects.orderPage.getPageTitle();
+    await expect(pageTitle).to.contains(this.pageObjects.orderPage.orderPageTitle);
   });
-  it('should go to the first order page', async () => {
-    await boBasePage.waitForSelectorAndClick(orderPage.orderfirstLineIdTD);
-    const pageTitle = await orderPage.getPageTitle();
-    await expect(pageTitle).to.contains(orderPage.orderPageTitle);
+  it('should modify the product quantity and check the validation', async function () {
+    await this.pageObjects.orderPage.modifyProductQuantity('1', '5');
   });
-  it('should modify the product quantity and check the validation', async () => {
-    await orderPage.modifyProductQuantity('1', '5');
+  it('should modify the order status and check the validation', async function () {
+    await this.pageObjects.orderPage.modifyOrderStatus('Payment accepted');
   });
-  it('should modify the order status and check the validation', async () => {
-    await orderPage.modifyOrderStatus('Payment accepted');
-  });
-  it('should logout from the BO', async () => {
-    await boBasePage.logoutBO();
-    const pageTitle = await loginPage.getPageTitle();
-    await expect(pageTitle).to.contains(loginPage.pageTitle);
+  it('should logout from the BO', async function () {
+    await this.pageObjects.boBasePage.logoutBO();
+    const pageTitle = await this.pageObjects.loginPage.getPageTitle();
+    await expect(pageTitle).to.contains(this.pageObjects.loginPage.pageTitle);
   });
 });
