@@ -27,7 +27,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Localization\Currency\DataLayer;
 
-use Exception;
 use PrestaShop\PrestaShop\Core\Currency\CurrencyDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Data\Layer\AbstractDataLayer;
 use PrestaShop\PrestaShop\Core\Data\Layer\DataLayerException;
@@ -122,23 +121,6 @@ class CurrencyDatabase extends AbstractDataLayer implements CurrencyDataLayerInt
      */
     protected function doWrite($currencyDataId, $currencyData)
     {
-        if (!$currencyDataId instanceof LocalizedCurrencyId) {
-            throw new LocalizationException('First parameter must be an instance of ' . LocalizedCurrencyId::class);
-        }
-
-        $currencyCode = $currencyDataId->getCurrencyCode();
-        $currencyEntity = $this->dataProvider->getCurrencyByIsoCodeOrCreate($currencyCode, $currencyDataId->getLocaleCode());
-
-        $currencyEntity->iso_code = $currencyData->getIsoCode();
-        $currencyEntity->name = $currencyData->getNames()[$currencyDataId->getLocaleCode()];
-        $currencyEntity->numeric_iso_code = $currencyData->getNumericIsoCode();
-        $currencyEntity->symbol = $currencyData->getSymbols()[$currencyDataId->getLocaleCode()];
-        $currencyEntity->precision = $currencyData->getPrecision();
-
-        try {
-            $this->dataProvider->saveCurrency($currencyEntity);
-        } catch (Exception $e) {
-            throw new DataLayerException('Unable to persist data in DB data layer', 0, $e);
-        }
+        // Nothing.
     }
 }
