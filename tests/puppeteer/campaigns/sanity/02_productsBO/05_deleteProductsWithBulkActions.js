@@ -13,11 +13,6 @@ const ProductFaker = require('../../data/faker/product');
 
 let browser;
 let page;
-let loginPage;
-let dashboardPage;
-let boBasePage;
-let productsPage;
-let addProductPage;
 let firstProductData;
 let secondProductData;
 
@@ -33,7 +28,7 @@ const init = async function () {
 };
 
 // Create 2 Standard products in BO and Delete it with Bulk Actions
-describe('Create Standard product in BO and Delete it with Bulk Actions', async function () {
+describe('Create Standard product in BO and Delete it with Bulk Actions', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
@@ -48,7 +43,7 @@ describe('Create Standard product in BO and Delete it with Bulk Actions', async 
     productToCreate.name = 'product To Delete 2';
     secondProductData = await (new ProductFaker(productToCreate));
   });
-  after(async function () {
+  after(async () => {
     await helper.closeBrowser(browser);
   });
   // Steps

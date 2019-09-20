@@ -29,7 +29,7 @@ const init = async function () {
   };
 };
 // Create, read, update and delete Standard product with combinations in BO
-describe('Create, read, update and delete Standard product with combinations in BO', async function () {
+describe('Create, read, update and delete Standard product with combinations in BO', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
@@ -42,7 +42,7 @@ describe('Create, read, update and delete Standard product with combinations in 
     productWithCombinations = await (new ProductFaker(productToCreate));
     editedProductWithCombinations = await (new ProductFaker(productToCreate));
   });
-  after(async function () {
+  after(async () => {
     await helper.closeBrowser(browser);
   });
   // Steps

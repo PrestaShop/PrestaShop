@@ -29,7 +29,7 @@ const init = async function () {
   };
 };
 // Create, read, update and delete Standard product in BO
-describe('Create, read, update and delete Standard product in BO', async function () {
+describe('Create, read, update and delete Standard product in BO', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
@@ -42,7 +42,7 @@ describe('Create, read, update and delete Standard product in BO', async functio
     productData = await (new ProductFaker(productToCreate));
     editedProductData = await (new ProductFaker(productToCreate));
   });
-  after(async function () {
+  after(async () => {
     await helper.closeBrowser(browser);
   });
   // Steps
@@ -75,8 +75,7 @@ describe('Create, read, update and delete Standard product in BO', async functio
     this.pageObjects = await init();
   });
   it('should edit Product', async function () {
-    const createProductMessage =
-      await this.pageObjects.addProductPage.createEditProduct(editedProductData, false);
+    const createProductMessage = await this.pageObjects.addProductPage.createEditProduct(editedProductData, false);
     await expect(createProductMessage).to.equal(this.pageObjects.addProductPage.settingUpdatedMessage);
   });
   it('should preview and check product in FO', async function () {

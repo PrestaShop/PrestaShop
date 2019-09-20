@@ -26,7 +26,7 @@ const init = async function () {
   };
 };
 // Create Standard product in BO and Delete it with DropDown Menu
-describe('Create Standard product in BO and Delete it with DropDown Menu', async function () {
+describe('Create Standard product in BO and Delete it with DropDown Menu', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
@@ -38,7 +38,7 @@ describe('Create Standard product in BO and Delete it with DropDown Menu', async
     };
     productData = await (new ProductFaker(productToCreate));
   });
-  after(async function () {
+  after(async () => {
     await helper.closeBrowser(browser);
   });
   // Steps

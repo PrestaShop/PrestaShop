@@ -26,14 +26,14 @@ const init = async function () {
   Edit the first order
   Logout from the BO
  */
-describe('Edit Order BO', async function () {
+describe('Edit Order BO', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
     page = await helper.newTab(browser);
     this.pageObjects = await init();
   });
-  after(async function () {
+  after(async () => {
     await browser.close();
   });
   // Steps
