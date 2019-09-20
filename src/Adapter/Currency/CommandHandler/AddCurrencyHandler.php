@@ -86,6 +86,7 @@ final class AddCurrencyHandler extends AbstractCurrencyHandler implements AddCur
             if (!empty($cldrCurrency)) {
                 // The currency may not be declared in the locale, eg with custom iso code
                 $entity->precision = (int) $cldrCurrency->getDecimalDigits();
+                $entity->numeric_iso_code = (int) $cldrCurrency->getNumericIsoCode();
             }
 
             $entity->refreshLocalizedCurrencyData(Language::getLanguages(), $this->localeRepoCLDR);

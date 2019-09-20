@@ -76,7 +76,20 @@ class CurrencyInstalled
      */
     public function getAvailableCurrencyCodes()
     {
-        $currencies = $this->dataProvider->findAll(false);
+        $currencies = $this->dataProvider->findAll(false, true);
+        $currencyIds = array_column($currencies, 'iso_code');
+
+        return $currencyIds;
+    }
+
+    /**
+     * Get all the available currencies' ISO codes (installed in database no matter if it's deleted or active).
+     *
+     * @return string[]
+     */
+    public function getAllCurrencyCodes()
+    {
+        $currencies = $this->dataProvider->findAll(false, false);
         $currencyIds = array_column($currencies, 'iso_code');
 
         return $currencyIds;

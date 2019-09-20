@@ -402,18 +402,20 @@ class CurrencyCore extends ObjectModel
      * @param bool $active If true only active are returned
      * @param bool $groupBy Group by id_currency
      * @param bool $currentShopOnly If true returns only currencies associated to current shop
+     * @param bool $filterDeleted It true filter deleted currencies
      *
      * @return array Currency data from database
      *
      * @throws PrestaShopDatabaseException
      */
-    public static function findAll($active = true, $groupBy = false, $currentShopOnly = true)
+    public static function findAll($active = true, $groupBy = false, $currentShopOnly = true, $filterDeleted = true)
     {
         $currencies = Db::getInstance()->executeS('
             SELECT *
             FROM `' . _DB_PREFIX_ . 'currency` c
             ' . ($currentShopOnly ? Shop::addSqlAssociation('currency', 'c') : '') . '
-                WHERE `deleted` = 0' .
+                WHERE 1' .
+                ($filterDeleted ? ' AND c.`deleted` = 0' : '') .
                 ($active ? ' AND c.`active` = 1' : '') .
                 ($groupBy ? ' GROUP BY c.`id_currency`' : '') .
                 ' ORDER BY `iso_code` ASC');
@@ -800,7 +802,7 @@ class CurrencyCore extends ObjectModel
         $symbolsByLang = $namesByLang = [];
         foreach ($languages as $languageData) {
             $language = new Language($languageData['id_lang']);
-            if ($language->locale === '') {
+            if (empty($language->locale)) {
                 // Language doesn't have locale we can't install this language
                 continue;
             }

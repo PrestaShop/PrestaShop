@@ -70,9 +70,9 @@ class CurrencyDataProvider implements CurrencyDataProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function findAll($currentShopOnly = true)
+    public function findAll($currentShopOnly = true, $filterDeleted = true)
     {
-        return Currency::findAll(false, false, $currentShopOnly);
+        return Currency::findAll(false, false, $currentShopOnly, $filterDeleted);
     }
 
     /**
