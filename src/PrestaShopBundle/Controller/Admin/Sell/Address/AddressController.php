@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Address\Command\DeleteAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\SetRequiredFieldsForAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Address\Exception\BulkDeleteAddressException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\CannotSetRequiredFieldsForAddressException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\DeleteAddressException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\InvalidAddressRequiredFieldsException;
@@ -100,7 +101,7 @@ class AddressController extends FrameworkBundleAdminController
             try {
                 $this->getCommandBus()->handle(new SetRequiredFieldsForAddressCommand($data['required_fields']));
                 $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
-            } catch (AddressException $e) {
+            } catch (Exception $e) {
                 $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
             }
         }
@@ -125,7 +126,7 @@ class AddressController extends FrameworkBundleAdminController
                 'success',
                 $this->trans('Successful deletion.', 'Admin.Notifications.Success')
             );
-        } catch (AddressException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
@@ -155,7 +156,7 @@ class AddressController extends FrameworkBundleAdminController
                 'success',
                 $this->trans('Successful deletion.', 'Admin.Notifications.Success')
             );
-        } catch (AddressException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
@@ -209,46 +210,6 @@ class AddressController extends FrameworkBundleAdminController
     }
 
     /**
-     * @param Exception $e
-     *
-     * @return array
-     */
-    private function getErrorMessages(Exception $e): array
-    {
-        return [
-            DeleteAddressException::class => [
-                DeleteAddressException::FAILED_DELETE => $this->trans(
-                    'An error occurred while deleting the object.',
-                    'Admin.Notifications.Error'
-                ),
-                DeleteAddressException::FAILED_BULK_DELETE => $this->trans(
-                    'An error occurred while deleting this selection.',
-                    'Admin.Notifications.Error'
-                ),
-            ],
-            AddressNotFoundException::class => $this->trans(
-                'The object cannot be loaded (or found)',
-                'Admin.Notifications.Error'
-            ),
-            CannotSetRequiredFieldsForAddressException::class => $this->trans(
-                'An error occurred when attempting to update the required fields.',
-                'Admin.Notifications.Error'
-            ),
-            AddressException::class => sprintf(
-                $this->trans(
-                    'Internal error #%s',
-                    'Admin.Notifications.Error'
-                ),
-                $e->getMessage()
-            ),
-            InvalidAddressRequiredFieldsException::class => $this->trans(
-                'Invalid data supplied.',
-                'Admin.Notifications.Error'
-            ),
-        ];
-    }
-
-    /**
      * Show "Add new" form and handle form submit.
      *
      * @AdminSecurity(
@@ -283,5 +244,49 @@ class AddressController extends FrameworkBundleAdminController
         $link = $this->getAdminLink('AdminAddresses', ['id_address' => $addressId, 'updateaddress' => 1]);
 
         return $this->redirect($link);
+    }
+
+    /**
+     * @param Exception $e
+     *
+     * @return array
+     */
+    private function getErrorMessages(Exception $e): array
+    {
+        return [
+            DeleteAddressException::class => [
+                DeleteAddressException::FAILED_DELETE => $this->trans(
+                    'An error occurred while deleting the object.',
+                    'Admin.Notifications.Error'
+                ),
+            ],
+            BulkDeleteAddressException::class => sprintf(
+                '%s: %s',
+                $this->trans(
+                    'An error occurred while deleting this selection.',
+                    'Admin.Notifications.Error'
+                ),
+                $e instanceof BulkDeleteAddressException ? $e->getAddressIds() : ''
+            ),
+            AddressNotFoundException::class => $this->trans(
+                'The object cannot be loaded (or found)',
+                'Admin.Notifications.Error'
+            ),
+            CannotSetRequiredFieldsForAddressException::class => $this->trans(
+                'An error occurred when attempting to update the required fields.',
+                'Admin.Notifications.Error'
+            ),
+            AddressException::class => sprintf(
+                $this->trans(
+                    'Internal error #%s',
+                    'Admin.Notifications.Error'
+                ),
+                $e->getMessage()
+            ),
+            InvalidAddressRequiredFieldsException::class => $this->trans(
+                'Invalid data supplied.',
+                'Admin.Notifications.Error'
+            ),
+        ];
     }
 }
