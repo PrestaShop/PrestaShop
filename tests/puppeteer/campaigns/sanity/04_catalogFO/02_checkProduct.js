@@ -6,16 +6,13 @@ const ProductData = require('../../data/FO/product');
 
 let browser;
 let page;
-let homePage;
-let productPage;
 
 // creating pages objects in a function
 const init = async function () {
-  await page.setExtraHTTPHeaders({
-    'Accept-Language': 'en-GB',
-  });
-  homePage = await (new HomePage(page));
-  productPage = await (new ProductPage(page));
+  return {
+    homePage: new HomePage(page),
+    productPage: new ProductPage(page),
+  };
 };
 
 /*
@@ -24,23 +21,26 @@ const init = async function () {
  */
 describe('Check the Product page', async () => {
   // before and after functions
-  before(async () => {
+  before(async function () {
     browser = await helper.createBrowser();
-    page = await browser.newPage();
-    await init();
+    page = await helper.newTab(browser);
+    await page.setExtraHTTPHeaders({
+      'Accept-Language': 'en-GB',
+    });
+    this.pageObjects = await init();
   });
   after(async () => {
-    await browser.close();
+    await helper.closeBrowser(browser);
   });
   // Steps
-  it('should open the shop page', async () => {
-    await homePage.goTo(global.URL_FO);
-    await homePage.checkHomePage();
+  it('should open the shop page', async function () {
+    await this.pageObjects.homePage.goTo(global.URL_FO);
+    await this.pageObjects.homePage.checkHomePage();
   });
-  it('should go to the first product page', async () => {
-    await homePage.goToProductPage('1');
+  it('should go to the first product page', async function () {
+    await this.pageObjects.homePage.goToProductPage('1');
   });
-  it('should check the product page', async () => {
-    await productPage.checkProduct(ProductData.firstProductData);
+  it('should check the product page', async function () {
+    await this.pageObjects.productPage.checkProduct(ProductData.firstProductData);
   });
 });
