@@ -1,6 +1,7 @@
 // Using chai
 const {expect} = require('chai');
 const helper = require('../../utils/helpers');
+const loginCommon = require('../../commonTests/loginBO');
 
 // importing pages
 const LoginPage = require('../../../pages/BO/login');
@@ -13,31 +14,27 @@ const ProductFaker = require('../../data/faker/product');
 
 let browser;
 let page;
-let loginPage;
-let dashboardPage;
-let boBasePage;
-let productsPage;
-let addProductPage;
-let foProductPage;
 let productData;
 let editedProductData;
 
 // creating pages objects in a function
 const init = async function () {
-  loginPage = await (new LoginPage(page));
-  dashboardPage = await (new DashboardPage(page));
-  boBasePage = await (new BOBasePage(page));
-  productsPage = await (new ProductsPage(page));
-  addProductPage = await (new AddProductPage(page));
-  foProductPage = await (new FOProductPage(page));
+  return {
+    loginPage: new LoginPage(page),
+    dashboardPage: new DashboardPage(page),
+    boBasePage: new BOBasePage(page),
+    productsPage: new ProductsPage(page),
+    addProductPage: new AddProductPage(page),
+    foProductPage: new FOProductPage(page),
+  };
 };
 // Create, read, update and delete Standard product in BO
-describe('Create, read, update and delete Standard product in BO', async () => {
+describe('Create, read, update and delete Standard product in BO', async function () {
   // before and after functions
-  before(async () => {
+  before(async function () {
     browser = await helper.createBrowser();
-    page = await browser.newPage();
-    await init();
+    page = await helper.newTab(browser);
+    this.pageObjects = await init();
     const productToCreate = {
       type: 'Standard product',
       productHasCombinations: false,
@@ -45,56 +42,54 @@ describe('Create, read, update and delete Standard product in BO', async () => {
     productData = await (new ProductFaker(productToCreate));
     editedProductData = await (new ProductFaker(productToCreate));
   });
-  after(async () => {
-    await browser.close();
+  after(async function () {
+    await helper.closeBrowser(browser);
   });
   // Steps
-  it('should login in BO', async () => {
-    await loginPage.goTo(global.URL_BO);
-    await loginPage.login(global.EMAIL, global.PASSWD);
-    const pageTitle = await dashboardPage.getPageTitle();
-    await expect(pageTitle).to.contains(dashboardPage.pageTitle);
-    await boBasePage.closeOnboardingModal();
+  loginCommon.loginBO();
+  it('should go to Products page', async function () {
+    await this.pageObjects.boBasePage.goToSubMenu(this.pageObjects.boBasePage.productsParentLink,
+      this.pageObjects.boBasePage.productsLink);
+    await this.pageObjects.boBasePage.closeSfToolBar();
+    const pageTitle = await this.pageObjects.productsPage.getPageTitle();
+    await expect(pageTitle).to.contains(this.pageObjects.productsPage.pageTitle);
   });
-  it('should go to Products page', async () => {
-    await boBasePage.goToSubMenu(boBasePage.productsParentLink, boBasePage.productsLink);
-    await boBasePage.closeSfToolBar();
-    const pageTitle = await productsPage.getPageTitle();
-    await expect(pageTitle).to.contains(productsPage.pageTitle);
-  });
-  it('should reset all filters', async () => {
-    if (await productsPage.elementVisible(productsPage.filterResetButton, 2000)) await productsPage.resetFilter();
-    await productsPage.resetFilterCategory();
-    const numberOfProducts = await productsPage.getNumberOfProductsFromList();
+  it('should reset all filters', async function () {
+    if (await this.pageObjects.productsPage.elementVisible(this.pageObjects.productsPage.filterResetButton, 2000)) {
+      await this.pageObjects.productsPage.resetFilter();
+    }
+    await this.pageObjects.productsPage.resetFilterCategory();
+    const numberOfProducts = await this.pageObjects.productsPage.getNumberOfProductsFromList();
     await expect(numberOfProducts).to.be.above(0);
   });
-  it('should create Product', async () => {
-    await productsPage.goToAddProductPage();
-    const createProductMessage = await addProductPage.createEditProduct(productData);
-    await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
+  it('should create Product', async function () {
+    await this.pageObjects.productsPage.goToAddProductPage();
+    const createProductMessage = await this.pageObjects.addProductPage.createEditProduct(productData);
+    await expect(createProductMessage).to.equal(this.pageObjects.addProductPage.settingUpdatedMessage);
   });
-  it('should preview and check product in FO', async () => {
-    page = await addProductPage.previewProduct();
-    await init();
-    await foProductPage.checkProduct(productData);
-    page = await foProductPage.closePage(browser, 1);
-    await init();
+  it('should preview and check product in FO', async function () {
+    page = await this.pageObjects.addProductPage.previewProduct();
+    this.pageObjects = await init();
+    await this.pageObjects.foProductPage.checkProduct(productData);
+    page = await this.pageObjects.foProductPage.closePage(browser, 1);
+    this.pageObjects = await init();
   });
-  it('should edit Product', async () => {
-    const createProductMessage = await addProductPage.createEditProduct(editedProductData, false);
-    await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
+  it('should edit Product', async function () {
+    const createProductMessage =
+      await this.pageObjects.addProductPage.createEditProduct(editedProductData, false);
+    await expect(createProductMessage).to.equal(this.pageObjects.addProductPage.settingUpdatedMessage);
   });
-  it('should preview and check product in FO', async () => {
-    page = await addProductPage.previewProduct();
-    await init();
-    await foProductPage.checkProduct(editedProductData);
-    page = await foProductPage.closePage(browser, 1);
-    await init();
+  it('should preview and check product in FO', async function () {
+    page = await this.pageObjects.addProductPage.previewProduct();
+    this.pageObjects = await init();
+    await this.pageObjects.foProductPage.checkProduct(editedProductData);
+    page = await this.pageObjects.foProductPage.closePage(browser, 1);
+    this.pageObjects = await init();
   });
-  it('should delete Product and be on product list page', async () => {
-    const testResult = await addProductPage.deleteProduct();
-    await expect(testResult).to.equal(productsPage.productDeletedSuccessfulMessage);
-    const pageTitle = await productsPage.getPageTitle();
-    await expect(pageTitle).to.contains(productsPage.pageTitle);
+  it('should delete Product and be on product list page', async function () {
+    const testResult = await this.pageObjects.addProductPage.deleteProduct();
+    await expect(testResult).to.equal(this.pageObjects.productsPage.productDeletedSuccessfulMessage);
+    const pageTitle = await this.pageObjects.productsPage.getPageTitle();
+    await expect(pageTitle).to.contains(this.pageObjects.productsPage.pageTitle);
   });
 });

@@ -32,7 +32,7 @@ describe('Filter in Products Page', async () => {
     this.pageObjects = await init();
   });
   after(async () => {
-    await browser.close();
+    await helper.closeBrowser(browser);
   });
   // Steps
   loginCommon.loginBO();
