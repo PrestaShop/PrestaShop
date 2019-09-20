@@ -15,4 +15,7 @@ module.exports = {
       },
     });
   },
+  async newTab(browser) {
+    return browser.newPage();
+  },
 };
