@@ -29,6 +29,9 @@ namespace Tests\Integration\Behaviour\Features\Context;
 use Context;
 use Currency;
 use Configuration;
+use DbQuery;
+use Db;
+use RuntimeException;
 
 class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
 {
@@ -85,6 +88,7 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
             $currency->save();
         }
         $this->currencies[$currencyName] = $currency;
+        SharedStorage::getStorage()->set($currencyName, $currency);
     }
 
     /**
@@ -120,5 +124,27 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
     public function checkCurrencyWithNameExists($currencyName)
     {
         $this->checkFixtureExists($this->currencies, 'Currency', $currencyName);
+    }
+
+    /**
+     * @Then there should be :expectedCount currencies of :currencyIsoCode
+     */
+    public function countCurrencies($expectedCount, $currencyIsoCode)
+    {
+        $query = new DbQuery();
+        $query->select('COUNT(c.id_currency)');
+        $query->from('currency', 'c');
+        $query->where('iso_code = \'' . pSQL($currencyIsoCode) . '\'');
+
+        $databaseCount = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query->build());
+
+        if ((int) $expectedCount !== $databaseCount) {
+            throw new RuntimeException(sprintf(
+                'Found %s currencies with iso code %s, expected %s',
+                $databaseCount,
+                $currencyIsoCode,
+                $expectedCount
+            ));
+        }
     }
 }
