@@ -13,6 +13,7 @@ scenario('Create a customer account in the Front Office', client => {
     test('should set the "Last name" input', () => client.waitAndSetValue(accountPage.lastname_input, data.customer.lastname));
     test('should set the "Email" input', () => client.waitAndSetValue(accountPage.email_input, 'new' + data.customer.email.replace("%ID", date_time)));
     test('should set the "Password" input', () => client.waitAndSetValue(accountPage.password_input, data.customer.password));
+    test('should agree to terms and conditions', () => client.waitForExistAndClick(accountPage.psgdpr_button));
     test('should click on "Save" button', () => client.waitForExistAndClick(accountPage.save_account_button));
 }, 'common_client');
 
