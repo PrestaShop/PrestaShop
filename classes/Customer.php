@@ -214,7 +214,7 @@ class CustomerCore extends ObjectModel
     /**
      * CustomerCore constructor.
      *
-     * @param null $id
+     * @param int|null $id
      */
     public function __construct($id = null)
     {
