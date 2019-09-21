@@ -496,17 +496,18 @@ class CartPresenter implements PresenterInterface
                 $cartVoucher['reduction_amount'] = $cartVoucher['reduction_amount'] * (1 + $cartHasTax / 100);
             }
 
-            $vouchers[$cartVoucher['id_cart_rule']]['reduction_amount'] = $cartVoucher['reduction_amount'];
-
             if ((array_key_exists('gift_product', $cartVoucher) && $cartVoucher['gift_product']) ||
                     $cartVoucher['free_shipping']) {
                 $cartVoucher['reduction_amount'] = $cartVoucher['value_real'];
             }
+            
+            $vouchers[$cartVoucher['id_cart_rule']]['reduction_amount'] = $cartVoucher['reduction_amount'];
 
-            if (isset($cartVoucher['reduction_percent']) && $cartVoucher['reduction_amount'] == '0.00' &&
+            if (isset($cartVoucher['reduction_percent']) &&
+                    $cartVoucher['reduction_amount'] == '0.00' &&
                     !$cartVoucher['free_shipping']) {
                 $cartVoucher['reduction_formatted'] = $cartVoucher['reduction_percent'] . '%';
-            } elseif (isset($cartVoucher['reduction_amount']) && $cartVoucher['reduction_amount'] > 0) {
+            } else {
                 $value = $this->includeTaxes() ? $cartVoucher['reduction_amount'] : $cartVoucher['value_tax_exc'];
                 $currencyFrom = new \Currency($cartVoucher['reduction_currency']);
                 $currencyTo = new \Currency($cart->id_currency);
