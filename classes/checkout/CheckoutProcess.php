@@ -215,4 +215,20 @@ class CheckoutProcessCore implements RenderableInterface
 
         return $this;
     }
+
+    /**
+     * @return CheckoutStepInterface
+     *
+     * @throws \RuntimeException if no current step is found
+     */
+    public function getCurrentStep()
+    {
+        foreach ($this->getSteps() as $step) {
+            if ($step->isCurrent()) {
+                return $step;
+            }
+        }
+
+        throw new \RuntimeException('There should be at least one current step');
+    }
 }
