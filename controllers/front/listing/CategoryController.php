@@ -233,7 +233,7 @@ class CategoryControllerCore extends ProductListingFrontController
             }
         }
 
-        if (!$this->category->is_root_category) {
+        if ($this->category->id_parent != 0 && !$this->category->is_root_category) {
             $breadcrumb['links'][] = $this->getCategoryPath($this->category);
         }
 
