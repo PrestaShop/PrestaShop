@@ -115,7 +115,6 @@ class ProductCombinationBulk extends CommonAbstractType
         $resolver->setDefaults([
             'validation_groups' => false,
             'iso_code' => '',
-            'price_display_precision' => '',
         ]);
     }
 
