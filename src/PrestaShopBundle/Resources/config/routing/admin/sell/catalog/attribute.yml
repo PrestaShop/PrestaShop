@@ -74,3 +74,11 @@ admin_attributes_bulk_delete:
         _legacy_parameters:
             id_attribute_group: attributeGroupId
             id_attribute: attributeId
+
+admin_attributes_update_position:
+  path: /update-position
+  methods: [POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Attribute:updatePosition'
+    _legacy_controller: AdminAttributesGroups
+#    _legacy_link: AdminAttributesGroups:updateattribute

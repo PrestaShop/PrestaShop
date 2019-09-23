@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
-use PrestaShop\PrestaShop\Adapter\AttributeGroup\AttributeGroupViewDataProvider;
 use PrestaShop\PrestaShop\Core\AttributeGroup\AttributeGroupViewDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
@@ -40,6 +39,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Attribute\AttributeColorColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\PositionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
@@ -128,10 +128,17 @@ final class AttributeGridDefinitionFactory extends AbstractGridDefinitionFactory
             );
         }
 
-        $columns->add((new DataColumn('position'))
+        $columns
+        ->add((new PositionColumn('position'))
             ->setName($this->trans('Position', [], 'Admin.Global'))
             ->setOptions([
-                'field' => 'position',
+                'id_field' => 'id_attribute',
+                'position_field' => 'position',
+                'update_method' => 'POST',
+                'update_route' => 'admin_attributes_update_position',
+                'record_route_params' => [
+                    'id_attribute_group' => 'attributeGroupId',
+                ],
             ])
         )
         ->add((new ActionColumn('actions'))

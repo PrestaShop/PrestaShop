@@ -79,6 +79,31 @@ class AttributeController extends FrameworkBundleAdminController
         ]);
     }
 
+    public function updatePositionAction(Request $request, $attributeGroupId)
+    {
+        $positionsData = [
+            'positions' => $request->request->get('positions'),
+            'parentId' => $attributeGroupId,
+        ];
+
+        $positionDefinition = $this->get('prestashop.core.grid.attribute.position_definition');
+        $positionUpdateFactory = $this->get('prestashop.core.grid.position.position_update_factory');
+
+        try {
+            $positionUpdate = $positionUpdateFactory->buildPositionUpdate($positionsData, $positionDefinition);
+            $updater = $this->get('prestashop.core.grid.position.doctrine_grid_position_updater');
+            $updater->update($positionUpdate);
+            $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+        } catch (Exception $e) {
+            $errors = [$e->toArray()];
+            $this->flashErrors($errors);
+        }
+
+        return $this->redirectToRoute('admin_attributes_index', [
+            'attributeGroupId' => $attributeGroupId,
+        ]);
+    }
+
     public function createAction($attributeGroupId)
     {
         // @todo: implement in another pr
