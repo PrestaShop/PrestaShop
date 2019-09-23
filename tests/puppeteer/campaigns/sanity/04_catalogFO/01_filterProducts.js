@@ -4,6 +4,7 @@ const helper = require('../../utils/helpers');
 
 // Importing pages
 const HomePage = require('../../../pages/FO/home');
+const {Categories} = require('../../data/demo/categories');
 
 let browser;
 let page;

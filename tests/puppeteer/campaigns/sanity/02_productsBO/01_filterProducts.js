@@ -8,6 +8,8 @@ const LoginPage = require('../../../pages/BO/login');
 const DashboardPage = require('../../../pages/BO/dashboard');
 const BOBasePage = require('../../../pages/BO/BObasePage');
 const ProductsPage = require('../../../pages/BO/products');
+const {Products} = require('../../data/demo/products');
+const {Categories} = require('../../data/demo/categories');
 
 let browser;
 let page;
@@ -51,7 +53,7 @@ describe('Filter in Products Page', async () => {
     await expect(numberOfProducts).to.be.above(0);
   });
   it('should filter list by Name and check result', async function () {
-    await this.pageObjects.productsPage.filterProducts('name', 'Customizable mug');
+    await this.pageObjects.productsPage.filterProducts('name', Products.demo_14.name);
     const numberOfProductsAfterFilter = await this.pageObjects.productsPage.getNumberOfProductsFromList();
     await expect(numberOfProductsAfterFilter).to.be.below(numberOfProducts);
   });
@@ -61,7 +63,7 @@ describe('Filter in Products Page', async () => {
     await expect(numberOfProductsAfterReset).to.equal(numberOfProducts);
   });
   it('should filter by Reference and check result', async function () {
-    await this.pageObjects.productsPage.filterProducts('reference', 'demo_1');
+    await this.pageObjects.productsPage.filterProducts('reference', Products.demo_1.reference);
     const numberOfProductsAfterFilter = await this.pageObjects.productsPage.getNumberOfProductsFromList();
     await expect(numberOfProductsAfterFilter).to.be.below(numberOfProducts);
   });
@@ -71,7 +73,7 @@ describe('Filter in Products Page', async () => {
     await expect(numberOfProductsAfterReset).to.equal(numberOfProducts);
   });
   it('should filter by Category and check result', async function () {
-    await this.pageObjects.productsPage.filterProductsByCategory('Men');
+    await this.pageObjects.productsPage.filterProductsByCategory(Categories.men.name);
     const numberOfProductsAfterFilter = await this.pageObjects.productsPage.getNumberOfProductsFromList();
     await expect(numberOfProductsAfterFilter).to.be.below(numberOfProducts);
   });
