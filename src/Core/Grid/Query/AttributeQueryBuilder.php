@@ -29,17 +29,13 @@ namespace PrestaShop\PrestaShop\Core\Grid\Query;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
+use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
 
 /**
  * Provides sql for attributes group > attribute list
  */
 final class AttributeQueryBuilder extends AbstractDoctrineQueryBuilder
 {
-    /**
-     * @var int
-     */
-    private $contextLangId;
-
     /**
      * @var DoctrineSearchCriteriaApplicatorInterface
      */
@@ -48,7 +44,22 @@ final class AttributeQueryBuilder extends AbstractDoctrineQueryBuilder
     /**
      * @var int
      */
+    private $contextLangId;
+
+    /**
+     * @var int
+     */
     private $attributeGroupId;
+
+    /**
+     * @var MultistoreContextCheckerInterface
+     */
+    private $multistoreContextChecker;
+
+    /**
+     * @var int
+     */
+    private $contextShopId;
 
     /**
      * @param Connection $connection
@@ -56,18 +67,24 @@ final class AttributeQueryBuilder extends AbstractDoctrineQueryBuilder
      * @param DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
      * @param int $contextLangId
      * @param int $attributeGroupId
+     * @param MultistoreContextCheckerInterface $multistoreContextChecker
+     * @param $contextShopId
      */
     public function __construct(
         Connection $connection,
         $dbPrefix,
         DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator,
         $contextLangId,
-        $attributeGroupId
+        $attributeGroupId,
+        MultistoreContextCheckerInterface $multistoreContextChecker,
+        $contextShopId
     ) {
         parent::__construct($connection, $dbPrefix);
         $this->contextLangId = $contextLangId;
         $this->searchCriteriaApplicator = $searchCriteriaApplicator;
         $this->attributeGroupId = $attributeGroupId;
+        $this->multistoreContextChecker = $multistoreContextChecker;
+        $this->contextShopId = $contextShopId;
     }
 
     /**
@@ -114,7 +131,18 @@ final class AttributeQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb = $this->connection->createQueryBuilder()
             ->from($this->dbPrefix . 'attribute', 'a')
             ->setParameter('contextLangId', $this->contextLangId)
-            ->setParameter('attributeGroupId', $this->attributeGroupId);
+            ->setParameter('attributeGroupId', $this->attributeGroupId)
+            ->setParameter('contextShopId', $this->contextShopId);
+
+        if ($this->multistoreContextChecker->isSingleShopContext()) {
+            $qb->leftJoin(
+                'a',
+                $this->dbPrefix . 'attribute_shop',
+                'shop',
+                'a.id_attribute = shop.id_attribute AND shop.id_shop = :contextShopId'
+            );
+            $qb->andWhere('shop.id_shop = :contextShopId');
+        }
 
         $qb->leftJoin(
             'a',

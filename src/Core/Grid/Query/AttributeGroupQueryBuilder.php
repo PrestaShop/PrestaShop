@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Query;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
+use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
 
 /**
  * Provides sql for attributes group list
@@ -46,20 +47,36 @@ final class AttributeGroupQueryBuilder extends AbstractDoctrineQueryBuilder
     private $searchCriteriaApplicator;
 
     /**
+     * @var MultistoreContextCheckerInterface
+     */
+    private $multistoreContextChecker;
+
+    /**
+     * @var int
+     */
+    private $contextShopId;
+
+    /**
      * @param Connection $connection
      * @param string $dbPrefix
      * @param DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
      * @param int $contextLangId
+     * @param MultistoreContextCheckerInterface $multistoreContextChecker
+     * @param int $contextShopId
      */
     public function __construct(
         Connection $connection,
         $dbPrefix,
         DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator,
-        $contextLangId
+        $contextLangId,
+        MultistoreContextCheckerInterface $multistoreContextChecker,
+        $contextShopId
     ) {
         parent::__construct($connection, $dbPrefix);
         $this->contextLangId = $contextLangId;
         $this->searchCriteriaApplicator = $searchCriteriaApplicator;
+        $this->multistoreContextChecker = $multistoreContextChecker;
+        $this->contextShopId = $contextShopId;
     }
 
     /**
@@ -106,7 +123,18 @@ final class AttributeGroupQueryBuilder extends AbstractDoctrineQueryBuilder
     {
         $qb = $this->connection->createQueryBuilder()
             ->from($this->dbPrefix . 'attribute_group', 'ag')
-            ->setParameter('contextLangId', $this->contextLangId);
+            ->setParameter('contextLangId', $this->contextLangId)
+            ->setParameter('contextShopId', $this->contextShopId);
+
+        if ($this->multistoreContextChecker->isSingleShopContext()) {
+            $qb->leftJoin(
+                'ag',
+                $this->dbPrefix . 'attribute_group_shop',
+                'ags',
+                'ag.id_attribute_group = ags.id_attribute_group AND ags.id_shop = :contextShopId'
+            );
+            $qb->andWhere('ags.id_shop = :contextShopId');
+        }
 
         $qb->leftJoin(
             'ag',
