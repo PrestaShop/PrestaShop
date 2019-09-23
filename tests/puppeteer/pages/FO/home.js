@@ -5,6 +5,7 @@ module.exports = class Home extends FOBasePage {
     super(page);
 
     // Selectors for home page
+    this.homePageSection = 'section#content.page-home';
     this.productArticle = '#content .products div:nth-child(%NUMBER) article';
     this.productImg = `${this.productArticle} img`;
     this.productQuickViewLink = `${this.productArticle} a.quick-view`;
@@ -23,7 +24,7 @@ module.exports = class Home extends FOBasePage {
    * Check home page
    */
   async checkHomePage() {
-    await this.page.waitForSelector(this.productImg.replace('%NUMBER', '1'), {visible: true});
+    await this.page.waitForSelector(this.homePageSection);
   }
 
   /**
@@ -31,7 +32,6 @@ module.exports = class Home extends FOBasePage {
    * @param id, product id
    */
   async goToProductPage(id) {
-    await this.page.waitForSelector(this.productImg.replace('%NUMBER', id));
     await this.waitForSelectorAndClick(this.productImg.replace('%NUMBER', id), 5000);
   }
 
