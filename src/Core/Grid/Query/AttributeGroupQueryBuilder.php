@@ -178,6 +178,18 @@ final class AttributeGroupQueryBuilder extends AbstractDoctrineQueryBuilder
                 continue;
             }
 
+            if ('position' === $filterName) {
+                // When filtering by position,
+                // value must be decreased by 1,
+                // since position value in database starts at 0,
+                // but for user display positions are increased by 1.
+                if (is_numeric($value)) {
+                    --$value;
+                } else {
+                    $value = null;
+                }
+            }
+
             $qb->andWhere($allowedFiltersMap[$filterName] . ' = :' . $filterName)
                 ->setParameter($filterName, $value);
         }
