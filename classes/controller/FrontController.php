@@ -1191,7 +1191,7 @@ class FrontControllerCore extends Controller
     {
         /*
         This is deprecated in PrestaShop 1.7 and has no effect in PrestaShop 1.7 theme.
-        jQuery2 is register by the core on every theme. Have a look at the /themes/_core folder.
+        jQuery is registered by the core on every theme. Have a look at the /themes/_core folder.
         */
     }
 
