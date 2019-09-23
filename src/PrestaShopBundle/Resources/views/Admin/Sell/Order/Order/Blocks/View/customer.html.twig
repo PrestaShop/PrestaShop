@@ -81,78 +81,81 @@
         </p>
       </div>
     </div>
-    <div class="row mt-2">
-      <div class="col-md-12">
-        <p>
-          <strong>{{ 'Shipping address'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
+    <div class="mt-2" style="background-color: #F8F8F8; padding-top: 18px; padding-left: 18px; padding-right: 18px; padding-bottom: 16px;">
+      <div class="row">
+        <div class="col-md-6">
+          <p>
+            <strong>{{ 'Shipping address'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
 
-          <a href="#"
-             class="float-right tooltip-link"
-             data-toggle="pstooltip"
-             data-placement="top"
-             data-original-title="{{ 'Edit'|trans({}, 'Admin.Actions') }}"
-          >
-            <i class="material-icons">edit</i>
-          </a>
-        </p>
+            <a href="#"
+               class="float-right tooltip-link"
+               data-toggle="pstooltip"
+               data-placement="top"
+               data-original-title="{{ 'Edit'|trans({}, 'Admin.Actions') }}"
+            >
+              <i class="material-icons">edit</i>
+            </a>
+          </p>
 
-        <p class="mb-0">{{ orderForViewing.shippingAddress.fullName }}</p>
-        {% if orderForViewing.shippingAddress.companyName is not empty %}
-          <p class="mb-0">{{ orderForViewing.shippingAddress.companyName }}</p>
-        {% endif %}
-        <p class="mb-0">{{ orderForViewing.shippingAddress.address1 }}</p>
-        {% if orderForViewing.shippingAddress.address2 is not empty %}
-          <p class="mb-0">{{ orderForViewing.shippingAddress.address2 }}</p>
-        {% endif %}
-        <p class="mb-0">
-          {{ orderForViewing.shippingAddress.cityName }},
-          {% if orderForViewing.shippingAddress.stateName is not empty %}
-            {{ orderForViewing.shippingAddress.stateName }}
+          <p class="mb-0">{{ orderForViewing.shippingAddress.fullName }}</p>
+          {% if orderForViewing.shippingAddress.companyName is not empty %}
+            <p class="mb-0">{{ orderForViewing.shippingAddress.companyName }}</p>
           {% endif %}
-          {{ orderForViewing.shippingAddress.postCode }}
-        </p>
-        <p class="mb-0">{{ orderForViewing.shippingAddress.countryName }}</p>
-        <p>
-          {{ orderForViewing.shippingAddress.phoneNumber }}
-          {{ orderForViewing.shippingAddress.mobilePhoneNumber }}
-        </p>
-
-        <p>
-          <strong>{{ 'Invoice address'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
-
-          <a href="#"
-             class="float-right tooltip-link"
-             data-toggle="pstooltip"
-             data-placement="top"
-             data-original-title="{{ 'Edit'|trans({}, 'Admin.Actions') }}"
-          >
-            <i class="material-icons">edit</i>
-          </a>
-        </p>
-
-        <p class="mb-0">{{ orderForViewing.invoiceAddress.fullName }}</p>
-        {% if orderForViewing.invoiceAddress.companyName is not empty %}
-          <p class="mb-0">{{ orderForViewing.invoiceAddress.companyName }}</p>
-        {% endif %}
-        <p class="mb-0">{{ orderForViewing.invoiceAddress.address1 }}</p>
-        {% if orderForViewing.invoiceAddress.address2 is not empty %}
-          <p class="mb-0">{{ orderForViewing.invoiceAddress.address2 }}</p>
-        {% endif %}
-        <p class="mb-0">
-          {{ orderForViewing.invoiceAddress.cityName }},
-          {% if orderForViewing.invoiceAddress.stateName is not empty %}
-            {{ orderForViewing.invoiceAddress.stateName }}
+          <p class="mb-0">{{ orderForViewing.shippingAddress.address1 }}</p>
+          {% if orderForViewing.shippingAddress.address2 is not empty %}
+            <p class="mb-0">{{ orderForViewing.shippingAddress.address2 }}</p>
           {% endif %}
-          {{ orderForViewing.invoiceAddress.postCode }}
-        </p>
-        <p class="mb-0">{{ orderForViewing.invoiceAddress.countryName }}</p>
-        <p>
-          {{ orderForViewing.invoiceAddress.phoneNumber }}
-          {{ orderForViewing.invoiceAddress.mobilePhoneNumber }}
-        </p>
+          <p class="mb-0">
+            {{ orderForViewing.shippingAddress.cityName }},
+            {% if orderForViewing.shippingAddress.stateName is not empty %}
+              {{ orderForViewing.shippingAddress.stateName }}
+            {% endif %}
+            {{ orderForViewing.shippingAddress.postCode }}
+          </p>
+          <p class="mb-0">{{ orderForViewing.shippingAddress.countryName }}</p>
+          <p>
+            {{ orderForViewing.shippingAddress.phoneNumber }}
+            {{ orderForViewing.shippingAddress.mobilePhoneNumber }}
+          </p>
+        </div>
+        <div class="col-md-6">
+          <p>
+            <strong>{{ 'Invoice address'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
+
+            <a href="#"
+               class="float-right tooltip-link"
+               data-toggle="pstooltip"
+               data-placement="top"
+               data-original-title="{{ 'Edit'|trans({}, 'Admin.Actions') }}"
+            >
+              <i class="material-icons">edit</i>
+            </a>
+          </p>
+
+          <p class="mb-0">{{ orderForViewing.invoiceAddress.fullName }}</p>
+          {% if orderForViewing.invoiceAddress.companyName is not empty %}
+            <p class="mb-0">{{ orderForViewing.invoiceAddress.companyName }}</p>
+          {% endif %}
+          <p class="mb-0">{{ orderForViewing.invoiceAddress.address1 }}</p>
+          {% if orderForViewing.invoiceAddress.address2 is not empty %}
+            <p class="mb-0">{{ orderForViewing.invoiceAddress.address2 }}</p>
+          {% endif %}
+          <p class="mb-0">
+            {{ orderForViewing.invoiceAddress.cityName }},
+            {% if orderForViewing.invoiceAddress.stateName is not empty %}
+              {{ orderForViewing.invoiceAddress.stateName }}
+            {% endif %}
+            {{ orderForViewing.invoiceAddress.postCode }}
+          </p>
+          <p class="mb-0">{{ orderForViewing.invoiceAddress.countryName }}</p>
+          <p>
+            {{ orderForViewing.invoiceAddress.phoneNumber }}
+            {{ orderForViewing.invoiceAddress.mobilePhoneNumber }}
+          </p>
+        </div>
       </div>
     </div>
-    <div style="background-color: #F8F8F8; padding-top: 18px; padding-left: 18px; padding-right: 18px; padding-bottom: 16px;">
+    <div class="mt-2" style="background-color: #F8F8F8; padding-top: 18px; padding-left: 18px; padding-right: 18px; padding-bottom: 16px;">
       <div class="row">
         <div class="col-md-6">
           <h3 class="mb-0">
