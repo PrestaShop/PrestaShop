@@ -57,7 +57,7 @@ describe('Order a product and check order confirmation', async () => {
     await expect(connected, 'Customer is not connected in FO').to.be.true;
   });
   it('should go to home page', async function () {
-    await this.pageObjects.homePage.goTo(global.URL_FO);
+    await this.pageObjects.homePage.goToHomePage();
     await this.pageObjects.homePage.checkHomePage();
   });
   it('should add first product to cart and Proceed to checkout', async function () {
