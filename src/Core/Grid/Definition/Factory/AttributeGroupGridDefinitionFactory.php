@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\PositionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
@@ -96,10 +97,13 @@ final class AttributeGroupGridDefinitionFactory extends AbstractGridDefinitionFa
                     'sortable' => false,
                 ])
             )
-            ->add((new DataColumn('position'))
+            ->add((new PositionColumn('position'))
                 ->setName($this->trans('Position', [], 'Admin.Global'))
                 ->setOptions([
-                    'field' => 'position',
+                    'id_field' => 'id_attribute_group',
+                    'position_field' => 'position',
+                    'update_method' => 'POST',
+                    'update_route' => 'admin_attribute_groups_update_position',
                 ])
             )
             ->add((new ActionColumn('actions'))

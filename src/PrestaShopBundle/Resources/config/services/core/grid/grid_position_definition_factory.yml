@@ -25,3 +25,10 @@ services:
       $idField: 'id_attribute'
       $positionField: 'position'
       $parentIdField: 'id_attribute_group'
+
+  prestashop.core.grid.attribute_group.position_definition:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Position\PositionDefinition'
+    arguments:
+      $table: 'attribute_group'
+      $idField: 'id_attribute_group'
+      $positionField: 'position'

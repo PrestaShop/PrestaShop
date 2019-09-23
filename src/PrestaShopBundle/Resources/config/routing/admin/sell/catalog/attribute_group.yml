@@ -74,3 +74,11 @@ admin_attribute_groups_export:
         _controller: 'PrestaShopBundle:Admin/Sell/Catalog/AttributeGroup:export'
         _legacy_controller: AdminAttributesGroups
         _legacy_link: AdminAttributesGroups:exportattribute_group
+
+admin_attribute_groups_update_position:
+  path: /update-position
+  methods: [POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/AttributeGroup:updatePosition'
+    _legacy_controller: AdminAttributesGroups
+#    _legacy_link: AdminAttributesGroups:updateattribute_groupPositions

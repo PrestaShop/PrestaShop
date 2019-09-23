@@ -90,6 +90,28 @@ class AttributeGroupController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_attribute_groups_index');
     }
 
+    public function updatePositionAction(Request $request)
+    {
+        $positionsData = [
+            'positions' => $request->request->get('positions'),
+        ];
+
+        $positionDefinition = $this->get('prestashop.core.grid.attribute_group.position_definition');
+        $positionUpdateFactory = $this->get('prestashop.core.grid.position.position_update_factory');
+
+        try {
+            $positionUpdate = $positionUpdateFactory->buildPositionUpdate($positionsData, $positionDefinition);
+            $updater = $this->get('prestashop.core.grid.position.doctrine_grid_position_updater');
+            $updater->update($positionUpdate);
+            $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+        } catch (Exception $e) {
+            $errors = [$e->toArray()];
+            $this->flashErrors($errors);
+        }
+
+        return $this->redirectToRoute('admin_attribute_groups_index');
+    }
+
     /**
      * Responsible for grid filtering
      *
