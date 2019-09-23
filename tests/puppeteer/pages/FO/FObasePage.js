@@ -21,19 +21,19 @@ module.exports = class Home extends CommonPage {
   }
 
   /**
-   * Filter by category
+   * Go to category
    * @param categoryID, category id from the BO
    */
-  async filterByCategory(categoryID) {
+  async goToCategory(categoryID) {
     await this.waitForSelectorAndClick(this.categoryMenu.replace('%ID', categoryID));
   }
 
   /**
-   * Filter by subcategory
+   * Go to subcategory
    * @param categoryID, category id from the BO
    * @param subCategoryID, subcategory id from the BO
    */
-  async filterSubCategory(categoryID, subCategoryID) {
+  async goToSubCategory(categoryID, subCategoryID) {
     await this.page.hover(this.categoryMenu.replace('%ID', categoryID));
     await this.waitForSelectorAndClick(this.categoryMenu.replace('%ID', subCategoryID));
   }
