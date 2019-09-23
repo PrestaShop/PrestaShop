@@ -8,6 +8,7 @@ const LoginPage = require('../../../pages/BO/login');
 const DashboardPage = require('../../../pages/BO/dashboard');
 const BOBasePage = require('../../../pages/BO/BObasePage');
 const OrderPage = require('../../../pages/BO/order');
+const {Statuses} = require('../../data/demo/orders');
 
 let browser;
 let page;
@@ -53,7 +54,7 @@ describe('Edit Order BO', async () => {
     await this.pageObjects.orderPage.modifyProductQuantity('1', '5');
   });
   it('should modify the order status and check the validation', async function () {
-    await this.pageObjects.orderPage.modifyOrderStatus('Payment accepted');
+    await this.pageObjects.orderPage.modifyOrderStatus(Statuses.paymentAccepted.status);
   });
   it('should logout from the BO', async function () {
     await this.pageObjects.boBasePage.logoutBO();

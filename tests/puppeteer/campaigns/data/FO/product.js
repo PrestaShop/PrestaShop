@@ -1,5 +1,4 @@
 module.exports = {
-
   firstProductData: {
     name: 'HUMMINGBIRD PRINTED T-SHIRT',
     quantity_wanted: '1',

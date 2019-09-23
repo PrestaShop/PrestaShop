@@ -8,8 +8,9 @@ const CartPage = require('../../../pages/FO/cart');
 const LoginPage = require('../../../pages/FO/login');
 const CheckoutPage = require('../../../pages/FO/checkout');
 const OrderConfirmationPage = require('../../../pages/FO/orderConfirmation');
-const customer = require('../../data/FO/customer');
+const {DefaultAccount} = require('../../data/demo/customer');
 const CartData = require('../../data/FO/cart');
+const {PaymentMethods} = require('../../data/demo/orders');
 
 let browser;
 let page;
@@ -52,7 +53,7 @@ describe('Order a product and check order confirmation', async () => {
     await expect(pageTitle).to.equal(this.pageObjects.loginPage.pageTitle);
   });
   it('should sign In in FO With default account', async function () {
-    await this.pageObjects.loginPage.customerLogin(customer.defaultAccount);
+    await this.pageObjects.loginPage.customerLogin(DefaultAccount);
     const connected = await this.pageObjects.homePage.isCustomerConnected();
     await expect(connected, 'Customer is not connected in FO').to.be.true;
   });
@@ -86,7 +87,7 @@ describe('Order a product and check order confirmation', async () => {
     await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
   });
   it('should Pay by back wire and confirm order', async function () {
-    await this.pageObjects.checkoutPage.choosePaymentAndOrder('ps_wirepayment');
+    await this.pageObjects.checkoutPage.choosePaymentAndOrder(PaymentMethods.wirePayment.moduleName);
     const pageTitle = await this.pageObjects.orderConfirmationPage.getPageTitle();
     await expect(pageTitle).to.equal(this.pageObjects.orderConfirmationPage.pageTitle);
     const cardTitle = await this.pageObjects.orderConfirmationPage
