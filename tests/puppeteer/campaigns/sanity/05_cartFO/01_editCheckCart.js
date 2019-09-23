@@ -61,6 +61,7 @@ describe('Check the Product page', async () => {
   });
   it('should go to the home page', async function () {
     await this.pageObjects.homePage.goToHomePage();
+    await this.pageObjects.homePage.checkHomePage();
   });
   it('should go to the second product page', async function () {
     await this.pageObjects.homePage.goToProductPage('2');
