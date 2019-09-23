@@ -72,7 +72,7 @@ final class AttachmentQueryBuilder extends AbstractDoctrineQueryBuilder
 
         $qb
             ->select('a.`id_attachment`, al.`name`, a.`file`, a.`file_size`')
-            ->addSelect('CONCAT(COALESCE(virtual_product_attachment.`product_count`, 0), " product(s)") AS products')
+            ->addSelect('COALESCE(virtual_product_attachment.`product_count`, 0) AS products')
         ;
 
         $this->searchCriteriaApplicator
