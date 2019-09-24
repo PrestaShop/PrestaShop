@@ -45,6 +45,8 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ChoiceColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DateTimeColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\OrderPriceColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\ColorColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\PreviewColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
@@ -167,6 +169,14 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setOptions([
                     'field' => 'id_order',
                 ])
+            )
+            ->add(
+                (new PreviewColumn('preview'))
+                    ->setOptions([
+                        'text_type' => 'static',
+                        'static_text' => '<',
+                        'identifier_field' => 'id_order',
+                    ])
             )
             ->add((new DataColumn('reference'))
                 ->setName($this->trans('Reference', [], 'Admin.Global'))

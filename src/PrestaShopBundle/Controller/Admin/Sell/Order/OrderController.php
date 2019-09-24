@@ -455,6 +455,11 @@ class OrderController extends FrameworkBundleAdminController
         ]);
     }
 
+    public function getPreviewDataAction(int $orderId): Response
+    {
+        return new Response($orderId);
+    }
+
     /**
      * Duplicates cart from specified order
      *

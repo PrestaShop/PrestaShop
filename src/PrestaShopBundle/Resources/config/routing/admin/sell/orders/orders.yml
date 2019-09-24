@@ -135,3 +135,10 @@ admin_orders_resend_email:
     orderId: \d+
     orderHistoryId: \d+
     orderStatusId: \d+
+
+admin_orders_get_preview_data:
+  path: /preview-data
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:getPreviewData
+    _legacy_controller: AdminOrders
