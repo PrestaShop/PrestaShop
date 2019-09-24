@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -31,6 +31,7 @@ import taxRulesGroupFormMap from './tax-rules-groups-form-map';
 export default class TaxRulesGroupForm {
   constructor() {
     this.taxRulesFormAction = $(taxRulesGroupFormMap.taxRuleForm).attr('action');
+    this._initTaxRuleForm();
     this._initEvents();
 
     return {};
@@ -42,28 +43,27 @@ export default class TaxRulesGroupForm {
    * @private
    */
   _initEvents() {
-    this._initTaxRuleForm();
     $(taxRulesGroupFormMap.countrySelect).on('change', () => this._handleCountryChange());
     $(taxRulesGroupFormMap.editTaxRuleLink).on('click', (event) => this._handleEditTaxRuleClick(event));
     $(taxRulesGroupFormMap.addTaxRuleBtn).on('click', (event) => this._handleAddTaxRuleClick(event));
   }
 
   /**
-   * Checks if form has non empty action witch indicates form was submitted before
-   * to initiate form before user interaction. Also check if list is empty and open create form
-   * if it is
+   * Checks conditions and initiates tax rule form if they are met
    *
    *  @private
    */
   _initTaxRuleForm() {
     if (this.taxRulesFormAction.trim()) {
-      this._showTaxRulesForm(this.taxRulesFormAction, false, false);
+      this._showTaxRulesForm(this.taxRulesFormAction, null, false);
 
       return;
     }
 
     if ($(taxRulesGroupFormMap.taxRulesGrid).find('.grid-table-empty').length) {
-      this._showTaxRulesForm($(taxRulesGroupFormMap.addLink).attr('href'));
+      this._showTaxRulesForm(
+        $(taxRulesGroupFormMap.addLink).data('load-path'),
+        $(taxRulesGroupFormMap.addLink).data('edit-path'));
     }
   }
 
@@ -110,7 +110,7 @@ export default class TaxRulesGroupForm {
   _handleEditTaxRuleClick(event) {
     event.preventDefault();
 
-    const editLink = $(event.target).closest('a').attr('href');
+    const editLink = $(event.target).closest('a').data('edit-path');
 
     if (editLink === this.taxRulesFormAction) {
       this._hideTaxRulesForm();
@@ -118,7 +118,9 @@ export default class TaxRulesGroupForm {
       return;
     }
 
-    this._showTaxRulesForm(editLink, true);
+    const loadLink = $(event.target).closest('a').data('load-path');
+
+    this._showTaxRulesForm(editLink, loadLink);
   }
 
   /**
@@ -160,31 +162,31 @@ export default class TaxRulesGroupForm {
   /**
    * Shows tax rule form and fills it with ajax response or empty data
    *
-   * @param link
-   * @param loadEditData
+   * @param submitLink
+   * @param loadEditLink
    * @param loadEmptyData
    *
    * @private
    */
-  _showTaxRulesForm(link, loadEditData = false, loadEmptyData = true) {
+  _showTaxRulesForm(submitLink, loadEditLink = null, loadEmptyData = true) {
     const $taxRuleForm = $(taxRulesGroupFormMap.taxRuleForm);
     const $taxRuleFormHiddenContent = $(taxRulesGroupFormMap.taxRulesHiddenContent);
     $taxRuleFormHiddenContent.hide();
 
     this._enableSpinner();
 
-    if ($taxRuleForm.hasClass('hidden-element')) {
-      $taxRuleForm.removeClass('hidden-element');
+    if ($taxRuleForm.hasClass('d-none')) {
+      $taxRuleForm.removeClass('d-none');
     }
 
     $taxRuleForm.fadeIn();
 
-    this.taxRulesFormAction = link;
-    $taxRuleForm.attr('action', link);
+    this.taxRulesFormAction = submitLink;
+    $taxRuleForm.attr('action', submitLink);
 
-    if (loadEditData) {
+    if (loadEditLink) {
       $.ajax({
-        url: link,
+        url: loadEditLink,
         method: 'GET',
         dataType: 'json',
       }).then(response => {
@@ -202,7 +204,7 @@ export default class TaxRulesGroupForm {
       return;
     }
 
-    if (loadEmptyData) {
+    if (loadEditLink) {
       this._setTaxRuleInformation(null);
     }
 
@@ -212,16 +214,16 @@ export default class TaxRulesGroupForm {
   /**
    * Resolves visibility of state select and fills it with ajax response data if visible
    *
-   * @param response
+   * @param states
    * @param fadeSpeed
    *
    * @private
    */
-  _resolveStateSelectVisibility(response, fadeSpeed = 400) {
+  _resolveStateSelectVisibility(states, fadeSpeed = 400) {
     const $stateFormSelect = $(taxRulesGroupFormMap.stateFormSelect);
     const $stateFormRow = $(taxRulesGroupFormMap.stateFormRow);
 
-    if (response.length === 0) {
+    if (states.length === 0) {
       $stateFormRow.fadeOut(fadeSpeed);
       $stateFormSelect.attr('disabled', 'disabled');
 
@@ -230,12 +232,12 @@ export default class TaxRulesGroupForm {
 
     $stateFormSelect.empty();
     $stateFormSelect.append($('<option></option>').attr('value', 0).text($stateFormSelect.data('all-translation')));
-    $.each(response, function (index, value) {
+    $.each(states, function (index, value) {
       $stateFormSelect.append($('<option></option>').attr('value', value).text(index));
     });
 
-    if ($stateFormRow.hasClass('hidden-element')) {
-      $stateFormRow.removeClass('hidden-element');
+    if ($stateFormRow.hasClass('d-none')) {
+      $stateFormRow.removeClass('d-none');
     }
 
     $stateFormSelect.removeAttr('disabled');
@@ -282,6 +284,7 @@ export default class TaxRulesGroupForm {
     this._removeTaxRuleFormErrors();
 
     if (data !== null) {
+      console.log(data);
       taxRule = data[0];
       states = data[1];
 
@@ -295,7 +298,6 @@ export default class TaxRulesGroupForm {
     }
 
     $countrySelect.val(countryId);
-
     this._resolveStateSelectVisibility(states, 0);
 
     $(taxRulesGroupFormMap.stateFormSelect).val(stateId);

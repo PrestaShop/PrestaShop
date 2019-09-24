@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -27,16 +27,16 @@
  * Defines all selectors that are used in tax rules group add/edit form.
  */
 export default {
-  countrySelect: '#tax_rule_country',
+  countrySelect: '#tax_rule_country_id',
   stateFormRow: '.js-state-form-row',
-  stateFormSelect: '#tax_rule_state',
+  stateFormSelect: '#tax_rule_state_ids',
   editTaxRuleLink: 'a.js-link-row-action',
   addTaxRuleBtn: '#page-header-desc-configuration-add',
   submitTaxRuleBtn: '#tax-rule-submit-btn',
   taxRuleForm: '#tax-rule-form',
-  zipCodeInput: '#tax_rule_zipCode',
-  behaviorSelect: '#tax_rule_behavior',
-  taxSelect: '#tax_rule_tax',
+  zipCodeInput: '#tax_rule_zip_code',
+  behaviorSelect: '#tax_rule_behavior_id',
+  taxSelect: '#tax_rule_tax_id',
   descriptionInput: '#tax_rule_description',
   spinnerContainer: '#spinner-container',
   addLink: '#page-header-desc-configuration-add',
@@ -45,10 +45,10 @@ export default {
   taxRuleInvalidFeedbackContainer: '.invalid-feedback-container',
   taxRuleFormPopoverErrorContainers: [
     '.popover-error-container-tax_rule_description',
-    '.popover-error-container-tax_rule_tax',
-    '.popover-error-container-tax_rule_behavior',
-    '.popover-error-container-tax_rule_state',
-    '.popover-error-container-tax_rule_country',
+    '.popover-error-container-tax_rule_tax_id',
+    '.popover-error-container-tax_rule_behavior_id',
+    '.popover-error-container-tax_rule_state_ids',
+    '.popover-error-container-tax_rule_country_id',
   ],
   taxRuleFormErrorAlert: '.alert.alert-danger',
   taxRulesGrid: 'form[name="tax_rule_grid"]',
