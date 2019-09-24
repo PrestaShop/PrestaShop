@@ -34,6 +34,7 @@ final class ZipCodePatternResolver
     /**
      * @param string $format
      * @param string $isoCode
+     *
      * @return string
      */
     public function getRegexPattern(string $format, string $isoCode): string
@@ -44,6 +45,7 @@ final class ZipCodePatternResolver
     /**
      * @param string $format
      * @param string $isoCode
+     *
      * @return string
      */
     public function getHumanReadablePattern(string $format, string $isoCode): string

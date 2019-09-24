@@ -652,7 +652,9 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
 
     /**
      * @param array $data
+     *
      * @return AddTaxRulesCommand
+     *
      * @throws CountryConstraintException
      * @throws StateConstraintException
      * @throws TaxConstraintException
@@ -691,7 +693,9 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
     /**
      * @param $id
      * @param array $data
+     *
      * @return UpdateTaxRuleCommand
+     *
      * @throws CountryConstraintException
      * @throws StateConstraintException
      * @throws TaxConstraintException
@@ -725,6 +729,7 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
 
     /**
      * @param array $data
+     *
      * @return array|mixed
      */
     private function getStateIds(array $data): array

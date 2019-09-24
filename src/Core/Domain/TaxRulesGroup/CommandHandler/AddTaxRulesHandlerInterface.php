@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Command\AddTaxRulesCommand;
-use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRuleId;
 
 /**
  * Defines contract for handler adding new tax rule

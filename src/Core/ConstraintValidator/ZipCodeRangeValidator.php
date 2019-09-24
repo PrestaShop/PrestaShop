@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\ConstraintValidator;
 
-use InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountryZipCodeRequirements;

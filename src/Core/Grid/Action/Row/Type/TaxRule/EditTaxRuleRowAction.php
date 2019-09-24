@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\TaxRule;
 
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\AbstractRowAction;
-use PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\AccessibilityCheckerInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**

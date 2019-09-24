@@ -36,7 +36,6 @@ use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Command\AddTaxRulesCommand;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\CommandHandler\AddTaxRulesHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\CannotAddTaxRuleException;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\TaxRuleConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRuleId;
 use PrestaShopException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use TaxRule;

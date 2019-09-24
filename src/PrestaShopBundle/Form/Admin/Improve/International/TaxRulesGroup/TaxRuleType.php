@@ -32,12 +32,8 @@ use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\ZipCodeRange;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Domain\Tax\ValueObject\TaxId;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\TaxRuleConstraint;
-use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\TaxRulesGroupConstraint;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
-use PrestaShopBundle\Form\Admin\Type\BehaviorChoiceType;
-use PrestaShopBundle\Form\Admin\Type\CountryAndAllChoiceType;
-use PrestaShopBundle\Form\Admin\Type\TaxChoiceType;
 use PrestaShopBundle\Form\EventSubscriber\TaxRuleFormSubscriber;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -53,7 +49,6 @@ use Symfony\Component\Validator\Constraints\NotBlank;
  */
 class TaxRuleType extends AbstractType
 {
-
     /**
      * @var TranslatorInterface
      */

@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\ConstraintValidator;
 
-use InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\TaxRulesGroupConstraintException;

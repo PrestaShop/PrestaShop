@@ -236,7 +236,9 @@ abstract class AbstractTaxRulesGroupHandler
     /**
      * @param CountryDataProvider $countryDataProvider
      * @param int $langId
+     *
      * @return int[]
+     *
      * @throws CountryNotFoundException
      */
     private function getAllCountryIdsByLanguage(
@@ -257,6 +259,7 @@ abstract class AbstractTaxRulesGroupHandler
 
     /**
      * @param CountryId $countryId
+     *
      * @return int[]
      */
     private function getSelectedCountryId(CountryId $countryId): array
