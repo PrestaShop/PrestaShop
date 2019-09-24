@@ -215,6 +215,11 @@ class OrderController extends FrameworkBundleAdminController
             ->setFileName('order_' . date('Y-m-d_His') . '.csv');
     }
 
+    public function getPreviewDataAction(int $orderId): Response
+    {
+        return new Response($orderId);
+    }
+
     /**
      * @param OrderException $e
      *

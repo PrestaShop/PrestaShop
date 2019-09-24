@@ -43,3 +43,10 @@ admin_orders_export:
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Order/Order:export
     _legacy_controller: AdminOrders
+
+admin_orders_get_preview_data:
+  path: /preview-data
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:getPreviewData
+    _legacy_controller: AdminOrders
