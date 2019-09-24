@@ -268,7 +268,7 @@ final class EditCurrencyHandler extends AbstractCurrencyHandler implements EditC
                 $langIds = Language::getLanguages(true, false, true);
                 $entity->name = [];
                 $entity->symbol = [];
-                $entity->numeric_iso_code = $currency->getNumericIsoCode();
+                $entity->numeric_iso_code = (int) $currency->getNumericIsoCode();
 
                 foreach ($langIds as $langId) {
                     $entity->name[$langId] = $currency->getDisplayName();

@@ -121,6 +121,9 @@ class CurrencyDatabase extends AbstractDataLayer implements CurrencyDataLayerInt
      */
     protected function doWrite($currencyDataId, $currencyData)
     {
-        // Nothing.
+        // We should not save anything in this layer. The CLDR or its Repository nor any of its layers
+        // should modify the database. This could override customization added by the user with default
+        // CLDR values. Any changes on the database must be managed through the backoffice and the appropriate
+        // commands/handlers
     }
 }
