@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception;
 /**
  * Is thrown when catalog price rule cannot be deleted
  */
-class DeleteCatalogPriceRuleException extends CatalogPriceRuleException
+class CannotDeleteCatalogPriceRuleException extends CatalogPriceRuleException
 {
     /**
      * When fails to delete single catalog price rule

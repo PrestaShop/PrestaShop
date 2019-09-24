@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\CatalogPriceRule\CommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Command\EditCatalogPriceRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\CommandHandler\EditCatalogPriceRuleHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\CatalogPriceRuleException;
-use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\UpdateCatalogPriceRuleException;
+use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\CannotUpdateCatalogPriceRuleException;
 use PrestaShopException;
 use SpecificPriceRule;
 
@@ -51,7 +51,7 @@ final class EditCatalogPriceRuleHandler implements EditCatalogPriceRuleHandlerIn
             }
 
             if (false === $specificPriceRule->update()) {
-                throw new UpdateCatalogPriceRuleException(
+                throw new CannotUpdateCatalogPriceRuleException(
                     sprintf('Failed to update specific price rule with id %s', $specificPriceRule->id)
                 );
             }
