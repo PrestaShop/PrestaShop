@@ -169,12 +169,12 @@ final class MerchandiseReturnQueryBuilder extends AbstractDoctrineQueryBuilder
             if ('date_add' === $filterName) {
                 if (isset($filterValue['from'])) {
                     $qb->andWhere('r.date_add >= :date_from');
-                    $qb->setParameter('date_from', $filterValue['from']);
+                    $qb->setParameter('date_from', sprintf('%s 0:0:0', $filterValue['from']));
                 }
 
                 if (isset($filterValue['to'])) {
                     $qb->andWhere('r.date_add <= :date_to');
-                    $qb->setParameter('date_to', $filterValue['to']);
+                    $qb->setParameter('date_to', sprintf('%s 23:59:59', $filterValue['to']));
                 }
 
                 continue;

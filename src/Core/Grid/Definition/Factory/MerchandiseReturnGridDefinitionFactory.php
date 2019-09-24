@@ -137,7 +137,7 @@ final class MerchandiseReturnGridDefinitionFactory extends AbstractGridDefinitio
             ->add((new Filter('date_add', DateRangeType::class))
                 ->setTypeOptions([
                     'required' => false,
-                    'date_format' => 'YYYY-MM-DD HH:mm:ss',
+                    'date_format' => 'YYYY-MM-DD',
                 ])
                 ->setAssociatedColumn('date_add')
             )
