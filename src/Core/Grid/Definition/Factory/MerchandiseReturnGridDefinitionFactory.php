@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\ColorColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DateTimeColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
@@ -88,7 +89,7 @@ final class MerchandiseReturnGridDefinitionFactory extends AbstractGridDefinitio
                     ])
             )
             ->add(
-                (new DataColumn('date_add'))
+                (new DateTimeColumn('date_add'))
                     ->setName($this->trans('Date issued', [], 'Admin.Orderscustomers.Feature'))
                     ->setOptions([
                         'field' => 'date_add',
@@ -136,6 +137,7 @@ final class MerchandiseReturnGridDefinitionFactory extends AbstractGridDefinitio
             ->add((new Filter('date_add', DateRangeType::class))
                 ->setTypeOptions([
                     'required' => false,
+                    'date_format' => 'YYYY-MM-DD HH:mm:ss',
                 ])
                 ->setAssociatedColumn('date_add')
             )
