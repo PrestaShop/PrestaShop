@@ -90,10 +90,7 @@ class FeatureController extends FrameworkBundleAdminController
     /**
      * Renders features list
      *
-     * @AdminSecurity(
-     *     "is_granted(['read'], request.get('_legacy_controller'))",
-     *     redirectRoute="admin_merchandise_return_index"
-     * )
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param Request $request
      * @param FeatureFilters $filters
@@ -219,10 +216,7 @@ class FeatureController extends FrameworkBundleAdminController
     /**
      * Prepares filtering response
      *
-     * @AdminSecurity(
-     *     "is_granted(['read'], request.get('_legacy_controller'))",
-     *     redirectRoute="admin_merchandise_return_index"
-     * )
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -250,7 +244,7 @@ class FeatureController extends FrameworkBundleAdminController
     /**
      * @AdminSecurity(
      *     "is_granted(['update'], request.get('_legacy_controller'))",
-     *     redirectRoute="admin_merchandise_return_index"
+     *     redirectRoute="admin_features_index"
      * )
      *
      * @param Request $request
