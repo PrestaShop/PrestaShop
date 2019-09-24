@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\CatalogPriceRule\CommandHandler;
 use PrestaShop\PrestaShop\Adapter\CatalogPriceRule\AbstractCatalogPriceRuleHandler;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Command\DeleteCatalogPriceRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\CommandHandler\DeleteCatalogPriceRuleHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\DeleteCatalogPriceRuleException;
+use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\CannotDeleteCatalogPriceRuleException;
 
 /**
  * Handles deletion of catalog price rule using legacy object model
@@ -45,9 +45,9 @@ final class DeleteCatalogPriceRuleHandler extends AbstractCatalogPriceRuleHandle
         $specificPriceRule = $this->getSpecificPriceRule($catalogPriceRuleId);
 
         if (null === $this->deleteSpecificPriceRule($specificPriceRule)) {
-            throw new DeleteCatalogPriceRuleException(
+            throw new CannotDeleteCatalogPriceRuleException(
                 sprintf('Cannot delete SpecificPriceRule object with id "%s".', $catalogPriceRuleId->getValue()),
-                DeleteCatalogPriceRuleException::FAILED_DELETE
+                CannotDeleteCatalogPriceRuleException::FAILED_DELETE
             );
         }
     }
