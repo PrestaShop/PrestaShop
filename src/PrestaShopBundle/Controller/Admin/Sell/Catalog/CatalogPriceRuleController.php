@@ -29,11 +29,11 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Command\BulkDeleteCatalogPriceRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Command\DeleteCatalogPriceRuleCommand;
-use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\DeleteCatalogPriceRuleException;
+use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\CannotDeleteCatalogPriceRuleException;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CatalogPriceRuleGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\CatalogPriceRuleFilters;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\CatalogPriceRuleNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\UpdateCatalogPriceRuleException;
+use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\CannotUpdateCatalogPriceRuleException;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Query\GetCatalogPriceRuleForEditing;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\QueryResult\EditableCatalogPriceRule;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
@@ -232,17 +232,17 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
     private function getErrorMessages(): array
     {
         return [
-            DeleteCatalogPriceRuleException::class => [
-                DeleteCatalogPriceRuleException::FAILED_DELETE => $this->trans(
+            CannotDeleteCatalogPriceRuleException::class => [
+                CannotDeleteCatalogPriceRuleException::FAILED_DELETE => $this->trans(
                     'An error occurred while deleting the object.',
                     'Admin.Notifications.Error'
                 ),
-                DeleteCatalogPriceRuleException::FAILED_BULK_DELETE => $this->trans(
+                CannotDeleteCatalogPriceRuleException::FAILED_BULK_DELETE => $this->trans(
                     'An error occurred while deleting this selection.',
                     'Admin.Notifications.Error'
                 ),
             ],
-            UpdateCatalogPriceRuleException::class => $this->trans(
+            CannotUpdateCatalogPriceRuleException::class => $this->trans(
                 'An error occurred while updating an object.',
                 'Admin.Notifications.Error'
             ),

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -27,17 +27,8 @@
 namespace PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception;
 
 /**
- * Is thrown when catalog price rule cannot be deleted
+ * Thrown when unable to update catalog price rule
  */
-class DeleteCatalogPriceRuleException extends CatalogPriceRuleException
+class CannotUpdateCatalogPriceRuleException extends CatalogPriceRuleException
 {
-    /**
-     * When fails to delete single catalog price rule
-     */
-    const FAILED_DELETE = 10;
-
-    /**
-     * When fails to delete catalog price rule in bulk action
-     */
-    const FAILED_BULK_DELETE = 20;
 }
