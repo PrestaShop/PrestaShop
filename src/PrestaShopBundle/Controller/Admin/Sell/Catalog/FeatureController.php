@@ -32,10 +32,10 @@ use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Query\GetFeatureForEditing;
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\FeatureGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\FeatureFilters;
+use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Service\Grid\ResponseBuilder;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -241,8 +241,39 @@ class FeatureController extends FrameworkBundleAdminController
         );
     }
 
+    //@todo delete action
     public function deleteAction(int $featureId): RedirectResponse
     {
+        return $this->redirectToRoute('admin_features_index');
+    }
+
+    /**
+     * @AdminSecurity(
+     *     "is_granted(['update'], request.get('_legacy_controller'))",
+     *     redirectRoute="admin_merchandise_return_index"
+     * )
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function updatePositionAction(Request $request)
+    {
+        $positionsData = [
+            'positions' => $request->request->get('positions'),
+        ];
+        $positionDefinition = $this->get('prestashop.core.grid.feature.position_definition');
+        $positionUpdateFactory = $this->get('prestashop.core.grid.position.position_update_factory');
+        try {
+            $positionUpdate = $positionUpdateFactory->buildPositionUpdate($positionsData, $positionDefinition);
+            $updater = $this->get('prestashop.core.grid.position.doctrine_grid_position_updater');
+            $updater->update($positionUpdate);
+            $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+        } catch (Exception $e) {
+            $errors = [$e->toArray()];
+            $this->flashErrors($errors);
+        }
+
         return $this->redirectToRoute('admin_features_index');
     }
 }
