@@ -89,7 +89,7 @@ $(() => {
   new Serp(
     {
       container: '#serp-app',
-      defaultTitle: 'input[name^="category[name]',
+      defaultTitle: 'input[name^="category[name]"]',
       watchedTitle: 'input[name^="category[meta_title]',
       defaultDescription: 'textarea[name^="category[description]',
       watchedDescription: 'textarea[name^="category[meta_description]',
