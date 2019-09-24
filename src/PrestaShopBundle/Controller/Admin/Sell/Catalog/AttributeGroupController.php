@@ -93,7 +93,9 @@ class AttributeGroupController extends FrameworkBundleAdminController
     /**
      * Updates attribute groups positioning order
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_attribute_groups_index"
+     * )
      *
      * @param Request $request
      *
