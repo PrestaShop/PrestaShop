@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -38,9 +38,9 @@ use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\BehaviorId;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 
 /**
- * Create tax rule with provided data
+ * Create tax rules with provided data
  */
-class AddTaxRuleCommand
+class AddTaxRulesCommand
 {
     /**
      * @var TaxRulesGroupId
@@ -128,11 +128,11 @@ class AddTaxRuleCommand
     /**
      * @param int $countryId
      *
-     * @return AddTaxRuleCommand
+     * @return AddTaxRulesCommand
      *
      * @throws CountryConstraintException
      */
-    public function setCountryId(int $countryId): AddTaxRuleCommand
+    public function setCountryId(int $countryId): AddTaxRulesCommand
     {
         $this->countryId = new CountryId($countryId);
 
@@ -150,9 +150,9 @@ class AddTaxRuleCommand
     /**
      * @param string $zipCode
      *
-     * @return AddTaxRuleCommand
+     * @return AddTaxRulesCommand
      */
-    public function setZipCode(string $zipCode): AddTaxRuleCommand
+    public function setZipCode(string $zipCode): AddTaxRulesCommand
     {
         $this->zipCode = $zipCode;
 
@@ -170,11 +170,11 @@ class AddTaxRuleCommand
     /**
      * @param int $taxId
      *
-     * @return AddTaxRuleCommand
+     * @return AddTaxRulesCommand
      *
      * @throws TaxConstraintException
      */
-    public function setTaxId(int $taxId): AddTaxRuleCommand
+    public function setTaxId(int $taxId): AddTaxRulesCommand
     {
         $this->taxId = new TaxId($taxId);
 
@@ -192,9 +192,9 @@ class AddTaxRuleCommand
     /**
      * @param string $description
      *
-     * @return AddTaxRuleCommand
+     * @return AddTaxRulesCommand
      */
-    public function setDescription(string $description): AddTaxRuleCommand
+    public function setDescription(string $description): AddTaxRulesCommand
     {
         $this->description = $description;
 

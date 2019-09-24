@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -34,6 +34,8 @@ use Exception;
 class CannotAddTaxRuleException extends TaxRulesGroupException
 {
     /**
+     * List of countries that reported an error when tax rule was added
+     *
      * @var array
      */
     private $failedRulesCountries;

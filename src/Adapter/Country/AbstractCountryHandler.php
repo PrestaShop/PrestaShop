@@ -36,7 +36,7 @@ use PrestaShopException;
 abstract class AbstractCountryHandler
 {
     /**
-     * Get legacy country
+     * Provides legacy country object
      *
      * @param CountryId $countryId
      *

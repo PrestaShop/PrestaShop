@@ -33,6 +33,8 @@ use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintExcepti
  */
 class CountryId
 {
+    const ALL_COUNTRIES_ID = 0;
+
     /**
      * @var int
      */

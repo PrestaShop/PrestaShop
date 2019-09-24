@@ -30,9 +30,12 @@ use Exception;
 use PrestaShop\PrestaShop\Adapter\Country\CountryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Command\AddTaxRulesCommand;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Command\BulkDeleteTaxRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Command\DeleteTaxRuleCommand;
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Command\UpdateTaxRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\CannotAddTaxRuleException;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\CannotAddTaxRulesGroupException;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\CannotBulkDeleteTaxRulesException;
@@ -48,6 +51,7 @@ use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Query\GetTaxRuleForEditing;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Query\GetTaxRulesGroupForEditing;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\QueryResult\EditableTaxRule;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\QueryResult\EditableTaxRulesGroup;
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRuleId;
 use PrestaShop\PrestaShop\Core\Search\Filters\TaxRuleFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -107,7 +111,7 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
                 $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_tax_rules_groups_edit', [
-                        'taxRulesGroupId' => $handlerResult->getIdentifiableObjectId(),
+                        'tax_rules_group_id' => $handlerResult->getIdentifiableObjectId(),
                     ]
                 );
             }
@@ -157,8 +161,8 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
             $taxRuleSessionParameter = $session->get('tax_rule');
             $taxRuleFormOptions['action'] = $taxRuleSessionParameter['form_action'];
             $taxRuleFormData = [
-                'taxRuleId' => $taxRuleSessionParameter['tax_rule_id'],
-                'taxRulesGroupId' => $taxRulesGroupId,
+                'tax_rule_id' => $taxRuleSessionParameter['tax_rule_id'],
+                'tax_rules_group_id' => $taxRulesGroupId,
             ];
 
             $session->remove('tax_rule');
@@ -235,20 +239,16 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
             'prestashop.core.form.identifiable_object.builder.tax_rule_form_builder'
         );
 
-        $taxRuleFormHandler = $this->get(
-            'prestashop.core.form.identifiable_object.handler.tax_rule_form_handler'
-        );
-
-        $taxRuleForm = $taxRuleFormBuilder->getForm(['taxRulesGroupId' => $taxRulesGroupId]);
+        $taxRuleForm = $taxRuleFormBuilder->getForm(['tax_rules_group_id' => $taxRulesGroupId]);
         $taxRuleForm->handleRequest($request);
 
         try {
-            $handlerResult = $taxRuleFormHandler->handle($taxRuleForm);
-            if ($handlerResult->isSubmitted() && $handlerResult->isValid()) {
+            if ($taxRuleForm->isSubmitted() && $taxRuleForm->isValid()) {
+                $this->getCommandBus()->handle($this->createAddTaxRulesCommand($taxRuleForm->getData()));
                 $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
             }
 
-            if ($handlerResult->isSubmitted() && !$handlerResult->isValid()) {
+            if ($taxRuleForm->isSubmitted() && !$taxRuleForm->isValid()) {
                 $this->setTaxRuleSessionParameters(
                         $this->generateUrl('admin_tax_rules_create', ['taxRulesGroupId' => $taxRulesGroupId])
                     );
@@ -294,27 +294,22 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
                         'prestashop.core.form.identifiable_object.builder.tax_rule_form_builder'
                     );
 
-            $taxRuleFormHandler = $this->get(
-                        'prestashop.core.form.identifiable_object.handler.tax_rule_form_handler'
-                    );
-
             $taxRuleForm = $taxRuleFormBuilder->getFormFor(
                         $taxRuleId,
                         [
-                            'taxRulesGroupId' => $editableTaxRule->getTaxRulesGroupId()->getValue(),
-                            'taxRuleId' => $taxRuleId,
+                            'tax_rules_group_id' => $editableTaxRule->getTaxRulesGroupId()->getValue(),
+                            'tax_rule_id' => $taxRuleId,
                         ]
                     );
 
             $taxRuleForm->handleRequest($request);
 
-            $result = $taxRuleFormHandler->handleFor($taxRuleId, $taxRuleForm);
-
-            if ($result->isSubmitted() && $result->isValid()) {
+            if ($taxRuleForm->isSubmitted() && $taxRuleForm->isValid()) {
+                $this->getCommandBus()->handle($this->createUpdateTaxRuleCommand($taxRuleId, $taxRuleForm->getData()));
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
             }
 
-            if ($result->isSubmitted() && !$result->isValid()) {
+            if ($taxRuleForm->isSubmitted() && !$taxRuleForm->isValid()) {
                 $this->setTaxRuleSessionParameters(
                             $this->generateUrl('admin_tax_rules_edit', ['taxRuleId' => $taxRuleId]),
                             $taxRuleId
@@ -653,5 +648,87 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
             $failedOnObjectMessage,
             $ids
         );
+    }
+
+    /**
+     * @param array $data
+     * @return AddTaxRulesCommand
+     * @throws CountryConstraintException
+     * @throws StateConstraintException
+     * @throws TaxConstraintException
+     * @throws TaxRuleConstraintException
+     * @throws TaxRulesGroupConstraintException
+     */
+    private function createAddTaxRulesCommand(array $data)
+    {
+        $stateIds = $this->getStateIds($data);
+
+        $command = new AddTaxRulesCommand(
+            (int) $data['tax_rules_group_id'],
+            (int) $data['behavior_id'],
+            array_map('intval', $stateIds)
+        );
+
+        if (!empty($data['tax_id'])) {
+            $command->setTaxId((int) $data['tax_id']);
+        }
+
+        if (!empty($data['description'])) {
+            $command->setDescription($data['description']);
+        }
+
+        if (!empty($data['country_id'])) {
+            $command->setCountryId((int) $data['country_id']);
+        }
+
+        if (!empty($data['zip_code'])) {
+            $command->setZipCode($data['zip_code']);
+        }
+
+        return $command;
+    }
+
+    /**
+     * @param $id
+     * @param array $data
+     * @return UpdateTaxRuleCommand
+     * @throws CountryConstraintException
+     * @throws StateConstraintException
+     * @throws TaxConstraintException
+     * @throws TaxRuleConstraintException
+     */
+    private function createUpdateTaxRuleCommand($id, array $data)
+    {
+        $stateIds = $this->getStateIds($data);
+
+        $command = new UpdateTaxRuleCommand(
+            $id,
+            (int) $data['country_id'],
+            (int) $data['behavior_id'],
+            array_map('intval', $stateIds)
+        );
+
+        if (null !== $data['description']) {
+            $command->setDescription($data['description']);
+        }
+
+        if (!empty($data['tax_id'])) {
+            $command->setTaxId($data['tax_id']);
+        }
+
+        if (!empty($data['zip_code'])) {
+            $command->setZipCode($data['zip_code']);
+        }
+
+        return $command;
+    }
+
+    /**
+     * @param array $data
+     * @return array|mixed
+     */
+    private function getStateIds(array $data): array
+    {
+        return !empty($data['state_ids']) ? $data['state_ids'] : [StateId::ALL_STATES_ID];
     }
 }

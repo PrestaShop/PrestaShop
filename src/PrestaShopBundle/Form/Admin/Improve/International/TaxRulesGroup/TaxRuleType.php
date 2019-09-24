@@ -29,13 +29,18 @@ namespace PrestaShopBundle\Form\Admin\Improve\International\TaxRulesGroup;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\UniqueTaxRuleBehavior;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\ZipCodeRange;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
+use PrestaShop\PrestaShop\Core\Domain\Tax\ValueObject\TaxId;
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\TaxRuleConstraint;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\TaxRulesGroupConstraint;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\BehaviorChoiceType;
 use PrestaShopBundle\Form\Admin\Type\CountryAndAllChoiceType;
 use PrestaShopBundle\Form\Admin\Type\TaxChoiceType;
 use PrestaShopBundle\Form\EventSubscriber\TaxRuleFormSubscriber;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -48,6 +53,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
  */
 class TaxRuleType extends AbstractType
 {
+
     /**
      * @var TranslatorInterface
      */
@@ -59,15 +65,39 @@ class TaxRuleType extends AbstractType
     private $stateChoiceProvider;
 
     /**
+     * @var FormChoiceProviderInterface
+     */
+    private $behaviorChoiceProvider;
+
+    /**
+     * @var FormChoiceProviderInterface
+     */
+    private $countriesChoiceProvider;
+
+    /**
+     * @var FormChoiceProviderInterface
+     */
+    private $taxesChoiceProvider;
+
+    /**
      * @param TranslatorInterface $translator
      * @param ConfigurableFormChoiceProviderInterface $stateChoiceProvider
+     * @param FormChoiceProviderInterface $behaviorChoiceProvider
+     * @param FormChoiceProviderInterface $countriesChoiceProvider
+     * @param FormChoiceProviderInterface $taxesChoiceProvider
      */
     public function __construct(
         TranslatorInterface $translator,
-        ConfigurableFormChoiceProviderInterface $stateChoiceProvider
+        ConfigurableFormChoiceProviderInterface $stateChoiceProvider,
+        FormChoiceProviderInterface $behaviorChoiceProvider,
+        FormChoiceProviderInterface $countriesChoiceProvider,
+        FormChoiceProviderInterface $taxesChoiceProvider
     ) {
         $this->translator = $translator;
         $this->stateChoiceProvider = $stateChoiceProvider;
+        $this->behaviorChoiceProvider = $behaviorChoiceProvider;
+        $this->countriesChoiceProvider = $countriesChoiceProvider;
+        $this->taxesChoiceProvider = $taxesChoiceProvider;
     }
 
     /**
@@ -76,34 +106,69 @@ class TaxRuleType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('country', CountryAndAllChoiceType::class, [
+            ->add('country_id', ChoiceType::class, [
+                'choices' => array_merge(
+                    [$this->translator->trans('All', [], 'Admin.Global') => CountryId::ALL_COUNTRIES_ID],
+                    array_map('intval', $this->countriesChoiceProvider->getChoices())
+                ),
                 'required' => false,
                 'placeholder' => false,
                 'constraints' => [
                     new NotBlank(),
                 ],
             ])
-            ->add('zipCode', TextType::class, [
+            ->add('zip_code', TextType::class, [
                 'required' => false,
                 'constraints' => [
                     new Length([
-                        'max' => TaxRulesGroupConstraint::MAX_TAX_RULE_ZIP_CODE_RANGE_LENGTH,
+                        'max' => TaxRuleConstraint::MAX_ZIP_CODE_RANGE_LENGTH,
                         'maxMessage' => $this->translator->trans(
                             'This field cannot be longer than %limit% characters',
-                            ['%limit%' => TaxRulesGroupConstraint::MAX_TAX_RULE_ZIP_CODE_RANGE_LENGTH],
+                            ['%limit%' => TaxRuleConstraint::MAX_ZIP_CODE_RANGE_LENGTH],
                             'Admin.Notifications.Error'
                         ),
                     ]),
                 ],
             ])
-            ->add('behavior', BehaviorChoiceType::class, [
+            ->add('zip_code_from', TextType::class, [
+                'required' => false,
+                'constraints' => [
+                    new Length([
+                        'max' => TaxRuleConstraint::MAX_ZIP_CODE_RANGE_LENGTH,
+                        'maxMessage' => $this->translator->trans(
+                            'This field cannot be longer than %limit% characters',
+                            ['%limit%' => TaxRuleConstraint::MAX_ZIP_CODE_RANGE_LENGTH],
+                            'Admin.Notifications.Error'
+                        ),
+                    ]),
+                ],
+            ])
+            ->add('zip_code_to', TextType::class, [
+                'required' => false,
+                'constraints' => [
+                    new Length([
+                        'max' => TaxRuleConstraint::MAX_ZIP_CODE_RANGE_LENGTH,
+                        'maxMessage' => $this->translator->trans(
+                            'This field cannot be longer than %limit% characters',
+                            ['%limit%' => TaxRuleConstraint::MAX_ZIP_CODE_RANGE_LENGTH],
+                            'Admin.Notifications.Error'
+                        ),
+                    ]),
+                ],
+            ])
+            ->add('behavior_id', ChoiceType::class, [
+                'choices' => $this->behaviorChoiceProvider->getChoices(),
                 'required' => false,
                 'constraints' => [
                     new NotBlank(),
                 ],
             ])
-            ->add('tax', TaxChoiceType::class, [
-                'required' => false,
+            ->add('tax_id', ChoiceType::class, [
+                'choices' => array_merge(
+                    [$this->translator->trans('No tax', [], 'Admin.Catalog.Feature') => TaxId::NO_TAX_ID],
+                    $this->taxesChoiceProvider->getChoices()
+                ),
+                'placeholder' => false,
                 'constraints' => [
                     new NotBlank(),
                 ],
@@ -112,10 +177,10 @@ class TaxRuleType extends AbstractType
                 'required' => false,
                 'constraints' => [
                     new Length([
-                        'max' => TaxRulesGroupConstraint::MAX_TAX_RULE_DESCRIPTION_LENGTH,
+                        'max' => TaxRuleConstraint::MAX_DESCRIPTION_LENGTH,
                         'maxMessage' => $this->translator->trans(
                             'This field cannot be longer than %limit% characters',
-                            ['%limit%' => TaxRulesGroupConstraint::MAX_TAX_RULE_DESCRIPTION_LENGTH],
+                            ['%limit%' => TaxRuleConstraint::MAX_DESCRIPTION_LENGTH],
                             'Admin.Notifications.Error'
                         ),
                     ]),
@@ -137,7 +202,7 @@ class TaxRuleType extends AbstractType
             [
                 'constraints' => [
                     new ZipCodeRange(),
-                    new UniqueTaxRuleBehavior(),
+//                    new UniqueTaxRuleBehavior(),
                 ],
             ]
         );

@@ -26,6 +26,8 @@
 
 namespace PrestaShopBundle\Form\EventSubscriber;
 
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
+use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -104,9 +106,9 @@ class TaxRuleFormSubscriber implements EventSubscriberInterface
         ];
 
         $choices = [];
-        $countryId = array_key_exists('country', $data) ? (int) $data['country'] : 0;
+        $countryId = array_key_exists('country_id', $data) ? (int) $data['country_id'] : CountryId::ALL_COUNTRIES_ID;
 
-        if ($countryId > 0) {
+        if ($countryId !== CountryId::ALL_COUNTRIES_ID) {
             $choices = $this->stateChoiceProvider->getChoices(['id_country' => $countryId]);
         }
 
@@ -116,13 +118,13 @@ class TaxRuleFormSubscriber implements EventSubscriberInterface
                     'required' => false,
                     'disabled' => false,
                     'choices' => array_merge(
-                        [$this->translator->trans('All', [], 'Admin.Global') => 0],
-                        $choices
+                        [$this->translator->trans('All', [], 'Admin.Global') => StateId::ALL_STATES_ID],
+                        array_map('intval', $choices)
                     ),
                 ]
             );
         }
 
-        $form->add('state', ChoiceType::class, $options);
+        $form->add('state_ids', ChoiceType::class, $options);
     }
 }

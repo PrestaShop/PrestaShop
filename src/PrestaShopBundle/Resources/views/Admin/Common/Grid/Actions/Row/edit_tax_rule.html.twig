@@ -23,24 +23,25 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-{% if grid.actions.bulk|length > 0 and grid.data.records_total > 0 %}
-  <div class="btn-group">
-    <button class="btn btn-outline-secondary dropdown-toggle js-bulk-actions-btn"
-            data-toggle="dropdown"
-            disabled
-    >
-      {{ 'Bulk actions'|trans({}, 'Admin.Global') }}
-      <i class="icon-caret-up"></i>
-    </button>
+{% set class = 'btn tooltip-link js-link-row-action' %}
 
-    <div class="dropdown-menu">
-      {% for action in grid.actions.bulk %}
-        {% if action.type == 'submit' %}
-          {{ include('@PrestaShop/Admin/Improve/International/TaxRulesGroup/Grid/Actions/Bulk/submit.html.twig', {'action': action, 'grid': grid}) }}
-        {% else %}
-          {{ include('@PrestaShop/Admin/Common/Grid/Actions/Bulk/'~action.type~'.html.twig', {'action': action, 'grid': grid}) }}
-        {% endif %}
-      {% endfor %}
-    </div>
-  </div>
+{% if attributes.class is defined %}
+  {% set class = class ~ ' ' ~ attributes.class %}
 {% endif %}
+
+<a class="{{ class }}"
+   data-edit-path="{{ path(action.options.edit_route, { (action.options.route_param_name) : record[action.options.route_param_field]}) }}"
+   data-load-path="{{ path(action.options.load_route, { (action.options.route_param_name) : record[action.options.route_param_field]}) }}"
+  {% if attributes.tooltip_name %}
+    data-toggle="pstooltip"
+    data-placement="top"
+    data-original-title="{{ action.name }}"
+  {% endif %}
+>
+  {% if action.icon is not empty %}
+    <i class="material-icons">{{ action.icon }}</i>
+  {% endif %}
+  {% if not attributes.tooltip_name %}
+    {{ action.name }}
+  {% endif %}
+</a>

@@ -33,6 +33,8 @@ use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxConstraintException;
  */
 class TaxId
 {
+    const NO_TAX_ID = 0;
+
     /**
      * @var int
      */

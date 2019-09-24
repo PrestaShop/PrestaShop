@@ -24,11 +24,30 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception;
+namespace PrestaShop\PrestaShop\Core\Util\Country;
 
 /**
- * Thrown on failure to delete single tax rule
+ * Call responsible for resolving country zip code format and returning it as other usable patterns
  */
-class CannotDeleteTaxRuleException extends TaxRulesGroupException
+final class ZipCodePatternResolver
 {
+    /**
+     * @param string $format
+     * @param string $isoCode
+     * @return string
+     */
+    public function getRegexPattern(string $format, string $isoCode): string
+    {
+        return str_replace(['N', 'L', 'C'], ['[0-9]', '[a-zA-Z]', $isoCode], '/^' . $format . '$/ui');
+    }
+
+    /**
+     * @param string $format
+     * @param string $isoCode
+     * @return string
+     */
+    public function getHumanReadablePattern(string $format, string $isoCode): string
+    {
+        return str_replace(['N', 'L',  'C'], ['0', 'A', $isoCode], $format);
+    }
 }

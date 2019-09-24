@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -24,47 +24,41 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Admin\Type;
+namespace PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\TaxRule;
 
-use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\AbstractRowAction;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\AccessibilityCheckerInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Responsible for providing behavior choices
+ * Defines custom edit tax rule row action
  */
-class BehaviorChoiceType extends AbstractType
+final class EditTaxRuleRowAction extends AbstractRowAction
 {
     /**
-     * @var FormChoiceProviderInterface
+     * {@inheritdoc}
      */
-    private $behaviorChoiceProvider;
-
-    /**
-     * @param FormChoiceProviderInterface $behaviorChoiceProvider
-     */
-    public function __construct(FormChoiceProviderInterface $behaviorChoiceProvider)
+    public function getType()
     {
-        $this->behaviorChoiceProvider = $behaviorChoiceProvider;
+        return 'edit_tax_rule';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    protected function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
-            'choices' => $this->behaviorChoiceProvider->getChoices(),
-            'placeholder' => false,
-        ]);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getParent()
-    {
-        return ChoiceType::class;
+        $resolver
+            ->setRequired([
+                'edit_route',
+                'load_route',
+                'route_param_name',
+                'route_param_field',
+            ])
+            ->setAllowedTypes('edit_route', 'string')
+            ->setAllowedTypes('load_route', 'string')
+            ->setAllowedTypes('route_param_name', 'string')
+            ->setAllowedTypes('route_param_field', 'string')
+        ;
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -59,7 +59,7 @@ final class BulkDeleteTaxRuleHandler extends AbstractTaxRulesGroupHandler implem
         }
 
         if (!empty($errors)) {
-            throw new CannotBulkDeleteTaxRulesException($errors, 'Failed to bulk delete without errors');
+            throw new CannotBulkDeleteTaxRulesException($errors, 'Failed: errors reported during bulk delete');
         }
     }
 }

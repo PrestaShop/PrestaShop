@@ -72,7 +72,7 @@ class TaxRuleRepository
         int $taxRuleGroupId,
         int $countryId,
         int $stateId,
-        int $taxRuleId,
+        ?int $taxRuleId = null,
         int $behaviorId = 0
     ): bool {
         $qb = $this->connection->createQueryBuilder()
@@ -81,14 +81,18 @@ class TaxRuleRepository
             ->where('tr.id_tax_rules_group = :taxRulesGroupId')
             ->andWhere('tr.id_country = :countryId')
             ->andWhere('tr.id_state = :stateId')
-            ->andWhere('tr.id_tax_rule <> :taxRuleId')
             ->andWhere('tr.behavior = :behavior')
             ->setParameter('taxRulesGroupId', $taxRuleGroupId)
             ->setParameter('countryId', $countryId)
             ->setParameter('stateId', $stateId)
-            ->setParameter('taxRuleId', $taxRuleId)
-            ->setParameter('behavior', $behaviorId)
-            ->setMaxResults(1);
+            ->setParameter('behavior', $behaviorId);
+
+        if ($taxRuleId !== null) {
+            $qb->andWhere('tr.id_tax_rule <> :taxRuleId')
+                ->setParameter('taxRuleId', $taxRuleId);
+        }
+
+        $qb->setMaxResults(1);
 
         return !$qb->execute()->fetchColumn() ? false : true;
     }

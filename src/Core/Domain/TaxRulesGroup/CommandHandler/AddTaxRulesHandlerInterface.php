@@ -24,11 +24,18 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\CommandHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Command\AddTaxRulesCommand;
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRuleId;
 
 /**
- * Thrown on failure to delete single tax rule
+ * Defines contract for handler adding new tax rule
  */
-class CannotDeleteTaxRuleException extends TaxRulesGroupException
+interface AddTaxRulesHandlerInterface
 {
+    /**
+     * @param AddTaxRulesCommand $command
+     */
+    public function handle(AddTaxRulesCommand $command);
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -67,7 +67,7 @@ final class UpdateTaxRulesGroupHandler extends AbstractTaxRulesGroupHandler impl
 
             if (false === $taxRulesGroup->update()) {
                 throw new CannotUpdateTaxRulesGroupException(
-                    'Failed to update tax rules group'
+                    sprintf('Failed to update tax rules group %d', $taxRulesGroup->id)
                 );
             }
         } catch (PrestaShopException $e) {

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -195,6 +195,22 @@ class EditableTaxRule
         $this->zipCodeTo = $zipCodeTo;
 
         return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getZipCodeForm(): ?string
+    {
+        return $this->zipCodeForm;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getZipCodeTo(): ?string
+    {
+        return $this->zipCodeTo;
     }
 
     /**

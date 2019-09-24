@@ -38,7 +38,7 @@
   </div>
   <div class="row justify-content-center">
     <div class="col">
-      {% include '@PrestaShop/Admin/Improve/International/TaxRulesGroup/Blocks/tax_rules_grid_panel.html.twig' %}
+      {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': taxRuleGrid } %}
     </div>
   </div>
 {% endblock %}

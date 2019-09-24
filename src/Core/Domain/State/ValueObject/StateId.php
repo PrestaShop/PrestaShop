@@ -33,6 +33,8 @@ use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateConstraintException;
  */
 class StateId
 {
+    const ALL_STATES_ID = 0;
+
     /**
      * @var int
      */

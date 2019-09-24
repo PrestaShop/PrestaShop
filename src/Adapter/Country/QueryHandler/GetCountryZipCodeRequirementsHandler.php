@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountryZipCodeRequirements;
 use PrestaShop\PrestaShop\Core\Domain\Country\QueryHandler\GetCountryZipCodeRequirementsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\CountryZipCodeRequirements;
+use PrestaShop\PrestaShop\Core\Util\Country\ZipCodePatternResolver;
 
 /**
  * Handles getting requirements for country zip code
@@ -44,11 +45,18 @@ final class GetCountryZipCodeRequirementsHandler extends AbstractCountryHandler 
     private $langId;
 
     /**
-     * @param LegacyContext $context
+     * @var ZipCodePatternResolver
      */
-    public function __construct(LegacyContext $context)
+    private $patternResolver;
+
+    /**
+     * @param LegacyContext $context
+     * @param ZipCodePatternResolver $patternResolver
+     */
+    public function __construct(LegacyContext $context, ZipCodePatternResolver $patternResolver)
     {
         $this->langId = (int) $context->getLanguage()->id;
+        $this->patternResolver = $patternResolver;
     }
 
     /**
@@ -66,17 +74,10 @@ final class GetCountryZipCodeRequirementsHandler extends AbstractCountryHandler 
         }
 
         if ($country->need_zip_code && !empty($country->zip_code_format)) {
-            $zipRegexp = '/^' . $country->zip_code_format . '$/ui';
-            $zipRegexp = str_replace('N', '[0-9]', $zipRegexp);
-            $zipRegexp = str_replace('L', '[a-zA-Z]', $zipRegexp);
-            $zipRegexp = str_replace('C', $country->iso_code, $zipRegexp);
-
-            $pattern = $zipRegexp;
-
-            $humanReadablePattern = str_replace(
-                'C',
-                $country->iso_code,
-                str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format))
+            $pattern = $this->patternResolver->getRegexPattern($country->zip_code_format, $country->iso_code);
+            $humanReadablePattern = $this->patternResolver->getHumanReadablePattern(
+                $country->zip_code_format,
+                $country->iso_code
             );
 
             $requirements->setPatterns($pattern, $humanReadablePattern);

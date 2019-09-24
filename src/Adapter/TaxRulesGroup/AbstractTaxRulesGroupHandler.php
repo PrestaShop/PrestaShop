@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -186,10 +186,10 @@ abstract class AbstractTaxRulesGroupHandler
         ?int $taxRuleId = null
     ): bool {
         $errors = $this->validator->validate([
-            'taxRulesGroupId' => $taxRulesGroupId,
-            'country' => $countryId,
-            'state' => $stateId,
-            'taxRuleId' => $taxRuleId,
+            'tax_rules_group_id' => $taxRulesGroupId,
+            'country_id' => $countryId,
+            'state_ids' => [$stateId],
+            'tax_rule_id' => $taxRuleId,
         ], new UniqueTaxRuleBehavior());
 
         return 0 !== count($errors);
@@ -206,8 +206,8 @@ abstract class AbstractTaxRulesGroupHandler
         int $countryId
     ): bool {
         $errors = $this->validator->validate([
-            'zipCode' => $zipCode,
-            'country' => $countryId,
+            'zip_code' => $zipCode,
+            'country_id' => $countryId,
         ], new ZipCodeRange());
 
         return 0 !== count($errors);
@@ -222,28 +222,45 @@ abstract class AbstractTaxRulesGroupHandler
      *
      * @throws CountryNotFoundException
      */
-    protected function getCountryForTaxRule(
+    protected function getCountryIdsForTaxRule(
         CountryDataProvider $countryDataProvider,
         int $langId,
         ?CountryId $countryId
     ): array {
-        $selectedCountries = [];
+        return $countryId !== null && $countryId->getValue() > 0 ?
+            $this->getSelectedCountryId($countryId) :
+            $this->getAllCountryIdsByLanguage($countryDataProvider, $langId)
+        ;
+    }
 
-        if ($countryId !== null && $countryId->getValue() > 0) {
-            $selectedCountries[] = $countryId->getValue();
+    /**
+     * @param CountryDataProvider $countryDataProvider
+     * @param int $langId
+     * @return int[]
+     * @throws CountryNotFoundException
+     */
+    private function getAllCountryIdsByLanguage(
+        CountryDataProvider $countryDataProvider,
+        int $langId
+    ): array {
+        try {
+            $countries = $countryDataProvider->getCountries($langId);
+            $selectedCountryIds = array_map(function (array $countries) {
+                return (int) $countries['id_country'];
+            }, $countries);
+        } catch (PrestaShopException $e) {
+            throw new CountryNotFoundException('Countries for tax rule creation failed to load');
         }
 
-        if (empty($selectedCountries)) {
-            try {
-                $countries = $countryDataProvider->getCountries($langId);
-                $selectedCountries = array_map(function (array $countries) {
-                    return (int) $countries['id_country'];
-                }, $countries);
-            } catch (PrestaShopException $e) {
-                throw new CountryNotFoundException('Countries for tax rule creation failed to load');
-            }
-        }
+        return $selectedCountryIds;
+    }
 
-        return $selectedCountries;
+    /**
+     * @param CountryId $countryId
+     * @return int[]
+     */
+    private function getSelectedCountryId(CountryId $countryId): array
+    {
+        return [$countryId->getValue()];
     }
 }

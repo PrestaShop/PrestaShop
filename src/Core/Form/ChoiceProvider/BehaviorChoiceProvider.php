@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\BehaviorId;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -53,9 +54,9 @@ final class BehaviorChoiceProvider implements FormChoiceProviderInterface
     public function getChoices()
     {
         return [
-            $this->translator->trans('This tax only', [], 'Admin.International.Feature') => 0,
-            $this->translator->trans('Combine', [], 'Admin.International.Feature') => 1,
-            $this->translator->trans('One after another', [], 'Admin.International.Feature') => 2,
+            $this->translator->trans('This tax only', [], 'Admin.International.Feature') => BehaviorId::THIS_TAX_ONLY,
+            $this->translator->trans('Combine', [], 'Admin.International.Feature') => BehaviorId::COMBINED,
+            $this->translator->trans('One after another', [], 'Admin.International.Feature') => BehaviorId::ONE_AFTER_ANOTHER,
         ];
     }
 }

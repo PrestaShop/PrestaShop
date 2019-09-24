@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -95,7 +95,7 @@ class UpdateTaxRuleCommand
         $this->taxRuleId = new TaxRuleId($taxRuleId);
         $this->countryId = new CountryId($countryId);
         $this->behaviorId = new BehaviorId($behaviorId);
-        $this->stateIds = $this->setStateIds($stateIds);
+        $this->setStateIds($stateIds);
     }
 
     /**

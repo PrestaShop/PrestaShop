@@ -1,5 +1,6 @@
-{#**
- * 2007-2019 PrestaShop and Contributors
+<?php
+/**
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -21,14 +22,29 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-<button id="{{ '%s_grid_bulk_action_%s'|format(grid.id, action.id) }}"
-        class="dropdown-item js-bulk-action-submit-btn"
-        type="button"
-        data-form-url="{{ path(action.options.submit_route, action.options.route_params|merge({'taxRulesGroupId': taxRulesGroup.taxRulesGroupId.value})) }}"
-        data-form-method="{{ action.options.submit_method }}"
-        data-confirm-message="{{ action.options.confirm_message }}"
->
-  {{ action.name }}
-</button>
+namespace PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup;
+
+/**
+ * Stores tax rule form constraints values
+ */
+final class TaxRuleConstraint
+{
+    /**
+     * Maximum length for tax rule description
+     */
+    public const MAX_DESCRIPTION_LENGTH = 100;
+
+    /**
+     * Maximum length for tax rule zip code range including "-"
+     */
+    public const MAX_ZIP_CODE_RANGE_LENGTH = 25;
+
+    /**
+     * Prevents class to be instantiated
+     */
+    private function __construct()
+    {
+    }
+}

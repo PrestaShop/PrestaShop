@@ -26,10 +26,12 @@
 
 namespace PrestaShop\PrestaShop\Core\ConstraintValidator;
 
+use InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountryZipCodeRequirements;
 use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\CountryZipCodeRequirements;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraint;
@@ -77,9 +79,10 @@ class ZipCodeRangeValidator extends ConstraintValidator
      */
     public function validate($value, Constraint $constraint)
     {
-        $countryId = (int) $value['country'];
+        $countryId = $value['country_id'] ?? CountryId::ALL_COUNTRIES_ID;
+
         $selectedCountries = [$countryId];
-        $zipCode = $value['zipCode'];
+        $zipCode = $value['zip_code'];
 
         if (null === $zipCode) {
             return;

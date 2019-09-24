@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Adapter\Country\CountryNotFoundException;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\TaxRulesGroup\AbstractTaxRulesGroupHandler;
 use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
+use PrestaShop\PrestaShop\Core\Domain\Tax\ValueObject\TaxId;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Command\UpdateTaxRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\CommandHandler\UpdateTaxRuleHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\CannotUpdateTaxRuleException;
@@ -86,7 +87,7 @@ final class UpdateTaxRuleHandler extends AbstractTaxRulesGroupHandler implements
 
         $taxRulesGroupId = (int) $taxRule->id_tax_rules_group;
         $zipCode = $command->getZipCode();
-        $taxId = $command->getTaxId() !== null ? $command->getTaxId()->getValue() : 0;
+        $taxId = $command->getTaxId() !== null ? $command->getTaxId()->getValue() : TaxId::NO_TAX_ID;
         $behavior = $command->getBehaviorId()->getValue();
         $description = $command->getDescription();
 
@@ -94,7 +95,7 @@ final class UpdateTaxRuleHandler extends AbstractTaxRulesGroupHandler implements
         $taxRule->id_tax = $taxId;
         $taxRule->description = $description;
 
-        $selectedCountries = $this->getCountryForTaxRule(
+        $selectedCountryIds = $this->getCountryIdsForTaxRule(
             $this->countryDataProvider,
             $this->langId,
             $command->getCountryId()
@@ -104,28 +105,28 @@ final class UpdateTaxRuleHandler extends AbstractTaxRulesGroupHandler implements
 
         $countriesWithErrors = [];
 
-        foreach ($selectedCountries as $countryKey => $country) {
+        foreach ($selectedCountryIds as $countryKey => $countryId) {
             $statesWithErrors = [];
 
             /** @var StateId $stateId */
             foreach ($stateIds as $stateKey => $stateId) {
                 $error = false;
                 try {
-                    $hasRuleForCountry = $this->assertUniqueBehaviorTaxRuleForCountry(
+                    $violationOfUniqueTaxRuleForACountryRule = $this->assertUniqueBehaviorTaxRuleForCountry(
                         $taxRulesGroupId,
-                        $country,
+                        $countryId,
                         $stateId->getValue(),
                         $taxRule->id
                     );
 
-                    if ($hasRuleForCountry) {
+                    if ($violationOfUniqueTaxRuleForACountryRule) {
                         $error = true;
                     }
 
                     if (null !== $command->getZipCode()) {
                         $isInvalid = $this->assertIsValidZipCode(
                             $zipCode,
-                            $country
+                            $countryId
                         );
 
                         if ($isInvalid) {
@@ -133,7 +134,7 @@ final class UpdateTaxRuleHandler extends AbstractTaxRulesGroupHandler implements
                         }
                     }
 
-                    $taxRule->id_country = $country;
+                    $taxRule->id_country = $countryId;
                     $taxRule->id_state = $stateId->getValue();
                     list($taxRule->zipcode_from, $taxRule->zipcode_to) = $taxRule->breakDownZipCode($zipCode);
 
@@ -143,10 +144,10 @@ final class UpdateTaxRuleHandler extends AbstractTaxRulesGroupHandler implements
                         $error = true;
                     }
 
-                    reset($selectedCountries);
+                    reset($selectedCountryIds);
                     reset($stateIds);
 
-                    if ($countryKey === key($selectedCountries) && $stateKey === key($stateIds)) {
+                    if ($countryKey === key($selectedCountryIds) && $stateKey === key($stateIds)) {
                         if (!$error && false === $taxRule->update()) {
                             $error = true;
                         }
@@ -167,7 +168,7 @@ final class UpdateTaxRuleHandler extends AbstractTaxRulesGroupHandler implements
             }
 
             if (!empty($statesWithErrors)) {
-                $countriesWithErrors[$country] = $statesWithErrors;
+                $countriesWithErrors[$countryId] = $statesWithErrors;
             }
         }
 

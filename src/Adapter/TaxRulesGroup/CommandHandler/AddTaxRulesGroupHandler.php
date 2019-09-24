@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -63,9 +63,7 @@ final class AddTaxRulesGroupHandler extends AbstractTaxRulesGroupHandler impleme
             $this->validateTaxRulesGroupFields($taxRulesGroup);
 
             if (false === $taxRulesGroup->add()) {
-                throw new CannotAddTaxRulesGroupException(
-                    'Failed to add tax rules group'
-                );
+                throw new CannotAddTaxRulesGroupException('Failed to add tax rules group');
             }
         } catch (PrestaShopException $e) {
             throw new TaxRulesGroupException('An unexpected error occurred when adding tax rules group', 0, $e);

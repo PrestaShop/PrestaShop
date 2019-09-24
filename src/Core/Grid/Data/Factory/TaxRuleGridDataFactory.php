@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
- * Gets and modifies data for supplier grid.
+ * Gets and modifies data for tax rules grid.
  */
 final class TaxRuleGridDataFactory implements GridDataFactoryInterface
 {

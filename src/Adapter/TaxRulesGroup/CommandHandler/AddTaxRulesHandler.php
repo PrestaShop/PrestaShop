@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -31,8 +31,9 @@ use PrestaShop\PrestaShop\Adapter\Country\CountryNotFoundException;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\TaxRulesGroup\AbstractTaxRulesGroupHandler;
 use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
-use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Command\AddTaxRuleCommand;
-use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\CommandHandler\AddTaxRuleHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Tax\ValueObject\TaxId;
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Command\AddTaxRulesCommand;
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\CommandHandler\AddTaxRulesHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\CannotAddTaxRuleException;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\TaxRuleConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRuleId;
@@ -43,7 +44,7 @@ use TaxRule;
 /**
  * Handles creation of new tax rule or bulk create tax rules
  */
-final class AddTaxRuleHandler extends AbstractTaxRulesGroupHandler implements AddTaxRuleHandlerInterface
+final class AddTaxRulesHandler extends AbstractTaxRulesGroupHandler implements AddTaxRulesHandlerInterface
 {
     /**
      * @var int
@@ -76,18 +77,17 @@ final class AddTaxRuleHandler extends AbstractTaxRulesGroupHandler implements Ad
      *
      * @throws CannotAddTaxRuleException
      * @throws CountryNotFoundException
-     * @throws TaxRuleConstraintException
      */
-    public function handle(AddTaxRuleCommand $command): TaxRuleId
+    public function handle(AddTaxRulesCommand $command)
     {
         $zipCode = $command->getZipCode();
-        $taxId = $command->getTaxId() !== null ? $command->getTaxId()->getValue() : 0;
+        $taxId = $command->getTaxId() !== null ? $command->getTaxId()->getValue() : TaxId::NO_TAX_ID;
         $taxRulesGroupId = $command->getTaxRulesGroupId()->getValue();
-        $behavior = $command->getBehaviorId()->getValue();
+        $behaviorId = $command->getBehaviorId()->getValue();
         $description = $command->getDescription();
         $taxRuleId = null;
 
-        $selectedCountries = $this->getCountryForTaxRule(
+        $selectedCountryIds = $this->getCountryIdsForTaxRule(
             $this->countryDataProvider,
             $this->langId,
             $command->getCountryId()
@@ -96,28 +96,29 @@ final class AddTaxRuleHandler extends AbstractTaxRulesGroupHandler implements Ad
         $countriesWithErrors = [];
         $stateIds = $command->getStateIds();
 
-        foreach ($selectedCountries as $country) {
+        /** @var int $countryId */
+        foreach ($selectedCountryIds as $countryId) {
             $statesWithErrors = [];
 
             /** @var StateId $stateId */
             foreach ($stateIds as $stateId) {
                 $error = false;
                 try {
-                    $hasRuleForCountry = $this->assertUniqueBehaviorTaxRuleForCountry(
+                    $violationOfUniqueTaxRuleForACountryRule = $this->assertUniqueBehaviorTaxRuleForCountry(
                         $taxRulesGroupId,
-                        $country,
+                        $countryId,
                         $stateId->getValue()
                     );
 
-                    if ($hasRuleForCountry) {
+                    if ($violationOfUniqueTaxRuleForACountryRule) {
                         $error = true;
                     }
 
                     $taxRule = new TaxRule();
 
                     $taxRule->id_tax_rules_group = $taxRulesGroupId;
-                    $taxRule->behavior = $behavior;
-                    $taxRule->id_country = $country;
+                    $taxRule->behavior = $behaviorId;
+                    $taxRule->id_country = $countryId;
                     $taxRule->id_tax = $taxId;
                     $taxRule->id_state = $stateId->getValue();
 
@@ -128,7 +129,7 @@ final class AddTaxRuleHandler extends AbstractTaxRulesGroupHandler implements Ad
                     if (null !== $command->getZipCode()) {
                         $isInvalid = $this->assertIsValidZipCode(
                             $zipCode,
-                            $country
+                            $countryId
                         );
 
                         if ($isInvalid) {
@@ -145,8 +146,6 @@ final class AddTaxRuleHandler extends AbstractTaxRulesGroupHandler implements Ad
                     }
 
                     if (!$error && $taxRule->add()) {
-                        $taxRuleId = $taxRule->id;
-
                         continue;
                     }
 
@@ -161,15 +160,12 @@ final class AddTaxRuleHandler extends AbstractTaxRulesGroupHandler implements Ad
             }
 
             if (!empty($statesWithErrors)) {
-                $countriesWithErrors[$country] = $statesWithErrors;
+                $countriesWithErrors[$countryId] = $statesWithErrors;
             }
         }
 
         if (!empty($countriesWithErrors)) {
             throw new CannotAddTaxRuleException($countriesWithErrors);
         }
-
-        //TODO find out how to handle hooks with multiple tax rule creation
-        return new TaxRuleId($taxRuleId);
     }
 }

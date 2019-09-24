@@ -28,9 +28,11 @@ namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\TaxRule\DeleteTaxRulesBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\TaxRule\EditTaxRuleRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
@@ -125,11 +127,12 @@ final class TaxRuleGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setOptions([
                         'actions' => (new RowActionCollection())
                             ->add(
-                                (new LinkRowAction('edit'))
+                                (new EditTaxRuleRowAction('edit'))
                                     ->setName($this->trans('Edit', [], 'Admin.Actions'))
                                     ->setIcon('edit')
                                     ->setOptions([
-                                        'route' => 'admin_tax_rules_edit',
+                                        'edit_route' => 'admin_tax_rules_edit',
+                                        'load_route' => 'admin_tax_rules_load',
                                         'route_param_name' => 'taxRuleId',
                                         'route_param_field' => 'id_tax_rule',
                                     ])
@@ -160,10 +163,10 @@ final class TaxRuleGridDefinitionFactory extends AbstractGridDefinitionFactory
     {
         return (new BulkActionCollection())
             ->add(
-                (new SubmitBulkAction('delete_selection'))
+                (new DeleteTaxRulesBulkAction('delete_selection'))
                     ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
                     ->setOptions([
-                        'submit_route' => 'admin_tax_rules_bulk_delete',
+                        'tax_rules_bulk_delete_route' => 'admin_tax_rules_bulk_delete',
                         'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
                     ])
             );

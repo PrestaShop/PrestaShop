@@ -6,6 +6,7 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Country\QueryHandler\GetCountryZipCodeRequirementsHandler'
     arguments:
       - '@prestashop.adapter.legacy.context'
+      - '@prestashop.core.util.country.zip_code_format_resolver'
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountryZipCodeRequirements'

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup;
 
 /**
- * Stores country form constraints values
+ * Stores tax rules group form constraints values
  */
 final class TaxRulesGroupConstraint
 {
@@ -35,16 +35,6 @@ final class TaxRulesGroupConstraint
      * Maximum length for tax rules group name
      */
     public const MAX_NAME_LENGTH = 64;
-
-    /**
-     * Maximum length for tax rule description
-     */
-    public const MAX_TAX_RULE_DESCRIPTION_LENGTH = 100;
-
-    /**
-     * Maximum length for tax rule zip code range including "-"
-     */
-    public const MAX_TAX_RULE_ZIP_CODE_RANGE_LENGTH = 25;
 
     /**
      * Prevents class to be instantiated

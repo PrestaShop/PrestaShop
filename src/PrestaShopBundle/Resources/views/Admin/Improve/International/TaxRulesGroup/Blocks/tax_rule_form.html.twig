@@ -1,5 +1,5 @@
 {#**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -25,7 +25,7 @@
 
 {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
 
-{{ form_start(taxRuleForm, {'attr': {'id': 'tax-rule-form', 'class': 'hidden-element'}}) }}
+{{ form_start(taxRuleForm, {'attr': {'id': 'tax-rule-form', 'class': 'd-none'}}) }}
 
 <div class="card">
   <div class="card-header">
@@ -36,40 +36,40 @@
     <div class="card-text">
       {{ form_errors(taxRuleForm) }}
 
-      {{ ps.form_group_row(taxRuleForm.country, {'attr': {
+      {{ ps.form_group_row(taxRuleForm.country_id, {'attr': {
         'data-states-url': path('admin_country_states') }}, {
         'label': 'Country'|trans({}, 'Admin.Global'),
       }) }}
 
-      <div class="form-group row js-state-form-row {% if taxRuleForm.state.vars.disabled %} hidden-element {% endif %}">
-        {{ form_label(taxRuleForm.state, 'State'|trans({}, 'Admin.Global'), {'label_attr': {'class': 'form-control-label'}}) }}
+      <div class="form-group row js-state-form-row {% if taxRuleForm.state_ids.vars.disabled %} d-none {% endif %}">
+        {{ form_label(taxRuleForm.state_ids, 'State'|trans({}, 'Admin.Global'), {'label_attr': {'class': 'form-control-label'}}) }}
         <div class="col-sm">
-          {{ ps.form_widget_with_error(taxRuleForm.state, {'attr': {
+          {{ ps.form_widget_with_error(taxRuleForm.state_ids, {'attr': {
             'data-all-translation': 'All'|trans({}, 'Admin.Global') }}
           ) }}
         </div>
       </div>
 
-      {{ ps.form_group_row(taxRuleForm.zipCode, {}, {
+      {{ ps.form_group_row(taxRuleForm.zip_code, {}, {
         'label': 'Zip/postal code range'|trans({}, 'Admin.International.Feature'),
         'help': 'You can define a range of Zip/postal codes (e.g., 75000-75015) or simply use one Zip/postal code.'|trans({}, 'Admin.International.Help'),
       }) }}
 
       <div class="form-group row">
-        {{ form_label(taxRuleForm.behavior, 'Behavior'|trans({}, 'Admin.International.Feature'), {'label_attr': {'class': 'form-control-label'}}) }}
+        {{ form_label(taxRuleForm.behavior_id, 'Behavior'|trans({}, 'Admin.International.Feature'), {'label_attr': {'class': 'form-control-label'}}) }}
         <div class="col-sm">
-          {{ form_widget(taxRuleForm.behavior) }}
+          {{ form_widget(taxRuleForm.behavior_id) }}
           <small class="form-text">
             {{ ('You must define the behavior if an address matches multiple rules:'|trans({}, 'Admin.International.Help') ~ '<br>' ~
             '- This tax only: Will apply only this tax'|trans({}, 'Admin.International.Help') ~ '<br>' ~
             '- Combine: Combine taxes (e.g.: 10% + 5% = 15%)'|trans({}, 'Admin.International.Help') ~ '<br>' ~
             '- One after another: Apply taxes one after another (e.g.: 100 + 10% => 110 + 5% = 115.5)'|trans({}, 'Admin.International.Help'))|raw }}
           </small>
-          {{ ps.form_error_with_popover(taxRuleForm.behavior) }}
+          {{ ps.form_error_with_popover(taxRuleForm.behavior_id) }}
         </div>
       </div>
 
-      {{ ps.form_group_row(taxRuleForm.tax, {}, {
+      {{ ps.form_group_row(taxRuleForm.tax_id, {}, {
         'label': 'Tax'|trans({}, 'Admin.Global'),
         'help' : '(Total tax: 9%)'|trans({}, 'Admin.International.Help')
       }) }}

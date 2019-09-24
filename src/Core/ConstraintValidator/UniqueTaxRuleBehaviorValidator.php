@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -26,6 +26,10 @@
 
 namespace PrestaShop\PrestaShop\Core\ConstraintValidator;
 
+use InvalidArgumentException;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
+use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\TaxRulesGroupConstraintException;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Entity\Repository\TaxRuleRepository;
 use Symfony\Component\Validator\Constraint;
@@ -60,34 +64,48 @@ class UniqueTaxRuleBehaviorValidator extends ConstraintValidator
 
     /**
      * {@inheritdoc}
+     *
+     * @throws TaxRulesGroupConstraintException
      */
     public function validate($value, Constraint $constraint)
     {
-        $countryId = (int) $value['country'];
-        $selectedCountries = [$countryId];
-
-        if ($countryId === 0) {
-            $countries = $this->countryChoiceProvider->getChoices();
-            $selectedCountries = array_map('intval', $countries);
+        if (!$this->valueExists($value, 'tax_rules_group_id')) {
+            throw new TaxRulesGroupConstraintException(
+                'Tax rules group id is required for tax rule',
+                TaxRulesGroupConstraintException::INVALID_ID
+            );
         }
 
-        foreach ($selectedCountries as $country) {
-            $taxRuleWithUniqueBehaviorExists = $this->taxRuleRepository->hasUniqueBehaviorTaxRule(
-                $this->getIntegerValue($value, 'taxRulesGroupId'),
-                $country,
-                $this->getIntegerValue($value, 'state'),
-                $this->getIntegerValue($value, 'taxRuleId')
-            );
+        $countryId = $value['country_id'] ?? CountryId::ALL_COUNTRIES_ID;
+        $taxRuleId = $this->valueExists($value, 'tax_rule_id') ? $value['tax_rule_id'] : null;
+        $selectedCountryIds = [$countryId];
 
-            if ($taxRuleWithUniqueBehaviorExists) {
-                $this->context->buildViolation($constraint->message)
-                    ->atPath('[behavior]')
-                    ->setTranslationDomain('Admin.International.Notifications')
-                    ->addViolation()
-                ;
+        if ($countryId === CountryId::ALL_COUNTRIES_ID) {
+            $countryChoices = $this->countryChoiceProvider->getChoices();
+            $selectedCountryIds = array_map('intval', $countryChoices);
+        }
+
+        foreach ($selectedCountryIds as $countryId) {
+            $stateIds = $this->getStates($value);
+
+            foreach ($stateIds as $stateId) {
+                $taxRuleWithUniqueBehaviorExists = $this->taxRuleRepository->hasUniqueBehaviorTaxRule(
+                    $value['tax_rules_group_id'],
+                    $countryId,
+                    $stateId,
+                    $taxRuleId
+                );
+
+                if ($taxRuleWithUniqueBehaviorExists) {
+                    $this->context->buildViolation($constraint->message)
+                        ->atPath('[behavior_id]')
+                        ->setTranslationDomain('Admin.International.Notifications')
+                        ->addViolation()
+                    ;
+                }
+
+                return;
             }
-
-            return;
         }
     }
 
@@ -97,8 +115,20 @@ class UniqueTaxRuleBehaviorValidator extends ConstraintValidator
      *
      * @return int
      */
-    private function getIntegerValue(array $data, string $key): int
+    private function valueExists(array $data, string $key): int
     {
-        return array_key_exists($key, $data) && $data[$key] !== null ? (int) $data[$key] : 0;
+        return array_key_exists($key, $data) && $data[$key] !== null;
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return array
+     */
+    private function getStates(array $data): array
+    {
+        return array_key_exists('state_ids', $data) && $data['state_ids'] !== null ?
+            $data['state_ids'] :
+            [StateId::ALL_STATES_ID];
     }
 }

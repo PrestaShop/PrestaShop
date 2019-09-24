@@ -24,33 +24,39 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\TaxRulesGroup\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\TaxRule;
 
-use PrestaShop\PrestaShop\Adapter\TaxRulesGroup\AbstractTaxRulesGroupHandler;
-use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Command\DeleteTaxRuleCommand;
-use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\CommandHandler\DeleteTaxRuleHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\CannotDeleteTaxRuleException;
-use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\TaxRuleNotFoundException;
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\AbstractBulkAction;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Responsible for single tax rule deletion
+ * Allows to configure "Delete" tax rules bulk action.
  */
-final class DeleteTaxRuleHandler extends AbstractTaxRulesGroupHandler implements DeleteTaxRuleHandlerInterface
+final class DeleteTaxRulesBulkAction extends AbstractBulkAction
 {
     /**
      * {@inheritdoc}
-     *
-     * @throws CannotDeleteTaxRuleException
-     * @throws TaxRuleNotFoundException
      */
-    public function handle(DeleteTaxRuleCommand $command): void
+    public function getType()
     {
-        $taxRule = $this->getTaxRule($command->getTaxRuleId());
+        return 'delete_tax_rules';
+    }
 
-        if (!$this->deleteTaxRule($taxRule)) {
-            throw new CannotDeleteTaxRuleException(
-                sprintf('Cannot delete tax rule object with id "%s".', $taxRule->id)
-            );
-        }
+    /**
+     * {@inheritdoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver
+            ->setRequired([
+                'tax_rules_bulk_delete_route',
+            ])->setDefaults([
+                'confirm_message' => null,
+                'submit_method' => 'POST',
+            ])
+            ->setAllowedTypes('tax_rules_bulk_delete_route', 'string')
+            ->setAllowedTypes('confirm_message', ['string', 'null'])
+            ->setAllowedValues('submit_method', ['POST'])
+        ;
     }
 }

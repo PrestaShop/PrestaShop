@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -33,6 +33,10 @@ use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\TaxRuleConstraintE
  */
 class BehaviorId
 {
+    const THIS_TAX_ONLY = 0;
+    const COMBINED = 1;
+    const ONE_AFTER_ANOTHER = 2;
+
     /**
      * @var int
      */
@@ -64,7 +68,7 @@ class BehaviorId
      */
     private function assertBehaviorValueIsValid(int $value): void
     {
-        $allowedBehaviorValues = [0, 1, 2];
+        $allowedBehaviorValues = [self::THIS_TAX_ONLY, self::COMBINED, self::ONE_AFTER_ANOTHER];
 
         if (!in_array($value, $allowedBehaviorValues)) {
             throw new TaxRuleConstraintException(

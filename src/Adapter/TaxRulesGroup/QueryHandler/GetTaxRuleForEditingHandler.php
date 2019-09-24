@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -48,6 +48,11 @@ use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 final class GetTaxRuleForEditingHandler extends AbstractTaxRulesGroupHandler implements GetTaxRuleForEditingHandlerInterface
 {
     /**
+     * Tax id value when no tax is selected
+     */
+    const NO_TAX_ID = 0;
+
+    /**
      * {@inheritdoc}
      *
      * @throws CountryConstraintException
@@ -81,7 +86,7 @@ final class GetTaxRuleForEditingHandler extends AbstractTaxRulesGroupHandler imp
             $editableTaxRule->setStateId(new StateId((int) $taxRule->id_state));
         }
 
-        if (null !== $taxRule->id_tax && (int) $taxRule->id_tax !== 0) {
+        if (null !== $taxRule->id_tax && (int) $taxRule->id_tax !== self::NO_TAX_ID) {
             $editableTaxRule->setTaxId(new TaxId((int) $taxRule->id_tax));
         }
 
