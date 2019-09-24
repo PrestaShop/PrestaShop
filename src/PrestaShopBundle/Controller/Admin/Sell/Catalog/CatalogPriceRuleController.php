@@ -269,7 +269,7 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
         }
 
         foreach ($catalogPriceRuleIds as &$catalogPriceRuleId) {
-            $catalogPriceRuleId = (int)$catalogPriceRuleId;
+            $catalogPriceRuleId = (int) $catalogPriceRuleId;
         }
 
         return $catalogPriceRuleIds;

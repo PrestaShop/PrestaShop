@@ -135,7 +135,19 @@ class CatalogPriceRuleType extends AbstractType
                 'placeholder' => false,
                 'choices' => $this->getModifiedGroupChoices(),
             ])
-            ->add('from_quantity', TextType::class)
+            ->add('from_quantity', NumberType::class, [
+                'scale' => 0,
+                'constraints' => [
+                    new GreaterThanOrEqual([
+                        'value' => 0,
+                        'message' => $this->translator->trans(
+                            '%s is invalid.',
+                            [],
+                            'Admin.Notifications.Error'
+                        ),
+                    ]),
+                ],
+            ])
             ->add('price', NumberType::class, [
                 'required' => false,
                 'scale' => 6,
