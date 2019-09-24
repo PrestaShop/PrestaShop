@@ -17,3 +17,10 @@ services:
       $idField: 'id_cms'
       $positionField: 'position'
       $parentIdField: 'id_cms_category'
+
+  prestashop.core.grid.feature.position_definition:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Position\PositionDefinition'
+    arguments:
+      $table: 'feature'
+      $idField: 'id_feature'
+      $positionField: 'position'
