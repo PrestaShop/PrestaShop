@@ -22,7 +22,7 @@ admin_features_delete:
   defaults:
     _controller: PrestaShopBundle:Admin\Sell\Catalog\Feature:delete
     _legacy_controller: AdminFeatures
-#    _legacy_link: AdminFeatures:submitBulkdeletefeature
+#    _legacy_link: AdminFeatures:submitdeletefeature
     _legacy_parameters:
       id_feature: featureId
   requirements:
@@ -41,7 +41,6 @@ admin_features_update_position:
   path: /update-position
   methods: [POST]
   defaults:
-    #@todo change action
-#    _controller: PrestaShopBundle:Admin\Sell\Catalog\Feature:index
+    _controller: PrestaShopBundle:Admin\Sell\Catalog\Feature:updatePosition
     _legacy_controller: AdminFeatures
-#    _legacy_link: AdminFeatures:updatefeature
+#    _legacy_link: AdminFeatures:updatePositions
