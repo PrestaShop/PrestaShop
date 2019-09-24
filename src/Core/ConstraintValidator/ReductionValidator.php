@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Core\ConstraintValidator;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\Reduction as ReductionConstraint;
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -55,36 +54,84 @@ final class ReductionValidator extends ConstraintValidator
             throw new UnexpectedTypeException($value, 'array');
         }
 
-        try {
-            new Reduction($value['type'], $value['value']);
-        } catch (DomainConstraintException $e) {
-            $this->buildViolation($constraint, $value, $e->getCode());
+        if (!$this->isAllowedType($value['type'])) {
+            $this->buildViolation($constraint->invalidTypeMessage, [
+                '%type%' => $value['type'],
+                '%types%' => implode(', ', [Reduction::TYPE_PERCENTAGE, Reduction::TYPE_AMOUNT]),
+            ]);
         }
+
+        if (Reduction::TYPE_AMOUNT === $value['type']) {
+            if (!$this->assertIsValidAmount($value['value'])) {
+                $this->buildViolation($constraint->invalidAmountValueMessage, ['%value%' => $value['value']]);
+            }
+        } elseif (Reduction::TYPE_PERCENTAGE === $value['type']) {
+            if (!$this->assertIsValidPercentage($value['value'])) {
+                $this->buildViolation($constraint->invalidPercentageValueMessage, [
+                    '%value%' => $value['value'],
+                    '%max%' => Reduction::MAX_ALLOWED_PERCENTAGE,
+                ]);
+            }
+        }
+    }
+
+    /**
+     * Returns true if type is defined in allowed types, false otherwise
+     *
+     * @param string $type
+     *
+     * @return bool
+     */
+    private function isAllowedType(string $type): bool
+    {
+        $allowedTypes = [
+            Reduction::TYPE_PERCENTAGE,
+            Reduction::TYPE_AMOUNT,
+        ];
+
+        return in_array($type, $allowedTypes, true);
+    }
+
+    /**
+     * Returns true is percentage is considered valid
+     *
+     * @param float $value
+     *
+     * @return bool
+     */
+    private function assertIsValidPercentage(float $value)
+    {
+        if (0 > $value || Reduction::MAX_ALLOWED_PERCENTAGE < $value) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Returns true if amount value is considered valid
+     *
+     * @param float $value
+     *
+     * @return bool
+     */
+    private function assertIsValidAmount(float $value)
+    {
+        if (0 > $value) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
      * Builds violation dependent from exception code
      *
-     * @param ReductionConstraint $constraint
-     * @param $value
-     * @param int $exceptionCode
+     * @param string $message
+     * @param array $params
      */
-    private function buildViolation(ReductionConstraint $constraint, $value, $exceptionCode)
+    private function buildViolation(string $message, array $params)
     {
-        $message = $constraint->invalidAmountValueMessage;
-        $params = ['%value%' => $value['value']];
-
-        if (DomainConstraintException::INVALID_REDUCTION_PERCENTAGE === $exceptionCode) {
-            $message = $constraint->invalidPercentageValueMessage;
-            $params['%max%'] = Reduction::MAX_ALLOWED_PERCENTAGE;
-        } elseif (DomainConstraintException::INVALID_REDUCTION_TYPE === $exceptionCode) {
-            $message = $constraint->invalidTypeMessage;
-            $params = [
-                '%type%' => $value['type'],
-                '%types%' => Reduction::TYPE_AMOUNT . ', ' . Reduction::TYPE_PERCENTAGE,
-            ];
-        }
-
         $this->context->buildViolation($message, $params)
             ->setTranslationDomain('Admin.Notifications.Error')
             ->setParameters($params)
