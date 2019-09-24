@@ -79,6 +79,15 @@ class AttributeController extends FrameworkBundleAdminController
         ]);
     }
 
+    /**
+     * Updates attributes positioning order
+     *
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
     public function updatePositionAction(Request $request, $attributeGroupId)
     {
         $positionsData = [

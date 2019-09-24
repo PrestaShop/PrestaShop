@@ -90,6 +90,15 @@ class AttributeGroupController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_attribute_groups_index');
     }
 
+    /**
+     * Updates attribute groups positioning order
+     *
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
     public function updatePositionAction(Request $request)
     {
         $positionsData = [

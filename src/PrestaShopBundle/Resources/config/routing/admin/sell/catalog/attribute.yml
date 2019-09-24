@@ -81,4 +81,4 @@ admin_attributes_update_position:
   defaults:
     _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Attribute:updatePosition'
     _legacy_controller: AdminAttributesGroups
-#    _legacy_link: AdminAttributesGroups:updateattributePositions
+#    _legacy_link: AdminAttributesGroups:updateAttributesPositions
