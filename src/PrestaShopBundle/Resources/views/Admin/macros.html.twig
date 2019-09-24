@@ -36,10 +36,10 @@
   </span>
 {% endmacro %}
 
-{% macro infotip(text, raw = false)%}
+{% macro infotip(text, use_raw = false)%}
 <div class="alert alert-info" role="alert">
   <p class="alert-text">
-    {%  if raw %}
+    {%  if use_raw %}
       {{ text|raw}}
     {% else %}
       {{ text }}
