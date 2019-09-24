@@ -182,13 +182,13 @@ class CatalogPriceRuleType extends AbstractType
                 'constraints' => [
                     new Reduction([
                         'invalidPercentageValueMessage' => $this->translator->trans(
-                            'Reduction cannot be higher than %max_reduction%',
-                            ['%max_reduction%' => ReductionVO::MAX_ALLOWED_PERCENTAGE . '%'],
+                            'Reduction value "%value%" is invalid. Allowed values from 0 to %max%',
+                            ['%max%' => ReductionVO::MAX_ALLOWED_PERCENTAGE . '%'],
                             'Admin.Notifications.Error'
                         ),
                         'invalidAmountValueMessage' => $this->translator->trans(
-                            'Reduction cannot be less than %max_reduction%',
-                            ['%max_reduction%' => 0],
+                            'Reduction value "%value%" is invalid. Value cannot be negative',
+                            [],
                             'Admin.Notifications.Error'
                         ),
                     ]),
