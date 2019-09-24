@@ -32,3 +32,10 @@ services:
       $table: 'attribute_group'
       $idField: 'id_attribute_group'
       $positionField: 'position'
+
+  prestashop.core.grid.feature.position_definition:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Position\PositionDefinition'
+    arguments:
+      $table: 'feature'
+      $idField: 'id_feature'
+      $positionField: 'position'
