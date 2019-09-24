@@ -73,17 +73,30 @@ export default class PreviewExtension {
         return;
       }
 
-      const rowColumnCount = $columnRow.find('td').length;
       const identifier = $previewToggle.data('preview-identifier');
 
-      const previewTemplate = `
+      Promise.resolve(this.renderer(identifier)).then((renderer) => {
+        if (typeof renderer === 'function') {
+          this.renderPreviewContent($columnRow, renderer());
+
+          return;
+        }
+
+        this.renderPreviewContent($columnRow, renderer);
+      });
+    });
+  }
+
+  renderPreviewContent($columnRow, content) {
+    const rowColumnCount = $columnRow.find('td').length;
+
+    const previewTemplate = `
         <tr class="preview-row">
-          <td colspan="${rowColumnCount}">${this.renderer(identifier)}</td>
+          <td colspan="${rowColumnCount}">${content}</td>
         </tr>
       `;
 
-      $columnRow.addClass('preview-open');
-      $columnRow.after(previewTemplate);
-    });
+    $columnRow.addClass('preview-open');
+    $columnRow.after(previewTemplate);
   }
 }

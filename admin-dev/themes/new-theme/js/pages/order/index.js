@@ -43,7 +43,20 @@ const $ = window.$;
 
 $(() => {
   function previewRenderer(id) {
-    new PreviewRenderer('/').render(id).then(data => data);
+    return new Promise((resolve, reject) => {
+      $.ajax({
+        url: this.previewDataUrl,
+        method: 'GET',
+        dataType: 'html',
+        data: {
+          id_order: id,
+        },
+      }).then((response) => {
+        resolve(response);
+      }).fail(() => {
+        reject();
+      });
+    });
   }
 
   const orderGrid = new Grid('order');
