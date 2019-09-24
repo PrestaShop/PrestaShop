@@ -156,7 +156,7 @@ Feature: Check cart to order data copy
     Then current cart order shipping fees should be 7.0 tax included
     Then current cart order shipping fees should be 7.0 tax excluded
     Then current cart order should have a discount in position 1 with an amount of 59.58 tax included and 57.29 tax excluded
-    Then current cart order should have a discount in position 2 with an amount of 29.79 tax included and 28.65 tax excluded
+    Then current cart order should have a discount in position 2 with an amount of 29.79 tax included and 28.64 tax excluded
     Then customer "customer1" should have 0 cart rules that apply to him
 
   Scenario: 1 product in cart, 1 cart rule with too-much amount
