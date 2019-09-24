@@ -353,6 +353,11 @@ class OrderController extends FrameworkBundleAdminController
         ]);
     }
 
+    public function getPreviewDataAction(int $orderId): Response
+    {
+        return new Response($orderId);
+    }
+
     /**
      * @param OrderException $e
      *
