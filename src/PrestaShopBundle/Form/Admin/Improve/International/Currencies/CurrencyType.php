@@ -163,7 +163,7 @@ class CurrencyType extends TranslatorAwareType
                         ),
                     ]),
                     new TypedRegex([
-                        'type' => 'currency_iso_code',
+                        'type' => TypedRegex::TYPE_CURRENCY_ISO_CODE,
                     ]),
                 ],
             ])
