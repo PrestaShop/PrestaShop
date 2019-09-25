@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,23 +22,14 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-<span
-  class="preview-toggle"
-  {% if column.options.preview_data_route is defined %}
-    {% set params = {} %}
-    {% if column.options.preview_record_params is defined %}
-      {% for param_name, record_field in column.options.preview_record_params %}
-        {% set params = params|merge({(param_name) : record[record_field]}) %}
-      {% endfor %}
-    {% endif %}
-    data-preview-data-url="{{ path(column.options.preview_data_route, params) }}"
-  {% endif %}
->
-  {% if column.options.text_type == 'dynamic' %}
-    {{ record[column.options.dynamic_text_field] }}
-  {% else %}
-    {{ column.options.static_text }}
-  {% endif %}
-</span>
+namespace PrestaShop\PrestaShop\Core\Domain\Order\QueryHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderPreview;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPreview;
+
+interface GetOrderPreviewHandlerInterface
+{
+    public function handle(GetOrderPreview $query): OrderPreview;
+}
