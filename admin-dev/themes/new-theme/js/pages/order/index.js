@@ -37,15 +37,18 @@ import FiltersSubmitButtonEnablerExtension
 import ChoiceExtension from '../../components/grid/extension/choice-extension';
 import ModalFormSubmitExtension from '../../components/grid/extension/modal-form-submit-extension';
 import PreviewExtension from '../../components/grid/extension/preview-extension';
-import PreviewRenderer from './preview-renderer';
 
 const $ = window.$;
 
 $(() => {
+  // @todo: I think previewRenderer() should accept `id` and some kind of `params` argument,
+  // so grid can pass other data (like URL) to preview renderer
+  // in case it uses ajax to load content.
+  // @todo: Extract into separate file.
   function previewRenderer(id) {
     return new Promise((resolve, reject) => {
       $.ajax({
-        url: this.previewDataUrl,
+        url: 'https://jsonplaceholder.typicode.com/posts/1',
         method: 'GET',
         dataType: 'html',
         data: {
