@@ -25,8 +25,9 @@
 
 {% block order_preview %}
   <div>
-    <p>name: {{ invoiceDetails.firstName }}</p>
-    <p>name: {{ invoiceDetails.lastName }}</p>
+{#    todo: finish template#}
+    <p>invoice name: {{ orderPreview.invoiceDetails.firstName }}</p>
+    <p>shipping name: {{ orderPreview.shippingDetails.firstName }}</p>
   </div>
 {% endblock %}
 
