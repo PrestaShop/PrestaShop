@@ -237,6 +237,7 @@ class AdminSuppliersControllerCore extends AdminController
                     'name' => 'dni',
                     'maxlength' => 16,
                     'col' => 4,
+                    'required' => true, // Only required in case of specifics countries
                 ),
                 array(
                     'type' => 'file',
