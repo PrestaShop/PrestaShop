@@ -1,0 +1,15 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.adapter.product.feature.command_handler.delete_feature_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Product\Feature\CommandHandler\DeleteFeatureHandler'
+    tags:
+      - name: 'tactician.handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\Product\Feature\Command\DeleteFeatureCommand'
+
+  prestashop.adapter.product.feature.command_handler.bulk_delete_feature_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Product\Feature\CommandHandler\BulkDeleteFeatureHandler'
+    tags:
+      - name: 'tactician.handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\Product\Feature\Command\BulkDeleteFeatureCommand'

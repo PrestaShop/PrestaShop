@@ -73,7 +73,7 @@ final class FeatureGridDefinitionFactory extends AbstractGridDefinitionFactory
     {
         $columns = (new ColumnCollection())
             ->add(
-                (new BulkActionColumn('features_bulk'))
+                (new BulkActionColumn('bulk'))
                     ->setOptions([
                         'bulk_field' => 'id_feature',
                     ])
@@ -252,7 +252,7 @@ final class FeatureGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->add((new SubmitBulkAction('delete_selection'))
                 ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
                 ->setOptions([
-                    'submit_route' => 'admin_features_delete_bulk',
+                    'submit_route' => 'admin_features_bulk_delete',
                     'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
                 ])
             );
