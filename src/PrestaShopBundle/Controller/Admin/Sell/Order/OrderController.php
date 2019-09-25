@@ -464,7 +464,7 @@ class OrderController extends FrameworkBundleAdminController
         $orderPreview = $this->getQueryBus()->handle(new GetOrderPreview($orderId));
 
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/preview.html.twig', [
-            'invoiceDetails' => $orderPreview->getInvoiceDetails(),
+            'orderPreview' => $orderPreview,
         ]);
     }
 
