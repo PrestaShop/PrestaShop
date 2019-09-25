@@ -4831,7 +4831,7 @@ class CartCore extends ObjectModel
      * Are all products of the Cart still available in the current state ? They might have been converted to another
      * type of product since then
      *
-     * @return bool False if not all products in the cart still exist
+     * @return bool False if one of the products from the cart has been changed into a new type of product
      */
     public function checkAllProductsAreStillAvailableInThisState()
     {
