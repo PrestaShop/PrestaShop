@@ -1094,6 +1094,12 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $product_full['customer_group_discount'] = $group_reduction;
         $product_full['title'] = $this->getProductPageTitle();
 
+        // round display price (without formatting, we don't want the currency symbol here, just the raw rounded value
+        $product_full['rounded_display_price'] = Tools::ps_round(
+            $product_full['price'],
+            Context::getContext()->currency->precision
+        );
+
         $presenter = $this->getProductPresenter();
 
         return $presenter->present(
