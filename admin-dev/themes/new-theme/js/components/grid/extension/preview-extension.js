@@ -73,9 +73,7 @@ export default class PreviewExtension {
         return;
       }
 
-      const identifier = $previewToggle.data('preview-identifier');
-
-      Promise.resolve(this.renderer(identifier)).then((renderer) => {
+      Promise.resolve(this.renderer()).then((renderer) => {
         if (typeof renderer === 'function') {
           this.renderPreviewContent($columnRow, renderer());
 

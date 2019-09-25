@@ -46,9 +46,10 @@ $(() => {
   // in case it uses ajax to load content.
   // @todo: Extract into separate file.
   function previewRenderer(id) {
+    console.log($('.preview-toggle').data('preview-data-url'));
     return new Promise((resolve, reject) => {
       $.ajax({
-        url: 'https://jsonplaceholder.typicode.com/posts/1',
+        url: $('.preview-toggle').data('preview-data-url'),
         method: 'GET',
         dataType: 'html',
         data: {

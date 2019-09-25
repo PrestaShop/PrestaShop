@@ -59,10 +59,14 @@ final class PreviewColumn extends AbstractColumn
                 // If text_type is "static"
                 // then Preview text is configured with column options
                 'static_text',
+                'preview_data_route',
+                'preview_record_params',
             ])
             ->setAllowedValues('text_type', ['static', 'dynamic'])
             ->setAllowedTypes('dynamic_text_field', 'string')
             ->setAllowedTypes('static_text', 'string')
+            ->setAllowedTypes('preview_data_route', 'string')
+            ->setAllowedTypes('preview_record_params', 'array')
         ;
     }
 }

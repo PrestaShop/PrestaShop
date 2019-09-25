@@ -45,6 +45,8 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Payment\Command\AddPaymentCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\UpdateProductInOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderPreview;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPreview;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\OrderFilters;
@@ -455,9 +457,15 @@ class OrderController extends FrameworkBundleAdminController
         ]);
     }
 
-    public function getPreviewDataAction(int $orderId): Response
+    public function getPreviewDataAction(Request $request): Response
     {
-        return new Response($orderId);
+        $orderId = $request->query->getInt('id');
+        /** @var OrderPreview $orderPreview */
+        $orderPreview = $this->getQueryBus()->handle(new GetOrderPreview($orderId));
+
+        return $this->render('@PrestaShop/Admin/Sell/Order/Order/preview.html.twig', [
+            'invoiceDetails' => $orderPreview->getInvoiceDetails(),
+        ]);
     }
 
     /**
