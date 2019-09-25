@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\QueryResult;
 
-class InvoiceDetails
+class ShippingDetails
 {
     /**
      * @var string
@@ -61,17 +61,7 @@ class InvoiceDetails
     /**
      * @var string
      */
-    private $email;
-
-    /**
-     * @var string
-     */
     private $phone;
-
-    /**
-     * @var string
-     */
-    private $company;
 
     /**
      * InvoiceDetails constructor.
@@ -81,10 +71,8 @@ class InvoiceDetails
      * @param string $address1
      * @param string $city
      * @param string $country
-     * @param string $email
      * @param string $phone
      * @param string $address2
-     * @param string $company
      */
     public function __construct(
         string $firstName,
@@ -93,9 +81,7 @@ class InvoiceDetails
         string $address2,
         string $city,
         string $country,
-        string $email,
-        string $phone,
-        string $company
+        string $phone
     ) {
         $this->firstName = $firstName;
         $this->lastName = $lastName;
@@ -103,9 +89,7 @@ class InvoiceDetails
         $this->address2 = $address2;
         $this->city = $city;
         $this->country = $country;
-        $this->email = $email;
         $this->phone = $phone;
-        $this->company = $company;
     }
 
     /**
@@ -151,14 +135,6 @@ class InvoiceDetails
     /**
      * @return string
      */
-    public function getEmail(): string
-    {
-        return $this->email;
-    }
-
-    /**
-     * @return string
-     */
     public function getPhone(): string
     {
         return $this->phone;
@@ -170,13 +146,5 @@ class InvoiceDetails
     public function getAddress2(): string
     {
         return $this->address2;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCompany(): string
-    {
-        return $this->company;
     }
 }

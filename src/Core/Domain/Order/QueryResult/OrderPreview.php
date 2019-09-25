@@ -34,11 +34,20 @@ class OrderPreview
     private $invoiceDetails;
 
     /**
-     * @param InvoiceDetails $invoiceDetails
+     * @var ShippingDetails
      */
-    public function __construct(InvoiceDetails $invoiceDetails)
-    {
+    private $shippingDetails;
+
+    /**
+     * @param InvoiceDetails $invoiceDetails
+     * @param ShippingDetails $shippingDetails
+     */
+    public function __construct(
+        InvoiceDetails $invoiceDetails,
+        ShippingDetails $shippingDetails
+    ) {
         $this->invoiceDetails = $invoiceDetails;
+        $this->shippingDetails = $shippingDetails;
     }
 
     /**
@@ -47,5 +56,13 @@ class OrderPreview
     public function getInvoiceDetails(): InvoiceDetails
     {
         return $this->invoiceDetails;
+    }
+
+    /**
+     * @return ShippingDetails
+     */
+    public function getShippingDetails(): ShippingDetails
+    {
+        return $this->shippingDetails;
     }
 }
