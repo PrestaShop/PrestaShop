@@ -520,8 +520,8 @@ class CartControllerCore extends FrontController
                 } elseif ($this->shouldAvailabilityErrorBeRaised($product, $qty_to_check)) {
                     // check quantity after cart quantity update
                     $this->{$ErrorKey}[] = $this->trans(
-                        'The item %product% in your cart is now a product with attributes. Please delete it and choose one of its combinations to proceed with your order.',
-                        array('%product%' => $product->name),
+                        'The product is no longer available in this quantity.',
+                        array(),
                         'Shop.Notifications.Error'
                     );
                 }
@@ -605,7 +605,7 @@ class CartControllerCore extends FrontController
 
             if ($currentProduct->hasAttributes() && $product['id_product_attribute'] === '0') {
                 return $this->trans(
-                    'The item %product% in your cart is no longer available in this version. You cannot proceed with your order until you delete or replace your product by a new one with attribute.',
+                   'The item %product% in your cart is now a product with attributes. Please delete it and choose one of its combinations to proceed with your order.',
                     array('%product%' => $product['name']),
                     'Shop.Notifications.Error'
                 );
