@@ -45,7 +45,7 @@ class CheckoutPaymentStepCore extends AbstractCheckoutStep
     {
         $cart = $this->getCheckoutSession()->getCart();
         $allProductsInStock = $cart->isAllProductsInStock();
-        $allProductsExist = $cart->isAllProductsStillExist();
+        $allProductsExist = $cart->checkAllProductsAreStillAvailableInThisState();
 
         if ($allProductsInStock !== true || $allProductsExist !== true) {
             $cartShowUrl = $this->context->link->getPageLink(
