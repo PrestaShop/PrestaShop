@@ -30,6 +30,9 @@ use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Query\GetFeatureForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\Feature\Command\BulkDeleteFeatureCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Feature\Command\DeleteFeatureCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Feature\Exception\CannotDeleteFeatureException;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\FeatureGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\FeatureFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -175,33 +178,6 @@ class FeatureController extends FrameworkBundleAdminController
     }
 
     /**
-     * Get translated error messages for feature exceptions
-     *
-     * @return array
-     */
-    private function getErrorMessages()
-    {
-        return [
-            FeatureNotFoundException::class => $this->trans(
-                'The object cannot be loaded (or found)',
-                'Admin.Notifications.Error'
-            ),
-            FeatureConstraintException::class => [
-                FeatureConstraintException::EMPTY_NAME => $this->trans(
-                    'The field %field_name% is required at least in your default language.',
-                    'Admin.Notifications.Error',
-                    ['%field_name%' => $this->trans('Name', 'Admin.Global')]
-                ),
-                FeatureConstraintException::INVALID_NAME => $this->trans(
-                    'The %s field is invalid.',
-                    'Admin.Notifications.Error',
-                    [sprintf('"%s"', $this->trans('Name', 'Admin.Global'))]
-                ),
-            ],
-        ];
-    }
-
-    /**
      * Check if Features functionality is enabled in the shop.
      *
      * @return bool
@@ -233,9 +209,49 @@ class FeatureController extends FrameworkBundleAdminController
         );
     }
 
-    //@todo delete action
+    /**
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_features_index")
+     *
+     * @param int $featureId
+     *
+     * @return RedirectResponse
+     */
     public function deleteAction(int $featureId): RedirectResponse
     {
+        try {
+            $this->getCommandBus()->handle(new DeleteFeatureCommand($featureId));
+            $this->addFlash(
+                'success',
+                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+            );
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        return $this->redirectToRoute('admin_features_index');
+    }
+
+    /**
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_features_index")
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function bulkDeleteAction(Request $request): RedirectResponse
+    {
+        $featureIds = $this->getBulkFeaturesFromRequest($request);
+
+        try {
+            $this->getCommandBus()->handle(new BulkDeleteFeatureCommand($featureIds));
+            $this->addFlash(
+                'success',
+                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+            );
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
         return $this->redirectToRoute('admin_features_index');
     }
 
@@ -267,5 +283,62 @@ class FeatureController extends FrameworkBundleAdminController
         }
 
         return $this->redirectToRoute('admin_features_index');
+    }
+
+    /**
+     * Get translated error messages for feature exceptions
+     *
+     * @return array
+     */
+    private function getErrorMessages()
+    {
+        return [
+            FeatureNotFoundException::class => $this->trans(
+                'The object cannot be loaded (or found)',
+                'Admin.Notifications.Error'
+            ),
+            CannotDeleteFeatureException::class => [
+                CannotDeleteFeatureException::FAILED_DELETE => $this->trans(
+                    'An error occurred while deleting the object.',
+                    'Admin.Notifications.Error'
+                ),
+                CannotDeleteFeatureException::FAILED_BULK_DELETE => $this->trans(
+                    'An error occurred while deleting this selection.',
+                    'Admin.Notifications.Error'
+                ),
+            ],
+            FeatureConstraintException::class => [
+                FeatureConstraintException::EMPTY_NAME => $this->trans(
+                    'The field %field_name% is required at least in your default language.',
+                    'Admin.Notifications.Error',
+                    ['%field_name%' => $this->trans('Name', 'Admin.Global')]
+                ),
+                FeatureConstraintException::INVALID_NAME => $this->trans(
+                    'The %s field is invalid.',
+                    'Admin.Notifications.Error',
+                    [sprintf('"%s"', $this->trans('Name', 'Admin.Global'))]
+                ),
+            ],
+        ];
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return array
+     */
+    private function getBulkFeaturesFromRequest(Request $request): array
+    {
+        $featureIds = $request->request->get('feature_bulk');
+
+        if (!is_array($featureIds)) {
+            return [];
+        }
+
+        foreach ($featureIds as $i => $featureId) {
+            $featureIds[$i] = (int) $featureId;
+        }
+
+        return $featureIds;
     }
 }

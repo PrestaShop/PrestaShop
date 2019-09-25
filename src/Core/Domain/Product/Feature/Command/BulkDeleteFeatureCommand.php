@@ -40,7 +40,7 @@ class BulkDeleteFeatureCommand
     private $featureIds;
 
     /**
-     * @param array $featureIds
+     * @param int[] $featureIds
      *
      * @throws FeatureConstraintException
      */
