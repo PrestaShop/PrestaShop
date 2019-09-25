@@ -73,7 +73,7 @@ export default class PreviewExtension {
         return;
       }
 
-      Promise.resolve(this.renderer()).then((renderer) => {
+      Promise.resolve(this.renderer($(event.target).data('preview-data-url'))).then((renderer) => {
         if (typeof renderer === 'function') {
           this.renderPreviewContent($columnRow, renderer());
 
