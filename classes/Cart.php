@@ -2415,6 +2415,9 @@ class CartCore extends ObjectModel
                 }
             }
 
+            if(empty($product['carrier_list']))
+                return array();
+
             if (!isset($grouped_by_warehouse[$product['id_address_delivery']]['in_stock'][$id_warehouse])) {
                 $grouped_by_warehouse[$product['id_address_delivery']]['in_stock'][$id_warehouse] = array();
                 $grouped_by_warehouse[$product['id_address_delivery']]['out_of_stock'][$id_warehouse] = array();
