@@ -178,7 +178,7 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'identifier_field' => 'id_order',
                         'preview_data_route' => 'admin_orders_get_preview_data',
                         'preview_record_params' => [
-                            'id' => 'id_order',
+                            'orderId' => 'id_order',
                         ],
                     ])
             )

@@ -26,62 +26,76 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\QueryResult;
 
+use PrestaShop\Decimal\Number;
+
 /**
- * DTO for order preview data
+ * DTO for order product details
  */
-class OrderPreview
+class ProductDetail
 {
     /**
-     * @var InvoiceDetails
+     * @var string
      */
-    private $invoiceDetails;
+    private $name;
 
     /**
-     * @var ShippingDetails
+     * @var int
      */
-    private $shippingDetails;
+    private $quantity;
 
     /**
-     * @var ProductDetail[]
+     * @var Number
      */
-    private $productDetails;
+    private $taxesPaid;
 
     /**
-     * @param InvoiceDetails $invoiceDetails
-     * @param ShippingDetails $shippingDetails
-     * @param array $productDetails
+     * @var Number
      */
-    public function __construct(
-        InvoiceDetails $invoiceDetails,
-        ShippingDetails $shippingDetails,
-        array $productDetails
-    ) {
-        $this->invoiceDetails = $invoiceDetails;
-        $this->shippingDetails = $shippingDetails;
-        $this->productDetails = $productDetails;
+    private $totalPrice;
+
+    /**
+     * @param string $name
+     * @param int $quantity
+     * @param Number $taxesPaid
+     * @param Number $totalPrice
+     */
+    public function __construct(string $name, int $quantity, Number $taxesPaid, Number $totalPrice)
+    {
+        $this->name = $name;
+        $this->quantity = $quantity;
+        $this->taxesPaid = $taxesPaid;
+        $this->totalPrice = $totalPrice;
     }
 
     /**
-     * @return InvoiceDetails
+     * @return string
      */
-    public function getInvoiceDetails(): InvoiceDetails
+    public function getName(): string
     {
-        return $this->invoiceDetails;
+        return $this->name;
     }
 
     /**
-     * @return ShippingDetails
+     * @return Number
      */
-    public function getShippingDetails(): ShippingDetails
+    public function getTaxesPaid(): Number
     {
-        return $this->shippingDetails;
+        return $this->taxesPaid;
     }
 
     /**
-     * @return ProductDetail[]
+     * @return Number
      */
-    public function getProductDetails(): array
+    public function getTotalPrice(): Number
     {
-        return $this->productDetails;
+        return $this->totalPrice;
+    }
+
+    /**
+     * @return int
+     */
+    public function getQuantity(): int
+    {
+        return $this->quantity;
     }
 }

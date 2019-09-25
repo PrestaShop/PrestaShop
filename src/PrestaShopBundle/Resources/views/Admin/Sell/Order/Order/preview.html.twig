@@ -24,10 +24,70 @@
  *#}
 
 {% block order_preview %}
-  <div>
-{#    todo: finish template#}
-    <p>invoice name: {{ orderPreview.invoiceDetails.firstName }}</p>
-    <p>shipping name: {{ orderPreview.shippingDetails.firstName }}</p>
+  <div class="row">
+    <table class="col-2 table-responsive-sm">
+      <thead>
+      <tr>
+        <th>{{ 'Invoice details'|trans({}, 'Admin.Global') }}</th>
+        <th>{{ 'Shipping details'|trans({}, 'Admin.Global') }}</th>
+      </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{{ orderPreview.invoiceDetails.firstName }} {{ orderPreview.invoiceDetails.lastName }}</td>
+          <td>{{ orderPreview.invoiceDetails.firstName }} {{ orderPreview.shippingDetails.lastName }}</td>
+        </tr>
+
+        <tr>
+          <td>{{ orderPreview.invoiceDetails.company }}</td>
+          <td>{{ orderPreview.shippingDetails.address1 }}</td>
+        </tr>
+
+        <tr>
+          <td>{{ orderPreview.invoiceDetails.address1 }}</td>
+          <td>{{ orderPreview.shippingDetails.address2 }}</td>
+        </tr>
+
+        <tr>
+          <td>{{ orderPreview.invoiceDetails.address2 }}</td>
+          <td>{{ orderPreview.shippingDetails.country }}</td>
+        </tr>
+
+        <tr>
+          <td>{{ orderPreview.invoiceDetails.country }}</td>
+          <td>{{ orderPreview.shippingDetails.phone }}</td>
+        </tr>
+
+        <tr>
+          <td>{{ orderPreview.invoiceDetails.phone }}</td>
+        </tr>
+
+        <tr>
+          <td>{{ orderPreview.invoiceDetails.email }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <table class="offset-4 col-6 table-responsive-sm">
+      <thead>
+        <tr>
+          <th>{{ 'Product'|trans({}, 'Admin.Global') }}</th>
+          <th>{{ 'Quantity'|trans({}, 'Admin.Global') }}</th>
+          <th>{{ 'Tax'|trans({}, 'Admin.Global') }}</th>
+          <th>{{ 'Total'|trans({}, 'Admin.Global') }}</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for productDetail in orderPreview.productDetails %}
+        <tr>
+          <td>{{ productDetail.name }}</td>
+          <td>{{ productDetail.quantity }}</td>
+          <td>{{ productDetail.taxesPaid }}</td>
+          <td>{{ productDetail.totalPrice }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+
   </div>
 {% endblock %}
 

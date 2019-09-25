@@ -45,16 +45,12 @@ $(() => {
   // so grid can pass other data (like URL) to preview renderer
   // in case it uses ajax to load content.
   // @todo: Extract into separate file.
-  function previewRenderer(id) {
-    console.log($('.preview-toggle').data('preview-data-url'));
+  function previewRenderer(path) {
     return new Promise((resolve, reject) => {
       $.ajax({
-        url: $('.preview-toggle').data('preview-data-url'),
+        url: path,
         method: 'GET',
         dataType: 'html',
-        data: {
-          id_order: id,
-        },
       }).then((response) => {
         resolve(response);
       }).fail(() => {

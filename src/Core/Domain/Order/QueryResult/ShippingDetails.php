@@ -26,6 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\QueryResult;
 
+/**
+ * DTO for order shipping details
+ */
 class ShippingDetails
 {
     /**

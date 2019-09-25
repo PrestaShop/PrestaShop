@@ -457,9 +457,8 @@ class OrderController extends FrameworkBundleAdminController
         ]);
     }
 
-    public function getPreviewDataAction(Request $request): Response
+    public function getPreviewDataAction(int $orderId): Response
     {
-        $orderId = $request->query->getInt('id');
         /** @var OrderPreview $orderPreview */
         $orderPreview = $this->getQueryBus()->handle(new GetOrderPreview($orderId));
 
