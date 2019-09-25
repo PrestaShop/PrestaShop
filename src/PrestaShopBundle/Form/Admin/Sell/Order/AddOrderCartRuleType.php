@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,32 +22,24 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
+namespace PrestaShopBundle\Form\Admin\Sell\Order;
 
-{% block content %}
-  <div class="row">
-    <div class="col-md-12">
-      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/order_actions.html.twig' %}
-    </div>
-  </div>
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormBuilderInterface;
 
-  <div class="row">
-    <div class="col-md-4">
-      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/customer.html.twig' %}
-
-      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/messages.html.twig' %}
-    </div>
-
-    <div class="col-md-8">
-      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/products.html.twig' %}
-
-      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/details.html.twig' %}
-
-      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/payments.html.twig' %}
-    </div>
-  </div>
-
-  {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/Modal/add_order_discount_modal.html.twig' %}
-{% endblock %}
+class AddOrderCartRuleType extends AbstractType
+{
+    public function buildForm(FormBuilderInterface $builder, array $optional): void
+    {
+        $builder
+            ->add('name', TextType::class)
+            ->add('type', ChoiceType::class)
+            ->add('value', TextType::class)
+        ;
+    }
+}

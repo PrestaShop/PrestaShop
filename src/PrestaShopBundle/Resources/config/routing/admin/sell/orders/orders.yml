@@ -48,3 +48,9 @@ admin_orders_view:
   path: /{orderId}/view
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Order/Order:view
+
+admin_orders_add_discount:
+  path: /{orderId}/discounts
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:addDiscount

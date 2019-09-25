@@ -38,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderGridDefinitionFactor
 use PrestaShop\PrestaShop\Core\Search\Filters\OrderFilters;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Form\Admin\Sell\Order\AddOrderCartRuleType;
 use PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrdersStatusType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Service\Grid\ResponseBuilder;
@@ -224,10 +225,24 @@ class OrderController extends FrameworkBundleAdminController
 
         dump($orderForViewing);
 
+        $addOrderCartRuleForm = $this->createForm(AddOrderCartRuleType::class);
+
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/view.html.twig', [
             'showContentHeader' => false,
             'orderForViewing' => $orderForViewing,
+            'addOrderCartRuleForm' => $addOrderCartRuleForm->createView(),
         ]);
+    }
+
+    /**
+     * @param int $orderId
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function addDiscountAction(int $orderId, Request $request): RedirectResponse
+    {
+
     }
 
     /**

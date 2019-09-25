@@ -32,6 +32,11 @@ namespace PrestaShop\PrestaShop\Core\Domain\Order\QueryResult;
 class OrderForViewing
 {
     /**
+     * @var int
+     */
+    private $orderId;
+
+    /**
      * @var OrderCustomerForViewing
      */
     private $customer;
@@ -96,6 +101,7 @@ class OrderForViewing
     private $messages;
 
     public function __construct(
+        int $orderId,
         string $reference,
         string $taxMethod,
         bool $isValid,
@@ -123,6 +129,12 @@ class OrderForViewing
         $this->payments = $payments;
         $this->isValid = $isValid;
         $this->messages = $messages;
+        $this->orderId = $orderId;
+    }
+
+    public function getId(): int
+    {
+        return $this->orderId;
     }
 
     /**

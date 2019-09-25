@@ -122,6 +122,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
         $this->getOrderMessages($order);
 
         return new OrderForViewing(
+            (int) $order->id,
             $order->reference,
             $taxMethod,
             (bool) $order->valid,
