@@ -4832,7 +4832,7 @@ class CartCore extends ObjectModel
      *
      * @return bool False if not all products in the cart still exist
      */
-    public function isAllProductsStillExist()
+    public function checkAllProductsAreStillAvailableInThisState()
     {
         foreach ($this->getProducts(false, false, null, false) as $product) {
             $currentProduct = new Product();
@@ -4842,6 +4842,8 @@ class CartCore extends ObjectModel
                 return false;
             }
         }
+
+        return true;
     }
 
     /**
