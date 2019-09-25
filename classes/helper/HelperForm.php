@@ -271,6 +271,7 @@ class HelperFormCore extends Helper
             'module_dir' => _MODULE_DIR_,
             'base_url' => $this->context->shop->getBaseURL(),
             'contains_states' => (isset($this->fields_value['id_country'], $this->fields_value['id_state'])) ? Country::containsStates($this->fields_value['id_country']) : null,
+            'contains_dni' => (isset($this->fields_value['id_country'], $this->fields_value['dni'])) ? Address::containsDni($this->fields_value['id_country']) : null,
             'show_cancel_button' => $this->show_cancel_button,
             'back_url' => $this->back_url,
         ));

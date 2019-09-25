@@ -1381,6 +1381,20 @@ function ajaxStates(id_state_selected)
     }
   });
 
+  $.ajax({
+    url: 'index.php',
+    dataType: 'json',
+    cache: false,
+    data: 'token=' + state_token + '&ajax=1&contains_dni=1&tab=AdminAddresses&id_country=' + $('#id_country').val(),
+    success: function(resp) {
+      if (resp && resp.contains_dni) {
+        $("#contains_dni").fadeIn();
+      } else {
+        $("#contains_dni").fadeOut();
+      }
+    }
+  });
+
   if (module_dir && vat_number)
   {
     $.ajax({
