@@ -66,7 +66,7 @@
                 </a>
               </h1>
             {else}
-                <a href="{$urls.base_url}">
+                <a href="{$urls.pages.index}">
                   <img class="logo img-responsive" src="{$shop.logo}" alt="{$shop.name}">
                 </a>
             {/if}
