@@ -28,12 +28,11 @@ admin_features_delete:
   requirements:
     featureId: \d+
 
-admin_features_delete_bulk:
-  path: /delete-bulk
+admin_features_bulk_delete:
+  path: /bulk-delete
   methods: [POST]
   defaults:
-    #@todo change action
-#    _controller: PrestaShopBundle:Admin\Sell\Catalog\Feature:index
+    _controller: PrestaShopBundle:Admin\Sell\Catalog\Feature:bulkDelete
     _legacy_controller: AdminFeatures
 #    _legacy_link: AdminFeatures:submitBulkdeletefeature
 
