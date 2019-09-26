@@ -57,8 +57,12 @@ class ProductDetail
      * @param string $unitPrice
      * @param string $totalPrice
      */
-    public function __construct(string $name, int $quantity, string $unitPrice, string $totalPrice)
-    {
+    public function __construct(
+        string $name,
+        int $quantity,
+        string $unitPrice,
+        string $totalPrice
+    ) {
         $this->name = $name;
         $this->quantity = $quantity;
         $this->unitPrice = $unitPrice;
