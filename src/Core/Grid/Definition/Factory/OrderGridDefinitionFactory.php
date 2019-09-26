@@ -43,6 +43,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ChoiceColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DateTimeColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\IdentifierColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\OrderPriceColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\ColorColumn;
@@ -157,6 +158,15 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getColumns()
     {
+        $previewColumn = (new PreviewColumn('preview'))
+            ->setOptions([
+                'icon_expand' => 'keyboard_arrow_down',
+                'icon_collapse' => 'keyboard_arrow_up',
+                'preview_data_route' => 'admin_orders_get_preview_data',
+                'preview_route_params' => [
+                    'orderId' => 'id_order',
+                ],
+            ]);
         $columns = (new ColumnCollection())
             ->add(
                 (new BulkActionColumn('orders_bulk'))
@@ -164,23 +174,12 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'bulk_field' => 'id_order',
                     ])
             )
-            ->add((new DataColumn('id_order'))
+            ->add((new IdentifierColumn('id_order'))
                 ->setName($this->trans('ID', [], 'Admin.Global'))
                 ->setOptions([
-                    'field' => 'id_order',
+                    'identifier_field' => 'id_order',
+                    'preview' => $previewColumn,
                 ])
-            )
-            ->add(
-                (new PreviewColumn('preview'))
-                    ->setOptions([
-                        'text_type' => 'static',
-                        'static_text' => '<',
-                        'identifier_field' => 'id_order',
-                        'preview_data_route' => 'admin_orders_get_preview_data',
-                        'preview_record_params' => [
-                            'orderId' => 'id_order',
-                        ],
-                    ])
             )
             ->add((new DataColumn('reference'))
                 ->setName($this->trans('Reference', [], 'Admin.Global'))
