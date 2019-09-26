@@ -72,7 +72,7 @@
         <tr>
           <th>{{ 'Product'|trans({}, 'Admin.Global') }}</th>
           <th>{{ 'Quantity'|trans({}, 'Admin.Global') }}</th>
-          <th>{{ 'Tax'|trans({}, 'Admin.Global') }}</th>
+          <th>{{ 'Base price'|trans({}, 'Admin.Global') }}</th>
           <th>{{ 'Total'|trans({}, 'Admin.Global') }}</th>
         </tr>
       </thead>
@@ -81,7 +81,7 @@
         <tr>
           <td>{{ productDetail.name }}</td>
           <td>{{ productDetail.quantity }}</td>
-          <td>{{ productDetail.taxesPaid }}</td>
+          <td>{{ productDetail.unitPrice }}</td>
           <td>{{ productDetail.totalPrice }}</td>
         </tr>
       {% endfor %}

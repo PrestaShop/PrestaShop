@@ -26,8 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\QueryResult;
 
-use PrestaShop\Decimal\Number;
-
 /**
  * DTO for order product details
  */
@@ -44,26 +42,26 @@ class ProductDetail
     private $quantity;
 
     /**
-     * @var Number
+     * @var string
      */
-    private $taxesPaid;
+    private $unitPrice;
 
     /**
-     * @var Number
+     * @var string
      */
     private $totalPrice;
 
     /**
      * @param string $name
      * @param int $quantity
-     * @param Number $taxesPaid
-     * @param Number $totalPrice
+     * @param string $unitPrice
+     * @param string $totalPrice
      */
-    public function __construct(string $name, int $quantity, Number $taxesPaid, Number $totalPrice)
+    public function __construct(string $name, int $quantity, string $unitPrice, string $totalPrice)
     {
         $this->name = $name;
         $this->quantity = $quantity;
-        $this->taxesPaid = $taxesPaid;
+        $this->unitPrice = $unitPrice;
         $this->totalPrice = $totalPrice;
     }
 
@@ -76,17 +74,17 @@ class ProductDetail
     }
 
     /**
-     * @return Number
+     * @return string
      */
-    public function getTaxesPaid(): Number
+    public function getUnitPrice(): string
     {
-        return $this->taxesPaid;
+        return $this->unitPrice;
     }
 
     /**
-     * @return Number
+     * @return string
      */
-    public function getTotalPrice(): Number
+    public function getTotalPrice(): string
     {
         return $this->totalPrice;
     }

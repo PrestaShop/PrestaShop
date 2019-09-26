@@ -122,12 +122,11 @@ services:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Order\Command\ResendOrderEmailCommand
 
-  prestashop.core.domain.order.query_handler.get_order_preview_handler:
+  prestashop.adapter.order.query_handler.get_order_preview_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Order\QueryHandler\GetOrderPreviewHandler'
     arguments:
-      - '@doctrine.dbal.default_connection'
-      - '%database_prefix%'
-      - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
+      - '@prestashop.core.localization.locale.repository'
+      - "@=service('prestashop.adapter.legacy.context').getContext().language.getLocale()"
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderPreview'
