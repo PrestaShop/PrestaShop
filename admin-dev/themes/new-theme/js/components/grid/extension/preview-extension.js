@@ -33,24 +33,19 @@ const $ = window.$;
  * Grid column must contain .preview-toggle element that PreviewExtension can hook on, example:
  *
  * <td>
- *  <span class="preview-toggle" data-preview-identifier="3">
+ *  <span class="preview-toggle">
  *    Preview
  *  </span>
  * </td>
- *
- * Note that "data-preview-identifier" attribute must be provided
- * with row identifier value (e.g. customer id if it's customers grid).
  *
  * You can use PreviewColumn when defining grid in PHP or create your custom column.
  *
  * In JS:
  *
- * // Here "identifier" contains "data-preview-identifier" value.
+ * function myPreviewRenderer(url) {
+ *   // do ajax load preview data and return json with preview content html
  *
- * function myPreviewRenderer(identifier) {
- *   // do ajax or anything else to load preview data and return html
- *
- *   return `<p>Preview data for ${identifier}</p>`;
+ *   return {preview: `<p>Preview data</p>`};
  * }
  *
  * const grid = new Grid('my_grid');
