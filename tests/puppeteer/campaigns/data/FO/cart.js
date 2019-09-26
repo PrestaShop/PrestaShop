@@ -1,5 +1,4 @@
 module.exports = {
-
   customCartData: {
     firstProduct: {
       name: 'Hummingbird printed t-shirt',

@@ -14,6 +14,7 @@ module.exports = {
     customer_form_continue_button: '//*[@id="customer-form"]//button[@name="continue"]',
     save_account_button: '[data-link-action="save-customer"]',
     gender_radio_button: '(//*[@id="customer-form"]//input[contains(@name,"id_gender")])[2]',
+    psgdpr_button: 'input[type="checkbox"][name="psgdpr"]',
     account_link: '//*[@id="_desktop_user_info"]//a[@class="account"]',
     add_first_address: '#address-link',
     adr_address: '//*[@id="content"]//input[@name="address1"]',

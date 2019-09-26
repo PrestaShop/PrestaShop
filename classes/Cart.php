@@ -3999,6 +3999,7 @@ class CartCore extends ObjectModel
                 WHERE NOT EXISTS (SELECT 1 FROM ' . _DB_PREFIX_ . 'orders o WHERE o.`id_cart` = c.`id_cart`
                                     AND o.`id_customer` = ' . (int) $id_customer . ')
                 AND c.`id_customer` = ' . (int) $id_customer . '
+                AND c.`id_guest` != 0
                     ' . Shop::addSqlRestriction(Shop::SHARE_ORDER, 'c') . '
                 ORDER BY c.`date_upd` DESC';
 
@@ -4177,6 +4178,18 @@ class CartCore extends ObjectModel
             WHERE `id_customization` = ' . (int) $cust_data['id_customization'] . '
             AND `index` = ' . (int) $index
         );
+
+        $hasRemainingCustomData = Db::getInstance()->getValue(
+            'SELECT 1 FROM `' . _DB_PREFIX_ . 'customized_data`
+            WHERE `id_customization` = ' . (int) $cust_data['id_customization']
+        );
+
+        if (!$hasRemainingCustomData) {
+            $result &= Db::getInstance()->execute(
+                'DELETE FROM `' . _DB_PREFIX_ . 'customization` 
+            WHERE `id_customization` = ' . (int) $cust_data['id_customization']
+            );
+        }
 
         return $result;
     }

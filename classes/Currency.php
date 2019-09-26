@@ -168,9 +168,9 @@ class CurrencyCore extends ObjectModel
     /**
      * CurrencyCore constructor.
      *
-     * @param null $id
+     * @param int|null $id
      * @param false|null $idLang if null or false, default language will be used
-     * @param null $idShop
+     * @param int|null $idShop
      */
     public function __construct($id = null, $idLang = null, $idShop = null)
     {

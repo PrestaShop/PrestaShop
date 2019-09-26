@@ -52,13 +52,14 @@ module.exports = class CommonPage {
    * @param selector, where to click
    * @return newPage, what was opened by the browser
    */
-  async openLinkWithTargetBlank(currentPage, selector) {
-    const pageTarget = await currentPage.target();
-    await currentPage.click(selector);
-    const newTarget = await global.browser.waitForTarget(target => target.opener() === pageTarget);
-    this.page = await newTarget.page();
-    await this.page.waitForSelector('body');
-    return this.page;
+  async openLinkWithTargetBlank(currentPage, selector, waitForNavigation = true) {
+    const [newPage] = await Promise.all([
+      new Promise(resolve => this.page.once('popup', resolve)),
+      currentPage.click(selector),
+    ]);
+    if (waitForNavigation) await newPage.waitForNavigation({waitUntil: 'networkidle0'});
+    await newPage.waitForSelector('body', {visible: true});
+    return newPage;
   }
 
   /**
@@ -146,12 +147,11 @@ module.exports = class CommonPage {
    * @param tabId
    * @return {Promise<void>}
    */
-  async closePage(tabId = -1) {
+  async closePage(browser, tabId = -1) {
     await this.page.close();
     if (tabId !== -1) {
-      this.page = (await global.browser.pages())[tabId];
+      this.page = (await browser.pages())[tabId];
       await this.page.bringToFront();
-      await this.page.waitFor(10000);
     }
     return this.page;
   }

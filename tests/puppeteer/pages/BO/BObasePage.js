@@ -46,6 +46,10 @@ module.exports = class BOBasePage extends CommonPage {
     this.modalDialog = '#confirmation_modal.show .modal-dialog';
     this.modalDialogYesButton = `${this.modalDialog} button.continue`;
     this.modalDialogNoButton = `${this.modalDialog} button.cancel`;
+
+    // Symfony Toolbar
+    this.sfToolbarMainContentDiv = 'div[id*=\'sfToolbarMainContent\']';
+    this.sfCloseToolbarLink = 'a[id*=\'sfToolbarHideButton\']';
   }
 
   /*
@@ -111,5 +115,15 @@ module.exports = class BOBasePage extends CommonPage {
   async setValueOnTinymceInput(iFrameSelector, value) {
     await this.page.click(iFrameSelector, {clickCount: 3});
     await this.page.keyboard.type(value);
+  }
+
+  /**
+   * Close symfony Toolbar
+   * @return {Promise<void>}
+   */
+  async closeSfToolBar() {
+    if (await this.elementVisible(`${this.sfToolbarMainContentDiv}[style='display: block;']`, 1000)) {
+      await this.page.click(this.sfCloseToolbarLink);
+    }
   }
 };

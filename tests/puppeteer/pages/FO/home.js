@@ -103,7 +103,7 @@ module.exports = class Home extends CommonPage {
   }
 
   /**
-   * Add product to cart with Quick view 
+   * Add product to cart with Quick view
    * @param id, index of product in list of products
    * @param quantity_wanted, quantity to order
    * @return {Promise<void>}
