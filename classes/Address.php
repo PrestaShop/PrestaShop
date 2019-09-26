@@ -347,7 +347,7 @@ class AddressCore extends ObjectModel
         }
 
         // Special validation for dni, check if the country needs it
-        if (static::containsDni((int) $this->id_country) && Tools::isEmpty($value)) {
+        if (static::dniRequired((int) $this->id_country) && Tools::isEmpty($value)) {
             if ($human_errors) {
                 return $this->trans(
                     'The %s field is required.',
@@ -374,7 +374,7 @@ class AddressCore extends ObjectModel
      *
      * @return bool
      */
-    public static function containsDni($idCountry)
+    public static function dniRequired($idCountry)
     {
         return (bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
             'SELECT c.`need_identification_number` ' .

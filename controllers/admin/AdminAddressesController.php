@@ -518,8 +518,8 @@ class AdminAddressesControllerCore extends AdminController
             }
         }
 
-        if (Tools::isSubmit('contains_dni')) {
-            echo json_encode(['contains_dni' => Address::containsDni((int) Tools::getValue('id_country'))]);
+        if (Tools::isSubmit('dni_required')) {
+            echo json_encode(['dni_required' => Address::dniRequired((int) Tools::getValue('id_country'))]);
         }
 
         die;
