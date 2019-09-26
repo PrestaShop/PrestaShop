@@ -114,21 +114,7 @@
     </div>
 
     <div class="row">
-      <div class="col-md-7">
-        <div style="background-color: #F8F8F8; padding-top: 18px; padding-left: 18px; padding-right: 18px; padding-bottom: 16px;">
-          <p class="mb-0">
-            {{ 'For this customer group, prices are displayed as: [1]%tax_method%[/1]'|trans({
-              '%tax_method%': orderForViewing.taxMethod,
-              '[1]': '<strong>',
-              '[/1]': '</strong>'
-            }, 'Admin.Orderscustomers.Notification')|raw }}
-          </p>
-          {% if not 'PS_ORDER_RETURN'|configuration %}
-            <strong>{{ 'Merchandise returns are disabled'|trans({}, 'Admin.Orderscustomers.Notification') }}</strong>
-          {% endif %}
-        </div>
-      </div>
-      <div class="col-md-5">
+      <div class="col-md-12">
         <div style="background-color: #F8F8F8; padding-top: 18px; padding-left: 18px; padding-right: 18px; padding-bottom: 16px;">
           <div class="row">
             <div class="col-sm text-center">
@@ -145,6 +131,21 @@
             </div>
           </div>
         </div>
+      </div>
+      <div class="col-md-12">
+        <p class="mb-0 mt-1 text-center text-muted">
+          <small>
+            {{ 'For this customer group, prices are displayed as: [1]%tax_method%[/1]'|trans({
+              '%tax_method%': orderForViewing.taxMethod,
+              '[1]': '<strong>',
+              '[/1]': '</strong>'
+            }, 'Admin.Orderscustomers.Notification')|raw }}.
+
+            {% if not 'PS_ORDER_RETURN'|configuration %}
+              <strong>{{ 'Merchandise returns are disabled'|trans({}, 'Admin.Orderscustomers.Notification') }}</strong>
+            {% endif %}
+          </small>
+        </p>
       </div>
     </div>
   </div>
