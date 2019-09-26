@@ -240,11 +240,13 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         $form_data['submitted_tabs'][] = 'Associations';
 
         //map translatable
+        $tmp_form_data = array();
         foreach ($this->translatableKeys as $field) {
             foreach ($form_data[$field] as $lang_id => $translate_value) {
-                $form_data[$field . '_' . $lang_id] = $translate_value;
+                $tmp_form_data[$field . '_' . $lang_id] = $translate_value;
             }
         }
+        $form_data = array_merge($form_data, $tmp_form_data);
 
         //Product type
         if ($form_data['type_product'] == 2) {
