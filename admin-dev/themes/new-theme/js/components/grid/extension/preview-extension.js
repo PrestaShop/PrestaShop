@@ -67,7 +67,7 @@ export default class PreviewExtension {
       const $columnRow = $previewToggle.closest('tr');
 
       if ($columnRow.hasClass('preview-open')) {
-        $columnRow.siblings('tr.preview-row:first').remove();
+        $columnRow.next('.preview-row').remove();
         $columnRow.removeClass('preview-open');
 
         return;
