@@ -38,3 +38,11 @@
 {% endif %}
 
 {{ record[column.options.identifier_field] }}
+
+{% if column.options.preview is not null %}
+  {% include '@PrestaShop/Admin/Common/Grid/Columns/Content/preview.html.twig' with {
+    'column': column.options.preview,
+    'record': record,
+  }
+  %}
+{% endif %}
