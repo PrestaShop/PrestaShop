@@ -27,9 +27,9 @@
 namespace PrestaShop\PrestaShop\Adapter\Order\QueryHandler;
 
 use Country;
+use Currency;
 use Customer;
 use Order;
-use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Adapter\Entity\Address;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderPreview;
@@ -39,12 +39,31 @@ use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPreview;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\ProductDetail;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\ShippingDetails;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
+use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
 
 /**
  * Handles GetOrderPreview query using legacy object model
  */
 final class GetOrderPreviewHandler implements GetOrderPreviewHandlerInterface
 {
+    /**
+     * @var LocaleRepository
+     */
+    private $localeRepository;
+
+    /**
+     * @var string
+     */
+    private $locale;
+
+    public function __construct(
+        LocaleRepository $localeRepository,
+        string $locale
+    ) {
+        $this->localeRepository = $localeRepository;
+        $this->locale = $locale;
+    }
+
     public function handle(GetOrderPreview $query): OrderPreview
     {
         $order = $this->getOrder($query->getOrderId());
@@ -125,18 +144,23 @@ final class GetOrderPreviewHandler implements GetOrderPreviewHandlerInterface
     private function getProductDetails(Order $order): array
     {
         $productDetails = [];
+        $currency = new Currency($order->id_currency);
+        $locale = $this->localeRepository->getLocale($this->locale);
 
         foreach ($order->getProductsDetail() as $detail) {
-            $priceTaxIncl = new Number($detail['total_price_tax_incl']);
-            $priceTaxExcl = new Number($detail['total_price_tax_excl']);
+            $unitPrice = $detail['unit_price_tax_excl'];
+            $totalPrice = $detail['total_price_tax_excl'];
 
-            $totalTaxes = $priceTaxIncl->minus($priceTaxExcl);
+            if (PS_TAX_INC === $order->getTaxCalculationMethod()) {
+                $unitPrice = $detail['unit_price_tax_incl'];
+                $totalPrice = $detail['total_price_tax_incl'];
+            }
 
             $productDetails[] = new ProductDetail(
                 $detail['product_name'],
                 (int) $detail['product_quantity'],
-                $totalTaxes,
-                $priceTaxIncl
+                $locale->formatPrice($unitPrice, $currency->iso_code),
+                $locale->formatPrice($totalPrice, $currency->iso_code)
             );
         }
 
