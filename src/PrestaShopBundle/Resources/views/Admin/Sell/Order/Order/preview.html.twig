@@ -24,8 +24,8 @@
  *#}
 
 {% block order_preview %}
-  <div class="row">
-    <table class="col-2 table-responsive-sm">
+  <div class="row order-preview-content">
+    <table class="col-3 table-responsive-sm details">
       <thead>
       <tr>
         <th>{{ 'Invoice details'|trans({}, 'Admin.Global') }}</th>
@@ -67,7 +67,7 @@
         </tr>
       </tbody>
     </table>
-    <table class="offset-4 col-6 table-responsive-sm">
+    <table class="offset-3 col-6 table-responsive-sm product">
       <thead>
         <tr>
           <th>{{ 'Product'|trans({}, 'Admin.Global') }}</th>
