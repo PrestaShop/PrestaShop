@@ -119,6 +119,7 @@ final class GetOrderPreviewHandler implements GetOrderPreviewHandlerInterface
 
     /**
      * @param Order $order
+     *
      * @return array
      */
     private function getProductDetails(Order $order): array
