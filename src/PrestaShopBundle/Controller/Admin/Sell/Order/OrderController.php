@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddCartRuleToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\BulkChangeOrderStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\ChangeOrderStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
@@ -41,6 +42,7 @@ use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Order\AddOrderCartRuleType;
 use PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrdersStatusType;
+use PrestaShopBundle\Form\Admin\Sell\Order\UpdateOrderStatusType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Service\Grid\ResponseBuilder;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -227,11 +229,15 @@ class OrderController extends FrameworkBundleAdminController
         dump($orderForViewing);
 
         $addOrderCartRuleForm = $this->createForm(AddOrderCartRuleType::class);
+        $updateOrderStatusForm = $this->createForm(UpdateOrderStatusType::class, [
+            'new_order_status_id' => $orderForViewing->getHistory()->getCurrentOrderStatusId(),
+        ]);
 
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/view.html.twig', [
             'showContentHeader' => false,
             'orderForViewing' => $orderForViewing,
             'addOrderCartRuleForm' => $addOrderCartRuleForm->createView(),
+            'updateOrderStatusForm' => $updateOrderStatusForm->createView(),
         ]);
     }
 
@@ -241,7 +247,7 @@ class OrderController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function addDiscountAction(int $orderId, Request $request): RedirectResponse
+    public function addCartRuleAction(int $orderId, Request $request): RedirectResponse
     {
         $addOrderCartRuleForm = $this->createForm(AddOrderCartRuleType::class);
         $addOrderCartRuleForm->handleRequest($request);
@@ -256,6 +262,37 @@ class OrderController extends FrameworkBundleAdminController
                         $data['name'],
                         $data['type'],
                         $data['value']
+                    )
+                );
+
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+            } catch (Exception $e) {
+                $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+            }
+        }
+
+        return $this->redirectToRoute('admin_orders_view', [
+            'orderId' => $orderId,
+        ]);
+    }
+
+    /**
+     * @param int $orderId
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function updateStatusAction(int $orderId, Request $request): RedirectResponse
+    {
+        $form = $this->createForm(UpdateOrderStatusType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            try {
+                $this->getCommandBus()->handle(
+                    new UpdateOrderStatusCommand(
+                        $orderId,
+                        (int) $form->getData()['new_order_status_id']
                     )
                 );
 

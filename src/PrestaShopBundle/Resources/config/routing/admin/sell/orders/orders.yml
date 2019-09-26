@@ -50,7 +50,17 @@ admin_orders_view:
     _controller: PrestaShopBundle:Admin/Sell/Order/Order:view
 
 admin_orders_add_cart_rule:
-  path: /{orderId}/discounts
+  path: /{orderId}/cart-rules
   methods: [POST]
   defaults:
-    _controller: PrestaShopBundle:Admin/Sell/Order/Order:addDiscount
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:addCartRule
+  requirements:
+    orderId: \d+
+
+admin_orders_update_status:
+  path: /{orderId}/status
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:updateStatus
+  requirements:
+    orderId: \d+

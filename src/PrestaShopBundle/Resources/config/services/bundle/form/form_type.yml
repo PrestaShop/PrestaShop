@@ -913,3 +913,10 @@ services:
           - '@prestashop.core.form.choice.provider.order_discount_type'
       tags:
           - { name: form.type }
+
+    form.type.order.update_order_status:
+      class: 'PrestaShopBundle\Form\Admin\Sell\Order\UpdateOrderStatusType'
+      arguments:
+        - '@prestashop.core.form.choice_provider.order_state_by_id'
+      tags:
+        - { name: form.type }

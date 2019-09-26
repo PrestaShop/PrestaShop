@@ -31,19 +31,24 @@ class OrderHistoryForViewing
     /**
      * @var OrderStatusForViewing[]
      */
-    private $statuses;
-
-    public function __construct()
-    {
-        $this->statuses = [];
-    }
+    private $statuses = [];
 
     /**
-     * @param OrderStatusForViewing $orderStatusForViewing
+     * @var int
      */
-    public function add(OrderStatusForViewing $orderStatusForViewing): void
+    private $currentOrderStatusId;
+
+    /**
+     * @param int $currentOrderStatusId
+     * @param OrderStatusForViewing[] $statuses
+     */
+    public function __construct(int $currentOrderStatusId, array $statuses)
     {
-        $this->statuses[] = $orderStatusForViewing;
+        $this->currentOrderStatusId = $currentOrderStatusId;
+
+        foreach ($statuses as $status) {
+            $this->add($status);
+        }
     }
 
     /**
@@ -52,5 +57,21 @@ class OrderHistoryForViewing
     public function getStatuses(): array
     {
         return $this->statuses;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCurrentOrderStatusId(): int
+    {
+        return $this->currentOrderStatusId;
+    }
+
+    /**
+     * @param OrderStatusForViewing $orderStatusForViewing
+     */
+    private function add(OrderStatusForViewing $orderStatusForViewing): void
+    {
+        $this->statuses[] = $orderStatusForViewing;
     }
 }

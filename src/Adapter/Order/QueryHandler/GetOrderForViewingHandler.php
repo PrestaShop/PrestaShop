@@ -426,10 +426,11 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
     private function getOrderHistory(Order $order): OrderHistoryForViewing
     {
         $history = $order->getHistory(Context::getContext()->language->id);
-        $historyForViewing = new OrderHistoryForViewing();
+
+        $statuses = [];
 
         foreach ($history as $item) {
-            $status = new OrderStatusForViewing(
+            $statuses[] = new OrderStatusForViewing(
                 (int) $item['id_order_state'],
                 $item['ostate_name'],
                 $item['color'],
@@ -438,11 +439,12 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
                 $item['employee_firstname'],
                 $item['employee_lastname']
             );
-
-            $historyForViewing->add($status);
         }
 
-        return $historyForViewing;
+        return new OrderHistoryForViewing(
+            $order->current_state,
+            $statuses
+        );
     }
 
     private function getOrderDocuments(Order $order): OrderDocumentsForViewing

@@ -24,6 +24,24 @@
  *#}
 
 <div class="mb-3">
+  {{ form_start(updateOrderStatusForm, {
+    'action': path('admin_orders_update_status', {'orderId': orderForViewing.id}),
+    'attr': {'class': 'form-inline d-inline-block'}}
+  ) }}
+    <div class="input-group">
+      {{ form_widget(updateOrderStatusForm.new_order_status_id, {'attr': {'class': 'mr-1'}}) }}
+
+      <button class="btn" style="background-color: white; border-radius: 4px; box-shadow: 0 0 10px 0 rgba(0,0,0,0.1);">
+        <i class="material-icons">print</i>
+        {{ 'Update status'|trans({}, 'Admin.Orderscustomers.Feature') }}
+      </button>
+    </div>
+
+    <div class="d-none">
+      {{ form_rest(updateOrderStatusForm) }}
+    </div>
+  {{ form_end(updateOrderStatusForm) }}
+
   <button class="btn" style="background-color: white; border-radius: 4px; box-shadow: 0 0 10px 0 rgba(0,0,0,0.1);">
     <i class="material-icons">print</i>
     {{ 'Print order'|trans({}, 'Admin.Orderscustomers.Feature') }}
