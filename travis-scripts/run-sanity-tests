@@ -1,0 +1,13 @@
+#!/bin/bash
+
+PROJECT_PATH=$(cd "$( dirname "$0" )/../" && pwd)
+
+/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_10.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :10 -ac -screen 0 1600x1200x16
+
+cd $PROJECT_PATH/tests/puppeteer && npm install
+
+echo "* Running puppeteer sanity tests ...";
+DISPLAY=:10 HEADLESS=true URL_FO="http://localhost/" npm run sanity-travis
+status=$?
+
+exit $status

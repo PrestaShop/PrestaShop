@@ -36,16 +36,16 @@ URL_BO="Your_Shop_URL_BO" URL_FO="Your_Shop_URL_FO" LOGIN="Your_Login" PASSWD="Y
 ```
 
 
-## Smoke tests 
+## Sanity tests 
 This campaign includes a non-exhaustive set of tests and it will ensure that the most important functions work.
 
 ### Launch all scripts
-If you want to run all smoke tests, you can run the script **campaigns/smoke/***
+If you want to run all sanity tests, you can run the script **campaigns/sanity/***
 
 #### With default values
 
 ```bash
-npm run smoke-tests
+npm run sanity-tests
 ```
 
 ## Upgrade test

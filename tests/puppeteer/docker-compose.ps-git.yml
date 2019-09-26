@@ -28,6 +28,7 @@ services:
   db:
     image: mysql:5.7.22
     environment:
-      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+      MYSQL_ROOT_PASSWORD: ''
     networks:
       - default
