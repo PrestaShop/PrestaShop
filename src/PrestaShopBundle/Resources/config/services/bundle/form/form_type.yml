@@ -906,3 +906,10 @@ services:
             - '@=service("prestashop.adapter.multistore_feature").isActive()'
         tags:
             - { name: form.type }
+
+    form.type.order.add_order_cart_rule:
+      class: 'PrestaShopBundle\Form\Admin\Sell\Order\AddOrderCartRuleType'
+      arguments:
+          - '@prestashop.core.form.choice.provider.order_discount_type'
+      tags:
+          - { name: form.type }

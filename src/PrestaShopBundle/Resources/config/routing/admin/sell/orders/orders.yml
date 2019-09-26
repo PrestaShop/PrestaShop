@@ -49,7 +49,7 @@ admin_orders_view:
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Order/Order:view
 
-admin_orders_add_discount:
+admin_orders_add_cart_rule:
   path: /{orderId}/discounts
   methods: [POST]
   defaults:

@@ -24,40 +24,33 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Admin\Sell\Order;
+namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
+use PrestaShop\PrestaShop\Core\Domain\Order\OrderDiscountType;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
-class AddOrderCartRuleType extends AbstractType
+final class OrderDiscountTypeChoiceProvider implements FormChoiceProviderInterface
 {
     /**
-     * @var FormChoiceProviderInterface
+     * @var TranslatorInterface
      */
-    private $orderDiscountTypeChoiceProvider;
+    private $translator;
 
-    /**
-     * @param FormChoiceProviderInterface $orderDiscountTypeChoiceProvider
-     */
-    public function __construct(FormChoiceProviderInterface $orderDiscountTypeChoiceProvider)
+    public function __construct(TranslatorInterface $translator)
     {
-        $this->orderDiscountTypeChoiceProvider = $orderDiscountTypeChoiceProvider;
+        $this->translator = $translator;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $optional): void
+    public function getChoices()
     {
-        $builder
-            ->add('name', TextType::class)
-            ->add('type', ChoiceType::class, [
-                'choices' => $this->orderDiscountTypeChoiceProvider->getChoices(),
-            ])
-            ->add('value', TextType::class)
-        ;
+        return [
+            $this->translator->trans('Percent', [], 'Admin.Global') => OrderDiscountType::DISCOUNT_PERCENT,
+            $this->translator->trans('Amount', [], 'Admin.Global') => OrderDiscountType::DISCOUNT_AMOUNT,
+            $this->translator->trans('Free shipping', [], 'Admin.Shipping.Feature') => OrderDiscountType::FREE_SHIPPING,
+        ];
     }
 }

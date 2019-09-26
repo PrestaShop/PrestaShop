@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddCartRuleToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\BulkChangeOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\ChangeOrderStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
@@ -242,7 +243,31 @@ class OrderController extends FrameworkBundleAdminController
      */
     public function addDiscountAction(int $orderId, Request $request): RedirectResponse
     {
+        $addOrderCartRuleForm = $this->createForm(AddOrderCartRuleType::class);
+        $addOrderCartRuleForm->handleRequest($request);
 
+        if ($addOrderCartRuleForm->isSubmitted() && $addOrderCartRuleForm->isValid()) {
+            $data = $addOrderCartRuleForm->getData();
+
+            try {
+                $this->getCommandBus()->handle(
+                    new AddCartRuleToOrderCommand(
+                        $orderId,
+                        $data['name'],
+                        $data['type'],
+                        $data['value']
+                    )
+                );
+
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+            } catch (Exception $e) {
+                $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+            }
+        }
+
+        return $this->redirectToRoute('admin_orders_view', [
+            'orderId' => $orderId,
+        ]);
     }
 
     /**
