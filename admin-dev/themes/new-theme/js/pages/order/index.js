@@ -45,19 +45,22 @@ $(() => {
   // so grid can pass other data (like URL) to preview renderer
   // in case it uses ajax to load content.
   // @todo: Extract into separate file.
-  function previewRenderer(path) {
+  function previewRenderer(dataUrl) {
     return new Promise((resolve, reject) => {
       $.ajax({
-        url: path,
+        url: dataUrl,
         method: 'GET',
-        dataType: 'html',
+        dataType: 'json',
       }).then((response) => {
-        resolve(response);
+        resolve({
+          content: response.content.content,
+        });
       }).fail(() => {
         reject();
       });
     });
   }
+
 
   const orderGrid = new Grid('order');
   orderGrid.addExtension(new ReloadListActionExtension());
