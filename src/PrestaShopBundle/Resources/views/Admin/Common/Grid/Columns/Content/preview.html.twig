@@ -27,17 +27,14 @@
   class="preview-toggle"
   {% if column.options.preview_data_route is defined %}
     {% set params = {} %}
-    {% if column.options.preview_record_params is defined %}
-      {% for param_name, record_field in column.options.preview_record_params %}
+    {% if column.options.preview_route_params is defined %}
+      {% for param_name, record_field in column.options.preview_route_params %}
         {% set params = params|merge({(param_name) : record[record_field]}) %}
       {% endfor %}
     {% endif %}
     data-preview-data-url="{{ path(column.options.preview_data_route, params) }}"
   {% endif %}
 >
-  {% if column.options.text_type == 'dynamic' %}
-    {{ record[column.options.dynamic_text_field] }}
-  {% else %}
-    {{ column.options.static_text }}
-  {% endif %}
+  <i class="material-icons js-expand">{{ column.options.icon_expand }}</i>
+  <i class="material-icons js-collapse not-displayable">{{ column.options.icon_collapse }}</i>
 </span>

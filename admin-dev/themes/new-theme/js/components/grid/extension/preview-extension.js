@@ -66,13 +66,16 @@ export default class PreviewExtension {
       const $previewToggle = $(event.currentTarget);
       const $columnRow = $previewToggle.closest('tr');
 
+
       if ($columnRow.hasClass('preview-open')) {
         $columnRow.next('.preview-row').remove();
         $columnRow.removeClass('preview-open');
+        $columnRow.find('.js-expand').show();
+        $columnRow.find('.js-collapse').hide();
 
         return;
       }
-      const dataUrl = $(event.target).data('preview-data-url');
+      const dataUrl = $(event.currentTarget).data('preview-data-url');
 
       Promise.resolve(this.renderer(dataUrl).then((result) => {
         this.renderPreviewContent($columnRow, result.orderPreview);
@@ -90,6 +93,8 @@ export default class PreviewExtension {
       `;
 
     $columnRow.addClass('preview-open');
+    $columnRow.find('.js-collapse').show();
+    $columnRow.find('.js-expand').hide();
     $columnRow.after(previewTemplate);
   }
 }

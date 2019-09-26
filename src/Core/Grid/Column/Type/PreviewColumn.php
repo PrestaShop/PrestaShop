@@ -49,24 +49,17 @@ final class PreviewColumn extends AbstractColumn
     {
         $resolver
             ->setRequired([
-                'text_type',
-                'identifier_field',
+                'icon_expand',
+                'icon_collapse',
+                'preview_data_route',
             ])
             ->setDefined([
-                // If text_type is "dynamic"
-                // then Preview text will be retrieved from configured column of the record
-                'dynamic_text_field',
-                // If text_type is "static"
-                // then Preview text is configured with column options
-                'static_text',
-                'preview_data_route',
-                'preview_record_params',
+                'preview_route_params',
             ])
-            ->setAllowedValues('text_type', ['static', 'dynamic'])
-            ->setAllowedTypes('dynamic_text_field', 'string')
-            ->setAllowedTypes('static_text', 'string')
             ->setAllowedTypes('preview_data_route', 'string')
-            ->setAllowedTypes('preview_record_params', 'array')
+            ->setAllowedTypes('preview_route_params', 'array')
+            ->setAllowedTypes('icon_expand', 'string')
+            ->setAllowedTypes('icon_collapse', 'string')
         ;
     }
 }
