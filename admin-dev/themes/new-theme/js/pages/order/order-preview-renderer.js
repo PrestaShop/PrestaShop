@@ -25,20 +25,16 @@
 
 const $ = window.$;
 
-export default class PreviewContentProvider {
-  getContent(url) {
-    return new Promise((resolve, reject) => {
-      $.ajax({
-        url,
-        method: 'GET',
-        dataType: 'json',
-      }).then((response) => {
-        resolve({
-          content: response.content.content,
-        });
-      }).fail(() => {
-        reject();
-      });
+export default function orderPreviewRenderer(orderPreviewUrl) {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: orderPreviewUrl,
+      method: 'GET',
+      dataType: 'json',
+    }).then((response) => {
+      resolve(response);
+    }).fail(() => {
+      reject();
     });
-  }
+  });
 }
