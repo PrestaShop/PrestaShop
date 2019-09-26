@@ -45,20 +45,27 @@ class OrderPreview
      * @var ProductDetail[]
      */
     private $productDetails;
+    /**
+     * @var bool
+     */
+    private $taxIncluded;
 
     /**
      * @param InvoiceDetails $invoiceDetails
      * @param ShippingDetails $shippingDetails
      * @param array $productDetails
+     * @param bool $taxIncluded
      */
     public function __construct(
         InvoiceDetails $invoiceDetails,
         ShippingDetails $shippingDetails,
-        array $productDetails
+        array $productDetails,
+        bool $taxIncluded
     ) {
         $this->invoiceDetails = $invoiceDetails;
         $this->shippingDetails = $shippingDetails;
         $this->productDetails = $productDetails;
+        $this->taxIncluded = $taxIncluded;
     }
 
     /**
@@ -83,5 +90,13 @@ class OrderPreview
     public function getProductDetails(): array
     {
         return $this->productDetails;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isTaxIncluded(): bool
+    {
+        return $this->taxIncluded;
     }
 }
