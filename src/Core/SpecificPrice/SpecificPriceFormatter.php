@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\SpecificPrice;
 
+use Configuration;
+use Context;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 
 /**
@@ -63,7 +65,7 @@ class SpecificPriceFormatter
      * @param bool $isTaxIncluded
      * @param Context $context
      */
-    public function __construct(array $specificPrice, bool $isTaxIncluded, $context)
+    public function __construct(array $specificPrice, bool $isTaxIncluded, Context $context)
     {
         $this->specificPrice = $specificPrice;
         $this->isTaxIncluded = $isTaxIncluded;
@@ -109,7 +111,7 @@ class SpecificPriceFormatter
             $this->specificPrice['real_value'] = $initialPrice > 0 ? $initialPrice - $currentPriceCurrentCurrency : $currentPriceCurrentCurrency;
             $discountPrice = $initialPrice - $this->specificPrice['real_value'];
 
-            if (\Configuration::get('PS_DISPLAY_DISCOUNT_PRICE')) {
+            if (Configuration::get('PS_DISPLAY_DISCOUNT_PRICE')) {
                 if ($this->specificPrice['reduction_tax'] == 0 && !$this->specificPrice['price']) {
                     $this->specificPrice['discount'] = $priceFormatter->format($initialPrice - ($initialPrice * $this->specificPrice['reduction_with_tax']));
                 } else {
@@ -127,7 +129,7 @@ class SpecificPriceFormatter
                 }
                 $this->specificPrice['reduction_with_tax'] = $this->specificPrice['reduction_tax'] ? $this->specificPrice['reduction'] : $this->specificPrice['reduction'] + ($this->specificPrice['reduction'] * $tax_rate) / 100;
                 $discountPrice = $initialPrice - $this->specificPrice['real_value'];
-                if (\Configuration::get('PS_DISPLAY_DISCOUNT_PRICE')) {
+                if (Configuration::get('PS_DISPLAY_DISCOUNT_PRICE')) {
                     if ($this->specificPrice['reduction_tax'] == 0 && !$this->specificPrice['price']) {
                         $this->specificPrice['discount'] = $priceFormatter->format($initialPrice - ($initialPrice * $this->specificPrice['reduction_with_tax']));
                     } else {
@@ -139,7 +141,7 @@ class SpecificPriceFormatter
             } else {
                 $this->specificPrice['real_value'] = $this->specificPrice['reduction'] * 100;
                 $discountPrice = $initialPrice - $initialPrice * $this->specificPrice['reduction'];
-                if (\Configuration::get('PS_DISPLAY_DISCOUNT_PRICE')) {
+                if (Configuration::get('PS_DISPLAY_DISCOUNT_PRICE')) {
                     if ($this->specificPrice['reduction_tax'] == 0) {
                         $this->specificPrice['discount'] = $priceFormatter->format($initialPrice - ($initialPrice * $this->specificPrice['reduction_with_tax']));
                     } else {
