@@ -71,7 +71,8 @@ final class GetOrderPreviewHandler implements GetOrderPreviewHandlerInterface
         return new OrderPreview(
             $this->getInvoiceDetails($order),
             $this->getShippingDetails($order),
-            $this->getProductDetails($order)
+            $this->getProductDetails($order),
+            PS_TAX_INC === $order->getTaxCalculationMethod()
         );
     }
 

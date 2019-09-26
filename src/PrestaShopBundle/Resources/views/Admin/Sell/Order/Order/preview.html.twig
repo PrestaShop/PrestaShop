@@ -70,18 +70,30 @@
     <table class="offset-3 col-6 table-responsive-sm product">
       <thead>
         <tr>
+          {% if orderPreview.taxIncluded %}
+            {% set taxInclusion = 'Tax included'|trans({}, 'Admin.Catalog.Feature') %}
+          {% else %}
+            {% set taxInclusion = 'Tax excluded'|trans({}, 'Admin.Catalog.Feature') %}
+          {% endif %}
+
           <th>{{ 'Product'|trans({}, 'Admin.Global') }}</th>
+          <th>
+            {{ 'Base price'|trans({}, 'Admin.Global') }}
+            <small>{{ taxInclusion }}</small>
+          </th>
           <th>{{ 'Quantity'|trans({}, 'Admin.Global') }}</th>
-          <th>{{ 'Base price'|trans({}, 'Admin.Global') }}</th>
-          <th>{{ 'Total'|trans({}, 'Admin.Global') }}</th>
+          <th>
+            {{ 'Total'|trans({}, 'Admin.Global') }}
+            <small>{{ taxInclusion }}</small>
+          </th>
         </tr>
       </thead>
       <tbody>
       {% for productDetail in orderPreview.productDetails %}
         <tr>
           <td>{{ productDetail.name }}</td>
-          <td>{{ productDetail.quantity }}</td>
           <td>{{ productDetail.unitPrice }}</td>
+          <td>{{ productDetail.quantity }}</td>
           <td>{{ productDetail.totalPrice }}</td>
         </tr>
       {% endfor %}
