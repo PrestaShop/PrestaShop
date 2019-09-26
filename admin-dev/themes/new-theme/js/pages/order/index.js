@@ -36,31 +36,11 @@ import FiltersSubmitButtonEnablerExtension
   from '../../components/grid/extension/filters-submit-button-enabler-extension';
 import ModalFormSubmitExtension from '../../components/grid/extension/modal-form-submit-extension';
 import PreviewExtension from '../../components/grid/extension/preview-extension';
+import orderPreviewRenderer from './order-preview-renderer';
 
 const $ = window.$;
 
 $(() => {
-  // @todo: I think previewRenderer() should accept `id` and some kind of `params` argument,
-  // so grid can pass other data (like URL) to preview renderer
-  // in case it uses ajax to load content.
-  // @todo: Extract into separate file.
-  function previewRenderer(dataUrl) {
-    return new Promise((resolve, reject) => {
-      $.ajax({
-        url: dataUrl,
-        method: 'GET',
-        dataType: 'json',
-      }).then((response) => {
-        resolve({
-          content: response.content.content,
-        });
-      }).fail(() => {
-        reject();
-      });
-    });
-  }
-
-
   const orderGrid = new Grid('order');
   orderGrid.addExtension(new ReloadListActionExtension());
   orderGrid.addExtension(new ExportToSqlManagerExtension());
@@ -72,5 +52,5 @@ $(() => {
   orderGrid.addExtension(new BulkActionCheckboxExtension());
   orderGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
   orderGrid.addExtension(new ModalFormSubmitExtension());
-  orderGrid.addExtension(new PreviewExtension(previewRenderer));
+  orderGrid.addExtension(new PreviewExtension(orderPreviewRenderer));
 });
