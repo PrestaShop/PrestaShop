@@ -72,16 +72,17 @@ export default class PreviewExtension {
 
         return;
       }
+      const dataUrl = $(event.target).data('preview-data-url');
 
-      Promise.resolve(this.renderer($(event.target).data('preview-data-url'))).then((renderer) => {
+      Promise.resolve(this.renderer(dataUrl).then((renderer) => {
         if (typeof renderer === 'function') {
           this.renderPreviewContent($columnRow, renderer());
 
           return;
         }
 
-        this.renderPreviewContent($columnRow, renderer);
-      });
+        this.renderPreviewContent($columnRow, renderer.content);
+      }));
     });
   }
 

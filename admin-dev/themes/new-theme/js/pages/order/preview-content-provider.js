@@ -25,22 +25,19 @@
 
 const $ = window.$;
 
-export default class PreviewRenderer {
-  constructor(previewDataUrl) {
-    this.previewDataUrl = previewDataUrl;
-  }
-
-  render(id) {
+export default class PreviewContentProvider {
+  getContent(url) {
     return new Promise((resolve, reject) => {
       $.ajax({
-        url: this.previewDataUrl,
+        url,
         method: 'GET',
-        dataType: 'html',
-        data: {
-          id_order: id,
-        },
+        dataType: 'json',
       }).then((response) => {
-        resolve('test');
+        resolve({
+          content: response.content.content,
+        });
+      }).fail(() => {
+        reject();
       });
     });
   }
