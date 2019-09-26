@@ -386,6 +386,15 @@
     "language_code": "lv-lv",
     "locale": "lv-LV"
   },
+  "mg": {
+    "name": "Malagasy",
+    "iso_code": "mg",
+    "date_format_lite": "d-m-Y",
+    "date_format_full": "d-m-Y H:i:s",
+    "is_rtl": "0",
+    "language_code": "mg-mg",
+    "locale": "mg-MG"
+  },
   "mk": {
     "name": "македонски (Macedonian)",
     "iso_code": "mk",
