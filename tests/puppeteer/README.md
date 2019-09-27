@@ -5,36 +5,20 @@
 ```bash
 git clone https://github.com/PrestaShop/PrestaShop/
 cd tests/puppeteer/
-npm i
+npm install
 ```
-
-## LinkChecker
-This script will detect not found and erroneous pages, by crawling your back office and front office
-
-### Available command line parameters
-
+## Available command line parameters
 | Parameter           | Description      |
 |---------------------|----------------- |
-| URL_BO              | URL of your PrestaShop website Back Office (default to **http://localhost:8080/admin-dev/**) |
 | URL_FO              | URL of your PrestaShop website Front Office (default to **http://localhost:8080/**) |
+| URL_BO              | URL of your PrestaShop website Back Office (default to **'URL_FO + admin-dev/'**) |
+| URL_INSTALL         | URL of your PrestaShop website Front Office (default to **'URL_FO + install-dev/'**) |
 | LOGIN               | LOGIN of your PrestaShop website (default to **demo@prestashop.com**) |
 | PASSWD              | PASSWD of your PrestaShop website (default to **prestashop_demo**) |
-
-### Launch script
-If you want to run the links checker test you can run the script **test/linkchecker.js**
-
-#### With default values
-
-```bash
-npm run linkchecker
-```
-
-#### With custom values
-
-```bash
-URL_BO="Your_Shop_URL_BO" URL_FO="Your_Shop_URL_FO" LOGIN="Your_Login" PASSWD="Your_Password" npm run linkchecker
-```
-
+| SHOPNAME            | Shop Name of tour PrestaShop (default to **Prestashop**) |
+| DB_USER             | login user of your MySql (default to **root**) |
+| DB_PASSWD           | Password for your MySql (default to **empty**) |
+| HEADLESS            | Boolean to run tests in headless or not (default to **true**) |
 
 ## Sanity tests 
 This campaign includes a non-exhaustive set of tests and it will ensure that the most important functions work.
@@ -46,6 +30,32 @@ If you want to run all sanity tests, you can run the script **campaigns/sanity/*
 
 ```bash
 npm run sanity-tests
+```
+
+#### With custom values
+You can add parameters that you need to run in the beginning of your command
+```bash
+HEADLESS=false URL_BO="Your_Shop_URL_BO" URL_FO="Your_Shop_URL_FO" npm run sanity-tests
+```
+
+### Stop tests when first step in failed
+If you want to run all sanity tests, and stop the tests when first step is failed, you can use the travis command for sanity tests
+
+```bash
+npm run sanity-travis
+```
+
+## LinkChecker
+This script will detect not found and erroneous pages, by crawling your back office and front office
+
+
+### Launch script
+If you want to run the links checker test you can run the script **test/linkchecker.js**
+
+#### With default values
+
+```bash
+npm run linkchecker
 ```
 
 ## Upgrade test
