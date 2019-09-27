@@ -44,11 +44,6 @@ class IsUrlRewriteValidatorTest extends ConstraintValidatorTestCase
     private $useAscendedChars;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|ConfigurationInterface
-     */
-    private $configurationMockWithAscendingCharsOff;
-
-    /**
      * @var \PHPUnit_Framework_MockObject_Builder_InvocationMocker
      */
     private $configurationMockWithAscendingCharsOn;
@@ -59,12 +54,6 @@ class IsUrlRewriteValidatorTest extends ConstraintValidatorTestCase
 
         $this->configurationMockWithAscendingCharsOff = $this->getMockBuilder(ConfigurationInterface::class)
             ->getMock()
-        ;
-
-        $this->configurationMockWithAscendingCharsOff
-            ->method('get')
-            ->with('PS_ALLOW_ACCENTED_CHARS_URL')
-            ->willReturn(false)
         ;
 
         $this->configurationMockWithAscendingCharsOn = $this->getMockBuilder(ConfigurationInterface::class)
@@ -199,7 +188,7 @@ class IsUrlRewriteValidatorTest extends ConstraintValidatorTestCase
     {
         $configuration = $this->useAscendedChars ?
              $this->configurationMockWithAscendingCharsOn :
-             $this->configurationMockWithAscendingCharsOff
+             0
          ;
 
         return new IsUrlRewriteValidator($configuration);
