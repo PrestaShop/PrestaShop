@@ -23,7 +23,7 @@ npm install
 | DB_PASSWD           | Password for your MySql (default to **`empty`**) |
 | HEADLESS            | Boolean to run tests in headless or not (default to **`true`**) |
 
-Before Running tests, you should install your shop manually or run the install script **`campaigns/sanity/01_installShop/*`** with [specific test command](README.md#specific-test).
+Before running tests, you should install your shop manually or run the install script **`campaigns/sanity/01_installShop/*`** with the [`specific-test` command](README.md#specific-test).
 
 ## Sanity tests 
 This campaign includes a non-exhaustive set of tests and it will ensure that the most important functions work.
