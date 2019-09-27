@@ -58,7 +58,7 @@ To specify which test to run, you can add the **`TEST_PATH`** parameter in the b
 ```bash
 # To run the **Filter Products** test from sanity campaign
 TEST_PATH="sanity/02_productsBO/01_filterProducts" URL_FO="Your_Shop_URL_FO" npm run specific-test
-# To Run all tests Products BO
+# To run all **Products BO** tests 
 TEST_PATH="sanity/02_productsBO/*" URL_FO="Your_Shop_URL_FO" npm run specific-test
 ```
 
