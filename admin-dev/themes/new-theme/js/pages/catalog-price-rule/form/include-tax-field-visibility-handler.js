@@ -30,10 +30,10 @@ const $ = window.$;
  */
 export default class IncludeTaxFieldVisibilityHandler {
   constructor(sourceSelector, targetSelector) {
-    this.$sourceSelector = sourceSelector;
-    this.$targetSelector = targetSelector;
+    this.$sourceSelector = $(sourceSelector);
+    this.$targetSelector = $(targetSelector);
     this._handle();
-    $(sourceSelector).on('change', () => this._handle());
+    this.$sourceSelector.on('change', () => this._handle());
 
     return {};
   }
@@ -44,10 +44,10 @@ export default class IncludeTaxFieldVisibilityHandler {
    * @private
    */
   _handle() {
-    $(this.$targetSelector).fadeIn();
-
-    if ($(`${this.$sourceSelector}`).val() === 'percentage') {
-      $(this.$targetSelector).fadeOut();
+    if (this.$sourceSelector.val() === 'percentage') {
+      this.$targetSelector.fadeOut();
+    } else {
+      this.$targetSelector.fadeIn();
     }
   }
 }

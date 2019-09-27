@@ -84,12 +84,7 @@ final class ReductionValidator extends ConstraintValidator
      */
     private function isAllowedType(string $type): bool
     {
-        $allowedTypes = [
-            Reduction::TYPE_PERCENTAGE,
-            Reduction::TYPE_AMOUNT,
-        ];
-
-        return in_array($type, $allowedTypes, true);
+        return in_array($type, Reduction::ALLOWED_TYPES, true);
     }
 
     /**
@@ -101,11 +96,7 @@ final class ReductionValidator extends ConstraintValidator
      */
     private function assertIsValidPercentage(float $value)
     {
-        if (0 > $value || Reduction::MAX_ALLOWED_PERCENTAGE < $value) {
-            return false;
-        }
-
-        return true;
+        return 0 <= $value && Reduction::MAX_ALLOWED_PERCENTAGE >= $value;
     }
 
     /**
@@ -117,11 +108,7 @@ final class ReductionValidator extends ConstraintValidator
      */
     private function assertIsValidAmount(float $value)
     {
-        if (0 > $value) {
-            return false;
-        }
-
-        return true;
+        return 0 <= $value;
     }
 
     /**
