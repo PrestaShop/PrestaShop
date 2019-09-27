@@ -3,10 +3,13 @@
 ## How to install your environment
 
 ```bash
+# Clone Prestashop
 git clone https://github.com/PrestaShop/PrestaShop/
+# Install dependencies in puppeteer folder
 cd tests/puppeteer/
 npm install
 ```
+
 ## Available command line parameters
 | Parameter           | Description      |
 |---------------------|----------------- |
@@ -16,15 +19,17 @@ npm install
 | LOGIN               | LOGIN of your PrestaShop website (default to **`demo@prestashop.com`**) |
 | PASSWD              | PASSWD of your PrestaShop website (default to **`prestashop_demo`**) |
 | SHOPNAME            | Shop Name of tour PrestaShop (default to **`Prestashop`**) |
-| DB_USER             | login user of your MySql (default to **`root`**) |
+| DB_USER             | Login user of your MySql (default to **`root`**) |
 | DB_PASSWD           | Password for your MySql (default to **`empty`**) |
 | HEADLESS            | Boolean to run tests in headless or not (default to **`true`**) |
+
+Before Running tests, you should install your shop manually or run the install script **`campaigns/sanity/01_installShop/*`** with [specific test command](README.md#specific-test)
 
 ## Sanity tests 
 This campaign includes a non-exhaustive set of tests and it will ensure that the most important functions work.
 
 ### Launch all scripts
-If you want to run all sanity tests, you can run the script **`campaigns/sanity/*`**
+If you want to run all sanity tests, you can run scripts in **`campaigns/sanity/*`**
 
 #### With default values
 
@@ -33,7 +38,7 @@ npm run sanity-tests
 ```
 
 #### With custom values
-You can add parameters that you need in the beginning of your command
+You can add parameters that you need in the beginning of your command 
 ```bash
 HEADLESS=false URL_BO="Your_Shop_URL_BO" URL_FO="Your_Shop_URL_FO" npm run sanity-tests
 ```
@@ -63,7 +68,7 @@ This script will detect not found and erroneous pages, by crawling your back off
 
 
 ### Launch script
-If you want to run the links checker test you can run the script **test/linkchecker.js**
+If you want to run the links checker test you can run the script **`campaigns/linkchecker.js`**
 
 #### With default values
 
