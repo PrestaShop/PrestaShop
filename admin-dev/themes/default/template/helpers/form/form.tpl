@@ -948,6 +948,11 @@
 				}
 			{/if}
 
+			dniRequired();
+			$('#id_country').change(function() {
+				dniRequired();
+			});
+
 			if ($(".datepicker").length > 0)
 				$(".datepicker").datepicker({
 					prevText: '',
@@ -977,7 +982,8 @@
 			$(".textarea-autosize").autosize();
 			{/if}
 		});
-	state_token = '{getAdminToken tab='AdminStates'}';
+		state_token = '{getAdminToken tab='AdminStates'}';
+		address_token = '{getAdminToken tab='AdminAddresses'}';
 	{block name="script"}{/block}
 	</script>
 {/if}
