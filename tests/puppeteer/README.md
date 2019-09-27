@@ -56,7 +56,7 @@ If you want to run only one test from the campaign or a couple of tests in the s
 To specify which test to run, you can add the **`TEST_PATH`** parameter in the beginning of the command
 
 ```bash
-# To Run test filter Products from sanity campaign
+# To run the **Filter Products** test from sanity campaign
 TEST_PATH="sanity/02_productsBO/01_filterProducts" URL_FO="Your_Shop_URL_FO" npm run specific-test
 # To Run all tests Products BO
 TEST_PATH="sanity/02_productsBO/*" URL_FO="Your_Shop_URL_FO" npm run specific-test
