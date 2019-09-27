@@ -53,7 +53,7 @@ npm run sanity-travis
 ## Specific test 
 If you want to run only one test from the campaign or a couple of tests in the same folder, you can use **`specific-test`** command.
 
-To specify which test tu run, you can add **`TEST_PATH`** parameter in the beginning of the command
+To specify which test to run, you can add the **`TEST_PATH`** parameter in the beginning of the command
 
 ```bash
 # To Run test filter Products from sanity campaign
