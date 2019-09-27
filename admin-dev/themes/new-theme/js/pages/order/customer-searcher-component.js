@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import createOrderPageMap from "./create-order-map";
+import createOrderPageMap from './create-order-map';
 
 const $ = window.$;
 
@@ -40,12 +40,10 @@ export default class CustomerSearcherComponent {
       onCustomerSearch: () => {
         this._doSearch();
       },
-      onCustomerChooseForOrderCreation: (event) => {
-        return this._chooseCustomerForOrderCreation(event);
-      },
+      onCustomerChooseForOrderCreation: event => this._chooseCustomerForOrderCreation(event),
       onCustomerChange: () => {
         this._showCustomerSearch();
-      }
+      },
     };
   }
 
@@ -81,36 +79,32 @@ export default class CustomerSearcherComponent {
   _doSearch() {
     const name = this.$searchInput.val();
 
-    if (4 > name.length) {
+    if (name.length < 4) {
       return;
     }
 
     $.ajax(this.$searchInput.data('url'), {
       method: 'GET',
       data: {
-        'action': 'searchCustomers',
-        'ajax': 1,
-        'customer_search': name
-      }
+        customer_search: name,
+      },
     }).then((response) => {
-      const result = JSON.parse(response);
-
       this._clearShownCustomers();
 
-      if (!result.hasOwnProperty('customers')) {
+      if (!response.found) {
         this._showNotFoundCustomers();
 
         return;
       }
 
-      for (let customerId in result.customers) {
-        let customerResult = result.customers[customerId];
-        let customer = {
+      for (const customerId in response.customers) {
+        const customerResult = response.customers[customerId];
+        const customer = {
           id: customerId,
           first_name: customerResult.firstname,
           last_name: customerResult.lastname,
           email: customerResult.email,
-          birthday: customerResult.birthday !== '0000-00-00' ? customerResult.birthday : ' '
+          birthday: customerResult.birthday !== '0000-00-00' ? customerResult.birthday : ' ',
         };
 
         this._showCustomer(customer);
@@ -150,7 +144,7 @@ export default class CustomerSearcherComponent {
   _showNotFoundCustomers() {
     const $emptyResultTemplate = $($('#customerSearchEmptyResultTemplate').html());
 
-    this.$customerSearchResultBlock.append($emptyResultTemplate)
+    this.$customerSearchResultBlock.append($emptyResultTemplate);
   }
 
   /**
