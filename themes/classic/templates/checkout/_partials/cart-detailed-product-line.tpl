@@ -35,7 +35,6 @@
     <div class="product-line-info">
       <a class="label" href="{$product.url}" data-id_customization="{$product.id_customization|intval}">{$product.name}</a>
     </div>
-
     <div class="product-line-info product-price h5 {if $product.has_discount}has-discount{/if}">
       {if $product.has_discount}
         <div class="product-discount">
@@ -108,6 +107,13 @@
         {/foreach}
       {/block}
     {/if}
+    <div class="product-line-info">
+      <div class="label">
+        {block name='product_availability'}
+          {include file='catalog/_partials/product-availability.tpl'}
+        {/block}
+      </div>
+    </div>
   </div>
 
   <!--  product line right content: actions (quantity, delete), price -->
