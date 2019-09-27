@@ -475,10 +475,10 @@ class CartPresenter implements PresenterInterface
     }
 
     /**
-     * Accepts a cart object with the shipping cost amount and formats the shipping cost display value accordingly. 
+     * Accepts a cart object with the shipping cost amount and formats the shipping cost display value accordingly.
      * If the shipping cost is 0, then we must check if this is because of a free carrier and thus display 'Free' or
      * simply because the system was unable to determine shipping cost at this point and thus send an empty string to hide the shipping line.
-     * 
+     *
      * @param Cart $cart
      * @param float $shippingCost
      *
@@ -490,7 +490,7 @@ class CartPresenter implements PresenterInterface
 
         if ($shippingCost != 0) {
             $shippingDisplayValue = $this->priceFormatter->format($shippingCost);
-        } else {            
+        } else {
             $defaultCountry = null;
 
             if (isset(Context::getContext()->cookie->id_country)) {
