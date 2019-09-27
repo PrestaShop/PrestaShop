@@ -39,16 +39,18 @@ use Symfony\Component\Validator\ConstraintValidator;
 class IsUrlRewriteValidator extends ConstraintValidator
 {
     /**
-     * @var ConfigurationInterface
+     * @var ConfigurationInterface|bool
      */
-    private $configuration;
+    private $accentedCharsConfiguration;
 
     /**
-     * @param ConfigurationInterface $configuration
+     * @param ConfigurationInterface|bool $accentedCharsConfiguration - this variable can accept boolean value
+     * of already predefined accented chars allowance configuration to not introduce BC break. The recommended approach
+     * is to pass PrestaShop\PrestaShop\Adapter\Configuration as a service instead to avoid keeping cached scalar value.
      */
-    public function __construct(ConfigurationInterface $configuration)
+    public function __construct($accentedCharsConfiguration)
     {
-        $this->configuration = $configuration;
+        $this->accentedCharsConfiguration = $accentedCharsConfiguration;
     }
 
     /**
@@ -78,7 +80,7 @@ class IsUrlRewriteValidator extends ConstraintValidator
     }
 
     /**
-     * Validates url rewrite according the patterns which vary based on ascended chars allowed setting.
+     * Validates url rewrite according the patterns which vary based on ascented chars allowed setting.
      *
      * @param string $urlRewrite
      *
@@ -88,10 +90,24 @@ class IsUrlRewriteValidator extends ConstraintValidator
     {
         $pattern = '/^[_a-zA-Z0-9\-]+$/';
 
-        if ($this->configuration->get('PS_ALLOW_ACCENTED_CHARS_URL')) {
+        if ($this->getAllowAccentedCharsSetting()) {
             $pattern = '/^[_a-zA-Z0-9\pL\pS-]+$/u';
         }
 
         return preg_match($pattern, $urlRewrite);
+    }
+
+    /**
+     * Gets the accented chars url setting.
+     *
+     * @return bool
+     */
+    private function getAllowAccentedCharsSetting()
+    {
+        if ($this->accentedCharsConfiguration instanceof ConfigurationInterface) {
+            return $this->accentedCharsConfiguration->get('PS_ALLOW_ACCENTED_CHARS_URL');
+        }
+
+        return $this->accentedCharsConfiguration;
     }
 }
