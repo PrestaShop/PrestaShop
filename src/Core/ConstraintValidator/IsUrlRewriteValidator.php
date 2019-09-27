@@ -44,9 +44,11 @@ class IsUrlRewriteValidator extends ConstraintValidator
     private $accentedCharsConfiguration;
 
     /**
-     * @param ConfigurationInterface|bool $accentedCharsConfiguration - this variable can accept boolean value
-     * of already predefined accented chars allowance configuration to not introduce BC break. The recommended approach
-     * is to pass PrestaShop\PrestaShop\Adapter\Configuration as a service instead to avoid keeping cached scalar value.
+     * this constructor can accept boolean value of already predefined accented chars allowance configuration to not
+     * introduce BC break. The recommended approach is to pass
+     * PrestaShop\PrestaShop\Adapter\Configuration as a service instead to avoid keeping cached scalar value.
+     *
+     * @param ConfigurationInterface|bool $accentedCharsConfiguration
      */
     public function __construct($accentedCharsConfiguration)
     {
