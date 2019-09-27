@@ -54,38 +54,55 @@ const $ = window.$;
 export default class PreviewExtension {
   constructor(previewRenderer) {
     this.renderer = previewRenderer;
-    this.expandIcon = '.js-expand';
-    this.collapseIcon = '.js-collapse';
-    this.previewOpen = 'preview-open';
-    this.previewToggle = '.preview-toggle';
+    this.expandSelector = '.js-expand';
+    this.collapseSelector = '.js-collapse';
+    this.previewOpenClass = 'preview-open';
+    this.previewToggleSelector = '.preview-toggle';
   }
 
+  /**
+   * Extends provided grid with preview functionality
+   *
+   * @param grid
+   */
   extend(grid) {
     grid.getContainer().find('tbody tr').on('mouseover mouseleave', (event) => {
       this._handleIconHovering(event);
     });
-    grid.getContainer().find(this.previewToggle).on('click', (event) => {
+    grid.getContainer().find(this.previewToggleSelector).on('click', (event) => {
       this._togglePreview(event);
     });
   }
 
+  /**
+   * Shows/hides preview toggling icons
+   *
+   * @param event
+   * @private
+   */
   _handleIconHovering(event) {
-    const $previewToggle = $(event.currentTarget).find('.preview-toggle');
+    const $previewToggle = $(event.currentTarget).find(this.previewToggleSelector);
 
-    if (event.type === 'mouseover' && !$(event.currentTarget).hasClass('preview-open')) {
+    if (event.type === 'mouseover' && !$(event.currentTarget).hasClass(this.previewOpenClass)) {
       this._showExpandIcon($previewToggle);
     } else {
       this._hideExpandIcon($previewToggle);
     }
   }
 
+  /**
+   * Shows/hides preview
+   *
+   * @param event
+   * @private
+   */
   _togglePreview(event) {
     const $previewToggle = $(event.currentTarget);
     const $columnRow = $previewToggle.closest('tr');
 
-    if ($columnRow.hasClass(this.previewOpen)) {
+    if ($columnRow.hasClass(this.previewOpenClass)) {
       $columnRow.next('.preview-row').remove();
-      $columnRow.removeClass('preview-open');
+      $columnRow.removeClass(this.previewOpenClass);
       this._showExpandIcon($columnRow);
       this._hideCollapseIcon($columnRow);
 
@@ -98,6 +115,14 @@ export default class PreviewExtension {
     }));
   }
 
+  /**
+   * Renders preview content
+   *
+   * @param $columnRow
+   * @param content
+   *
+   * @private
+   */
   _renderPreviewContent($columnRow, content) {
     const rowColumnCount = $columnRow.find('td').length;
 
@@ -107,22 +132,49 @@ export default class PreviewExtension {
         </tr>
       `;
 
-    $columnRow.addClass(this.previewOpen);
+    $columnRow.addClass(this.previewOpenClass);
     this._showCollapseIcon($columnRow);
     this._hideExpandIcon($columnRow);
     $columnRow.after(previewTemplate);
   }
 
+  /**
+   * Shows preview expanding icon
+   *
+   * @param parent
+   * @private
+   */
   _showExpandIcon(parent) {
-    parent.find(this.expandIcon).removeClass('d-none');
+    parent.find(this.expandSelector).removeClass('d-none');
   }
+
+  /**
+   * Hides preview expanding icon
+   *
+   * @param parent
+   * @private
+   */
   _hideExpandIcon(parent) {
-    parent.find(this.expandIcon).addClass('d-none');
+    parent.find(this.expandSelector).addClass('d-none');
   }
+
+  /**
+   * Shows preview collapsing icon
+   *
+   * @param parent
+   * @private
+   */
   _showCollapseIcon(parent) {
-    parent.find(this.collapseIcon).removeClass('d-none');
+    parent.find(this.collapseSelector).removeClass('d-none');
   }
+
+  /**
+   * Hides preview collapsing icon
+   *
+   * @param parent
+   * @private
+   */
   _hideCollapseIcon(parent) {
-    parent.find(this.collapseIcon).addClass('d-none');
+    parent.find(this.collapseSelector).addClass('d-none');
   }
 }
