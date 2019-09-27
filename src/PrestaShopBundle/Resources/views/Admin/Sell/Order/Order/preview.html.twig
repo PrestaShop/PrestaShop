@@ -25,12 +25,18 @@
 
 {% block order_preview %}
   <div class="row order-preview-content">
-    <table class="col-3 table-responsive-sm details">
+    <table class="col-4 table-responsive-sm details">
       <thead>
-      <tr>
-        <th>{{ 'Invoice details'|trans({}, 'Admin.Global') }}</th>
-        <th>{{ 'Shipping details'|trans({}, 'Admin.Global') }}</th>
-      </tr>
+        <tr>
+          <th>
+            <i class="material-icons">receipt</i>
+            {{ 'Invoice details'|trans({}, 'Admin.Global') }}
+          </th>
+          <th>
+            <i class="material-icons">local_shipping</i>
+            {{ 'Shipping details'|trans({}, 'Admin.Global') }}
+          </th>
+        </tr>
       </thead>
       <tbody>
         <tr>
@@ -67,7 +73,7 @@
         </tr>
       </tbody>
     </table>
-    <table class="offset-3 col-6 table-responsive-sm product">
+    <table class="offset-2 col-6 table-responsive-sm product">
       <thead>
         <tr>
           {% if orderPreview.taxIncluded %}

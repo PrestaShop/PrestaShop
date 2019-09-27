@@ -16,6 +16,14 @@
     .product th {
       background-color: #eaebec;
     }
+
+    $order-details-text-padding-left: 34px;
+
+    .details {
+      td {
+        padding-left: 34px;
+      }
+    }
   }
 }
 
