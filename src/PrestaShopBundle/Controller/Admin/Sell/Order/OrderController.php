@@ -459,14 +459,21 @@ class OrderController extends FrameworkBundleAdminController
 
     public function getPreviewDataAction(int $orderId): Response
     {
-        /** @var OrderPreview $orderPreview */
-        $orderPreview = $this->getQueryBus()->handle(new GetOrderPreview($orderId));
+        try {
+            /** @var OrderPreview $orderPreview */
+            $orderPreview = $this->getQueryBus()->handle(new GetOrderPreview($orderId));
 
-        return $this->json([
-            'preview' => $this->renderView('@PrestaShop/Admin/Sell/Order/Order/preview.html.twig', [
-                'orderPreview' => $orderPreview,
-            ]),
-        ]);
+            return $this->json([
+                'preview' => $this->renderView('@PrestaShop/Admin/Sell/Order/Order/preview.html.twig', [
+                    'orderPreview' => $orderPreview,
+                ]),
+            ]);
+        } catch (Exception $e) {
+            return $this->json(
+                ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
+                Response::HTTP_BAD_REQUEST
+            );
+        }
     }
 
     /**
@@ -566,11 +573,11 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @param OrderException $e
+     * @param Exception $e
      *
      * @return array
      */
-    private function getErrorMessages(OrderException $e)
+    private function getErrorMessages(Exception $e)
     {
         return [
             CannotEditDeliveredOrderProductException::class => $this->trans('You cannot edit the cart once the order delivered', 'Admin.Orderscustomers.Notification'),
