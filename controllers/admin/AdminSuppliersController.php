@@ -323,6 +323,7 @@ class AdminSuppliersControllerCore extends AdminController
                 'city' => $address->city,
                 'id_country' => $address->id_country,
                 'id_state' => $address->id_state,
+                'dni' => $address->dni,
             );
         } else {
             $this->fields_value = array(
