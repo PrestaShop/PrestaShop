@@ -64,7 +64,7 @@ TEST_PATH="sanity/02_productsBO/*" URL_FO="Your_Shop_URL_FO" npm run specific-te
 
 
 ## LinkChecker
-This script will detect not found and erroneous pages, by crawling your back office and front office
+This script will detect not found and erroneous pages, by crawling your back office and front office. It's still a Work In Progress.
 
 
 ### Launch script
