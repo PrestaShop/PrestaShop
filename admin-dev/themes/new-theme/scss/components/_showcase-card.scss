@@ -21,9 +21,8 @@
     background-image: url("img/helper-card/wave-shape-background.png");
   }
 
-  &__attribute,
-  &__monitoring {
-    background-image: url("img/helper-card/content-background@3x.png");
+  &__attribute, &__monitoring, &__feature {
+    background-image: url('img/helper-card/content-background@3x.png');
   }
 
   &__category {

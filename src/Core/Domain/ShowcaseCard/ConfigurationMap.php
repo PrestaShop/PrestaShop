@@ -55,6 +55,7 @@ class ConfigurationMap
             ShowcaseCard::CMS_PAGES_CARD => sprintf(self::CLOSED_TEMPLATE, 'CMS_PAGES'),
             ShowcaseCard::ATTRIBUTES_CARD => sprintf(self::CLOSED_TEMPLATE, 'ATTRIBUTES'),
             ShowcaseCard::MONITORING_CARD => sprintf(self::CLOSED_TEMPLATE, 'MONITORING'),
+            ShowcaseCard::FEATURES_CARD => sprintf(self::CLOSED_TEMPLATE, 'FEATURES'),
         ];
     }
 
