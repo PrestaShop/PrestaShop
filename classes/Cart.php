@@ -3392,7 +3392,7 @@ class CartCore extends ObjectModel
         if (!isset($id_zone)) {
             // Get id zone
             if (!$this->isMultiAddressDelivery()
-                && isset($this->id_address_delivery) // Be carefull, id_address_delivery is not usefull one 1.5
+                && isset($this->id_address_delivery) // Be careful, id_address_delivery is not useful one 1.5
                 && $this->id_address_delivery
                 && Customer::customerHasAddress($this->id_customer, $this->id_address_delivery)
             ) {
