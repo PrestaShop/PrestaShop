@@ -1,6 +1,7 @@
 const helper = require('../../utils/helpers');
 // Importing pages
 const InstallPage = require('../../../pages/Install/install');
+const HomePage = require('../../../pages/FO/home');
 
 let browser;
 let page;
@@ -9,6 +10,7 @@ let page;
 const init = async function () {
   return {
     installPage: new InstallPage(page),
+    homePage: new HomePage(page),
   };
 };
 
@@ -68,6 +70,8 @@ describe('Install Prestashop', async () => {
     await this.pageObjects.installPage.checkInstallationSuccessful();
   });
   it('should go to FO and check that Prestashop logo exists', async function () {
-    await this.pageObjects.installPage.goAndCheckFOAfterInstall();
+    page = await this.pageObjects.installPage.goToFOAfterInstall();
+    this.pageObjects = await init();
+    await this.pageObjects.homePage.checkHomePage();
   });
 });
