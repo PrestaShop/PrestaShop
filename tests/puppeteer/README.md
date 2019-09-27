@@ -26,7 +26,7 @@ npm install
 Before running tests, you should install your shop manually or run the install script **`campaigns/sanity/01_installShop/*`** with the [`specific-test` command](README.md#specific-test).
 
 ## Sanity tests 
-This campaign includes a non-exhaustive set of tests and it will ensure that the most important functions work.
+This campaign includes a non-exhaustive set of tests and will ensure that the most important functions work.
 
 ### Launch all scripts
 If you want to run all sanity tests, you can run scripts in **`campaigns/sanity/*`**
