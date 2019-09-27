@@ -30,10 +30,10 @@ const $ = window.$;
  */
 export default class PriceFieldAvailabilityHandler {
   constructor(checkboxSelector, targetSelector) {
-    this.$sourceSelector = checkboxSelector;
-    this.$targetSelector = targetSelector;
+    this.$sourceSelector = $(checkboxSelector);
+    this.$targetSelector = $(targetSelector);
     this._handle();
-    $(checkboxSelector).on('change', () => this._handle());
+    this.$sourceSelector.on('change', () => this._handle());
 
     return {};
   }
@@ -44,8 +44,8 @@ export default class PriceFieldAvailabilityHandler {
    * @private
    */
   _handle() {
-    const checkboxVal = $(`${this.$sourceSelector}`).is(':checked');
+    const checkboxVal = this.$sourceSelector.is(':checked');
 
-    $(this.$targetSelector).prop('disabled', checkboxVal);
+    this.$targetSelector.prop('disabled', checkboxVal);
   }
 }
