@@ -15,7 +15,7 @@ npm install
 |---------------------|----------------- |
 | URL_FO              | URL of your PrestaShop website Front Office (default to **`http://localhost:8080/`**) |
 | URL_BO              | URL of your PrestaShop website Back Office (default to **`URL_FO + admin-dev/`**) |
-| URL_INSTALL         | URL of your PrestaShop website Front Office (default to **`URL_FO + install-dev/`**) |
+| URL_INSTALL         | URL of the Install folder (default to **`URL_FO + install-dev/`**) |
 | LOGIN               | LOGIN of your PrestaShop website (default to **`demo@prestashop.com`**) |
 | PASSWD              | PASSWD of your PrestaShop website (default to **`prestashop_demo`**) |
 | SHOPNAME            | Shop Name of tour PrestaShop (default to **`Prestashop`**) |
