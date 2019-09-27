@@ -66,12 +66,10 @@ export default class PreviewExtension {
    * @param grid
    */
   extend(grid) {
-    grid.getContainer().find('tbody tr').on('mouseover mouseleave', (event) => {
-      this._handleIconHovering(event);
-    });
-    grid.getContainer().find(this.previewToggleSelector).on('click', (event) => {
-      this._togglePreview(event);
-    });
+    const $gridContainer = $(grid.getContainer);
+
+    $gridContainer.find('tbody tr').on('mouseover mouseleave', event => this._handleIconHovering(event));
+    $gridContainer.find(this.previewToggleSelector).on('click', event => this._togglePreview(event));
   }
 
   /**
@@ -112,6 +110,8 @@ export default class PreviewExtension {
 
     Promise.resolve(this.renderer(dataUrl).then((result) => {
       this._renderPreviewContent($columnRow, result.preview);
+    }).catch((e) => {
+      showErrorMessage(e.responseJSON.message);
     }));
   }
 

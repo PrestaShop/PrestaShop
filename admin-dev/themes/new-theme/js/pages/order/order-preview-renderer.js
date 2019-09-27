@@ -33,8 +33,8 @@ export default function orderPreviewRenderer(orderPreviewUrl) {
       dataType: 'json',
     }).then((response) => {
       resolve(response);
-    }).fail(() => {
-      reject();
+    }).catch((e) => {
+      reject(e);
     });
   });
 }
