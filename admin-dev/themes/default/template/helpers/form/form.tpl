@@ -949,9 +949,7 @@
 			{/if}
 
 			dniRequired();
-			$('#id_country').change(function() {
-				dniRequired();
-			});
+			$('#id_country').change(dniRequired);
 
 			if ($(".datepicker").length > 0)
 				$(".datepicker").datepicker({
