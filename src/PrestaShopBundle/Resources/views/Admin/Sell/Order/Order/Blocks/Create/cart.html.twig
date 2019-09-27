@@ -1,0 +1,156 @@
+{#**
+ * 2007-2019 PrestaShop and Contributors
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+
+<div class="card d-none" id="cartBlock">
+  <h3 class="card-header">{{ 'Cart'|trans({}, 'Admin.Orderscustomers.Feature') }}</h3>
+  <div class="card-body">
+    <div class="row">
+      <div class="col-3">
+        <span class="float-right">{{ 'Search for a product'|trans({}, 'Admin.Orderscustomers.Feature') }}</span>
+      </div>
+      <div class="col-4">
+        <input type="text"
+               class="form-control"
+        >
+        <small class="form-text">
+          {{ 'Search for an existing product by typing the first letters of its name.'|trans({}, 'Admin.Orderscustomers.Help') }}
+        </small>
+      </div>
+    </div>
+
+    <hr class="mt-3 mb-3">
+
+    <div class="row">
+      <div class="col">
+        <div class="row">
+          <div class="col-3">
+            <span class="float-right">{{ 'Product'|trans({}, 'Admin.Global') }}</span>
+          </div>
+          <div class="col-4">
+            <select class="form-control"></select>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-3">
+            <span class="float-right">{{ 'Combination'|trans({}, 'Admin.Global') }}</span>
+          </div>
+          <div class="col-4">
+            <select class="form-control"></select>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-3">
+            <span class="float-right">{{ 'Quantity'|trans({}, 'Admin.Global') }}</span>
+          </div>
+          <div class="col-1">
+            <input type="text" class="form-control">
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-1 offset-sm-3">
+            <button type="button" class="btn btn-primary">{{ 'Add to cart'|trans({}, 'Admin.Orderscustomers.Feature') }}</button>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <hr>
+          </div>
+        </div>
+        <div class="row">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>{{ 'Product'|trans({}, 'Admin.Global') }}</th>
+                <th>{{ 'Description'|trans({}, 'Admin.Global') }}</th>
+                <th>{{ 'Reference'|trans({}, 'Admin.Global') }}</th>
+                <th>{{ 'Price per unit'|trans({}, 'Admin.Catalog.Feature') }}</th>
+                <th>{{ 'Quantity'|trans({}, 'Admin.Global') }}</th>
+                <th>{{ 'Price'|trans({}, 'Admin.Global') }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><img src="http://prestashop.local/2-small_default/hummingbird-printed-t-shirt.jpg" alt=""></td>
+                <td>
+                  <p class="mb-0">Hummingbird printed t-shirt</p>
+                  <p>S- White</p>
+                </td>
+                <td>
+                  demo_1
+                </td>
+                <td>
+                  <input type="text" class="form-control">
+                </td>
+                <td>
+                  <input type="text" class="form-control" style="max-width: 100px;">
+                </td>
+                <td>
+                  45
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="row">
+          <div class="col-4 offset-sm-3">
+            <div class="alert alert-warning">
+              <div class="alert-text">
+                {{ 'The prices are without taxes.'|trans({}, 'Admin.Orderscustomers.Notification') }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-3">
+            <span class="float-right">
+              {{ 'Currency'|trans({}, 'Admin.Global') }}
+            </span>
+          </div>
+          <div class="col-4">
+            <select class="form-control">
+              {% for currency in currencies %}
+                <option value="{{ currency.id_currency }}">{{ currency.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-3">
+            <span class="float-right">
+              {{ 'Language'|trans({}, 'Admin.Global') }}
+            </span>
+          </div>
+          <div class="col-4">
+            <select class="form-control" id="cartLanguageSelect">
+              {% for language in languages %}
+                <option value="{{ language.id_lang }}">{{ language.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
