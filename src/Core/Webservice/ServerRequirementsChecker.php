@@ -117,8 +117,16 @@ final class ServerRequirementsChecker implements ServerRequirementsCheckerInterf
     {
         $issues = [];
 
+        if (!$this->phpExtensionChecker->loaded('SimpleXML')) {
+            $issues[] = self::ISSUE_EXT_SIMPLEXML_NOT_AVAILABLE;
+        }
+
+        if (false === $this->configuration->getBoolean('PS_SSL_ENABLED')) {
+            $issues[] = self::ISSUE_HTTPS_NOT_AVAILABLE;
+        }
+
         if (false === strpos($this->hostingInformation->getServerInformation()['version'], 'Apache')) {
-            $issues[] = self::ISSUE_NOT_APACHE_SERVER;
+            return $issues;
         }
 
         if (function_exists('apache_get_modules')) {
@@ -135,14 +143,6 @@ final class ServerRequirementsChecker implements ServerRequirementsCheckerInterf
             $issues[] = self::ISSUE_CANNOT_CHECK_APACHE_MODULES;
         }
 
-        if (!$this->phpExtensionChecker->loaded('SimpleXML')) {
-            $issues[] = self::ISSUE_EXT_SIMPLEXML_NOT_AVAILABLE;
-        }
-
-        if (false === $this->configuration->getBoolean('PS_SSL_ENABLED')) {
-            $issues[] = self::ISSUE_HTTPS_NOT_AVAILABLE;
-        }
-
         return $issues;
     }
 
@@ -152,11 +152,6 @@ final class ServerRequirementsChecker implements ServerRequirementsCheckerInterf
     private function getWarningMessages()
     {
         return [
-            self::ISSUE_NOT_APACHE_SERVER => $this->translator->trans(
-                'To avoid operating problems, please use an Apache server.',
-                [],
-                'Admin.Advparameters.Notification'
-            ),
             self::ISSUE_CANNOT_CHECK_APACHE_MODULES => $this->translator->trans(
                 'Please activate the \'mod_auth_basic\' Apache module to allow authentication of PrestaShop\'s webservice.',
                 [],
