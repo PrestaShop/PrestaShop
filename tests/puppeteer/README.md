@@ -10,7 +10,7 @@ npm install
 ## Available command line parameters
 | Parameter           | Description      |
 |---------------------|----------------- |
-| URL_FO              | URL of your PrestaShop website Front Office (default to **http://localhost:8080/**) |
+| URL_FO              | URL of your PrestaShop website Front Office (default to **`http://localhost:8080/`**) |
 | URL_BO              | URL of your PrestaShop website Back Office (default to **`URL_FO + admin-dev/`**) |
 | URL_INSTALL         | URL of your PrestaShop website Front Office (default to **`URL_FO + install-dev/`**) |
 | LOGIN               | LOGIN of your PrestaShop website (default to **`demo@prestashop.com`**) |
@@ -44,6 +44,19 @@ If you want to run all sanity tests, and stop tests when first step is failed, y
 ```bash
 npm run sanity-travis
 ```
+
+## Specific test 
+If you want to run only one test from the campaign or a couple of tests in the same folder, you can use **`specific-test`** command.
+
+To specify which test tu run, you can add **`TEST_PATH`** parameter in the beginning of the command
+
+```bash
+# To Run test filter Products from sanity campaign
+TEST_PATH="sanity/02_productsBO/01_filterProducts" URL_FO="Your_Shop_URL_FO" npm run specific-test
+# To Run all tests Products BO
+TEST_PATH="sanity/02_productsBO/*" URL_FO="Your_Shop_URL_FO" npm run specific-test
+```
+
 
 ## LinkChecker
 This script will detect not found and erroneous pages, by crawling your back office and front office
