@@ -41,7 +41,7 @@
         data-link="{$quick_access_current_link_name|truncate:32}"
       >
         <i class="material-icons">add_circle</i>
-        {l s='Add current page to Quick Access'  d='Admin.Navigation.Header'}
+        {l s='Add current page to Quick Access'  d='Admin.Actions'}
       </a>
     {/if}
     <a class="dropdown-item" href="{$link->getAdminLink("AdminQuickAccesses")|addslashes}">

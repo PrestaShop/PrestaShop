@@ -85,7 +85,7 @@
 					<a id="linkHide" href="#" style="text-decoration:underline;display:none">{l s='Hide warning' d='Admin.Actions'}</a>
 				</span>
 			{else}
-				{l s='There is %d warning.' sprintf=count($warnings) d='Admin.Notifications.Error'}
+				{l s='There is %d warning.' sprintf=count($warnings) d='Admin.Actions'}
 			{/if}
 			<ul style="display:{if count($warnings) > 1}none{else}block{/if};" id="seeMore">
 			{foreach $warnings as $warning}
