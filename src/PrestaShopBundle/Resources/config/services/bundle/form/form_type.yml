@@ -920,3 +920,13 @@ services:
         - '@prestashop.core.form.choice_provider.order_state_by_id'
       tags:
         - { name: form.type }
+
+    form.type.order.order_payment:
+      class: 'PrestaShopBundle\Form\Admin\Sell\Order\OrderPaymentType'
+      arguments:
+        - '@prestashop.adapter.form.choice_provider.currency_symbol_by_id'
+        - '@prestashop.adapter.form.choice_provider.order_invoice_by_id'
+        - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
+        - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
+      tags:
+        - { name: form.type }

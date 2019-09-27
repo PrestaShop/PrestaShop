@@ -64,3 +64,11 @@ admin_orders_update_status:
     _controller: PrestaShopBundle:Admin/Sell/Order/Order:updateStatus
   requirements:
     orderId: \d+
+
+admin_orders_add_payment:
+  path: /{orderId}/payment
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:addPayment
+  requirements:
+    orderId: \d+

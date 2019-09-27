@@ -100,8 +100,14 @@ class OrderForViewing
      */
     private $messages;
 
+    /**
+     * @var int
+     */
+    private $currencyId;
+
     public function __construct(
         int $orderId,
+        int $currencyId,
         string $reference,
         string $taxMethod,
         bool $isValid,
@@ -130,11 +136,23 @@ class OrderForViewing
         $this->isValid = $isValid;
         $this->messages = $messages;
         $this->orderId = $orderId;
+        $this->currencyId = $currencyId;
     }
 
+    /**
+     * @return int
+     */
     public function getId(): int
     {
         return $this->orderId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCurrencyId(): int
+    {
+        return $this->currencyId;
     }
 
     /**

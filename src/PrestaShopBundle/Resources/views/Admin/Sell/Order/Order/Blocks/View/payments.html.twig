@@ -36,7 +36,7 @@
         <p class="alert-text">
           {{ 'Warning'|trans({}, 'Admin.Global') }}
           <strong>{{ orderForViewing.payments.paidAmount }}</strong>
-          {{ 'paid instead of' }}
+          {{ 'paid instead of'|trans({}, 'Admin.Orderscustomers.Notification') }}
           <strong>{{ orderForViewing.payments.amountToPay }}</strong>
         </p>
       </div>
@@ -105,29 +105,29 @@
         </tr>
       {% endfor %}
       <tr>
-        <td>
-          <input type="text" name="payment_date" class="form-control" />
-        </td>
-        <td>
-          <input name="payment_method" list="payment_method" class="form-control" />
-          <datalist id="payment_method_data_list">
-          </datalist>
-        </td>
-        <td>
-          <input type="text" name="payment_transaction_id" class="form-control" />
-        </td>
-        <td>
-          <div class="input-group">
-            <input type="text" name="payment_amount" class="form-control" />
-            <select name="" id="" class="form-control custom-select">
-              <option value="1">EUR</option>
-            </select>
-          </div>
-        </td>
-        <td></td>
-        <td>
-          <button class="btn btn-primary btn-sm">{{ 'Add'|trans({}, 'Admin.Actions') }}</button>
-        </td>
+        {{ form_start(addOrderPaymentForm, {'action': path('admin_orders_add_payment', {'orderId': orderForViewing.id})}) }}
+          <td>
+            {{ form_widget(addOrderPaymentForm.date) }}
+          </td>
+          <td>
+            {{ form_widget(addOrderPaymentForm.payment_method) }}
+          </td>
+          <td>
+            {{ form_widget(addOrderPaymentForm.transaction_id) }}
+          </td>
+          <td>
+            <div class="input-group">
+              {{ form_widget(addOrderPaymentForm.amount) }}
+              {{ form_widget(addOrderPaymentForm.id_currency) }}
+            </div>
+          </td>
+          <td>
+            {{ form_widget(addOrderPaymentForm.id_invoice) }}
+          </td>
+          <td>
+            <button type="submit" class="btn btn-primary btn-sm">{{ 'Add'|trans({}, 'Admin.Actions') }}</button>
+          </td>
+        {{ form_end(addOrderPaymentForm) }}
       </tr>
       </tbody>
     </table>

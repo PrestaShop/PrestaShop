@@ -123,6 +123,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
 
         return new OrderForViewing(
             (int) $order->id,
+            (int) $order->id_currency,
             $order->reference,
             $taxMethod,
             (bool) $order->valid,
