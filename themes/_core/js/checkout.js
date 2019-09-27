@@ -34,6 +34,7 @@ function setUpCheckout() {
   setUpPayment();
 
   handleCheckoutStepChange();
+  handleSubmitButton();
 }
 
 function handleCheckoutStepChange() {
@@ -69,6 +70,17 @@ function handleCheckoutStepChange() {
       prestashop.emit('changedCheckoutStep', {event: event});
     }
   );
+}
+
+function handleSubmitButton() {
+  // prevents rage clicking on submit button and related issues
+  const submitSelector = '.js-current-step button[type="submit"]';
+  $(document).on('click', submitSelector, function () {
+    $(this).addClass('disabled');
+    $('input[required]').on('invalid', function (e) {
+      $(submitSelector).removeClass('disabled');
+    });
+  });
 }
 
 $(document).ready(() => {
