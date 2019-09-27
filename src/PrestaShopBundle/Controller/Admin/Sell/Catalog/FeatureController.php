@@ -31,6 +31,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Feature\Command\BulkDeleteFeatureC
 use PrestaShop\PrestaShop\Core\Domain\Product\Feature\Command\DeleteFeatureCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Feature\Exception\CannotDeleteFeatureException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Feature\Exception\FeatureNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
+use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\FeatureGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\FeatureFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -58,11 +60,16 @@ class FeatureController extends FrameworkBundleAdminController
     public function indexAction(Request $request, FeatureFilters $filters): Response
     {
         $gridFactory = $this->get('prestashop.core.grid.factory.feature');
-        $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
+
+        $showcaseCardIsClosed = $this->getQueryBus()->handle(
+            new GetShowcaseCardIsClosed((int) $this->getContext()->employee->id, ShowcaseCard::FEATURES_CARD)
+        );
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Features/index.html.twig', [
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
-            'featuresGrid' => $gridPresenter->present($gridFactory->getGrid($filters)),
+            'featuresGrid' => $this->presentGrid($gridFactory->getGrid($filters)),
+            'showcaseCardName' => ShowcaseCard::FEATURES_CARD,
+            'isShowcaseCardClosed' => $showcaseCardIsClosed,
         ]);
     }
 
