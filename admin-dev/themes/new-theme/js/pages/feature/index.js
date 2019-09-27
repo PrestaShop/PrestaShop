@@ -34,6 +34,8 @@ import FiltersSubmitButtonEnablerExtension
   from '../../components/grid/extension/filters-submit-button-enabler-extension';
 import PositionExtension from '../../components/grid/extension/position-extension';
 import SubmitRowActionExtension from '../../components/grid/extension/action/row/submit-row-action-extension';
+import ShowcaseCard from "../../components/showcase-card/showcase-card";
+import ShowcaseCardCloseExtension from "../../components/showcase-card/extension/showcase-card-close-extension";
 
 const $ = window.$;
 
@@ -49,4 +51,7 @@ $(() => {
   grid.addExtension(new FiltersSubmitButtonEnablerExtension());
   grid.addExtension(new PositionExtension());
   grid.addExtension(new SubmitRowActionExtension());
+
+  const showcaseCard = new ShowcaseCard('featuresShowcaseCard');
+  showcaseCard.addExtension(new ShowcaseCardCloseExtension());
 });

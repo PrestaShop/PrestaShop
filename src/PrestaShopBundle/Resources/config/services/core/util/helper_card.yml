@@ -9,9 +9,9 @@ services:
       -
         'team':
           'en': 'https://doc.prestashop.com/display/PS17/Team'
-          'fr': 'http://doc.prestashop.com/pages/viewpage.action?pageId=51840334'
+          'fr': 'https://doc.prestashop.com/pages/viewpage.action?pageId=51840334'
           'es': 'https://doc.prestashop.com/display/PS17/Equipo'
-          'it': 'http://doc.prestashop.com/pages/viewpage.action?pageId=54266520'
+          'it': 'https://doc.prestashop.com/pages/viewpage.action?pageId=54266520'
           '_fallback': 'https://doc.prestashop.com/display/PS17/Team'
         'meta':
           'fr': 'https://doc.prestashop.com/display/PS17/SEO+et+URL'
@@ -43,8 +43,8 @@ services:
           '_fallback': 'https://doc.prestashop.com/display/PS17/Pages+-+Managing+Static+Content'
         'debug_mode':
           'en': 'https://doc.prestashop.com/display/PS17/Performance#Performance-Debugmode'
-          'fr': 'http://doc.prestashop.com/pages/viewpage.action?pageId=51840325#Param%%C3%%A8tresdeperformances-Modedebug'
-          'it': 'http://doc.prestashop.com/pages/viewpage.action?pageId=54266514'
+          'fr': 'https://doc.prestashop.com/pages/viewpage.action?pageId=51840325#Param%%C3%%A8tresdeperformances-Modedebug'
+          'it': 'https://doc.prestashop.com/pages/viewpage.action?pageId=54266514'
           'es': 'https://doc.prestashop.com/display/PS17/Rendimiento#Rendimiento-ModoDepuraci%%C3%%B3n'
           '_fallback': 'https://doc.prestashop.com/display/PS17/Performance#Performance-Debugmode'
         'attribute':
@@ -59,3 +59,9 @@ services:
           'es': 'https://doc.prestashop.com/display/PS17/Monitorear+el+catalogo'
           'it': 'https://doc.prestashop.com/display/PS17/Monitorare+il+Catalogo'
           '_fallback': 'https://doc.prestashop.com/display/PS17/Monitoring+your+Catalog'
+        'feature':
+          'en': 'https://doc.prestashop.com/display/PS17/Managing+Product+Features'
+          'fr': 'https://doc.prestashop.com/display/PS17/Gerer+les+caracteristiques+de+vos+produits'
+          'es': 'https://doc.prestashop.com/pages/viewpage.action?pageId=54264108'
+          'it': 'https://doc.prestashop.com/display/PS17/Gestire+le+Funzioni+Prodotto'
+          '_fallback': 'https://doc.prestashop.com/display/PS17/Managing+Product+Features'
