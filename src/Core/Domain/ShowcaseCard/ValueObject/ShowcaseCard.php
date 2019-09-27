@@ -60,6 +60,11 @@ class ShowcaseCard
     const CMS_PAGES_CARD = 'cms-pages_card';
 
     /**
+     * Card shown Features
+     */
+    const FEATURES_CARD = 'features_card';
+
+    /**
      * List of supported card names
      */
     const SUPPORTED_NAMES = [
@@ -68,6 +73,7 @@ class ShowcaseCard
         self::CUSTOMERS_CARD => true,
         self::EMPLOYEES_CARD => true,
         self::CMS_PAGES_CARD => true,
+        self::FEATURES_CARD => true,
     ];
 
     /**
