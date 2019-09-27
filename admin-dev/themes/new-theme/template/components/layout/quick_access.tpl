@@ -26,7 +26,7 @@
         data-link="{$quick_access_current_link_name|truncate:32}"
       >
         <i class="material-icons">remove_circle_outline</i>
-        {l s='Remove from QuickAccess' d='Admin.Navigation.Header'}
+        {l s='Remove from Quick Access' d='Admin.Navigation.Header'}
       </a>
     {else}
       <a
@@ -41,12 +41,12 @@
         data-link="{$quick_access_current_link_name|truncate:32}"
       >
         <i class="material-icons">add_circle</i>
-        {l s='Add current page to QuickAccess'  d='Admin.Navigation.Header'}
+        {l s='Add current page to Quick Access'  d='Admin.Navigation.Header'}
       </a>
     {/if}
     <a class="dropdown-item" href="{$link->getAdminLink("AdminQuickAccesses")|addslashes}">
       <i class="material-icons">settings</i>
-      {l s='Manage quick accesses' d='Admin.Navigation.Header'}
+      {l s='Manage your quick accesses' d='Admin.Navigation.Header'}
     </a>
   </div>
 </div>

@@ -46,7 +46,7 @@
 			{if count($errors) == 1}
 				{$errors[0]}
 			{else}
-				{l s='There are %d errors' sprintf=[$errors|count] d='Admin.Notifications.Error'}
+				{l s='There are %d errors.' sprintf=[$errors|count] d='Admin.Notifications.Error'}
 				<br/>
 				<ul>
 					{foreach $errors AS $error}
@@ -79,10 +79,10 @@
 		<div class="alert alert-warning">
 			<button type="button" class="close" data-dismiss="alert">&times;</button>
 			{if count($warnings) > 1}
-				{l s='There are %d warnings.' sprintf=count($warnings) d='Admin.Notifications.Error'}
+				{l s='There are %d warnings.' sprintf=count($warnings) d='Admin.Actions'}
 				<span style="margin-left:20px;" id="labelSeeMore">
 					<a id="linkSeeMore" href="#" style="text-decoration:underline">{l s='Click here to see more'}</a>
-					<a id="linkHide" href="#" style="text-decoration:underline;display:none">{l s='Hide warning'}</a>
+					<a id="linkHide" href="#" style="text-decoration:underline;display:none">{l s='Hide warning' d='Admin.Actions'}</a>
 				</span>
 			{else}
 				{l s='There is %d warning.' sprintf=count($warnings) d='Admin.Notifications.Error'}
