@@ -1,5 +1,5 @@
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,10 +15,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -930,7 +930,6 @@ class AdminModuleController {
   }
 
   doBulkAction(requestedBulkAction) {
-    const self = this;
     // This object is used to check if requested bulkAction is available and give proper
     // url segment to be called for it
     const forceDeletion = $('#force_bulk_deletion').prop('checked');
@@ -954,53 +953,106 @@ class AdminModuleController {
 
     // Loop over all checked bulk checkboxes
     const bulkActionSelectedSelector = this.getBulkCheckboxesCheckedSelector();
+    const bulkModuleAction = bulkActionToUrl[requestedBulkAction];
 
     if ($(bulkActionSelectedSelector).length <= 0) {
       console.warn(window.translate_javascripts['Bulk Action - One module minimum']);
       return false;
     }
 
-    const bulkModulesTechNames = [];
+    const modulesActions = [];
     let moduleTechName;
     $(bulkActionSelectedSelector).each(function bulkActionSelector() {
       moduleTechName = $(this).data('tech-name');
-      bulkModulesTechNames.push({
+      modulesActions.push({
         techName: moduleTechName,
         actionMenuObj: $(this).closest('.module-checkbox-bulk-list').next(),
       });
     });
 
-    let actionMenuObj;
-    let urlActionSegment;
-    let urlElement;
-    $.each(bulkModulesTechNames, function bulkModulesLoop(index, data) {
-      actionMenuObj = data.actionMenuObj;
-      moduleTechName = data.techName;
-
-      urlActionSegment = bulkActionToUrl[requestedBulkAction];
-
-      if (typeof self.moduleCardController !== 'undefined') {
-        // We use jQuery to get the specific link for this action. If found, we send it.
-        urlElement = $(
-          self.moduleCardController.moduleActionMenuLinkSelector + urlActionSegment,
-          actionMenuObj
-        );
-
-        if (urlElement.length > 0) {
-          self.moduleCardController._requestToController(
-            urlActionSegment,
-            urlElement,
-            forceDeletion
-          );
-        } else {
-          $.growl.error({message: window.translate_javascripts['Bulk Action - Request not available for module']
-                                        .replace('[1]', urlActionSegment)
-                                        .replace('[2]', moduleTechName)});
-        }
-      }
-    });
+    this.performModulesAction(modulesActions, bulkModuleAction, forceDeletion);
 
     return true;
+  }
+
+  performModulesAction(modulesActions, bulkModuleAction, forceDeletion) {
+    const self = this;
+    if (typeof self.moduleCardController === 'undefined') {
+      return;
+    }
+
+    //First let's filter modules that can't perform this action
+    let actionMenuLinks = filterAllowedActions(modulesActions);
+    if (!actionMenuLinks.length) {
+      return;
+    }
+
+    let modulesRequestedCountdown = actionMenuLinks.length - 1;
+    let spinnerObj = $("<button class=\"btn-primary-reverse onclick unbind spinner \"></button>");
+    if (actionMenuLinks.length > 1) {
+      //Loop through all the modules except the last one which waits for other
+      //requests and then call its request with cache clear enabled
+      $.each(actionMenuLinks, function bulkModulesLoop(index, actionMenuLink) {
+        if (index >= actionMenuLinks.length - 1) {
+          return;
+        }
+        requestModuleAction(actionMenuLink, true, countdownModulesRequest);
+      });
+      //Display a spinner for the last module
+      const lastMenuLink = actionMenuLinks[actionMenuLinks.length - 1];
+      const actionMenuObj = lastMenuLink.closest(self.moduleCardController.moduleItemActionsSelector);
+      actionMenuObj.hide();
+      actionMenuObj.after(spinnerObj);
+    } else {
+      requestModuleAction(actionMenuLinks[0]);
+    }
+
+    function requestModuleAction(actionMenuLink, disableCacheClear, requestEndCallback) {
+      self.moduleCardController._requestToController(
+        bulkModuleAction,
+        actionMenuLink,
+        forceDeletion,
+        disableCacheClear,
+        requestEndCallback
+      );
+    }
+
+    function countdownModulesRequest() {
+      modulesRequestedCountdown--;
+      //Now that all other modules have performed their action WITHOUT cache clear, we
+      //can request the last module request WITH cache clear
+      if (modulesRequestedCountdown <= 0) {
+        if (spinnerObj) {
+          spinnerObj.remove();
+          spinnerObj = null;
+        }
+
+        const lastMenuLink = actionMenuLinks[actionMenuLinks.length - 1];
+        const actionMenuObj = lastMenuLink.closest(self.moduleCardController.moduleItemActionsSelector);
+        actionMenuObj.fadeIn();
+        requestModuleAction(lastMenuLink);
+      }
+    }
+
+    function filterAllowedActions(modulesActions) {
+      let actionMenuLinks = [];
+      let actionMenuLink;
+      $.each(modulesActions, function filterAllowedModules(index, moduleData) {
+        actionMenuLink = $(
+          self.moduleCardController.moduleActionMenuLinkSelector + bulkModuleAction,
+          moduleData.actionMenuObj
+        );
+        if (actionMenuLink.length > 0) {
+          actionMenuLinks.push(actionMenuLink);
+        } else {
+          $.growl.error({message: window.translate_javascripts['Bulk Action - Request not available for module']
+              .replace('[1]', bulkModuleAction)
+              .replace('[2]', moduleData.techName)});
+        }
+      });
+
+      return actionMenuLinks;
+    }
   }
 
   initActionButtons() {
@@ -1028,7 +1080,26 @@ class AdminModuleController {
     // "Upgrade All" button handler
     $('body').on('click', self.upgradeAllSource, (event) => {
       event.preventDefault();
-      $(self.upgradeAllTargets).click();
+
+      if ($(self.upgradeAllTargets).length <= 0) {
+        console.warn(window.translate_javascripts['Upgrade All Action - One module minimum']);
+        return false;
+      }
+
+      const modulesActions = [];
+      let moduleTechName;
+      $(self.upgradeAllTargets).each(function bulkActionSelector() {
+        const moduleItemList = $(this).closest('.module-item-list');
+        moduleTechName = moduleItemList.data('tech-name');
+        modulesActions.push({
+          techName: moduleTechName,
+          actionMenuObj: $('.module-actions', moduleItemList),
+        });
+      });
+
+      this.performModulesAction(modulesActions, 'upgrade');
+
+      return true;
     });
   }
 

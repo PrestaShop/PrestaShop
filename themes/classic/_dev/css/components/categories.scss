@@ -21,6 +21,7 @@
   margin-bottom: 1.563rem;
   .block-category-inner{
       display: flex;
+      justify-content: space-between;
       #category-description {
     p,
     strong {
@@ -30,6 +31,7 @@
     p {
       color: $gray-darker;
       margin-bottom: 0;
+      word-break: break-word;
       &:first-child {
         margin-bottom: $medium-space;
       }

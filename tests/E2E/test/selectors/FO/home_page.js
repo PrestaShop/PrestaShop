@@ -10,6 +10,9 @@ module.exports = {
     products_block: '//*[@id="footer"]/div[2]/div/div[1]/div[1]/div/div[1]',
     our_campany_block: '//*[@id="footer"]/div[2]/div/div[1]/div[1]/div/div[2]',
     your_account_block: '//*[@id="block_myaccount_infos"]',
-    store_information_block: '//*[@id="footer"]/div[2]/div/div[1]/div[3]'
+    store_information_block: '//*[@id="footer"]/div[2]/div/div[1]/div[3]',
+    search_input: '//*[@id="search_widget"]//input[2]',
+    search_icon: '//*[@id="search_widget"]//i',
+    your_account_link:'//*[@id="block_myaccount_infos"]/p/a'
   }
 };

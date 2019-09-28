@@ -129,21 +129,6 @@
   </file>
   <file original="controllers/admin/AdminContactsController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="9cd9efd3eb168071eb0a199972c54aab">
-        <source>Contact name (e.g. Customer Support).</source>
-        <target>Contact name (e.g. Customer Support).</target>
-        <note>Line: 86</note>
-      </trans-unit>
-      <trans-unit id="daedf9c5c8f38ac4cf641f3fb3e1bdc4">
-        <source>Emails will be sent to this address.</source>
-        <target>Emails will be sent to this address.</target>
-        <note>Line: 94</note>
-      </trans-unit>
-      <trans-unit id="0f28459fa87b1b3ce6e8b17932f08c3a">
-        <source>If enabled, all messages will be saved in the "Customer Service" page under the "Customer" menu.</source>
-        <target>If enabled, all messages will be saved in the "Customer Service" page under the "Customer" menu.</target>
-        <note>Line: 103</note>
-      </trans-unit>
       <trans-unit id="a2b086325f59e6c2fbd410511f4fdfb3">
         <source>Further information regarding this contact.</source>
         <target>Further information regarding this contact.</target>
@@ -153,11 +138,6 @@
   </file>
   <file original="controllers/admin/AdminGendersController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="6252c0f2c2ed83b7b06dfca86d4650bb">
-        <source>Invalid characters:</source>
-        <target>Invalid characters:</target>
-        <note>Line: 123</note>
-      </trans-unit>
       <trans-unit id="62c7ceb6de5c4d39e49c9762af6ddb4d">
         <source>Image width in pixels. Enter "0" to use the original size.</source>
         <target>Image width in pixels. Enter "0" to use the original size.</target>
@@ -205,61 +185,27 @@
       <trans-unit id="d38245fbe312b2dafef8450b67e94f50">
         <source>%group_name% - All persons without a customer account or customers that are not logged in.</source>
         <target>%group_name% - All persons without a customer account or customers that are not logged in.</target>
-        <note>Line: 612</note>
+        <note>Line: 615</note>
       </trans-unit>
       <trans-unit id="5125d0fd7b81fee95b7e4b7689a878a9">
         <source>%group_name% - All persons who placed an order through Guest Checkout.</source>
         <target>%group_name% - All persons who placed an order through Guest Checkout.</target>
-        <note>Line: 613</note>
+        <note>Line: 616</note>
       </trans-unit>
       <trans-unit id="96f090b06e329e3d192c0ea3701f8cb5">
         <source>%group_name% - All persons who created an account on this site.</source>
         <target>%group_name% - All persons who created an account on this site.</target>
-        <note>Line: 614</note>
+        <note>Line: 617</note>
       </trans-unit>
       <trans-unit id="a2ce271cf6d8afe81168fbfc4ccb492c">
         <source>PrestaShop has three default customer groups:</source>
         <target>PrestaShop has three default customer groups:</target>
-        <note>Line: 616</note>
+        <note>Line: 619</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminMetaController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="219985722a429b6aaceef7d363e6a565">
-        <source>Name of the related page.</source>
-        <target>Name of the related page.</target>
-        <note>Line: 342</note>
-      </trans-unit>
-      <trans-unit id="14bc1d17bbcf8fb45debf11fb7c5f80b">
-        <source>Title of this page.</source>
-        <target>Title of this page.</target>
-        <note>Line: 351</note>
-      </trans-unit>
-      <trans-unit id="79c06fd4269a36582767dc4525699148">
-        <source>A short description of your shop.</source>
-        <target>A short description of your shop.</target>
-        <note>Line: 361</note>
-      </trans-unit>
-      <trans-unit id="d9f600637f31b203b55f6c91dabd4fde">
-        <source>List of keywords for search engines.</source>
-        <target>List of keywords for search engines.</target>
-        <note>Line: 371</note>
-      </trans-unit>
-      <trans-unit id="0210e7a00cf2cd3cca0e4d7ed3bdf86f">
-        <source>To add tags, click in the field, write something, and then press the "Enter" key.</source>
-        <target>To add tags, click in the field, write something, and then press the "Enter" key.</target>
-        <note>Line: 372</note>
-      </trans-unit>
-      <trans-unit id="99de37a1ed381af8c01ccb18f70b1427">
-        <source>For instance, "contacts" for http://example.com/shop/contacts to redirect to http://example.com/shop/contact-form.php</source>
-        <target>For instance, "contacts" for http://example.com/shop/contacts to redirect to http://example.com/shop/contact-form.php</target>
-        <note>Line: 384</note>
-      </trans-unit>
-      <trans-unit id="7aa534250fe76a40d96078a07b6f44e8">
-        <source>Only letters and hyphens are allowed.</source>
-        <target>Only letters and hyphens are allowed.</target>
-        <note>Line: 385</note>
+      <trans-unit id="c7a5c6872a29383d6ab0db08e6b40e15">
+        <source>Need to hide prices for all groups? Save time, enable catalog mode in Product Settings instead.</source>
+        <target>Need to hide prices for all groups? Save time, enable catalog mode in Product Settings instead.</target>
+        <note>Line: 370</note>
       </trans-unit>
     </body>
   </file>
@@ -268,22 +214,22 @@
       <trans-unit id="6ca725316d3577fb24218119380f38fe">
         <source>Leave blank if no change.</source>
         <target>Leave blank if no change.</target>
-        <note>Line: 228</note>
+        <note>Line: 199</note>
       </trans-unit>
       <trans-unit id="4181de604675ec0fb8d12202ec23964c">
         <source>Fee given for each visit.</source>
         <target>Fee given for each visit.</target>
-        <note>Line: 265</note>
+        <note>Line: 236</note>
       </trans-unit>
       <trans-unit id="4b11cf76a471c13ba29b799772c90ddf">
         <source>Fee given for each order placed.</source>
         <target>Fee given for each order placed.</target>
-        <note>Line: 271</note>
+        <note>Line: 242</note>
       </trans-unit>
       <trans-unit id="d3d12bc1b7512d954444ec7c368d7176">
         <source>If you know how to use MySQL regular expressions, you can use the [1]expert mode[/1].</source>
         <target>If you know how to use MySQL regular expressions, you can use the [1]expert mode[/1].</target>
-        <note>Line: 330</note>
+        <note>Line: 301</note>
       </trans-unit>
     </body>
   </file>
@@ -292,78 +238,77 @@
       <trans-unit id="12399d580627a1a5889cdc44e6e48b5a">
         <source>Enable the automatic indexing of products. If you enable this feature, the products will be indexed in the search automatically when they are saved. If the feature is disabled, you will have to index products manually by using the links provided in the field set.</source>
         <target>Enable the automatic indexing of products. If you enable this feature, the products will be indexed in the search automatically when they are saved. If the feature is disabled, you will have to index products manually by using the links provided in the field set.</target>
-        <note>Line: 106</note>
+        <note>Line: 119</note>
       </trans-unit>
       <trans-unit id="a5cb89e5bcb48c0708ee6837a5944d3e">
         <source>By default, to search for “blouse”, you have to enter “blous”, “blo”, etc (beginning of the word) – but not “lous” (within the word).</source>
         <target>By default, to search for “blouse”, you have to enter “blous”, “blo”, etc (beginning of the word) – but not “lous” (within the word).</target>
-        <note>Line: 121</note>
+        <note>Line: 134</note>
       </trans-unit>
       <trans-unit id="d2e38e24e467d35cc5881e083e05b823">
         <source>With this option enabled, it also gives the good result if you search for “lous”, “ouse”, or anything contained in the word.</source>
         <target>With this option enabled, it also gives the good result if you search for “lous”, “ouse”, or anything contained in the word.</target>
-        <note>Line: 126</note>
+        <note>Line: 139</note>
       </trans-unit>
       <trans-unit id="9110055bdc92744713baa237b26f8ac7">
         <source>Enable search within a whole word, rather than from its beginning only.</source>
         <target>Enable search within a whole word, rather than from its beginning only.</target>
-        <note>Line: 132</note>
+        <note>Line: 145</note>
       </trans-unit>
       <trans-unit id="0e665a9cf278d49f43c4bb4cb9a7c29f">
         <source>It checks if the searched term is contained in the indexed word. This may be resource-consuming.</source>
         <target>It checks if the searched term is contained in the indexed word. This may be resource-consuming.</target>
-        <note>Line: 137</note>
+        <note>Line: 150</note>
       </trans-unit>
       <trans-unit id="1122eba5946331d2709712f64fa1d66b">
         <source>By default, if you search "book", you will have "book", "bookcase" and "bookend".</source>
         <target>By default, if you search "book", you will have "book", "bookcase" and "bookend".</target>
-        <note>Line: 149</note>
+        <note>Line: 162</note>
       </trans-unit>
       <trans-unit id="0b1d71ac92f27198d2bd1e6cd49cec1b">
         <source>With this option enabled, it only gives one result “book”, as exact end of the indexed word is matching.</source>
         <target>With this option enabled, it only gives one result “book”, as exact end of the indexed word is matching.</target>
-        <note>Line: 154</note>
+        <note>Line: 167</note>
       </trans-unit>
       <trans-unit id="c4474326e7d8129b7c04ada10f34f5b1">
         <source>Enable more precise search with the end of the word.</source>
         <target>Enable more precise search with the end of the word.</target>
-        <note>Line: 160</note>
+        <note>Line: 173</note>
       </trans-unit>
       <trans-unit id="efb6bc8d1ee1c5527d494ba15ee3109d">
         <source>It checks if the searched term is the exact end of the indexed word.</source>
         <target>It checks if the searched term is the exact end of the indexed word.</target>
-        <note>Line: 165</note>
+        <note>Line: 178</note>
       </trans-unit>
       <trans-unit id="645115aba5ef431a04da95c746477544">
         <source>Only words this size or larger will be indexed.</source>
         <target>Only words this size or larger will be indexed.</target>
-        <note>Line: 178</note>
+        <note>Line: 191</note>
       </trans-unit>
       <trans-unit id="2c2666c9eee818342b0aff77dda51990">
         <source>Please enter the index words separated by a "|".</source>
         <target>Please enter the index words separated by a "|".</target>
-        <note>Line: 190</note>
+        <note>Line: 203</note>
       </trans-unit>
       <trans-unit id="786471035f60ea5955fd93f6998e8637">
         <source>Enter each alias separated by a comma (e.g. 'prestshop,preztashop,prestasohp').</source>
         <target>Enter each alias separated by a comma (e.g. 'prestshop,preztashop,prestasohp').</target>
-        <note>Line: 350</note>
+        <note>Line: 363</note>
       </trans-unit>
       <trans-unit id="259b411f284388d228a30c1e2ed0c61d">
         <source><![CDATA[Forbidden characters: <>;=#{}]]></source>
         <target><![CDATA[Forbidden characters: <>;=#{}]]></target>
-        <note>Context:
-File: controllers/admin/AdminSearchConfController.php:351</note>
+        <note>Line: 364</note>
       </trans-unit>
       <trans-unit id="01d2aac5d20787a1e873f2bdc79b514a">
         <source>Search this word instead.</source>
         <target>Search this word instead.</target>
-        <note>Line: 359</note>
+        <note>Line: 372</note>
       </trans-unit>
       <trans-unit id="88851f53412ccb796508fd5f48e7a44f">
         <source><![CDATA[Forbidden characters: <>;=#{}]]></source>
         <target><![CDATA[Forbidden characters: <>;=#{}]]></target>
-        <note>Line: 351</note>
+        <note>Line: 364</note>
       </trans-unit>
     </body>
   </file>
@@ -372,27 +317,27 @@ File: controllers/admin/AdminSearchConfController.php:351</note>
       <trans-unit id="5c85aec638229f60a035c7a6ab3623c8">
         <source>This field does not refer to the shop name visible in the front office.</source>
         <target>This field does not refer to the shop name visible in the front office.</target>
-        <note>Line: 371</note>
+        <note>Line: 373</note>
       </trans-unit>
       <trans-unit id="1561fa99e3814c72f5206ab48b472335">
         <source>Follow [1]this link[/1] to edit the shop name used on the front office.</source>
         <target>Follow [1]this link[/1] to edit the shop name used on the front office.</target>
-        <note>Line: 372</note>
+        <note>Line: 374</note>
       </trans-unit>
       <trans-unit id="92aaf3cf7e8f1434886a8887e102391b">
         <source>You can't edit the shop group because the current shop belongs to a group with the "share" option enabled.</source>
         <target>You can't edit the shop group because the current shop belongs to a group with the "share" option enabled.</target>
-        <note>Line: 430</note>
+        <note>Line: 432</note>
       </trans-unit>
       <trans-unit id="fce5f624e66bd2e2f0296fc3bd2a8f64">
         <source>This is the root category of the store that you've created. To define a new root category for your store, [1]please click here[/1].</source>
         <target>This is the root category of the store that you've created. To define a new root category for your store, [1]please click here[/1].</target>
-        <note>Line: 440</note>
+        <note>Line: 442</note>
       </trans-unit>
       <trans-unit id="f0f7416fad0a9c9fc3163cabe68393c1">
         <source>By selecting associated categories, you are choosing to share the categories between shops. Once associated between shops, any alteration of this category will impact every shop.</source>
         <target>By selecting associated categories, you are choosing to share the categories between shops. Once associated between shops, any alteration of this category will impact every shop.</target>
-        <note>Line: 494</note>
+        <note>Line: 496</note>
       </trans-unit>
     </body>
   </file>
@@ -440,22 +385,22 @@ File: controllers/admin/AdminSearchConfController.php:351</note>
       <trans-unit id="f45ed1483cf46972b5f225656c9c8991">
         <source>Whether or not to display this store.</source>
         <target>Whether or not to display this store.</target>
-        <note>Line: 265</note>
+        <note>Line: 271</note>
       </trans-unit>
       <trans-unit id="b950eb0054205bc67aa88899eadded22">
         <source>Storefront picture.</source>
         <target>Storefront picture.</target>
-        <note>Line: 274</note>
+        <note>Line: 280</note>
       </trans-unit>
       <trans-unit id="d42de30e9e03274c5c83bd6ce5c27a6f">
         <source>Displayed in emails sent to customers.</source>
         <target>Displayed in emails sent to customers.</target>
-        <note>Line: 447</note>
+        <note>Line: 457</note>
       </trans-unit>
       <trans-unit id="49aaf34d99febc7c13881d121288cd8a">
         <source>Shop registration information (e.g. SIRET or RCS).</source>
         <target>Shop registration information (e.g. SIRET or RCS).</target>
-        <note>Line: 454</note>
+        <note>Line: 464</note>
       </trans-unit>
     </body>
   </file>
@@ -464,7 +409,7 @@ File: controllers/admin/AdminSearchConfController.php:351</note>
       <trans-unit id="2593c7ce3ff937293feb1e61c152e551">
         <source>characters</source>
         <target>characters</target>
-        <note>Line: 55</note>
+        <note>Line: 56</note>
       </trans-unit>
     </body>
   </file>
@@ -512,22 +457,37 @@ File: controllers/admin/AdminSearchConfController.php:351</note>
       <trans-unit id="80af0f0b70143f575fdfd6fa3ca3cb89">
         <source>Set the maximum size of the summary of your product description (in characters).</source>
         <target>Set the maximum size of the summary of your product description (in characters).</target>
-        <note>Line: 54</note>
+        <note>Line: 62</note>
       </trans-unit>
       <trans-unit id="fc216bdfbaab3c5e3e87c70720110a08">
         <source>How to calculate quantity discounts.</source>
         <target>How to calculate quantity discounts.</target>
-        <note>Line: 61</note>
+        <note>Line: 69</note>
       </trans-unit>
       <trans-unit id="07d295aa9281a95bf9c27348393f688a">
         <source>When active, friendly URL will be updated on every save.</source>
         <target>When active, friendly URL will be updated on every save.</target>
-        <note>Line: 68</note>
+        <note>Line: 76</note>
       </trans-unit>
       <trans-unit id="3f141565d26297ff4449250743dba137">
         <source>When active, new products will be activated by default during creation.</source>
         <target>When active, new products will be activated by default during creation.</target>
-        <note>Line: 75</note>
+        <note>Line: 83</note>
+      </trans-unit>
+      <trans-unit id="bd92437d0543aa142ccea7c021c9efe9">
+        <source>Catalog mode disables the shopping cart on your store. Visitors will be able to browse your products catalog, but not buy them.</source>
+        <target>Catalog mode disables the shopping cart on your store. Visitors will be able to browse your products catalog, but not buy them.</target>
+        <note>Line: 38</note>
+      </trans-unit>
+      <trans-unit id="2f00a538942083503dd09c585cc6d91c">
+        <source>Have specific needs? Edit particular groups to let them see prices or not.</source>
+        <target>Have specific needs? Edit particular groups to let them see prices or not.</target>
+        <note>Line: 42</note>
+      </trans-unit>
+      <trans-unit id="bbaceb858ee14af2da60e07d63fd8678">
+        <source>Display product prices when in catalog mode.</source>
+        <target>Display product prices when in catalog mode.</target>
+        <note>Line: 46</note>
       </trans-unit>
     </body>
   </file>
@@ -590,6 +550,25 @@ File: controllers/admin/AdminSearchConfController.php:351</note>
         <source>When selling packs of products, how do you want your stock to be calculated?</source>
         <target>When selling packs of products, how do you want your stock to be calculated?</target>
         <note>Line: 97</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/Contact/Contacts/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="9cd9efd3eb168071eb0a199972c54aab">
+        <source>Contact name (e.g. Customer Support).</source>
+        <target>Contact name (e.g. Customer Support).</target>
+        <note>Line: 41</note>
+      </trans-unit>
+      <trans-unit id="daedf9c5c8f38ac4cf641f3fb3e1bdc4">
+        <source>Emails will be sent to this address.</source>
+        <target>Emails will be sent to this address.</target>
+        <note>Line: 46</note>
+      </trans-unit>
+      <trans-unit id="0f28459fa87b1b3ce6e8b17932f08c3a">
+        <source>If enabled, all messages will be saved in the "Customer Service" page under the "Customer" menu.</source>
+        <target>If enabled, all messages will be saved in the "Customer Service" page under the "Customer" menu.</target>
+        <note>Line: 51</note>
       </trans-unit>
     </body>
   </file>
@@ -675,37 +654,85 @@ File: controllers/admin/AdminSearchConfController.php:351</note>
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="6252c0f2c2ed83b7b06dfca86d4650bb">
+        <source>Invalid characters:</source>
+        <target>Invalid characters:</target>
+        <note>Line: 71</note>
+      </trans-unit>
+      <trans-unit id="219985722a429b6aaceef7d363e6a565">
+        <source>Name of the related page.</source>
+        <target>Name of the related page.</target>
+        <note>Line: 45</note>
+      </trans-unit>
+      <trans-unit id="14bc1d17bbcf8fb45debf11fb7c5f80b">
+        <source>Title of this page.</source>
+        <target>Title of this page.</target>
+        <note>Line: 49</note>
+      </trans-unit>
+      <trans-unit id="79c06fd4269a36582767dc4525699148">
+        <source>A short description of your shop.</source>
+        <target>A short description of your shop.</target>
+        <note>Line: 59</note>
+      </trans-unit>
+      <trans-unit id="d9f600637f31b203b55f6c91dabd4fde">
+        <source>List of keywords for search engines.</source>
+        <target>List of keywords for search engines.</target>
+        <note>Line: 69</note>
+      </trans-unit>
+      <trans-unit id="99de37a1ed381af8c01ccb18f70b1427">
+        <source>For instance, "contacts" for http://example.com/shop/contacts to redirect to http://example.com/shop/contact-form.php</source>
+        <target>For instance, "contacts" for http://example.com/shop/contacts to redirect to http://example.com/shop/contact-form.php</target>
+        <note>Line: 80</note>
+      </trans-unit>
+      <trans-unit id="7aa534250fe76a40d96078a07b6f44e8">
+        <source>Only letters and hyphens are allowed.</source>
+        <target>Only letters and hyphens are allowed.</target>
+        <note>Line: 81</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/seo_options_configuration.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="6d6348525df68625d9758d6d071ac505">
+        <source>Enable this option if you want to display your product's attributes in its meta title.</source>
+        <target>Enable this option if you want to display your product's attributes in its meta title.</target>
+        <note>Line: 38</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/set_up_urls_configuration.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="3ff4fabe93bbb10c32a27c54ea13a5e1">
         <source>Enable this option only if your server allows URL rewriting (recommended).</source>
         <target>Enable this option only if your server allows URL rewriting (recommended).</target>
-        <note>Line: 54</note>
+        <note>Line: 55</note>
       </trans-unit>
       <trans-unit id="6a9bb0bb3f61904834f4f436bbcaa1d2">
         <source>URL rewriting (mod_rewrite) is not active on your server, or it is not possible to check your server configuration. If you want to use Friendly URLs, you must activate this mod.</source>
         <target>URL rewriting (mod_rewrite) is not active on your server, or it is not possible to check your server configuration. If you want to use Friendly URLs, you must activate this mod.</target>
-        <note>Line: 62</note>
+        <note>Line: 63</note>
       </trans-unit>
       <trans-unit id="1ccf825d454faaa7f8141830469fab8f">
         <source>Enable this option if you want to allow accented characters in your friendly URLs.</source>
         <target>Enable this option if you want to allow accented characters in your friendly URLs.</target>
-        <note>Line: 69</note>
+        <note>Line: 70</note>
       </trans-unit>
       <trans-unit id="37d06ba898faba724d13f931b1642b06">
         <source>You should only activate this option if you are using non-latin characters ; for all the latin charsets, your SEO will be better without this option.</source>
         <target>You should only activate this option if you are using non-latin characters ; for all the latin charsets, your SEO will be better without this option.</target>
-        <note>Line: 69</note>
+        <note>Line: 70</note>
       </trans-unit>
       <trans-unit id="7dcc0875a9e200be4d760155c09c2945">
         <source>Enable this option only if you have problems with URL rewriting.</source>
         <target>Enable this option only if you have problems with URL rewriting.</target>
-        <note>Line: 86</note>
+        <note>Line: 87</note>
       </trans-unit>
       <trans-unit id="9e9ad9fb2adc8da0aaec808b3d4e73e4">
         <source>Some of PrestaShop's features might not work correctly with a specific configuration of Apache's mod_security module. We recommend to turn it off.</source>
         <target>Some of PrestaShop's features might not work correctly with a specific configuration of Apache's mod_security module. We recommend to turn it off.</target>
-        <note>Line: 96</note>
+        <note>Line: 97</note>
       </trans-unit>
     </body>
   </file>
@@ -789,6 +816,15 @@ File: controllers/admin/AdminSearchConfController.php:351</note>
         <source>The multistore feature allows you to manage several e-shops with one Back Office. If this feature is enabled, a "Multistore" page will be available in the "Advanced Parameters" menu.</source>
         <target>The multistore feature allows you to manage several e-shops with one Back Office. If this feature is enabled, a "Multistore" page will be available in the "Advanced Parameters" menu.</target>
         <note>Line: 150</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/Design/Cms/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="0210e7a00cf2cd3cca0e4d7ed3bdf86f">
+        <source>To add tags, click in the field, write something, and then press the "Enter" key.</source>
+        <target>To add tags, click in the field, write something, and then press the "Enter" key.</target>
+        <note>Line: 76</note>
       </trans-unit>
     </body>
   </file>

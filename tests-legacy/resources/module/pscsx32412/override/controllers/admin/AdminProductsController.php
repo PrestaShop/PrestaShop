@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -1948,7 +1948,7 @@ class AdminProductsController extends AdminProductsControllerCore
     {
         // Cache this condition to improve performances
         static $is_activated = null;
-        if (is_null($is_activated)) {
+        if (null === $is_activated) {
             $is_activated = Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP && $this->id_object;
         }
 
@@ -1956,7 +1956,7 @@ class AdminProductsController extends AdminProductsControllerCore
             return true;
         }
 
-        if (is_null($id_lang)) {
+        if (null === $id_lang) {
             return !empty($_POST['multishop_check'][$field]);
         } else {
             return !empty($_POST['multishop_check'][$field][$id_lang]);
@@ -1995,7 +1995,7 @@ class AdminProductsController extends AdminProductsControllerCore
                 $virtual_product_filename = Tools::getValue('virtual_product_filename', ProductDownload::getNewFilename());
             }
 
-            $product->setDefaultAttribute(0);//reset cache_default_attribute
+            $product->setDefaultAttribute(0); //reset cache_default_attribute
             if (Tools::getValue('virtual_product_expiration_date') && !Validate::isDate(Tools::getValue('virtual_product_expiration_date'))) {
                 if (!Tools::getValue('virtual_product_expiration_date')) {
                     $this->errors[] = Tools::displayError('The expiration-date attribute is required.');
@@ -2327,7 +2327,7 @@ class AdminProductsController extends AdminProductsControllerCore
         if (isset($categories[$id_category])) {
             foreach ($categories[$id_category] as $key => $row) {
                 if ($key != 'infos') {
-                    $content .= AdminProductsController::recurseCategoryForInclude($id_obj, $indexedCategories, $categories, $categories[$id_category][$key], $key, $id_category_default, $has_suite);
+                    $content .= static::recurseCategoryForInclude($id_obj, $indexedCategories, $categories, $categories[$id_category][$key], $key, $id_category_default, $has_suite);
                 }
             }
         }
@@ -3797,17 +3797,17 @@ class AdminProductsController extends AdminProductsControllerCore
 
                 if (!ImageManager::resize($file['save_path'], $new_path.'.'.$image->image_format, null, null, 'jpg', false, $error)) {
                     switch ($error) {
-                        case ImageManager::ERROR_FILE_NOT_EXIST :
+                        case ImageManager::ERROR_FILE_NOT_EXIST:
                             $file['error'] = Tools::displayError('An error occurred while copying image, the file does not exist anymore.');
 
                             break;
 
-                        case ImageManager::ERROR_FILE_WIDTH :
+                        case ImageManager::ERROR_FILE_WIDTH:
                             $file['error'] = Tools::displayError('An error occurred while copying image, the file width is 0px.');
 
                             break;
 
-                        case ImageManager::ERROR_MEMORY_LIMIT :
+                        case ImageManager::ERROR_MEMORY_LIMIT:
                             $file['error'] = Tools::displayError('An error occurred while copying image, check your memory limit.');
 
                             break;
@@ -4554,7 +4554,7 @@ class AdminProductsController extends AdminProductsControllerCore
                 }
 
                 break;
-            case 'advanced_stock_management' :
+            case 'advanced_stock_management':
                 if (Tools::getValue('value') === false) {
                     die(json_encode(array('error' =>  $this->l('Undefined value'))));
                 }
@@ -4655,7 +4655,7 @@ class AdminProductsController extends AdminProductsControllerCore
         Pack::deleteItems($product->id);
         // lines format: QTY x ID-QTY x ID
         if (Tools::getValue('type_product') == Product::PTYPE_PACK) {
-            $product->setDefaultAttribute(0);//reset cache_default_attribute
+            $product->setDefaultAttribute(0); //reset cache_default_attribute
             $items = Tools::getValue('inputPackItems');
             $lines = array_unique(explode('-', $items));
 

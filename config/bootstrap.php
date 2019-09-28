@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -32,8 +32,8 @@ use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerAggregate;
 use Symfony\Component\Yaml\Yaml;
 
 $container_builder = new ContainerBuilder();
-$container = $container_builder->build();
-ServiceLocator::setServiceContainerInstance($container);
+$legacyContainer = $container_builder->build();
+ServiceLocator::setServiceContainerInstance($legacyContainer);
 
 if (!file_exists(_PS_CACHE_DIR_)) {
     @mkdir(_PS_CACHE_DIR_);
@@ -126,7 +126,7 @@ if ($lastParametersModificationTime) {
         define('_COOKIE_IV_', $config['parameters']['cookie_iv']);
     } else {
         // Define cookie IV if missing to prevent failure in composer post-install script
-        define('_COOKIE_IV_', Tools::passwdGen(8));
+        define('_COOKIE_IV_', Tools::passwdGen(32));
     }
 
     // New cookie

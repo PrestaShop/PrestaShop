@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -166,6 +166,15 @@ class ShopUrlCore extends ObjectModel
     public static function cacheMainDomainForShop($id_shop)
     {
         if (!isset(self::$main_domain_ssl[(int) $id_shop]) || !isset(self::$main_domain[(int) $id_shop])) {
+            // May be called while the context is not instanciated yet
+            // For instance in first step of the installer
+            if ($id_shop === null && !isset(Context::getContext()->shop)) {
+                self::$main_domain[(int) $id_shop] = null;
+                self::$main_domain_ssl[(int) $id_shop] = null;
+
+                return;
+            }
+
             $row = Db::getInstance()->getRow('
             SELECT domain, domain_ssl
             FROM ' . _DB_PREFIX_ . 'shop_url

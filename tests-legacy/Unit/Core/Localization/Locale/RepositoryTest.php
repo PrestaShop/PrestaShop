@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,8 +27,9 @@
 namespace LegacyTests\Unit\Core\Localization\Locale;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Localization\CLDR\Locale as CldrLocale;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleInterface as CldrLocaleInterface;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository as CldrLocaleRepository;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\NumberSymbolsData;
 use PrestaShop\PrestaShop\Core\Localization\Currency;
 use PrestaShop\PrestaShop\Core\Localization\Currency\Repository as CurrencyRepository;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
@@ -37,39 +38,36 @@ use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepositor
 class RepositoryTest extends TestCase
 {
     /**
+     * An instance of the tested LocaleRepository class
+     *
      * @var LocaleRepository
      */
     protected $localeRepository;
 
-    /**
-     * @inheritDoc
-     */
     protected function setUp()
     {
         /**
          * Mock the LocaleRepository dependencies :
          */
+
+        $symbolsDataStub = new NumberSymbolsData();
+        $symbolsDataStub->setDecimal(',');
+        $symbolsDataStub->setGroup(' ');
+        $symbolsDataStub->setList(';');
+        $symbolsDataStub->setPercentSign('%');
+        $symbolsDataStub->setMinusSign('-');
+        $symbolsDataStub->setPlusSign('+');
+        $symbolsDataStub->setExponential('E');
+        $symbolsDataStub->setSuperscriptingExponent('^');
+        $symbolsDataStub->setPerMille('‰');
+        $symbolsDataStub->setInfinity('∞');
+        $symbolsDataStub->setNan('NaN');
+
         /** CLDR Locale data object */
-        $cldrLocale = $this->getMockBuilder(CldrLocale::class)
-            ->setMethods([
-                'getNumberPositivePattern',
-                'getNumberNegativePattern',
-                'getNumberSymbols',
-                'getNumberMaxFractionDigits',
-                'getNumberMinFractionDigits',
-                'getNumberGroupingUsed',
-                'getNumberPrimaryGroupSize',
-                'getNumberSecondaryGroupSize',
-            ])
-            ->getMock();
-        $cldrLocale->method('getNumberPositivePattern')->willReturn('');
-        $cldrLocale->method('getNumberNegativePattern')->willReturn('');
-        $cldrLocale->method('getNumberSymbols')->willReturn([]);
-        $cldrLocale->method('getNumberMaxFractionDigits')->willReturn(3);
-        $cldrLocale->method('getNumberMinFractionDigits')->willReturn(0);
-        $cldrLocale->method('getNumberGroupingUsed')->willReturn(true);
-        $cldrLocale->method('getNumberPrimaryGroupSize')->willReturn(3);
-        $cldrLocale->method('getNumberSecondaryGroupSize')->willReturn(3);
+        $cldrLocale = $this->createMock(CldrLocaleInterface::class);
+        $cldrLocale
+            ->method('getAllNumberSymbols')
+            ->willReturn(['latn' => $symbolsDataStub]);
 
         /** CLDR LocaleRepository (returning the data object) */
         $cldrLocaleRepository = $this->getMockBuilder(CldrLocaleRepository::class)
@@ -94,12 +92,12 @@ class RepositoryTest extends TestCase
         $currencyRepository = $this->getMockBuilder(CurrencyRepository::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $currencyRepository->method('getInstalledCurrencies')
+        $currencyRepository->method('getAvailableCurrencies')
             ->willReturn([$currency]);
 
         /** @var CldrLocaleRepository $cldrLocaleRepository */
         /** @var CurrencyRepository $currencyRepository */
-        $this->localeRepository = new LocaleRepository($cldrLocaleRepository, $currencyRepository);
+        $this->localeRepository = new LocaleRepository($cldrLocaleRepository, $currencyRepository, 'fr-FR');
     }
 
     /**

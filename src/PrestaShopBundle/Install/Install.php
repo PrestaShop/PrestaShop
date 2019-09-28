@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -56,7 +56,6 @@ use PrestaShop\PrestaShop\Adapter\Entity\Tools;
 use PrestaShop\PrestaShop\Adapter\Entity\Validate;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
-use PrestaShop\PrestaShop\Core\Cldr\Update;
 use PrestaShopBundle\Cache\LocalizationWarmer;
 use PrestaShopBundle\Service\Database\Upgrade as UpgradeDatabase;
 use PrestashopInstallerException;
@@ -86,11 +85,11 @@ class Install extends AbstractInstall
     public function __construct($settingsFile = null, $bootstrapFile = null)
     {
         if ($bootstrapFile === null) {
-            $bootstrapFile = self::BOOTSTRAP_FILE;
+            $bootstrapFile = static::BOOTSTRAP_FILE;
         }
 
         if ($settingsFile === null) {
-            $settingsFile = self::SETTINGS_FILE;
+            $settingsFile = static::SETTINGS_FILE;
         }
 
         $this->settingsFile = $settingsFile;
@@ -155,9 +154,9 @@ class Install extends AbstractInstall
             return false;
         }
 
-        $secret = Tools::passwdGen(56);
-        $cookie_key = defined('_COOKIE_KEY_') ? _COOKIE_KEY_ : Tools::passwdGen(56);
-        $cookie_iv = defined('_COOKIE_IV_') ? _COOKIE_IV_ : Tools::passwdGen(8);
+        $secret = Tools::passwdGen(64);
+        $cookie_key = defined('_COOKIE_KEY_') ? _COOKIE_KEY_ : Tools::passwdGen(64);
+        $cookie_iv = defined('_COOKIE_IV_') ? _COOKIE_IV_ : Tools::passwdGen(32);
         $database_port = null;
 
         $splits = preg_split('#:#', $database_host);
@@ -351,28 +350,6 @@ class Install extends AbstractInstall
     }
 
     /**
-     * Install Cldr Datas.
-     */
-    public function installCldrDatas()
-    {
-        $cldrUpdate = new Update(_PS_TRANSLATIONS_DIR_);
-        $cldrUpdate->init();
-
-        //get each defined languages and fetch cldr datas
-        $langs = Db::getInstance()->executeS('SELECT * FROM ' . _DB_PREFIX_ . 'lang');
-
-        foreach ($langs as $lang) {
-            $cldrRepository = Tools::getCldr(null, $lang['locale']);
-            $language_code = explode('-', $cldrRepository->getCulture());
-            if (count($language_code) == 1) {
-                $cldrUpdate->fetchLocale($language_code['0']);
-            } else {
-                $cldrUpdate->fetchLocale($language_code['0'] . '-' . Tools::strtoupper($language_code[1]));
-            }
-        }
-    }
-
-    /**
      * Initialize the prestashop context with default values during tests.
      */
     public function initializeTestContext()
@@ -469,6 +446,8 @@ class Install extends AbstractInstall
         Configuration::updateGlobalValue('PS_VERSION_DB', _PS_INSTALL_VERSION_);
         Configuration::updateGlobalValue('PS_INSTALL_VERSION', _PS_INSTALL_VERSION_);
 
+        Context::getContext()->language = new LanguageLegacy($id_lang);
+
         return true;
     }
 
@@ -522,11 +501,6 @@ class Install extends AbstractInstall
 
                     return false;
                 }
-            }
-
-            // Copy language default images (we do this action after database in populated because we need image types information)
-            foreach ($languages as $iso) {
-                $this->copyLanguageImages($iso);
             }
         } catch (PrestashopInstallerException $e) {
             $this->setError($e->getMessage());
@@ -682,9 +656,17 @@ class Install extends AbstractInstall
             $types = ImageType::getImagesTypes($cat);
             foreach ($types as $type) {
                 if (file_exists($img_path . $iso . '-default-' . $type['name'] . '.jpg')) {
-                    copy($img_path . $iso . '-default-' . $type['name'] . '.jpg', $dst_path . $iso . '-default-' . $type['name'] . '.jpg');
+                    copy(
+                        $img_path . $iso . '-default-' . $type['name'] . '.jpg',
+                        $dst_path . $iso . '-default-' . $type['name'] . '.jpg'
+                    );
                 } else {
-                    ImageManager::resize($img_path . $iso . '.jpg', $dst_path . $iso . '-default-' . $type['name'] . '.jpg', $type['width'], $type['height']);
+                    ImageManager::resize(
+                        $img_path . $iso . '.jpg',
+                        $dst_path . $iso . '-default-' . $type['name'] . '.jpg',
+                        $type['width'],
+                        $type['height']
+                    );
                 }
             }
         }
@@ -694,14 +676,14 @@ class Install extends AbstractInstall
 
     public function getLocalizationPackContent($version, $country)
     {
-        if (Install::$_cache_localization_pack_content === null || array_key_exists($country, Install::$_cache_localization_pack_content)) {
+        if (static::$_cache_localization_pack_content === null || array_key_exists($country, static::$_cache_localization_pack_content)) {
             $localizationWarmer = new LocalizationWarmer($version, $country);
             $localization_file_content = $localizationWarmer->warmUp(_PS_CACHE_DIR_ . 'sandbox' . DIRECTORY_SEPARATOR);
 
-            Install::$_cache_localization_pack_content[$country] = $localization_file_content;
+            static::$_cache_localization_pack_content[$country] = $localization_file_content;
         }
 
-        return isset(Install::$_cache_localization_pack_content[$country]) ? Install::$_cache_localization_pack_content[$country] : false;
+        return isset(static::$_cache_localization_pack_content[$country]) ? static::$_cache_localization_pack_content[$country] : false;
     }
 
     /**
@@ -899,6 +881,7 @@ class Install extends AbstractInstall
                 'ps_customtext',
                 'ps_emailsubscription',
                 'ps_facetedsearch',
+                'ps_faviconnotificationbo',
                 'ps_featuredproducts',
                 'ps_imageslider',
                 'ps_languageselector',
@@ -1171,6 +1154,20 @@ class Install extends AbstractInstall
 
         $theme_manager = $builder->build();
 
-        return $theme_manager->install($themeName) && $theme_manager->enable($themeName);
+        if (!($theme_manager->install($themeName) && $theme_manager->enable($themeName))) {
+            return false;
+        }
+
+        /*
+         * Copy language default images.
+         * We do this action after install theme because we
+         * need image types information.
+         */
+        $languages = $this->language->getIsoList();
+        foreach ($languages as $iso) {
+            $this->copyLanguageImages($iso);
+        }
+
+        return true;
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -470,6 +470,7 @@ class AdminShopUrlControllerCore extends AdminController
         $return = parent::processSave();
         if (!$this->errors) {
             Tools::generateHtaccess();
+            Tools::generateRobotsFile();
             Tools::clearSmartyCache();
             Media::clearCache();
         }
@@ -552,7 +553,7 @@ class AdminShopUrlControllerCore extends AdminController
             self::$cache_lang['Name'] = $this->trans('Name:', array(), 'Admin.Global');
         }
 
-        if (!is_null($name)) {
+        if (null !== $name) {
             $name = '\n\n' . self::$cache_lang['Name'] . ' ' . $name;
         }
 
@@ -563,7 +564,7 @@ class AdminShopUrlControllerCore extends AdminController
         );
 
         if ($this->specificConfirmDelete !== false) {
-            $data['confirm'] = !is_null($this->specificConfirmDelete) ? '\r' . $this->specificConfirmDelete : self::$cache_lang['DeleteItem'] . $name;
+            $data['confirm'] = null !== $this->specificConfirmDelete ? '\r' . $this->specificConfirmDelete : self::$cache_lang['DeleteItem'] . $name;
         }
 
         $tpl->assign(array_merge($this->tpl_delete_link_vars, $data));

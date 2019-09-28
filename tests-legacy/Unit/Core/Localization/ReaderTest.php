@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,15 +16,15 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace LegacyTests\Unit\Core\Localization\CLDR;
+namespace LegacyTests\Unit\Core\Localization;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleData;
@@ -61,7 +61,7 @@ class ReaderTest extends TestCase
 
         $this->assertInstanceOf(LocaleData::class, $localeData);
 
-        $dns = $localeData->defaultNumberingSystem;
+        $dns = $localeData->getDefaultNumberingSystem();
 
         $this->assertEquals(
             $expectedData['defaultNumberingSystem'],
@@ -70,22 +70,22 @@ class ReaderTest extends TestCase
         );
         $this->assertEquals(
             $expectedData['digitsGroupSeparator'],
-            $localeData->numberSymbols[$dns]->group,
+            $localeData->getNumberSymbols()[$dns]->getGroup(),
             'Wrong group separator'
         );
         $this->assertEquals(
             $expectedData['decimalSeparator'],
-            $localeData->numberSymbols[$dns]->decimal,
+            $localeData->getNumberSymbols()[$dns]->getDecimal(),
             'Wrong decimal separator'
         );
         $this->assertEquals(
             $expectedData['decimalPattern'],
-            $localeData->decimalPatterns[$dns],
+            $localeData->getDecimalPatterns()[$dns],
             'Wrong decimal pattern'
         );
         $this->assertEquals(
             $expectedData['currencyPattern'],
-            $localeData->currencyPatterns[$dns],
+            $localeData->getCurrencyPatterns()[$dns],
             'Wrong currency pattern'
         );
     }
@@ -107,7 +107,7 @@ class ReaderTest extends TestCase
                 'localeCode'   => 'fr',
                 'expectedData' => [
                     'defaultNumberingSystem' => 'latn',
-                    'digitsGroupSeparator'   => ' ',
+                    'digitsGroupSeparator'   => hex2bin('e280af'),
                     'decimalSeparator'       => ',',
                     'decimalPattern'         => '#,##0.###',
                     'currencyPattern'        => '#,##0.00 ¤',
@@ -117,7 +117,7 @@ class ReaderTest extends TestCase
                 'localeCode'   => 'fr-FR',
                 'expectedData' => [
                     'defaultNumberingSystem' => 'latn',
-                    'digitsGroupSeparator'   => ' ',
+                    'digitsGroupSeparator'   => hex2bin('e280af'),
                     'decimalSeparator'       => ',',
                     'decimalPattern'         => '#,##0.###',
                     'currencyPattern'        => '#,##0.00 ¤',
@@ -127,10 +127,10 @@ class ReaderTest extends TestCase
                 'localeCode'   => 'fr-CH',
                 'expectedData' => [
                     'defaultNumberingSystem' => 'latn',
-                    'digitsGroupSeparator'   => ' ',
+                    'digitsGroupSeparator'   => hex2bin('e280af'),
                     'decimalSeparator'       => ',',
                     'decimalPattern'         => '#,##0.###',
-                    'currencyPattern'        => '#,##0.00 ¤ ;-#,##0.00 ¤',
+                    'currencyPattern'        => '#,##0.00 ¤',
                 ],
             ],
             'en-GB' => [

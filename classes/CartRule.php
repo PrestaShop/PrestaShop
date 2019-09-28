@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -1083,7 +1083,7 @@ class CartRuleCore extends ObjectModel
         }
 
         $all_products = $context->cart->getProducts();
-        $package_products = (is_null($package) ? $all_products : $package['products']);
+        $package_products = (null === $package ? $all_products : $package['products']);
 
         $all_cart_rules_ids = $context->cart->getOrderedCartRulesIds();
 
@@ -1114,7 +1114,7 @@ class CartRuleCore extends ObjectModel
         // Free shipping on selected carriers
         if ($this->free_shipping && in_array($filter, array(CartRule::FILTER_ACTION_ALL, CartRule::FILTER_ACTION_ALL_NOCAP, CartRule::FILTER_ACTION_SHIPPING))) {
             if (!$this->carrier_restriction) {
-                $reduction_value += $context->cart->getOrderTotal($use_tax, Cart::ONLY_SHIPPING, is_null($package) ? null : $package['products'], is_null($package) ? null : $package['id_carrier']);
+                $reduction_value += $context->cart->getOrderTotal($use_tax, Cart::ONLY_SHIPPING, null === $package ? null : $package['products'], null === $package ? null : $package['id_carrier']);
             } else {
                 $data = Db::getInstance()->executeS('
 					SELECT crc.id_cart_rule, c.id_carrier
@@ -1226,7 +1226,7 @@ class CartRuleCore extends ObjectModel
             // Discount (¤)
             if ((float) $this->reduction_amount > 0) {
                 $prorata = 1;
-                if (!is_null($package) && count($all_products)) {
+                if (null !== $package && count($all_products)) {
                     $total_products = $use_tax ? $cart_amount_ti : $cart_amount_te;
                     if ($total_products) {
                         $prorata = $order_package_products_total / $total_products;
@@ -1340,7 +1340,7 @@ class CartRuleCore extends ObjectModel
 
         // Free gift
         if ((int) $this->gift_product && in_array($filter, array(CartRule::FILTER_ACTION_ALL, CartRule::FILTER_ACTION_ALL_NOCAP, CartRule::FILTER_ACTION_GIFT))) {
-            $id_address = (is_null($package) ? 0 : $package['id_address']);
+            $id_address = (null === $package ? 0 : $package['id_address']);
             foreach ($package_products as $product) {
                 if ($product['id_product'] == $this->gift_product && ($product['id_product_attribute'] == $this->gift_product_attribute || !(int) $this->gift_product_attribute)) {
                     // The free gift coupon must be applied to one product only (needed for multi-shipping which manage multiple product lists)

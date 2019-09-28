@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -167,7 +167,7 @@ class CMSCore extends ObjectModel
      * @param bool $idBlock
      * @param bool $active
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return array|false|mysqli_result|PDOStatement|resource|null
      */
     public static function listCms($idLang = null, $idBlock = false, $active = true)
     {
@@ -260,7 +260,7 @@ class CMSCore extends ObjectModel
     /**
      * @param $idCategory
      *
-     * @return false|null|string
+     * @return false|string|null
      */
     public static function getLastPosition($idCategory)
     {
@@ -278,7 +278,7 @@ class CMSCore extends ObjectModel
      * @param bool $active
      * @param null $idShop
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return array|false|mysqli_result|PDOStatement|resource|null
      */
     public static function getCMSPages($idLang = null, $idCmsCategory = null, $active = true, $idShop = null)
     {
@@ -314,7 +314,7 @@ class CMSCore extends ObjectModel
     /**
      * @param $idCms
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return array|false|mysqli_result|PDOStatement|resource|null
      */
     public static function getUrlRewriteInformations($idCms)
     {
@@ -332,14 +332,14 @@ class CMSCore extends ObjectModel
      * @param int|null $idLang
      * @param int|null $idShop
      *
-     * @return array|bool|null|object
+     * @return array|bool|object|null
      */
     public static function getCMSContent($idCms, $idLang = null, $idShop = null)
     {
-        if (is_null($idLang)) {
+        if (null === $idLang) {
             $idLang = (int) Configuration::get('PS_LANG_DEFAULT');
         }
-        if (is_null($idShop)) {
+        if (null === $idShop) {
             $idShop = (int) Configuration::get('PS_SHOP_DEFAULT');
         }
 

@@ -1,5 +1,5 @@
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,10 +15,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -29,6 +29,7 @@ import PostSizeChecker from './PostSizeChecker';
 
 export default class Importer {
   constructor() {
+    this.configuration = {};
     this.progressModal = new ImportProgressModal;
     this.batchSizeCalculator = new ImportBatchSizeCalculator;
     this.postSizeChecker = new PostSizeChecker();
@@ -40,16 +41,12 @@ export default class Importer {
   /**
    * Process the import.
    *
+   * @param {String} importUrl url of the controller, processing the import.
    * @param {Object} configuration import configuration.
    */
-  import(configuration) {
-    this.configuration = {
-      ajax: 1,
-      action: 'import',
-      tab: 'AdminImport',
-      token: token
-    };
+  import(importUrl, configuration) {
     this._mergeConfiguration(configuration);
+    this.importUrl = importUrl;
 
     // Total number of rows to be imported.
     this.totalRowsCount = 0;
@@ -62,7 +59,7 @@ export default class Importer {
     this.progressModal.reset();
     this.progressModal.show();
 
-    // Starting the import with 5 elements in batch.
+    // Starting the import with default batch size, which is adjusted for next iterations.
     this._ajaxImport(0, this.defaultBatchSize);
   }
 
@@ -72,23 +69,21 @@ export default class Importer {
    * @param {number} offset row number, from which the import job will start processing data.
    * @param {number} batchSize batch size of this import job.
    * @param {boolean} validateOnly whether the data should be only validated, if false - the data will be imported.
-   * @param {number} stepIndex current step index, retrieved from the ajax response
    * @param {Object} recurringVariables variables which are recurring between import batch jobs.
    * @private
    */
-  _ajaxImport(offset, batchSize, validateOnly = true, stepIndex = 0, recurringVariables = {}) {
+  _ajaxImport(offset, batchSize, validateOnly = true, recurringVariables = {}) {
     this._mergeConfiguration({
       offset: offset,
       limit: batchSize,
       validateOnly: validateOnly ? 1 : 0,
-      moreStep: stepIndex,
       crossStepsVars: JSON.stringify(recurringVariables)
     });
 
     this._onImportStart();
 
     $.post({
-      url: 'index.php',
+      url: this.importUrl,
       dataType: 'json',
       data: this.configuration,
       success: (response) => {
@@ -97,9 +92,11 @@ export default class Importer {
           return false;
         }
 
-        let nextStepIndex = response.oneMoreStep !== undefined ? response.oneMoreStep : stepIndex;
+        let hasErrors = response.errors && response.errors.length,
+            hasWarnings = response.warnings && response.warnings.length,
+            hasNotices = response.notices && response.notices.length;
 
-        if (response.totalCount !== undefined) {
+        if (response.totalCount !== undefined && response.totalCount) {
           // The total rows count is retrieved only in the first batch response.
           this.totalRowsCount = response.totalCount;
         }
@@ -113,11 +110,11 @@ export default class Importer {
         }
 
         // Information messages are not shown during validation.
-        if (!validateOnly && response.informations) {
-          this.progressModal.showInfoMessages(response.informations);
+        if (!validateOnly && hasNotices) {
+          this.progressModal.showInfoMessages(response.notices);
         }
 
-        if (response.errors) {
+        if (hasErrors) {
           this.hasErrors = true;
           this.progressModal.showErrorMessages(response.errors);
 
@@ -127,7 +124,7 @@ export default class Importer {
             this._onImportStop();
             return false;
           }
-        } else if (response.warnings) {
+        } else if (hasWarnings) {
           this.hasWarnings = true;
           this.progressModal.showWarningMessages(response.warnings);
         }
@@ -137,8 +134,8 @@ export default class Importer {
           this.batchSizeCalculator.markImportEnd();
 
           // Calculate next import batch size and offset.
-          let nextBatchSize = this.batchSizeCalculator.calculateBatchSize(batchSize);
           let nextOffset = offset + batchSize;
+          let nextBatchSize = this.batchSizeCalculator.calculateBatchSize(batchSize, this.totalRowsCount);
 
           // Showing a warning if post size limit is about to be reached.
           if (this.postSizeChecker.isReachingPostSizeLimit(response.postSizeLimit, response.nextPostSize)) {
@@ -152,7 +149,6 @@ export default class Importer {
             nextOffset,
             nextBatchSize,
             validateOnly,
-            nextStepIndex,
             response.crossStepsVariables
           );
         }
@@ -179,17 +175,6 @@ export default class Importer {
 
           // Continue with the data import.
           return this._ajaxImport(0, this.defaultBatchSize, false);
-        }
-
-        if (stepIndex < nextStepIndex) {
-          // If it's still not the last step of the import - continue with the next step.
-          return this._ajaxImport(
-            0,
-            this.defaultBatchSize,
-            false,
-            nextStepIndex,
-            response.crossStepsVariables
-          );
         }
 
         // Import is completely finished.

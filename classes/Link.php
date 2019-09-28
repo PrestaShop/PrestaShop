@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -132,7 +132,7 @@ class LinkCore
         $ean13 = null,
         $idLang = null,
         $idShop = null,
-        $ipa = 0,
+        $ipa = null,
         $force_routes = false,
         $relativeProtocol = false,
         $addAnchor = false,
@@ -161,6 +161,10 @@ class LinkCore
             $params['id'] = $product->id;
         }
 
+        //Attribute equal to 0 or empty is useless, so we force it to null so that it won't be inserted in query parameters
+        if (empty($ipa)) {
+            $ipa = null;
+        }
         $params['id_product_attribute'] = $ipa;
         if (!$alias) {
             $product = $this->getProductObject($product, $idLang, $idShop);
@@ -321,7 +325,7 @@ class LinkCore
             'token' => Tools::getToken(false),
         );
 
-        if (!is_null($op)) {
+        if (null !== $op) {
             $params['op'] = $op;
         }
 
@@ -424,7 +428,7 @@ class LinkCore
         }
 
         // Selected filters is used by the module ps_facetedsearch
-        $selectedFilters = is_null($selectedFilters) ? '' : $selectedFilters;
+        $selectedFilters = null === $selectedFilters ? '' : $selectedFilters;
 
         if (empty($selectedFilters)) {
             $rule = 'category_rule';
@@ -652,7 +656,7 @@ class LinkCore
      * @param string $module Module name
      * @param string $controller
      * @param array $params
-     * @param null $ssl
+     * @param bool|null $ssl
      * @param int $idLang
      * @param null $idShop
      * @param bool $relativeProtocol
@@ -718,7 +722,7 @@ class LinkCore
         $sfContainer = SymfonyContainer::getInstance();
         $sfRouter = null;
         $legacyUrlConverter = null;
-        if (!is_null($sfContainer)) {
+        if (null !== $sfContainer) {
             $sfRouter = $sfContainer->get('router');
             $legacyUrlConverter = $sfContainer->get('prestashop.bundle.routing.converter.legacy_url_converter');
         }
@@ -781,7 +785,25 @@ class LinkCore
                     break;
                 }
 
-                $routeName = 'admin_international_translations_show_settings';
+                // When params are empty or only token exists we want to use default translations route.
+                if (empty($params) || 1 === count($params) && isset($params['token'])) {
+                    $routeName = 'admin_international_translations_show_settings';
+                }
+
+                break;
+
+            case 'AdminEmployees':
+                if (!isset($params['action'])) {
+                    break;
+                }
+
+                if ('toggleMenu' === $params['action']) {
+                    // Linking legacy toggle menu action to migrated action.
+                    $routeName = 'admin_employees_toggle_navigation';
+                } elseif ('formLanguage' === $params['action']) {
+                    // Linking legacy change form language action to migrated action.
+                    $routeName = 'admin_employees_change_form_language';
+                }
 
                 break;
         }
@@ -806,6 +828,27 @@ class LinkCore
         $idLang = Context::getContext()->language->id;
 
         return $this->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . Dispatcher::getInstance()->createUrl($controller, $idLang, $params);
+    }
+
+    /**
+     * @param array $tab
+     *
+     * @return string
+     *
+     * @throws PrestaShopException
+     */
+    public function getTabLink(array $tab)
+    {
+        if (!empty($tab['route_name'])) {
+            $sfContainer = SymfonyContainer::getInstance();
+            if (null !== $sfContainer) {
+                $sfRouter = $sfContainer->get('router');
+
+                return $sfRouter->generate($tab['route_name']);
+            }
+        }
+
+        return $this->getAdminLink($tab['class_name']);
     }
 
     /**
@@ -1481,7 +1524,7 @@ class LinkCore
                 }
 
                 $sfContainer = SymfonyContainer::getInstance();
-                if (!is_null($sfContainer)) {
+                if (null !== $sfContainer) {
                     $sfRouter = $sfContainer->get('router');
 
                     if (array_key_exists('sf-params', $params)) {

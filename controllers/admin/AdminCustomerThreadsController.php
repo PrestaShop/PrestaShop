@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -183,7 +183,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                     'PS_SAV_IMAP_PWD' => array(
                         'title' => $this->trans('IMAP password', array(), 'Admin.Catalog.Feature'),
                         'hint' => $this->trans('Password to use to connect your IMAP server.', array(), 'Admin.Catalog.Help'),
-                        'type' => 'text',
+                        'type' => 'password',
                     ),
                     'PS_SAV_IMAP_DELETE_MSG' => array(
                         'title' => $this->trans('Delete messages', array(), 'Admin.Catalog.Feature'),
@@ -245,7 +245,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
         $this->addRowAction('delete');
 
         $this->_select = '
-			CONCAT(c.`firstname`," ",c.`lastname`) as customer, cl.`name` as contact, l.`name` as language, group_concat(message) as messages, cm.private,
+			CONCAT(c.`firstname`," ",c.`lastname`) as customer, cl.`name` as contact, l.`name` as language, group_concat(cm.`message`) as messages, cm.private,
 			(
 				SELECT IFNULL(CONCAT(LEFT(e.`firstname`, 1),". ",e.`lastname`), "--")
 				FROM `' . _DB_PREFIX_ . 'customer_message` cm2

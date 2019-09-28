@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -331,7 +331,7 @@ class CountryCore extends ObjectModel
      *
      * @param int $idCountry Country ID
      *
-     * @return bool|false|null|string
+     * @return bool|false|string|null
      */
     public static function getZipCodeFormat($idCountry)
     {
@@ -357,7 +357,7 @@ class CountryCore extends ObjectModel
      * @param int $idZone Zone ID
      * @param int $idLang Language ID
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return array|false|mysqli_result|PDOStatement|resource|null
      */
     public static function getCountriesByZoneId($idZone, $idLang)
     {
@@ -448,8 +448,6 @@ class CountryCore extends ObjectModel
         }
 
         $zipRegexp = '/^' . $this->zip_code_format . '$/ui';
-        $zipRegexp = str_replace(' ', '( |)', $zipRegexp);
-        $zipRegexp = str_replace('-', '(-|)', $zipRegexp);
         $zipRegexp = str_replace('N', '[0-9]', $zipRegexp);
         $zipRegexp = str_replace('L', '[a-zA-Z]', $zipRegexp);
         $zipRegexp = str_replace('C', $this->iso_code, $zipRegexp);

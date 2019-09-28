@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -349,7 +349,7 @@ class OrderHistoryCore extends ObjectModel
 
         // changes invoice number of order ?
         if (!Validate::isLoadedObject($new_os) || !Validate::isLoadedObject($order)) {
-            die($this->trans('Invalid new order status', array(), 'Admin.Orderscustomers.Notification'));
+            die(Tools::displayError($this->trans('Invalid new order status', array(), 'Admin.Orderscustomers.Notification')));
         }
 
         // the order is valid if and only if the invoice is available and the order is not cancelled
@@ -486,11 +486,17 @@ class OrderHistoryCore extends ObjectModel
             ShopUrl::cacheMainDomainForShop($order->id_shop);
 
             $topic = $result['osname'];
+            $carrierUrl = '';
+            if (Validate::isLoadedObject($carrier = new Carrier((int) $order->id_carrier, $order->id_lang))) {
+                $carrierUrl = $carrier->url;
+            }
             $data = array(
                 '{lastname}' => $result['lastname'],
                 '{firstname}' => $result['firstname'],
                 '{id_order}' => (int) $this->id_order,
                 '{order_name}' => $order->getUniqReference(),
+                '{followup}' => str_replace('@', $order->getWsShippingNumber(), $carrierUrl),
+                '{shipping_number}' => $order->getWsShippingNumber(),
             );
 
             if ($result['module_name']) {

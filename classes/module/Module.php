@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,15 +27,17 @@ use PrestaShop\PrestaShop\Adapter\LegacyLogger;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
 use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
 use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
+use PrestaShop\TranslationToolsBundle\Translation\Helper\DomainHelper;
 
 abstract class ModuleCore implements ModuleInterface
 {
     /** @var int Module ID */
     public $id = null;
 
-    /** @var float Version */
+    /** @var string Version */
     public $version;
     public $database_version;
 
@@ -61,6 +63,11 @@ abstract class ModuleCore implements ModuleInterface
     /** @var string A little description of the module */
     public $description;
 
+    /**
+     * @var string Text to display when ask for confirmation on uninstall action
+     */
+    public $confirmUninstall;
+
     /** @var string author of the module */
     public $author;
 
@@ -69,6 +76,11 @@ abstract class ModuleCore implements ModuleInterface
 
     /** @var string Module key provided by addons.prestashop.com */
     public $module_key = '';
+
+    /**
+     * @var bool Set to true to enable bootstrap theme on configuration page
+     */
+    public $bootstrap = false;
 
     public $description_full;
 
@@ -445,7 +457,7 @@ abstract class ModuleCore implements ModuleInterface
     /**
      * Set errors, warning or success message of a module upgrade.
      *
-     * @param $upgrade_detail
+     * @param array $upgrade_detail
      */
     protected function setUpgradeMessage($upgrade_detail)
     {
@@ -474,7 +486,7 @@ abstract class ModuleCore implements ModuleInterface
     /**
      * Init the upgrade module.
      *
-     * @param $module
+     * @param Module $module
      *
      * @return bool
      */
@@ -561,8 +573,8 @@ abstract class ModuleCore implements ModuleInterface
     /**
      * Upgrade the registered version to a new one.
      *
-     * @param $name
-     * @param $version
+     * @param string $name
+     * @param string $version
      *
      * @return bool
      */
@@ -578,9 +590,9 @@ abstract class ModuleCore implements ModuleInterface
      * Check if a module need to be upgraded.
      * This method modify the module_cache adding an upgrade list file.
      *
-     * @param $module
+     * @param Module $module
      *
-     * @return bool
+     * @return bool|null Boolean if Module::$version != Module::$database_version, null instead
      */
     public static function needUpgrade($module)
     {
@@ -601,9 +613,9 @@ abstract class ModuleCore implements ModuleInterface
      * Load the available list of upgrade of a specified module
      * with an associated version.
      *
-     * @param $module_name
-     * @param $module_version
-     * @param $registered_version
+     * @param string $module_name
+     * @param string $module_version
+     * @param string $registered_version
      *
      * @return bool to know directly if any files have been found
      */
@@ -659,7 +671,7 @@ abstract class ModuleCore implements ModuleInterface
     /**
      * Return the status of the upgraded module.
      *
-     * @param $module_name
+     * @param string $module_name
      *
      * @return bool
      */
@@ -742,7 +754,7 @@ abstract class ModuleCore implements ModuleInterface
      *
      * @param array|string $name
      *
-     * @return true if succeed
+     * @return bool
      *
      * @since 1.4.1
      * @deprecated since 1.7
@@ -769,6 +781,8 @@ abstract class ModuleCore implements ModuleInterface
      * Activate current module.
      *
      * @param bool $force_all If true, enable module for all shop
+     *
+     * @return bool
      */
     public function enable($force_all = false)
     {
@@ -845,7 +859,7 @@ abstract class ModuleCore implements ModuleInterface
      *
      * @param array|string $name
      *
-     * @return true if succeed
+     * @return bool
      *
      * @since 1.7
      */
@@ -871,7 +885,7 @@ abstract class ModuleCore implements ModuleInterface
      *
      * @param array|string $name
      *
-     * @return true if succeed
+     * @return bool
      *
      * @since 1.4.1
      * @deprecated since 1.7
@@ -898,6 +912,8 @@ abstract class ModuleCore implements ModuleInterface
      * Desactivate current module.
      *
      * @param bool $force_all If true, disable module for all shop
+     *
+     * @return bool
      */
     public function disable($force_all = false)
     {
@@ -923,6 +939,8 @@ abstract class ModuleCore implements ModuleInterface
      * @param string $id Current div id]
      * @param bool $return define the return way : false for a display, true for a return
      * @param bool $use_vars_instead_of_ids use an js vars instead of ids seperate by "¤"
+     *
+     * @return false|string
      */
     public function displayFlags($languages, $default_language, $ids, $id, $return = false, $use_vars_instead_of_ids = false)
     {
@@ -954,8 +972,8 @@ abstract class ModuleCore implements ModuleInterface
     /**
      * Connect module to a hook.
      *
-     * @param string $hook_name Hook name
-     * @param array $shop_list List of shop linked to the hook (if null, link hook to all shops)
+     * @param string|array $hook_name Hook name
+     * @param array|null $shop_list List of shop linked to the hook (if null, link hook to all shops)
      *
      * @return bool result
      */
@@ -967,8 +985,8 @@ abstract class ModuleCore implements ModuleInterface
     /**
      * Unregister module from hook.
      *
-     * @param mixed $id_hook Hook id (can be a hook name since 1.5.0)
-     * @param array $shop_list List of shop
+     * @param int|string $hook_id Hook id (can be a hook name since 1.5.0)
+     * @param array|null $shop_list List of shop
      *
      * @return bool result
      */
@@ -980,8 +998,8 @@ abstract class ModuleCore implements ModuleInterface
     /**
      * Unregister exceptions linked to module.
      *
-     * @param int $id_hook Hook id
-     * @param array $shop_list List of shop
+     * @param int $hook_id Hook id
+     * @param array|null $shop_list List of shop
      *
      * @return bool result
      */
@@ -1035,7 +1053,7 @@ abstract class ModuleCore implements ModuleInterface
     /**
      * Edit exceptions for module->Hook.
      *
-     * @param int $hookID Hook id
+     * @param int $id_hook Hook id
      * @param array $excepts List of shopID and file name
      *
      * @return bool result
@@ -1057,7 +1075,7 @@ abstract class ModuleCore implements ModuleInterface
      * of an AdminTab which belongs to a module, in order to keep translation
      * related to a module in its directory (instead of $_LANGADM).
      *
-     * @param mixed $current_class the
+     * @param string $current_class Name of Module class
      *
      * @return bool|string if the class belongs to a module, will return the module name. Otherwise, return false.
      */
@@ -1098,13 +1116,13 @@ abstract class ModuleCore implements ModuleInterface
      *
      * @param string $module_name Module name
      *
-     * @return Module
+     * @return Module|false
      */
     public static function getInstanceByName($module_name)
     {
         if (!Validate::isModuleName($module_name)) {
             if (_PS_MODE_DEV_) {
-                die(Context::getContext()->getTranslator()->trans('%1$s is not a valid module name.', array(Tools::safeOutput($module_name)), 'Admin.Modules.Notification'));
+                die(Tools::displayError(Context::getContext()->getTranslator()->trans('%1$s is not a valid module name.', array(Tools::safeOutput($module_name)), 'Admin.Modules.Notification')));
             }
 
             return false;
@@ -1147,7 +1165,7 @@ abstract class ModuleCore implements ModuleInterface
      *
      * @param int $id_module Module ID
      *
-     * @return Module instance
+     * @return Module|false
      */
     public static function getInstanceById($id_module)
     {
@@ -1625,9 +1643,7 @@ abstract class ModuleCore implements ModuleInterface
     /**
      * Return non native module.
      *
-     * @param int $position Take only positionnables modules
-     *
-     * @return array Modules
+     * @return array|false Modules list or false if cannot read xml
      */
     public static function getNonNativeModuleList()
     {
@@ -1710,8 +1726,7 @@ abstract class ModuleCore implements ModuleInterface
     /**
      * Return if the module is provided by addons.prestashop.com or not.
      *
-     * @param string $name The module name (the folder name)
-     * @param string $key The key provided by addons
+     * @param string $module_name The module name (the folder name)
      *
      * @return int
      */
@@ -1877,7 +1892,7 @@ abstract class ModuleCore implements ModuleInterface
     /**
      * Create the Addons API call from the module name only.
      *
-     * @param string $name Module dir name
+     * @param string $module_name Module dir name
      *
      * @return bool Returns if the module is trusted by addons.prestashop.com
      */
@@ -1959,7 +1974,7 @@ abstract class ModuleCore implements ModuleInterface
      *
      * @param string $string String to translate
      * @param bool|string $specific filename to use in translation key
-     * @param string|null $locale Give a context for the translation
+     * @param string|null $locale Locale to translate to
      *
      * @return string Translation
      */
@@ -1969,15 +1984,24 @@ abstract class ModuleCore implements ModuleInterface
             return $string;
         }
 
-        return Translate::getModuleTranslation($this, $string, ($specific) ? $specific : $this->name);
+        return Translate::getModuleTranslation(
+            $this,
+            $string,
+            ($specific) ? $specific : $this->name,
+            null,
+            false,
+            $locale
+        );
     }
 
     /**
      * Reposition module
      *
-     * @param bool $id_hook Hook ID
+     * @param int $id_hook Hook ID
      * @param bool $way Up (0) or Down (1)
-     * @param int $position
+     * @param int|null $position
+     *
+     * @return bool
      */
     public function updatePosition($id_hook, $way, $position = null)
     {
@@ -2054,14 +2078,16 @@ abstract class ModuleCore implements ModuleInterface
      * Reorder modules position
      *
      * @param bool $id_hook Hook ID
-     * @param array $shop_list List of shop
+     * @param array|null $shop_list List of shop
+     *
+     * @return bool
      */
     public function cleanPositions($id_hook, $shop_list = null)
     {
         $sql = 'SELECT `id_module`, `id_shop`
             FROM `' . _DB_PREFIX_ . 'hook_module`
             WHERE `id_hook` = ' . (int) $id_hook . '
-            ' . ((!is_null($shop_list) && $shop_list) ? ' AND `id_shop` IN(' . implode(', ', array_map('intval', $shop_list)) . ')' : '') . '
+            ' . ((null !== $shop_list && $shop_list) ? ' AND `id_shop` IN(' . implode(', ', array_map('intval', $shop_list)) . ')' : '') . '
             ORDER BY `position`';
         $results = Db::getInstance()->executeS($sql);
         $position = array();
@@ -2198,6 +2224,7 @@ abstract class ModuleCore implements ModuleInterface
      *
      * @param int $id_module Module ID
      * @param int $id_hook Hook ID
+     * @param bool $dispatch
      *
      * @return array Exceptions
      */
@@ -2255,6 +2282,7 @@ abstract class ModuleCore implements ModuleInterface
      * Return exceptions for module in hook
      *
      * @param int $id_hook Hook ID
+     * @param bool $dispatch
      *
      * @return array Exceptions
      */
@@ -2413,15 +2441,18 @@ abstract class ModuleCore implements ModuleInterface
      * Use this method to return the result of a smarty template when assign data only locally with $this->smarty->assign().
      *
      * @param string $templatePath relative path the template file, from the module root dir
-     * @param null $cache_id
-     * @param null $compile_id
+     * @param string|null $cache_id
+     * @param string|null $compile_id
      *
-     * @return mixed
+     * @return string
      */
     public function fetch($templatePath, $cache_id = null, $compile_id = null)
     {
         if ($cache_id !== null) {
             Tools::enableCache();
+        }
+        if ($compile_id === null) {
+            $compile_id = Context::getContext()->shop->theme->getName();
         }
 
         $template = $this->context->smarty->createTemplate(
@@ -2478,7 +2509,7 @@ abstract class ModuleCore implements ModuleInterface
      *
      * @param string $template
      *
-     * @return string
+     * @return string|null
      */
     public function getTemplatePath($template)
     {
@@ -2517,8 +2548,8 @@ abstract class ModuleCore implements ModuleInterface
      * Clear template cache.
      *
      * @param string $template Template name
-     * @param int null $cache_id
-     * @param int null $compile_id
+     * @param string|null $cache_id
+     * @param string|null $compile_id
      *
      * @return int Number of template cleared
      */
@@ -2563,8 +2594,8 @@ abstract class ModuleCore implements ModuleInterface
      * Clear defered template cache.
      *
      * @param string $template_path Template path
-     * @param int null $cache_id
-     * @param int null $compile_id
+     * @param string|null $cache_id
+     * @param string|null $compile_id
      *
      * @return int Number of template cleared
      */
@@ -2707,7 +2738,7 @@ abstract class ModuleCore implements ModuleInterface
      * Check employee permission for module.
      *
      * @param array $variable (action)
-     * @param object $employee
+     * @param Employee $employee
      *
      * @return bool if module can be transplanted on hook
      */
@@ -2720,8 +2751,8 @@ abstract class ModuleCore implements ModuleInterface
      * Check employee permission for module (static method).
      *
      * @param int $id_module
-     * @param array $variable (action)
-     * @param object $employee
+     * @param string $variable (action)
+     * @param Employee $employee
      *
      * @return bool if module can be transplanted on hook
      */
@@ -2748,6 +2779,7 @@ abstract class ModuleCore implements ModuleInterface
      * Get authorized modules for a client group.
      *
      * @param int $group_id
+     * @param array $shops
      *
      * @return array|null
      */
@@ -2834,7 +2866,7 @@ abstract class ModuleCore implements ModuleInterface
     /**
      * Return module position for a given hook
      *
-     * @param bool $id_hook Hook ID
+     * @param int $id_hook Hook ID
      *
      * @return int position
      */
@@ -2873,6 +2905,8 @@ abstract class ModuleCore implements ModuleInterface
      * add a warning message to display at the top of the admin page.
      *
      * @param string $msg
+     *
+     * @return false|null
      */
     public function adminDisplayWarning($msg)
     {
@@ -2886,6 +2920,8 @@ abstract class ModuleCore implements ModuleInterface
      * add a info message to display at the top of the admin page.
      *
      * @param string $msg
+     *
+     * @return false|null
      */
     protected function adminDisplayInformation($msg)
     {
@@ -3062,9 +3098,7 @@ abstract class ModuleCore implements ModuleInterface
             $dir_name = dirname($override_dest);
 
             if (!$orig_path && !is_dir($dir_name)) {
-                $oldumask = umask(0000);
-                @mkdir($dir_name, 0777);
-                umask($oldumask);
+                @mkdir($dir_name, FileSystem::DEFAULT_MODE_FOLDER);
             }
 
             if (!is_writable($dir_name)) {
@@ -3274,7 +3308,14 @@ abstract class ModuleCore implements ModuleInterface
 
     private function getWidgetHooks()
     {
-        return array_values(Hook::getHooks(false, true));
+        $hooks = array_values(Hook::getHooks(false, true));
+        $registeredHookList = Hook::getHookModuleList();
+
+        foreach ($hooks as &$hook) {
+            $hook['registered'] = !empty($registeredHookList[$hook['id_hook']][$this->id]);
+        }
+
+        return $hooks;
     }
 
     /**
@@ -3290,6 +3331,7 @@ abstract class ModuleCore implements ModuleInterface
 
         $hooks_list = Hook::getHooks();
         $possible_hooks_list = array();
+        $registeredHookList = Hook::getHookModuleList();
         foreach ($hooks_list as &$current_hook) {
             $hook_name = $current_hook['name'];
             $retro_hook_name = Hook::getRetroHookName($hook_name);
@@ -3300,6 +3342,7 @@ abstract class ModuleCore implements ModuleInterface
                     'name' => $hook_name,
                     'description' => $current_hook['description'],
                     'title' => $current_hook['title'],
+                    'registered' => !empty($registeredHookList[$current_hook['id_hook']][$this->id]),
                 );
             }
         }
@@ -3350,10 +3393,11 @@ abstract class ModuleCore implements ModuleInterface
     {
         $moduleName = $this->name;
         $domains = array_keys($this->context->getTranslator()->getCatalogue()->all());
-        $moduleName = preg_replace('/^ps_(\w+)/', '$1', $moduleName);
+        $moduleBaseDomain = DomainHelper::buildModuleBaseDomain($moduleName);
+        $length = strlen($moduleBaseDomain);
 
         foreach ($domains as $domain) {
-            if (false !== stripos($domain, $moduleName)) {
+            if (substr($domain, 0, $length) === $moduleBaseDomain) {
                 return true;
             }
         }

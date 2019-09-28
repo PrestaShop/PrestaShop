@@ -1877,13 +1877,13 @@ class AdminProductsController extends AdminProductsControllerCore
     protected function isProductFieldUpdated($field, $id_lang = null)
     {
         static $is_activated = null;
-        if (is_null($is_activated)) {
+        if (null === $is_activated) {
             $is_activated = Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP && $this->id_object;
         }
         if (!$is_activated) {
             return true;
         }
-        if (is_null($id_lang)) {
+        if (null === $id_lang) {
             return !empty($_POST['multishop_check'][$field]);
         } else {
             return !empty($_POST['multishop_check'][$field][$id_lang]);
@@ -1928,7 +1928,7 @@ class AdminProductsController extends AdminProductsControllerCore
             } else {
                 $virtual_product_filename = Tools::getValue('virtual_product_filename', ProductDownload::getNewFilename());
             }
-            $product->setDefaultAttribute(0);//reset cache_default_attribute
+            $product->setDefaultAttribute(0); //reset cache_default_attribute
             if (Tools::getValue('virtual_product_expiration_date') && !Validate::isDate(Tools::getValue('virtual_product_expiration_date'))) {
                 if (!Tools::getValue('virtual_product_expiration_date')) {
                     $this->errors[] = Tools::displayError('The expiration-date attribute is required.');
@@ -2229,7 +2229,7 @@ class AdminProductsController extends AdminProductsControllerCore
         if (isset($categories[$id_category])) {
             foreach ($categories[$id_category] as $key => $row) {
                 if ($key != 'infos') {
-                    $content .= AdminProductsController::recurseCategoryForInclude($id_obj, $indexedCategories, $categories, $categories[$id_category][$key], $key, $id_category_default, $has_suite);
+                    $content .= static::recurseCategoryForInclude($id_obj, $indexedCategories, $categories, $categories[$id_category][$key], $key, $id_category_default, $has_suite);
                 }
             }
         }
@@ -3567,13 +3567,13 @@ class AdminProductsController extends AdminProductsControllerCore
                 $error = 0;
                 if (!ImageManager::resize($file['save_path'], $new_path.'.'.$image->image_format, null, null, 'jpg', false, $error)) {
                     switch ($error) {
-                        case ImageManager::ERROR_FILE_NOT_EXIST :
+                        case ImageManager::ERROR_FILE_NOT_EXIST:
                             $file['error'] = Tools::displayError('An error occurred while copying image, the file does not exist anymore.');
                             break;
-                        case ImageManager::ERROR_FILE_WIDTH :
+                        case ImageManager::ERROR_FILE_WIDTH:
                             $file['error'] = Tools::displayError('An error occurred while copying image, the file width is 0px.');
                             break;
-                        case ImageManager::ERROR_MEMORY_LIMIT :
+                        case ImageManager::ERROR_MEMORY_LIMIT:
                             $file['error'] = Tools::displayError('An error occurred while copying image, check your memory limit.');
                             break;
                         default:
@@ -4231,7 +4231,7 @@ class AdminProductsController extends AdminProductsControllerCore
                     die(json_encode(array('error' => $error)));
                 }
                 break;
-            case 'advanced_stock_management' :
+            case 'advanced_stock_management':
                 if (Tools::getValue('value') === false) {
                     die(json_encode(array('error' =>  $this->l('Undefined value'))));
                 }
@@ -4335,7 +4335,7 @@ class AdminProductsController extends AdminProductsControllerCore
     {
         Pack::deleteItems($product->id);
         if (Tools::getValue('type_product') == Product::PTYPE_PACK) {
-            $product->setDefaultAttribute(0);//reset cache_default_attribute
+            $product->setDefaultAttribute(0); //reset cache_default_attribute
             $items = Tools::getValue('inputPackItems');
             $lines = array_unique(explode('-', $items));
             if (count($lines)) {

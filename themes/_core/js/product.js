@@ -1,5 +1,5 @@
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,10 +15,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -85,6 +85,17 @@ function getProductUpdateUrl() {
 }
 
 /**
+ * @param {string} errorMessage
+ */
+function showErrorNextToAddtoCartButton(errorMessage) {
+  if (errorMessage === undefined) {
+    errorMessage = 'An error occurred while processing your request';
+  }
+
+  showError($('#product-availability'), errorMessage);
+}
+
+/**
  * Update the product html
  *
  * @param {string} event
@@ -105,7 +116,7 @@ function updateProduct(event, eventType, updateUrl) {
 
   // Can not get product ajax url
   if (updateUrl === null) {
-    showError($('#product-availability'), 'An error occurred while processing your request');
+    showErrorNextToAddtoCartButton();
 
     return;
   }
@@ -123,6 +134,13 @@ function updateProduct(event, eventType, updateUrl) {
     clearTimeout(currentRequestDelayedId);
   }
 
+  // Most update need to occur (almost) instantly, but in some cases (like keyboard actions)
+  // we need to delay the update a bit more
+  let updateDelay = 30;
+  if ('updatedProductQuantity' === eventType) {
+    updateDelay = 750;
+  }
+
   currentRequestDelayedId = setTimeout(function updateProductRequest() {
 
     if (formSerialized === '') {
@@ -135,7 +153,7 @@ function updateProduct(event, eventType, updateUrl) {
       data: {
         ajax: 1,
         action: 'refresh',
-        quantity_wanted: $quantityWantedInput.val()
+        quantity_wanted: eventType === 'updatedProductCombination' ? $quantityWantedInput.attr('min') : $quantityWantedInput.val()
       },
       dataType: 'json',
       beforeSend() {
@@ -147,7 +165,7 @@ function updateProduct(event, eventType, updateUrl) {
         if (textStatus !== 'abort'
             && $('section#main > .ajax-error').length === 0
         ) {
-          showError($('#product-availability'), 'An error occurred while processing your request');
+          showErrorNextToAddtoCartButton();
         }
       },
       success(data, textStatus, errorThrown) {
@@ -165,6 +183,7 @@ function updateProduct(event, eventType, updateUrl) {
         $('.product-discounts').replaceWith(data.product_discounts);
         $('.product-additional-info').replaceWith(data.product_additional_info);
         $('#product-details').replaceWith(data.product_details);
+        $('.product-flags').replaceWith(data.product_flags);
         replaceAddToCartSections(data);
         const minimalProductQuantity = parseInt(data.product_minimal_quantity, 10);
 
@@ -182,7 +201,7 @@ function updateProduct(event, eventType, updateUrl) {
         currentRequestDelayedId = null;
       }
     });
-  }.bind(currentRequest, currentRequestDelayedId), 1500);
+  }.bind(currentRequest, currentRequestDelayedId), updateDelay);
 }
 
 /**
@@ -203,7 +222,7 @@ function replaceAddToCartSections(data) {
   });
 
   if ($productAddToCart === null) {
-    showError($('#product-availability'), 'An error occurred while processing your request');
+    showErrorNextToAddtoCartButton();
   }
   const $addProductToCart = $('.product-add-to-cart');
   const productAvailabilitySelector = '.add';
@@ -311,7 +330,7 @@ $(document).ready(() => {
       productUpdateUrl => updateProduct(event, eventType, productUpdateUrl)
     ).fail(() => {
       if ($('section#main > .ajax-error').length === 0) {
-        showError($('#product-availability'), 'An error occurred while processing your request');
+        showErrorNextToAddtoCartButton();
       }
     });
   });
@@ -320,11 +339,27 @@ $(document).ready(() => {
     if (!args.product_url || !args.id_product_attribute) {
       return;
     }
+
+    /*
+     * If quickview modal is present we are not on product page, so
+     * we don't change the url nor title
+     */
+    const quickView = $('.modal.quickview');
+    if (quickView.length) {
+      return;
+    }
+
+    let pageTitle = document.title;
+    if (args.product_title) {
+      pageTitle = args.product_title;
+      $(document).attr('title', pageTitle);
+    }
+
     window.history.replaceState(
       {
         id_product_attribute: args.id_product_attribute
       },
-      document.title,
+      pageTitle,
       args.product_url
     );
   });
@@ -336,5 +371,13 @@ $(document).ready(() => {
     const $quantityWantedInput = $('#quantity_wanted');
     //Force value to 1, it will automatically trigger updateProduct and reset the appropriate min value if needed
     $quantityWantedInput.val(1);
+  });
+
+  prestashop.on('showErrorNextToAddtoCartButton', (event) => {
+    if (!event || !event.errorMessage) {
+      return;
+    }
+
+    showErrorNextToAddtoCartButton(event.errorMessage);
   });
 });

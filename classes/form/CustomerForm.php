@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -115,18 +115,18 @@ class CustomerFormCore extends AbstractForm
             ));
         }
 
-        // birthday is from input type text..., so we need to convert to a valid date
+        // check birthdayField against null case is mandatory.
         $birthdayField = $this->getField('birthday');
-        if (!empty($birthdayField)) {
-            $birthdayValue = $birthdayField->getValue();
-            if (!empty($birthdayValue)) {
-                $dateBuilt = DateTime::createFromFormat(Context::getContext()->language->date_format_lite, $birthdayValue);
-                if (!empty($dateBuilt)) {
-                    $birthdayField->setValue($dateBuilt->format('Y-m-d'));
-                }
-            }
+        if (!empty($birthdayField) &&
+            !empty($birthdayField->getValue()) &&
+            Validate::isBirthDate($birthdayField->getValue(), Context::getContext()->language->date_format_lite)
+        ) {
+            $dateBuilt = DateTime::createFromFormat(
+                Context::getContext()->language->date_format_lite,
+                $birthdayField->getValue()
+            );
+            $birthdayField->setValue($dateBuilt->format('Y-m-d'));
         }
-
         $this->validateFieldsLengths();
         $this->validateByModules();
 

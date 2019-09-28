@@ -1,5 +1,5 @@
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,10 +15,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -222,7 +222,7 @@ export default class ModuleCard {
     return (event.result !== false); // explicit false must be set from handlers to stop propagation of the click event.
   };
 
-  _requestToController(action, element, forceDeletion) {
+  _requestToController(action, element, forceDeletion, disableCacheClear, callback) {
     var self = this;
     var jqElementObj = element.closest(this.moduleItemActionsSelector);
     var form = element.closest("form");
@@ -232,6 +232,9 @@ export default class ModuleCard {
 
     if (forceDeletion === "true" || forceDeletion === true) {
       actionParams.push({name: "actionParams[deletion]", value: true});
+    }
+    if (disableCacheClear === "true" || disableCacheClear === true) {
+      actionParams.push({name: "actionParams[cacheClearEnabled]", value: 0});
     }
 
     $.ajax({
@@ -258,29 +261,22 @@ export default class ModuleCard {
         } else {
           $.growl.notice({message: result[moduleTechName].msg});
 
-          var alteredSelector = null;
+          var alteredSelector = self._getModuleItemSelector().replace('.', '');
           var mainElement = null;
 
           if (action == "uninstall") {
-            jqElementObj.fadeOut(function() {
-              alteredSelector = self._getModuleItemSelector().replace('.', '');
-              mainElement = jqElementObj.parents('.' + alteredSelector).first();
-              mainElement.remove();
-            });
+            mainElement = jqElementObj.closest('.' + alteredSelector);
+            mainElement.remove();
 
             BOEvent.emitEvent("Module Uninstalled", "CustomEvent");
           } else if (action == "disable") {
-
-            alteredSelector = self._getModuleItemSelector().replace('.', '');
-            mainElement = jqElementObj.parents('.' + alteredSelector).first();
+            mainElement = jqElementObj.closest('.' + alteredSelector);
             mainElement.addClass(alteredSelector + '-isNotActive');
             mainElement.attr('data-active', '0');
 
             BOEvent.emitEvent("Module Disabled", "CustomEvent");
           } else if (action == "enable") {
-            alteredSelector = self._getModuleItemSelector().replace('.', '');
-
-            mainElement = jqElementObj.parents('.' + alteredSelector).first();
+            mainElement = jqElementObj.closest('.' + alteredSelector);
             mainElement.removeClass(alteredSelector + '-isNotActive');
             mainElement.attr('data-active', '1');
 
@@ -290,9 +286,16 @@ export default class ModuleCard {
           jqElementObj.replaceWith(result[moduleTechName].action_menu_html);
         }
       }
+    }).fail(function() {
+      const moduleItem = jqElementObj.closest('module-item-list');
+      const techName = moduleItem.data('techName');
+      $.growl.error({message: "Could not perform action "+action+" for module "+techName});
     }).always(function () {
       jqElementObj.fadeIn();
       spinnerObj.remove();
+      if (callback) {
+        callback();
+      }
     });
 
     return false;

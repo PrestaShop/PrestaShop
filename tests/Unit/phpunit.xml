@@ -2,6 +2,9 @@
          color="true"
          stopOnFailure="true"
 >
+  <php>
+    <server name="KERNEL_CLASS" value="AppKernel" />
+  </php>
     <testsuites>
         <testsuite name="Unit">
             <directory>.</directory>

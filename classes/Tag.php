@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -186,7 +186,7 @@ class TagCore extends ObjectModel
      * @param int $idLang Language ID
      * @param int $nb number
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return array|false|mysqli_result|PDOStatement|resource|null
      */
     public static function getMainTags($idLang, $nb = 10)
     {
@@ -198,7 +198,7 @@ class TagCore extends ObjectModel
             SELECT t.name, counter AS times
             FROM `' . _DB_PREFIX_ . 'tag_count` pt
             LEFT JOIN `' . _DB_PREFIX_ . 'tag` t ON (t.id_tag = pt.id_tag)
-            WHERE pt.`id_group` ' . (count($groups) ? 'IN (' . implode(',', $groups) . ')' : '= 1') . '
+            WHERE pt.`id_group` ' . (count($groups) ? 'IN (' . implode(',', $groups) . ')' : '=' . (int) Group::getCurrent()->id) . '
             AND pt.`id_lang` = ' . (int) $idLang . ' AND pt.`id_shop` = ' . (int) $context->shop->id . '
             ORDER BY times DESC
             LIMIT ' . (int) $nb);
@@ -243,7 +243,7 @@ class TagCore extends ObjectModel
      * @param bool $associated
      * @param Context|null $context
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return array|false|mysqli_result|PDOStatement|resource|null
      */
     public function getProducts($associated = true, Context $context = null)
     {

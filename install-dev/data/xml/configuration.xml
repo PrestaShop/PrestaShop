@@ -841,5 +841,11 @@ Country</value>
     <configuration id="PS_LABEL_OOS_PRODUCTS_BOD" name="PS_LABEL_OOS_PRODUCTS_BOD">
       <value>Out-of-Stock</value>
     </configuration>
+    <configuration id="PS_CATALOG_MODE_WITH_PRICES" name="PS_CATALOG_MODE_WITH_PRICES">
+      <value>0</value>
+    </configuration>
+    <configuration id="PS_MAIL_THEME" name="PS_MAIL_THEME">
+      <value>modern</value>
+    </configuration>
   </entities>
 </entity_configuration>

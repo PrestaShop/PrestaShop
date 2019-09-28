@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -692,34 +692,11 @@ class AdminCarrierWizardControllerCore extends AdminController
                 if (!isset($range_sup[$key])) {
                     continue;
                 }
-                $add_range = true;
-                if ($range_type == Carrier::SHIPPING_METHOD_WEIGHT) {
-                    if (!RangeWeight::rangeExist(null, (float) $delimiter1, (float) $range_sup[$key], $carrier->id_reference)) {
-                        $range = new RangeWeight();
-                    } else {
-                        $range = new RangeWeight((int) $key);
-                        $range->id_carrier = (int) $carrier->id;
-                        $range->save();
-                        $add_range = false;
-                    }
-                }
-
-                if ($range_type == Carrier::SHIPPING_METHOD_PRICE) {
-                    if (!RangePrice::rangeExist(null, (float) $delimiter1, (float) $range_sup[$key], $carrier->id_reference)) {
-                        $range = new RangePrice();
-                    } else {
-                        $range = new RangePrice((int) $key);
-                        $range->id_carrier = (int) $carrier->id;
-                        $range->save();
-                        $add_range = false;
-                    }
-                }
-                if ($add_range) {
-                    $range->id_carrier = (int) $carrier->id;
-                    $range->delimiter1 = (float) $delimiter1;
-                    $range->delimiter2 = (float) $range_sup[$key];
-                    $range->save();
-                }
+                $range = $carrier->getRangeObject((int) $range_type);
+                $range->id_carrier = (int) $carrier->id;
+                $range->delimiter1 = (float) $delimiter1;
+                $range->delimiter2 = (float) $range_sup[$key];
+                $range->save();
 
                 if (!Validate::isLoadedObject($range)) {
                     return false;

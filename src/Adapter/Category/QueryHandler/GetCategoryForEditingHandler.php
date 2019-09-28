@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,13 +27,16 @@
 namespace PrestaShop\PrestaShop\Adapter\Category\QueryHandler;
 
 use Category;
+use Db;
 use ImageManager;
 use ImageType;
-use PrestaShop\PrestaShop\Core\Domain\Category\EditableCategory;
+use PDO;
+use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\EditableCategory;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Category\QueryHandler\GetCategoryForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\MenuThumbnailId;
 use PrestaShop\PrestaShop\Core\Image\Parser\ImageTagSourceParserInterface;
 
 /**
@@ -70,7 +73,22 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
             );
         }
 
+        /**
+         * Select recursivly the subcategories in one SQL request
+         */
+        $subcategories = Db::getInstance()->query(
+            'SELECT id_category ' .
+            'FROM ( ' .
+            '  SELECT * FROM `' . _DB_PREFIX_ . 'category`' .
+            '  ORDER BY id_parent, id_category' .
+            ') category_sorted, ' .
+            '(SELECT @pv := ' . (int) $category->id . ') initialisation ' .
+            'WHERE FIND_IN_SET(id_parent, @pv) ' .
+            'AND LENGTH(@pv := CONCAT(@pv, \',\', id_category))'
+        );
+
         $editableCategory = new EditableCategory(
+            $query->getCategoryId(),
             $category->name,
             (bool) $category->active,
             $category->description,
@@ -84,7 +102,8 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
             (bool) $category->is_root_category,
             $this->getCoverImage($query->getCategoryId()),
             $this->getThumbnailImage($query->getCategoryId()),
-            $this->getMenuThumbnailImages($query->getCategoryId())
+            $this->getMenuThumbnailImages($query->getCategoryId()),
+            $subcategories->fetchAll(PDO::FETCH_COLUMN)
         );
 
         return $editableCategory;
@@ -184,18 +203,23 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
     {
         $menuThumbnails = [];
 
-        for ($i = 0; $i < 3; ++$i) {
-            if (file_exists(_PS_CAT_IMG_DIR_ . $categoryId->getValue() . '-' . $i . '_thumb.jpg')) {
+        foreach (MenuThumbnailId::ALLOWED_ID_VALUES as $id) {
+            $thumbnailPath = _PS_CAT_IMG_DIR_ . $categoryId->getValue() . '-' . $id . '_thumb.jpg';
+
+            if (file_exists($thumbnailPath)) {
                 $imageTag = ImageManager::thumbnail(
-                    _PS_CAT_IMG_DIR_ . $categoryId->getValue() . '-' . $i . '_thumb.jpg',
-                    'category_' . $categoryId->getValue() . '-' . $i . '_thumb.jpg',
+                    $thumbnailPath,
+                    'category_' . $categoryId->getValue() . '-' . $id . '_thumb.jpg',
                     100,
                     'jpg',
                     true,
                     true
                 );
 
-                $menuThumbnails[$i]['path'] = $this->imageTagSourceParser->parse($imageTag);
+                $menuThumbnails[$id] = [
+                    'path' => $this->imageTagSourceParser->parse($imageTag),
+                    'id' => $id,
+                ];
             }
         }
 

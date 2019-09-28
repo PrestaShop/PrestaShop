@@ -151,6 +151,7 @@ services:
             - '@prestashop.adapter.meta.set_up_urls.configuration'
             - '@prestashop.adapter.meta.shop_url.configuration'
             - '@prestashop.adapter.meta.url_schema.configuration'
+            - '@prestashop.adapter.meta.seo_options.configuration'
             - '@translator'
             - '@prestashop.adapter.routes.route_validator'
             - '@prestashop.adapter.validate'
@@ -159,3 +160,25 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Employee\EmployeeOptionsFormDataProvider'
         arguments:
             - '@prestashop.core.team.employee.configuration.employee_options_configuration'
+
+    prestashop.admin.currency.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Currencies\CurrencyFormDataProvider'
+        arguments:
+            - '@prestashop.core.command_bus'
+            - '@=service("prestashop.adapter.legacy.configuration").get("PS_ACTIVE_CRONJOB_EXCHANGE_RATE")'
+
+    prestashop.admin.tax_options.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Tax\TaxOptionsFormDataProvider'
+        arguments:
+            - '@prestashop.core.tax.tax_options_configuration'
+
+    prestashop.admin.improve.design.theme.shop_logos.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Improve\Design\Theme\ShopLogosFormDataProvider'
+        arguments:
+            - '@prestashop.core.command_bus'
+            - '@prestashop.adapter.theme.theme_multi_store_settings_form_data_provider'
+
+    prestashop.admin.mail_theme.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Improve\Design\MailTheme\MailThemeFormDataProvider'
+        arguments:
+            - '@prestashop.core.mail_theme.configuration'

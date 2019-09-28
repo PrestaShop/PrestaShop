@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,24 +16,26 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Shop;
 
+use Context as LegacyContext;
 use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
+use PrestaShop\PrestaShop\Core\Shop\ShopContextInterface;
 use Shop;
 use ShopGroup;
 
 /**
  * This class will provide legacy shop context.
  */
-class Context implements MultistoreContextCheckerInterface
+class Context implements MultistoreContextCheckerInterface, ShopContextInterface
 {
     /**
      * Get shops list.
@@ -190,5 +192,23 @@ class Context implements MultistoreContextCheckerInterface
     public function isGroupShopContext()
     {
         return Shop::getContext() === Shop::CONTEXT_GROUP;
+    }
+
+    /**
+     * Get list of all shop IDs.
+     *
+     * @return array
+     */
+    public function getAllShopIds()
+    {
+        return Shop::getCompleteListOfShopsID();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getShopName()
+    {
+        return LegacyContext::getContext()->shop->name;
     }
 }

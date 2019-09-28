@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -1096,7 +1096,7 @@ class OrderCore extends ObjectModel
      */
     public function getCustomer()
     {
-        if (is_null($this->cacheCustomer)) {
+        if (null === $this->cacheCustomer) {
             $this->cacheCustomer = new Customer((int) $this->id_customer);
         }
 
@@ -1744,8 +1744,8 @@ class OrderCore extends ObjectModel
     }
 
     /**
-     * Gennerate a unique reference for orders generated with the same cart id
-     * This references, is usefull for check payment.
+     * Generate a unique reference for orders generated with the same cart id
+     * This references, is useful for check payment.
      *
      * @return string
      */
@@ -1842,13 +1842,13 @@ class OrderCore extends ObjectModel
         }
 
         // We put autodate parameter of add method to true if date_add field is null
-        $res = $order_payment->add(is_null($order_payment->date_add)) && $this->update();
+        $res = $order_payment->add(null === $order_payment->date_add) && $this->update();
 
         if (!$res) {
             return false;
         }
 
-        if (!is_null($order_invoice)) {
+        if (null !== $order_invoice) {
             $res = Db::getInstance()->execute('
             INSERT INTO `' . _DB_PREFIX_ . 'order_invoice_payment` (`id_order_invoice`, `id_order_payment`, `id_order`)
             VALUES(' . (int) $order_invoice->id . ', ' . (int) $order_payment->id . ', ' . (int) $this->id . ')');
@@ -1905,7 +1905,7 @@ class OrderCore extends ObjectModel
      */
     public function getShipping()
     {
-        return Db::getInstance()->executeS(
+        $results = Db::getInstance()->executeS(
             'SELECT DISTINCT oc.`id_order_invoice`, oc.`weight`, oc.`shipping_cost_tax_excl`, oc.`shipping_cost_tax_incl`, c.`url`, oc.`id_carrier`, c.`name` as `carrier_name`, oc.`date_add`, "Delivery" as `type`, "true" as `can_edit`, oc.`tracking_number`, oc.`id_order_carrier`, osl.`name` as order_state_name, c.`name` as state_name
             FROM `' . _DB_PREFIX_ . 'orders` o
             LEFT JOIN `' . _DB_PREFIX_ . 'order_history` oh
@@ -1919,6 +1919,11 @@ class OrderCore extends ObjectModel
             WHERE o.`id_order` = ' . (int) $this->id . '
             GROUP BY c.id_carrier'
         );
+        foreach ($results as &$row) {
+            $row['carrier_name'] = Cart::replaceZeroByShopName($row['carrier_name'], null);
+        }
+
+        return $results;
     }
 
     /**
@@ -2407,7 +2412,7 @@ class OrderCore extends ObjectModel
 
     /**
      * By default this function was made for invoice, to compute tax amounts and balance delta (because of computation made on round values).
-     * If you provide $limitToOrderDetails, only these item will be taken into account. This option is usefull for order slip for example,
+     * If you provide $limitToOrderDetails, only these item will be taken into account. This option is useful for order slip for example,
      * where only sublist of the order is refunded.
      *
      * @param $limitToOrderDetails Optional array of OrderDetails to take into account. False by default to take all OrderDetails from the current Order.
@@ -2639,7 +2644,17 @@ class OrderCore extends ObjectModel
 
         // add real order products
         foreach ($this->getProducts() as $product) {
-            $new_cart->updateQty($product['product_quantity'], (int) $product['product_id']);
+            $new_cart->updateQty(
+                $product['product_quantity'],
+                (int) $product['product_id'],
+                null,
+                false,
+                'up',
+                0,
+                null,
+                true,
+                true
+            ); // - skipAvailabilityCheckOutOfStock
         }
 
         // get new shipping cost
@@ -2650,11 +2665,11 @@ class OrderCore extends ObjectModel
         $diff_shipping_tax_incl = $this->total_shipping_tax_incl - $base_total_shipping_tax_incl;
         $diff_shipping_tax_excl = $this->total_shipping_tax_excl - $base_total_shipping_tax_excl;
 
-        $this->total_shipping_tax_excl = $this->total_shipping_tax_excl - $diff_shipping_tax_excl;
-        $this->total_shipping_tax_incl = $this->total_shipping_tax_incl - $diff_shipping_tax_incl;
+        $this->total_shipping_tax_excl -= $diff_shipping_tax_excl;
+        $this->total_shipping_tax_incl -= $diff_shipping_tax_incl;
         $this->total_shipping = $this->total_shipping_tax_incl;
-        $this->total_paid_tax_excl = $this->total_paid_tax_excl - $diff_shipping_tax_excl;
-        $this->total_paid_tax_incl = $this->total_paid_tax_incl - $diff_shipping_tax_incl;
+        $this->total_paid_tax_excl -= $diff_shipping_tax_excl;
+        $this->total_paid_tax_incl -= $diff_shipping_tax_incl;
         $this->total_paid = $this->total_paid_tax_incl;
         $this->update();
 

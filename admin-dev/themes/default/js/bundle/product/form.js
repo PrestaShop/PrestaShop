@@ -1,5 +1,5 @@
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,10 +15,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -74,7 +74,23 @@ $(document).ready(function() {
     $('[data-toggle="tooltip"]').tooltip('hide');
     $('[data-toggle="popover"]').popover('hide');
   });
+
+  $('.summary-description-container a[data-toggle="tab"]').on('shown.bs.tab', resetEditor);
 });
+
+/**
+ * Reset active tinyMce editor (triggered when switch language, or switching tabs)
+ */
+function resetEditor() {
+  const languageEditorsSelector = '.summary-description-container .panel.active div.translation-field.active textarea.autoload_rte';
+  $(languageEditorsSelector).each(function(index, textarea) {
+    const editor = tinyMCE.get(textarea.id);
+    if (editor) {
+      //Reset content to force refresh of editor
+      editor.setContent(editor.getContent());
+    }
+  });
+}
 
 /**
  * Manage show or hide fields
@@ -745,7 +761,10 @@ var form = (function() {
 
   function switchLanguage(iso_code) {
     $('div.translations.tabbable > div > div.translation-field:not(.translation-label-' + iso_code + ')').removeClass('show active');
-    $('div.translations.tabbable > div > div.translation-field.translation-label-' + iso_code).addClass('show active');
+
+    const langueTabSelector = 'div.translations.tabbable > div > div.translation-field.translation-label-' + iso_code;
+    $(langueTabSelector).addClass('show active');
+    resetEditor();
   }
 
   function updateMissingTranslatedNames() {
@@ -1300,6 +1319,7 @@ var imagesProduct = (function() {
         thumbnailWidth: 250,
         thumbnailHeight: null,
         acceptedFiles: 'image/*',
+        timeout: 0,
         dictRemoveFile: translate_javascripts['Delete'],
         dictFileTooBig: translate_javascripts['ToLargeFile'],
         dictCancelUpload: translate_javascripts['Delete'],

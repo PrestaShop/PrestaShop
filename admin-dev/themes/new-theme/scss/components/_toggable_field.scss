@@ -1,0 +1,50 @@
+@import "../config/settings";
+
+.tokenfield {
+  height: auto;
+  input.token-input[type="text"] {
+    display: inline-block;
+    border: 0;
+    outline: none;
+    background-color: transparent;
+    max-width: 100%;
+  }
+
+  .token {
+    display: inline-block;
+    padding: .4rem;
+    margin: .1rem;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    vertical-align: baseline;
+    background-color: $brand-primary;
+
+    > .token-label {
+      white-space: nowrap;
+    }
+
+    .close {
+      margin: 0 .4rem;
+      color: $gray-dark;
+      text-decoration: none;
+      font-size: .875rem;
+      font-weight: 400;
+      text-shadow: none;
+
+      &:hover {
+        color: $gray-dark;
+      }
+    }
+  }
+
+  .token-input {
+    width: auto !important;
+  }
+}
+
+.locale-input-group {
+  .js-taggable-field {
+    width: 80%;
+  }
+}

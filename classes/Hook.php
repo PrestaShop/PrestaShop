@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -101,6 +101,9 @@ class HookCore extends ObjectModel
         // Product page
         'displayProductTabContent' => array('from' => '1.7.0.0'),
         'displayProductTab' => array('from' => '1.7.0.0'),
+
+        // Controller
+        'actionAjaxDieBefore' => array('from' => '1.6.1.1'),
     );
 
     const MODULE_LIST_BY_HOOK_KEY = 'hook_module_exec_list_';
@@ -512,7 +515,7 @@ class HookCore extends ObjectModel
             }
 
             // If shop lists is null, we fill it with all shops
-            if (is_null($shop_list)) {
+            if (null === $shop_list) {
                 $shop_list = Shop::getCompleteListOfShopsID();
             }
 
@@ -591,7 +594,7 @@ class HookCore extends ObjectModel
      *
      * @since 1.5.0
      *
-     * @param string $hook_name Get list of modules for this hook if given
+     * @param string|null $hook_name Get list of modules for this hook if given
      *
      * @return array
      */
@@ -599,7 +602,7 @@ class HookCore extends ObjectModel
     {
         $context = Context::getContext();
         $cache_id = self::MODULE_LIST_BY_HOOK_KEY . (isset($context->shop->id) ? '_' . $context->shop->id : '') . ((isset($context->customer)) ? '_' . $context->customer->id : '');
-        if (!Cache::isStored($cache_id) || $hook_name == 'displayPayment' || $hook_name == 'displayPaymentEU' || $hook_name == 'paymentOptions' || $hook_name == 'displayBackOfficeHeader') {
+        if (!Cache::isStored($cache_id) || $hook_name == 'displayPayment' || $hook_name == 'displayPaymentEU' || $hook_name == 'paymentOptions' || $hook_name == 'displayBackOfficeHeader' || $hook_name == 'displayAdminLogin') {
             $frontend = true;
             $groups = array();
             $use_groups = Group::isFeatureActive();
@@ -622,7 +625,7 @@ class HookCore extends ObjectModel
             $sql = new DbQuery();
             $sql->select('h.`name` as hook, m.`id_module`, h.`id_hook`, m.`name` as module');
             $sql->from('module', 'm');
-            if ($hook_name != 'displayBackOfficeHeader') {
+            if ($hook_name != 'displayBackOfficeHeader' && $hook_name != 'displayAdminLogin') {
                 $sql->join(Shop::addSqlAssociation('module', 'm', true, 'module_shop.enable_device & ' . (int) Context::getContext()->getDevice()));
                 $sql->innerJoin('module_shop', 'ms', 'ms.`id_module` = m.`id_module`');
             }
@@ -645,7 +648,7 @@ class HookCore extends ObjectModel
                     }
                 }
             }
-            if (Validate::isLoadedObject($context->shop)) {
+            if (Validate::isLoadedObject($context->shop) && $hook_name != 'displayAdminLogin') {
                 $sql->where('hm.`id_shop` = ' . (int) $context->shop->id);
             }
 
@@ -678,7 +681,7 @@ class HookCore extends ObjectModel
                     );
                 }
             }
-            if ($hook_name != 'displayPayment' && $hook_name != 'displayPaymentEU' && $hook_name != 'paymentOptions' && $hook_name != 'displayBackOfficeHeader') {
+            if ($hook_name != 'displayPayment' && $hook_name != 'displayPaymentEU' && $hook_name != 'paymentOptions' && $hook_name != 'displayBackOfficeHeader' && $hook_name != 'displayAdminLogin') {
                 Cache::store($cache_id, $list);
                 // @todo remove this in 1.6, we keep it in 1.5 for backward compatibility
                 self::$_hook_modules_cache_exec = $list;
@@ -688,7 +691,7 @@ class HookCore extends ObjectModel
         }
 
         // If hook_name is given, just get list of modules for this hook
-        if ($hook_name) {
+        if (null !== $hook_name) {
             $retro_hook_name = strtolower(Hook::getRetroHookName($hook_name));
             $hook_name = strtolower($hook_name);
 
@@ -745,7 +748,7 @@ class HookCore extends ObjectModel
         }
 
         $hookRegistry = self::getHookRegistry();
-        $isRegistryEnabled = !is_null($hookRegistry);
+        $isRegistryEnabled = null !== $hookRegistry;
 
         if ($isRegistryEnabled) {
             $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
@@ -973,12 +976,12 @@ class HookCore extends ObjectModel
     }
 
     /**
-     * @return null|\PrestaShopBundle\DataCollector\HookRegistry
+     * @return \PrestaShopBundle\DataCollector\HookRegistry|null
      */
     private static function getHookRegistry()
     {
         $sfContainer = SymfonyContainer::getInstance();
-        if (!is_null($sfContainer) && 'dev' === $sfContainer->getParameter('kernel.environment')) {
+        if (null !== $sfContainer && 'dev' === $sfContainer->getParameter('kernel.environment')) {
             return $sfContainer->get('prestashop.hooks_registry');
         }
 

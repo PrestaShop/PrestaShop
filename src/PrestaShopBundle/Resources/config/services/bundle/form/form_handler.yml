@@ -148,12 +148,12 @@ services:
             - 'LogsPage'
 
     prestashop.admin.import.form_handler:
-        class: 'PrestaShop\PrestaShop\Core\Form\ImportPageFormHandler'
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import\ImportFormHandler'
         arguments:
             - '@prestashop.admin.import.form_builder'
             - '@prestashop.core.hook.dispatcher'
             - '@prestashop.admin.import.form_data_provider'
-            - 'ImportPage'
+            - 'Import'
 
     prestashop.admin.import_data_configuration.form_handler:
         class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import\ImportFormHandler'
@@ -281,6 +281,7 @@ services:
               'set_up_urls': 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\SetUpUrlType'
               'shop_urls': 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\ShopUrlType'
               'url_schema': 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\UrlSchemaType'
+              'seo_options': 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta\SEOOptionsType'
             - 'MetaPage'
             - 'meta_settings_form'
 
@@ -294,7 +295,27 @@ services:
               'options': 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Employee\EmployeeOptionsType'
             - 'Employee'
 
-    # Entity form handler
+    prestashop.admin.currency_settings.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        arguments:
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.admin.currency.form_data_provider'
+            -
+              'exchange_rates': 'PrestaShopBundle\Form\Admin\Improve\International\Currencies\CurrencyExchangeRateType'
+            - 'Currency'
+
+    prestashop.admin.shop_logos_settings.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        arguments:
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.admin.improve.design.theme.shop_logos.form_data_provider'
+            -
+              'shop_logos': 'PrestaShopBundle\Form\Admin\Improve\Design\Theme\ShopLogosType'
+            - 'ShopLogo'
+
+  # Entity form handler
     prestashop.admin.request_sql.form_handler:
         class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql\SqlRequestFormHandler'
         arguments:
@@ -307,3 +328,23 @@ services:
         arguments:
             - '@prestashop.core.command_bus'
             - '@prestashop.core.query_bus'
+
+    prestashop.admin.tax_options.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        arguments:
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.admin.tax_options.form_data_provider'
+            -
+              'options': 'PrestaShopBundle\Form\Admin\Improve\International\Tax\TaxOptionsType'
+            - 'Tax'
+
+    prestashop.admin.mail_theme.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        arguments:
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.admin.mail_theme.form_data_provider'
+            -
+              'configuration': 'PrestaShopBundle\Form\Admin\Improve\Design\MailTheme\MailThemeConfigurationType'
+            - 'MailTheme'

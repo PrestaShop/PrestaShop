@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -30,6 +30,7 @@ use HelperImageUploader;
 use ImageManager;
 use PrestaShop\PrestaShop\Adapter\Cache\CacheClearer;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\MenuThumbnailsLimitException;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\MenuThumbnailId;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\ImageUploaderInterface;
@@ -63,7 +64,6 @@ final class CategoryMenuThumbnailUploader implements ImageUploaderInterface
         //Get total of image already present in directory
         $files = scandir(_PS_CAT_IMG_DIR_, SCANDIR_SORT_NONE);
         $usedKeys = [];
-        $allowedKeys = [0, 1, 2];
 
         foreach ($files as $file) {
             $matches = [];
@@ -73,7 +73,7 @@ final class CategoryMenuThumbnailUploader implements ImageUploaderInterface
             }
         }
 
-        $availableKeys = array_diff($allowedKeys, $usedKeys);
+        $availableKeys = array_diff(MenuThumbnailId::ALLOWED_ID_VALUES, $usedKeys);
 
         // HelperImageUploader::process() expects
         // uploaded file to be available in $_FILES
@@ -88,7 +88,7 @@ final class CategoryMenuThumbnailUploader implements ImageUploaderInterface
         $helper = new HelperImageUploader('thumbnail');
         $uploadedFiles = $helper->process();
 
-        if (count($availableKeys) < count($files)) {
+        if (count($availableKeys) < count($uploadedFiles)) {
             throw new MenuThumbnailsLimitException(
                 sprintf('Maximum number of menu thumbnails was reached for category "%s"', $categoryId)
             );

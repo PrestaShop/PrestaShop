@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -50,6 +50,7 @@ final class LinkColumn extends AbstractColumn
         $resolver
             ->setDefaults([
                 'sortable' => true,
+                'icon' => null,
             ])
             ->setRequired([
                 'field',
@@ -57,10 +58,12 @@ final class LinkColumn extends AbstractColumn
                 'route_param_name',
                 'route_param_field',
             ])
-            ->setAllowedTypes('field', 'string')
+            ->setAllowedTypes('field', ['string', 'null'])
             ->setAllowedTypes('route', 'string')
             ->setAllowedTypes('route_param_name', 'string')
             ->setAllowedTypes('route_param_field', 'string')
-            ->setAllowedTypes('sortable', 'bool');
+            ->setAllowedTypes('sortable', 'bool')
+            ->setAllowedTypes('icon', ['string', 'null'])
+        ;
     }
 }

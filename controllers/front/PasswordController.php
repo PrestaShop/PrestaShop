@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -54,7 +54,7 @@ class PasswordControllerCore extends FrontController
         } else {
             $customer = new Customer();
             $customer->getByEmail($email);
-            if (is_null($customer->email)) {
+            if (null === $customer->email) {
                 $customer->email = Tools::getValue('email');
             }
 
@@ -109,7 +109,11 @@ class PasswordControllerCore extends FrontController
     {
         $token = Tools::getValue('token');
         $id_customer = (int) Tools::getValue('id_customer');
-        if ($email = Db::getInstance()->getValue('SELECT `email` FROM ' . _DB_PREFIX_ . 'customer c WHERE c.`secure_key` = \'' . pSQL($token) . '\' AND c.id_customer = ' . $id_customer)) {
+        $reset_token = Tools::getValue('reset_token');
+        $email = Db::getInstance()->getValue(
+            'SELECT `email` FROM ' . _DB_PREFIX_ . 'customer c WHERE c.`secure_key` = \'' . pSQL($token) . '\' AND c.id_customer = ' . $id_customer
+        );
+        if ($email) {
             $customer = new Customer();
             $customer->getByEmail($email);
 
@@ -117,6 +121,12 @@ class PasswordControllerCore extends FrontController
                 $this->errors[] = $this->trans('Customer account not found', array(), 'Shop.Notifications.Error');
             } elseif (!$customer->active) {
                 $this->errors[] = $this->trans('You cannot regenerate the password for this account.', array(), 'Shop.Notifications.Error');
+            } elseif ($customer->getValidResetPasswordToken() !== $reset_token) {
+                $this->errors[] = $this->trans('The password change request expired. You should ask for a new one.', array(), 'Shop.Notifications.Error');
+            }
+
+            if ($this->errors) {
+                return;
             }
 
             if ($isSubmit = Tools::isSubmit('passwd')) {
@@ -146,59 +156,54 @@ class PasswordControllerCore extends FrontController
                     'customer_email' => $customer->email,
                     'customer_token' => $token,
                     'id_customer' => $id_customer,
-                    'reset_token' => Tools::getValue('reset_token'),
+                    'reset_token' => $reset_token,
                 ]);
 
                 $this->setTemplate('customer/password-new');
             } else {
                 // Both password fields posted. Check if all is right and store new password properly.
-                if (!Tools::getValue('reset_token') || (strtotime($customer->last_passwd_gen . '+' . (int) Configuration::get('PS_PASSWD_TIME_FRONT') . ' minutes') - time()) > 0) {
+                if (!$reset_token || (strtotime($customer->last_passwd_gen . '+' . (int) Configuration::get('PS_PASSWD_TIME_FRONT') . ' minutes') - time()) > 0) {
                     Tools::redirect('index.php?controller=authentication&error_regen_pwd');
                 } else {
-                    // To update password, we must have the temporary reset token that matches.
-                    if ($customer->getValidResetPasswordToken() !== Tools::getValue('reset_token')) {
-                        $this->errors[] = $this->trans('The password change request expired. You should ask for a new one.', array(), 'Shop.Notifications.Error');
-                    } else {
-                        $customer->passwd = $this->get('hashing')->hash($password = Tools::getValue('passwd'), _COOKIE_KEY_);
-                        $customer->last_passwd_gen = date('Y-m-d H:i:s', time());
+                    $customer->passwd = $this->get('hashing')->hash($password = Tools::getValue('passwd'), _COOKIE_KEY_);
+                    $customer->last_passwd_gen = date('Y-m-d H:i:s', time());
 
-                        if ($customer->update()) {
-                            Hook::exec('actionPasswordRenew', array('customer' => $customer, 'password' => $password));
-                            $customer->removeResetPasswordToken();
-                            $customer->update();
+                    if ($customer->update()) {
+                        Hook::exec('actionPasswordRenew', array('customer' => $customer, 'password' => $password));
+                        $customer->removeResetPasswordToken();
+                        $customer->update();
 
-                            $mail_params = [
-                                '{email}' => $customer->email,
-                                '{lastname}' => $customer->lastname,
-                                '{firstname}' => $customer->firstname,
-                            ];
+                        $mail_params = [
+                            '{email}' => $customer->email,
+                            '{lastname}' => $customer->lastname,
+                            '{firstname}' => $customer->firstname,
+                        ];
 
-                            if (
-                                Mail::Send(
-                                    $this->context->language->id,
-                                    'password',
-                                    $this->trans(
-                                        'Your new password',
-                                        array(),
-                                        'Emails.Subject'
-                                    ),
-                                    $mail_params,
-                                    $customer->email,
-                                    $customer->firstname . ' ' . $customer->lastname
-                                )
-                            ) {
-                                $this->context->smarty->assign([
-                                    'customer_email' => $customer->email,
-                                ]);
-                                $this->success[] = $this->trans('Your password has been successfully reset and a confirmation has been sent to your email address: %s', array($customer->email), 'Shop.Notifications.Success');
-                                $this->context->updateCustomer($customer);
-                                $this->redirectWithNotifications('index.php?controller=my-account');
-                            } else {
-                                $this->errors[] = $this->trans('An error occurred while sending the email.', array(), 'Shop.Notifications.Error');
-                            }
+                        if (
+                            Mail::Send(
+                                $this->context->language->id,
+                                'password',
+                                $this->trans(
+                                    'Your new password',
+                                    array(),
+                                    'Emails.Subject'
+                                ),
+                                $mail_params,
+                                $customer->email,
+                                $customer->firstname . ' ' . $customer->lastname
+                            )
+                        ) {
+                            $this->context->smarty->assign([
+                                'customer_email' => $customer->email,
+                            ]);
+                            $this->success[] = $this->trans('Your password has been successfully reset and a confirmation has been sent to your email address: %s', array($customer->email), 'Shop.Notifications.Success');
+                            $this->context->updateCustomer($customer);
+                            $this->redirectWithNotifications('index.php?controller=my-account');
                         } else {
-                            $this->errors[] = $this->trans('An error occurred with your account, which prevents us from updating the new password. Please report this issue using the contact form.', array(), 'Shop.Notifications.Error');
+                            $this->errors[] = $this->trans('An error occurred while sending the email.', array(), 'Shop.Notifications.Error');
                         }
+                    } else {
+                        $this->errors[] = $this->trans('An error occurred with your account, which prevents us from updating the new password. Please report this issue using the contact form.', array(), 'Shop.Notifications.Error');
                     }
                 }
             }

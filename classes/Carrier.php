@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -351,7 +351,7 @@ class CarrierCore extends ObjectModel
      *
      * @param int $id_zone Zone ID
      *
-     * @return false|null|string Maximum delivery price
+     * @return false|string|null Maximum delivery price
      */
     public function getMaxDeliveryPriceByWeight($id_zone)
     {
@@ -584,7 +584,7 @@ class CarrierCore extends ObjectModel
     /**
      * Get most used Tax rules group.
      *
-     * @return false|null|string Most used Tax rules group ID
+     * @return false|string|null Most used Tax rules group ID
      */
     public static function getIdTaxRulesGroupMostUsed()
     {
@@ -634,7 +634,7 @@ class CarrierCore extends ObjectModel
 			LEFT JOIN `' . _DB_PREFIX_ . 'zone` zz ON cz.id_zone = zz.id_zone) ON zz.`id_zone` = c.`id_zone`
 			WHERE 1
 			' . ($active_countries ? 'AND c.active = 1' : '') . '
-			' . (!is_null($contain_states) ? 'AND c.`contains_states` = ' . (int) $contain_states : '') . '
+			' . (null !== $contain_states ? 'AND c.`contains_states` = ' . (int) $contain_states : '') . '
 			ORDER BY cl.name ASC');
 
         $countries = array();
@@ -696,7 +696,7 @@ class CarrierCore extends ObjectModel
     {
         $context = Context::getContext();
         $id_lang = $context->language->id;
-        if (is_null($cart)) {
+        if (null === $cart) {
             $cart = $context->cart;
         }
         if (isset($context->currency)) {
@@ -958,8 +958,8 @@ class CarrierCore extends ObjectModel
             if ($delete) {
                 Db::getInstance()->execute(
                     'DELETE FROM `' . _DB_PREFIX_ . 'delivery`
-                    WHERE ' . (is_null($values['id_shop']) ? 'ISNULL(`id_shop`) ' : 'id_shop = ' . (int) $values['id_shop']) . '
-                    AND ' . (is_null($values['id_shop_group']) ? 'ISNULL(`id_shop`) ' : 'id_shop_group=' . (int) $values['id_shop_group']) . '
+                    WHERE ' . (null === $values['id_shop'] ? 'ISNULL(`id_shop`) ' : 'id_shop = ' . (int) $values['id_shop']) . '
+                    AND ' . (null === $values['id_shop_group'] ? 'ISNULL(`id_shop`) ' : 'id_shop_group=' . (int) $values['id_shop_group']) . '
                     AND id_carrier=' . (int) $values['id_carrier'] .
                     ($values['id_range_price'] !== null ? ' AND id_range_price=' . (int) $values['id_range_price'] : ' AND (ISNULL(`id_range_price`) OR `id_range_price` = 0)') .
                     ($values['id_range_weight'] !== null ? ' AND id_range_weight=' . (int) $values['id_range_weight'] : ' AND (ISNULL(`id_range_weight`) OR `id_range_weight` = 0)') . '
@@ -969,7 +969,7 @@ class CarrierCore extends ObjectModel
 
             $sql .= '(';
             foreach ($values as $v) {
-                if (is_null($v)) {
+                if (null === $v) {
                     $sql .= 'NULL';
                 } elseif (is_int($v) || is_float($v)) {
                     $sql .= $v;
@@ -1197,7 +1197,7 @@ class CarrierCore extends ObjectModel
      *
      * @param Context|null $context Context
      *
-     * @return false|null|string TaxrulesGroup ID
+     * @return false|string|null TaxrulesGroup ID
      *                           false if not found
      */
     public function getIdTaxRulesGroup(Context $context = null)
@@ -1211,7 +1211,7 @@ class CarrierCore extends ObjectModel
      * @param int $id_carrier Carrier ID
      * @param Context|null $context Context
      *
-     * @return false|null|string TaxRulesGroup ID
+     * @return false|string|null TaxRulesGroup ID
      *                           false if not found
      */
     public static function getIdTaxRulesGroupByIdCarrier($id_carrier, Context $context = null)
@@ -1483,18 +1483,18 @@ class CarrierCore extends ObjectModel
             $ps_country_default = Configuration::get('PS_COUNTRY_DEFAULT');
         }
 
-        if (is_null($id_shop)) {
+        if (null === $id_shop) {
             $id_shop = Context::getContext()->shop->id;
         }
-        if (is_null($cart)) {
+        if (null === $cart) {
             $cart = Context::getContext()->cart;
         }
 
-        if (is_null($error) || !is_array($error)) {
+        if (null === $error || !is_array($error)) {
             $error = array();
         }
 
-        $id_address = (int) ((!is_null($id_address_delivery) && $id_address_delivery != 0) ? $id_address_delivery : $cart->id_address_delivery);
+        $id_address = (int) ((null !== $id_address_delivery && $id_address_delivery != 0) ? $id_address_delivery : $cart->id_address_delivery);
         if ($id_address) {
             $id_zone = Address::getZoneById($id_address);
 

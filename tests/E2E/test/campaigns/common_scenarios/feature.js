@@ -64,6 +64,7 @@ module.exports = {
       test('should click on "Reset" button', () => client.waitForExistAndClick(FeatureSubMenu.reset_button));
       let dataValueNumber = data.values.length;
       for (let i = 0; i < dataValueNumber; i++) {
+        test('should click on "Feature" subtab', () => client.waitForExistAndClick(Menu.Sell.Catalog.feature_tab));
         test('should search for the updated feature', () => client.searchByValue(FeatureSubMenu.search_input.replace('%SEARCHBY', 'b!name'), FeatureSubMenu.search_button, data.name + date_time));
         test('should select the feature', () => client.waitForExistAndClick(FeatureSubMenu.selected_feature));
         test('should click on "Edit" action', () => client.waitForExistAndClick(FeatureSubMenu.update_feature_value_button.replace('%ID', i + 1)));

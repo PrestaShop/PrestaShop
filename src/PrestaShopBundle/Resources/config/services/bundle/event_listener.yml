@@ -77,3 +77,17 @@ services:
             - '@prestashop.adapter.grid.search.factory.search_criteria_with_category_parent_id'
         tags:
             - { name: kernel.event_listener, event: prestashop.search_criteria.filter, method: onFilterSearchCriteria }
+
+    prestashop.bundle.event_listener.filter_cms_page_category_search_criteria:
+        class: PrestaShopBundle\EventListener\FilterCmsPageCategorySearchCriteriaListener
+        arguments:
+            - '@request_stack'
+        tags:
+            - { name: kernel.event_listener, event: prestashop.search_criteria.filter, method: onFilterSearchCriteria }
+
+    prestashop.bundle.event_listener.back_url_redirect_response_listener:
+        class: PrestaShopBundle\EventListener\BackUrlRedirectResponseListener
+        arguments:
+          - '@prestashop.core.uti.back_url_provider'
+        tags:
+          - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }

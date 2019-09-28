@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -65,13 +65,16 @@ namespace PrestaShopBundle\Install {
     use Language;
     use Module;
     use PhpEncryption;
+    use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
     use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
     use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
     use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
     use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
     use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
     use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
-    use PrestaShop\PrestaShop\Core\Cldr\Update;
+    use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+    use PrestaShop\PrestaShop\Core\Domain\MailTemplate\Command\GenerateThemeMailTemplatesCommand;
+    use PrestaShop\PrestaShop\Core\Exception\CoreException;
     use PrestaShopBundle\Service\Database\Upgrade as UpgradeDatabase;
     use RandomLib;
     use Shop;
@@ -161,7 +164,6 @@ namespace PrestaShopBundle\Install {
             'blockstore',
             'blocktags',
             'blockwishlist',
-            'productcomments',
             'productpaymentlogos',
             'sendtoafriend',
             'themeconfigurator',
@@ -724,13 +726,10 @@ namespace PrestaShopBundle\Install {
 
                         $lang_pack = Language::getLangDetails($isoCode);
                         Language::installSfLanguagePack($lang_pack['locale'], $errorsLanguage);
-                        Language::installEmailsLanguagePack($lang_pack, $errorsLanguage);
+                        self::generateEmailsLanguagePack($lang_pack, $errorsLanguage);
 
                         if (empty($errorsLanguage)) {
                             Language::loadLanguages();
-
-                            $cldrUpdate = new Update(_PS_TRANSLATIONS_DIR_);
-                            $cldrUpdate->fetchLocale(Language::getLocaleByIso($isoCode));
                         } else {
                             $this->logError('Error updating translations', 44);
                         }
@@ -738,6 +737,46 @@ namespace PrestaShopBundle\Install {
                         Language::updateMultilangTable($isoCode);
                     }
                 }
+            }
+        }
+
+        /**
+         * @param array $langPack
+         * @param array $errors
+         */
+        private static function generateEmailsLanguagePack($langPack, &$errors = array())
+        {
+            $locale = $langPack['locale'];
+            $sfContainer = SymfonyContainer::getInstance();
+            if (null === $sfContainer) {
+                $errors[] = Context::getContext()->getTranslator()->trans(
+                    'Cannot generate emails because the Symfony container is unavailable.',
+                    array(),
+                    'Admin.Notifications.Error'
+                );
+
+                return;
+            }
+
+            $mailTheme = Configuration::get('PS_MAIL_THEME');
+            /** @var GenerateThemeMailTemplatesCommand $generateCommand */
+            $generateCommand = new GenerateThemeMailTemplatesCommand(
+                $mailTheme,
+                $locale,
+                false,
+                !empty($coreOutputFolder) ? $coreOutputFolder : '',
+                !empty($modulesOutputFolder) ? $modulesOutputFolder : ''
+            );
+            /** @var CommandBusInterface $commandBus */
+            $commandBus = $sfContainer->get('prestashop.core.command_bus');
+            try {
+                $commandBus->handle($generateCommand);
+            } catch (CoreException $e) {
+                $errors[] = Context::getContext()->getTranslator()->trans(
+                    'Cannot generate email templates: %s.',
+                    array($e->getMessage()),
+                    'Admin.Notifications.Error'
+                );
             }
         }
 
@@ -1127,7 +1166,7 @@ namespace PrestaShopBundle\Install {
                 @unlink($tmp_settings_file);
                 $factory = new RandomLib\Factory();
                 $generator = $factory->getLowStrengthGenerator();
-                $secret = $generator->generateString(56);
+                $secret = $generator->generateString(64);
 
                 if (!defined('_LEGACY_NEW_COOKIE_KEY_')) {
                     define('_LEGACY_NEW_COOKIE_KEY_', $default_parameters['parameters']['new_cookie_key']);

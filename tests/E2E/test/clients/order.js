@@ -1,7 +1,7 @@
 var CommonClient = require('./common_client');
 const {OrderPage} = require('../selectors/BO/order');
 const {CreateOrder} = require('../selectors/BO/order');
-
+let pdfUtil = require('pdf-to-text');
 global.tab = [];
 global.orders = [];
 global.lineFile = [];
@@ -72,15 +72,6 @@ class Order extends CommonClient {
       .then(() => expect(global.lineFile, "No data").to.be.not.empty)
   }
 
-  checkFile(folderPath, fileName, pause = 0) {
-    fs.stat(folderPath + fileName, function (err, stats) {
-      err === null && stats.isFile() ? global.existingFile = true : global.existingFile = false;
-    });
-    return this.client
-      .pause(pause)
-      .then(() => expect(global.existingFile).to.be.true)
-  }
-
   checkExportedFileInfo(pause = 0) {
     return this.client
       .pause(pause)
@@ -100,7 +91,25 @@ class Order extends CommonClient {
 
   async getCreditSlipDocumentName(selector) {
     let name = await this.client.getText(selector);
-     global.creditSlip = await name.replace('#', '');
+    global.creditSlip = await name.replace('#', '');
+  }
+
+  getNameInvoice(selector, pause = 0) {
+    return this.client
+      .pause(pause)
+      .then(() => this.client.getText(selector))
+      .then((name) => global.invoiceFileName = name.replace('#', ''))
+      .then(() => this.client.pause(2000));
+  }
+
+  async checkWordNumber(folderPath, fileName, text, occurrence) {
+    await pdfUtil.pdfToText(folderPath + fileName + '.pdf', function (err, data) {
+      global.numberOccurence = (data.split(text).length) - 1;
+    });
+
+    return this.client
+      .pause(2000)
+      .then(() => expect(global.numberOccurence, text + "does not exist " + occurrence + " in the PDF document").to.equal(occurrence));
   }
 }
 

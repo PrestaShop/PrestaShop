@@ -328,7 +328,7 @@ class CronJobs extends Module
             $query = 'INSERT INTO '._DB_PREFIX_.'cronjobs
                 (`description`, `task`, `hour`, `day`, `month`, `day_of_week`, `updated_at`, `one_shot`, `active`, `id_shop`, `id_shop_group`)
                 VALUES (\''. Db::getInstance()->escape($description) .'\', \'' .
-                urlencode($task) . '\', \'0\', \''.CronJobs::EACH.'\', \''.CronJobs::EACH.'\', \''.CronJobs::EACH.'\',
+                urlencode($task) . '\', \'0\', \''.static::EACH.'\', \''.static::EACH.'\', \''.static::EACH.'\',
                     NULL, TRUE, TRUE, '.$id_shop.', '.$id_shop_group.')';
 
             return Db::getInstance()->execute($query);
@@ -693,7 +693,7 @@ class CronJobs extends Module
         );
 
         $context_options = array('http' => array(
-            'method' => (is_null($webservice_id) == true) ? 'POST' : 'PUT',
+            'method' => ((null === $webservice_id) == true) ? 'POST' : 'PUT',
             'header'  => 'Content-type: application/x-www-form-urlencoded',
             'content' => http_build_query($data),
         ));

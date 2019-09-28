@@ -1,5 +1,5 @@
 {**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,10 +15,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -27,8 +27,6 @@
     <div class="address-body">
       <h4>{$address.alias}</h4>
       <address>{$address.formatted nofilter}</address>
-      {* To display the fields value extra added in a address from by using hook 'additionalCustomerAddressFields' *}
-      {hook h='displayAdditionalCustomerAddressFields' address=$address}
     </div>
 
     {block name='address_block_item_actions'}

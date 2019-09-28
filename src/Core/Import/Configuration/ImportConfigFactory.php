@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -51,15 +51,16 @@ final class ImportConfigFactory implements ImportConfigFactoryInterface
 
         return new ImportConfig(
             $request->request->get('csv', $request->getSession()->get('csv')),
-            $request->request->get('entity', $request->getSession()->get('entity', 0)),
+            $request->request->getInt('entity', $request->getSession()->get('entity', 0)),
             $request->request->get('iso_lang', $request->getSession()->get('iso_lang')),
             $separator,
             $multivalueSeparator,
-            $request->request->get('truncate', $request->getSession()->get('truncate', false)),
-            $request->request->get('regenerate', $request->getSession()->get('regenerate', false)),
-            $request->request->get('match_ref', $request->getSession()->get('match_ref', false)),
-            $request->request->get('forceIDs', $request->getSession()->get('forceIDs', false)),
-            $request->request->get('sendemail', $request->getSession()->get('sendemail', true))
+            $request->request->getBoolean('truncate', $request->getSession()->get('truncate', false)),
+            $request->request->getBoolean('regenerate', $request->getSession()->get('regenerate', false)),
+            $request->request->getBoolean('match_ref', $request->getSession()->get('match_ref', false)),
+            $request->request->getBoolean('forceIDs', $request->getSession()->get('forceIDs', false)),
+            $request->request->getBoolean('sendemail', $request->getSession()->get('sendemail', true)),
+            $request->request->getInt('skip', 0)
         );
     }
 }

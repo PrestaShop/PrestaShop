@@ -1,3 +1,8 @@
+/**
+ * This script is based on the scenario described in this test link
+ * [id="PS-89"][Name="Generate a PDF by date"]
+ **/
+
 const {Menu} = require('../../../selectors/BO/menu.js');
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {AccessPageFO} = require('../../../selectors/FO/access_page');
@@ -7,9 +12,9 @@ const {Invoices} = require('../../../selectors/BO/order');
 const commonOrder = require('../../common_scenarios/order');
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
 const {OnBoarding} = require('../../../selectors/BO/onboarding');
+const welcomeScenarios = require('../../common_scenarios/welcome');
 
 let promise = Promise.resolve();
-
 global.orderInfo = [];
 
 scenario('Generate a PDF by date', () => {
@@ -27,8 +32,11 @@ scenario('Generate a PDF by date', () => {
   }, 'order');
 
   scenario('Generate a PDF by date', () => {
-    scenario('Change the Customer Group tax parameter', client => {
+    scenario('Open the browser and login successfully in the Back Office ', client => {
       test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
+    }, 'common_client');
+    welcomeScenarios.findAndCloseWelcomeModal();
+    scenario('Change the Customer Group tax parameter', client => {
       test('should go to "Product settings" page', () => client.goToSubtabMenuPage(Menu.Configure.ShopParameters.shop_parameters_menu, Menu.Configure.ShopParameters.customer_settings_submenu));
       test('should click on "Group" tab', () => client.waitForExistAndClick(CustomerSettings.groups.group_button));
       test('should click on customer "Edit" button', () => client.waitForExistAndClick(CustomerSettings.groups.customer_edit_button));
@@ -36,10 +44,14 @@ scenario('Generate a PDF by date', () => {
       test('should click on "Save" button', () => client.waitForExistAndClick(CustomerSettings.groups.save_button));
     }, 'order');
     scenario('Get all Order information', client => {
-      test('should go to "Product settings" page', () => client.goToSubtabMenuPage(Menu.Sell.Orders.orders_menu, Menu.Sell.Orders.orders_submenu));
+      test('should go to "Order settings" page', () => client.goToSubtabMenuPage(Menu.Sell.Orders.orders_menu, Menu.Sell.Orders.orders_submenu));
       for (let i = 1; i <= 2; i++) {
         test('should go the order n°' + i, () => client.waitForExistAndClick(OrderPage.order_view_button.replace("%ORDERNumber", i)));
         test('should change order state to "payment accepted"', () => client.changeOrderState(OrderPage, 'Payment accepted'));
+        /**
+         * should refresh the page, to pass the error
+         */
+        test('should refresh the page', () => client.refresh());
         test('should get all order information', () => {
           return promise
             .then(() => client.getTextInVar(OrderPage.order_date, "invoiceDate"))
@@ -100,47 +112,54 @@ scenario('Generate a PDF by date', () => {
       test('should click on "Generate PDF file by date"', () => client.waitForExistAndClick(Invoices.generate_pdf_button));
       test('should wait for the "invoice" to download', () => client.pause(5000));
       for (let i = 1; i <= 2; i++) {
-        test('should check the Customer name of the ' + i + ' product', () => client.checkDocument(global.downloadsFolderPath, 'invoices', 'John DOE'));
-        test('should check the "Delivery Address " of the product n°' + i, () => {
-          return promise
-            .then(() => client.checkDocument(global.downloadsFolderPath, 'invoices', 'My Company'))
-            .then(() => client.checkDocument(global.downloadsFolderPath, 'invoices', '16, Main street'))
-            .then(() => client.checkDocument(global.downloadsFolderPath, 'invoices', '75002 Paris'))
-            .then(() => client.checkDocument(global.downloadsFolderPath, 'invoices', 'France'))
+        test('should check the "Delivery Address " of the product n°' + i, async () => {
+          await client.checkFile(global.downloadsFolderPath, 'invoices.pdf');
+          if (global.existingFile) {
+            await client.checkDocument(global.downloadsFolderPath, 'invoices', 'My Company');
+            await client.checkDocument(global.downloadsFolderPath, 'invoices', '16, Main street');
+            await client.checkDocument(global.downloadsFolderPath, 'invoices', '75002 Paris');
+            await client.checkDocument(global.downloadsFolderPath, 'invoices', 'France');
+          }
         });
-        test('should check the "invoice Date" of the product n°' + i, () => client.checkDocument(global.downloadsFolderPath, 'invoices', global.orderInfo[i - 1].invoiceDate));
-        test('should check the "Order Reference" of the product n°' + i, () => client.checkDocument(global.downloadsFolderPath, 'invoices', global.orderInfo[i - 1].OrderRef));
-        test('should check the "Product Reference"of the product n°' + i, () => client.checkDocument(global.downloadsFolderPath, 'invoices', global.orderInfo[i - 1].ProductRef));
-        test('should check the "Product Combination" of the product n°' + i, () => client.checkDocument(global.downloadsFolderPath, 'invoices', global.orderInfo[i - 1].ProductCombination));
-        test('should check the "Product Quantity" of the product n°' + i, () => client.checkDocument(global.downloadsFolderPath, 'invoices', global.orderInfo[i - 1].ProductQuantity));
-        test('should check the "Total Price" of the product n°' + i, () => client.checkDocument(global.downloadsFolderPath, 'invoices', global.orderInfo[i - 1].TotalPrice));
-        test('should check the "Unit Price" of the product n°' + i, () => client.checkDocument(global.downloadsFolderPath, 'invoices', global.orderInfo[i - 1].ProductUnitPrice));
-        test('should check the "Tax Rate" of the product n°' + i, () => client.checkDocument(global.downloadsFolderPath, 'invoices', global.orderInfo[i - 1].ProductTaxRate));
-        test('should check the "Total Product" of the product n°' + i, () => client.checkDocument(global.downloadsFolderPath, 'invoices', global.orderInfo[i - 1].TotalProduct));
-        test('should check the "Shipping Cost" of the product n°' + i, () => client.checkDocument(global.downloadsFolderPath, 'invoices', global.orderInfo[i - 1].ShippingCost));
-        test('should check the "Total" of the product n°' + i, () => client.checkDocument(global.downloadsFolderPath, 'invoices', global.orderInfo[i - 1].Total));
-        test('should check the "Total Tax" of the product n°' + i, () => client.checkDocument(global.downloadsFolderPath, 'invoices', global.orderInfo[i - 1].TotalTax));
-        test('should check the "Carrier" name of the product n°' + i, () => client.checkDocument(global.downloadsFolderPath, 'invoices', global.orderInfo[i - 1].Carrier));
-        test('should check the "Payment Method" of the product n°' + i, () => client.checkDocument(global.downloadsFolderPath, 'invoices', global.orderInfo[i - 1].PaymentMethod));
+        test('should check the "invoice" information of the product n°' + i, async () => {
+          await client.checkFile(global.downloadsFolderPath, 'invoices.pdf');
+          if (global.existingFile) {
+            await client.checkDocument(global.downloadsFolderPath, 'invoices', 'John DOE');
+            await client.checkDocument(global.downloadsFolderPath, 'invoices', global.orderInfo[i - 1].invoiceDate);
+            await client.checkDocument(global.downloadsFolderPath, 'invoices', global.orderInfo[i - 1].OrderRef);
+            await client.checkDocument(global.downloadsFolderPath, 'invoices', global.orderInfo[i - 1].ProductRef);
+            await client.checkDocument(global.downloadsFolderPath, 'invoices', global.orderInfo[i - 1].ProductCombination);
+            await client.checkDocument(global.downloadsFolderPath, 'invoices', global.orderInfo[i - 1].ProductQuantity);
+            await client.checkDocument(global.downloadsFolderPath, 'invoices', global.orderInfo[i - 1].TotalPrice);
+            await client.checkDocument(global.downloadsFolderPath, 'invoices', global.orderInfo[i - 1].ProductUnitPrice);
+            await client.checkDocument(global.downloadsFolderPath, 'invoices', global.orderInfo[i - 1].ProductTaxRate);
+            await client.checkDocument(global.downloadsFolderPath, 'invoices', global.orderInfo[i - 1].TotalProduct);
+            await client.checkDocument(global.downloadsFolderPath, 'invoices', global.orderInfo[i - 1].ShippingCost);
+            await client.checkDocument(global.downloadsFolderPath, 'invoices', global.orderInfo[i - 1].Total);
+            await client.checkDocument(global.downloadsFolderPath, 'invoices', global.orderInfo[i - 1].TotalTax);
+            await client.checkDocument(global.downloadsFolderPath, 'invoices', global.orderInfo[i - 1].Carrier);
+            await client.checkDocument(global.downloadsFolderPath, 'invoices', global.orderInfo[i - 1].PaymentMethod);
+          }
+        });
       }
-      test('should delete the invoice pdf file', () => client.deleteFile(global.downloadsFolderPath, 'invoices', '.pdf'));
+      test('should delete the invoice pdf file', async () => {
+        await client.checkFile(global.downloadsFolderPath, 'invoices.pdf');
+        if (global.existingFile) {
+          await client.deleteFile(global.downloadsFolderPath, 'invoices', '.pdf');
+        }
+      });
     }, 'order');
   }, 'order');
   scenario('Change the date', client => {
-    test('should set the "From" date', () => client.waitAndSetValue(Invoices.from_input, '2020-08-04'));
-    test('should set the "To" date', () => client.waitAndSetValue(Invoices.from_input, '2020-08-10'));
+    test('should set the "From" date', () => client.setInputValue(Invoices.from_input, '2020-08-04'));
+    test('should set the "To" date', () => client.setInputValue(Invoices.from_input, '2020-08-10'));
     test('should click on "Generate PDF file by date"', () => client.waitForExistAndClick(Invoices.generate_pdf_button));
     test('should check that no invoice has been found', () => client.checkTextValue(Invoices.no_invoice_alert, 'No invoice has been found for this period.', 'contain'));
   }, 'order');
   scenario('Close symfony toolbar then click on "Stop the OnBoarding" button', client => {
     test('should close symfony toolbar', () => {
       return promise
-        .then(() => client.isVisible(AddProductPage.symfony_toolbar, 3000))
-        .then(() => {
-          if (global.isVisible) {
-            client.waitForExistAndClick(AddProductPage.symfony_toolbar)
-          }
-        });
+        .then(() => client.waitForSymfonyToolbar(AddProductPage, 2000))
     });
     test('should check and click on "Stop the OnBoarding" button', () => {
       return promise
@@ -157,3 +176,4 @@ scenario('Generate a PDF by date', () => {
     test('should click on "Save" button', () => client.waitForExistAndClick(CustomerSettings.groups.save_button));
   }, 'order');
 }, 'order', true);
+

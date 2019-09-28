@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -65,8 +65,8 @@ class ProductSeo extends CommonAbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $remoteUrls = [
-            ProductInterface::REDIRECT_TYPE_PRODUCT_MOVED_PERMANENTLY => $this->context->getAdminLink('', false) . 'ajax_products_list.php?forceJson=1&disableCombination=1&exclude_packs=0&excludeVirtuals=0&limit=20&q=%QUERY',
-            ProductInterface::REDIRECT_TYPE_PRODUCT_FOUND => $this->context->getAdminLink('', false) . 'ajax_products_list.php?forceJson=1&disableCombination=1&exclude_packs=0&excludeVirtuals=0&limit=20&q=%QUERY',
+            ProductInterface::REDIRECT_TYPE_PRODUCT_MOVED_PERMANENTLY => $this->context->getLegacyAdminLink('AdminProducts', true, ['ajax' => 1, 'action' => 'productsList', 'forceJson' => 1, 'disableCombination' => 1, 'exclude_packs' => 0, 'excludeVirtuals' => 0, 'limit' => 20]) . '&q=%QUERY',
+            ProductInterface::REDIRECT_TYPE_PRODUCT_FOUND => $this->context->getLegacyAdminLink('AdminProducts', true, ['ajax' => 1, 'action' => 'productsList', 'forceJson' => 1, 'disableCombination' => 1, 'exclude_packs' => 0, 'excludeVirtuals' => 0, 'limit' => 20]) . '&q=%QUERY',
             ProductInterface::REDIRECT_TYPE_CATEGORY_MOVED_PERMANENTLY => $this->router->generate('admin_get_ajax_categories') . '&query=%QUERY',
             ProductInterface::REDIRECT_TYPE_CATEGORY_FOUND => $this->router->generate('admin_get_ajax_categories') . '&query=%QUERY',
         ];
@@ -169,7 +169,7 @@ class ProductSeo extends CommonAbstractType
                 'id_type_redirected',
                 TypeaheadProductCollectionType::class,
                 [
-                    'remote_url' => $this->context->getAdminLink('', false) . 'ajax_products_list.php?forceJson=1&disableCombination=1&exclude_packs=0&excludeVirtuals=0&limit=20&q=%QUERY',
+                    'remote_url' => $this->context->getLegacyAdminLink('AdminProducts', true, ['ajax' => 1, 'action' => 'productsList', 'forceJson' => 1, 'disableCombination' => 1, 'exclude_packs' => 0, 'excludeVirtuals' => 0, 'limit' => 20]) . '&q=%QUERY',
                     'mapping_value' => 'id',
                     'mapping_name' => 'name',
                     'mapping_type' => $options['mapping_type'],

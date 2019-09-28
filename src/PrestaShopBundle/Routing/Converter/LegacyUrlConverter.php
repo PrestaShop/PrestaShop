@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,21 +16,23 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Routing\Converter;
 
+use PrestaShopBundle\Routing\Converter\Exception\AlreadyConvertedException;
 use PrestaShopBundle\Routing\Converter\Exception\ArgumentException;
 use PrestaShopBundle\Routing\Converter\Exception\RouteNotFoundException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Routing\Exception\Exceptioninterface;
 
 /**
  * Class LegacyUrlConverter is able to convert query parameters or an url into a
@@ -71,6 +73,14 @@ final class LegacyUrlConverter
      */
     public function convertByParameters(array $parameters)
     {
+        //Tab parameter can be used as an alias for controller
+        if (!empty($parameters['tab'])) {
+            if (empty($parameters['controller'])) {
+                $parameters['controller'] = $parameters['tab'];
+            }
+            unset($parameters['tab']);
+        }
+
         if (empty($parameters['controller'])) {
             throw new ArgumentException('Missing required controller argument');
         }
@@ -89,9 +99,12 @@ final class LegacyUrlConverter
      *
      * @throws ArgumentException
      * @throws RouteNotFoundException
+     * @throws AlreadyConvertedException
      */
     public function convertByUrl($url)
     {
+        $this->checkAlreadyMatchingRoute($url);
+
         $parsedUrl = parse_url($url);
         $parameters = array();
         if (isset($parsedUrl['query'])) {
@@ -113,10 +126,13 @@ final class LegacyUrlConverter
      *
      * @throws ArgumentException
      * @throws RouteNotFoundException
+     * @throws AlreadyConvertedException
      */
     public function convertByRequest(Request $request)
     {
         $this->router->getContext()->fromRequest($request);
+        $this->checkAlreadyMatchingRoute($request->getRequestUri());
+
         $parameters = array_merge($request->query->all(), $request->request->all());
 
         return $this->convertByParameters($parameters);
@@ -166,7 +182,7 @@ final class LegacyUrlConverter
     /**
      * @param array $parameters
      *
-     * @return null|string
+     * @return string|null
      */
     private function getActionFromParameters(array $parameters)
     {
@@ -209,5 +225,25 @@ final class LegacyUrlConverter
         }
 
         return LegacyRoute::isIndexAction($legacyAction) ? 'index' : $legacyAction;
+    }
+
+    /**
+     * We check that the router doesn't match the url, if no exception is thrown
+     * then the url is already converted and we throw our own AlreadyConvertedException
+     *
+     * @param string $url
+     *
+     * @throws AlreadyConvertedException
+     */
+    private function checkAlreadyMatchingRoute($url)
+    {
+        try {
+            $urlPath = parse_url($url, PHP_URL_PATH);
+            if (!empty($urlPath)) {
+                $this->router->match($urlPath);
+                throw new AlreadyConvertedException(sprintf('%s is already a converted url', $url));
+            }
+        } catch (ExceptionInterface $e) {
+        }
     }
 }

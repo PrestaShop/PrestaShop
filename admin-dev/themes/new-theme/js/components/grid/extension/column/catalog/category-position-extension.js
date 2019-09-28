@@ -1,5 +1,5 @@
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,10 +15,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -50,6 +50,7 @@ export default class CategoryPositionExtension {
 
     grid.getContainer().find('.js-grid-table').tableDnD({
       dragHandle: '.js-drag-handle',
+      onDragClass: 'dragging-row',
       onDragStart: () => {
         this.originalPositions = decodeURIComponent($.tableDnD.serialize());
       },
@@ -74,14 +75,12 @@ export default class CategoryPositionExtension {
     const categoryParentId = $categoryPositionContainer.data('id-parent');
     const positionUpdateUrl = $categoryPositionContainer.data('position-update-url');
 
-    let params = positions.replace(new RegExp(this.grid.getId() + '_grid_table', 'g'), 'category');
+    let params = positions.replace(new RegExp(this.grid.getId() + '_grid_table', 'g'), 'positions');
 
     let queryParams = {
       id_category_parent: categoryParentId,
       id_category_to_move: categoryId,
-      way: way,
-      ajax: 1,
-      action: 'updatePositions'
+      way: way
     };
 
     if (positions.indexOf('_0&') !== -1) {
@@ -153,16 +152,13 @@ export default class CategoryPositionExtension {
       headers: {
         'cache-control': 'no-cache'
       },
-      data: params
+      data: params,
+      dataType: 'json'
     }).then((response) => {
-      response = JSON.parse(response);
-
-      if (typeof response.message !== 'undefined') {
+      if (response.success) {
         showSuccessMessage(response.message);
       } else {
-        // use legacy error
-        // @todo: update when all category controller is migrated to symfony
-        showErrorMessage(response.errors);
+        showErrorMessage(response.message);
       }
 
       this._updateCategoryIdsAndPositions();

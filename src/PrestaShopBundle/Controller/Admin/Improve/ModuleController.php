@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -115,7 +115,6 @@ class ModuleController extends ModuleAbstractController
             ->removeStatus(AddonListFilterStatus::UNINSTALLED);
         $installedProducts = $moduleRepository->getFilteredList($filters);
         $categories = $this->getCategories($modulesProvider, $installedProducts);
-
         $bulkActions = [
             'bulk-uninstall' => $this->trans('Uninstall', 'Admin.Actions'),
             'bulk-disable' => $this->trans('Disable', 'Admin.Actions'),
@@ -384,45 +383,50 @@ class ModuleController extends ModuleAbstractController
             return new JsonResponse($response);
         }
 
+        $actionTitle = str_replace('_', ' ', $action);
+
         try {
             $response[$module]['status'] = $moduleManager->{$action}($module);
-            if ($response[$module]['status'] === null) {
-                $response[$module]['status'] = false;
+
+            if ($response[$module]['status'] === true) {
                 $response[$module]['msg'] = $this->trans(
-                    '%module% did not return a valid response on %action% action.',
+                    '%action% action on module %module% succeeded.',
                     'Admin.Modules.Notification',
                     [
+                        '%action%' => ucfirst($actionTitle),
                         '%module%' => $module,
-                        '%action%' => $action,
                     ]
                 );
+
+                if ($action !== 'uninstall') {
+                    $response[$module]['module_name'] = $module;
+                    $response[$module]['is_configurable'] = (bool) $this
+                        ->get('prestashop.core.admin.module.repository')
+                        ->getModule($module)
+                        ->attributes
+                        ->get('is_configurable');
+                }
             } elseif ($response[$module]['status'] === false) {
                 $error = $moduleManager->getError($module);
                 $response[$module]['msg'] = $this->trans(
                     'Cannot %action% module %module%. %error_details%',
                     'Admin.Modules.Notification',
                     [
-                        '%action%' => str_replace('_', ' ', $action),
+                        '%action%' => $actionTitle,
                         '%module%' => $module,
                         '%error_details%' => $error,
                     ]
                 );
             } else {
+                $response[$module]['status'] = false;
                 $response[$module]['msg'] = $this->trans(
-                    '%action% action on module %module% succeeded.',
+                    '%module% did not return a valid response on %action% action.',
                     'Admin.Modules.Notification',
                     [
-                        '%action%' => ucfirst(str_replace('_', ' ', $action)),
                         '%module%' => $module,
+                        '%action%' => $actionTitle,
                     ]
                 );
-                if ($action != 'uninstall') {
-                    $response[$module]['module_name'] = $module;
-                    $response[$module]['is_configurable'] = (bool) $this->get('prestashop.core.admin.module.repository')
-                                                          ->getModule($module)
-                                                          ->attributes
-                                                          ->get('is_configurable');
-                }
             }
         } catch (UnconfirmedModuleActionException $e) {
             $collection = AddonsCollection::createFrom(array($e->getModule()));
@@ -432,8 +436,10 @@ class ModuleController extends ModuleAbstractController
                 [
                     'status' => false,
                     'confirmation_subject' => $e->getSubject(),
-                    'module' => $this->container->get('prestashop.adapter.presenter.module')
-                    ->presentCollection($modules)[0],
+                    'module' => $this
+                        ->container
+                        ->get('prestashop.adapter.presenter.module')
+                        ->presentCollection($modules)[0],
                     'msg' => $this->trans(
                         'Confirmation needed by module %module% on %action% (%subject%).',
                         'Admin.Modules.Notification',
@@ -451,11 +457,12 @@ class ModuleController extends ModuleAbstractController
                 'Exception thrown by module %module% on %action%. %error_details%',
                 'Admin.Modules.Notification',
                 [
-                    '%action%' => str_replace('_', ' ', $action),
+                    '%action%' => $actionTitle,
                     '%module%' => $module,
                     '%error_details%' => $e->getMessage(),
                 ]
             );
+
             $logger = $this->container->get('logger');
             $logger->error($response[$module]['msg']);
         }

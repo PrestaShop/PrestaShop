@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -39,7 +39,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 class Module implements ModuleInterface
 {
-    /** @var legacyInstance Module The instance of the legacy module */
+    /** @var LegacyModule Module The instance of the legacy module */
     public $instance = null;
 
     /**
@@ -150,7 +150,7 @@ class Module implements ModuleInterface
 
         if ($this->database->get('installed')) {
             $version = $this->database->get('version');
-        } elseif (is_null($this->attributes->get('version')) && $this->disk->get('is_valid')) {
+        } elseif (null === $this->attributes->get('version') && $this->disk->get('is_valid')) {
             $version = $this->disk->get('version');
         } else {
             $version = $this->attributes->get('version');
@@ -232,7 +232,13 @@ class Module implements ModuleInterface
         // "Notice: Use of undefined constant _PS_INSTALL_LANGS_PATH_ - assumed '_PS_INSTALL_LANGS_PATH_'"
         LegacyModule::updateTranslationsAfterInstall(false);
 
-        $result = $this->instance->install();
+        // Casted to Boolean, because some modules returns 1 instead true and 0 instead false.
+        // Other value types are not expected. See also: https://github.com/PrestaShop/PrestaShop/pull/11442#issuecomment-440485268
+        // The best way is to check for non Boolean type and `throw \UnexpectedValueException`,
+        // but it's need much refactoring and testing.
+        // TODO: refactoring.
+        $result = (bool) $this->instance->install();
+
         $this->database->set('installed', $result);
         $this->database->set('active', $result);
         $this->database->set('version', $this->attributes->get('version'));

@@ -40,9 +40,9 @@ class Product extends CommonClient {
       .waitForExistAndClick(AddProductPage.catalog_second_element_radio);
   }
 
-  associatedFile() {
+  associatedFile(id) {
     return this.client
-      .waitForExistAndClick(AddProductPage.virtual_associated_file)
+      .waitForExistAndClick(AddProductPage.virtual_associated_file.replace('%ID', id), 1000)
       .pause(2000);
   }
 
@@ -52,13 +52,13 @@ class Product extends CommonClient {
       .waitAndSetValue(AddProductPage.pack_label_out_stock, data.common.qty_msg_unstock);
   }
 
-  selectPricingPriorities() {
+  selectPricingPriorities(firstPriority = 'id_shop', secondPriority = 'id_currency', thirdPriority = 'id_country', fourthPriority = 'id_group') {
     return this.client
       .scrollTo(AddProductPage.pricing_first_priorities_select, 50)
-      .waitAndSelectByValue(AddProductPage.pricing_first_priorities_select, 'id_shop')
-      .waitAndSelectByValue(AddProductPage.pricing_second_priorities_select, 'id_currency')
-      .waitAndSelectByValue(AddProductPage.pricing_third_priorities_select, 'id_country')
-      .waitAndSelectByValue(AddProductPage.pricing_fourth_priorities_select, 'id_group');
+      .waitAndSelectByValue(AddProductPage.pricing_first_priorities_select, firstPriority)
+      .waitAndSelectByValue(AddProductPage.pricing_second_priorities_select, secondPriority)
+      .waitAndSelectByValue(AddProductPage.pricing_third_priorities_select, thirdPriority)
+      .waitAndSelectByValue(AddProductPage.pricing_fourth_priorities_select, fourthPriority);
   }
 
   selectCondition() {
@@ -94,9 +94,9 @@ class Product extends CommonClient {
     return this.client
       .scrollTo(AddProductPage.search_add_related_product_input)
       .waitAndSetValue(AddProductPage.search_add_related_product_input, search_products[0])
-      .waitForVisibleAndClick(AddProductPage.related_product_item)
+      .waitForVisibleAndClick(AddProductPage.related_product_item.replace('%I', 1))
       .waitAndSetValue(AddProductPage.search_add_related_product_input, search_products[1])
-      .waitForVisibleAndClick(AddProductPage.related_product_item);
+      .waitForVisibleAndClick(AddProductPage.related_product_item.replace('%I', 1));
   }
 
   addFeature(type, id = '0') {
@@ -129,7 +129,7 @@ class Product extends CommonClient {
   selectFeature(addProductPage, name, value, number) {
     return this.client
       .scrollWaitForExistAndClick(addProductPage.feature_select.replace('%NUMBER', number + 1))
-      .waitAndSetValue(addProductPage.select_feature_created, name)
+      .selectByVisibleText(addProductPage.select_feature_created.replace('%ID', number), name)
       .waitForVisibleAndClick(addProductPage.result_feature_select.replace('%ID', number))
       .pause(4000)
       .selectByVisibleText(addProductPage.feature_value_select.replace('%ID', number).replace('%V', 'not(@disabled)'), value);
@@ -138,7 +138,7 @@ class Product extends CommonClient {
   selectFeatureCustomizedValue(addProductPage, name, customizedValue, number) {
     return this.client
       .scrollWaitForExistAndClick(addProductPage.feature_select.replace('%NUMBER', number + 1))
-      .waitAndSetValue(addProductPage.select_feature_created, name)
+      .selectByVisibleText(addProductPage.select_feature_created.replace('%ID', number), name)
       .waitForVisibleAndClick(addProductPage.result_feature_select.replace('%ID', number))
       .waitAndSetValue(addProductPage.customized_value_input.replace('%ID', number), customizedValue)
   }
@@ -193,8 +193,9 @@ class Product extends CommonClient {
       })
   }
 
-  clickPageNext(selector) {
+  clickPageNext(selector, pause = 0) {
     return this.client
+      .pause(pause)
       .scrollWaitForExistAndClick(selector);
   }
 
@@ -238,24 +239,23 @@ class Product extends CommonClient {
 
   checkProductCategory(i) {
     return this.client
-      .scrollWaitForExistAndClick(ProductList.product_name_link.replace("%ID", global.positionTable[i - 1], 50000))
+      .scrollWaitForExistAndClick(AddProductPage.catalog_product_name.replace("%ID", global.positionTable[i - 1], 50, 50000))
       .waitForVisible(AddProductPage.product_name_input)
-      .scrollWaitForExistAndClick(AddProductPage.expand_categories_button)
   }
 
-  getSubCategoryNumber(i) {
+  getSubCategoryNumber(selector, i) {
     return this.client
-      .execute(function (i) {
+      .execute(function (selector, i) {
         let count;
         try {
-          count = document.getElementById('choice_tree').getElementsByTagName("ul")[i + 1].children.length;
+          count = document.getElementById(selector).getElementsByTagName("ul")[i + 1].children.length;
           return count;
         }
         catch (err) {
           count = 0;
           return count;
         }
-      }, i)
+      }, selector, i)
       .then((count) => {
         global.subCatNumber = count.value;
       })
@@ -324,6 +324,38 @@ class Product extends CommonClient {
         }
       });
   }
+
+  checkCategoryProduct() {
+    return this.client
+      .pause(1000)
+      .then(() => {
+        expect(global.productCategories.HOME.Accessories).to.contains(tab['categoryName'])
+      });
+  }
+
+  getCategoriesPageNumber(selector) {
+    return this.client
+      .waitForVisible('#' + selector)
+      .execute(function (selector) {
+        return document.getElementById(selector).getElementsByTagName("tbody")[0].children.length;
+      }, selector)
+      .then((count) => {
+        global.categoriesPageNumber = count.value;
+      });
+  }
+
+  checkTitleValue(selector, value, pause = 0) {
+    return this.client
+      .pause(pause)
+      .execute(function (selector) {
+        return document.querySelector(selector).textContent;
+      }, selector)
+      .then((values) => {
+        expect(values.value).to.contain(value)
+      });
+  }
+
+
 }
 
 module.exports = Product;

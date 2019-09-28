@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,21 +16,27 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace LegacyTests\Unit\Controller\FrontController;
 
-use LegacyTests\TestCase\IntegrationTestCase;
+use Currency;
+use Language;
+use LocalizationPack;
 use LegacyTests\Unit\ContextMocker;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
+use PrestaShopBundle\Cache\LocalizationWarmer;
+use ProductControllerCore;
+use ReflectionClass;
+use Tests\TestCase\SymfonyIntegrationTestCase;
 
-class ProductControllerTest extends IntegrationTestCase
+class ProductControllerTest extends SymfonyIntegrationTestCase
 {
     /**
      * @var ContextMocker
@@ -39,18 +45,42 @@ class ProductControllerTest extends IntegrationTestCase
 
     private $controller;
 
+    private static $languagesPackInstalled = false;
+
     protected function setUp()
     {
         parent::setUp();
-        $this->contextMocker = new ContextMocker();
-        $this->contextMocker->mockContext();
-        $this->controller = new \ProductControllerCore();
+
+        // Done here as we require the kernel to be instanciated.
+        if (!self::$languagesPackInstalled) {
+            self::installTestedLanguagePacks();
+            self::$languagesPackInstalled = true;
+        }
+        $this->controller = new ProductControllerCore();
     }
 
     protected function tearDown()
     {
+        global $kernel;
+        unset($kernel);
         parent::tearDown();
         $this->contextMocker->resetContext();
+    }
+
+    protected static function installTestedLanguagePacks()
+    {
+        $countries = [
+            'us',
+            'fr',
+        ];
+        $cacheDir  = _PS_CACHE_DIR_ . 'sandbox' . DIRECTORY_SEPARATOR;
+
+        foreach ($countries as $country) {
+            $xmlContent = (new LocalizationWarmer(_PS_VERSION_, $country))
+                ->warmUp($cacheDir);
+
+            (new LocalizationPack())->loadLocalisationPack($xmlContent, false, true);
+        }
     }
 
     /**
@@ -64,7 +94,7 @@ class ProductControllerTest extends IntegrationTestCase
      */
     public function invokeMethod($object, $methodName, array $parameters = array())
     {
-        $reflection = new \ReflectionClass(get_class($object));
+        $reflection = new ReflectionClass(get_class($object));
         $method     = $reflection->getMethod($methodName);
         $method->setAccessible(true);
 
@@ -91,11 +121,11 @@ class ProductControllerTest extends IntegrationTestCase
         $specificPrices,
         $expected
     ) {
-        $class    = new \ReflectionClass(get_class($this->controller));
+        $class    = new ReflectionClass(get_class($this->controller));
         $property = $class->getProperty("context");
         $property->setAccessible(true);
 
-        $currency                  = new \Currency();
+        $currency                  = new Currency();
         $currency->active          = true;
         $currency->conversion_rate = $currencyData['conversion_rate'];
         $currency->sign            = $currencyData['sign'];
@@ -104,8 +134,9 @@ class ProductControllerTest extends IntegrationTestCase
         /** @var \Context $context */
         $context            = $property->getValue($this->controller);
         $context->currency  = $currency;
-        $language           = new \Language();
+        $language           = new Language();
         $language->iso_code = 'EN';
+        $language->locale   = 'en-US';
         $context->language  = $language;
         $result             = $this->invokeMethod(
             $this->controller,

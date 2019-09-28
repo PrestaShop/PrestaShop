@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,15 +16,16 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 use PrestaShop\PrestaShop\Adapter\CoreException;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
+use PrestaShop\PrestaShop\Core\Crypto\Hashing;
 
 /**
  * Class EmployeeCore.
@@ -164,7 +165,7 @@ class EmployeeCore extends ObjectModel
     {
         parent::__construct($id, null, $idShop);
 
-        if (!is_null($idLang)) {
+        if (null !== $idLang) {
             $this->id_lang = (int) (Language::getLanguage($idLang) !== false) ? $idLang : Configuration::get('PS_LANG_DEFAULT');
         }
 
@@ -340,11 +341,11 @@ class EmployeeCore extends ObjectModel
             return false;
         }
 
-        /** @var \PrestaShop\PrestaShop\Core\Crypto\Hashing $crypto */
-        $crypto = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Crypto\\Hashing');
+        /** @var Hashing $crypto */
+        $crypto = ServiceLocator::get(Hashing::class);
 
         $passwordHash = $result['passwd'];
-        $shouldCheckPassword = !is_null($plaintextPassword);
+        $shouldCheckPassword = null !== $plaintextPassword;
         if ($shouldCheckPassword && !$crypto->checkHash($plaintextPassword, $passwordHash)) {
             return false;
         }
@@ -416,7 +417,7 @@ class EmployeeCore extends ObjectModel
      * @param int $idProfile Profile ID
      * @param bool $activeOnly Only active Employees
      *
-     * @return false|null|string
+     * @return false|string|null
      */
     public static function countProfile($idProfile, $activeOnly = false)
     {
@@ -505,7 +506,7 @@ class EmployeeCore extends ObjectModel
     /**
      * Get favorite Module list.
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return array|false|mysqli_result|PDOStatement|resource|null
      */
     public function favoriteModulesList()
     {
@@ -577,7 +578,7 @@ class EmployeeCore extends ObjectModel
      * @param int $idProfile Profile ID
      * @param bool $activeOnly Only active Employees
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return array|false|mysqli_result|PDOStatement|resource|null
      */
     public static function getEmployeesByProfile($idProfile, $activeOnly = false)
     {
@@ -725,7 +726,7 @@ class EmployeeCore extends ObjectModel
     /**
      * Returns the default tab class name.
      *
-     * @return null|string
+     * @return string|null
      */
     public function getDefaultTabClassName()
     {

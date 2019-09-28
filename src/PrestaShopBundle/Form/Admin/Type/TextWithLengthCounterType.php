@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,13 +27,12 @@
 namespace PrestaShopBundle\Form\Admin\Type;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Class TextWithLengthCounterType.
+ * Defines reusable text input with max length counter
  */
 class TextWithLengthCounterType extends AbstractType
 {
@@ -44,6 +43,7 @@ class TextWithLengthCounterType extends AbstractType
     {
         $view->vars['max_length'] = $options['max_length'];
         $view->vars['position'] = $options['position'];
+        $view->vars['input'] = $options['input'];
     }
 
     /**
@@ -57,17 +57,12 @@ class TextWithLengthCounterType extends AbstractType
             ])
             ->setDefaults([
                 'position' => 'before',
+                'input' => 'text',
+                'compound' => false,
             ])
             ->setAllowedTypes('max_length', 'int')
-            ->setAllowedValues('position', ['before', 'after']);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getParent()
-    {
-        return TextareaType::class;
+            ->setAllowedValues('position', ['before', 'after'])
+            ->setAllowedValues('input', ['text', 'textarea']);
     }
 
     /**
@@ -75,6 +70,6 @@ class TextWithLengthCounterType extends AbstractType
      */
     public function getBlockPrefix()
     {
-        return 'text_with_counter';
+        return 'text_with_length_counter';
     }
 }

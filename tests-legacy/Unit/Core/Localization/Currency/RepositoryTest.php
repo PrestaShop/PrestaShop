@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,57 +27,62 @@
 namespace LegacyTests\Unit\Core\Localization\Currency;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Localization\Currency\DataRepositoryInterface as CurrencyDataRepositoryInterface;
+use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyData;
+use PrestaShop\PrestaShop\Core\Localization\Currency\DataSourceInterface as CurrencyDataSourceInterface;
 use PrestaShop\PrestaShop\Core\Localization\Currency\Repository as CurrencyRepository;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 
 class RepositoryTest extends TestCase
 {
     /**
+     * An instance of the tested CurrencyRepository class
+     *
+     * This Locale CurrencyRepository has been populated with stub data source dependency.
+     *
      * @var CurrencyRepository
      */
     protected $currencyRepository;
 
     protected function setUp()
     {
-        $euroData  = [
-            'isActive'       => true,
-            'conversionRate' => 1,
-            'isoCode'        => 'EUR',
-            'numericIsoCode' => 978,
-            'symbols'        => ['fr-FR' => '€', 'en-US' => '€'],
-            'precision'      => 2,
-            'names'          => ['fr-FR' => 'euro', 'en-US' => 'euro'],
-        ];
-        $peaceData = [
-            'isActive'       => true,
-            'conversionRate' => 1,
-            'isoCode'        => 'PCE',
-            'numericIsoCode' => 999,
-            'symbols'        => ['fr-FR' => '☮', 'en-US' => '☮'],
-            'precision'      => 2,
-            'names'          => ['fr-FR' => 'paix', 'en-US' => 'peace'],
-        ];
+        $dataSource = $this->createMock(CurrencyDataSourceInterface::class);
+        $dataSource
+            ->method('getLocalizedCurrencyData')
+            ->willReturnCallback(
+                function ($localizedCurrencyId) {
+                    $data = new CurrencyData();
 
-        $getDataByCurrencyCode = function ($isoCode) use ($euroData, $peaceData) {
-            if ($isoCode == 'EUR') {
-                return $euroData;
-            }
+                    switch ($localizedCurrencyId->getCurrencyCode()) {
+                        case 'EUR':
+                            $data->setIsActive(true);
+                            $data->setConversionRate(1);
+                            $data->setIsoCode('EUR');
+                            $data->setNumericIsoCode(978);
+                            $data->setSymbols(['fr-FR' => '€', 'en-US' => '€']);
+                            $data->setPrecision(2);
+                            $data->setNames(['fr-FR' => 'euro', 'en-US' => 'euro']);
+                            break;
 
-            if ($isoCode == 'PCE') {
-                return $peaceData;
-            }
+                        case 'PCE':
+                            $data->setIsActive(true);
+                            $data->setConversionRate(1);
+                            $data->setIsoCode('PCE');
+                            $data->setNumericIsoCode(999);
+                            $data->setSymbols(['fr-FR' => '☮', 'en-US' => '☮']);
+                            $data->setPrecision(2);
+                            $data->setNames(['fr-FR' => 'paix', 'en-US' => 'peace']);
+                            break;
 
-            throw new LocalizationException('Unknown currency code');
-        };
+                        default:
+                            throw new LocalizationException('Unknown currency code : ' . $localizedCurrencyId);
+                    }
 
-        $dataRepo = $this->createMock(CurrencyDataRepositoryInterface::class);
-        $dataRepo
-            ->method('getDataByCurrencyCode')
-            ->willReturnCallback($getDataByCurrencyCode);
+                    return $data;
+                }
+            );
 
-        /** @var $dataRepo CurrencyDataRepositoryInterface */
-        $this->currencyRepository = new CurrencyRepository($dataRepo);
+        /** @var $dataSource CurrencyDataSourceInterface */
+        $this->currencyRepository = new CurrencyRepository($dataSource);
     }
 
     /**
@@ -99,7 +104,7 @@ class RepositoryTest extends TestCase
      */
     public function testGetCurrency($currencyCode, $expectedNames, $expectedSymbols)
     {
-        $currency = $this->currencyRepository->getCurrency($currencyCode);
+        $currency = $this->currencyRepository->getCurrency($currencyCode, 'fr-FR');
         foreach ($expectedNames as $localeCode => $name) {
             $this->assertSame($name, $currency->getName($localeCode));
         }
@@ -141,12 +146,11 @@ class RepositoryTest extends TestCase
      * Given an unknown or invalid currency code
      * When asking the currency repository for the corresponding Currency
      * Then an exception should be raised
-     *
      */
     public function testGetCurrencyWithUnknownCode()
     {
-        $this->expectException(\PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException::class);
+        $this->setExpectedException(LocalizationException::class);
 
-        $this->currencyRepository->getCurrency('foobar');
+        $this->currencyRepository->getCurrency('foo', 'bar');
     }
 }

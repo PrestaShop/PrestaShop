@@ -60,11 +60,12 @@ module.exports = {
       test('should check the attribute values', () => client.checkTextValue(SearchProductPage.attribute_radio_values, Object.keys(data.values).map((k) => data.values[k].value), 'deepequal'));
     }, 'attribute_and_feature');
   },
-  checkAllAttributeTypeInFO: async function (AccessPageBO, productPage, productName, data, client) {
+  checkAllAttributeTypeInFO: async function (client, productPage, productName) {
     for (let i = 0; i <= global.pagination; i++) {
       await client.pause(4000);
       await client.isVisible(productPage.productLink.replace('%PRODUCTNAME', productName + date_time));
       await client.middleClickWhenVisible(productPage.productLink.replace('%PRODUCTNAME', productName + date_time));
+      await client.pause(1000);
       if (i !== global.pagination) {
         await client.isVisible(productPage.pagination_next);
         if (global.isVisible) {

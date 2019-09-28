@@ -2,11 +2,8 @@ services:
   _defaults:
     public: true
 
-  prestashop.adapter.group.query_handler.get_default_groups_handler:
-    class: 'PrestaShop\PrestaShop\Adapter\Group\QueryHandler\GetDefaultGroupsHandler'
+  prestashop.adapter.group.provider.default_groups_provider:
+    class: 'PrestaShop\PrestaShop\Adapter\Group\Provider\DefaultGroupsProvider'
     arguments:
       - '@prestashop.adapter.legacy.configuration'
       - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
-    tags:
-      - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Group\Query\GetDefaultGroups'

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -238,8 +238,7 @@ class CategoriesProvider
      */
     private function findModuleCategory(ApiModule $installedProduct, array $categories)
     {
-        $moduleCategory = $installedProduct->attributes->get('categoryName');
-        $moduleCategoryParent = $this->getParentCategory($moduleCategory);
+        $moduleCategoryParent = $installedProduct->attributes->get('categoryParentEnglishName');
         if (!isset($categories['categories']->subMenu[$moduleCategoryParent])) {
             if (in_array($installedProduct->attributes->get('name'), $this->modulesTheme)) {
                 $moduleCategoryParent = self::CATEGORY_THEME;
@@ -252,7 +251,7 @@ class CategoriesProvider
             return $moduleCategoryParent;
         }
 
-        return CategoriesProvider::CATEGORY_OTHER;
+        return self::CATEGORY_OTHER;
     }
 
     /**

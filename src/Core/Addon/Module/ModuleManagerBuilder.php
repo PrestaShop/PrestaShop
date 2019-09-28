@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -17,10 +17,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -32,7 +32,6 @@ use Db;
 use Doctrine\Common\Cache\FilesystemCache;
 use GuzzleHttp\Client;
 use PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider;
-use PrestaShop\PrestaShop\Adapter\Cache\CacheClearer;
 use PrestaShop\PrestaShop\Adapter\Cache\Clearer;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
@@ -44,16 +43,14 @@ use PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
-use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerChain;
+use PrestaShop\PrestaShop\Core\Util\File\YamlParser;
 use PrestaShopBundle\Event\Dispatcher\NullDispatcher;
 use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 use PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient;
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
 use Symfony\Component\Routing\Router;
-use Symfony\Component\Yaml\Yaml;
 
 class ModuleManagerBuilder
 {
@@ -82,7 +79,7 @@ class ModuleManagerBuilder
     public static $cacheProvider = null;
 
     /**
-     * @return null|ModuleManagerBuilder
+     * @return ModuleManagerBuilder|null
      */
     public static function getInstance()
     {
@@ -113,12 +110,7 @@ class ModuleManagerBuilder
                     self::$moduleZipManager,
                     self::$translator,
                     new NullDispatcher(),
-                    new CacheClearer(
-                        new CacheClearerChain(),
-                        new Clearer\SymfonyCacheClearer(),
-                        new Clearer\MediaCacheClearer(),
-                        new Clearer\SmartyCacheClearer()
-                    )
+                    new Clearer\SymfonyCacheClearer()
                 );
             }
         }
@@ -133,9 +125,9 @@ class ModuleManagerBuilder
      */
     public function buildRepository()
     {
-        if (is_null(self::$modulesRepository)) {
+        if (null === self::$modulesRepository) {
             $sfContainer = SymfonyContainer::getInstance();
-            if (!is_null($sfContainer)) {
+            if (null !== $sfContainer) {
                 self::$modulesRepository = $sfContainer->get('prestashop.core.admin.module.repository');
             } else {
                 self::$modulesRepository = new ModuleRepository(
@@ -160,34 +152,16 @@ class ModuleManagerBuilder
          * build & buildRepository. No need to init manually all the dependancies.
          */
         $sfContainer = SymfonyContainer::getInstance();
-        if (!is_null($sfContainer)) {
+        if (null !== $sfContainer) {
             return;
         }
 
-        $phpConfigFile = $this->getConfigDir() . '/config.php';
-        if (file_exists($phpConfigFile)
-            && filemtime($phpConfigFile) >= filemtime($this->getConfigDir() . DIRECTORY_SEPARATOR . 'config.yml')) {
-            $config = require $phpConfigFile;
-        } else {
-            $config = Yaml::parse(
-                file_get_contents(
-                    $this->getConfigDir() . DIRECTORY_SEPARATOR . 'config.yml'
-                )
-            );
+        $yamlParser = new YamlParser((new Configuration())->get('_PS_CACHE_DIR_'));
 
-            try {
-                $filesystem = new Filesystem();
-                $filesystem->dumpFile($phpConfigFile, '<?php return ' . var_export($config, true) . ';' . "\n");
-            } catch (IOException $e) {
-                return false;
-            }
-        }
+        $config = $yamlParser->parse($this->getConfigDir() . '/config.yml');
+        $prestashopAddonsConfig =
+            $yamlParser->parse($this->getConfigDir() . '/addons/categories.yml');
 
-        $prestashopAddonsConfig = Yaml::parse(
-            file_get_contents(
-                $this->getConfigDir() . DIRECTORY_SEPARATOR . 'addons/categories.yml'
-            )
-        );
         $clientConfig = $config['csa_guzzle']['clients']['addons_api']['config'];
 
         self::$translator = Context::getContext()->getTranslator();
@@ -235,7 +209,7 @@ class ModuleManagerBuilder
         );
         self::$lecacyContext = new LegacyContext();
 
-        if (is_null(self::$adminModuleDataProvider)) {
+        if (null === self::$adminModuleDataProvider) {
             self::$moduleDataProvider = new ModuleDataProvider(self::$legacyLogger, self::$translator);
             self::$adminModuleDataProvider = new AdminModuleDataProvider(
                 self::$translator,
@@ -271,7 +245,7 @@ class ModuleManagerBuilder
 
     protected function getConfigDir()
     {
-        return _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'config';
+        return _PS_ROOT_DIR_ . '/app/config';
     }
 
     /**

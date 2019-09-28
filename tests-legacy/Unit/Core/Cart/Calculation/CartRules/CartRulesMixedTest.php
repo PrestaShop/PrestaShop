@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -29,11 +29,7 @@ namespace LegacyTests\Unit\Core\Cart\Calculation\CartRules;
 use LegacyTests\Unit\Core\Cart\Calculation\AbstractCartCalculationTest;
 
 /**
- * these tests aim to check the correct calculation of cart total when applying cart rules
- *
- * products are inserted as fixtures
- * products are inserted in cart from data providers
- * cart rules are inserted from data providers
+ * behat equivalent : Scenarii/Cart/Calculation/CartRule/mixed.feature
  */
 class CartRulesMixedTest extends AbstractCartCalculationTest
 {
@@ -93,6 +89,18 @@ class CartRulesMixedTest extends AbstractCartCalculationTest
                 // voucher exceeds total
                 'cartRules'       => [5, 7],
                 'knownToFailOnV1' => false,
+            ],
+            '3 products in cart, several quantities, one 5€ global voucher, one 50% global voucher' => [
+                'products'        => [
+                    2 => 2, // 64.776
+                    1 => 3, // 59.43
+                    3 => 1, // 31.188
+                    // total without rule : 155.41
+                ],
+                'expectedTotal'   => 82.205,
+                // voucher exceeds total
+                'cartRules'       => [4, 7],
+                'knownToFailOnV1' => true,
             ],
         ];
     }

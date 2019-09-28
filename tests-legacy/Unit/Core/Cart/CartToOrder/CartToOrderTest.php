@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -48,6 +48,9 @@ class CartToOrderTest extends CartTaxesTest
     {
         parent::setUp();
 
+        global $kernel;
+        $kernel = new \AppKernel('test', true);
+        $kernel->boot();
         $this->previousConfigurationMailMethod = Configuration::get('PS_MAIL_METHOD');
         Configuration::set('PS_MAIL_METHOD', Mail::METHOD_DISABLE);
     }
@@ -93,14 +96,10 @@ class CartToOrderTest extends CartTaxesTest
     )
     {
         // prepare cart
-        $this->cart->id_address_delivery = $addressId;
         $this->resetCart();
+        $this->cart->id_address_delivery = $addressId;
         $this->addProductsToCart($productData);
         $this->addCartRulesToCart($cartRuleData);
-
-        // need to update secret_key in order to get payment working
-        $this->cart->secure_key = md5('xxx');
-        $this->cart->update();
 
         // need to set customer to have a valid email
         $customer = new Customer();
@@ -116,7 +115,7 @@ class CartToOrderTest extends CartTaxesTest
         Context::getContext()->updateCustomer($customer);
 
         // copy to order
-        $paymentModule = new PaymentModuleFake;
+        $paymentModule = new PaymentModuleFake();
         $paymentModule->validateOrder(
             $this->cart->id,
             Configuration::get('PS_OS_CHEQUE'), // PS_OS_PAYMENT for payment-validated order
@@ -131,6 +130,11 @@ class CartToOrderTest extends CartTaxesTest
 
         // tests
         $order = Order::getByCartId($this->cart->id);
+        // compare global cart/order total
+        $this->assertEquals($this->cart->getOrderTotal(false), $order->total_paid_tax_excl);
+        $this->assertEquals($this->cart->getOrderTotal(true), $order->total_paid_tax_incl);
+
+        // specific comparisons
         $this->assertEquals($expected_totalProduct_taxIncl, $order->total_products_wt);
         $this->assertEquals($expected_totalProduct_taxExcl, $order->total_products);
         $this->assertEquals($expected_totalDiscount_taxExcl, $order->total_discounts_tax_excl);
@@ -208,7 +212,7 @@ class CartToOrderTest extends CartTaxesTest
                 'expected_discounts_taxExcl' => [57.29],
                 'expected_newVoucherValue' => 0,
             ],
-            '3 product in cart, 3 cart rules' => [
+            '3 product in cart, 2 cart rules' => [
                 'products' => [1 => 1, 2 => 1, 3 => 2],
                 'cartRules' => [1, 2],
                 'addressId' => CartTaxesTest::ADDRESS_ID_1,

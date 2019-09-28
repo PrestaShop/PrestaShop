@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -134,15 +134,15 @@ class ThemeTranslationsFactoryTest extends TestCase
         return new MessageCatalogue(
             self::TEST_LOCALE,
             array(
-                'DefaultDomain.'.self::TEST_LOCALE => array(
+                'DefaultDomain' => array(
                     'Default message' => 'Default MESSAGE',
                     'Default message bis' => 'Bis',
                 ),
-                'ShopFront.'.self::TEST_LOCALE => array(
+                'ShopFront' => array(
                     'Add to Cart' => 'Add to Cart',
                     'Edit product' => 'Edit it',
                 ),
-                'messages.'.self::TEST_LOCALE => array(
+                'messages' => array(
                     'foo' => 'Foo',
                     'bar' => 'Bar',
                     'baz' => 'Baz',
@@ -156,13 +156,13 @@ class ThemeTranslationsFactoryTest extends TestCase
         return new MessageCatalogue(
             self::TEST_LOCALE,
             array(
-                'DefaultDomain.'.self::TEST_LOCALE => array(
+                'DefaultDomain' => array(
                     'Default message' => 'Default MESSAGE override xliff',
                 ),
-                'ShopFront.'.self::TEST_LOCALE => array(
+                'ShopFront' => array(
                     'Add to Cart' => 'Add to Cart override xliff',
                 ),
-                'messages.'.self::TEST_LOCALE => array(
+                'messages' => array(
                     'bar' => 'Bar override xlif',
                     'baz' => 'Baz override xliff',
                 ),
@@ -236,14 +236,11 @@ class ThemeTranslationsFactoryTest extends TestCase
     {
         $this->assertInternalType('array', $this->translations);
 
-        $domain = 'messages.' . $locale;
-        $this->assertArrayHasKey($domain, $this->translations);
+        $this->assertArrayHasKey('messages', $this->translations);
 
-        $domain = 'ShopFront.' . $locale;
-        $this->assertArrayHasKey($domain, $this->translations);
+        $this->assertArrayHasKey('ShopFront', $this->translations);
 
-        $domain = 'DefaultDomain.' . $locale;
-        $this->assertArrayHasKey($domain, $this->translations);
+        $this->assertArrayHasKey('DefaultDomain', $this->translations);
     }
 
     /**
@@ -256,7 +253,7 @@ class ThemeTranslationsFactoryTest extends TestCase
                 'xlf' => null,
                 'db' => null,
             ),
-            $this->translations['DefaultDomain.' . $locale]['Default message bis'],
+            $this->translations['DefaultDomain']['Default message bis'],
             'It should provide with default translations.'
         );
 
@@ -265,7 +262,7 @@ class ThemeTranslationsFactoryTest extends TestCase
                 'xlf' => null,
                 'db' => null,
             ),
-            $this->translations['messages.' . $locale]['foo'],
+            $this->translations['messages']['foo'],
             'It should provide with default translations.'
         );
     }
@@ -280,7 +277,7 @@ class ThemeTranslationsFactoryTest extends TestCase
                 'xlf' => 'Add to Cart override xliff',
                 'db' => null,
             ),
-            $this->translations['ShopFront.' . $locale]['Add to Cart'],
+            $this->translations['ShopFront']['Add to Cart'],
             'It should provide with translations from XLIFF catalogue overriding the defaults.'
         );
 
@@ -289,7 +286,7 @@ class ThemeTranslationsFactoryTest extends TestCase
                 'xlf' => 'Bar override xlif',
                 'db' => null,
             ),
-            $this->translations['messages.' . $locale]['bar'],
+            $this->translations['messages']['bar'],
             'It should provide with translations from XLIFF catalogue overriding the defaults.'
         );
     }
@@ -304,7 +301,7 @@ class ThemeTranslationsFactoryTest extends TestCase
                 'xlf' => 'Default MESSAGE override xliff',
                 'db' => 'Default override database',
             ),
-            $this->translations['DefaultDomain.' . $locale]['Default message'],
+            $this->translations['DefaultDomain']['Default message'],
             'It should provide with translations from XLIFF catalogue overriding the defaults and database overrides.'
         );
 
@@ -313,7 +310,7 @@ class ThemeTranslationsFactoryTest extends TestCase
                 'xlf' => 'Baz override xliff',
                 'db' => 'Baz is updated from database!',
             ),
-            $this->translations['messages.' . $locale]['baz'],
+            $this->translations['messages']['baz'],
             'It should provide with translations from XLIFF catalogue overriding the defaults and database overrides.'
         );
     }

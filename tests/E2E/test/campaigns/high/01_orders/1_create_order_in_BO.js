@@ -70,20 +70,30 @@ scenario('Create order in the Back Office', () => {
     scenario('Print invoice', client => {
       test('should click on "DOCUMENTS" subtab', () => client.waitForVisibleAndClick(OrderPage.document_submenu));
       test('should download the invoice document', () => client.downloadDocument(OrderPage.download_invoice_button));
-      test('should check the "invoice file name" ', () => client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, global.invoiceFileName));
-      test('should check that the "invoice customer" is "John Doe"', () => client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, 'John DOE'));
-      test('should check  the "invoice basic price"  ', () => client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, global.basic_price));
-      test('should check that the "invoice product information" is : "P1' + global.date_time + ' - Size : M- Color : Beige"', () => client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, "P1" + global.date_time + " - Size : M- Color : Beige"));
-      test('should delete the invoice file', () => client.deleteFile(global.downloadsFolderPath, global.invoiceFileName , ".pdf", 2000));
+      test('should check the "invoice file" information ', async () => {
+        await client.checkFile(global.downloadsFolderPath, global.invoiceFileName + ".pdf");
+        if (global.existingFile) {
+          await client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, global.invoiceFileName);
+          await client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, 'John DOE');
+          await client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, global.basic_price);
+          await client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, "P1" + global.date_time + " - Size : M- Color : Beige");
+          await client.deleteFile(global.downloadsFolderPath, global.invoiceFileName, '.pdf', 2000);
+        }
+      });
     }, 'order');
 
     scenario('Print delivery invoice', client => {
       test('should download the delivery invoice document', () => client.downloadDocument(OrderPage.download_delivery_button));
-      test('should check the "delivery invoice file name"', () => client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, global.invoiceFileName));
-      test('should check that the "delivery invoice customer" is : Johan DOE', () => client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, 'John DOE'));
-      test('should check that the "delivery invoice product information" is : "P1' + global.date_time + ' - Size : M- Color : Beige"', () => client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, "P1" + global.date_time + " - Size : M- Color : Beige"));
-      test('should check that the "delivery invoice product carrier" is : My carrier"', () => client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, "My carrier"));
-      test('should delete the delivery invoice file', () => client.deleteFile(global.downloadsFolderPath, global.invoiceFileName, ".pdf", 2000));
+      test('should check the "delivery file" information', async () => {
+        await client.checkFile(global.downloadsFolderPath, global.invoiceFileName + ".pdf");
+        if (global.existingFile) {
+          await client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, global.invoiceFileName);
+          await client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, 'John DOE');
+          await client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, "P1" + global.date_time + " - Size : M- Color : Beige");
+          await client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, "My carrier");
+          await client.deleteFile(global.downloadsFolderPath, global.invoiceFileName, ".pdf", 2000);
+        }
+      });
     }, 'order');
   }, 'order');
 }, 'order', true);

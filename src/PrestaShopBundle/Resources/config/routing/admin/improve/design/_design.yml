@@ -8,4 +8,12 @@ _positions:
 
 _theme:
     resource: "theme.yml"
-    prefix: /theme
+    prefix: /themes
+
+_cms_page:
+    resource: "cms_pages.yml"
+    prefix: /cms-pages
+
+_mail_theme:
+    resource: "mail_theme.yml"
+    prefix: /mail_theme/

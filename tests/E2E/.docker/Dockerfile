@@ -11,7 +11,8 @@ RUN apt install -y \
     gnupg2 \
     curl \
     git \
-    software-properties-common
+    software-properties-common \
+    poppler-utils
 
 RUN rm -rf /var/lib/apt/lists/*
 

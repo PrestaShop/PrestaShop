@@ -1,11 +1,16 @@
+/**
+ * This scenario is based on the bug described in this ticket
+ * http://forge.prestashop.com/browse/BOOM-2805
+ **/
+
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {AccessPageFO} = require('../../../selectors/FO/access_page');
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
 const {productPage} = require('../../../selectors/FO/product_page');
 const {SearchProductPage} = require('../../../selectors/FO/search_product_page');
 const {CheckoutOrderPage} = require('../../../selectors/FO/order_page');
-
 const common_scenarios = require('../../common_scenarios/product');
+const welcomeScenarios = require('../../common_scenarios/welcome');
 
 let productData = {
   name: 'PQ',
@@ -14,11 +19,9 @@ let productData = {
   image_name: 'image_test.jpg',
   reference: 'test_1',
 };
-
-/**
- * This scenario is based on the bug described in this ticket
- * http://forge.prestashop.com/browse/BOOM-2805
- **/
+/*
+* Check issue #13634, blocking last step
+ */
 
 scenario('Check adding a product to the cart with unavailable quantities', () => {
 
@@ -26,10 +29,13 @@ scenario('Check adding a product to the cart with unavailable quantities', () =>
     test('should open the browser', () => client.open());
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'order');
+  welcomeScenarios.findAndCloseWelcomeModal();
+
+  welcomeScenarios.findAndCloseWelcomeModal();
 
   common_scenarios.createProduct(AddProductPage, productData);
 
-  scenario('Create order in the Front Office', client => {
+  scenario('Create order in the Front Office', () => {
     scenario('Open the browser and connect to the Front Office', client => {
       test('should login successfully in the Front Office', () => client.signInFO(AccessPageFO));
     }, 'order');
@@ -46,7 +52,5 @@ scenario('Check adding a product to the cart with unavailable quantities', () =>
       test('should click on the product link button', () => client.waitForExistAndClick(CheckoutOrderPage.product_cart_link));
       test('should check the existence of "There are not enough products in stock" warning message', () => client.checkTextValue(productPage.product_availability_message, "Out-of-Stock", "contain"));
     }, 'order');
-
   }, 'order');
-
 }, 'order', true);

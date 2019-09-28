@@ -64,7 +64,16 @@ body#checkout {
     .step-edit {
       display: none;
     }
+    &.-unreachable {
+      .step-title {
+        cursor: not-allowed;
+        opacity: 0.5;
+      }
+    }
     &.-current {
+      .step-title {
+        cursor: default;
+      }
       .content {
         display: block;
       }
@@ -222,6 +231,9 @@ body#checkout {
       label {
         text-align: inherit;
       }
+      img {
+        width: 3.125rem;
+      }
     }
     .carrier-delay,
     .carrier-name {
@@ -326,6 +338,12 @@ body#checkout {
       border: 1px solid #e5e5e5;
       border-radius: 0;
       padding: 1rem;
+      .logo-container {
+        text-align: center;
+        img {
+          width: 3.125rem;
+        }
+      }
     }
     .step-edit {
       display: inline;
@@ -357,7 +375,8 @@ body#checkout {
 }
 /**** ORDER CONFIRMATION *****/
 #order-details {
-  padding-left: $large-space;
+  padding-left: 1.3rem;
+  margin-top: 1.25rem;
   > .card-title {
     margin-bottom: $large-space;
   }
@@ -370,6 +389,14 @@ body#checkout {
 }
 #order-items {
   border-right: $gray-light 1px solid;
+  .h3 {
+    font-size: 1rem;
+    &._desktop-title {
+      @include media-breakpoint-down(md) {
+        display: none;
+      }
+    }
+  }
   hr {
     border-top-color: $gray-darker;
   }
@@ -380,6 +407,21 @@ body#checkout {
       td {
         &:last-child {
           text-align: right;
+        }
+      }
+      td {
+        padding: .5rem;
+        font-size: .875rem;
+      }
+      &.total-value {
+        background-color: $gray-light;
+      }
+      &.taxes {
+        td {
+          text-align: left;
+          .value {
+            padding-top: 0;
+          }
         }
       }
     }
@@ -412,7 +454,7 @@ body#checkout {
 }
 @include media-breakpoint-down(md) {
   .done {
-    margin: 0;
+    margin-right: .625rem;
     padding: 0;
   }
   body#checkout section.checkout-step .address-item {

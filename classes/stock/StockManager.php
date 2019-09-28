@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -529,7 +529,7 @@ class StockManagerCore implements StockManagerInterface
      */
     public function getProductPhysicalQuantities($id_product, $id_product_attribute, $ids_warehouse = null, $usable = false)
     {
-        if (!is_null($ids_warehouse)) {
+        if (null !== $ids_warehouse) {
             // in case $ids_warehouse is not an array
             if (!is_array($ids_warehouse)) {
                 $ids_warehouse = array($ids_warehouse);
@@ -564,7 +564,7 @@ class StockManagerCore implements StockManagerInterface
      */
     public function getProductRealQuantities($id_product, $id_product_attribute, $ids_warehouse = null, $usable = false)
     {
-        if (!is_null($ids_warehouse)) {
+        if (null !== $ids_warehouse) {
             // in case $ids_warehouse is not an array
             if (!is_array($ids_warehouse)) {
                 $ids_warehouse = array($ids_warehouse);
@@ -648,7 +648,7 @@ class StockManagerCore implements StockManagerInterface
         $query->leftjoin('supply_order_state', 'sos', 'sos.id_supply_order_state = so.id_supply_order_state');
         $query->where('sos.pending_receipt = 1');
         $query->where('sod.id_product = ' . (int) $id_product . ' AND sod.id_product_attribute = ' . (int) $id_product_attribute);
-        if (!is_null($ids_warehouse) && count($ids_warehouse)) {
+        if (null !== $ids_warehouse && count($ids_warehouse)) {
             $query->where('so.id_warehouse IN(' . implode(', ', $ids_warehouse) . ')');
         }
 

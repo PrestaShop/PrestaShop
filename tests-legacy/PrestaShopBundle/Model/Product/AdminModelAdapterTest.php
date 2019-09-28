@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,17 +16,16 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace LegacyTests\PrestaShopBundle\Model\Product;
 
-use PrestaShop\PrestaShop\Adapter\CombinationDataProvider;
 use PrestaShopBundle\Model\Product\AdminModelAdapter;
 use Product;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -191,7 +190,8 @@ class AdminModelAdapterTest extends KernelTestCase
             $this->container->get('prestashop.adapter.data_provider.feature'),
             $this->container->get('prestashop.adapter.data_provider.pack'),
             $this->container->get('prestashop.adapter.shop.context'),
-            $this->container->get('prestashop.adapter.data_provider.tax')
+            $this->container->get('prestashop.adapter.data_provider.tax'),
+            $this->container->get('router')
         );
     }
 
@@ -257,7 +257,7 @@ class AdminModelAdapterTest extends KernelTestCase
             "attribute_quantity" => 300,
             "name" => "Taille - L",
         );
-        $combinationDataProvider = new combinationDataProvider();
+        $combinationDataProvider = $this->container->get('prestashop.adapter.data_provider.combination');
         $actualReturn = $combinationDataProvider->completeCombination($this->fakeCombination(), $this->product);
 
         foreach ($expectedStructureReturn as $property => $value) {

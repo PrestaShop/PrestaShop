@@ -1,5 +1,5 @@
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,10 +15,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -73,9 +73,11 @@ export default class ImportBatchSizeCalculator {
    * Calculates the recommended import batch size.
    *
    * @param {number} currentBatchSize current import batch size
+   * @param {number} maxBatchSize greater than zero, the batch size that shouldn't be exceeded
+   *
    * @returns {number} recommended import batch size
    */
-  calculateBatchSize(currentBatchSize) {
+  calculateBatchSize(currentBatchSize, maxBatchSize = 0) {
     if (!this._importStartTime) {
       throw 'Import start is not marked.';
     }
@@ -84,9 +86,15 @@ export default class ImportBatchSizeCalculator {
       throw 'Import end is not marked.';
     }
 
-    return Math.min(
+    let candidates = [
       this._maxBatchSize,
       Math.max(this._minBatchSize, Math.floor(currentBatchSize * this._calculateAcceleration()))
-    );
+    ];
+
+    if (maxBatchSize > 0) {
+      candidates.push(maxBatchSize);
+    }
+
+    return Math.min(...candidates);
   }
 }

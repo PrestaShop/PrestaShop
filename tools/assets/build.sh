@@ -6,51 +6,43 @@
 
 #http://redsymbol.net/articles/unofficial-bash-strict-mode/
 set -euo pipefail
-ADMIN_DIR="${ADMIN_DIR:-admin-dev}"
+PROJECT_PATH=$(cd "$( dirname "$0" )/../../" && pwd)
+ADMIN_DIR="${PROJECT_PATH}/${ADMIN_DIR:-admin-dev}"
 
 if [[ ! -d $ADMIN_DIR ]]; then
   echo "Could not find directory '$ADMIN_DIR'. Make sure to launch this script from the root directory of PrestaShop"
   return 1
 fi
 
-BASE_DIRECTORY=$(pwd)
-
 function build {
-  if [[ ! -d "node_modules" ]]; then
-    npm install
+  if [[ -z "$1" ]]; then
+    echo "Parameter is empty"
+    exit 1
   fi
 
+  pushd $1
+  if [[ -d "node_modules" ]]; then
+    rm -rf node_modules
+  fi
+
+  npm install
   npm run build
+  popd
 }
 
-#echo ">>> Building admin bundle..."
-
-#cd "$BASE_DIRECTORY/$ADMIN_DIR"
-
-#build
+echo ">>> Make sur you have the latest npm version"
+npm install -g npm
 
 echo ">>> Building admin default theme..."
-
-cd "$BASE_DIRECTORY/$ADMIN_DIR/themes/default"
-
-build
+build "$ADMIN_DIR/themes/default"
 
 echo ">>> Building admin new theme..."
-
-cd "$BASE_DIRECTORY/$ADMIN_DIR/themes/new-theme"
-
-build
+build "$ADMIN_DIR/themes/new-theme"
 
 echo ">>> Building core theme assets..."
-
-cd "$BASE_DIRECTORY/themes"
-
-build
+build "$PROJECT_PATH/themes"
 
 echo ">>> Building classic theme assets..."
-
-cd "$BASE_DIRECTORY/themes/classic/_dev"
-
-build
+build "$PROJECT_PATH/themes/classic/_dev"
 
 echo "All done!"

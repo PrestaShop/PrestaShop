@@ -6,8 +6,7 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Grid\Filter\GridFilterFormFactory'
         arguments:
             - '@form.factory'
-        calls:
-            - [setHookDispatcher, ['@prestashop.core.hook.dispatcher']]
+            - '@prestashop.core.hook.dispatcher'
 
     prestashop.core.grid.filter.category_form_factory:
         class: 'PrestaShop\PrestaShop\Core\Grid\Filter\CategoryFilterFormFactory'
@@ -15,3 +14,10 @@ services:
             - '@prestashop.core.grid.filter.form_factory'
             - '@router'
             - '@request_stack'
+
+    prestashop.core.grid.filter.cms_page_form_factory:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Filter\CmsPageFilterFormFactory'
+      arguments:
+        - '@prestashop.core.grid.filter.form_factory'
+        - '@router'
+        - '@request_stack'

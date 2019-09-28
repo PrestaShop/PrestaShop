@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -46,7 +46,7 @@ interface CurrencyInterface
      *
      * Price in currency A * currency A's conversion rate = price in default currency
      *
-     * Example :
+     * Example:
      * Given the Euro as default shop's currency,
      * If 1 dollar = 1.31 euros,
      * Then conversion rate for Dollar will be 1.31
@@ -93,8 +93,8 @@ interface CurrencyInterface
     /**
      * Get the number of decimal digits to use with this currency.
      *
-     * Example : Euro's decimal precision is 2 (1 234,56 EUR)
-     * Example : Colombian peso's decimal precision is 0 (1 235 COP)
+     * Example: Euro's decimal precision is 2 (1 234,56 EUR)
+     * Example: Colombian peso's decimal precision is 0 (1 235 COP)
      *
      * @return int
      */

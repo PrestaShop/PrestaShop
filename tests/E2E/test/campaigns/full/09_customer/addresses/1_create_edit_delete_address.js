@@ -1,3 +1,10 @@
+/**
+ * This script is based on scenarios described in this combination of the following tests link
+ * [id="PS-63"][Name="create an address"]
+ * [id="PS-64"][Name="edit an address"]
+ * [id="PS-65"][Name="delete an address"]
+ **/
+
 const {AccessPageBO} = require('../../../../selectors/BO/access_page');
 const {Addresses} = require('../../../../selectors/BO/customers/addresses');
 const {Menu} = require('../../../../selectors/BO/menu.js');

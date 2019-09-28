@@ -1,5 +1,5 @@
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,23 +15,27 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import Grid from "../../components/grid/grid";
-import ReloadListActionExtension from "../../components/grid/extension/reload-list-extension";
-import ExportToSqlManagerExtension from "../../components/grid/extension/export-to-sql-manager-extension";
-import FiltersResetExtension from "../../components/grid/extension/filters-reset-extension";
-import SortingExtension from "../../components/grid/extension/sorting-extension";
-import BulkActionCheckboxExtension from "../../components/grid/extension/bulk-action-checkbox-extension";
-import SubmitBulkActionExtension from "../../components/grid/extension/submit-bulk-action-extension";
-import SubmitRowActionExtension from "../../components/grid/extension/action/row/submit-row-action-extension";
-import HelperCard from "../../components/helper-card";
+import FiltersSubmitButtonEnablerExtension
+  from '../../components/grid/extension/filters-submit-button-enabler-extension';
+import Grid from '../../components/grid/grid';
+import ReloadListActionExtension from '../../components/grid/extension/reload-list-extension';
+import ExportToSqlManagerExtension from '../../components/grid/extension/export-to-sql-manager-extension';
+import FiltersResetExtension from '../../components/grid/extension/filters-reset-extension';
+import SortingExtension from '../../components/grid/extension/sorting-extension';
+import BulkActionCheckboxExtension from '../../components/grid/extension/bulk-action-checkbox-extension';
+import SubmitBulkActionExtension from '../../components/grid/extension/submit-bulk-action-extension';
+import SubmitRowActionExtension from '../../components/grid/extension/action/row/submit-row-action-extension';
+import ColumnTogglingExtension from '../../components/grid/extension/column-toggling-extension';
+import ShowcaseCard from '../../components/showcase-card/showcase-card';
+import ShowcaseCardCloseExtension from '../../components/showcase-card/extension/showcase-card-close-extension';
 
 const $ = window.$;
 
@@ -45,6 +49,9 @@ $(() => {
   employeeGrid.addExtension(new BulkActionCheckboxExtension());
   employeeGrid.addExtension(new SubmitBulkActionExtension());
   employeeGrid.addExtension(new SubmitRowActionExtension());
+  employeeGrid.addExtension(new ColumnTogglingExtension());
+  employeeGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
 
-  new HelperCard();
+  const showcaseCard = new ShowcaseCard('employeesShowcaseCard');
+  showcaseCard.addExtension(new ShowcaseCardCloseExtension());
 });

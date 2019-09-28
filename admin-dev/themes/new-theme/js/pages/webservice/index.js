@@ -1,5 +1,5 @@
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,10 +15,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -32,6 +32,10 @@ import SubmitBulkActionExtension from "../../components/grid/extension/submit-bu
 import SortingExtension from "../../components/grid/extension/sorting-extension";
 import SubmitRowActionExtension from "../../components/grid/extension/action/row/submit-row-action-extension";
 import ColumnTogglingExtension from "../../components/grid/extension/column-toggling-extension";
+import ChoiceTree from "../../components/form/choice-tree";
+import GeneratableInput from "../../components/generatable-input";
+import MultipleChoiceTable from "../../components/multiple-choice-table";
+import PermissionsRowSelector from "./permissions-row-selector";
 
 const $ = window.$;
 
@@ -46,4 +50,16 @@ $(() => {
   webserviceGrid.addExtension(new SubmitBulkActionExtension());
   webserviceGrid.addExtension(new SubmitRowActionExtension());
   webserviceGrid.addExtension(new BulkActionCheckboxExtension());
+
+  // needed for shop association input in form
+  new ChoiceTree('#webservice_key_shop_association').enableAutoCheckChildren();
+
+  // needed for permissions input in form
+  new MultipleChoiceTable();
+
+  // needed for key input in form
+  const generatableInput = new GeneratableInput();
+  generatableInput.attachOn('.js-generator-btn');
+
+  new PermissionsRowSelector();
 });

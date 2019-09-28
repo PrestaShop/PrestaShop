@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -47,7 +47,7 @@ class ProductPresenterFactoryCore
     public function __construct(Context $context, TaxConfiguration $taxConfiguration = null)
     {
         $this->context = $context;
-        $this->taxConfiguration = (is_null($taxConfiguration)) ? new TaxConfiguration() : $taxConfiguration;
+        $this->taxConfiguration = (null === $taxConfiguration) ? new TaxConfiguration() : $taxConfiguration;
     }
 
     /**
@@ -60,6 +60,7 @@ class ProductPresenterFactoryCore
         $settings = new ProductPresentationSettings();
 
         $settings->catalog_mode = Configuration::isCatalogMode();
+        $settings->catalog_mode_with_prices = (int) Configuration::get('PS_CATALOG_MODE_WITH_PRICES');
         $settings->include_taxes = $this->taxConfiguration->includeTaxes();
         $settings->allow_add_variant_to_cart_from_listing = (int) Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY');
         $settings->stock_management_enabled = Configuration::get('PS_STOCK_MANAGEMENT');

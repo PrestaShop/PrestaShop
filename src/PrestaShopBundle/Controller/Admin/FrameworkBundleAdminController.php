@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,9 +27,11 @@
 namespace PrestaShopBundle\Controller\Admin;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
+use Exception;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridInterface;
+use PrestaShop\PrestaShop\Core\Module\Exception\ModuleErrorInterface;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -162,7 +164,7 @@ class FrameworkBundleAdminController extends Controller
      *
      * @return array The responses of hooks
      *
-     * @throws \Exception
+     * @throws Exception
      */
     protected function renderHook($hookName, array $parameters)
     {
@@ -197,6 +199,8 @@ class FrameworkBundleAdminController extends Controller
 
     /**
      * Get the old but still useful context.
+     *
+     * @return \Context
      */
     protected function getContext()
     {
@@ -333,7 +337,7 @@ class FrameworkBundleAdminController extends Controller
      *
      * @return string
      *
-     * @throws \Exception
+     * @throws Exception
      */
     protected function getForbiddenActionMessage($action, $suffix = '')
     {
@@ -349,7 +353,7 @@ class FrameworkBundleAdminController extends Controller
             return $this->trans('You do not have permission to add this.', 'Admin.Notifications.Error');
         }
 
-        throw new \Exception(sprintf('Invalid action (%s)', $action . $suffix));
+        throw new Exception(sprintf('Invalid action (%s)', $action . $suffix));
     }
 
     /**
@@ -447,5 +451,40 @@ class FrameworkBundleAdminController extends Controller
     protected function getContextShopId()
     {
         return $this->getContext()->shop->id;
+    }
+
+    /**
+     * Get error by exception from given messages
+     *
+     * @param Exception $e
+     * @param array $messages
+     *
+     * @return string
+     */
+    protected function getErrorMessageForException(Exception $e, array $messages)
+    {
+        if ($e instanceof ModuleErrorInterface) {
+            return $e->getMessage();
+        }
+
+        $exceptionType = get_class($e);
+        $exceptionCode = $e->getCode();
+
+        if (isset($messages[$exceptionType])) {
+            $message = $messages[$exceptionType];
+
+            if (is_string($message)) {
+                return $message;
+            }
+
+            if (is_array($message) && isset($message[$exceptionCode])) {
+                return $message[$exceptionCode];
+            }
+        }
+
+        return $this->getFallbackErrorMessage(
+            $exceptionType,
+            $exceptionCode
+        );
     }
 }

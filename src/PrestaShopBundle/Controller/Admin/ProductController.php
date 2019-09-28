@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -44,7 +44,6 @@ use PrestaShopBundle\Form\Admin\Product\ProductQuantity;
 use PrestaShopBundle\Form\Admin\Product\ProductSeo;
 use PrestaShopBundle\Form\Admin\Product\ProductShipping;
 use PrestaShopBundle\Model\Product\AdminModelAdapter;
-use PrestaShopBundle\Model\Product\AdminModelAdapter as ProductAdminModelAdapter;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use PrestaShopBundle\Service\DataProvider\Admin\ProductInterface as ProductInterfaceProvider;
 use PrestaShopBundle\Service\DataProvider\StockInterface;
@@ -628,6 +627,7 @@ class ProductController extends FrameworkBundleAdminController
             'is_multishop_context' => $isMultiShopContext,
             'is_combination_active' => $this->get('prestashop.adapter.legacy.configuration')->combinationIsActive(),
             'showContentHeader' => false,
+            'seo_link' => $adminProductWrapper->getPreviewUrl($product, false),
             'preview_link' => $preview_url,
             'preview_link_deactivate' => $preview_url_deactive,
             'stats_link' => $this->getAdminLink('AdminStats', ['module' => 'statsproduct', 'id_product' => $id]),
@@ -1207,7 +1207,7 @@ class ProductController extends FrameworkBundleAdminController
 
         $productAdapter = $this->get('prestashop.adapter.data_provider.product');
         $product = $productAdapter->getProduct($productId);
-        $modelMapper = new ProductAdminModelAdapter(
+        $modelMapper = new AdminModelAdapter(
             $product,
             $this->get('prestashop.adapter.legacy.context'),
             $this->get('prestashop.adapter.admin.wrapper.product'),
@@ -1218,7 +1218,8 @@ class ProductController extends FrameworkBundleAdminController
             $this->get('prestashop.adapter.data_provider.feature'),
             $this->get('prestashop.adapter.data_provider.pack'),
             $this->get('prestashop.adapter.shop.context'),
-            $this->get('prestashop.adapter.data_provider.tax')
+            $this->get('prestashop.adapter.data_provider.tax'),
+            $this->get('router')
         );
         $form = $this->createFormBuilder($modelMapper->getFormData());
         switch ($step) {

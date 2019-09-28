@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -140,7 +140,7 @@ class ReferrerCore extends ObjectModel
      * @param int $idProduct
      * @param int $employee
      *
-     * @return array|bool|null|object
+     * @return array|bool|object|null
      */
     public function getStatsVisits($idProduct, $employee)
     {
@@ -216,7 +216,7 @@ class ReferrerCore extends ObjectModel
      * @param int $idProduct
      * @param int $employee
      *
-     * @return array|bool|null|object
+     * @return array|bool|object|null
      */
     public function getStatsSales($idProduct, $employee)
     {
@@ -366,7 +366,7 @@ class ReferrerCore extends ObjectModel
 
         // If it's a product and it has no visits nor orders
         if ((int) $idProduct && !$statsVisits['visits'] && !$statsSales['orders']) {
-            exit;
+            return;
         }
 
         $jsonArray = array(
@@ -387,6 +387,6 @@ class ReferrerCore extends ObjectModel
             'percent_fee' => Tools::displayPrice($statsSales['sales'] * $referrer->percent_fee / 100, $currency),
         );
 
-        die('[' . json_encode($jsonArray) . ']');
+        return json_encode([$jsonArray]);
     }
 }

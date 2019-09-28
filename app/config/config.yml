@@ -13,6 +13,8 @@ parameters:
     translator.data_collector: PrestaShopBundle\Translation\DataCollectorTranslator
     admin_page: "%kernel.root_dir%/../src/PrestaShopBundle/Resources/views/Admin"
     env(PS_LOG_OUTPUT): "%kernel.logs_dir%/%kernel.environment%.log"
+    mail_themes_uri: "/mails/themes"
+    mail_themes_dir: "%kernel.project_dir%%mail_themes_uri%"
 
 framework:
     assets:
@@ -63,6 +65,7 @@ twig:
         '%admin_page%/Configure/AdvancedParameters': AdvancedParameters
         '%admin_page%/Configure/ShopParameters': ShopParameters
         '%kernel.root_dir%/../modules': Modules
+        '%mail_themes_dir%': MailThemes
     globals:
         webpack_server: false
 

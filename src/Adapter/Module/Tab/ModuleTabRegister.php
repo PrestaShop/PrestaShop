@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -112,7 +112,6 @@ class ModuleTabRegister
         }
 
         $tabs = $this->addUndeclaredTabs($module->get('name'), $module->getInstance()->getTabs());
-
         foreach ($tabs as $tab) {
             try {
                 $this->registerTab($module, new ParameterBag($tab));
@@ -120,6 +119,14 @@ class ModuleTabRegister
                 $this->logger->error($e->getMessage());
             }
         }
+    }
+
+    /**
+     * @param Module $module
+     */
+    public function enableTabs(Module $module)
+    {
+        $this->tabRepository->changeEnabledByModuleName($module->get('name'), true);
     }
 
     /**
@@ -176,7 +183,7 @@ class ModuleTabRegister
             throw new Exception('Missing class name of tab');
         }
         // Check controller exists
-        if (!in_array($className . 'Controller.php', $this->getModuleAdminControllersFilename($moduleName))) {
+        if (empty($data->get('route_name')) && !in_array($className . 'Controller.php', $this->getModuleAdminControllersFilename($moduleName))) {
             throw new Exception(sprintf('Class "%sController" not found in controllers/admin', $className));
         }
         // Deprecation check
@@ -283,7 +290,9 @@ class ModuleTabRegister
          */
         $tab = new Tab();
         $tab->active = $tabDetails->getBoolean('visible', true);
+        $tab->enabled = true;
         $tab->class_name = $tabDetails->get('class_name');
+        $tab->route_name = $tabDetails->get('route_name');
         $tab->module = $module->get('name');
         $tab->name = $this->getTabNames($tabDetails->get('name', $tab->class_name));
         $tab->icon = $tabDetails->get('icon');

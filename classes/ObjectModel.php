@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -186,6 +186,14 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     }
 
     /**
+     * reset static cache (eg unit testing purpose).
+     */
+    public static function resetStaticCache()
+    {
+        static::$loaded_classes = array();
+    }
+
+    /**
      * Returns object validation rules (fields validity).
      *
      * @param string $class Child class name for static use (optional)
@@ -234,7 +242,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             }
         }
 
-        if (!is_null($translator)) {
+        if (null !== $translator) {
             $this->translator = $translator;
         }
 
@@ -259,9 +267,9 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
 
     protected function trans($id, array $parameters = array(), $domain = null, $locale = null)
     {
-        if (is_null($this->translator)) {
+        if (null === $this->translator) {
             $this->translator = Context::getContext()->getTranslator();
-            if (is_null($this->translator)) {
+            if (null === $this->translator) {
                 return $id;
             }
         }

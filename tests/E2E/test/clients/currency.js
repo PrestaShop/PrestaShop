@@ -22,6 +22,15 @@ class Currency extends CommonClient {
         .waitForExistAndClick(actionSelector);
     }
   }
+
+  getCurrencyNumber(selector, globalVar, timeout = 90000) {
+    return this.client
+      .waitForExist(selector, timeout)
+      .then(() => this.client.getText(selector))
+      .then((variable) => {
+        global.tab[globalVar] = (variable.split('(')[1]).split(')')[0];
+      });
+  }
 }
 
 module.exports = Currency;

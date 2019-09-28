@@ -7,7 +7,7 @@
 >
     <php>
         <server name="KERNEL_CLASS" value="AppKernel" />
-        <env name="SYMFONY_ENV" value="test"/>
+        <env name="SYMFONY_ENV" value="test" />
         <env name="kernel.environment" value="test" />
     </php>
     <listeners>
@@ -26,10 +26,6 @@
     <testsuites>
         <testsuite name="Unit">
             <directory>Unit</directory>
-            <exclude>Unit/Core/Cart</exclude>
-        </testsuite>
-        <testsuite name="CoreCart">
-            <directory>Unit/Core/Cart</directory>
         </testsuite>
         <testsuite name="Integration">
             <directory>Integration</directory>

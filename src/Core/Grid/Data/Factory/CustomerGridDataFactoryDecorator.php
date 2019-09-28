@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,21 +16,21 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Grid\Data\Factory;
 
-use PrestaShop\PrestaShop\Core\Cldr\Repository;
 use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
+use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
 
 /**
  * Class CustomerGridDataFactoryDecorator decorates data from customer doctrine data factory.
@@ -43,9 +43,9 @@ final class CustomerGridDataFactoryDecorator implements GridDataFactoryInterface
     private $customerDoctrineGridDataFactory;
 
     /**
-     * @var Repository
+     * @var LocaleInterface
      */
-    private $cldrRepository;
+    private $locale;
 
     /**
      * @var string
@@ -54,16 +54,16 @@ final class CustomerGridDataFactoryDecorator implements GridDataFactoryInterface
 
     /**
      * @param GridDataFactoryInterface $customerDoctrineGridDataFactory
-     * @param Repository $cldrRepository
+     * @param LocaleInterface $locale
      * @param string $contextCurrencyIsoCode
      */
     public function __construct(
         GridDataFactoryInterface $customerDoctrineGridDataFactory,
-        Repository $cldrRepository,
+        LocaleInterface $locale,
         $contextCurrencyIsoCode
     ) {
         $this->customerDoctrineGridDataFactory = $customerDoctrineGridDataFactory;
-        $this->cldrRepository = $cldrRepository;
+        $this->locale = $locale;
         $this->contextCurrencyIsoCode = $contextCurrencyIsoCode;
     }
 
@@ -102,7 +102,7 @@ final class CustomerGridDataFactoryDecorator implements GridDataFactoryInterface
             }
 
             if (!empty($customer['total_spent'])) {
-                $customer['total_spent'] = $this->cldrRepository->getPrice(
+                $customer['total_spent'] = $this->locale->formatPrice(
                     $customer['total_spent'],
                     $this->contextCurrencyIsoCode
                 );

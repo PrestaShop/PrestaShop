@@ -247,7 +247,7 @@ class AdminGamificationController extends ModuleAdminController
         foreach ($ids_badge as $id) {
             $badge = new Badge((int)$id);
             if (($badge->scoring + $current_level_percent) >= 100) {
-                $current_level ++;
+                $current_level++;
                 $current_level_percent = $badge->scoring + $current_level_percent - 100;
             } else {
                 $current_level_percent += $badge->scoring;
@@ -265,7 +265,7 @@ class AdminGamificationController extends ModuleAdminController
                 $this->processLevelAndBadgeValidation($new_ids_badge);
             }
 
-            $nbr_notif ++;
+            $nbr_notif++;
             $not_viewed_badge[] = $badge->id;
         }
 
@@ -287,7 +287,7 @@ class AdminGamificationController extends ModuleAdminController
                 $cond->processCalculation();
                 unset($cond);
             }
-            $group_position ++;
+            $group_position++;
         } while (count($condition_ids));
     }
 

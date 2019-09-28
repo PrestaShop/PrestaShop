@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -17,10 +17,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\TranslationToolsBundle\Translation\Dumper\XliffFileDumper;
 use PrestaShop\TranslationToolsBundle\Translation\Extractor\SmartyExtractor;
 use PrestaShopBundle\Translation\Provider\ThemeProvider;
+use Symfony\Component\Translation\Dumper\DumperInterface;
 use Symfony\Component\Translation\Dumper\FileDumper;
 use Symfony\Component\Translation\MessageCatalogue;
 
@@ -41,13 +42,39 @@ use Symfony\Component\Translation\MessageCatalogue;
  */
 class ThemeExtractor
 {
+    /**
+     * @var MessageCatalogue|null the Message catalogue
+     */
     private $catalog;
+
+    /**
+     * @var array the list of Translation dumpers
+     */
     private $dumpers = array();
+
+    /**
+     * @var string the format of extracted files
+     */
     private $format = 'xlf';
+
+    /**
+     * @var string the output path for extraction
+     */
     private $outputPath;
+
+    /**
+     * @var SmartyExtractor the Smarty Extractor
+     */
     private $smartyExtractor;
+
+    /**
+     * @var ThemeProvider the Theme Provider
+     */
     private $themeProvider;
 
+    /**
+     * @var bool checks wether we should override the database with results or not
+     */
     private $overrideFromDatabase = false;
 
     public function __construct(SmartyExtractor $smartyExtractor)
@@ -56,6 +83,11 @@ class ThemeExtractor
         $this->dumpers[] = new XliffFileDumper();
     }
 
+    /**
+     * @param ThemeProvider $themeProvider
+     *
+     * @return $this
+     */
     public function setThemeProvider(ThemeProvider $themeProvider)
     {
         $this->themeProvider = $themeProvider;
@@ -63,6 +95,15 @@ class ThemeExtractor
         return $this;
     }
 
+    /**
+     * @param Theme $theme
+     * @param string $locale
+     * @param bool $rootDir
+     *
+     * @return mixed
+     *
+     * @throws \Exception
+     */
     public function extract(Theme $theme, $locale = 'en-US', $rootDir = false)
     {
         $this->catalog = new MessageCatalogue($locale);
@@ -74,7 +115,7 @@ class ThemeExtractor
             'default_locale' => $locale,
             'root_dir' => $rootDir,
         );
-        $this->smartyExtractor->extract($themeDirectory, $this->catalog, $options['root_dir']);
+        $this->smartyExtractor->extract($themeDirectory, $this->catalog);
 
         $this->overrideFromDefaultCatalog($locale, $this->catalog);
 
@@ -126,7 +167,7 @@ class ThemeExtractor
             // AdminCatalogFeature to Admin.Catalog.Feature
             $domain = implode('.', preg_split('/(?=[A-Z])/', $domain, -1, PREG_SPLIT_NO_EMPTY));
 
-            if (in_array($domain, $defaultDomainsCatalogue)) {
+            if (in_array($domain, $defaultDomainsCatalogue, true)) {
                 foreach ($translation as $key => $trans) {
                     if ($catalogue->has($key, $domain)) {
                         $catalogue->set($key, $trans, $domain);
@@ -147,7 +188,7 @@ class ThemeExtractor
      */
     private function overrideFromDatabase($themeName, $locale, &$catalogue)
     {
-        if (is_null($this->themeProvider)) {
+        if (null === $this->themeProvider) {
             throw new \Exception('Theme provider is required.');
         }
 
@@ -159,6 +200,11 @@ class ThemeExtractor
         $catalogue->addCatalogue($databaseCatalogue);
     }
 
+    /**
+     * @param FileDumper $dumper
+     *
+     * @return $this
+     */
     public function addDumper(FileDumper $dumper)
     {
         $this->dumpers[] = $dumper;
@@ -166,11 +212,19 @@ class ThemeExtractor
         return $this;
     }
 
+    /**
+     * @return DumperInterface[]
+     */
     public function getDumpers()
     {
         return $this->dumpers;
     }
 
+    /**
+     * @param string $format
+     *
+     * @return $this
+     */
     public function setFormat($format)
     {
         $this->format = $format;
@@ -178,11 +232,19 @@ class ThemeExtractor
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getFormat()
     {
         return $this->format;
     }
 
+    /**
+     * @param $outputPath
+     *
+     * @return $this
+     */
     public function setOutputPath($outputPath)
     {
         $this->outputPath = $outputPath;
@@ -190,16 +252,25 @@ class ThemeExtractor
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getOutputPath()
     {
         return $this->outputPath;
     }
 
+    /**
+     * @return MessageCatalogue|null
+     */
     public function getCatalog()
     {
         return $this->catalog;
     }
 
+    /**
+     * @return $this
+     */
     public function disableOverridingFromDatabase()
     {
         $this->overrideFromDatabase = false;
@@ -207,6 +278,9 @@ class ThemeExtractor
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function enableOverridingFromDatabase()
     {
         $this->overrideFromDatabase = true;

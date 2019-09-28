@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,17 +16,16 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Currency;
 
-use PrestaShop\PrestaShop\Core\Cldr\Repository;
 use PrestaShop\PrestaShop\Core\Grid\Data\Factory\GridDataFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
@@ -44,22 +43,14 @@ final class CurrencyGridDataFactory implements GridDataFactoryInterface
     private $gridDataFactory;
 
     /**
-     * @var Repository
-     */
-    private $cldrRepository;
-
-    /**
      * CurrencyGridDataFactory constructor.
      *
      * @param GridDataFactoryInterface $gridDataFactory
-     * @param Repository $cldrRepository
      */
     public function __construct(
-        GridDataFactoryInterface $gridDataFactory,
-        Repository $cldrRepository
+        GridDataFactoryInterface $gridDataFactory
     ) {
         $this->gridDataFactory = $gridDataFactory;
-        $this->cldrRepository = $cldrRepository;
     }
 
     /**
@@ -89,12 +80,8 @@ final class CurrencyGridDataFactory implements GridDataFactoryInterface
     {
         $result = [];
         foreach ($records as $key => $record) {
-            $cldrCurrency = $this->cldrRepository->getCurrency($record['iso_code']);
-
             $result[$key] = $record;
-            $result[$key]['currency'] = !empty($cldrCurrency['name']) ? ucfirst($cldrCurrency['name']) : '';
-            $result[$key]['symbol'] = !empty($cldrCurrency['symbol']) ? $cldrCurrency['symbol'] : '';
-            $result[$key]['iso_code'] .= !empty($cldrCurrency['iso_code']) ? ' / ' . $cldrCurrency['iso_code'] : '';
+            $result[$key]['currency'] = ucfirst($result[$key]['name']);
             $result[$key]['conversion_rate'] = (float) $result[$key]['conversion_rate'];
         }
 

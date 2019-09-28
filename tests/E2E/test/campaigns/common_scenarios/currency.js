@@ -14,7 +14,11 @@ module.exports = {
   accessToCurrencies() {
     scenario('Access to "Currencies" page', client => {
       test('should go to "Localization" page', () => client.goToSubtabMenuPage(Menu.Improve.International.international_menu, Menu.Improve.International.localization_submenu));
-      test('should click on "Currencies" subtab', () => client.waitForExistAndClick(Menu.Improve.International.currencies_tab));
+      test('should click on "Currencies" subtab', () => {
+        return promise
+          .then(() => client.waitForExistAndClick(Menu.Improve.International.currencies_tab))
+          .then(() => client.waitForVisible(Menu.Improve.International.active_currencies_tab));
+      });
     }, 'common_client');
   },
 
@@ -26,7 +30,7 @@ module.exports = {
       test('should choose the "' + currencyData.name + '" currency from the list', () => client.waitAndSelectByValue(Localization.Currencies.currency_select, currencyData.name));
       test('should set the "Exchange rate" input', () => client.waitAndSetValue(Localization.Currencies.exchange_rate_input, currencyData.exchangeRate));
       if (statusCurrency) {
-        test('should click on "Status" toggle button', () => client.waitForExistAndClick(Localization.Currencies.status_currency_toggle_button));
+        test('should click on "Status" toggle button', () => client.waitForExistAndClick(Localization.Currencies.status_currency_toggle_button.replace('%ID', 1)));
       }
       test('should click on "Save" button', () => client.waitForExistAndClick(Localization.Currencies.save_button));
       if (successMessage) {
@@ -48,12 +52,16 @@ module.exports = {
     global.elementsSortedTable = [];
     global.elementsTable = [];
     scenario('Check the sort of currencies by "' + sortBy.toUpperCase() + '"', client => {
-      test('should get the number of currencies', () => client.getTextInVar(Localization.Currencies.currency_number_span, 'number_currency'));
+      test('should get the number of currencies', async () => {
+        await client.pause(2000);
+        await client.getCurrencyNumber(Localization.Currencies.currency_number_span, 'number_currency');
+      });
       test('should click on "Sort by ASC" icon', async () => {
         for (let j = 0; j < (parseInt(tab['number_currency'])); j++) {
           await client.getTableField(selector, j);
         }
-        await client.waitForExistAndClick(Localization.Currencies.sort_icon.replace('%B', sortBy).replace('%W', 2));
+        await client.moveToObject(Localization.Currencies.sort_icon.replace("%B", sortBy));
+        await client.waitForExistAndClick(Localization.Currencies.sort_icon.replace("%B", sortBy));
       });
       test('should check that the currencies are well sorted by ASC', async () => {
         for (let j = 0; j < (parseInt(tab['number_currency'])); j++) {
@@ -61,7 +69,10 @@ module.exports = {
         }
         await client.checkSortTable(isNumber);
       });
-      test('should click on "Sort by DESC" icon', () => client.waitForExistAndClick(Localization.Currencies.sort_icon.replace('%B', sortBy).replace('%W', 1)));
+      test('should click on "Sort by DESC" icon', async () => {
+        await client.moveToObject(Localization.Currencies.sort_icon.replace("%B", sortBy));
+        await client.waitForExistAndClick(Localization.Currencies.sort_icon.replace("%B", sortBy));
+      });
       test('should check that the currencies are well sorted by DESC', async () => {
         for (let j = 0; j < (parseInt(tab['number_currency'])); j++) {
           await client.getTableField(selector, j, true);
@@ -74,29 +85,37 @@ module.exports = {
   checkCurrencyByStatus() {
     scenario('Search the currency in the back office by "Status"', client => {
       test('should click on reset button', () => client.waitForExistAndClick(Localization.Currencies.reset_button));
-      test('should choose "Yes" from enabled filter list', () => client.waitAndSelectByValue(Localization.Currencies.enabled_select, '1'));
-      test('should get the number of currencies', () => client.getTextInVar(Localization.Currencies.currency_number_span, 'number_currency'));
-      test('should check if all displayed currencies are enabled ', () => {
+      test('should choose "Yes" from enabled filter list', async () => {
+        await client.pause(2000);
+        await client.waitAndSelectByValue(Localization.Currencies.enabled_select, '1')
+      });
+      test('should click on Search button', () => client.waitForExistAndClick(Localization.Currencies.search_button));
+      test('should get the number of currencies', async () => await client.getCurrencyNumber(Localization.Currencies.currency_number_span, 'number_currency'));
+      test('should check if all the displayed currencies are enabled ', () => {
         for (let j = 1; j <= (parseInt(tab['number_currency'])); j++) {
-          promise = client.waitForExist(Localization.Currencies.check_icon.replace('%ID', j).replace('%ICON', 'icon-check'));
+          promise = client.waitForExist(Localization.Currencies.check_icon.replace('%ID', j).replace('%ICON', 'icon-valid'));
         }
         return promise
       });
       test('should click on reset button', () => client.waitForExistAndClick(Localization.Currencies.reset_button));
-      test('should choose "No" from enabled filter list', () => client.waitAndSelectByValue(Localization.Currencies.enabled_select, '0'));
-      test('should check that currencies are not existing', () => client.checkTextValue(Localization.Currencies.search_no_results, 'No records found', 'contain'));
+      test('should choose "No" from enabled filter list', async () => {
+        await client.pause(2000);
+        await client.waitAndSelectByValue(Localization.Currencies.enabled_select, '0')
+      });
+      test('should click on Search button', () => client.waitForExistAndClick(Localization.Currencies.search_button));
+      test('should check that currencies are not existing', () => client.checkTextValue(Localization.Currencies.search_no_results, 'No records found'));
       test('should click on reset button', () => client.waitForExistAndClick(Localization.Currencies.reset_button));
-    }, 'common_client');
+    }, 'currency');
   },
 
   editCurrency(editedCurrencyData, message, changeRate = true, statusCurrency = true) {
     scenario('Edit "Currency"', client => {
-      test('should click on "Edit" action from the dropdown list', () => client.clickOnAction(Localization.Currencies.edit_button));
+      test('should click on "Edit" action from the dropdown list', () => client.waitForExistAndClick(Localization.Currencies.edit_button));
       if (changeRate) {
         test('should set the "Exchange rate" input', () => client.waitAndSetValue(Localization.Currencies.exchange_rate_input, editedCurrencyData.exchangeRate));
       }
       if (statusCurrency) {
-        test('should disable the edited currency', () => client.waitForExistAndClick(Localization.Currencies.status_currency_toggle_button));
+        test('should disable the edited currency', () => client.waitForExistAndClick(Localization.Currencies.status_currency_toggle_button.replace('%ID', 0)));
       }
       test('should click on "Save" button', () => client.waitForExistAndClick(Localization.Currencies.save_button));
       test('should verify the appearance of the green validation', () => client.checkTextValue(Localization.Currencies.success_danger_panel.replace('%B', 'success'), message));
@@ -141,9 +160,9 @@ module.exports = {
 
   liveExchangeRate() {
     scenario('Live exchange rate', client => {
-      test('should click on "Live exchange rates" toggle button', () => client.waitForExistAndClick(Localization.Currencies.live_exchange_rate_toggle_button));
+      test('should click on "Live exchange rates" toggle button', () => client.waitForExistAndClick(Localization.Currencies.live_exchange_rate_toggle_button.replace('%ID', 1)));
       test('should click on update exchange rates', () => client.waitForExistAndClick(Localization.Currencies.update_exchange_rate_button));
-      test('should verify the appearance of the green validation', () => client.checkTextValue(Localization.Currencies.success_danger_panel.replace('%B', 'success'), '×\nThe settings have been successfully updated.'));
+      test('should verify the appearance of the green validation', () => client.checkTextValue(Localization.Currencies.success_danger_panel.replace('%B', 'success'), 'Successful update.'));
     }, 'common_client');
   },
 

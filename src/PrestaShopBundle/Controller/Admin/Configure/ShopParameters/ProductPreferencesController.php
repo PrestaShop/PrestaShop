@@ -1,13 +1,13 @@
 <?php
-/*
- * 2007-2018 PrestaShop
+/**
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -16,19 +16,18 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
- *  @author PrestaShop SA <contact@prestashop.com>
- *  @copyright  2007-2018 PrestaShop SA
- *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
- *  International Registered Trademark & Property of PrestaShop SA
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Security\Voter\PageVoter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -39,33 +38,19 @@ use Symfony\Component\HttpFoundation\Response;
 class ProductPreferencesController extends FrameworkBundleAdminController
 {
     /**
-     * Show product preferences form.
-     *
      * @param Request $request
      *
-     * @Template("@PrestaShop/Admin/Configure/ShopParameters/product_preferences.html.twig")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
-     * @return array|Response
+     * @return Response
      */
     public function indexAction(Request $request)
     {
         $legacyController = $request->attributes->get('_legacy_controller');
 
-        if (!in_array(
-            $this->authorizationLevel($legacyController),
-            [
-                PageVoter::LEVEL_READ,
-                PageVoter::LEVEL_UPDATE,
-                PageVoter::LEVEL_CREATE,
-                PageVoter::LEVEL_DELETE,
-            ]
-        )) {
-            return $this->redirectToDefaultPage();
-        }
-
         $form = $this->get('prestashop.admin.product_preferences.form_handler')->getForm();
 
-        return [
+        return $this->render('@PrestaShop/Admin/Configure/ShopParameters/product_preferences.html.twig', [
             'layoutHeaderToolbarBtn' => [],
             'layoutTitle' => $this->trans('Product Settings', 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
@@ -75,11 +60,16 @@ class ProductPreferencesController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink($legacyController),
             'requireFilterStatus' => false,
             'form' => $form->createView(),
-        ];
+        ]);
     }
 
     /**
      * Process product preferences form.
+     *
+     * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))",
+     *     message="You do not have permission to update this.",
+     *     redirectRoute="admin_product_preferences"
+     * )
      *
      * @param Request $request
      *
@@ -87,21 +77,6 @@ class ProductPreferencesController extends FrameworkBundleAdminController
      */
     public function processAction(Request $request)
     {
-        $legacyController = $request->attributes->get('_legacy_controller');
-
-        if (!in_array(
-            $this->authorizationLevel($legacyController),
-            [
-                PageVoter::LEVEL_UPDATE,
-                PageVoter::LEVEL_CREATE,
-                PageVoter::LEVEL_DELETE,
-            ]
-        )) {
-            $this->addFlash('error', $this->trans('You do not have permission to edit this.', 'Admin.Notifications.Error'));
-
-            return $this->redirectToRoute('admin_product_preferences');
-        }
-
         $formHandler = $this->get('prestashop.admin.product_preferences.form_handler');
 
         $form = $formHandler->getForm();

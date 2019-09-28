@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -40,6 +40,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -67,15 +68,18 @@ final class WebserviceKeyDefinitionFactory extends AbstractGridDefinitionFactory
     /**
      * WebserviceKeyDefinitionFactory constructor.
      *
+     * @param HookDispatcherInterface $hookDispatcher
      * @param array $statusChoices
      * @param $resetActionUrl
      * @param $redirectionUrl
      */
     public function __construct(
+        HookDispatcherInterface $hookDispatcher,
         array $statusChoices,
         $resetActionUrl,
         $redirectionUrl
     ) {
+        parent::__construct($hookDispatcher);
         $this->statusChoices = $statusChoices;
         $this->resetActionUrl = $resetActionUrl;
         $this->redirectionUrl = $redirectionUrl;
@@ -130,8 +134,8 @@ final class WebserviceKeyDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setOptions([
                     'field' => 'active',
                     'primary_field' => 'id_webservice_account',
-                    'route' => 'admin_webservice_status_toggle',
-                    'route_param_name' => 'webserviceAccountId',
+                    'route' => 'admin_webservice_keys_toggle_status',
+                    'route_param_name' => 'webserviceKeyId',
                 ])
             )
             ->add(
@@ -143,8 +147,8 @@ final class WebserviceKeyDefinitionFactory extends AbstractGridDefinitionFactory
                             (new LinkRowAction('edit'))
                             ->setIcon('edit')
                             ->setOptions([
-                                'route' => 'admin_webservice_list_edit',
-                                'route_param_name' => 'webserviceAccountId',
+                                'route' => 'admin_webservice_keys_edit',
+                                'route_param_name' => 'webserviceKeyId',
                                 'route_param_field' => 'id_webservice_account',
                             ])
                         )
@@ -154,8 +158,8 @@ final class WebserviceKeyDefinitionFactory extends AbstractGridDefinitionFactory
                             ->setIcon('delete')
                             ->setOptions([
                                 'method' => 'DELETE',
-                                'route' => 'admin_delete_single_webservice_log',
-                                'route_param_name' => 'webserviceAccountId',
+                                'route' => 'admin_webservice_keys_delete',
+                                'route_param_name' => 'webserviceKeyId',
                                 'route_param_field' => 'id_webservice_account',
                                 'confirm_message' => $this->trans(
                                     'Delete selected item?',
@@ -178,6 +182,9 @@ final class WebserviceKeyDefinitionFactory extends AbstractGridDefinitionFactory
                 (new Filter('key', TextType::class))
                 ->setTypeOptions([
                     'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Search key', [], 'Admin.Actions'),
+                    ],
                 ])
                 ->setAssociatedColumn('key')
             )
@@ -185,6 +192,9 @@ final class WebserviceKeyDefinitionFactory extends AbstractGridDefinitionFactory
                 (new Filter('description', TextType::class))
                 ->setTypeOptions([
                     'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Search description', [], 'Admin.Actions'),
+                    ],
                 ])
                 ->setAssociatedColumn('description')
             )
@@ -242,21 +252,21 @@ final class WebserviceKeyDefinitionFactory extends AbstractGridDefinitionFactory
                 (new SubmitBulkAction('webservice_enable_selection'))
                 ->setName($this->trans('Enable selection', [], 'Admin.Actions'))
                 ->setOptions([
-                    'submit_route' => 'admin_webservice_bulk_enable',
+                    'submit_route' => 'admin_webservice_keys_bulk_enable',
                 ])
             )
             ->add(
                 (new SubmitBulkAction('webservice_disable_selection'))
                 ->setName($this->trans('Disable selection', [], 'Admin.Actions'))
                 ->setOptions([
-                    'submit_route' => 'admin_webservice_bulk_disable',
+                    'submit_route' => 'admin_webservice_keys_bulk_disable',
                 ])
             )
             ->add(
                 (new SubmitBulkAction('delete_webservice'))
                 ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
                 ->setOptions([
-                    'submit_route' => 'admin_delete_multiple_webservice_log',
+                    'submit_route' => 'admin_webservice_keys_bulk_delete',
                     'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
                 ])
             );

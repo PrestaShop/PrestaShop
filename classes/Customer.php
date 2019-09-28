@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -173,8 +173,8 @@ class CustomerCore extends ObjectModel
         'primary' => 'id_customer',
         'fields' => array(
             'secure_key' => array('type' => self::TYPE_STRING, 'validate' => 'isMd5', 'copy_post' => false),
-            'lastname' => array('type' => self::TYPE_STRING, 'validate' => 'isName', 'required' => true, 'size' => 255),
-            'firstname' => array('type' => self::TYPE_STRING, 'validate' => 'isName', 'required' => true, 'size' => 255),
+            'lastname' => array('type' => self::TYPE_STRING, 'validate' => 'isCustomerName', 'required' => true, 'size' => 255),
+            'firstname' => array('type' => self::TYPE_STRING, 'validate' => 'isCustomerName', 'required' => true, 'size' => 255),
             'email' => array('type' => self::TYPE_STRING, 'validate' => 'isEmail', 'required' => true, 'size' => 255),
             'passwd' => array('type' => self::TYPE_STRING, 'validate' => 'isPasswd', 'required' => true, 'size' => 255),
             'last_passwd_gen' => array('type' => self::TYPE_STRING, 'copy_post' => false),
@@ -214,10 +214,11 @@ class CustomerCore extends ObjectModel
     /**
      * CustomerCore constructor.
      *
-     * @param null $id
+     * @param int|null $id
      */
     public function __construct($id = null)
     {
+        // It sets default value for customer group even when customer does not exist
         $this->id_default_group = (int) Configuration::get('PS_CUSTOMER_GROUP');
         parent::__construct($id);
     }
@@ -348,7 +349,7 @@ class CustomerCore extends ObjectModel
     /**
      * Return customers list.
      *
-     * @param null|bool $onlyActive Returns only active customers when `true`
+     * @param bool|null $onlyActive Returns only active customers when `true`
      *
      * @return array Customers
      */
@@ -405,7 +406,7 @@ class CustomerCore extends ObjectModel
             return false;
         }
 
-        $shouldCheckPassword = !is_null($plaintextPassword);
+        $shouldCheckPassword = null !== $plaintextPassword;
         if ($shouldCheckPassword && !$crypto->checkHash($plaintextPassword, $passwordHash)) {
             return false;
         }
@@ -545,8 +546,13 @@ class CustomerCore extends ObjectModel
      * @param int $idCustomer Customer ID
      * @param int $idAddress Address ID
      */
-    public static function resetAddressCache($idCustomer, $idAddress)
+    public static function resetAddressCache($idCustomer = null, $idAddress = null)
     {
+        if ($idCustomer === null || $idAddress === null) {
+            self::$_customerHasAddress = array();
+            self::$_customer_groups = array();
+            self::$_defaultGroupId = array();
+        }
         $key = (int) $idCustomer . '-' . (int) $idAddress;
         if (array_key_exists($key, self::$_customerHasAddress)) {
             unset(self::$_customerHasAddress[$key]);
@@ -599,7 +605,7 @@ class CustomerCore extends ObjectModel
             return array();
         }
 
-        if (is_null($idLang)) {
+        if (null === $idLang) {
             $idLang = Context::getContext()->language->id;
         }
 
@@ -619,7 +625,7 @@ class CustomerCore extends ObjectModel
      * @param int $idAddress Address ID
      * @param int|null $idLang Language ID
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return array|false|mysqli_result|PDOStatement|resource|null
      */
     public function getSimpleAddress($idAddress, $idLang = null)
     {
@@ -667,7 +673,7 @@ class CustomerCore extends ObjectModel
      */
     public function getSimpleAddressSql($idAddress = null, $idLang = null)
     {
-        if (is_null($idLang)) {
+        if (null === $idLang) {
             $idLang = Context::getContext()->language->id;
         }
         $shareOrder = (bool) Context::getContext()->shop->getGroup()->share_order;
@@ -704,7 +710,7 @@ class CustomerCore extends ObjectModel
                         AND a.`deleted` = 0
                         AND a.`active` = 1';
 
-        if (!is_null($idAddress)) {
+        if (null !== $idAddress) {
             $sql .= ' AND a.`id_address` = ' . (int) $idAddress;
         }
 
@@ -742,6 +748,13 @@ class CustomerCore extends ObjectModel
         if (!Validate::isUnsignedId($idCustomer)) {
             die(Tools::displayError());
         }
+
+        // Check that customers password hasn't changed since last login
+        $context = Context::getContext();
+        if ($passwordHash != $context->cookie->__get('passwd')) {
+            return false;
+        }
+
         $cacheId = 'Customer::checkPassword' . (int) $idCustomer . '-' . $passwordHash;
         if (!Cache::isStored($cacheId)) {
             $sql = new DbQuery();
@@ -764,9 +777,9 @@ class CustomerCore extends ObjectModel
      * Light back office search for customers.
      *
      * @param string $query Searched string
-     * @param null|int $limit Limit query results
+     * @param int|null $limit Limit query results
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource Corresponding customers
+     * @return array|false|mysqli_result|PDOStatement|resource|null Corresponding customers
      *
      * @throws PrestaShopDatabaseException
      */
@@ -806,7 +819,7 @@ class CustomerCore extends ObjectModel
      *
      * @param string $ip Searched string
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return array|false|mysqli_result|PDOStatement|resource|null
      */
     public static function searchByIp($ip)
     {
@@ -851,7 +864,7 @@ class CustomerCore extends ObjectModel
     /**
      * Get last 10 emails sent to the Customer.
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return array|false|mysqli_result|PDOStatement|resource|null
      */
     public function getLastEmails()
     {
@@ -871,7 +884,7 @@ class CustomerCore extends ObjectModel
     /**
      * Get last 10 Connections of the Customer.
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return array|false|mysqli_result|PDOStatement|resource|null
      */
     public function getLastConnections()
     {
@@ -995,7 +1008,7 @@ class CustomerCore extends ObjectModel
     /**
      * Get Products bought by this Customer.
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return array|false|mysqli_result|PDOStatement|resource|null
      */
     public function getBoughtProducts()
     {
@@ -1010,7 +1023,7 @@ class CustomerCore extends ObjectModel
      *
      * @param int $idCustomer Customer ID
      *
-     * @return mixed|null|string
+     * @return mixed|string|null
      */
     public static function getDefaultGroupId($idCustomer)
     {
@@ -1283,7 +1296,7 @@ class CustomerCore extends ObjectModel
      * Get Customer Groups
      * (for webservice).
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return array|false|mysqli_result|PDOStatement|resource|null
      */
     public function getWsGroups()
     {

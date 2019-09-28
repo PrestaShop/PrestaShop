@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -268,7 +268,7 @@ class WebserviceRequestCore
         $this->outputFormat = $type;
         switch ($type) {
             case 'JSON':
-                require_once dirname(__FILE__) . '/WebserviceOutputJSON.php';
+                require_once __DIR__ . '/WebserviceOutputJSON.php';
                 $obj_render = new WebserviceOutputJSON();
 
                 break;
@@ -813,7 +813,7 @@ class WebserviceRequestCore
     protected function authenticate()
     {
         if (!$this->hasErrors()) {
-            if (is_null($this->_key)) {
+            if (null === $this->_key) {
                 $this->setError(401, 'Please enter the authentication key as the login. No password required', 16);
             } else {
                 if (empty($this->_key)) {
@@ -1639,7 +1639,7 @@ class WebserviceRequestCore
                                         $values[] = $entry;
                                     }
                                     $setter = $this->resourceConfiguration['associations'][$association->getName()]['setter'];
-                                    if (!is_null($setter) && $setter && method_exists($object, $setter) && !$object->$setter($values)) {
+                                    if (null !== $setter && $setter && method_exists($object, $setter) && !$object->$setter($values)) {
                                         $this->setError(500, 'Error occurred while setting the ' . $association->getName() . ' value', 85);
 
                                         return false;

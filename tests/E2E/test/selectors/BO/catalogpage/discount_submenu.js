@@ -37,7 +37,10 @@ module.exports = {
       success_delete_message:'//*[@id="content"]/div[@class="bootstrap"]/div[contains(@class, "success")]',
       filter_name_input: '//*[@id="table-cart_rule"]//input[@name="cart_ruleFilter_name"]',
       filter_search_button: '//*[@id="submitFilterButtoncart_rule"]',
-      edit_button: '//*[@id="table-cart_rule"]//a[@title="Edit"]'
+      edit_button: '//*[@id="table-cart_rule"]//a[@title="Edit"]',
+      highlight_button: '//*[@id="cart_rule_informations"]/div[4]//label[@for="highlight_%S"]',
+      partial_use_button: '//*[@id="cart_rule_informations"]/div[5]//label[@for="partial_use_%S"]',
+      free_shipping_button: '//*[@id="cart_rule_actions"]/div[1]//label[@for="free_shipping_%S"]'
     }
   }
 };

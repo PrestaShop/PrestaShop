@@ -1,3 +1,8 @@
+/**
+ * This script is based on the scenario described in this test link
+ * [id="PS-38"][Name="Create Attrib"]
+ **/
+
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
 const {productPage} = require('../../../selectors/FO/product_page');
@@ -7,7 +12,7 @@ const {Menu} = require('../../../selectors/BO/menu.js');
 const commonAttribute = require('../../common_scenarios/attribute');
 const commonScenarios = require('../../common_scenarios/product');
 const {SearchProductPage} = require('../../../selectors/FO/search_product_page');
-
+const welcomeScenarios = require('../../common_scenarios/welcome');
 let promise = Promise.resolve();
 
 let productData = {
@@ -83,7 +88,7 @@ scenario('Create "Attributes" in the Back Office', () => {
     test('should open the browser', () => client.open());
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'attribute_and_feature');
-
+  welcomeScenarios.findAndCloseWelcomeModal();
   /* Create three type of attribute */
   for (let i = 0; i < attributeData.length; i++) {
     commonAttribute.createAttribute(attributeData[i]);
@@ -98,11 +103,7 @@ scenario('Create "Attributes" in the Back Office', () => {
       return promise
         .then(() => client.isVisible(ProductList.pagination_products, 3000))
         .then(() => client.getProductsNumber(ProductList.pagination_products))
-        .then(() => {
-          if (global.ps_mode_dev) {
-            client.waitForExistAndClick(AddProductPage.symfony_toolbar)
-          }
-        });
+        .then(() => client.waitForSymfonyToolbar(AddProductPage, 2000))
     });
     test('should go to "Shop Parameters - Product Settings" page', () => {
       return promise
@@ -129,7 +130,7 @@ scenario('Create "Attributes" in the Back Office', () => {
         .then(() => client.scrollWaitForExistAndClick(productPage.see_all_products))
 
     });
-    test('should check all attribute type in the "Front Office"', () => commonAttribute.checkAllAttributeTypeInFO(AccessPageBO, productPage, productData.name, attributeData, client));
+    test('should check all attribute type in the "Front Office"', () => commonAttribute.checkAllAttributeTypeInFO(client, productPage, productData.name));
 
     test('should go to the product page', () => client.switchWindow(2));
     test('should check all attributes name of the product', () => client.checkTextValue(SearchProductPage.attribute_name, Object.keys(attributeData).map((k) => attributeData[k].name + date_time), 'deepequal'));
@@ -147,4 +148,4 @@ scenario('Create "Attributes" in the Back Office', () => {
   commonAttribute.deleteAttribute(attributeData[0]);
   commonAttribute.deleteAttribute(attributeData[1]);
   commonAttribute.deleteAttribute(attributeData[2]);
-}, 'attribute_and_feature', true);
+}, 'common_client', true);

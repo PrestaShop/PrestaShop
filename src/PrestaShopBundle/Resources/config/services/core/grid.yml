@@ -40,13 +40,5 @@ services:
     arguments:
       - '@prestashop.core.grid.position.update_handler.doctrine_position_update_handler'
 
-  prestashop.core.grid.query.category_query_builder:
-    class: 'PrestaShop\PrestaShop\Core\Grid\Query\CategoryQueryBuilder'
-    parent: 'prestashop.core.grid.abstract_query_builder'
-    arguments:
-      - '@prestashop.core.query.doctrine_search_criteria_applicator'
-      - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
-      - "@=service('prestashop.adapter.legacy.context').getContext().shop.id"
-      - '@prestashop.adapter.shop.context'
-      - '@prestashop.adapter.feature.multistore'
-    public: true
+  prestashop.core.grid.query.filter.doctrine_filter_applicator:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Query\Filter\DoctrineFilterApplicator'

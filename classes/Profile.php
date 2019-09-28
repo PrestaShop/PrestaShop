@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -29,6 +29,11 @@
  */
 class ProfileCore extends ObjectModel
 {
+    const ALLOWED_PROFILE_TYPE_CHECK = [
+        'id_tab',
+        'class_name',
+    ];
+
     /** @var string Name */
     public $name;
 
@@ -127,7 +132,7 @@ class ProfileCore extends ObjectModel
      */
     public static function getProfileAccesses($idProfile, $type = 'id_tab')
     {
-        if (!in_array($type, array('id_tab', 'class_name'))) {
+        if (!in_array($type, self::ALLOWED_PROFILE_TYPE_CHECK)) {
             return false;
         }
 
@@ -139,46 +144,39 @@ class ProfileCore extends ObjectModel
             self::$_cache_accesses[$idProfile][$type] = array();
             // Super admin profile has full auth
             if ($idProfile == _PS_ADMIN_PROFILE_) {
-                self::fillCacheAccesses(
-                    $idProfile,
-                    $type,
-                    array(
-                        'id_profile' => _PS_ADMIN_PROFILE_,
-                        'view' => '1',
-                        'add' => '1',
-                        'edit' => '1',
-                        'delete' => '1',
-                    )
-                );
+                $defaultPermission = [
+                    'id_profile' => _PS_ADMIN_PROFILE_,
+                    'view' => '1',
+                    'add' => '1',
+                    'edit' => '1',
+                    'delete' => '1',
+                ];
+                $roles = [];
             } else {
-                self::fillCacheAccesses(
-                    $idProfile,
-                    $type,
-                    array(
-                        'id_profile' => $idProfile,
-                        'view' => '0',
-                        'add' => '0',
-                        'edit' => '0',
-                        'delete' => '0',
-                    )
+                $defaultPermission = [
+                    'id_profile' => $idProfile,
+                    'view' => '0',
+                    'add' => '0',
+                    'edit' => '0',
+                    'delete' => '0',
+                ];
+                $roles = self::generateAccessesArrayFromPermissions(
+                    Db::getInstance()->executeS('
+                        SELECT `slug`,
+                            `slug` LIKE "%CREATE" as "add",
+                            `slug` LIKE "%READ" as "view",
+                            `slug` LIKE "%UPDATE" as "edit",
+                            `slug` LIKE "%DELETE" as "delete"
+                        FROM `' . _DB_PREFIX_ . 'authorization_role` a
+                        LEFT JOIN `' . _DB_PREFIX_ . 'access` j ON j.id_authorization_role = a.id_authorization_role
+                        WHERE j.`id_profile` = ' . (int) $idProfile)
                 );
-
-                $result = Db::getInstance()->executeS('
-				SELECT `slug`,
-                                    `slug` LIKE "%CREATE" as "add",
-                                    `slug` LIKE "%READ" as "view",
-                                    `slug` LIKE "%UPDATE" as "edit",
-                                    `slug` LIKE "%DELETE" as "delete"
-				FROM `' . _DB_PREFIX_ . 'authorization_role` a
-				LEFT JOIN `' . _DB_PREFIX_ . 'access` j ON j.id_authorization_role = a.id_authorization_role
-				WHERE j.`id_profile` = ' . (int) $idProfile);
-
-                foreach ($result as $row) {
-                    $tab = self::findTabTypeInformationByAuthSlug($type, $row['slug']);
-
-                    self::$_cache_accesses[$idProfile][$type][$tab][array_search('1', $row)] = '1';
-                }
             }
+            self::fillCacheAccesses(
+                $idProfile,
+                $defaultPermission,
+                $roles
+            );
         }
 
         return self::$_cache_accesses[$idProfile][$type];
@@ -191,44 +189,53 @@ class ProfileCore extends ObjectModel
 
     /**
      * @param int $idProfile Profile ID
-     * @param string $type Type
-     * @param array $cacheData Cached data
+     * @param array $defaultData Cached data
+     * @param array $accesses Data loaded from the database
      */
-    private static function fillCacheAccesses($idProfile, $type, $cacheData = [])
+    private static function fillCacheAccesses($idProfile, $defaultData = [], $accesses = [])
     {
         foreach (Tab::getTabs(Context::getContext()->language->id) as $tab) {
-            self::$_cache_accesses[$idProfile][$type][$tab[$type]] = array_merge(
-                array(
-                    'id_tab' => $tab['id_tab'],
-                    'class_name' => $tab['class_name'],
-                ),
-                $cacheData
-            );
+            $accessData = [];
+            if (isset($accesses[strtoupper($tab['class_name'])])) {
+                $accessData = $accesses[strtoupper($tab['class_name'])];
+            }
+
+            foreach (self::ALLOWED_PROFILE_TYPE_CHECK as $type) {
+                self::$_cache_accesses[$idProfile][$type][$tab[$type]] = array_merge(
+                    array(
+                        'id_tab' => $tab['id_tab'],
+                        'class_name' => $tab['class_name'],
+                    ),
+                    $defaultData,
+                    $accessData
+                );
+            }
         }
     }
 
     /**
-     * Find tab type information by authorization slug.
+     * Creates the array of accesses [role => add / view / edit / delete] from a given list of roles
      *
-     * @param string $type
-     * @param string $authSlug
+     * @param array $rolesGiven
      *
-     * @return int
+     * @return array
      */
-    private static function findTabTypeInformationByAuthSlug($type, $authSlug)
+    private static function generateAccessesArrayFromPermissions($rolesGiven)
     {
-        preg_match(
-            '/ROLE_MOD_[A-Z]+_(?P<classname>[A-Z][A-Z0-9]*)_(?P<auth>[A-Z]+)/',
-            $authSlug,
-            $matches
-        );
+        // Modify array to merge the class names together.
+        $accessPerTab = [];
+        foreach ($rolesGiven as $role) {
+            preg_match(
+                '/ROLE_MOD_[A-Z]+_(?P<classname>[A-Z][A-Z0-9]*)_[A-Z]+/',
+                $role['slug'],
+                $matches
+            );
+            if (empty($matches['classname'])) {
+                continue;
+            }
+            $accessPerTab[$matches['classname']][array_search('1', $role)] = '1';
+        }
 
-        $result = Db::getInstance()->getRow('
-            SELECT `' . $type . '`
-            FROM `' . _DB_PREFIX_ . 'tab` t
-            WHERE UCASE(`class_name`) = "' . $matches['classname'] . '"
-        ');
-
-        return $result[$type];
+        return $accessPerTab;
     }
 }

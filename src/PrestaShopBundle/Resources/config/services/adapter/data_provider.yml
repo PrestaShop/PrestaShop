@@ -1,3 +1,6 @@
+imports:
+  - { resource: ./data_provider_common.yml }
+
 services:
     _defaults:
         public: true
@@ -10,7 +13,6 @@ services:
             - '@prestashop.module.zip.manager'
         properties:
             cacheDir: "%kernel.cache_dir%"
-        public: false
 
     prestashop.adapter.admin.data_provider.module:
         class: PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider
@@ -36,15 +38,6 @@ services:
     prestashop.adapter.data_provider.category:
         class: PrestaShop\PrestaShop\Adapter\Category\CategoryDataProvider
         arguments: ["@=service('prestashop.adapter.legacy.context')"]
-
-    prestashop.adapter.data_provider.country:
-        class: PrestaShop\PrestaShop\Adapter\Country\CountryDataProvider
-
-    prestashop.adapter.data_provider.currency:
-        class: PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider
-        arguments:
-          - "@prestashop.adapter.legacy.configuration"
-          - "@=service('prestashop.adapter.legacy.context').getContext().shop?service('prestashop.adapter.legacy.context').getContext().shop.id"
 
     prestashop.adapter.data_provider.group:
         class: PrestaShop\PrestaShop\Adapter\Group\GroupDataProvider
@@ -82,12 +75,25 @@ services:
 
     prestashop.adapter.data_provider.combination:
         class: PrestaShop\PrestaShop\Adapter\CombinationDataProvider
+        arguments: ['@prestashop.core.localization.locale.repository']
 
     prestashop.adapter.data_provider.cms:
         class: PrestaShop\PrestaShop\Adapter\CMS\CMSDataProvider
 
     prestashop.adapter.data_provider.pack:
         class: PrestaShop\PrestaShop\Adapter\Pack\PackDataProvider
+
+    prestashop.adapter.data_provider.tab:
+        class: PrestaShop\PrestaShop\Adapter\Tab\TabDataProvider
+        arguments:
+          - '@=service("prestashop.adapter.legacy.context").getContext().employee.id_profile'
+          - '@=service("prestashop.adapter.legacy.configuration").getInt("_PS_ADMIN_PROFILE_")'
+
+    prestashop.adapter.data_provider.profile:
+      class: PrestaShop\PrestaShop\Adapter\Profile\ProfileDataProvider
+      arguments:
+          - '@prestashop.adapter.data_provider.employee'
+          - '@=service("prestashop.adapter.legacy.configuration").getInt("_PS_ADMIN_PROFILE_")'
 
     prestashop.adapter.data_provider.module:
         class: PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider
@@ -105,3 +111,8 @@ services:
 
     prestashop.adapter.data_provider.default_route:
         class: PrestaShop\PrestaShop\Adapter\Routes\DefaultRouteProvider
+
+    prestashop.adapter.data_provider.employee:
+        class: PrestaShop\PrestaShop\Adapter\Employee\ContextEmployeeProvider
+        arguments:
+            - '@=service("prestashop.adapter.legacy.context").getContext().employee'

@@ -53,8 +53,7 @@ ALTER TABLE `PREFIX_supply_order_history`
   CHANGE `employee_firstname` `employee_firstname` VARCHAR(255) DEFAULT '';
 
 ALTER TABLE `PREFIX_supply_order_receipt_history`
-  CHANGE `employee_firstname` `employee_firstname` VARCHAR(255) DEFAULT '',
-  CHANGE `employee_lastname` `employee_firstname` VARCHAR(255) DEFAULT '';
+  CHANGE `employee_firstname` `employee_firstname` VARCHAR(255) DEFAULT '';
 
 ALTER TABLE `PREFIX_supplier_lang`
   CHANGE `meta_description` `meta_description` VARCHAR(512) DEFAULT NULL,
@@ -64,7 +63,6 @@ ALTER TABLE `PREFIX_order_detail`
   CHANGE `product_reference` `product_reference` varchar(64) DEFAULT NULL;
 
 ALTER TABLE `PREFIX_product`
-  CHANGE `reference` `supplier_reference` varchar(64) DEFAULT NULL,
   CHANGE `supplier_reference` `supplier_reference` varchar(64) DEFAULT NULL;
 
 ALTER TABLE `PREFIX_product_attribute`
@@ -85,11 +83,8 @@ ALTER TABLE `PREFIX_product_supplier`
   CHANGE `product_supplier_reference` `product_supplier_reference` varchar(64) DEFAULT NULL;
 
 ALTER TABLE `PREFIX_product_lang`
-  CHANGE `meta_description` `meta_description` varchar(512) DEFAULT NULL, 
-  CHANGE `meta_keywords` `meta_keywords` varchar(255) DEFAULT NULL; 
+  CHANGE `meta_description` `meta_description` varchar(512) DEFAULT NULL,
+  CHANGE `meta_keywords` `meta_keywords` varchar(255) DEFAULT NULL;
 
 ALTER TABLE `PREFIX_customer_thread`
   CHANGE `email` `email` varchar(255) NOT NULL;
-
-ALTER TABLE `PREFIX_stock_available`
-  ADD `location` VARCHAR(255) NOT NULL DEFAULT '' AFTER `out_of_stock`;

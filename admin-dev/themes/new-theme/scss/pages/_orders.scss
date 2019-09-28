@@ -1,0 +1,6 @@
+#order_grid {
+  // Do not break text for Shop column in Orders grid
+  .column-shop_name {
+    word-break: normal;
+  }
+}

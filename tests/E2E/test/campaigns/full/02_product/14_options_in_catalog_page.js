@@ -1,3 +1,8 @@
+/**
+ * This script is based on the scenario described in this test link
+ * [id="PS-103"][Name="Options in catalog page"]
+ **/
+
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {CatalogPage} = require('../../../selectors/BO/catalogpage/index');
 const {Menu} = require('../../../selectors/BO/menu.js');
@@ -5,6 +10,7 @@ const {ProductList} = require('../../../selectors/BO/add_product_page');
 const {productPage} = require('../../../selectors/FO/product_page');
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
 const common_scenarios = require('../../common_scenarios/product');
+const welcomeScenarios = require('../../common_scenarios/welcome');
 
 let promise = Promise.resolve();
 
@@ -13,6 +19,7 @@ scenario('Check the options in the catalog page', () => {
     test('should open the browser', () => client.open());
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'common_client');
+  welcomeScenarios.findAndCloseWelcomeModal();
   scenario('Disable the first product from the list in the Back Office', client => {
     test('should go to "Catalog" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.products_submenu));
     test('should disable the first product', () => client.waitForExistAndClick(ProductList.product_status.replace('%I', 1).replace('%ACTION', 'enabled')));

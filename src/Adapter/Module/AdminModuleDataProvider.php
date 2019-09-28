@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -51,6 +51,21 @@ class AdminModuleDataProvider implements ModuleInterface
     const _CACHEKEY_MODULES_ = '_addons_modules';
 
     const _DAY_IN_SECONDS_ = 86400; /* Cache for One Day */
+
+    /**
+     * @const array giving a translation domain key for each module action
+     */
+    const _ACTIONS_TRANSLATION_DOMAINS_ = array(
+        'install' => 'Admin.Actions',
+        'uninstall' => 'Admin.Actions',
+        'enable' => 'Admin.Actions',
+        'disable' => 'Admin.Actions',
+        'enable_mobile' => 'Admin.Modules.Feature',
+        'disable_mobile' => 'Admin.Modules.Feature',
+        'reset' => 'Admin.Actions',
+        'upgrade' => 'Admin.Actions',
+        'configure' => 'Admin.Actions',
+    );
 
     /**
      * @var array of defined and callable module actions
@@ -248,9 +263,9 @@ class AdminModuleDataProvider implements ModuleInterface
 
     /**
      * @param AddonsCollection $addons
-     * @param null $specific_action
+     * @param string|null $specific_action
      *
-     * @return array
+     * @return AddonsCollection
      */
     public function generateAddonsUrls(AddonsCollection $addons, $specific_action = null)
     {
@@ -331,6 +346,7 @@ class AdminModuleDataProvider implements ModuleInterface
 
             $urls = $this->filterAllowedActions($urls, $addon->attributes->get('name'));
             $addon->attributes->set('urls', $urls);
+            $addon->attributes->set('actionTranslationDomains', self::_ACTIONS_TRANSLATION_DOMAINS_);
             if ($specific_action && array_key_exists($specific_action, $urls)) {
                 $addon->attributes->set('url_active', $specific_action);
             } elseif ($url_active === 'buy' || array_key_exists($url_active, $urls)) {

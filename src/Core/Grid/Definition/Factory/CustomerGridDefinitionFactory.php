@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,11 +27,12 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\Customer\DeleteCustomersBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\Customer\DeleteCustomerRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
-use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\LinkGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
@@ -42,6 +43,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Form\Admin\Type\DateRangeType;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
@@ -70,15 +72,18 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
     private $genderChoices;
 
     /**
+     * @param HookDispatcherInterface $hookDispatcher
      * @param bool $isB2bFeatureEnabled
      * @param bool $isMultistoreFeatureEnabled
      * @param array $genderChoices
      */
     public function __construct(
+        HookDispatcherInterface $hookDispatcher,
         $isB2bFeatureEnabled,
         $isMultistoreFeatureEnabled,
         array $genderChoices
     ) {
+        parent::__construct($hookDispatcher);
         $this->isB2bFeatureEnabled = $isB2bFeatureEnabled;
         $this->isMultistoreFeatureEnabled = $isMultistoreFeatureEnabled;
         $this->genderChoices = $genderChoices;
@@ -161,7 +166,7 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setOptions([
                     'field' => 'active',
                     'primary_field' => 'id_customer',
-                    'route' => 'admin_customers_index',
+                    'route' => 'admin_customers_toggle_status',
                     'route_param_name' => 'customerId',
                 ])
             )
@@ -171,7 +176,7 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setOptions([
                     'field' => 'newsletter',
                     'primary_field' => 'id_customer',
-                    'route' => 'admin_customers_index',
+                    'route' => 'admin_customers_toggle_newsletter_subscription',
                     'route_param_name' => 'customerId',
                 ])
             )
@@ -181,7 +186,7 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setOptions([
                     'field' => 'optin',
                     'primary_field' => 'id_customer',
-                    'route' => 'admin_customers_index',
+                    'route' => 'admin_customers_toggle_partner_offer_subscription',
                     'route_param_name' => 'customerId',
                 ])
             )
@@ -199,8 +204,8 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'field' => 'connect',
                 ])
             )
-            ->add(
-                (new ActionColumn('actions'))
+            ->add((new ActionColumn('actions'))
+                ->setName($this->trans('Actions', [], 'Admin.Global'))
                 ->setOptions([
                     'actions' => (new RowActionCollection())
                         ->add(
@@ -223,20 +228,12 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                                 'route_param_field' => 'id_customer',
                             ])
                         )
-                        ->add(
-                            (new SubmitRowAction('delete'))
+                        ->add((new DeleteCustomerRowAction('delete'))
                             ->setName($this->trans('Delete', [], 'Admin.Actions'))
                             ->setIcon('delete')
                             ->setOptions([
-                                'method' => 'DELETE',
-                                'route' => 'admin_customers_index',
-                                'route_param_name' => 'customerId',
-                                'route_param_field' => 'id_customer',
-                                'confirm_message' => $this->trans(
-                                    'Delete selected item?',
-                                    [],
-                                    'Admin.Notifications.Warning'
-                                ),
+                                'customer_id_field' => 'id_customer',
+                                'customer_delete_route' => 'admin_customers_delete',
                             ])
                         ),
                 ])
@@ -277,6 +274,9 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->add(
                 (new Filter('id_customer', NumberType::class))
                 ->setTypeOptions([
+                    'attr' => [
+                        'placeholder' => $this->trans('Search ID', [], 'Admin.Actions'),
+                    ],
                     'required' => false,
                 ])
                 ->setAssociatedColumn('id_customer')
@@ -295,6 +295,9 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->add(
                 (new Filter('firstname', TextType::class))
                 ->setTypeOptions([
+                    'attr' => [
+                        'placeholder' => $this->trans('Search first name', [], 'Admin.Actions'),
+                    ],
                     'required' => false,
                 ])
                 ->setAssociatedColumn('firstname')
@@ -302,6 +305,9 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->add(
                 (new Filter('lastname', TextType::class))
                 ->setTypeOptions([
+                    'attr' => [
+                        'placeholder' => $this->trans('Search last name', [], 'Admin.Actions'),
+                    ],
                     'required' => false,
                 ])
                 ->setAssociatedColumn('lastname')
@@ -309,6 +315,9 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->add(
                 (new Filter('email', TextType::class))
                 ->setTypeOptions([
+                    'attr' => [
+                        'placeholder' => $this->trans('Search email', [], 'Admin.Actions'),
+                    ],
                     'required' => false,
                 ])
                 ->setAssociatedColumn('email')
@@ -349,6 +358,9 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
             $filters->add(
                 (new Filter('company', TextType::class))
                 ->setTypeOptions([
+                    'attr' => [
+                        'placeholder' => $this->trans('Search company', [], 'Admin.Actions'),
+                    ],
                     'required' => false,
                 ])
                 ->setAssociatedColumn('company')
@@ -380,7 +392,7 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setName($this->trans('Export', [], 'Admin.Actions'))
                 ->setIcon('cloud_download')
                 ->setOptions([
-                    'route' => 'admin_customers_index',
+                    'route' => 'admin_customers_export',
                 ])
             )
             ->add(
@@ -410,21 +422,20 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                 (new SubmitBulkAction('enable_selection'))
                 ->setName($this->trans('Enable selection', [], 'Admin.Actions'))
                 ->setOptions([
-                    'submit_route' => 'admin_customers_index',
+                    'submit_route' => 'admin_customers_enable_bulk',
                 ])
             )
             ->add(
                 (new SubmitBulkAction('disable_selection'))
                 ->setName($this->trans('Disable selection', [], 'Admin.Actions'))
                 ->setOptions([
-                    'submit_route' => 'admin_customers_index',
+                    'submit_route' => 'admin_customers_disable_bulk',
                 ])
             )
-            ->add(
-                (new SubmitBulkAction('delete_selection'))
+            ->add((new DeleteCustomersBulkAction('delete_selection'))
                 ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
                 ->setOptions([
-                    'submit_route' => 'admin_customers_index',
+                    'customers_bulk_delete_route' => 'admin_customers_delete_bulk',
                 ])
             );
     }

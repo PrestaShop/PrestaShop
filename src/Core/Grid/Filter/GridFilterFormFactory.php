@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,28 +27,41 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Filter;
 
 use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinitionInterface;
-use PrestaShop\PrestaShop\Core\Hook\HookDispatcherAwareTrait;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use PrestaShopBundle\Event\Dispatcher\NullDispatcher;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\DependencyInjection\Container;
 
 /**
  * Class FilterFormFactory is responsible for creating grid filter form.
  */
 final class GridFilterFormFactory implements GridFilterFormFactoryInterface
 {
-    use HookDispatcherAwareTrait;
-
     /**
      * @var FormFactoryInterface
      */
     private $formFactory;
 
     /**
-     * @param FormFactoryInterface $formFactory
+     * @var HookDispatcherInterface
      */
-    public function __construct(FormFactoryInterface $formFactory)
-    {
+    private $hookDispatcher;
+
+    /**
+     * @param FormFactoryInterface $formFactory
+     * @param HookDispatcherInterface|null $hookDispatcher
+     */
+    public function __construct(
+        FormFactoryInterface $formFactory,
+        HookDispatcherInterface $hookDispatcher = null
+    ) {
         $this->formFactory = $formFactory;
+
+        if (null === $hookDispatcher) {
+            @trigger_error('The $hookDispatcher parameter should not be null, inject your main HookDispatcherInterface service, or NullDispatcher if you don\'t need hooks.', E_USER_DEPRECATED);
+        }
+        $this->hookDispatcher = $hookDispatcher ? $hookDispatcher : new NullDispatcher();
     }
 
     /**
@@ -70,7 +83,7 @@ final class GridFilterFormFactory implements GridFilterFormFactoryInterface
             );
         }
 
-        $this->hookDispatcher->dispatchWithParameters('action' . $definition->getId() . 'GridFilterFormModifier', [
+        $this->hookDispatcher->dispatchWithParameters('action' . Container::camelize($definition->getId()) . 'GridFilterFormModifier', [
             'filter_form_builder' => $formBuilder,
         ]);
 

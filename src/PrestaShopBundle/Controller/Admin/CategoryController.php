@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,20 +16,27 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Controller\Admin;
 
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\AssignProductToCategoryCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotAssignProductToCategoryException;
 use PrestaShopBundle\Form\Admin\Category\SimpleCategory;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Admin controller for the Category pages.
@@ -46,10 +53,12 @@ class CategoryController extends FrameworkBundleAdminController
     public function addSimpleCategoryFormAction(Request $request)
     {
         $response = new JsonResponse();
+        $commandBus = $this->get('prestashop.core.command_bus');
         $tools = $this->get('prestashop.adapter.tools');
         $shopContext = $this->get('prestashop.adapter.shop.context');
         $shopList = $shopContext->getShops(false, true);
         $currentIdShop = $shopContext->getContextShopID();
+        $defaultLanguageId = $this->get('prestashop.adapter.legacy.configuration')->getInt('PS_LANG_DEFAULT');
 
         $form = $this->createFormBuilder()
             ->add('category', SimpleCategory::class)
@@ -60,28 +69,52 @@ class CategoryController extends FrameworkBundleAdminController
         if ($form->isValid()) {
             $data = $form->getData();
 
-            $_POST = [
-                'submitAddcategory' => 1,
-                'name_1' => $data['category']['name'],
-                'id_parent' => $data['category']['id_parent'],
-                'link_rewrite_1' => $tools->link_rewrite($data['category']['name']),
-                'active' => 1,
-                'checkBoxShopAsso_category' => $currentIdShop ? [$currentIdShop => $currentIdShop] : $shopList,
+            $localizedName = [
+                $defaultLanguageId => $data['category']['name'],
             ];
 
-            $adminCategoryController = $this->get('prestashop.adapter.admin.controller.category')->getInstance();
-            if ($category = $adminCategoryController->processAdd()) {
-                $response->setData(['category' => $category]);
-            }
+            $command = new AddCategoryCommand(
+                $localizedName,
+                [$defaultLanguageId => $tools->linkRewrite($data['category']['name'])],
+                true,
+                (int) $data['category']['id_parent']
+            );
 
-            if ($request->query->has('id_product')) {
-                $productAdapter = $this->get('prestashop.adapter.data_provider.product');
-                $product = $productAdapter->getProduct($request->query->get('id_product'));
-                $product->addToCategories($category->id);
-                $product->save();
+            $command->setAssociatedShopIds($currentIdShop ? [$currentIdShop => $currentIdShop] : $shopList);
+
+            try {
+                /** @var CategoryId $categoryId */
+                $categoryId = $commandBus->handle($command);
+
+                if ($categoryId->getValue()) {
+                    $response->setData(
+                        [
+                            'category' => [
+                                'id' => $categoryId->getValue(),
+                                'id_parent' => $data['category']['id_parent'],
+                                'name' => $localizedName,
+                            ],
+                        ]
+                    );
+                    if ($request->query->has('id_product')) {
+                        $assignProductToCategoryCommand = new AssignProductToCategoryCommand(
+                            $categoryId->getValue(),
+                            $request->query->get('id_product')
+                        );
+                        $commandBus->handle($assignProductToCategoryCommand);
+                    }
+                }
+            } catch (CategoryException $e) {
+                // TODO: do some frontend work to display this error message from ajax query
+                $response->setStatusCode(Response::HTTP_BAD_REQUEST);
+                $response->setData(['error' => $this->getErrorMessageForException($e, $this->getErrorMessages($data['category']['name']))]);
+            } catch (ProductException $e) {
+                // TODO: do some frontend work to display this error message from ajax query
+                $response->setStatusCode(Response::HTTP_BAD_REQUEST);
+                $response->setData(['error' => $this->getErrorMessageForException($e, $this->getErrorMessages($data['category']['name']))]);
             }
         } else {
-            $response->setStatusCode(400);
+            $response->setStatusCode(Response::HTTP_BAD_REQUEST);
             $response->setData($this->getFormErrorsForJS($form));
         }
 
@@ -105,5 +138,26 @@ class CategoryController extends FrameworkBundleAdminController
         return new JsonResponse(
             $this->get('prestashop.adapter.data_provider.category')->getAjaxCategories($request->get('query'), $limit, true)
         );
+    }
+
+    /**
+     * @param string $categoryName
+     *
+     * @return array
+     */
+    private function getErrorMessages(string $categoryName): array
+    {
+        return [
+            CategoryException::class => $this->trans(
+                'Category "%s" could not be created.',
+                'Admin.Notifications.Error',
+                [$categoryName]
+            ),
+            CannotAssignProductToCategoryException::class => $this->trans(
+                'This product could not be assigned to category "%s".',
+                'Admin.Notifications.Error',
+                [$categoryName]
+            ),
+        ];
     }
 }

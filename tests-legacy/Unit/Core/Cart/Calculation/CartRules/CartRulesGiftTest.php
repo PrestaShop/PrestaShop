@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -28,12 +28,9 @@ namespace LegacyTests\Unit\Core\Cart\Calculation\CartRules;
 
 use LegacyTests\Unit\Core\Cart\Calculation\AbstractCartCalculationTest;
 
+
 /**
- * these tests aim to check the correct calculation of cart total when applying cart rules
- *
- * products are inserted as fixtures
- * products are inserted in cart from data providers
- * cart rules are inserted from data providers
+ * behat equivalent : Scenarii/Cart/Calculation/CartRule/gift.feature
  */
 class CartRulesGiftTest extends AbstractCartCalculationTest
 {
@@ -74,7 +71,7 @@ class CartRulesGiftTest extends AbstractCartCalculationTest
                 * 3 * static::PRODUCT_FIXTURES[1]['price']
                 + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'cartRules'            => [13],
-                'oductCount' => 3,
+                'expectedProductCount' => 3,
                 'knownToFailOnV1'      => true,
             ],
             '2 products in cart, one cart rule offering a gift (in stock) and a global 10% discount'                                    => [

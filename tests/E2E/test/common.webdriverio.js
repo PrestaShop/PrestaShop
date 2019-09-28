@@ -10,6 +10,11 @@ let options = {
   waitForTimeout: 30000,
   desiredCapabilities: {
     browserName: 'chrome',
+    chromeOptions: {
+      prefs: {
+        'download.default_directory': '',
+      }
+    }
   },
   port: 4444,
   deprecationWarnings: false
@@ -120,16 +125,23 @@ function initCommands(client) {
       .deleteCookie();
   });
 
+  client.addCommand('signOutWithoutCookiesFO', function (selector) {
+    return client
+      .waitForExistAndClick(selector.sign_out_button)
+      .waitForExist(selector.sign_in_button, 90000)
+  });
+
   client.addCommand('accessToFO', function (selector) {
     return client
       .url(global.URL)
       .waitForExistAndClick(selector.logo_home_page);
   });
 
-  client.addCommand('switchWindow', function (id) {
+  client.addCommand('switchWindow', function (id, pause = 0) {
     return client
       .getTabIds()
       .then(ids => client.switchTab(ids[id]))
+      .pause(pause)
       .refresh();
   });
 
@@ -155,14 +167,20 @@ module.exports = {
     if (client) {
       return client;
     }
-
+    // Mode Headless
     if (typeof global.headless !== 'undefined' && global.headless) {
-      options["desiredCapabilities"] = {
+      options['desiredCapabilities'] = {
         browserName: 'chrome',
         chromeOptions: {
-          args: ['--headless', '--disable-gpu', '--window-size=1270,899']
+          args: ['--headless', '--disable-gpu', '--window-size=1270,899'],
+          prefs: {
+            'download.default_directory': global.downloadsFolderPath,
+          }
         }
       };
+    } else {
+      // Mode Headfull
+      options['desiredCapabilities']['chromeOptions']['prefs']['download.default_directory'] = global.downloadsFolderPath;
     }
 
     if (typeof global.selenium_protocol !== 'undefined') {
@@ -171,13 +189,20 @@ module.exports = {
 
     if (typeof global.selenium_host !== 'undefined') {
       options.host = global.selenium_host;
+    } else {
+      // We need to set it to localhost for 'chai-http' library
+      global.selenium_host = 'localhost';
     }
 
     if (typeof global.selenium_port !== 'undefined') {
       options.port = global.selenium_port;
+    } else {
+      // We need to set it to localhost for 'chai-http' library
+      global.selenium_port = options.port;
     }
+
     fs.readFile(debugFile, 'utf8', (err, content) => {
-        global.ps_mode_dev = (content.substring(content.indexOf("define('_PS_MODE_DEV_', "), content.indexOf(");")).split(', ')[1]) === 'true' ? true : false;
+      global.ps_mode_dev = (content.substring(content.indexOf("define('_PS_MODE_DEV_', "), content.indexOf(');')).split(', ')[1]) === 'true' ? true : false;
     });
     client = webdriverio.remote(options);
     initCommands(client);

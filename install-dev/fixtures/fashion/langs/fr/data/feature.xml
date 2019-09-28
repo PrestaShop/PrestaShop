@@ -1,18 +1,9 @@
 <?xml version="1.0"?>
 <entity_feature>
-  <feature id="Compositions">
-    <name>Compositions</name>
+  <feature id="Composition">
+    <name>Composition</name>
   </feature>
-  <feature id="Paper_Type">
-    <name>Type de papier</name>
-  </feature>
-  <feature id="Color">
-    <name>Couleur</name>
-  </feature>
-  <feature id="Size">
-    <name>Taille</name>
-  </feature>
-  <feature id="Frame_Size">
-    <name>Taille du cadre</name>
+  <feature id="Property">
+    <name>Propriété</name>
   </feature>
 </entity_feature>

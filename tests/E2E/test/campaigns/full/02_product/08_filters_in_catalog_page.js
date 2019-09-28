@@ -1,27 +1,25 @@
+/** This script is based on the scenario described in this test link
+ * [id="PS-104"][Name="Filters in catalog page"]
+ **/
 const {ProductList} = require('../../../selectors/BO/add_product_page');
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
 const {Menu} = require('../../../selectors/BO/menu.js');
 const commonProduct = require('../../common_scenarios/product');
 const promise = Promise.resolve();
+const welcomeScenarios = require('../../common_scenarios/welcome');
 
-/** This script is based on the scenario described in this test link
- * [id="PS-104"][Name="Filters in catalog page"]
- * http://testlink.prestashop.net/linkto.php?tprojectPrefix=PS&item=testcase&id=PS-104
- **/
 scenario('Check the sort of products in the Back Office', client => {
-  test('should open browser', () => client.open());
-  test('should log in successfully in BO', () => client.signInBO(AccessPageBO));
-  test('should go to "Catalog" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.products_submenu));
+  scenario('Login in the Back Office', client => {
+    test('should open the browser', () => client.open());
+    test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
+  }, 'common_client');
+  welcomeScenarios.findAndCloseWelcomeModal();
   scenario('Close symfony toolbar then change items per page number', client => {
+    test('should go to "Catalog" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.products_submenu));
     test('should close symfony toolbar', () => {
       return promise
-        .then(() => client.pause(2000))
-        .then(() => {
-          if (global.ps_mode_dev) {
-            client.waitForExistAndClick(AddProductPage.symfony_toolbar);
-          }
-        });
+        .then(() => client.waitForSymfonyToolbar(AddProductPage, 2000))
     });
     test('should change the paginator select to "100"', () => {
       return promise
@@ -52,7 +50,7 @@ scenario('Check the sort of products in the Back Office', client => {
     });
   }, 'product/product');
   scenario('Search products by different attributes', () => {
-    scenario('Search products  by "ID"', client => {
+    scenario('Search products by "ID"', client => {
       test('should search products by id', () => {
         return promise
           .then(() => client.isVisible(ProductList.catalogue_filter_by_id_min_input))
@@ -101,7 +99,7 @@ scenario('Check the sort of products in the Back Office', client => {
       });
       commonProduct.productList(AddProductPage, ProductList.products_column.replace('%COL', 7), 'price', client, 18, 25);
     }, 'product/product');
-    scenario('Search products  by "Minimum quantity"', client => {
+    scenario('Search products by "Minimum quantity"', client => {
       test('should search a products by minimum quantity', () => {
         return promise
           .then(() => client.isVisible(ProductList.catalogue_filter_by_quantity_min_input))
@@ -131,7 +129,7 @@ scenario('Check the sort of products in the Back Office', client => {
       });
       commonProduct.productList(AddProductPage, ProductList.products_status_icon, 'active_status', client);
     }, 'product/product');
-    scenario('Search products  by "Inactive status"', client => {
+    scenario('Search products by "Inactive status"', client => {
       test('should search products by inactive status', () => {
         return promise
           .then(() => client.waitForExistAndClick(ProductList.status_select))
@@ -141,8 +139,8 @@ scenario('Check the sort of products in the Back Office', client => {
       });
       commonProduct.productList(AddProductPage, ProductList.products_status_icon, 'inactive_status', client);
     }, 'product/product');
-    scenario('Back to default pagination', client => {
-      test('Back to default pagination', () => {
+    scenario('Go back to default pagination', client => {
+      test('should go back to default pagination', () => {
         return promise
           .then(() => client.isVisible(ProductList.pagination_products, 3000))
           .then(() => {
@@ -154,3 +152,4 @@ scenario('Check the sort of products in the Back Office', client => {
     }, 'product/product');
   }, 'product/product');
 }, 'product/product', true);
+

@@ -1,3 +1,8 @@
+/**
+ * This script is based on the scenario described in this test link
+ * [id="PS-41"][Name="Create Feature"]
+ **/
+
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
 const commonFeature = require('../../common_scenarios/feature');
@@ -29,7 +34,10 @@ let productData = {
   ]
 };
 
-
+/**
+ * This script should be moved to the campaign full when this issue will be fixed
+ * https://github.com/PrestaShop/PrestaShop/issues/11217
+ **/
 scenario('Create, edit, delete, delete with bulk actions "Feature" in the Back Office', () => {
 
   scenario('Test 1: Create "Feature"', () => {
@@ -116,12 +124,7 @@ scenario('Create, edit, delete, delete with bulk actions "Feature" in the Back O
       }
       test('should close the symfony toolbar if exists', () => {
         return promise
-          .then(() => client.isVisible(AddProductPage.symfony_toolbar))
-          .then(() => {
-            if (global.isVisible) {
-              client.waitForExistAndClick(AddProductPage.symfony_toolbar);
-            }
-          });
+          .then(() => client.waitForSymfonyToolbar(AddProductPage, 2000))
       });
       test('should click on "Save" button', () => client.waitForExistAndClick(AddProductPage.save_product_button, 5000));
       /**
@@ -242,12 +245,7 @@ scenario('Create, edit, delete, delete with bulk actions "Feature" in the Back O
       });
       test('should close the symfony toolbar if exists', () => {
         return promise
-          .then(() => client.isVisible(AddProductPage.symfony_toolbar))
-          .then(() => {
-            if (global.isVisible) {
-              client.waitForExistAndClick(AddProductPage.symfony_toolbar);
-            }
-          });
+          .then(() => client.waitForSymfonyToolbar(AddProductPage, 2000))
       });
       test('should click on "Save" button', () => client.waitForExistAndClick(AddProductPage.save_product_button, 5000));
       test('should go to "Catalog > Products" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.products_submenu));

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -40,11 +40,25 @@ final class CategoryTreeChoiceProvider implements FormChoiceProviderInterface
     private $categoryDataProvider;
 
     /**
-     * @param CategoryDataProvider $categoryDataProvider
+     * @var int
      */
-    public function __construct(CategoryDataProvider $categoryDataProvider)
+    private $contextShopRootCategoryId;
+
+    /**
+     * @var bool
+     */
+    private $enabledCategoriesOnly;
+
+    /**
+     * @param CategoryDataProvider $categoryDataProvider
+     * @param int $contextShopRootCategoryId
+     * @param bool $enabledCategoriesOnly
+     */
+    public function __construct(CategoryDataProvider $categoryDataProvider, $contextShopRootCategoryId, $enabledCategoriesOnly = false)
     {
         $this->categoryDataProvider = $categoryDataProvider;
+        $this->contextShopRootCategoryId = $contextShopRootCategoryId;
+        $this->enabledCategoriesOnly = $enabledCategoriesOnly;
     }
 
     /**
@@ -52,7 +66,7 @@ final class CategoryTreeChoiceProvider implements FormChoiceProviderInterface
      */
     public function getChoices()
     {
-        $categories = $this->categoryDataProvider->getNestedCategories();
+        $categories = $this->categoryDataProvider->getNestedCategories($this->contextShopRootCategoryId, false, $this->enabledCategoriesOnly);
         $choices = [];
 
         foreach ($categories as $category) {

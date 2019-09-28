@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -30,8 +30,11 @@ use Context;
 use Currency;
 use Employee;
 use Language;
+use Link;
 use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
+use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowPresenterInterface;
 use Psr\Log\NullLogger;
 
 use Shop;
@@ -39,7 +42,6 @@ use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase as TestCase;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Translation\Translator;
-use Theme;
 
 /**
  * Responsible of e2e and integration tests using Symfony.
@@ -99,15 +101,10 @@ class LightWebTestCase extends TestCase
 
         $contextMock->shop = $shopMock;
 
-        $themeMock = $this->getMockBuilder(Theme::class)
-            ->setMethods(array('getName'))
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $themeMock->method('getName')
-            ->willReturn('classic');
-
-        $contextMock->shop->theme = $themeMock;
+        $contextMock->shop->theme = new Theme([
+            'name' => 'classic',
+            'directory' => _PS_ROOT_DIR_.'/themes/',
+        ]);
 
         $countryMock = $this->getMockBuilder(Country::class)
             ->getMock();
@@ -115,11 +112,9 @@ class LightWebTestCase extends TestCase
 
         $contextMock->country = $countryMock;
 
-        $languageMock = $this->getMockBuilder(Language::class)
-            ->disableAutoload()
-            ->disableOriginalConstructor()
-            ->getMock();
-        $contextMock->language = $languageMock;
+        $languageFixture = new Language(1);
+
+        $contextMock->language = $languageFixture;
 
         $currencyMock = $this->getMockBuilder(Currency::class)
             ->disableOriginalConstructor()
@@ -129,11 +124,34 @@ class LightWebTestCase extends TestCase
 
         $currencyDataProviderMock = $this->getMockBuilder(CurrencyDataProvider::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getDefaultCurrencyIsoCode'])
+            ->setMethods(['getDefaultCurrencyIsoCode', 'getDefaultCurrency'])
             ->getMock();
+
+        $linkMock = $this
+            ->getMockBuilder(Link::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $contextMock->link = $linkMock;
 
         $currencyDataProviderMock->method('getDefaultCurrencyIsoCode')
             ->will($this->returnValue('en'));
+        $currencyDataProviderMock->method('getDefaultCurrency')
+            ->will($this->returnValue($currencyMock));
+
+        $kpiRowPresenterMock = $this->getMockBuilder(KpiRowPresenterInterface::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['present'])
+            ->getMock();
+
+        $kpiRowPresenterMock->method('present')
+            ->will($this->returnValue(['allowRefresh' => false, 'kpis' => ['a', 'b', 'c']]));
+
+        $smartyMock = $this
+            ->getMockBuilder(\Smarty::class)
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
 
         $legacyContextMock = $this->getMockBuilder(LegacyContext::class)
             ->setMethods([
@@ -144,10 +162,15 @@ class LightWebTestCase extends TestCase
                 'getLanguages',
                 'getLanguage',
                 'getAdminLink',
+                'getAvailableLanguages',
+                'getSmarty',
             ])
             ->disableAutoload()
             ->disableOriginalConstructor()
             ->getMock();
+
+        $legacyContextMock->method('getSmarty')
+            ->willReturn($smartyMock);
 
         $legacyContextMock->method('getContext')
             ->willReturn($contextMock);
@@ -176,11 +199,34 @@ class LightWebTestCase extends TestCase
 
         $legacyContextMock->method('getLanguage')
             ->will(
-                $this->returnValue($languageMock)
+                $this->returnValue($languageFixture)
+            );
+
+        $legacyContextMock->method('getAvailableLanguages')
+            ->willReturn(
+                [
+                    [
+                        'id_lang' => '1',
+                        'name' => 'English (English)',
+                        'iso_code' => 'en',
+                        'language_code' => 'en-us',
+                        'locale' => 'en-US',
+                        'active' => true,
+                    ],
+                    [
+                        'id_lang' => '2',
+                        'name' => 'Français (French)',
+                        'iso_code' => 'fr',
+                        'language_code' => 'fr',
+                        'locale' => 'fr-FR',
+                        'active' => false,
+                    ],
+                ]
             );
 
         self::$kernel->getContainer()->set('prestashop.adapter.data_provider.currency', $currencyDataProviderMock);
         self::$kernel->getContainer()->set('prestashop.adapter.legacy.context', $legacyContextMock);
+        self::$kernel->getContainer()->set('prestashop.core.kpi_row.presenter', $kpiRowPresenterMock);
         self::$kernel->getContainer()->set('logger', new NullLogger());
     }
 

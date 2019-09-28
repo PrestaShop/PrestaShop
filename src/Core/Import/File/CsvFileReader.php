@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -56,17 +56,29 @@ final class CsvFileReader implements FileReaderInterface
     private $escape;
 
     /**
+     * @var FileOpenerInterface
+     */
+    private $fileOpener;
+
+    /**
+     * @param FileOpenerInterface $fileOpener
      * @param string $delimiter
      * @param int $length
      * @param string $enclosure
      * @param string $escape
      */
-    public function __construct($delimiter = ';', $length = 0, $enclosure = '"', $escape = '\\')
-    {
+    public function __construct(
+        FileOpenerInterface $fileOpener,
+        $delimiter = ';',
+        $length = 0,
+        $enclosure = '"',
+        $escape = '\\'
+    ) {
         $this->delimiter = $delimiter;
         $this->length = $length;
         $this->enclosure = $enclosure;
         $this->escape = $escape;
+        $this->fileOpener = $fileOpener;
     }
 
     /**
@@ -78,13 +90,14 @@ final class CsvFileReader implements FileReaderInterface
             throw new UnreadableFileException();
         }
 
-        $handle = fopen($file->getPathname(), 'rb');
-
-        if (false === $handle) {
-            throw new UnreadableFileException();
-        }
+        $convertToUtf8 = !mb_check_encoding(file_get_contents($file), 'UTF-8');
+        $handle = $this->fileOpener->open($file);
 
         while ($row = fgetcsv($handle, $this->length, $this->delimiter, $this->enclosure, $this->escape)) {
+            if ($convertToUtf8) {
+                $row = array_map('utf8_encode', $row);
+            }
+
             yield DataRow::createFromArray($row);
         }
 

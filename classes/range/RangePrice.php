@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,17 +16,28 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 class RangePriceCore extends ObjectModel
 {
+    /**
+     * @var int
+     */
     public $id_carrier;
+
+    /**
+     * @var float
+     */
     public $delimiter1;
+
+    /**
+     * @var float
+     */
     public $delimiter2;
 
     /**
@@ -87,7 +98,9 @@ class RangePriceCore extends ObjectModel
     /**
      * Get all available price ranges.
      *
-     * @return array Ranges
+     * @param int $id_carrier Carrier identifier
+     *
+     * @return array|false All ranges for this carrier, or false on error
      */
     public static function getRanges($id_carrier)
     {
@@ -98,19 +111,39 @@ class RangePriceCore extends ObjectModel
             ORDER BY `delimiter1` ASC');
     }
 
+    /**
+     * Check if a range exists for delimiter1 and delimiter2 by id_carrier or id_reference
+     *
+     * @param int|null $id_carrier Carrier identifier
+     * @param float $delimiter1
+     * @param float $delimiter2
+     * @param int|null $id_reference Carrier reference is the initial Carrier identifier (optional)
+     *
+     * @return int|false Total of matching ranges, or false on error
+     */
     public static function rangeExist($id_carrier, $delimiter1, $delimiter2, $id_reference = null)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
             SELECT count(*)
             FROM `' . _DB_PREFIX_ . 'range_price` rp' .
-            (is_null($id_carrier) && $id_reference ? '
+            (null === $id_carrier && $id_reference ? '
             INNER JOIN `' . _DB_PREFIX_ . 'carrier` c on (rp.`id_carrier` = c.`id_carrier`)' : '') . '
             WHERE' .
             ($id_carrier ? ' `id_carrier` = ' . (int) $id_carrier : '') .
-            (is_null($id_carrier) && $id_reference ? ' c.`id_reference` = ' . (int) $id_reference : '') . '
+            (null === $id_carrier && $id_reference ? ' c.`id_reference` = ' . (int) $id_reference : '') . '
             AND `delimiter1` = ' . (float) $delimiter1 . ' AND `delimiter2` = ' . (float) $delimiter2);
     }
 
+    /**
+     * Check if a range overlaps another range for this carrier
+     *
+     * @param int $id_carrier Carrier identifier
+     * @param float $delimiter1
+     * @param float $delimiter2
+     * @param int|null $id_rang RangePrice identifier (optional)
+     *
+     * @return int|false Total of overlapping ranges, or false on error
+     */
     public static function isOverlapping($id_carrier, $delimiter1, $delimiter2, $id_rang = null)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
@@ -122,6 +155,6 @@ class RangePriceCore extends ObjectModel
                 OR (' . (float) $delimiter1 . ' > `delimiter1` AND ' . (float) $delimiter1 . ' < `delimiter2`)
                 OR (' . (float) $delimiter2 . ' < `delimiter1` AND ' . (float) $delimiter2 . ' > `delimiter2`)
             )
-            ' . (!is_null($id_rang) ? ' AND `id_range_price` != ' . (int) $id_rang : ''));
+            ' . (null !== $id_rang ? ' AND `id_range_price` != ' . (int) $id_rang : ''));
     }
 }

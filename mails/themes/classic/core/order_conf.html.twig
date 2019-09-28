@@ -1,0 +1,346 @@
+{% extends '@MailThemes/classic/components/order_layout.html.twig' %}
+
+{% block content %}
+<tr>
+  <td align="center" class="titleblock">
+    <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
+      <span class="title">{{ 'Hi {firstname} {lastname},'|trans({}, 'Emails.Body', locale) }}</span><br/>
+      <span class="subtitle">{{ 'Thank you for shopping with {shop_name}!'|trans({}, 'Emails.Body', locale) }}</span>
+    </font>
+  </td>
+</tr>
+<tr>
+  <td class="space_footer">&nbsp;</td>
+</tr>
+<tr>
+  <td class="box" style="border:1px solid #D6D4D4;">
+    <table class="table">
+      <tr>
+        <td width="10">&nbsp;</td>
+        <td>
+          <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
+            {% if templateType == 'html' %}
+
+              <p style="border-bottom:1px solid #D6D4D4;">
+                {{ 'Order details'|trans({}, 'Emails.Body', locale)|raw }}
+              </p>
+            
+{% endif %}
+            <span>
+              <span><strong>{{ 'Order:'|trans({}, 'Emails.Body', locale)|raw }}</strong></span> {order_name} {{ 'Placed on'|trans({}, 'Emails.Body', locale)|raw }} {date}<br/><br/>
+              <span><strong>{{ 'Payment:'|trans({}, 'Emails.Body', locale)|raw }}</strong></span> {payment}
+            </span>
+          </font>
+        </td>
+        <td width="10">&nbsp;</td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+  <td>
+    <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
+      <table class="table table-recap" bgcolor="#ffffff"><!-- Title -->
+        <tr>
+          <th bgcolor="#f8f8f8" style="border:1px solid #D6D4D4;background-color: #fbfbfb;color: #333;font-family: Arial;font-size: 13px;padding: 10px;">{{ 'Reference'|trans({}, 'Emails.Body', locale)|raw }}</th>
+          <th bgcolor="#f8f8f8" style="border:1px solid #D6D4D4;background-color: #fbfbfb;color: #333;font-family: Arial;font-size: 13px;padding: 10px;">{{ 'Product'|trans({}, 'Emails.Body', locale)|raw }}</th>
+          <th bgcolor="#f8f8f8" style="border:1px solid #D6D4D4;background-color: #fbfbfb;color: #333;font-family: Arial;font-size: 13px;padding: 10px;" width="17%">{{ 'Unit price'|trans({}, 'Emails.Body', locale)|raw }}</th>
+          <th bgcolor="#f8f8f8" style="border:1px solid #D6D4D4;background-color: #fbfbfb;color: #333;font-family: Arial;font-size: 13px;padding: 10px;">{{ 'Quantity'|trans({}, 'Emails.Body', locale)|raw }}</th>
+          <th bgcolor="#f8f8f8" style="border:1px solid #D6D4D4;background-color: #fbfbfb;color: #333;font-family: Arial;font-size: 13px;padding: 10px;" width="17%">{{ 'Total price'|trans({}, 'Emails.Body', locale)|raw }}</th>
+        </tr>
+        {% if templateType == 'html' %}
+{products}
+{% endif %}
+        {% if templateType == 'txt' %}
+{products_txt}
+{% endif %}
+
+        {% if templateType == 'html' %}
+{discounts}
+{% endif %}
+        {% if templateType == 'txt' %}
+{discounts_txt}
+{% endif %}
+
+        <tr class="conf_body">
+          <td bgcolor="#f8f8f8" colspan="4" style="border:1px solid #D6D4D4;">
+            <table class="table">
+              <tr>
+                <td width="10">&nbsp;</td>
+                <td align="right">
+                  <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
+                    <strong>{{ 'Products'|trans({}, 'Emails.Body', locale)|raw }}</strong>
+                  </font>
+                </td>
+                <td width="10">&nbsp;</td>
+              </tr>
+            </table>
+          </td>
+          <td bgcolor="#f8f8f8" align="right" colspan="4" style="border:1px solid #D6D4D4;">
+            <table class="table">
+              <tr>
+                <td width="10">&nbsp;</td>
+                <td align="right">
+                  <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
+                    {total_products}
+                  </font>
+                </td>
+                <td width="10">&nbsp;</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr class="conf_body">
+          <td bgcolor="#f8f8f8" colspan="4" style="border:1px solid #D6D4D4;">
+            <table class="table">
+              <tr>
+                <td width="10">&nbsp;</td>
+                <td align="right">
+                  <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
+                    <strong>{{ 'Discounts'|trans({}, 'Emails.Body', locale)|raw }}</strong>
+                  </font>
+                </td>
+                <td width="10">&nbsp;</td>
+              </tr>
+            </table>
+          </td>
+          <td bgcolor="#f8f8f8" colspan="4" style="border:1px solid #D6D4D4;">
+            <table class="table">
+              <tr>
+                <td width="10">&nbsp;</td>
+                <td align="right">
+                  <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
+                    {total_discounts}
+                  </font>
+                </td>
+                <td width="10">&nbsp;</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr class="conf_body">
+          <td bgcolor="#f8f8f8" colspan="4" style="border:1px solid #D6D4D4;">
+            <table class="table">
+              <tr>
+                <td width="10">&nbsp;</td>
+                <td align="right">
+                  <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
+                    <strong>{{ 'Gift-wrapping'|trans({}, 'Emails.Body', locale)|raw }}</strong>
+                  </font>
+                </td>
+                <td width="10">&nbsp;</td>
+              </tr>
+            </table>
+          </td>
+          <td bgcolor="#f8f8f8" colspan="4" style="border:1px solid #D6D4D4;">
+            <table class="table">
+              <tr>
+                <td width="10">&nbsp;</td>
+                <td align="right">
+                  <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
+                    {total_wrapping}
+                  </font>
+                </td>
+                <td width="10">&nbsp;</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr class="conf_body">
+          <td bgcolor="#f8f8f8" colspan="4" style="border:1px solid #D6D4D4;">
+            <table class="table">
+              <tr>
+                <td width="10">&nbsp;</td>
+                <td align="right">
+                  <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
+                    <strong>{{ 'Shipping'|trans({}, 'Emails.Body', locale)|raw }}</strong>
+                  </font>
+                </td>
+                <td width="10">&nbsp;</td>
+              </tr>
+            </table>
+          </td>
+          <td bgcolor="#f8f8f8" colspan="4" style="border:1px solid #D6D4D4;">
+            <table class="table">
+              <tr>
+                <td width="10">&nbsp;</td>
+                <td align="right">
+                  <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
+                    {total_shipping}
+                  </font>
+                </td>
+                <td width="10">&nbsp;</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr class="conf_body">
+          <td bgcolor="#f8f8f8" colspan="4" style="border:1px solid #D6D4D4;">
+            <table class="table">
+              <tr>
+                <td width="10">&nbsp;</td>
+                <td align="right">
+                  <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
+                    <strong>{{ 'Total Tax paid'|trans({}, 'Emails.Body', locale)|raw }}</strong>
+                  </font>
+                </td>
+                <td width="10">&nbsp;</td>
+              </tr>
+            </table>
+          </td>
+          <td bgcolor="#f8f8f8" colspan="4" style="border:1px solid #D6D4D4;">
+            <table class="table">
+              <tr>
+                <td width="10">&nbsp;</td>
+                <td align="right">
+                  <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
+                    {total_tax_paid}
+                  </font>
+                </td>
+                <td width="10">&nbsp;</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr class="conf_body">
+          <td bgcolor="#f8f8f8" colspan="4" style="border:1px solid #D6D4D4;">
+            <table class="table">
+              <tr>
+                <td width="10">&nbsp;</td>
+                <td align="right">
+                  <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
+                    <strong>{{ 'Total paid'|trans({}, 'Emails.Body', locale)|raw }}</strong>
+                  </font>
+                </td>
+                <td width="10">&nbsp;</td>
+              </tr>
+            </table>
+          </td>
+          <td bgcolor="#f8f8f8" colspan="4" style="border:1px solid #D6D4D4;">
+            <table class="table">
+              <tr>
+                <td width="10">&nbsp;</td>
+                <td align="right">
+                  <font size="4" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
+                    {total_paid}
+                  </font>
+                </td>
+                <td width="10">&nbsp;</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        
+      </table>
+    </font>
+  </td>
+</tr>
+<tr>
+  <td class="box" style="border:1px solid #D6D4D4;">
+    <table class="table">
+      <tr>
+        <td width="10">&nbsp;</td>
+        <td>
+          <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
+            {% if templateType == 'html' %}
+
+              <p style="border-bottom:1px solid #D6D4D4;">
+                {{ 'Shipping'|trans({}, 'Emails.Body', locale)|raw }}
+              </p>
+            
+{% endif %}
+            <span>
+              <span><strong>{{ 'Carrier:'|trans({}, 'Emails.Body', locale)|raw }}</strong></span> {carrier}<br/><br/>
+              <span><strong>{{ 'Payment:'|trans({}, 'Emails.Body', locale)|raw }}</strong></span> {payment}
+            </span>
+          </font>
+        </td>
+        <td width="10">&nbsp;</td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+  <td class="space_footer">&nbsp;</td>
+</tr>
+<tr>
+  <td>
+    <table class="table">
+      <tr>
+        <td class="box address" width="310" style="border:1px solid #D6D4D4;">
+          <table class="table">
+            <tr>
+              <td width="10">&nbsp;</td>
+              <td>
+                <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
+                  {% if templateType == 'html' %}
+
+                    <p style="border-bottom:1px solid #D6D4D4;">
+                      {{ 'Delivery address'|trans({}, 'Emails.Body', locale)|raw }}
+                    </p>
+                    <span>
+                      {delivery_block_html}
+                    </span>
+                  
+{% endif %}
+                  <span data-text-only="1">
+                    {delivery_block_txt}
+                  </span>
+                </font>
+              </td>
+              <td width="10">&nbsp;</td>
+            </tr>
+          </table>
+        </td>
+        <td width="20" class="space_address">&nbsp;</td>
+        <td class="box address" width="310" style="border:1px solid #D6D4D4;">
+          <table class="table">
+            <tr>
+              <td width="10">&nbsp;</td>
+              <td>
+                <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
+                  {% if templateType == 'html' %}
+
+                    <p style="border-bottom:1px solid #D6D4D4;">
+                      {{ 'Billing address'|trans({}, 'Emails.Body', locale)|raw }}
+                    </p>
+                    <span>
+                      {invoice_block_html}
+                    </span>
+                  
+{% endif %}
+                  <span data-text-only="1">
+                    {invoice_block_txt}
+                  </span>
+                </font>
+              </td>
+              <td width="10">&nbsp;</td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+  <td class="space_footer">&nbsp;</td>
+</tr>
+<tr>
+  <td class="linkbelow">
+    <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
+      <span>
+        {{ 'You can review your order and download your invoice from the <a href="{history_url}">"Order history"</a> section of your customer account by clicking <a href="{my_account_url}">"My account"</a> on our shop.'|trans({}, 'Emails.Body', locale)|raw }}
+      </span>
+    </font>
+  </td>
+</tr>
+<tr>
+  <td class="linkbelow">
+    <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
+      <span>
+        {{ 'If you have a guest account, you can follow your order via the <a href="{guest_tracking_url}?id_order={order_name}">"Guest Tracking"</a> section on our shop.'|trans({}, 'Emails.Body', locale)|raw }}
+      </span>
+    </font>
+  </td>
+</tr>
+{% endblock %}

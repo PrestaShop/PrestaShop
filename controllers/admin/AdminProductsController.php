@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -74,7 +74,7 @@ class AdminProductsControllerCore extends AdminController
         if (Tools::getIsset('id_product')) {
             if (Tools::getIsset('addproduct') || Tools::getIsset('updateproduct')) {
                 $sfContainer = SymfonyContainer::getInstance();
-                if (!is_null($sfContainer)) {
+                if (null !== $sfContainer) {
                     $sfRouter = $sfContainer->get('router');
                     Tools::redirectAdmin($sfRouter->generate(
                         'admin_product_form',
@@ -1056,7 +1056,7 @@ class AdminProductsControllerCore extends AdminController
         $text_count = 0;
         if (is_array($current_customization)) {
             foreach ($current_customization as $field) {
-                if ($field['type'] == 1) {
+                if ($field['type'] == Product::CUSTOMIZE_TEXTFIELD) {
                     ++$text_count;
                 } else {
                     ++$files_count;
@@ -2170,7 +2170,7 @@ class AdminProductsControllerCore extends AdminController
     {
         // Cache this condition to improve performances
         static $is_activated = null;
-        if (is_null($is_activated)) {
+        if (null === $is_activated) {
             $is_activated = Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP && $this->id_object;
         }
 
@@ -2179,11 +2179,11 @@ class AdminProductsControllerCore extends AdminController
         }
 
         $def = ObjectModel::getDefinition($this->object);
-        if (!$this->object->isMultiShopField($field) && is_null($id_lang) && isset($def['fields'][$field])) {
+        if (!$this->object->isMultiShopField($field) && null === $id_lang && isset($def['fields'][$field])) {
             return true;
         }
 
-        if (is_null($id_lang)) {
+        if (null === $id_lang) {
             return !empty($_POST['multishop_check'][$field]);
         } else {
             return !empty($_POST['multishop_check'][$field][$id_lang]);
@@ -2402,7 +2402,7 @@ class AdminProductsControllerCore extends AdminController
     /**
      * Post treatment for suppliers.
      *
-     * @param null|int $id_product
+     * @param int|null $id_product
      */
     public function processSuppliers($id_product = null)
     {
@@ -2521,28 +2521,29 @@ class AdminProductsControllerCore extends AdminController
 
                         if (!$product_supplier_id) {
                             $product->addSupplierReference($supplier->id_supplier, (int) $attribute['id_product_attribute'], $reference, (float) $price, (int) $id_currency);
-                            if ($product->id_supplier == $supplier->id_supplier) {
-                                if ((int) $attribute['id_product_attribute'] > 0) {
-                                    $data = array(
-                                        'supplier_reference' => pSQL($reference),
-                                        'wholesale_price' => (float) Tools::convertPrice($price, $id_currency),
-                                    );
-                                    $where = '
-										a.id_product = ' . (int) $product->id . '
-										AND a.id_product_attribute = ' . (int) $attribute['id_product_attribute'];
-                                    ObjectModel::updateMultishopTable('Combination', $data, $where);
-                                } else {
-                                    $product->wholesale_price = (float) Tools::convertPrice($price, $id_currency); //converted in the default currency
-                                    $product->supplier_reference = pSQL($reference);
-                                    $product->update();
-                                }
-                            }
                         } else {
                             $product_supplier = new ProductSupplier($product_supplier_id);
                             $product_supplier->id_currency = (int) $id_currency;
                             $product_supplier->product_supplier_price_te = (float) $price;
                             $product_supplier->product_supplier_reference = pSQL($reference);
                             $product_supplier->update();
+                        }
+
+                        if ($product->id_supplier == $supplier->id_supplier) {
+                            if ((int) $attribute['id_product_attribute'] > 0) {
+                                $data = array(
+                                    'supplier_reference' => pSQL($reference),
+                                    'wholesale_price' => (float) Tools::convertPrice($price, $id_currency),
+                                );
+                                $where = '
+                                    a.id_product = ' . (int) $product->id . '
+                                    AND a.id_product_attribute = ' . (int) $attribute['id_product_attribute'];
+                                ObjectModel::updateMultishopTable('Combination', $data, $where);
+                            } else {
+                                $product->wholesale_price = (float) Tools::convertPrice($price, $id_currency); //converted in the default currency
+                                $product->supplier_reference = pSQL($reference);
+                                $product->update();
+                            }
                         }
                     } elseif (Tools::isSubmit('supplier_reference_' . $product->id . '_' . $attribute['id_product_attribute'] . '_' . $supplier->id_supplier)) {
                         //int attribute with default values if possible
@@ -3235,5 +3236,161 @@ class AdminProductsControllerCore extends AdminController
                 }
             }
         }
+    }
+
+    /**
+     * Returns in an homemade JSON with the content of a products pack.
+     */
+    public function displayAjaxProductPackItems()
+    {
+        $jsonArray = array();
+        $products = Db::getInstance()->executeS('
+            SELECT p.`id_product`, pl.`name`
+            FROM `' . _DB_PREFIX_ . 'product` p
+            NATURAL LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl
+            WHERE pl.`id_lang` = ' . (int) (Tools::getValue('id_lang')) . '
+            ' . Shop::addSqlRestrictionOnLang('pl') . '
+            AND NOT EXISTS (SELECT 1 FROM `' . _DB_PREFIX_ . 'pack` WHERE `id_product_pack` = p.`id_product`)
+            AND p.`id_product` != ' . (int) (Tools::getValue('id_product')));
+
+        foreach ($products as $packItem) {
+            $jsonArray[] = '{"value": "' . (int) ($packItem['id_product']) . '-' . addslashes($packItem['name'])
+                . '", "text":"' . (int) ($packItem['id_product']) . ' - ' . addslashes($packItem['name']) . '"}';
+        }
+        $this->ajaxRender('[' . implode(',', $jsonArray) . ']');
+    }
+
+    /**
+     * Displays a list of products when their name matches a given query
+     * Optional parameters allow products to be excluded from the results.
+     */
+    public function displayAjaxProductsList()
+    {
+        $query = Tools::getValue('q', false);
+        if (empty($query)) {
+            return;
+        }
+
+        /*
+         * In the SQL request the "q" param is used entirely to match result in database.
+         * In this way if string:"(ref : #ref_pattern#)" is displayed on the return list,
+         * they are no return values just because string:"(ref : #ref_pattern#)"
+         * is not write in the name field of the product.
+         * So the ref pattern will be cut for the search request.
+         */
+        if ($pos = strpos($query, ' (ref:')) {
+            $query = substr($query, 0, $pos);
+        }
+
+        $excludeIds = Tools::getValue('excludeIds', false);
+        if ($excludeIds && $excludeIds != 'NaN') {
+            $excludeIds = implode(',', array_map('intval', explode(',', $excludeIds)));
+        } else {
+            $excludeIds = '';
+        }
+
+        // Excluding downloadable products from packs because download from pack is not supported
+        $forceJson = Tools::getValue('forceJson', false);
+        $disableCombination = Tools::getValue('disableCombination', false);
+        $excludeVirtuals = (bool) Tools::getValue('excludeVirtuals', true);
+        $exclude_packs = (bool) Tools::getValue('exclude_packs', true);
+
+        $context = Context::getContext();
+
+        $sql = 'SELECT p.`id_product`, pl.`link_rewrite`, p.`reference`, pl.`name`, image_shop.`id_image` id_image, il.`legend`, p.`cache_default_attribute`
+                FROM `' . _DB_PREFIX_ . 'product` p
+                ' . Shop::addSqlAssociation('product', 'p') . '
+                LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl ON (pl.id_product = p.id_product AND pl.id_lang = ' . (int) $context->language->id . Shop::addSqlRestrictionOnLang('pl') . ')
+                LEFT JOIN `' . _DB_PREFIX_ . 'image_shop` image_shop
+                    ON (image_shop.`id_product` = p.`id_product` AND image_shop.cover=1 AND image_shop.id_shop=' . (int) $context->shop->id . ')
+                LEFT JOIN `' . _DB_PREFIX_ . 'image_lang` il ON (image_shop.`id_image` = il.`id_image` AND il.`id_lang` = ' . (int) $context->language->id . ')
+                WHERE (pl.name LIKE \'%' . pSQL($query) . '%\' OR p.reference LIKE \'%' . pSQL($query) . '%\')' .
+                (!empty($excludeIds) ? ' AND p.id_product NOT IN (' . $excludeIds . ') ' : ' ') .
+                ($excludeVirtuals ? 'AND NOT EXISTS (SELECT 1 FROM `' . _DB_PREFIX_ . 'product_download` pd WHERE (pd.id_product = p.id_product))' : '') .
+                ($exclude_packs ? 'AND (p.cache_is_pack IS NULL OR p.cache_is_pack = 0)' : '') .
+                ' GROUP BY p.id_product';
+
+        $items = Db::getInstance()->executeS($sql);
+
+        if ($items && ($disableCombination || $excludeIds)) {
+            $results = [];
+            foreach ($items as $item) {
+                if (!$forceJson) {
+                    $item['name'] = str_replace('|', '&#124;', $item['name']);
+                    $results[] = trim($item['name']) . (!empty($item['reference']) ? ' (ref: ' . $item['reference'] . ')' : '') . '|' . (int) ($item['id_product']);
+                } else {
+                    $results[] = array(
+                        'id' => $item['id_product'],
+                        'name' => $item['name'] . (!empty($item['reference']) ? ' (ref: ' . $item['reference'] . ')' : ''),
+                        'ref' => (!empty($item['reference']) ? $item['reference'] : ''),
+                        'image' => str_replace('http://', Tools::getShopProtocol(), $context->link->getImageLink($item['link_rewrite'], $item['id_image'], 'home_default')),
+                    );
+                }
+            }
+
+            if (!$forceJson) {
+                return $this->ajaxRender(implode(PHP_EOL, $results));
+            }
+
+            return $this->ajaxRender(json_encode($results));
+        }
+        if ($items) {
+            // packs
+            $results = array();
+            foreach ($items as $item) {
+                // check if product have combination
+                if (Combination::isFeatureActive() && $item['cache_default_attribute']) {
+                    $sql = 'SELECT pa.`id_product_attribute`, pa.`reference`, ag.`id_attribute_group`, pai.`id_image`, agl.`name` AS group_name, al.`name` AS attribute_name,
+                                a.`id_attribute`
+                            FROM `' . _DB_PREFIX_ . 'product_attribute` pa
+                            ' . Shop::addSqlAssociation('product_attribute', 'pa') . '
+                            LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute_combination` pac ON pac.`id_product_attribute` = pa.`id_product_attribute`
+                            LEFT JOIN `' . _DB_PREFIX_ . 'attribute` a ON a.`id_attribute` = pac.`id_attribute`
+                            LEFT JOIN `' . _DB_PREFIX_ . 'attribute_group` ag ON ag.`id_attribute_group` = a.`id_attribute_group`
+                            LEFT JOIN `' . _DB_PREFIX_ . 'attribute_lang` al ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = ' . (int) $context->language->id . ')
+                            LEFT JOIN `' . _DB_PREFIX_ . 'attribute_group_lang` agl ON (ag.`id_attribute_group` = agl.`id_attribute_group` AND agl.`id_lang` = ' . (int) $context->language->id . ')
+                            LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute_image` pai ON pai.`id_product_attribute` = pa.`id_product_attribute`
+                            WHERE pa.`id_product` = ' . (int) $item['id_product'] . '
+                            GROUP BY pa.`id_product_attribute`, ag.`id_attribute_group`
+                            ORDER BY pa.`id_product_attribute`';
+
+                    $combinations = Db::getInstance()->executeS($sql);
+                    if (!empty($combinations)) {
+                        foreach ($combinations as $k => $combination) {
+                            $results[$combination['id_product_attribute']]['id'] = $item['id_product'];
+                            $results[$combination['id_product_attribute']]['id_product_attribute'] = $combination['id_product_attribute'];
+                            !empty($results[$combination['id_product_attribute']]['name']) ? $results[$combination['id_product_attribute']]['name'] .= ' ' . $combination['group_name'] . '-' . $combination['attribute_name']
+                            : $results[$combination['id_product_attribute']]['name'] = $item['name'] . ' ' . $combination['group_name'] . '-' . $combination['attribute_name'];
+                            if (!empty($combination['reference'])) {
+                                $results[$combination['id_product_attribute']]['ref'] = $combination['reference'];
+                            } else {
+                                $results[$combination['id_product_attribute']]['ref'] = !empty($item['reference']) ? $item['reference'] : '';
+                            }
+                            if (empty($results[$combination['id_product_attribute']]['image'])) {
+                                $results[$combination['id_product_attribute']]['image'] = str_replace('http://', Tools::getShopProtocol(), $context->link->getImageLink($item['link_rewrite'], $combination['id_image'], 'home_default'));
+                            }
+                        }
+                    } else {
+                        $results[] = array(
+                            'id' => $item['id_product'],
+                            'name' => $item['name'],
+                            'ref' => (!empty($item['reference']) ? $item['reference'] : ''),
+                            'image' => str_replace('http://', Tools::getShopProtocol(), $context->link->getImageLink($item['link_rewrite'], $item['id_image'], 'home_default')),
+                        );
+                    }
+                } else {
+                    $results[] = array(
+                        'id' => $item['id_product'],
+                        'name' => $item['name'],
+                        'ref' => (!empty($item['reference']) ? $item['reference'] : ''),
+                        'image' => str_replace('http://', Tools::getShopProtocol(), $context->link->getImageLink($item['link_rewrite'], $item['id_image'], 'home_default')),
+                    );
+                }
+            }
+
+            return $this->ajaxRender(json_encode(array_values($results)));
+        }
+
+        return $this->ajaxRender(json_encode([]));
     }
 }

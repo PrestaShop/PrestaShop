@@ -4,6 +4,9 @@ let path = require('path');
 let fs = require('fs');
 let pdfUtil = require('pdf-to-text');
 const exec = require('child_process').exec;
+let chai = require('chai');
+let chai_http = require('chai-http');
+chai.use(chai_http);
 
 global.tab = [];
 global.isOpen = false;
@@ -57,16 +60,16 @@ class CommonClient {
               let element = document.querySelector(selector);
               element.scrollIntoView();
             }, selector)
-            .waitForVisibleAndClick(selector, 2000);
+            .scrollWaitForExistAndClick(selector, 2000);
         } else {
           this.client
-            .waitForExistAndClick(menuSelector, 2000)
+            .scrollWaitForExistAndClick(menuSelector, 2000)
             .pause(2000)
             .execute(function (selector) {
               let element = document.querySelector(selector);
               element.scrollIntoView();
             }, selector)
-            .waitForVisibleAndClick(selector);
+            .scrollWaitForExistAndClick(selector);
         }
       })
       .then(() => this.client.pause(4000));
@@ -120,16 +123,36 @@ class CommonClient {
       .waitForExistAndClick(option.replace('%LANG', language).replace('%ID', id))
   }
 
-  open() {
+  async open() {
     if (headless !== 'undefined' && headless) {
-      return this.client.init().windowHandleSize({width: 1280, height: 899});
+      let headless_client = await this.client.init().windowHandleSize({width: 1280, height: 899});
+      await this.enableDownloadForHeadlessMode();
+      return headless_client;
     } else {
       return this.client.init().windowHandleSize({width: 1280, height: 1024});
     }
   }
 
+  /**
+   * Enable download in headless mode
+   */
+  async enableDownloadForHeadlessMode(){
+    let sessionId = await this.client.requestHandler.sessionID;
+    let params = {
+      'cmd': 'Page.setDownloadBehavior',
+      'params': {
+        'behavior': 'allow', 'downloadPath': global.downloadsFolderPath
+      }
+    };
+    let selenium_hostURL= 'http://' + global.selenium_host + ':' + global.selenium_port;
+    let selenium_requestURL = '/wd/hub/session/' + sessionId + '/chromium/send_command' ;
+    await chai.request(selenium_hostURL)
+              .post(selenium_requestURL)
+              .send(params);
+  }
+
   close() {
-    return this.client.end();
+    return this.client.endAll();
   }
 
   closeWindow(id) {
@@ -202,7 +225,9 @@ class CommonClient {
       return this.client
         .waitForExist(selector, timeout)
         .then(() => this.client.getText(selector))
-        .then((variable) => global.tab[globalVar] = variable);
+        .then((variable) => {
+          global.tab[globalVar] = variable
+        });
     }
   }
 
@@ -213,7 +238,7 @@ class CommonClient {
       .then((variable) => global.tab[globalVar] = variable);
   }
 
-  checkTextValue(selector, textToCheckWith, parameter = 'equal', pause = 0) {
+  checkTextValue(selector, textToCheckWith, parameter = 'equal', pause = 0, type = "") {
     switch (parameter) {
       case "contain":
         return this.client
@@ -227,7 +252,14 @@ class CommonClient {
           .pause(pause)
           .waitForExist(selector, 9000)
           .then(() => this.client.getText(selector))
-          .then((text) => expect(text).to.equal(textToCheckWith));
+          .then((text) => {
+            if (type === "int") {
+              let textValue = parseInt(text);
+              expect(textValue).to.equal(textToCheckWith);
+            } else {
+              expect(text).to.equal(textToCheckWith)
+            }
+          });
         break;
       case "deepequal":
         return this.client
@@ -242,6 +274,13 @@ class CommonClient {
           .waitForExist(selector, 9000)
           .then(() => this.client.getText(selector))
           .then((text) => expect(text).to.not.equal(textToCheckWith));
+        break;
+      case "greaterThan":
+        return this.client
+          .pause(pause)
+          .waitForExist(selector, 9000)
+          .then(() => this.client.getText(selector))
+          .then((text) => expect(parseInt(text)).to.be.gt(textToCheckWith));
         break;
     }
   }
@@ -316,9 +355,9 @@ class CommonClient {
    * @returns {*}
    */
   async checkDocument(folderPath, fileName, text) {
-   await pdfUtil.pdfToText(folderPath + fileName + '.pdf', function (err, data) {
+    await pdfUtil.pdfToText(folderPath + fileName + '.pdf', function (err, data) {
+      global.indexText = data.indexOf(text);
       global.data = global.data + data;
-      global.indexText = global.data.indexOf(text);
     });
 
     return this.client
@@ -332,14 +371,14 @@ class CommonClient {
    * @param fileName
    * @returns {*}
    */
-  checkFile(folderPath, fileName, pause = 0) {
-    fs.stat(folderPath + fileName, function (err, stats) {
+  async checkFile(folderPath, fileName, pause = 2000) {
+    await fs.stat(folderPath + fileName, function (err, stats) {
       err === null && stats.isFile() ? global.existingFile = true : global.existingFile = false;
     });
 
     return this.client
       .pause(pause)
-      .then(() => expect(global.existingFile).to.be.true)
+      .then(() => expect(global.existingFile, "Expected File was not find in the folder " + folderPath).to.be.true)
   }
 
   waitForVisible(selector, timeout = 90000) {
@@ -359,8 +398,8 @@ class CommonClient {
     return this.client.waitAndSelectByAttribute(selector, attribute, value, pause, timeout);
   }
 
-  switchWindow(id) {
-    return this.client.switchWindow(id);
+  switchWindow(id, pause = 0) {
+    return this.client.switchWindow(id, pause);
   }
 
   switchTab(id) {
@@ -466,8 +505,8 @@ class CommonClient {
    */
   setEditorText(selector, content) {
     return this.client
-      .pause(1000)
-      .click(selector)
+      .pause(2000)
+      .waitForExistAndClick(selector)
       .execute(function (content) {
         return (tinyMCE.activeEditor.setContent(content));
       }, content);
@@ -562,6 +601,11 @@ class CommonClient {
     return this.client
       .deleteCookie()
       .refresh();
+  }
+
+  deleteCookieWithoutRefresh() {
+    return this.client
+      .deleteCookie()
   }
 
   middleClick(selector, globalVisibility = true, pause = 2000) {
@@ -701,6 +745,204 @@ class CommonClient {
     fs.unlinkSync(folderPath + fileName + extension);
     return this.client
       .pause(pause)
+  }
+
+  checkAutoUpgrade() {
+    fs.readFile(rcTarget + 'admin-dev/autoupgrade/tmp/log.txt', 'utf8', (err, content) => {
+      global.upgradeError = content.indexOf("upgradeDbError");
+    });
+    return this.client
+      .pause(2000)
+      .then(() => {
+        expect(global.upgradeError, "Upgrade process done, but some warnings/errors have been found").to.equal(-1)
+      });
+  }
+
+  signOutWithoutCookiesFO(selector) {
+    return this.client.signOutWithoutCookiesFO(selector);
+  }
+
+  waitForSymfonyToolbar(AddProductPage, pause = 0) {
+    return this.client
+      .pause(pause)
+      .isVisible(AddProductPage.symfony_toolbar, 4000)
+      .then((isVisible) => {
+        if (global.ps_mode_dev && isVisible) {
+          this.client.waitForExistAndClick(AddProductPage.symfony_toolbar)
+        }
+      })
+  }
+
+  goToFrame(id) {
+    return this.client.frame(id);
+  }
+
+  closeFrame() {
+    return this.client.frameParent();
+  }
+
+  checkStockColumn(selector, textToCheckWith) {
+    return this.client
+      .waitForExist(selector, 9000)
+      .then(() => this.client.getText(selector))
+      .then((text) => expect(text.split(' trending_flat ')[0]).to.equal(textToCheckWith));
+  }
+
+  checkElementValidation(selector, validationText, parameter = 'equal') {
+    return this.client
+      .pause(3000)
+      .execute(function (selector) {
+        let message = document.querySelector(selector).validationMessage;
+        return message;
+      }, selector)
+      .then((message) => {
+        switch (parameter) {
+          case "equal":
+            expect(message.value).to.be.equal(validationText);
+            break;
+          case "contain":
+            expect(message.value).to.contain(validationText);
+            break;
+          default:
+            break;
+        }
+      });
+  }
+
+  closeOtherWindow(id) {
+    return this.client.close(id);
+  }
+
+  checkIsVisible(selector) {
+    return this.client
+      .pause(2000)
+      .isVisible(selector)
+      .then((isVisible) => expect(isVisible).to.be.true);
+  }
+
+  checkCheckboxStatus(selector, checkedValue) {
+    return this.client
+      .pause(2000)
+      .execute(function (selector) {
+        return (document.querySelector(selector).checked);
+      }, selector)
+      .then((status) => {
+        expect(status.value).to.equal(checkedValue)
+      });
+  }
+
+  getOptionNumber(selector, attribute, value, wait = 0) {
+    return this.client
+      .pause(wait)
+      .execute(function (selector, attribute) {
+        return document.getElementById(selector).getElementsByTagName(attribute).length;
+      }, selector, attribute)
+      .then((count) => {
+        global.tab[value] = count.value;
+      });
+  }
+   /**
+   * get Current URL
+   * @param pause
+   * @return current url
+   */
+  getURL(pause = 0) {
+     return this.client
+     .pause(pause)
+     .url();
+    }
+
+  /**
+   * perform a javascript click, function waitForExistAndClick sometimes clicks on the wrong element so we rely on JS
+   * click rather than a screen click
+   * @param selector, xpath of the element
+   * @param pause
+   * @return true, if click works, false otherwise
+   */
+  waitForExistAndClickJs(selector, isXpath = true, pause = 0) {
+    return this.client
+      .pause(pause)
+      .execute(function (selector,isXpath) {
+        if(isXpath) return document.evaluate(selector,document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.click();
+        else return document.querySelector(selector).click();
+      }, selector,isXpath);
+  }
+
+
+  /**
+   *  set input javascript method, function waitAndSetValue don't delete value before set the new value so we used this
+   *  to be sure that the input is empty before setting the new value
+   * @param selector, the input
+   * @param value, value to set
+   * @param isXpath, selector is xpath or css selector
+   * @param pause
+   * @return {*}
+   */
+  setInputValue(selector, value, isXpath = true, pause = 0) {
+    return this.client
+        .pause(pause)
+        .execute(function (selector, value, isXpath) {
+          if(isXpath) {
+            document.evaluate(selector,document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.value = '';
+            document.evaluate(selector,document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.value = value;
+          }
+          else {
+            document.querySelector(selector).value = '';
+            document.querySelector(selector).value = value;
+          }
+        }, selector, value, isXpath);
+  }
+
+  /**
+   *  set iFrame Content, Added to set value for textarea timymce
+   * @param selector, the iFrame
+   * @param value, value to set
+   * @param isXpath, selector is xpath or css selector
+   * @param pause
+   * @return {*}
+   */
+  setiFrameContent(selector, value, isXpath = true, pause = 0) {
+    return this.client
+        .pause(pause)
+        .execute(function (selector, value, isXpath) {
+          if(isXpath) {
+            document.evaluate(selector,document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.contentWindow.document.body.innerHTML = '<p>' + value + '</p>';
+          }
+          else {
+            document.querySelector(selector).contentWindow.document.body.innerHTML = '<p>' + value + '</p>';
+          }
+        }, selector, value, isXpath);
+  }
+
+  /**
+   * remove attribute from selector
+   * @param selector, xpath or css selector of the element
+   * @param attributeName, attribute to remove
+   * @param isXpath, true if selector is xpath, false if css selector
+   */
+  removeAttribute(selector, attributeName, isXpath = true) {
+    return this.client
+      .execute(function (selector, attributeName, isXpath) {
+        if(isXpath) document.evaluate(selector,document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.removeAttribute(attributeName);
+        else document.querySelector(selector).removeAttribute(attributeName);
+      }, selector, attributeName, isXpath);
+  }
+
+  /**
+   * Select/unselect all options in link Widget creation test
+   * @param selectorList, selector to click on
+   * @param i, position if the options
+   * @return {Promise<*>}
+   */
+  async selectAllOptionsLinkWidget(selectorList, i = 1) {
+    return this.client
+      .isVisible(selectorList.replace('%POS', i))
+      .then(async (isVisible) => {
+        if (isVisible) {
+          await this.scrollWaitForExistAndClick(selectorList.replace('%POS', i));
+          await this.selectAllOptionsLinkWidget(selectorList, i + 1)
+        }
+      });
   }
 }
 

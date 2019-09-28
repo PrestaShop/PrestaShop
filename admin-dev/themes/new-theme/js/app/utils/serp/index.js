@@ -1,5 +1,5 @@
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,15 +15,16 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 import Vue from 'vue';
-import serp from './serp';
+import serp from './serp.vue';
+
 const $ = window.$;
 
 /**
@@ -33,60 +34,128 @@ const $ = window.$;
  * Set the proper class to link a input to a part of the panel.
  */
 class SerpApp {
-  constructor() {
+  constructor(selectors, url) {
     // If the selector cannot be found, we do not load the Vue app
-    if (0 === $('#serp-app').length) {
+    if ($(selectors.container).length === 0) {
       return;
     }
 
-    this.defaultTitle = $('.serp-default-title:input');
-    this.watchedTitle = $('.serp-watched-title:input');
-    this.defaultDescription = $('.serp-default-description');
-    this.watchedDescription = $('.serp-watched-description');
-    this.defaultUrl = $('.serp-default-url:input');
+    this.originalUrl = url;
+    this.useMultiLang = selectors.multiLanguageInput !== undefined &&
+                        selectors.multiLanguageItem !== undefined;
+
+    if (this.useMultiLang) {
+      this.multiLangInputSelector = selectors.multiLanguageInput;
+      this.attachMultiLangEvents(selectors.multiLanguageItem);
+    }
+
+    this.data = {
+      url,
+      title: '',
+      description: '',
+    };
 
     this.vm = new Vue({
-      el: '#serp-app',
-      template: '<serp ref="serp" />',
+      el: selectors.container,
+      template: '<serp ref="serp" :url="url" :title="title" :description="description" />',
       components: { serp },
+      data: this.data,
     });
 
-    this.attachEvents(this.vm.$refs.serp);
-  }
-    
-  attachEvents(app) {
-    // Specific rules for updating the search result preview
-    const updateSerpTitle = () => {
-      const title1 = this.watchedTitle.length ? this.watchedTitle.val() : '';
-      const title2 = this.defaultTitle.length ? this.defaultTitle.val() : '';
-      app.setTitle(title1 || title2);
-    };
-    const updateSerpUrl = () => {
-      if (this.defaultUrl.length) {
-        app.setUrl(this.defaultUrl.val());
-      }
-    };
-    const updateSerpDescription = () => {
-      const desc1 = this.watchedDescription.length ? $(this.watchedDescription.val()).text() || this.watchedDescription.val() : '';
-      const desc2 = this.defaultDescription.length ? $(this.defaultDescription.val()).text() || this.defaultDescription.val() : '';
-      app.setDescription(desc1 || desc2);
-    };
-    this.watchedTitle.on('keyup change', updateSerpTitle);
-    this.defaultTitle.on('keyup change', updateSerpTitle);
-
-    this.watchedDescription.on('keyup change', updateSerpDescription);
-    this.defaultDescription.on('keyup change', updateSerpDescription);
-
-    updateSerpTitle();
-    updateSerpUrl();
-    updateSerpDescription();
+    this.initializeSelectors(selectors);
+    this.attachInputEvents();
   }
 
-  /**
-   * @returns {boolean}
-   */
-  isActive() {
-    return (undefined !== this.vm);
+  attachMultiLangEvents(itemSelector) {
+    $('body').on(
+      'click',
+      itemSelector,
+      () => {
+        this.checkTitle();
+        this.checkDesc();
+        this.checkUrl();
+      },
+    );
+  }
+
+  initializeSelectors(selectors) {
+    this.defaultTitle = $(selectors.defaultTitle);
+    this.watchedTitle = $(selectors.watchedTitle);
+    this.defaultDescription = $(selectors.defaultDescription);
+    this.watchedDescription = $(selectors.watchedDescription);
+    this.watchedMetaUrl = $(selectors.watchedMetaUrl);
+  }
+
+  attachInputEvents() {
+    $(this.defaultTitle).on('keyup change', () => this.checkTitle());
+    $(this.watchedTitle).on('keyup change', () => this.checkTitle());
+    $(this.defaultDescription).on('keyup change', () => this.checkDesc());
+    $(this.watchedDescription).on('keyup change', () => this.checkDesc());
+    this.watchedMetaUrl.on('keyup change', () => this.checkUrl());
+
+    this.checkTitle();
+    this.checkDesc();
+    this.checkUrl();
+  }
+
+  setTitle(title) {
+    this.data.title = title;
+  }
+
+  setDescription(description) {
+    this.data.description = description;
+  }
+
+  setUrl(rewrite) {
+    this.data.url = this.originalUrl.replace(
+      '{friendy-url}',
+      rewrite,
+    );
+  }
+
+  checkTitle() {
+    let defaultTitle = this.defaultTitle;
+    let watchedTitle = this.watchedTitle;
+
+    if (this.useMultiLang) {
+      watchedTitle = watchedTitle.closest(this.multiLangInputSelector).find('input');
+      defaultTitle = defaultTitle.closest(this.multiLangInputSelector).find('input');
+    }
+
+    const title1 = watchedTitle.length ? watchedTitle.val() : '';
+    const title2 = defaultTitle.length ? defaultTitle.val() : '';
+
+    this.setTitle(title1 === '' ? title2 : title1);
+    // Always check for url if title change
+    this.checkUrl();
+  }
+
+  checkDesc() {
+    let watchedDescription = this.watchedDescription;
+    let defaultDescription = this.defaultDescription;
+
+    if (this.useMultiLang) {
+      watchedDescription = watchedDescription
+        .closest(this.multiLangInputSelector)
+        .find(this.watchedDescription.is('input') ? 'input' : 'textarea');
+      defaultDescription = defaultDescription
+        .closest(this.multiLangInputSelector)
+        .find(this.defaultDescription.is('input') ? 'input' : 'textarea');
+    }
+
+    const desc1 = watchedDescription.length ? watchedDescription.val().innerText || watchedDescription.val() : '';
+    const desc2 = defaultDescription.length ? $(defaultDescription.val()).text() || defaultDescription.val() : '';
+
+    this.setDescription(desc1 === '' ? desc2 : desc1);
+  }
+
+  checkUrl() {
+    let watchedMetaUrl = this.watchedMetaUrl;
+    if (this.useMultiLang) {
+      watchedMetaUrl = watchedMetaUrl.closest(this.multiLangInputSelector).find('input');
+    }
+
+    this.setUrl(watchedMetaUrl.val());
   }
 }
 

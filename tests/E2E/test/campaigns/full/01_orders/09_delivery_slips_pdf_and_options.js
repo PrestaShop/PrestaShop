@@ -1,9 +1,17 @@
+/**
+ * This script is based on scenarios described in this combination of the following tests link
+ * [id="PS-95"][Name="Delivery slips PDF"]
+ * [id="PS-96"][Name="Delivery slips options"]
+ **/
+
 const {Menu} = require('../../../selectors/BO/menu.js');
 const commonOrder = require('../../common_scenarios/order');
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {AccessPageFO} = require('../../../selectors/FO/access_page');
 const {DeliverySlip} = require('../../../selectors/BO/order');
 const {OrderPage} = require('../../../selectors/BO/order');
+const welcomeScenarios = require('../../common_scenarios/welcome');
+
 let promise = Promise.resolve();
 global.orderInformation = [];
 
@@ -20,6 +28,7 @@ scenario('Test1: Delivery slips PDF', () => {
       }, 'common_client');
       scenario('Login in the Back Office ', client => {
         test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
+        welcomeScenarios.findAndCloseWelcomeModal();
         commonOrder.updateStatus("Shipped");
         commonOrder.getDeliveryInformation(i - 1);
       }, 'common_client');
@@ -38,21 +47,33 @@ scenario('Test1: Delivery slips PDF', () => {
         .then(() => client.pause(5000));
     });
     for (let i = 1; i <= 3; i++) {
-      test('should check the Customer name of the ' + i + ' product', () => client.checkDocument(global.downloadsFolderPath, 'deliveries', 'John DOE'));
-      test('should check the "Delivery Address" of the product n°' + i, () => {
-        return promise
-          .then(() => client.checkDocument(global.downloadsFolderPath, 'deliveries', 'My Company'))
-          .then(() => client.checkDocument(global.downloadsFolderPath, 'deliveries', '16, Main street'))
-          .then(() => client.checkDocument(global.downloadsFolderPath, 'deliveries', '75002 Paris'))
-          .then(() => client.checkDocument(global.downloadsFolderPath, 'deliveries', 'France'))
+      test('should check the Customer name of the ' + i + ' product', async () => {
+        await client.checkFile(global.downloadsFolderPath, 'deliveries.pdf');
+        if (global.existingFile) {
+          await client.checkDocument(global.downloadsFolderPath, 'deliveries', 'John DOE');
+        }
       });
-      test('should check the "invoice Date" of the product n°' + i, () => client.checkDocument(global.downloadsFolderPath, 'deliveries', global.orderInformation[i - 1].invoiceDate));
-      test('should check the "Order Reference" of the product n°' + i, () => client.checkDocument(global.downloadsFolderPath, 'deliveries', global.orderInformation[i - 1].OrderRef));
-      test('should check the "Product Reference"of the product n°' + i, () => client.checkDocument(global.downloadsFolderPath, 'deliveries', global.orderInformation[i - 1].ProductRef));
-      test('should check the "Product Combination" of the product n°' + i, () => client.checkDocument(global.downloadsFolderPath, 'deliveries', global.orderInformation[i - 1].ProductCombination));
-      test('should check the "Product Quantity" of the product n°' + i, () => client.checkDocument(global.downloadsFolderPath, 'deliveries', global.orderInformation[i - 1].ProductQuantity));
-      test('should check the "Product Name" of the product n°' + i, () => client.checkDocument(global.downloadsFolderPath, 'deliveries', global.orderInformation[i - 1].ProductName));
-      test('should check the "total Price" of the product n°' + i, () => client.checkDocument(global.downloadsFolderPath, 'deliveries', global.orderInformation[i - 1].ProductTotal));
+      test('should check the "Delivery Address" of the product n°' + i, async () => {
+        await client.checkFile(global.downloadsFolderPath, 'deliveries.pdf');
+        if (global.existingFile) {
+          await client.checkDocument(global.downloadsFolderPath, 'deliveries', 'My Company');
+          await client.checkDocument(global.downloadsFolderPath, 'deliveries', '16, Main street');
+          await client.checkDocument(global.downloadsFolderPath, 'deliveries', '75002 Paris');
+          await client.checkDocument(global.downloadsFolderPath, 'deliveries', 'France');
+        }
+      });
+      test('should check the "Delivery" information of the product n°' + i, async () => {
+        await client.checkFile(global.downloadsFolderPath, 'deliveries.pdf');
+        if (global.existingFile) {
+          await client.checkDocument(global.downloadsFolderPath, 'deliveries', global.orderInformation[i - 1].invoiceDate);
+          await client.checkDocument(global.downloadsFolderPath, 'deliveries', global.orderInformation[i - 1].OrderRef);
+          await client.checkDocument(global.downloadsFolderPath, 'deliveries', global.orderInformation[i - 1].ProductRef);
+          await client.checkDocument(global.downloadsFolderPath, 'deliveries', global.orderInformation[i - 1].ProductCombination);
+          await client.checkDocument(global.downloadsFolderPath, 'deliveries', global.orderInformation[i - 1].ProductQuantity);
+          await client.checkDocument(global.downloadsFolderPath, 'deliveries', global.orderInformation[i - 1].ProductName);
+          await client.checkDocument(global.downloadsFolderPath, 'deliveries', global.orderInformation[i - 1].ProductTotal);
+        }
+      });
     }
   }, 'order');
 }, 'order');
@@ -83,29 +104,40 @@ scenario('Test2: Delivery slips options', () => {
     commonOrder.getDeliveryInformation(0);
     scenario('Check that the option name of the delivery slip is updated successfully', client => {
       test('should click on "DOCUMENTS" tab', () => client.waitForExistAndClick(OrderPage.document_submenu));
-      test('should get the "Delivery slip" Document name', () => client.checkTextValue(OrderPage.delivery_slip_document, 'PR', 'contain'));
-      test('should get the "Delivery slip" Document Number', () => client.checkTextValue(OrderPage.delivery_slip_document, Number(global.tab['delivNumber']) + 1, 'contain'));
+      test('should check the "Delivery slip" Document name', () => client.checkTextValue(OrderPage.delivery_slip_document, 'PR', 'contain'));
+      test('should check the "Delivery slip" Document Number', () => client.checkTextValue(OrderPage.delivery_slip_document, Number(global.tab['delivNumber']) + 1, 'contain'));
       test('should get the invoice name', () => client.getDocumentName(OrderPage.delivery_slip_document));
       test('should generate the "deliveries" pdf file', () => {
         return promise
+          .then(() => {
+            // for headless, we need to remove attribute 'target' to avoid download in a new Tab
+            if(global.headless)  client.removeAttribute(OrderPage.delivery_slip_document,'target');
+          })
           .then(() => client.waitForExistAndClick(OrderPage.delivery_slip_document))
           .then(() => client.pause(5000));
       });
-      test('should check the Customer name of the order', () => client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, 'John DOE'));
-      test('should check the "Delivery Address" of the order ', () => {
-        return promise
-          .then(() => client.checkDocument(global.downloadsFolderPath, 'deliveries', 'My Company'))
-          .then(() => client.checkDocument(global.downloadsFolderPath, 'deliveries', '16, Main street'))
-          .then(() => client.checkDocument(global.downloadsFolderPath, 'deliveries', '75002 Paris'))
-          .then(() => client.checkDocument(global.downloadsFolderPath, 'deliveries', 'France'));
+      test('should check the "Delivery Address" of the order ', async () => {
+        await client.checkFile(global.downloadsFolderPath, global.invoiceFileName + '.pdf');
+        if (global.existingFile) {
+          await client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, 'My Company');
+          await client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, '16, Main street');
+          await client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, '75002 Paris');
+          await client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, 'France');
+        }
       });
-      test('should check the "invoice Date" of the order', () => client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, global.orderInformation[0].invoiceDate));
-      test('should check the "Order Reference" of the order', () => client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, global.orderInformation[0].OrderRef));
-      test('should check the "Product Reference"of the order', () => client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, global.orderInformation[0].ProductRef));
-      test('should check the "Product Combination" of the order', () => client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, global.orderInformation[0].ProductCombination));
-      test('should check the "Product Quantity" of the order', () => client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, global.orderInformation[0].ProductQuantity));
-      test('should check the "Product Name" of the order', () => client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, global.orderInformation[0].ProductName));
-      test('should check the "total Price" of the order', () => client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, global.orderInformation[0].ProductTotal));
+      test('should check the "Invoice" information', async () => {
+        await client.checkFile(global.downloadsFolderPath, global.invoiceFileName + '.pdf');
+        if (global.existingFile) {
+          await client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, 'John DOE');
+          await client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, global.orderInformation[0].invoiceDate)
+          await client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, global.orderInformation[0].OrderRef);
+          await client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, global.orderInformation[0].ProductRef);
+          await client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, global.orderInformation[0].ProductCombination);
+          await client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, global.orderInformation[0].ProductQuantity);
+          await client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, global.orderInformation[0].ProductName);
+          await client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, global.orderInformation[0].ProductTotal);
+        }
+      });
     }, 'order');
   }, 'order');
 
@@ -115,8 +147,18 @@ scenario('Test2: Delivery slips options', () => {
     test('should change the "Delivery Number"', () => client.waitAndSetValue(DeliverySlip.delivery_number, global.tab['delivNumber']));
     test('should Disable the product image', () => client.waitForExistAndClick(DeliverySlip.disable_product_image));
     test('should click on "Save" button', () => client.waitForExistAndClick(DeliverySlip.save_button));
-    test('should delete the "delivery" file', () => client.deleteFile(downloadsFolderPath, "deliveries", ".pdf", 2000));
+    test('should delete the "delivery" file', async () => {
+      await client.checkFile(global.downloadsFolderPath, 'deliveries.pdf');
+      if (global.existingFile) {
+        await client.deleteFile(downloadsFolderPath, "deliveries", ".pdf", 2000);
+      }
+    });
+    test('should delete the "invoice" file', async () => {
+      await client.checkFile(global.downloadsFolderPath, global.invoiceFileName + '.pdf');
+      if (global.existingFile) {
+        await client.deleteFile(downloadsFolderPath, global.invoiceFileName, ".pdf", 2000);
+      }
+    });
   }, 'order');
-
 }, 'order', true);
 

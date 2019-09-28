@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -30,6 +30,8 @@ use Context;
 use Language;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use Shop;
+use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
+use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 // bin/phpunit -c tests/phpunit-admin.xml --group api --stop-on-error --stop-on-failure --verbose --debug
@@ -41,7 +43,7 @@ abstract class ApiTestCase extends WebTestCase
     protected $router;
 
     /**
-     * @var \Symfony\Component\BrowserKit\Client
+     * @var Client
      */
     protected static $client;
 
@@ -98,7 +100,7 @@ abstract class ApiTestCase extends WebTestCase
             ->getMock();
 
         $contextMock = $this->mockContext();
-        $legacyContextMock->method('getContext')->willReturn($contextMock);
+        $legacyContextMock->expects($this->any())->method('getContext')->willReturn($contextMock);
 
         $legacyContextMock->method('getEmployeeLanguageIso')->willReturn(null);
         $legacyContextMock->method('getEmployeeCurrency')->willReturn(null);
@@ -113,7 +115,7 @@ abstract class ApiTestCase extends WebTestCase
      */
     private function mockContext()
     {
-        $contextMock = $this->getMockBuilder('\Context')->getMock();
+        $contextMock = $this->getMockBuilder('Context')->getMock();
 
         $employeeMock = $this->mockEmployee();
         $contextMock->employee = $employeeMock;
@@ -187,6 +189,15 @@ abstract class ApiTestCase extends WebTestCase
         $shopMock->method('getCategory')->willReturn(1);
         $shopMock->method('getContextType')->willReturn(Shop::CONTEXT_SHOP);
         $shopMock->id = 1;
+
+        $themeMock = $this->getMockBuilder(Theme::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getName'])
+            ->getMock()
+        ;
+        $themeMock->method('getName')->willReturn('classic');
+
+        $shopMock->theme = $themeMock;
 
         $shopGroupMock = $this->getMockBuilder('\ShopGroup')->getMock();
 

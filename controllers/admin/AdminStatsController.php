@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -265,7 +265,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
             $sales = array();
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
                 '
-			SELECT LEFT(`invoice_date`, 10) AS date, SUM(total_products / o.conversion_rate) AS sales
+			SELECT LEFT(`invoice_date`, 10) AS date, SUM((total_paid_tax_excl - total_shipping_tax_excl) / o.conversion_rate) AS sales
 			FROM `' . _DB_PREFIX_ . 'orders` o
 			LEFT JOIN `' . _DB_PREFIX_ . 'order_state` os ON o.current_state = os.id_order_state
 			WHERE `invoice_date` BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59" AND os.logable = 1
@@ -281,7 +281,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
             $sales = array();
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
                 '
-			SELECT LEFT(`invoice_date`, 7) AS date, SUM(total_products / o.conversion_rate) AS sales
+			SELECT LEFT(`invoice_date`, 7) AS date, SUM((total_paid_tax_excl - total_shipping_tax_excl) / o.conversion_rate) AS sales
 			FROM `' . _DB_PREFIX_ . 'orders` o
 			LEFT JOIN `' . _DB_PREFIX_ . 'order_state` os ON o.current_state = os.id_order_state
 			WHERE `invoice_date` BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59" AND os.logable = 1
@@ -296,7 +296,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
         } else {
             return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
                 '
-			SELECT SUM(total_products / o.conversion_rate)
+			SELECT SUM((total_paid_tax_excl - total_shipping_tax_excl) / o.conversion_rate)
 			FROM `' . _DB_PREFIX_ . 'orders` o
 			LEFT JOIN `' . _DB_PREFIX_ . 'order_state` os ON o.current_state = os.id_order_state
 			WHERE `invoice_date` BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59" AND os.logable = 1
@@ -377,8 +377,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 		SELECT COUNT(*)
 		FROM `' . _DB_PREFIX_ . 'category` c
 		' . Shop::addSqlAssociation('category', 'c') . '
-		AND c.active = 1
-		AND c.nright = c.nleft + 1'
+		AND c.`id_category` != ' . (int) Configuration::get('PS_ROOT_CATEGORY')
         );
         $used = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
             '
@@ -386,8 +385,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 		FROM `' . _DB_PREFIX_ . 'category` c
 		LEFT JOIN `' . _DB_PREFIX_ . 'category_product` cp ON c.id_category = cp.id_category
 		' . Shop::addSqlAssociation('category', 'c') . '
-		AND c.active = 1
-		AND c.nright = c.nleft + 1'
+		AND c.`id_category` != ' . (int) Configuration::get('PS_ROOT_CATEGORY')
         );
 
         return (int) ($total - $used);
@@ -1034,5 +1032,72 @@ class AdminStatsControllerCore extends AdminStatsTabController
             die(json_encode($array));
         }
         die(json_encode(array('has_errors' => true)));
+    }
+
+    /**
+     * Display graphs on the stats page from module data.
+     */
+    public function displayAjaxGraphDraw()
+    {
+        $module = Tools::getValue('module');
+        $render = Tools::getValue('render');
+        $type = Tools::getValue('type');
+        $option = Tools::getValue('option');
+        $layers = Tools::getValue('layers');
+        $width = Tools::getValue('width');
+        $height = Tools::getValue('height');
+        $id_employee = Tools::getValue('id_employee');
+        $id_lang = Tools::getValue('id_lang');
+
+        $graph = Module::getInstanceByName($module);
+        if (false === $graph) {
+            $this->ajaxRender(Tools::displayError());
+
+            return;
+        }
+
+        $graph->setEmployee($id_employee);
+        $graph->setLang($id_lang);
+        if ($option) {
+            $graph->setOption($option, $layers);
+        }
+
+        $graph->create($render, $type, $width, $height, $layers);
+        $graph->draw();
+    }
+
+    /**
+     * Display grid with module data on the stats page.
+     */
+    public function displayAjaxGraphGrid()
+    {
+        $module = Tools::getValue('module');
+        $render = Tools::getValue('render');
+        $type = Tools::getValue('type');
+        $option = Tools::getValue('option');
+        $width = (int) (Tools::getValue('width', 600));
+        $height = (int) (Tools::getValue('height', 920));
+        $start = (int) (Tools::getValue('start', 0));
+        $limit = (int) (Tools::getValue('limit', 40));
+        $sort = Tools::getValue('sort', 0); // Should be a String. Default value is an Integer because we don't know what can be the name of the column to sort.
+        $dir = Tools::getValue('dir', 0); // Should be a String : Either ASC or DESC
+        $id_employee = (int) (Tools::getValue('id_employee'));
+        $id_lang = (int) (Tools::getValue('id_lang'));
+
+        $grid = Module::getInstanceByName($module);
+        if (false === $grid) {
+            $this->ajaxRender(Tools::displayError());
+
+            return;
+        }
+
+        $grid->setEmployee($id_employee);
+        $grid->setLang($id_lang);
+        if ($option) {
+            $grid->setOption($option);
+        }
+
+        $grid->create($render, $type, $width, $height, $start, $limit, $sort, $dir);
+        $grid->render();
     }
 }

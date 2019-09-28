@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,20 +16,19 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Cache;
 
-use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
-use Tools;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 
 class LocalizationWarmer implements CacheWarmerInterface
 {
@@ -59,19 +58,13 @@ class LocalizationWarmer implements CacheWarmerInterface
         if (is_file($path_cache_file)) {
             $localization_file_content = file_get_contents($path_cache_file);
         } else {
-            $localization_file_content = @Tools::file_get_contents('http://api.prestashop.com/localization/' . $this->version . '/' . $this->country . '.xml');
-            if (!@simplexml_load_string($localization_file_content)) {
-                $localization_file_content = false;
-            }
-            if (!$localization_file_content) {
-                $localization_file = _PS_ROOT_DIR_ . '/localization/default.xml';
+            $localization_file = _PS_ROOT_DIR_ . '/localization/default.xml';
 
-                if (file_exists(_PS_ROOT_DIR_ . '/localization/' . $this->country . '.xml')) {
-                    $localization_file = _PS_ROOT_DIR_ . '/localization/' . $this->country . '.xml';
-                }
-
-                $localization_file_content = file_get_contents($localization_file);
+            if (file_exists(_PS_ROOT_DIR_ . '/localization/' . $this->country . '.xml')) {
+                $localization_file = _PS_ROOT_DIR_ . '/localization/' . $this->country . '.xml';
             }
+
+            $localization_file_content = file_get_contents($localization_file);
 
             try {
                 $fs->dumpFile($path_cache_file, $localization_file_content);

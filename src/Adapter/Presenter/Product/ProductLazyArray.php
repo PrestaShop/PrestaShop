@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -192,7 +192,7 @@ class ProductLazyArray extends AbstractLazyArray
     /**
      * @arrayAccess
      *
-     * @return null|string
+     * @return string|null
      */
     public function getAddToCartUrl()
     {
@@ -250,7 +250,7 @@ class ProductLazyArray extends AbstractLazyArray
     /**
      * @arrayAccess
      *
-     * @return null|string
+     * @return string|null
      */
     public function getDeliveryInformation()
     {
@@ -284,7 +284,7 @@ class ProductLazyArray extends AbstractLazyArray
     /**
      * @arrayAccess
      *
-     * @return null|string
+     * @return string|null
      */
     public function getFileSizeFormatted()
     {
@@ -445,14 +445,23 @@ class ProductLazyArray extends AbstractLazyArray
             );
         }
 
-        if ($show_price
-            && $this->product['reduction']
-            && !$this->settings->catalog_mode
-            && !$this->product['on_sale']) {
-            $flags['discount'] = array(
-                'type' => 'discount',
-                'label' => $this->translator->trans('Reduced price', array(), 'Shop.Theme.Catalog'),
-            );
+        if ($show_price && $this->product['reduction']) {
+            if ($this->product['discount_type'] === 'percentage') {
+                $flags['discount'] = array(
+                    'type' => 'discount',
+                    'label' => $this->product['discount_percentage'],
+                );
+            } elseif ($this->product['discount_type'] === 'amount') {
+                $flags['discount'] = array(
+                    'type' => 'discount',
+                    'label' => $this->product['discount_amount_to_display'],
+                );
+            } else {
+                $flags['discount'] = array(
+                    'type' => 'discount',
+                    'label' => $this->translator->trans('Reduced price', array(), 'Shop.Theme.Catalog'),
+                );
+            }
         }
 
         if ($this->product['new']) {
@@ -556,7 +565,7 @@ class ProductLazyArray extends AbstractLazyArray
         ProductPresentationSettings $settings,
         array $product
     ) {
-        return $settings->showPrices && (bool) $product['show_price'];
+        return $settings->shouldShowPrice() && (bool) $product['show_price'];
     }
 
     /**
@@ -734,7 +743,7 @@ class ProductLazyArray extends AbstractLazyArray
             $ean13,
             $language->id,
             null,
-            $canonical ? null : $product['id_product_attribute'],
+            !$canonical && $product['id_product_attribute'] > 0 ? $product['id_product_attribute'] : null,
             false,
             false,
             true
@@ -843,119 +852,110 @@ class ProductLazyArray extends AbstractLazyArray
     protected function getProductAttributeWhitelist()
     {
         return array(
-            'id_shop_default',
-            'id_manufacturer',
-            'id_supplier',
-            'reference',
-            'is_virtual',
-            'id_category_default',
-            'id_product_attribute',
-            'id_product',
-            'id_customization',
-            'price',
-            'pack_stock_type',
-            'meta_description',
-            'meta_keywords',
-            'meta_title',
-            'link_rewrite',
-            'name',
-            'description',
-            'description_short',
-            'on_sale',
-            'online_only',
-            'ecotax',
-            'minimal_quantity',
-            'low_stock_threshold',
-            'low_stock_alert',
-            'price',
-            'unity',
-            'unit_price_ratio',
-            'additional_shipping_cost',
-            'customizable',
-            'text_fields',
-            'uploadable_files',
-            'redirect_type',
-            'id_type_redirected',
-            'available_for_order',
-            'available_date',
-            'show_condition',
-            'condition',
-            'show_price',
-            'indexed',
-            'visibility',
-            'cache_default_attribute',
-            'advanced_stock_management',
-            'date_add',
-            'date_upd',
-            'pack_stock_type',
-            'meta_description',
-            'meta_keywords',
-            'meta_title',
-            'link_rewrite',
-            'name',
-            'description',
-            'description_short',
-            'available_now',
-            'available_later',
-            'id',
-            'out_of_stock',
-            'new',
-            'quantity_wanted',
-            'extraContent',
-            'allow_oosp',
-            'category',
-            'category_name',
-            'link',
-            'attribute_price',
-            'price_tax_exc',
-            'price_without_reduction',
-            'reduction',
-            'specific_prices',
-            'quantity',
-            'quantity_all_versions',
-            'id_image',
-            'features',
-            'attachments',
-            'virtual',
-            'pack',
-            'packItems',
-            'nopackprice',
-            'customization_required',
-            'attributes',
-            'rate',
-            'tax_name',
-            'ecotax_rate',
-            'unit_price',
-            'customizations',
-            'is_customizable',
-            'show_quantities',
-            'quantity_label',
-            'quantity_discounts',
-            'customer_group_discount',
-            'weight_unit',
-            'images',
-            'cover',
-            'url',
-            'canonical_url',
-            'has_discount',
-            'discount_type',
-            'discount_percentage',
-            'discount_percentage_absolute',
-            'discount_amount',
-            'discount_amount_to_display',
-            'price_amount',
-            'unit_price_full',
             'add_to_cart_url',
-            'main_variants',
-            'flags',
-            'labels',
-            'show_availability',
+            'additional_shipping_cost',
+            'advanced_stock_management',
+            'allow_oosp',
+            'attachments',
+            'attribute_price',
+            'attributes',
+            'availability',
             'availability_date',
             'availability_message',
-            'availability',
-            'reference_to_display',
+            'available_date',
+            'available_for_order',
+            'available_later',
+            'available_now',
+            'cache_default_attribute',
+            'canonical_url',
+            'category',
+            'category_name',
+            'condition',
+            'cover',
+            'customer_group_discount',
+            'customizable',
+            'customization_required',
+            'customizations',
+            'date_add',
+            'date_upd',
             'delivery_in_stock',
             'delivery_out_stock',
+            'description',
+            'description_short',
+            'discount_amount',
+            'discount_amount_to_display',
+            'discount_percentage',
+            'discount_percentage_absolute',
+            'discount_type',
+            'ecotax',
+            'ecotax_rate',
+            'extraContent',
+            'features',
+            'flags',
+            'has_discount',
+            'id',
+            'id_category_default',
+            'id_customization',
+            'id_image',
+            'id_manufacturer',
+            'id_product',
+            'id_product_attribute',
+            'id_shop_default',
+            'id_supplier',
+            'id_type_redirected',
+            'images',
+            'indexed',
+            'is_customizable',
+            'is_virtual',
+            'labels',
+            'link',
+            'link_rewrite',
+            'low_stock_alert',
+            'low_stock_threshold',
+            'main_variants',
+            'meta_description',
+            'meta_keywords',
+            'meta_title',
+            'minimal_quantity',
+            'name',
+            'new',
+            'nopackprice',
+            'on_sale',
+            'online_only',
+            'out_of_stock',
+            'pack',
+            'pack_stock_type',
+            'packItems',
+            'price',
+            'price_amount',
+            'price_tax_exc',
+            'price_without_reduction',
+            'quantity',
+            'quantity_all_versions',
+            'quantity_discounts',
+            'quantity_label',
+            'quantity_wanted',
+            'rate',
+            'redirect_type',
+            'reduction',
+            'reference',
+            'reference_to_display',
+            'show_availability',
+            'show_condition',
+            'show_price',
+            'show_quantities',
+            'specific_prices',
+            'tax_name',
+            'text_fields',
+            'unit_price',
+            'unit_price_full',
+            'unit_price_ratio',
+            'unity',
+            'uploadable_files',
+            'url',
+            'virtual',
+            'visibility',
+            'weight_unit',
         );
     }
 

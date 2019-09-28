@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Number\Formatter as NumberFormatter;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecification;
 use PrestaShop\PrestaShop\Core\Localization\Specification\NumberCollection as PriceSpecificationMap;
+use PrestaShop\PrestaShop\Core\Localization\Specification\Price as PriceSpecification;
 
 /**
  * Locale entity.
@@ -149,17 +150,39 @@ class Locale implements LocaleInterface
      */
     public function formatPrice($number, $currencyCode)
     {
+        return $this->numberFormatter->format(
+            $number,
+            $this->getPriceSpecification($currencyCode)
+        );
+    }
+
+    /**
+     * Get price specification
+     *
+     * @param string $currencyCode Currency of the price
+     *
+     * @return PriceSpecification
+     */
+    public function getPriceSpecification($currencyCode)
+    {
         $currencyCode = (string) $currencyCode;
         $priceSpec = $this->priceSpecifications->get($currencyCode);
         if (null === $priceSpec) {
             throw new LocalizationException(
-                'Price specification not found for currency "' . $currencyCode . '"'
+                'Price specification not found for currency: "' . $currencyCode . '"'
             );
         }
 
-        return $this->numberFormatter->format(
-            $number,
-            $priceSpec
-        );
+        return $priceSpec;
+    }
+
+    /**
+     * Get number specification
+     *
+     * @return NumberSpecification
+     */
+    public function getNumberSpecification()
+    {
+        return $this->numberSpecification;
     }
 }

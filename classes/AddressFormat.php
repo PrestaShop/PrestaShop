@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -29,6 +29,8 @@
  */
 class AddressFormatCore extends ObjectModel
 {
+    const FORMAT_NEW_LINE = "\n";
+
     /** @var int $id_address_format Address format */
     public $id_address_format;
 
@@ -217,7 +219,7 @@ class AddressFormatCore extends ObjectModel
         $fieldsValidate = Address::getFieldsValidate();
         $usedKeyList = array();
 
-        $multipleLineFields = explode("\n", $this->format);
+        $multipleLineFields = explode(self::FORMAT_NEW_LINE, $this->format);
         if ($multipleLineFields && is_array($multipleLineFields)) {
             foreach ($multipleLineFields as $lineField) {
                 if (($patternsName = preg_split(self::_CLEANING_REGEX_, $lineField, -1, PREG_SPLIT_NO_EMPTY))) {
@@ -388,7 +390,7 @@ class AddressFormatCore extends ObjectModel
      *
      * @return string
      */
-    public static function generateAddress(Address $address, $patternRules = array(), $newLine = "\r\n", $separator = ' ', $style = array())
+    public static function generateAddress(Address $address, $patternRules = array(), $newLine = self::FORMAT_NEW_LINE, $separator = ' ', $style = array())
     {
         $addressFields = AddressFormat::getOrderedAddressFields($address->id_country);
         $addressFormatedValues = AddressFormat::getFormattedAddressFieldsValues($address, $addressFields);
@@ -430,7 +432,7 @@ class AddressFormatCore extends ObjectModel
         return AddressFormat::generateAddress(
             $params['address'],
             (isset($params['patternRules']) ? $params['patternRules'] : array()),
-            (isset($params['newLine']) ? $params['newLine'] : "\r\n"),
+            (isset($params['newLine']) ? $params['newLine'] : self::FORMAT_NEW_LINE),
             (isset($params['separator']) ? $params['separator'] : ' '),
             (isset($params['style']) ? $params['style'] : array())
         );
@@ -515,7 +517,7 @@ class AddressFormatCore extends ObjectModel
     public static function getOrderedAddressFields($idCountry = 0, $splitAll = false, $cleaned = false)
     {
         $out = array();
-        $fieldSet = explode("\n", AddressFormat::getAddressCountryFormat($idCountry));
+        $fieldSet = explode(AddressFormat::FORMAT_NEW_LINE, AddressFormat::getAddressCountryFormat($idCountry));
         foreach ($fieldSet as $fieldItem) {
             if ($splitAll) {
                 if ($cleaned) {
@@ -590,6 +592,9 @@ class AddressFormatCore extends ObjectModel
         if (empty($out)) {
             $out = $this->getFormatDB(Configuration::get('PS_COUNTRY_DEFAULT'));
         }
+        if (Country::isNeedDniByCountryId($idCountry) && false === strpos($out, 'dni')) {
+            $out .= AddressFormat::FORMAT_NEW_LINE . 'dni';
+        }
 
         return $out;
     }
@@ -597,7 +602,7 @@ class AddressFormatCore extends ObjectModel
     /**
      * @param int $idCountry
      *
-     * @return false|null|string
+     * @return false|string|null
      *
      * @deprecated 1.7.0
      */
@@ -611,7 +616,7 @@ class AddressFormatCore extends ObjectModel
      *
      * @param int $idCountry Country ID
      *
-     * @return false|null|string Address format
+     * @return false|string|null Address format
      *
      * @since 1.7.0
      */

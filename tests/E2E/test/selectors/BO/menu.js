@@ -44,10 +44,10 @@ module.exports = {
     Improve: {
       Modules: {
         modules_menu: '//*[@id="subtab-AdminParentModulesSf"]/a',
-        modules_manager_submenu: '#subtab-AdminModulesSf',
+        modules_manager_submenu: '#subtab-AdminModulesSf > a',
         modules_catalog_submenu: '#subtab-AdminParentModulesCatalog > a',
         installed_modules_tabs: '//*[@id="subtab-AdminModulesManage"]',
-        catalog_tab: '//*[@id="subtab-AdminModulesCatalog"]',
+        catalog_tab: '//*[@id="subtab-AdminModulesCatalog"] | //*[@id="subtab-AdminPsMboModule"]',
         modules_selections_submenu: '#subtab-AdminAddonsCatalog',
         selection_tab: '#subtab-AdminAddonsCatalog',
         alerts_subTab: '//*[@id="subtab-AdminModulesNotifications"]',
@@ -56,7 +56,7 @@ module.exports = {
       Design: {
         design_menu: '//*[@id="subtab-AdminParentThemes"]/a',
         theme_logo_submenu: '#subtab-AdminThemesParent',
-        theme_catalog_submenu: '#subtab-AdminPsMboTheme',
+        theme_catalog_submenu: '#subtab-AdminPsMboTheme , #subtab-AdminThemesCatalog',
         pages_submenu: '#subtab-AdminCmsContent',
         positions_submenu: '#subtab-AdminModulesPositions',
         image_settings_submenu: '#subtab-AdminImages',
@@ -79,6 +79,7 @@ module.exports = {
         localization_submenu: '#subtab-AdminParentLocalization',
         languages_tab: '//*[@id="subtab-AdminLanguages"]',
         currencies_tab: '//*[@id="subtab-AdminCurrencies"]',
+        active_currencies_tab: '//*[@id="subtab-AdminCurrencies" and contains(@class,"active")]',
         geolocation_tab: '//*[@id="subtab-AdminGeolocation"]',
         locations_submenu: '#subtab-AdminParentCountries',
         countries_tab: '//*[@id="subtab-AdminCountries"]',

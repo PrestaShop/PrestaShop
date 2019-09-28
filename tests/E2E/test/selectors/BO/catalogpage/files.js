@@ -19,6 +19,11 @@ module.exports = {
     files_number: '//*[@id="form-attachment"]//span[@class="badge"]',
     files_table: '//*[@id="table-attachment"]/tbody/tr[%R]/td[%D]',
     sort_by_icon: '//*[@id="table-attachment"]/thead/tr[1]/th[%H]//i[contains(@class, "%BY")]',
-    empty_list: '//*[@id="table-attachment"]/tbody//td[@class="list-empty"]'
+    empty_list: '//*[@id="table-attachment"]/tbody//td[@class="list-empty"]',
+    bulk_actions_unselect_all_button: '//*[@id="form-attachment"]//div[contains(@class,"bulk-actions")]//ul[@class="dropdown-menu"]//a[contains(@onclick, "false)")]',
+    files_name: '//*[@id="table-attachment"]/tbody/tr[%ID]/td[3]',
+    files_id: '//*[@id="table-attachment"]/tbody/tr[%ID]/td[2]',
+    files_size: '//*[@id="table-attachment"]/tbody/tr[%ID]/td[5]',
+    files_associated: '//*[@id="table-attachment"]/tbody/tr[%ID]/td[6]'
   }
 };

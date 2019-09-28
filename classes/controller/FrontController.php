@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -503,7 +503,14 @@ class FrontControllerCore extends Controller
             'token' => Tools::getToken(),
         );
 
-        $modulesVariables = Hook::exec('actionFrontControllerSetVariables', [], null, true);
+        $modulesVariables = Hook::exec(
+            'actionFrontControllerSetVariables',
+            [
+                'templateVars' => &$templateVars,
+            ],
+            null,
+            true
+        );
 
         if (is_array($modulesVariables)) {
             foreach ($modulesVariables as $moduleName => $variables) {
@@ -675,12 +682,14 @@ class FrontControllerCore extends Controller
 
         $html = '';
 
+        $theme = $this->context->shop->theme->getName();
+
         if (is_array($content)) {
             foreach ($content as $tpl) {
-                $html .= $this->context->smarty->fetch($tpl, null, $this->getLayout());
+                $html .= $this->context->smarty->fetch($tpl, null, $theme . $this->getLayout());
             }
         } else {
-            $html = $this->context->smarty->fetch($content, null, $this->getLayout());
+            $html = $this->context->smarty->fetch($content, null, $theme . $this->getLayout());
         }
 
         Hook::exec('actionOutputHTMLBefore', array('html' => &$html));
@@ -935,8 +944,6 @@ class FrontControllerCore extends Controller
      */
     public function initHeader()
     {
-        /* @see P3P Policies (https://www.w3.org/TR/P3P/) */
-        header('P3P: CP="IDC DSP COR CURa ADMa OUR IND PHY ONL COM STA"');
     }
 
     /**
@@ -1381,7 +1388,7 @@ class FrontControllerCore extends Controller
             $params['id'] = null;
         }
 
-        if (is_null($locale)) {
+        if (null === $locale) {
             $locale = $this->context->language->locale;
         }
 
@@ -1528,6 +1535,8 @@ class FrontControllerCore extends Controller
 
         return array(
             'display_taxes_label' => $this->getDisplayTaxesLabel(),
+            'display_prices_tax_incl' => (bool) (new TaxConfiguration())->includeTaxes(),
+            'taxes_enabled' => (bool) Configuration::get('PS_TAX'),
             'low_quantity_threshold' => (int) Configuration::get('PS_LAST_QTIES'),
             'is_b2b' => (bool) Configuration::get('PS_B2B_ENABLE'),
             'is_catalog' => (bool) Configuration::isCatalogMode(),

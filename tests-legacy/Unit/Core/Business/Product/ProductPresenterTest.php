@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -47,6 +47,7 @@ class PriceFormatter extends BasePricePresenter
 
 class ProductPresenterTest extends UnitTestCase
 {
+    /** @var ProductPresentationSettings */
     private $settings;
     private $product;
     private $language;
@@ -126,10 +127,24 @@ class ProductPresenterTest extends UnitTestCase
         return $this->_presentProduct('PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingPresenter', $field);
     }
 
-    public function testPriceShouldBeShownInCatalogMode()
+    public function testPriceShouldNotBeShownInCatalogMode()
     {
         $this->settings->catalog_mode = true;
+        $this->assertFalse($this->getPresentedProduct('show_price'));
+    }
+
+    public function testPriceShouldBeShownInCatalogModeWithPrices()
+    {
+        $this->settings->catalog_mode = true;
+        $this->settings->catalog_mode_with_prices = true;
         $this->assertTrue($this->getPresentedProduct('show_price'));
+    }
+
+    public function testPriceShouldNotBeShownInCatalogModeWithoutPrices()
+    {
+        $this->settings->catalog_mode = true;
+        $this->settings->catalog_mode_with_prices = false;
+        $this->assertFalse($this->getPresentedProduct('show_price'));
     }
 
     public function testPriceShouldShownInRestrictedCountryMode()
@@ -265,15 +280,21 @@ class ProductPresenterTest extends UnitTestCase
         );
     }
 
-    public function testProductHasOnlyOnSaleFlagIfItHasADiscountAndIsOnSale()
+    public function testProductHasBothOnSaleFlagAndDiscountFlagIfItHasADiscountAndIsOnSale()
     {
         $this->product['reduction'] = true;
         $this->product['on_sale'] = true;
         $this->assertEquals(
-            ['on-sale' => [
-                'type'  => 'on-sale',
-                'label' => 'some label',
-            ]],
+            [
+                'on-sale' => [
+                    'type'  => 'on-sale',
+                    'label' => 'some label',
+                ],
+                'discount' => [
+                    'type'  => 'discount',
+                    'label' => 'some label',
+                ]
+            ],
             $this->getPresentedProduct('flags')
         );
     }

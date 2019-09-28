@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -56,14 +56,18 @@ class GetFileControllerCore extends FrontController
             }
 
             Tools::setCookieLanguage();
-            if (!$this->context->customer->isLogged() && !Tools::getValue('secure_key') && !Tools::getValue('id_order')) {
-                Tools::redirect('index.php?controller=authentication&back=get-file.php&key=' . $key);
-            } elseif (!$this->context->customer->isLogged() && Tools::getValue('secure_key') && Tools::getValue('id_order')) {
-                $order = new Order((int) Tools::getValue('id_order'));
-                if (!Validate::isLoadedObject($order)) {
-                    $this->displayCustomError('Invalid key.');
-                }
-                if ($order->secure_key != Tools::getValue('secure_key')) {
+            if (!$this->context->customer->isLogged()) {
+                if (!Tools::getValue('secure_key') && !Tools::getValue('id_order')) {
+                    Tools::redirect('index.php?controller=authentication&back=get-file.php%26key=' . $key);
+                } elseif (Tools::getValue('secure_key') && Tools::getValue('id_order')) {
+                    $order = new Order((int) Tools::getValue('id_order'));
+                    if (!Validate::isLoadedObject($order)) {
+                        $this->displayCustomError('Invalid key.');
+                    }
+                    if ($order->secure_key != Tools::getValue('secure_key')) {
+                        $this->displayCustomError('Invalid key.');
+                    }
+                } else {
                     $this->displayCustomError('Invalid key.');
                 }
             }
@@ -86,6 +90,13 @@ class GetFileControllerCore extends FrontController
             $state = $order->getCurrentOrderState();
             if (!$state || !$state->paid) {
                 $this->displayCustomError('This order has not been paid.');
+            }
+
+            // Check whether the order was made by the current user
+            // If the order was made by a guest, skip this step
+            $customer = new Customer((int) $order->id_customer);
+            if (!$customer->is_guest && $order->secure_key !== $this->context->customer->secure_key) {
+                Tools::redirect('index.php?controller=authentication&back=get-file.php%26key=' . $key);
             }
 
             /* Product no more present in catalog */

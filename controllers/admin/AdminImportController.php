@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -655,11 +655,15 @@ class AdminImportControllerCore extends AdminController
             }
         }
 
-        // Import form is reworked in Symfony.
-        // If user tries to access legacy form directly,
-        // we redirect him to new form.
-        $symfonyImportForm = $this->context->link->getAdminLink('AdminImport');
-        Tools::redirectAdmin($symfonyImportForm);
+        $request = $this->getSymfonyRequest();
+
+        if ($request && $request->isMethod(\Symfony\Component\HttpFoundation\Request::METHOD_GET)) {
+            // Import form is reworked in Symfony.
+            // If user tries to access legacy form directly,
+            // we redirect him to new form.
+            $symfonyImportForm = $this->context->link->getAdminLink('AdminImport');
+            Tools::redirectAdmin($symfonyImportForm);
+        }
 
         if (!is_dir(AdminImportController::getPath())) {
             return !($this->errors[] = $this->trans('The import directory doesn\'t exist. Please check your file path.', array(), 'Admin.Advparameters.Notification'));
@@ -688,8 +692,8 @@ class AdminImportControllerCore extends AdminController
         $this->addJqueryPlugin(array('fancybox'));
 
         $entity_selected = 0;
-        if (isset($this->entities[$this->l(Tools::ucfirst(Tools::getValue('import_type')))])) {
-            $entity_selected = $this->entities[$this->l(Tools::ucfirst(Tools::getValue('import_type')))];
+        if (isset($this->entities[$this->trans(Tools::ucfirst(Tools::getValue('import_type')))])) {
+            $entity_selected = $this->entities[$this->trans(Tools::ucfirst(Tools::getValue('import_type')))];
             $this->context->cookie->entity_selected = (int) $entity_selected;
         } elseif (isset($this->context->cookie->entity_selected)) {
             $entity_selected = (int) $this->context->cookie->entity_selected;
@@ -974,7 +978,7 @@ class AdminImportControllerCore extends AdminController
         }
 
         $separator = Tools::getValue('multiple_value_separator');
-        if (is_null($separator) || trim($separator) == '') {
+        if (null === $separator || trim($separator) == '') {
             $separator = ',';
         }
 
@@ -1340,17 +1344,20 @@ class AdminImportControllerCore extends AdminController
             }
 
             $info = AdminImportController::getMaskedRow($line);
-
-            $this->categoryImportOne(
-                $info,
-                $default_language_id,
-                $id_lang,
-                $force_ids,
-                $regenerate,
-                $shop_is_feature_active,
-                $cat_moved, // by ref
-                $validateOnly
-            );
+            try {
+                $this->categoryImportOne(
+                    $info,
+                    $default_language_id,
+                    $id_lang,
+                    $force_ids,
+                    $regenerate,
+                    $shop_is_feature_active,
+                    $cat_moved, // by ref
+                    $validateOnly
+                );
+            } catch (Exception $exc) {
+                $this->errors[] = $exc->getMessage();
+            }
         }
 
         $this->closeCsvFile($handle);
@@ -1390,7 +1397,9 @@ class AdminImportControllerCore extends AdminController
             if ($validateOnly && ($category->parent == $category->id) || (isset($info['id']) && $category->parent == (int) $info['id'])) {
                 $this->errors[] = $this->trans(
                     'The category ID must be unique. It can\'t be the same as the one for the parent category (ID: %1$s).',
-                    array((isset($info['id']) && !empty($info['id'])) ? $info['id'] : 'null'),
+                    [
+                        !empty($info['id']) ? Tools::htmlentitiesUTF8($info['id']) : 'null',
+                    ],
                     'Admin.Advparameters.Notification'
                 );
 
@@ -1405,7 +1414,7 @@ class AdminImportControllerCore extends AdminController
             if ($validateOnly && isset($category->name) && ($category->parent == $category->name)) {
                 $this->errors[] = $this->trans(
                     'A category can\'t be its own parent. You should rename it (current name: %1$s).',
-                    array($category->parent),
+                    [Tools::htmlentitiesUTF8($category->parent)],
                     'Admin.Advparameters.Notification'
                 );
 
@@ -1430,9 +1439,14 @@ class AdminImportControllerCore extends AdminController
                     $category->id_parent = $category_to_create->id;
                 } else {
                     if (!$validateOnly) {
-                        $this->errors[] = $this->trans('%category_name% (ID: %id%) cannot be saved', array(
-                            '%category_name%' => $category_to_create->name[$id_lang],
-                            '%id%' => (isset($category_to_create->id) && !empty($category_to_create->id)) ? $category_to_create->id : 'null', ), 'Admin.Advparameters.Notification');
+                        $this->errors[] = $this->trans(
+                            '%category_name% (ID: %id%) cannot be saved',
+                            array(
+                                '%category_name%' => Tools::htmlentitiesUTF8($category_to_create->name[$id_lang]),
+                                '%id%' => !empty($category_to_create->id) ? Tools::htmlentitiesUTF8($category_to_create->id) : 'null',
+                            ),
+                            'Admin.Advparameters.Notification'
+                        );
                     }
                     if ($field_error !== true || isset($lang_field_error) && $lang_field_error !== true) {
                         $this->errors[] = ($field_error !== true ? $field_error : '') . (isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '') .
@@ -1458,17 +1472,27 @@ class AdminImportControllerCore extends AdminController
             $category->link_rewrite = Tools::link_rewrite($category->name[$default_language_id]);
             if ($category->link_rewrite == '') {
                 $category->link_rewrite = 'friendly-url-autogeneration-failed';
-                $this->warnings[] = $this->trans('URL rewriting failed to auto-generate a friendly URL for: %category_name%', array('%category_name%' => $category->name[$default_language_id]), 'Admin.Advparameters.Notification');
+                $this->warnings[] = $this->trans(
+                    'URL rewriting failed to auto-generate a friendly URL for: %category_name%',
+                    array(
+                        '%category_name%' => Tools::htmlentitiesUTF8($category->name[$default_language_id]),
+                    ),
+                    'Admin.Advparameters.Notification'
+                );
             }
             $category->link_rewrite = AdminImportController::createMultiLangField($category->link_rewrite);
         }
 
         if (!$valid_link) {
-            $this->informations[] = $this->trans('Rewrite link for %1$s (ID %2$s): re-written as %3$s.', array(
-                '%1$s' => $bak,
-                '%2$s' => (isset($info['id']) && !empty($info['id'])) ? $info['id'] : 'null',
-                '%3$s' => $category->link_rewrite[$default_language_id],
-            ), 'Admin.Advparameters.Notification');
+            $this->informations[] = $this->trans(
+                'Rewrite link for %1$s (ID %2$s): re-written as %3$s.',
+                array(
+                    '%1$s' => Tools::htmlentitiesUTF8($bak),
+                    '%2$s' => !empty($info['id']) ? Tools::htmlentitiesUTF8($info['id']) : 'null',
+                    '%3$s' => Tools::htmlentitiesUTF8($category->link_rewrite[$default_language_id]),
+                ),
+                'Admin.Advparameters.Notification'
+            );
         }
         $res = false;
         if (($field_error = $category->validateFields(UNFRIENDLY_ERROR, true)) === true &&
@@ -1490,8 +1514,12 @@ class AdminImportControllerCore extends AdminController
 
             if ($category->id && $category->id == $category->id_parent) {
                 $this->errors[] = sprintf(
-                    $this->trans('A category cannot be its own parent. The parent category ID is either missing or unknown (ID: %1$s).', array(), 'Admin.Advparameters.Notification'),
-                    (isset($info['id']) && !empty($info['id'])) ? $info['id'] : 'null'
+                    $this->trans(
+                        'A category cannot be its own parent. The parent category ID is either missing or unknown (ID: %1$s).',
+                        array(),
+                        'Admin.Advparameters.Notification'
+                    ),
+                    !empty($info['id']) ? Tools::htmlentitiesUTF8($info['id']) : 'null'
                 );
 
                 return;
@@ -1536,11 +1564,11 @@ class AdminImportControllerCore extends AdminController
         if (!$res) {
             $this->errors[] = $this->trans(
                 '%1$s (ID: %2$s) cannot be %3$s',
-                array(
-                    (isset($info['name']) && !empty($info['name'])) ? Tools::safeOutput($info['name']) : 'No Name',
-                    (isset($info['id']) && !empty($info['id'])) ? Tools::safeOutput($info['id']) : 'No ID',
+                [
+                    !empty($info['name']) ? Tools::safeOutput($info['name']) : 'No Name',
+                    !empty($info['id']) ? Tools::safeOutput($info['id']) : 'No ID',
                     ($validateOnly ? 'validated' : 'saved'),
-                ),
+                ],
                 'Admin.Advparameters.Notification'
             );
             $error_tmp = ($field_error !== true ? $field_error : '') . (isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '') . Db::getInstance()->getMsgError();
@@ -1795,8 +1823,8 @@ class AdminImportControllerCore extends AdminController
                     if (!$validateOnly) {
                         $this->errors[] = sprintf(
                             $this->trans('%1$s (ID: %2$s) cannot be saved', array(), 'Admin.Advparameters.Notification'),
-                            $manufacturer->name,
-                            (isset($manufacturer->id) && !empty($manufacturer->id)) ? $manufacturer->id : 'null'
+                            Tools::htmlentitiesUTF8($manufacturer->name),
+                            !empty($manufacturer->id) ? $manufacturer->id : 'null'
                         );
                     }
                     if ($field_error !== true || isset($lang_field_error) && $lang_field_error !== true) {
@@ -1827,8 +1855,8 @@ class AdminImportControllerCore extends AdminController
                     if (!$validateOnly) {
                         $this->errors[] = sprintf(
                             $this->trans('%1$s (ID: %2$s) cannot be saved', array(), 'Admin.Advparameters.Notification'),
-                            $supplier->name,
-                            (isset($supplier->id) && !empty($supplier->id)) ? $supplier->id : 'null'
+                            Tools::htmlentitiesUTF8($supplier->name),
+                            !empty($supplier->id) ? Tools::htmlentitiesUTF8($supplier->id) : 'null'
                         );
                     }
                     if ($field_error !== true || isset($lang_field_error) && $lang_field_error !== true) {
@@ -1878,8 +1906,8 @@ class AdminImportControllerCore extends AdminController
                             if (!$validateOnly) {
                                 $this->errors[] = sprintf(
                                     $this->trans('%1$s (ID: %2$s) cannot be saved', array(), 'Admin.Advparameters.Notification'),
-                                    $category_to_create->name[$default_language_id],
-                                    (isset($category_to_create->id) && !empty($category_to_create->id)) ? $category_to_create->id : 'null'
+                                    Tools::htmlentitiesUTF8($category_to_create->name[$default_language_id]),
+                                    !empty($category_to_create->id) ? Tools::htmlentitiesUTF8($category_to_create->id) : 'null'
                                 );
                             }
                             if ($field_error !== true || isset($lang_field_error) && $lang_field_error !== true) {
@@ -1896,7 +1924,7 @@ class AdminImportControllerCore extends AdminController
                         $this->errors[] = $this->trans(
                             '%data% cannot be saved',
                             array(
-                                '%data%' => trim($value),
+                                '%data%' => Tools::htmlentitiesUTF8(trim($value)),
                             ),
                             'Admin.Advparameters.Notification'
                         );
@@ -1927,11 +1955,15 @@ class AdminImportControllerCore extends AdminController
         }
 
         if (!$valid_link) {
-            $this->informations[] = $this->trans('Rewrite link for %1$s (ID %2$s): re-written as %3$s.', array(
-                '%1$s' => $product->name[$id_lang],
-                '%2$s' => (isset($info['id']) && !empty($info['id'])) ? $info['id'] : 'null',
-                '%3$s' => $link_rewrite,
-            ), 'Admin.Advparameters.Notification');
+            $this->informations[] = $this->trans(
+                'Rewrite link for %1$s (ID %2$s): re-written as %3$s.',
+                array(
+                    '%1$s' => Tools::htmlentitiesUTF8($product->name[$id_lang]),
+                    '%2$s' => !empty($info['id']) ? Tools::htmlentitiesUTF8($info['id']) : 'null',
+                    '%3$s' => Tools::htmlentitiesUTF8($link_rewrite),
+                ),
+                'Admin.Advparameters.Notification'
+            );
         }
 
         if (!$valid_link || !(is_array($product->link_rewrite) && count($product->link_rewrite))) {
@@ -2061,8 +2093,8 @@ class AdminImportControllerCore extends AdminController
         if (!$res) {
             $this->errors[] = sprintf(
                 $this->trans('%1$s (ID: %2$s) cannot be saved', array(), 'Admin.Advparameters.Notification'),
-                (isset($info['name']) && !empty($info['name'])) ? Tools::safeOutput($info['name']) : 'No Name',
-                (isset($info['id']) && !empty($info['id'])) ? Tools::safeOutput($info['id']) : 'No ID'
+                !empty($info['name']) ? Tools::safeOutput($info['name']) : 'No Name',
+                !empty($info['id']) ? Tools::safeOutput($info['id']) : 'No ID'
             );
             $this->errors[] = ($field_error !== true ? $field_error : '') . (isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '') .
                 Db::getInstance()->getMsgError();
@@ -2081,6 +2113,7 @@ class AdminImportControllerCore extends AdminController
                 $product_supplier->id_supplier = (int) $product->id_supplier;
                 $product_supplier->product_supplier_price_te = $product->wholesale_price;
                 $product_supplier->product_supplier_reference = $product->supplier_reference;
+                $product_supplier->id_currency = Currency::getDefaultCurrency()->id;
                 $product_supplier->save();
             }
 
@@ -2223,7 +2256,13 @@ class AdminImportControllerCore extends AdminController
                     }
 
                     if ($error) {
-                        $this->warnings[] = $this->trans('Product #%id%: the picture (%url%) cannot be saved.', array('%id%' => $image->id_product, '%url%' => $url), 'Admin.Advparameters.Notification');
+                        $this->warnings[] = $this->trans(
+                            'Product #%id%: the picture (%url%) cannot be saved.', array(
+                                '%id%' => Tools::htmlentitiesUTF8($image->id_product),
+                                '%url%' => Tools::htmlentitiesUTF8($url),
+                            ),
+                            'Admin.Advparameters.Notification'
+                        );
                     }
                 }
             }
@@ -2267,9 +2306,21 @@ class AdminImportControllerCore extends AdminController
             // set advanced stock managment
             if (!$validateOnly && isset($product->advanced_stock_management)) {
                 if ($product->advanced_stock_management != 1 && $product->advanced_stock_management != 0) {
-                    $this->warnings[] = $this->trans('Advanced stock management has incorrect value. Not set for product %name% ', array('%name%' => $product->name[$default_language_id]), 'Admin.Advparameters.Notification');
+                    $this->warnings[] = $this->trans(
+                        'Advanced stock management has incorrect value. Not set for product %name% ',
+                        array(
+                            '%name%' => Tools::htmlentitiesUTF8($product->name[$default_language_id]),
+                        ),
+                        'Admin.Advparameters.Notification'
+                    );
                 } elseif (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && $product->advanced_stock_management == 1) {
-                    $this->warnings[] = $this->trans('Advanced stock management is not enabled, cannot enable on product %name% ', array('%name%' => $product->name[$default_language_id]), 'Admin.Advparameters.Notification');
+                    $this->warnings[] = $this->trans(
+                        'Advanced stock management is not enabled, cannot enable on product %name% ',
+                        array(
+                            '%name%' => Tools::htmlentitiesUTF8($product->name[$default_language_id]),
+                        ),
+                        'Admin.Advparameters.Notification'
+                    );
                 } elseif ($update_advanced_stock_management_value) {
                     $product->setAdvancedStockManagement($product->advanced_stock_management);
                 }
@@ -2282,7 +2333,13 @@ class AdminImportControllerCore extends AdminController
             // Check if warehouse exists
             if (isset($product->warehouse) && $product->warehouse) {
                 if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
-                    $this->warnings[] = $this->trans('Advanced stock management is not enabled, warehouse not set on product %name% ', array('%name%' => $product->name[$default_language_id]), 'Admin.Advparameters.Notification');
+                    $this->warnings[] = $this->trans(
+                        'Advanced stock management is not enabled, warehouse not set on product %name% ',
+                        array(
+                            '%name%' => Tools::htmlentitiesUTF8($product->name[$default_language_id]),
+                        ),
+                        'Admin.Advparameters.Notification'
+                    );
                 } elseif (!$validateOnly) {
                     if (Warehouse::exists($product->warehouse)) {
                         // Get already associated warehouses
@@ -2302,7 +2359,13 @@ class AdminImportControllerCore extends AdminController
                         }
                         StockAvailable::synchronize($product->id);
                     } else {
-                        $this->warnings[] = $this->trans('Warehouse did not exist, cannot set on product  %name% ', array('%name%' => $product->name[$default_language_id]), 'Admin.Advparameters.Notification');
+                        $this->warnings[] = $this->trans(
+                            'Warehouse did not exist, cannot set on product %name%.',
+                            array(
+                                '%name%' => Tools::htmlentitiesUTF8($product->name[$default_language_id]),
+                            ),
+                            'Admin.Advparameters.Notification'
+                        );
                     }
                 }
             }
@@ -2310,9 +2373,21 @@ class AdminImportControllerCore extends AdminController
             // stock available
             if (isset($product->depends_on_stock)) {
                 if ($product->depends_on_stock != 0 && $product->depends_on_stock != 1) {
-                    $this->warnings[] = $this->trans('Incorrect value for "Depends on stock" for product %name% ', array('%name%' => $product->name[$default_language_id]), 'Admin.Advparameters.Notification');
+                    $this->warnings[] = $this->trans(
+                        'Incorrect value for "Depends on stock" for product %name% ',
+                        array(
+                            '%name%' => Tools::htmlentitiesUTF8($product->name[$default_language_id]),
+                        ),
+                        'Admin.Advparameters.Notification'
+                    );
                 } elseif ((!$product->advanced_stock_management || $product->advanced_stock_management == 0) && $product->depends_on_stock == 1) {
-                    $this->warnings[] = $this->trans('Advanced stock management is not enabled, cannot set "Depends on stock" for product %name% ', array('%name%' => $product->name[$default_language_id]), 'Admin.Advparameters.Notification');
+                    $this->warnings[] = $this->trans(
+                        'Advanced stock management is not enabled, cannot set "Depends on stock" for product %name% ',
+                        array(
+                            '%name%' => Tools::htmlentitiesUTF8($product->name[$default_language_id]),
+                        ),
+                        'Admin.Advparameters.Notification'
+                    );
                 } elseif (!$validateOnly) {
                     StockAvailable::setProductDependsOnStock($product->id, $product->depends_on_stock);
                 }
@@ -2379,8 +2454,8 @@ class AdminImportControllerCore extends AdminController
             !$category_to_create->add()) {
             $this->errors[] = sprintf(
                 $this->trans('%1$s (ID: %2$s) cannot be saved', array(), 'Admin.Advparameters.Notification'),
-                $category_to_create->name[$default_language_id],
-                (isset($category_to_create->id) && !empty($category_to_create->id)) ? $category_to_create->id : 'null'
+                Tools::htmlentitiesUTF8($category_to_create->name[$default_language_id]),
+                !empty($category_to_create->id) ? Tools::htmlentitiesUTF8($category_to_create->id) : 'null'
             );
             if ($field_error !== true || isset($lang_field_error) && $lang_field_error !== true) {
                 $this->errors[] = ($field_error !== true ? $field_error : '') . (isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '') .
@@ -2532,7 +2607,11 @@ class AdminImportControllerCore extends AdminController
                         $image->associateTo($id_shop_list);
                         // FIXME: 2s/image !
                         if (!AdminImportController::copyImg($product->id, $image->id, $url, 'products', !$regenerate)) {
-                            $this->warnings[] = $this->trans('Error copying image: %url%', array('%url%' => $url), 'Admin.Advparameters.Notification');
+                            $this->warnings[] = $this->trans(
+                                'Error copying image: %url%',
+                                array('%url%' => Tools::htmlentitiesUTF8($url)),
+                                'Admin.Advparameters.Notification'
+                            );
                             $image->delete();
                         } else {
                             $id_image[] = (int) $image->id;
@@ -2543,7 +2622,7 @@ class AdminImportControllerCore extends AdminController
                             $this->warnings[] = $this->trans(
                                 '%data% cannot be saved',
                                 array(
-                                    '%data%' => (isset($image->id_product) ? ' (' . $image->id_product . ')' : ''),
+                                    '%data%' => (isset($image->id_product) ? ' (' . Tools::htmlentitiesUTF8($image->id_product) . ')' : ''),
                                 ),
                                 'Admin.Advparameters.Notification'
                             );
@@ -2574,7 +2653,7 @@ class AdminImportControllerCore extends AdminController
                     if (empty($id_image)) {
                         $this->warnings[] = sprintf(
                             $this->trans('No image was found for combination with id_product = %s and image position = %s.', array(), 'Admin.Advparameters.Notification'),
-                            $product->id,
+                            Tools::htmlentitiesUTF8($product->id),
                             (int) $position
                         );
                     }
@@ -2693,7 +2772,14 @@ class AdminImportControllerCore extends AdminController
                     $info['available_date'] = Validate::isDate($info['available_date']) ? $info['available_date'] : null;
 
                     if (!Validate::isEan13($info['ean13'])) {
-                        $this->warnings[] = $this->trans('EAN13 "%ean13%" has incorrect value for product with id %id%.', array('%ean13%' => $info['ean13'], '%id%' => $product->id), 'Admin.Advparameters.Notification');
+                        $this->warnings[] = $this->trans(
+                            'EAN13 "%ean13%" has incorrect value for product with id %id%.',
+                            array(
+                                '%ean13%' => Tools::htmlentitiesUTF8($info['ean13']),
+                                '%id%' => Tools::htmlentitiesUTF8($product->id),
+                            ),
+                            'Admin.Advparameters.Notification'
+                        );
                         $info['ean13'] = '';
                     }
 
@@ -2810,9 +2896,21 @@ class AdminImportControllerCore extends AdminController
             // set advanced stock managment
             if (isset($info['advanced_stock_management'])) {
                 if ($info['advanced_stock_management'] != 1 && $info['advanced_stock_management'] != 0) {
-                    $this->warnings[] = $this->trans('Advanced stock management has incorrect value. Not set for product with id %id%.', array('%id%' => $product->id), 'Admin.Advparameters.Notification');
+                    $this->warnings[] = $this->trans(
+                        'Advanced stock management has incorrect value. Not set for product with id %id%.',
+                        array(
+                            '%id%' => Tools::htmlentitiesUTF8($product->id),
+                        ),
+                        'Admin.Advparameters.Notification'
+                    );
                 } elseif (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && $info['advanced_stock_management'] == 1) {
-                    $this->warnings[] = $this->trans('Advanced stock management is not enabled, cannot enable on product with id %id%.', array('%id%' => $product->id), 'Admin.Advparameters.Notification');
+                    $this->warnings[] = $this->trans(
+                        'Advanced stock management is not enabled, cannot enable on product with id %id%.',
+                        array(
+                            '%id%' => Tools::htmlentitiesUTF8($product->id),
+                        ),
+                        'Admin.Advparameters.Notification'
+                    );
                 } elseif (!$validateOnly) {
                     $product->setAdvancedStockManagement($info['advanced_stock_management']);
                 }
@@ -2825,7 +2923,11 @@ class AdminImportControllerCore extends AdminController
             // Check if warehouse exists
             if (isset($info['warehouse']) && $info['warehouse']) {
                 if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
-                    $this->warnings[] = $this->trans('Advanced stock management is not enabled, warehouse is not set on product with id %id%.', array('%id%' => $product->id), 'Admin.Advparameters.Notification');
+                    $this->warnings[] = $this->trans(
+                        'Advanced stock management is not enabled, warehouse is not set on product with id %id%.',
+                        array('%id%' => Tools::htmlentitiesUTF8($product->id)),
+                        'Admin.Advparameters.Notification'
+                    );
                 } else {
                     if (Warehouse::exists($info['warehouse'])) {
                         $warehouse_location_entity = new WarehouseProductLocation();
@@ -2841,7 +2943,13 @@ class AdminImportControllerCore extends AdminController
                             StockAvailable::synchronize($product->id);
                         }
                     } else {
-                        $this->warnings[] = $this->trans('Warehouse did not exist, cannot set on product %name%.', array('%name%' => $product->name[$default_language]), 'Admin.Advparameters.Notification');
+                        $this->warnings[] = $this->trans(
+                            'Warehouse did not exist, cannot set on product %name%.',
+                            array(
+                                '%name%' => Tools::htmlentitiesUTF8($product->name[$default_language]),
+                            ),
+                            'Admin.Advparameters.Notification'
+                        );
                     }
                 }
             }
@@ -2849,9 +2957,21 @@ class AdminImportControllerCore extends AdminController
             // stock available
             if (isset($info['depends_on_stock'])) {
                 if ($info['depends_on_stock'] != 0 && $info['depends_on_stock'] != 1) {
-                    $this->warnings[] = $this->trans('Incorrect value for "Depends on stock" for product %name% ', array('%name%' => $product->name[$default_language]), 'Admin.Notifications.Error');
+                    $this->warnings[] = $this->trans(
+                        'Incorrect value for "Depends on stock" for product %name% ',
+                        array(
+                            '%name%' => Tools::htmlentitiesUTF8($product->name[$default_language]),
+                        ),
+                        'Admin.Notifications.Error'
+                    );
                 } elseif ((!$info['advanced_stock_management'] || $info['advanced_stock_management'] == 0) && $info['depends_on_stock'] == 1) {
-                    $this->warnings[] = $this->trans('Advanced stock management is not enabled, cannot set "Depends on stock" for product %name% ', array('%name%' => $product->name[$default_language]), 'Admin.Advparameters.Notification');
+                    $this->warnings[] = $this->trans(
+                        'Advanced stock management is not enabled, cannot set "Depends on stock" for product %name% ',
+                        array(
+                            '%name%' => Tools::htmlentitiesUTF8($product->name[$default_language]),
+                        ),
+                        'Admin.Advparameters.Notification'
+                    );
                 } elseif (!$validateOnly) {
                     StockAvailable::setProductDependsOnStock($product->id, $info['depends_on_stock'], null, $id_product_attribute);
                 }
@@ -3135,8 +3255,8 @@ class AdminImportControllerCore extends AdminController
                 $this->errors[] = $this->trans(
                     'Email address %1$s (ID: %2$s) cannot be validated.',
                     array(
-                        $info['email'],
-                        (isset($info['id']) && !empty($info['id'])) ? $info['id'] : 'null',
+                        Tools::htmlentitiesUTF8($info['email']),
+                        !empty($info['id']) ? Tools::htmlentitiesUTF8($info['id']) : 'null',
                     ),
                     'Admin.Advparameters.Notification'
                 );
@@ -3144,8 +3264,8 @@ class AdminImportControllerCore extends AdminController
                 $this->errors[] = $this->trans(
                     'Email address %1$s (ID: %2$s) cannot be saved.',
                     array(
-                        $info['email'],
-                        (isset($info['id']) && !empty($info['id'])) ? $info['id'] : 'null',
+                        Tools::htmlentitiesUTF8($info['email']),
+                        !empty($info['id']) ? Tools::htmlentitiesUTF8($info['id']) : 'null',
                     ),
                     'Admin.Advparameters.Notification'
                 );
@@ -3236,7 +3356,7 @@ class AdminImportControllerCore extends AdminController
                         $this->errors[] = $this->trans(
                             '%data% cannot be saved',
                             array(
-                                '%data%' => $country->name[$default_language_id],
+                                '%data%' => Tools::htmlentitiesUTF8($country->name[$default_language_id]),
                             ),
                             'Admin.Advparameters.Notification'
                         );
@@ -3274,7 +3394,7 @@ class AdminImportControllerCore extends AdminController
                         $this->errors[] = $this->trans(
                             '%data% cannot be saved',
                             array(
-                                '%data%' => $state->name,
+                                '%data%' => Tools::htmlentitiesUTF8($state->name),
                             ),
                             'Admin.Advparameters.Notification'
                         );
@@ -3297,9 +3417,9 @@ class AdminImportControllerCore extends AdminController
                         $this->errors[] = $this->trans(
                             '%1$s does not exist in database %2$s (ID: %3$s), and therefore cannot be validated',
                             array(
-                                $address->customer_email,
-                                Db::getInstance()->getMsgError(),
-                                (isset($info['id']) && !empty($info['id'])) ? $info['id'] : 'null',
+                                Tools::htmlentitiesUTF8($address->customer_email),
+                                Tools::htmlentitiesUTF8(Db::getInstance()->getMsgError()),
+                                !empty($info['id']) ? Tools::htmlentitiesUTF8($info['id']) : 'null',
                             ),
                             'Admin.Advparameters.Notification'
                         );
@@ -3307,16 +3427,16 @@ class AdminImportControllerCore extends AdminController
                         $this->errors[] = $this->trans(
                             '%1$s does not exist in database %2$s (ID: %3$s), and therefore cannot be saved',
                             array(
-                                $address->customer_email,
-                                Db::getInstance()->getMsgError(),
-                                (isset($info['id']) && !empty($info['id'])) ? $info['id'] : 'null',
+                                Tools::htmlentitiesUTF8($address->customer_email),
+                                Tools::htmlentitiesUTF8(Db::getInstance()->getMsgError()),
+                                !empty($info['id']) ? Tools::htmlentitiesUTF8($info['id']) : 'null',
                             ),
                             'Admin.Advparameters.Notification'
                         );
                     }
                 }
             } else {
-                $this->errors[] = $this->trans('"%email%" is not a valid email address.', array('%email%' => $address->customer_email), 'Admin.Advparameters.Notification');
+                $this->errors[] = $this->trans('"%email%" is not a valid email address.', array('%email%' => Tools::htmlentitiesUTF8($address->customer_email)), 'Admin.Advparameters.Notification');
 
                 return;
             }
@@ -3332,8 +3452,8 @@ class AdminImportControllerCore extends AdminController
                         $this->errors[] = $this->trans(
                             '%1$s does not exist in database %2$s (ID: %3$s), and therefore cannot be validated',
                             array(
-                                $customer->email,
-                                Db::getInstance()->getMsgError(),
+                                Tools::htmlentitiesUTF8($customer->email),
+                                Tools::htmlentitiesUTF8(Db::getInstance()->getMsgError()),
                                 (int) $address->id_customer,
                             ),
                             'Admin.Advparameters.Notification'
@@ -3342,8 +3462,8 @@ class AdminImportControllerCore extends AdminController
                         $this->errors[] = $this->trans(
                             '%1$s does not exist in database %2$s (ID: %3$s), and therefore cannot be saved',
                             array(
-                                $customer->email,
-                                Db::getInstance()->getMsgError(),
+                                Tools::htmlentitiesUTF8($customer->email),
+                                Tools::htmlentitiesUTF8(Db::getInstance()->getMsgError()),
                                 (int) $address->id_customer,
                             ),
                             'Admin.Advparameters.Notification'
@@ -3355,7 +3475,7 @@ class AdminImportControllerCore extends AdminController
                     $this->errors[] = $this->trans(
                         'The customer ID #%d does not exist in the database, and therefore cannot be validated.',
                         array(
-                            $address->id_customer,
+                            Tools::htmlentitiesUTF8($address->id_customer),
                         ),
                         'Admin.Advparameters.Notification'
                     );
@@ -3363,7 +3483,7 @@ class AdminImportControllerCore extends AdminController
                     $this->errors[] = $this->trans(
                         'The customer ID #%d does not exist in the database, and therefore cannot be saved.',
                         array(
-                            $address->id_customer,
+                            Tools::htmlentitiesUTF8($address->id_customer),
                         ),
                         'Admin.Advparameters.Notification'
                     );
@@ -3391,8 +3511,8 @@ class AdminImportControllerCore extends AdminController
                     if (!$validateOnly) {
                         $this->errors[] = Db::getInstance()->getMsgError() . ' ' . sprintf(
                             $this->trans('%1$s (ID: %2$s) cannot be saved', array(), 'Admin.Advparameters.Notification'),
-                            $manufacturer->name,
-                            (isset($manufacturer->id) && !empty($manufacturer->id)) ? $manufacturer->id : 'null'
+                            Tools::htmlentitiesUTF8($manufacturer->name),
+                            !empty($manufacturer->id) ? Tools::htmlentitiesUTF8($manufacturer->id) : 'null'
                         );
                     }
                     if ($field_error !== true || isset($lang_field_error) && $lang_field_error !== true) {
@@ -3420,8 +3540,8 @@ class AdminImportControllerCore extends AdminController
                     if (!$validateOnly) {
                         $this->errors[] = Db::getInstance()->getMsgError() . ' ' . sprintf(
                             $this->trans('%1$s (ID: %2$s) cannot be saved', array(), 'Admin.Advparameters.Notification'),
-                            $supplier->name,
-                            (isset($supplier->id) && !empty($supplier->id)) ? $supplier->id : 'null'
+                            Tools::htmlentitiesUTF8($supplier->name),
+                            !empty($supplier->id) ? Tools::htmlentitiesUTF8($supplier->id) : 'null'
                         );
                     }
                     if ($field_error !== true || isset($lang_field_error) && $lang_field_error !== true) {
@@ -3460,8 +3580,8 @@ class AdminImportControllerCore extends AdminController
             if (!$validateOnly) {
                 $this->errors[] = sprintf(
                     $this->trans('%1$s (ID: %2$s) cannot be saved', array(), 'Admin.Advparameters.Notification'),
-                    $info['alias'],
-                    (isset($info['id']) && !empty($info['id'])) ? $info['id'] : 'null'
+                    Tools::htmlentitiesUTF8($info['alias']),
+                    !empty($info['id']) ? Tools::htmlentitiesUTF8($info['id']) : 'null'
                 );
             }
             if ($field_error !== true || isset($lang_field_error) && $lang_field_error !== true) {
@@ -3574,8 +3694,8 @@ class AdminImportControllerCore extends AdminController
             if (!$validateOnly) {
                 $this->errors[] = Db::getInstance()->getMsgError() . ' ' . sprintf(
                     $this->trans('%1$s (ID: %2$s) cannot be saved', array(), 'Admin.Advparameters.Notification'),
-                    (isset($info['name']) && !empty($info['name'])) ? Tools::safeOutput($info['name']) : 'No Name',
-                    (isset($info['id']) && !empty($info['id'])) ? Tools::safeOutput($info['id']) : 'No ID'
+                    !empty($info['name']) ? Tools::safeOutput($info['name']) : 'No Name',
+                    !empty($info['id']) ? Tools::safeOutput($info['id']) : 'No ID'
                 );
             }
             if ($field_error !== true || isset($lang_field_error) && $lang_field_error !== true) {
@@ -3667,8 +3787,8 @@ class AdminImportControllerCore extends AdminController
             if (!$res) {
                 $this->errors[] = Db::getInstance()->getMsgError() . ' ' . sprintf(
                     $this->trans('%1$s (ID: %2$s) cannot be saved', array(), 'Admin.Advparameters.Notification'),
-                    (isset($info['name']) && !empty($info['name'])) ? Tools::safeOutput($info['name']) : 'No Name',
-                    (isset($info['id']) && !empty($info['id'])) ? Tools::safeOutput($info['id']) : 'No ID'
+                    !empty($info['name']) ? Tools::safeOutput($info['name']) : 'No Name',
+                    !empty($info['id']) ? Tools::safeOutput($info['id']) : 'No ID'
                 );
             } elseif (!$validateOnly) {
                 // Associate supplier to group shop
@@ -3692,7 +3812,7 @@ class AdminImportControllerCore extends AdminController
                 }
             }
         } else {
-            $this->errors[] = $this->trans('Supplier is invalid', array(), 'Admin.Advparameters.Notification') . ' (' . $supplier->name . ')';
+            $this->errors[] = $this->trans('Supplier is invalid', array(), 'Admin.Advparameters.Notification') . ' (' . Tools::htmlentitiesUTF8($supplier->name) . ')';
             $this->errors[] = ($field_error !== true ? $field_error : '') . (isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '');
         }
     }
@@ -3765,12 +3885,12 @@ class AdminImportControllerCore extends AdminController
             if (!$res) {
                 $this->errors[] = Db::getInstance()->getMsgError() . ' ' . sprintf(
                     $this->trans('%1$s (ID: %2$s) cannot be saved', array(), 'Admin.Advparameters.Notification'),
-                    $info['name'],
-                    (isset($info['id']) ? $info['id'] : 'null')
+                    Tools::htmlentitiesUTF8($info['name']),
+                    (isset($info['id']) ? Tools::htmlentitiesUTF8($info['id']) : 'null')
                 );
             }
         } else {
-            $this->errors[] = $this->trans('Alias is invalid', array(), 'Admin.Advparameters.Notification') . ' (' . $alias->name . ')';
+            $this->errors[] = $this->trans('Alias is invalid', array(), 'Admin.Advparameters.Notification') . ' (' . Tools::htmlentitiesUTF8($alias->name) . ')';
             $this->errors[] = ($field_error !== true ? $field_error : '') . (isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '');
         }
     }
@@ -3870,7 +3990,7 @@ class AdminImportControllerCore extends AdminController
                         $this->errors[] = $this->trans(
                             '%data% cannot be saved',
                             array(
-                                '%data%' => $country->name[$default_language_id],
+                                '%data%' => Tools::htmlentitiesUTF8($country->name[$default_language_id]),
                             ),
                             'Admin.Advparameters.Notification'
                         );
@@ -3908,7 +4028,8 @@ class AdminImportControllerCore extends AdminController
                         $this->errors[] = $this->trans(
                             '%data% cannot be saved',
                             array(
-                                '%data%' => $state->name, ),
+                                '%data%' => Tools::htmlentitiesUTF8($state->name),
+                            ),
                             'Admin.Advparameters.Notification'
                         );
                     }
@@ -3934,13 +4055,13 @@ class AdminImportControllerCore extends AdminController
             if (!$res) {
                 $this->errors[] = Db::getInstance()->getMsgError() . ' ' . sprintf(
                     $this->trans('%1$s (ID: %2$s) cannot be saved', array(), 'Admin.Advparameters.Notification'),
-                    $info['name'],
-                    (isset($info['id']) ? $info['id'] : 'null')
+                    Tools::htmlentitiesUTF8($info['name']),
+                    (isset($info['id']) ? Tools::htmlentitiesUTF8($info['id']) : 'null')
                 );
             }
         } else {
             $id_lang = Language::getIdByIso(Tools::getValue('iso_lang'));
-            $this->errors[] = $this->trans('Store is invalid', array(), 'Admin.Advparameters.Notification') . ' (' . $store->name[$id_lang] . ')';
+            $this->errors[] = $this->trans('Store is invalid', array(), 'Admin.Advparameters.Notification') . ' (' . Tools::htmlentitiesUTF8($store->name[$id_lang]) . ')';
             $this->errors[] = ($field_error !== true ? $field_error : '') . (isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '');
         }
     }
@@ -4138,7 +4259,11 @@ class AdminImportControllerCore extends AdminController
         if (array_key_exists('supply_order_reference', $info) && pSQL($info['supply_order_reference']) && SupplyOrder::exists(pSQL($info['supply_order_reference']))) {
             $supply_order = SupplyOrder::getSupplyOrderByReference(pSQL($info['supply_order_reference']));
         } else {
-            $this->errors[] = sprintf($this->trans('Supply Order (%s) could not be loaded (at line %d).', array(), 'Admin.Advparameters.Notification'), $info['supply_order_reference'], $current_line + 1);
+            $this->errors[] = sprintf(
+                $this->trans('Supply Order (%s) could not be loaded (at line %d).', array(), 'Admin.Advparameters.Notification'),
+                Tools::htmlentitiesUTF8($info['supply_order_reference']),
+                $current_line + 1
+            );
         }
 
         if (empty($this->errors)) {
@@ -4671,8 +4796,12 @@ class AdminImportControllerCore extends AdminController
 
     protected function addProductWarning($product_name, $product_id = null, $message = '')
     {
-        $this->warnings[] = $product_name . (isset($product_id) ? ' (ID ' . $product_id . ')' : '') . ' '
-            . $message;
+        $this->warnings[] = Tools::htmlentitiesUTF8(
+            $product_name
+            . (isset($product_id) ? ' (ID ' . $product_id . ')' : '')
+            . ' '
+            . $message
+        );
     }
 
     public function ajaxProcessSaveImportMatchs()
@@ -4786,6 +4915,18 @@ class AdminImportControllerCore extends AdminController
         die(json_encode($results));
     }
 
+    public function initModal()
+    {
+        parent::initModal();
+        $modal_content = $this->context->smarty->fetch('controllers/import/modal_import_progress.tpl');
+        $this->modals[] = array(
+            'modal_id' => 'importProgress',
+            'modal_class' => 'modal-md',
+            'modal_title' => $this->trans('Importing your data...', array(), 'Admin.Advparameters.Notification'),
+            'modal_content' => $modal_content,
+        );
+    }
+
     /**
      * Gets session from symfony container.
      *
@@ -4794,5 +4935,17 @@ class AdminImportControllerCore extends AdminController
     private function getSession()
     {
         return \PrestaShop\PrestaShop\Adapter\SymfonyContainer::getInstance()->get('session');
+    }
+
+    /**
+     * Get symfony request object.
+     *
+     * @return \Symfony\Component\HttpFoundation\Request|null
+     */
+    private function getSymfonyRequest()
+    {
+        $requestStack = \PrestaShop\PrestaShop\Adapter\SymfonyContainer::getInstance()->get('request_stack');
+
+        return $requestStack->getCurrentRequest();
     }
 }

@@ -6,4 +6,3 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Currency\CurrencyGridDataFactory'
         arguments:
             - '@prestashop.core.grid.data_provider.currency'
-            - '@prestashop.core.cldr.repository'

@@ -1,5 +1,5 @@
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,10 +15,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -51,20 +51,20 @@ export default class DeleteCategoriesBulkActionExtension {
       $deleteCategoriesModal.modal('show');
 
       $deleteCategoriesModal.on('click', '.js-submit-delete-categories', () => {
-        const $checkboxes = grid.getContainer().find('.js-bulk-action-checkbox');
+        const $checkboxes = grid.getContainer().find('.js-bulk-action-checkbox:checked');
         const $categoriesToDeleteInputBlock = $('#delete_categories_categories_to_delete');
 
-        $checkboxes.each((i, value) => {
-          const $input = $(value);
+        $checkboxes.each((i, element) => {
+          const $checkbox = $(element);
 
           const categoryInput = $categoriesToDeleteInputBlock
             .data('prototype')
-            .replace(/__name__/g, $input.val());
+            .replace(/__name__/g, $checkbox.val());
 
-          const $item = $($.parseHTML(categoryInput)[0]);
-          $item.val($input.val());
+          const $input = $($.parseHTML(categoryInput)[0]);
+          $input.val($checkbox.val());
 
-          $categoriesToDeleteInputBlock.append($item);
+          $categoriesToDeleteInputBlock.append($input);
         });
 
         const $form = $deleteCategoriesModal.find('form');

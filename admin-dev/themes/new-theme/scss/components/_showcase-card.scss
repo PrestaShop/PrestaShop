@@ -1,11 +1,11 @@
-@import "../mixins/breakpoints";
-
 .showcase-card, .helper-card {
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.06);
   max-width: 810px;
   position: relative;
   margin: auto;
   margin-bottom: 17px;
+  display: flex;
+  flex-direction: row;
 
   &__left, &__right {
     height: 100%;
@@ -14,13 +14,21 @@
     vertical-align: top;
   }
 
-  &__team {
-    background-image: url('img/helper-card/team-background.png');
+  &__team, &__customer {
+    background-image: url('img/helper-card/wave-shape-background.png');
+  }
+
+  &__category {
+    background-image: url('img/helper-card/seo-background@3x.png');
   }
 
   &__left {
     width: 320px;
     animation: showcase-img-appearance 1s;
+
+    @include media-breakpoint-down(md) {
+      display: none;
+    }
 
     img {
       animation: showcase-img-appearance 1.5s;
@@ -35,8 +43,12 @@
 
   &__right {
     width: 480px;
-    padding: 45px 55px 45px 20px;
+    padding: 45px 55px 0 20px;
     font-size: 14px;
+
+    @include media-breakpoint-down(md) {
+      padding: 3.438rem 1.25rem;
+    }
 
     h2 {
       font-size: 18px;
@@ -48,6 +60,12 @@
     p {
       margin: 22px 0;
       text-align: left;
+    }
+
+    > a {
+      &.btn-outline-secondary {
+        margin-right: .95rem;
+      }
     }
 
     button {
@@ -70,5 +88,21 @@
     top: 20px;
     right: 20px;
     cursor: pointer;
+  }
+}
+
+.showcase-list-card {
+  &__header {
+    color: #363a41;
+    opacity: 0.7;
+    font-size: 20px;
+    font-weight: 600;
+  }
+
+  &__message {
+    max-width: 460px;
+    font-size: 14px;
+    line-height: 1.43;
+    color: #6c868e;
   }
 }

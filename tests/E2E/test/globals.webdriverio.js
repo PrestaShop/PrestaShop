@@ -15,7 +15,8 @@ global.URL = siteUrl;
 
 global.install_language = argv.LANGUAGE || 'en';
 global.install_country = argv.COUNTRY || 'france';
-global.db_server = argv.DB_SERVER || 'lolcahost';
+global.country_currency = argv.CURRENCY || 'EUR';
+global.db_server = argv.DB_SERVER || 'localhost';
 global.db_user = argv.DB_USER || 'root';
 global.db_passwd = argv.DB_PASSWD || 'doge';
 global.db_empty_password = !!argv.DB_EMPTY_PASSWD; //Cast as boolean
@@ -43,6 +44,7 @@ global.new_customer_email = 'pub' + date_time + '@prestashop.com';
 global.categoryImage = path.join(__dirname, '', 'datas', 'category_image.png');
 global.categoryThumb = path.join(__dirname, '', 'datas', 'category_miniature.png');
 global.brandsImage = path.join(__dirname, '', 'datas', 'prestashop.png');
+global.shopPath = argv.SHOPPATH || '../..';
 
 global.onboarding = false;
 global.invoiceFileName = '';

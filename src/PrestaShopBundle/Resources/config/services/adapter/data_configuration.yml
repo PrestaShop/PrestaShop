@@ -224,8 +224,25 @@ services:
             - '@prestashop.adapter.legacy.configuration'
             - '@=service("prestashop.adapter.data_provider.default_route").getRules()'
 
+    prestashop.adapter.meta.seo_options.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Meta\SEOOptionsDataConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+
     prestashop.core.team.employee.configuration.employee_options_configuration:
         class: 'PrestaShop\PrestaShop\Core\Team\Employee\Configuration\EmployeeOptionsConfiguration'
         arguments:
             - '@prestashop.adapter.legacy.configuration'
             - '@prestashop.core.team.employee.configuration.options_checker'
+
+    prestashop.core.tax.tax_options_configuration:
+        class: 'PrestaShop\PrestaShop\Core\Tax\TaxOptionsConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+            - '@prestashop.adapter.tax.ecotax.ecotax_resetter'
+
+    prestashop.core.mail_theme.configuration:
+      class: 'PrestaShop\PrestaShop\Core\MailTemplate\MailThemeConfiguration'
+      arguments:
+        - '@prestashop.adapter.legacy.configuration'
+        - '@prestashop.core.mail_template.theme_catalog'

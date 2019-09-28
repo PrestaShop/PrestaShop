@@ -1,39 +1,47 @@
 const {productPage} = require('../../selectors/FO/product_page');
 const {CheckoutOrderPage} = require('../../selectors/FO/order_page');
 const {accountPage} = require('../../selectors/FO/add_account_page');
-const {OrderPage} = require('../../selectors/BO/order');
+const {OrderPage, CreateOrder} = require('../../selectors/BO/order');
 const {Menu} = require('../../selectors/BO/menu.js');
 const {ShoppingCart} = require('../../selectors/BO/order');
-
 const {CreditSlip} = require('../../selectors/BO/order');
 const {ProductList} = require('../../selectors/BO/add_product_page');
 const {AddProductPage} = require('../../selectors/BO/add_product_page');
 const {MerchandiseReturns} = require('../../selectors/BO/Merchandise_returns');
+const {Customer} = require('../../selectors/BO/customers/customer');
 
 let dateFormat = require('dateformat');
 let data = require('../../datas/customer_and_address_data');
+let dateSystem = dateFormat(new Date(), 'mm/dd/yyyy');
 let promise = Promise.resolve();
 global.orderInformation = [];
 
 module.exports = {
-  createOrderFO: function (authentication = "connected", login = 'pub@prestashop.com', password = '123456789') {
+  createOrderFO: function (authentication = "connected", login = 'pub@prestashop.com', password = '123456789', checkAvailableQuantity = false) {
     scenario('Create order in the Front Office', client => {
       test('should set the language of shop to "English"', () => client.changeLanguage());
+      test('should get the first product name', () => client.getTextInVar(productPage.first_product, 'first_product_name'));
       test('should go to the first product page', () => client.waitForExistAndClick(productPage.first_product, 2000));
       test('should select product "size M" ', () => client.waitAndSelectByValue(productPage.first_product_size, '2'));
       test('should select product "color Black"', () => client.waitForExistAndClick(productPage.first_product_color));
       test('should set the product "quantity"', () => {
         return promise
-          .then(() => client.waitAndSetValue(productPage.first_product_quantity, "4"))
+          .then(() => client.waitAndSetValue(productPage.first_product_quantity, "4", 500))
           .then(() => client.getTextInVar(CheckoutOrderPage.product_current_price, "first_basic_price"));
       });
-      test('should click on "Add to cart" button  ', () => client.waitForExistAndClick(CheckoutOrderPage.add_to_cart_button));
+      if (checkAvailableQuantity === true) {
+        test('should click on "product details" tab', () => client.waitForExistAndClick(CheckoutOrderPage.product_details_tab, 2000));
+        test('should get the product "available quantity"', async () => {
+          await client.getAttributeInVar(CheckoutOrderPage.product_available_quantity_span, 'data-stock', 'available_quantity')
+        });
+      }
+      test('should click on "Add to cart" button  ', () => client.waitForExistAndClick(CheckoutOrderPage.add_to_cart_button, 3000));
       test('should click on proceed to checkout button 1', () => client.waitForVisibleAndClick(CheckoutOrderPage.proceed_to_checkout_modal_button));
       /**
        * This scenario is based on the bug described in this ticket
        * https://github.com/PrestaShop/PrestaShop/issues/9841
        **/
-      test('should set the quantity to "4" using the keyboard', () => client.waitAndSetValue(CheckoutOrderPage.quantity_input.replace('%NUMBER', 1), '4'));
+      test('should set the quantity to "4" using the keyboard', () => client.setInputValue(CheckoutOrderPage.quantity_input.replace('%NUMBER', 1), '4'));
       test('should click on proceed to checkout button 2', () => client.waitForExistAndClick(CheckoutOrderPage.proceed_to_checkout_button));
 
       if (authentication === "create_account" || authentication === "guest") {
@@ -132,25 +140,31 @@ module.exports = {
       }, 'common_client');
     }, 'common_client');
   },
-  createOrderBO: function (OrderPage, CreateOrder, productData) {
+  createOrderBO: function (OrderPage, CreateOrder, productData, customer = 'john doe') {
     scenario('Create order in the Back Office', client => {
       test('should go to "Orders" page', () => client.goToSubtabMenuPage(Menu.Sell.Orders.orders_menu, Menu.Sell.Orders.orders_submenu));
       test('should click on "Add new order" button', () => client.waitForExistAndClick(CreateOrder.new_order_button, 1000));
-      test('should search for a customer', () => client.waitAndSetValue(CreateOrder.customer_search_input, 'john doe'));
+      test('should search for a customer', () => client.waitAndSetValue(CreateOrder.customer_search_input, customer));
       test('should choose the customer', () => client.waitForExistAndClick(CreateOrder.choose_customer_button));
       test('should search for a product by name', () => client.waitAndSetValue(CreateOrder.product_search_input, productData.name + global.date_time));
       test('should set the product combination', () => client.waitAndSelectByValue(CreateOrder.product_combination, global.combinationId));
       test('should set the product quantity', () => client.waitAndSetValue(CreateOrder.quantity_input.replace('%NUMBER', 1), '4'));
       test('should click on "Add to cart" button', () => client.scrollWaitForExistAndClick(CreateOrder.add_to_cart_button));
       test('should get the basic product price', () => client.getTextInVar(CreateOrder.basic_price_value, global.basic_price));
-      test('should set the delivery option ', () => client.waitAndSelectByValue(CreateOrder.delivery_option, '2,'));
+      test('should set the delivery option ', () => {
+        return promise
+          .then(() => client.waitAndSelectByValue(CreateOrder.delivery_option, '2,'))
+          .then(() => client.pause(1000));
+      });
+      test('should get the  shipping price', () => client.getTextInVar(CreateOrder.shipping_price, 'price'));
+      test('should get the total with taxes', () => client.getTextInVar(CreateOrder.total_with_tax, 'total_tax'));
       test('should add an order message ', () => client.addOrderMessage('Order message test'));
       test('should set the payment type ', () => client.waitAndSelectByValue(CreateOrder.payment, 'ps_checkpayment'));
       test('should set the order status ', () => client.waitAndSelectByValue(OrderPage.order_state_select, '1'));
       test('should click on "Create the order"', () => client.waitForExistAndClick(CreateOrder.create_order_button));
     }, 'order');
   },
-  checkOrderInBO: function (clientType = "client") {
+  checkOrderInBO: function (clientType = "client", checkCustomer = false) {
     scenario('Check the created order information in the Back Office', client => {
       test('should go to "Orders" page', () => client.goToSubtabMenuPage(Menu.Sell.Orders.orders_menu, Menu.Sell.Orders.orders_submenu));
       test('should search for the created order by reference', () => client.waitAndSetValue(OrderPage.search_by_reference_input, global.tab['reference']));
@@ -159,25 +173,56 @@ module.exports = {
       test('should check that the customer name is "John DOE"', () => client.checkTextValue(OrderPage.customer_name, 'John DOE', 'contain'));
       if (clientType === "guest") {
         test('should check that the order has been placed by a guest', () => client.isExisting(OrderPage.transform_guest_customer_button));
+      } else if (checkCustomer === true) {
+        test('should check the customer email', () => client.checkTextValue(OrderPage.customer_email, 'pub@prestashop.com', 'contain'));
+        test('should check the "Account registered" ', () => client.checkTextValue(OrderPage.customer_created, dateSystem, 'contain'));
+        test('should check the "valid orders placed" ', () => client.checkTextValue(OrderPage.valid_order_placed, global.tab['valid_orders']));
+        test('should check the "Total spent since registration" ', () => client.checkTextValue(OrderPage.total_registration, global.tab['total_amount'].split('€')[1], 'contain'));
       }
-      test('should status be equal to "Awaiting bank wire payment"', () => client.checkTextValue(OrderPage.order_status, 'Awaiting bank wire payment'));
-      test('should check the shipping price', () => client.checkTextValue(OrderPage.shipping_cost, global.tab['shipping_price']));
+
+      //Check shipping and invoice address
+      test('should check the "Shipping Address"', () => client.checkTextValue(OrderPage.shipping_address, 'John DOE', 'contain'));
+      test('should click on "Invoice Address" subtab', () => client.waitForVisibleAndClick(OrderPage.tab_invoice, 1000));
+      test('should check "Invoice Address"', () => client.checkTextValue(OrderPage.invoice_address, 'John DOE', 'contain'));
+
+      //Check shipping information
+      test('should check the "Date" of shipping', () => client.checkTextValue(OrderPage.date_shipping, dateSystem, 'contain'));
+      test('should check shipping carrier', () => client.checkTextValue(OrderPage.shipping_method, global.tab["method"].split('\n')[0], 'contain'));
+      test('should check the "weight" is equal  "0.000 kg"', () => client.checkTextValue(OrderPage.weight_shipping, '0.000', 'contain'));
+      test('should check the shipping cost', () => client.checkTextValue(OrderPage.shipping_cost, global.tab['shipping_price']));
+      test('should check the shipping tracking number', () => client.checkTextValue(OrderPage.tracking_number_column, ''));
+
+      //Check payment information
+      test('should check the "Method" of payment', () => client.checkTextValue(OrderPage.payment_method, '', 'contain'));
+      test('should check the "Amount" of payment', () => client.checkTextValue(OrderPage.amount_payment, '', 'contain'));
+      test('should check the "date" of payment', () => client.checkTextValue(OrderPage.payment_date_column, '', 'contain'));
+
+      //Check products information
       test('should check the product name', () => client.checkTextValue(OrderPage.product_name.replace("%NUMBER", 1), global.tab['product']));
+      test('should check the  "Base price" of the product ', () => client.checkTextValue(OrderPage.product_unit_price_tax_included, global.tab['basic_price']));
+      test('should check the "quantity" of the product', () => client.checkTextValue(OrderPage.order_quantity.replace("%NUMBER", 1), '4'));
+      test('should check the "Available quantity" of the product', () => client.checkTextValue(OrderPage.order_available_quantity.replace("%NUMBER", 1), (global.tab['available_quantity'] - 4), 'contain'));
+      test('should check that the "Total" of the product', () => client.checkTextValue(OrderPage.total_product_price.replace("%NUMBER", 1), 4 * (global.tab['basic_price'].split('€')[1]), 'contain'));
+
+      //Check total products
+      test('should check the total of "Products" tax included', () => client.checkTextValue(OrderPage.total_price, global.tab["total_price"]));
+      test('should check the total of "Shipping"', () => client.checkTextValue(OrderPage.shipping_cost_price, global.tab['shipping_price']));
+      test('should check the "Total" for orders tax included', () => client.checkTextValue(OrderPage.total_order_price, Number(global.tab["total_price"].split('€')[1]) + Number(global.tab['shipping_price'].split('€')[1]), 'contain'));
+      test('should check that the status is equal to "Awaiting bank wire payment"', () => client.checkTextValue(OrderPage.order_status, 'Awaiting bank wire payment'));
+
       test('should check the order message', () => client.checkTextValue(OrderPage.message_order, 'Order message test'));
-      test('should check the total price', () => client.checkTextValue(OrderPage.total_price, global.tab["total_price"]));
       test('should check basic product price', () => {
         return promise
           .then(() => client.scrollWaitForExistAndClick(OrderPage.edit_product_button))
-          .then(() => client.checkAttributeValue(OrderPage.product_basic_price.replace("%NUMBER", 1), 'value', global.tab["basic_price"].replace('€', '')))
+          .then(() => client.checkAttributeValue(OrderPage.product_basic_price.replace("%NUMBER", 1), 'value', global.tab["basic_price"].replace('€', '')));
       });
-      test('should check shipping method', () => client.checkTextValue(OrderPage.shipping_method, global.tab["method"].split('\n')[0], 'contain'));
     }, "order");
   },
 
   getShoppingCartsInfo: async function (client) {
     let idColumn;
     await client.isVisible(ShoppingCart.checkbox_input);
-    if (isVisible) {
+    if (global.isVisible) {
       idColumn = 2;
     } else {
       idColumn = 1;
@@ -200,8 +245,10 @@ module.exports = {
   checkExportedFile: async function (client) {
     await client.downloadCart(ShoppingCart.export_carts_button);
     await client.checkFile(global.downloadsFolderPath, global.exportCartFileName);
-    await client.readFile(global.downloadsFolderPath, global.exportCartFileName, 1000);
-    await client.checkExportedFileInfo(1000);
+    if (global.existingFile) {
+      await client.readFile(global.downloadsFolderPath, global.exportCartFileName, 1000);
+      await client.checkExportedFileInfo(1000);
+    }
     await client.waitForExistAndClick(ShoppingCart.reset_button);
   },
   initCheckout: function (client) {
@@ -215,11 +262,15 @@ module.exports = {
         .then(() => client.waitForExistAndClick(CheckoutOrderPage.proceed_to_checkout_button));
     });
   },
-  creditSlip: function (refundedValue, i) {
+  creditSlip: function (refundedValue, i, close = false) {
     scenario('Generate a credit slip', client => {
       test('should go to the orders list', () => client.goToSubtabMenuPage(Menu.Sell.Orders.orders_menu, Menu.Sell.Orders.orders_submenu));
       test('should go to the created order', () => client.waitForExistAndClick(OrderPage.order_view_button.replace('%ORDERNumber', 1)));
       test('should change order state to "Payment accepted"', () => client.changeOrderState(OrderPage, 'Payment accepted'));
+      /**
+       * should refresh the page, to pass the error
+       */
+      test('should refresh the page', () => client.refresh());
       test('should click on "Partial refund" button', () => client.waitForExistAndClick(OrderPage.partial_refund));
       test('should set the "quantity refund" to "2"', () => client.waitAndSetValue(OrderPage.quantity_refund, refundedValue));
       test('should click on "Re-stock products" CheckBox', () => client.waitForExistAndClick(OrderPage.re_stock_product));
@@ -282,36 +333,50 @@ module.exports = {
       test('should click on "DOCUMENTS" subtab', () => client.scrollWaitForExistAndClick(OrderPage.document_submenu));
       test('should get the credit slip name', () => client.getCreditSlipDocumentName(OrderPage.credit_slip_document_name));
       test('should go to "Credit slip" page', () => client.goToSubtabMenuPage(Menu.Sell.Orders.orders_menu, Menu.Sell.Orders.credit_slips_submenu));
-      test('should click on "Download credit slip" button', () => {
-        return promise
-          .then(() => client.waitForVisibleAndClick(CreditSlip.download_btn.replace('%ID', global.tab['orderID'].replace("#", ''))))
-          .then(() => client.pause(8000));
+      test('should click on "Download credit slip" button', async () => {
+        await client.waitForVisible(CreditSlip.download_btn.replace('%ID', global.tab['orderID'].replace('#', '')));
+        if(global.headless) {
+          await client.enableDownloadForHeadlessMode();
+          // for headless, we need to remove attribute 'target' to avoid download in a new Tab
+          await client.removeAttribute(CreditSlip.download_btn.replace('%ID', global.tab['orderID'].replace('#', '')),'target');
+        }
+        await client.waitForExistAndClick(CreditSlip.download_btn.replace('%ID', global.tab['orderID'].replace('#', '')));
+        await client.pause(8000);
       });
-    }, 'order');
+    }, 'order', close);
   },
   checkCreditSlip: function (refundedValue, i) {
     scenario('Check the credit slip information', client => {
-      test('should check the "Billing Address" ', () => {
-        return promise
-          .then(() => client.checkDocument(global.downloadsFolderPath, global.creditSlip, 'My Company'))
-          .then(() => client.checkDocument(global.downloadsFolderPath, global.creditSlip, '16, Main street'))
-          .then(() => client.checkDocument(global.downloadsFolderPath, global.creditSlip, '75002 Paris'))
-          .then(() => client.checkDocument(global.downloadsFolderPath, global.creditSlip, 'France'));
+      test('should check the "Billing Address" ', async () => {
+        await client.checkFile(global.downloadsFolderPath, global.creditSlip + ".pdf");
+        if (global.existingFile) {
+          await client.checkDocument(global.downloadsFolderPath, global.creditSlip, 'My Company');
+          await client.checkDocument(global.downloadsFolderPath, global.creditSlip, '16, Main street');
+          await client.checkDocument(global.downloadsFolderPath, global.creditSlip, '75002 Paris');
+          await client.checkDocument(global.downloadsFolderPath, global.creditSlip, 'France');
+        }
       });
-      test('should check the "Name & Last name" ', () => client.checkDocument(global.downloadsFolderPath, global.creditSlip, global.tab['accountName']));
-      test('should check the "Invoice date Reference"', () => client.checkDocument(global.downloadsFolderPath, global.creditSlip, global.orderInformation[i].invoiceDate));
-      test('should check the "Invoice order Reference"', () => client.checkDocument(global.downloadsFolderPath, global.creditSlip, global.orderInformation[i].orderRef));
-      test('should check the "Product combination" ', () => client.checkDocument(global.downloadsFolderPath, global.creditSlip, global.orderInformation[i].productCombination));
-      test('should check the "Product quantity" ', () => client.checkDocument(global.downloadsFolderPath, global.creditSlip, global.orderInformation[i].productQuantity));
-      test('should check the "Product name" ', () => client.checkDocument(global.downloadsFolderPath, global.creditSlip, global.orderInformation[i].productName));
-      test('should check the "Unit Price" ', () => client.checkDocument(global.downloadsFolderPath, global.creditSlip, global.orderInformation[i].unitPrice));
-      test('should check the "Price" ', () => client.checkDocument(global.downloadsFolderPath, global.creditSlip, parseInt(global.orderInformation[i].unitPrice * refundedValue)));
-      test('should check the "Product total" ', () => client.checkDocument(global.downloadsFolderPath, global.creditSlip, global.orderInformation[i].productTotal));
-      test('should check the "Total Tax" ', () => client.checkDocument(global.downloadsFolderPath, global.creditSlip, Math.round(global.orderInformation[i].taxExcl * refundedValue * global.orderInformation[i].taxRate) / 100));
-      test('should check the "Tax Rate" ', () => client.checkDocument(global.downloadsFolderPath, global.creditSlip, parseInt((global.orderInformation[i].taxRate)).toFixed(3)));
-      test('should check the "Tax detail" ', () => {
-        return promise
-          .then(() => client.checkDocument(global.downloadsFolderPath, global.creditSlip, 'Products'))
+      test('should check all the "information" ', async () => {
+        await client.checkFile(global.downloadsFolderPath, global.creditSlip + ".pdf");
+        if (global.existingFile) {
+          await client.checkDocument(global.downloadsFolderPath, global.creditSlip, global.tab['accountName']);
+          await client.checkDocument(global.downloadsFolderPath, global.creditSlip, global.orderInformation[i].invoiceDate);
+          await client.checkDocument(global.downloadsFolderPath, global.creditSlip, global.orderInformation[i].orderRef);
+          await client.checkDocument(global.downloadsFolderPath, global.creditSlip, global.orderInformation[i].productCombination);
+          await client.checkDocument(global.downloadsFolderPath, global.creditSlip, global.orderInformation[i].productQuantity);
+          await client.checkDocument(global.downloadsFolderPath, global.creditSlip, global.orderInformation[i].productName);
+          await client.checkDocument(global.downloadsFolderPath, global.creditSlip, global.orderInformation[i].unitPrice);
+          await client.checkDocument(global.downloadsFolderPath, global.creditSlip, parseInt(global.orderInformation[i].unitPrice * refundedValue));
+          await client.checkDocument(global.downloadsFolderPath, global.creditSlip, global.orderInformation[i].productTotal);
+          await client.checkDocument(global.downloadsFolderPath, global.creditSlip, Math.round(global.orderInformation[i].taxExcl * refundedValue * global.orderInformation[i].taxRate) / 100);
+          await client.checkDocument(global.downloadsFolderPath, global.creditSlip, parseInt((global.orderInformation[i].taxRate)).toFixed(3));
+        }
+      });
+      test('should check the "Tax detail" ', async () => {
+        await client.checkFile(global.downloadsFolderPath, global.creditSlip + ".pdf");
+        if (global.existingFile) {
+          await client.checkDocument(global.downloadsFolderPath, global.creditSlip, 'Products');
+        }
       });
     }, 'order');
   },
@@ -324,27 +389,40 @@ module.exports = {
     }, 'order');
   },
   checkOrderInvoice: function (client, i) {
-    test('should check the Customer name of the ' + i + ' product', () => client.checkDocument(global.downloadsFolderPath, 'invoices', 'John DOE'));
-    test('should check the "Delivery Address " of the product n°' + i, () => {
-      return promise
-        .then(() => client.checkDocument(global.downloadsFolderPath, 'invoices', 'My Company'))
-        .then(() => client.checkDocument(global.downloadsFolderPath, 'invoices', '16, Main street'))
-        .then(() => client.checkDocument(global.downloadsFolderPath, 'invoices', '75002 Paris'))
-        .then(() => client.checkDocument(global.downloadsFolderPath, 'invoices', 'France'));
+    test('should check the Customer name of the ' + i + ' product', async () => {
+      await client.checkFile(global.downloadsFolderPath, 'invoices.pdf');
+      if (global.existingFile) {
+        client.checkDocument(global.downloadsFolderPath, 'invoices', 'John DOE');
+      }
     });
-    test('should check the "invoice Date" of the product n°' + i, () => client.checkDocument(global.downloadsFolderPath, 'invoices', global.orderInfo[i - 1].invoiceDate));
-    test('should check the "Order Reference" of the product n°' + i, () => client.checkDocument(global.downloadsFolderPath, 'invoices', global.orderInfo[i - 1].OrderRef));
-    test('should check the "Product Reference"of the product n°' + i, () => client.checkDocument(global.downloadsFolderPath, 'invoices', global.orderInfo[i - 1].ProductRef));
-    test('should check the "Product Combination" of the product n°' + i, () => client.checkDocument(global.downloadsFolderPath, 'invoices', global.orderInfo[i - 1].ProductCombination));
-    test('should check the "Product Quantity" of the product n°' + i, () => client.checkDocument(global.downloadsFolderPath, 'invoices', global.orderInfo[i - 1].ProductQuantity));
-    test('should check the "Total Price" of the product n°' + i, () => client.checkDocument(global.downloadsFolderPath, 'invoices', global.orderInfo[i - 1].TotalPrice));
-    test('should check the "Unit Price" of the product n°' + i, () => client.checkDocument(global.downloadsFolderPath, 'invoices', global.orderInfo[i - 1].ProductUnitPrice));
-    test('should check the "Tax Rate" of the product n°' + i, () => client.checkDocument(global.downloadsFolderPath, 'invoices', global.orderInfo[i - 1].ProductTaxRate));
-    test('should check the "Total Product" of the product n°' + i, () => client.checkDocument(global.downloadsFolderPath, 'invoices', global.orderInfo[i - 1].TotalProduct));
-    test('should check the "Shipping Cost" of the product n°' + i, () => client.checkDocument(global.downloadsFolderPath, 'invoices', global.orderInfo[i - 1].ShippingCost));
-    test('should check the "Total" of the product n°' + i, () => client.checkDocument(global.downloadsFolderPath, 'invoices', global.orderInfo[i - 1].Total));
-    test('should check the "Total Tax" of the product n°' + i, () => client.checkDocument(global.downloadsFolderPath, 'invoices', global.orderInfo[i - 1].TotalTax));
-    test('should check the "Carrier" name of the product n°' + i, () => client.checkDocument(global.downloadsFolderPath, 'invoices', global.orderInfo[i - 1].Carrier));
+    test('should check the "Delivery Address " of the product n°' + i, async () => {
+      await client.checkFile(global.downloadsFolderPath, 'invoices.pdf');
+      if (global.existingFile) {
+        await client.checkDocument(global.downloadsFolderPath, 'invoices', 'My Company');
+        await client.checkDocument(global.downloadsFolderPath, 'invoices', 'My Company');
+        await client.checkDocument(global.downloadsFolderPath, 'invoices', '16, Main street');
+        await client.checkDocument(global.downloadsFolderPath, 'invoices', '75002 Paris');
+        await client.checkDocument(global.downloadsFolderPath, 'invoices', 'France');
+      }
+    });
+    test('should check the "invoice" information of the product n°' + i, async () => {
+      await client.checkFile(global.downloadsFolderPath, 'invoices.pdf');
+      if (global.existingFile) {
+        await client.checkDocument(global.downloadsFolderPath, 'invoices', global.orderInfo[i - 1].invoiceDate);
+        await client.checkDocument(global.downloadsFolderPath, 'invoices', global.orderInfo[i - 1].OrderRef);
+        await client.checkDocument(global.downloadsFolderPath, 'invoices', global.orderInfo[i - 1].ProductRef);
+        await client.checkDocument(global.downloadsFolderPath, 'invoices', global.orderInfo[i - 1].ProductCombination);
+        await client.checkDocument(global.downloadsFolderPath, 'invoices', global.orderInfo[i - 1].ProductQuantity);
+        await client.checkDocument(global.downloadsFolderPath, 'invoices', global.orderInfo[i - 1].TotalPrice);
+        await client.checkDocument(global.downloadsFolderPath, 'invoices', global.orderInfo[i - 1].ProductUnitPrice);
+        await client.checkDocument(global.downloadsFolderPath, 'invoices', global.orderInfo[i - 1].ProductTaxRate);
+        await client.checkDocument(global.downloadsFolderPath, 'invoices', global.orderInfo[i - 1].TotalProduct);
+        await client.checkDocument(global.downloadsFolderPath, 'invoices', global.orderInfo[i - 1].ShippingCost);
+        await client.checkDocument(global.downloadsFolderPath, 'invoices', global.orderInfo[i - 1].Total);
+        await client.checkDocument(global.downloadsFolderPath, 'invoices', global.orderInfo[i - 1].TotalTax);
+        await client.checkDocument(global.downloadsFolderPath, 'invoices', global.orderInfo[i - 1].Carrier);
+      }
+    });
   },
   updateStatus: function (status) {
     scenario('Change the order state to "' + status + '"', client => {
@@ -352,6 +430,10 @@ module.exports = {
       test('should go to the created order', () => client.waitForExistAndClick(OrderPage.order_view_button.replace('%ORDERNumber', 1)));
       test('should change order state to "' + status + '"', () => client.updateStatus(status));
       test('should click on "Update state" button', () => client.waitForExistAndClick(OrderPage.update_status_button));
+      /**
+       * should refresh the page, to pass the error
+       */
+      test('should refresh the page', () => client.refresh());
       test('should check that the status was updated', () => client.waitForVisible(OrderPage.status.replace('%STATUS', status)));
     }, 'order');
   },
@@ -383,6 +465,8 @@ module.exports = {
             })
           })
           .then(() => client.getTextInVar(OrderPage.product_total_price, "ProductTotal"))
+          .then(() => client.getTextInVar(OrderPage.shipping_method, "method"))
+          .then(() => client.getTextInVar(OrderPage.payment_method, "PaymentMethod"))
           .then(() => {
             global.orderInformation[index] = {
               "OrderId": global.tab['OrderID'].replace("#", ''),
@@ -392,7 +476,9 @@ module.exports = {
               "ProductCombination": global.tab['ProductCombination'],
               "ProductQuantity": global.tab['ProductQuantity'],
               "ProductName": global.tab['ProductName'],
-              "ProductTotal": global.tab['ProductTotal']
+              "ProductTotal": global.tab['ProductTotal'],
+              "Method": global.tab['method'],
+              "PaymentMethod": global.tab['PaymentMethod']
             }
           });
       });
@@ -404,6 +490,30 @@ module.exports = {
       test('should disable "Merchandise Returns"', () => client.waitForExistAndClick(MerchandiseReturns.disableReturns));
       test('should click on "Save" button', () => client.waitForExistAndClick(MerchandiseReturns.save_button));
       test('should check the success message', () => client.checkTextValue(MerchandiseReturns.success_msg, 'The settings have been successfully updated.', 'contain'));
+    }, 'order');
+  },
+
+  createCustomerFromOrder: function (customerData) {
+    scenario('Create customer through order in the Back Office', client => {
+      test('should go to "Orders" page', () => client.goToSubtabMenuPage(Menu.Sell.Orders.orders_menu, Menu.Sell.Orders.orders_submenu));
+      test('should click on "Add new order" button', () => client.waitForExistAndClick(CreateOrder.new_order_button, 1000));
+      test('should click on "Add new customer" button', () => {
+        return promise
+          .then(() => client.waitForExistAndClick(CreateOrder.new_customer_button, 1000))
+          .then(() => client.goToFrame(1));
+      });
+      test('should click on "Mr" in the "Social title" radio button', () => client.waitForExistAndClick(Customer.social_title_button, 1000));
+      test('should set the "First name" input', () => client.waitAndSetValue(Customer.first_name_input, customerData.first_name));
+      test('should set the "Last name" input', () => client.waitAndSetValue(Customer.last_name_input, customerData.last_name));
+      test('should set the "Email address" input', () => client.waitAndSetValue(Customer.email_address_input, date_time + customerData.email_address));
+      test('should set the "Password" input', () => client.waitAndSetValue(Customer.password_input, customerData.password));
+      test('should set the customer "Birthday"', () => {
+        return promise
+          .then(() => client.waitAndSelectByValue(Customer.days_select, customerData.birthday.day))
+          .then(() => client.waitAndSelectByValue(Customer.month_select, customerData.birthday.month))
+          .then(() => client.waitAndSelectByValue(Customer.years_select, customerData.birthday.year));
+      });
+      test('should click on "Save" button', () => client.waitForExistAndClick(Customer.save_button));
     }, 'order');
   },
 };

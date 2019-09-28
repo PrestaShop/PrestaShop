@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,28 +16,36 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Form\Admin\Catalog\Category;
 
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
+use PrestaShop\PrestaShop\Core\Domain\Category\SeoSettings;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
+use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
 use PrestaShopBundle\Form\Admin\Type\Material\MaterialChoiceTableType;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
-use PrestaShopBundle\Form\Admin\Type\TextWithLengthCounterType;
+use PrestaShopBundle\Form\Admin\Type\TextWithRecommendedLengthType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
+use PrestaShopBundle\Form\Admin\Type\TranslateType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Regex;
 
 /**
  * Class AbstractCategoryType.
@@ -55,21 +63,29 @@ abstract class AbstractCategoryType extends TranslatorAwareType
     private $multistoreFeature;
 
     /**
+     * @var ConfigurationInterface
+     */
+    private $configuration;
+
+    /**
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param array $customerGroupChoices
      * @param FeatureInterface $multistoreFeature
+     * @param ConfigurationInterface $configuration
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
         array $customerGroupChoices,
-        FeatureInterface $multistoreFeature
+        FeatureInterface $multistoreFeature,
+        ConfigurationInterface $configuration
     ) {
         parent::__construct($translator, $locales);
 
         $this->customerGroupChoices = $customerGroupChoices;
         $this->multistoreFeature = $multistoreFeature;
+        $this->configuration = $configuration;
     }
 
     /**
@@ -80,13 +96,32 @@ abstract class AbstractCategoryType extends TranslatorAwareType
         $builder
             ->add('name', TranslatableType::class, [
                 'type' => TextType::class,
+                'constraints' => [
+                    new DefaultLanguage(),
+                ],
+                'options' => [
+                    'constraints' => [
+                        new Regex([
+                            'pattern' => '/^[^<>;=#{}]*$/u',
+                            'message' => $this->trans('%s is invalid.', 'Admin.Notifications.Error'),
+                        ]),
+                    ],
+                ],
+            ])
+            ->add('description', TranslateType::class, [
+                'type' => FormattedTextareaType::class,
+                'locales' => $this->locales,
+                'hideTabs' => false,
+                'required' => false,
+                'options' => [
+                    'constraints' => [
+                        new CleanHtml([
+                            'message' => $this->trans('This field is invalid', 'Admin.Notifications.Error'),
+                        ]),
+                    ],
+                ],
             ])
             ->add('active', SwitchType::class, [
-                'required' => false,
-                'data' => true,
-            ])
-            ->add('description', TranslatableType::class, [
-                'type' => TextareaType::class,
                 'required' => false,
             ])
             ->add('cover_image', FileType::class, [
@@ -100,29 +135,106 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                 'required' => false,
             ])
             ->add('meta_title', TranslatableType::class, [
-                'type' => TextWithLengthCounterType::class,
+                'type' => TextWithRecommendedLengthType::class,
+                'required' => false,
                 'options' => [
-                    'max_length' => 70,
+                    'recommended_length' => SeoSettings::RECOMMENDED_TITLE_LENGTH,
+                    'attr' => [
+                        'maxlength' => SeoSettings::MAX_TITLE_LENGTH,
+                        'placeholder' => $this->trans(
+                            'To have a different title from the category name, enter it here.',
+                            'Admin.Catalog.Help'
+                        ),
+                    ],
+                    'constraints' => [
+                        new Regex([
+                            'pattern' => '/^[^<>={}]*$/u',
+                            'message' => $this->trans('%s is invalid.', 'Admin.Notifications.Error'),
+                        ]),
+                        new Length([
+                            'max' => SeoSettings::MAX_TITLE_LENGTH,
+                            'maxMessage' => $this->trans(
+                                'This field cannot be longer than %limit% characters',
+                                'Admin.Notifications.Error',
+                                [
+                                    '%limit%' => SeoSettings::MAX_TITLE_LENGTH,
+                                ]
+                            ),
+                        ]),
+                    ],
                 ],
             ])
             ->add('meta_description', TranslatableType::class, [
-                'type' => TextareaType::class,
+                'required' => false,
+                'type' => TextWithRecommendedLengthType::class,
                 'options' => [
                     'required' => false,
+                    'input_type' => 'textarea',
+                    'recommended_length' => SeoSettings::RECOMMENDED_DESCRIPTION_LENGTH,
+                    'attr' => [
+                        'maxlength' => SeoSettings::MAX_DESCRIPTION_LENGTH,
+                        'rows' => 3,
+                        'placeholder' => $this->trans(
+                            'To have a different description than your category summary in search results page, write it here.',
+                            'Admin.Catalog.Help'
+                        ),
+                    ],
+                    'constraints' => [
+                        new Regex([
+                            'pattern' => '/^[^<>={}]*$/u',
+                            'message' => $this->trans('%s is invalid.', 'Admin.Notifications.Error'),
+                        ]),
+                        new Length([
+                            'max' => SeoSettings::MAX_DESCRIPTION_LENGTH,
+                            'maxMessage' => $this->trans(
+                                'This field cannot be longer than %limit% characters',
+                                'Admin.Notifications.Error',
+                                [
+                                    '%limit%' => SeoSettings::MAX_DESCRIPTION_LENGTH,
+                                ]
+                            ),
+                        ]),
+                    ],
                 ],
             ])
             ->add('meta_keyword', TranslatableType::class, [
-                'type' => TextType::class,
+                'required' => false,
                 'options' => [
+                    'constraints' => [
+                        new Regex([
+                            'pattern' => '/^[^<>={}]*$/u',
+                            'message' => $this->trans('%s is invalid.', 'Admin.Notifications.Error'),
+                        ]),
+                    ],
+                    'attr' => [
+                        'class' => 'js-taggable-field',
+                        'placeholder' => $this->trans('Add tag', 'Admin.Actions'),
+                    ],
                     'required' => false,
                 ],
             ])
             ->add('link_rewrite', TranslatableType::class, [
                 'type' => TextType::class,
+                'constraints' => [
+                    new DefaultLanguage(),
+                ],
+                'options' => [
+                    'constraints' => [
+                        new Regex([
+                            'pattern' => (bool) $this->configuration->get('PS_ALLOW_ACCENTED_CHARS_URL') ? '/^[_a-zA-Z0-9\x{0600}-\x{06FF}\pL\pS-]+$/u' : '/^[^<>={}]*$/u',
+                            'message' => $this->trans('%s is invalid.', 'Admin.Notifications.Error'),
+                        ]),
+                    ],
+                ],
             ])
             ->add('group_association', MaterialChoiceTableType::class, [
                 'choices' => $this->customerGroupChoices,
-                'required' => false,
+                'required' => true,
+                'constraints' => [
+                    new NotBlank([
+                        'message' => $this->trans('This field cannot be empty', 'Admin.Notifications.Error'),
+                    ]),
+                ],
             ]);
 
         if ($this->multistoreFeature->isUsed()) {

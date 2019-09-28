@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -40,6 +40,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Form\Admin\Type\DateRangeType;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -66,12 +67,18 @@ final class EmailLogsDefinitionFactory extends AbstractGridDefinitionFactory
     private $languageChoiceProvider;
 
     /**
+     * @param HookDispatcherInterface $hookDispatcher
      * @param string $resetActionUrl
      * @param string $redirectionUrl
      * @param FormChoiceProviderInterface $languageChoiceProvider
      */
-    public function __construct($resetActionUrl, $redirectionUrl, FormChoiceProviderInterface $languageChoiceProvider)
-    {
+    public function __construct(
+        HookDispatcherInterface $hookDispatcher,
+        $resetActionUrl,
+        $redirectionUrl,
+        FormChoiceProviderInterface $languageChoiceProvider
+    ) {
+        parent::__construct($hookDispatcher);
         $this->resetActionUrl = $resetActionUrl;
         $this->redirectionUrl = $redirectionUrl;
         $this->languageChoiceProvider = $languageChoiceProvider;

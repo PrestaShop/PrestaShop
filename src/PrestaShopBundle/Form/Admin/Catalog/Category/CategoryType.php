@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -42,12 +42,25 @@ class CategoryType extends AbstractCategoryType
     {
         parent::buildForm($builder, $options);
 
+        // Root category is always disabled
+        $disabledCategories = array_merge(
+            [
+                $this->getConfiguration()->getInt('PS_ROOT_CATEGORY'),
+            ],
+            $options['subcategories']
+        );
+
+        if (null !== $options['id_category']) {
+            // when using CategoryType to edit category
+            // user should not be able to select that category as parent
+            $disabledCategories[] = $options['id_category'];
+        }
+
         $builder
             ->add('id_parent', CategoryChoiceTreeType::class, [
-                // when using CategoryType to edit category
-                // user should not be able to select that category as parent
-                'disabled_values' => null !== $options['id_category'] ? [$options['id_category']] : [],
-            ]);
+                'disabled_values' => $disabledCategories,
+            ])
+        ;
     }
 
     /**
@@ -58,7 +71,9 @@ class CategoryType extends AbstractCategoryType
         $resolver
             ->setDefaults([
                 'id_category' => null,
+                'subcategories' => [],
             ])
+            ->setAllowedTypes('subcategories', ['array'])
             ->setAllowedTypes('id_category', ['int', 'null']);
     }
 }

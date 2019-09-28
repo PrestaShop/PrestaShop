@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -170,6 +170,7 @@ class CartControllerCore extends FrontController
             'cart_detailed' => $this->render('checkout/_partials/cart-detailed'),
             'cart_detailed_totals' => $this->render('checkout/_partials/cart-detailed-totals'),
             'cart_summary_items_subtotal' => $this->render('checkout/_partials/cart-summary-items-subtotal'),
+            'cart_summary_subtotals_container' => $this->render('checkout/_partials/cart-summary-subtotals'),
             'cart_summary_totals' => $this->render('checkout/_partials/cart-summary-totals'),
             'cart_detailed_actions' => $this->render('checkout/_partials/cart-detailed-actions'),
             'cart_voucher' => $this->render('checkout/_partials/cart-voucher'),
@@ -423,8 +424,8 @@ class CartControllerCore extends FrontController
         // Check product quantity availability
         if ('update' !== $mode && $this->shouldAvailabilityErrorBeRaised($product, $qty_to_check)) {
             $this->{$ErrorKey}[] = $this->trans(
-                'The item %product% in your cart is no longer available in this quantity. You cannot proceed with your order until the quantity is adjusted.',
-                array('%product%' => $product->name),
+                'The product is no longer available in this quantity.',
+                array(),
                 'Shop.Notifications.Error'
             );
         }
@@ -433,10 +434,10 @@ class CartControllerCore extends FrontController
         if (!$this->id_product_attribute) {
             if ($qty_to_check < $product->minimal_quantity) {
                 $this->errors[] = $this->trans(
-                     'The minimum purchase order quantity for the product %product% is %quantity%.',
-                     array('%product%' => $product->name, '%quantity%' => $product->minimal_quantity),
-                     'Shop.Notifications.Error'
-                 );
+                    'The minimum purchase order quantity for the product %product% is %quantity%.',
+                    array('%product%' => $product->name, '%quantity%' => $product->minimal_quantity),
+                    'Shop.Notifications.Error'
+                );
 
                 return;
             }
@@ -444,10 +445,10 @@ class CartControllerCore extends FrontController
             $combination = new Combination($this->id_product_attribute);
             if ($qty_to_check < $combination->minimal_quantity) {
                 $this->errors[] = $this->trans(
-                     'The minimum purchase order quantity for the product %product% is %quantity%.',
-                     array('%product%' => $product->name, '%quantity%' => $combination->minimal_quantity),
-                     'Shop.Notifications.Error'
-                 );
+                    'The minimum purchase order quantity for the product %product% is %quantity%.',
+                    array('%product%' => $product->name, '%quantity%' => $combination->minimal_quantity),
+                    'Shop.Notifications.Error'
+                );
 
                 return;
             }
@@ -519,8 +520,8 @@ class CartControllerCore extends FrontController
                 } elseif ($this->shouldAvailabilityErrorBeRaised($product, $qty_to_check)) {
                     // check quantity after cart quantity update
                     $this->{$ErrorKey}[] = $this->trans(
-                        'The item %product% in your cart is no longer available in this quantity. You cannot proceed with your order until the quantity is adjusted.',
-                        array('%product%' => $product->name),
+                        'The product is no longer available in this quantity.',
+                        array(),
                         'Shop.Notifications.Error'
                     );
                 }

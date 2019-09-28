@@ -1,11 +1,11 @@
 /* unicode_hack.js
-*    Copyright (C) 2010-2012  Marcelo Gibson de Castro GonÃ§alves. All rights reserved.
-*
-*    Copying and distribution of this file, with or without modification,
-*    are permitted in any medium without royalty provided the copyright
-*    notice and this notice are preserved.  This file is offered as-is,
-*    without any warranty.
-*/
+ *    Copyright (C) 2010-2012  Marcelo Gibson de Castro GonÃ§alves. All rights reserved.
+ *
+ *    Copying and distribution of this file, with or without modification,
+ *    are permitted in any medium without royalty provided the copyright
+ *    notice and this notice are preserved.  This file is offered as-is,
+ *    without any warranty.
+ */
 var unicode_hack = (function() {
     /* Regexps to match characters in the BMP according to their Unicode category.
        Extracted from Unicode specification, version 5.0.0, source:
@@ -76,7 +76,7 @@ var unicode_hack = (function() {
 
 })();
 /**
- * 2007-2017 PrestaShop
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -95,13 +95,19 @@ var unicode_hack = (function() {
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+function validate_isCustomerName(s)
+{
+	var reg = /^(?:[^0-9!<>,;?=+()\/\\@#"°*`\{\}_^$%:¤\[\]|\.。]|[\.。](?:\s|$))*$/;
+	return reg.test(s);
+}
+
 function validate_isName(s)
 {
-	var reg = /^[^0-9!<>,;?=+()@#"°{}_$%:]+$/;
+	var reg = /^[^0-9!<>,;?=+()@#"°\{\}_$%:]+$/;
 	return reg.test(s);
 }
 

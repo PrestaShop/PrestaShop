@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -100,7 +100,7 @@ class ImageManagerCore
         $cacheParam = $disableCache ? '?time=' . time() : '';
 
         if (Context::getContext()->controller->controller_type == 'admin') {
-            return '../img/tmp/' . $cacheImage . $cacheParam;
+            return __PS_BASE_URI__ . 'img/tmp/' . $cacheImage . $cacheParam;
         }
 
         return _PS_TMP_IMG_ . $cacheImage . $cacheParam;
@@ -514,8 +514,8 @@ class ImageManagerCore
         $dest = array();
         $dest['x'] = $dstX;
         $dest['y'] = $dstY;
-        $dest['width'] = !is_null($dstWidth) ? $dstWidth : $src['width'];
-        $dest['height'] = !is_null($dstHeight) ? $dstHeight : $src['height'];
+        $dest['width'] = null !== $dstWidth ? $dstWidth : $src['width'];
+        $dest['height'] = null !== $dstHeight ? $dstHeight : $src['height'];
         $dest['ressource'] = ImageManager::createWhiteImage($dest['width'], $dest['height']);
 
         $white = imagecolorallocate($dest['ressource'], 255, 255, 255);

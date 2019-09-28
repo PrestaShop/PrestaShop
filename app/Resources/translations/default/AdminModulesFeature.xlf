@@ -31,11 +31,6 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:167</note>
   </file>
   <file original="modules/ps_mbo/views/templates/admin/include/action_menu.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="abfc3a65538a6ec86502b2b498b6b4a6">
-        <source>Discover</source>
-        <target>Discover</target>
-        <note>Line: 28</note>
-      </trans-unit>
       <trans-unit id="349838fb1d851d3e2014b9fe39203275">
         <source>Install</source>
         <target>Install</target>
@@ -43,104 +38,8 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:167</note>
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_mbo/views/templates/admin/include/dropdown_categories.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="a6a2a55bea8760389dfca77132905b7c">
-        <source>All Categories</source>
-        <target>All Categories</target>
-        <note>Line: 36</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/ps_mbo/views/templates/admin/include/menu_top.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="9adfc354d13f70ca8172da3cd2d9c06e">
-        <source>%nbModules% modules and services selected for you</source>
-        <target>%nbModules% modules and services selected for you</target>
-        <note>Line: 52</note>
-      </trans-unit>
-      <trans-unit id="6ff9dd0d34f65181173c1e4bc39939de">
-        <source>Selection</source>
-        <target>Selection</target>
-        <note>Line: 54</note>
-      </trans-unit>
-      <trans-unit id="3d7c1883e8f497290c2aafa2086f49ff">
-        <source>Increasing Price</source>
-        <target>Increasing Price</target>
-        <note>Line: 64</note>
-      </trans-unit>
-      <trans-unit id="8e7cce37e14aea45d6d88e8c4aaa1b98">
-        <source>Decreasing Price</source>
-        <target>Decreasing Price</target>
-        <note>Line: 65</note>
-      </trans-unit>
-      <trans-unit id="e22269bb51f9f2394e148716babbafbb">
-        <source>Popularity</source>
-        <target>Popularity</target>
-        <note>Line: 66</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/ps_mbo/views/templates/admin/include/modal_addons_connect.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="7234d2a9a27b5e8dba609efe02ee9548">
-        <source>Link your shop to your Addons account to automatically receive important updates for the modules you purchased. Don't have an account yet?</source>
-        <target>Link your shop to your Addons account to automatically receive important updates for the modules you purchased. Don't have an account yet?</target>
-        <note>Line: 50</note>
-      </trans-unit>
-      <trans-unit id="cedcf6fe65a8f2849fe11e316d6c9923">
-        <source>Sign up now</source>
-        <target>Sign up now</target>
-        <note>Line: 51</note>
-      </trans-unit>
-      <trans-unit id="b09249132bbed9baecd987cf73200b44">
-        <source>Confirm logout</source>
-        <target>Confirm logout</target>
-        <note>Line: 88</note>
-      </trans-unit>
-      <trans-unit id="6be2c07aa891bbaafc828e43e336abb4">
-        <source>Yes, log out</source>
-        <target>Yes, log out</target>
-        <note>Line: 102</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/ps_mbo/views/templates/admin/include/modal_confirm_prestatrust.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="80c1f30ef63bc79dd32b654e7b85c112">
-        <source>Module verification</source>
-        <target>Module verification</target>
-        <note>Line: 5</note>
-      </trans-unit>
-      <trans-unit id="a517747c3d12f99244ae598910d979c5">
-        <source>Author</source>
-        <target>Author</target>
-        <note>Line: 21</note>
-      </trans-unit>
-      <trans-unit id="249212ebba2907c6087887db076179e6">
-        <source>Back to modules list</source>
-        <target>Back to modules list</target>
-        <note>Line: 38</note>
-      </trans-unit>
-      <trans-unit id="34afcb42ab73990082d328d9b34811b5">
-        <source>Proceed with the installation</source>
-        <target>Proceed with the installation</target>
-        <note>Line: 42</note>
-      </trans-unit>
-      <trans-unit id="0c18217e480e74369a0b21d29052574e">
-        <source>Buy module</source>
-        <target>Buy module</target>
-        <note>Line: 43</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="modules/ps_mbo/views/templates/admin/include/modal_import.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="76ab1ee2aacc1b9bbc0a70bf6cca7004">
-        <source>Upload a module</source>
-        <target>Upload a module</target>
-        <note>Line: 30</note>
-      </trans-unit>
       <trans-unit id="5d863819c3f3055dd8fca884f087caf7">
         <source>Drop your module archive here or</source>
         <target>Drop your module archive here or</target>
@@ -153,21 +52,46 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:167</note>
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_mbo/views/templates/admin/module-toolbar.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="modules/watermark/views/templates/admin/addons-suggestion.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="1c0b7f4d79e06a46c12312615fc4ab14">
-        <source>Connect to Addons marketplace</source>
-        <target>Connect to Addons marketplace</target>
-        <note>Line: 17</note>
+      <trans-unit id="25131b831e5832d70365d17471b6326d">
+        <source>Discover all modules</source>
+        <target>Discover all modules</target>
+        <note>Line: 45</note>
+      </trans-unit>
+      <trans-unit id="31edfec531c02c0cfe522ed5ca726e2f">
+        <source>Want to go further?</source>
+        <target>Want to go further?</target>
+        <note>Line: 31</note>
+      </trans-unit>
+      <trans-unit id="7c6a169b9017895a118d7cb18b7b788e">
+        <source>To go further:</source>
+        <target>To go further:</target>
+        <note>Line: 49</note>
+      </trans-unit>
+      <trans-unit id="ca9d568dc040c1a1efccc71c07984cf0">
+        <source><![CDATA[Labels, Stickers & Logos]]></source>
+        <target><![CDATA[Labels, Stickers & Logos]]></target>
+        <note>Line: 52</note>
+      </trans-unit>
+      <trans-unit id="c3782cf09e0f24e3a31a2dda9d9de9b9">
+        <source>Addons Marketplace</source>
+        <target>Addons Marketplace</target>
+        <note>Line: 55</note>
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_mbo/views/templates/admin/page.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="modules/watermark/watermark.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="decbe415d8accca7c2c16d48a79ee934">
-        <source>Read More</source>
-        <target>Read More</target>
-        <note>Line: 106</note>
+      <trans-unit id="0dd948e4d25b3f02772adf5b1663de6e">
+        <source>For example, you can add "Free shipping", "-30%", "New", "Last parts in stock", "No. 1 of sales" badges to make your products more visible and to differentiate them. And also propose badges indicating the composition (100% cotton, 100% organic...) or icons highlighting the strengths of each product. So you customize your shop in just a few clicks.</source>
+        <target>For example, you can add "Free shipping", "-30%", "New", "Last parts in stock", "No. 1 of sales" badges to make your products more visible and to differentiate them. And also propose badges indicating the composition (100% cotton, 100% organic...) or icons highlighting the strengths of each product. So you customize your shop in just a few clicks.</target>
+        <note>Line: 608</note>
+      </trans-unit>
+      <trans-unit id="3da6c86f2fce98d47d8681582b0fc858">
+        <source>https://addons.prestashop.com/en/309-labels-stickers-logos</source>
+        <target>https://addons.prestashop.com/en/309-labels-stickers-logos</target>
+        <note>Line: 610</note>
       </trans-unit>
     </body>
   </file>
@@ -199,21 +123,26 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:167</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/Blocks/import_file_history.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="90406afefae30826692e7f7480f7467c">
-        <source>Toggle Dropdown</source>
-        <target>Toggle Dropdown</target>
-        <note>Line: 86</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/Payment/PaymentMethods/Blocks/payment_modules_list.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="2693dd71600631eed47725291fe5da19">
         <source>v%version% - by %author%</source>
         <target>v%version% - by %author%</target>
         <note>Line: 41</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/action_menu.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="abfc3a65538a6ec86502b2b498b6b4a6">
+        <source>Discover</source>
+        <target>Discover</target>
+        <note>Line: 36</note>
+      </trans-unit>
+      <trans-unit id="90406afefae30826692e7f7480f7467c">
+        <source>Toggle Dropdown</source>
+        <target>Toggle Dropdown</target>
+        <note>Line: 51</note>
       </trans-unit>
     </body>
   </file>
@@ -238,10 +167,24 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:167</note>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/card_list.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="decbe415d8accca7c2c16d48a79ee934">
+        <source>Read More</source>
+        <target>Read More</target>
+        <note>Line: 91</note>
+      </trans-unit>
       <trans-unit id="031f3657c3601889e98df488db139b75">
         <source>Service by %author%</source>
         <target>Service by %author%</target>
         <note>Line: 76</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/dropdown_categories_catalog.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="a6a2a55bea8760389dfca77132905b7c">
+        <source>All Categories</source>
+        <target>All Categories</target>
+        <note>Line: 39</note>
       </trans-unit>
     </body>
   </file>
@@ -284,6 +227,35 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:167</note>
         <source>Recently Used</source>
         <target>Recently Used</target>
         <note>Line: 28</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_addons_connect.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7234d2a9a27b5e8dba609efe02ee9548">
+        <source>Link your shop to your Addons account to automatically receive important updates for the modules you purchased. Don't have an account yet?</source>
+        <target>Link your shop to your Addons account to automatically receive important updates for the modules you purchased. Don't have an account yet?</target>
+        <note>Line: 48</note>
+      </trans-unit>
+      <trans-unit id="cedcf6fe65a8f2849fe11e316d6c9923">
+        <source>Sign up now</source>
+        <target>Sign up now</target>
+        <note>Line: 49</note>
+      </trans-unit>
+      <trans-unit id="b09249132bbed9baecd987cf73200b44">
+        <source>Confirm logout</source>
+        <target>Confirm logout</target>
+        <note>Line: 91</note>
+      </trans-unit>
+      <trans-unit id="6be2c07aa891bbaafc828e43e336abb4">
+        <source>Yes, log out</source>
+        <target>Yes, log out</target>
+        <note>Line: 105</note>
+      </trans-unit>
+      <trans-unit id="1c0b7f4d79e06a46c12312615fc4ab14">
+        <source>Connect to Addons marketplace</source>
+        <target>Connect to Addons marketplace</target>
+        <note>Line: 30</note>
       </trans-unit>
     </body>
   </file>
@@ -340,8 +312,42 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:167</note>
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_confirm_prestatrust.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="80c1f30ef63bc79dd32b654e7b85c112">
+        <source>Module verification</source>
+        <target>Module verification</target>
+        <note>Line: 30</note>
+      </trans-unit>
+      <trans-unit id="a517747c3d12f99244ae598910d979c5">
+        <source>Author</source>
+        <target>Author</target>
+        <note>Line: 46</note>
+      </trans-unit>
+      <trans-unit id="249212ebba2907c6087887db076179e6">
+        <source>Back to modules list</source>
+        <target>Back to modules list</target>
+        <note>Line: 63</note>
+      </trans-unit>
+      <trans-unit id="34afcb42ab73990082d328d9b34811b5">
+        <source>Proceed with the installation</source>
+        <target>Proceed with the installation</target>
+        <note>Line: 67</note>
+      </trans-unit>
+      <trans-unit id="0c18217e480e74369a0b21d29052574e">
+        <source>Buy module</source>
+        <target>Buy module</target>
+        <note>Line: 68</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_import.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="76ab1ee2aacc1b9bbc0a70bf6cca7004">
+        <source>Upload a module</source>
+        <target>Upload a module</target>
+        <note>Line: 30</note>
+      </trans-unit>
       <trans-unit id="7c8701c300f85e9799c74e83f4adea64">
         <source>Drop your module archive here or [1]select file[/1]</source>
         <target>Drop your module archive here or [1]select file[/1]</target>
@@ -390,6 +396,35 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:167</note>
         <source>Changelog</source>
         <target>Changelog</target>
         <note>Line: 105</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/sorting.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="9adfc354d13f70ca8172da3cd2d9c06e">
+        <source>%nbModules% modules and services selected for you</source>
+        <target>%nbModules% modules and services selected for you</target>
+        <note>Line: 29</note>
+      </trans-unit>
+      <trans-unit id="6ff9dd0d34f65181173c1e4bc39939de">
+        <source>Selection</source>
+        <target>Selection</target>
+        <note>Line: 31</note>
+      </trans-unit>
+      <trans-unit id="3d7c1883e8f497290c2aafa2086f49ff">
+        <source>Increasing Price</source>
+        <target>Increasing Price</target>
+        <note>Line: 41</note>
+      </trans-unit>
+      <trans-unit id="8e7cce37e14aea45d6d88e8c4aaa1b98">
+        <source>Decreasing Price</source>
+        <target>Decreasing Price</target>
+        <note>Line: 42</note>
+      </trans-unit>
+      <trans-unit id="e22269bb51f9f2394e148716babbafbb">
+        <source>Popularity</source>
+        <target>Popularity</target>
+        <note>Line: 43</note>
       </trans-unit>
     </body>
   </file>

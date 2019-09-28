@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -40,23 +40,23 @@ use Group;
 use Language;
 use Link;
 use Order;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\AddressInformation;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\BoughtProductInformation;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CartInformation;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\CustomerInformation;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\DiscountInformation;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\GeneralInformation;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\GroupInformation;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\LastConnectionInformation;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\MessageInformation;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\OrderInformation;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\OrdersInformation;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\PersonalInformation;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\ProductsInformation;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\ReferrerInformation;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\SentEmailInformation;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\Subscriptions;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Dto\ViewedProductInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\AddressInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\BoughtProductInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\CartInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\DiscountInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\GeneralInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\GroupInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\LastConnectionInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\MessageInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\OrderInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\OrdersInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\PersonalInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\ProductsInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\ReferrerInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\SentEmailInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\Subscriptions;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\ViewedProductInformation;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\ViewableCustomer;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryHandler\GetCustomerForViewingHandlerInterface;
@@ -117,7 +117,7 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
 
         Context::getContext()->customer = $customer;
 
-        return new CustomerInformation(
+        return new ViewableCustomer(
             $customerId,
             $this->getGeneralInformation($customer),
             $this->getPersonalInformation($customer),

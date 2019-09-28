@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,14 +16,15 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 use PrestaShop\PrestaShop\Adapter\StockManager;
+use PrestaShop\PrestaShop\Adapter\MailTemplate\MailPartialTemplateRenderer;
 
 abstract class PaymentModuleCore extends Module
 {
@@ -34,6 +35,9 @@ abstract class PaymentModuleCore extends Module
     public $currencies_mode = 'checkbox';
 
     const DEBUG_MODE = false;
+
+    /** @var MailPartialTemplateRenderer */
+    protected $partialRenderer;
 
     public function install()
     {
@@ -192,7 +196,7 @@ abstract class PaymentModuleCore extends Module
      * @param int $id_order_state
      * @param float $amount_paid Amount really paid by customer (in the default currency)
      * @param string $payment_method Payment method (eg. 'Credit card')
-     * @param null $message Message to attach to order
+     * @param string|null $message Message to attach to order
      * @param array $extra_vars
      * @param null $currency_special
      * @param bool $dont_touch_amount
@@ -554,7 +558,7 @@ abstract class PaymentModuleCore extends Module
                             $order_detail->product_quantity_in_stock < 0)) {
                         $history = new OrderHistory();
                         $history->id_order = (int) $order->id;
-                        $history->changeIdOrderState(Configuration::get($order->valid ? 'PS_OS_OUTOFSTOCK_PAID' : 'PS_OS_OUTOFSTOCK_UNPAID'), $order, true);
+                        $history->changeIdOrderState(Configuration::get($order->hasBeenPaid() ? 'PS_OS_OUTOFSTOCK_PAID' : 'PS_OS_OUTOFSTOCK_UNPAID'), $order, true);
                         $history->addWithemail();
                     }
 
@@ -569,13 +573,14 @@ abstract class PaymentModuleCore extends Module
                         $delivery = new Address((int) $order->id_address_delivery);
                         $delivery_state = $delivery->id_state ? new State((int) $delivery->id_state) : false;
                         $invoice_state = $invoice->id_state ? new State((int) $invoice->id_state) : false;
+                        $carrier = $order->id_carrier ? new Carrier($order->id_carrier) : false;
 
                         $data = array(
                             '{firstname}' => $this->context->customer->firstname,
                             '{lastname}' => $this->context->customer->lastname,
                             '{email}' => $this->context->customer->email,
-                            '{delivery_block_txt}' => $this->_getFormatedAddress($delivery, "\n"),
-                            '{invoice_block_txt}' => $this->_getFormatedAddress($invoice, "\n"),
+                            '{delivery_block_txt}' => $this->_getFormatedAddress($delivery, AddressFormat::FORMAT_NEW_LINE),
+                            '{invoice_block_txt}' => $this->_getFormatedAddress($invoice, AddressFormat::FORMAT_NEW_LINE),
                             '{delivery_block_html}' => $this->_getFormatedAddress($delivery, '<br />', array(
                                 'firstname' => '<span style="font-weight:bold;">%s</span>',
                                 'lastname' => '<span style="font-weight:bold;">%s</span>',
@@ -696,7 +701,7 @@ abstract class PaymentModuleCore extends Module
                 } else {
                     $error = $this->trans('Order creation failed', array(), 'Admin.Payment.Notification');
                     PrestaShopLogger::addLog($error, 4, '0000002', 'Cart', (int) ($order->id_cart));
-                    die($error);
+                    die(Tools::displayError($error));
                 }
             } // End foreach $order_detail_list
 
@@ -713,7 +718,7 @@ abstract class PaymentModuleCore extends Module
         } else {
             $error = $this->trans('Cart cannot be loaded or an order has already been placed using this cart', array(), 'Admin.Payment.Notification');
             PrestaShopLogger::addLog($error, 4, '0000001', 'Cart', (int) ($this->context->cart->id));
-            die($error);
+            die(Tools::displayError($error));
         }
     }
 
@@ -749,7 +754,7 @@ abstract class PaymentModuleCore extends Module
             $r_values[] = implode(' ', $tmp_values);
         }
 
-        $out = implode("\n", $r_values);
+        $out = implode(AddressFormat::FORMAT_NEW_LINE, $r_values);
 
         return $out;
     }
@@ -767,7 +772,7 @@ abstract class PaymentModuleCore extends Module
     /**
      * @param int $current_id_currency optional but on 1.5 it will be REQUIRED
      *
-     * @return Currency
+     * @return Currency|false
      */
     public function getCurrency($current_id_currency = null)
     {
@@ -816,7 +821,7 @@ abstract class PaymentModuleCore extends Module
         $values = '';
         if (count($id_module_list) == 0) {
             // fetch all installed module ids
-            $modules = PaymentModuleCore::getInstalledPaymentModules();
+            $modules = static::getInstalledPaymentModules();
             foreach ($modules as $module) {
                 $id_module_list[] = $module['id_module'];
             }
@@ -877,6 +882,18 @@ abstract class PaymentModuleCore extends Module
     }
 
     /**
+     * @return MailPartialTemplateRenderer
+     */
+    protected function getPartialRenderer()
+    {
+        if (!$this->partialRenderer) {
+            $this->partialRenderer = new MailPartialTemplateRenderer($this->context->smarty);
+        }
+
+        return $this->partialRenderer;
+    }
+
+    /**
      * Fetch the content of $template_name inside the folder
      * current_theme/mails/current_iso_lang/ if found, otherwise in
      * mails/current_iso_lang.
@@ -894,22 +911,7 @@ abstract class PaymentModuleCore extends Module
             return '';
         }
 
-        $pathToFindEmail = array(
-            _PS_THEME_DIR_ . 'mails' . DIRECTORY_SEPARATOR . $this->context->language->iso_code . DIRECTORY_SEPARATOR . $template_name,
-            _PS_THEME_DIR_ . 'mails' . DIRECTORY_SEPARATOR . 'en' . DIRECTORY_SEPARATOR . $template_name,
-            _PS_MAIL_DIR_ . $this->context->language->iso_code . DIRECTORY_SEPARATOR . $template_name,
-            _PS_MAIL_DIR_ . 'en' . DIRECTORY_SEPARATOR . $template_name,
-        );
-
-        foreach ($pathToFindEmail as $path) {
-            if (Tools::file_exists_cache($path)) {
-                $this->context->smarty->assign('list', $var);
-
-                return $this->context->smarty->fetch($path);
-            }
-        }
-
-        return '';
+        return $this->getPartialRenderer()->render($template_name, $this->context->language, $var);
     }
 
     protected function createOrderFromCart(
@@ -985,7 +987,7 @@ abstract class PaymentModuleCore extends Module
         $order->total_shipping_tax_incl = (float) $cart->getPackageShippingCost($carrierId, true, null, $order->product_list);
         $order->total_shipping = $order->total_shipping_tax_incl;
 
-        if (!is_null($carrier) && Validate::isLoadedObject($carrier)) {
+        if (null !== $carrier && Validate::isLoadedObject($carrier)) {
             $order->carrier_tax_rate = $carrier->getTaxesRate(new Address((int) $cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
         }
 
@@ -1035,7 +1037,7 @@ abstract class PaymentModuleCore extends Module
         }
 
         // Adding an entry in order_carrier table
-        if (!is_null($carrier)) {
+        if (null !== $carrier) {
             $order_carrier = new OrderCarrier();
             $order_carrier->id_order = (int) $order->id;
             $order_carrier->id_carrier = $carrierId;

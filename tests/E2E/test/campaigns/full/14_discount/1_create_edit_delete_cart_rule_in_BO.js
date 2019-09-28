@@ -1,3 +1,8 @@
+/**
+ * This script is based on the scenario described in this test link
+ * [id="PS-54"][Name="create a cart rule"]
+ **/
+
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const commonScenarios = require('../../common_scenarios/discount');
 const welcomeScenarios = require('../../common_scenarios/welcome');

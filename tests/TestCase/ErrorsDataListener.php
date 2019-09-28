@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -32,7 +32,7 @@ use PHPUnit_Framework_TestSuite;
 class ErrorsDataListener extends BaseTestListener
 {
     /**
-     * @var PhpErrorsCounter a dedicated error handler.
+     * @var PhpErrorsCounter a dedicated error handler
      */
     private $errorsCounter;
 
@@ -56,7 +56,7 @@ class ErrorsDataListener extends BaseTestListener
 
     public function startTestSuite(PHPUnit_Framework_TestSuite $suite)
     {
-        $this->suites++;
+        ++$this->suites;
         if (!$this->isRegistered) {
             $this->errorsCounter->registerErrorHandler();
             $this->isRegistered = true;
@@ -65,7 +65,7 @@ class ErrorsDataListener extends BaseTestListener
 
     public function endTestSuite(PHPUnit_Framework_TestSuite $suite)
     {
-        $this->suites--;
+        --$this->suites;
 
         if ($this->suites === 0) {
             printf(PHP_EOL . PHP_EOL . 'Current report of phpErrorsHandler:');

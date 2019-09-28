@@ -1,0 +1,5 @@
+{
+  "slow": 45000,
+  "timeout": 0,
+  "reporter": "mochawesome"
+}

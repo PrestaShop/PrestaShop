@@ -1,5 +1,5 @@
 {**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,10 +15,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -119,7 +119,7 @@
 									    <ul style="margin: 0; padding: 0; list-style-type: none;">
 									    {foreach from=$datas key='index' item='data'}
 											    <li style="display: inline; margin: 2px;">
-												    <a href="displayImage.php?img={$data.value}&name={$order->id|intval}-file{$index}" class="_blank">
+												    <a href="{$link->getAdminLink('AdminCarts', true, [], ['ajax' => 1, 'action' => 'customizationImage', 'img' => $data.value, 'name' => $order->id|intval|cat:'-file'|cat:$index])}" class="_blank">
 												    <img src="{$pic_dir}{$data.value}_small" alt="" /></a>
 											    </li>
 									    {/foreach}

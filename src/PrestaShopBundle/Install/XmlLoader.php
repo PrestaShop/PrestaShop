@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Adapter\Entity\Shop;
 use PrestaShop\PrestaShop\Adapter\Entity\StockAvailable;
 use PrestaShop\PrestaShop\Adapter\Entity\Tag;
 use PrestaShop\PrestaShop\Adapter\Entity\Tools;
+use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
 use PrestaShopDatabaseException;
 use PrestashopInstallerException;
 
@@ -712,7 +713,7 @@ class XmlLoader
                             )
                         );
                     }
-                    @chmod($target_file, 0644);
+                    @chmod($target_file, FileSystem::DEFAULT_MODE_FILE);
                 } elseif (!ImageManager::resize(
                     $from_path . $identifier . '.' . $extension,
                     $target_file,
@@ -768,7 +769,7 @@ class XmlLoader
 
             return;
         }
-        @chmod($dst_path . '.' . $image->image_format, 0644);
+        @chmod($dst_path . '.' . $image->image_format, FileSystem::DEFAULT_MODE_FILE);
 
         $types = ImageType::getImagesTypes('products');
         foreach ($types as $type) {
@@ -796,7 +797,7 @@ class XmlLoader
                         )
                     );
                 }
-                @chmod($target_file, 0644);
+                @chmod($target_file, FileSystem::DEFAULT_MODE_FILE);
             } elseif (!ImageManager::resize($path . $identifier . '.jpg', $target_file, $type['width'], $type['height'])) {
                 // Resize the image if no cache was prepared in fixtures
                 $this->setError(
@@ -814,7 +815,7 @@ class XmlLoader
     {
         static $tables = null;
 
-        if (is_null($tables)) {
+        if (null === $tables) {
             $tables = array();
             foreach (Db::getInstance()->executeS('SHOW TABLES') as $row) {
                 $table = current($row);
@@ -866,12 +867,12 @@ class XmlLoader
     {
         static $cache = null;
 
-        if (!is_null($cache)) {
+        if (null !== $cache) {
             return $cache;
         }
 
         $dir = $path;
-        if (is_null($dir)) {
+        if (null === $dir) {
             $dir = _PS_CLASS_DIR_;
         }
 
@@ -887,7 +888,7 @@ class XmlLoader
         }
 
         sort($classes);
-        if (is_null($path)) {
+        if (null === $path) {
             $cache = $classes;
         }
 

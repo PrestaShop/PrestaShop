@@ -3,18 +3,18 @@ module.exports = {
     calendar_form: '//*[@id="calendar_form"]',
     Orders: {
       order_form: '//*[@id="form-order"]',
-      invoice_form: '//*[@id="main-div"]//form[@name="generate_by_date"]',
+      status_block: '//*[@id="by-status-block"]',
       order_slip_form: '//*[@id="form-order_slip"]',
-      delivery_form: '//*[@id="delivery_pdf_fieldset"]',
+      delivery_pdf_fieldset: '//*[@id="delivery_pdf_fieldset"]',
       shopping_cart_form: '//*[@id="form-cart"]',
     },
     Catalog: {
       product_form: '//*[@id="product_catalog_list"]',
-      category_form: '//*[@id="form-category"]',
+      category_form: '//*[@id="category_grid"]',
       empty_category_form: '//*[@id="form-empty_categories"]',
       attribute_form: '//*[@id="form-attribute_group"]',
       feature_form: '//*[@id="form-feature"]',
-      manufacturer_form: '//*[@id="form-manufacturer"]',
+      manufacturer_form: '//*[@id="manufacturer_grid"]',
       supplier_form: '//*[@id="subtab-AdminSuppliers"]',
       attachment_form: '//*[@id="form-attachment"]',
       cart_rule_form: '//*[@id="form-cart_rule"]',
@@ -22,7 +22,7 @@ module.exports = {
       search_box: '//*[@id="search"]' // Search products in stock and movements page
     },
     Customers: {
-      customer_form: '//*[@id="form-customer"]',
+      customer_form: '//*[@id="customer_grid"]',
       address_form: '//*[@id="form-address"]'
     },
     CustomerService: {
@@ -43,13 +43,14 @@ module.exports = {
     Design: {
       design_form: '//*[@id="configuration_form"]',
       catalog_theme: '//div[contains(@class, "addons-catalog-theme")]/div[1]',
-      configuration_fieldset: '//*[@id="configuration_fieldset_appearance"]',
-      cms_category_form: '//*[@id="form-cms_category"]',
+      configuration_fieldset: '//*[@id="configuration_fieldset_appearance"] | //*[@id="main-div"]//form[@name="shop_logos"]',
+      cms_category_form: '//*[@id="cms_page_category_grid"]',
       position_module_form: '//*[@id="module-positions-form"]',
       image_type_form: '//*[@id="form-image_type"]',
-      configuration_link_form: '//*[@id="configuration_form"]',
+      new_block_button: '//*[@id="page-header-desc-configuration-add"]',
       menu_module_name: '(//*[@id="psthemecusto"]//div[@data-module_name="menu"])[2]',
       download_theme_button: '//*[@id="download_child_theme"]',
+      prestashop_content_div: '//*[@id="prestastore-content"]',
     },
     Shipping: {
       carrier_form: '//*[@id="form-carrier"]',
@@ -61,13 +62,13 @@ module.exports = {
     },
     International: {
       localization_pack_select: '//*[@id="main-div"]//form[@name="import_localization_pack"]',
-      languages_form: '//*[@id="form-lang"]',
-      currency_form: '//*[@id="form-currency"]',
+      languages_form: '//*[@id="form-lang"] | //*[@id="language_grid"]',
+      currency_form: '//*[@id="form-currency"] | //*[@id="currency_grid_table"]',
       geolocation_by_address: '//*[@id="main-div"]/div[@class="content-div  with-tabs"]//form',
       zone_form: '//*[@id="form-zone"]',
       country_form: '//*[@id="form-country"]',
       state_form: '//*[@id="form-state"]',
-      tax_from: '//*[@id="form-tax"]',
+      tax_from: '//*[@id="tax_grid"]',
       tax_rules_from: '//*[@id="form-tax_rules_group"]',
       translation_form: '//*[@id="main-div"]//form[@name="modify_translations"]',
     },
@@ -80,7 +81,7 @@ module.exports = {
       customers_form: '//*[@id="configuration_form"]',
       groups_form: '//*[@id="form-group"]',
       titles_form: '//*[@id="form-gender"]',
-      contact_form: '//*[@id="form-contact"]',
+      contact_form: '//*[@id="contact_grid"]',
       stores_form: '//*[@id="form-store"]',
       meta_form: '//*[@id="form-meta"]', //SEO & URLs form
       search_engine_form: '//*[@id="form-search_engine"]',
@@ -96,12 +97,12 @@ module.exports = {
       administration_form: '//form[contains(@class, "form-horizontal")]',
       mail_form: '//*[@id="email_logs_grid_panel"] | //*[@id="form_mail"]',
       preview_import_form: '//form[contains(@class, "import")]',
-      employee_form: '//*[@id="form-employee"]', //team page
-      profiles_form: '//*[@id="form-profile"]',
+      employee_form: '//*[@id="employee_grid"]', //team page
+      profiles_form: '//*[@id="profile_grid"]',
       permissions_form: '//*[@id="access_form"]',
       request_sql_form: '//*[@id="sql_request_grid_panel"]', //database page
       log_form: '//*[@id="logs_grid_panel"]',
-      webservice_form: '//*[@id="form-webservice_account"]',
+      webservice_form: '//*[@id="form-webservice_account"] | //*[@id="webservice_key_grid"]',
       multistore_form: '//*[@id="form-shop_group"]',
       backup_filter_form: '//*[@id="backup_filter_form"]',
     }

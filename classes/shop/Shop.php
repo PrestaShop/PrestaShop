@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -331,18 +331,16 @@ class ShopCore extends ObjectModel
         if (!($id_shop = Tools::getValue('id_shop')) || defined('_PS_ADMIN_DIR_')) {
             $found_uri = '';
             $is_main_uri = false;
-            $host = Tools::getHttpHost();
+            $host = Tools::getHttpHost(false, false, true);
             $request_uri = rawurldecode($_SERVER['REQUEST_URI']);
 
-            $sql = 'SELECT s.id_shop, CONCAT(su.physical_uri, su.virtual_uri) AS uri, su.domain, su.main
-                    FROM ' . _DB_PREFIX_ . 'shop_url su
-                    LEFT JOIN ' . _DB_PREFIX_ . 'shop s ON (s.id_shop = su.id_shop)
-                    WHERE (su.domain = \'' . pSQL($host) . '\' OR su.domain_ssl = \'' . pSQL($host) . '\')
-                        AND s.active = 1
-                        AND s.deleted = 0
-                    ORDER BY LENGTH(CONCAT(su.physical_uri, su.virtual_uri)) DESC';
+            $result = self::findShopByHost($host);
 
-            $result = Db::getInstance()->executeS($sql);
+            // If could not find a matching, try with port
+            if (empty($result)) {
+                $host = Tools::getHttpHost(false, false, false);
+                $result = self::findShopByHost($host);
+            }
 
             $through = false;
             foreach ($result as $row) {
@@ -673,7 +671,7 @@ class ShopCore extends ObjectModel
      */
     public static function cacheShops($refresh = false)
     {
-        if (!is_null(self::$shops) && !$refresh) {
+        if (null !== self::$shops && !$refresh) {
             return;
         }
 
@@ -1131,7 +1129,7 @@ class ShopCore extends ObjectModel
      */
     public static function addSqlRestrictionOnLang($alias = null, $id_shop = null)
     {
-        if (isset(Context::getContext()->shop) && is_null($id_shop)) {
+        if (isset(Context::getContext()->shop) && null === $id_shop) {
             $id_shop = (int) Context::getContext()->shop->id;
         }
         if (!$id_shop) {
@@ -1321,5 +1319,27 @@ class ShopCore extends ObjectModel
             ($active ? ' AND entity.`active` = 1' : '') .
             ($delete ? ' AND entity.deleted = 0' : '')
         );
+    }
+
+    /**
+     * @param string $host
+     *
+     * @return array
+     *
+     * @throws PrestaShopDatabaseException
+     */
+    private static function findShopByHost($host)
+    {
+        $sql = 'SELECT s.id_shop, CONCAT(su.physical_uri, su.virtual_uri) AS uri, su.domain, su.main
+                    FROM ' . _DB_PREFIX_ . 'shop_url su
+                    LEFT JOIN ' . _DB_PREFIX_ . 'shop s ON (s.id_shop = su.id_shop)
+                    WHERE (su.domain = \'' . pSQL($host) . '\' OR su.domain_ssl = \'' . pSQL($host) . '\')
+                        AND s.active = 1
+                        AND s.deleted = 0
+                    ORDER BY LENGTH(CONCAT(su.physical_uri, su.virtual_uri)) DESC';
+
+        $result = Db::getInstance()->executeS($sql);
+
+        return $result;
     }
 }

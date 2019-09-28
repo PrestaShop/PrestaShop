@@ -5,7 +5,7 @@
 @import "mixins/single_line_block";
 @import "mixins/notification_container";
 @import "mixins/notification_counter";
-@import "mixins/breakpoints";
+@import "~bootstrap/scss/mixins/breakpoints";
 @import "mixins/cards";
 @import "mixins/hover";
 @import "mixins/stars";
@@ -40,6 +40,8 @@
 @import "components/material_choice_tree";
 @import "components/button_groups";
 @import "components/cursor";
+@import "components/toggable_field";
+@import "components/form_popover_error";
 
 // Pages specifics SCSS files
 @import "pages/product_page";
@@ -50,6 +52,11 @@
 @import "pages/meta";
 @import "pages/import_data";
 @import "pages/currency";
+@import "pages/themes_logo";
+@import "pages/cms_page";
+@import "pages/employee";
+@import "pages/error";
+@import "pages/orders";
 
 // Main Layout
 @import "pages/modules";

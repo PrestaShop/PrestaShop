@@ -1,3 +1,8 @@
+/**
+ * This script is based on the scenario described in this test link
+ * [id="PS-90"][Name="Generate a PDF by order status"]
+ **/
+
 const {Menu} = require('../../../selectors/BO/menu.js');
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {AccessPageFO} = require('../../../selectors/FO/access_page');
@@ -7,6 +12,7 @@ const {Invoices} = require('../../../selectors/BO/order');
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
 const commonOrder = require('../../common_scenarios/order');
 const {OnBoarding} = require('../../../selectors/BO/onboarding');
+const welcomeScenarios = require('../../common_scenarios/welcome');
 
 let promise = Promise.resolve();
 
@@ -25,8 +31,11 @@ scenario('Generate a PDF by status', () => {
       }, 'order');
       commonOrder.createOrderFO();
     }, 'order');
-    scenario('Change the Customer Group tax parameter', client => {
+    scenario('Open the browser and login successfully in the Back Office ', client => {
       test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
+    }, 'common_client');
+    welcomeScenarios.findAndCloseWelcomeModal();
+    scenario('Change the Customer Group tax parameter', client => {
       test('should go to "Product settings" page', () => client.goToSubtabMenuPage(Menu.Configure.ShopParameters.shop_parameters_menu, Menu.Configure.ShopParameters.customer_settings_submenu));
       test('should click on "Group" tab', () => client.waitForExistAndClick(CustomerSettings.groups.group_button));
       test('should click on customer "Edit" button', () => client.waitForExistAndClick(CustomerSettings.groups.customer_edit_button));
@@ -37,6 +46,10 @@ scenario('Generate a PDF by status', () => {
       test('should go to "Product settings" page', () => client.goToSubtabMenuPage(Menu.Sell.Orders.orders_menu, Menu.Sell.Orders.orders_submenu));
       for (let i = 1; i <= 2; i++) {
         test('should go the order n°' + i, () => client.waitForExistAndClick(OrderPage.order_view_button.replace("%ORDERNumber", i)));
+        /**
+         * should refresh the page, to pass the error
+         */
+        test('should refresh the page', () => client.refresh());
         test('should go to "Documents" tab', () => client.waitForExistAndClick(OrderPage.documents_tab));
         test('should click on "Generate invoice" button', () => client.waitForExistAndClick(OrderPage.generate_invoice_button));
         test('should verify the success message', () => client.waitForVisible(OrderPage.success_msg));
@@ -98,20 +111,19 @@ scenario('Generate a PDF by status', () => {
       test('should click on "Awaiting bank wire payment" option', () => client.waitForExistAndClick(OrderPage.awaiting_bank_wire_payment_option));
       test('should close the symfony toolbar ', () => {
         return promise
-          .then(() => client.pause(2000))
-          .then(() => client.isVisible(AddProductPage.symfony_toolbar))
-          .then(() => {
-            if (global.isVisible) {
-              client.waitForExistAndClick(AddProductPage.symfony_toolbar)
-            }
-          })
+          .then(() => client.waitForSymfonyToolbar(AddProductPage, 2000))
       });
       test('should click on "Generate PDF by status"', () => client.waitForExistAndClick(Invoices.generate_pdf_by_status_button));
       test('should wait for the "invoice" to download', () => client.pause(7000));
       for (let i = 1; i <= 2; i++) {
         commonOrder.checkOrderInvoice(client, i)
       }
-      test('should delete the invoice pdf file', () => client.deleteFile(global.downloadsFolderPath, 'invoices.pdf'));
+      test('should delete the invoice pdf file', async () =>{
+        await client.checkFile(global.downloadsFolderPath, 'invoices.pdf');
+        if (global.existingFile) {
+          await  client.deleteFile(global.downloadsFolderPath, 'invoices', '.pdf');
+        }
+      });
     }, 'order');
   }, 'order');
 
@@ -127,7 +139,7 @@ scenario('Generate a PDF by status', () => {
       commonOrder.createOrderFO();
     }, 'order');
     scenario('Go to the created order, change status and Get all information', client => {
-      test('should login successfully in the Back Office', () => client.linkAccess(URL+'/admin-dev'));
+      test('should login successfully in the Back Office', () => client.linkAccess(URL + '/admin-dev'));
       test('should go to "Product settings" page', () => client.goToSubtabMenuPage(Menu.Sell.Orders.orders_menu, Menu.Sell.Orders.orders_submenu));
       for (let i = 1; i <= 2; i++) {
         test('should go the order n°' + i, () => client.waitForExistAndClick(OrderPage.order_view_button.replace("%ORDERNumber", i)));
@@ -136,6 +148,10 @@ scenario('Generate a PDF by status', () => {
         } else {
           test('should change order state to "Canceled"', () => client.changeOrderState(OrderPage, 'Canceled'));
         }
+        /**
+         * should refresh the page, to pass the error
+         */
+        test('should refresh the page', () => client.refresh());
         test('should go to "Documents" tab', () => client.waitForExistAndClick(OrderPage.documents_tab));
         test('should click on "Generate invoice" button', () => client.waitForExistAndClick(OrderPage.generate_invoice_button));
         test('should verify the success message', () => client.waitForVisible(OrderPage.success_msg));
@@ -201,18 +217,18 @@ scenario('Generate a PDF by status', () => {
       for (let i = 1; i <= 2; i++) {
         commonOrder.checkOrderInvoice(client, i)
       }
-      test('should delete the invoice pdf file', () => client.deleteFile(global.downloadsFolderPath, 'invoices','.pdf'));
+      test('should delete the invoice pdf file', async () => {
+        await client.checkFile(global.downloadsFolderPath, 'invoices.pdf');
+        if (global.existingFile) {
+         await client.deleteFile(global.downloadsFolderPath, 'invoices', '.pdf');
+        }
+      });
     }, 'order');
   }, 'order');
   scenario('Close symfony toolbar then click on "Stop the OnBoarding" button', client => {
     test('should close symfony toolbar', () => {
       return promise
-        .then(() => client.isVisible(AddProductPage.symfony_toolbar, 3000))
-        .then(() => {
-          if (global.isVisible) {
-            client.waitForExistAndClick(AddProductPage.symfony_toolbar)
-          }
-        });
+        .then(() => client.waitForSymfonyToolbar(AddProductPage, 2000))
     });
     test('should check and click on "Stop the OnBoarding" button', () => {
       return promise
@@ -229,3 +245,4 @@ scenario('Generate a PDF by status', () => {
     test('should click on "Save" button', () => client.waitForExistAndClick(CustomerSettings.groups.save_button));
   }, 'order');
 }, 'order', true);
+

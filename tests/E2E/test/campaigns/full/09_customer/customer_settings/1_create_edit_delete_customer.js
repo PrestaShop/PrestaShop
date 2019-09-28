@@ -1,3 +1,10 @@
+/**
+ * This script is based on scenarios described in this combination of the following tests link
+ * [id="PS-60"][Name="create a customer"]
+ * [id="PS-61"][Name="edit a customer"]
+ * [id="PS-62"][Name="delete a customer"]
+ **/
+
 const {AccessPageBO} = require('../../../../selectors/BO/access_page');
 const {AccessPageFO} = require('../../../../selectors/FO/access_page');
 const {accountPage} = require('../../../../selectors/FO/add_account_page');
@@ -7,6 +14,7 @@ const {Addresses} = require('../../../../selectors/BO/customers/addresses');
 const {BO} = require('../../../../selectors/BO/customers/index');
 const common_scenarios = require('../../../common_scenarios/customer');
 const common_scenarios_address = require('../../../common_scenarios/address');
+const welcomeScenarios = require('../../../common_scenarios/welcome');
 let promise = Promise.resolve();
 
 let customerData = {
@@ -38,7 +46,7 @@ scenario('Create, Edit, delete "Customer"', () => {
     test('should open the browser', () => client.open());
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'customer');
-
+  welcomeScenarios.findAndCloseWelcomeModal();
   common_scenarios.createCustomer(customerData);
   common_scenarios.checkCustomerBO(customerData);
 
@@ -63,7 +71,9 @@ scenario('Create, Edit, delete "Customer"', () => {
 
   scenario('Check that the customer information is updated in the Front Office', client => {
     test('should go to the Front Office', () => client.switchWindow(1));
-    test('should refresh the page', () => client.refresh());
+    test('should set the "Email" input', () => client.waitAndSetValue(AccessPageFO.login_input, date_time + editCustomerData.email_address));
+    test('should set the "Password" input', () => client.waitAndSetValue(AccessPageFO.password_inputFO, editCustomerData.password));
+    test('should click on "Sign In" button', () => client.waitForExistAndClick(AccessPageFO.login_button));
     common_scenarios.checkCustomerFO(client, editCustomerData);
     test('should go to the Back Office', () => client.switchWindow(0));
   }, 'customer');
@@ -86,7 +96,7 @@ scenario('Create, Edit, delete "Customer"', () => {
         .then(() => client.isVisible(Customer.customer_filter_by_email_input))
         .then(() => client.search(Customer.customer_filter_by_email_input, date_time + editCustomerData.email_address));
     });
-    test('should check that there is no result', () => client.isExisting(Customer.empty_list_icon));
+    test('should check that there is no result', () => client.checkTextValue(Customer.empty_list_icon, "No records found", "equal", 500));
   }, 'customer');
 
   scenario('Verify that the address related to the deleted customer doesn\'t exist', client => {
@@ -123,10 +133,9 @@ scenario('Create, Edit, delete "Customer"', () => {
         .then(() => client.scrollWaitForExistAndClick(Customer.dropdown_toggle, 50, 1000))
         .then(() => client.waitForExistAndClick(Customer.delete_button, 1000));
     });
-    test('should accept the currently displayed alert dialog', () => client.alertAccept());
-    test('should choose the option that Doesn\'t allows customers to register again with the same email address', () => client.waitForExistAndClick(Customer.delete_second_option));
+    test('should choose the option that doesn\'t allow customers to register again with the same email address', () => client.waitForVisibleAndClick(Customer.delete_second_option));
     test('should click on "Delete" button', () => client.waitForExistAndClick(Customer.delete_confirmation_button, 2000));
-    test('should verify the appearance of the green validation', () => client.checkTextValue(BO.success_panel, '×\nSuccessful deletion.', 'equal', 2000));
+    test('should verify the appearance of the green validation', () => client.checkTextValue(BO.success_panel, 'Successful deletion.', 'equal', 2000));
     test('should go to the Front Office', () => client.switchWindow(1));
   }, 'customer');
 

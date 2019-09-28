@@ -1,9 +1,11 @@
 module.exports = {
   Stock: {
+    edit_quantity_input:'#app tr:nth-of-type(1) div[name="qty"] input',
     product_quantity_input: '(//*[@id="app"]//div[contains(@class,"edit-qty")])[%O]/input',
     product_quantity: '//*[@id="app"]//tr[%O]/td[7]',
     product_quantity_modified: '(//*[@id="app"]//tr[%O]//span[contains(@class,"qty-update")])[1]',
-    save_product_quantity_button: '(//*[@id="app"]//button[contains(@class,"check-button")])[1]',
+    available_quantity_modified: '(//*[@id="app"]//tr[%O]//span[contains(@class,"qty-update")])[2]',
+    save_product_quantity_button: '(//*[@id="app"]//button[contains(@class,"check-button")])[%I]',
     group_apply_button: '//*[@id="app"]//button[contains(@class,"update-qty")]',
     add_quantity_button: '(//*[@id="app"]//span[contains(@class,"ps-number-up")])[%ITEM]',
     remove_quantity_button: '(//*[@id="app"]//span[contains(@class,"ps-number-down")])[%ITEM]',

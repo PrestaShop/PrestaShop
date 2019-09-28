@@ -69,3 +69,96 @@ table.grid-ordering-column tr.position-row-while-drag {
     }
   }
 }
+
+table .thead-default .column-headers th:last-child .grid-actions-header-text {
+  float: right;
+
+  span {
+    padding-right: 14px;
+  }
+}
+
+table .column-filters td:last-child .grid-search-button,
+table .column-filters td:last-child .grid-reset-button {
+  float: right;
+}
+
+.grid {
+  table.grid-table {
+    thead {
+      tr {
+        td {
+          .min-field,
+          .max-field {
+            display: inline-block;
+            width: 60px;
+          }
+        }
+      }
+    }
+    tbody {
+      tr {
+        $tr: &;
+
+        &:hover {
+          background: #fafbfc;
+        }
+
+        // styling for row that is being dragged
+        &.dragging-row {
+          background: #fafbfc;
+          cursor: move;
+
+          td {
+            background: #67868e;
+            color: white;
+            -webkit-transform: translate(5px, 10px);
+            transform: translate(5px, 10px);
+
+            // make all icons and links white
+            i.grid-toggler-icon-valid,
+            i.grid-toggler-icon-not-valid,
+            i.material-icons,
+            a,
+            a:after {
+              color: white;
+            }
+          }
+        }
+
+        // ---------------------------------
+        // Styling for specific column types
+        // ---------------------------------
+        td {
+          word-break: break-word;
+
+          &.draggable-type {
+            .draggable-column {
+              color: transparent;
+              cursor: move;
+            }
+
+            @at-root {
+              #{$tr}:hover .draggable-column {
+                color: #15b7d7 !important;
+              }
+            }
+          }
+
+          &.action-type {
+            .btn-group > .dropdown-item {
+              &:hover,
+              &:focus {
+                background-color: transparent;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  .table-responsive .row {
+    margin: 0;
+  }
+}
+

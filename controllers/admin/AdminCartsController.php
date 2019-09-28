@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -426,8 +426,6 @@ class AdminCartsControllerCore extends AdminController
                         if (!ImageManager::resize($tmp_name, _PS_UPLOAD_DIR_ . $file_name)) {
                             continue;
                         } elseif (!ImageManager::resize($tmp_name, _PS_UPLOAD_DIR_ . $file_name . '_small', (int) Configuration::get('PS_PRODUCT_PICTURE_WIDTH'), (int) Configuration::get('PS_PRODUCT_PICTURE_HEIGHT'))) {
-                            $errors[] = $this->trans('An error occurred during the image upload process.', array(), 'Admin.Catalog.Notification');
-                        } elseif (!chmod(_PS_UPLOAD_DIR_ . $file_name, 0777) || !chmod(_PS_UPLOAD_DIR_ . $file_name . '_small', 0777)) {
                             $errors[] = $this->trans('An error occurred during the image upload process.', array(), 'Admin.Catalog.Notification');
                         } else {
                             $this->context->cart->addPictureToProduct((int) $product->id, (int) $customization_field['id_customization_field'], Product::CUSTOMIZE_FILE, $file_name);
@@ -836,6 +834,26 @@ class AdminCartsControllerCore extends AdminController
     {
         parent::initToolbar();
         unset($this->toolbar_btn['new']);
+    }
+
+    /**
+     * Display an image as a download.
+     */
+    public function displayAjaxCustomizationImage()
+    {
+        if (!Tools::isSubmit('img') || !Tools::isSubmit('name')) {
+            return;
+        }
+
+        $img = Tools::getValue('img');
+        $name = Tools::getValue('name');
+        $path = _PS_UPLOAD_DIR_ . $img;
+
+        if (Validate::isMd5($img) && Validate::isGenericName($path)) {
+            header('Content-type: image/jpeg');
+            header('Content-Disposition: attachment; filename="' . $name . '.jpg"');
+            readfile($path);
+        }
     }
 
     public function displayAjaxGetSummary()

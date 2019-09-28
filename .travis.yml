@@ -1,9 +1,13 @@
 language: php
 
+services:
+  - mysql
+
 addons:
   chrome: stable
   apt:
     packages:
+      - dpkg
       - apache2
       - postfix
       - libapache2-mod-fastcgi
@@ -18,23 +22,21 @@ sudo: required
 dist: trusty
 
 php:
-  - 5.6
+  - 7.1
   - 7.2
 
 env:
   global:
     - SYMFONY_DEPRECATIONS_HELPER=disabled
   matrix:
-    - PRESTASHOP_TEST_TYPE=lint
     - PRESTASHOP_TEST_TYPE=unit
-    - PRESTASHOP_TEST_TYPE=e2e
+    - PRESTASHOP_TEST_TYPE=integration
+    - PRESTASHOP_TEST_TYPE=sanity
 
 matrix:
   include:
     - php: 7.2
       env: EXTRA_DEPS=phpHigh  PRESTASHOP_TEST_TYPE=unit
-    - php: 7.2
-      env: PRESTASHOP_TEST_TYPE=e2e EXTRA_TESTS=functional
     - stage: deploy
       php: 7.2
       before_install: skip
@@ -55,13 +57,14 @@ matrix:
         local-dir: "/tmp/ps-release"
         on:
           all_branches: true
-  exclude:
-    - php: 7.2 # Replaced with additional tests
-      env: PRESTASHOP_TEST_TYPE=e2e
+  allow_failures:
+    - php: 7.2
+      env: EXTRA_DEPS=phpHigh  PRESTASHOP_TEST_TYPE=unit
 
 before_install:
+  - /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_10.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :10 -ac -screen 0 1600x1200x16
   # Avoid Composer authentication issues
-  - if [[ $TRAVIS_REPO_SLUG = PrestaShop/PrestaShop ]]; then cp travis-scripts/.composer-auth.json ~/.composer/auth.json; fi;
+  - if [[ "$TRAVIS_REPO_SLUG" = PrestaShop/PrestaShop ]]; then cp travis-scripts/.composer-auth.json ~/.composer/auth.json; fi;
   # Apache & php-fpm configuration
   - bash travis-scripts/setup-php-fpm.sh
   - bash travis-scripts/setup-apache.sh
@@ -69,32 +72,31 @@ before_install:
   # PrestaShop configuration
   - cp tests-legacy/parameters.yml.travis app/config/parameters.yml
 
+before_script:
+  - if [ "$EXTRA_DEPS" = "phpHigh" ]; then
+        composer update --ignore-platform-reqs --no-suggest --ansi --no-interaction --no-progress --quiet;
+    else
+        composer install --no-suggest --ansi --prefer-dist --no-interaction --no-progress --quiet;
+    fi
 
-notifications:
-  hipchat: ec4e21c5eb82066ba8be5fd1afefde@1184657
+  - bash travis-scripts/install-prestashop;
 
 script:
-  - if [ $EXTRA_DEPS = "phpHigh" ]; then
-        composer update --ignore-platform-reqs;
-    else
-        composer install --prefer-dist --no-interaction --no-progress;
-    fi
-
-  - bash travis-scripts/install-prestashop
-  - if [ $PRESTASHOP_TEST_TYPE = "lint" ]; then
+  - if [ "$PRESTASHOP_TEST_TYPE" = "unit" ]; then
         bash tests-legacy/check_file_syntax.sh;
-    fi
-
-  - if [ $PRESTASHOP_TEST_TYPE = "unit" ]; then
         bash tests-legacy/check_phpunit.sh;
     fi
 
-  - if [ $PRESTASHOP_TEST_TYPE = "unit" ]; then
+  - if [ "$PRESTASHOP_TEST_TYPE" = "unit" ]; then
         bash tests/check_unit.sh;
     fi
 
-  - if [ $PRESTASHOP_TEST_TYPE = "e2e" ]; then
-        bash tests-legacy/check_e2e.sh;
+  - if [ "$PRESTASHOP_TEST_TYPE" = "integration" ]; then
+        bash tests/check_integration.sh;
+    fi
+
+  - if [ "$PRESTASHOP_TEST_TYPE" = "sanity" ]; then
+        bash tests/check_sanity.sh;
     fi
 
 after_script:
@@ -107,5 +109,29 @@ after_failure:
   - sudo cat /var/log/php-fpm.log
   - sudo ls -l /var/log/apache2
   - sudo cat /var/log/apache2/other_vhosts_access.log
-  - if [ ! -z "$PRESTASTHOP_SCREENHOST" ]; then bash ./travis-scripts/base64-screenshots; fi # As we cannot upload file, we display the base64 encoded content of the screenshots
   - cat $TRAVIS_BUILD_DIR/var/log/dev.log
+
+before_deploy:
+  - |
+      if [ "${TRAVIS_EVENT_TYPE}" = "cron" ]; then
+        mkdir -p ${HOME}/.ssh/;
+        echo $GC_INSTANCE_KEY | base64 --decode -i > ${HOME}/.ssh/google_compute_engine && \
+        echo $GC_INSTANCE_PUB | base64 --decode -i > ${HOME}/.ssh/google_compute_engine.pub && \
+        chmod 600 ${HOME}/.ssh/* && \
+        echo $GC_SERVICE_KEY | base64 --decode -i > ${HOME}/gcloud-service-key.json && \
+        gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json && \
+        gcloud config set project $GC_PROJECT_ID
+      fi
+
+after_deploy:
+  - |
+    if [ "${TRAVIS_EVENT_TYPE}" = "cron" ]; then
+      [[ $TRAVIS_BRANCH = "develop" ]] && INSTANCE_TYPE="develop" || INSTANCE_TYPE="release";
+      # make sure instance is stopped. This step does not need to be chained
+      gcloud compute instances stop --zone $GC_ZONE "${GC_INSTANCE_NAME}-${INSTANCE_TYPE}";
+      gcloud compute instances add-metadata "${GC_INSTANCE_NAME}-${INSTANCE_TYPE}" --zone $GC_ZONE --metadata=NIGHTLY_TOKEN=$NIGHTLY_TOKEN && \
+      gcloud compute instances add-metadata "${GC_INSTANCE_NAME}-${INSTANCE_TYPE}" --zone $GC_ZONE --metadata=TRAVIS_BRANCH=$TRAVIS_BRANCH && \
+      gcloud compute instances add-metadata "${GC_INSTANCE_NAME}-${INSTANCE_TYPE}" --zone $GC_ZONE --metadata-from-file startup-tests-script=tests/E2E/scripts/run-nightly-tests.sh && \
+      gcloud compute instances add-metadata "${GC_INSTANCE_NAME}-${INSTANCE_TYPE}" --zone $GC_ZONE --metadata-from-file startup-reports-script=tests/E2E/scripts/run-nightly-reports.sh && \
+      gcloud compute instances start --zone $GC_ZONE "${GC_INSTANCE_NAME}-${INSTANCE_TYPE}"
+    fi

@@ -31,6 +31,7 @@ services:
     prestashop.core.import.csv_file_reader:
         class: 'PrestaShop\PrestaShop\Core\Import\File\CsvFileReader'
         arguments:
+            - '@prestashop.adapter.import.file_opener'
             - '@=service("prestashop.core.import.normalizer.csv_value_separator").normalize(service("session").get("separator"))'
 
     prestashop.core.import.data_row.presenter:
@@ -105,3 +106,23 @@ services:
 
     prestashop.core.import.config_factory:
         class: 'PrestaShop\PrestaShop\Core\Import\Configuration\ImportConfigFactory'
+
+    prestashop.core.import.runtime_config_factory:
+        class: 'PrestaShop\PrestaShop\Core\Import\Configuration\ImportRuntimeConfigFactory'
+
+    prestashop.core.import.request_validator:
+        class: 'PrestaShop\PrestaShop\Core\Import\Validator\ImportRequestValidator'
+
+    prestashop.core.import.access_checker:
+        class: 'PrestaShop\PrestaShop\Core\Import\Access\ImportAccessChecker'
+        arguments:
+            - '@prestashop.adapter.data_provider.employee'
+
+    prestashop.core.import.importer:
+        class: 'PrestaShop\PrestaShop\Core\Import\Importer'
+        arguments:
+            - '@prestashop.core.import.access_checker'
+            - '@prestashop.adapter.import.entity_deleter'
+            - '@prestashop.core.import.csv_file_reader'
+            - '@prestashop.core.import.dir'
+            - '@prestashop.core.configuration.ini_configuration'

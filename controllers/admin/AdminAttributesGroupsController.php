@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -81,6 +81,8 @@ class AdminAttributesGroupsControllerCore extends AdminController
             ),
         );
         $this->fieldImageSettings = array('name' => 'texture', 'dir' => 'co');
+
+        $this->image_dir = 'co';
     }
 
     /**
@@ -794,12 +796,6 @@ class AdminAttributesGroupsControllerCore extends AdminController
                 }
                 $_POST['id_parent'] = 0;
                 $this->processSave($this->token);
-            }
-
-            if (Tools::getValue('id_attribute') && Tools::isSubmit('submitAddattribute') && Tools::getValue('color') && !Tools::getValue('filename')) {
-                if (file_exists(_PS_IMG_DIR_ . $this->fieldImageSettings['dir'] . '/' . (int) Tools::getValue('id_attribute') . '.jpg')) {
-                    unlink(_PS_IMG_DIR_ . $this->fieldImageSettings['dir'] . '/' . (int) Tools::getValue('id_attribute') . '.jpg');
-                }
             }
         } else {
             if (Tools::isSubmit('submitBulkdelete' . $this->table)) {

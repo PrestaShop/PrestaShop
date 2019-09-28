@@ -1,4 +1,4 @@
-2007-2017 PrestaShop
+2007-2019 PrestaShop and Contributors
 
 NOTICE OF LICENSE
 
@@ -17,12 +17,887 @@ versions in the future. If you wish to customize PrestaShop for your
 needs please refer to http://www.prestashop.com for more information.
 
 @author    PrestaShop SA <contact@prestashop.com>
-@copyright 2007-2017 PrestaShop SA
+@copyright 2007-2019 PrestaShop SA and Contributors
 @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
 International Registered Trademark & Property of PrestaShop SA
 
 Release Notes for PrestaShop 1.7
 --------------------------------
+
+####################################
+#   v1.7.6.1 - (2019-08-26)
+####################################
+- Back Office:
+  - Bug fix:
+    - #15173: CLDR has access to all currencies regardless of the current shop (by @jolelievre)
+    - #15139: Make module and email translations work again when using a theme other than classic (by @eternoendless)
+    - #14966: Keep BO from using two different translators in parallel  (by @matthieu-rolland)
+    - #15030: Get all categories in category tree form (not only enabled ones) (by @matthieu-rolland)
+    - #14962: Fix error preventing to translate backoffice wordings when using a theme other than classic (by @eternoendless)
+    - #15017: Improve translation test module (by @eternoendless)
+    - #14721: Manage edit/view link for customers in HelperList (by @jolelievre)
+    - #15036: Fix supplier display after import (by @jolelievre)
+    - #14719: Scan translation keys from email themes (by @jolelievre)
+    - #14938: Fix error when loading theme that includes a translations directory but no translations (by @eternoendless)
+    - #14926: Fix logs filtering (by @sarjon)
+    - #14671: Make sure token is properly used in legacy context (by @PierreRambaud)
+    - #14914: Date picker calendar is shown in wrong place when rendered downwards in grid (by @PierreRambaud)
+    - #14828: Cannot save the "No Picture Image"  (by @PierreRambaud)
+    - #14805: Fix unclosed div tag (by @sarjon)
+    - #14701: Fix log delete all action on Logs page (by @matks)
+    - #14605: Do not use encodeURIComponent with POST data (by @PierreRambaud)
+    - #14673: Fix Orders view page link to transform guest to customer (by @matks)
+- Front Office:
+  - Bug fix:
+    - #15042: Only disable following steps in the checkout process when the current step has a continue button (by @jolelievre)
+    - #14945: Fixed {firstname} typo in order customer comment mail in 1.7.6.x (by @dheerajwebkul)
+    - #14786: Sprintf function broken in 1.7.6 for custom module templates (by @roja45)
+    - #14863: Prevent uninstall of Product Comments module (by @templatin)
+- Core:
+  - Improvement:
+    - #14579: Fix many things that were supposed to be removed during build not being removed (by @eternoendless)
+  - Bug fix:
+    - #15132: Fix abstract service declaration (by @eternoendless)
+    - #14711: Update Decimal library to 1.2.0 (by @eternoendless)
+    - #14833: Bad currency format for Czech language (by @PierreRambaud)
+    - #14664: Update precision and numeric iso code of currencies (by @Quetzacoalt91)
+- Installer:
+  - Bug fix:
+    - #14620: Init properly the Kernel on major *manual* upgrades (by @Quetzacoalt91)
+    - #14739: Keep Composer.lock file in release (by @jolelievre)
+- Web Services:
+  - Bug fix:
+    - #14953: Initialize container in WebService environment (by @matthieu-rolland)
+- Localization:
+  - Bug fix:
+    - #15051: Fix translations (by @jolelievre)
+- Tests:
+  - Refactoring:
+    - #14356: Fix "02_autoupgrade" in install_upgrade campaign (by @nesrineabdmouleh)
+
+####################################
+#   v1.7.6.0 - (2019-07-09)
+####################################
+- Back Office:
+  - Bug fix:
+    - #14532: Check if index.php file exists before ignoring it (by @jolelievre)
+- Core:
+  - Refactoring:
+    - #14552: Use variable instead of recomputing (by @jolelievre)
+
+####################################
+#   v1.7.6.0 RC 2 - (2019-07-05)
+####################################
+- Back Office:
+  - Bug fix:
+    - #14460: Ignore index.php files in Doctrine entities scanning
+    - #14401: Fix grid calendar
+
+- Front Office:
+  - Bug fix:
+    - #14444: Check if selected address belongs to user
+    - #14395: Classic theme force all type number to not have arrows
+
+- Core:
+  - Improvement:
+    - #14438: Testing the factory with number and price specifications
+  - Bug fix:
+    - #14453: Update facetedsearch to 3.0.6
+    - #14400: Wrong way to retrieve CLDR information
+
+####################################
+#   v1.7.6.0 RC 1 - (2019-06-25)
+####################################
+- Back Office:
+  - Improvement:
+    - #14239: Introduce the usage of Module user-displayable exceptions to handle module errors (part 2)
+    - #14008: Adds missing form data arguments in hooks
+    - #13779: Allow to overwrite theme mails if they have modules OR mail templates
+    - #13722: Filter themes without override in email generation form
+  - Bug fix:
+    - #14364: View button doesn't have href
+    - #14331: Handle bad theme error nicely
+    - #14290: Extend customer page
+    - #14259: Avoid bug when creating manually created a language
+    - #14248: Cannot use accented URL with arabic language
+    - #14242: Module form_rest() outside div
+    - #14220: Set schema form rendered when it contains no children
+    - #14189: Fix manufacturer controller using wrong DomainException ns
+    - #14172: Add missing form_errors for identifiable object forms
+    - #13984: Fix bo categories
+    - #14152: Adjust employee avatar size
+    - #14156: Add missing null check in EditCmsPageHandler
+    - #14101: Fix missing permission roles
+    - #14137: Adds missing form_rest in Shop Parameters > Preferences
+    - #14107: Do not allow the selection of any subcategories
+    - #14084: Fixes updating name and symbol for currency
+    - #14021: Improved error handling when theme is uploaded or activated
+    - #14091: Do not use specific prices when displaying price with tax in BO product catalog
+    - #14029: Missing legacy link for themes page
+    - #14028: Add explanations about SEO cards
+    - #14030: Add missing legacy link for translations routes
+    - #13875: Added help property (backported from Symfony 4 framework)
+    - #14007: Fix currency precision from CLDR at install
+    - #13774: Includes missing theme & logo page validation handling for logo and icon images
+    - #13916: Fixes saving private note about customer from order page
+    - #13820: Fixes form_rest placing
+    - #13956: Restore legacy controller and template files deleted late in beta
+    - #13840: Fix resetting sort and items per page on list filters reset action
+    - #13887: Fix saving customer with required fields
+    - #13813: Fixes toggling Category status in Monitoring page
+    - #13866: Fix cart rule calculation for free gift
+    - #13857: Missing legacy links fix for employess controller
+    - #13797: Adds missing legacy links for currency controller
+    - #13777: Incorrect translation arguments passed in cms page form
+    - #13690: Theme and logo page design fixes
+    - #13821: Fix manufacturers, taxes lists id filtering
+    - #13165: Fix multilanguage fields configuration
+    - #13764: Fixes customer view url in notifications bar
+    - #13763: Fix help sidebar display in Customers page
+    - #13765: Fix sql manager bulk actions
+
+- Front Office:
+  - Improvement:
+    - #14180: Improve right block on cart and checkout page
+    - #14138: Add comment in Customer registration form, add better error message
+  - Bug fix:
+    - #14325: Refresh product flags on ajax call when product page is refreshed
+    - #14298: Fix english mail generation on fresh install
+    - #14309: Simplify the installation language to its minimum
+    - #14296: Fix carrier display in order confirmation email
+    - #14251: Fix categories wordbreak
+    - #14190: You need to be authenticated to play with addresses
+    - #14166: Fix categories cover images which had an incorrect format
+    - #14163: Add missing quotes in error message
+    - #13370: Fix cart refresh after voucher removal
+    - #14075: Fix: If Ask for birth date option is disabled, an exception is displayed in the FO
+    - #13905: Step clickable and not - Checkout page
+    - #12891: Fix bug on block social in footer
+    - #13780: Fix displayed discount on tax excluded cart display
+
+- Core:
+  - Improvement:
+    - #14284: Update to Faceted search 3.0.5
+    - #13925: Add getter for current locale
+    - #14197: Update facetedsearch dependency
+    - #14010: Update some license headers that were outdated
+    - #14011: Update outdated CSS assets
+    - #13778: Add new hooks for Symfony migrated pages in XML install file and SQL upgrade
+  - Bug fix:
+    - #14324: Use Admin.Actions instead Admin.International.Help
+    - #14316: Reapply changes from PR switching on PHPSpreadsheet
+    - #14300: &= prevents result to be a boolean
+    - #13795: Updates to Domain
+    - #13919: Tax must be returned depending on PS_TAX_DISPLAY only
+    - #13923: Make sure index exist before getting value for gift message
+    - #14027: Fix BC break on Toggle column parameter
+    - #13885: Force array cache for doctrine
+    - #13808: Update Symfony to latest patch version to fix ICU version problem
+    - #13665: Final retail price is not displayed due to missing CLDR files
+
+- Installer:
+  - Bug fix:
+    - #14243: Fix translation catalogue
+    - #14225: Update facetedsearch cache
+
+####################################
+#   v1.7.6.0-beta.1 - (2019-05-13)
+####################################
+- Back Office:
+  - New feature:
+    - #13221: Allow trans() to fall back on the legacy translation system when used with modules (by @eternoendless)
+    - #12974: Cms page category listing position update (by @tomas862)
+    - #13004: Integrate new modern mail theme (compiled from MJML) (by @jolelievre)
+    - #12981: Migration of  "Design -> pages -> cms page listing"  (by @tomas862)
+    - #12647: Migration of "Design -> pages -> add new / edit page category" (by @tomas862)
+    - #12163: Migration of shop parameters->contact->contacts add new edit contact form (by @tomas862)
+    - #12706: Kpis list are now customizables using hooks (by @mickaelandrieu)
+    - #10595: Migration of "Shop parameters >Traffic & SEO > SEO & URL > Add new / edit page" form (by @tomas862)
+    - #12046: Introduce Mail Template Generator (by @jolelievre)
+    - #10877: Migration of  "Design > Pages" page cms category listing (by @tomas862)
+    - #11894: Migration of international/localization/currencies page form and some exchange rate actions (by @tomas862)
+    - #12128: Add migrated customers page helper card (by @matks)
+    - #11153: Migration of "Catalog > Brand & Suppliers > Suppliers" listing (by @tomas862)
+    - #10774: Migration of "International > Localization > Currencies" page listing (by @tomas862)
+    - #11484: Add final price column in products list (by @PrestaShark)
+    - #10992: Migrate Customer view page (by @sarjon)
+    - #11408: Migrate Categories Add/Edit actions - tests fixed (by @matks)
+    - #11049: Add Helper Card to Employees page (by @sarjon)
+    - #11075: Improve AdminSecurity and DemoRestricted annotations to allow to pass query parameters to keep (by @tomas862)
+    - #10120: Migration of Advanced Parameters -> Import (Step 2) (by @rokaszygmantas)
+    - #10790: Migrate Employee options configuration (by @sarjon)
+  - Improvement:
+    - #13603: Add id for orders view page to ease E2E testing (by @matks)
+    - #13404: Add missing showcase card in CMS page (by @tomas862)
+    - #13234: Add Showcase card in Categories page (by @sarjon)
+    - #13158: Fix error bubbling inside the translatable type (by @tomas862)
+    - #13125: Add CMS page listing position update functionality (by @tomas862)
+    - #13048: Integrate mail generator (by @jolelievre)
+    - #12331: Migration of Theme & Logo page with style and ux improvements (by @tomas862)
+    - #12436: Introduces new File type input design for all new and migrated back-office pages  (by @tomas862)
+    - #13123: Display shop path in Information page (by @unlocomqx)
+    - #12707: New design for employee profile [Back-Office] (by @YeLnatSs)
+    - #13033: Filter out registered hooks in module positions list (by @unlocomqx)
+    - #12914: Significantly reduce number of SQL requests to get the employee authorizations (by @Quetzacoalt91)
+    - #13095: Update dashboard links (by @eternoendless)
+    - #13012: Update Twig to v1.38 (by @matks)
+    - #12850: "Module Manager" tab should be the first tab in Modules Tab (by @rblaurin)
+    - #12214: Migrate "Advanced Parameters > Team > Employees > Add new employee" page (by @rokaszygmantas)
+    - #12928: Allow multiple grids on same page (by @jolelievre)
+    - #12971: Enable customers page (by @sarjon)
+    - #12945: Build assets (by @matks)
+    - #12644: Add margin between buttons on Traffic & SEO page (by @YeLnatSs)
+    - #12699: Refacto addons store controller and handle addons failure (by @matks)
+    - #12838: Replace hardcoded currency sign in specific price form (by @metineren)
+    - #12784: Add module main class parse error to log message (by @teemumantynen)
+    - #12717: Add re-usable rewrite link copier service (by @tomas862)
+    - #12505: Improve error handling in migrated controllers (by @sarjon)
+    - #12761: Remove timeout from product image upload (by @JohnMidity)
+    - #12713: Enable usage of roles for Module Updates and Module Alerts pages and manage access (by @matks)
+    - #12622: Refactor AddonsStoreController to use annotations and some improvements (by @matks)
+    - #12316: Update access rules for SystemInformationController and MemcacheServer (by @matks)
+    - #10911: Build new theme using Webpack 4 (by @CaptainYouz)
+    - #12094: Refactor OrderPreferencesController to use annotations (by @matks)
+    - #12076: Refacto ProductPreferencesController to use annotations (by @matks)
+    - #12074: Refacto PreferencesController to use annotations (by @matks)
+    - #12098: Refactor Shipping/ referencesController to use annotations (by @matks)
+    - #12097: Refacto PaymentMethodsController to use annotations (by @matks)
+    - #12099: Refactor MaintenanceController to use annotations (by @matks)
+    - #12077: Refacto ThemeCatalogController to use annotations (by @matks)
+    - #11439: Migrate Customer list actions (by @sarjon)
+    - #11561: Migrate legacy import logic to adapters and hide Import page 2 (by @rokaszygmantas)
+    - #11877: Align grid search and reset buttons to the right (by @tomas862)
+    - #11481: Add cover & menu thumbnail images deleting for category (by @sarjon)
+    - #11919: Use env variable for admin dir with default value in assets build script (by @spolischook)
+    - #11785: Update dependencies with security breaches (by @jolelievre)
+    - #11732: Avoid using short bool (by @MathiasReker)
+    - #11735: Elseif instead of else if (by @MathiasReker)
+    - #11739: Remove blackslash (by @MathiasReker)
+    - #11741: Use brackets for index brace (by @MathiasReker)
+    - #11235: Prevent unnecessary Order objects from being created in Admin Orders (by @mnastalski)
+    - #10199: Fix quantity placeholder issue in the Stock management page (by @CaptainYouz)
+    - #11160: Form handling improvements in import page step 1 and 2 (by @rokaszygmantas)
+    - #11095: Update grid design regarding grid gear icon position and dropdown toggle icon modification (by @tomas862)
+    - #11266: Allow BO hooks to use the method $this->render() (by @Quetzacoalt91)
+    - #11093: Set sortable flag by default to "true" on ToggleColumn (by @tomas862)
+  - Bug fix:
+    - #13381: Use tinymce in migrated pages (by @matks)
+    - #13481: Improve preview and test mail feature, improve and fix a few templates (by @jolelievre)
+    - #13643: Fixes incorrect hook names for identifiable object forms. (by @tomas862)
+    - #13219: ScrollIntoView if field is invalid (by @PierreRambaud)
+    - #13623: Fix categories deleting in bulk action (by @sarjon)
+    - #13372: Add missing security annotations (by @rokaszygmantas)
+    - #13504: Fix backoffice translations for third-party modules (by @eternoendless)
+    - #13576: Fix deleting profile  (by @sarjon)
+    - #13563: Do not get data from null currency (by @Quetzacoalt91)
+    - #13233: Enable 'back' GET parameter management (by @tomas862)
+    - #13550: Add missing check in Manufacturer image uploader (by @zuk3975)
+    - #13547: Deprecate Language::installEmailsLanguagePack (by @jolelievre)
+    - #13484: Fixes Categories grid filtering by position (by @sarjon)
+    - #13535: Fix responsive showcase cards  (by @YeLnatSs)
+    - #13508: Enable ChoiceTree javascript in manufacturers form  (by @zuk3975)
+    - #13528: Fix calendar overflow (by @zuk3975)
+    - #13152: Updates characters length for Category meta fields (by @sarjon)
+    - #13477: Fix issue on order with free gift (by @tomlev)
+    - #13439: Improvements on LegacyUrlConverter, "tab" alias, insensitive and prevent infinite redirection loop (by @jolelievre)
+    - #13431: Fix parameters list in product lookup (by @Quetzacoalt91)
+    - #13434: Remove material icons on SQL manager page (by @marionf)
+    - #13429: Build outdated assets for 1.7.6.x (by @matks)
+    - #13367: Remove deactivated currencies from new CLDR (by @tomlev)
+    - #13351: Mail generator fixes (by @jolelievre)
+    - #13363: Fix syntax error in tpl (by @Quetzacoalt91)
+    - #13349: Make all grids responsive (by @eternoendless)
+    - #13273: Fix domain errors (by @matks)
+    - #13264: Restores deleted generatable_text_widget from template (by @sarjon)
+    - #13216: Enable help bar on suppliers page (by @PierreRambaud)
+    - #13199: Fix Profiles form twig template compatibility with twig v2 (by @matks)
+    - #13108: Fix missing lang entries in Configuration (by @rblaurin)
+    - #13177: Fix notice undefined index: icon on Design -> Positions (by @Matt75)
+    - #13161: Remove icons from Customers form (by @sarjon)
+    - #12931: Make footer on product page spread itself when the menu is hidden (by @dineshbadrukhiya)
+    - #13157: Fix Add/Edit brand icon (by @matks)
+    - #13145: Fix bug with incorrect error display within the forms (by @tomas862)
+    - #13093: Add missing label and delete legacy tax controller as it was migrated (by @rokaszygmantas)
+    - #13105: Validate theme zip file and show error messages (by @rokaszygmantas)
+    - #13088: Ensure translations are always saved with the selected theme in back office (by @mickaelandrieu)
+    - #13122: Fix notice when iso code does not exist in array (by @Quetzacoalt91)
+    - #13104: Fix bad variable in Customers Add/Edit template (by @matks)
+    - #13094: Fix product demo link_rewrite (by @marionf)
+    - #13079: Fix visual glitches in new theme (by @eternoendless)
+    - #13054: Escape all import output data (by @PierreRambaud)
+    - #13043: Fix to handle fancybox customer creation in Add an Order page (by @matks)
+    - #13063: Module Manager: Use categoryParentEnglishName instead of category name (by @PierreRambaud)
+    - #13066: Fix npm install not working anymore on new-theme (by @PierreRambaud)
+    - #12523: Solved problem with texture upload when attribute has hex color (by @kpodemski)
+    - #13049: Fix BO scaling in mobile (by @eternoendless)
+    - #12705: Update OrderHistory to manage {followup} & {shipping_number} vars in all email templates, not only in in_transit template (by @jf-viguier)
+    - #12946: Fix recurring technical error when saving modifications in a Carrier (by @Matt75)
+    - #12897: Enable lite display for new theme (by @matks)
+    - #12874: Fix Symfony console crash because of DocumentationLinkProvider service definition (by @jolelievre)
+    - #12788: Remove html escaping of errors (by @bilfeldt)
+    - #12794: Add missing columns in products_import.csv (by @rblaurin)
+    - #12730: Fix fatal error in product catalog when short description is too long (by @rblaurin)
+    - #12751: Fix saving shop association in migrated add/edit forms (by @rokaszygmantas)
+    - #12787: Add legacy links to all meta page routes (by @tomas862)
+    - #12711: Fix shipping cost becoming free if more than a half or available quantity ordered (by @LedCloud)
+    - #12723: Fix specific price without discount being added (by @rblaurin)
+    - #12709: Refactor MetaController to secure search usage (by @matks)
+    - #12716: Prevent including jQuery in the new theme (by @eternoendless)
+    - #12668: Fix help sidebar when adding/editing language (by @sarjon)
+    - #12465: Fix duplicate HTML id (by @mickaelandrieu)
+    - #12563: Fix error in admin panel when visiting a category that's not under Index (by @mowcixo)
+    - #12597: The lang parameter in the url is now shop dependent (by @helgvor-stoll)
+    - #12471: Use AdminSecurity annotation for ajax call for Sql Manager (by @matks)
+    - #12479: Avoid module sorting function warnings when module data is invalid (by @matks)
+    - #8993: Fix HTML formated configuration not saved (by @shaffe-fr)
+    - #11175: Allow product default supplier reference to be updated, if the product supplier is already attached to the product (by @simondaigre)
+    - #12240: Adds missing argument in MetaController which caused page crash (by @tomas862)
+    - #12096: Fix access rights to Administration page (by @matks)
+    - #12140: Default carrier name was displayed as 0 (by @Gitdyr)
+    - #11693: Fix search feature value and pagination (by @studiox3)
+    - #12052: SERP: Avoid mutating a prop directly + fix url encode (by @PierreRambaud)
+    - #11854: Add customer_message table name into SQL request (by @Klemart3D)
+    - #11932: Can't sort tax included for now (by @PierreRambaud)
+    - #11936: Description has a max length and can not exceeded (by @PierreRambaud)
+    - #11922: Fix searching issue in the Credit Slips page (by @khouloudbelguith)
+    - #11907: Fix error when updating the product details in order (by @PeeyushAgrawalWebkul)
+    - #11851: Fix error "getimagesize(): php_network_getaddresses" when trying to change the order status to payment accepted (by @PierreRambaud)
+    - #11850: Fix header (by @PierreRambaud)
+    - #11200: Fix address changes not impacted when creating an order from another order (by @jf-viguier)
+    - #11201: Addresses changes not impacted when creating an order from another order (by @jf-viguier)
+    - #11526: Fix wrong protocol in the File Manager Dialog (by @freakstatic)
+    - #11535: Display the right front url in multistore menu (by @jolelievre)
+    - #10981: Change BO product list price source for multistore (by @mafisz)
+    - #11256: Fixes error reported in #9687, regarding carrier list in the modal to ... (by @manfield)
+    - #11424: Improvement needs on hover of "Ok" button of source code modal on product page (by @dineshbadrukhiya)
+    - #10904: Fix date filtering in AdminSpecificPriceRuleController (by @Matt75)
+    - #11179: Fix sorting issue in the webservice page (by @khouloudbelguith)
+    - #10535: Fix typos (by @MathiasReker)
+    - #10930: Allow product import to change previous id_category_default when you force ID (by @itisco)
+    - #10939: Fix bad annotation in AttributeGroupLang, AttributeLang and TabLang (by @Fabuloops)
+    - #10808: Adjusted URL to be SSL agnostic (by @alu-)
+    - #10924: Fix right side block of attribute and attribute groups in combination tab not appearing (by @dineshbadrukhiya)
+    - #10781: Fixes new webservice list behavior in multishop context and fixes warning message display (by @tomas862)
+  - Refactoring:
+    - #13466: Brand and address export actions (by @zuk3975)
+    - #13251: Removes unnecessary return on update everywhere (by @tomas862)
+    - #13144: Cms page fixes (by @zuk3975)
+    - #13162: Tax page fixes (by @zuk3975)
+    - #13164: Manufacturer page fixes (by @zuk3975)
+    - #13159: Remove 'Constraint' suffix from TypedRegex constraint and validator (by @zuk3975)
+    - #12795: Brand address create/edit actions migration (by @zuk3975)
+    - #12995: Migrate Cms page create/edit actions (by @zuk3975)
+    - #13076: Migrate Add/Edit Profiles page (by @sarjon)
+    - #13014: Final Migration of Categories page (by @sarjon)
+    - #13067: Fix manufacturers namespace typos and wrong typecasts in commands (by @zuk3975)
+    - #12735: Brands create/edit migration (by @zuk3975)
+    - #12641: Migrate tax create/edit form (by @zuk3975)
+    - #12912: Fix Traffic and SEO route paths (by @matks)
+    - #12423: Taxes list migration (by @zuk3975)
+    - #12610: Taxes Options configuration form migration (by @zuk3975)
+    - #11470: Improve birthdate validation (by @zessx)
+    - #11723: Migrate customer Add/Edit actions (by @sarjon)
+    - #11519: Migrate Customers KPIs and required fields configuration (by @sarjon)
+    - #11527: Migrate customer view actions (by @sarjon)
+- Front Office:
+  - New feature:
+    - #13103: Introduce new hooks displayProductActions & displayPersonalInformationTop (by @Quetzacoalt91)
+  - Improvement:
+    - #13047: New design for prices and taxes (by @YeLnatSs)
+    - #13135: Add variable to tell if prices are tax included or not (by @eternoendless)
+    - #13009: Change product canonical url to parent, no more redirection (by @jolelievre)
+    - #12564: Allow Doctrine entities in modules, make doctrine available for FO, modules autoload on FO (by @jolelievre)
+    - #11943: Improve performance by avoiding parsing YAML files during ModuleManagerBuilder init (by @jocel1)
+    - #10253: Add modal-dialog-centered class to classic theme (by @CaptainYouz)
+    - #12748: Remove obsolete P3P policy (by @MathiasReker)
+    - #12753: Allow ipv6 to be used in htaccess redirects (by @Quetzacoalt91)
+    - #12017: Weak token implementation (by @PierreRambaud)
+    - #11534: Move scroll forcing from core to classic (by @dennispw)
+    - #10487: Added breadcrumb to the manufacturers pages (by @SebBareyre)
+    - #11661: Reset quantity value to min value after adding to cart (by @jolelievre)
+    - #11614: Allow modules to add custom product flags (by @kpodemski)
+    - #11607: Remove useless space (by @MathiasReker)
+    - #11491: Classic theme footer block design improvement (by @dineshbadrukhiya)
+    - #11455: Remove unnecessary spaces on header of the checkout page (by @dineshbadrukhiya)
+    - #11362: Dont expose Powered-By: Prestashop  (by @MathiasReker)
+    - #11215: Remove inline-style color in test-data (by @dineshbadrukhiya)
+    - #10769: Keep variant id_attribute in ProductLazyArray (by @Piraito)
+  - Bug fix:
+    - #13664: Remove id_attribute parameter from product link when it is equal to 0 (by @jolelievre)
+    - #13617: Fix not null voucher with free shipping producing php error (by @tomlev)
+    - #13635: Fix product link should not include attribute parameter equals to zero (by @jolelievre)
+    - #13407: Fix labels display computing (by @jolelievre)
+    - #13578: Automatically add dni field in Address format for countries which need it (by @jolelievre)
+    - #13440: Change checkout behaviour (needs to be validated after meeting) (by @jolelievre)
+    - #13411: Hide tax label in front when tax display is disabled in the shop (by @jolelievre)
+    - #13525: Fix currency display on not existing language (by @tomlev)
+    - #13003: Add behat tests for free shipping (by @tomlev)
+    - #13261: Fix lang on currency install (by @tomlev)
+    - #13201: Fix search results if shop has non-default 'visitor' group and categories that are only accessible for the non-default visitor group (by @fgschaefer)
+    - #13218: Fix breadcrumb in search results page leads to 404 page (by @PierreRambaud)
+    - #12872: Fix label "Web only"  (by @YeLnatSs)
+    - #13150: Add a missing space that could trigger an SQL error (by @chrisvanberg)
+    - #13106: Do not go to the latest step when you change a previous step state in checkout (by @PierreRambaud)
+    - #12893: Fix bug on contact when mail is too long (by @YeLnatSs)
+    - #13081: Empty filter should not be shown (by @PierreRambaud)
+    - #11688: Fix catalog mode in products list and product page (by @jolelievre)
+    - #12391: Fix Broken Authentication and Session Management (by @arnaudschaeffer)
+    - #12892: Limit carrier image size on checkout page (by @YeLnatSs)
+    - #12964: Wrong specific price refresh on product page with combinations (by @PierreRambaud)
+    - #12965: Fix wrong cart calculation when using cart rule with virtual products (by @tomlev)
+    - #12817: Robots should not index search content (by @watou)
+    - #12733: Changed the regex to force space and hyphen in postcode validation (by @jojotjebaby)
+    - #12696: Fix missing comma in sql upgrade file (by @tomlev)
+    - #12403: Attribute min not allowed on element input at this point, change type from text to number (by @dominictayloruk)
+    - #12406: Revert "Fix translation on account creation email error" (by @marionf)
+    - #12341: Use show_price to display price in schema.org tags (by @arnaudschaeffer)
+    - #12227: Fix ps_viewedproduct in classic theme (by @SharakPL)
+    - #10341: Fix main page slider display on all devices (by @CaptainYouz)
+    - #12023: When downloading a virtual good,  check if the order was made by the current user (by @garnele007)
+    - #10297: Fix image dimensions in Product Card view (by @CaptainYouz)
+    - #11726: Force DNI fields required if associated Country needs it (by @jolelievre)
+    - #10294: Fix minimum order amount for secondary currency (by @sadlyblue)
+    - #11754: Fix wrong discount details on order page / on invoice (by @tomlev)
+    - #11608: Fix deprecated jquery shortcut function 'load' (by @Fabuloops)
+    - #11745: Fix for password recovery error messages (by @web-fu)
+    - #11656: Correctly display percentage in cart (by @jolelievre)
+    - #11645: Fix discount computing to take combination into account (by @jolelievre)
+    - #11604: Fix wrong html attribute (by @SebBareyre)
+    - #11576: Add .gif support to webpack.config.js (by @adviva)
+    - #11605: Remove useless space (by @SebBareyre)
+    - #11495: Fix category description below the image (by @dineshbadrukhiya)
+    - #11563: Fix typo for "Environment" comment (by @Klemart3D)
+    - #9041: Fix override of ProductController (by @nenes25)
+    - #11103: Fix discount display when display preference is set without tax (by @tomlev)
+    - #11282: Convert customization price to current currency (by @unlocomqx)
+    - #11419: Noto Sans fonts updated to version 2.001 hinted (by @ProBackup-nl)
+    - #10867: Remove inline-style of Arial font (by @MathiasReker)
+    - #10643: Fix password validation message when password is too short (by @rdy4ever)
+- Core:
+  - New feature:
+    - #12708: Deprecate admin endpoints outside index.php (by @Quetzacoalt91)
+    - #11321: Translation Manager of Back Office can now manage legacy translations of modules (by @mickaelandrieu)
+    - #9337: Migrate "Brands" listing page (a.k.a manufacturers) (by @sarjon)
+    - #12758: Added a Theme Enabler command (by @mickaelandrieu)
+    - #10455: New CLDR implementation (by @tomlev)
+    - #12284: Include script handler to manage installation of modules (by @mickaelandrieu)
+    - #12089: Implement AbstractTypedCollection with tests (by @jolelievre)
+    - #10974: Implement form handlers for SqlManager form - part 1 (by @sarjon)
+    - #10839: Migrate languages list (by @sarjon)
+    - #10197: Added a schema generator (by @mickaelandrieu)
+    - #9132: Add hook for extra fields on customer address form (by @PeeyushAgrawalWebkul)
+    - #10816: Migrate "Layout customization" part of Them & Logo controller (by @sarjon)
+    - #10797: Migrate Employee list  (by @sarjon)
+    - #10864: Implement image source parser (by @sarjon)
+    - #10160: Migrate categories listing (by @sarjon)
+  - Improvement:
+    - #13735: Update native modules (by @eternoendless)
+    - #13402: Add new hooks of 1.7.6.0 in fixtures (by @Quetzacoalt91)
+    - #13238: Update themes folders license headers (by @matks)
+    - #13239: Update js folder license headers (by @matks)
+    - #13237: Update tests folders license headers (by @matks)
+    - #13235: Update src folder license headers (by @matks)
+    - #12941: Remove unnecessary return on update (by @eternoendless)
+    - #12999: Remove calls to old CLDR (by @Quetzacoalt91)
+    - #13141: Performance: avoid useless attributes queries (by @123monsite-regis)
+    - #12996: Domain improvements: naming and namespace (by @sarjon)
+    - #11730: Use of static instead of ClassName (by @MathiasReker)
+    - #11970: Unary operator spaces (by @MathiasReker)
+    - #11977: Function declaration (by @MathiasReker)
+    - #11975: Space after semicolon (by @MathiasReker)
+    - #13008: Adds phpdoc on range objectmodel (by @Matt75)
+    - #12782: Fixes for migrated Categories add/edit actions (by @sarjon)
+    - #12956: Customization - improve phpdoc and constants usage (by @Matt75)
+    - #12959: Make Tools curl throw an exception when it fails in dev mode (by @matks)
+    - #10406: Document and add tests to Faceted Search system (by @mickaelandrieu)
+    - #12251: Improve version (by @eternoendless)
+    - #12749: Remove 9 duplicates from array in getProductAttributeWhitelist(). Items sorted to check dupes. (by @toslan)
+    - #12810: Install ps_faviconnotificationbo automatically (by @eternoendless)
+    - #12808: Deprecate Cart::addExtraCarriers() (by @eternoendless)
+    - #12570: Add Drag & Drop styling for category position column (by @sarjon)
+    - #12346: Add Category form builder & handler (by @sarjon)
+    - #12498: Add showcase card for Suppliers list (by @sarjon)
+    - #12598: Restore composer file (by @PierreRambaud)
+    - #12532: Updated Core using new version of Composer script handler (by @mickaelandrieu)
+    - #12208: Add filter on the modules folder to avoid caching all files by Twig (by @Quetzacoalt91)
+    - #10783: Migration of Advanced Parameters > Team > Profiles page. (by @rokaszygmantas)
+    - #11968: Switch case space (by @MathiasReker)
+    - #11859: Replace tabs with spaces in htaccess (by @MathiasReker)
+    - #11961: Improvements in the Domain namespace (by @sarjon)
+    - #12247: Bump version to 1.7.6.0 (by @eternoendless)
+    - #12222: Add notice for docker-compose (by @PierreRambaud)
+    - #12211: Add breadcrumb to the search results page (by @SebBareyre)
+    - #11992: Replace calls to is_null by comparison (by @MathiasReker)
+    - #12082: Update Nginx configuration for multishop (by @PierreRambaud)
+    - #12150: Allow specific versions of libs to be ignored (by @Quetzacoalt91)
+    - #12031: Make pre-commit execute linter only if php files have been staged (by @eternoendless)
+    - #11985: PHP unit test case static method calls (by @MathiasReker)
+    - #11899: Introduce HelperList title_icon property (by @matks)
+    - #11866: Order imports (by @MathiasReker)
+    - #11867: Remove unneeded curly braces (by @MathiasReker)
+    - #11869: Remove unneeded control parentheses (by @MathiasReker)
+    - #11857: Replace tabs with spaces (by @MathiasReker)
+    - #11823: Fix namespace (by @MathiasReker)
+    - #11781: Fix blank lines: Add and remove (by @MathiasReker)
+    - #11729: Use binary mode to write files (by @MathiasReker)
+    - #10486: Split grid service definitions in separate files (by @sarjon)
+    - #10533: Add old product ID on actionProductAdd hook when duplicating a product (by @duGuillaume)
+    - #10975: Introduced a new function for Products.php for retrive a product ID given it reference (by @runningz)
+    - #11696: Combine consecutive issets (by @MathiasReker)
+    - #11708: Modernize types casting (by @MathiasReker)
+    - #11710: Include is not a function (by @MathiasReker)
+    - #11695: Array indentation (by @MathiasReker)
+    - #11685: Fix php-cs-fixer "non printable character" (by @MathiasReker)
+    - #11736: Remove unused imports (by @MathiasReker)
+    - #11757: Remove empty statement (by @MathiasReker)
+    - #11744: Fix PhpDoc Validate::isColor() (by @EdouardTack)
+    - #11697: Combine consecutive unsets (by @MathiasReker)
+    - #11635: Improve use of protocol (by @MathiasReker)
+    - #11738: No PHP closing tag and no EOL (by @MathiasReker)
+    - #11712: Normalize use of operators (by @MathiasReker)
+    - #11733: Add function type (by @MathiasReker)
+    - #11734: Remove comma in single array (by @MathiasReker)
+    - #11709: Use echo instead of print (by @MathiasReker)
+    - #11707: Do not use alias functions (by @MathiasReker)
+    - #11704: Remove useless return (by @MathiasReker)
+    - #11703: Do not use short echo tags (by @MathiasReker)
+    - #11701: Use logical operators (by @MathiasReker)
+    - #11699: Hash to slash comment (by @MathiasReker)
+    - #11694: Align multiline comment (by @MathiasReker)
+    - #11653: Allow override of _PS_DEBUG_PROFILING_ (by @SebBareyre)
+    - #11678: Fix use of protocol (by @MathiasReker)
+    - #11672: Non printable character (by @MathiasReker)
+    - #11643: Additional PHP Improvements (by @MathiasReker)
+    - #11666: Fully qualified strict types (by @MathiasReker)
+    - #11667: Heredoc to nowdoc (by @MathiasReker)
+    - #11671: Use constant instead of function (by @MathiasReker)
+    - #11669: Improve error suppression (by @MathiasReker)
+    - #11566: Build all the assets using a single command (by @eternoendless)
+    - #11313: Only call ntree regeneration at this end of a WS call and optimize regenerateEntireNtree (by @jocel1)
+    - #11510: Add PHP 7.3 polyfills (by @Quetzacoalt91)
+    - #11397: Add total_shipping_tax_excl, incl in email data (by @sitte)
+    - #11417: Lossless compression of all images (by @MathiasReker)
+    - #11246: Replace deprecated library PhpExcel by PhpSpreadsheet (by @MartinFinkenflugel)
+    - #11249: Fix declaration of method arguments (by @Seleda)
+    - #11140: Remove unreachable code (by @idnovate)
+    - #11139: Deprecate legacy Db service (by @sarjon)
+    - #10770: Update CacheClearer adapter (by @sarjon)
+    - #10777: Migration of Shop parameters > Contact > Contacts page. (by @rokaszygmantas)
+    - #10834: Allow release creator to be run without version parameter (by @Quetzacoalt91)
+    - #10699: Change getcwd() for __DIR__ (by @DanielBoettner)
+    - #10704: Add TranslatableType (by @sarjon)
+    - #9247: Add themes in gitignore (except classic) (by @Quetzacoalt91)
+  - Bug fix:
+    - #13684: Wrong discount subtotal when customergroup is set to use ex taxes (by @tomlev)
+    - #13604: Forbid URLS to be added in customer names (by @PierreRambaud)
+    - #13605: Add missing translation domains (by @matks)
+    - #13560: Remove duplicate method call (by @eternoendless)
+    - #13540: Update upgrade scripts to PS 1.7.6.0 (by @Quetzacoalt91)
+    - #13470: Removes GetDefaultGroupHandler adapter  (by @sarjon)
+    - #13435: Fixes option for MaterialMultipleChoiceTableType (by @sarjon)
+    - #13409: Do not call removed cldr lib (by @Quetzacoalt91)
+    - #13353: Fixes default Customer group overriding (by @sarjon)
+    - #13189: Harmonize Grids naming (by @sarjon)
+    - #13256: Fixes to Customer subdomain & controller (by @sarjon)
+    - #13246: Add missing hook description (by @eternoendless)
+    - #13242: Add missing hook description for additionalCustomerAddressFields (by @eternoendless)
+    - #13222: Do not try to install an unsupported language (by @PierreRambaud)
+    - #13208: Fix broken page when requesting a duplicate _legacy_link (by @PierreRambaud)
+    - #13209: Properly set error headers (by @jocel1)
+    - #13146: Fixes missing fields validation in Language command handlers (by @sarjon)
+    - #13115: Fix strpos arguments order (by @quasilyte)
+    - #12550: Improve the way VAT is managed for price calculation (by @prestamodule)
+    - #13057: Fix search action configuration for grids (by @sarjon)
+    - #12967: Foward $locale to Translate::getModuleTranslation() (by @eternoendless)
+    - #11962: Do not stripslashes value from _GET & _POST (by @PierreRambaud)
+    - #12960: DoctrineBuilderExtension uses YamlParser for its config (by @jolelievre)
+    - #12940: Do not look for translations if no locale (by @matks)
+    - #12841: Add deprecation notice for hook actionAjaxDieBefore (by @eternoendless)
+    - #12803: Fallback on language code when locale is empty (by @Quetzacoalt91)
+    - #12756: Fix bug when overriding the Address class (by @dariusakafest)
+    - #12739: Revert new theme to Webpack 2 (by @PierreRambaud)
+    - #12559: Remove translations from db when Language is deleted (by @sarjon)
+    - #12152: Fix timezone standard is ignored (by @michaesc)
+    - #11764: Fix undefined property (by @idnovate)
+    - #12473: Order Creation: fix out of stock status (by @rGaillard)
+    - #12484: Fix missing tag for CustomerType (by @sarjon)
+    - #12124: Remove unwanted umask (by @PierreRambaud)
+    - #12399: Actually use arguments passed to CountryDataProvider->getCountries() (by @TysonAndre)
+    - #12397: Fix use of array_merge in HookFinder->addExpectedInstanceClasses (by @TysonAndre)
+    - #12367: Move PositionColumn in its original folder (by @Quetzacoalt91)
+    - #12344: Fix translation on account creation email error (by @SebBareyre)
+    - #11442: Fixed the problem with the type of a return value in Module::onInstall() (by @zapalm)
+    - #12139: Fix some Symfony service definitions (by @matks)
+    - #12125: Fix bad GridFactory service definition (by @matks)
+    - #12014: Unify algorithm for calculating average tax rate for products in a cart (by @eternoendless)
+    - #12010: Make filtering of LazyArrays return a new instance (by @eternoendless)
+    - #12015: Fix typo in example Nginx config file (by @mwht)
+    - #11809: Fix misuse of information returned by getimagesize (by @olivier-monaco)
+    - #11876: Fix lang table multi-store data issue (by @Dan-Orchard)
+    - #11892: Fix missing const definition (by @sarjon)
+    - #11895: Fix categories grid id (by @sarjon)
+    - #11884: Do not allow null for low_stock_alert (by @eternoendless)
+    - #11706: Fix implode calls (by @MathiasReker)
+    - #11679: Fix issue with deleting a category with subcategories on Multistore (by @MathiasReker)
+    - #11691: Fix bug on pdf logo path (by @SebBareyre)
+    - #11747: Convert comments to php docs in some cases (by @MathiasReker)
+    - #11731: Fix typo in Phpdoc (by @MathiasReker)
+    - #11714: Fix line ending (by @MathiasReker)
+    - #11711: Add missing braces (by @MathiasReker)
+    - #11559: Keep first try of translator initialization in memory (by @Quetzacoalt91)
+    - #11564: Fix shop name in the subject of mail (by @khouloudbelguith)
+    - #9034: Added missing Rewrite base on Api rule (by @123monsite-regis)
+    - #10465: Fixed bug on inc/dec product quantity in cart with vouchers  discounts (by @sete391)
+    - #11469: Fix SQL update when last_connection_date is null (by @Quetzacoalt91)
+    - #11204: Fix incorrect comparison when out of stock (by @andromaque)
+    - #11202: Fix a bug where PrestaShop cookie is set on every page when a cookie value is NULL (by @jocel1)
+    - #11214: Handle bad address use case for Carrier Tax Rate (by @matks)
+    - #11151: Fix MailsProvider service declaration name (by @mickaelandrieu)
+    - #11168: Remove Throwable from core (by @sarjon)
+    - #10917: Add getConfiguration to PrestaShopBundle (by @Quetzacoalt91)
+    - #10536: Delete search indexes after deleting a product (by @MathiasReker)
+    - #10722: Update Smarty and Symfony to latest (by @eternoendless)
+    - #9042: Fix controller override (by @nenes25)
+    - #12243: Update gitignore (by @PierreRambaud)
+    - #13171: Outdated assets (by @PierreRambaud)
+  - Refactoring:
+    - #12926: Migration of Manufacturers view action (by @sarjon)
+    - #11783: Migrate customers searching via ajax (by @sarjon)
+    - #12766: Remove duplicate CLDR service (by @matks)
+    - #12447: Remove legacy Webservice controller (by @sarjon)
+    - #12446: Enable new Languages page (by @sarjon)
+    - #12398: Fix unused variables where straightforward to do so (by @TysonAndre)
+    - #12293: Migrate actions of Languages list (by @sarjon)
+    - #12400: Remove a harmless duplicate array entry in PositionsController (by @TysonAndre)
+    - #12263: Migrate Add/Edit actions for webservice keys (by @sarjon)
+    - #11997: Happy new year 2019 (by @Quetzacoalt91)
+    - #11135: Migrate Employees list actions (by @sarjon)
+    - #12249: Migrate legacy test TermsAndConditionsTest and refactor related class (by @matks)
+    - #11885: Migration of Languages adding/editing (by @sarjon)
+    - #11169: Migrate Theme & Logo (by @sarjon)
+    - #12022: Use Symfony Cache Clear in ModuleManager instead of deprecated CacheClearer (by @matks)
+    - #10916: Migrate customers listing (by @sarjon)
+- Installer:
+  - New feature:
+    - #12864: Remove ps_legalcompliance from composer.json  (by @Quetzacoalt91)
+  - Improvement:
+    - #13734: Update translations catalogue for 1.7.6 (by @eternoendless)
+    - #13069: Update demo features (by @marionf)
+  - Bug fix:
+    - #13471: Set null values when trying to retrieve the non-existing default shop (by @Quetzacoalt91)
+    - #13223: Fix SQL syntax error in upgrade file to PS 1.7.6 (by @Quetzacoalt91)
+    - #13078: Revert "Fix delivery slips failure when upgrading" (by @Quetzacoalt91)
+    - #12666: Fix delivery slips failure when upgrading (by @rblaurin)
+    - #12155: Fix fixtures not generating thumbnails (by @PierreRambaud)
+    - #12141: Change php requirements in INSTALL.txt (by @PierreRambaud)
+    - #9366: Don't display the system step if mandatory requirements are OK (by @rGaillard)
+- Web Services:
+  - Improvement:
+    - #12329: API and Products: Add missing combination IDs in the pack content (by @Quetzacoalt91)
+    - #11938: Make customer's product customization information reachable in WebServices (by @eternoendless)
+  - Bug fix:
+    - #12836: Fixes fatal error when trying to get the images of a product with no images  (by @mowcixo)
+    - #12201: Fix SQL exception when creating a product_option without values (by @mowcixo)
+    - #11902: Fix API error with php 7.2 (by @DelecroixQuentin)
+    - #11192: Correctly call hook for product update in Product class (by @alexll)
+- Localization:
+  - Bug fix:
+    - #10843: Fix typo in download_product.txt (by @antonellamarengo)
+  - Refactoring:
+    - #12747: Fix PhpDoc for AttributeGroupCore::getAttributes() (by @BadPixxel)
+- Tests:
+  - New feature:
+    - #13167: Move lint checks in GitHub action (by @Quetzacoalt91)
+    - #12091: Geo-location: By IP address (by @ansar21mallouli)
+    - #12086: Location: zone and country (by @ansar21mallouli)
+    - #12049: Change position, unhook and transplant a module (by @ansar21mallouli)
+    - #12030: Filters by category in catalog page (by @ansar21mallouli)
+    - #12001: Filters in catalog page (by @ansar21mallouli)
+    - #12007: Delivery slip test (by @YosraAk)
+    - #11897: Generate invoice pdf by date and status (by @hadrich-hatem)
+    - #11891: Credit slip, credit slip pdf and credit slip options (by @hadrich-hatem)
+    - #11804: Localization: local units and configuration (by @ansar21mallouli)
+    - #11800: Create, edit and delete feature (by @hadrich-hatem)
+    - #11768: Import localization pack (by @ansar21mallouli)
+    - #11766: Create, edit, delete, exchange rate currency (by @ansar21mallouli)
+    - #9309: Check buttons in header product page (by @hadrich-hatem)
+    - #9312: Check order details (selenium tests) (by @fatmaBouchekoua)
+    - #11184: Advanced localization (by @ansar21mallouli)
+    - #9341: Identity (Selenium tests) (by @fatmaBouchekoua)
+  - Improvement:
+    - #13356: Adds unit tests for FormHandlerFactory (by @sarjon)
+    - #13176: Allow to use date as parameter for nightly builds (by @PierreRambaud)
+    - #13127: Do not run tests with the StarterTheme anymore (by @Quetzacoalt91)
+    - #13052: Remove usage of TRAVIS_BUILD_DIR (by @PierreRambaud)
+    - #12804: Use string value for CSRF token in DeliveryControllerTest (by @matks)
+    - #12793: Allow Travis phpHigh build to fail as it is an informative check, not not a mandatory check (by @matks)
+    - #12495: Add a descriptif comment for the broken test "installation language <> country " (by @YosraAk)
+    - #12490: Add a descriptive comment for the broken test "create_edit_delete_contact" (by @YosraAk)
+    - #12488: Add a descriptif comment for the broken test "create_edit_delete_language" (by @YosraAk)
+    - #12496: Add a descriptif comment for the broken test "autoupgrade" (by @YosraAk)
+    - #12494: Add a descriptif comment for the broken test "sort filter file" (by @YosraAk)
+    - #12493: Add a descriptif comment for the broken test "linkWidget" (by @YosraAk)
+    - #12492: Add a descriptif comment for the broken test "page" (by @YosraAk)
+    - #12491: Add a descriptif comment for the broken test "category" (by @YosraAk)
+    - #12487: Add a descriptif comment for the broken test "configuration" (by @YosraAk)
+    - #12482: Add a descriptif comment for the broken test "Delete category" (by @YosraAk)
+    - #12486: Add a descriptif comment for the broken test "read_more_module" (by @YosraAk)
+    - #12485: Add a descriptif comment for the broken test "create_feature" (by @YosraAk)
+    - #12481: Add a descriptif comment for the broken test "create_product_with_combination" (by @YosraAk)
+    - #12480: Add a descriptif comment for the broken test "shopping_carts_view" (by @YosraAk)
+    - #12021: Add unit tests for CommandBus, DocumentationLinkProvider and UrlFileChecker (by @matks)
+    - #12378: Improve report files generation (by @PierreRambaud)
+    - #12369: Fix deprecation notices reported by Composer (by @Quetzacoalt91)
+    - #12304: Add unit tests for Core IdentifiableObject classes (by @matks)
+    - #12324: Separate nightly tests and reports (by @PierreRambaud)
+    - #12298: Improve logging for nightly tests (by @PierreRambaud)
+    - #12232: Add unit tests for Core/Kpi (by @matks)
+    - #12256: Wrong duration time while combine nightly tests reports (by @PierreRambaud)
+    - #12183: Restore survival test for Import page (by @matks)
+    - #12188: Add test link id (by @ansar21mallouli)
+    - #11725: Nightly tests build on Google Cloud Platform (by @PierreRambaud)
+    - #11920: Add advice when lint fails + Display all files in error in Travis lint job (by @Quetzacoalt91)
+    - #12060: Enable PHP CS Fixer on tests folder (by @matks)
+    - #11865: PHP unit set up tear down visibility (by @MathiasReker)
+    - #11677: Fix wrong name (by @MathiasReker)
+    - #11674: Simplify PHP unit construct (by @MathiasReker)
+    - #11675: Simplify PHP unit expectations (by @MathiasReker)
+    - #11676: Use camelcase instead of snakecase in functions (by @MathiasReker)
+    - #11565: Allow tests high and fix conflicts in file (by @PierreRambaud)
+    - #11237: Improved survival tests (by @mickaelandrieu)
+    - #10724: Clean php-cs-fixer files (by @matks)
+    - #9421: Update test high : create product with combination/create virtual … (by @fouratachour)
+  - Bug fix:
+    - #13464: Apply CS Fixer on 1.7.6.x (by @Quetzacoalt91)
+    - #13113: Fix typo on static (by @Quetzacoalt91)
+    - #12574: Fix PositionsControllerTest for good (by @jolelievre)
+    - #12238: Wrong directory to check if there are files reported by mochawesome (by @PierreRambaud)
+    - #12225: Add a json check when running report combine (by @PierreRambaud)
+    - #12210: Update nightly tests (by @PierreRambaud)
+    - #12166: Update php-cs-fixer to a recent version to be compatible with PHP7.3 (by @PierreRambaud)
+    - #12079: Fix static cache reset on ObjectModel (by @tomlev)
+    - #10477: Added an Error Data Listener (by @mickaelandrieu)
+    - #12013: Isolate legacy tests into suites to fix develop branch (by @matks)
+    - #11898: Fix travis script for running tests and fix broken tests (by @matks)
+    - #11549: Fix unable to build tests container (by @PierreRambaud)
+    - #11306: Fix linter jobs of Travis (by @Quetzacoalt91)
+  - Refactoring:
+    - #13686: Add close welcome module for tests 11_international (by @boubkerbribri)
+    - #13683: Add close welcome module for tests 10_modules (by @boubkerbribri)
+    - #13680: Fix tests customer (by @boubkerbribri)
+    - #13630: Fix Onboarding close method (by @boubkerbribri)
+    - #13656: Fix for tests in order test suite (by @SimonGrn)
+    - #13657: Fix the check of the success message when saving and deleting a currency (by @nesrineabdmouleh)
+    - #13667: Fix test Feature 1 create edit delete feature (by @boubkerbribri)
+    - #13676: Add close welcome modal for tests Manufacturer (by @boubkerbribri)
+    - #13693: Fix first test of the order test suite (by @SimonGrn)
+    - #13696: Add welcome module for tests discount (by @boubkerbribri)
+    - #13700: Fix test 3 of the shop parameters test suite (by @SimonGrn)
+    - #13637: Add handling of the welcome modal and document the blocking issue for the last step (by @SimonGrn)
+    - #13661: Fix for test 4 of the order test suite after canonical url fix (by @SimonGrn)
+    - #13651: Adding close welcome module in tests product (by @boubkerbribri)
+    - #13659: Adding close welcome module in tests Attribute  (by @boubkerbribri)
+    - #13612: Fix test 05 create order without account (by @boubkerbribri)
+    - #13615: Fix test Product suite full (by @nesrineabdmouleh)
+    - #13545: Fix test Employee Suite Full (by @boubkerbribri)
+    - #13616: Fix method used to change quantity (by @SimonGrn)
+    - #13602: Fix for test 2 of the orders test suite (by @SimonGrn)
+    - #13502: Fix test Category suite full (by @boubkerbribri)
+    - #13597: Fix test 09_delivery_slips_pdf_and_options (by @boubkerbribri)
+    - #13570: Fix broken selectors and logic for the test suite 9 (customer) (by @SimonGrn)
+    - #13588: Fixing some tests orders (by @boubkerbribri)
+    - #13581: Fix test feature update (by @ntiepresta)
+    - #13568: Fix tests 10_module Suite Full (by @boubkerbribri)
+    - #13561: Fix for tests 1 and 2 of the shop parameters test suite (by @SimonGrn)
+    - #13503: FIx test Create Attribute Suite Full (by @boubkerbribri)
+    - #13534: Fix tests manufacturer (by @boubkerbribri)
+    - #13552: Fix tests International/localization and international/taxes (by @boubkerbribri)
+    - #13536: Fixes e2e broken selectors (by @mbadrani)
+    - #12634: Behat cart tests (by @tomlev)
+    - #12679: Add some fixes to the campaign full (by @YosraAk)
+    - #12678: Create virtual product (by @ansar21mallouli)
+    - #12431: Update product quantity test (by @YosraAk)
+    - #12362: Go to next and previous page test (by @ansar21mallouli)
+    - #12355: Print the delivery slip (by @ansar21mallouli)
+    - #12351: Update create order in FO test (by @YosraAk)
+    - #12343: Print invoice order (by @ansar21mallouli)
+    - #12317: Create order in BO test (by @ansar21mallouli)
+    - #12315: Create order as a guest test and update readme file (by @YosraAk)
+    - #12289: Update sort module test (by @ansar21mallouli)
+    - #12281: Update zip module test (by @YosraAk)
+    - #12266: Migrate ImageTagSourceParserTest in tests folder (by @matks)
+    - #12272: Add checkFile step after downloading a file (by @YosraAk)
+    - #12245: Update check notifications test (by @ansar21mallouli)
+    - #12219: Update click on discover test (by @ansar21mallouli)
+    - #12220: Update file tests (by @YosraAk)
+    - #12217: Update search module test (by @ansar21mallouli)
+    - #12206: Installation test (by @ansar21mallouli)
+    - #12190: Update check the addons catalog page test (by @ansar21mallouli)
+    - #12181: Update onboarding test (by @YosraAk)
+    - #12122: Add a new brand address test (by @ansar21mallouli)
+    - #12115: Update create manufacturers test (by @ansar21mallouli)
+    - #12112: Update bulk actions in catalog page test (by @ansar21mallouli)
+    - #12104: Update delete shopping cart test (by @ansar21mallouli)
+    - #12067: Add some fixes to the campaign full (by @YosraAk)
+    - #12054: Migrate legacy unit test for Hashing (by @matks)
+    - #12045: Update autoupgrade test (by @YosraAk)
+    - #11776: Fix campaign full tests on develop branch (by @YosraAk)
+    - #11525: Introduce modern unit tests for new test structure (by @matks)
+    - #11529: Migrate tests-legacy tests to namespace LegacyTests (by @matks)
+    - #11464: Cleanup /tests directory (by @sarjon)
+
+####################################
+#   v1.7.5.2 - (2019-05-02)
+####################################
+- Core:
+  - Bug fix:
+    - #13599: Forbid URLs to be added in customer names (by @PierreRambaud)
+    - #13580: Fixed dispatched hook on the Grid presenter (by @mickaelandrieu)
+    - #13567: Improve name validation (by @eternoendless)
+    - #13549: Forbid URLs to be inserted into Name fields (by @matks)
+- Tests:
+  - Refactoring:
+    - #13583: Fix selector in E2E tests for addons catalog page and another one in the autoupgrade test (by @nesrineabdmouleh)
+
+####################################
+#   v1.7.5.1 - (2019-02-18)
+####################################
+- Back Office:
+  - Bug fix:
+    - #12507: Add hookDispatcher in GridFactory constructor, HookDispatcherAwareTrait has a safer getter
+    - #12234: Force refresh of tinymce editors in product page step 1
+    - #12402: Fix first attribute generation when not choosing first attribute
+    - #12372: Fix provider warehouse routes
+    - #12370: RTL fixes: profile, select and notification dropdown, popover tooltips, stock quantity arrows
+    - #12395: Change stock alert z index to be on top of header
+    - #12354: Fix cancel button on Safari browser
+    - #12361: Refacto SearchParameters and SearchParametersResolver for pagination
+    - #12205: Fix bulk module actions
+    - #12277: Prevent usage of enter key in search hook input
+    - #12236: SERP: Textarea from tinymce requires jquery to return the text value
+    - #12016: Update module & service link in upgrade
+    - #12196: Fix RTL glitches
+    - #12111: Keep showcase cards closed
+    - #11923: Fix error in SERP component when using non-alphanumeric characters
+
+- Front Office:
+  - Improvement:
+    - #12327: Make it possible to enable/disable attribute name on page title
+  - Bug fix:
+    - #12337: Slow combination update due to delay before request
+
+- Core:
+  - Bug fix:
+    - #12543: Update vulnerable dependencies
+    - #12389: Fixed grid hook calls
+    - #12292: Allow arabic numbers in link rewrite
+    - #12106: Robots.txt with multilang/multishop
+    - #11995: Fix undefined INTL_IDNA_VARIANT_UTS46 if intl ICU < 4.6
+    - #11814: Fix typos and duplicate code in upgrade SQL
+
+- Installer:
+  - Bug fix:
+    - #11937: Check if intl is installed in installer
 
 ####################################
 #   v1.7.5.0 - (2018-12-17)

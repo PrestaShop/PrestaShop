@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,10 +27,10 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Security\Voter\PageVoter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Controller responsible of "Configure > Shop Parameters > Order Settings" page.
@@ -38,13 +38,11 @@ use Symfony\Component\HttpFoundation\Request;
 class OrderPreferencesController extends FrameworkBundleAdminController
 {
     /**
-     * Show order preferences page.
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
-     * @Template("@PrestaShop/Admin/Configure/ShopParameters/OrderPreferences/order_preferences.html.twig")
-     *
-     * @return array Template parameters
+     * @return Response
      */
     public function indexAction(Request $request)
     {
@@ -52,7 +50,7 @@ class OrderPreferencesController extends FrameworkBundleAdminController
 
         $form = $this->get('prestashop.admin.order_preferences.form_handler')->getForm();
 
-        return [
+        return $this->render('@PrestaShop/Admin/Configure/ShopParameters/OrderPreferences/order_preferences.html.twig', [
             'layoutTitle' => $this->trans('Order settings', 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
             'enableSidebar' => true,
@@ -60,11 +58,13 @@ class OrderPreferencesController extends FrameworkBundleAdminController
             'form' => $form->createView(),
             'isMultishippingEnabled' => $this->configuration->getBoolean('PS_ALLOW_MULTISHIPPING'),
             'isAtcpShipWrapEnabled' => $this->configuration->getBoolean('PS_ATCP_SHIPWRAP'),
-        ];
+        ]);
     }
 
     /**
-     * Handle order settings form submit.
+     * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))",
+     *     message="You do not have permission to edit this.",
+     *     redirectRoute="admin_order_preferences")
      *
      * @param Request $request
      *
@@ -72,24 +72,6 @@ class OrderPreferencesController extends FrameworkBundleAdminController
      */
     public function processAction(Request $request)
     {
-        $legacyController = $request->attributes->get('_legacy_controller');
-
-        if (!in_array(
-            $this->authorizationLevel($legacyController),
-            [
-                PageVoter::LEVEL_UPDATE,
-                PageVoter::LEVEL_CREATE,
-                PageVoter::LEVEL_DELETE,
-            ]
-        )) {
-            $this->addFlash(
-                'error',
-                $this->trans('You do not have permission to edit this.', 'Admin.Notifications.Error')
-            );
-
-            return $this->redirectToRoute('admin_order_preferences');
-        }
-
         $formHandler = $this->get('prestashop.admin.order_preferences.form_handler');
 
         $form = $formHandler->getForm();

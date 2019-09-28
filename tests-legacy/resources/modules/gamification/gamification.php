@@ -246,7 +246,7 @@ class gamification extends Module
         $current_level = (int)Configuration::get('GF_CURRENT_LEVEL');
         $current_level_percent = (int)Configuration::get('GF_CURRENT_LEVEL_PERCENT');
 
-        $badges_to_display = array();//retro compat
+        $badges_to_display = array(); //retro compat
         $unlock_badges = array();
         $next_badges = array();
         $not_viewed_badge = explode('|', Configuration::get('GF_NOT_VIEWED_BADGE', ''));
@@ -276,7 +276,7 @@ class gamification extends Module
 
     public function refreshDatas($iso_lang = null)
     {
-        if (is_null($iso_lang)) {
+        if (null === $iso_lang) {
             $iso_lang = $this->context->language->iso_code;
         }
 
@@ -334,7 +334,7 @@ class gamification extends Module
 
     public function getData($iso_lang = null)
     {
-        if (is_null($iso_lang)) {
+        if (null === $iso_lang) {
             $iso_lang = $this->context->language->iso_code;
         }
         $iso_country = $this->context->country->iso_code;

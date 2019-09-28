@@ -64,7 +64,7 @@ scenario('Create "Product"', () => {
         return promise
           .then(() => client.waitForExistAndClick(AddProductPage.pricing_tax_rule_select))
           .then(() => client.waitAndSetValue(AddProductPage.pricing_tax_rule_input, taxData.name + date_time))
-          .then(() => client.waitForExistAndClick(AddProductPage.pricing_tax_rule_option));
+          .then(() => client.waitForExistAndClick(AddProductPage.pricing_tax_rule_option.replace('%T', '23%')));
       });
       test('should click on "Add specific price" button', () => client.scrollWaitForExistAndClick(AddProductPage.pricing_add_specific_price_button));
       test('should set the "Starting at" input', () => client.waitAndSetValue(AddProductPage.specific_price_starting_at_input, productData.pricing[0].starting_at, 3000));
@@ -74,12 +74,7 @@ scenario('Create "Product"', () => {
       test('should click on "Apply" button', () => client.waitForExistAndClick(AddProductPage.specific_price_save_button));
       test('should click on "Save" button', () => {
         return promise
-          .then(() => client.isVisible(AddProductPage.symfony_toolbar, 3000))
-          .then(() => {
-            if (global.isVisible) {
-              client.waitForExistAndClick(AddProductPage.symfony_toolbar)
-            }
-          })
+          .then(() => client.waitForSymfonyToolbar(AddProductPage, 2000))
           .then(() => client.waitForExistAndClick(AddProductPage.save_product_button, 2000));
       });
       test('should click on "Add specific price" button', () => client.scrollWaitForExistAndClick(AddProductPage.pricing_add_specific_price_button));
@@ -95,12 +90,7 @@ scenario('Create "Product"', () => {
     scenario('Save the created product', client => {
       test('should switch the product online', () => {
         return promise
-          .then(() => client.isVisible(AddProductPage.symfony_toolbar, 3000))
-          .then(() => {
-            if (global.isVisible) {
-              client.waitForExistAndClick(AddProductPage.symfony_toolbar)
-            }
-          })
+          .then(() => client.waitForSymfonyToolbar(AddProductPage, 3000))
           .then(() => client.waitForExistAndClick(AddProductPage.product_online_toggle, 2000));
       });
       test('should click on "Save" button', () => client.waitForExistAndClick(AddProductPage.save_product_button));

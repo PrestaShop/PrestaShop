@@ -1,8 +1,12 @@
+/**
+ * This script is based on the scenario described in this test link
+ * [id="PS-386"][Name="Navigate between page in catalog page"]
+ **/
+
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {Menu} = require('../../../selectors/BO/menu.js');
-const {AddProductPage} = require('../../../selectors/BO/add_product_page');
 const commonProduct = require('../../common_scenarios/product');
-let promise = Promise.resolve();
+const welcomeScenarios = require('../../common_scenarios/welcome');
 let productData = {
   name: 'Product test',
   quantity: "50",
@@ -16,7 +20,7 @@ scenario('Navigate between the catalog pages in the back office', () => {
     test('should open the browser', () => client.open());
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'common_client');
-
+  welcomeScenarios.findAndCloseWelcomeModal();
   scenario('Create products to have more than 20 product in the catalog', client => {
     test('should go to "Catalog" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.products_submenu));
     test('should create products if there\'s less than 20 product in the list', () => commonProduct.checkPaginationThenCreateProduct(client, productData));

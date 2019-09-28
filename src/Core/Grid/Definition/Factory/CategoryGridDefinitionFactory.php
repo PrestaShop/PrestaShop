@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -39,12 +39,14 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Category\CategoryPositionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DraggableColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\IdentifierColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\LinkColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
@@ -76,17 +78,20 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
     private $multistoreContextChecker;
 
     /**
+     * @param HookDispatcherInterface $hookDispatcher
      * @param string $resetActionUrl
      * @param string $redirectActionUrl
      * @param MultistoreContextCheckerInterface $multistoreContextChecker
      * @param AccessibilityCheckerInterface $categoryForViewAccessibilityChecker
      */
     public function __construct(
+        HookDispatcherInterface $hookDispatcher,
         $resetActionUrl,
         $redirectActionUrl,
         MultistoreContextCheckerInterface $multistoreContextChecker,
         AccessibilityCheckerInterface $categoryForViewAccessibilityChecker
     ) {
+        parent::__construct($hookDispatcher);
         $this->resetActionUrl = $resetActionUrl;
         $this->redirectActionUrl = $redirectActionUrl;
         $this->categoryForViewAccessibilityChecker = $categoryForViewAccessibilityChecker;
@@ -98,7 +103,7 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getId()
     {
-        return 'categories';
+        return 'category';
     }
 
     /**
@@ -116,16 +121,12 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
     {
         $columns = (new ColumnCollection())
             ->add(
-                (new BulkActionColumn('bulk'))
-                ->setOptions([
-                    'bulk_field' => 'id_category',
-                ])
-            )
-            ->add(
-                (new DataColumn('id_category'))
+                (new IdentifierColumn('id_category'))
                 ->setName($this->trans('ID', [], 'Admin.Global'))
                 ->setOptions([
-                    'field' => 'id_category',
+                    'identifier_field' => 'id_category',
+                    'bulk_field' => 'id_category',
+                    'with_bulk_field' => true,
                 ])
             )
             ->add(
@@ -133,7 +134,7 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setName($this->trans('Name', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'name',
-                    'route' => 'admin_category_edit',
+                    'route' => 'admin_categories_index',
                     'route_param_name' => 'categoryId',
                     'route_param_field' => 'id_category',
                 ])
@@ -143,6 +144,7 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setName($this->trans('Description', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'description',
+                    'sortable' => false,
                 ])
             )
             ->add(
@@ -151,7 +153,7 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setOptions([
                     'field' => 'active',
                     'primary_field' => 'id_category',
-                    'route' => 'admin_category_process_status_toggle',
+                    'route' => 'admin_categories_toggle_status',
                     'route_param_name' => 'categoryId',
                 ])
             )
@@ -164,17 +166,20 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
             );
 
         if ($this->multistoreContextChecker->isSingleShopContext()) {
-            $columns->addAfter(
-                'description',
-                (new CategoryPositionColumn('position'))
-                ->setName($this->trans('Position', [], 'Admin.Global'))
-                ->setOptions([
-                    'field' => 'position',
-                    'id_field' => 'id_category',
-                    'id_parent_field' => 'id_parent',
-                    'update_route' => 'AdminCategories',
-                ])
-            );
+            $columns
+                ->addAfter(
+                    'description',
+                    (new CategoryPositionColumn('position'))
+                        ->setName($this->trans('Position', [], 'Admin.Global'))
+                        ->setOptions([
+                            'field' => 'position',
+                            'id_field' => 'id_category',
+                            'id_parent_field' => 'id_parent',
+                            'update_route' => 'admin_categories_update_position',
+                        ])
+                )
+                ->addBefore('id_category', new DraggableColumn('position_drag'))
+            ;
         }
 
         return $columns;
@@ -191,6 +196,9 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setAssociatedColumn('id_category')
                 ->setTypeOptions([
                     'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Search ID', [], 'Admin.Actions'),
+                    ],
                 ])
             )
             ->add(
@@ -198,6 +206,9 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setAssociatedColumn('name')
                 ->setTypeOptions([
                     'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Search name', [], 'Admin.Actions'),
+                    ],
                 ])
             )
             ->add(
@@ -205,6 +216,9 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setAssociatedColumn('description')
                 ->setTypeOptions([
                     'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Search description', [], 'Admin.Actions'),
+                    ],
                 ])
             )
             ->add(
@@ -228,6 +242,9 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setAssociatedColumn('position')
                 ->setTypeOptions([
                     'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Search position', [], 'Admin.Actions'),
+                    ],
                 ])
             );
         }
@@ -257,7 +274,7 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setName($this->trans('Export', [], 'Admin.Actions'))
                 ->setIcon('cloud_download')
                 ->setOptions([
-                    'route' => 'admin_category_export',
+                    'route' => 'admin_categories_export',
                 ])
             )
             ->add(
@@ -287,21 +304,21 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                 (new SubmitBulkAction('enable_selection'))
                 ->setName($this->trans('Enable selection', [], 'Admin.Actions'))
                 ->setOptions([
-                    'submit_route' => 'admin_category_process_bulk_status_enable',
+                    'submit_route' => 'admin_categories_bulk_enable_status',
                 ])
             )
             ->add(
                 (new SubmitBulkAction('disable_selection'))
                 ->setName($this->trans('Disable selection', [], 'Admin.Actions'))
                 ->setOptions([
-                    'submit_route' => 'admin_category_process_bulk_status_disable',
+                    'submit_route' => 'admin_categories_bulk_disable_status',
                 ])
             )
             ->add(
                 (new DeleteCategoriesBulkAction('delete_selection'))
                 ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
                 ->setOptions([
-                    'categories_bulk_delete_route' => 'admin_category_process_bulk_delete',
+                    'categories_bulk_delete_route' => 'admin_categories_bulk_delete',
                 ])
             );
     }
@@ -317,8 +334,8 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setName($this->trans('View', [], 'Admin.Actions'))
                 ->setIcon('zoom_in')
                 ->setOptions([
-                    'route' => 'admin_category_listing',
-                    'route_param_name' => 'id_category',
+                    'route' => 'admin_categories_index',
+                    'route_param_name' => 'categoryId',
                     'route_param_field' => 'id_category',
                     'accessibility_checker' => $this->categoryForViewAccessibilityChecker,
                 ])
@@ -328,7 +345,7 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setName($this->trans('Edit', [], 'Admin.Actions'))
                 ->setIcon('edit')
                 ->setOptions([
-                    'route' => 'admin_category_edit',
+                    'route' => 'admin_categories_edit',
                     'route_param_name' => 'categoryId',
                     'route_param_field' => 'id_category',
                 ])
@@ -339,7 +356,7 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setIcon('delete')
                 ->setOptions([
                     'category_id_field' => 'id_category',
-                    'category_delete_route' => 'admin_category_process_delete',
+                    'category_delete_route' => 'admin_categories_delete',
                 ])
             );
     }

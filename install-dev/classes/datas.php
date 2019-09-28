@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -180,16 +180,16 @@ class Datas
 
     public static function getInstance()
     {
-        if (Datas::$instance === null) {
-            Datas::$instance = new Datas();
+        if (static::$instance === null) {
+            static::$instance = new static();
         }
 
-        return Datas::$instance;
+        return static::$instance;
     }
 
     public static function getArgs()
     {
-        return Datas::$available_args;
+        return static::$available_args;
     }
 
     public function getAndCheckArgs($argv)
@@ -214,7 +214,7 @@ class Datas
         }
 
         $errors = array();
-        foreach (Datas::getArgs() as $key => $row) {
+        foreach (static::getArgs() as $key => $row) {
             if (isset($row['name'])) {
                 $name = $row['name'];
             } else {

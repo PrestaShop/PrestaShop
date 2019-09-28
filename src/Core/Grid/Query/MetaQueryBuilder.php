@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -105,6 +105,13 @@ final class MetaQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     private function getQueryBuilder(array $filters)
     {
+        $availableFilters = [
+            'id_meta',
+            'page',
+            'title',
+            'url_rewrite',
+        ];
+
         $qb = $this->connection
             ->createQueryBuilder()
             ->from($this->dbPrefix . 'meta', 'm')
@@ -115,11 +122,21 @@ final class MetaQueryBuilder extends AbstractDoctrineQueryBuilder
                 'm.`id_meta` = l.`id_meta`'
             );
 
-        $qb->andWhere('l.`id_lang`=' . $this->contextIdLang);
-        $qb->andWhere('l.`id_shop`=' . $this->contextIdShop);
+        $qb->andWhere('l.`id_lang` = :id_lang');
+        $qb->andWhere('l.`id_shop` = :id_shop');
+
+        $qb->setParameters([
+            'id_lang' => $this->contextIdLang,
+            'id_shop' => $this->contextIdShop,
+        ]);
+
         $qb->andWhere('m.`configurable`=1');
 
         foreach ($filters as $name => $value) {
+            if (!in_array($name, $availableFilters, true)) {
+                continue;
+            }
+
             if ('id_meta' === $name) {
                 $qb->andWhere('m.`id_meta` = :' . $name);
                 $qb->setParameter($name, $value);

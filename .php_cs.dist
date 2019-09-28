@@ -1,9 +1,12 @@
 <?php
 
+ini_set('memory_limit','256M');
+
 $finder = PhpCsFixer\Finder::create()->in([
     __DIR__.'/src',
     __DIR__.'/classes',
     __DIR__.'/controllers',
+    __DIR__.'/tests',
 ]);
 
 return PhpCsFixer\Config::create()
@@ -33,6 +36,7 @@ return PhpCsFixer\Config::create()
         'self_accessor' => false,
         'yoda_style' => null,
         'non_printable_character' => true,
+        'combine_consecutive_issets' => true,
     ])
     ->setFinder($finder)
     ->setCacheFile(__DIR__.'/var/.php_cs.cache');
