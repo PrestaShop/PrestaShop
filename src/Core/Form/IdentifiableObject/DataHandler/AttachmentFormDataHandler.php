@@ -27,8 +27,9 @@
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\CreateAttachmentCommand;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\AddAttachmentCommand;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\EditAttachmentCommand;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\ValueObject\AttachmentId;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -65,12 +66,13 @@ final class AttachmentFormDataHandler implements FormDataHandlerInterface
 
     /**
      * {@inheritdoc}
+     * @throws AttachmentConstraintException
      */
     public function update($attachmentId, array $data)
     {
-        $attachmentIdObj = new AttachmentId((int) $attachmentId);
+        $attachmentIdObject = new AttachmentId((int) $attachmentId);
 
-        $command = $this->createEditAttachmentCommand($attachmentIdObj, $data);
+        $command = $this->createEditAttachmentCommand($attachmentIdObject, $data);
 
         $this->commandBus->handle($command);
     }
@@ -87,19 +89,19 @@ final class AttachmentFormDataHandler implements FormDataHandlerInterface
         AttachmentId $attachmentId,
         array $data
     ): EditAttachmentCommand {
-        /** @var UploadedFile|null $fileObj */
-        $fileObj = $data['file'];
+        /** @var UploadedFile|null $fileObject */
+        $fileObject = $data['file'];
 
         $command = new EditAttachmentCommand($attachmentId);
         $command->setLocalizedNames($data['name']);
         $command->setLocalizedDescriptions($data['file_description']);
 
-        if ($fileObj instanceof UploadedFile) {
+        if ($fileObject instanceof UploadedFile) {
             $command->setFileInfo(
-                $fileObj->getPathname(),
-                $fileObj->getMimeType(),
-                $fileObj->getClientOriginalName(),
-                $fileObj->getSize()
+                $fileObject->getPathname(),
+                $fileObject->getMimeType(),
+                $fileObject->getClientOriginalName(),
+                $fileObject->getSize()
             );
         }
 
@@ -109,14 +111,14 @@ final class AttachmentFormDataHandler implements FormDataHandlerInterface
     /**
      * @param array $data
      *
-     * @return CreateAttachmentCommand
+     * @return AddAttachmentCommand
      */
     private function createAddAttachmentCommand(array $data)
     {
         /** @var UploadedFile $file */
         $file = $data['file'];
 
-        return new CreateAttachmentCommand(
+        return new AddAttachmentCommand(
             $file->getPathname(),
             $file->getSize(),
             $data['name'],

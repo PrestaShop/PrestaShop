@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Attachment\Command;
 /**
  * Attachment creation command
  */
-class CreateAttachmentCommand
+class AddAttachmentCommand
 {
     /**
      * @var string

@@ -24,22 +24,16 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Attachment\Config;
+namespace PrestaShop\PrestaShop\Core\Domain\Attachment\CommandHandler;
 
-/**
- * Stores attachment validation configuration values
- */
-final class AttachmentValidationConfiguration
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\AddAttachmentCommand;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\ValueObject\AttachmentId;
+
+interface AddAttachmentHandlerInterface
 {
     /**
-     * Maximum length for name (value is constrained by database)
+     * @param AddAttachmentCommand $command
+     * @return AttachmentId
      */
-    const MAX_NAME_LENGTH = 32;
-
-    /**
-     * Prevents class to be instantiated
-     */
-    private function __construct()
-    {
-    }
+    public function handle(AddAttachmentCommand $command): AttachmentId;
 }

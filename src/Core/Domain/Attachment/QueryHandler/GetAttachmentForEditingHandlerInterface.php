@@ -29,9 +29,6 @@ namespace PrestaShop\PrestaShop\Core\Domain\Attachment\QueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachmentForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\EditableAttachment;
 
-/**
- * Interface for service that gets attachment data for editing
- */
 interface GetAttachmentForEditingHandlerInterface
 {
     /**

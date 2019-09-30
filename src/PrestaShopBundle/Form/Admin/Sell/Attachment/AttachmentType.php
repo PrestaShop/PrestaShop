@@ -29,7 +29,7 @@ namespace PrestaShopBundle\Form\Admin\Sell\Attachment;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
-use PrestaShop\PrestaShop\Core\Domain\Attachment\Config\AttachmentValidationConfiguration;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Configuration\AttachmentConstraint;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Translation\TranslatorAwareTrait;
 use Symfony\Component\Form\AbstractType;
@@ -53,6 +53,8 @@ class AttachmentType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $isFileRequired = !$options['is_edit_form'] || (isset($options['has_old_file']) && !$options['has_old_file']);
+
         $builder
             ->add('name', TranslatableType::class, [
                 'type' => TextType::class,
@@ -64,17 +66,17 @@ class AttachmentType extends AbstractType
                                 'type' => 'generic_name',
                             ]
                         ),
+                        new Length(
+                            [
+                                'max' => AttachmentConstraint::MAX_NAME_LENGTH,
+                                'maxMessage' => $this->trans(
+                                    'This field cannot be longer than %limit% characters',
+                                    ['%limit%' => AttachmentConstraint::MAX_NAME_LENGTH],
+                                    'Admin.Notifications.Error'
+                                ),
+                            ]
+                        ),
                     ],
-                    new Length(
-                        [
-                            'max' => AttachmentValidationConfiguration::MAX_NAME_LENGTH,
-                            'maxMessage' => $this->trans(
-                                'This field cannot be longer than %limit% characters',
-                                ['%limit%' => AttachmentValidationConfiguration::MAX_NAME_LENGTH],
-                                'Admin.Notifications.Error'
-                            ),
-                        ]
-                    ),
                 ],
                 'constraints' => [
                     new DefaultLanguage(),
@@ -90,8 +92,7 @@ class AttachmentType extends AbstractType
                 ],
             ])
             ->add('file', FileType::class, [
-                'required' => !$options['is_edit_form'] ||
-                    (isset($options['has_old_file']) && !$options['has_old_file']),
+                'required' => $isFileRequired,
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),

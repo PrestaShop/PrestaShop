@@ -39,41 +39,41 @@ abstract class AbstractAttachmentHandler
     /**
      * @var ValidatorInterface
      */
-    protected $validator;
+    private $validator;
 
     /**
      * @param ValidatorInterface $validator
      */
-    public function setValidator(ValidatorInterface $validator)
+    public function __construct(ValidatorInterface $validator)
     {
         $this->validator = $validator;
     }
 
     /**
-     * @param array $localisedTexts
+     * @param array $localizedTexts
      *
      * @throws AttachmentConstraintException
      */
-    protected function assertHasDefaultLanguage(array $localisedTexts)
+    protected function assertHasDefaultLanguage(array $localizedTexts)
     {
-        $errors = $this->validator->validate($localisedTexts, new DefaultLanguage());
+        $errors = $this->validator->validate($localizedTexts, new DefaultLanguage());
 
         if (0 !== count($errors)) {
             throw new AttachmentConstraintException(
                 'Missing name in default language',
-                AttachmentConstraintException::MISSING_DEFAULT_LANGUAGE_FOR_NAME
+                AttachmentConstraintException::MISSING_NAME_IN_DEFAULT_LANGUAGE
             );
         }
     }
 
     /**
-     * @param array $localisedDescription
+     * @param array $localizedDescription
      *
      * @throws AttachmentConstraintException
      */
-    protected function assertDescriptionContainsCleanHtml(array $localisedDescription)
+    protected function assertDescriptionContainsCleanHtml(array $localizedDescription)
     {
-        foreach ($localisedDescription as $description) {
+        foreach ($localizedDescription as $description) {
             $errors = $this->validator->validate($description, new CleanHtml());
 
             if (0 !== count($errors)) {
@@ -93,9 +93,7 @@ abstract class AbstractAttachmentHandler
      */
     protected function getUniqueFileName(): string
     {
-        do {
-            $uniqueFileName = sha1(microtime());
-        } while (file_exists(_PS_DOWNLOAD_DIR_ . $uniqueFileName));
+        $uniqueFileName = sha1(uniqid());
 
         return $uniqueFileName;
     }
