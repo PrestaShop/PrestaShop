@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\TaxRulesGroup\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Country\CountryDataProvider;
-use PrestaShop\PrestaShop\Adapter\Country\CountryNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\TaxRulesGroup\AbstractTaxRulesGroupHandler;
 use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
@@ -75,14 +75,14 @@ final class AddTaxRulesHandler extends AbstractTaxRulesGroupHandler implements A
      * {@inheritdoc}
      *
      * @throws CannotAddTaxRuleException
-     * @throws CountryNotFoundException
+     * @throws TaxRuleConstraintException
      */
     public function handle(AddTaxRulesCommand $command)
     {
         $zipCode = $command->getZipCode();
         $taxId = $command->getTaxId() !== null ? $command->getTaxId()->getValue() : TaxId::NO_TAX_ID;
         $taxRulesGroupId = $command->getTaxRulesGroupId()->getValue();
-        $behaviorId = $command->getBehaviorId()->getValue();
+        $behaviorId = $command->getBehavior()->getValue();
         $description = $command->getDescription();
         $taxRuleId = null;
 

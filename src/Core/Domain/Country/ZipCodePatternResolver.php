@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Util\Country;
+namespace PrestaShop\PrestaShop\Core\Domain\Country;
 
 /**
  * Call responsible for resolving country zip code format and returning it as other usable patterns

@@ -27,7 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
 use Exception;
-use PrestaShop\PrestaShop\Adapter\Country\CountryNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
@@ -256,7 +256,7 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
                 return $this->redirectToRoute('admin_tax_rules_groups_edit', [
                         'taxRulesGroupId' => $taxRulesGroupId,
                         'request' => $request,
-                    ], 307);
+                    ], Response::HTTP_TEMPORARY_REDIRECT);
             }
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
@@ -290,9 +290,7 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
         }
 
         try {
-            $taxRuleFormBuilder = $this->get(
-                        'prestashop.core.form.identifiable_object.builder.tax_rule_form_builder'
-                    );
+            $taxRuleFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.tax_rule_form_builder');
 
             $taxRuleForm = $taxRuleFormBuilder->getFormFor(
                         $taxRuleId,
@@ -318,7 +316,7 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
                 return $this->redirectToRoute('admin_tax_rules_groups_edit', [
                             'taxRulesGroupId' => $editableTaxRule->getTaxRulesGroupId()->getValue(),
                             'request' => $request,
-                        ], 307);
+                        ], Response::HTTP_TEMPORARY_REDIRECT);
             }
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
@@ -510,6 +508,11 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
                     $this->trans('%s is invalid.', 'Admin.Notifications.Error'),
                     $this->trans('Behavior', 'Admin.International.Feature')
                 ),
+                TaxRuleConstraintException::FAILED_TO_LOAD_COUNTRIES => sprintf(
+                    '%s %s',
+                    $this->trans('Countries', 'Admin.Navigation.Menu'),
+                    $this->trans('(cannot load object)', 'Admin.Notifications.Error')
+                ),
             ],
             CannotAddTaxRulesGroupException::class => $this->trans(
                 'An error occurred while creating an object.',
@@ -561,10 +564,6 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
                     'Admin.Notifications.Error'
                 ),
             ],
-            CountryNotFoundException::class => $this->trans(
-                'The object cannot be loaded (or found)',
-                'Admin.Notifications.Error'
-            ),
             TaxConstraintException::class => [
                 TaxConstraintException::INVALID_ID => $this->trans(
                     'The object cannot be loaded (the identifier is missing or invalid)',

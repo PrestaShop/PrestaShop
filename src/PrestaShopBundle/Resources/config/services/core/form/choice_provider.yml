@@ -211,7 +211,7 @@ services:
       - '@prestashop.core.mail_template.theme_catalog'
 
   prestashop.core.form.choice_provider.behavior:
-    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\BehaviorChoiceProvider'
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\TaxRuleBehaviorChoiceProvider'
     arguments:
       - '@translator'
 

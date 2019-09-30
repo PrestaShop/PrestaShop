@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\TaxRulesGroup;
 
 use PrestaShop\PrestaShop\Adapter\Country\CountryDataProvider;
-use PrestaShop\PrestaShop\Adapter\Country\CountryNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\UniqueTaxRuleBehavior;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\ZipCodeRange;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
@@ -92,7 +92,7 @@ abstract class AbstractTaxRulesGroupHandler
     }
 
     /**
-     * Gets legacy TaxRuleGroup object
+     * Gets legacy TaxRule object
      *
      * @param TaxRuleId $taxRuleId
      *
@@ -172,6 +172,8 @@ abstract class AbstractTaxRulesGroupHandler
     }
 
     /**
+     * Checks if country with tax only behavior is already registered in tax rule group
+     *
      * @param int $taxRulesGroupId
      * @param int $countryId
      * @param int $stateId
@@ -220,7 +222,7 @@ abstract class AbstractTaxRulesGroupHandler
      *
      * @return int[]
      *
-     * @throws CountryNotFoundException
+     * @throws TaxRuleConstraintException
      */
     protected function getCountryIdsForTaxRule(
         CountryDataProvider $countryDataProvider,
@@ -239,7 +241,7 @@ abstract class AbstractTaxRulesGroupHandler
      *
      * @return int[]
      *
-     * @throws CountryNotFoundException
+     * @throws TaxRuleConstraintException
      */
     private function getAllCountryIdsByLanguage(
         CountryDataProvider $countryDataProvider,
@@ -251,7 +253,10 @@ abstract class AbstractTaxRulesGroupHandler
                 return (int) $countries['id_country'];
             }, $countries);
         } catch (PrestaShopException $e) {
-            throw new CountryNotFoundException('Countries for tax rule creation failed to load');
+            throw new TaxRuleConstraintException(
+                'Countries for tax rule creation failed to load',
+                TaxRuleConstraintException::FAILED_TO_LOAD_COUNTRIES
+            );
         }
 
         return $selectedCountryIds;

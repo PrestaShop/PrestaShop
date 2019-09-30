@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Tax\ValueObject\TaxId;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\TaxRuleConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\TaxRulesGroupConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\BehaviorId;
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\Behavior;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 
 /**
@@ -50,7 +50,7 @@ class AddTaxRulesCommand
     /**
      * @var int
      */
-    private $behaviorId;
+    private $behavior;
 
     /**
      * @var CountryId|null
@@ -79,17 +79,17 @@ class AddTaxRulesCommand
 
     /**
      * @param int $taxRulesGroupId
-     * @param int $behaviorId
+     * @param int $behavior
      * @param int[] $stateIds
      *
      * @throws TaxRuleConstraintException
      * @throws TaxRulesGroupConstraintException
      * @throws StateConstraintException
      */
-    public function __construct(int $taxRulesGroupId, int $behaviorId, array $stateIds)
+    public function __construct(int $taxRulesGroupId, int $behavior, array $stateIds)
     {
         $this->taxRulesGroupId = new TaxRulesGroupId($taxRulesGroupId);
-        $this->behaviorId = new BehaviorId($behaviorId);
+        $this->behavior = new Behavior($behavior);
         $this->stateIds = $this->setStateIds($stateIds);
     }
 
@@ -102,11 +102,11 @@ class AddTaxRulesCommand
     }
 
     /**
-     * @return BehaviorId
+     * @return Behavior
      */
-    public function getBehaviorId(): BehaviorId
+    public function getBehavior(): Behavior
     {
-        return $this->behaviorId;
+        return $this->behavior;
     }
 
     /**

@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\TaxRulesGroup\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Country\CountryDataProvider;
-use PrestaShop\PrestaShop\Adapter\Country\CountryNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\TaxRulesGroup\AbstractTaxRulesGroupHandler;
 use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
@@ -75,7 +75,7 @@ final class UpdateTaxRuleHandler extends AbstractTaxRulesGroupHandler implements
      * {@inheritdoc}
      *
      * @throws CannotUpdateTaxRuleException
-     * @throws CountryNotFoundException
+     * @throws TaxRuleConstraintException
      */
     public function handle(UpdateTaxRuleCommand $command): void
     {
@@ -88,7 +88,7 @@ final class UpdateTaxRuleHandler extends AbstractTaxRulesGroupHandler implements
         $taxRulesGroupId = (int) $taxRule->id_tax_rules_group;
         $zipCode = $command->getZipCode();
         $taxId = $command->getTaxId() !== null ? $command->getTaxId()->getValue() : TaxId::NO_TAX_ID;
-        $behavior = $command->getBehaviorId()->getValue();
+        $behavior = $command->getBehavior()->getValue();
         $description = $command->getDescription();
 
         $taxRule->behavior = $behavior;
@@ -147,6 +147,9 @@ final class UpdateTaxRuleHandler extends AbstractTaxRulesGroupHandler implements
                     reset($selectedCountryIds);
                     reset($stateIds);
 
+                    // This is done to determine if this is first iteration of foreach cycle to know if
+                    // tax rule should be updated or created to prevent overriding of tax rule that is being updated
+                    // if on update more states or countries were added.
                     if ($countryKey === key($selectedCountryIds) && $stateKey === key($stateIds)) {
                         if (!$error && false === $taxRule->update()) {
                             $error = true;

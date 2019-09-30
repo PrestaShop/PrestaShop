@@ -39,7 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\TaxRulesGroupConst
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Query\GetTaxRuleForEditing;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\QueryHandler\GetTaxRuleForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\QueryResult\EditableTaxRule;
-use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\BehaviorId;
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\Behavior;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 
 /**
@@ -71,7 +71,7 @@ final class GetTaxRuleForEditingHandler extends AbstractTaxRulesGroupHandler imp
             $taxRuleId,
             new TaxRulesGroupId((int) $taxRule->id_tax_rules_group),
             new CountryId((int) $taxRule->id_country),
-            new BehaviorId($taxRule->behavior)
+            new Behavior($taxRule->behavior)
         );
 
         if (null !== $taxRule->zipcode_from) {

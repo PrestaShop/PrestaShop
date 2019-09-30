@@ -24,10 +24,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\Core\Util\Country;
+namespace Tests\Unit\Core\Domain\Country;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Util\Country\ZipCodePatternResolver;
+use PrestaShop\PrestaShop\Core\Domain\Country\ZipCodePatternResolver;
 
 class ZipCodePatternResolverTest extends TestCase
 {

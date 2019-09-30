@@ -63,7 +63,7 @@ final class TaxRuleFormDataProvider implements FormDataProviderInterface
             'country_id' => $editableTaxRule->getCountryId()->getValue(),
             'state_id' => $editableTaxRule->getStateId() ? [$editableTaxRule->getStateId()->getValue()] : null,
             'zip_code' => $editableTaxRule->getZipCode(),
-            'behavior_id' => $editableTaxRule->getBehaviorId() ? $editableTaxRule->getBehaviorId()->getValue() : null,
+            'behavior_id' => $editableTaxRule->getBehavior() ? $editableTaxRule->getBehavior()->getValue() : null,
             'tax_id' => $editableTaxRule->getTaxId() ? $editableTaxRule->getTaxId()->getValue() : null,
             'description' => $editableTaxRule->getDescription(),
         ];

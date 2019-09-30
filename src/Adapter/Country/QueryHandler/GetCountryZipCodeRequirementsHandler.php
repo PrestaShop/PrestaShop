@@ -27,12 +27,12 @@
 namespace PrestaShop\PrestaShop\Adapter\Country\QueryHandler;
 
 use PrestaShop\PrestaShop\Adapter\Country\AbstractCountryHandler;
-use PrestaShop\PrestaShop\Adapter\Country\CountryNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountryZipCodeRequirements;
 use PrestaShop\PrestaShop\Core\Domain\Country\QueryHandler\GetCountryZipCodeRequirementsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\CountryZipCodeRequirements;
-use PrestaShop\PrestaShop\Core\Util\Country\ZipCodePatternResolver;
+use PrestaShop\PrestaShop\Core\Domain\Country\ZipCodePatternResolver;
 
 /**
  * Handles getting requirements for country zip code

@@ -3,4 +3,4 @@ services:
     public: true
 
   prestashop.core.util.country.zip_code_format_resolver:
-    class: 'PrestaShop\PrestaShop\Core\Util\Country\ZipCodePatternResolver'
+    class: 'PrestaShop\PrestaShop\Core\Domain\Country\ZipCodePatternResolver'

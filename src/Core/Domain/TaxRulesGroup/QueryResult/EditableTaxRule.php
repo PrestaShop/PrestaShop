@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\QueryResult;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
 use PrestaShop\PrestaShop\Core\Domain\Tax\ValueObject\TaxId;
-use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\BehaviorId;
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\Behavior;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRuleId;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 
@@ -54,9 +54,9 @@ class EditableTaxRule
     private $countryId;
 
     /**
-     * @var BehaviorId
+     * @var Behavior
      */
-    private $behaviorId;
+    private $behavior;
 
     /**
      * @var StateId|null
@@ -87,18 +87,18 @@ class EditableTaxRule
      * @param TaxRuleId $taxRuleId
      * @param TaxRulesGroupId $taxRulesGroupId
      * @param CountryId $countryId
-     * @param BehaviorId $behaviorId
+     * @param Behavior $behavior
      */
     public function __construct(
         TaxRuleId $taxRuleId,
         TaxRulesGroupId $taxRulesGroupId,
         CountryId $countryId,
-        BehaviorId $behaviorId
+        Behavior $behavior
     ) {
         $this->taxRuleId = $taxRuleId;
         $this->taxRulesGroupId = $taxRulesGroupId;
         $this->countryId = $countryId;
-        $this->behaviorId = $behaviorId;
+        $this->behavior = $behavior;
     }
 
     /**
@@ -126,11 +126,11 @@ class EditableTaxRule
     }
 
     /**
-     * @return BehaviorId
+     * @return Behavior
      */
-    public function getBehaviorId(): BehaviorId
+    public function getBehavior(): Behavior
     {
-        return $this->behaviorId;
+        return $this->behavior;
     }
 
     /**

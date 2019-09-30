@@ -125,32 +125,6 @@ class TaxRuleType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('zip_code_from', TextType::class, [
-                'required' => false,
-                'constraints' => [
-                    new Length([
-                        'max' => TaxRuleConstraint::MAX_ZIP_CODE_RANGE_LENGTH,
-                        'maxMessage' => $this->translator->trans(
-                            'This field cannot be longer than %limit% characters',
-                            ['%limit%' => TaxRuleConstraint::MAX_ZIP_CODE_RANGE_LENGTH],
-                            'Admin.Notifications.Error'
-                        ),
-                    ]),
-                ],
-            ])
-            ->add('zip_code_to', TextType::class, [
-                'required' => false,
-                'constraints' => [
-                    new Length([
-                        'max' => TaxRuleConstraint::MAX_ZIP_CODE_RANGE_LENGTH,
-                        'maxMessage' => $this->translator->trans(
-                            'This field cannot be longer than %limit% characters',
-                            ['%limit%' => TaxRuleConstraint::MAX_ZIP_CODE_RANGE_LENGTH],
-                            'Admin.Notifications.Error'
-                        ),
-                    ]),
-                ],
-            ])
             ->add('behavior_id', ChoiceType::class, [
                 'choices' => $this->behaviorChoiceProvider->getChoices(),
                 'required' => false,
@@ -197,7 +171,7 @@ class TaxRuleType extends AbstractType
             [
                 'constraints' => [
                     new ZipCodeRange(),
-//                    new UniqueTaxRuleBehavior(),
+                    new UniqueTaxRuleBehavior(),
                 ],
             ]
         );

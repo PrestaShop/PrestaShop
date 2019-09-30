@@ -38,7 +38,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 /**
  * Subscriber resolves state choices and adds states field on submit and pre set data events
  */
-class TaxRuleFormSubscriber implements EventSubscriberInterface
+final class TaxRuleFormSubscriber implements EventSubscriberInterface
 {
     /**
      * @var TranslatorInterface

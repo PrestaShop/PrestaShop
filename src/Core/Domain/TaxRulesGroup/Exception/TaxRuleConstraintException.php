@@ -40,4 +40,9 @@ class TaxRuleConstraintException extends TaxRulesGroupException
      * Thrown when provided tax rule behavior id value is not valid
      */
     public const INVALID_BEHAVIOR_ID = 2;
+
+    /**
+     * Thrown when filed to load countries for tax rule creation
+     */
+    public const FAILED_TO_LOAD_COUNTRIES = 3;
 }

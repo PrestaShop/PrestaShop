@@ -29,9 +29,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\TaxRuleConstraintException;
 
 /**
- * Provides tax rule behavior id
+ * Provides tax rule behavior
  */
-class BehaviorId
+class Behavior
 {
     const THIS_TAX_ONLY = 0;
     const COMBINED = 1;
