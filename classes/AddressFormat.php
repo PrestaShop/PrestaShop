@@ -252,9 +252,37 @@ class AddressFormatCore extends ObjectModel
     {
         foreach (self::getFieldsRequired() as $requiredField) {
             if (!in_array($requiredField, $fieldList)) {
-                $this->_errorFormatList[] = $this->trans('The field %s is required.', array($requiredField), 'Admin.Notifications.Error');
+                $this->_errorFormatList[] = $this->trans(
+                    'The field %s is required (in the "%s" tab).',
+                    array($requiredField, $this->getFieldTabName($requiredField)),
+                    'Admin.Notifications.Error');
             }
         }
+    }
+
+    /**
+     * Given a field name, get the name of the tab in which the field name can be found.
+     * For ex: Country:name => the tab is 'Country'.
+     * There should be only one separator in the string, otherwise return false.
+     *
+     * @param string $field
+     *
+     * @return bool|string
+     */
+    private function getFieldTabName($field)
+    {
+        if (strpos($field, ':') === false) {
+            // When there is no ':' separator, the field is in the Address tab
+            return 'Address';
+        }
+
+        $fieldTab = explode(':', $field);
+        if (count($fieldTab) === 2) {
+            // The part preceding the ':' separator is the name of the tab in which there is the required field
+            return $fieldTab[0];
+        }
+
+        return false;
     }
 
     /**
