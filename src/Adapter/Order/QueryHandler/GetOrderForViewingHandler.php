@@ -159,7 +159,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
         if ($order->id !== $orderId->getValue()) {
             throw new OrderNotFoundException(
                 $orderId,
-                sprintf('Order with id "%s" was not found.',$orderId->getValue())
+                sprintf('Order with id "%s" was not found.', $orderId->getValue())
             );
         }
 
