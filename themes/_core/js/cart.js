@@ -79,9 +79,9 @@ $(document).ready(() => {
     '[data-button-action="add-to-cart"]',
     (event) => {
       event.preventDefault();
-      if ($('#quantity_wanted').val() > $('[data-stock]').data('stock') && $('[data-allow-oosp]').data('allow-oosp').length === 0) {
-          $('[data-button-action="add-to-cart"]').attr('disabled', 'disabled');
-      } else {
+      if ($('#quantity_wanted').val() <= $('[data-stock]').data('stock') && $('[data-allow-oosp]').data('allow-oosp').length !== 0) {
+        $('[data-button-action="add-to-cart"]').attr('disabled', 'disabled');
+        
         let $form = $(event.target).closest('form');
         let query = $form.serialize() + '&add=1&action=update';
         let actionURL = $form.attr('action');
@@ -126,6 +126,7 @@ $(document).ready(() => {
           });
         }).fail((resp) => {
           prestashop.emit('handleError', {eventType: 'addProductToCart', resp: resp});
+          $('[data-button-action="add-to-cart"]').removeAttr('disabled');
         });
       }
     }
