@@ -182,28 +182,23 @@ class AdminSearchConfControllerCore extends AdminController
                         ),
                     ),
                     'PS_SEARCH_FUZZY' => array(
-                        'title' => $this->trans('Fuzzy Search', array(), 'Admin.Shopparameters.Feature'),
+                        'title' => $this->trans('Fuzzy search', array(), 'Admin.Shopparameters.Feature'),
                         'validation' => 'isBool',
                         'cast' => 'intval',
                         'type' => 'bool',
                         'desc' => $this->trans(
-                                'By default, fuzzy search is enabled and spelling error are allowed. To search “bird”, you can to enter “burd”, “bard”, “beerd” etc...',
+                                'By default, the fuzzy search is enabled. It means spelling errors are allowed, e.g. you can search for "bird" with words like "burd", "bard" or "beerd".',
                                 array(),
                                 'Admin.Shopparameters.Help'
                             ) . '<br/>' .
                             $this->trans(
-                                'With this option disabled, to get good result, you need get exact writting contained in the word.',
+                                'Disabling this option will require exact spelling for the search to match result.',
                                 array(),
                                 'Admin.Shopparameters.Help'
                             ),
                         'hint' => array(
                             $this->trans(
-                                'Enable spelling errors during search.',
-                                array(),
-                                'Admin.Shopparameters.Help'
-                            ),
-                            $this->trans(
-                                'Fuzzy search will check if a close word of the search word exist in indexed words in database. This will be very resource-consuming.',
+                                'Enable approximate string matching.',
                                 array(),
                                 'Admin.Shopparameters.Help'
                             ),
@@ -211,12 +206,12 @@ class AdminSearchConfControllerCore extends AdminController
                     ),
                     'PS_SEARCH_FUZZY_MAX_LOOP' => array(
                         'title' => $this->trans(
-                            'Maximum words with spelling error allowed by search',
+                            'Maximum approximate strings allowed by fuzzy search',
                             array(),
                             'Admin.Shopparameters.Feature'
                         ),
                         'hint' => $this->trans(
-                            'A fuzzy search is very resource-consuming. More words you have to solve, more a search could take time.',
+                            'Note that this option is time-consuming: the more you check, the longer it searches.',
                             array(),
                             'Admin.Shopparameters.Help'
                         ),
