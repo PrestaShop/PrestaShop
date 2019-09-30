@@ -26,7 +26,7 @@ describe('Install Prestashop', async () => {
   });
   // Steps
   it('should open the Install page', async function () {
-    await this.pageObjects.installPage.goTo(global.URL_INSTALL);
+    await this.pageObjects.installPage.goTo(global.INSTALL.URL);
     await this.pageObjects.installPage.checkStepTitle(this.pageObjects.installPage.firstStepPageTitle,
       [this.pageObjects.installPage.firstStepFrTitle, this.pageObjects.installPage.firstStepEnTitle]);
   });

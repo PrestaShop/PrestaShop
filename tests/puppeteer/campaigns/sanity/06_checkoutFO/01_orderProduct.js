@@ -44,7 +44,7 @@ describe('Order a product and check order confirmation', async () => {
   });
   // Steps
   it('should open the shop page', async function () {
-    await this.pageObjects.homePage.goTo(global.URL_FO);
+    await this.pageObjects.homePage.goTo(global.FO.URL);
     await this.pageObjects.homePage.checkHomePage();
   });
   it('should go to login page', async function () {
