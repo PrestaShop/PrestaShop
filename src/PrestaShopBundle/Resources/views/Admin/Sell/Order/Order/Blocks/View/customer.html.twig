@@ -52,7 +52,7 @@
     <div class="row mt-3">
       <div class="col-md-6">
         <p class="mb-1">
-          <strong>{{ 'Email'|trans({}, 'Admin.Global') }}</strong>
+          <strong>{{ 'Email:'|trans({}, 'Admin.Global') }}</strong>
         </p>
         <p>
           <a href="mailto:{{ orderForViewing.customer.email }}">
@@ -61,20 +61,20 @@
         </p>
 
         <p class="mb-1">
-          <strong>{{ 'Account registered'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
+          <strong>{{ 'Account registered:'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
         </p>
         <p>{{ orderForViewing.customer.accountRegistrationDate|date("m/d/Y H:i:s") }}</p>
       </div>
       <div class="col-md-6">
         <p class="mb-1">
-          <strong>{{ 'Valid orders placed'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
+          <strong>{{ 'Validated orders placed:'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
         </p>
         <p>
           <span class="badge rounded badge-dark">{{ orderForViewing.customer.validOrdersPlaced }}</span>
         </p>
 
         <p class="mb-1">
-          <strong>{{ 'Total spent since registration'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
+          <strong>{{ 'Total spent since registration:'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
         </p>
         <p>
           <span class="badge rounded badge-dark">{{ orderForViewing.customer.totalSpentSinceRegistration }}</span>
