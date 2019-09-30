@@ -27,7 +27,6 @@
 namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
 use Exception;
-use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;

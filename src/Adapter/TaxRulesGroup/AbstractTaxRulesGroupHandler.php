@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Adapter\TaxRulesGroup;
 
 use PrestaShop\PrestaShop\Adapter\Country\CountryDataProvider;
-use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\UniqueTaxRuleBehavior;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\ZipCodeRange;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
