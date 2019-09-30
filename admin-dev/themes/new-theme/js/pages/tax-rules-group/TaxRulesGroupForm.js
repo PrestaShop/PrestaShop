@@ -55,12 +55,14 @@ export default class TaxRulesGroupForm {
    */
   _initTaxRuleForm() {
     if (this.taxRulesFormAction.trim()) {
-      this._showTaxRulesForm(this.taxRulesFormAction, null, false);
+      this._showTaxRulesForm();
 
       return;
     }
 
-    if ($(taxRulesGroupFormMap.taxRulesGrid).find('.grid-table-empty').length) {
+    const isListEmpty = $(taxRulesGroupFormMap.taxRulesGrid).find('.grid-table-empty').length;
+
+    if (isListEmpty) {
       this._showTaxRulesForm(
         $(taxRulesGroupFormMap.addLink).data('load-path'),
         $(taxRulesGroupFormMap.addLink).data('edit-path'));
@@ -140,7 +142,7 @@ export default class TaxRulesGroupForm {
       return;
     }
 
-    this._showTaxRulesForm(addLink);
+    this._showTaxRulesForm();
   }
 
   /**
@@ -168,7 +170,7 @@ export default class TaxRulesGroupForm {
    *
    * @private
    */
-  _showTaxRulesForm(submitLink, loadEditLink = null, loadEmptyData = true) {
+  _showTaxRulesForm(submitLink = $(taxRulesGroupFormMap.addLink).attr('href'), loadEditLink = null) {
     const $taxRuleForm = $(taxRulesGroupFormMap.taxRuleForm);
     const $taxRuleFormHiddenContent = $(taxRulesGroupFormMap.taxRulesHiddenContent);
     $taxRuleFormHiddenContent.hide();
@@ -204,7 +206,7 @@ export default class TaxRulesGroupForm {
       return;
     }
 
-    if (loadEditLink) {
+    if (!loadEditLink) {
       this._setTaxRuleInformation(null);
     }
 
