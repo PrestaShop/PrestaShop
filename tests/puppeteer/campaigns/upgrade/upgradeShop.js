@@ -95,12 +95,12 @@ describe('Upgrade Prestashop to last Stable', async () => {
   });
 
   it('should login and verify version in BO', async function () {
-    await this.pageObjects.loginPage.goTo(global.URL_BO);
-    await this.pageObjects.loginPage.login(global.EMAIL, global.PASSWD);
+    await this.pageObjects.loginPage.goTo(global.BO.URL);
+    await this.pageObjects.loginPage.login(global.BO.EMAIL, global.BO.PASSWD);
     const pageTitle = await this.pageObjects.dashboardPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.dashboardPage.pageTitle);
     const version = await this.pageObjects.boBasePage.getTextContent(this.pageObjects.boBasePage.shopVersionBloc);
-    expect(version).to.be.equal(global.PS_VERSION);
+    expect(version).to.be.equal(global.INSTALL.PS_VERSION);
   });
 
   it('should enable Shop', async function () {
