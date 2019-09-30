@@ -32,7 +32,7 @@
 					<textarea id="ordered_fields" name="address_layout" style="height:150px;">{$input.address_layout}</textarea>
 				</div>
 				<div class="col-lg-8">
-					{l s='Required fields for the address (click for more details):' d='Admin.International.Feature'}
+					{l s='Some countries require different elements than others. Click on the button below to get the valid default address format for this country.' d='Admin.International.Feature'}
 					{$input.display_valid_fields}
 				</div>
 			</div>
