@@ -42,7 +42,6 @@ use ImageManager;
 use Module;
 use Order;
 use OrderInvoice;
-use OrderMessage;
 use OrderPayment;
 use OrderReturn;
 use OrderSlip;
@@ -97,15 +96,23 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
     private $translator;
 
     /**
+     * @var Context
+     */
+    private $context;
+
+    /**
      * @param ImageTagSourceParserInterface $imageTagSourceParser
      * @param TranslatorInterface $translator
+     * @param Context $context
      */
     public function __construct(
         ImageTagSourceParserInterface $imageTagSourceParser,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        Context $context
     ) {
         $this->imageTagSourceParser = $imageTagSourceParser;
         $this->translator = $translator;
+        $this->context = $context;
     }
 
     /**
@@ -116,10 +123,8 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
         $order = $this->getOrder($query->getOrderId());
 
         $taxMethod = $order->getTaxCalculationMethod() == PS_TAX_EXC ?
-            Context::getContext()->getTranslator()->trans('Tax excluded', [], 'Admin.Global') :
-            Context::getContext()->getTranslator()->trans('Tax included', [], 'Admin.Global');
-
-        $this->getOrderMessages($order);
+            $this->translator->trans('Tax excluded', [], 'Admin.Global') :
+            $this->translator->trans('Tax included', [], 'Admin.Global');
 
         return new OrderForViewing(
             (int) $order->id,
@@ -328,7 +333,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
                 $stockLocationIsAvailable = true;
             }
 
-            $pack_items = $product['cache_is_pack'] ? Pack::getItemTable($product['id_product'], Context::getContext()->language->id, true) : array();
+            $pack_items = $product['cache_is_pack'] ? Pack::getItemTable($product['id_product'], $this->context->language->id, true) : array();
             foreach ($pack_items as &$pack_item) {
                 $pack_item['current_stock'] = StockAvailable::getQuantityAvailableByProduct($pack_item['id_product'], $pack_item['id_product_attribute'], $pack_item['id_shop']);
                 // if the current stock requires a warning
@@ -426,7 +431,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
      */
     private function getOrderHistory(Order $order): OrderHistoryForViewing
     {
-        $history = $order->getHistory(Context::getContext()->language->id);
+        $history = $order->getHistory($this->context->language->id);
 
         $statuses = [];
 
@@ -472,7 +477,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
 
             if ('invoice' === $type) {
                 $number = $document->getInvoiceNumberFormatted(
-                    Context::getContext()->language->id,
+                    $this->context->language->id,
                     $order->id_shop
                 );
 
@@ -482,13 +487,13 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             } elseif ('delivery_slip' === $type) {
                 $number = sprintf(
                     '%s%06d',
-                    Configuration::get('PS_DELIVERY_PREFIX', Context::getContext()->language->id, null, $order->id_shop),
+                    Configuration::get('PS_DELIVERY_PREFIX', $this->context->language->id, null, $order->id_shop),
                     $document->delivery_number
                 );
             } elseif ('credit_slip' === $type) {
                 $number = sprintf(
                     '%s%06d',
-                    Configuration::get('PS_CREDIT_SLIP_PREFIX', Context::getContext()->language->id),
+                    Configuration::get('PS_CREDIT_SLIP_PREFIX', $this->context->language->id),
                     $document->id
                 );
             }
@@ -655,7 +660,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
         foreach ($order->getOrderPaymentCollection() as $payment) {
             $invoice = $payment->getOrderInvoice($order->id);
             $invoiceNumber = $invoice ?
-                $invoice->getInvoiceNumberFormatted(Context::getContext()->language->id, $order->id_shop) :
+                $invoice->getInvoiceNumberFormatted($this->context->language->id, $order->id_shop) :
                 null;
 
             $orderPayments[] = new OrderPaymentForViewing(

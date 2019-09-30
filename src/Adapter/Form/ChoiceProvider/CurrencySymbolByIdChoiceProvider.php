@@ -29,6 +29,9 @@ namespace PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider;
 use Currency;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 
+/**
+ * Provides currency choices where currency is represented by symbol (e.g. € for euro) and value is currency id.
+ */
 final class CurrencySymbolByIdChoiceProvider implements ConfigurableFormChoiceProviderInterface
 {
     /**

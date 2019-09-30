@@ -157,16 +157,6 @@ class AddPaymentCommand
     }
 
     /**
-     * @param float $paymentAmount
-     */
-    private function assertAmountIsNotNegative($paymentAmount)
-    {
-        if (!is_float($paymentAmount) || 0 >= $paymentAmount) {
-            throw new OrderConstraintException('The amount is invalid.');
-        }
-    }
-
-    /**
      * @param string $paymentMethod
      */
     private function assertPaymentMethodIsGenericName($paymentMethod)

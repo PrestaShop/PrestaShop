@@ -111,6 +111,7 @@ services:
     arguments:
       - '@prestashop.core.image.parser.image_tag_source_parser'
       - '@translator'
+      - '@=service("prestashop.adapter.legacy.context").getContext()'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing

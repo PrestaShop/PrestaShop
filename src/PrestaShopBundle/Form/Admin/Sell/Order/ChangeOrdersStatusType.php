@@ -37,7 +37,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 class ChangeOrdersStatusType extends AbstractType
 {
     /**
-     * @var FormChoiceProvider\Interface
+     * @var FormChoiceProviderInterface
      */
     private $orderStatusChoiceProvider;
 
