@@ -15,7 +15,7 @@ global.INSTALL = {
   SHOPNAME: process.env.SHOPNAME || 'Prestashop',
   PS_VERSION: process.env.PS_VERSION || '1.7.6.0',
 };
-global.browserConfig = {
+global.BROWSER_CONFIG = {
   headless: JSON.parse(process.env.HEADLESS || true),
   timeout: 0,
   slowMo: 25,
