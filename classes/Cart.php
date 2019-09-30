@@ -4839,6 +4839,26 @@ class CartCore extends ObjectModel
     }
 
     /**
+     * Are all products of the Cart still available in the current state ? They might have been converted to another
+     * type of product since then
+     *
+     * @return bool False if one of the products from the cart has been changed into a new type of product
+     */
+    public function checkAllProductsAreStillAvailableInThisState()
+    {
+        foreach ($this->getProducts(false, false, null, false) as $product) {
+            $currentProduct = new Product();
+            $currentProduct->hydrate($product);
+
+            if ($currentProduct->hasAttributes() && $product['id_product_attribute'] === '0') {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * Are all products of the Cart in stock?
      *
      * @param bool $ignore_virtual Ignore virtual products
