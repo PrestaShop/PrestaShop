@@ -211,7 +211,7 @@ class AdminSearchConfControllerCore extends AdminController
                             'Admin.Shopparameters.Feature'
                         ),
                         'hint' => $this->trans(
-                            'Note that this option is time-consuming: the more you check, the longer it searches.',
+                            'Note that this option is resource-consuming: the more you check, the longer it searches.',
                             array(),
                             'Admin.Shopparameters.Help'
                         ),
