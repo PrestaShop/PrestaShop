@@ -96,11 +96,11 @@
     </taxRulesGroup>
   </taxes>
   <states>
-	<state name="Hovedstaden" iso_code="DK-84" country="DK" zone="Europe" tax_behavior="0" />
-	<state name="Midtjylland" iso_code="DK-82" country="DK" zone="Europe" tax_behavior="0" />
-	<state name="Nordjylland" iso_code="DK-81" country="DK" zone="Europe" tax_behavior="0" />
-	<state name="Sjælland" iso_code="DK-85" country="DK" zone="Europe" tax_behavior="0" />
-	<state name="Syddanmark" iso_code="DK-83" country="DK" zone="Europe" tax_behavior="0" />
+    <state name="Hovedstaden" iso_code="DK-84" country="DK" zone="Europe" tax_behavior="0" />
+    <state name="Midtjylland" iso_code="DK-82" country="DK" zone="Europe" tax_behavior="0" />
+    <state name="Nordjylland" iso_code="DK-81" country="DK" zone="Europe" tax_behavior="0" />
+    <state name="Sjælland" iso_code="DK-85" country="DK" zone="Europe" tax_behavior="0" />
+    <state name="Syddanmark" iso_code="DK-83" country="DK" zone="Europe" tax_behavior="0" />
   </states>
   <units>
     <unit type="weight" value="kg"/>

@@ -184,18 +184,18 @@
     </taxRulesGroup>
   </taxes>
   <states>
-	<state name="Drenthe" iso_code="NL-DR" country="NL" zone="Europe" tax_behavior="0" />
-	<state name="Flevoland" iso_code="NL-FL" country="NL" zone="Europe" tax_behavior="0" />
-	<state name="Fryslân" iso_code="NL-FR" country="NL" zone="Europe" tax_behavior="0" />
-	<state name="Gelderland" iso_code="NL-GE" country="NL" zone="Europe" tax_behavior="0" />
-	<state name="Groningen" iso_code="NL-GR" country="NL" zone="Europe" tax_behavior="0" />
-	<state name="Limburg" iso_code="NL-LI" country="NL" zone="Europe" tax_behavior="0" />
-	<state name="Noord-Brabant" iso_code="NL-NB" country="NL" zone="Europe" tax_behavior="0" />
-	<state name="Noord-Holland" iso_code="NL-NH" country="NL" zone="Europe" tax_behavior="0" />
-	<state name="Overijssel" iso_code="NL-OV" country="NL" zone="Europe" tax_behavior="0" />
-	<state name="Utrecht" iso_code="NL-UT" country="NL" zone="Europe" tax_behavior="0" />
-	<state name="Zeeland" iso_code="NL-ZE" country="NL" zone="Europe" tax_behavior="0" />
-	<state name="Zuid-Holland" iso_code="NL-ZH" country="NL" zone="Europe" tax_behavior="0" />
+    <state name="Drenthe" iso_code="NL-DR" country="NL" zone="Europe" tax_behavior="0" />
+    <state name="Flevoland" iso_code="NL-FL" country="NL" zone="Europe" tax_behavior="0" />
+    <state name="Fryslân" iso_code="NL-FR" country="NL" zone="Europe" tax_behavior="0" />
+    <state name="Gelderland" iso_code="NL-GE" country="NL" zone="Europe" tax_behavior="0" />
+    <state name="Groningen" iso_code="NL-GR" country="NL" zone="Europe" tax_behavior="0" />
+    <state name="Limburg" iso_code="NL-LI" country="NL" zone="Europe" tax_behavior="0" />
+    <state name="Noord-Brabant" iso_code="NL-NB" country="NL" zone="Europe" tax_behavior="0" />
+    <state name="Noord-Holland" iso_code="NL-NH" country="NL" zone="Europe" tax_behavior="0" />
+    <state name="Overijssel" iso_code="NL-OV" country="NL" zone="Europe" tax_behavior="0" />
+    <state name="Utrecht" iso_code="NL-UT" country="NL" zone="Europe" tax_behavior="0" />
+    <state name="Zeeland" iso_code="NL-ZE" country="NL" zone="Europe" tax_behavior="0" />
+    <state name="Zuid-Holland" iso_code="NL-ZH" country="NL" zone="Europe" tax_behavior="0" />
   </states>
   <units>
     <unit type="weight" value="kg"/>
