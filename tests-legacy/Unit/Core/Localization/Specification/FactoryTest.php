@@ -180,6 +180,7 @@ class FactoryTest extends TestCase
             true,
             $maxFractionDigits
         );
+        $expected['maxFractionDigits'] = $maxFractionDigits;
         $this->assertEquals(
             $expected,
             $specification->toArray()
