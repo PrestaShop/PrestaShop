@@ -5526,7 +5526,7 @@ class ProductCore extends ObjectModel
             SELECT `id_customization_field`, `type`
             FROM `' . _DB_PREFIX_ . 'customization_field`
             WHERE `id_product` = ' . (int) $id . '
-            AND `required` = 1'
+            AND `required` = 1 AND `is_deleted` = 0'
         );
     }
 
