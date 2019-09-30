@@ -24,36 +24,22 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Attachment\Query;
-
-use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Attachment\ValueObject\AttachmentId;
+namespace PrestaShop\PrestaShop\Core\Domain\Attachment\Configuration;
 
 /**
- * Gets attachment information for editing.
+ * Stores attachment validation configuration values
  */
-class GetAttachmentForEditing
+final class AttachmentConstraint
 {
     /**
-     * @var AttachmentId
+     * Maximum length for name (value is constrained by database)
      */
-    private $attachmentId;
+    const MAX_NAME_LENGTH = 32;
 
     /**
-     * @param int $attachmentIdValue
-     *
-     * @throws AttachmentConstraintException
+     * Prevents class to be instantiated
      */
-    public function __construct(int $attachmentIdValue)
+    private function __construct()
     {
-        $this->attachmentId = new AttachmentId($attachmentIdValue);
-    }
-
-    /**
-     * @return AttachmentId
-     */
-    public function getAttachmentId(): AttachmentId
-    {
-        return $this->attachmentId;
     }
 }

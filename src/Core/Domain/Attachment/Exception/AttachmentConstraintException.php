@@ -43,5 +43,5 @@ class AttachmentConstraintException extends AttachmentException
 
     const INVALID_DESCRIPTION = 6;
 
-    const MISSING_DEFAULT_LANGUAGE_FOR_NAME = 7;
+    const MISSING_NAME_IN_DEFAULT_LANGUAGE = 7;
 }

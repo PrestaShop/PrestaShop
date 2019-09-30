@@ -28,19 +28,21 @@ namespace PrestaShop\PrestaShop\Adapter\Attachment\CommandHandler;
 
 use Attachment;
 use PrestaShop\PrestaShop\Adapter\File\Uploader\AttachmentFileUploader;
-use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\CreateAttachmentCommand;
-use PrestaShop\PrestaShop\Core\Domain\Attachment\CommandHandler\CreateAttachmentHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\AttachmentFileUploaderInterface;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\AddAttachmentCommand;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\CommandHandler\AddAttachmentHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\CannotAddAttachmentException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\ValueObject\AttachmentId;
 use PrestaShopException;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
- * Handles attachment creation
+ * Handles attachment creation and file uploading procedures
  */
-final class CreateAttachmentHandler extends AbstractAttachmentHandler implements CreateAttachmentHandlerInterface
+final class AddAttachmentHandler extends AbstractAttachmentHandler implements AddAttachmentHandlerInterface
 {
     /**
      * @var AttachmentFileUploader
@@ -48,10 +50,13 @@ final class CreateAttachmentHandler extends AbstractAttachmentHandler implements
     protected $fileUploader;
 
     /**
-     * @param AttachmentFileUploader $fileUploader
+     * @param ValidatorInterface $validator
+     * @param AttachmentFileUploaderInterface $fileUploader
      */
-    public function __construct(AttachmentFileUploader $fileUploader)
+    public function __construct(ValidatorInterface $validator, AttachmentFileUploaderInterface $fileUploader)
     {
+        parent::__construct($validator);
+
         $this->fileUploader = $fileUploader;
     }
 
@@ -62,7 +67,7 @@ final class CreateAttachmentHandler extends AbstractAttachmentHandler implements
      * @throws AttachmentException
      * @throws AttachmentNotFoundException
      */
-    public function handle(CreateAttachmentCommand $command)
+    public function handle(AddAttachmentCommand $command): AttachmentId
     {
         try {
             $attachment = new Attachment();
@@ -90,16 +95,10 @@ final class CreateAttachmentHandler extends AbstractAttachmentHandler implements
             }
 
             if (false === $attachment->add()) {
-                throw new CannotAddAttachmentException(
-                    'Failed to add attachment'
-                );
+                throw new CannotAddAttachmentException('Failed to add attachment');
             }
         } catch (PrestaShopException $e) {
-            throw new AttachmentException(
-                'An unexpected error occurred when adding attachment',
-                0,
-                $e
-            );
+            throw new AttachmentException('An unexpected error occurred when adding attachment', 0, $e);
         }
 
         return new AttachmentId($attachment->id);

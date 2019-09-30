@@ -28,9 +28,6 @@ namespace PrestaShop\PrestaShop\Core\Domain\Attachment\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\EditAttachmentCommand;
 
-/**
- * Interface defines contract for edit attachment handler
- */
 interface EditAttachmentHandlerInterface
 {
     /**

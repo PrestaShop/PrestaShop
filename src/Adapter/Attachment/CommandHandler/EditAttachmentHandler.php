@@ -28,16 +28,19 @@ namespace PrestaShop\PrestaShop\Adapter\Attachment\CommandHandler;
 
 use Attachment;
 use PrestaShop\PrestaShop\Adapter\File\Uploader\AttachmentFileUploader;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\AttachmentFileUploaderInterface;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\EditAttachmentCommand;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\CommandHandler\EditAttachmentHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\CannotUpdateAttachmentException;
+use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShopException;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
- * Handles editing of attachment
+ * Handles editing of attachment and file uploading procedures
  */
 final class EditAttachmentHandler extends AbstractAttachmentHandler implements EditAttachmentHandlerInterface
 {
@@ -47,10 +50,13 @@ final class EditAttachmentHandler extends AbstractAttachmentHandler implements E
     protected $fileUploader;
 
     /**
-     * @param AttachmentFileUploader $fileUploader
+     * @param ValidatorInterface $validator
+     * @param AttachmentFileUploaderInterface $fileUploader
      */
-    public function __construct(AttachmentFileUploader $fileUploader)
+    public function __construct(ValidatorInterface $validator, AttachmentFileUploaderInterface $fileUploader)
     {
+        parent::__construct($validator);
+
         $this->fileUploader = $fileUploader;
     }
 
@@ -61,6 +67,7 @@ final class EditAttachmentHandler extends AbstractAttachmentHandler implements E
      * @throws AttachmentException
      * @throws AttachmentNotFoundException
      * @throws CannotUpdateAttachmentException
+     * @throws FileNotFoundException
      */
     public function handle(EditAttachmentCommand $command)
     {
@@ -91,6 +98,7 @@ final class EditAttachmentHandler extends AbstractAttachmentHandler implements E
      * @throws AttachmentException
      * @throws AttachmentNotFoundException
      * @throws CannotUpdateAttachmentException
+     * @throws FileNotFoundException
      */
     private function updateAttachmentFromCommandData(Attachment $attachment, EditAttachmentCommand $command)
     {
@@ -105,8 +113,6 @@ final class EditAttachmentHandler extends AbstractAttachmentHandler implements E
             $this->assertDescriptionContainsCleanHtml($command->getLocalizedDescriptions());
             $this->assertHasDefaultLanguage($command->getLocalizedNames());
 
-            $uniqueFileName = $this->getUniqueFileName();
-
             $attachment->description = $command->getLocalizedDescriptions();
             $attachment->name = $command->getLocalizedNames();
 
@@ -118,31 +124,25 @@ final class EditAttachmentHandler extends AbstractAttachmentHandler implements E
             }
 
             if (null !== $command->getPathName()) {
+                $uniqueFileName = $this->getUniqueFileName();
+
                 $attachment->file_name = $command->getOriginalFileName();
                 $attachment->file = $uniqueFileName;
                 $attachment->mime = $command->getMimeType();
 
-                if (null !== $command->getPathName()) {
-                    $this->fileUploader->upload(
-                        $command->getPathName(),
-                        $uniqueFileName,
-                        $command->getFileSize(),
-                        $command->getAttachmentId()->getValue()
-                    );
-                }
+                $this->fileUploader->upload(
+                    $command->getPathName(),
+                    $uniqueFileName,
+                    $command->getFileSize(),
+                    $command->getAttachmentId()->getValue()
+                );
             }
 
             if (false === $attachment->update()) {
-                throw new CannotUpdateAttachmentException(
-                    'Failed to update attachment'
-                );
+                throw new CannotUpdateAttachmentException('Failed to update attachment');
             }
         } catch (PrestaShopException $e) {
-            throw new AttachmentException(
-                'An unexpected error occurred when updating attachment',
-                0,
-                $e
-            );
+            throw new AttachmentException('An unexpected error occurred when updating attachment', 0, $e);
         }
     }
 }

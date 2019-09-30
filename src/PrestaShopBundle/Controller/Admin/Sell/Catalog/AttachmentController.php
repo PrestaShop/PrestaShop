@@ -41,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\Attachment;
 use PrestaShop\PrestaShop\Core\Search\Filters\AttachmentFilters;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachmentForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\EditableAttachment;
+use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
@@ -118,6 +119,8 @@ class AttachmentController extends FrameworkBundleAdminController
         }
 
         return $this->render('@PrestaShop/Admin/Sell/Attachment/add.html.twig', [
+            'enableSidebar' => true,
+            'layoutTitle' => $this->trans('Add new file', 'Admin.Catalog.Feature'),
             'attachmentForm' => $attachmentForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
         ]);
@@ -174,9 +177,16 @@ class AttachmentController extends FrameworkBundleAdminController
             }
         }
 
+        $names = $attachmentInformation->getName();
+
         return $this->render('@PrestaShop/Admin/Sell/Attachment/edit.html.twig', [
+            'enableSidebar' => true,
+            'layoutTitle' => $this->trans(
+                'Edit: %value%',
+                'Admin.Catalog.Feature',
+                ['%value%' => reset($names)]
+            ),
             'attachmentForm' => $attachmentForm->createView(),
-            'attachmentInformation' => $attachmentInformation,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
         ]);
     }
@@ -304,7 +314,7 @@ class AttachmentController extends FrameworkBundleAdminController
                     'Invalid description for %s language',
                     'Admin.Catalog.Notification'
                 ),
-                AttachmentConstraintException::MISSING_DEFAULT_LANGUAGE_FOR_NAME => $this->trans(
+                AttachmentConstraintException::MISSING_NAME_IN_DEFAULT_LANGUAGE => $this->trans(
                     'The %s field is not valid',
                     'Admin.Notifications.Error',
                     [

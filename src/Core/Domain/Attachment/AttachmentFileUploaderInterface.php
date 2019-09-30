@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -24,17 +24,15 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Attachment\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Attachment;
 
-use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\CreateAttachmentCommand;
-
-/**
- * Interface  defines contract for create attachment handler
- */
-interface CreateAttachmentHandlerInterface
+interface AttachmentFileUploaderInterface
 {
     /**
-     * @param CreateAttachmentCommand $command
+     * @param string $filePath
+     * @param string $uniqueFileName
+     * @param int $fileSize
+     * @param int|null $id
      */
-    public function handle(CreateAttachmentCommand $command);
+    public function upload(string $filePath, string $uniqueFileName, int $fileSize, int $id = null): void;
 }
