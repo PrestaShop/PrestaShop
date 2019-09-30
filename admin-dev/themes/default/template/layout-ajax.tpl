@@ -81,7 +81,7 @@
 			{if count($warnings) > 1}
 				{l s='There are %d warnings.' sprintf=count($warnings) d='Admin.Notifications.Error'}
 				<span style="margin-left:20px;" id="labelSeeMore">
-					<a id="linkSeeMore" href="#" style="text-decoration:underline">{l s='Click here to see more' d='Admin.Actions'}</a>
+					<a id="linkSeeMore" href="#" style="text-decoration:underline">{l s='See more' d='Admin.Actions'}</a>
 					<a id="linkHide" href="#" style="text-decoration:underline;display:none">{l s='Hide warning' d='Admin.Actions'}</a>
 				</span>
 			{else}
