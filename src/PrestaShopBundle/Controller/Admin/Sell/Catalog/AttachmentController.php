@@ -41,7 +41,6 @@ use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\Attachment;
 use PrestaShop\PrestaShop\Core\Search\Filters\AttachmentFilters;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachmentForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\EditableAttachment;
-use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;

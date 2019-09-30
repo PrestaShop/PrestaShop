@@ -66,6 +66,7 @@ final class AttachmentFormDataHandler implements FormDataHandlerInterface
 
     /**
      * {@inheritdoc}
+     *
      * @throws AttachmentConstraintException
      */
     public function update($attachmentId, array $data)

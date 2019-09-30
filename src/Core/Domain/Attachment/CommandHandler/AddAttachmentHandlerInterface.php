@@ -33,6 +33,7 @@ interface AddAttachmentHandlerInterface
 {
     /**
      * @param AddAttachmentCommand $command
+     *
      * @return AttachmentId
      */
     public function handle(AddAttachmentCommand $command): AttachmentId;
