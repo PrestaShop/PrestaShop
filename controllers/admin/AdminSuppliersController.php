@@ -232,6 +232,14 @@ class AdminSuppliersControllerCore extends AdminController
                     ),
                 ),
                 array(
+                    'type' => 'text',
+                    'label' => $this->trans('DNI', array(), 'Admin.Global'),
+                    'name' => 'dni',
+                    'maxlength' => 16,
+                    'col' => 4,
+                    'required' => true, // Only required in case of specifics countries
+                ),
+                array(
                     'type' => 'file',
                     'label' => $this->trans('Logo', array(), 'Admin.Global'),
                     'name' => 'logo',
@@ -315,6 +323,7 @@ class AdminSuppliersControllerCore extends AdminController
                 'city' => $address->city,
                 'id_country' => $address->id_country,
                 'id_state' => $address->id_state,
+                'dni' => $address->dni,
             );
         } else {
             $this->fields_value = array(
@@ -485,8 +494,23 @@ class AdminSuppliersControllerCore extends AdminController
             $address->id_country = Tools::getValue('id_country', null);
             $address->id_state = Tools::getValue('id_state', null);
             $address->city = Tools::getValue('city', null);
+            $address->dni = Tools::getValue('dni', null);
 
             $validation = $address->validateController();
+
+            /*
+             * Make sure dni is checked without raising an exception.
+             * This field is mandatory for some countries.
+             */
+            if ($address->validateField('dni', $address->dni) !== true) {
+                $validation['dni'] = $this->trans(
+                    '%s is invalid.',
+                    array(
+                        '<b>dni</b>',
+                    ),
+                    'Admin.Notifications.Error'
+                );
+            }
 
             // checks address validity
             if (count($validation) > 0) {
