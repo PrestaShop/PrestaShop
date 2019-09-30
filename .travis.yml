@@ -44,7 +44,7 @@ stages:
 jobs:
   include:
     - stage: deploy
-      php: 7.2
+      php: 7.3
       before_install: skip
       before_script: skip
       install: skip
