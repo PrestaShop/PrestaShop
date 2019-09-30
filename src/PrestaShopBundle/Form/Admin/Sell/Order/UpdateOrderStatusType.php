@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -24,25 +24,35 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Order;
+namespace PrestaShopBundle\Form\Admin\Sell\Order;
 
-/**
- * Discount types that can be added to an order
- */
-final class OrderDiscountType
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\FormBuilderInterface;
+
+class UpdateOrderStatusType extends AbstractType
 {
     /**
-     * Discount type with percent (%) amount
+     * @var FormChoiceProviderInterface
      */
-    public const DISCOUNT_PERCENT = 1;
+    private $orderStatusChoiceProvider;
 
     /**
-     * Discount type with money (EUR, USD & etc) amount
+     * @param FormChoiceProviderInterface $orderStatusChoiceProvider
      */
-    public const DISCOUNT_AMOUNT = 2;
+    public function __construct(FormChoiceProviderInterface $orderStatusChoiceProvider)
+    {
+        $this->orderStatusChoiceProvider = $orderStatusChoiceProvider;
+    }
 
-    /**
-     * Discount type with free shipping
-     */
-    public const FREE_SHIPPING = 3;
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder
+            ->add('new_order_status_id', ChoiceType::class, [
+                'choices' => $this->orderStatusChoiceProvider->getChoices(),
+                'translation_domain' => false,
+            ])
+        ;
+    }
 }

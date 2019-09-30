@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -24,25 +24,33 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Order;
+namespace PrestaShop\PrestaShop\Core\Domain\Order\Query;
+
+use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 
 /**
- * Discount types that can be added to an order
+ * Get order for view in Back Office
  */
-final class OrderDiscountType
+class GetOrderForViewing
 {
     /**
-     * Discount type with percent (%) amount
+     * @var OrderId
      */
-    public const DISCOUNT_PERCENT = 1;
+    private $orderId;
 
     /**
-     * Discount type with money (EUR, USD & etc) amount
+     * @param int $orderId
      */
-    public const DISCOUNT_AMOUNT = 2;
+    public function __construct(int $orderId)
+    {
+        $this->orderId = new OrderId($orderId);
+    }
 
     /**
-     * Discount type with free shipping
+     * @return OrderId
      */
-    public const FREE_SHIPPING = 3;
+    public function getOrderId(): OrderId
+    {
+        return $this->orderId;
+    }
 }

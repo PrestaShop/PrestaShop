@@ -43,3 +43,32 @@ admin_orders_export:
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Order/Order:export
     _legacy_controller: AdminOrders
+
+admin_orders_view:
+  path: /{orderId}/view
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:view
+
+admin_orders_add_cart_rule:
+  path: /{orderId}/cart-rules
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:addCartRule
+  requirements:
+    orderId: \d+
+
+admin_orders_update_status:
+  path: /{orderId}/status
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:updateStatus
+  requirements:
+    orderId: \d+
+
+admin_orders_add_payment:
+  path: /{orderId}/payment
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:addPayment
+  requirements:
+    orderId: \d+

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -24,25 +24,36 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Order;
+namespace PrestaShop\PrestaShop\Core\Domain\Order\QueryResult;
 
-/**
- * Discount types that can be added to an order
- */
-final class OrderDiscountType
+class OrderMessagesForViewing
 {
-    /**
-     * Discount type with percent (%) amount
-     */
-    public const DISCOUNT_PERCENT = 1;
+    /** @var OrderMessageForViewing[] */
+    private $messages = [];
 
     /**
-     * Discount type with money (EUR, USD & etc) amount
+     * @param OrderMessageForViewing[] $messages
      */
-    public const DISCOUNT_AMOUNT = 2;
+    public function __construct(array $messages)
+    {
+        foreach ($messages as $message) {
+            $this->add($message);
+        }
+    }
 
     /**
-     * Discount type with free shipping
+     * @return OrderMessageForViewing[]
      */
-    public const FREE_SHIPPING = 3;
+    public function getMessages(): array
+    {
+        return $this->messages;
+    }
+
+    /**
+     * @param OrderMessageForViewing $message
+     */
+    private function add(OrderMessageForViewing $message): void
+    {
+        $this->messages[] = $message;
+    }
 }

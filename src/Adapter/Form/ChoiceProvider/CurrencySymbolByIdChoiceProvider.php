@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -24,25 +24,28 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Order;
+namespace PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider;
+
+use Currency;
+use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 
 /**
- * Discount types that can be added to an order
+ * Provides currency choices where currency is represented by symbol (e.g. € for euro) and value is currency id.
  */
-final class OrderDiscountType
+final class CurrencySymbolByIdChoiceProvider implements ConfigurableFormChoiceProviderInterface
 {
     /**
-     * Discount type with percent (%) amount
+     * {@inheritdoc}
      */
-    public const DISCOUNT_PERCENT = 1;
+    public function getChoices(array $options): array
+    {
+        $currencies = Currency::getCurrenciesByIdShop($options['id_shop']);
+        $choices = [];
 
-    /**
-     * Discount type with money (EUR, USD & etc) amount
-     */
-    public const DISCOUNT_AMOUNT = 2;
+        foreach ($currencies as $currency) {
+            $choices[$currency['symbol']] = (int) $currency['id_currency'];
+        }
 
-    /**
-     * Discount type with free shipping
-     */
-    public const FREE_SHIPPING = 3;
+        return $choices;
+    }
 }

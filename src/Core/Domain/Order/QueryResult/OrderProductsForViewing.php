@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -24,25 +24,38 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Order;
+namespace PrestaShop\PrestaShop\Core\Domain\Order\QueryResult;
 
-/**
- * Discount types that can be added to an order
- */
-final class OrderDiscountType
+class OrderProductsForViewing
 {
     /**
-     * Discount type with percent (%) amount
+     * @var OrderProductForViewing[]
      */
-    public const DISCOUNT_PERCENT = 1;
+    private $products = [];
 
     /**
-     * Discount type with money (EUR, USD & etc) amount
+     * @param OrderProductForViewing[] $products
      */
-    public const DISCOUNT_AMOUNT = 2;
+    public function __construct(array $products)
+    {
+        foreach ($products as $product) {
+            $this->addProductForViewing($product);
+        }
+    }
 
     /**
-     * Discount type with free shipping
+     * @param OrderProductForViewing $productForViewing
      */
-    public const FREE_SHIPPING = 3;
+    private function addProductForViewing(OrderProductForViewing $productForViewing): void
+    {
+        $this->products[] = $productForViewing;
+    }
+
+    /**
+     * @return OrderProductForViewing[]
+     */
+    public function getProducts(): array
+    {
+        return $this->products;
+    }
 }

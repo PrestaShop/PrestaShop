@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -24,25 +24,33 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Order;
+namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
-/**
- * Discount types that can be added to an order
- */
-final class OrderDiscountType
+use PrestaShop\PrestaShop\Core\Domain\Order\OrderDiscountType;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use Symfony\Component\Translation\TranslatorInterface;
+
+final class OrderDiscountTypeChoiceProvider implements FormChoiceProviderInterface
 {
     /**
-     * Discount type with percent (%) amount
+     * @var TranslatorInterface
      */
-    public const DISCOUNT_PERCENT = 1;
+    private $translator;
+
+    public function __construct(TranslatorInterface $translator)
+    {
+        $this->translator = $translator;
+    }
 
     /**
-     * Discount type with money (EUR, USD & etc) amount
+     * {@inheritdoc}
      */
-    public const DISCOUNT_AMOUNT = 2;
-
-    /**
-     * Discount type with free shipping
-     */
-    public const FREE_SHIPPING = 3;
+    public function getChoices()
+    {
+        return [
+            $this->translator->trans('Percent', [], 'Admin.Global') => OrderDiscountType::DISCOUNT_PERCENT,
+            $this->translator->trans('Amount', [], 'Admin.Global') => OrderDiscountType::DISCOUNT_AMOUNT,
+            $this->translator->trans('Free shipping', [], 'Admin.Shipping.Feature') => OrderDiscountType::FREE_SHIPPING,
+        ];
+    }
 }

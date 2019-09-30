@@ -65,7 +65,7 @@ final class AddPaymentHandler extends AbstractOrderHandler implements AddPayment
         }
 
         $paymentAdded = $order->addOrderPayment(
-            $amount,
+            (string) $command->getPaymentAmount(),
             $command->getPaymentMethod(),
             $command->getPaymentTransactionId(),
             $currency,

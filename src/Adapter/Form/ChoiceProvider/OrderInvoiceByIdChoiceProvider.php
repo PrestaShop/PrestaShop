@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -24,25 +24,29 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Order;
+namespace PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider;
 
-/**
- * Discount types that can be added to an order
- */
-final class OrderDiscountType
+use Order;
+use OrderInvoice;
+use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
+
+final class OrderInvoiceByIdChoiceProvider implements ConfigurableFormChoiceProviderInterface
 {
     /**
-     * Discount type with percent (%) amount
+     * {@inheritdoc}
      */
-    public const DISCOUNT_PERCENT = 1;
+    public function getChoices(array $options): array
+    {
+        $order = new Order($options['id_order']);
+        $invoices = $order->getInvoicesCollection();
 
-    /**
-     * Discount type with money (EUR, USD & etc) amount
-     */
-    public const DISCOUNT_AMOUNT = 2;
+        $choices = [];
 
-    /**
-     * Discount type with free shipping
-     */
-    public const FREE_SHIPPING = 3;
+        /** @var OrderInvoice $invoice */
+        foreach ($invoices as $invoice) {
+            $choices[$invoice->getInvoiceNumberFormatted($options['id_lang'], $order->id_shop)] = $invoice->id;
+        }
+
+        return $choices;
+    }
 }

@@ -1,6 +1,5 @@
-<?php
-/**
- * 2007-2019 PrestaShop SA and Contributors
+{#**
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -22,27 +21,33 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- */
+ *#}
 
-namespace PrestaShop\PrestaShop\Core\Domain\Order;
-
-/**
- * Discount types that can be added to an order
- */
-final class OrderDiscountType
-{
-    /**
-     * Discount type with percent (%) amount
-     */
-    public const DISCOUNT_PERCENT = 1;
-
-    /**
-     * Discount type with money (EUR, USD & etc) amount
-     */
-    public const DISCOUNT_AMOUNT = 2;
-
-    /**
-     * Discount type with free shipping
-     */
-    public const FREE_SHIPPING = 3;
-}
+<table class="table">
+  <tbody>
+    {% for status in orderForViewing.history.statuses %}
+    <tr>
+      <td>
+        <span class="badge rounded"
+              style="background-color: {{ status.color }}; color: {{ is_color_bright(status.color) ? 'black' : 'white' }};"
+        >
+          {{ status.name }}
+        </span>
+      </td>
+      <td class="text-right">
+        {% if status.employeeLastName is not empty %}
+          {{ status.employeeFirstName ~ ' ' ~ status.employeeLastName }}
+        {% endif %}
+      </td>
+      <td class="text-right">
+        {{ status.createdAt.format('Y-m-d H:i:s') }}
+      </td>
+      <td class="text-right">
+        {% if status.withEmail %}
+          <a href="#">{{ 'Resend email'|trans({}, 'Admin.Orderscustomers.Feature') }}</a>
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>

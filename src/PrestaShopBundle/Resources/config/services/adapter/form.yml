@@ -42,3 +42,9 @@ services:
 
   prestashop.adapter.form.choice_provider.order_countries:
     class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\OrderCountriesChoiceProvider'
+
+  prestashop.adapter.form.choice_provider.order_invoice_by_id:
+    class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\OrderInvoiceByIdChoiceProvider'
+
+  prestashop.adapter.form.choice_provider.currency_symbol_by_id:
+    class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\CurrencySymbolByIdChoiceProvider'

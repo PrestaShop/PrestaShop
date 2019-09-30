@@ -27,16 +27,24 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddCartRuleToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\BulkChangeOrderStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\ChangeOrderStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Payment\Command\AddPaymentCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\OrderFilters;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Form\Admin\Sell\Order\AddOrderCartRuleType;
 use PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrdersStatusType;
+use PrestaShopBundle\Form\Admin\Sell\Order\OrderPaymentType;
+use PrestaShopBundle\Form\Admin\Sell\Order\UpdateOrderStatusType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Service\Grid\ResponseBuilder;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -213,6 +221,136 @@ class OrderController extends FrameworkBundleAdminController
             ->setData($data)
             ->setHeadersData($headers)
             ->setFileName('order_' . date('Y-m-d_His') . '.csv');
+    }
+
+    public function viewAction(int $orderId): Response
+    {
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+
+        $addOrderCartRuleForm = $this->createForm(AddOrderCartRuleType::class);
+        $updateOrderStatusForm = $this->createForm(UpdateOrderStatusType::class, [
+            'new_order_status_id' => $orderForViewing->getHistory()->getCurrentOrderStatusId(),
+        ]);
+        $addOrderPaymentForm = $this->createForm(OrderPaymentType::class, [
+            'id_currency' => $orderForViewing->getCurrencyId(),
+        ], [
+            'id_order' => $orderId,
+        ]);
+
+        return $this->render('@PrestaShop/Admin/Sell/Order/Order/view.html.twig', [
+            'showContentHeader' => false,
+            'orderForViewing' => $orderForViewing,
+            'addOrderCartRuleForm' => $addOrderCartRuleForm->createView(),
+            'updateOrderStatusForm' => $updateOrderStatusForm->createView(),
+            'addOrderPaymentForm' => $addOrderPaymentForm->createView(),
+        ]);
+    }
+
+    /**
+     * @param int $orderId
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function addCartRuleAction(int $orderId, Request $request): RedirectResponse
+    {
+        $addOrderCartRuleForm = $this->createForm(AddOrderCartRuleType::class);
+        $addOrderCartRuleForm->handleRequest($request);
+
+        if ($addOrderCartRuleForm->isSubmitted() && $addOrderCartRuleForm->isValid()) {
+            $data = $addOrderCartRuleForm->getData();
+
+            try {
+                $this->getCommandBus()->handle(
+                    new AddCartRuleToOrderCommand(
+                        $orderId,
+                        $data['name'],
+                        $data['type'],
+                        $data['value']
+                    )
+                );
+
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+            } catch (Exception $e) {
+                $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+            }
+        }
+
+        return $this->redirectToRoute('admin_orders_view', [
+            'orderId' => $orderId,
+        ]);
+    }
+
+    /**
+     * @param int $orderId
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function updateStatusAction(int $orderId, Request $request): RedirectResponse
+    {
+        $form = $this->createForm(UpdateOrderStatusType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            try {
+                $this->getCommandBus()->handle(
+                    new UpdateOrderStatusCommand(
+                        $orderId,
+                        (int) $form->getData()['new_order_status_id']
+                    )
+                );
+
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+            } catch (Exception $e) {
+                $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+            }
+        }
+
+        return $this->redirectToRoute('admin_orders_view', [
+            'orderId' => $orderId,
+        ]);
+    }
+
+    /**
+     * @param int $orderId
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function addPaymentAction(int $orderId, Request $request): RedirectResponse
+    {
+        $form = $this->createForm(OrderPaymentType::class, [], [
+            'id_order' => $orderId,
+        ]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+
+            try {
+                $this->getCommandBus()->handle(
+                    new AddPaymentCommand(
+                        $orderId,
+                        $data['date'],
+                        $data['payment_method'],
+                        $data['amount'],
+                        $data['id_currency'],
+                        $data['id_invoice'],
+                        $data['transaction_id']
+                    )
+                );
+
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+            } catch (Exception $e) {
+                $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+            }
+        }
+
+        return $this->redirectToRoute('admin_orders_view', [
+            'orderId' => $orderId,
+        ]);
     }
 
     /**

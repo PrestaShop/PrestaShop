@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -24,25 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Order;
+namespace PrestaShop\PrestaShop\Core\Domain\Order\QueryHandler;
 
-/**
- * Discount types that can be added to an order
- */
-final class OrderDiscountType
+use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
+
+interface GetOrderForViewingHandlerInterface
 {
     /**
-     * Discount type with percent (%) amount
+     * @param GetOrderForViewing $query
+     *
+     * @return OrderForViewing
      */
-    public const DISCOUNT_PERCENT = 1;
-
-    /**
-     * Discount type with money (EUR, USD & etc) amount
-     */
-    public const DISCOUNT_AMOUNT = 2;
-
-    /**
-     * Discount type with free shipping
-     */
-    public const FREE_SHIPPING = 3;
+    public function handle(GetOrderForViewing $query): OrderForViewing;
 }
