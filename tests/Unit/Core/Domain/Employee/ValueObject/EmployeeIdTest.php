@@ -40,15 +40,15 @@ class EmployeeIdTest extends TestCase
     }
 
     /**
-     * @dataProvider testItExceptionThrownWithInvalidValuesData
-     ** */
+     * @dataProvider getInvalidEmployeeIds
+     */
     public function testItExceptionThrownWithInvalidValues($employeId)
     {
         $this->expectException(InvalidEmployeeIdException::class);
         new EmployeeId($employeId);
     }
 
-    public function testItExceptionThrownWithInvalidValuesData()
+    public function getInvalidEmployeeIds()
     {
         return [
             'stringy -1' => ['-1'],
