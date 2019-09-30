@@ -134,7 +134,7 @@ class CurrencyTest extends TestCase
      */
     public function testGetSymbolWithUnknownLocaleCode()
     {
-        $this->setExpectedException(LocalizationException::class);
+        $this->expectException(LocalizationException::class);
 
         $this->currency->getSymbol('foobar');
     }
@@ -176,7 +176,7 @@ class CurrencyTest extends TestCase
      */
     public function testGetNameWithUnknownLocaleCode()
     {
-        $this->setExpectedException(LocalizationException::class);
+        $this->expectException(LocalizationException::class);
 
         $this->currency->getName('foobar');
     }

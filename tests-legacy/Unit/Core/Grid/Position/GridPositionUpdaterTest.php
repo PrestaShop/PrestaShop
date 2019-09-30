@@ -46,7 +46,7 @@ class GridPositionUpdaterTest extends TestCase
         $updateHandler = $this->createUpdateHandlerMockWithAssertions();
         $gridUpdater = new GridPositionUpdater($updateHandler);
 
-        $gridUpdater->update($positionUpdate);
+        $this->assertNull($gridUpdater->update($positionUpdate));
     }
 
     public function testUpdateException()
@@ -62,6 +62,7 @@ class GridPositionUpdaterTest extends TestCase
         } catch (PositionException $e) {
             $caughtException = $e;
         }
+
         $this->assertNotNull($caughtException);
         $this->assertInstanceOf(PositionUpdateException::class, $caughtException);
         $this->assertEquals('Could not update #%i', $caughtException->getKey());
