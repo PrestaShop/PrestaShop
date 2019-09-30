@@ -45,8 +45,6 @@ class ModulesGetOverrideTest extends IntegrationTestCase
             ['ganalytics'],
             ['ps_emailsubscription'],
             ['ps_featuredproducts'],
-            ['psaddonsconnect'],
-            ['pscsx3241'],
         ];
     }
 
