@@ -12,7 +12,7 @@ admin_tax_rules_groups_create:
   defaults:
     _controller: PrestaShopBundle:Admin\Improve\International\TaxRulesGroup:create
     _legacy_controller: AdminTaxRulesGroup
-    _legacy_link: AdminTaxRulesGroup:addtax_rules_group
+#    _legacy_link: AdminTaxRulesGroup:addtax_rules_group
 
 admin_tax_rules_groups_edit:
   path: /{taxRulesGroupId}/edit
@@ -20,7 +20,7 @@ admin_tax_rules_groups_edit:
   defaults:
     _controller: PrestaShopBundle:Admin\Improve\International\TaxRulesGroup:edit
     _legacy_controller: AdminTaxRulesGroup
-    _legacy_link: AdminTaxRulesGroup:updatetax_rules_group
+#    _legacy_link: AdminTaxRulesGroup:updatetax_rules_group
     _legacy_parameters:
       id_tax_rules_group: taxRulesGroupId
   requirements:
@@ -32,7 +32,7 @@ admin_tax_rules_create:
   defaults:
     _controller: PrestaShopBundle:Admin\Improve\International\TaxRulesGroup:createTaxRule
     _legacy_controller: AdminTaxRulesGroup
-    _legacy_link: AdminTaxRulesGroup:addtax_rules_group
+#    _legacy_link: AdminTaxRulesGroup:addtax_rules_group
   requirements:
     taxRulesGroupId: \d+
 
@@ -42,7 +42,7 @@ admin_tax_rules_load:
   defaults:
     _controller: PrestaShopBundle:Admin\Improve\International\TaxRulesGroup:loadTaxRule
     _legacy_controller: AdminTaxRulesGroup
-    _legacy_link: AdminTaxRulesGroup:updateTaxRule
+#    _legacy_link: AdminTaxRulesGroup:updateTaxRule
     _legacy_parameters:
       id_tax_rule: taxRuleId
   requirements:
@@ -54,7 +54,7 @@ admin_tax_rules_edit:
   defaults:
     _controller: PrestaShopBundle:Admin\Improve\International\TaxRulesGroup:editTaxRule
     _legacy_controller: AdminTaxRulesGroup
-    _legacy_link: AdminTaxRulesGroup:updateTaxRule
+#    _legacy_link: AdminTaxRulesGroup:updateTaxRule
     _legacy_parameters:
       id_tax_rule: taxRuleId
   requirements:
@@ -66,7 +66,7 @@ admin_tax_rules_delete:
   defaults:
     _controller: PrestaShopBundle:Admin\Improve\International\TaxRulesGroup:deleteTaxRule
     _legacy_controller: AdminTaxRulesGroup
-    _legacy_link: AdminTaxRulesGroup:deletetax_rule
+#    _legacy_link: AdminTaxRulesGroup:deletetax_rule
     _legacy_parameters:
       id_tax_rule: taxRuleId
   requirements:
@@ -78,4 +78,4 @@ admin_tax_rules_bulk_delete:
   defaults:
     _controller: PrestaShopBundle:Admin\Improve\International\TaxRulesGroup:bulkDeleteTaxRules
     _legacy_controller: AdminTaxRulesGroup
-    _legacy_link: AdminTaxRulesGroup:submitBulkdeletetax_rule
+#    _legacy_link: AdminTaxRulesGroup:submitBulkdeletetax_rule
