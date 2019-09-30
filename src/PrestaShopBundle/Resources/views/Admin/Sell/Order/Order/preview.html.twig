@@ -24,17 +24,17 @@
  *#}
 
 {% block order_preview %}
-  <div class="row order-preview-content">
+  <div class="row order-preview-content mt-2">
     <table class="col-4 table-responsive-sm details">
       <thead>
         <tr>
-          <th>
+          <th class="mb-1">
             <i class="material-icons">receipt</i>
-            {{ 'Invoice details'|trans({}, 'Admin.Global') }}
+            {{ 'Invoice details'|trans({}, 'Admin.Global') }}:
           </th>
-          <th>
+          <th class="mb-1">
             <i class="material-icons">local_shipping</i>
-            {{ 'Shipping details'|trans({}, 'Admin.Global') }}
+            {{ 'Shipping details'|trans({}, 'Admin.Global') }}:
           </th>
         </tr>
       </thead>
@@ -73,39 +73,49 @@
         </tr>
       </tbody>
     </table>
-    <table class="offset-2 col-6 table-responsive-sm product">
-      <thead>
-        <tr>
-          {% if orderPreview.taxIncluded %}
-            {% set taxInclusion = 'Tax included'|trans({}, 'Admin.Catalog.Feature') %}
-          {% else %}
-            {% set taxInclusion = 'Tax excluded'|trans({}, 'Admin.Catalog.Feature') %}
-          {% endif %}
+    <div class="offset-2 col-6 ">
+      <div class="table-responsive">
+        <table class="table product table-borderless border-bottom-0">
+          <thead>
+          <tr>
+            {% if orderPreview.taxIncluded %}
+              {% set taxInclusion = 'Tax included'|trans({}, 'Admin.Catalog.Feature') %}
+            {% else %}
+              {% set taxInclusion = 'Tax excluded'|trans({}, 'Admin.Catalog.Feature') %}
+            {% endif %}
 
-          <th>{{ 'Product'|trans({}, 'Admin.Global') }}</th>
-          <th>
-            {{ 'Base price'|trans({}, 'Admin.Global') }}
-            <small>{{ taxInclusion }}</small>
-          </th>
-          <th>{{ 'Quantity'|trans({}, 'Admin.Global') }}</th>
-          <th>
-            {{ 'Total'|trans({}, 'Admin.Global') }}
-            <small>{{ taxInclusion }}</small>
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-      {% for productDetail in orderPreview.productDetails %}
-        <tr>
-          <td>{{ productDetail.name }}</td>
-          <td>{{ productDetail.unitPrice }}</td>
-          <td>{{ productDetail.quantity }}</td>
-          <td>{{ productDetail.totalPrice }}</td>
-        </tr>
-      {% endfor %}
-      </tbody>
-    </table>
+            <th>{{ 'Product'|trans({}, 'Admin.Global') }}</th>
+            <th>
+              {{ 'Base price'|trans({}, 'Admin.Global') }}
+              <small>{{ taxInclusion }}</small>
+            </th>
+            <th>{{ 'Quantity'|trans({}, 'Admin.Global') }}</th>
+            <th>
+              {{ 'Total'|trans({}, 'Admin.Global') }}
+              <small>{{ taxInclusion }}</small>
+            </th>
+          </tr>
+          </thead>
+          <tbody>
+          {% for productDetail in orderPreview.productDetails %}
+            <tr>
+              <td class="p-1">{{ productDetail.name }}</td>
+              <td class="p-1">{{ productDetail.unitPrice }}</td>
+              <td class="p-1">{{ productDetail.quantity }}</td>
+              <td class="p-1">{{ productDetail.totalPrice }}</td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
 
+      <div class="text-right">
+        <a href="#" class="btn btn-primary btn-sm">
+          {{ 'Open order'|trans({}, 'Admin.Orderscustomers.Feature') }}
+          <i class="material-icons">arrow_right_alt</i>
+        </a>
+      </div>
+    </div>
   </div>
 {% endblock %}
 

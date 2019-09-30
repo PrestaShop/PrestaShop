@@ -53,6 +53,7 @@ const $ = window.$;
  */
 export default class PreviewExtension {
   constructor(previewRenderer) {
+    this.lock = [];
     this.renderer = previewRenderer;
     this.expandSelector = '.js-expand';
     this.collapseSelector = '.js-collapse';
@@ -108,11 +109,27 @@ export default class PreviewExtension {
     }
     const dataUrl = $(event.currentTarget).data('preview-data-url');
 
-    Promise.resolve(this.renderer(dataUrl).then((result) => {
-      this._renderPreviewContent($columnRow, result.preview);
+    if (this._isLocked(dataUrl)) {
+      return;
+    }
+
+    // Prevents loading preview multiple times.
+    // Uses "dataUrl" as lock key.
+    this._lock(dataUrl);
+
+    $.ajax({
+      url: dataUrl,
+      method: 'GET',
+      dataType: 'json',
+    }).then((response) => {
+      this._renderPreviewContent($columnRow, response.preview);
+
+      this._unlock(dataUrl);
     }).catch((e) => {
       showErrorMessage(e.responseJSON.message);
-    }));
+
+      this._unlock(dataUrl);
+    });
   }
 
   /**
@@ -176,5 +193,27 @@ export default class PreviewExtension {
    */
   _hideCollapseIcon(parent) {
     parent.find(this.collapseSelector).addClass('d-none');
+  }
+
+  _isLocked(key) {
+    return this.lock.indexOf(key) !== -1;
+  }
+
+  _lock(key) {
+    if (this._isLocked(key)) {
+      return;
+    }
+
+    this.lock.push(key);
+  }
+
+  _unlock(key) {
+    const index = this.lock.indexOf(key);
+
+    if (index === -1) {
+      return;
+    }
+
+    this.lock.splice(index, 1);
   }
 }
