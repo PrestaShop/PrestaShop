@@ -51,7 +51,6 @@ final class AttachmentFileUploader implements AttachmentFileUploaderInterface
 
     /**
      * @param ConfigurationInterface $configuration
-     *
      */
     public function __construct(ConfigurationInterface $configuration)
     {

@@ -60,6 +60,7 @@ class AttachmentId
 
     /**
      * @param int $attachmentId
+     *
      * @throws AttachmentConstraintException
      */
     private function assertIsValidId(int $attachmentId): void
