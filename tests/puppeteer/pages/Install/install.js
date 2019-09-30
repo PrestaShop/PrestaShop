@@ -70,9 +70,13 @@ module.exports = class Install extends CommonPage {
    * @param pageTitle, expected title
    */
   async checkStepTitle(selector, pageTitle) {
-    await this.page.waitFor(selector, {visible: true, timeout: 90000});
+    await this.page.waitForSelector(selector, {visible: true});
     const title = await this.getTextContent(selector);
-    await expect(title).to.contains(pageTitle);
+    if (Array.isArray(pageTitle)) {
+      const result = await pageTitle.some(arrVal => title.includes(arrVal));
+      await expect(result).to.be.true;
+    }
+    else await expect(title).to.contains(pageTitle);
   }
 
   /**
@@ -133,7 +137,7 @@ module.exports = class Install extends CommonPage {
     if (await this.elementVisible(this.createDbButton, 3000)) {
       await this.page.click(this.createDbButton);
     }
-    await this.page.waitForSelector(this.dbResultCheckOkBlock);
+    await this.page.waitForSelector(this.dbResultCheckOkBlock, {visible: true});
   }
 
   /**
