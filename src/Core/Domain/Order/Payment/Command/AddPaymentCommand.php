@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Order\Payment\Command;
 
 use DateTimeImmutable;
+use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
@@ -53,7 +54,7 @@ class AddPaymentCommand
     private $paymentMethod;
 
     /**
-     * @var float
+     * @var Number
      */
     private $paymentAmount;
 
@@ -90,14 +91,13 @@ class AddPaymentCommand
         $orderInvoiceId = null,
         $transactionId = ''
     ) {
-        $this->assertAmountIsNotNegative($paymentAmount);
         $this->assertPaymentMethodIsGenericName($paymentMethod);
         $this->assertTransactionIdIsString($transactionId);
 
         $this->orderId = new OrderId($orderId);
         $this->paymentDate = new DateTimeImmutable($paymentDate);
         $this->paymentMethod = $paymentMethod;
-        $this->paymentAmount = $paymentAmount;
+        $this->paymentAmount = new Number($paymentAmount);
         $this->paymentCurrencyId = new CurrencyId($paymentCurrencyId);
         $this->orderInvoiceId = $orderInvoiceId;
         $this->transactionId = $transactionId;
@@ -128,7 +128,7 @@ class AddPaymentCommand
     }
 
     /**
-     * @return float
+     * @return Number
      */
     public function getPaymentAmount()
     {
@@ -171,7 +171,7 @@ class AddPaymentCommand
      */
     private function assertPaymentMethodIsGenericName($paymentMethod)
     {
-        if (empty($paymentMethod) || preg_match('/^[^<>={}]*$/u', $paymentMethod)) {
+        if (empty($paymentMethod) || !preg_match('/^[^<>={}]*$/u', $paymentMethod)) {
             throw new OrderConstraintException('The selected payment method is invalid.');
         }
     }
