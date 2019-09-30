@@ -1,6 +1,7 @@
 const helper = require('../../utils/helpers');
 // Importing pages
 const InstallPage = require('../../../pages/Install/install');
+const HomePage = require('../../../pages/FO/home');
 
 let browser;
 let page;
@@ -9,6 +10,7 @@ let page;
 const init = async function () {
   return {
     installPage: new InstallPage(page),
+    homePage: new HomePage(page),
   };
 };
 
@@ -26,7 +28,7 @@ describe('Install Prestashop', async () => {
   it('should open the Install page', async function () {
     await this.pageObjects.installPage.goTo(global.URL_INSTALL);
     await this.pageObjects.installPage.checkStepTitle(this.pageObjects.installPage.firstStepPageTitle,
-      this.pageObjects.installPage.firstStepFrTitle);
+      [this.pageObjects.installPage.firstStepFrTitle, this.pageObjects.installPage.firstStepEnTitle]);
   });
   it('should change language to English and check title', async function () {
     await this.pageObjects.installPage.setInstallLanguage();
@@ -68,6 +70,8 @@ describe('Install Prestashop', async () => {
     await this.pageObjects.installPage.checkInstallationSuccessful();
   });
   it('should go to FO and check that Prestashop logo exists', async function () {
-    await this.pageObjects.installPage.goAndCheckFOAfterInstall();
+    page = await this.pageObjects.installPage.goToFOAfterInstall();
+    this.pageObjects = await init();
+    await this.pageObjects.homePage.checkHomePage();
   });
 });

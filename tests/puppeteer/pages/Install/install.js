@@ -62,11 +62,6 @@ module.exports = class Install extends CommonPage {
     this.installFixturesStep = '#process_step_installFixtures';
     this.finalStepPageTitle = '#install_process_success h2';
     this.discoverFoButton = '#foBlock';
-
-    // Selectors in FO
-    this.FOLogo = '#_desktop_logo';
-    this.userInfoHeaderIcon = '#_desktop_user_info';
-    this.cartHeaderIcon = '#_desktop_cart';
   }
 
   /**
@@ -75,9 +70,13 @@ module.exports = class Install extends CommonPage {
    * @param pageTitle, expected title
    */
   async checkStepTitle(selector, pageTitle) {
-    await this.page.waitFor(selector, {visible: true, timeout: 90000});
+    await this.page.waitForSelector(selector, {visible: true});
     const title = await this.getTextContent(selector);
-    await expect(title).to.contains(pageTitle);
+    if (Array.isArray(pageTitle)) {
+      const result = await pageTitle.some(arrVal => title.includes(arrVal));
+      await expect(result).to.be.true;
+    }
+    else await expect(title).to.contains(pageTitle);
   }
 
   /**
@@ -138,7 +137,7 @@ module.exports = class Install extends CommonPage {
     if (await this.elementVisible(this.createDbButton, 3000)) {
       await this.page.click(this.createDbButton);
     }
-    await this.page.waitForSelector(this.dbResultCheckOkBlock);
+    await this.page.waitForSelector(this.dbResultCheckOkBlock, {visible: true});
   }
 
   /**
@@ -163,12 +162,8 @@ module.exports = class Install extends CommonPage {
   /**
    * Go to FO after Installation and check that Prestashop logo exist
    */
-  async goAndCheckFOAfterInstall() {
+  async goToFOAfterInstall() {
     await this.page.waitForSelector(this.discoverFoButton, {visible: true});
-    const FOPage = await this.openLinkWithTargetBlank(this.page, this.discoverFoButton, false);
-    await FOPage.bringToFront();
-    await FOPage.waitForSelector(this.FOLogo, {visible: true});
-    await FOPage.waitForSelector(this.userInfoHeaderIcon, {visible: true});
-    await FOPage.waitForSelector(this.cartHeaderIcon, {visible: true});
+    return this.openLinkWithTargetBlank(this.page, this.discoverFoButton, false);
   }
 };
