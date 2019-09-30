@@ -253,7 +253,7 @@ class AddressFormatCore extends ObjectModel
         foreach (self::getFieldsRequired() as $requiredField) {
             if (!in_array($requiredField, $fieldList)) {
                 $this->_errorFormatList[] = $this->trans(
-                    'The field %s is required (in the "%s" tab).',
+                    'The field %s is required (in the %s tab).',
                     array($requiredField, $this->getFieldTabName($requiredField)),
                     'Admin.Notifications.Error');
             }
