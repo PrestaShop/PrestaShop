@@ -128,7 +128,7 @@ class TaxRulesGroupQueryBuilder extends AbstractDoctrineQueryBuilder
      * @param QueryBuilder $qb
      * @param array $filters
      */
-    private function applyFilters(QueryBuilder $qb, array $filters): array
+    private function applyFilters(QueryBuilder $qb, array $filters): void
     {
         $allowedFiltersMap = [
             'id_tax_rules_group' => 'trg.id_tax_rules_group',
