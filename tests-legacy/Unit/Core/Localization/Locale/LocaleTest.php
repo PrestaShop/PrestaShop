@@ -130,7 +130,7 @@ class LocaleTest extends TestCase
      */
     public function testFormatNumberWithInvalidRawNumber()
     {
-        $this->setExpectedException(LocalizationException::class);
+        $this->expectException(LocalizationException::class);
 
         $this->cldrLocale->formatNumber('foobar');
     }
@@ -214,7 +214,7 @@ class LocaleTest extends TestCase
      */
     public function testFormatNumberWithInvalidPriceData($number, $currency)
     {
-        $this->setExpectedException(LocalizationException::class);
+        $this->expectException(LocalizationException::class);
 
         $this->cldrLocale->formatPrice($number, $currency);
     }

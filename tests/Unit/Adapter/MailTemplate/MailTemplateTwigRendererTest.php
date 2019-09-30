@@ -64,7 +64,7 @@ class MailTemplateTwigRendererTest extends TestCase
 
     public function testFileNotFound()
     {
-        $this->setExpectedException(FileNotFoundException::class);
+        $this->expectException(FileNotFoundException::class);
 
         $templatePaths = [
             MailTemplateInterface::HTML_TYPE => 'path/to/non_existent_template.html.twig',
