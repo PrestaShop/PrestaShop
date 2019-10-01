@@ -350,6 +350,7 @@ class OrderController extends FrameworkBundleAdminController
 
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
             } catch (Exception $e) {
+                throw $e;
                 $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
             }
         }
