@@ -2077,7 +2077,7 @@ abstract class ModuleCore implements ModuleInterface
     /**
      * Reorder modules position
      *
-     * @param bool $id_hook Hook ID
+     * @param int $id_hook Hook ID
      * @param array|null $shop_list List of shop
      *
      * @return bool
