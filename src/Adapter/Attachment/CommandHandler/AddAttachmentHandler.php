@@ -77,22 +77,15 @@ final class AddAttachmentHandler extends AbstractAttachmentHandler implements Ad
 
             $uniqueFileName = $this->getUniqueFileName();
 
-            $attachment->file_name = $command->getOriginalName();
-            $attachment->file = $uniqueFileName;
             $attachment->description = $command->getLocalizedDescriptions();
             $attachment->name = $command->getLocalizedNames();
+            $attachment->file_name = $command->getOriginalName();
+            $attachment->file = $uniqueFileName;
             $attachment->mime = $command->getMimeType();
 
-            if (!$attachment->validateFields(false) && !$attachment->validateFieldsLang(false)) {
-                throw new AttachmentConstraintException(
-                    'Attachment contains invalid field values',
-                    AttachmentConstraintException::INVALID_FIELDS
-                );
-            }
+            $this->assertValidFields($attachment);
 
-            if (null !== $command->getFilePathName()) {
-                $this->fileUploader->upload($command->getFilePathName(), $uniqueFileName, $command->getFileSize());
-            }
+            $this->fileUploader->upload($command->getFilePathName(), $uniqueFileName, $command->getFileSize());
 
             if (false === $attachment->add()) {
                 throw new CannotAddAttachmentException('Failed to add attachment');
