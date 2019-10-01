@@ -82,7 +82,7 @@ final class AttachmentFileUploader implements AttachmentFileUploaderInterface
     {
         try {
             $attachment = new Attachment($attachmentId);
-            @unlink(_PS_DOWNLOAD_DIR_ . $attachment->file);
+            unlink(_PS_DOWNLOAD_DIR_ . $attachment->file);
         } catch (PrestaShopException $e) {
             throw new AttachmentNotFoundException(sprintf('Attachment with id "%s" was not found.', $attachmentId));
         }
@@ -104,13 +104,14 @@ final class AttachmentFileUploader implements AttachmentFileUploaderInterface
                     (string) ($this->configuration->get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024),
                     number_format(($fileSize / 1024), 2, '.', '')
                 ),
-             AttachmentConstraintException::INVALID_FILE_SIZE);
+                AttachmentConstraintException::INVALID_FILE_SIZE
+            );
         }
 
         try {
             move_uploaded_file($filePath, _PS_DOWNLOAD_DIR_ . $uniqid);
         } catch (FileException $e) {
-            throw new AttachmentUploadFailedException('Failed to copy the file.');
+            throw new AttachmentUploadFailedException(sprintf('Failed to copy the file %s.', $filePath));
         }
     }
 

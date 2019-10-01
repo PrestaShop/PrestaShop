@@ -67,7 +67,6 @@ final class EditAttachmentHandler extends AbstractAttachmentHandler implements E
      * @throws AttachmentException
      * @throws AttachmentNotFoundException
      * @throws CannotUpdateAttachmentException
-     * @throws FileNotFoundException
      */
     public function handle(EditAttachmentCommand $command)
     {
@@ -98,7 +97,6 @@ final class EditAttachmentHandler extends AbstractAttachmentHandler implements E
      * @throws AttachmentException
      * @throws AttachmentNotFoundException
      * @throws CannotUpdateAttachmentException
-     * @throws FileNotFoundException
      */
     private function updateAttachmentFromCommandData(Attachment $attachment, EditAttachmentCommand $command)
     {
@@ -116,12 +114,7 @@ final class EditAttachmentHandler extends AbstractAttachmentHandler implements E
             $attachment->description = $command->getLocalizedDescriptions();
             $attachment->name = $command->getLocalizedNames();
 
-            if (!$attachment->validateFields(false) && !$attachment->validateFieldsLang(false)) {
-                throw new AttachmentConstraintException(
-                    'Attachment contains invalid field values',
-                    AttachmentConstraintException::INVALID_FIELDS
-                );
-            }
+            $this->assertValidFields($attachment);
 
             if (null !== $command->getPathName()) {
                 $uniqueFileName = $this->getUniqueFileName();
@@ -129,6 +122,8 @@ final class EditAttachmentHandler extends AbstractAttachmentHandler implements E
                 $attachment->file_name = $command->getOriginalFileName();
                 $attachment->file = $uniqueFileName;
                 $attachment->mime = $command->getMimeType();
+
+                $this->assertValidFields($attachment);
 
                 $this->fileUploader->upload(
                     $command->getPathName(),

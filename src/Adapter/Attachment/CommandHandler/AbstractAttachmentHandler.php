@@ -26,9 +26,11 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Attachment\CommandHandler;
 
+use Attachment;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentConstraintException;
+use PrestaShopException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
@@ -96,5 +98,20 @@ abstract class AbstractAttachmentHandler
         $uniqueFileName = sha1(uniqid());
 
         return $uniqueFileName;
+    }
+
+    /**
+     * @param Attachment $attachment
+     * @throws AttachmentConstraintException
+     * @throws PrestaShopException
+     */
+    protected function assertValidFields(Attachment $attachment)
+    {
+        if (!$attachment->validateFields(false) && !$attachment->validateFieldsLang(false)) {
+            throw new AttachmentConstraintException(
+                'Attachment contains invalid field values',
+                AttachmentConstraintException::INVALID_FIELDS
+            );
+        }
     }
 }
