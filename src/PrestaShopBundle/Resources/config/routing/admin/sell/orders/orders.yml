@@ -136,11 +136,11 @@ admin_orders_resend_email:
     orderHistoryId: \d+
     orderStatusId: \d+
 
-admin_orders_get_preview_data:
+admin_orders_preview:
   path: /{orderId}/preview
   methods: [GET]
   defaults:
-    _controller: PrestaShopBundle:Admin/Sell/Order/Order:getPreviewData
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:preview
     _legacy_controller: AdminOrders
   requirements:
     orderId: \d+

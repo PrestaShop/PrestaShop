@@ -457,7 +457,7 @@ class OrderController extends FrameworkBundleAdminController
         ]);
     }
 
-    public function getPreviewDataAction(int $orderId): Response
+    public function previewAction(int $orderId): Response
     {
         try {
             /** @var OrderPreview $orderPreview */
@@ -466,6 +466,7 @@ class OrderController extends FrameworkBundleAdminController
             return $this->json([
                 'preview' => $this->renderView('@PrestaShop/Admin/Sell/Order/Order/preview.html.twig', [
                     'orderPreview' => $orderPreview,
+                    'orderId' => $orderId,
                 ]),
             ]);
         } catch (Exception $e) {

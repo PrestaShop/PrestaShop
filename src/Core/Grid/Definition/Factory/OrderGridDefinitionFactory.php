@@ -162,11 +162,13 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->setOptions([
                 'icon_expand' => 'keyboard_arrow_down',
                 'icon_collapse' => 'keyboard_arrow_up',
-                'preview_data_route' => 'admin_orders_get_preview_data',
+                'preview_data_route' => 'admin_orders_preview',
                 'preview_route_params' => [
                     'orderId' => 'id_order',
                 ],
-            ]);
+            ])
+        ;
+
         $columns = (new ColumnCollection())
             ->add(
                 (new BulkActionColumn('orders_bulk'))

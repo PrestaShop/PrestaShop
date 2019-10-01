@@ -26,30 +26,7 @@
 const $ = window.$;
 
 /**
- * Extends grid with preview functionality with additional row data.
- *
- * Usage:
- *
- * Grid column must contain .preview-toggle element that PreviewExtension can hook on, example:
- *
- * <td>
- *  <span class="preview-toggle">
- *    Preview
- *  </span>
- * </td>
- *
- * You can use PreviewColumn when defining grid in PHP or create your custom column.
- *
- * In JS:
- *
- * function myPreviewRenderer(url) {
- *   // do ajax load preview data and return json with preview content html
- *
- *   return {preview: `<p>Preview data</p>`};
- * }
- *
- * const grid = new Grid('my_grid');
- * grid.extend(new PreviewExtension(myPreviewRenderer));
+ * Extends grid with preview functionality.
  */
 export default class PreviewExtension {
   constructor(previewRenderer) {
