@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForAddressCreation;
-use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\AddressCreationCustomer;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\AddressCreationCustomerInformation;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateConstraintException;
 
 /**
@@ -64,7 +64,7 @@ final class AddressFormDataHandler implements FormDataHandlerInterface
      */
     public function create(array $data)
     {
-        /** @var AddressCreationCustomer $addressCustomer */
+        /** @var AddressCreationCustomerInformation $addressCustomer */
         $addressCustomer = $this->commandBus->handle(new GetCustomerForAddressCreation($data['customer_email']));
 
         $addAddressCommand = new AddCustomerAddressCommand(
