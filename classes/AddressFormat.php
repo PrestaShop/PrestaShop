@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressException;
 
 /**
  * Class AddressFormatCore.
@@ -263,11 +264,13 @@ class AddressFormatCore extends ObjectModel
     /**
      * Given a field name, get the name of the tab in which the field name can be found.
      * For ex: Country:name => the tab is 'Country'.
-     * There should be only one separator in the string, otherwise return false.
+     * There should be only one separator in the string, otherwise throw an exception.
      *
      * @param string $field
      *
      * @return bool|string
+     *
+     * @throws AddressException
      */
     private function getFieldTabName($field)
     {
@@ -282,7 +285,7 @@ class AddressFormatCore extends ObjectModel
             return $fieldTab[0];
         }
 
-        return false;
+        throw new AddressException('Address format field is not valid');
     }
 
     /**
