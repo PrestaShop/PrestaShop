@@ -110,7 +110,7 @@
       </div>
 
       <div class="text-right">
-        <a href="#" class="btn btn-primary btn-sm">
+        <a href="{{ path('admin_orders_view', {'orderId': orderId}) }}" class="btn btn-primary btn-sm">
           {{ 'Open order'|trans({}, 'Admin.Orderscustomers.Feature') }}
           <i class="material-icons">arrow_right_alt</i>
         </a>

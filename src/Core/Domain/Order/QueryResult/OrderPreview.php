@@ -32,17 +32,17 @@ namespace PrestaShop\PrestaShop\Core\Domain\Order\QueryResult;
 class OrderPreview
 {
     /**
-     * @var InvoiceDetails
+     * @var OrderPreviewInvoiceDetails
      */
     private $invoiceDetails;
 
     /**
-     * @var ShippingDetails
+     * @var OrderPreviewShippingDetails
      */
     private $shippingDetails;
 
     /**
-     * @var ProductDetail[]
+     * @var OrderPreviewProductDetail[]
      */
     private $productDetails;
     /**
@@ -51,14 +51,14 @@ class OrderPreview
     private $taxIncluded;
 
     /**
-     * @param InvoiceDetails $invoiceDetails
-     * @param ShippingDetails $shippingDetails
+     * @param OrderPreviewInvoiceDetails $invoiceDetails
+     * @param OrderPreviewShippingDetails $shippingDetails
      * @param array $productDetails
      * @param bool $taxIncluded
      */
     public function __construct(
-        InvoiceDetails $invoiceDetails,
-        ShippingDetails $shippingDetails,
+        OrderPreviewInvoiceDetails $invoiceDetails,
+        OrderPreviewShippingDetails $shippingDetails,
         array $productDetails,
         bool $taxIncluded
     ) {
@@ -69,23 +69,23 @@ class OrderPreview
     }
 
     /**
-     * @return InvoiceDetails
+     * @return OrderPreviewInvoiceDetails
      */
-    public function getInvoiceDetails(): InvoiceDetails
+    public function getInvoiceDetails(): OrderPreviewInvoiceDetails
     {
         return $this->invoiceDetails;
     }
 
     /**
-     * @return ShippingDetails
+     * @return OrderPreviewShippingDetails
      */
-    public function getShippingDetails(): ShippingDetails
+    public function getShippingDetails(): OrderPreviewShippingDetails
     {
         return $this->shippingDetails;
     }
 
     /**
-     * @return ProductDetail[]
+     * @return OrderPreviewProductDetail[]
      */
     public function getProductDetails(): array
     {

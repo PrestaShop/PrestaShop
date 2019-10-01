@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Order\QueryResult;
 /**
  * DTO for order product details
  */
-class ProductDetail
+class OrderPreviewProductDetail
 {
     /**
      * @var string

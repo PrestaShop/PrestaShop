@@ -34,10 +34,10 @@ use PrestaShop\PrestaShop\Adapter\Entity\Address;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderPreview;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryHandler\GetOrderPreviewHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\InvoiceDetails;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPreviewInvoiceDetails;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPreview;
-use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\ProductDetail;
-use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\ShippingDetails;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPreviewProductDetail;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPreviewShippingDetails;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
 
@@ -56,6 +56,10 @@ final class GetOrderPreviewHandler implements GetOrderPreviewHandlerInterface
      */
     private $locale;
 
+    /**
+     * @param LocaleRepository $localeRepository
+     * @param string $locale
+     */
     public function __construct(
         LocaleRepository $localeRepository,
         string $locale
@@ -64,6 +68,9 @@ final class GetOrderPreviewHandler implements GetOrderPreviewHandlerInterface
         $this->locale = $locale;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function handle(GetOrderPreview $query): OrderPreview
     {
         $order = $this->getOrder($query->getOrderId());
@@ -99,15 +106,15 @@ final class GetOrderPreviewHandler implements GetOrderPreviewHandlerInterface
     /**
      * @param Order $order
      *
-     * @return InvoiceDetails
+     * @return OrderPreviewInvoiceDetails
      */
-    private function getInvoiceDetails(Order $order): InvoiceDetails
+    private function getInvoiceDetails(Order $order): OrderPreviewInvoiceDetails
     {
         $customer = new Customer($order->id_customer);
         $address = new Address($order->id_address_invoice);
         $country = new Country($address->id_country);
 
-        return new InvoiceDetails(
+        return new OrderPreviewInvoiceDetails(
             $customer->firstname,
             $customer->lastname,
             $address->address1,
@@ -120,13 +127,16 @@ final class GetOrderPreviewHandler implements GetOrderPreviewHandlerInterface
         );
     }
 
-    private function getShippingDetails(Order $order): ShippingDetails
+    /**
+     * {@inheritdoc}
+     */
+    private function getShippingDetails(Order $order): OrderPreviewShippingDetails
     {
         $customer = new Customer($order->id_customer);
         $address = new Address($order->id_address_delivery);
         $country = new Country($address->id_country);
 
-        return new ShippingDetails(
+        return new OrderPreviewShippingDetails(
             $customer->firstname,
             $customer->lastname,
             $address->address1,
@@ -157,7 +167,7 @@ final class GetOrderPreviewHandler implements GetOrderPreviewHandlerInterface
                 $totalPrice = $detail['total_price_tax_incl'];
             }
 
-            $productDetails[] = new ProductDetail(
+            $productDetails[] = new OrderPreviewProductDetail(
                 $detail['product_name'],
                 (int) $detail['product_quantity'],
                 $locale->formatPrice($unitPrice, $currency->iso_code),
