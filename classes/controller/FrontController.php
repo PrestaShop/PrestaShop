@@ -1184,18 +1184,6 @@ class FrontControllerCore extends Controller
     }
 
     /**
-     * @deprecated 1.7  This function has no effect in PrestaShop 1.7 theme. jQuery2 is register by the core on every theme.
-     *                  Have a look at the /themes/_core folder.
-     */
-    public function addJquery($version = null, $folder = null, $minifier = true)
-    {
-        /*
-        This is deprecated in PrestaShop 1.7 and has no effect in PrestaShop 1.7 theme.
-        jQuery is registered by the core on every theme. Have a look at the /themes/_core folder.
-        */
-    }
-
-    /**
      * Adds jQuery UI component(s) to queued JS file list.
      *
      * @param string|array $component

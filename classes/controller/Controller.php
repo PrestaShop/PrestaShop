@@ -545,7 +545,6 @@ abstract class ControllerCore
             'Controller->addJquery() is deprecated since version 1.7.7.0, jQuery is always included',
             E_USER_DEPRECATED
         );
-        $this->addJS(Media::getJqueryPath($version, $folder, $minifier), false);
     }
 
     /**
