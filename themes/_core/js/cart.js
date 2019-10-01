@@ -79,7 +79,6 @@ $(document).ready(() => {
     '[data-button-action="add-to-cart"]',
     (event) => {
       event.preventDefault();
-      if ($('#quantity_wanted').val() <= $('[data-stock]').data('stock') && $('[data-allow-oosp]').data('allow-oosp').length !== 0) {
         $('[data-button-action="add-to-cart"]').prop('disabled', true);
         
         let $form = $(event.target).closest('form');
@@ -128,7 +127,6 @@ $(document).ready(() => {
           prestashop.emit('handleError', {eventType: 'addProductToCart', resp: resp});
           $('[data-button-action="add-to-cart"]').removeProp('disabled');
         });
-      }
     }
   );
 
