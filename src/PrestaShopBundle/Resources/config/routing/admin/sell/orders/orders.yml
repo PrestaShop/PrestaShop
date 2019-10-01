@@ -79,3 +79,11 @@ admin_orders_add_payment:
     _controller: PrestaShopBundle:Admin/Sell/Order/Order:addPayment
   requirements:
     orderId: \d+
+
+admin_orders_change_currency:
+  path: /{orderId}/change-currency
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:changeCurrency
+  requirements:
+    orderId: \d+
