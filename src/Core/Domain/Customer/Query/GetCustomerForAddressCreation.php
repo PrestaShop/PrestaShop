@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Customer\Query;
 
-use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Email;
 
 /**
@@ -35,24 +34,22 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Email;
 class GetCustomerForAddressCreation
 {
     /**
-     * @var Email
+     * @var string
      */
     private $customerEmail;
 
     /**
      * @param string $customerEmail
-     *
-     * @throws CustomerConstraintException
      */
     public function __construct(string $customerEmail)
     {
-        $this->customerEmail = new Email($customerEmail);
+        $this->customerEmail = $customerEmail;
     }
 
     /**
      * @return Email
      */
-    public function getCustomerEmail(): Email
+    public function getCustomerEmail(): string
     {
         return $this->customerEmail;
     }

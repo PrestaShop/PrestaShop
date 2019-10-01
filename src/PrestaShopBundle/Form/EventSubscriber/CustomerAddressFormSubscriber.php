@@ -88,12 +88,13 @@ class CustomerAddressFormSubscriber implements EventSubscriberInterface
 
         $countryId = (int) $data['id_country'];
         $choices = array_merge(
-            ['-' => 0],
+            ['-' => ''],
             $this->stateChoiceProvider->getChoices(['id_country' => $countryId])
         );
         $options = [
             'required' => false,
             'disabled' => true,
+            'placeholder' => false,
             'choices' => [],
         ];
 

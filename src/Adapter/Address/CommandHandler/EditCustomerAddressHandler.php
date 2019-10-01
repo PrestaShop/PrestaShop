@@ -48,7 +48,7 @@ final class EditCustomerAddressHandler extends AbstractAddressHandler implements
      * @throws AddressConstraintException
      * @throws CannotUpdateAddressException
      */
-    public function handle(EditCustomerAddressCommand $command)
+    public function handle(EditCustomerAddressCommand $command): void
     {
         try {
             $address = $this->getAddressFromCommand($command);
@@ -77,7 +77,7 @@ final class EditCustomerAddressHandler extends AbstractAddressHandler implements
      * @throws AddressException
      * @throws AddressNotFoundException
      */
-    private function getAddressFromCommand(EditCustomerAddressCommand $command)
+    private function getAddressFromCommand(EditCustomerAddressCommand $command): Address
     {
         $address = $this->getAddress($command->getAddressId());
 

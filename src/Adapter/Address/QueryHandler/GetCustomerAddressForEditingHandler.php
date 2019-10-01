@@ -39,7 +39,6 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
 use PrestaShopException;
 
 /**
@@ -76,7 +75,7 @@ final class GetCustomerAddressForEditingHandler extends AbstractAddressHandler i
             );
         }
 
-        return new EditableCustomerAddress(
+        $editableCustomerAddress = new EditableCustomerAddress(
             $addressId,
             $customerId,
             $customer->email,
@@ -85,16 +84,45 @@ final class GetCustomerAddressForEditingHandler extends AbstractAddressHandler i
             $address->lastname,
             $address->address1,
             $address->city,
-            $address->postcode,
-            new CountryId((int) $address->id_country),
-            $address->dni,
-            $address->company,
-            $address->vat_number,
-            $address->address2,
-            new StateId((int) $address->id_state),
-            $address->phone,
-            $address->phone_mobile,
-            $address->other
+            new CountryId((int) $address->id_country)
         );
+
+        if (null !== $address->postcode) {
+            $editableCustomerAddress->setPostCode($address->postcode);
+        }
+
+        if (null !== $address->dni) {
+            $editableCustomerAddress->setIdNumber($address->dni);
+        }
+
+        if (null !== $address->company) {
+            $editableCustomerAddress->setCompany($address->company);
+        }
+
+        if (null !== $address->vat_number) {
+            $editableCustomerAddress->setVatNumber($address->vat_number);
+        }
+
+        if (null !== $address->address2) {
+            $editableCustomerAddress->setAddress2($address->address2);
+        }
+
+        if (null !== $address->id_state && $address->id_state > 0) {
+            $editableCustomerAddress->setStateId($address->id_state);
+        }
+
+        if (null !== $address->phone) {
+            $editableCustomerAddress->setHomePhone($address->phone);
+        }
+
+        if (null !== $address->phone_mobile) {
+            $editableCustomerAddress->setMobilePhone($address->phone_mobile);
+        }
+
+        if (null !== $address->other) {
+            $editableCustomerAddress->setOther($address->other);
+        }
+
+        return $editableCustomerAddress;
     }
 }

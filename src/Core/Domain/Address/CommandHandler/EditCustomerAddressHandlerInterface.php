@@ -36,5 +36,5 @@ interface EditCustomerAddressHandlerInterface
     /**
      * @param EditCustomerAddressCommand $command
      */
-    public function handle(EditCustomerAddressCommand $command);
+    public function handle(EditCustomerAddressCommand $command): void;
 }

@@ -38,7 +38,7 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 /**
  * Validator for checking if customer with given email exists in current shop context
  */
-class ExistingCustomerEmailValidator extends ConstraintValidator
+final class ExistingCustomerEmailValidator extends ConstraintValidator
 {
     /**
      * @var CommandBusInterface

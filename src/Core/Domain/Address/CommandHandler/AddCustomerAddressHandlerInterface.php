@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Domain\Address\Command\AddCustomerAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
 
 /**
- * Defines contract for add customer address handler
+ * Interface for service that handles command which adds new customer address
  */
 interface AddCustomerAddressHandlerInterface
 {
