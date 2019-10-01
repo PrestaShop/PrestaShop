@@ -325,13 +325,15 @@ class Number implements NumberInterface
     }
 
     /**
-     * @deprecated https://github.com/PrestaShop/PrestaShop/issues/13168
+     * @deprecated
      *
      * @param int $maxFractionDigits
+     *
+     * @throws LocalizationException
      */
     public function setMaxFractionDigits($maxFractionDigits)
     {
-        $this->maxFractionDigits = $maxFractionDigits;
+        throw new LocalizationException('Class Number is immutable. Please define maxFractionDigits from the constructor.');
     }
 
     /**

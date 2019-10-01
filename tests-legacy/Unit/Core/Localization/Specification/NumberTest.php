@@ -27,6 +27,7 @@
 namespace LegacyTests\Unit\Core\Localization\Specification;
 
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecification;
 use PrestaShop\PrestaShop\Core\Localization\Specification\NumberSymbolList;
 
@@ -110,8 +111,22 @@ class NumberTest extends TestCase
      */
     public function testGetSymbolsByNumberingSystemWithInvalidParameter()
     {
-        $this->expectException(\PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException::class);
+        $this->expectException(LocalizationException::class);
 
         $this->latinNumberSpec->getSymbolsByNumberingSystem('foobar');
+    }
+
+    /**
+     * Given a valid Number specification
+     * When defining max fraction digits from the method setMaxFractionDigits
+     * Then an exception souhd be raised
+     *
+     */
+    public function testSetMaxFractionDigits()
+    {
+        $this->expectException(LocalizationException::class);
+        $this->expectExceptionMessage('Class Number is immutable. Please define maxFractionDigits from the constructor.');
+
+        $this->latinNumberSpec->setMaxFractionDigits(2);
     }
 }
