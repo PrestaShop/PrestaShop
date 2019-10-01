@@ -24,12 +24,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Address\Config;
+namespace PrestaShop\PrestaShop\Core\Domain\Address\Configuration;
 
 /**
  * Stores address form constraints configuration values
  */
-final class AddressConstraintConfiguration
+final class AddressConstraint
 {
     /**
      * Maximum length for address alias (value is constrained by database)

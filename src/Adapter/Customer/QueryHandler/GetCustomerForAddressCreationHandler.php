@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerByEmailNotFound
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForAddressCreation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryHandler\GetCustomerForAddressCreationHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\AddressCreationCustomer;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\AddressCreationCustomerInformation;
 use PrestaShopDatabaseException;
 
 /**
@@ -42,34 +42,41 @@ class GetCustomerForAddressCreationHandler implements GetCustomerForAddressCreat
     /**
      * {@inheritdoc}
      *
-     * @return AddressCreationCustomer
+     * @return AddressCreationCustomerInformation
      *
      * @throws CustomerByEmailNotFoundException
      * @throws CustomerException
      */
-    public function handle(GetCustomerForAddressCreation $query): AddressCreationCustomer
+    public function handle(GetCustomerForAddressCreation $query): AddressCreationCustomerInformation
     {
+        $email = $query->getCustomerEmail();
+
         try {
-            $customer = Customer::getCustomersByEmail($query->getCustomerEmail()->getValue());
+            $result = Customer::searchByName($email);
         } catch (PrestaShopDatabaseException $e) {
             throw new CustomerException(
-                sprintf('Failed to fetch results for customers with email %s', $query->getCustomerEmail())
+                sprintf('Failed to fetch results for customers with email %s', $email)
             );
         }
 
-        if (empty($customer)) {
+        if (empty($result)) {
             throw new CustomerByEmailNotFoundException(
-                sprintf('Failed to find customer with email %s', $query->getCustomerEmail()->getValue())
+                sprintf('Failed to find customer with email %s', $email)
             );
         }
 
-        $customer = $customer['0'];
+        $customer = reset($result);
 
-        return new AddressCreationCustomer(
+        $customerInformation = new AddressCreationCustomerInformation(
             (int) $customer['id_customer'],
             $customer['firstname'],
-            $customer['lastname'],
-            $customer['company']
+            $customer['lastname']
         );
+
+        if (null !== $customer['company']) {
+            $customerInformation->setCompany($customer);
+        }
+
+        return $customerInformation;
     }
 }

@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CustomerAddressCo
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CustomerAddressZipCode;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\ExistingCustomerEmail;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
-use PrestaShop\PrestaShop\Core\Domain\Address\Config\AddressConstraintConfiguration;
+use PrestaShop\PrestaShop\Core\Domain\Address\Configuration\AddressConstraint;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\CountryChoiceType;
 use PrestaShopBundle\Form\EventSubscriber\CustomerAddressFormSubscriber;
@@ -113,10 +113,10 @@ class CustomerAddressType extends AbstractType
                     ]),
                     new Length(
                         [
-                            'max' => AddressConstraintConfiguration::MAX_PHONE_LENGTH,
+                            'max' => AddressConstraint::MAX_PHONE_LENGTH,
                             'maxMessage' => $this->translator->trans(
                                 'This field cannot be longer than %limit% characters',
-                                ['%limit%' => AddressConstraintConfiguration::MAX_PHONE_LENGTH],
+                                ['%limit%' => AddressConstraint::MAX_PHONE_LENGTH],
                                 'Admin.Notifications.Error'
                             ),
                         ]
@@ -143,10 +143,10 @@ class CustomerAddressType extends AbstractType
                     ]),
                     new Length(
                         [
-                            'max' => AddressConstraintConfiguration::MAX_DNI_LENGTH,
+                            'max' => AddressConstraint::MAX_DNI_LENGTH,
                             'maxMessage' => $this->translator->trans(
                                 'This field cannot be longer than %limit% characters',
-                                ['%limit%' => AddressConstraintConfiguration::MAX_DNI_LENGTH],
+                                ['%limit%' => AddressConstraint::MAX_DNI_LENGTH],
                                 'Admin.Notifications.Error'
                             ),
                         ]
@@ -167,10 +167,10 @@ class CustomerAddressType extends AbstractType
                     ]),
                     new Length(
                         [
-                            'max' => AddressConstraintConfiguration::MAX_ALIAS_LENGTH,
+                            'max' => AddressConstraint::MAX_ALIAS_LENGTH,
                             'maxMessage' => $this->translator->trans(
                                 'This field cannot be longer than %limit% characters',
-                                ['%limit%' => AddressConstraintConfiguration::MAX_ALIAS_LENGTH],
+                                ['%limit%' => AddressConstraint::MAX_ALIAS_LENGTH],
                                 'Admin.Notifications.Error'
                             ),
                         ]
@@ -191,10 +191,10 @@ class CustomerAddressType extends AbstractType
                     ]),
                     new Length(
                         [
-                            'max' => AddressConstraintConfiguration::MAX_FIRST_NAME_LENGTH,
+                            'max' => AddressConstraint::MAX_FIRST_NAME_LENGTH,
                             'maxMessage' => $this->translator->trans(
                                 'This field cannot be longer than %limit% characters',
-                                ['%limit%' => AddressConstraintConfiguration::MAX_FIRST_NAME_LENGTH],
+                                ['%limit%' => AddressConstraint::MAX_FIRST_NAME_LENGTH],
                                 'Admin.Notifications.Error'
                             ),
                         ]
@@ -215,10 +215,10 @@ class CustomerAddressType extends AbstractType
                     ]),
                     new Length(
                         [
-                            'max' => AddressConstraintConfiguration::MAX_LAST_NAME_LENGTH,
+                            'max' => AddressConstraint::MAX_LAST_NAME_LENGTH,
                             'maxMessage' => $this->translator->trans(
                                 'This field cannot be longer than %limit% characters',
-                                ['%limit%' => AddressConstraintConfiguration::MAX_LAST_NAME_LENGTH],
+                                ['%limit%' => AddressConstraint::MAX_LAST_NAME_LENGTH],
                                 'Admin.Notifications.Error'
                             ),
                         ]
@@ -242,10 +242,10 @@ class CustomerAddressType extends AbstractType
                     ]),
                     new Length(
                         [
-                            'max' => AddressConstraintConfiguration::MAX_COMPANY_LENGTH,
+                            'max' => AddressConstraint::MAX_COMPANY_LENGTH,
                             'maxMessage' => $this->translator->trans(
                                 'This field cannot be longer than %limit% characters',
-                                ['%limit%' => AddressConstraintConfiguration::MAX_COMPANY_LENGTH],
+                                ['%limit%' => AddressConstraint::MAX_COMPANY_LENGTH],
                                 'Admin.Notifications.Error'
                             ),
                         ]
@@ -269,10 +269,10 @@ class CustomerAddressType extends AbstractType
                     ]),
                     new Length(
                         [
-                            'max' => AddressConstraintConfiguration::MAX_VAT_LENGTH,
+                            'max' => AddressConstraint::MAX_VAT_LENGTH,
                             'maxMessage' => $this->translator->trans(
                                 'This field cannot be longer than %limit% characters',
-                                ['%limit%' => AddressConstraintConfiguration::MAX_VAT_LENGTH],
+                                ['%limit%' => AddressConstraint::MAX_VAT_LENGTH],
                                 'Admin.Notifications.Error'
                             ),
                         ]
@@ -293,10 +293,10 @@ class CustomerAddressType extends AbstractType
                     ]),
                     new Length(
                         [
-                            'max' => AddressConstraintConfiguration::MAX_ADDRESS_LENGTH,
+                            'max' => AddressConstraint::MAX_ADDRESS_LENGTH,
                             'maxMessage' => $this->translator->trans(
                                 'This field cannot be longer than %limit% characters',
-                                ['%limit%' => AddressConstraintConfiguration::MAX_ADDRESS_LENGTH],
+                                ['%limit%' => AddressConstraint::MAX_ADDRESS_LENGTH],
                                 'Admin.Notifications.Error'
                             ),
                         ]
@@ -320,10 +320,10 @@ class CustomerAddressType extends AbstractType
                     ]),
                     new Length(
                         [
-                            'max' => AddressConstraintConfiguration::MAX_ADDRESS_LENGTH,
+                            'max' => AddressConstraint::MAX_ADDRESS_LENGTH,
                             'maxMessage' => $this->translator->trans(
                                 'This field cannot be longer than %limit% characters',
-                                ['%limit%' => AddressConstraintConfiguration::MAX_ADDRESS_LENGTH],
+                                ['%limit%' => AddressConstraint::MAX_ADDRESS_LENGTH],
                                 'Admin.Notifications.Error'
                             ),
                         ]
@@ -344,10 +344,10 @@ class CustomerAddressType extends AbstractType
                     ]),
                     new Length(
                         [
-                            'max' => AddressConstraintConfiguration::MAX_CITY_LENGTH,
+                            'max' => AddressConstraint::MAX_CITY_LENGTH,
                             'maxMessage' => $this->translator->trans(
                                 'This field cannot be longer than %limit% characters',
-                                ['%limit%' => AddressConstraintConfiguration::MAX_CITY_LENGTH],
+                                ['%limit%' => AddressConstraint::MAX_CITY_LENGTH],
                                 'Admin.Notifications.Error'
                             ),
                         ]
@@ -371,10 +371,10 @@ class CustomerAddressType extends AbstractType
                     ]),
                     new Length(
                         [
-                            'max' => AddressConstraintConfiguration::MAX_POSTCODE_LENGTH,
+                            'max' => AddressConstraint::MAX_POSTCODE_LENGTH,
                             'maxMessage' => $this->translator->trans(
                                 'This field cannot be longer than %limit% characters',
-                                ['%limit%' => AddressConstraintConfiguration::MAX_POSTCODE_LENGTH],
+                                ['%limit%' => AddressConstraint::MAX_POSTCODE_LENGTH],
                                 'Admin.Notifications.Error'
                             ),
                         ]
@@ -408,10 +408,10 @@ class CustomerAddressType extends AbstractType
                     ]),
                     new Length(
                         [
-                            'max' => AddressConstraintConfiguration::MAX_PHONE_LENGTH,
+                            'max' => AddressConstraint::MAX_PHONE_LENGTH,
                             'maxMessage' => $this->translator->trans(
                                 'This field cannot be longer than %limit% characters',
-                                ['%limit%' => AddressConstraintConfiguration::MAX_PHONE_LENGTH],
+                                ['%limit%' => AddressConstraint::MAX_PHONE_LENGTH],
                                 'Admin.Notifications.Error'
                             ),
                         ]
@@ -435,10 +435,10 @@ class CustomerAddressType extends AbstractType
                     ]),
                     new Length(
                         [
-                            'max' => AddressConstraintConfiguration::MAX_OTHER_LENGTH,
+                            'max' => AddressConstraint::MAX_OTHER_LENGTH,
                             'maxMessage' => $this->translator->trans(
                                 'This field cannot be longer than %limit% characters',
-                                ['%limit%' => AddressConstraintConfiguration::MAX_OTHER_LENGTH],
+                                ['%limit%' => AddressConstraint::MAX_OTHER_LENGTH],
                                 'Admin.Notifications.Error'
                             ),
                         ]
