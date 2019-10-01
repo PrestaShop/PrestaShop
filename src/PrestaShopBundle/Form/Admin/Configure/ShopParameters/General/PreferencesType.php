@@ -128,6 +128,7 @@ class PreferencesType extends TranslatorAwareType
                 ],
             ])
             ->add('display_suppliers', SwitchType::class)
+            ->add('display_manufacturers', SwitchType::class)
             ->add('display_best_sellers', SwitchType::class)
             ->add('multishop_feature_active', SwitchType::class, [
                 'disabled' => !$this->isContextDependantOptionEnabled(),
