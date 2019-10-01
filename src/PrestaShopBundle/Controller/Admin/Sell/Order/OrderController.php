@@ -85,6 +85,15 @@ class OrderController extends FrameworkBundleAdminController
         );
     }
 
+    //@todo: wip
+    public function createAction()
+    {
+        return $this->render('@PrestaShop/Admin/Sell/Order/Order/create.html.twig', [
+            'currencies' => \Currency::getCurrenciesByIdShop(\Context::getContext()->shop->id),
+            'languages' => \Language::getLanguages(true, \Context::getContext()->shop->id),
+        ]);
+    }
+
     /**
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
      *

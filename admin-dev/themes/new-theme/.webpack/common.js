@@ -83,6 +83,7 @@ module.exports = {
     error: './js/pages/error',
     monitoring: './js/pages/monitoring',
     order: './js/pages/order',
+    order_create: './js/pages/order/create.js',
     catalog_price_rule: './js/pages/catalog-price-rule',
   },
   output: {
