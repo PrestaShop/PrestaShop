@@ -30,15 +30,6 @@ import addressFormMap from "./address-form-map";
  */
 export default class CustomerAddressForm {
   constructor() {
-    this.countrySelect = addressFormMap.countrySelect;
-    this.stateSelect = addressFormMap.stateSelect;
-    this.stateFormRowSelect = addressFormMap.stateFormRowSelect;
-    this.emailInput = addressFormMap.customerEmail;
-
-    this.firstName = addressFormMap.firstName;
-    this.lastName = addressFormMap.lastName;
-    this.company = addressFormMap.company;
-
     this._initEvents();
 
     return {};
@@ -50,11 +41,8 @@ export default class CustomerAddressForm {
    * @private
    */
   _initEvents() {
-    const $countryDropdown = $(this.countrySelect);
-    const $emailInput = $(this.emailInput);
-
-    $countryDropdown.on('change', () => this._handleCountryChange());
-    $emailInput.on('blur', (event) => this._handleEmailChange(event));
+    $(addressFormMap.countrySelect).on('change', () => this._handleCountryChange());
+    $(addressFormMap.customerEmail).on('blur', (event) => this._handleEmailChange(event));
   }
 
   /**
@@ -63,38 +51,65 @@ export default class CustomerAddressForm {
    * @private
    */
   _handleCountryChange() {
-    const countryDropdown = $(this.countrySelect);
-    const getCountryStateUrl = countryDropdown.data('states-url');
-    const stateDropdown = $(this.stateSelect);
-    const stateFormRowSelect = $(this.stateFormRowSelect);
+    const $countryDropdown = $(addressFormMap.countrySelect);
+    const getCountryStateUrl = $countryDropdown.data('states-url');
+
+    if ($countryDropdown.val() === '') {
+      this._hideStateSelect();
+
+      return;
+    }
 
     $.ajax({
       url: getCountryStateUrl,
       method: 'GET',
       dataType: 'json',
       data: {
-        id_country: countryDropdown.val(),
+        id_country: $countryDropdown.val(),
       }
     }).then((response) => {
       if (response.states.length === 0) {
-        stateFormRowSelect.fadeOut();
-        stateDropdown.attr('disabled', 'disabled');
+        this._hideStateSelect();
 
         return;
       }
 
-      stateDropdown.removeAttr('disabled');
-      stateFormRowSelect.fadeIn();
-
-      stateDropdown.empty();
-      stateDropdown.append($('<option></option>').attr('value', 0).text('-'));
-      $.each(response.states, function (index, value) {
-        stateDropdown.append($('<option></option>').attr('value', value).text(index));
-      });
+      this._showStateSelect(response);
     }).catch((response) => {
       if (typeof response.responseJSON !== 'undefined') {
         showErrorMessage(response.responseJSON.message);
       }
+    });
+  }
+
+  /**
+   * Hides and disables state select
+   *
+   * @private
+   */
+  _hideStateSelect() {
+    $(addressFormMap.stateFormRowSelect).fadeOut();
+    $(addressFormMap.stateSelect).attr('disabled', 'disabled');
+  }
+
+  /**
+   * Shows, enables and fills state select with data
+   *
+   * @param data
+   *
+   * @private
+   */
+  _showStateSelect(data) {
+    const $stateDropdown = $(addressFormMap.stateSelect);
+    const $stateFormRowSelect = $(addressFormMap.stateFormRowSelect);
+
+    $stateDropdown.removeAttr('disabled');
+    $stateFormRowSelect.fadeIn();
+
+    $stateDropdown.empty();
+    $stateDropdown.append($('<option></option>').attr('value', '').text('-'));
+    $.each(data.states, function (index, value) {
+      $stateDropdown.append($('<option></option>').attr('value', value).text(index));
     });
   }
 
@@ -109,8 +124,9 @@ export default class CustomerAddressForm {
     const emailInput = $(event.target);
     const getFillCustomerDataUrl = emailInput.data('customer-information-url');
     const email = emailInput.val();
+    const minEmailSymbolsForEmailRequest = 5;
 
-    if (email.length > 5) {
+    if (email.length > minEmailSymbolsForEmailRequest) {
       $.ajax({
         url: getFillCustomerDataUrl,
         data: {
@@ -131,15 +147,11 @@ export default class CustomerAddressForm {
    * @private
    */
   _setCustomerInformation(data) {
-    const firstNameSelector = $(this.firstName);
-    const lastNameSelector = $(this.lastName);
-    const companySelector = $(this.company);
+    $(addressFormMap.firstName).val(data.first_name);
+    $(addressFormMap.lastName).val(data.last_name);
 
-    firstNameSelector.val(data.first_name);
-    lastNameSelector.val(data.last_name);
-
-    if (0 > data.company.length) {
-      companySelector.val(data.company);
+    if (data.company !== null && data.company.length > 0) {
+      $(addressFormMap.company).val(data.company);
     }
   }
 }
