@@ -71,6 +71,15 @@ class CustomerNameValidatorTest extends ConstraintValidatorTestCase
         ];
     }
 
+    public function testIfFailsWhenInputIsOnlyBlank()
+    {
+        $this->validator->validate(' ', new CustomerName());
+
+        $this->buildViolation((new CustomerName())->message)
+            ->assertRaised()
+        ;
+    }
+
     /**
      * @dataProvider getInvalidCharacters
      *
