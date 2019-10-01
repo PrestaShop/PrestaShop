@@ -85,7 +85,7 @@ class ProductAssemblerCore
                 LEFT JOIN {$prefix}stock_available sa
 			        ON sa.id_product = p.id_product 
 			        AND sa.id_shop = $idShop
-			    WHERE p.id_product = $idProduct";
+			    WHERE p.id_product = $idProduct LIMIT 1";
 
         $rows = Db::getInstance()->executeS($sql);
         if ($rows === false) {
