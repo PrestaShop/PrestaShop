@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Customer\QueryHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForAddressCreation;
-use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\AddressCreationCustomer;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\AddressCreationCustomerInformation;
 
 /**
  * Defines contract for customer by email search handler
@@ -37,7 +37,7 @@ interface GetCustomerForAddressCreationHandlerInterface
     /**
      * @param GetCustomerForAddressCreation $query
      *
-     * @return AddressCreationCustomer
+     * @return AddressCreationCustomerInformation
      */
-    public function handle(GetCustomerForAddressCreation $query): AddressCreationCustomer;
+    public function handle(GetCustomerForAddressCreation $query): AddressCreationCustomerInformation;
 }

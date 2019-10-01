@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Address\QueryResult;
 use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
+use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
 
 /**
@@ -77,52 +78,52 @@ class EditableCustomerAddress
     private $city;
 
     /**
-     * @var string
-     */
-    private $postCode;
-
-    /**
      * @var CountryId
      */
     private $countryId;
 
     /**
-     * @var string
+     * @var string|null
+     */
+    private $postCode;
+
+    /**
+     * @var string|null
      */
     private $idNumber;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $company;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $vatNumber;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $address2;
 
     /**
-     * @var StateId
+     * @var StateId|null
      */
     private $stateId;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $homePhone;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $mobilePhone;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $other;
 
@@ -135,16 +136,7 @@ class EditableCustomerAddress
      * @param string $lastName
      * @param string $address
      * @param string $city
-     * @param string $postCode
      * @param CountryId $countryId
-     * @param string $idNumber
-     * @param string $company
-     * @param string $vatNumber
-     * @param string $address2
-     * @param StateId $stateId
-     * @param string $homePhone
-     * @param string $mobilePhone
-     * @param string $other
      */
     public function __construct(
         AddressId $addressId,
@@ -155,16 +147,7 @@ class EditableCustomerAddress
         string $lastName,
         string $address,
         string $city,
-        string $postCode,
-        CountryId $countryId,
-        string $idNumber,
-        string $company,
-        string $vatNumber,
-        string $address2,
-        StateId $stateId,
-        string $homePhone,
-        string $mobilePhone,
-        string $other
+        CountryId $countryId
     ) {
         $this->addressId = $addressId;
         $this->customerId = $customerId;
@@ -174,16 +157,7 @@ class EditableCustomerAddress
         $this->lastName = $lastName;
         $this->address = $address;
         $this->city = $city;
-        $this->postCode = $postCode;
         $this->countryId = $countryId;
-        $this->idNumber = $idNumber;
-        $this->company = $company;
-        $this->vatNumber = $vatNumber;
-        $this->address2 = $address2;
-        $this->stateId = $stateId;
-        $this->homePhone = $homePhone;
-        $this->mobilePhone = $mobilePhone;
-        $this->other = $other;
     }
 
     /**
@@ -251,14 +225,6 @@ class EditableCustomerAddress
     }
 
     /**
-     * @return string
-     */
-    public function getPostCode(): string
-    {
-        return $this->postCode;
-    }
-
-    /**
      * @return CountryId
      */
     public function getCountryId(): CountryId
@@ -267,66 +233,184 @@ class EditableCustomerAddress
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getIdNumber(): string
+    public function getPostCode(): ?string
+    {
+        return $this->postCode;
+    }
+
+    /**
+     * @param string $postCode
+     *
+     * @return EditableCustomerAddress
+     */
+    public function setPostCode(string $postCode): EditableCustomerAddress
+    {
+        $this->postCode = $postCode;
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getIdNumber(): ?string
     {
         return $this->idNumber;
     }
 
     /**
-     * @return string
+     * @param string $idNumber
+     *
+     * @return EditableCustomerAddress
      */
-    public function getCompany(): string
+    public function setIdNumber(string $idNumber): EditableCustomerAddress
+    {
+        $this->idNumber = $idNumber;
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getCompany(): ?string
     {
         return $this->company;
     }
 
     /**
-     * @return string
+     * @param string $company
+     *
+     * @return EditableCustomerAddress
      */
-    public function getVatNumber(): string
+    public function setCompany(string $company): EditableCustomerAddress
+    {
+        $this->company = $company;
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getVatNumber(): ?string
     {
         return $this->vatNumber;
     }
 
     /**
-     * @return string
+     * @param string $vatNumber
+     *
+     * @return EditableCustomerAddress
      */
-    public function getAddress2(): string
+    public function setVatNumber(string $vatNumber): EditableCustomerAddress
+    {
+        $this->vatNumber = $vatNumber;
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getAddress2(): ?string
     {
         return $this->address2;
     }
 
     /**
-     * @return StateId
+     * @param string $address2
+     *
+     * @return EditableCustomerAddress
      */
-    public function getStateId(): StateId
+    public function setAddress2(string $address2): EditableCustomerAddress
+    {
+        $this->address2 = $address2;
+
+        return $this;
+    }
+
+    /**
+     * @return StateId|null
+     */
+    public function getStateId(): ?StateId
     {
         return $this->stateId;
     }
 
     /**
-     * @return string
+     * @param string $stateId
+     *
+     * @return EditableCustomerAddress
+     *
+     * @throws StateConstraintException
      */
-    public function getHomePhone(): string
+    public function setStateId(string $stateId): EditableCustomerAddress
+    {
+        $this->stateId = new StateId($stateId);
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getHomePhone(): ?string
     {
         return $this->homePhone;
     }
 
     /**
-     * @return string
+     * @param string $homePhone
+     *
+     * @return EditableCustomerAddress
      */
-    public function getMobilePhone(): string
+    public function setHomePhone(string $homePhone): EditableCustomerAddress
+    {
+        $this->homePhone = $homePhone;
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getMobilePhone(): ?string
     {
         return $this->mobilePhone;
     }
 
     /**
-     * @return string
+     * @param string $mobilePhone
+     *
+     * @return EditableCustomerAddress
      */
-    public function getOther(): string
+    public function setMobilePhone(string $mobilePhone): EditableCustomerAddress
+    {
+        $this->mobilePhone = $mobilePhone;
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getOther(): ?string
     {
         return $this->other;
+    }
+
+    /**
+     * @param string $other
+     *
+     * @return EditableCustomerAddress
+     */
+    public function setOther(string $other): EditableCustomerAddress
+    {
+        $this->other = $other;
+
+        return $this;
     }
 }

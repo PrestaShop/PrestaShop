@@ -35,9 +35,6 @@ use PrestaShop\PrestaShop\Core\Domain\Address\Exception\CannotAddAddressExceptio
 use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
 use PrestaShopException;
 
-/**
- * Handles creation of customer address
- */
 final class AddCustomerAddressHandler implements AddCustomerAddressHandlerInterface
 {
     /**
@@ -78,7 +75,7 @@ final class AddCustomerAddressHandler implements AddCustomerAddressHandlerInterf
      *
      * @return Address
      */
-    private function createAddressFromCommand(AddCustomerAddressCommand $command)
+    private function createAddressFromCommand(AddCustomerAddressCommand $command): Address
     {
         $address = new Address();
 
