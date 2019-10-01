@@ -262,7 +262,7 @@ class OrderController extends FrameworkBundleAdminController
             'addOrderCartRuleForm' => $addOrderCartRuleForm->createView(),
             'updateOrderStatusForm' => $updateOrderStatusForm->createView(),
             'addOrderPaymentForm' => $addOrderPaymentForm->createView(),
-            'changeOrderCurrencyForm' => $changeOrderCurrencyForm->createView()
+            'changeOrderCurrencyForm' => $changeOrderCurrencyForm->createView(),
         ]);
     }
 
