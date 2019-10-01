@@ -32,7 +32,7 @@
 
   <div class="card-body">
     {% if orderForViewing.payments.amountToPay and orderForViewing.payments.paidAmount %}
-      <div class="alert alert-danger" role="alert">
+      <div class="alert alert-danger mb-0" role="alert">
         <p class="alert-text">
           {{ 'Warning'|trans({}, 'Admin.Global') }}
           <strong>{{ orderForViewing.payments.paidAmount }}</strong>
@@ -62,12 +62,12 @@
           <td>{{ payment.amount }}</td>
           <td>{% if payment.invoiceNumber %}{{ payment.invoiceNumber }}{% endif %}</td>
           <td class="text-right">
-            <button class="btn btn-sm btn-outline-secondary">
+            <button class="btn btn-sm btn-outline-secondary js-payment-details-btn">
               {{ 'Details'|trans({}, 'Admin.Global') }}
             </button>
           </td>
         </tr>
-        <tr>
+        <tr class="d-none">
           <td colspan="6">
             <p class="mb-0">
               <strong>{{ 'Card number'|trans({}, 'Admin.Global') }}</strong>
