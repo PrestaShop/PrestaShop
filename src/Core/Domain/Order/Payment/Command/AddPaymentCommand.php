@@ -30,7 +30,6 @@ use DateTimeImmutable;
 use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 
 /**
@@ -142,9 +141,6 @@ class AddPaymentCommand
         return $this->paymentCurrencyId;
     }
 
-    /**
-     * @return null
-     */
     public function getOrderInvoiceId()
     {
         return $this->orderInvoiceId;
