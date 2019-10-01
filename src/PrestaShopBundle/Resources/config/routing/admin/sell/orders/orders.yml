@@ -89,3 +89,11 @@ admin_orders_duplicate_cart:
     orderId: \d+
   options:
     expose: true
+
+admin_orders_change_currency:
+  path: /{orderId}/change-currency
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:changeCurrency
+  requirements:
+    orderId: \d+
