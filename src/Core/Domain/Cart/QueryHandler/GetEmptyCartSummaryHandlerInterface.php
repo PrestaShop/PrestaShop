@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -24,33 +24,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Cart\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Cart\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetEmptyCartSummary;
+use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\EmptyCartSummary;
 
-/**
- * Creates empty cart for given customer.
- */
-class CreateEmptyCustomerCartCommand
+interface GetEmptyCartSummaryHandlerInterface
 {
-    /**
-     * @var CustomerId
-     */
-    private $customerId;
-
-    /**
-     * @param int $customerId Customer for which cart is being created
-     */
-    public function __construct($customerId)
-    {
-        $this->customerId = new CustomerId($customerId);
-    }
-
-    /**
-     * @return CustomerId
-     */
-    public function getCustomerId()
-    {
-        return $this->customerId;
-    }
+    public function handle(GetEmptyCartSummary $query): EmptyCartSummary;
 }

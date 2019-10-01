@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -28,10 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Cart\Query;
 
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 
-/**
- * Gets cart summary for cart in Back Office.
- */
-class GetCartSummary
+class GetEmptyCartSummary
 {
     /**
      * @var CartId

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -24,33 +24,49 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Cart\Command;
+namespace PrestaShop\PrestaShop\Adapter\Cart;
 
-use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
+use Cart;
+use Context;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
+use PrestaShopException;
 
 /**
- * Creates empty cart for given customer.
+ * Adapter service for setting context cart
  */
-class CreateEmptyCustomerCartCommand
+final class ContextCartSetter
 {
     /**
-     * @var CustomerId
+     * @var Context
      */
-    private $customerId;
+    private $context;
 
     /**
-     * @param int $customerId Customer for which cart is being created
+     * @param Context $context
      */
-    public function __construct($customerId)
+    public function __construct(Context $context)
     {
-        $this->customerId = new CustomerId($customerId);
+        $this->context = $context;
     }
 
-    /**
-     * @return CustomerId
-     */
-    public function getCustomerId()
+    public function setContextCart(int $cartId)
     {
-        return $this->customerId;
+        try {
+            $cart = new Cart($cartId);
+
+            if (false === $cart) {
+                throw new CartNotFoundException(
+                    sprintf('Cart with id "%s" was not found', $cartId)
+                );
+            }
+        } catch (PrestaShopException $e) {
+            throw new CartException(sprintf(
+                'An error occurred while trying to load cart with id "%s"',
+                $cartId
+            ));
+        }
+
+        $this->context->cart = $cart;
     }
 }

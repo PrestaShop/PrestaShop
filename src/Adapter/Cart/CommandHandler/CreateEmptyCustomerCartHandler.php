@@ -54,7 +54,7 @@ final class CreateEmptyCustomerCartHandler implements CreateEmptyCustomerCartHan
         $cart->id_customer = $customer->id;
         $cart->secure_key = $customer->secure_key;
 
-        $cart->id_shop = $command->getShopId()->getValue();
+        $cart->id_shop = $customer->id_shop;
         $cart->id_lang = (int) Configuration::get('PS_LANG_DEFAULT');
         $cart->id_currency = (int) Configuration::get('PS_CURRENCY_DEFAULT');
 

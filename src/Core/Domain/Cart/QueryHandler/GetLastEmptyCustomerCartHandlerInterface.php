@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -26,18 +26,18 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Cart\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartSummary;
-use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartSummary;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetLastEmptyCustomerCart;
+use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 
 /**
- * Interface for service that retrieves cart summary.
+ * Interface for handling GetLastEmptyCustomerCart query
  */
-interface GetCartSummaryHandlerInterface
+interface GetLastEmptyCustomerCartHandlerInterface
 {
     /**
-     * @param GetCartSummary $query
+     * @param GetLastEmptyCustomerCart $query
      *
-     * @return CartSummary
+     * @return CartId
      */
-    public function handle(GetCartSummary $query);
+    public function handle(GetLastEmptyCustomerCart $query): CartId;
 }

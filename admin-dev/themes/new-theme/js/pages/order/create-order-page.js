@@ -88,15 +88,15 @@ export default class CreateOrderPage {
     $.ajax(this.$container.data('last-empty-cart-url'), {
       method: 'POST',
       data: {
-        id_customer: this.data.customer_id,
+        customer_id: this.data.customer_id,
       },
       dataType: 'json',
     }).then((response) => {
       this.data.cart_id = response.cart.id_cart;
 
       const checkoutHistory = {
-        carts: typeof response.carts !== 'undefined' ? response.carts : [],
-        orders: typeof response.orders !== 'undefined' ? response.orders : [],
+        carts: response.carts,
+        orders: response.orders,
       };
 
       this._renderCheckoutHistory(checkoutHistory);

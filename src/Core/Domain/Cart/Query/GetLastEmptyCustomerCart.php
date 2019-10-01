@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -24,14 +24,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Cart\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Cart\Query;
 
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 
 /**
- * Creates empty cart for given customer.
+ * Query for retrieving last empty cart for customer
  */
-class CreateEmptyCustomerCartCommand
+class GetLastEmptyCustomerCart
 {
     /**
      * @var CustomerId
@@ -39,9 +39,9 @@ class CreateEmptyCustomerCartCommand
     private $customerId;
 
     /**
-     * @param int $customerId Customer for which cart is being created
+     * @param int $customerId
      */
-    public function __construct($customerId)
+    public function __construct(int $customerId)
     {
         $this->customerId = new CustomerId($customerId);
     }
@@ -49,7 +49,7 @@ class CreateEmptyCustomerCartCommand
     /**
      * @return CustomerId
      */
-    public function getCustomerId()
+    public function getCustomerId(): CustomerId
     {
         return $this->customerId;
     }

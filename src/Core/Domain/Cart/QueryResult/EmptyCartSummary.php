@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -26,17 +26,22 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult;
 
-class CartSummary
+class EmptyCartSummary
 {
     /**
      * @var array
      */
-    private $summary;
+    private $carts;
 
     /**
      * @var array
      */
-    private $deliveryOptions;
+    private $orders;
+
+    /**
+     * @var array
+     */
+    private $cart;
 
     /**
      * @var array
@@ -44,50 +49,42 @@ class CartSummary
     private $addresses;
 
     /**
-     * @var bool
-     */
-    private $isFreeShipping;
-
-    /**
-     * @var string
-     */
-    private $orderMessage;
-
-    /**
-     * @param array $summary
-     * @param array $deliveryOptions
+     * EmptyCartSummary constructor.
+     * @param array $carts
+     * @param array $orders
+     * @param array $cart
      * @param array $addresses
-     * @param bool $isFreeShipping
-     * @param string $orderMessage
      */
-    public function __construct(
-        array $summary,
-        array $deliveryOptions,
-        array $addresses,
-        $isFreeShipping,
-        $orderMessage
-    ) {
-        $this->summary = $summary;
-        $this->deliveryOptions = $deliveryOptions;
+    public function __construct(array $carts, array $orders, array $cart, array $addresses)
+    {
+        $this->carts = $carts;
+        $this->orders = $orders;
+        $this->cart = $cart;
         $this->addresses = $addresses;
-        $this->isFreeShipping = $isFreeShipping;
-        $this->orderMessage = $orderMessage;
     }
 
     /**
      * @return array
      */
-    public function getSummary(): array
+    public function getCarts(): array
     {
-        return $this->summary;
+        return $this->carts;
     }
 
     /**
      * @return array
      */
-    public function getDeliveryOptions(): array
+    public function getOrders(): array
     {
-        return $this->deliveryOptions;
+        return $this->orders;
+    }
+
+    /**
+     * @return array
+     */
+    public function getCart(): array
+    {
+        return $this->cart;
     }
 
     /**
@@ -96,21 +93,5 @@ class CartSummary
     public function getAddresses(): array
     {
         return $this->addresses;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isFreeShipping(): bool
-    {
-        return $this->isFreeShipping;
-    }
-
-    /**
-     * @return string
-     */
-    public function getOrderMessage(): string
-    {
-        return $this->orderMessage;
     }
 }
