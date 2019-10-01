@@ -102,6 +102,7 @@ abstract class AbstractAttachmentHandler
 
     /**
      * @param Attachment $attachment
+     *
      * @throws AttachmentConstraintException
      * @throws PrestaShopException
      */
