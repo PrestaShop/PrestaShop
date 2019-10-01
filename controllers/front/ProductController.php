@@ -31,7 +31,6 @@ use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Core\Product\ProductExtraContentFinder;
 use PrestaShop\PrestaShop\Core\Product\ProductInterface;
-use PrestaShop\PrestaShop\Core\SpecificPrice\SpecificPriceFormatter;
 
 class ProductControllerCore extends ProductPresentingFrontControllerCore
 {

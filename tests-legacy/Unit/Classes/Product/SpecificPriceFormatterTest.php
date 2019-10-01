@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace LegacyTests\Unit\Core\SpecificPrice;
+namespace LegacyTests\Unit\Classes\Product\SpecificPrice;
 
 use Context;
 use Currency;
@@ -33,8 +33,8 @@ use LegacyTests\Unit\ContextMocker;
 use LocalizationPack;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShopBundle\Cache\LocalizationWarmer;
+use SpecificPriceFormatter;
 use Tests\TestCase\SymfonyIntegrationTestCase;
-use PrestaShop\PrestaShop\Core\SpecificPrice\SpecificPriceFormatter;
 
 class SpecificPriceFormatterTest extends SymfonyIntegrationTestCase
 {
