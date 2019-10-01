@@ -132,7 +132,7 @@
       </tbody>
     </table>
 
-    {% if not orderForViewing.valid %}
+    {% if not orderForViewing.valid and changeOrderCurrencyForm.new_currency_id.vars.choices|length %}
       {{ form_start(changeOrderCurrencyForm, {'action': path('admin_orders_change_currency', {'orderId': orderForViewing.id})}) }}
         <div class="form-group row">
           <label class="form-control-label">{{ 'Change currency'|trans({}, 'Admin.Orderscustomers.Feature') }}</label>
