@@ -930,3 +930,10 @@ services:
         - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
       tags:
         - { name: form.type }
+
+    form.type.order.change_order_currency:
+      class: 'PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrderCurrencyType'
+      arguments:
+        - '@prestashop.core.form.choice_provider.currency_by_id'
+      tags:
+        - { name: form.type }

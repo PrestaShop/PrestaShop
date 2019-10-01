@@ -133,21 +133,27 @@
     </table>
 
     {% if not orderForViewing.valid %}
-      <form action="" class="form-horizontal">
+      {{ form_start(changeOrderCurrencyForm, {'action': path('admin_orders_change_currency', {'orderId': orderForViewing.id})}) }}
         <div class="form-group row">
           <label class="form-control-label">{{ 'Change currency'|trans({}, 'Admin.Orderscustomers.Feature') }}</label>
           <div class="col-sm">
             <div class="input-group">
-              <select name="" id="" class="form-control custom-select">
-                <option value="1">EUR</option>
-              </select>
-              <button class="btn btn-outline-primary btn-sm">
+              {{ form_widget(changeOrderCurrencyForm.new_currency_id) }}
+              <button class="btn btn-outline-secondary btn-sm ml-2">
                 {{ 'Change'|trans({}, 'Admin.Orderscustomers.Feature') }}
               </button>
             </div>
+
+            <div class="d-none">
+              {{ form_rest(changeOrderCurrencyForm) }}
+            </div>
+
+            <small class="text-muted">
+              {{ 'Do not forget to update your exchange rate before making this change.'|trans({}, 'Admin.Orderscustomers.Help') }}
+            </small>
           </div>
         </div>
-      </form>
+      {{ form_end(changeOrderCurrencyForm) }}
     {% endif %}
   </div>
 </div>
