@@ -33,7 +33,6 @@ $(() => {
   function handlePaymentDetailsToggle() {
     $(OrderViewPageMap.orderPaymentDetailsBtn).on('click', (event) => {
       const $paymentDetailRow = $(event.currentTarget).closest('tr').next(':first');
-      console.log($paymentDetailRow);
 
       if ($paymentDetailRow.hasClass('d-none')) {
         $paymentDetailRow.removeClass('d-none');
