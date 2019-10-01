@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 /**
  * Provides customer data for address creation
  */
-class AddressCreationCustomer
+class AddressCreationCustomerInformation
 {
     /**
      * @var CustomerId
@@ -49,7 +49,7 @@ class AddressCreationCustomer
     private $lastName;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $company;
 
@@ -57,14 +57,12 @@ class AddressCreationCustomer
      * @param int $customerId
      * @param string $firstName
      * @param string $lastName
-     * @param string $company
      */
-    public function __construct(int $customerId, string $firstName, string $lastName, string $company)
+    public function __construct(int $customerId, string $firstName, string $lastName)
     {
         $this->customerId = new CustomerId($customerId);
         $this->firstName = $firstName;
         $this->lastName = $lastName;
-        $this->company = $company;
     }
 
     /**
@@ -92,10 +90,22 @@ class AddressCreationCustomer
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getCompany(): string
+    public function getCompany(): ?string
     {
         return $this->company;
+    }
+
+    /**
+     * @param string $company
+     *
+     * @return AddressCreationCustomerInformation
+     */
+    public function setCompany(string $company): AddressCreationCustomerInformation
+    {
+        $this->company = $company;
+
+        return $this;
     }
 }

@@ -50,7 +50,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerByEmailNotFound
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForAddressCreation;
-use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\AddressCreationCustomer;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\AddressCreationCustomerInformation;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateConstraintException;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Address\RequiredFieldsAddressType;
@@ -60,10 +60,6 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
 
 /**
  * Class manages "Sell > Customers > Addresses" page.
@@ -371,11 +367,10 @@ class AddressController extends FrameworkBundleAdminController
         try {
             $email = $request->query->get('email');
 
-            /** @var AddressCreationCustomer $customerInformation */
+            /** @var AddressCreationCustomerInformation $customerInformation */
             $customerInformation = $this->getQueryBus()->handle(new GetCustomerForAddressCreation($email));
 
-            $normalizer = new ObjectNormalizer(null, new CamelCaseToSnakeCaseNameConverter());
-            $serializer = new Serializer([$normalizer], ['json' => new JsonEncoder()]);
+            $serializer = $this->get('prestashop.bundle.snake_case_serializer_json');
 
             return new Response($serializer->serialize($customerInformation, 'json'));
         } catch (Exception $e) {
@@ -386,7 +381,7 @@ class AddressController extends FrameworkBundleAdminController
             }
 
             return $this->json([
-                'message' => $this->getErrorMessageForException($e, []),
+                'message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e)),
             ],
                 $code
             );
