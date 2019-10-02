@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -59,6 +59,7 @@ class PreferencesConfiguration implements DataConfigurationInterface
             'price_round_type' => $this->configuration->get('PS_ROUND_TYPE'),
             'price_display_precision' => $this->configuration->get('PS_PRICE_DISPLAY_PRECISION'),
             'display_suppliers' => $this->configuration->getBoolean('PS_DISPLAY_SUPPLIERS'),
+            'display_manufacturers' => $this->configuration->getBoolean('PS_DISPLAY_MANUFACTURERS'),
             'display_best_sellers' => $this->configuration->getBoolean('PS_DISPLAY_BEST_SELLERS'),
             'multishop_feature_active' => $this->configuration->getBoolean('PS_MULTISHOP_FEATURE_ACTIVE'),
             'shop_activity' => $this->configuration->get('PS_SHOP_ACTIVITY'),
@@ -80,6 +81,7 @@ class PreferencesConfiguration implements DataConfigurationInterface
             $this->configuration->set('PS_ROUND_TYPE', $configuration['price_round_type']);
             $this->configuration->set('PS_PRICE_DISPLAY_PRECISION', $configuration['price_display_precision']);
             $this->configuration->set('PS_DISPLAY_SUPPLIERS', $configuration['display_suppliers']);
+            $this->configuration->set('PS_DISPLAY_MANUFACTURERS', $configuration['display_manufacturers']);
             $this->configuration->set('PS_DISPLAY_BEST_SELLERS', $configuration['display_best_sellers']);
             $this->configuration->set('PS_MULTISHOP_FEATURE_ACTIVE', $configuration['multishop_feature_active']);
             $this->configuration->set('PS_SHOP_ACTIVITY', $configuration['shop_activity']);
@@ -103,6 +105,7 @@ class PreferencesConfiguration implements DataConfigurationInterface
             $configuration['price_round_type'],
             $configuration['price_display_precision'],
             $configuration['display_suppliers'],
+            $configuration['display_manufacturers'],
             $configuration['display_best_sellers'],
             $configuration['multishop_feature_active']
         );

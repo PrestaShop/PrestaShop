@@ -1,5 +1,5 @@
 {#**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -332,17 +332,17 @@
 {%- endblock translate_textarea_widget %}
 
 {% block date_picker_widget %}
-    {% spaceless %}
-        {%  set attr = attr|merge({'class': ((attr.class|default('') ~ ' datepicker')|trim)}) %}
-        <div class="input-group datepicker">
-            <input type="text" class="form-control" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
-            <div class="input-group-append">
-                <div class="input-group-text">
-                    <i class="material-icons">date_range</i>
-                </div>
-            </div>
+  {% spaceless %}
+    {%  set attr = attr|merge({'class': ((attr.class|default('') ~ ' datepicker')|trim)}) %}
+    <div class="input-group datepicker">
+      <input type="text" class="form-control" data-format="{{ date_format }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
+      <div class="input-group-append">
+        <div class="input-group-text">
+          <i class="material-icons">date_range</i>
         </div>
-    {% endspaceless %}
+      </div>
+    </div>
+  {% endspaceless %}
 {% endblock date_picker_widget %}
 
 {% block date_range_widget %}
@@ -659,6 +659,9 @@
         <button class="btn btn-outline-secondary dropdown-toggle js-locale-btn"
                 type="button"
                 data-toggle="dropdown"
+                {% if change_form_language_url is defined %}
+                  data-change-language-url="{{ form.vars.change_form_language_url }}"
+                {% endif %}
                 aria-haspopup="true"
                 aria-expanded="false"
                 id="{{ form.vars.id }}"
@@ -701,6 +704,11 @@
 {% endblock birthday_widget %}
 
 {% block file_widget %}
+  <style>
+    .custom-file-label:after {
+      content: "{{ "Browse"|trans({}, 'Admin.Actions')  }}";
+    }
+  </style>
   <div class="custom-file">
     {% set attr = attr|merge({
       class: (attr.class|default('') ~ ' custom-file-input')|trim,
@@ -780,3 +788,13 @@
     </em>
   </small>
 {% endblock text_with_recommended_length_widget %}
+
+{% block integer_min_max_filter_widget %}
+  {{ form_widget(form['min_field'], { attr: {class: 'min-field'}}) }}
+  {{ form_widget(form['max_field'], { attr: {class: 'max-field'}}) }}
+{% endblock %}
+
+{% block number_min_max_filter_widget %}
+  {{ form_widget(form['min_field'], { attr: {class: 'min-field'}}) }}
+  {{ form_widget(form['max_field'], { attr: {class: 'max-field'}}) }}
+{% endblock %}

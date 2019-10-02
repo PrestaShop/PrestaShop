@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -31,34 +31,18 @@ namespace PrestaShop\PrestaShop\Core\Domain\Supplier\Exception;
  */
 class CannotDeleteSupplierException extends SupplierException
 {
+    /**
+     * When fails to delete supplier due to existing pending orders of that supplier
+     */
     const HAS_PENDING_ORDERS = 1;
 
     /**
-     * @var int
+     * When fails to delete single supplier
      */
-    private $supplierId;
+    const FAILED_DELETE = 2;
 
     /**
-     * @param int $supplierId
-     * @param string $message
-     * @param int $code
-     * @param $previous
+     * When fails to delete supplier in bulk action
      */
-    public function __construct(
-        $supplierId,
-        $message = '',
-        $code = 0,
-        $previous = null
-    ) {
-        parent::__construct($message, $code, $previous);
-        $this->supplierId = $supplierId;
-    }
-
-    /**
-     * @return int
-     */
-    public function getSupplierId()
-    {
-        return $this->supplierId;
-    }
+    const FAILED_BULK_DELETE = 3;
 }

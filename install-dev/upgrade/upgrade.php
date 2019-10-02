@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -45,8 +45,11 @@ if (isset($_GET['adminDir']) && $_GET['adminDir'] && !defined('_PS_ADMIN_DIR_'))
     define('_PS_ADMIN_DIR_', base64_decode($_GET['adminDir']));
 }
 
-require_once dirname(__FILE__).'/../init.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
+require_once __DIR__ . '/../../config/defines.inc.php';
+require_once __DIR__ . '/../../config/autoload.php';
 Upgrade::migrateSettingsFile();
+require_once dirname(__FILE__).'/../init.php';
 require_once _PS_CONFIG_DIR_.'bootstrap.php';
 
 $logDir = _PS_ROOT_DIR_.'/var/logs/'.(_PS_MODE_DEV_ ? 'dev' : 'prod').'/';

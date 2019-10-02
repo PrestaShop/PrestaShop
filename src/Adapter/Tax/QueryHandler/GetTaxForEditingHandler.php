@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -46,8 +46,8 @@ final class GetTaxForEditingHandler extends AbstractTaxHandler implements GetTax
         return new EditableTax(
             $query->getTaxId(),
             $tax->name,
-            $tax->rate,
-            $tax->active
+            (float) $tax->rate,
+            (bool) $tax->active
         );
     }
 }

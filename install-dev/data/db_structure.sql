@@ -1979,7 +1979,7 @@ CREATE TABLE `PREFIX_search_word` (
   `id_word` int(10) unsigned NOT NULL auto_increment,
   `id_shop` int(11) unsigned NOT NULL DEFAULT 1,
   `id_lang` int(10) unsigned NOT NULL,
-  `word` varchar(15) NOT NULL,
+  `word` varchar(30) NOT NULL,
   PRIMARY KEY (`id_word`),
   UNIQUE KEY `id_lang` (`id_lang`, `id_shop`, `word`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;

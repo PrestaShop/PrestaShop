@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Form\Admin\Sell\Address;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
+use PrestaShop\PrestaShop\Core\Domain\Address\AddressSettings;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -117,10 +118,10 @@ class ManufacturerAddressType extends AbstractType
                         'type' => 'name',
                     ]),
                     new Length([
-                        'max' => 255,
+                        'max' => AddressSettings::MAX_NAME_LENGTH,
                         'maxMessage' => $this->translator->trans(
                             'This field cannot be longer than %limit% characters',
-                            ['%limit%' => 255],
+                            ['%limit%' => AddressSettings::MAX_NAME_LENGTH],
                             'Admin.Notifications.Error'
                         ),
                     ]),
@@ -137,10 +138,10 @@ class ManufacturerAddressType extends AbstractType
                         'type' => 'name',
                     ]),
                     new Length([
-                        'max' => 255,
+                        'max' => AddressSettings::MAX_NAME_LENGTH,
                         'maxMessage' => $this->translator->trans(
                             'This field cannot be longer than %limit% characters',
-                            ['%limit%' => 255],
+                            ['%limit%' => AddressSettings::MAX_NAME_LENGTH],
                             'Admin.Notifications.Error'
                         ),
                     ]),
@@ -152,10 +153,10 @@ class ManufacturerAddressType extends AbstractType
                         'type' => 'address',
                     ]),
                     new Length([
-                        'max' => 128,
+                        'max' => AddressSettings::MAX_ADDRESS_LENGTH,
                         'maxMessage' => $this->translator->trans(
                             'This field cannot be longer than %limit% characters',
-                            ['%limit%' => 128],
+                            ['%limit%' => AddressSettings::MAX_ADDRESS_LENGTH],
                             'Admin.Notifications.Error'
                         ),
                     ]),
@@ -168,10 +169,10 @@ class ManufacturerAddressType extends AbstractType
                         'type' => 'address',
                     ]),
                     new Length([
-                        'max' => 128,
+                        'max' => AddressSettings::MAX_ADDRESS_LENGTH,
                         'maxMessage' => $this->translator->trans(
                             'This field cannot be longer than %limit% characters',
-                            ['%limit%' => 128],
+                            ['%limit%' => AddressSettings::MAX_ADDRESS_LENGTH],
                             'Admin.Notifications.Error'
                         ),
                     ]),
@@ -184,10 +185,10 @@ class ManufacturerAddressType extends AbstractType
                         'type' => 'post_code',
                     ]),
                     new Length([
-                        'max' => 12,
+                        'max' => AddressSettings::MAX_POST_CODE_LENGTH,
                         'maxMessage' => $this->translator->trans(
                             'This field cannot be longer than %limit% characters',
-                            ['%limit%' => 12],
+                            ['%limit%' => AddressSettings::MAX_POST_CODE_LENGTH],
                             'Admin.Notifications.Error'
                         ),
                     ]),
@@ -204,10 +205,10 @@ class ManufacturerAddressType extends AbstractType
                         'type' => 'city_name',
                     ]),
                     new Length([
-                        'max' => 64,
+                        'max' => AddressSettings::MAX_CITY_NAME_LENGTH,
                         'maxMessage' => $this->translator->trans(
                             'This field cannot be longer than %limit% characters',
-                            ['%limit%' => 64],
+                            ['%limit%' => AddressSettings::MAX_CITY_NAME_LENGTH],
                             'Admin.Notifications.Error'
                         ),
                     ]),
@@ -239,10 +240,10 @@ class ManufacturerAddressType extends AbstractType
                         'type' => 'phone_number',
                     ]),
                     new Length([
-                        'max' => 32,
+                        'max' => AddressSettings::MAX_PHONE_LENGTH,
                         'maxMessage' => $this->translator->trans(
                             'This field cannot be longer than %limit% characters',
-                            ['%limit%' => 32],
+                            ['%limit%' => AddressSettings::MAX_PHONE_LENGTH],
                             'Admin.Notifications.Error'
                         ),
                     ]),
@@ -255,10 +256,10 @@ class ManufacturerAddressType extends AbstractType
                         'type' => 'phone_number',
                     ]),
                     new Length([
-                        'max' => 32,
+                        'max' => AddressSettings::MAX_PHONE_LENGTH,
                         'maxMessage' => $this->translator->trans(
                             'This field cannot be longer than %limit% characters',
-                            ['%limit%' => 32],
+                            ['%limit%' => AddressSettings::MAX_PHONE_LENGTH],
                             'Admin.Notifications.Error'
                         ),
                     ]),
@@ -271,10 +272,10 @@ class ManufacturerAddressType extends AbstractType
                         'type' => 'message',
                     ]),
                     new Length([
-                        'max' => 300,
+                        'max' => AddressSettings::MAX_OTHER_LENGTH,
                         'maxMessage' => $this->translator->trans(
                             'This field cannot be longer than %limit% characters',
-                            ['%limit%' => 300],
+                            ['%limit%' => AddressSettings::MAX_OTHER_LENGTH],
                             'Admin.Notifications.Error'
                         ),
                     ]),

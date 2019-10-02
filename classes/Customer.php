@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -214,7 +214,7 @@ class CustomerCore extends ObjectModel
     /**
      * CustomerCore constructor.
      *
-     * @param null $id
+     * @param int|null $id
      */
     public function __construct($id = null)
     {

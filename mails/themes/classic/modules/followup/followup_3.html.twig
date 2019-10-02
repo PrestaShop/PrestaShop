@@ -27,7 +27,7 @@
             
 {% endif %}
             <span>
-              {{ 'As appreciation for your loyalty, we want to give you a discount of <span><strong>{amount}</strong></span>% valid on your next order! This offer is valid for <span><strong>{days}</strong></span> days, so do not waste a moment!'|trans({}, 'Emails.Body', locale)|raw }}<br/> <br/>
+              {{ 'As appreciation for your loyalty, we want to give you a discount of [1]{amount}%[/1] valid on your next order! This offer is valid for [1]{days}[/1] days, so do not waste a moment!'|trans({'[1]': '<span><strong>', '[/1]': '</strong></span>'}, 'Emails.Body', locale)|raw }}<br/> <br/>
               <span><strong>{{ 'Here is your coupon:'|trans({}, 'Emails.Body', locale)|raw }}</strong></span> {voucher_num}<br/><br/>
               {{ 'Enter this code in your shopping cart to get your discount.'|trans({}, 'Emails.Body', locale)|raw }}
             </span>

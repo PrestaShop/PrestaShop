@@ -1,0 +1,81 @@
+admin_orders_index:
+  path: /
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:index
+    _legacy_controller: AdminOrders
+
+admin_orders_create:
+  path: /new
+  methods: [GET, POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Sell\Order\Order:create
+    _legacy_controller: AdminOrders
+
+admin_orders_search:
+  path: /
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:search
+    _legacy_controller: AdminOrders
+
+admin_orders_generate_invoice_pdf:
+  path: /{orderId}/generate-invoice-pdf
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:generateInvoicePdf
+    _legacy_controller: AdminOrders
+  requirements:
+    orderId: \d+
+
+admin_orders_generate_delivery_slip_pdf:
+  path: /{orderId}/generate-delivery-slip-pdf
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:generateDeliverySlipPdf
+    _legacy_controller: AdminOrders
+  requirements:
+    orderId: \d+
+
+admin_orders_change_orders_status:
+  path: /change-orders-status
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:changeOrdersStatus
+    _legacy_controller: AdminOrders
+
+admin_orders_export:
+  path: /export
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:export
+    _legacy_controller: AdminOrders
+
+admin_orders_view:
+  path: /{orderId}/view
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:view
+
+admin_orders_add_cart_rule:
+  path: /{orderId}/cart-rules
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:addCartRule
+  requirements:
+    orderId: \d+
+
+admin_orders_update_status:
+  path: /{orderId}/status
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:updateStatus
+  requirements:
+    orderId: \d+
+
+admin_orders_add_payment:
+  path: /{orderId}/payment
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:addPayment
+  requirements:
+    orderId: \d+

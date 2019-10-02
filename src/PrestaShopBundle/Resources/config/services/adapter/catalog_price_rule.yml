@@ -1,0 +1,15 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.adapter.catalog_price_rule.command_handler.delete_catalog_price_rule_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\CatalogPriceRule\CommandHandler\DeleteCatalogPriceRuleHandler'
+    tags:
+      - name: 'tactician.handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Command\DeleteCatalogPriceRuleCommand'
+
+  prestashop.adapter.catalog_price_rule.command_handler.bulk_delete_catalog_price_rule_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\CatalogPriceRule\CommandHandler\BulkDeleteCatalogPriceRuleHandler'
+    tags:
+      - name: 'tactician.handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Command\BulkDeleteCatalogPriceRuleCommand'

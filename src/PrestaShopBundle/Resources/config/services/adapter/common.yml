@@ -18,3 +18,6 @@ services:
       class: PrestaShop\PrestaShop\Adapter\Environment
       arguments:
         - !php/const _PS_MODE_DEV_
+
+    prestashop.adapter.validate:
+      class: PrestaShop\PrestaShop\Adapter\Validate

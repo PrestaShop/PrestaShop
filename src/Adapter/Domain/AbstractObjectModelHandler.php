@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Domain;
 
 use Context;
 use Db;
+use ImageManager;
 use ObjectModel;
 use PrestaShopDatabaseException;
 use Shop;
@@ -128,5 +129,36 @@ abstract class AbstractObjectModelHandler
                 $primaryKey . '=' . $primaryKeyValue
             );
         }
+    }
+
+    /**
+     * @param string $imagePath the original image path
+     * @param int $imageId
+     * @param string $belongsTo object name to which image belongs (e.g. 'supplier', 'manufacturer')
+     *
+     * @return string
+     */
+    protected function getTmpImageTag($imagePath, $imageId, $belongsTo)
+    {
+        return ImageManager::thumbnail(
+            $imagePath,
+            $belongsTo . '_' . $imageId . '.jpg',
+            350,
+            'jpg',
+            true,
+            true
+        );
+    }
+
+    /**
+     * Calculates and returns image size in kb for provided image path. Returns null if image doesn't exist
+     *
+     * @param string $imagePath
+     *
+     * @return float|null
+     */
+    protected function getImageSize($imagePath)
+    {
+        return file_exists($imagePath) ? filesize($imagePath) / 1000 : null;
     }
 }

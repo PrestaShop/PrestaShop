@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -65,6 +65,6 @@ final class ImageTagSourceParser implements ImageTagSourceParserInterface
             return null;
         }
 
-        return sprintf('%s%s', $this->shopRootUri, $path[1]);
+        return sprintf('/%s', $path[1]);
     }
 }

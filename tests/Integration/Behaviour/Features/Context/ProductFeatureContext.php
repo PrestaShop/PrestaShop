@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -633,5 +633,17 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
         $this->checkProductWithNameExists($productName);
         $this->products[$productName]->is_virtual = 1;
         $this->products[$productName]->save();
+    }
+
+    /**
+     * @Given there is product with reference :productReference
+     */
+    public function thereIsProductOfTypeWithReference($productReference)
+    {
+        $productId = Product::getIdByReference($productReference);
+
+        if (!$productId) {
+            throw new \RuntimeException(sprintf('Product with reference "%s" does not exist.', $productReference));
+        }
     }
 }

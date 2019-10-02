@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -24,7 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 use Composer\CaBundle\CaBundle;
-use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShop\PrestaShop\Adapter\ContainerFinder;
+use PrestaShop\PrestaShop\Core\Exception\ContainerNotFoundException;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
 use PHPSQLParser\PHPSQLParser;
@@ -32,6 +33,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem as PsFileSystem;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
+use PrestaShop\PrestaShop\Core\String\CharacterCleaner;
 
 class ToolsCore
 {
@@ -480,34 +482,15 @@ class ToolsCore
      */
     public static function extractHost($url)
     {
-        if (PHP_VERSION_ID >= 50628) {
-            $parsed = parse_url($url);
-            if (!is_array($parsed)) {
-                return $url;
-            }
-            if (empty($parsed['host']) || empty($parsed['scheme'])) {
-                return '';
-            }
-
-            return $parsed['host'];
+        $parsed = parse_url($url);
+        if (!is_array($parsed)) {
+            return $url;
         }
-
-        // big workaround needed
-        // @see: https://bugs.php.net/bug.php?id=73192
-        // @see: https://3v4l.org/nFYJh
-
-        $matches = [];
-        if (!preg_match('/^[\w]+:\/\/(?<authority>[^\/?#$]+)/ui', $url, $matches)) {
-            // relative url
-            return '';
-        }
-        $authority = $matches['authority'];
-
-        if (!preg_match('/(?:(?<user>.+):(?<pass>.+)@)?(?<domain>[\w.-]+)(?::(?<port>\d+))?/ui', $authority, $matches)) {
+        if (empty($parsed['host']) || empty($parsed['scheme'])) {
             return '';
         }
 
-        return $matches['domain'];
+        return $parsed['host'];
     }
 
     /**
@@ -792,9 +775,10 @@ class ToolsCore
             return $locale;
         }
 
-        $container = isset($context->controller) ? $context->controller->getContainer() : null;
-        if (null === $container) {
-            $container = SymfonyContainer::getInstance();
+        $containerFinder = new ContainerFinder($context);
+        $container = $containerFinder->getContainer();
+        if (null === $context->container) {
+            $context->container = $container;
         }
 
         /** @var LocaleRepository $localeRepository */
@@ -3013,10 +2997,6 @@ exit;
      */
     public static function jsonEncode($data, $options = 0, $depth = 512)
     {
-        if (PHP_VERSION_ID < 50500) { /* PHP version < 5.5.0 */
-            return json_encode($data, $options);
-        }
-
         return json_encode($data, $options, $depth);
     }
 
@@ -3420,7 +3400,11 @@ exit;
     public static function clearSf2Cache($env = null)
     {
         if (null === $env) {
-            $env = _PS_MODE_DEV_ ? 'dev' : 'prod';
+            if (defined('_PS_IN_TEST_')) {
+                $env = 'test';
+            } else {
+                $env = (_PS_MODE_DEV_) ? 'dev' : 'prod';
+            }
         }
 
         $dir = _PS_ROOT_DIR_ . '/var/cache/' . $env . '/';
@@ -3771,27 +3755,33 @@ exit;
      */
     public static function arrayUnique($array)
     {
-        if (version_compare(PHP_VERSION, '5.2.9', '<')) {
-            return array_unique($array);
-        } else {
-            return array_unique($array, SORT_REGULAR);
-        }
+        return array_unique($array, SORT_REGULAR);
     }
 
     /**
      * Delete unicode class from regular expression patterns.
      *
+     * @deprecated Use PrestaShop\PrestaShop\Core\String\CharacterCleaner::cleanNonUnicodeSupport() instead
+     *
      * @param string $pattern
      *
      * @return string pattern
+     *
+     * @throws Exception
      */
     public static function cleanNonUnicodeSupport($pattern)
     {
-        if (!defined('PREG_BAD_UTF8_OFFSET')) {
-            return $pattern;
+        $context = Context::getContext();
+        $containerFinder = new ContainerFinder($context);
+        try {
+            $container = $containerFinder->getContainer();
+            $characterCleaner = $container->get('prestashop.core.string.character_cleaner');
+        } catch (ContainerNotFoundException $e) {
+            // Used when the container is not generated
+            $characterCleaner = new CharacterCleaner();
         }
 
-        return preg_replace('/\\\[px]\{[a-z]{1,2}\}|(\/[a-z]*)u([a-z]*)$/i', '$1$2', $pattern);
+        return $characterCleaner->cleanNonUnicodeSupport($pattern);
     }
 
     protected static $is_addons_up = true;

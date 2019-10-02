@@ -1,0 +1,43 @@
+<div class="card" id="shippingBlock">
+  <h3 class="card-header">
+    {{ 'Shipping'|trans({}, 'Admin.Actions') }}
+  </h3>
+  <div class="card-body">
+    <div class="row">
+      <div class="col-3">
+        <span class="float-right">
+          {{ 'Delivery option'|trans({}, 'Admin.Orderscustomers.Feature') }}
+        </span>
+      </div>
+      <div class="col-4">
+        <select class="form-control"></select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-3">
+        <span class="float-right">
+          {{ 'Shipping price (Tax incl.)'|trans({}, 'Admin.Orderscustomers.Feature') }}
+        </span>
+      </div>
+      <div class="col-4">
+        <p><strong>0</strong></p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-3">
+        <span class="float-right">
+          {{ 'Free shipping'|trans({}, 'Admin.Shipping.Feature') }}
+        </span>
+      </div>
+      <div class="col-4">
+        <span class="ps-switch">
+          <input id="form_general_enable_token_0" class="ps-switch" name="form[general][enable_token]" value="0" type="radio">
+          <label for="form_general_enable_token_0">No</label>
+          <input id="form_general_enable_token_1" class="ps-switch" name="form[general][enable_token]" value="1" checked="" type="radio">
+          <label for="form_general_enable_token_1">Yes</label>
+          <span class="slide-button"></span>
+        </span>
+      </div>
+    </div>
+  </div>
+</div>

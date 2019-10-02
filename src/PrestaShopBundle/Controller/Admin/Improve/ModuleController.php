@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -115,7 +115,6 @@ class ModuleController extends ModuleAbstractController
             ->removeStatus(AddonListFilterStatus::UNINSTALLED);
         $installedProducts = $moduleRepository->getFilteredList($filters);
         $categories = $this->getCategories($modulesProvider, $installedProducts);
-
         $bulkActions = [
             'bulk-uninstall' => $this->trans('Uninstall', 'Admin.Actions'),
             'bulk-disable' => $this->trans('Disable', 'Admin.Actions'),

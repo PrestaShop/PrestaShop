@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -82,7 +82,18 @@ class OrderControllerCore extends FrontController
         $this->bootstrap();
     }
 
-    protected function getCheckoutSession()
+    /**
+     * @return CheckoutProcess
+     */
+    public function getCheckoutProcess()
+    {
+        return $this->checkoutProcess;
+    }
+
+    /**
+     * @return CheckoutSession
+     */
+    public function getCheckoutSession()
     {
         $deliveryOptionsFinder = new DeliveryOptionsFinder(
             $this->context,

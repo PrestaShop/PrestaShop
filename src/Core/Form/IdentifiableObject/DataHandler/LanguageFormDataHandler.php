@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -101,7 +101,7 @@ final class LanguageFormDataHandler implements FormDataHandlerInterface
         }
 
         if ($data['no_picture_image'] instanceof UploadedFile) {
-            $command->setFlagImagePath($data['no_picture_image']->getPathname());
+            $command->setNoPictureImagePath($data['no_picture_image']->getPathname());
         }
 
         if (isset($data['shop_association'])) {

@@ -143,9 +143,6 @@ module.exports = {
             .then(() => client.switchWindow(1))
             .then(() => client.refresh());
         });
-        test('should click on "Attachments" tab', () => client.scrollWaitForExistAndClick(productPage.attachments_tab, 50));
-        test('should check that "description" of the file is well updated', () => client.checkTextValue(productPage.file_description, fileEditedData.description, 'equal', 1000));
-        test('should check the existence of the file(s)', () => client.checkTextValue(productPage.filename_link.replace('%N', 1), fileEditedData.filename + global.date_time));
       }
       else {
         test('should go to the Front Office', () => {
@@ -222,48 +219,6 @@ module.exports = {
           .then(() => client.isVisible(Files.empty_list, 1000))
           .then(() => client.getFilesNumber('table-attachment', 1000));
       });
-
-      if (filterBy === 'associated') {
-        test('should check "Filter file by ' + filterBy + '" (issue #9607)', () => {
-          if (global.filesNumber > 0) {
-            for (let j = 0; j < global.filesNumber; j++) {
-              promise = client.getFileInformations(Files.files_table.replace('%R', j + 1).replace('%D', index), j, false);
-            }
-            return promise
-              .then(() => client.checkFilterFile(searchValue));
-          } else {
-            return Promise.reject(new Error('No Records Found')).then(expect(global.filesNumber).to.be.at.most(0));
-          }
-        });
-      }
-
-      else if (filterBy === 'size') {
-        test('should check "Filter file by ' + filterBy + '" (issue #11054)', () => {
-          if (global.filesNumber > 0) {
-            for (let j = 0; j < global.filesNumber; j++) {
-              promise = client.getFileInformations(Files.files_table.replace('%R', j + 1).replace('%D', index), j, false);
-            }
-            return promise
-              .then(() => client.checkFilterFile(searchValue));
-          } else {
-            return Promise.reject(new Error('No Records Found')).then(expect(global.filesNumber).to.be.at.most(0));
-          }
-        });
-      }
-
-      else {
-        test('should check "Filter file by ' + filterBy + '" (issue #11054)', () => {
-          if (global.filesNumber > 0) {
-            for (let j = 0; j < global.filesNumber; j++) {
-              promise = client.getFileInformations(Files.files_table.replace('%R', j + 1).replace('%D', index), j, false);
-            }
-            return promise
-              .then(() => client.checkFilterFile(searchValue));
-          } else {
-            return Promise.reject(new Error('No Records Found')).then(expect(global.filesNumber).to.be.at.most(0));
-          }
-        });
-      }
     }, 'file');
   }
 };

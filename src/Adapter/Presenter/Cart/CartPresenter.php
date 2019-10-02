@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -486,6 +486,7 @@ class CartPresenter implements PresenterInterface
         foreach ($cartVouchers as $cartVoucher) {
             $vouchers[$cartVoucher['id_cart_rule']]['id_cart_rule'] = $cartVoucher['id_cart_rule'];
             $vouchers[$cartVoucher['id_cart_rule']]['name'] = $cartVoucher['name'];
+            $vouchers[$cartVoucher['id_cart_rule']]['code'] = $cartVoucher['code'];
             $vouchers[$cartVoucher['id_cart_rule']]['reduction_percent'] = $cartVoucher['reduction_percent'];
             $vouchers[$cartVoucher['id_cart_rule']]['reduction_currency'] = $cartVoucher['reduction_currency'];
 
@@ -505,6 +506,20 @@ class CartPresenter implements PresenterInterface
                 $cartVoucher['reduction_formatted'] = $cartVoucher['reduction_percent'] . '%';
             } elseif (isset($cartVoucher['reduction_amount']) && $cartVoucher['reduction_amount'] > 0) {
                 $value = $this->includeTaxes() ? $cartVoucher['reduction_amount'] : $cartVoucher['value_tax_exc'];
+                $currencyFrom = new \Currency($cartVoucher['reduction_currency']);
+                $currencyTo = new \Currency($cart->id_currency);
+                if ($currencyFrom->conversion_rate == 0) {
+                    $value = 0;
+                } else {
+                    // convert to default currency
+                    $defaultCurrencyId = (int) Configuration::get('PS_CURRENCY_DEFAULT');
+                    $value /= $currencyFrom->conversion_rate;
+                    if ($defaultCurrencyId == $currencyTo->id) {
+                        // convert to destination currency
+                        $value *= $currencyTo->conversion_rate;
+                    }
+                }
+                // following will do currency conversion to current one
                 $cartVoucher['reduction_formatted'] = $this->priceFormatter->convertAndFormat($value);
             }
 

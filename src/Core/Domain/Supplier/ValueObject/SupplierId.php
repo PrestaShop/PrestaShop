@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -45,7 +45,7 @@ class SupplierId
      */
     public function __construct($supplierId)
     {
-        $this->assertIsNotIntegerOrLessThanZero($supplierId);
+        $this->assertIsIntegerGreaterThanZero($supplierId);
         $this->value = $supplierId;
     }
 
@@ -62,7 +62,7 @@ class SupplierId
      *
      * @throws SupplierException
      */
-    private function assertIsNotIntegerOrLessThanZero($supplierId)
+    private function assertIsIntegerGreaterThanZero($supplierId)
     {
         if (!is_int($supplierId) || 0 >= $supplierId) {
             throw new SupplierException(

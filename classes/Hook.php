@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -602,7 +602,7 @@ class HookCore extends ObjectModel
     {
         $context = Context::getContext();
         $cache_id = self::MODULE_LIST_BY_HOOK_KEY . (isset($context->shop->id) ? '_' . $context->shop->id : '') . ((isset($context->customer)) ? '_' . $context->customer->id : '');
-        if (!Cache::isStored($cache_id) || $hook_name == 'displayPayment' || $hook_name == 'displayPaymentEU' || $hook_name == 'paymentOptions' || $hook_name == 'displayBackOfficeHeader') {
+        if (!Cache::isStored($cache_id) || $hook_name == 'displayPayment' || $hook_name == 'displayPaymentEU' || $hook_name == 'paymentOptions' || $hook_name == 'displayBackOfficeHeader' || $hook_name == 'displayAdminLogin') {
             $frontend = true;
             $groups = array();
             $use_groups = Group::isFeatureActive();
@@ -625,7 +625,7 @@ class HookCore extends ObjectModel
             $sql = new DbQuery();
             $sql->select('h.`name` as hook, m.`id_module`, h.`id_hook`, m.`name` as module');
             $sql->from('module', 'm');
-            if ($hook_name != 'displayBackOfficeHeader') {
+            if ($hook_name != 'displayBackOfficeHeader' && $hook_name != 'displayAdminLogin') {
                 $sql->join(Shop::addSqlAssociation('module', 'm', true, 'module_shop.enable_device & ' . (int) Context::getContext()->getDevice()));
                 $sql->innerJoin('module_shop', 'ms', 'ms.`id_module` = m.`id_module`');
             }
@@ -648,7 +648,7 @@ class HookCore extends ObjectModel
                     }
                 }
             }
-            if (Validate::isLoadedObject($context->shop)) {
+            if (Validate::isLoadedObject($context->shop) && $hook_name != 'displayAdminLogin') {
                 $sql->where('hm.`id_shop` = ' . (int) $context->shop->id);
             }
 
@@ -681,7 +681,7 @@ class HookCore extends ObjectModel
                     );
                 }
             }
-            if ($hook_name != 'displayPayment' && $hook_name != 'displayPaymentEU' && $hook_name != 'paymentOptions' && $hook_name != 'displayBackOfficeHeader') {
+            if ($hook_name != 'displayPayment' && $hook_name != 'displayPaymentEU' && $hook_name != 'paymentOptions' && $hook_name != 'displayBackOfficeHeader' && $hook_name != 'displayAdminLogin') {
                 Cache::store($cache_id, $list);
                 // @todo remove this in 1.6, we keep it in 1.5 for backward compatibility
                 self::$_hook_modules_cache_exec = $list;

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-define('_PS_INSTALL_VERSION_', '1.7.6.0');
+define('_PS_INSTALL_VERSION_', '1.7.7.0');
 
-define('_PS_INSTALL_MINIMUM_PHP_VERSION_ID_', 50600);
-define('_PS_INSTALL_MINIMUM_PHP_VERSION_', '5.6');
+define('_PS_INSTALL_MINIMUM_PHP_VERSION_ID_', 70103);
+define('_PS_INSTALL_MINIMUM_PHP_VERSION_', '7.1');
