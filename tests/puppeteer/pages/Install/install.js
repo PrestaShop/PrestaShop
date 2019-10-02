@@ -1,5 +1,3 @@
-// Using chai
-const {expect} = require('chai');
 // Using CommonPage
 const CommonPage = require('../commonPage');
 
@@ -68,15 +66,15 @@ module.exports = class Install extends CommonPage {
    * To check each step title
    * @param selector, where to get actual title
    * @param pageTitle, expected title
+   * @return {Promise<*>}
    */
   async checkStepTitle(selector, pageTitle) {
     await this.page.waitForSelector(selector, {visible: true});
     const title = await this.getTextContent(selector);
     if (Array.isArray(pageTitle)) {
-      const result = await pageTitle.some(arrVal => title.includes(arrVal));
-      await expect(result).to.be.true;
+      return pageTitle.some(arrVal => title.includes(arrVal));
     }
-    else await expect(title).to.contains(pageTitle);
+    return title.includes(pageTitle);
   }
 
   /**

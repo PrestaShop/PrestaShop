@@ -1,5 +1,3 @@
-// Using chai
-const {expect} = require('chai');
 // Importing page
 const BOBasePage = require('../BO/BObasePage');
 
@@ -105,7 +103,7 @@ module.exports = class Product extends BOBasePage {
       await category.querySelector('input').click();
       return true;
     }, this.filterByCategoriesCategoryLabel, value);
-    await expect(found, `${value} not found as a category`).to.be.true;
+    if (!found) throw new Error(`${value} not found as a category`);
     await this.page.waitForNavigation({waitUntil: 'networkidle0'});
   }
 

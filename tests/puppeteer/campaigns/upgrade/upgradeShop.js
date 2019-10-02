@@ -86,6 +86,8 @@ describe('Upgrade Prestashop to last Stable', async () => {
 
   it('should upgrade Prestashop', async function () {
     await this.pageObjects.autoUpgradePage.upgradePrestashop('major');
+    await expect(this.actualStepsDoneForUpgradeTable).to.include
+      .members(this.pageObjects.autoUpgradePage.expectedStepsDoneForUpgradeTable);
   });
 
   it('should reload and check that user was automatically logged out', async function () {
