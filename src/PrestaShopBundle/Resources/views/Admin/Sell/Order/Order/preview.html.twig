@@ -79,7 +79,7 @@
           <thead>
           <tr>
             {% if orderPreview.taxIncluded %}
-              {% set taxInclusion = 'Tax included'|trans({}, 'Admin.Catalog.Feature') %}
+              {% set taxInclusion = 'Tax included'|trans({}, 'Admin.Global') %}
             {% else %}
               {% set taxInclusion = 'Tax excluded'|trans({}, 'Admin.Catalog.Feature') %}
             {% endif %}
