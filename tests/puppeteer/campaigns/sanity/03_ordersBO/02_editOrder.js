@@ -51,10 +51,12 @@ describe('Edit Order BO', async () => {
     await expect(pageTitle).to.contains(this.pageObjects.orderPage.orderPageTitle);
   });
   it('should modify the product quantity and check the validation', async function () {
-    await this.pageObjects.orderPage.modifyProductQuantity('1', '5');
+    const result = await this.pageObjects.orderPage.modifyProductQuantity('1', '5');
+    await expect(result).to.be.true;
   });
   it('should modify the order status and check the validation', async function () {
-    await this.pageObjects.orderPage.modifyOrderStatus(Statuses.paymentAccepted.status);
+    const result = await this.pageObjects.orderPage.modifyOrderStatus(Statuses.paymentAccepted.status);
+    await expect(result).to.be.true;
   });
   it('should logout from the BO', async function () {
     await this.pageObjects.boBasePage.logoutBO();

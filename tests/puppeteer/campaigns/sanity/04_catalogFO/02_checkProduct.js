@@ -1,3 +1,5 @@
+// Using chai
+const {expect} = require('chai');
 const helper = require('../../utils/helpers');
 // Importing pages
 const HomePage = require('../../../pages/FO/home');
@@ -41,6 +43,9 @@ describe('Check the Product page', async () => {
     await this.pageObjects.homePage.goToProductPage('1');
   });
   it('should check the product page', async function () {
-    await this.pageObjects.productPage.checkProduct(ProductData.firstProductData);
+    const result = await this.pageObjects.productPage.checkProduct(ProductData.firstProductData);
+    await expect(result.name).to.be.true;
+    await expect(result.price).to.be.true;
+    await expect(result.quantity).to.be.true;
   });
 });

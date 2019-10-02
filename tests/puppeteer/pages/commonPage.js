@@ -1,6 +1,3 @@
-// Using chai
-const {expect} = require('chai');
-
 module.exports = class CommonPage {
   constructor(page) {
     this.page = page;
@@ -78,22 +75,22 @@ module.exports = class CommonPage {
    * @param selector, element to check
    * @param textToCheckWith, text to check with
    * @param parameter, parameter to use
-   * @return promise, throw an error if element does not exist or text is not correct
+   * @return promise<*>, boolean if check has passed or failed
    */
   async checkTextValue(selector, textToCheckWith, parameter = 'equal') {
     await this.page.waitForSelector(selector);
+    let text;
     switch (parameter) {
       case 'equal':
-        await this.page.$eval(selector, el => el.innerText)
-          .then(text => expect(text.replace(/\s+/g, ' ').trim()).to.equal(textToCheckWith));
-        break;
+        text = await this.page.$eval(selector, el => el.innerText);
+        return text.replace(/\s+/g, ' ').trim() === textToCheckWith;
       case 'contain':
-        await this.page.$eval(selector, el => el.innerText)
-          .then(text => expect(text).to.contain(textToCheckWith));
-        break;
+        text = await this.page.$eval(selector, el => el.innerText);
+        return text.includes(textToCheckWith);
       default:
       // do nothing
     }
+    return false;
   }
 
   /**
@@ -107,7 +104,7 @@ module.exports = class CommonPage {
     await this.page.waitForSelector(selector);
     const value = await this.page.$eval(selector, (el, attr) => el
       .getAttribute(attr), attribute);
-    expect(value).to.be.equal(textToCheckWith);
+    return value === textToCheckWith;
   }
 
   /**
@@ -185,7 +182,7 @@ module.exports = class CommonPage {
       }
       /* eslint-enable */
     }
-    await expect(found, `${textValue} was not found as option of select`).to.be.true;
+    if (!found) throw new Error(`${textValue} was not found as option of select`);
   }
 
   /**

@@ -48,22 +48,25 @@ describe('Filter the Orders table by ID, REFERENCE, STATUS', async () => {
   it('should filter the Orders table by ID and check the result', async function () {
     await this.pageObjects.orderPage.filterTableByInput(this.pageObjects.orderPage.orderFilterIdInput,
       Orders.firstOrder.id, this.pageObjects.orderPage.searchButton);
-    await this.pageObjects.boBasePage.checkTextValue(this.pageObjects.orderPage.orderfirstLineIdTD,
+    const result = await this.pageObjects.boBasePage.checkTextValue(this.pageObjects.orderPage.orderfirstLineIdTD,
       Orders.firstOrder.id);
+    await expect(result).to.be.true;
     await this.pageObjects.orderPage.waitForSelectorAndClick(this.pageObjects.orderPage.resetButton);
   });
   it('should filter the Orders table by REFERENCE and check the result', async function () {
     await this.pageObjects.orderPage.filterTableByInput(this.pageObjects.orderPage.orderFilterReferenceInput,
       Orders.fourthOrder.ref, this.pageObjects.orderPage.searchButton);
-    await this.pageObjects.boBasePage.checkTextValue(this.pageObjects.orderPage.orderfirstLineReferenceTD,
-      Orders.fourthOrder.ref);
+    const result = await this.pageObjects.boBasePage.checkTextValue(
+      this.pageObjects.orderPage.orderfirstLineReferenceTD, Orders.fourthOrder.ref);
+    await expect(result).to.be.true;
     await this.pageObjects.orderPage.waitForSelectorAndClick(this.pageObjects.orderPage.resetButton);
   });
   it('should filter the Orders table by STATUS and check the result', async function () {
     await this.pageObjects.orderPage.filterTableBySelect(this.pageObjects.orderPage.orderFilterStatusSelect,
       Statuses.paymentError.index);
-    await this.pageObjects.orderPage.checkTextValue(this.pageObjects.orderPage.orderfirstLineStatusTD,
+    const result = await this.pageObjects.orderPage.checkTextValue(this.pageObjects.orderPage.orderfirstLineStatusTD,
       Statuses.paymentError.status);
+    await expect(result).to.be.true;
   });
   it('should logout from the BO', async function () {
     await this.pageObjects.boBasePage.logoutBO();

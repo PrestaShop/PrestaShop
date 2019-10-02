@@ -68,7 +68,10 @@ describe('Order a product and check order confirmation', async () => {
     await expect(pageTitle).to.equal(this.pageObjects.cartPage.pageTitle);
   });
   it('should check the cart details', async function () {
-    await this.pageObjects.cartPage.checkProductInCart(CartData.customCartData.firstProduct, '1');
+    const result = await this.pageObjects.cartPage.checkProductInCart(CartData.customCartData.firstProduct, '1');
+    await expect(result.name).to.be.true;
+    await expect(result.price).to.be.true;
+    await expect(result.quantity).to.be.true;
   });
   it('should proceed to checkout and check Step Address', async function () {
     await this.pageObjects.cartPage.clickOnProceedToCheckout();

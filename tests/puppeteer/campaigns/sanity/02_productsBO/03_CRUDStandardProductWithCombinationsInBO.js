@@ -70,7 +70,10 @@ describe('Create, read, update and delete Standard product with combinations in 
   it('should preview and check product in FO', async function () {
     page = await this.pageObjects.addProductPage.previewProduct();
     this.pageObjects = await init();
-    await this.pageObjects.foProductPage.checkProduct(productWithCombinations);
+    const result = await this.pageObjects.foProductPage.checkProduct(productWithCombinations);
+    await expect(result.name).to.be.true;
+    await expect(result.price).to.be.true;
+    await expect(result.quantity).to.be.true;
     page = await this.pageObjects.foProductPage.closePage(browser, 1);
     this.pageObjects = await init();
   });
@@ -82,7 +85,10 @@ describe('Create, read, update and delete Standard product with combinations in 
   it('should preview and check product in FO', async function () {
     page = await this.pageObjects.addProductPage.previewProduct();
     this.pageObjects = await init();
-    await this.pageObjects.foProductPage.checkProduct(editedProductWithCombinations);
+    const result = await this.pageObjects.foProductPage.checkProduct(editedProductWithCombinations);
+    await expect(result.name).to.be.true;
+    await expect(result.price).to.be.true;
+    await expect(result.quantity).to.be.true;
     page = await this.pageObjects.foProductPage.closePage(browser, 1);
     this.pageObjects = await init();
   });

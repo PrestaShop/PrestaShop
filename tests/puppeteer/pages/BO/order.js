@@ -68,7 +68,7 @@ module.exports = class Order extends BOBasePage {
     await this.waitForSelectorAndClick(this.editProductButton.replace('%ID', id));
     await this.setValue(this.editProductQuantityInput.replace('%ID', id), quantity);
     await this.waitForSelectorAndClick(this.UpdateProductButton.replace('%ID', id));
-    await this.checkTextValue(this.productQuantitySpan.replace('%ID', id), quantity);
+    return this.checkTextValue(this.productQuantitySpan.replace('%ID', id), quantity);
   }
 
   /**
@@ -81,6 +81,6 @@ module.exports = class Order extends BOBasePage {
     await this.page.type(this.orderStatusInput, status);
     await this.page.click(this.orderStatusSearchResult);
     await this.page.click(this.updateStatusButton);
-    await this.checkTextValue(this.statusValidation, status);
+    return this.checkTextValue(this.statusValidation, status);
   }
 };
