@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Adapter\Cart\QueryHandler;
 
 use Customer;
-use PrestaShop\PrestaShop\Adapter\Entity\PrestaShopDatabaseException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;

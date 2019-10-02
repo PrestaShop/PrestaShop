@@ -50,6 +50,7 @@ class EmptyCartSummary
 
     /**
      * EmptyCartSummary constructor.
+     *
      * @param array $carts
      * @param array $orders
      * @param array $cart

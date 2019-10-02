@@ -31,7 +31,6 @@ use PrestaShop\PrestaShop\Adapter\Cart\ContextCartSetter;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\CreateEmptyCustomerCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForViewing;
-use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartSummary;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetEmptyCartSummary;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetLastEmptyCustomerCart;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;

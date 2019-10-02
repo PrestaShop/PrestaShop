@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Cart\QueryHandler;
 
 use Cart;
 use Currency;
+use Language;
 use Order;
 use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
@@ -37,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\EmptyCartSummary;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleInterface;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Locale\RepositoryInterface;
+use PrestaShopException;
 
 /**
  * Handles GetEmptyCartSummary query using legacy object models
@@ -76,9 +78,27 @@ final class GetEmptyCartSummaryHandler extends AbstractCartHandler implements Ge
         return new EmptyCartSummary(
             $this->decorateCarts($carts, $cart->id),
             $this->decorateOrders($orders),
-            [],//@todo
+            $this->getCartInfo($cart),
             $this->getAddresses($cart)
         );
+    }
+
+    /**
+     * @param Cart $cart
+     *
+     * @return array
+     *
+     * @throws PrestaShopException
+     */
+    private function getCartInfo(Cart $cart)
+    {
+        $currency = new Currency($cart->id_currency);
+        $language = new Language($cart->id_lang);
+
+        return [
+            'currency' => $currency->name,
+            'lang' => $language->name,
+        ];
     }
 
     /**

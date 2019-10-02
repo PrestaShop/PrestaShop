@@ -15,7 +15,7 @@ admin_carts_view:
     cartId: \d+
 
 admin_carts_load_empty_customer_cart:
-  path: /load
+  path: /load-empty
   methods: [POST]
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Order/Cart:loadEmptyCustomerCart
