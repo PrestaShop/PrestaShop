@@ -71,9 +71,12 @@ describe('Create, read, update and delete Standard product in BO', async () => {
     page = await this.pageObjects.addProductPage.previewProduct();
     this.pageObjects = await init();
     const result = await this.pageObjects.foProductPage.checkProduct(productData);
-    await expect(result.name).to.be.true;
-    await expect(result.price).to.be.true;
-    await expect(result.quantity).to.be.true;
+    await Promise.all([
+      expect(result.name).to.be.true,
+      expect(result.price).to.be.true,
+      expect(result.quantity_wanted).to.be.true,
+      expect(result.description).to.be.true,
+    ]);
     page = await this.pageObjects.foProductPage.closePage(browser, 1);
     this.pageObjects = await init();
   });
@@ -85,9 +88,12 @@ describe('Create, read, update and delete Standard product in BO', async () => {
     page = await this.pageObjects.addProductPage.previewProduct();
     this.pageObjects = await init();
     const result = await this.pageObjects.foProductPage.checkProduct(editedProductData);
-    await expect(result.name).to.be.true;
-    await expect(result.price).to.be.true;
-    await expect(result.quantity).to.be.true;
+    await Promise.all([
+      expect(result.name).to.be.true,
+      expect(result.price).to.be.true,
+      expect(result.quantity_wanted).to.be.true,
+      expect(result.description).to.be.true,
+    ]);
     page = await this.pageObjects.foProductPage.closePage(browser, 1);
     this.pageObjects = await init();
   });

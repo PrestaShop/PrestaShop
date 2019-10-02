@@ -77,15 +77,19 @@ describe('Check the Product page', async () => {
   });
   it('should check the first product details', async function () {
     const result = await this.pageObjects.cartPage.checkProductInCart(CartData.customCartData.firstProduct, '1');
-    await expect(result.name).to.be.true;
-    await expect(result.price).to.be.true;
-    await expect(result.quantity).to.be.true;
+    await Promise.all([
+      expect(result.name).to.be.true,
+      expect(result.price).to.be.true,
+      expect(result.quantity).to.be.true,
+    ]);
   });
   it('should check the second product details', async function () {
     const result = await this.pageObjects.cartPage.checkProductInCart(CartData.customCartData.secondProduct, '2');
-    await expect(result.name).to.be.true;
-    await expect(result.price).to.be.true;
-    await expect(result.quantity).to.be.true;
+    await Promise.all([
+      expect(result.name).to.be.true,
+      expect(result.price).to.be.true,
+      expect(result.quantity).to.be.true,
+    ]);
   });
   it('should get the Total TTC', async function () {
     // getNumberFromText is used to get the Total TTC price

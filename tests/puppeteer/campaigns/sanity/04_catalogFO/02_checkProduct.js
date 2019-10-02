@@ -43,9 +43,11 @@ describe('Check the Product page', async () => {
     await this.pageObjects.homePage.goToProductPage('1');
   });
   it('should check the product page', async function () {
-    const result = await this.pageObjects.productPage.checkProduct(ProductData.firstProductData);
-    await expect(result.name).to.be.true;
-    await expect(result.price).to.be.true;
-    await expect(result.quantity).to.be.true;
+    const result = await this.pageObjects.productPage.checkProduct(ProductData.firstProductData); await Promise.all([
+      expect(result.name).to.be.true,
+      expect(result.price).to.be.true,
+      expect(result.quantity_wanted).to.be.true,
+      expect(result.description).to.be.true,
+    ]);
   });
 });

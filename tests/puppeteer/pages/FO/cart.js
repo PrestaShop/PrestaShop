@@ -25,9 +25,9 @@ module.exports = class Cart extends FOBasePage {
    */
   async checkProductInCart(cartData, productID) {
     return {
-      name: this.checkTextValue(this.productName.replace('%NUMBER', productID), cartData.name),
-      price: this.checkTextValue(this.productPrice.replace('%NUMBER', productID), cartData.price),
-      quantity: this.checkAttributeValue(this.productQuantity.replace('%NUMBER', productID), 'value',
+      name: await this.checkTextValue(this.productName.replace('%NUMBER', productID), cartData.name),
+      price: await this.checkTextValue(this.productPrice.replace('%NUMBER', productID), cartData.price),
+      quantity: await this.checkAttributeValue(this.productQuantity.replace('%NUMBER', productID), 'value',
         cartData.quantity),
     };
   }

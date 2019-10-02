@@ -19,10 +19,10 @@ module.exports = class Product extends FOBasePage {
    */
   async checkProduct(productData) {
     return {
-      name: this.checkTextValue(this.productName, productData.name),
-      price: this.checkAttributeValue(this.productPrice, 'content', productData.price),
-      quantity_wanted: this.checkAttributeValue(this.productQuantity, 'value', productData.quantity_wanted),
-      description: this.checkTextValue(this.productDescription, productData.description, 'contain'),
+      name: await this.checkTextValue(this.productName, productData.name),
+      price: await this.checkAttributeValue(this.productPrice, 'content', productData.price),
+      quantity_wanted: await this.checkAttributeValue(this.productQuantity, 'value', productData.quantity_wanted),
+      description: await this.checkTextValue(this.productDescription, productData.description, 'contain'),
     };
   }
 
