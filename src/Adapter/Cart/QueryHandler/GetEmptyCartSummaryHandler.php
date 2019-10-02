@@ -96,6 +96,7 @@ final class GetEmptyCartSummaryHandler extends AbstractCartHandler implements Ge
         $language = new Language($cart->id_lang);
 
         return [
+            'cart_id' => (int) $cart->id,
             'currency' => $currency->name,
             'lang' => $language->name,
         ];

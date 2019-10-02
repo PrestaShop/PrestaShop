@@ -35,6 +35,8 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Command\EditCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SetPrivateNoteAboutCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\TransformGuestToCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\MissingCustomerRequiredFieldsException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerCarts;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerOrders;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\EditableCustomer;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerDefaultGroupAccessException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
@@ -702,6 +704,40 @@ class CustomerController extends AbstractAdminController
             ->setData($data)
             ->setHeadersData($headers)
             ->setFileName('customer_' . date('Y-m-d_His') . '.csv');
+    }
+
+    /**
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function getCustomerCartsAction(Request $request)
+    {
+        $customerId = $request->query->getInt('customer_id');
+        $carts = $this->getQueryBus()->handle(new GetCustomerCarts($customerId));
+
+        return $this->json([
+            'carts' => $carts,
+        ]);
+    }
+
+    /**
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function getCustomerOrdersAction(Request $request)
+    {
+        $customerId = $request->query->getInt('customer_id');
+        $orders = $this->getQueryBus()->handle(new GetCustomerOrders($customerId));
+
+        return $this->json([
+            'orders' => $orders,
+        ]);
     }
 
     /**

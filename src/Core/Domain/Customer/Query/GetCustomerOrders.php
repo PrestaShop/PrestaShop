@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -24,19 +24,33 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Customer\QueryHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\Query;
 
-use PrestaShop\PrestaShop\Core\Domain\Customer\Query\SearchCustomers;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 
 /**
- * Interface for service that handles customers searching command
+ * Query for getting summarized customer orders
  */
-interface SearchCustomersHandlerInterface
+class GetCustomerOrders
 {
     /**
-     * @param SearchCustomers $query
-     *
-     * @return array
+     * @var CustomerId
      */
-    public function handle(SearchCustomers $query);
+    private $customerId;
+
+    /**
+     * @param int $customerId
+     */
+    public function __construct(int $customerId)
+    {
+        $this->customerId = new CustomerId($customerId);
+    }
+
+    /**
+     * @return CustomerId
+     */
+    public function getCustomerId(): CustomerId
+    {
+        return $this->customerId;
+    }
 }

@@ -92,15 +92,43 @@ export default class CreateOrderPage {
       },
       dataType: 'json',
     }).then((response) => {
-      this.data.cart_id = response.cart.id_cart;
+      this.data.cart_id = response.cart.cart_id;
 
       const checkoutHistory = {
         carts: response.carts,
         orders: response.orders,
       };
+      this._loadCustomerCarts();
+      this._loadCustomerOrders();
 
-      this._renderCheckoutHistory(checkoutHistory);
+      // this._renderCheckoutHistory(checkoutHistory);
       this._renderCartSummary(response);
+    });
+  }
+
+  _loadCustomerCarts() {
+    $.ajax(this.$container.data('customer-carts-url'), {
+      method: 'GET',
+      data: {
+        customer_id: this.data.customer_id,
+      },
+      dataType: 'json',
+    }).then((response) => {
+      this._renderCustomerCarts(response.carts);
+      $(createOrderPageMap.customerCheckoutHistory).removeClass('d-none');
+    });
+  }
+
+  _loadCustomerOrders() {
+    $.ajax(this.$container.data('customer-orders-url'), {
+      method: 'GET',
+      data: {
+        customer_id: this.data.customer_id,
+      },
+      dataType: 'json',
+    }).then((response) => {
+      this._renderCustomerOrders(response.orders);
+      $(createOrderPageMap.customerCheckoutHistory).removeClass('d-none');
     });
   }
 
@@ -112,7 +140,7 @@ export default class CreateOrderPage {
    * @private
    */
   _renderCheckoutHistory(checkoutHistory) {
-    this._renderCustomerCarts(checkoutHistory.carts);
+    // this._renderCustomerCarts(checkoutHistory.carts);
     this._renderCustomerOrders(checkoutHistory.orders);
 
     $(createOrderPageMap.customerCheckoutHistory).removeClass('d-none');
@@ -136,18 +164,17 @@ export default class CreateOrderPage {
     }
 
     for (const key in carts) {
-      if (!carts.hasOwnProperty(key)) {
+      const cart = carts[key];
+      if (cart.cartId === this.data.cart_id) {
         continue;
       }
-
-      const cart = carts[key];
       const $template = $cartsTableRowTemplate.clone();
 
-      $template.find('.js-cart-id').text(cart.id_cart);
-      $template.find('.js-cart-date').text(cart.date_add);
-      $template.find('.js-cart-total').text(cart.total_price);
+      $template.find('.js-cart-id').text(cart.cartId);
+      $template.find('.js-cart-date').text(cart.cartCreationDate);
+      $template.find('.js-cart-total').text(cart.cartTotal);
 
-      $template.find('.js-use-cart-btn').data('cart-id', cart.id_cart);
+      $template.find('.js-use-cart-btn').data('cart-id', cart.cartId);
 
       $cartsTable.find('tbody').append($template);
     }
@@ -196,11 +223,11 @@ export default class CreateOrderPage {
       const order = orders[key];
       const $template = $rowTemplate.clone();
 
-      $template.find('.js-order-id').text(order.id_order);
-      $template.find('.js-order-date').text(order.date_add);
-      $template.find('.js-order-products').text(order.nb_products);
-      $template.find('.js-order-total-paid').text(order.total_paid_real);
-      $template.find('.js-order-status').text(order.order_state);
+      $template.find('.js-order-id').text(order.orderId);
+      $template.find('.js-order-date').text(order.orderPlacedDate);
+      $template.find('.js-order-products').text(order.totalProductsCount);
+      $template.find('.js-order-total-paid').text(order.totalPaid);
+      $template.find('.js-order-status').text(order.orderStatus);
 
       $ordersTable.find('tbody').append($template);
     }

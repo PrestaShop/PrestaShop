@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -26,17 +26,18 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Customer\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Customer\Query\SearchCustomers;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerCarts;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\CartSummary;
 
 /**
- * Interface for service that handles customers searching command
+ * Interface for handling GetCustomerCarts query
  */
-interface SearchCustomersHandlerInterface
+interface GetCustomerCartsHandlerInterface
 {
     /**
-     * @param SearchCustomers $query
+     * @param GetCustomerCarts $query
      *
-     * @return array
+     * @return CartSummary[]
      */
-    public function handle(SearchCustomers $query);
+    public function handle(GetCustomerCarts $query): array;
 }

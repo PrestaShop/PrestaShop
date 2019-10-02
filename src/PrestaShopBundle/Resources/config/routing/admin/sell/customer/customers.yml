@@ -161,3 +161,19 @@ admin_customers_search:
     _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:search
     _legacy_controller: AdminCustomers
     _legacy_link: AdminCustomers:searchCustomers
+
+admin_customers_carts:
+  path: /carts
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:getCustomerCarts
+    _legacy_controller: AdminCustomers
+    _legacy_link: AdminCustomers
+
+admin_customers_orders:
+  path: /orders
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:getCustomerOrders
+    _legacy_controller: AdminCustomers
+    _legacy_link: AdminCustomers

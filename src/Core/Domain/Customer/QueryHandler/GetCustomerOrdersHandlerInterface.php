@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -26,17 +26,18 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Customer\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Customer\Query\SearchCustomers;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerOrders;
+use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\OrderSummary;
 
 /**
- * Interface for service that handles customers searching command
+ * Interface for handling GetCustomerOrders query
  */
-interface SearchCustomersHandlerInterface
+interface GetCustomerOrdersHandlerInterface
 {
     /**
-     * @param SearchCustomers $query
+     * @param GetCustomerOrders $query
      *
-     * @return array
+     * @return OrderSummary[]
      */
-    public function handle(SearchCustomers $query);
+    public function handle(GetCustomerOrders $query): array;
 }

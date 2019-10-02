@@ -97,6 +97,7 @@ class CartController extends FrameworkBundleAdminController
         }
 
         $contextCartSetter->setContextCart($cartId);
+
         $cartSummary = $this->getQueryBus()->handle(new GetEmptyCartSummary($cartId));
 
         return $this->json($cartSummary);
