@@ -70,7 +70,7 @@
         <tr>
           <td colspan="6">
             <p class="mb-0">
-              <strong>{{ 'Card Number'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>&nbsp;
+              <strong>{{ 'Card number'|trans({}, 'Admin.Global') }}</strong>
               {% if payment.cardNumber %}
                 {{ payment.cardNumber }}
               {% else %}
@@ -86,7 +86,7 @@
               {% endif %}
             </p>
             <p class="mb-0">
-              <strong>{{ 'Card Expiration'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>&nbsp;
+              <strong>{{ 'Expiration date'|trans({}, 'Admin.Catalog.Feature') }}</strong>&nbsp;
               {% if payment.cardExpiration %}
                 {{ payment.cardExpiration }}
               {% else %}
@@ -94,7 +94,7 @@
               {% endif %}
             </p>
             <p class="mb-0">
-              <strong>{{ 'Card Holder'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>&nbsp;
+              <strong>{{ 'Cardholder name'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>&nbsp;
               {% if payment.cardHolder %}
                 {{ payment.cardHolder }}
               {% else %}
@@ -142,7 +142,7 @@
                 <option value="1">EUR</option>
               </select>
               <button class="btn btn-outline-primary btn-sm">
-                {{ 'Change'|trans({}, 'Admin.Orderscustomers.Feature') }}
+                {{ 'Change'|trans({}, 'Admin.Actions') }}
               </button>
             </div>
           </div>
