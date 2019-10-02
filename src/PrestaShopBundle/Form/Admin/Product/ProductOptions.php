@@ -160,6 +160,14 @@ class ProductOptions extends CommonAbstractType
                         ]
                     )
             )
+            ->add('mpn', FormType\TextType::class, [
+                'required' => false,
+                'label' => $this->translator->trans('MPN', [], 'Admin.Catalog.Feature'),
+                'constraints' => [
+                    new Assert\Length(['max' => 40]),
+                ],
+                'empty_data' => '',
+            ])
             ->add('upc', FormType\TextType::class, [
                 'required' => false,
                 'label' => $this->translator->trans('UPC barcode', [], 'Admin.Catalog.Feature'),
