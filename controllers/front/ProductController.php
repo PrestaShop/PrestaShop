@@ -890,7 +890,12 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         }
 
         foreach ($specific_prices as $key => &$row) {
-            $specificPriceFormatter = new SpecificPriceFormatter($row, $isTaxIncluded, $this->context);
+            $specificPriceFormatter = new SpecificPriceFormatter(
+                $row,
+                $isTaxIncluded,
+                $this->context->currency,
+                Configuration::get('PS_DISPLAY_DISCOUNT_PRICE')
+            );
             $row = $specificPriceFormatter->formatSpecificPrice($price, $tax_rate, $ecotax_amount);
             $row['nextQuantity'] = (isset($specific_prices[$key + 1]) ? (int) $specific_prices[$key + 1]['from_quantity'] : -1);
         }

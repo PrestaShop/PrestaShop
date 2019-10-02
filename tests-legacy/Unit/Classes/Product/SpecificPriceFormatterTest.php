@@ -27,6 +27,7 @@
 namespace LegacyTests\Unit\Classes\Product\SpecificPrice;
 
 use Context;
+use Configuration;
 use Currency;
 use Language;
 use LegacyTests\Unit\ContextMocker;
@@ -107,7 +108,12 @@ class SpecificPriceFormatterTest extends SymfonyIntegrationTestCase
         $language->locale = 'en-US';
         $context->language = $language;
 
-        $specificPriceFormatter = new SpecificPriceFormatter($specificPrices[0], $isTaxIncluded, $context);
+        $specificPriceFormatter = new SpecificPriceFormatter(
+            $specificPrices[0],
+            $isTaxIncluded,
+            $context->currency,
+            Configuration::get('PS_DISPLAY_DISCOUNT_PRICE')
+        );
         $formattedSpecificPrice = $specificPriceFormatter->formatSpecificPrice($price, $taxRate, $ecotaxAmount);
 
         $priceFormatter = new PriceFormatter();

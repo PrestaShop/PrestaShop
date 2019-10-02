@@ -49,9 +49,14 @@ class SpecificPriceFormatterCore
     private $specificPrice;
 
     /**
-     * @var Context
+     * @var Currency
      */
-    private $context;
+    private $currency;
+
+    /**
+     * @var bool
+     */
+    private $displayDiscountPrice;
 
     /**
      * SpecificPriceFormatter constructor.
@@ -60,11 +65,12 @@ class SpecificPriceFormatterCore
      * @param bool $isTaxIncluded
      * @param Context $context
      */
-    public function __construct(array $specificPrice, bool $isTaxIncluded, Context $context)
+    public function __construct(array $specificPrice, bool $isTaxIncluded, Currency $currency, bool $displayDiscountPrice)
     {
         $this->specificPrice = $specificPrice;
         $this->isTaxIncluded = $isTaxIncluded;
-        $this->context = $context;
+        $this->currency = $currency;
+        $this->displayDiscountPrice = $displayDiscountPrice;
     }
 
     /**
@@ -95,7 +101,7 @@ class SpecificPriceFormatterCore
             // Since this price is set in default currency,
             // we need to convert it into current currency
             $this->specificPrice['id_currency'];
-            $currentPriceCurrentCurrency = \Tools::convertPrice($currentPriceDefaultCurrency, $this->context->currency, true, $this->context);
+            $currentPriceCurrentCurrency = \Tools::convertPrice($currentPriceDefaultCurrency, $this->currency, true);
 
             if ($this->specificPrice['reduction_type'] == 'amount') {
                 $currentPriceCurrentCurrency -= ($this->specificPrice['reduction_tax'] ? $this->specificPrice['reduction'] : $this->specificPrice['reduction'] / (1 + $tax_rate / 100));
@@ -106,7 +112,7 @@ class SpecificPriceFormatterCore
             $this->specificPrice['real_value'] = $initialPrice > 0 ? $initialPrice - $currentPriceCurrentCurrency : $currentPriceCurrentCurrency;
             $discountPrice = $initialPrice - $this->specificPrice['real_value'];
 
-            if (Configuration::get('PS_DISPLAY_DISCOUNT_PRICE')) {
+            if ($this->displayDiscountPrice) {
                 if ($this->specificPrice['reduction_tax'] == 0 && !$this->specificPrice['price']) {
                     $this->specificPrice['discount'] = $priceFormatter->format($initialPrice - ($initialPrice * $this->specificPrice['reduction_with_tax']));
                 } else {
@@ -124,7 +130,7 @@ class SpecificPriceFormatterCore
                 }
                 $this->specificPrice['reduction_with_tax'] = $this->specificPrice['reduction_tax'] ? $this->specificPrice['reduction'] : $this->specificPrice['reduction'] + ($this->specificPrice['reduction'] * $tax_rate) / 100;
                 $discountPrice = $initialPrice - $this->specificPrice['real_value'];
-                if (Configuration::get('PS_DISPLAY_DISCOUNT_PRICE')) {
+                if ($this->displayDiscountPrice) {
                     if ($this->specificPrice['reduction_tax'] == 0 && !$this->specificPrice['price']) {
                         $this->specificPrice['discount'] = $priceFormatter->format($initialPrice - ($initialPrice * $this->specificPrice['reduction_with_tax']));
                     } else {
@@ -136,7 +142,7 @@ class SpecificPriceFormatterCore
             } else {
                 $this->specificPrice['real_value'] = $this->specificPrice['reduction'] * 100;
                 $discountPrice = $initialPrice - $initialPrice * $this->specificPrice['reduction'];
-                if (Configuration::get('PS_DISPLAY_DISCOUNT_PRICE')) {
+                if ($this->displayDiscountPrice) {
                     if ($this->specificPrice['reduction_tax'] == 0) {
                         $this->specificPrice['discount'] = $priceFormatter->format($initialPrice - ($initialPrice * $this->specificPrice['reduction_with_tax']));
                     } else {
