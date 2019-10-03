@@ -92,9 +92,9 @@ class CurrencyDataSource implements DataSourceInterface
     /**
      * {@inheritdoc}
      */
-    public function getAllCurrenciesData($localeCode)
+    public function getAllCurrenciesDataInDatabase($localeCode)
     {
-        return $this->formatCurrenciesData($this->installedDataLayer->getAvailableCurrencyCodes(), $localeCode);
+        return $this->formatCurrenciesData($this->installedDataLayer->getAllCurrencyCodesInDatabase(), $localeCode);
     }
 
     /**
@@ -103,7 +103,7 @@ class CurrencyDataSource implements DataSourceInterface
      *
      * @return array
      */
-    protected function formatCurrenciesData(array $currencyCodes, $localeCode)
+    private function formatCurrenciesData(array $currencyCodes, $localeCode)
     {
         $currenciesData = [];
         foreach ($currencyCodes as $currencyCode) {
