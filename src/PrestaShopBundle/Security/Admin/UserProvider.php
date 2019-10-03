@@ -100,6 +100,8 @@ final class UserProvider implements UserProviderInterface
             $employeeForAuthentication = $this->queryBus->handle(
                 GetEmployeeForAuthentication::fromEmail($username)
             );
+            // This is an Employee DTO, that's used by authentication system.
+            // It is constructed by providing it with a legacy Employee instance.
             $employee = new Employee(
                 new LegacyEmployee($employeeForAuthentication->getEmployeeId()->getValue())
             );
