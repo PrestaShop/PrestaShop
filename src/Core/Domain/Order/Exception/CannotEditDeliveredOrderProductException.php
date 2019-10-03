@@ -1,3 +1,4 @@
+<?php
 /**
  * 2007-2019 PrestaShop SA and Contributors
  *
@@ -23,13 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-export default {
-<<<<<<< HEAD
-  orderPaymentDetailsBtn: '.js-payment-details-btn',
-=======
-  updateOrderProductModal: '#updateOrderProductModal',
-  updateOrderProductPriceTaxExclInput: '#update_order_product_price_tax_excl',
-  updateOrderProductPriceTaxInclInput: '#update_order_product_price_tax_incl',
-  updateOrderProductQuantityInput: '#update_order_product_quantity',
->>>>>>> 10d6f3ccfa... Implement updating order products
-};
+namespace PrestaShop\PrestaShop\Core\Domain\Order\Exception;
+
+class CannotEditDeliveredOrderProductException extends OrderException
+{
+}

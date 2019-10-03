@@ -33,6 +33,7 @@ use OrderCarrier;
 use OrderDetail;
 use OrderInvoice;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotEditDeliveredOrderProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\UpdateProductInOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\CommandHandler\UpdateProductInOrderHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
@@ -215,7 +216,7 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
 
         // We can't edit a delivered order
         if ($order->hasBeenDelivered()) {
-            throw new OrderException('You cannot edit a delivered order.');
+            throw new CannotEditDeliveredOrderProductException('You cannot edit a delivered order.');
         }
 
         if (null !== $orderInvoice && $orderInvoice->id_order != $order->id) {

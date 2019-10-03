@@ -49,6 +49,14 @@
   </div>
 
   {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/Modal/add_order_discount_modal.html.twig' %}
+  {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/Modal/add_product_modal.html.twig' %}
+  {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/Modal/update_product_modal.html.twig' %}
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+
+  <script src="{{ asset('themes/new-theme/public/order_view.bundle.js') }}"></script>
 {% endblock %}
 
 {% block javascripts %}
