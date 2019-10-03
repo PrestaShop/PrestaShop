@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -24,35 +24,18 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\Customer;
+namespace PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker;
 
-use PrestaShop\PrestaShop\Core\Grid\Action\Row\AbstractRowAction;
-use Symfony\Component\OptionsResolver\OptionsResolver;
-
-final class DeleteCustomerRowAction extends AbstractRowAction
+/**
+ * Checks if print invoice option can be visible in order list.
+ */
+final class PrintInvoiceAccessibilityChecker implements AccessibilityCheckerInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function getType()
+    public function isGranted(array $record)
     {
-        return 'delete_customer';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function configureOptions(OptionsResolver $resolver)
-    {
-        parent::configureOptions($resolver);
-
-        $resolver
-            ->setRequired([
-                'customer_id_field',
-                'customer_delete_route',
-            ])
-            ->setAllowedTypes('customer_id_field', 'string')
-            ->setAllowedTypes('customer_delete_route', 'string')
-        ;
+        return $record['is_invoice_available'];
     }
 }

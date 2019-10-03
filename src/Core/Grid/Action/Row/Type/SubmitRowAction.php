@@ -48,6 +48,8 @@ final class SubmitRowAction extends AbstractRowAction
      */
     public function configureOptions(OptionsResolver $resolver)
     {
+        parent::configureOptions($resolver);
+
         $resolver
             ->setRequired([
                 'route',
