@@ -13,5 +13,5 @@ ALTER TABLE `PREFIX_stock` ADD `mpn` VARCHAR(40) NULL AFTER `upc`;
 ALTER TABLE `PREFIX_product_attribute` ADD `mpn` VARCHAR(40) NULL AFTER `upc`;
 ALTER TABLE `PREFIX_product` ADD `mpn` VARCHAR(40) NULL AFTER `upc`;
 
-/* Delete optin field from employee table */
-ALTER TABLE `PREFIX_employee` DROP `optin`;
+/* Set optin field value to 0 in employee table */
+UPDATE `PREFIX_employee` SET `optin` = 0;
