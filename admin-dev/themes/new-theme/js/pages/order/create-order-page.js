@@ -66,7 +66,7 @@ export default class CreateOrderPage {
     this.$container.on('click', createOrderPageMap.chooseCustomerBtn, (event) => {
       this.data.customer_id = this.customerSearcher.onCustomerChooseForOrderCreation(event);
 
-      this._loadCartSummaryAfterChoosingCustomer();
+      this._loadCartInfoAfterChoosingCustomer();
     });
 
     this.$container.on('click', createOrderPageMap.changeCustomerBtn, () => this.customerSearcher.onCustomerChange());
@@ -84,7 +84,7 @@ export default class CreateOrderPage {
    *
    * @private
    */
-  _loadCartSummaryAfterChoosingCustomer() {
+  _loadCartInfoAfterChoosingCustomer() {
     $.ajax(this.$container.data('last-empty-cart-url'), {
       method: 'POST',
       data: {
@@ -92,17 +92,13 @@ export default class CreateOrderPage {
       },
       dataType: 'json',
     }).then((response) => {
-      this.data.cart_id = response.cart.cart_id;
+      this.data.cart_id = response.cartId;
 
-      const checkoutHistory = {
-        carts: response.carts,
-        orders: response.orders,
-      };
       this._loadCustomerCarts();
       this._loadCustomerOrders();
 
       // this._renderCheckoutHistory(checkoutHistory);
-      this._renderCartSummary(response);
+      this._renderCartInfo(response);
     });
   }
 
@@ -185,17 +181,17 @@ export default class CreateOrderPage {
   /**
    * Renders cart summary on the page
    *
-   * @param {Object} cartSummary
+   * @param {Object} cartInfo
    *
    * @private
    */
-  _renderCartSummary(cartSummary) {
-    this._renderAddressesSelect(cartSummary);
+  _renderCartInfo(cartInfo) {
+    this._renderAddressesSelect(cartInfo.addresses);
 
     // render Summary block when at least 1 product is in cart
     // and delivery options are available
 
-    this._showCartSummary();
+    this._showCartInfo();
   }
 
   /**
@@ -238,7 +234,7 @@ export default class CreateOrderPage {
    *
    * @private
    */
-  _showCartSummary() {
+  _showCartInfo() {
     $(createOrderPageMap.cartBlock).removeClass('d-none');
     $(createOrderPageMap.vouchersBlock).removeClass('d-none');
     $(createOrderPageMap.addressesBlock).removeClass('d-none');
@@ -247,11 +243,11 @@ export default class CreateOrderPage {
   /**
    * Renders Delivery & Invoice addresses select
    *
-   * @param {Object} cartSummary
+   * @param {Array} addresses
    *
    * @private
    */
-  _renderAddressesSelect(cartSummary) {
+  _renderAddressesSelect(addresses) {
     let deliveryAddressDetailsContent = '';
     let invoiceAddressDetailsContent = '';
 
@@ -268,7 +264,7 @@ export default class CreateOrderPage {
     $deliveryAddressSelect.empty();
     $invoiceAddressSelect.empty();
 
-    if (cartSummary.addresses.length === 0) {
+    if (addresses.length === 0) {
       $addressesWarningContent.removeClass('d-none');
       $addressesContent.addClass('d-none');
 
@@ -278,30 +274,26 @@ export default class CreateOrderPage {
     $addressesContent.removeClass('d-none');
     $addressesWarningContent.addClass('d-none');
 
-    for (const key in Object.keys(cartSummary.addresses)) {
-      if (!cartSummary.addresses.hasOwnProperty(key)) {
-        continue;
-      }
-
-      const address = cartSummary.addresses[key];
+    for (const key in Object.keys(addresses)) {
+      const address = addresses[key];
 
       const deliveryAddressOption = {
-        value: address.id_address,
+        value: address.addressId,
         text: address.alias,
       };
 
       const invoiceAddressOption = {
-        value: address.id_address,
+        value: address.addressId,
         text: address.alias,
       };
 
-      if (parseInt(cartSummary.cart.id_address_delivery) === parseInt(address.id_address)) {
-        deliveryAddressDetailsContent = address.formated_address;
+      if (address.delivery) {
+        deliveryAddressDetailsContent = address.formattedAddress;
         deliveryAddressOption.selected = 'selected';
       }
 
-      if (parseInt(cartSummary.cart.id_address_invoice) === parseInt(address.id_address)) {
-        invoiceAddressDetailsContent = address.formated_address;
+      if (address.invoice) {
+        invoiceAddressDetailsContent = address.formattedAddress;
         invoiceAddressOption.selected = 'selected';
       }
 
@@ -324,32 +316,33 @@ export default class CreateOrderPage {
    * @private
    */
   _changeCartAddresses() {
-    $.ajax(this.$container.data('cart-addresses-url'), {
+    $.ajax(this.$container.data('edit-address-url'), {
+      method: 'POST',
       data: {
-        id_customer: this.data.customer_id,
-        id_cart: this.data.cart_id,
-        id_address_delivery: $(createOrderPageMap.deliveryAddressSelect).val(),
-        id_address_invoice: $(createOrderPageMap.invoiceAddressSelect).val(),
+        customer_id: this.data.customer_id,
+        cart_id: this.data.cart_id,
+        delivery_address_id: $(createOrderPageMap.deliveryAddressSelect).val(),
+        invoice_address_id: $(createOrderPageMap.invoiceAddressSelect).val(),
       },
       dataType: 'json',
     }).then((response) => {
-      this._persistCartSummaryData(response);
+      // this._persistCartInfoData(response);
 
-      this._renderAddressesSelect(response);
+      this._renderAddressesSelect(response.addresses);
     });
   }
 
   /**
    * Stores cart summary into "session" like variable
    *
-   * @param {Object} cartSummary
+   * @param {Object} cartInfo
    *
    * @private
    */
-  _persistCartSummaryData(cartSummary) {
-    this.data.cart_id = cartSummary.cart.id;
-    this.data.delivery_address_id = cartSummary.cart.id_address_delivery;
-    this.data.invoice_address_id = cartSummary.cart.id_address_invoice;
+  _persistCartInfoData(cartInfo) {
+    this.data.cart_id = cartInfo.cart.id;
+    this.data.delivery_address_id = cartInfo.cart.id_address_delivery;
+    this.data.invoice_address_id = cartInfo.cart.id_address_invoice;
   }
 
   /**
@@ -368,9 +361,9 @@ export default class CreateOrderPage {
       },
       dataType: 'json',
     }).then((response) => {
-      this._persistCartSummaryData(response);
+      this._persistCartInfoData(response);
 
-      this._renderCartSummary(response);
+      this._renderCartInfo(response);
     });
   }
 }

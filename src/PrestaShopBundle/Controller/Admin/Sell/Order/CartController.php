@@ -27,14 +27,14 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
 use Exception;
-use PrestaShop\PrestaShop\Adapter\Cart\ContextCartInitializer;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\CreateEmptyCustomerCartCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartAddressesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
-use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetLastEmptyCustomerCart;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -80,23 +80,33 @@ class CartController extends FrameworkBundleAdminController
         ]);
     }
 
-    public function loadCustomerCartAction(Request $request)
+    public function loadCartAction(Request $request): JsonResponse
     {
-        /** @var ContextCartInitializer $contextCartInitializer */
-        $contextCartInitializer = $this->get('prestashop.adapter.cart.context_cart_initializer');
-
-        $customerId = $request->request->getInt('customer_id');
         $cartId = $request->request->getInt('cart_id');
+        $customerId = $request->request->getInt('customer_id');
 
         if (!$cartId) {
-            try {
-                $cartId = $this->getQueryBus()->handle(new GetLastEmptyCustomerCart($customerId))->getValue();
-            } catch (CartNotFoundException $e) {
-                $cartId = $this->getCommandBus()->handle(new CreateEmptyCustomerCartCommand($customerId))->getValue();
-            }
+            $cartId = $this->getCommandBus()->handle(new CreateEmptyCustomerCartCommand($customerId))->getValue();
         }
+        //@todo: delete this service if unusable
+        $contextCartInitializer = $this->get('prestashop.adapter.cart.context_cart_initializer');
 
-        $contextCartInitializer->init($cartId, $customerId);
+        $cartInfo = $this->getQueryBus()->handle(new GetCartInformation($cartId));
+
+        return $this->json($cartInfo);
+    }
+
+    public function editAddressAction(Request $request): JsonResponse
+    {
+        $cartId = $request->request->getInt('cart_id');
+
+        $updateAddressCommand = new UpdateCartAddressesCommand(
+            $cartId,
+            $request->request->getInt('delivery_address_id'),
+            $invoiceAddressId = $request->request->getInt('invoice_address_id')
+        );
+
+        $this->getCommandBus()->handle($updateAddressCommand);
 
         return $this->json($this->getQueryBus()->handle(new GetCartInformation($cartId)));
     }

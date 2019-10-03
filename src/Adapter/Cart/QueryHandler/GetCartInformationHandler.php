@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryHandler\GetCartInformationHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartAddress;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleInterface;
 use PrestaShop\PrestaShop\Core\Localization\Locale\RepositoryInterface;
@@ -72,7 +73,7 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
      */
     public function handle(GetCartInformation $query): CartInformation
     {
-        $cart = $this->getContextCartObject($query->getCartId());
+        $cart = $this->getCart($query->getCartId());
         $currency = new Currency($cart->id_currency);
         $language = new Language($cart->id_lang);
 
@@ -83,22 +84,38 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
             (int) $currency->id,
             (int) $language->id,
             $cart->getDiscounts(),
-            $this->extractAddressInfo($cart),
+            (int) $cart->id_address_delivery,
+            (int) $cart->id_address_invoice,
+            $this->getAddresses($cart),
             [],
             []
         );
     }
 
-    private function extractAddressInfo(Cart $cart)
+    /**
+     * @param Cart $cart
+     *
+     * @return CartAddress[]
+     */
+    private function getAddresses(Cart $cart): array
     {
         $customer = new Customer($cart->id_customer);
         $addresses = $customer->getAddresses($cart->id_lang);
+        $cartAddresses = [];
 
         foreach ($addresses as &$data) {
-            $address = new Address((int) $data['id_address']);
-            $data['formated_address'] = AddressFormat::generateAddress($address, [], '<br />');
+            $isDelivery = (int) $cart->id_address_delivery === (int) $data['id_address'];
+            $isInvoice = (int) $cart->id_address_invoice === (int) $data['id_address'];
+
+            $cartAddresses[] = new CartAddress(
+                (int) $data['id_address'],
+                $data['alias'],
+                AddressFormat::generateAddress(new Address($data['id_address']), [], '<br />'),
+                $isDelivery,
+                $isInvoice
+            );
         }
 
-        return $addresses;
+        return $cartAddresses;
     }
 }

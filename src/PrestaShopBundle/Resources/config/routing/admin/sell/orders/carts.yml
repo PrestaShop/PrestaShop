@@ -14,11 +14,20 @@ admin_carts_view:
   requirements:
     cartId: \d+
 
-admin_carts_load_customer_cart:
+admin_carts_load_cart:
   path: /load
   methods: [POST]
   defaults:
-    _controller: PrestaShopBundle:Admin/Sell/Order/Cart:loadCustomerCart
+    _controller: PrestaShopBundle:Admin/Sell/Order/Cart:loadCart
     _legacy_controller: AdminCarts
   requirements:
     customerId: \d+
+
+admin_carts_edit_address:
+  path: /edit-address
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Cart:editAddress
+    _legacy_controller: AdminCarts
+    requirements:
+      cartId: \d+
