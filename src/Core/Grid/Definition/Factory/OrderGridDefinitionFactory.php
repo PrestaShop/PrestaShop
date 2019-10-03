@@ -193,7 +193,7 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setOptions([
                         'links' => [
                             [
-                                'icon' => 'picture_as_pdf',
+                                'icon' => 'receipt',
                                 'is_link_available_field' => 'is_invoice_available',
                                 'route' => 'admin_orders_generate_invoice_pdf',
                                 'route_param_name' => 'orderId',
