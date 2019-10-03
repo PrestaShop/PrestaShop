@@ -36,6 +36,9 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 /**
  * Admin Middleware security.
+ *
+ * @deprecated since 1.7.7. PrestaShop's security system was changed,
+ * refer to \PrestaShop\PrestaShop\Adapter\Security\EmployeeAuthenticationHandler
  */
 class Admin
 {
