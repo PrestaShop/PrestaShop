@@ -27,16 +27,13 @@
   {% for link in column.options.links %}
     {% set isValidationFieldDefined = link.is_link_available_field is defined %}
     {% set isAvailable = (isValidationFieldDefined and record[link.is_link_available_field]) or not isValidationFieldDefined %}
-
     {% if isAvailable %}
       <a
         href="{{ path(link.route, { (link.route_param_name) : record[link.route_param_field]}) }}"
-        {% if link.title is defined and link.title %}
-          class="flex-grow tooltip-link"
-          data-toggle="pstooltip"
-          data-placement="top"
-          data-original-title="{{ link.title }}"
-        {% endif %}
+        class="flex-grow tooltip-link"
+        data-toggle="pstooltip"
+        data-placement="top"
+        data-original-title="{{ link.title }}"
       >
         <i class="material-icons">{{ link.icon }}</i>
       </a>
