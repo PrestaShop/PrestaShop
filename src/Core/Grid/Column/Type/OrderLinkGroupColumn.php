@@ -37,7 +37,7 @@ final class OrderLinkGroupColumn extends AbstractColumn
     /**
      * {@inheritdoc}
      */
-    public function getType()
+    public function getType(): string
     {
         return 'order_link_group';
     }
@@ -45,7 +45,7 @@ final class OrderLinkGroupColumn extends AbstractColumn
     /**
      * {@inheritdoc}
      */
-    protected function configureOptions(OptionsResolver $resolver)
+    protected function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
             ->setRequired([
