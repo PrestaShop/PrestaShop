@@ -17,3 +17,11 @@ _manufacturers:
 _monitoring:
   resource: "monitoring.yml"
   prefix: /monitoring
+
+_catalog_price_rules:
+  resource: "catalog_price_rule.yml"
+  prefix: /catalog-price-rules
+
+_features:
+    resource: "features.yml"
+    prefix: /features

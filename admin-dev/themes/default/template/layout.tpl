@@ -1,5 +1,5 @@
 {**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -47,7 +47,7 @@
 		{if count($errors) == 1}
 			{reset($errors)}
 		{else }
-			{l s='%d errors' sprintf=[$errors|count]}
+			{l s='There are %d errors.' sprintf=[$errors|count] d='Admin.Notifications.Error'}
 			<br/>
 			<ol>
 				{foreach $errors as $error}

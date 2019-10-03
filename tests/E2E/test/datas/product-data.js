@@ -17,6 +17,7 @@ module.exports = {
       ean13: "1313131313131",
       isbn: "121212121212",
       upc: "012345678901",
+      mpn: "PN0123.ABC.4",
       wholesale: "5",
       priceTI: "15",
       weight: "2",
@@ -30,6 +31,7 @@ module.exports = {
         ean13: "3131313131313",
         isbn: "212121212121",
         upc: "123456789012",
+        mpn: "PN3210.ABC.4",
         wholesale: "10",
         priceTI: "20",
         weight: "-5",
@@ -91,6 +93,7 @@ module.exports = {
   common: {
     ean13: "0123456789987",
     upc: "012345678901",
+    mpn: "PN0123.ABC.4",
     summary: "new automate",
     description: "create new product in automate",
     product_reference: "new product automate",

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -45,6 +45,8 @@ class CombinationCore extends ObjectModel
 
     public $upc;
 
+    public $mpn;
+
     public $wholesale_price;
 
     public $price;
@@ -81,6 +83,7 @@ class CombinationCore extends ObjectModel
             'ean13' => array('type' => self::TYPE_STRING, 'validate' => 'isEan13', 'size' => 13),
             'isbn' => array('type' => self::TYPE_STRING, 'validate' => 'isIsbn', 'size' => 32),
             'upc' => array('type' => self::TYPE_STRING, 'validate' => 'isUpc', 'size' => 12),
+            'mpn' => array('type' => self::TYPE_STRING, 'validate' => 'isMpn', 'size' => 40),
             'quantity' => array('type' => self::TYPE_INT, 'validate' => 'isInt', 'size' => 10),
             'reference' => array('type' => self::TYPE_STRING, 'size' => 64),
             'supplier_reference' => array('type' => self::TYPE_STRING, 'size' => 64),

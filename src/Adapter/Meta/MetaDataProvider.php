@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -54,6 +54,14 @@ class MetaDataProvider implements MetaDataProviderInterface
         }
 
         return $idMeta;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAvailablePages()
+    {
+        return Meta::getPages(true);
     }
 
     /**

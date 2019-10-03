@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -375,6 +375,7 @@ class AdminSuppliersControllerCore extends AdminController
                 $comb_array[$combination['id_product_attribute']]['reference'] = $combination['reference'];
                 $comb_array[$combination['id_product_attribute']]['ean13'] = $combination['ean13'];
                 $comb_array[$combination['id_product_attribute']]['upc'] = $combination['upc'];
+                $comb_array[$combination['id_product_attribute']]['mpn'] = $combination['mpn'];
                 $comb_array[$combination['id_product_attribute']]['quantity'] = $combination['quantity'];
                 $comb_array[$combination['id_product_attribute']]['attributes'][] = array(
                     $combination['group_name'],

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -65,7 +65,7 @@ final class AddPaymentHandler extends AbstractOrderHandler implements AddPayment
         }
 
         $paymentAdded = $order->addOrderPayment(
-            $amount,
+            (string) $command->getPaymentAmount(),
             $command->getPaymentMethod(),
             $command->getPaymentTransactionId(),
             $currency,

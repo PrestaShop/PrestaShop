@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -196,7 +196,7 @@ abstract class PaymentModuleCore extends Module
      * @param int $id_order_state
      * @param float $amount_paid Amount really paid by customer (in the default currency)
      * @param string $payment_method Payment method (eg. 'Credit card')
-     * @param null $message Message to attach to order
+     * @param string|null $message Message to attach to order
      * @param array $extra_vars
      * @param null $currency_special
      * @param bool $dont_touch_amount
@@ -772,7 +772,7 @@ abstract class PaymentModuleCore extends Module
     /**
      * @param int $current_id_currency optional but on 1.5 it will be REQUIRED
      *
-     * @return Currency
+     * @return Currency|false
      */
     public function getCurrency($current_id_currency = null)
     {

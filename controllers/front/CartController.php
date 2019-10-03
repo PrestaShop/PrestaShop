@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -597,11 +597,27 @@ class CartControllerCore extends FrontController
      */
     protected function areProductsAvailable()
     {
+        $products = $this->context->cart->getProducts();
+
+        foreach ($products as $product) {
+            $currentProduct = new Product();
+            $currentProduct->hydrate($product);
+
+            if ($currentProduct->hasAttributes() && $product['id_product_attribute'] === '0') {
+                return $this->trans(
+                   'The item %product% in your cart is now a product with attributes. Please delete it and choose one of its combinations to proceed with your order.',
+                    array('%product%' => $product['name']),
+                    'Shop.Notifications.Error'
+                );
+            }
+        }
+
         $product = $this->context->cart->checkQuantities(true);
 
         if (true === $product || !is_array($product)) {
             return true;
         }
+
         if ($product['active']) {
             return $this->trans(
                 'The item %product% in your cart is no longer available in this quantity. You cannot proceed with your order until the quantity is adjusted.',

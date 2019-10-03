@@ -9,7 +9,8 @@
     "linkchecker": "node campaigns/linkchecker.js",
     "lint": "eslint  --fix --ignore-path .gitignore .",
     "specific-test": "./node_modules/mocha/bin/mocha campaigns/$TEST_PATH",
-    "smoke-tests": "./node_modules/mocha/bin/mocha campaigns/smoke/*"
+    "sanity-tests": "./node_modules/mocha/bin/mocha campaigns/sanity/*",
+    "sanity-travis": "./node_modules/mocha/bin/mocha --bail campaigns/sanity/*"
   },
   "repository": {
     "type": "git",
@@ -30,7 +31,8 @@
     "eslint-config-prestashop": "0.0.2",
     "mocha": "^6.1.4",
     "mochawesome": "^4.0.1",
-    "puppeteer": "^1.18.1"
+    "puppeteer": "^1.18.1",
+    "faker": "^4.1.0"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.2",

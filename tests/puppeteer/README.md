@@ -3,49 +3,77 @@
 ## How to install your environment
 
 ```bash
+# Clone Prestashop
 git clone https://github.com/PrestaShop/PrestaShop/
+# Install dependencies in puppeteer folder
 cd tests/puppeteer/
-npm i
+npm install
 ```
 
-## LinkChecker
-This script will detect not found and erroneous pages, by crawling your back office and front office
-
-### Available command line parameters
-
+## Available command line parameters
 | Parameter           | Description      |
 |---------------------|----------------- |
-| URL_BO              | URL of your PrestaShop website Back Office (default to **http://localhost:8080/admin-dev/**) |
-| URL_FO              | URL of your PrestaShop website Front Office (default to **http://localhost:8080/**) |
-| LOGIN               | LOGIN of your PrestaShop website (default to **demo@prestashop.com**) |
-| PASSWD              | PASSWD of your PrestaShop website (default to **prestashop_demo**) |
+| URL_FO              | URL of your PrestaShop website Front Office (default to **`http://localhost:8080/`**) |
+| URL_BO              | URL of your PrestaShop website Back Office (default to **`URL_FO + admin-dev/`**) |
+| URL_INSTALL         | URL of the Install folder (default to **`URL_FO + install-dev/`**) |
+| LOGIN               | LOGIN of your PrestaShop website (default to **`demo@prestashop.com`**) |
+| PASSWD              | PASSWD of your PrestaShop website (default to **`prestashop_demo`**) |
+| SHOPNAME            | Shop Name of tour PrestaShop (default to **`Prestashop`**) |
+| DB_USER             | Login user of your MySql (default to **`root`**) |
+| DB_PASSWD           | Password for your MySql (default to **`empty`**) |
+| HEADLESS            | Boolean to run tests in headless or not (default to **`true`**) |
+
+Before running tests, you should install your shop manually or run the install script **`campaigns/sanity/01_installShop/*`** with the [`specific-test` command](README.md#specific-test).
+
+## Sanity tests 
+This campaign includes a non-exhaustive set of tests and will ensure that the most important functions work.
+
+### Launch all scripts
+If you want to run all sanity tests, you can run scripts in **`campaigns/sanity/*`**
+
+#### With default values
+
+```bash
+npm run sanity-tests
+```
+
+#### With custom values
+You can add parameters that you need in the beginning of your command 
+```bash
+HEADLESS=false URL_BO="Your_Shop_URL_BO" URL_FO="Your_Shop_URL_FO" npm run sanity-tests
+```
+
+### Stop tests when first step in failed
+If you want to run all sanity tests "safely", you can use the Travis-specific command : this will add the Mocha `--bail` parameter which stops the campaign when the first test fails.
+
+```bash
+npm run sanity-travis
+```
+
+## Specific test 
+If you want to run only one test from the campaign or a couple of tests in the same folder, you can use **`specific-test`** command.
+
+To specify which test to run, you can add the **`TEST_PATH`** parameter in the beginning of the command
+
+```bash
+# To run the **Filter Products** test from sanity campaign
+TEST_PATH="sanity/02_productsBO/01_filterProducts" URL_FO="Your_Shop_URL_FO" npm run specific-test
+# To run all **Products BO** tests 
+TEST_PATH="sanity/02_productsBO/*" URL_FO="Your_Shop_URL_FO" npm run specific-test
+```
+
+
+## LinkChecker
+This script will detect not found and erroneous pages, by crawling your back office and front office. It's still a Work In Progress.
+
 
 ### Launch script
-If you want to run the links checker test you can run the script **test/linkchecker.js**
+If you want to run the links checker test you can run the script **`campaigns/linkchecker.js`**
 
 #### With default values
 
 ```bash
 npm run linkchecker
-```
-
-#### With custom values
-
-```bash
-URL_BO="Your_Shop_URL_BO" URL_FO="Your_Shop_URL_FO" LOGIN="Your_Login" PASSWD="Your_Password" npm run linkchecker
-```
-
-
-## Smoke tests 
-This campaign includes a non-exhaustive set of tests and it will ensure that the most important functions work.
-
-### Launch all scripts
-If you want to run all smoke tests, you can run the script **campaigns/smoke/***
-
-#### With default values
-
-```bash
-npm run smoke-tests
 ```
 
 ## Upgrade test

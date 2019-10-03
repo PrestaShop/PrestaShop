@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -27,6 +27,8 @@
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Behat\Context\Context;
+use Behat\Testwork\Hook\Scope\BeforeSuiteScope;
+use ObjectModel;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
@@ -38,6 +40,20 @@ abstract class AbstractDomainFeatureContext implements Context
      * @var \Exception|null
      */
     protected $lastException;
+
+    /**
+     * @var int
+     */
+    protected $lastErrorCode;
+
+    /**
+     * @BeforeSuite
+     */
+    public static function prepare(BeforeSuiteScope $scope)
+    {
+        // Disable legacy object model cache to prevent conflicts between scenarios.
+        ObjectModel::disableCache();
+    }
 
     /**
      * @return CommandBusInterface
@@ -74,6 +90,19 @@ abstract class AbstractDomainFeatureContext implements Context
                 $expectedError,
                 $this->lastException ? get_class($this->lastException) : 'null'
             ));
+        }
+    }
+
+    protected function assertLastErrorCodeIs($errorCode)
+    {
+        if ($this->lastErrorCode !== $errorCode) {
+            throw new RuntimeException(
+                sprintf(
+                    'Last error code should be "%s" but got "%s"',
+                    var_export($this->lastErrorCode, true),
+                    var_export($errorCode, true)
+                )
+            );
         }
     }
 }

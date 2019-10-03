@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -704,6 +704,7 @@ class CartCore extends ObjectModel
                 IF (IFNULL(pa.`ean13`, \'\') = \'\', p.`ean13`, pa.`ean13`) AS ean13,
                 IF (IFNULL(pa.`isbn`, \'\') = \'\', p.`isbn`, pa.`isbn`) AS isbn,
                 IF (IFNULL(pa.`upc`, \'\') = \'\', p.`upc`, pa.`upc`) AS upc,
+                IF (IFNULL(pa.`mpn`, \'\') = \'\', p.`mpn`, pa.`mpn`) AS mpn,
                 IFNULL(product_attribute_shop.`minimal_quantity`, product_shop.`minimal_quantity`) as minimal_quantity,
                 IF(product_attribute_shop.wholesale_price > 0,  product_attribute_shop.wholesale_price, product_shop.`wholesale_price`) wholesale_price
             ');
@@ -713,7 +714,7 @@ class CartCore extends ObjectModel
         } else {
             $sql->select(
                 'p.`reference` AS reference, p.`ean13`, p.`isbn`,
-                p.`upc` AS upc, product_shop.`minimal_quantity` AS minimal_quantity, product_shop.`wholesale_price` wholesale_price'
+                p.`upc` AS upc, p.`mpn` AS mpn, product_shop.`minimal_quantity` AS minimal_quantity, product_shop.`wholesale_price` wholesale_price'
             );
         }
 
@@ -3392,7 +3393,7 @@ class CartCore extends ObjectModel
         if (!isset($id_zone)) {
             // Get id zone
             if (!$this->isMultiAddressDelivery()
-                && isset($this->id_address_delivery) // Be carefull, id_address_delivery is not usefull one 1.5
+                && isset($this->id_address_delivery) // Be careful, id_address_delivery is not useful one 1.5
                 && $this->id_address_delivery
                 && Customer::customerHasAddress($this->id_customer, $this->id_address_delivery)
             ) {
@@ -3999,6 +4000,7 @@ class CartCore extends ObjectModel
                 WHERE NOT EXISTS (SELECT 1 FROM ' . _DB_PREFIX_ . 'orders o WHERE o.`id_cart` = c.`id_cart`
                                     AND o.`id_customer` = ' . (int) $id_customer . ')
                 AND c.`id_customer` = ' . (int) $id_customer . '
+                AND c.`id_guest` != 0
                     ' . Shop::addSqlRestriction(Shop::SHARE_ORDER, 'c') . '
                 ORDER BY c.`date_upd` DESC';
 
@@ -4177,6 +4179,18 @@ class CartCore extends ObjectModel
             WHERE `id_customization` = ' . (int) $cust_data['id_customization'] . '
             AND `index` = ' . (int) $index
         );
+
+        $hasRemainingCustomData = Db::getInstance()->getValue(
+            'SELECT 1 FROM `' . _DB_PREFIX_ . 'customized_data`
+            WHERE `id_customization` = ' . (int) $cust_data['id_customization']
+        );
+
+        if (!$hasRemainingCustomData) {
+            $result &= Db::getInstance()->execute(
+                'DELETE FROM `' . _DB_PREFIX_ . 'customization` 
+            WHERE `id_customization` = ' . (int) $cust_data['id_customization']
+            );
+        }
 
         return $result;
     }
@@ -4823,6 +4837,26 @@ class CartCore extends ObjectModel
             FROM `' . _DB_PREFIX_ . 'customer` cu
             LEFT JOIN `' . _DB_PREFIX_ . 'cart` ca ON (ca.`id_customer` = cu.`id_customer`)
             WHERE ca.`id_cart` = ' . (int) $id_cart);
+    }
+
+    /**
+     * Are all products of the Cart still available in the current state ? They might have been converted to another
+     * type of product since then
+     *
+     * @return bool False if one of the products from the cart has been changed into a new type of product
+     */
+    public function checkAllProductsAreStillAvailableInThisState()
+    {
+        foreach ($this->getProducts(false, false, null, false) as $product) {
+            $currentProduct = new Product();
+            $currentProduct->hydrate($product);
+
+            if ($currentProduct->hasAttributes() && $product['id_product_attribute'] === '0') {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**

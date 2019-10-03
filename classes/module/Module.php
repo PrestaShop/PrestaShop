@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -2077,7 +2077,7 @@ abstract class ModuleCore implements ModuleInterface
     /**
      * Reorder modules position
      *
-     * @param bool $id_hook Hook ID
+     * @param int $id_hook Hook ID
      * @param array|null $shop_list List of shop
      *
      * @return bool

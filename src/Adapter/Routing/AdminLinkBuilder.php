@@ -16,7 +16,7 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2019 PrestaShop SA and Contributors
@@ -90,12 +90,13 @@ class AdminLinkBuilder implements EntityLinkBuilderInterface
      */
     private function buildActionParameters($action, $entity, array $parameters)
     {
+        unset($parameters['current_index']);
+        unset($parameters['token']);
         $editAction = $action . $entity;
-        $entityId = 'id_' . $entity;
 
         return array_merge(
             $parameters,
-            [$entityId => $parameters[$entityId], $editAction => 1]
+            [$editAction => 1]
         );
     }
 

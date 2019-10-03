@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShopBundle\Translation\Loader\SqlTranslationLoader;
 use PrestaShopBundle\Translation\TranslatorComponent as Translator;
@@ -363,18 +364,32 @@ class ContextCore
     }
 
     /**
+     * Returns a translator depending on service container availability and if the method
+     * is called by the installer or not.
+     *
+     * @param bool $isInstaller Set to true if the method is called by the installer
+     *
      * @return Translator
      */
-    public function getTranslator()
+    public function getTranslator($isInstaller = false)
     {
         if (null !== $this->translator) {
             return $this->translator;
         }
 
-        $translator = $this->getTranslatorFromLocale($this->language->locale);
-        $this->translator = $translator;
+        $sfContainer = SymfonyContainer::getInstance();
 
-        return $translator;
+        if ($isInstaller || null === $sfContainer) {
+            // symfony's container isn't available in front office, so we load and configure the translator component
+            $this->translator = $this->getTranslatorFromLocale($this->language->locale);
+        } else {
+            $this->translator = $sfContainer->get('translator');
+            // We need to set the locale here because in legacy BO pages, the translator is used
+            // before the TranslatorListener does its job of setting the locale according to the Request object
+            $this->translator->setLocale($this->language->locale);
+        }
+
+        return $this->translator;
     }
 
     /**
