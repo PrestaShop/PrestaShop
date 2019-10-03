@@ -167,6 +167,10 @@ final class ResetPasswordHandler implements ResetPasswordHandlerInterface
         }
 
         $employee->removeResetPasswordToken(); // Delete temporary reset token
+
+        // Not sure if we need to call $employee->update() again, as it was called a few lines above,
+        // but this is copied from the legacy logic and it's risky to change it
+        // without knowing the reasoning behind it.
         $employee->update();
     }
 }
