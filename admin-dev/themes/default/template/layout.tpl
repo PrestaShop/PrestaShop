@@ -47,7 +47,7 @@
 		{if count($errors) == 1}
 			{reset($errors)}
 		{else }
-			{l s='%d errors' sprintf=[$errors|count]}
+			{l s='There are %d errors.' sprintf=[$errors|count] d='Admin.Notifications.Error'}
 			<br/>
 			<ol>
 				{foreach $errors as $error}
