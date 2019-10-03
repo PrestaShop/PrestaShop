@@ -371,9 +371,7 @@ class CartPresenter implements PresenterInterface
             'type' => 'shipping',
             'label' => $this->translator->trans('Shipping', array(), 'Shop.Theme.Checkout'),
             'amount' => $shippingCost,
-            'value' => $shippingCost != 0
-                ? $this->priceFormatter->format($shippingCost)
-                : $this->translator->trans('Free', array(), 'Shop.Theme.Checkout'),
+            'value' => $this->getShippingDisplayValue($cart, $shippingCost),
         );
 
         $subtotals['tax'] = null;
@@ -474,6 +472,46 @@ class CartPresenter implements PresenterInterface
                 ) :
                 '',
         );
+    }
+
+    /**
+     * Accepts a cart object with the shipping cost amount and formats the shipping cost display value accordingly.
+     * If the shipping cost is 0, then we must check if this is because of a free carrier and thus display 'Free' or
+     * simply because the system was unable to determine shipping cost at this point and thus send an empty string to hide the shipping line.
+     *
+     * @param Cart $cart
+     * @param float $shippingCost
+     *
+     * @return string
+     */
+    private function getShippingDisplayValue($cart, $shippingCost)
+    {
+        $shippingDisplayValue = '';
+
+        if ($shippingCost != 0) {
+            $shippingDisplayValue = $this->priceFormatter->format($shippingCost);
+        } else {
+            $defaultCountry = null;
+
+            if (isset(Context::getContext()->cookie->id_country)) {
+                $defaultCountry = new Country(Context::getContext()->cookie->id_country);
+            }
+
+            $deliveryOptionList = $cart->getDeliveryOptionList($defaultCountry);
+
+            if (isset($deliveryOptionList) && count($deliveryOptionList) > 0) {
+                foreach ($deliveryOptionList as $option) {
+                    foreach ($option as $currentCarrier) {
+                        if (isset($currentCarrier['is_free']) && $currentCarrier['is_free'] > 0) {
+                            $shippingDisplayValue = $this->translator->trans('Free', array(), 'Shop.Theme.Checkout');
+                            break 2;
+                        }
+                    }
+                }
+            }
+        }
+
+        return $shippingDisplayValue;
     }
 
     private function getTemplateVarVouchers(Cart $cart)
