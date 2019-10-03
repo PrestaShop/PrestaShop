@@ -12,3 +12,6 @@ services:
 
     prestashop.core.grid.action.row.accessibility_checker.print_delivery_slip:
         class: 'PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\PrintDeliverySlipAccessibilityChecker'
+
+    prestashop.core.grid.action.row.accessibility_checker.delete_cart:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\DeleteCartAccessibilityChecker'
