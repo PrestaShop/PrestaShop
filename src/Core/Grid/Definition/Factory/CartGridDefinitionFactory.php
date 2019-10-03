@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\AccessibilityCheckerInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
@@ -67,19 +68,27 @@ final class CartGridDefinitionFactory extends AbstractGridDefinitionFactory
     private $contextDateFormat;
 
     /**
+     * @var AccessibilityCheckerInterface
+     */
+    private $deleteCartAccessibilityChecker;
+
+    /**
      * @param HookDispatcherInterface $dispatcher
      * @param ConfigurationInterface $configuration
+     * @param AccessibilityCheckerInterface $deleteCartAccessibilityChecker
      * @param string $contextDateFormat
      */
     public function __construct(
         HookDispatcherInterface $dispatcher,
         ConfigurationInterface $configuration,
+        AccessibilityCheckerInterface $deleteCartAccessibilityChecker,
         $contextDateFormat
     ) {
         parent::__construct($dispatcher);
 
         $this->configuration = $configuration;
         $this->contextDateFormat = $contextDateFormat;
+        $this->deleteCartAccessibilityChecker = $deleteCartAccessibilityChecker;
     }
 
     /**
@@ -167,6 +176,7 @@ final class CartGridDefinitionFactory extends AbstractGridDefinitionFactory
                                 'route' => 'admin_carts_delete',
                                 'route_param_name' => 'cartId',
                                 'route_param_field' => 'id_cart',
+                                'accessibility_checker' => $this->deleteCartAccessibilityChecker,
                                 'confirm_message' => $this->trans(
                                     'Delete selected item?',
                                     [],
