@@ -14,11 +14,20 @@ admin_carts_view:
   requirements:
     cartId: \d+
 
-admin_carts_load_cart:
-  path: /load
+admin_carts_info:
+  path: /info
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Cart:getInfo
+    _legacy_controller: AdminCarts
+  requirements:
+    cartId: \d+
+
+admin_carts_create_empty:
+  path: /create-empty
   methods: [POST]
   defaults:
-    _controller: PrestaShopBundle:Admin/Sell/Order/Cart:loadCart
+    _controller: PrestaShopBundle:Admin/Sell/Order/Cart:createEmpty
     _legacy_controller: AdminCarts
   requirements:
     customerId: \d+

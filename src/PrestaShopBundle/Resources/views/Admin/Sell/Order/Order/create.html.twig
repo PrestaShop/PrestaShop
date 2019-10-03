@@ -29,7 +29,8 @@
 
 {% block content %}
   <div id="orderCreationContainer"
-       data-last-empty-cart-url="{{ path('admin_carts_load_cart') }}"
+       data-create-empty-cart-url="{{ path('admin_carts_create_empty') }}"
+       data-get-cart-info-url="{{ path('admin_carts_info') }}"
        data-edit-address-url="{{ path('admin_carts_edit_address') }}"
        data-customer-carts-url="{{ path('admin_customers_carts') }}"
        data-customer-orders-url="{{ path('admin_customers_orders') }}"

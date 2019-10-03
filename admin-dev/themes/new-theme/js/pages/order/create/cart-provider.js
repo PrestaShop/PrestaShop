@@ -22,15 +22,33 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-import CreateOrderPage from './create/create-order-page';
+
+import createOrderPageMap from './create-order-map';
 
 const $ = window.$;
 
-$(document).ready(() => {
-  const createOrderPage = new CreateOrderPage();
+export default class CartProvider {
+  constructor() {
+    this.$container = $(createOrderPageMap.orderCreationContainer);
+  }
 
-  createOrderPage.listenForCustomerSearch();
-  createOrderPage.listenForCustomerSelect();
-  createOrderPage.listenForCartSelect();
-  createOrderPage.listenForCartUpdate();
-});
+  getCart(cartId) {
+    return $.ajax(this.$container.data('get-cart-info-url'), {
+      method: 'GET',
+      data: {
+        cart_id: cartId,
+      },
+      dataType: 'json',
+    });
+  }
+
+  loadEmptyCart(customerId) {
+    return $.ajax(this.$container.data('create-empty-cart-url'), {
+      method: 'POST',
+      data: {
+        customer_id: customerId,
+      },
+      dataType: 'json',
+    });
+  }
+}

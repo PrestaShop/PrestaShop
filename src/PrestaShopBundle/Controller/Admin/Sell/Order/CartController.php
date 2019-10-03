@@ -80,15 +80,18 @@ class CartController extends FrameworkBundleAdminController
         ]);
     }
 
-    public function loadCartAction(Request $request): JsonResponse
+    public function getInfoAction(Request $request)
     {
-        $cartId = $request->request->getInt('cart_id');
+        $cartId = $request->query->getInt('cart_id');
+        $cartInfo = $this->getQueryBus()->handle(new GetCartInformation($cartId));
+
+        return $this->json($cartInfo);
+    }
+
+    public function createEmptyAction(Request $request): JsonResponse
+    {
         $customerId = $request->request->getInt('customer_id');
-
-        if (!$cartId) {
-            $cartId = $this->getCommandBus()->handle(new CreateEmptyCustomerCartCommand($customerId))->getValue();
-        }
-
+        $cartId = $this->getCommandBus()->handle(new CreateEmptyCustomerCartCommand($customerId))->getValue();
         $cartInfo = $this->getQueryBus()->handle(new GetCartInformation($cartId));
 
         return $this->json($cartInfo);

@@ -39,26 +39,26 @@ class CartSummary
     /**
      * @var string
      */
-    private $cartCreationDate;
+    private $creationDate;
 
     /**
      * @var string
      */
-    private $cartTotal;
+    private $totalPrice;
 
     /**
      * @param int $cartId
-     * @param string $cartCreationDate
-     * @param string $cartTotal
+     * @param string $creationDate
+     * @param string $totalPrice
      */
     public function __construct(
         int $cartId,
-        string $cartCreationDate,
-        string $cartTotal
+        string $creationDate,
+        string $totalPrice
     ) {
         $this->cartId = $cartId;
-        $this->cartCreationDate = $cartCreationDate;
-        $this->cartTotal = $cartTotal;
+        $this->creationDate = $creationDate;
+        $this->totalPrice = $totalPrice;
     }
 
     /**
@@ -72,16 +72,16 @@ class CartSummary
     /**
      * @return string
      */
-    public function getCartCreationDate(): string
+    public function getCreationDate(): string
     {
-        return $this->cartCreationDate;
+        return $this->creationDate;
     }
 
     /**
      * @return string
      */
-    public function getCartTotal(): string
+    public function getTotalPrice(): string
     {
-        return $this->cartTotal;
+        return $this->totalPrice;
     }
 }

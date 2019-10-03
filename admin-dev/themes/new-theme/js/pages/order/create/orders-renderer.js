@@ -22,15 +22,41 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-import CreateOrderPage from './create/create-order-page';
+
+import createOrderPageMap from './create-order-map';
 
 const $ = window.$;
 
-$(document).ready(() => {
-  const createOrderPage = new CreateOrderPage();
+/**
+ * Renders customer orders list
+ */
+export default class OrdersRenderer {
+  /**
+   * Renders customer orders
+   *
+   * @param {Array} orders
+   */
+  render(orders) {
+    const $ordersTable = $(createOrderPageMap.customerOrdersTable);
+    const $rowTemplate = $($(createOrderPageMap.customerOrdersTableRowTemplate).html());
 
-  createOrderPage.listenForCustomerSearch();
-  createOrderPage.listenForCustomerSelect();
-  createOrderPage.listenForCartSelect();
-  createOrderPage.listenForCartUpdate();
-});
+    $ordersTable.find('tbody').empty();
+
+    if (!orders) {
+      return;
+    }
+
+    for (const key in Object.keys(orders)) {
+      const order = orders[key];
+      const $template = $rowTemplate.clone();
+
+      $template.find('.js-order-id').text(order.orderId);
+      $template.find('.js-order-date').text(order.orderPlacedDate);
+      $template.find('.js-order-products').text(order.totalProductsCount);
+      $template.find('.js-order-total-paid').text(order.totalPaid);
+      $template.find('.js-order-status').text(order.orderStatus);
+
+      $ordersTable.find('tbody').append($template);
+    }
+  }
+}
