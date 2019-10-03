@@ -72,7 +72,6 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\WebserviceKeyFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\WebserviceKeyFeatureContext
-
         tax:
             paths:
                 features: Features/Scenario/Tax
@@ -110,3 +109,10 @@ default:
               - Tests\Integration\Behaviour\Features\Context\Configuration\CommonConfigurationFeatureContext
               - Tests\Integration\Behaviour\Features\Context\Domain\MetaFeatureContext
               - Tests\Integration\Behaviour\Features\Context\MetaFeatureContext
+        feature:
+            paths:
+                features: Features/Scenario/Feature
+            contexts:
+                - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\FeatureFeatureContext
