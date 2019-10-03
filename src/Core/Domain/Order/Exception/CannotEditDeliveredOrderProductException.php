@@ -1,3 +1,4 @@
+<?php
 /**
  * 2007-2019 PrestaShop SA and Contributors
  *
@@ -23,14 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-export default {
-  orderPaymentDetailsBtn: '.js-payment-details-btn',
-  privateNoteToggleBtn: '.js-private-note-toggle-btn',
-  privateNoteBlock: '.js-private-note-block',
-  privateNoteInput: '#private_note_note',
-  privateNoteSubmitBtn: '.js-private-note-btn',
-  updateOrderProductModal: '#updateOrderProductModal',
-  updateOrderProductPriceTaxExclInput: '#update_order_product_price_tax_excl',
-  updateOrderProductPriceTaxInclInput: '#update_order_product_price_tax_incl',
-  updateOrderProductQuantityInput: '#update_order_product_quantity',
-};
+namespace PrestaShop\PrestaShop\Core\Domain\Order\Exception;
+
+class CannotEditDeliveredOrderProductException extends OrderException
+{
+}

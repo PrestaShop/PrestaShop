@@ -1,3 +1,4 @@
+<?php
 /**
  * 2007-2019 PrestaShop SA and Contributors
  *
@@ -23,14 +24,25 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-export default {
-  orderPaymentDetailsBtn: '.js-payment-details-btn',
-  privateNoteToggleBtn: '.js-private-note-toggle-btn',
-  privateNoteBlock: '.js-private-note-block',
-  privateNoteInput: '#private_note_note',
-  privateNoteSubmitBtn: '.js-private-note-btn',
-  updateOrderProductModal: '#updateOrderProductModal',
-  updateOrderProductPriceTaxExclInput: '#update_order_product_price_tax_excl',
-  updateOrderProductPriceTaxInclInput: '#update_order_product_price_tax_incl',
-  updateOrderProductQuantityInput: '#update_order_product_quantity',
-};
+namespace PrestaShopBundle\Form\Admin\Sell\Order;
+
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormBuilderInterface;
+
+class AddOrderProductType extends AbstractType
+{
+    public function buildForm(FormBuilderInterface $builder, array $options): void
+    {
+        $builder
+            ->add('product_id', TextType::class)
+            ->add('combination_id', TextType::class, [
+                'required' => false,
+            ])
+            ->add('price_tax_incl', TextType::class)
+            ->add('price_tax_excl', TextType::class)
+            ->add('quantity', NumberType::class)
+        ;
+    }
+}

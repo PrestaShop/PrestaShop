@@ -132,6 +132,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             $order->reference,
             $taxMethod,
             (bool) $order->valid,
+            $order->hasBeenDelivered(),
             $this->getOrderCustomer($order),
             $this->getOrderShippingAddress($order),
             $this->getOrderInvoiceAddress($order),
@@ -387,7 +388,9 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
                 $unitPriceFormatted,
                 $totalPriceFormatted,
                 $product['current_stock'],
-                $this->imageTagSourceParser->parse($product['image_tag'])
+                $this->imageTagSourceParser->parse($product['image_tag']),
+                Tools::ps_round($product['unit_price_tax_excl'], 2),
+                Tools::ps_round($product['unit_price_tax_incl'], 2)
             );
         }
 

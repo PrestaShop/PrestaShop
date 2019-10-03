@@ -73,6 +73,16 @@ class OrderProductForViewing
      */
     private $imagePath;
 
+    /**
+     * @var float
+     */
+    private $unitPriceTaxExclRaw;
+
+    /**
+     * @var float
+     */
+    private $unitPriceTaxInclRaw;
+
     public function __construct(
         int $id,
         string $name,
@@ -82,7 +92,9 @@ class OrderProductForViewing
         string $unitPrice,
         string $totalPrice,
         int $availableQuantity,
-        string $imagePath
+        string $imagePath,
+        float $unitPriceTaxExclRaw,
+        float $unitPriceTaxInclRaw
     ) {
         $this->id = $id;
         $this->name = $name;
@@ -93,6 +105,8 @@ class OrderProductForViewing
         $this->totalPrice = $totalPrice;
         $this->availableQuantity = $availableQuantity;
         $this->imagePath = $imagePath;
+        $this->unitPriceTaxExclRaw = $unitPriceTaxExclRaw;
+        $this->unitPriceTaxInclRaw = $unitPriceTaxInclRaw;
     }
 
     /**
@@ -165,5 +179,21 @@ class OrderProductForViewing
     public function getImagePath(): string
     {
         return $this->imagePath;
+    }
+
+    /**
+     * @return float
+     */
+    public function getUnitPriceTaxExclRaw(): float
+    {
+        return $this->unitPriceTaxExclRaw;
+    }
+
+    /**
+     * @return float
+     */
+    public function getUnitPriceTaxInclRaw(): float
+    {
+        return $this->unitPriceTaxInclRaw;
     }
 }

@@ -69,4 +69,16 @@ $(() => {
       $submitBtn.prop('disabled', !note);
     });
   }
+
+  $(document).on('click', '.js-order-product-update-btn', (event) => {
+    const $btn = $(event.currentTarget);
+
+    const $modal = $(OrderViewPageMap.updateOrderProductModal);
+
+    $modal.find('.js-update-product-name').text($btn.data('product-name'));
+    $modal.find(OrderViewPageMap.updateOrderProductPriceTaxExclInput).val($btn.data('product-price-tax-excl'));
+    $modal.find(OrderViewPageMap.updateOrderProductPriceTaxInclInput).val($btn.data('product-price-tax-incl'));
+    $modal.find(OrderViewPageMap.updateOrderProductQuantityInput).val($btn.data('product-quantity'));
+    $modal.find('form').attr('action', $btn.data('update-url'));
+  });
 });

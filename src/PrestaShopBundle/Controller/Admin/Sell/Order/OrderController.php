@@ -34,10 +34,12 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Command\BulkChangeOrderStatusCommand
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\DuplicateOrderCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotEditDeliveredOrderProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\ChangeOrderStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Payment\Command\AddPaymentCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\UpdateProductInOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
@@ -48,8 +50,10 @@ use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Customer\PrivateNoteType;
 use PrestaShopBundle\Form\Admin\Sell\Order\AddOrderCartRuleType;
 use PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrderCurrencyType;
+use PrestaShopBundle\Form\Admin\Sell\Order\AddOrderProductType;
 use PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrdersStatusType;
 use PrestaShopBundle\Form\Admin\Sell\Order\OrderPaymentType;
+use PrestaShopBundle\Form\Admin\Sell\Order\UpdateOrderProductType;
 use PrestaShopBundle\Form\Admin\Sell\Order\UpdateOrderStatusType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Service\Grid\ResponseBuilder;
@@ -259,6 +263,8 @@ class OrderController extends FrameworkBundleAdminController
         $privateNoteForm = $this->createForm(PrivateNoteType::class, [
             'note' => $orderForViewing->getCustomer()->getPrivateNote(),
         ]);
+        $addOrderProductForm = $this->createForm(AddOrderProductType::class);
+        $updateOrderProductForm = $this->createForm(UpdateOrderProductType::class);
 
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/view.html.twig', [
             'showContentHeader' => false,
@@ -268,6 +274,39 @@ class OrderController extends FrameworkBundleAdminController
             'addOrderPaymentForm' => $addOrderPaymentForm->createView(),
             'changeOrderCurrencyForm' => $changeOrderCurrencyForm->createView(),
             'privateNoteForm' => $privateNoteForm->createView(),
+            'addOrderProductForm' => $addOrderProductForm->createView(),
+            'updateOrderProductForm' => $updateOrderProductForm->createView(),
+        ]);
+    }
+
+    public function updateProductAction(int $orderId, int $orderDetailId, Request $request): RedirectResponse
+    {
+        $updateOrderProductForm = $this->createForm(UpdateOrderProductType::class);
+        $updateOrderProductForm->handleRequest($request);
+
+        if ($updateOrderProductForm->isSubmitted() && $updateOrderProductForm->isValid()) {
+            $data = $updateOrderProductForm->getData();
+
+            try {
+                $this->getCommandBus()->handle(
+                    new UpdateProductInOrderCommand(
+                        $orderId,
+                        $orderDetailId,
+                        $data['price_tax_excl'],
+                        $data['price_tax_incl'],
+                        $data['quantity']
+                    )
+                );
+
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+            } catch (Exception $e) {
+                $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+            }
+        }
+
+        return $this->redirectToRoute('admin_orders_view', [
+            'orderId' => $orderId,
+>>>>>>> 068f2bffca... Implement updating order products
         ]);
     }
 
@@ -467,6 +506,8 @@ class OrderController extends FrameworkBundleAdminController
     private function getErrorMessages(OrderException $e)
     {
         return [
+            CannotEditDeliveredOrderProductException::class =>
+                $this->trans('Cannot edit product for delivered order', 'Admin.Orderscustomers.Notification'),
             OrderNotFoundException::class => $e instanceof OrderNotFoundException ?
                 $this->trans(
                     'Order #%d cannot be loaded',
