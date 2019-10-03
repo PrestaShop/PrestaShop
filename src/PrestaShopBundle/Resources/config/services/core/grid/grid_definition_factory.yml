@@ -257,5 +257,6 @@ services:
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
         arguments:
             - '@prestashop.adapter.legacy.configuration'
+            - '@prestashop.core.grid.action.row.accessibility_checker.delete_cart'
             - '@=service("prestashop.adapter.legacy.context").getContext().language.date_format_full'
         public: true
