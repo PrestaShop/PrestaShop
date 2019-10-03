@@ -279,4 +279,5 @@ services:
         arguments:
             - '@prestashop.adapter.legacy.configuration'
             - '@=service("prestashop.adapter.legacy.context").getContext().language.date_format_full'
+            - ''
         public: true
