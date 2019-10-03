@@ -67,11 +67,42 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
+     * @Given currency :reference with isoCode :isoCode exists
+     */
+    public function createCurrencyWithIsoCode($reference, $isoCode)
+    {
+        //Currency::getIdByIsoCode only returns not deleted currency so we check the storage to avoid duplicate contents
+        if (SharedStorage::getStorage()->exists($reference)) {
+            /** @var Currency $currency */
+            $currency = SharedStorage::getStorage()->get($reference);
+            if ($currency->iso_code == $isoCode) {
+                return;
+            }
+        }
+
+        $currencyId = Currency::getIdByIsoCode($isoCode, 0, true);
+
+        if (!$currencyId) {
+            $currency = new Currency();
+            $currency->name = $isoCode;
+            $currency->iso_code = $isoCode;
+            $currency->active = 1;
+            $currency->deleted = 0;
+            $currency->conversion_rate = 1;
+            $currency->add();
+        } else {
+            $currency = new Currency($currencyId);
+        }
+
+        SharedStorage::getStorage()->set($reference, $currency);
+    }
+
+    /**
      * @Given /^there is a currency named "(.+)" with iso code "(.+)" and exchange rate of (\d+\.\d+)$/
      */
     public function thereIsACurrency($currencyName, $currencyIsoCode, $changeRate)
     {
-        $currencyId = Currency::getIdByIsoCode($currencyIsoCode);
+        $currencyId = Currency::getIdByIsoCode($currencyIsoCode, 0, true);
         // soft delete here...
         if (!$currencyId) {
             $currency = new Currency();

@@ -90,9 +90,9 @@ class Repository implements CurrencyRepositoryInterface
     /**
      * {@inheritdoc}
      */
-    public function getAllCurrencies($localeCode)
+    public function getAllCurrenciesInDatabase($localeCode)
     {
-        return $this->formatCurrencies($this->dataSource->getAllCurrenciesData($localeCode));
+        return $this->formatCurrencies($this->dataSource->getAllCurrenciesDataInDatabase($localeCode));
     }
 
     /**
@@ -103,6 +103,7 @@ class Repository implements CurrencyRepositoryInterface
     private function formatCurrencies(array $currenciesData)
     {
         $currencies = new CurrencyCollection();
+        /** @var CurrencyData $currencyDatum */
         foreach ($currenciesData as $currencyDatum) {
             $currencies->add(new Currency(
                 $currencyDatum->isActive(),

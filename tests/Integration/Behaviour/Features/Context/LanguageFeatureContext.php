@@ -26,27 +26,30 @@
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
-use Behat\Gherkin\Node\TableNode;
 use Language;
 use RuntimeException;
 
 class LanguageFeatureContext extends AbstractPrestaShopFeatureContext
 {
     /**
-     * @Given I add a new language :reference with following properties:
+     * @Given language :reference with locale :locale exists
      */
-    public function addLocale($reference, TableNode $node)
+    public function createLanguageWithLocale($reference, $locale)
     {
-        $data = $node->getRowsHash();
-        $language = new Language();
-        $language->name = $data['name'];
-        $language->iso_code = $data['iso_code'];
-        $language->language_code = $data['language_code'];
-        $language->locale = $data['locale'];
-        $language->date_format_lite = $data['date_format_lite'];
-        $language->date_format_full = $data['date_format_full'];
-        $language->is_rtl = (bool) $data['is_rtl'];
-        $language->add();
+        $languageId = Language::getIdByLocale($locale, true);
+
+        if (false === $languageId) {
+            $language = new Language();
+            $language->locale = $locale;
+            $language->active = true;
+            $language->name = $locale;
+            $language->is_rtl = false;
+            $language->language_code = strtolower($locale);
+            $language->iso_code = substr($locale, 0, strpos($locale, '-'));
+            $language->add();
+        } else {
+            $language = new Language($languageId);
+        }
 
         SharedStorage::getStorage()->set($reference, $language);
     }
