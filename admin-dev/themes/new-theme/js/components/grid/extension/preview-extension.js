@@ -29,9 +29,8 @@ const $ = window.$;
  * Extends grid with preview functionality.
  */
 export default class PreviewExtension {
-  constructor(previewRenderer) {
+  constructor() {
     this.lock = [];
-    this.renderer = previewRenderer;
     this.expandSelector = '.js-expand';
     this.collapseSelector = '.js-collapse';
     this.previewOpenClass = 'preview-open';
