@@ -79,3 +79,12 @@ admin_orders_add_payment:
     _controller: PrestaShopBundle:Admin/Sell/Order/Order:addPayment
   requirements:
     orderId: \d+
+
+admin_orders_update_product:
+  path: /{orderId}/products/{orderDetailId}
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:updateProduct
+  requirements:
+    orderId: \d+
+    orderDetailId: \d+

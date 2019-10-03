@@ -85,6 +85,7 @@ module.exports = {
     order: './js/pages/order',
     order_create: './js/pages/order/create.js',
     catalog_price_rule: './js/pages/catalog-price-rule',
+    order_view: './js/pages/order/view.js',
   },
   output: {
     path: path.resolve(__dirname, '../public'),

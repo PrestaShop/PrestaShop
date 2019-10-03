@@ -105,12 +105,18 @@ class OrderForViewing
      */
     private $currencyId;
 
+    /**
+     * @var bool
+     */
+    private $isDelivered;
+
     public function __construct(
         int $orderId,
         int $currencyId,
         string $reference,
         string $taxMethod,
         bool $isValid,
+        bool $isDelivered,
         OrderCustomerForViewing $customer,
         OrderShippingAddressForViewing $shippingAddress,
         OrderInvoiceAddressForViewing $invoiceAddress,
@@ -137,6 +143,7 @@ class OrderForViewing
         $this->messages = $messages;
         $this->orderId = $orderId;
         $this->currencyId = $currencyId;
+        $this->isDelivered = $isDelivered;
     }
 
     /**
@@ -257,5 +264,13 @@ class OrderForViewing
     public function getMessages(): OrderMessagesForViewing
     {
         return $this->messages;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDelivered(): bool
+    {
+        return $this->isDelivered;
     }
 }
