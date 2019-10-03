@@ -3,4 +3,10 @@
   .column-shop_name {
     word-break: normal;
   }
+
+  .order-link-groups {
+    a:only-child {
+      margin-left: auto;
+    }
+  }
 }
