@@ -191,8 +191,8 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'format' => $this->contextDateFormat,
                 ])
             )
-            ->add((new LinkGroupColumn('pdf'))
-                ->setName($this->trans('PDF', [], 'Admin.Global'))
+            ->add((new LinkGroupColumn('actions'))
+                ->setName($this->trans('Actions', [], 'Admin.Global'))
                 ->setOptions([
                         'links' => [
                             [
@@ -209,13 +209,13 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
                                 'route_param_name' => 'orderId',
                                 'route_param_field' => 'id_order',
                             ],
+                            [
+                                'icon' => 'zoom_in',
+                                'route' => 'admin_orders_index',
+                                'route_param_name' => 'id_order',
+                                'route_param_field' => 'id_order',
+                            ],
                         ],
-                ])
-            )
-            ->add((new ActionColumn('actions'))
-                ->setName($this->trans('Actions', [], 'Admin.Global'))
-                ->setOptions([
-                    'actions' => $this->getRowActions(),
                 ])
             )
         ;
@@ -406,25 +406,6 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'submit_route' => 'admin_orders_change_orders_status',
                     'modal_id' => 'changeOrdersStatusModal',
                 ])
-            )
-        ;
-    }
-
-    /**
-     * @return RowActionCollection
-     */
-    private function getRowActions()
-    {
-        return (new RowActionCollection())
-            ->add(
-                (new LinkRowAction('view'))
-                    ->setName($this->trans('View', [], 'Admin.Actions'))
-                    ->setIcon('zoom_in')
-                    ->setOptions([
-                        'route' => 'admin_orders_index',
-                        'route_param_name' => 'id_order',
-                        'route_param_field' => 'id_order',
-                    ])
             )
         ;
     }

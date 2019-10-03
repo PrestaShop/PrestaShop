@@ -25,7 +25,10 @@
 
 <div class="text-nowrap">
   {% for link in column.options.links %}
-    {% if record[link.is_link_available_field] %}
+    {% set isValidationFieldDefined = link.is_link_available_field is defined %}
+    {% set isAvailable = (isValidationFieldDefined and record[link.is_link_available_field]) or not isValidationFieldDefined %}
+
+    {% if isAvailable %}
       <a href="{{ path(link.route, { (link.route_param_name) : record[link.route_param_field]}) }}">
         <i class="material-icons">{{ link.icon }}</i>
       </a>
