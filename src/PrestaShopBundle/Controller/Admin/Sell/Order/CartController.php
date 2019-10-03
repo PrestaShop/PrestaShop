@@ -88,8 +88,6 @@ class CartController extends FrameworkBundleAdminController
         if (!$cartId) {
             $cartId = $this->getCommandBus()->handle(new CreateEmptyCustomerCartCommand($customerId))->getValue();
         }
-        //@todo: delete this service if unusable
-        $contextCartInitializer = $this->get('prestashop.adapter.cart.context_cart_initializer');
 
         $cartInfo = $this->getQueryBus()->handle(new GetCartInformation($cartId));
 
