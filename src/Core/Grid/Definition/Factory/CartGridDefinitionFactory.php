@@ -81,14 +81,13 @@ final class CartGridDefinitionFactory extends AbstractGridDefinitionFactory
     public function __construct(
         HookDispatcherInterface $dispatcher,
         ConfigurationInterface $configuration,
-        AccessibilityCheckerInterface $deleteCartAccessibilityChecker,
         $contextDateFormat
     ) {
         parent::__construct($dispatcher);
 
         $this->configuration = $configuration;
         $this->contextDateFormat = $contextDateFormat;
-        $this->deleteCartAccessibilityChecker = $deleteCartAccessibilityChecker;
+        //$this->deleteCartAccessibilityChecker = $deleteCartAccessibilityChecker;
     }
 
     /**
@@ -176,7 +175,6 @@ final class CartGridDefinitionFactory extends AbstractGridDefinitionFactory
                                 'route' => 'admin_carts_delete',
                                 'route_param_name' => 'cartId',
                                 'route_param_field' => 'id_cart',
-                                'accessibility_checker' => $this->deleteCartAccessibilityChecker,
                                 'confirm_message' => $this->trans(
                                     'Delete selected item?',
                                     [],
