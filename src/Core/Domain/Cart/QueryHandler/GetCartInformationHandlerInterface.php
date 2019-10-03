@@ -24,30 +24,15 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Cart\Query;
+namespace PrestaShop\PrestaShop\Core\Domain\Cart\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
+use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation;
 
-class GetEmptyCartSummary
+/**
+ * Interface for handling GetCartInformation query
+ */
+interface GetCartInformationHandlerInterface
 {
-    /**
-     * @var CartId
-     */
-    private $cartId;
-
-    /**
-     * @param int $cartId
-     */
-    public function __construct($cartId)
-    {
-        $this->cartId = new CartId($cartId);
-    }
-
-    /**
-     * @return CartId
-     */
-    public function getCartId()
-    {
-        return $this->cartId;
-    }
+    public function handle(GetCartInformation $query): CartInformation;
 }

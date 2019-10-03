@@ -29,7 +29,7 @@
 
 {% block content %}
   <div id="orderCreationContainer"
-       data-last-empty-cart-url="{{ path('admin_carts_load_empty_customer_cart') }}"
+       data-last-empty-cart-url="{{ path('admin_carts_load_customer_cart') }}"
        data-customer-carts-url="{{ path('admin_customers_carts') }}"
        data-customer-orders-url="{{ path('admin_customers_orders') }}"
        data-cart-addresses-url="{{ getAdminLink('AdminCarts', true, {'action': 'updateAddresses', 'ajax': 1}) }}"

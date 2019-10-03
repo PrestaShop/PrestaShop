@@ -24,12 +24,36 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Cart\QueryHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Cart\Query;
 
-use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetEmptyCartSummary;
-use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\EmptyCartSummary;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 
-interface GetEmptyCartSummaryHandlerInterface
+/**
+ * Query for getting cart information
+ */
+class GetCartInformation
 {
-    public function handle(GetEmptyCartSummary $query): EmptyCartSummary;
+    /**
+     * @var CartId
+     */
+    private $cartId;
+
+    /**
+     * @param int $cartId
+     *
+     * @throws CartConstraintException
+     */
+    public function __construct(int $cartId)
+    {
+        $this->cartId = new CartId($cartId);
+    }
+
+    /**
+     * @return CartId
+     */
+    public function getCartId(): CartId
+    {
+        return $this->cartId;
+    }
 }

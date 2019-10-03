@@ -27,11 +27,11 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
 use Exception;
-use PrestaShop\PrestaShop\Adapter\Cart\ContextCartSetter;
+use PrestaShop\PrestaShop\Adapter\Cart\ContextCartInitializer;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\CreateEmptyCustomerCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForViewing;
-use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetEmptyCartSummary;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetLastEmptyCustomerCart;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -80,10 +80,10 @@ class CartController extends FrameworkBundleAdminController
         ]);
     }
 
-    public function loadEmptyCustomerCartAction(Request $request)
+    public function loadCustomerCartAction(Request $request)
     {
-        /** @var ContextCartSetter $contextCartSetter */
-        $contextCartSetter = $this->get('prestashop.adapter.cart.context_cart_setter');
+        /** @var ContextCartInitializer $contextCartInitializer */
+        $contextCartInitializer = $this->get('prestashop.adapter.cart.context_cart_initializer');
 
         $customerId = $request->request->getInt('customer_id');
         $cartId = $request->request->getInt('cart_id');
@@ -96,11 +96,9 @@ class CartController extends FrameworkBundleAdminController
             }
         }
 
-        $contextCartSetter->setContextCart($cartId);
+        $contextCartInitializer->init($cartId, $customerId);
 
-        $cartSummary = $this->getQueryBus()->handle(new GetEmptyCartSummary($cartId));
-
-        return $this->json($cartSummary);
+        return $this->json($this->getQueryBus()->handle(new GetCartInformation($cartId)));
     }
 
     /**

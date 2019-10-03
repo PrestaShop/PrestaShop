@@ -91,16 +91,16 @@ services:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetLastEmptyCustomerCart'
 
-  prestashop.adapter.cart.context_cart_setter:
-    class: 'PrestaShop\PrestaShop\Adapter\Cart\ContextCartSetter'
+  prestashop.adapter.cart.context_cart_initializer:
+    class: 'PrestaShop\PrestaShop\Adapter\Cart\ContextCartInitializer'
     arguments:
       - '@=service("prestashop.adapter.legacy.context").getContext()'
 
-  prestashop.adapter.query_handler.get_empty_cart_summary_handler:
-    class: 'PrestaShop\PrestaShop\Adapter\Cart\QueryHandler\GetEmptyCartSummaryHandler'
+  prestashop.adapter.query_handler.get_cart_information_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Cart\QueryHandler\GetCartInformationHandler'
     arguments:
       - '@prestashop.core.localization.locale.repository'
       - '@=service("prestashop.adapter.legacy.context").getContext().language.getLocale()'
     tags:
       - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetEmptyCartSummary'
+        command: 'PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation'

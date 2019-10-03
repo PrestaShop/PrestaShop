@@ -26,11 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Cart;
 
-use Address;
-use AddressFormat;
 use Cart;
 use Context;
-use Customer;
 use PrestaShop\PrestaShop\Adapter\Validate;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
@@ -61,23 +58,5 @@ abstract class AbstractCartHandler
         }
 
         return $cart;
-    }
-
-    /**
-     * @param Cart $cart
-     *
-     * @return array
-     */
-    protected function getAddresses(Cart $cart)
-    {
-        $customer = new Customer($cart->id_customer);
-        $addresses = $customer->getAddresses($cart->id_lang);
-
-        foreach ($addresses as &$data) {
-            $address = new Address((int) $data['id_address']);
-            $data['formated_address'] = AddressFormat::generateAddress($address, [], '<br />');
-        }
-
-        return $addresses;
     }
 }
