@@ -2,57 +2,36 @@
 @reset-database-before-feature
 Feature: CLDR display for prices
 
+  # It's important to prepare all the currencies status before we display any price, because LocaleRepository
+  # caches the locale which contains the price specifications of all currencies available at the time they were created.
   Background:
     Given shop "shop1" with name "test_shop" exists
+    Given language "language1" with locale "en-US" exists
+    Given language "language2" with locale "fr-FR" exists
+    Given currency "currency1" with isoCode "USD" exists
+    Given currency "currency2" with isoCode "EUR" exists
+    Given currency "currency3" with isoCode "AUD" exists
+    And I delete currency "currency2"
+    And I disable currency "currency3"
 
-  Scenario: Display EUR
-    When I add a new language "language1" with following properties:
-      | name             | English (US) |
-      | iso_code         | en           |
-      | language_code    | en-us        |
-      | locale           | en-US        |
-      | date_format_lite | m/d/Y        |
-      | date_format_full | m/d/Y H:i:s  |
-      | is_rtl           | 0            |
-    And I add a new language "language2" with following properties:
-      | name             | French       |
-      | iso_code         | fr           |
-      | language_code    | fr-fr        |
-      | locale           | fr-FR        |
-      | date_format_lite | d/m/Y        |
-      | date_format_full | d/m/Y H:i:s  |
-      | is_rtl           | 0            |
-    And I add new currency "currency1" with following properties:
-      | iso_code         | EUR           |
-      | exchange_rate    | 0.63          |
-      | is_enabled       | 1             |
-      | shop_association | shop1         |
-    Then language "language1" should be "en-US"
-    Then language "language2" should be "fr-FR"
-    And currency "currency1" should be "EUR"
-    And display a price of 14789.5426 "EUR" with locale "en-US" should look like "€14,789.54"
-    And display a price of 14789.5426 "EUR" with locale "fr-FR" should look like "14 789,54 €"
+  Scenario: Display USD
+    Then display a price of 14789.5426 "USD" with locale "en-US" should look like "$14,789.54"
+    Then display a price of 14789.5426 "USD" with locale "fr-FR" should look like "14 789,54 $"
 
-  Scenario: Display a deleted currency
-    Given language "language1" should be "en-US"
-    And currency "currency1" should be "EUR"
+  Scenario: Display a deleted EUR currency
     And there should be 1 currencies of "EUR"
-    And display a price of 14789.5426 "EUR" with locale "en-US" should look like "€14,789.54"
-    When I delete currency "currency1"
+    And currency with "EUR" has been deleted
     Then display a price of 14789.5426 "EUR" with locale "en-US" should look like "€14,789.54"
+    And display a price of 14789.5426 "EUR" with locale "fr-FR" should look like "14 789,54 €"
     # Check that the CLDR doesn't add the currency in database
     And there should be 1 currencies of "EUR"
 
   Scenario: Display a disabled currency
-    Given language "language1" should be "en-US"
-    And I add new currency "currency1" with following properties:
-      | iso_code         | USD           |
-      | exchange_rate    | 0.89          |
-      | is_enabled       | 1             |
-      | shop_association | shop1         |
-    And there should be 1 currencies of "USD"
-    And display a price of 14789.5426 "USD" with locale "en-US" should look like "$14,789.54"
-    When I disable currency "currency1"
-    Then display a price of 14789.5426 "USD" with locale "en-US" should look like "$14,789.54"
+    And there should be 1 currencies of "AUD"
+    And currency with "AUD" has been deactivated
+    # We use narrow symbols that's why australian dollar is displayed with $ and not A$
+    Then display a price of 14789.5426 "AUD" with locale "en-US" should look like "$14,789.54"
+    And display a price of 14789.5426 "AUD" with locale "fr-FR" should look like "14 789,54 $"
     # Check that the CLDR doesn't add the currency in database
-    And there should be 1 currencies of "USD"
+    And there should be 1 currencies of "AUD"
+

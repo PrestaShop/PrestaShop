@@ -67,13 +67,13 @@ interface DataSourceInterface
     public function getAvailableCurrenciesData($localeCode);
 
     /**
-     * Get all the available currencies' data (installed in database no matter if it's deleted or active).
+     * Get all the database currencies' data (present in database no matter if it's deleted or active).
      *
      * @param string $localeCode
      *                           Data will be translated in this language
      *
      * @return CurrencyData[]
-     *                        The available currencies' data
+     *                        The database currencies' data
      */
-    public function getAllCurrenciesData($localeCode);
+    public function getAllCurrenciesDataInDatabase($localeCode);
 }

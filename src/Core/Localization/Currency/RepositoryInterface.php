@@ -69,5 +69,5 @@ interface RepositoryInterface
      * @return CurrencyCollection
      *                            The available currencies
      */
-    public function getAllCurrencies($localeCode);
+    public function getAllCurrenciesInDatabase($localeCode);
 }
