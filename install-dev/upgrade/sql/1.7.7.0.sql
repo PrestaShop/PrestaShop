@@ -14,4 +14,5 @@ ALTER TABLE `PREFIX_product_attribute` ADD `mpn` VARCHAR(40) NULL AFTER `upc`;
 ALTER TABLE `PREFIX_product` ADD `mpn` VARCHAR(40) NULL AFTER `upc`;
 
 /* Set optin field value to 0 in employee table */
+ALTER TABLE `PREFIX_employee` MODIFY COLUMN `optin` tinyint(1) unsigned NOT NULL DEFAULT 0;
 UPDATE `PREFIX_employee` SET `optin` = 0;
