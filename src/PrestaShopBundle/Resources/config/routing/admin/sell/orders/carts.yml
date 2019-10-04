@@ -32,6 +32,15 @@ admin_carts_create_empty:
   requirements:
     customerId: \d+
 
+admin_carts_duplicate:
+  path: /duplicate
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Cart:duplicateOrderCart
+    _legacy_controller: AdminCarts
+  requirements:
+    orderId: \d+
+
 admin_carts_edit_address:
   path: /edit-address
   methods: [POST]

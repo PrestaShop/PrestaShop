@@ -32,5 +32,6 @@ $(document).ready(() => {
   createOrderPage.listenForCustomerSearch();
   createOrderPage.listenForCustomerSelect();
   createOrderPage.listenForCartSelect();
+  createOrderPage.listenForOrderSelect();
   createOrderPage.listenForCartUpdate();
 });

@@ -54,6 +54,7 @@ export default class CreateOrderPage {
       listenForCustomerSearch: () => this._handleCustomerSearch(),
       listenForCustomerSelect: () => this._handleCustomerChooseForOrderCreation(),
       listenForCartSelect: () => this._handleUseCartForOrderCreation(),
+      listenForOrderSelect: () => this._handleDuplicateOrderCart(),
       listenForCartUpdate: () => this._handleCartUpdate(),
     };
   }
@@ -91,21 +92,53 @@ export default class CreateOrderPage {
     this.$container.on('click', createOrderPageMap.changeCustomerBtn, () => this.customerSearcher.onCustomerChange());
   }
 
+  /**
+   * Handles use case when cart is selected for order creation
+   *
+   * @private
+   */
   _handleUseCartForOrderCreation() {
     this.$container.on('click', '.js-use-cart-btn', (e) => {
       const cartId = $(e.currentTarget).data('cart-id');
 
-      this.cartProvider.getCart({cartId}).then((response) => {
+      this.cartProvider.getCart(cartId).then((response) => {
         this._renderCartInfo(response);
       });
     });
   }
 
+  /**
+   * Handles use case when order is selected for cart duplication
+   *
+   * @private
+   */
+  _handleDuplicateOrderCart() {
+    this.$container.on('click', '.js-use-order-btn', (e) => {
+      const orderId = $(e.currentTarget).data('order-id');
+
+      this.cartProvider.duplicateOrderCart(orderId).then((response) => {
+        this._renderCartInfo(response);
+      });
+    });
+  }
+
+  /**
+   * Delegates actions to events associated with cart update (e.g. change cart address)
+   *
+   * @private
+   */
   _handleCartUpdate() {
     // @todo: add other actions
     this.$container.on('change', createOrderPageMap.addressSelect, () => this._changeCartAddresses());
   }
 
+  /**
+   * Gets and renders customer carts
+   *
+   * @param customerId
+   *
+   * @private
+   */
   _loadCustomerCarts(customerId) {
     this.customerInfoProvider.getCustomerCarts(customerId).then((response) => {
       this.cartsRenderer.render({
@@ -116,6 +149,13 @@ export default class CreateOrderPage {
     });
   }
 
+  /**
+   * Gets and renders customer orders
+   *
+   * @param customerId
+   *
+   * @private
+   */
   _loadCustomerOrders(customerId) {
     this.customerInfoProvider.getCustomerOrders(customerId).then((response) => {
       this.ordersRenderer.render(response.orders);

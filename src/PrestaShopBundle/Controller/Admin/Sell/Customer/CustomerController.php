@@ -715,7 +715,8 @@ class CustomerController extends AbstractAdminController
      */
     public function getCustomerCartsAction(Request $request)
     {
-        $customerId = $request->query->getInt('customer_id');
+        //@todo #requestParamCase check carts controller
+        $customerId = $request->query->getInt('customerId');
         $carts = $this->getQueryBus()->handle(new GetCustomerCarts($customerId));
 
         return $this->json([
@@ -732,7 +733,8 @@ class CustomerController extends AbstractAdminController
      */
     public function getCustomerOrdersAction(Request $request)
     {
-        $customerId = $request->query->getInt('customer_id');
+        //@todo #requestParamCase check carts controller
+        $customerId = $request->query->getInt('customerId');
         $orders = $this->getQueryBus()->handle(new GetCustomerOrders($customerId));
 
         return $this->json([

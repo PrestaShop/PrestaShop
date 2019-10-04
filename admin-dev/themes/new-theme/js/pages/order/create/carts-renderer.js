@@ -65,7 +65,5 @@ export default class CartsRenderer {
 
       $cartsTable.find('tbody').append($template);
     }
-
-    $(createOrderPageMap.customerCheckoutHistory).removeClass('d-none');
   }
 }

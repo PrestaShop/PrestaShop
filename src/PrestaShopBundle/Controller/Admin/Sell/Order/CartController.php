@@ -29,9 +29,12 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\CreateEmptyCustomerCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartAddressesCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
+use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation;
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\DuplicateOrderCartCommand;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -80,26 +83,76 @@ class CartController extends FrameworkBundleAdminController
         ]);
     }
 
+    /**
+     * Gets requested cart information
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     *
+     * @throws CartConstraintException
+     */
     public function getInfoAction(Request $request)
     {
-        $cartId = $request->query->getInt('cart_id');
+        //@todo #requestParamCase: camelcase request param temporary, routes should be changed when introduces js routing.
+        //@todo e.g carts/{cartId}
+        //@todo check customers controller too
+        $cartId = $request->query->getInt('cartId');
         $cartInfo = $this->getQueryBus()->handle(new GetCartInformation($cartId));
 
         return $this->json($cartInfo);
     }
 
+    /**
+     * Duplicates cart from specified order
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     *
+     * @throws CartConstraintException
+     */
+    public function duplicateOrderCartAction(Request $request)
+    {
+        //@todo #requestParamCase
+        $orderId = $request->request->getInt('orderId');
+
+        $cartId = $this->getCommandBus()->handle(new DuplicateOrderCartCommand($orderId))->getValue();
+
+        return $this->json($this->getCartInfo($cartId));
+    }
+
+    /**
+     * Creates empty cart
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     *
+     * @throws CartConstraintException
+     */
     public function createEmptyAction(Request $request): JsonResponse
     {
-        $customerId = $request->request->getInt('customer_id');
+        //@todo #requestParamCase
+        $customerId = $request->request->getInt('customerId');
         $cartId = $this->getCommandBus()->handle(new CreateEmptyCustomerCartCommand($customerId))->getValue();
-        $cartInfo = $this->getQueryBus()->handle(new GetCartInformation($cartId));
 
-        return $this->json($cartInfo);
+        return $this->json($this->getCartInfo($cartId));
     }
 
+    /**
+     * Changes the cart address information
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     *
+     * @throws CartConstraintException
+     */
     public function editAddressAction(Request $request): JsonResponse
     {
-        $cartId = $request->request->getInt('cart_id');
+        //@todo #requestParamCase
+        $cartId = $request->request->getInt('cartId');
 
         $updateAddressCommand = new UpdateCartAddressesCommand(
             $cartId,
@@ -109,7 +162,19 @@ class CartController extends FrameworkBundleAdminController
 
         $this->getCommandBus()->handle($updateAddressCommand);
 
-        return $this->json($this->getQueryBus()->handle(new GetCartInformation($cartId)));
+        return $this->json($this->getCartInfo($cartId));
+    }
+
+    /**
+     * @param int $cartId
+     *
+     * @return CartInformation
+     *
+     * @throws CartConstraintException
+     */
+    private function getCartInfo(int $cartId): CartInformation
+    {
+        return $this->getQueryBus()->handle(new GetCartInformation($cartId));
     }
 
     /**

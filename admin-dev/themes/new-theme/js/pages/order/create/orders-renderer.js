@@ -56,6 +56,8 @@ export default class OrdersRenderer {
       $template.find('.js-order-total-paid').text(order.totalPaid);
       $template.find('.js-order-status').text(order.orderStatus);
 
+      $template.find('.js-use-order-btn').data('order-id', order.orderId);
+
       $ordersTable.find('tbody').append($template);
     }
   }

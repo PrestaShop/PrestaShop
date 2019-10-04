@@ -46,7 +46,7 @@ export default class CartProvider {
     return $.ajax(this.$container.data('get-cart-info-url'), {
       method: 'GET',
       data: {
-        cart_id: cartId,
+        cartId,
       },
       dataType: 'json',
     });
@@ -63,7 +63,24 @@ export default class CartProvider {
     return $.ajax(this.$container.data('create-empty-cart-url'), {
       method: 'POST',
       data: {
-        customer_id: customerId,
+        customerId,
+      },
+      dataType: 'json',
+    });
+  }
+
+  /**
+   * Duplicates cart from provided order
+   *
+   * @param orderId
+   *
+   * @returns {jqXHR}. Object with cart information in response
+   */
+  duplicateOrderCart(orderId) {
+    return $.ajax(this.$container.data('duplicate-order-cart-url'), {
+      method: 'POST',
+      data: {
+        orderId,
       },
       dataType: 'json',
     });

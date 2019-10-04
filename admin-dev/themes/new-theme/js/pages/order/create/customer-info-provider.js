@@ -46,7 +46,7 @@ export default class CustomerInfoProvider {
     return $.ajax(this.$container.data('customer-carts-url'), {
       method: 'GET',
       data: {
-        customer_id: customerId,
+        customerId,
       },
       dataType: 'json',
     });
@@ -63,7 +63,7 @@ export default class CustomerInfoProvider {
     return $.ajax(this.$container.data('customer-orders-url'), {
       method: 'GET',
       data: {
-        customer_id: customerId,
+        customerId,
       },
       dataType: 'json',
     });
