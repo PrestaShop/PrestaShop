@@ -22,6 +22,8 @@ admin_carts_info:
     _legacy_controller: AdminCarts
   requirements:
     cartId: \d+
+  options:
+    expose: true
 
 admin_carts_create_empty:
   path: /create-empty
@@ -31,6 +33,8 @@ admin_carts_create_empty:
     _legacy_controller: AdminCarts
   requirements:
     customerId: \d+
+  options:
+    expose: true
 
 admin_carts_duplicate:
   path: /duplicate
@@ -40,6 +44,8 @@ admin_carts_duplicate:
     _legacy_controller: AdminCarts
   requirements:
     orderId: \d+
+  options:
+    expose: true
 
 admin_carts_edit_address:
   path: /edit-address
@@ -47,5 +53,7 @@ admin_carts_edit_address:
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Order/Cart:editAddress
     _legacy_controller: AdminCarts
-    requirements:
-      cartId: \d+
+  requirements:
+    cartId: \d+
+  options:
+    expose: true

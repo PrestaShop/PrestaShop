@@ -31,7 +31,8 @@ import CustomerInfoProvider from './customer-info-provider';
 import CartsRenderer from './carts-renderer';
 import OrdersRenderer from './orders-renderer';
 import AddressesRenderer from './addresses-renderer';
-import VouchersRenderer from "./vouchers-renderer";
+import VouchersRenderer from './vouchers-renderer';
+import Router from '../../../components/router';
 
 const $ = window.$;
 
@@ -51,6 +52,7 @@ export default class CreateOrderPage {
     this.ordersRenderer = new OrdersRenderer();
     this.addressesRenderer = new AddressesRenderer();
     this.vouchersRenderer = new VouchersRenderer();
+    this.router = new Router();
 
     return {
       listenForCustomerSearch: () => this._handleCustomerSearch(),
@@ -78,6 +80,9 @@ export default class CreateOrderPage {
    * @private
    */
   _handleCustomerChooseForOrderCreation() {
+    //@todo: rename routes and remove console log as its for testing only.
+    console.log(this.router.generate('admin_carts_create_empty'));
+
     this.$container.on('click', createOrderPageMap.chooseCustomerBtn, (event) => {
       const customerId = this.customerSearcher.onCustomerChooseForOrderCreation(event);
       this.data.customer_id = customerId;
