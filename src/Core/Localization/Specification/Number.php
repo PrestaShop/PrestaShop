@@ -325,18 +325,6 @@ class Number implements NumberInterface
     }
 
     /**
-     * @deprecated
-     *
-     * @param int $maxFractionDigits
-     *
-     * @throws LocalizationException
-     */
-    public function setMaxFractionDigits($maxFractionDigits)
-    {
-        throw new LocalizationException('Class Number is immutable. Please define maxFractionDigits from the constructor.');
-    }
-
-    /**
      * To array function
      *
      * @return array

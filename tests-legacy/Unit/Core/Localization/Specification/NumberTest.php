@@ -115,18 +115,4 @@ class NumberTest extends TestCase
 
         $this->latinNumberSpec->getSymbolsByNumberingSystem('foobar');
     }
-
-    /**
-     * Given a valid Number specification
-     * When defining max fraction digits from the method setMaxFractionDigits
-     * Then an exception souhd be raised
-     *
-     */
-    public function testSetMaxFractionDigits()
-    {
-        $this->expectException(LocalizationException::class);
-        $this->expectExceptionMessage('Class Number is immutable. Please define maxFractionDigits from the constructor.');
-
-        $this->latinNumberSpec->setMaxFractionDigits(2);
-    }
 }
