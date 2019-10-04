@@ -145,6 +145,18 @@ table .column-filters td:last-child .grid-reset-button {
             }
           }
 
+          &.choice-type {
+            .dropdown-toggle {
+              padding: 0 0 0 5px;
+            }
+
+            .dropdown-menu {
+              .dropdown-item {
+                cursor: pointer;
+              }
+            }
+          }
+
           &.action-type {
             .inline-dropdown-item {
               &:only-child {

@@ -41,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\BooleanColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ChoiceColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DateTimeColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\OrderPriceColumn;
@@ -85,6 +86,10 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
      * @var FeatureInterface
      */
     private $multistoreFeature;
+    /**
+     * @var FormChoiceProviderInterface
+     */
+    private $orderStatesChoiceProvider;
 
     /**
      * @var AccessibilityCheckerInterface
@@ -105,6 +110,7 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
      * @param FeatureInterface $multistoreFeature
      * @param AccessibilityCheckerInterface $printInvoiceAccessibilityChecker
      * @param AccessibilityCheckerInterface $printDeliverySlipAccessibilityChecker
+     * @param FormChoiceProviderInterface $orderStatesChoiceProvider
      */
     public function __construct(
         HookDispatcherInterface $dispatcher,
@@ -114,7 +120,8 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
         $contextDateFormat,
         FeatureInterface $multistoreFeature,
         AccessibilityCheckerInterface $printInvoiceAccessibilityChecker,
-        AccessibilityCheckerInterface $printDeliverySlipAccessibilityChecker
+        AccessibilityCheckerInterface $printDeliverySlipAccessibilityChecker,
+        FormChoiceProviderInterface $orderStatesChoiceProvider
     ) {
         parent::__construct($dispatcher);
 
@@ -125,6 +132,7 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
         $this->multistoreFeature = $multistoreFeature;
         $this->printInvoiceAccessibilityChecker = $printInvoiceAccessibilityChecker;
         $this->printDeliverySlipAccessibilityChecker = $printDeliverySlipAccessibilityChecker;
+        $this->orderStatesChoiceProvider = $orderStatesChoiceProvider;
     }
 
     /**
@@ -199,6 +207,12 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setOptions([
                     'field' => 'osname',
                     'color_field' => 'color',
+                ])
+            )
+            ->add((new ChoiceColumn('test'))
+                ->setName($this->trans('Test!!!!! :)', [], 'Admin.Global'))
+                ->setOptions([
+                    'choice_provider' => $this->orderStatesChoiceProvider,
                 ])
             )
             ->add((new DateTimeColumn('date_add'))

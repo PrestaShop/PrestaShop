@@ -195,6 +195,7 @@ services:
             - '@prestashop.adapter.feature.multistore'
             - '@prestashop.core.grid.action.row.accessibility_checker.print_invoice'
             - '@prestashop.core.grid.action.row.accessibility_checker.print_delivery_slip'
+            - '@prestashop.core.form.choice_provider.order_state_by_id'
         public: true
 
     prestashop.core.grid.definition.factory.catalog_price_rule:
