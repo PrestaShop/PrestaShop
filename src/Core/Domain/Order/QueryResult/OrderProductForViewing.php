@@ -83,7 +83,13 @@ class OrderProductForViewing
      */
     private $unitPriceTaxInclRaw;
 
+    /**
+     * @var int
+     */
+    private $orderDetailId;
+
     public function __construct(
+        int $orderDetailId,
         int $id,
         string $name,
         string $reference,
@@ -107,6 +113,15 @@ class OrderProductForViewing
         $this->imagePath = $imagePath;
         $this->unitPriceTaxExclRaw = $unitPriceTaxExclRaw;
         $this->unitPriceTaxInclRaw = $unitPriceTaxInclRaw;
+        $this->orderDetailId = $orderDetailId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getOrderDetailId(): int
+    {
+        return $this->orderDetailId;
     }
 
     /**
