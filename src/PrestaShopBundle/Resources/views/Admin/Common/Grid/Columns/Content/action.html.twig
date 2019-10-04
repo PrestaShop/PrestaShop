@@ -39,16 +39,10 @@
   {% endfor %}
 
   <div class="d-flex justify-content-between">
-    {% set hasSingleInlineAction = inlineActions|length == 1 %}
-
     {% for inlineAction in inlineActions -%}
       {% if inlineAction.isApplicable(record) %}
 
         {% set class = 'dropdown-item inline-dropdown-item' %}
-
-        {% if hasSingleInlineAction %}
-          {% set class = class ~ 'ml-auto' %}
-        {% endif %}
 
         {{ include('@PrestaShop/Admin/Common/Grid/Actions/Row/'~inlineAction.type~'.html.twig', {
           'grid': grid,

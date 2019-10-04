@@ -146,6 +146,14 @@ table .column-filters td:last-child .grid-reset-button {
           }
 
           &.action-type {
+            .inline-dropdown-item {
+              &:only-child {
+                margin-left: auto;
+              }
+
+              width: inherit;
+            }
+
             .btn-group > .dropdown-item {
               &:hover,
               &:focus {
