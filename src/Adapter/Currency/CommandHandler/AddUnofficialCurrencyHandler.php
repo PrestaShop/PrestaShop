@@ -36,7 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShopException;
 
 /**
- * Class AddUnofficialCurrencyHandler is responsible for adding new unofficial currency.
+ * Adds a new unofficial currency.
  *
  * @internal
  */
@@ -64,11 +64,7 @@ final class AddUnofficialCurrencyHandler extends AbstractAddCurrencyHandler impl
             $entity->active = $command->isEnabled();
             $entity->unofficial = true;
             $entity->conversion_rate = $command->getExchangeRate()->getValue();
-            if (null !== $command->getNumericIsoCode()) {
-                $entity->numeric_iso_code = $command->getNumericIsoCode()->getValue();
-            } else {
-                $entity->numeric_iso_code = $this->getRandomNumericIsoCode();
-            }
+            $entity->numeric_iso_code = $this->getNumericIsoCode($command);
             if (null !== $command->getPrecision()) {
                 $entity->precision = $command->getPrecision()->getValue();
             }
@@ -93,6 +89,20 @@ final class AddUnofficialCurrencyHandler extends AbstractAddCurrencyHandler impl
         }
 
         return new CurrencyId((int) $entity->id);
+    }
+
+    /**
+     * @param AddUnofficialCurrencyCommand $command
+     *
+     * @return int
+     */
+    private function getNumericIsoCode(AddUnofficialCurrencyCommand $command)
+    {
+        if (null !== $command->getNumericIsoCode()) {
+            return $command->getNumericIsoCode()->getValue();
+        }
+
+        return $this->getRandomNumericIsoCode();
     }
 
     /**
