@@ -90,6 +90,7 @@ final class AttributeGroupQueryBuilder extends AbstractDoctrineQueryBuilder
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters())
             ->select('ag.id_attribute_group, a.id_attribute, agl.name, ag.position, COUNT(a.id_attribute) AS `values`')
+            ->andWhere('attrShop.id_shop = :contextShopId AND ags.id_shop = :contextShopId')
             ->groupBy('ag.id_attribute_group');
 
         $this->searchCriteriaApplicator
@@ -148,6 +149,13 @@ final class AttributeGroupQueryBuilder extends AbstractDoctrineQueryBuilder
             $this->dbPrefix . 'attribute',
             'a',
             'a.id_attribute_group = ag.id_attribute_group'
+        );
+
+        $qb->leftJoin(
+            'a',
+            $this->dbPrefix . 'attribute_shop',
+            'attrShop',
+            'a.id_attribute = attrShop.id_attribute AND attrShop.id_shop = :contextShopId'
         );
 
         $this->applyFilters($filters, $qb);
