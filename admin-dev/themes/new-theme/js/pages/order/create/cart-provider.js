@@ -27,11 +27,21 @@ import createOrderPageMap from './create-order-map';
 
 const $ = window.$;
 
+/**
+ * Provides ajax calls for getting cart information
+ */
 export default class CartProvider {
   constructor() {
     this.$container = $(createOrderPageMap.orderCreationContainer);
   }
 
+  /**
+   * Gets cart information
+   *
+   * @param cartId
+   *
+   * @returns {jqXHR}. Object with cart information in response.
+   */
   getCart(cartId) {
     return $.ajax(this.$container.data('get-cart-info-url'), {
       method: 'GET',
@@ -42,6 +52,13 @@ export default class CartProvider {
     });
   }
 
+  /**
+   * Gets existing empty cart or creates new empty cart for customer.
+   *
+   * @param customerId
+   *
+   * @returns {jqXHR}. Object with cart information in response
+   */
   loadEmptyCart(customerId) {
     return $.ajax(this.$container.data('create-empty-cart-url'), {
       method: 'POST',

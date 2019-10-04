@@ -27,11 +27,21 @@ import createOrderPageMap from './create-order-map';
 
 const $ = window.$;
 
+/**
+ * Provides ajax calls for getting customer information
+ */
 export default class CustomerInfoProvider {
   constructor() {
     this.$container = $(createOrderPageMap.orderCreationContainer);
   }
 
+  /**
+   * Gets customer carts
+   *
+   * @param customerId
+   *
+   * @returns {jqXHR}. Array of carts in response.
+   */
   getCustomerCarts(customerId) {
     return $.ajax(this.$container.data('customer-carts-url'), {
       method: 'GET',
@@ -42,6 +52,13 @@ export default class CustomerInfoProvider {
     });
   }
 
+  /**
+   * Gets customer orders
+   *
+   * @param customerId
+   *
+   * @returns {jqXHR}. Array of orders in response.
+   */
   getCustomerOrders(customerId) {
     return $.ajax(this.$container.data('customer-orders-url'), {
       method: 'GET',

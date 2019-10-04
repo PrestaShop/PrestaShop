@@ -92,7 +92,7 @@ export default class CreateOrderPage {
   }
 
   _handleUseCartForOrderCreation() {
-    this.$container.on('click', '.js-use-cart-btn .js-use-order-btn', (e) => {
+    this.$container.on('click', '.js-use-cart-btn', (e) => {
       const cartId = $(e.currentTarget).data('cart-id');
 
       this.cartProvider.getCart({cartId}).then((response) => {
