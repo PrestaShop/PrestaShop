@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult;
+namespace PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation;
 
 /**
  * Holds address data for cart information

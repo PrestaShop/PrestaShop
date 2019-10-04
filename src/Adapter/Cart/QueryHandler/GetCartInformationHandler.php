@@ -36,9 +36,10 @@ use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryHandler\GetCartInformationHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartAddress;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation;
+use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartAddress;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleInterface;
+use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Locale\RepositoryInterface;
 use PrestaShopException;
 
@@ -70,6 +71,7 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
      *
      * @throws CartNotFoundException
      * @throws PrestaShopException
+     * @throws LocalizationException
      */
     public function handle(GetCartInformation $query): CartInformation
     {
@@ -77,13 +79,15 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
         $currency = new Currency($cart->id_currency);
         $language = new Language($cart->id_lang);
 
+        $legacySummary = $cart->getSummaryDetails(null, true);
+
         //@todo: implement empty arguments
         return new CartInformation(
             $cart->id,
-            [],
+            $this->extractProdcutsFromLegacySummary($legacySummary),
             (int) $currency->id,
             (int) $language->id,
-            $cart->getDiscounts(),
+            $this->extractCartRulesFromLegacySummary($legacySummary, $currency),
             $this->getAddresses($cart),
             [],
             []
@@ -115,5 +119,35 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
         }
 
         return $cartAddresses;
+    }
+
+    /**
+     * @param array $legacySummary
+     * @param Currency $currency
+     *
+     * @return CartInformation\CartRule[]
+     *
+     * @throws LocalizationException
+     */
+    private function extractCartRulesFromLegacySummary(array $legacySummary, Currency $currency): array
+    {
+        $cartRules = [];
+
+        foreach ($legacySummary['discounts'] as $discount) {
+            $cartRules[] = new CartInformation\CartRule(
+                (int) $discount['id_cart_rule'],
+                $discount['name'],
+                $discount['description'],
+                $this->locale->formatPrice($discount['value_real'], $currency->iso_code)
+            );
+        }
+
+        return $cartRules;
+    }
+
+    //@todo: extract products to some CartProduct[] DTO array...
+    private function extractProdcutsFromLegacySummary(array $legacySummary): array
+    {
+        return $legacySummary['products'];
     }
 }

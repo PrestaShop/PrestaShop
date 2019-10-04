@@ -31,6 +31,7 @@ import CustomerInfoProvider from './customer-info-provider';
 import CartsRenderer from './carts-renderer';
 import OrdersRenderer from './orders-renderer';
 import AddressesRenderer from './addresses-renderer';
+import VouchersRenderer from "./vouchers-renderer";
 
 const $ = window.$;
 
@@ -49,6 +50,7 @@ export default class CreateOrderPage {
     this.cartsRenderer = new CartsRenderer();
     this.ordersRenderer = new OrdersRenderer();
     this.addressesRenderer = new AddressesRenderer();
+    this.vouchersRenderer = new VouchersRenderer();
 
     return {
       listenForCustomerSearch: () => this._handleCustomerSearch(),
@@ -172,6 +174,7 @@ export default class CreateOrderPage {
    */
   _renderCartInfo(cartInfo) {
     this.addressesRenderer.render(cartInfo.addresses);
+    this.vouchersRenderer.render(cartInfo.cartRules);
     // render Summary block when at least 1 product is in cart
     // and delivery options are available
 

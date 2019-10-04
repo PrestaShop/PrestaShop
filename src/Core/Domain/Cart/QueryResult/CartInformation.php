@@ -26,6 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult;
 
+use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartAddress;
+use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartRule;
+
 class CartInformation
 {
     //@todo: implement DTO's instead of arrays
@@ -52,9 +55,9 @@ class CartInformation
     private $langId;
 
     /**
-     * @var array
+     * @var CartRule[]
      */
-    private $vouchers;
+    private $cartRules;
 
     /**
      * @var CartAddress[]
@@ -76,7 +79,7 @@ class CartInformation
      * @param array $products
      * @param int $currencyId
      * @param int $langId
-     * @param array $vouchers
+     * @param CartRule[] $cartRules
      * @param CartAddress[] $addresses
      * @param array $shipping
      * @param array $summary
@@ -86,7 +89,7 @@ class CartInformation
         array $products,
         int $currencyId,
         int $langId,
-        array $vouchers,
+        array $cartRules,
         array $addresses,
         array $shipping,
         array $summary
@@ -95,7 +98,7 @@ class CartInformation
         $this->products = $products;
         $this->currencyId = $currencyId;
         $this->langId = $langId;
-        $this->vouchers = $vouchers;
+        $this->cartRules = $cartRules;
         $this->addresses = $addresses;
         $this->shipping = $shipping;
         $this->summary = $summary;
@@ -134,11 +137,11 @@ class CartInformation
     }
 
     /**
-     * @return array
+     * @return CartRule[]
      */
-    public function getVouchers(): array
+    public function getCartRules(): array
     {
-        return $this->vouchers;
+        return $this->cartRules;
     }
 
     /**

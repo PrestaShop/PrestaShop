@@ -49,6 +49,8 @@ export default {
   customerCheckoutHistory: '#customerCheckoutHistory',
   customerOrdersTable: '#customerOrdersTable',
   customerOrdersTableRowTemplate: '#customerOrdersTableRowTemplate',
+  vouchersTable: '#vouchersTable',
+  vouchersTableRowTemplate: '#vouchersTableRowTemplate',
 
   // selectors related to cart block
   cartBlock: '#cartBlock',
