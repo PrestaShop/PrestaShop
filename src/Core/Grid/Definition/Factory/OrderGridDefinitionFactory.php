@@ -43,7 +43,6 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DateTimeColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\OrderLinkGroupColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\OrderPriceColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\ColorColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
@@ -207,44 +206,6 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setOptions([
                     'field' => 'date_add',
                     'format' => $this->contextDateFormat,
-                ])
-            )
-            ->add((new OrderLinkGroupColumn('to_be_removed_class'))
-                ->setName($this->trans('todo - remove me!', [], 'Admin.Global'))
-                ->setOptions([
-                        'links' => [
-                            [
-                                'icon' => 'receipt',
-                                'is_link_available_field' => 'is_invoice_available',
-                                'route' => 'admin_orders_generate_invoice_pdf',
-                                'route_param_name' => 'orderId',
-                                'route_param_field' => 'id_order',
-                                'title' => $this->trans(
-                                    'View invoice',
-                                    [],
-                                    'Admin.Orderscustomers.Feature'
-                                )
-                            ],
-                            [
-                                'icon' => 'local_shipping',
-                                'is_link_available_field' => 'delivery_number',
-                                'route' => 'admin_orders_generate_delivery_slip_pdf',
-                                'route_param_name' => 'orderId',
-                                'route_param_field' => 'id_order',
-                                'title' => $this->trans(
-                                    'View delivery slip',
-                                    [],
-                                    'Admin.Orderscustomers.Feature'
-                                )
-                            ],
-                            [
-                                'icon' => 'zoom_in',
-                                'route' => 'admin_orders_index',
-                                'route_param_name' => 'id_order',
-                                'route_param_field' => 'id_order',
-                                'title' => $this->trans('View', [], 'Admin.Actions')
-                            ],
-                        ],
                 ])
             )
             ->add((new ActionColumn('actions'))
