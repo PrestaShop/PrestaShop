@@ -287,21 +287,17 @@ class OrderController extends FrameworkBundleAdminController
         if ($updateOrderProductForm->isSubmitted() && $updateOrderProductForm->isValid()) {
             $data = $updateOrderProductForm->getData();
 
-            try {
-                $this->getCommandBus()->handle(
-                    new UpdateProductInOrderCommand(
-                        $orderId,
-                        $orderDetailId,
-                        $data['price_tax_excl'],
-                        $data['price_tax_incl'],
-                        $data['quantity']
-                    )
-                );
+            $this->getCommandBus()->handle(
+                new UpdateProductInOrderCommand(
+                    $orderId,
+                    $orderDetailId,
+                    $data['price_tax_excl'],
+                    $data['price_tax_incl'],
+                    $data['quantity']
+                )
+            );
 
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
-            } catch (Exception $e) {
-                $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
-            }
+            $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
         }
 
         return $this->redirectToRoute('admin_orders_view', [
@@ -324,20 +320,16 @@ class OrderController extends FrameworkBundleAdminController
         if ($addOrderCartRuleForm->isSubmitted() && $addOrderCartRuleForm->isValid()) {
             $data = $addOrderCartRuleForm->getData();
 
-            try {
-                $this->getCommandBus()->handle(
-                    new AddCartRuleToOrderCommand(
-                        $orderId,
-                        $data['name'],
-                        $data['type'],
-                        $data['value']
-                    )
-                );
+            $this->getCommandBus()->handle(
+                new AddCartRuleToOrderCommand(
+                    $orderId,
+                    $data['name'],
+                    $data['type'],
+                    $data['value']
+                )
+            );
 
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
-            } catch (Exception $e) {
-                $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
-            }
+            $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
         }
 
         return $this->redirectToRoute('admin_orders_view', [

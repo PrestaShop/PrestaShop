@@ -380,6 +380,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             $totalPriceFormatted = Tools::displayPrice($totalPrice, $currency);
 
             $productsForViewing[] = new OrderProductForViewing(
+                $product['id_order_detail'],
                 $product['product_id'],
                 $product['product_name'],
                 $product['reference'],
