@@ -84,7 +84,7 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
         //@todo: implement empty arguments
         return new CartInformation(
             $cart->id,
-            $this->extractProdcutsFromLegacySummary($legacySummary),
+            $this->extractProductsFromLegacySummary($legacySummary),
             (int) $currency->id,
             (int) $language->id,
             $this->extractCartRulesFromLegacySummary($legacySummary, $currency),
@@ -146,7 +146,7 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
     }
 
     //@todo: extract products to some CartProduct[] DTO array...
-    private function extractProdcutsFromLegacySummary(array $legacySummary): array
+    private function extractProductsFromLegacySummary(array $legacySummary): array
     {
         return $legacySummary['products'];
     }
