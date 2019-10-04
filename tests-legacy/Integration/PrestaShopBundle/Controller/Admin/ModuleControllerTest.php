@@ -38,7 +38,6 @@ class ModuleControllerTest extends WebTestCase
     {
         parent::setUp();
         $this->enableDemoMode();
-        $this->logIn();
     }
 
     public function testModuleAction()

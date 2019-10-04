@@ -37,7 +37,6 @@ class ProductControllerTest extends WebTestCase
     {
         parent::setUp();
         $this->enableDemoMode();
-        $this->logIn();
     }
 
     /**

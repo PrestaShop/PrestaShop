@@ -37,7 +37,6 @@ class DrawerTest extends AbstractEndpointAdminTest
     {
         parent::setUp();
         $this->employeeLogin();
-        $_SERVER['REQUEST_URI'] = _PS_ROOT_DIR_ . '/admin-dev/drawer.php';
     }
 
     public function testEndpoint()

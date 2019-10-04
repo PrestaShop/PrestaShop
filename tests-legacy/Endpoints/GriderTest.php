@@ -37,7 +37,6 @@ class GriderTest extends AbstractEndpointAdminTest
     {
         parent::setUp();
         $this->employeeLogin();
-        $_SERVER['REQUEST_URI'] = _PS_ROOT_DIR_ . '/admin-dev/grider.php';
     }
 
     public function testEndpoint()

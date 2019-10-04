@@ -27,12 +27,6 @@
 namespace Tests\Unit\PrestaShopBundle\Controller\ArgumentResolver;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\Domain\Employee\AuthorizationOptions;
-use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeForAuthentication;
-use PrestaShop\PrestaShop\Core\Domain\Employee\QueryResult\EmployeeForAuthentication;
-use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
-use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 use PrestaShop\PrestaShop\Core\Search\SearchParametersInterface;
 use PrestaShopBundle\Controller\ArgumentResolver\SearchParametersResolver;
@@ -58,8 +52,7 @@ class SearchParametersResolverTest extends TestCase
             $this->buildTokenStorageMock(),
             $this->buildAdminFilterRepositoryMock(),
             $this->buildEventDispatcherMock(),
-            self::SHOP_ID,
-            $this->buildQueryBusMock()
+            self::SHOP_ID
         );
         $this->assertNotNull($resolver);
     }
@@ -77,8 +70,7 @@ class SearchParametersResolverTest extends TestCase
             $this->buildTokenStorageMock(),
             $this->buildAdminFilterRepositoryMock(),
             $this->buildEventDispatcherMock(),
-            self::SHOP_ID,
-            $this->buildQueryBusMock()
+            self::SHOP_ID
         );
         $this->assertNotNull($resolver);
 
@@ -90,8 +82,7 @@ class SearchParametersResolverTest extends TestCase
             $this->buildTokenStorageMock(true),
             $this->buildAdminFilterRepositoryMock(),
             $this->buildEventDispatcherMock(),
-            self::SHOP_ID,
-            $this->buildQueryBusMock()
+            self::SHOP_ID
         );
         $this->assertNotNull($resolver);
 
@@ -107,8 +98,7 @@ class SearchParametersResolverTest extends TestCase
             $this->buildTokenStorageMock(true),
             $this->buildAdminFilterRepositoryMock(),
             $this->buildEventDispatcherMock(SampleFilters::getDefaults()),
-            self::SHOP_ID,
-            $this->buildQueryBusMock()
+            self::SHOP_ID
         );
         $this->assertNotNull($resolver);
 
@@ -135,8 +125,7 @@ class SearchParametersResolverTest extends TestCase
             $this->buildTokenStorageMock(true),
             $this->buildAdminFilterRepositoryMock(), //No request parameters so no saving
             $this->buildEventDispatcherMock($expectedParameters),
-            self::SHOP_ID,
-            $this->buildQueryBusMock()
+            self::SHOP_ID
         );
         $this->assertNotNull($resolver);
 
@@ -169,8 +158,7 @@ class SearchParametersResolverTest extends TestCase
             $this->buildTokenStorageMock(true),
             $this->buildAdminFilterRepositoryMock($requestParameters),
             $this->buildEventDispatcherMock($expectedParameters),
-            self::SHOP_ID,
-            $this->buildQueryBusMock()
+            self::SHOP_ID
         );
         $this->assertNotNull($resolver);
 
@@ -214,8 +202,7 @@ class SearchParametersResolverTest extends TestCase
             $this->buildTokenStorageMock(true),
             $this->buildAdminFilterRepositoryMock($expectedParameters),
             $this->buildEventDispatcherMock($expectedParameters),
-            self::SHOP_ID,
-            $this->buildQueryBusMock()
+            self::SHOP_ID
         );
         $this->assertNotNull($resolver);
 
@@ -443,27 +430,6 @@ class SearchParametersResolverTest extends TestCase
         }
 
         return $repositoryMock;
-    }
-
-    private function buildQueryBusMock()
-    {
-        $queryBus = $this->createMock(CommandBusInterface::class);
-        $queryBus
-            ->method('handle')
-            ->with($this->isInstanceOf(GetEmployeeForAuthentication::class))
-            ->willReturn(
-                new EmployeeForAuthentication(
-                    new EmployeeId((int) self::EMPLOYEE_ID),
-                    new Email('test@prestashop.com'),
-                    'verysecurepasswordhash',
-                    '',
-                    1,
-                    [AuthorizationOptions::DEFAULT_EMPLOYEE_ROLE]
-                )
-            )
-        ;
-
-        return $queryBus;
     }
 }
 

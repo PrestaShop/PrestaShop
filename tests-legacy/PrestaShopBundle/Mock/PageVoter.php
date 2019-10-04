@@ -27,16 +27,10 @@
 namespace LegacyTests\PrestaShopBundle\Mock;
 
 use PrestaShopBundle\Security\Voter\PageVoter as BaseVoter;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class PageVoter extends BaseVoter
 {
-    public function onKernelRequest(GetResponseEvent $event)
-    {
-        return true;
-    }
-
     /**
      * @param string $attribute
      * @param mixed $subject

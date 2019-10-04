@@ -24,39 +24,30 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace LegacyTests\Endpoints;
+namespace LegacyTests\PrestaShopBundle\Mock;
 
-use Tools;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 
 /**
- * Test class for admin/ajax_products_list.php
+ * Admin Middleware security
  */
-class AjaxProductListTest extends AbstractEndpointAdminTest
+class AdapterSecurityAdminMock
 {
-    protected function setUp()
+    public function __construct(LegacyContext $context, TokenStorage $securityTokenStorage)
     {
-        parent::setUp();
-        $this->employeeLogin();
     }
 
-    public function testAjaxEndpoint()
+    /**
+     * Check if employee is logged in
+     * If not loggedin in, redirect to admin home page
+     *
+     * @param GetResponseEvent $event
+     *
+     * @return bool or redirect
+     */
+    public function onKernelRequest(GetResponseEvent $event)
     {
-        // We look for products having a "e" in their name or reference
-        // This should help having results.
-        $_GET['q'] = 'e';
-        $_GET['token'] = Tools::getAdminTokenLite('AdminProducts');
-
-        ob_start();
-        require _PS_ROOT_DIR_ . '/admin-dev/ajax_products_list.php';
-        $output = json_decode(ob_get_clean());
-
-        $this->assertTrue(is_array($output));
-        if (count($output)) {
-            $firstElem = reset($output);
-            // Test some properties, not all of them
-            $this->assertObjectHasAttribute('id', $firstElem);
-            $this->assertObjectHasAttribute('name', $firstElem);
-            $this->assertObjectHasAttribute('ref', $firstElem);
-        }
     }
 }

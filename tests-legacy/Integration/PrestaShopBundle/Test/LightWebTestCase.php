@@ -30,7 +30,6 @@ use Context;
 use Currency;
 use Employee;
 use Language;
-use LegacyTests\Services\EmployeeLoginTrait;
 use Link;
 use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
@@ -52,8 +51,6 @@ use Symfony\Component\Translation\Translator;
  */
 class LightWebTestCase extends TestCase
 {
-    use EmployeeLoginTrait;
-
     /**
      * @var Client
      */
