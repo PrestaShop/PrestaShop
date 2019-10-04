@@ -462,7 +462,7 @@ class CurrencyController extends FrameworkBundleAdminController
                     'This currency already exists.',
                     'Admin.International.Notification'
                 ),
-                CurrencyConstraintException::MISMATCHING_ISO_CODES => $this->trans(
+                CurrencyConstraintException::ISO_CODES_MISMATCH => $this->trans(
                     'Cannot find a real currency matching this couple of ISO code and numeric ISO code',
                     'Admin.International.Notification'
                 ),

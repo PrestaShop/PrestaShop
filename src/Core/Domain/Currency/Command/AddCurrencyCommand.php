@@ -43,7 +43,7 @@ class AddCurrencyCommand implements CurrencyCommandInterface
     private $isoCode;
 
     /**
-     * @var NumericIsoCode
+     * @var NumericIsoCode|null
      */
     private $numericIsoCode;
 
@@ -53,7 +53,7 @@ class AddCurrencyCommand implements CurrencyCommandInterface
     private $exchangeRate;
 
     /**
-     * @var Precision
+     * @var Precision|null
      */
     private $precision;
 
@@ -92,6 +92,9 @@ class AddCurrencyCommand implements CurrencyCommandInterface
         $this->isoCode = new AlphaIsoCode($isoCode);
         $this->exchangeRate = new ExchangeRate($exchangeRate);
         $this->isEnabled = $isEnabled;
+        $this->localizedNames = [];
+        $this->localizedSymbols = [];
+        $this->shopIds = [];
     }
 
     /**
@@ -103,7 +106,7 @@ class AddCurrencyCommand implements CurrencyCommandInterface
     }
 
     /**
-     * @return NumericIsoCode
+     * @return NumericIsoCode|null
      */
     public function getNumericIsoCode()
     {
