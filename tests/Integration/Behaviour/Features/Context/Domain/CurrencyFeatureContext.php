@@ -249,6 +249,6 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertLastErrorIsMismatchingIsoCodes()
     {
-        $this->assertLastErrorIs(CurrencyConstraintException::class, CurrencyConstraintException::MISMATCHING_ISO_CODES);
+        $this->assertLastErrorIs(CurrencyConstraintException::class, CurrencyConstraintException::ISO_CODES_MISMATCH);
     }
 }
