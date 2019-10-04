@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Form\Admin\Sell\Order;
 
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -57,14 +58,21 @@ class OrderPaymentType extends AbstractType
     private $contextShopId;
 
     /**
+     * @var FormChoiceProviderInterface
+     */
+    private $installedPaymentModulesChoiceProvider;
+
+    /**
      * @param ConfigurableFormChoiceProviderInterface $currencySymbolByIdChoiceProvider
      * @param ConfigurableFormChoiceProviderInterface $orderInvoiceChoiceProvider
+     * @param FormChoiceProviderInterface $installedPaymentModulesChoiceProvider
      * @param int $contextLanguageId
      * @param int $contextShopId
      */
     public function __construct(
         ConfigurableFormChoiceProviderInterface $currencySymbolByIdChoiceProvider,
         ConfigurableFormChoiceProviderInterface $orderInvoiceChoiceProvider,
+        FormChoiceProviderInterface $installedPaymentModulesChoiceProvider,
         int $contextLanguageId,
         int $contextShopId
     ) {
@@ -72,6 +80,7 @@ class OrderPaymentType extends AbstractType
         $this->orderInvoiceChoiceProvider = $orderInvoiceChoiceProvider;
         $this->contextLanguageId = $contextLanguageId;
         $this->contextShopId = $contextShopId;
+        $this->installedPaymentModulesChoiceProvider = $installedPaymentModulesChoiceProvider;
     }
 
     /**
@@ -84,7 +93,9 @@ class OrderPaymentType extends AbstractType
                 'widget' => 'single_text',
                 'input' => 'string',
             ])
-            ->add('payment_method', TextType::class)
+            ->add('payment_method', TextType::class, [
+                'data_list' => $this->installedPaymentModulesChoiceProvider->getChoices(),
+            ])
             ->add('transaction_id', TextType::class, [
                 'required' => false,
             ])

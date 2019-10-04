@@ -809,3 +809,19 @@
 {% block custom_content_widget %}
   {% include template with data %}
 {% endblock %}
+
+{% block text_widget %}
+  {% if data_list is not null %}
+    {%- set attr = attr|merge({'list': id ~ '_datalist'}) -%}
+  {% endif %}
+
+  {{ form_widget(form, {'attr': attr}) }}
+
+  {% if data_list is not null %}
+    <datalist id="{{ id ~ '_datalist' }}">
+      {% for item in data_list %}
+        <option value="{{ item }}"></option>
+      {% endfor%}
+    </datalist>
+  {% endif %}
+{% endblock text_widget %}
