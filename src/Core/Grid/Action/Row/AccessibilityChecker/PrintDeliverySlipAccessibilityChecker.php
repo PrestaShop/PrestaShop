@@ -36,6 +36,6 @@ final class PrintDeliverySlipAccessibilityChecker implements AccessibilityChecke
      */
     public function isGranted(array $record)
     {
-        return $record['delivery_number'];
+        return $record['delivery_number'] ?? null;
     }
 }

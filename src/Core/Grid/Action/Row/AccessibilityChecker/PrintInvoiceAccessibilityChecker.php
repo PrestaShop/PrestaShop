@@ -36,6 +36,6 @@ final class PrintInvoiceAccessibilityChecker implements AccessibilityCheckerInte
      */
     public function isGranted(array $record)
     {
-        return $record['is_invoice_available'];
+        return $record['is_invoice_available'] ?? null;
     }
 }
