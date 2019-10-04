@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3a3ca97e48aa78b16277a94ccaf3366d",
+    "content-hash": "459bae66a11430d55ac70d0b730ad984",
     "packages": [
         {
             "name": "analog/analog",
@@ -1492,16 +1492,16 @@
         },
         {
             "name": "guzzlehttp/cache-subscriber",
-            "version": "dev-master",
+            "version": "0.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/cache-subscriber.git",
-                "reference": "1377567481d6d96224c9bd66aac475fbfbeec776"
+                "reference": "8c766ba399e4c46383e3eaa220201be62abd101e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/cache-subscriber/zipball/1377567481d6d96224c9bd66aac475fbfbeec776",
-                "reference": "1377567481d6d96224c9bd66aac475fbfbeec776",
+                "url": "https://api.github.com/repos/guzzle/cache-subscriber/zipball/8c766ba399e4c46383e3eaa220201be62abd101e",
+                "reference": "8c766ba399e4c46383e3eaa220201be62abd101e",
                 "shasum": ""
             },
             "require": {
@@ -1540,7 +1540,7 @@
                 "Guzzle",
                 "cache"
             ],
-            "time": "2018-08-06T12:43:55+00:00"
+            "time": "2019-09-16T13:44:55+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -8674,7 +8674,6 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "cssjanus/cssjanus": 20,
-        "guzzlehttp/cache-subscriber": 20,
         "phake/phake": 0
     },
     "prefer-stable": false,
