@@ -421,7 +421,6 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'route' => 'admin_orders_generate_invoice_pdf',
                         'route_param_name' => 'orderId',
                         'route_param_field' => 'id_order',
-                        'use_inline_display' => true,
                     ])
             )
             ->add(
@@ -433,7 +432,6 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'route' => 'admin_orders_generate_delivery_slip_pdf',
                         'route_param_name' => 'orderId',
                         'route_param_field' => 'id_order',
-                        'use_inline_display' => true,
                     ])
             )
             ->add(
@@ -444,7 +442,6 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'route' => 'admin_orders_index',
                         'route_param_name' => 'id_order',
                         'route_param_field' => 'id_order',
-                        'use_inline_display' => true,
                     ])
             )
         ;
