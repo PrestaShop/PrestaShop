@@ -30,6 +30,7 @@ import CartProvider from './cart-provider';
 import CustomerInfoProvider from './customer-info-provider';
 import CartsRenderer from './carts-renderer';
 import OrdersRenderer from './orders-renderer';
+import AddressesRenderer from './addresses-renderer';
 
 const $ = window.$;
 
@@ -47,6 +48,7 @@ export default class CreateOrderPage {
     this.shippingRenderer = new ShippingRenderer();
     this.cartsRenderer = new CartsRenderer();
     this.ordersRenderer = new OrdersRenderer();
+    this.addressesRenderer = new AddressesRenderer();
 
     return {
       listenForCustomerSearch: () => this._handleCustomerSearch(),
@@ -100,7 +102,7 @@ export default class CreateOrderPage {
   }
 
   _handleCartUpdate() {
-    //@todo: add other actions
+    // @todo: add other actions
     this.$container.on('change', createOrderPageMap.addressSelect, () => this._changeCartAddresses());
   }
 
@@ -129,8 +131,7 @@ export default class CreateOrderPage {
    * @private
    */
   _renderCartInfo(cartInfo) {
-    this._renderAddressesSelect(cartInfo.addresses);
-
+    this.addressesRenderer.render(cartInfo.addresses);
     // render Summary block when at least 1 product is in cart
     // and delivery options are available
 
@@ -146,76 +147,6 @@ export default class CreateOrderPage {
     $(createOrderPageMap.cartBlock).removeClass('d-none');
     $(createOrderPageMap.vouchersBlock).removeClass('d-none');
     $(createOrderPageMap.addressesBlock).removeClass('d-none');
-  }
-
-  /**
-   * Renders Delivery & Invoice addresses select
-   *
-   * @param {Array} addresses
-   *
-   * @private
-   */
-  _renderAddressesSelect(addresses) {
-    let deliveryAddressDetailsContent = '';
-    let invoiceAddressDetailsContent = '';
-
-    const $deliveryAddressDetails = $(createOrderPageMap.deliveryAddressDetails);
-    const $invoiceAddressDetails = $(createOrderPageMap.invoiceAddressDetails);
-    const $deliveryAddressSelect = $(createOrderPageMap.deliveryAddressSelect);
-    const $invoiceAddressSelect = $(createOrderPageMap.invoiceAddressSelect);
-
-    const $addressesContent = $(createOrderPageMap.addressesContent);
-    const $addressesWarningContent = $(createOrderPageMap.addressesWarning);
-
-    $deliveryAddressDetails.empty();
-    $invoiceAddressDetails.empty();
-    $deliveryAddressSelect.empty();
-    $invoiceAddressSelect.empty();
-
-    if (addresses.length === 0) {
-      $addressesWarningContent.removeClass('d-none');
-      $addressesContent.addClass('d-none');
-
-      return;
-    }
-
-    $addressesContent.removeClass('d-none');
-    $addressesWarningContent.addClass('d-none');
-
-    for (const key in Object.keys(addresses)) {
-      const address = addresses[key];
-
-      const deliveryAddressOption = {
-        value: address.addressId,
-        text: address.alias,
-      };
-
-      const invoiceAddressOption = {
-        value: address.addressId,
-        text: address.alias,
-      };
-
-      if (address.delivery) {
-        deliveryAddressDetailsContent = address.formattedAddress;
-        deliveryAddressOption.selected = 'selected';
-      }
-
-      if (address.invoice) {
-        invoiceAddressDetailsContent = address.formattedAddress;
-        invoiceAddressOption.selected = 'selected';
-      }
-
-      $deliveryAddressSelect.append($('<option>', deliveryAddressOption));
-      $invoiceAddressSelect.append($('<option>', invoiceAddressOption));
-    }
-
-    if (deliveryAddressDetailsContent) {
-      $(createOrderPageMap.deliveryAddressDetails).html(deliveryAddressDetailsContent);
-    }
-
-    if (invoiceAddressDetailsContent) {
-      $(createOrderPageMap.invoiceAddressDetails).html(invoiceAddressDetailsContent);
-    }
   }
 
   /**
@@ -235,7 +166,7 @@ export default class CreateOrderPage {
     }).then((response) => {
       // this._persistCartInfoData(response);
 
-      this._renderAddressesSelect(response.addresses);
+      this.addressesRenderer.render(response.addresses);
     });
   }
 

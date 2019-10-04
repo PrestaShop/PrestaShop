@@ -84,8 +84,6 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
             (int) $currency->id,
             (int) $language->id,
             $cart->getDiscounts(),
-            (int) $cart->id_address_delivery,
-            (int) $cart->id_address_invoice,
             $this->getAddresses($cart),
             [],
             []

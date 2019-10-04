@@ -62,16 +62,6 @@ class CartInformation
     private $addresses;
 
     /**
-     * @var int
-     */
-    private $deliveryAddressId;
-
-    /**
-     * @var int
-     */
-    private $invoiceAddressId;
-
-    /**
      * @var array
      */
     private $shipping;
@@ -87,8 +77,6 @@ class CartInformation
      * @param int $currencyId
      * @param int $langId
      * @param array $vouchers
-     * @param int $deliveryAddressId
-     * @param int $invoiceAddressId
      * @param CartAddress[] $addresses
      * @param array $shipping
      * @param array $summary
@@ -99,8 +87,6 @@ class CartInformation
         int $currencyId,
         int $langId,
         array $vouchers,
-        int $deliveryAddressId,
-        int $invoiceAddressId,
         array $addresses,
         array $shipping,
         array $summary
@@ -111,8 +97,6 @@ class CartInformation
         $this->langId = $langId;
         $this->vouchers = $vouchers;
         $this->addresses = $addresses;
-        $this->deliveryAddressId = $deliveryAddressId;
-        $this->invoiceAddressId = $invoiceAddressId;
         $this->shipping = $shipping;
         $this->summary = $summary;
     }
@@ -163,22 +147,6 @@ class CartInformation
     public function getAddresses(): array
     {
         return $this->addresses;
-    }
-
-    /**
-     * @return int
-     */
-    public function getDeliveryAddressId(): int
-    {
-        return $this->deliveryAddressId;
-    }
-
-    /**
-     * @return int
-     */
-    public function getInvoiceAddressId(): int
-    {
-        return $this->invoiceAddressId;
     }
 
     /**
