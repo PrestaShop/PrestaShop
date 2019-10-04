@@ -769,10 +769,10 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
 
         return new OrderPricesForViewing(
             Tools::displayPrice($productsPrice, $currency),
-            0 !== $discountsAmount ? Tools::displayPrice($productsPrice, $currency) ? null,
-            0 !== $discountsAmount ? Tools::displayPrice($productsPrice, $currency) ? null,
-            0 !== $discountsAmount ? Tools::displayPrice($productsPrice, $currency) ? null,
-            0 !== $discountsAmount ? Tools::displayPrice($productsPrice, $currency) ? null,
+            0 !== $discountsAmount ? Tools::displayPrice($productsPrice, $currency) : null,
+            0 !== $discountsAmount ? Tools::displayPrice($productsPrice, $currency) : null,
+            0 !== $discountsAmount ? Tools::displayPrice($productsPrice, $currency) : null,
+            0 !== $discountsAmount ? Tools::displayPrice($productsPrice, $currency) : null
         );
     }
 }
