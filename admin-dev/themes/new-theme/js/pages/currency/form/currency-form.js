@@ -55,8 +55,7 @@ export default class CurrencyForm {
   }
 
   _initFields() {
-    const isUnofficial = this.$isUnofficialCheckbox.prop('checked');
-    if (!isUnofficial) {
+    if (!this._isUnofficialCurrency()) {
       this.$isUnofficialCheckbox.prop('checked', false);
       this.$isoCodeInput.prop('readonly', true);
     } else {
@@ -77,8 +76,12 @@ export default class CurrencyForm {
     }
   }
 
+  _isUnofficialCurrency() {
+    return this.$isUnofficialCheckbox.prop('checked');
+  }
+
   _onIsUnofficialCheckboxChange() {
-    if (this.$isUnofficialCheckbox.prop('checked')) {
+    if (this._isUnofficialCurrency()) {
       this.$currencySelector.val('');
       this.$isoCodeInput.prop('readonly', false);
     } else {
@@ -89,7 +92,7 @@ export default class CurrencyForm {
   _onResetDefaultSettingsClick() {
     this._resetCurrencyData(this.$isoCodeInput.val());
 
-    return false
+    return false;
   }
 
   _resetCurrencyData(selectedISOCode) {
@@ -112,17 +115,17 @@ export default class CurrencyForm {
           this.$exchangeRateInput.val(currencyData.exchange_rate);
         }
         this.$precisionInput.val(currencyData.precision);
-        this.$loadingDataModal.modal('hide');
-        this.$resetDefaultSettingsButton.removeClass('spinner');
       })
       .fail((currencyData) => {
-        this.$loadingDataModal.modal('hide');
-        this.$resetDefaultSettingsButton.removeClass('spinner');
         let errorMessage = 'Can not find CLDR data for currency ' + selectedISOCode;
         if (currencyData && currencyData.responseJSON && currencyData.responseJSON.error) {
           errorMessage = currencyData.responseJSON.error;
         }
         showGrowl('error', errorMessage, 3000);
+      })
+      .always(() => {
+        this.$loadingDataModal.modal('hide');
+        this.$resetDefaultSettingsButton.removeClass('spinner');
       })
   }
 }
