@@ -49,9 +49,11 @@
             <p class="mb-0">{{ 'Total'|trans({}, 'Admin.Global') }}</p>
             <small class="text-muted">{{ orderForViewing.taxMethod }}</small>
           </th>
-          <th class="text-right">
-            <p>{{ 'Actions'|trans({}, 'Admin.Global') }}</p>
-          </th>
+          {% if not orderForViewing.delivered %}
+            <th class="text-right">
+              <p>{{ 'Actions'|trans({}, 'Admin.Global') }}</p>
+            </th>
+          {% endif %}
         </tr>
       </thead>
       <tbody>
@@ -76,33 +78,35 @@
             <td>{{ product.unitPrice }}</td>
             <td>{{ product.quantity }}</td>
             <td>{{ product.totalPrice }}</td>
-            <td class="text-right">
-              <a href="#"
-                 class="tooltip-link"
-                 data-toggle="pstooltip"
-                 data-placement="top"
-                 data-original-title="{{ 'Edit'|trans({}, 'Admin.Actions') }}"
-              >
-                <i class="material-icons js-order-product-update-btn"
-                   data-update-url="{{ path('admin_orders_update_product', {'orderId': orderForViewing.id, 'orderDetailId': product.orderDetailId}) }}"
-                   data-product-name="{{ product.name }}"
-                   data-product-quantity="{{ product.quantity }}"
-                   data-product-price-tax-incl="{{ product.unitPriceTaxInclRaw }}"
-                   data-product-price-tax-excl="{{ product.unitPriceTaxExclRaw }}"
-                   data-toggle="modal"
-                   data-target="#updateOrderProductModal"
-                >edit</i>
-              </a>
+            {% if not orderForViewing.delivered %}
+              <td class="text-right">
+                <a href="#"
+                   class="tooltip-link"
+                   data-toggle="pstooltip"
+                   data-placement="top"
+                   data-original-title="{{ 'Edit'|trans({}, 'Admin.Actions') }}"
+                >
+                  <i class="material-icons js-order-product-update-btn"
+                     data-update-url="{{ path('admin_orders_update_product', {'orderId': orderForViewing.id, 'orderDetailId': product.orderDetailId}) }}"
+                     data-product-name="{{ product.name }}"
+                     data-product-quantity="{{ product.quantity }}"
+                     data-product-price-tax-incl="{{ product.unitPriceTaxInclRaw }}"
+                     data-product-price-tax-excl="{{ product.unitPriceTaxExclRaw }}"
+                     data-toggle="modal"
+                     data-target="#updateOrderProductModal"
+                  >edit</i>
+                </a>
 
-              <a href="#"
-                 class="ml-2 tooltip-link"
-                 data-toggle="pstooltip"
-                 data-placement="top"
-                 data-original-title="{{ 'Delete'|trans({}, 'Admin.Actions') }}"
-              >
-                <i class="material-icons">delete</i>
-              </a>
-            </td>
+                <a href="#"
+                   class="ml-2 tooltip-link"
+                   data-toggle="pstooltip"
+                   data-placement="top"
+                   data-original-title="{{ 'Delete'|trans({}, 'Admin.Actions') }}"
+                >
+                  <i class="material-icons">delete</i>
+                </a>
+              </td>
+            {% endif %}
           </tr>
         {% endfor %}
       </tbody>
@@ -110,10 +114,12 @@
 
     <div class="row mb-3">
       <div class="col-md-12 text-right">
-        <button type="button" class="btn btn-outline-secondary" data-toggle="modal" data-target="#addOrderProductModal">
-          <i class="material-icons">add_circle_outline</i>
-          {{ 'Add a product'|trans({}, 'Admin.Orderscustomers.Feature') }}
-        </button>
+        {% if not orderForViewing.delivered %}
+          <button type="button" class="btn btn-outline-secondary" data-toggle="modal" data-target="#addOrderProductModal">
+            <i class="material-icons">add_circle_outline</i>
+            {{ 'Add a product'|trans({}, 'Admin.Orderscustomers.Feature') }}
+          </button>
+        {% endif %}
         <button type="button" class="btn btn-outline-secondary" data-toggle="modal" data-target="#addOrderDiscountModal">
           <i class="material-icons">confirmation_number</i>
           {{ 'Add a new discount'|trans({}, 'Admin.Orderscustomers.Feature') }}
