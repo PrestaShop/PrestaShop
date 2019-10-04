@@ -30,13 +30,12 @@
 {% endif %}
 
 <a class="{{ class }}"
-{#   href="{{ path(action.options.route, { (action.options.route_param_name) : record[action.options.route_param_field]}) }}"#}
+   href="{{ path(action.options.route, { (action.options.route_param_name) : record[action.options.route_param_field]}) }}"
    data-confirm-message="{{ action.options.confirm_message }}"
   {% if attributes.tooltip_name %}
     data-toggle="pstooltip"
     data-placement="top"
     data-original-title="{{ action.name }}"
-    data-trigger="click"
   {% endif %}
 >
   {% if action.icon is not empty %}

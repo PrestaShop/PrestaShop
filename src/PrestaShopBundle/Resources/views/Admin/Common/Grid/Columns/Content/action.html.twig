@@ -39,7 +39,7 @@
 
     <div class="btn-group-action text-right">
       {% if inlineActions is not empty %}
-        <div class="btn-group text-right">
+        <div class="btn-group d-flex justify-content-between text-right">
           {% for inlineAction in inlineActions -%}
             {% if inlineAction.isApplicable(record) %}
 
