@@ -175,16 +175,16 @@ class ImageManagerCore
 			return resizeWithImagick(
 				$sourceFile,
 				$destinationFile,
-				$destinationWidth = null,
-				$destinationHeight = null,
-				$fileType = 'jpg',
-				$forceType = false,
-				&$error = 0,
-				&$targetWidth = null,
-				&$targetHeight = null,
-				$quality = 5,
-				&$sourceWidth = null,
-				&$sourceHeight = null
+				$destinationWidth,
+				$destinationHeight,
+				$fileType,
+				$forceType,
+				&$error,
+				&$targetWidth,
+				&$targetHeight,
+				$quality,
+				&$sourceWidth,
+				&$sourceHeight
 			);
 		}
 		
