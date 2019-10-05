@@ -171,6 +171,23 @@ class ImageManagerCore
         &$sourceWidth = null,
         &$sourceHeight = null
     ) {
+		if ($this->isImagick()) {
+			return resizeWithImagick(
+				$sourceFile,
+				$destinationFile,
+				$destinationWidth = null,
+				$destinationHeight = null,
+				$fileType = 'jpg',
+				$forceType = false,
+				&$error = 0,
+				&$targetWidth = null,
+				&$targetHeight = null,
+				$quality = 5,
+				&$sourceWidth = null,
+				&$sourceHeight = null
+			);
+		}
+		
         clearstatcache(true, $sourceFile);
 
         if (!file_exists($sourceFile) || !filesize($sourceFile)) {
@@ -663,5 +680,176 @@ class ImageManagerCore
     public static function isImagick()
     {
 		return extension_loaded('imagick');
+    }
+    
+    /**
+     * Resize, cut and optimize image with Imagick.
+     *
+     * @param string $sourceFile Image object from $_FILE
+     * @param string $destinationFile Destination filename
+     * @param int $destinationWidth Desired width (optional)
+     * @param int $destinationHeight Desired height (optional)
+     * @param string $fileType Desired file_type (may be override by PS_IMAGE_QUALITY)
+     * @param bool $forceType Don't override $file_type
+     * @param int $error Out error code
+     * @param int $targetWidth Needed by AdminImportController to speed up the import process
+     * @param int $targetHeight Needed by AdminImportController to speed up the import process
+     * @param int $quality Needed by AdminImportController to speed up the import process
+     * @param int $sourceWidth Needed by AdminImportController to speed up the import process
+     * @param int $sourceHeight Needed by AdminImportController to speed up the import process
+     *
+     *@return bool Operation result
+     */
+    public static function resizeWithImagick(
+        $sourceFile,
+        $destinationFile,
+        $destinationWidth = null,
+        $destinationHeight = null,
+        $fileType = 'jpg',
+        $forceType = false,
+        &$error = 0,
+        &$targetWidth = null,
+        &$targetHeight = null,
+        $quality = 96,
+        &$sourceWidth = null,
+        &$sourceHeight = null
+    ) {
+        clearstatcache(true, $sourceFile);
+
+        if (!file_exists($sourceFile) || !filesize($sourceFile)) {
+            return !($error = self::ERROR_FILE_NOT_EXIST);
+        }
+
+        list($tmpWidth, $tmpHeight, $type) = getimagesize($sourceFile);
+        $rotate = 0;
+        if (function_exists('exif_read_data') && function_exists('mb_strtolower')) {
+            $exif = @exif_read_data($sourceFile);
+
+            if ($exif && isset($exif['Orientation'])) {
+                switch ($exif['Orientation']) {
+                    case 3:
+                        $sourceWidth = $tmpWidth;
+                        $sourceHeight = $tmpHeight;
+                        $rotate = 180;
+
+                        break;
+
+                    case 6:
+                        $sourceWidth = $tmpHeight;
+                        $sourceHeight = $tmpWidth;
+                        $rotate = -90;
+
+                        break;
+
+                    case 8:
+                        $sourceWidth = $tmpHeight;
+                        $sourceHeight = $tmpWidth;
+                        $rotate = 90;
+
+                        break;
+
+                    default:
+                        $sourceWidth = $tmpWidth;
+                        $sourceHeight = $tmpHeight;
+                }
+            } else {
+                $sourceWidth = $tmpWidth;
+                $sourceHeight = $tmpHeight;
+            }
+        } else {
+            $sourceWidth = $tmpWidth;
+            $sourceHeight = $tmpHeight;
+        }
+
+        // If PS_IMAGE_QUALITY is activated, the generated image will be a PNG with .jpg as a file extension.
+        // This allow for higher quality and for transparency. JPG source files will also benefit from a higher quality
+        // because JPG reencoding by GD, even with max quality setting, degrades the image.
+        if (Configuration::get('PS_IMAGE_QUALITY') == 'png_all'
+            || (Configuration::get('PS_IMAGE_QUALITY') == 'png' && $type == IMAGETYPE_PNG) && !$forceType) {
+            $fileType = 'png';
+        }
+
+        if (!$sourceWidth) {
+            return !($error = self::ERROR_FILE_WIDTH);
+        }
+        if (!$destinationWidth) {
+            $destinationWidth = $sourceWidth;
+        }
+        if (!$destinationHeight) {
+            $destinationHeight = $sourceHeight;
+        }
+
+        $widthDiff = $destinationWidth / $sourceWidth;
+        $heightDiff = $destinationHeight / $sourceHeight;
+
+        $psImageGenerationMethod = Configuration::get('PS_IMAGE_GENERATION_METHOD');
+        if ($widthDiff > 1 && $heightDiff > 1) {
+            $nextWidth = $sourceWidth;
+            $nextHeight = $sourceHeight;
+        } else {
+            if ($psImageGenerationMethod == 2 || (!$psImageGenerationMethod && $widthDiff > $heightDiff)) {
+                $nextHeight = $destinationHeight;
+                $nextWidth = round(($sourceWidth * $nextHeight) / $sourceHeight);
+                $destinationWidth = (int) (!$psImageGenerationMethod ? $destinationWidth : $nextWidth);
+            } else {
+                $nextWidth = $destinationWidth;
+                $nextHeight = round($sourceHeight * $destinationWidth / $sourceWidth);
+                $destinationHeight = (int) (!$psImageGenerationMethod ? $destinationHeight : $nextHeight);
+            }
+        }
+
+        if (!ImageManager::checkImageMemoryLimit($sourceFile)) {
+            return !($error = self::ERROR_MEMORY_LIMIT);
+        }
+
+        $targetWidth = $destinationWidth;
+        $targetHeight = $destinationHeight;
+
+        $destImage = imagecreatetruecolor($destinationWidth, $destinationHeight);
+
+        // If image is a PNG and the output is PNG, fill with transparency. Else fill with white background.
+        if ($fileType == 'png' && $type == IMAGETYPE_PNG) {
+            imagealphablending($destImage, false);
+            imagesavealpha($destImage, true);
+            $transparent = imagecolorallocatealpha($destImage, 255, 255, 255, 127);
+            imagefilledrectangle($destImage, 0, 0, $destinationWidth, $destinationHeight, $transparent);
+        } else {
+            $white = imagecolorallocate($destImage, 255, 255, 255);
+            imagefilledrectangle($destImage, 0, 0, $destinationWidth, $destinationHeight, $white);
+        }
+
+        $srcImage = ImageManager::create($type, $sourceFile);
+        if ($rotate) {
+            $srcImage = imagerotate($srcImage, $rotate, 0);
+        }
+
+        if ($destinationWidth >= $sourceWidth && $destinationHeight >= $sourceHeight) {
+            imagecopyresized($destImage, $srcImage, (int) (($destinationWidth - $nextWidth) / 2), (int) (($destinationHeight - $nextHeight) / 2), 0, 0, $nextWidth, $nextHeight, $sourceWidth, $sourceHeight);
+        } else {
+            ImageManager::imagecopyresampled($destImage, $srcImage, (int) (($destinationWidth - $nextWidth) / 2), (int) (($destinationHeight - $nextHeight) / 2), 0, 0, $nextWidth, $nextHeight, $sourceWidth, $sourceHeight, $quality);
+        }
+
+		//Set Imagick Object values
+		$srcImage = new Imagick();
+		$srcImage->readImage($sourceFile);
+		$srcImage->setImageCompression(Imagick::COMPRESSION_JPEG);
+		$srcImage->setInterlaceScheme(Imagick::INTERLACE_PLANE);
+		$srcImage->setImageCompressionQuality($quality);
+		$srcImage->sharpenimage(2, 0.5, 134217727);
+		$srcImage->gaussianBlurImage(0.03,0.03);
+		$srcImage->stripImage();
+		$srcImage->thumbnailImage($destinationWidth, $destinationHeight, Imagick::FILTER_TRIANGLE, 1);
+		
+		//Output the final Image using Imagick
+        $writeFile = $srcImage->writeImage($destinationFile);
+        Hook::exec('actionOnImageResizeAfter', array('dst_file' => $destinationFile, 'file_type' => $fileType));
+        @imagedestroy($srcImage);
+
+        file_put_contents(
+            dirname($destinationFile) . DIRECTORY_SEPARATOR . 'fileType',
+            $fileType
+        );
+
+        return $writeFile;
     }
 }
