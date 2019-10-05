@@ -829,16 +829,16 @@ class ImageManagerCore
             ImageManager::imagecopyresampled($destImage, $srcImage, (int) (($destinationWidth - $nextWidth) / 2), (int) (($destinationHeight - $nextHeight) / 2), 0, 0, $nextWidth, $nextHeight, $sourceWidth, $sourceHeight, $quality);
         }
 
-		//Set Imagick Object values
-		$srcImage = new Imagick();
-		$srcImage->readImage($sourceFile);
-		$srcImage->setImageCompression(Imagick::COMPRESSION_JPEG);
-		$srcImage->setInterlaceScheme(Imagick::INTERLACE_PLANE);
-		$srcImage->setImageCompressionQuality($quality);
-		$srcImage->sharpenimage(2, 0.5, 134217727);
-		$srcImage->gaussianBlurImage(0.03,0.03);
-		$srcImage->stripImage();
-		$srcImage->thumbnailImage($destinationWidth, $destinationHeight, Imagick::FILTER_TRIANGLE, 1);
+        //Set Imagick Object values
+        $srcImage = new Imagick();
+        $srcImage->readImage($sourceFile);
+        $srcImage->setImageCompression(Imagick::COMPRESSION_JPEG);
+        $srcImage->setInterlaceScheme(Imagick::INTERLACE_PLANE);
+        $srcImage->setImageCompressionQuality($quality);
+        $srcImage->sharpenimage(2, 0.5, 134217727);
+        $srcImage->gaussianBlurImage(0.03,0.03);
+        $srcImage->stripImage();
+        $srcImage->thumbnailImage($destinationWidth, $destinationHeight, Imagick::FILTER_TRIANGLE, 1);
 		
 		//Output the final Image using Imagick
         $writeFile = $srcImage->writeImage($destinationFile);
