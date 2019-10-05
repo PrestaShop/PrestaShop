@@ -840,7 +840,7 @@ class ImageManagerCore
         $srcImage->stripImage();
         $srcImage->thumbnailImage($destinationWidth, $destinationHeight, Imagick::FILTER_TRIANGLE, 1);
 		
-		//Output the final Image using Imagick
+        //Output the final Image using Imagick
         $writeFile = $srcImage->writeImage($destinationFile);
         Hook::exec('actionOnImageResizeAfter', array('dst_file' => $destinationFile, 'file_type' => $fileType));
         @imagedestroy($srcImage);
