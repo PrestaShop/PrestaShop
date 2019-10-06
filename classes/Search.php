@@ -245,9 +245,10 @@ class SearchCore
         $words = Search::extractKeyWords($expr, $id_lang, false, $context->language->iso_code);
         $fuzzyMaxLoop = Configuration::get('PS_SEARCH_FUZZY_MAX_LOOP');
         $psFuzzySearch = Configuration::get('PS_SEARCH_FUZZY');
+        $psSearchMinWordLength = (int) Configuration::get('PS_SEARCH_MINWORDLEN');
 
         foreach ($words as $key => $word) {
-            if (!empty($word) && strlen($word) >= (int) Configuration::get('PS_SEARCH_MINWORDLEN')) {
+            if (!empty($word) && strlen($word) >= psSearchMinWordLength) {
                 $sql_param_search = self::getSearchParamFromWord($word);
                 $sql = 'SELECT DISTINCT si.id_product
                             FROM ' . _DB_PREFIX_ . 'search_word sw
