@@ -248,7 +248,7 @@ class SearchCore
         $psSearchMinWordLength = (int) Configuration::get('PS_SEARCH_MINWORDLEN');
 
         foreach ($words as $key => $word) {
-            if (!empty($word) && strlen($word) >= psSearchMinWordLength) {
+            if (!empty($word) && strlen($word) >= $psSearchMinWordLength) {
                 $sql_param_search = self::getSearchParamFromWord($word);
                 $sql = 'SELECT DISTINCT si.id_product
                             FROM ' . _DB_PREFIX_ . 'search_word sw
