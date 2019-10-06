@@ -243,6 +243,8 @@ class SearchCore
         $score_array = array();
         $fuzzyLoop = 0;
         $words = Search::extractKeyWords($expr, $id_lang, false, $context->language->iso_code);
+        $fuzzyMaxLoop = Configuration::get('PS_SEARCH_FUZZY_MAX_LOOP');
+        $psFuzzySearch = Configuration::get('PS_SEARCH_FUZZY');
 
         foreach ($words as $key => $word) {
             if (!empty($word) && strlen($word) >= (int) Configuration::get('PS_SEARCH_MINWORDLEN')) {
@@ -255,8 +257,8 @@ class SearchCore
                                 AND sw.word LIKE';
 
                 while (!($result = $db->executeS($sql . "'" . $sql_param_search . "';", true, false))) {
-                    if (!Configuration::get('PS_SEARCH_FUZZY') ||
-                        $fuzzyLoop++ > Configuration::get('PS_SEARCH_FUZZY_MAX_LOOP') ||
+                    if (!$psFuzzySearch||
+                        $fuzzyLoop++ > $fuzzyMaxLoop ||
                         !($sql_param_search = self::findClosestWeightestWord($context, $word))) {
                         break;
                     }
@@ -637,11 +639,13 @@ class SearchCore
      */
     protected static function fillProductArray(&$product_array, $weight_array, $key, $value, $id_lang, $iso_code)
     {
+        $psSearchMawWordLenth = Configuration::get('PS_SEARCH_MAX_WORD_LENGTH');
+
         if (strncmp($key, 'id_', 3) && isset($weight_array[$key])) {
             $words = Search::extractKeyWords($value, (int) $id_lang, true, $iso_code);
             foreach ($words as $word) {
                 if (!empty($word)) {
-                    $word = Tools::substr($word, 0, PS_SEARCH_MAX_WORD_LENGTH);
+                    $word = Tools::substr($word, 0, $psSearchMawWordLenth);
 
                     if (!isset($product_array[$word])) {
                         $product_array[$word] = 0;
@@ -967,9 +971,10 @@ class SearchCore
         $word = str_replace(array('%', '_'), array('\\%', '\\_'), $word);
         $start_search = Configuration::get('PS_SEARCH_START') ? '%' : '';
         $end_search = Configuration::get('PS_SEARCH_END') ? '' : '%';
+        $psSearchMawWordLenth = Configuration::get('PS_SEARCH_MAX_WORD_LENGTH');
         $start_pos = (int) ($word[0] == '-');
 
-        return $start_search . pSQL(Tools::substr($word, $start_pos, PS_SEARCH_MAX_WORD_LENGTH)) . $end_search;
+        return $start_search . pSQL(Tools::substr($word, $start_pos, $psSearchMawWordLenth)) . $end_search;
     }
 
     /**
@@ -983,6 +988,7 @@ class SearchCore
     {
         $distance = array(); // cache levenshtein distance
         $searchMinWordLength = (int) Configuration::get('PS_SEARCH_MINWORDLEN');
+        $psSearchMawWordLenth = Configuration::get('PS_SEARCH_MAX_WORD_LENGTH');
 
         if (!self::$totalWordInSearchWordTable) {
             $sql = 'SELECT count(*) FROM `' . _DB_PREFIX_ . 'search_word`;';
@@ -1025,10 +1031,10 @@ class SearchCore
             if (self::$targetLengthMin < $searchMinWordLength) {
                 self::$targetLengthMin = $searchMinWordLength;
             }
-            if (self::$targetLengthMax > PS_SEARCH_MAX_WORD_LENGTH) {
-                self::$targetLengthMax = PS_SEARCH_MAX_WORD_LENGTH;
+            if (self::$targetLengthMax > $psSearchMawWordLenth) {
+                self::$targetLengthMax = $psSearchMawWordLenth ;
             }
-            // Could happen when $queryString length * $coefMin > PS_SEARCH_MAX_WORD_LENGTH
+            // Could happen when $queryString length * $coefMin > $psSearchMawWordLenth
             if (self::$targetLengthMax < self::$targetLengthMin) {
                 return '';
             }
