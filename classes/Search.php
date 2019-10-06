@@ -257,7 +257,7 @@ class SearchCore
                                 AND sw.word LIKE';
 
                 while (!($result = $db->executeS($sql . "'" . $sql_param_search . "';", true, false))) {
-                    if (!$psFuzzySearch||
+                    if (!$psFuzzySearch ||
                         $fuzzyLoop++ > $fuzzyMaxLoop ||
                         !($sql_param_search = self::findClosestWeightestWord($context, $word))) {
                         break;
@@ -1032,7 +1032,7 @@ class SearchCore
                 self::$targetLengthMin = $searchMinWordLength;
             }
             if (self::$targetLengthMax > $psSearchMawWordLenth) {
-                self::$targetLengthMax = $psSearchMawWordLenth ;
+                self::$targetLengthMax = $psSearchMawWordLenth;
             }
             // Could happen when $queryString length * $coefMin > $psSearchMawWordLenth
             if (self::$targetLengthMax < self::$targetLengthMin) {
