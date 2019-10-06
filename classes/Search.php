@@ -995,25 +995,25 @@ class SearchCore
             $sql = 'SELECT count(*) FROM `' . _DB_PREFIX_ . 'search_word`;';
             self::$totalWordInSearchWordTable = (int) Db::getInstance()->getValue($sql);
         }
-        /* If the ps_search_word table size is superior at PS_SEARCH_MAX_WORDS_IN_TABLE, That mean that the DB is really huge.
+        /* If the ps_search_word table size is superior to PS_SEARCH_MAX_WORDS_IN_TABLE, that mean that the DB is really huge.
          * To reduce the server load, we are looking only for words with same length that the query word.
          * If we use the auto-acale && self::$totalWordInSearchWordTable > PS_SEARCH_MAX_WORDS_IN_TABLE,
-         * we will get $coefMax < 1 following by $coefMax < $coefMin, this is a non-sense
-         * so we test it before and assign a right value for both target length */
+         * we will get $coefMax < 1 following by $coefMax < $coefMin, this is a non-sense.
+         * So, we test it before and assign a right value for both target lengths */
         if (self::$totalWordInSearchWordTable > PS_SEARCH_MAX_WORDS_IN_TABLE) {
             self::$targetLengthMin = self::$targetLengthMax = (int) (strlen($queryString));
         } else {
             /* This part of code could be see like an auto-scale.
             *  Of course, more the contante ps_search_word table is elevate, more server resource is needed.
             *  So, we need an algorythm to reduce the server load depending the DB size.
-            *  Here will be calculated a range of target length depanding the ps_search_word table size.
+            *  Here will be calculated ranges of target length depending the ps_search_word table size.
             *  If ps_search_word table size tends to PS_SEARCH_MAX_WORDS_IN_TABLE, $coefMax and $coefMin will tend to 1.
             *  If ps_search_word table size tends to 0, $coefMax will tends to 2, and $coefMin will tends to 0.5.
             *  Calculating is made with the linear function y = ax + b.
-            *  With actual contante values, we have :
+            *  With actual constant values, we have :
             *  Linear function for $coefMin : a = 0.5 / 100000, b = 0.5
             *  Linear function for $coefMax : a = -1 / 100000, b = 2
-            *  Result :
+            *  Results :
             *  500 words id DB give coefMin : 0.5025, coefMax : 1.995
             *  20,000 words id DB give $coefMin : 0.6, $coefMax : 1.8
             *  40,000 words id DB give $coefMin : 0.7, $coefMax : 1.6
