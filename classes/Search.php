@@ -239,8 +239,7 @@ class SearchCore
         }
 
         $eligible_products2 = [];
-        $intersect_array = array();
-        $score_array = array();
+        $score_array = [];
         $fuzzyLoop = 0;
         $words = Search::extractKeyWords($expr, $id_lang, false, $context->language->iso_code);
         $fuzzyMaxLoop = (int) Configuration::get('PS_SEARCH_FUZZY_MAX_LOOP');
