@@ -5,15 +5,6 @@
     <field name="value"/>
   </fields>
   <entities>
-  <configuration id="PS_SEARCH_INDEXATION" name="PS_SEARCH_INDEXATION">
-    <value>1</value>
-  </configuration>
-  <configuration id="PS_SEARCH_FUZZY" name="PS_SEARCH_FUZZY">
-    <value>1</value>
-  </configuration>
-  <configuration id="PS_SEARCH_FUZZY_MAX_LOOP" name="PS_SEARCH_FUZZY_MAX_LOOP">
-    <value>4</value>
-  </configuration>
   <configuration id="PS_CARRIER_DEFAULT" name="PS_CARRIER_DEFAULT">
     <value>1</value>
   </configuration>
@@ -148,6 +139,18 @@
   </configuration>
   <configuration id="PS_DISP_UNAVAILABLE_ATTR" name="PS_DISP_UNAVAILABLE_ATTR">
     <value>1</value>
+  </configuration>
+  <configuration id="PS_SEARCH_INDEXATION" name="PS_SEARCH_INDEXATION">
+    <value>1</value>
+  </configuration>
+  <configuration id="PS_SEARCH_FUZZY" name="PS_SEARCH_FUZZY">
+    <value>1</value>
+  </configuration>
+  <configuration id="PS_SEARCH_FUZZY_MAX_LOOP" name="PS_SEARCH_FUZZY_MAX_LOOP">
+    <value>4</value>
+  </configuration>
+  <configuration id="PS_SEARCH_MAX_WORD_LENGTH" name="PS_SEARCH_MAX_WORD_LENGTH">
+    <value>15</value>
   </configuration>
   <configuration id="PS_SEARCH_MINWORDLEN" name="PS_SEARCH_MINWORDLEN">
     <value>3</value>
