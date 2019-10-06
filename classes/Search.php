@@ -24,11 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 define('PS_SEARCH_MAX_WORD_LENGTH', 30);
-define('PS_SEARCH_MAX_WORDS_IN_TABLE', 100000); /* Max numer of words in ps_search_word, above which $coefs for target length will be everytime equal to 1 */
-define('PS_SEARCH_ORDINATE_MIN', 0.5);
-define('PS_SEARCH_ORDINATE_MAX', -1);
-define('PS_SEARCH_ABSCISSA_MIN', 0.5);
-define('PS_SEARCH_ABSCISSA_MAX', 2);
 
 /* Copied from Drupal search module, except for \x{0}-\x{2f} that has been replaced by \x{0}-\x{2c}\x{2e}-\x{2f} in order to keep the char '-' */
 define(
