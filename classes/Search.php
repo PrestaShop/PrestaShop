@@ -243,8 +243,8 @@ class SearchCore
         $score_array = array();
         $fuzzyLoop = 0;
         $words = Search::extractKeyWords($expr, $id_lang, false, $context->language->iso_code);
-        $fuzzyMaxLoop = Configuration::get('PS_SEARCH_FUZZY_MAX_LOOP');
-        $psFuzzySearch = Configuration::get('PS_SEARCH_FUZZY');
+        $fuzzyMaxLoop = (int) Configuration::get('PS_SEARCH_FUZZY_MAX_LOOP');
+        $psFuzzySearch = (int) Configuration::get('PS_SEARCH_FUZZY');
         $psSearchMinWordLength = (int) Configuration::get('PS_SEARCH_MINWORDLEN');
 
         foreach ($words as $key => $word) {
@@ -640,7 +640,7 @@ class SearchCore
      */
     protected static function fillProductArray(&$product_array, $weight_array, $key, $value, $id_lang, $iso_code)
     {
-        $psSearchMawWordLenth = Configuration::get('PS_SEARCH_MAX_WORD_LENGTH');
+        $psSearchMawWordLenth = (int) Configuration::get('PS_SEARCH_MAX_WORD_LENGTH');
 
         if (strncmp($key, 'id_', 3) && isset($weight_array[$key])) {
             $words = Search::extractKeyWords($value, (int) $id_lang, true, $iso_code);
@@ -989,7 +989,7 @@ class SearchCore
     {
         $distance = array(); // cache levenshtein distance
         $searchMinWordLength = (int) Configuration::get('PS_SEARCH_MINWORDLEN');
-        $psSearchMawWordLenth = Configuration::get('PS_SEARCH_MAX_WORD_LENGTH');
+        $psSearchMawWordLenth = (int) Configuration::get('PS_SEARCH_MAX_WORD_LENGTH');
 
         if (!self::$totalWordInSearchWordTable) {
             $sql = 'SELECT count(*) FROM `' . _DB_PREFIX_ . 'search_word`;';
