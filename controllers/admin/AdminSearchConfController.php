@@ -219,6 +219,21 @@ class AdminSearchConfControllerCore extends AdminController
                         'type' => 'text',
                         'cast' => 'intval',
                     ),
+                    'PS_SEARCH_MAX_WORD_LENGTH' => array(
+                        'title' => $this->trans(
+                            'Maximum word length (in characters)',
+                            array(),
+                            'Admin.Shopparameters.Feature'
+                        ),
+                        'hint' => $this->trans(
+                            'Only words this maximum size or smaller will be used during the search.',
+                            array(),
+                            'Admin.Shopparameters.Help'
+                        ),
+                        'validation' => 'isUnsignedInt',
+                        'type' => 'text',
+                        'cast' => 'intval',
+                    ),
                     'PS_SEARCH_MINWORDLEN' => array(
                         'title' => $this->trans(
                             'Minimum word length (in characters)',
