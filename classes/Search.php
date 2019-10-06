@@ -987,7 +987,7 @@ class SearchCore
      */
     public static function findClosestWeightestWord($context, $queryString)
     {
-        $distance = array(); // cache levenshtein distance
+        $distance = []; // cache levenshtein distance
         $searchMinWordLength = (int) Configuration::get('PS_SEARCH_MINWORDLEN');
         $psSearchMawWordLenth = (int) Configuration::get('PS_SEARCH_MAX_WORD_LENGTH');
 
