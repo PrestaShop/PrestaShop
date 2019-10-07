@@ -24,6 +24,7 @@
  */
 
 import createOrderPageMap from './create-order-map';
+import Router from '../../../components/router';
 
 const $ = window.$;
 
@@ -33,6 +34,7 @@ const $ = window.$;
 export default class CartProvider {
   constructor() {
     this.$container = $(createOrderPageMap.orderCreationContainer);
+    this.router = new Router();
   }
 
   /**
@@ -43,12 +45,8 @@ export default class CartProvider {
    * @returns {jqXHR}. Object with cart information in response.
    */
   getCart(cartId) {
-    return $.ajax(this.$container.data('get-cart-info-url'), {
+    return $.ajax(this.router.generate('admin_carts_info', {cartId}), {
       method: 'GET',
-      data: {
-        cartId,
-      },
-      dataType: 'json',
     });
   }
 
@@ -60,7 +58,7 @@ export default class CartProvider {
    * @returns {jqXHR}. Object with cart information in response
    */
   loadEmptyCart(customerId) {
-    return $.ajax(this.$container.data('create-empty-cart-url'), {
+    return $.ajax(this.router.generate('admin_carts_create'), {
       method: 'POST',
       data: {
         customerId,
@@ -77,12 +75,8 @@ export default class CartProvider {
    * @returns {jqXHR}. Object with cart information in response
    */
   duplicateOrderCart(orderId) {
-    return $.ajax(this.$container.data('duplicate-order-cart-url'), {
+    return $.ajax(this.router.generate('admin_orders_duplicate_cart', {orderId}), {
       method: 'POST',
-      data: {
-        orderId,
-      },
-      dataType: 'json',
     });
   }
 }

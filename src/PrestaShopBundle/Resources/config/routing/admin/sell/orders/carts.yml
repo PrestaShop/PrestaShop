@@ -15,7 +15,7 @@ admin_carts_view:
     cartId: \d+
 
 admin_carts_info:
-  path: /info
+  path: /{cartId}/info
   methods: [GET]
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Order/Cart:getInfo
@@ -25,30 +25,17 @@ admin_carts_info:
   options:
     expose: true
 
-admin_carts_create_empty:
-  path: /create-empty
+admin_carts_create:
+  path: /new
   methods: [POST]
   defaults:
-    _controller: PrestaShopBundle:Admin/Sell/Order/Cart:createEmpty
+    _controller: PrestaShopBundle:Admin/Sell/Order/Cart:create
     _legacy_controller: AdminCarts
-  requirements:
-    customerId: \d+
-  options:
-    expose: true
-
-admin_carts_duplicate:
-  path: /duplicate
-  methods: [POST]
-  defaults:
-    _controller: PrestaShopBundle:Admin/Sell/Order/Cart:duplicateOrderCart
-    _legacy_controller: AdminCarts
-  requirements:
-    orderId: \d+
   options:
     expose: true
 
 admin_carts_edit_address:
-  path: /edit-address
+  path: /{cartId}/edit-address
   methods: [POST]
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Order/Cart:editAddress

@@ -709,14 +709,12 @@ class CustomerController extends AbstractAdminController
     /**
      * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
      *
-     * @param Request $request
+     * @param int $customerId
      *
      * @return JsonResponse
      */
-    public function getCustomerCartsAction(Request $request)
+    public function getCartsAction(int $customerId)
     {
-        //@todo #requestParamCase check carts controller
-        $customerId = $request->query->getInt('customerId');
         $carts = $this->getQueryBus()->handle(new GetCustomerCarts($customerId));
 
         return $this->json([
@@ -727,14 +725,12 @@ class CustomerController extends AbstractAdminController
     /**
      * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
      *
-     * @param Request $request
+     * @param int $customerId
      *
      * @return JsonResponse
      */
-    public function getCustomerOrdersAction(Request $request)
+    public function getOrdersAction(int $customerId)
     {
-        //@todo #requestParamCase check carts controller
-        $customerId = $request->query->getInt('customerId');
         $orders = $this->getQueryBus()->handle(new GetCustomerOrders($customerId));
 
         return $this->json([

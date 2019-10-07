@@ -53,13 +53,13 @@ export default class Router {
   /**
    * Decorated "generate" method, with predefined security token in params
    *
-   * @param url
+   * @param route
    * @param params
    * @returns {*}
    */
-  generate(url, params = {}) {
+  generate(route, params = {}) {
     const tokenizedParams = Object.assign(params, {_token: $(document).find('body').data('token')});
 
-    return this.router.generate(url, tokenizedParams);
+    return this.router.generate(route, tokenizedParams);
   }
 }

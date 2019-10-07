@@ -80,9 +80,6 @@ export default class CreateOrderPage {
    * @private
    */
   _handleCustomerChooseForOrderCreation() {
-    //@todo: rename routes and remove console log as its for testing only.
-    console.log(this.router.generate('admin_carts_create_empty'));
-
     this.$container.on('click', createOrderPageMap.chooseCustomerBtn, (event) => {
       const customerId = this.customerSearcher.onCustomerChooseForOrderCreation(event);
       this.data.customer_id = customerId;

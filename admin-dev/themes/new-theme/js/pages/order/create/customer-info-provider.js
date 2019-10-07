@@ -24,6 +24,7 @@
  */
 
 import createOrderPageMap from './create-order-map';
+import Router from '../../../components/router';
 
 const $ = window.$;
 
@@ -33,6 +34,7 @@ const $ = window.$;
 export default class CustomerInfoProvider {
   constructor() {
     this.$container = $(createOrderPageMap.orderCreationContainer);
+    this.router = new Router();
   }
 
   /**
@@ -43,12 +45,8 @@ export default class CustomerInfoProvider {
    * @returns {jqXHR}. Array of carts in response.
    */
   getCustomerCarts(customerId) {
-    return $.ajax(this.$container.data('customer-carts-url'), {
+    return $.ajax(this.router.generate('admin_customers_carts', {customerId}), {
       method: 'GET',
-      data: {
-        customerId,
-      },
-      dataType: 'json',
     });
   }
 
@@ -60,12 +58,8 @@ export default class CustomerInfoProvider {
    * @returns {jqXHR}. Array of orders in response.
    */
   getCustomerOrders(customerId) {
-    return $.ajax(this.$container.data('customer-orders-url'), {
+    return $.ajax(this.router.generate('admin_customers_orders', {customerId}), {
       method: 'GET',
-      data: {
-        customerId,
-      },
-      dataType: 'json',
     });
   }
 }
