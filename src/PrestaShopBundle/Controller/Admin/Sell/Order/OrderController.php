@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddCartRuleToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\BulkChangeOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\DuplicateOrderCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderCurrencyCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\DeleteCartRuleFromOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotEditDeliveredOrderProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\ChangeOrderStatusException;
@@ -278,6 +279,25 @@ class OrderController extends FrameworkBundleAdminController
             'privateNoteForm' => $privateNoteForm->createView(),
             'addOrderProductForm' => $addOrderProductForm->createView(),
             'updateOrderProductForm' => $updateOrderProductForm->createView(),
+        ]);
+    }
+
+    /**
+     * @param int $orderId
+     * @param int $orderCartRuleId
+     *
+     * @return RedirectResponse
+     */
+    public function removeCartRuleAction(int $orderId, int $orderCartRuleId): RedirectResponse
+    {
+        $this->getCommandBus()->handle(
+            new DeleteCartRuleFromOrderCommand($orderId, $orderCartRuleId)
+        );
+
+        $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+
+        return $this->redirectToRoute('admin_orders_view', [
+            'orderId' => $orderId,
         ]);
     }
 
