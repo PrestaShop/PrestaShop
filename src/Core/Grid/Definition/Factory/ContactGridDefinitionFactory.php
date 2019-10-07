@@ -141,6 +141,7 @@ final class ContactGridDefinitionFactory extends AbstractGridDefinitionFactory
                                 'route' => 'admin_contacts_edit',
                                 'route_param_name' => 'contactId',
                                 'route_param_field' => 'id_contact',
+                                'clickable_row' => true,
                             ])
                         )
                         ->add(

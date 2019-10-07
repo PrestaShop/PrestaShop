@@ -157,6 +157,7 @@ final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
                                 'route' => 'admin_languages_edit',
                                 'route_param_name' => 'languageId',
                                 'route_param_field' => 'id_lang',
+                                'clickable_row' => true,
                             ])
                         )
                         ->add(
