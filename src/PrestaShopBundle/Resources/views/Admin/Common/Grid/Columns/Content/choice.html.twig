@@ -33,14 +33,17 @@
   {% endif %}
 {% endfor %}
 
+{% set classes = 'btn btn-secondary dropdown-toggle rounded' %}
+
 {% if choices is not empty %}
   <div class="dropdown">
     <button
       {% if column.options.color_field %}
         {% set textColor = is_color_bright(record[column.options.color_field]) ? '#383838' : 'white' %}
         style="background-color: {{ record[column.options.color_field] }}; color: {{ textColor }};"
+        {% set classes = classes ~ ' coloured' %}
       {% endif %}
-      class="btn btn-secondary dropdown-toggle rounded"
+      class="{{ classes }}"
       type="button"
       data-toggle="dropdown"
       data-boundary="viewport"

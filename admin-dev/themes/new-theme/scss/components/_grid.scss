@@ -146,13 +146,36 @@ table .column-filters td:last-child .grid-reset-button {
           }
 
           &.choice-type {
-            .dropdown-toggle {
-              padding: 0 0 0 5px;
-            }
+            .dropdown {
+              &.show {
+                .dropdown-toggle {
+                  &::after {
+                    display: inline-block;
+                  }
+                }
+              }
 
-            .dropdown-menu {
-              .dropdown-item {
-                cursor: pointer;
+              .dropdown-toggle {
+                padding: 0 5px 0 5px;
+                &.coloured {
+                  border: 0;
+                }
+
+                &::after {
+                  display: none;
+                }
+
+                &:hover {
+                  &::after {
+                    display: inline-block;
+                  }
+                }
+              }
+
+              .dropdown-menu {
+                .dropdown-item {
+                  cursor: pointer;
+                }
               }
             }
           }
