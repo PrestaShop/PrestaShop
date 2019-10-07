@@ -64,6 +64,14 @@ admin_orders_add_cart_rule:
   requirements:
     orderId: \d+
 
+admin_orders_list_update_status:
+  path: /list/{orderId}/status
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:updateStatusFromList
+  requirements:
+    orderId: \d+
+
 admin_orders_update_status:
   path: /{orderId}/status
   methods: [POST]

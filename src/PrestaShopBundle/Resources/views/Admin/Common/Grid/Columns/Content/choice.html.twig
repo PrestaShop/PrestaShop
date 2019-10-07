@@ -26,6 +26,7 @@
 {% set choices = column.options.choice_provider.getChoices() %}
 {% set selectedChoice = record[column.options.field] %}
 {% set selectedChoiceName = '' %}
+{% set routeParams = record|array_pluck(column.options.record_route_params) %}
 
 {% for name,value in choices %}
   {% if value == selectedChoice %}
@@ -36,7 +37,10 @@
 {% set classes = 'btn btn-secondary dropdown-toggle dropdown-toggle-split rounded' %}
 
 {% if choices is not empty %}
-  <div class="dropdown">
+  <div
+    class="dropdown"
+    data-url="{{ url(column.options.route, routeParams) }}"
+  >
     <button
       {% if column.options.color_field %}
         {% set textColor = is_color_bright(record[column.options.color_field]) ? '#383838' : 'white' %}

@@ -45,7 +45,6 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ChoiceColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DateTimeColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\OrderPriceColumn;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\ColorColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
@@ -202,19 +201,16 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'field' => 'payment',
                 ])
             )
-            ->add((new ColorColumn('osname'))
+            ->add((new ChoiceColumn('osname'))
                 ->setName($this->trans('Status', [], 'Admin.Global'))
                 ->setOptions([
-                    'field' => 'osname',
-                    'color_field' => 'color',
-                ])
-            )
-            ->add((new ChoiceColumn('test'))
-                ->setName($this->trans('Test!!!!! :)', [], 'Admin.Global'))
-                ->setOptions([
                     'field' => 'current_state',
+                    'route' => 'admin_orders_list_update_status',
                     'color_field' => 'color',
                     'choice_provider' => $this->orderStatesChoiceProvider,
+                    'record_route_params' => [
+                        'id_order' => 'orderId',
+                    ],
                 ])
             )
             ->add((new DateTimeColumn('date_add'))
