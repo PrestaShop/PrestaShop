@@ -31,79 +31,213 @@ class OrderPricesForViewing
     /**
      * @var string
      */
-    private $productsPrice;
+    private $productsPriceFormatted;
 
     /**
      * @var string
      */
-    private $discountsAmount;
+    private $discountsAmountFormatted;
 
     /**
      * @var string
      */
-    private $wrappingPrice;
+    private $wrappingPriceFormatted;
 
     /**
      * @var string
      */
-    private $shippingPrice;
+    private $shippingPriceFormatted;
 
     /**
      * @var string
      */
-    private $shippingRefundableAmount;
+    private $shippingRefundableAmountFormatted;
+
+    /**
+     * @var string
+     */
+    private $taxesAmountFormatted;
+
+    /**
+     * @var string
+     */
+    private $totalAmountFormatted;
+
+    /**
+     * @var float
+     */
+    private $productsPriceRaw;
+
+    /**
+     * @var float
+     */
+    private $discountsAmountRaw;
+    /**
+     * @var float
+     */
+    private $wrappingPriceRaw;
+
+    /**
+     * @var float
+     */
+    private $shippingPriceRaw;
+
+    /**
+     * @var float
+     */
+    private $shippingRefundableAmountRaw;
+
+    /**
+     * @var float
+     */
+    private $taxesAmountRaw;
+
+    /**
+     * @var float
+     */
+    private $totalAmountRaw;
 
     public function __construct(
+        float $productsPriceRaw,
+        float $discountsAmountRaw,
+        float $wrappingPriceRaw,
+        float $shippingPriceRaw,
+        float $shippingRefundableAmountRaw,
+        float $taxesAmountRaw,
+        float $totalAmountRaw,
         string $productsPrice,
-        ?string $discountsAmount,
-        ?string $wrappingPrice,
-        ?string $shippingPrice,
-        ?string $shippingRefundableAmount
+        string $discountsAmount,
+        string $wrappingPrice,
+        string $shippingPrice,
+        string $shippingRefundableAmount,
+        string $taxesAmount,
+        string $totalAmount
     ) {
-        $this->productsPrice = $productsPrice;
-        $this->discountsAmount = $discountsAmount;
-        $this->wrappingPrice = $wrappingPrice;
-        $this->shippingPrice = $shippingPrice;
-        $this->shippingRefundableAmount = $shippingRefundableAmount;
+        $this->productsPriceFormatted = $productsPrice;
+        $this->discountsAmountFormatted = $discountsAmount;
+        $this->wrappingPriceFormatted = $wrappingPrice;
+        $this->shippingPriceFormatted = $shippingPrice;
+        $this->shippingRefundableAmountFormatted = $shippingRefundableAmount;
+        $this->taxesAmountFormatted = $taxesAmount;
+        $this->totalAmountFormatted = $totalAmount;
+        $this->productsPriceRaw = $productsPriceRaw;
+        $this->discountsAmountRaw = $discountsAmountRaw;
+        $this->wrappingPriceRaw = $wrappingPriceRaw;
+        $this->shippingPriceRaw = $shippingPriceRaw;
+        $this->shippingRefundableAmountRaw = $shippingRefundableAmountRaw;
+        $this->taxesAmountRaw = $taxesAmountRaw;
+        $this->totalAmountRaw = $totalAmountRaw;
     }
 
     /**
      * @return string
      */
-    public function getProductsPrice(): string
+    public function getProductsPriceFormatted(): string
     {
-        return $this->productsPrice;
+        return $this->productsPriceFormatted;
     }
 
     /**
      * @return string
      */
-    public function getDiscountsAmount(): string
+    public function getDiscountsAmountFormatted(): ?string
     {
-        return $this->discountsAmount;
+        return $this->discountsAmountFormatted;
     }
 
     /**
      * @return string
      */
-    public function getWrappingPrice(): string
+    public function getWrappingPriceFormatted(): ?string
     {
-        return $this->wrappingPrice;
+        return $this->wrappingPriceFormatted;
     }
 
     /**
      * @return string
      */
-    public function getShippingPrice(): string
+    public function getShippingPriceFormatted(): ?string
     {
-        return $this->shippingPrice;
+        return $this->shippingPriceFormatted;
     }
 
     /**
      * @return string
      */
-    public function getShippingRefundableAmount(): string
+    public function getShippingRefundableAmountFormatted(): ?string
     {
-        return $this->shippingRefundableAmount;
+        return $this->shippingRefundableAmountFormatted;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTaxesAmountFormatted(): string
+    {
+        return $this->taxesAmountFormatted;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTotalAmountFormatted(): string
+    {
+        return $this->totalAmountFormatted;
+    }
+
+    /**
+     * @return float
+     */
+    public function getProductsPriceRaw(): float
+    {
+        return $this->productsPriceRaw;
+    }
+
+    /**
+     * @return float
+     */
+    public function getDiscountsAmountRaw(): float
+    {
+        return $this->discountsAmountRaw;
+    }
+
+    /**
+     * @return float
+     */
+    public function getWrappingPriceRaw(): float
+    {
+        return $this->wrappingPriceRaw;
+    }
+
+    /**
+     * @return float
+     */
+    public function getShippingPriceRaw(): float
+    {
+        return $this->shippingPriceRaw;
+    }
+
+    /**
+     * @return float
+     */
+    public function getShippingRefundableAmountRaw(): float
+    {
+        return $this->shippingRefundableAmountRaw;
+    }
+
+    /**
+     * @return float
+     */
+    public function getTaxesAmountRaw(): float
+    {
+        return $this->taxesAmountRaw;
+    }
+
+    /**
+     * @return float
+     */
+    public function getTotalAmountRaw(): float
+    {
+        return $this->totalAmountRaw;
     }
 }

@@ -133,15 +133,40 @@
           <div class="row">
             <div class="col-sm text-center">
               <p class="text-muted mb-0"><strong>{{ 'Products'|trans({}, 'Admin.Global') }}</strong></p>
-              <strong>14.99</strong>
+              <strong>{{ orderForViewing.prices.productsPriceFormatted }}</strong>
             </div>
-            <div class="col-sm text-center">
-              <p class="text-muted mb-0"><strong>{{ 'Shipping'|trans({}, 'Admin.Catalog.Feature') }}</strong></p>
-              <strong>99.99</strong>
-            </div>
+
+            {% if orderForViewing.prices.discountsAmountRaw %}
+              <div class="col-sm text-center">
+                <p class="text-muted mb-0"><strong>{{ 'Discounts'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong></p>
+                <strong>{{ orderForViewing.prices.discountsAmountFormatted }}</strong>
+              </div>
+            {% endif %}
+
+            {% if orderForViewing.prices.wrappingPriceRaw %}
+              <div class="col-sm text-center">
+                <p class="text-muted mb-0"><strong>{{ 'Wrapping'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong></p>
+                <strong>{{ orderForViewing.prices.wrappingPriceFormatted }}</strong>
+              </div>
+            {% endif %}
+
+            {% if orderForViewing.prices.shippingPriceRaw %}
+              <div class="col-sm text-center">
+                <p class="text-muted mb-0"><strong>{{ 'Shipping'|trans({}, 'Admin.Catalog.Feature') }}</strong></p>
+                <strong>{{ orderForViewing.prices.shippingPriceFormatted }}</strong>
+              </div>
+            {% endif %}
+
+            {% if orderForViewing.taxIncluded %}
+              <div class="col-sm text-center">
+                <p class="text-muted mb-0"><strong>{{ 'Taxes'|trans({}, 'Admin.Global') }}</strong></p>
+                <strong>{{ orderForViewing.prices.taxesAmountFormatted }}</strong>
+              </div>
+            {% endif %}
+
             <div class="col-sm text-center">
               <p class="text-muted mb-0"><strong>{{ 'Total'|trans({}, 'Admin.Global') }}</strong></p>
-              <strong>85</strong>
+              <span class="badge rounded badge-dark">{{ orderForViewing.prices.totalAmountFormatted }}</span>
             </div>
           </div>
         </div>
