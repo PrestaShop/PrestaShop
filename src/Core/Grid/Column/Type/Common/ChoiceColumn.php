@@ -67,8 +67,12 @@ final class ChoiceColumn extends AbstractColumn
                     'field',
                 ]
             )
+            ->setDefaults([
+                'color_field' => '',
+            ])
             ->setAllowedTypes('choice_provider', FormChoiceProviderInterface::class)
             ->setAllowedTypes('field', ['string', 'int', 'bool'])
+            ->setAllowedTypes('color_field', ['string'])
         ;
     }
 }
