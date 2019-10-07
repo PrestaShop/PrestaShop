@@ -37,10 +37,7 @@
 {% set classes = 'btn btn-secondary dropdown-toggle dropdown-toggle-split rounded' %}
 
 {% if choices is not empty %}
-  <div
-    class="dropdown"
-    data-url="{{ url(column.options.route, routeParams) }}"
-  >
+  <div class="dropdown">
     <button
       {% if column.options.color_field %}
         {% set textColor = is_color_bright(record[column.options.color_field]) ? '#383838' : 'white' %}
@@ -56,9 +53,12 @@
     >
       {{ selectedChoiceName }}
     </button>
-    <div class="dropdown-menu">
+    <div
+      class="dropdown-menu js-choice-options"
+      data-url="{{ url(column.options.route, routeParams) }}"
+    >
       {% for name,value in choices if value != selectedChoice %}
-        <button class="dropdown-item" data-url="" data-value="{{ value }}">{{ name }}</button>
+        <button class="js-dropdown-item dropdown-item" data-value="{{ value }}">{{ name }}</button>
       {% endfor %}
     </div>
   </div>

@@ -303,7 +303,12 @@ class OrderController extends FrameworkBundleAdminController
      */
     public function updateStatusAction(int $orderId, Request $request): RedirectResponse
     {
-        $this->handleOrderStatusUpdate($orderId, $request);
+        $form = $this->createForm(UpdateOrderStatusType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->handleOrderStatusUpdate($orderId, (int) $form->getData()['new_order_status_id']);
+        }
 
         return $this->redirectToRoute('admin_orders_view', [
             'orderId' => $orderId,
@@ -320,7 +325,7 @@ class OrderController extends FrameworkBundleAdminController
      */
     public function updateStatusFromListAction(int $orderId, Request $request): RedirectResponse
     {
-        $this->handleOrderStatusUpdate($orderId, $request);
+        $this->handleOrderStatusUpdate($orderId, $request->request->getInt('value'));
 
         return $this->redirectToRoute('admin_orders_index');
     }
@@ -387,26 +392,21 @@ class OrderController extends FrameworkBundleAdminController
      * Initializes order status update
      *
      * @param int $orderId
-     * @param Request $request
+     * @param int $orderStatusId
      */
-    private function handleOrderStatusUpdate(int $orderId, Request $request): void
+    private function handleOrderStatusUpdate(int $orderId, int $orderStatusId): void
     {
-        $form = $this->createForm(UpdateOrderStatusType::class);
-        $form->handleRequest($request);
+        try {
+            $this->getCommandBus()->handle(
+                new UpdateOrderStatusCommand(
+                    $orderId,
+                    $orderStatusId
+                )
+            );
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                $this->getCommandBus()->handle(
-                    new UpdateOrderStatusCommand(
-                        $orderId,
-                        (int) $form->getData()['new_order_status_id']
-                    )
-                );
-
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
-            } catch (Exception $e) {
-                $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
-            }
+            $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
     }
 
