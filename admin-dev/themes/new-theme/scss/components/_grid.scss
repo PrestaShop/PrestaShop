@@ -146,12 +146,16 @@ table .column-filters td:last-child .grid-reset-button {
           }
 
           &.choice-type {
+            @mixin display-dropdown-arrow() {
+              &::after {
+                visibility: visible;
+              }
+            }
+
             .dropdown {
               &.show {
                 .dropdown-toggle {
-                  &::after {
-                    display: inline-block;
-                  }
+                  @include display-dropdown-arrow();
                 }
               }
 
@@ -162,13 +166,11 @@ table .column-filters td:last-child .grid-reset-button {
                 }
 
                 &::after {
-                  display: none;
+                  visibility: hidden;
                 }
 
                 &:hover {
-                  &::after {
-                    display: inline-block;
-                  }
+                  @include display-dropdown-arrow();
                 }
               }
 
