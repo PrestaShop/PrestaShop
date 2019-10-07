@@ -38,6 +38,7 @@ import ExportToSqlManagerExtension from '../../components/grid/extension/export-
 import ChoiceTree from '../../components/form/choice-tree';
 import TranslatableField from '../../components/translatable-field';
 import TinyMCEEditor from '../../components/tinymce-editor';
+import LinkRowActionExtension from '../../components/grid/extension/link-row-action-extension';
 
 const $ = window.$;
 
@@ -52,6 +53,7 @@ $(() => {
     grid.addExtension(new SubmitRowActionExtension());
     grid.addExtension(new SubmitBulkExtension());
     grid.addExtension(new BulkActionCheckboxExtension());
+    grid.addExtension(new LinkRowActionExtension());
   });
 
   new TranslatableInput();

@@ -31,6 +31,7 @@ import ColumnTogglingExtension from '../../components/grid/extension/column-togg
 import SubmitRowActionExtension from '../../components/grid/extension/action/row/submit-row-action-extension';
 import ChoiceTree from '../../components/form/choice-tree';
 import ExchangeRatesUpdateScheduler from './ExchangeRatesUpdateScheduler';
+import LinkRowActionExtension from '../../components/grid/extension/link-row-action-extension';
 
 const $ = window.$;
 
@@ -41,6 +42,7 @@ $(() => {
   currency.addExtension(new ReloadListActionExtension());
   currency.addExtension(new ColumnTogglingExtension());
   currency.addExtension(new SubmitRowActionExtension());
+  currency.addExtension(new LinkRowActionExtension());
 
   const choiceTree = new ChoiceTree('#currency_shop_association');
   choiceTree.enableAutoCheckChildren();
