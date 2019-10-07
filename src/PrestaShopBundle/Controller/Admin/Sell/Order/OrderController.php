@@ -251,7 +251,9 @@ class OrderController extends FrameworkBundleAdminController
 
         dump($orderForViewing);
 
-        $addOrderCartRuleForm = $this->createForm(AddOrderCartRuleType::class);
+        $addOrderCartRuleForm = $this->createForm(AddOrderCartRuleType::class, [], [
+            'order_id' => $orderId,
+        ]);
         $updateOrderStatusForm = $this->createForm(UpdateOrderStatusType::class, [
             'new_order_status_id' => $orderForViewing->getHistory()->getCurrentOrderStatusId(),
         ]);

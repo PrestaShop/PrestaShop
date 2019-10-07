@@ -26,11 +26,14 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Order;
 
+use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class AddOrderCartRuleType extends AbstractType
 {
@@ -40,24 +43,64 @@ class AddOrderCartRuleType extends AbstractType
     private $orderDiscountTypeChoiceProvider;
 
     /**
-     * @param FormChoiceProviderInterface $orderDiscountTypeChoiceProvider
+     * @var ConfigurableFormChoiceProviderInterface
      */
-    public function __construct(FormChoiceProviderInterface $orderDiscountTypeChoiceProvider)
-    {
+    private $orderInvoiceByIdChoiceProvider;
+
+    /**
+     * @var int
+     */
+    private $contextLangId;
+
+    /**
+     * @param FormChoiceProviderInterface $orderDiscountTypeChoiceProvider
+     * @param ConfigurableFormChoiceProviderInterface $orderInvoiceByIdChoiceProvider
+     * @param int $contextLangId
+     */
+    public function __construct(
+        FormChoiceProviderInterface $orderDiscountTypeChoiceProvider,
+        ConfigurableFormChoiceProviderInterface $orderInvoiceByIdChoiceProvider,
+        int $contextLangId
+    ) {
         $this->orderDiscountTypeChoiceProvider = $orderDiscountTypeChoiceProvider;
+        $this->orderInvoiceByIdChoiceProvider = $orderInvoiceByIdChoiceProvider;
+        $this->contextLangId = $contextLangId;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $optional): void
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $invoices = $options['order_id'] ?
+            $this->orderInvoiceByIdChoiceProvider->getChoices([
+                'id_order' => $options['order_id'],
+                'id_lang' => $this->contextLangId,
+            ]) : [];
+
         $builder
             ->add('name', TextType::class)
             ->add('type', ChoiceType::class, [
                 'choices' => $this->orderDiscountTypeChoiceProvider->getChoices(),
             ])
             ->add('value', TextType::class)
+            ->add('invoice_id', ChoiceType::class, [
+                'choices' => $invoices,
+            ])
+            ->add('apply_on_all_invoices', CheckboxType::class)
+        ;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver
+            ->setDefaults([
+                'order_id' => null,
+            ])
+            ->setAllowedTypes('order_id', ['int', 'null'])
         ;
     }
 }
