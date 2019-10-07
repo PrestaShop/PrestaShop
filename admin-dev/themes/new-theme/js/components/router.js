@@ -23,20 +23,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-/**
- * Class responsible for checking password's validity.
- * Can validate entered password's length against min/max values.
- * If password confirmation input is provided, can validate if entered password is matching confirmation.
- */
-
-import Routing from '../../../../../vendor/friendsofsymfony/jsrouting-bundle/Resources/public/js/router.min';
+import Routing from 'fos-routing';
+import routes from '../fos_js_routes.json';
 
 const $ = window.$;
-
-// Routing.setRoutingData(require('../fos_js_routes.json'));
-const routes = require('../fos_js_routes.json');
-
-// Routing.setBaseUrl($(document).find('body').data('base-url'));
 
 /**
  * Wraps FOSJsRoutingbundle with exposed routes.
@@ -54,7 +44,7 @@ const routes = require('../fos_js_routes.json');
 export default class Router {
   constructor() {
     this.router = Routing;
-    this.router.setRoutingData(routes);
+    this.router.setData(routes);
     this.router.setBaseUrl($(document).find('body').data('base-url'));
 
     return this;
