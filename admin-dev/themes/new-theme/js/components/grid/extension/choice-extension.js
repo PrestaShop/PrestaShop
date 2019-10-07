@@ -26,6 +26,10 @@
 const $ = global.$;
 
 export default class ChoiceExtension {
+  constructor() {
+    this.lock = [];
+  }
+
   extend(grid) {
     const $choiceOptionsContainer = grid.getContainer().find('table.table .js-choice-options');
 
@@ -47,7 +51,7 @@ export default class ChoiceExtension {
    * @private
    */
   _submitForm(url, selectedStatusId) {
-
+    //todo: locks
     const $form = $(`<form method="POST" action="${url}">
         <input type="text" name="value" value="${selectedStatusId}">
     </form>`);
@@ -55,5 +59,26 @@ export default class ChoiceExtension {
     $form.appendTo('body');
 
     $form.submit();
+  }
+
+  /**
+   * Checks if current url is being used at the moment.
+   *
+   * @param url
+   * @return {boolean}
+   *
+   * @private
+   */
+  _isLocked(url) {
+    return this.lock.includes(url);
+  }
+
+  /**
+   * Locks the current url so it cant be used twice to execute same requesat
+   * @param url
+   * @private
+   */
+  _lock(url) {
+    this.lock.push(url);
   }
 }
