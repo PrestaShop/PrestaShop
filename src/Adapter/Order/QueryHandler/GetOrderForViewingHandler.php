@@ -51,6 +51,8 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryHandler\GetOrderForViewingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderCarrierForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderCustomerForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderDiscountForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderDiscountsForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderDocumentForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderDocumentsForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
@@ -136,6 +138,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             $taxMethod,
             $isTaxIncluded,
             (bool) $order->valid,
+            $order->hasInvoice(),
             $order->hasBeenDelivered(),
             $this->getOrderCustomer($order),
             $this->getOrderShippingAddress($order),
@@ -147,7 +150,8 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             $this->getOrderReturns($order),
             $this->getOrderPayments($order),
             $this->getOrderMessages($order),
-            $this->getOrderPrices($order)
+            $this->getOrderPrices($order),
+            $this->getOrderDiscounts($order)
         );
     }
 
@@ -765,5 +769,23 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             Tools::displayPrice($taxesAmount, $currency),
             Tools::displayPrice($totalAmount, $currency)
         );
+    }
+
+    private function getOrderDiscounts(Order $order): OrderDiscountsForViewing
+    {
+        $currency = new Currency($order->id_currency);
+        $discounts = $order->getCartRules();
+        $discountsForViewing = [];
+
+        foreach ($discounts as $discount) {
+            $discountsForViewing[] = new OrderDiscountForViewing(
+                (int) $discount['id_cart_rule'],
+                $discount['name'],
+                (float) $discount['value'],
+                Tools::displayPrice($discount['value'], $currency)
+            );
+        }
+
+        return new OrderDiscountsForViewing($discountsForViewing);
     }
 }

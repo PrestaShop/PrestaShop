@@ -120,6 +120,16 @@ class OrderForViewing
      */
     private $isTaxIncluded;
 
+    /**
+     * @var bool
+     */
+    private $hasInvoice;
+
+    /**
+     * @var OrderDiscountsForViewing
+     */
+    private $discounts;
+
     public function __construct(
         int $orderId,
         int $currencyId,
@@ -127,6 +137,7 @@ class OrderForViewing
         string $taxMethod,
         bool $isTaxIncluded,
         bool $isValid,
+        bool $hasInvoice,
         bool $isDelivered,
         OrderCustomerForViewing $customer,
         OrderShippingAddressForViewing $shippingAddress,
@@ -138,7 +149,8 @@ class OrderForViewing
         OrderReturnsForViewing $returns,
         OrderPaymentsForViewing $payments,
         OrderMessagesForViewing $messages,
-        OrderPricesForViewing $prices
+        OrderPricesForViewing $prices,
+        OrderDiscountsForViewing $discounts
     ) {
         $this->reference = $reference;
         $this->customer = $customer;
@@ -158,6 +170,8 @@ class OrderForViewing
         $this->isDelivered = $isDelivered;
         $this->prices = $prices;
         $this->isTaxIncluded = $isTaxIncluded;
+        $this->hasInvoice = $hasInvoice;
+        $this->discounts = $discounts;
     }
 
     /**
@@ -302,5 +316,21 @@ class OrderForViewing
     public function isTaxIncluded(): bool
     {
         return $this->isTaxIncluded;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasInvoice(): bool
+    {
+        return $this->hasInvoice;
+    }
+
+    /**
+     * @return OrderDiscountsForViewing
+     */
+    public function getDiscounts(): OrderDiscountsForViewing
+    {
+        return $this->discounts;
     }
 }
