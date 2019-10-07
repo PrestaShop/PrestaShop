@@ -62,9 +62,13 @@ final class ChoiceColumn extends AbstractColumn
 
         $resolver
             ->setRequired(
-                'choice_provider'
+                [
+                    'choice_provider',
+                    'field',
+                ]
             )
             ->setAllowedTypes('choice_provider', FormChoiceProviderInterface::class)
+            ->setAllowedTypes('field', ['string', 'int', 'bool'])
         ;
     }
 }

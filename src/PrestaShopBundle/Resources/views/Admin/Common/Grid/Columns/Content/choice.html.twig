@@ -24,6 +24,14 @@
  *#}
 
 {% set choices = column.options.choice_provider.getChoices() %}
+{% set selectedChoice = record[column.options.field] %}
+{% set selectedChoiceName = '' %}
+
+{% for name,value in choices %}
+  {% if value == selectedChoice %}
+    {% set selectedChoiceName = name %}
+  {% endif %}
+{% endfor %}
 
 {% if choices is not empty %}
   <div class="dropdown">
@@ -35,10 +43,10 @@
       aria-haspopup="true"
       aria-expanded="false"
     >
-      Dropdown button
+      {{ selectedChoiceName }}
     </button>
     <div class="dropdown-menu">
-      {% for name,value in choices %}
+      {% for name,value in choices if value != selectedChoice %}
         <button class="dropdown-item" data-url="" data-value="{{ value }}">{{ name }}</button>
       {% endfor %}
     </div>

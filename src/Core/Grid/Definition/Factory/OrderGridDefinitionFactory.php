@@ -212,6 +212,7 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->add((new ChoiceColumn('test'))
                 ->setName($this->trans('Test!!!!! :)', [], 'Admin.Global'))
                 ->setOptions([
+                    'field' => 'current_state',
                     'choice_provider' => $this->orderStatesChoiceProvider,
                 ])
             )
