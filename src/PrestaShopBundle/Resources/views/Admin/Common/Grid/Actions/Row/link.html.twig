@@ -37,6 +37,7 @@
     data-placement="top"
     data-original-title="{{ action.name }}"
   {% endif %}
+  {% if action.options.clickable_row|default(false) %}data-clickable-row="1"{% endif %}
 >
   {% if action.icon is not empty %}
     <i class="material-icons">{{ action.icon }}</i>
