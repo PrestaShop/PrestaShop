@@ -76,7 +76,13 @@
               </a>
             </td>
             <td>{{ product.unitPrice }}</td>
-            <td>{{ product.quantity }}</td>
+            <td>
+              {% if product.quantity > 1 %}
+                <span class="badge badge-secondary rounded-circle">{{ product.quantity }}</span>
+              {% else %}
+                {{ product.quantity }}
+              {% endif %}
+            </td>
             <td>{{ product.totalPrice }}</td>
             {% if not orderForViewing.delivered %}
               <td class="text-right">
