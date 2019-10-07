@@ -54,12 +54,14 @@ final class LinkRowAction extends AbstractRowAction
             ->setDefaults([
                 'confirm_message' => '',
                 'accessibility_checker' => null,
+                'clickable_row' => false,
             ])
             ->setAllowedTypes('route', 'string')
             ->setAllowedTypes('route_param_name', 'string')
             ->setAllowedTypes('route_param_field', 'string')
             ->setAllowedTypes('confirm_message', 'string')
             ->setAllowedTypes('accessibility_checker', [AccessibilityCheckerInterface::class, 'callable', 'null'])
+            ->setAllowedTypes('clickable_row', 'boolean')
         ;
     }
 

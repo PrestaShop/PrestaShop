@@ -35,6 +35,23 @@ export default class LinkRowActionExtension {
    * @param {Grid} grid
    */
   extend(grid) {
+    $('tr', grid.getContainer()).each(function () {
+      const $parentRow = $(this);
+
+      $('.js-link-row-action[data-clickable-row=1]:first', $parentRow).each(function () {
+        const $rowLink = $(this);
+
+        const $parentCell = $rowLink.closest('td');
+        const clickableCells = $('td.data-type, td.identifier-type, td.badge-type', $parentRow)
+          .not($parentCell)
+        ;
+
+        clickableCells.addClass('cursor-pointer').click(() => {
+          document.location = $rowLink.attr('href');
+        });
+      });
+    });
+
     grid.getContainer().on('click', '.js-link-row-action', (event) => {
       const confirmMessage = $(event.currentTarget).data('confirm-message');
 
