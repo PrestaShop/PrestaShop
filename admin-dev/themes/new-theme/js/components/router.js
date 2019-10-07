@@ -31,7 +31,12 @@
 
 import Routing from '../../../../../vendor/friendsofsymfony/jsrouting-bundle/Resources/public/js/router.min';
 
-Routing.setRoutingData(require('../fos_js_routes.json'));
+const $ = window.$;
+
+// Routing.setRoutingData(require('../fos_js_routes.json'));
+const routes = require('../fos_js_routes.json');
+
+// Routing.setBaseUrl($(document).find('body').data('base-url'));
 
 /**
  * Wraps FOSJsRoutingbundle with exposed routes.
@@ -48,6 +53,23 @@ Routing.setRoutingData(require('../fos_js_routes.json'));
  */
 export default class Router {
   constructor() {
-    return Routing;
+    this.router = Routing;
+    this.router.setRoutingData(routes);
+    this.router.setBaseUrl($(document).find('body').data('base-url'));
+
+    return this;
+  }
+
+  /**
+   * Decorated "generate" method, with predefined security token in params
+   *
+   * @param url
+   * @param params
+   * @returns {*}
+   */
+  generate(url, params = {}) {
+    const tokenizedParams = Object.assign(params, {_token: $(document).find('body').data('token')});
+
+    return this.router.generate(url, tokenizedParams);
   }
 }

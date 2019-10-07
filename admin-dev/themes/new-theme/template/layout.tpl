@@ -4,7 +4,7 @@
   {$header}
 </head>
 
-<body class="lang-{$iso_user}{if $lang_is_rtl} lang-rtl{/if} {$smarty.get.controller|escape|strtolower}{if $collapse_menu} page-sidebar-closed{/if}">
+<body class="lang-{$iso_user}{if $lang_is_rtl} lang-rtl{/if} {$smarty.get.controller|escape|strtolower}{if $collapse_menu} page-sidebar-closed{/if}" data-base-url="{$base_url}" data-token="{$token}">
 
 {if $display_header}
   <header id="header">

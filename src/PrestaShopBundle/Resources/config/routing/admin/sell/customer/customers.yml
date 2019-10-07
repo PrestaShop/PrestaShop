@@ -169,6 +169,8 @@ admin_customers_carts:
     _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:getCustomerCarts
     _legacy_controller: AdminCustomers
     _legacy_link: AdminCustomers
+  options:
+    expose: true
 
 admin_customers_orders:
   path: /orders
@@ -177,3 +179,5 @@ admin_customers_orders:
     _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:getCustomerOrders
     _legacy_controller: AdminCustomers
     _legacy_link: AdminCustomers
+  options:
+    expose: true

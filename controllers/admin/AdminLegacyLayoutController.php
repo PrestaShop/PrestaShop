@@ -1,4 +1,7 @@
 <?php
+
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+
 /**
  * 2007-2019 PrestaShop SA and Contributors
  *
@@ -109,6 +112,14 @@ class AdminLegacyLayoutControllerCore extends AdminController
             'toggle_navigation_url' => $this->context->link->getAdminLink('AdminEmployees', true, [], [
                 'action' => 'toggleMenu',
             ]),
+            // base url for javascript router
+            'base_url' => SymfonyContainer::getInstance()->get('request_stack')
+                ->getCurrentRequest()
+                ->getBaseUrl(),
+            //security token for javascript router
+            'token' => SymfonyContainer::getInstance()->get('security.csrf.token_manager')
+                ->getToken(SymfonyContainer::getInstance()->get('prestashop.user_provider')->getUsername())
+                ->getValue(),
         );
 
         if ($this->helpLink === false || !empty($this->helpLink)) {
