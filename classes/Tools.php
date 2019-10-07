@@ -821,7 +821,7 @@ class ToolsCore
     public static function displayPriceSmarty($params, &$smarty)
     {
         $context = Context::getContext();
-        $locale = $context->getCurrentLocale();
+        $locale = static::getContextLocale($context);
         if (array_key_exists('currency', $params)) {
             $currency = Currency::getCurrencyInstance((int) $params['currency']);
             if (Validate::isLoadedObject($currency)) {
