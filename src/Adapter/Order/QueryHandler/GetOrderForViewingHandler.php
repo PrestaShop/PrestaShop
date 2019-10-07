@@ -122,41 +122,19 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
     public function handle(GetOrderForViewing $query): OrderForViewing
     {
         $order = $this->getOrder($query->getOrderId());
-        $customer = $order->getCustomer();
 
-        $isTaxExcluded = $order->getTaxCalculationMethod() == PS_TAX_EXC;
+        $isTaxIncluded = $order->getTaxCalculationMethod() == PS_TAX_INC;
 
-        $taxMethod = $isTaxExcluded ?
-            $this->translator->trans('Tax excluded', [], 'Admin.Global') :
-            $this->translator->trans('Tax included', [], 'Admin.Global');
-
-        $shipping_refundable_tax_excl = $order->total_shipping_tax_excl;
-        $shipping_refundable_tax_incl = $order->total_shipping_tax_incl;
-        $slips = OrderSlip::getOrdersSlip($customer->id, $order->id);
-        foreach ($slips as $slip) {
-            $shipping_refundable_tax_excl -= $slip['total_shipping_tax_excl'];
-            $shipping_refundable_tax_incl -= $slip['total_shipping_tax_incl'];
-        }
-
-        if ($isTaxExcluded) {
-            $productsPrice = $order->total_products;
-            $discountsAmount = $order->total_discounts_tax_excl;
-            $wrappingPrice = $order->total_wrapping_tax_excl;
-            $shippingPrice = $order->total_shipping_tax_excl;
-            $shippingRefundable = max(0, $shipping_refundable_tax_excl);
-        } else {
-            $productsPrice = $order->total_products_wt;
-            $discountsAmount = $order->total_discounts_tax_incl;
-            $wrappingPrice = $order->total_wrapping_tax_incl;
-            $shippingPrice = $order->total_shipping_tax_incl;
-            $shippingRefundable = max(0, $shipping_refundable_tax_incl);
-        }
+        $taxMethod = $isTaxIncluded ?
+            $this->translator->trans('Tax included', [], 'Admin.Global') :
+            $this->translator->trans('Tax excluded', [], 'Admin.Global');
 
         return new OrderForViewing(
             (int) $order->id,
             (int) $order->id_currency,
             $order->reference,
             $taxMethod,
+            $isTaxIncluded,
             (bool) $order->valid,
             $order->hasBeenDelivered(),
             $this->getOrderCustomer($order),
@@ -168,7 +146,8 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             $this->getOrderShipping($order),
             $this->getOrderReturns($order),
             $this->getOrderPayments($order),
-            $this->getOrderMessages($order)
+            $this->getOrderMessages($order),
+            $this->getOrderPrices($order)
         );
     }
 
@@ -754,25 +733,37 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
         }
 
         if ($isTaxExcluded) {
-            $productsPrice = $order->total_products;
-            $discountsAmount = $order->total_discounts_tax_excl;
-            $wrappingPrice = $order->total_wrapping_tax_excl;
-            $shippingPrice = $order->total_shipping_tax_excl;
+            $productsPrice = (float) $order->total_products;
+            $discountsAmount = (float) $order->total_discounts_tax_excl;
+            $wrappingPrice = (float) $order->total_wrapping_tax_excl;
+            $shippingPrice = (float) $order->total_shipping_tax_excl;
             $shippingRefundable = max(0, $shipping_refundable_tax_excl);
         } else {
-            $productsPrice = $order->total_products_wt;
-            $discountsAmount = $order->total_discounts_tax_incl;
-            $wrappingPrice = $order->total_wrapping_tax_incl;
-            $shippingPrice = $order->total_shipping_tax_incl;
+            $productsPrice = (float) $order->total_products_wt;
+            $discountsAmount = (float) $order->total_discounts_tax_incl;
+            $wrappingPrice = (float) $order->total_wrapping_tax_incl;
+            $shippingPrice = (float) $order->total_shipping_tax_incl;
             $shippingRefundable = max(0, $shipping_refundable_tax_incl);
         }
 
+        $taxesAmount = $order->total_paid_tax_incl-$order->total_paid_tax_excl;
+        $totalAmount = (float) $order->total_paid_tax_incl;
+
         return new OrderPricesForViewing(
+            $productsPrice,
+            $discountsAmount,
+            $wrappingPrice,
+            $shippingPrice,
+            $shippingRefundable,
+            $taxesAmount,
+            $totalAmount,
             Tools::displayPrice($productsPrice, $currency),
-            0 !== $discountsAmount ? Tools::displayPrice($productsPrice, $currency) : null,
-            0 !== $discountsAmount ? Tools::displayPrice($productsPrice, $currency) : null,
-            0 !== $discountsAmount ? Tools::displayPrice($productsPrice, $currency) : null,
-            0 !== $discountsAmount ? Tools::displayPrice($productsPrice, $currency) : null
+            Tools::displayPrice($discountsAmount, $currency) ,
+            Tools::displayPrice($wrappingPrice, $currency),
+            Tools::displayPrice($shippingPrice, $currency),
+            Tools::displayPrice($shippingRefundable, $currency),
+            Tools::displayPrice($taxesAmount, $currency),
+            Tools::displayPrice($totalAmount, $currency)
         );
     }
 }

@@ -248,6 +248,8 @@ class OrderController extends FrameworkBundleAdminController
         /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
 
+        dump($orderForViewing);
+
         $addOrderCartRuleForm = $this->createForm(AddOrderCartRuleType::class);
         $updateOrderStatusForm = $this->createForm(UpdateOrderStatusType::class, [
             'new_order_status_id' => $orderForViewing->getHistory()->getCurrentOrderStatusId(),
