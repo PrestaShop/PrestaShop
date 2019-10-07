@@ -112,6 +112,7 @@ final class BackupDefinitionFactory extends AbstractGridDefinitionFactory
                                 'route' => 'admin_backups_download_view',
                                 'route_param_name' => 'downloadFileName',
                                 'route_param_field' => 'file_name',
+                                'clickable_row' => true,
                             ])
                         )
                         ->add(
