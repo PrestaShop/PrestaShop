@@ -26,6 +26,10 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
+use Context;
+use Currency;
+use PrestaShop\PrestaShop\Core\Localization\Locale;
+use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
 use Tools;
 
 /**
@@ -33,6 +37,30 @@ use Tools;
  */
 class PriceFormatter
 {
+    /**
+     * @var Context
+     */
+    private $context;
+
+    /**
+     * @var Locale
+     */
+    private $locale;
+
+    /**
+     * @param Context $context
+     * @param LocaleRepository $repository
+     */
+    public function __construct(
+        Context $context,
+        LocaleRepository $repository
+    ) {
+        $this->context = $context;
+        $this->locale = $repository->getLocale(
+            $this->context->getContext()->language->getLocale()
+        );
+    }
+
     /**
      * @param float $price
      * @param string|null $currency
@@ -52,7 +80,9 @@ class PriceFormatter
      */
     public function format($price, $currency = null)
     {
-        return Tools::displayPrice($price, $currency);
+        $currency = $currency ?: $this->context->currency;
+        $currency = is_array($currency) ? Currency::getCurrencyInstance($currency['id_currency']) : $currency;
+        return $this->locale->formatPrice($price, $currency->iso_code);
     }
 
     /**

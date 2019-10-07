@@ -80,6 +80,9 @@ services:
 
     prestashop.adapter.formatter.price:
         class: PrestaShop\PrestaShop\Adapter\Product\PriceFormatter
+        arguments:
+            - '@=service("prestashop.adapter.legacy.context").getContext()'
+            - "@prestashop.core.localization.locale.repository"
 
     # Other adapters
     prestashop.adapter.shop.context:
