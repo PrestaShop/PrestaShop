@@ -133,6 +133,39 @@
       </div>
     </div>
 
+    {% if orderForViewing.discounts.discounts is not empty %}
+      <table class="table">
+        <thead>
+          <tr>
+            <th>{{ 'Name'|trans({}, 'Admin.Global') }}</th>
+            <th>{{ 'Value'|trans({}, 'Admin.Global') }}</th>
+            <th class="text-right">{{ 'Actions'|trans({}, 'Admin.Global') }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for discount in orderForViewing.discounts.discounts %}
+            <tr>
+              <td>{{ discount.name }}</td>
+              <td>
+                {% if discount.amountRaw %}-{% endif %}
+                {{ discount.amountFormatted }}
+              </td>
+              <td class="text-right">
+                <a href="#"
+                   class="ml-2 tooltip-link"
+                   data-toggle="pstooltip"
+                   data-placement="top"
+                   data-original-title="{{ 'Delete'|trans({}, 'Admin.Actions') }}"
+                >
+                  <i class="material-icons">delete</i>
+                </a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% endif %}
+
     <div class="row">
       <div class="col-md-12">
         <div style="background-color: #F8F8F8; padding-top: 18px; padding-left: 18px; padding-right: 18px; padding-bottom: 16px;">
