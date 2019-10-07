@@ -548,7 +548,8 @@ $header-text-color: #4e6167;
       border: 1px solid #899EA5;
       border-radius: 1px;
       color: #576C72;
-      max-width: 130px;
+      min-width: 130px;
+      width: fit-content;
 
       &:hover {
         border-color: $primary;
