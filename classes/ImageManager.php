@@ -179,12 +179,12 @@ class ImageManagerCore
 				$destinationHeight,
 				$fileType,
 				$forceType,
-				&$error,
-				&$targetWidth,
-				&$targetHeight,
+				$error,
+				$targetWidth,
+				$targetHeight,
 				$quality,
-				&$sourceWidth,
-				&$sourceHeight
+				$sourceWidth,
+				$sourceHeight
 			);
 		}
 		
