@@ -492,7 +492,17 @@ class CartControllerCore extends FrontController
                     false,
                     true
                 );
-                $update_quantity = $this->updateCartProductQuantity((int) $this->qty, (int) $this->id_product);
+                $update_quantity = $this->context->cart->updateQty(
+                    $this->qty,
+                    $this->id_product,
+                    $this->id_product_attribute,
+                    $this->customization_id,
+                    Tools::getValue('op', 'up'),
+                    $this->id_address_delivery,
+                    null,
+                    true,
+                    true
+                );
                 if ($update_quantity < 0) {
                     // If product has attribute, minimal quantity is set with minimal quantity of attribute
                     $minimal_quantity = ($this->id_product_attribute)
@@ -659,35 +669,7 @@ class CartControllerCore extends FrontController
                         'Shop.Notifications.Error',
                     )
                 );
-                // increase cart's product quantity up to minimal quantity
-                $addedQuantity = (int) $product['minimal_quantity'] - (int) $product['cart_quantity'];
-                $this->updateCartProductQuantity($addedQuantity, (int) $product['id_product']);
             }
         }
-    }
-
-    /**
-     * Wrapper for the cart's updateQty method, not to repeat the long list of parameters
-     * at each use of the method.
-     * It increases the quantity for a product in the cart.
-     *
-     * @param int $addedQuantity
-     * @param int $productId
-     *
-     * @return bool Whether the quantity has been successfully updated
-     */
-    private function updateCartProductQuantity(int $addedQuantity, int $productId)
-    {
-        return $this->context->cart->updateQty(
-            $addedQuantity,
-            $productId,
-            $this->id_product_attribute,
-            $this->customization_id,
-            Tools::getValue('op', 'up'),
-            $this->id_address_delivery,
-            null,
-            true,
-            true
-        );
     }
 }
