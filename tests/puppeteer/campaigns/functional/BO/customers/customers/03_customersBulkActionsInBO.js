@@ -35,7 +35,6 @@ describe('Create Customers, Then disable / Enable and Delete with Bulk actions',
     page = await helper.newTab(browser);
     this.pageObjects = await init();
     firstCustomerData = await (new CustomerFaker({firstName: 'todelete'}));
-    await console.log(firstCustomerData);
     secondCustomerData = await (new CustomerFaker({firstName: 'todelete'}));
   });
   after(async () => {
