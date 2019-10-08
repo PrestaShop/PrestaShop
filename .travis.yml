@@ -28,6 +28,7 @@ php:
 env:
   global:
     - SYMFONY_DEPRECATIONS_HELPER=disabled
+    - DISABLE_DEBUG_TOOLBAR=1
   matrix:
     - PRESTASHOP_TEST_TYPE=unit
     - PRESTASHOP_TEST_TYPE=integration
