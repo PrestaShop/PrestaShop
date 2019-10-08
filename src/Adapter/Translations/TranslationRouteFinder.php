@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepositoryInterface;
 use PrestaShopBundle\Service\TranslationService;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\PropertyAccess\PropertyAccess;
+use Validate;
 
 /**
  * Class TranslationRouteFinder finds the correct route for translations.
@@ -203,7 +204,11 @@ class TranslationRouteFinder
     private function isModuleUsingNewTranslationSystem($moduleName)
     {
         $module = $this->moduleRepository->getInstanceByName($moduleName);
-
-        return $module->isUsingNewTranslationSystem();
+        
+        if (Validate::isLoadedObject($module)){
+            return $module->isUsingNewTranslationSystem();
+        }else {
+            return false;
+        }
     }
 }
