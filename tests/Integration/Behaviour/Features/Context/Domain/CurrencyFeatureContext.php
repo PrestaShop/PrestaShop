@@ -266,7 +266,7 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
         $currencyId = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query->build());
 
         if (!$currencyId) {
-            throw new RuntimeException(sprintf('Currency with ISO Code "%s" should be deleted in database', $isoCode));
+            throw new RuntimeException(sprintf('Currency with ISO Code "%s" should be deactivated in database', $isoCode));
         }
     }
 

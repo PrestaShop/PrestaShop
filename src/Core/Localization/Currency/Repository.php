@@ -90,9 +90,9 @@ class Repository implements CurrencyRepositoryInterface
     /**
      * {@inheritdoc}
      */
-    public function getAllCurrenciesInDatabase($localeCode)
+    public function getAllInstalledCurrencies($localeCode)
     {
-        return $this->formatCurrencies($this->dataSource->getAllCurrenciesDataInDatabase($localeCode));
+        return $this->formatCurrencies($this->dataSource->getAllInstalledCurrenciesData($localeCode));
     }
 
     /**

@@ -87,9 +87,9 @@ class CurrencyInstalled
      *
      * @return string[]
      */
-    public function getAllCurrencyCodesInDatabase()
+    public function getAllInstalledCurrencyIsoCodes()
     {
-        $currencies = $this->dataProvider->findAllInDatabase();
+        $currencies = $this->dataProvider->findAllInstalled();
         $currencyIsoCodes = array_column($currencies, 'iso_code');
 
         return $currencyIsoCodes;

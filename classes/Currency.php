@@ -428,9 +428,9 @@ class CurrencyCore extends ObjectModel
      *
      * @throws PrestaShopDatabaseException
      */
-    public static function findAllInDatabase()
+    public static function findAllInstalled()
     {
-        $currencies = Db::getInstance()->executeS(
+        $currencies = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
             'SELECT * FROM `' . _DB_PREFIX_ . 'currency` c ORDER BY `iso_code` ASC'
         );
 
@@ -590,14 +590,14 @@ class CurrencyCore extends ObjectModel
      *
      * @param string $isoCode ISO code
      * @param int $idShop Shop ID
-     * @param bool $noCache
+     * @param bool $forceRefreshCache [default=false] Set to TRUE to forcefully refresh any currently cached results
      *
      * @return int Currency ID
      */
-    public static function getIdByIsoCode($isoCode, $idShop = 0, $noCache = false)
+    public static function getIdByIsoCode($isoCode, $idShop = 0, $forceRefreshCache = false)
     {
         $cacheId = 'Currency::getIdByIsoCode_' . pSQL($isoCode) . '-' . (int) $idShop;
-        if ($noCache || !Cache::isStored($cacheId)) {
+        if ($forceRefreshCache || !Cache::isStored($cacheId)) {
             $query = Currency::getIdByQuery($idShop);
             $query->where('iso_code = \'' . pSQL($isoCode) . '\'');
 

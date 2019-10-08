@@ -71,7 +71,10 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function createCurrencyWithIsoCode($reference, $isoCode)
     {
-        //Currency::getIdByIsoCode only returns not deleted currency so we check the storage to avoid duplicate contents
+        /*
+         * Currency::getIdByIsoCode only returns not deleted currency so we check the storage to avoid
+         * duplicate contents, if it matches the expected iso code then we do nothing
+         */
         if (SharedStorage::getStorage()->exists($reference)) {
             /** @var Currency $currency */
             $currency = SharedStorage::getStorage()->get($reference);
