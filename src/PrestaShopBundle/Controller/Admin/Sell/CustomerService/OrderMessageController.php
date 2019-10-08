@@ -69,7 +69,7 @@ class OrderMessageController extends FrameworkBundleAdminController
             'layoutHeaderToolbarBtn' => [
                 'add' => [
                     'href' => $this->generateUrl('admin_order_messages_create'),
-                    'desc' => $this->trans('Add new customer', 'Admin.Orderscustomers.Feature'),
+                    'desc' => $this->trans('Add new order message', 'Admin.Orderscustomers.Feature'),
                     'icon' => 'add_circle_outline',
                 ],
             ],
