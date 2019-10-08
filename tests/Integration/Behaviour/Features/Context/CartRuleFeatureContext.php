@@ -152,7 +152,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
 
         Db::getInstance()->execute(
             'INSERT INTO `' . _DB_PREFIX_ . 'cart_rule_product_rule_value` (`id_product_rule`, `id_item`) ' .
-            'VALUES (' . (int) $idProductRuleGroup . ', '. $category->id . ')'
+            'VALUES (' . (int) $idProductRuleGroup . ', ' . $category->id . ')'
         );
     }
 
