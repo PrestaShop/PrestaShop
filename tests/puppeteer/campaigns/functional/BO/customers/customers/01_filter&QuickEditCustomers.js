@@ -217,7 +217,7 @@ describe('Filter And Quick Edit Customers', async () => {
         this.pageObjects.customersPage.customerGridTitle);
       await expect(numberOfCustomersAfterReset).to.equal(numberOfCustomers);
     });
-    it('should filter by Partner Offers \'NO\'', async function () {
+    it('should filter by Partner Offers \'YES\'', async function () {
       await this.pageObjects.customersPage.filterCustomers(
         'select',
         'optin',
