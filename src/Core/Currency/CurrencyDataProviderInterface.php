@@ -56,7 +56,7 @@ interface CurrencyDataProviderInterface
     public function findAll($currentShopOnly = true);
 
     /**
-     * Return raw currencies data from the database (regardless of their active or deleted status).
+     * Return raw currencies data from the database (regardless of their active or soft deleted status).
      *
      * @return array[] Currencies in database
      */
