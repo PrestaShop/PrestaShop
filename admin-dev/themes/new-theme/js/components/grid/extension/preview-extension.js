@@ -97,14 +97,13 @@ export default class PreviewExtension {
       url: dataUrl,
       method: 'GET',
       dataType: 'json',
+      complete: () => {
+        this._unlock(dataUrl);
+      },
     }).then((response) => {
       this._renderPreviewContent($columnRow, response.preview);
-
-      this._unlock(dataUrl);
     }).catch((e) => {
       showErrorMessage(e.responseJSON.message);
-
-      this._unlock(dataUrl);
     });
   }
 
