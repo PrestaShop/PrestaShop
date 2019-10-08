@@ -127,16 +127,6 @@ final class AttributeGroupQueryBuilder extends AbstractDoctrineQueryBuilder
             ->setParameter('contextLangId', $this->contextLangId)
             ->setParameter('contextShopId', $this->contextShopId);
 
-        if ($this->multistoreContextChecker->isSingleShopContext()) {
-            $qb->leftJoin(
-                'ag',
-                $this->dbPrefix . 'attribute_group_shop',
-                'ags',
-                'ag.id_attribute_group = ags.id_attribute_group AND ags.id_shop = :contextShopId'
-            );
-            $qb->andWhere('ags.id_shop = :contextShopId');
-        }
-
         $qb->leftJoin(
             'ag',
             $this->dbPrefix . 'attribute_group_lang',
@@ -150,6 +140,14 @@ final class AttributeGroupQueryBuilder extends AbstractDoctrineQueryBuilder
             'a',
             'a.id_attribute_group = ag.id_attribute_group'
         );
+
+        $qb->leftJoin(
+            'ag',
+            $this->dbPrefix . 'attribute_group_shop',
+            'ags',
+            'ag.id_attribute_group = ags.id_attribute_group AND ags.id_shop = :contextShopId'
+        );
+        $qb->andWhere('ags.id_shop = :contextShopId');
 
         $qb->leftJoin(
             'a',
