@@ -32,12 +32,14 @@ use Cart;
 use Currency;
 use Customer;
 use Language;
+use Link;
 use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryHandler\GetCartInformationHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartAddress;
+use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartProduct;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleInterface;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Locale\RepositoryInterface;
@@ -70,8 +72,8 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
      * @return CartInformation
      *
      * @throws CartNotFoundException
-     * @throws PrestaShopException
      * @throws LocalizationException
+     * @throws PrestaShopException
      */
     public function handle(GetCartInformation $query): CartInformation
     {
@@ -145,9 +147,29 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
         return $cartRules;
     }
 
-    //@todo: extract products to some CartProduct[] DTO array...
+    /**
+     * @param array $legacySummary
+     *
+     * @return CartProduct[]
+     */
     private function extractProductsFromLegacySummary(array $legacySummary): array
     {
-        return $legacySummary['products'];
+        $products = [];
+        foreach ($legacySummary['products'] as $product) {
+            $products[] = new CartProduct(
+                (int) $product['id_product'],
+                isset($product['id_product_attribute']) ? (int) $product['id_product_attribute'] : 0,
+                (int) $product['id_customization'],
+                $product['name'],
+                isset($product['attributes_small']) ? $product['attributes_small'] : '',
+                $product['reference'],
+                $product['price'],
+                (int) $product['quantity'],
+                $product['total'],
+                (new Link())->getImageLink($product['link_rewrite'], $product['id_image'], 'small_default')
+            );
+        }
+
+        return $products;
     }
 }

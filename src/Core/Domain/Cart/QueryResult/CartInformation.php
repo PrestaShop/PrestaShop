@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult;
 
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartAddress;
+use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartProduct;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartRule;
 
 class CartInformation
@@ -38,9 +39,7 @@ class CartInformation
     private $cartId;
 
     /**
-     * @todo: CartProduct[]
-     *
-     * @var array
+     * @var CartProduct[]
      */
     private $products;
 
@@ -113,7 +112,7 @@ class CartInformation
     }
 
     /**
-     * @return array
+     * @return CartProduct[]
      */
     public function getProducts(): array
     {
