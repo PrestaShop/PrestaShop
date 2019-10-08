@@ -99,7 +99,9 @@ class CartControllerCore extends FrontController
         }
 
         // check that minimal quantity conditions are respected for each product in the cart
-        $this->checkCartProductsMinimalQuantities();
+        if (!Tools::getValue('ajax')) {
+            $this->checkCartProductsMinimalQuantities();
+        }
         $presenter = new CartPresenter();
         $presented_cart = $presenter->present($this->context->cart, $shouldSeparateGifts = true);
 
@@ -666,8 +668,8 @@ class CartControllerCore extends FrontController
                     array(
                         '%product%' => $product['name'],
                         '%quantity%' => $product['minimal_quantity'],
-                        'Shop.Notifications.Error',
-                    )
+                    ),
+                    'Shop.Notifications.Error'
                 );
             }
         }
