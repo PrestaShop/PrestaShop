@@ -1,19 +1,19 @@
 # These are alias routes used to manage legacy urls that were badly formatted (camel case)
-_admin_mail_theme_save_configuration_alias:
+admin_mail_theme_save_configuration_deprecated:
   path: /saveConfiguration
   defaults:
     _controller: FrameworkBundle:Redirect:redirect
     route: admin_mail_theme_save_configuration
     permanent: true
 
-_admin_mail_theme_send_test_mail_alias:
+admin_mail_theme_send_test_mail_deprecated:
   path: /sendTestMail/{locale}/{theme}/{layout}
   defaults:
     _controller: FrameworkBundle:Redirect:redirect
     route: admin_mail_theme_send_test_mail
     permanent: true
 
-_admin_mail_theme_send_test_module_mail_mail:
+admin_mail_theme_send_test_module_mail_deprecated:
   path: /sendTestMail/{locale}/{theme}/{module}/{layout}
   methods: [GET]
   defaults:
