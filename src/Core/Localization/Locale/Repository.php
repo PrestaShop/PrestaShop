@@ -204,7 +204,7 @@ class Repository implements RepositoryInterface
             throw new LocalizationException('CLDR locale not found for locale code "' . $localeCode . '"');
         }
 
-        $currencies = $this->currencyRepository->getAllCurrenciesInDatabase($localeCode);
+        $currencies = $this->currencyRepository->getAllInstalledCurrencies($localeCode);
 
         $priceSpecifications = new PriceSpecificationMap();
         foreach ($currencies as $currency) {

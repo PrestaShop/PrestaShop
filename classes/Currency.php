@@ -428,7 +428,7 @@ class CurrencyCore extends ObjectModel
      *
      * @throws PrestaShopDatabaseException
      */
-    public static function findAllInDatabase()
+    public static function findAllInstalled()
     {
         $currencies = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
             'SELECT * FROM `' . _DB_PREFIX_ . 'currency` c ORDER BY `iso_code` ASC'
