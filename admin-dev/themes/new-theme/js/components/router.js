@@ -43,9 +43,8 @@ const $ = window.$;
  */
 export default class Router {
   constructor() {
-    this.router = Routing;
-    this.router.setData(routes);
-    this.router.setBaseUrl($(document).find('body').data('base-url'));
+    Routing.setData(routes);
+    Routing.setBaseUrl($(document).find('body').data('base-url'));
 
     return this;
   }
@@ -55,11 +54,12 @@ export default class Router {
    *
    * @param route
    * @param params
-   * @returns {*}
+   *
+   * @returns {String}
    */
   generate(route, params = {}) {
     const tokenizedParams = Object.assign(params, {_token: $(document).find('body').data('token')});
 
-    return this.router.generate(route, tokenizedParams);
+    return Routing.generate(route, tokenizedParams);
   }
 }
