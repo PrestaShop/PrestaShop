@@ -1667,7 +1667,8 @@ class OrderCore extends ObjectModel
         $history = new OrderHistory();
         $history->id_order = (int) $this->id;
         $history->id_employee = (int) $id_employee;
-        $history->changeIdOrderState((int) $id_order_state, $this);
+        $use_existings_payment = !$this->hasInvoice();
+        $history->changeIdOrderState((int) $id_order_state, $this, $use_existings_payment);
         $res = Db::getInstance()->getRow('
             SELECT `invoice_number`, `invoice_date`, `delivery_number`, `delivery_date`
             FROM `' . _DB_PREFIX_ . 'orders`
