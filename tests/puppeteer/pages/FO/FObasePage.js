@@ -11,6 +11,9 @@ module.exports = class Home extends CommonPage {
     this.logoutLink = `${this.userInfoLink} .user-info a.logout`;
     this.contactLink = '#contact-link';
     this.categoryMenu = '#category-%ID > a';
+    this.languageSelectorDiv = '#_desktop_language_selector';
+    this.languageSelectorExpandIcon = `${this.languageSelectorDiv} i.expand-more`;
+    this.languageSelectorMenuItemLink = `${this.languageSelectorDiv} ul li a[data-iso-code='%LANG']`;
   }
 
   /**
@@ -55,5 +58,32 @@ module.exports = class Home extends CommonPage {
    */
   async isCustomerConnected() {
     return this.elementVisible(this.logoutLink, 1000);
+  }
+
+  /**
+   * Logout from FO
+   * @return {Promise<void>}
+   */
+  async logout() {
+    await Promise.all([
+      this.page.click(this.logoutLink),
+      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
+    ]);
+  }
+
+  /**
+   * Change language in FO
+   * @param lang
+   * @return {Promise<void>}
+   */
+  async changeLanguage(lang = 'en') {
+    await Promise.all([
+      this.page.click(this.languageSelectorExpandIcon),
+      this.page.waitForSelector(this.languageSelectorMenuItemLink.replace('%LANG', lang)),
+    ]);
+    await Promise.all([
+      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
+      this.page.click(this.languageSelectorMenuItemLink.replace('%LANG', lang)),
+    ]);
   }
 };
