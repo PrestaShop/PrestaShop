@@ -1,6 +1,7 @@
 const faker = require('faker');
-let genders = ['Mr.', 'Mrs.'];
-let defaultCustomerGroups = ['Visitor', 'Guest', 'Customer'];
+
+const genders = ['Mr.', 'Mrs.'];
+const defaultCustomerGroups = ['Visitor', 'Guest', 'Customer'];
 
 module.exports = class Customer {
   constructor(customerToCreate = {}) {
@@ -15,7 +16,7 @@ module.exports = class Customer {
     this.dayOfBirth = customerToCreate.dayOfBirth || this.birthDate.getDate();
     this.enabled = customerToCreate.enabled || 'Yes';
     this.partnerOffers = customerToCreate.partnerOffers || 'Yes';
-    this.defaultCustomerGroup =
-      customerToCreate.defaultCustomerGroup || faker.random.arrayElement(defaultCustomerGroups);
+    this.defaultCustomerGroup = customerToCreate.defaultCustomerGroup
+      || faker.random.arrayElement(defaultCustomerGroups);
   }
 };
