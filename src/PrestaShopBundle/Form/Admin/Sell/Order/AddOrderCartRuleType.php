@@ -86,8 +86,12 @@ class AddOrderCartRuleType extends AbstractType
             ->add('value', TextType::class)
             ->add('invoice_id', ChoiceType::class, [
                 'choices' => $invoices,
+                'required' => false,
+                'placeholder' => false,
             ])
-            ->add('apply_on_all_invoices', CheckboxType::class)
+            ->add('apply_on_all_invoices', CheckboxType::class, [
+                'required' => false,
+            ])
         ;
     }
 
