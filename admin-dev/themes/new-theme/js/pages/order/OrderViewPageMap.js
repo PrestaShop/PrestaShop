@@ -33,4 +33,9 @@ export default {
   updateOrderProductPriceTaxExclInput: '#update_order_product_price_tax_excl',
   updateOrderProductPriceTaxInclInput: '#update_order_product_price_tax_incl',
   updateOrderProductQuantityInput: '#update_order_product_quantity',
+  addCartRuleModal: '#addOrderDiscountModal',
+  addCartRuleApplyOnAllInvoicesCheckbox: '#add_order_cart_rule_apply_on_all_invoices',
+  addCartRuleInvoiceIdSelect: '#add_order_cart_rule_invoice_id',
+  addCartRuleTypeSelect: '#add_order_cart_rule_type',
+  addCartRuleValueInput: '#add_order_cart_rule_value',
 };

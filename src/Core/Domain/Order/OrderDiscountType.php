@@ -34,15 +34,15 @@ final class OrderDiscountType
     /**
      * Discount type with percent (%) amount
      */
-    public const DISCOUNT_PERCENT = 1;
+    public const DISCOUNT_PERCENT = 'percent';
 
     /**
      * Discount type with money (EUR, USD & etc) amount
      */
-    public const DISCOUNT_AMOUNT = 2;
+    public const DISCOUNT_AMOUNT = 'amount';
 
     /**
      * Discount type with free shipping
      */
-    public const FREE_SHIPPING = 3;
+    public const FREE_SHIPPING = 'free_shipping';
 }
