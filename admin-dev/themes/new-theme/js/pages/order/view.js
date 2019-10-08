@@ -91,7 +91,8 @@ $(() => {
     const $modal = $(OrderViewPageMap.addCartRuleModal);
     const $form = $modal.find('form');
     const $invoiceSelect = $modal.find(OrderViewPageMap.addCartRuleInvoiceIdSelect);
-    const $valueFormGroup = $form.find(OrderViewPageMap.addCartRuleValueInput).closest('.form-group');
+    const $valueInput = $form.find(OrderViewPageMap.addCartRuleValueInput);
+    const $valueFormGroup = $valueInput.closest('.form-group');
 
     $form.find(OrderViewPageMap.addCartRuleApplyOnAllInvoicesCheckbox).on('change', (event) => {
       const isChecked = $(event.currentTarget).is(':checked');
@@ -104,8 +105,10 @@ $(() => {
 
       if (selectedCartRuleType === 'free_shipping') {
         $valueFormGroup.addClass('d-none');
+        $valueInput.attr('disabled', true);
       } else {
         $valueFormGroup.removeClass('d-none');
+        $valueInput.attr('disabled', false);
       }
     });
   }

@@ -137,7 +137,7 @@
       <table class="table">
         <thead>
           <tr>
-            <th>{{ 'Name'|trans({}, 'Admin.Global') }}</th>
+            <th>{{ 'Discount name'|trans({}, 'Admin.Global') }}</th>
             <th>{{ 'Value'|trans({}, 'Admin.Global') }}</th>
             <th class="text-right">{{ 'Actions'|trans({}, 'Admin.Global') }}</th>
           </tr>
@@ -170,7 +170,7 @@
 
     <div class="row">
       <div class="col-md-12">
-        <div style="background-color: #F8F8F8; padding-top: 18px; padding-left: 18px; padding-right: 18px; padding-bottom: 16px;">
+        <div class="info-block">
           <div class="row">
             <div class="col-sm text-center">
               <p class="text-muted mb-0"><strong>{{ 'Products'|trans({}, 'Admin.Global') }}</strong></p>
@@ -180,7 +180,7 @@
             {% if orderForViewing.prices.discountsAmountRaw %}
               <div class="col-sm text-center">
                 <p class="text-muted mb-0"><strong>{{ 'Discounts'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong></p>
-                <strong>{{ orderForViewing.prices.discountsAmountFormatted }}</strong>
+                <strong>-{{ orderForViewing.prices.discountsAmountFormatted }}</strong>
               </div>
             {% endif %}
 

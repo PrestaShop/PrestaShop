@@ -344,12 +344,15 @@ class OrderController extends FrameworkBundleAdminController
         if ($addOrderCartRuleForm->isSubmitted() && $addOrderCartRuleForm->isValid()) {
             $data = $addOrderCartRuleForm->getData();
 
+            $invoiceId = $data['apply_on_all_invoices'] ? null : $data['invoice_id'];
+
             $this->getCommandBus()->handle(
                 new AddCartRuleToOrderCommand(
                     $orderId,
                     $data['name'],
                     $data['type'],
-                    $data['value']
+                    $data['value'] ?? null,
+                    $invoiceId
                 )
             );
 
