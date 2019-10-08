@@ -61,13 +61,13 @@ interface RepositoryInterface
     public function getAvailableCurrencies($localeCode);
 
     /**
-     * Get all the available currencies (installed in database no matter if it's deleted or active).
+     * Get all the installed currencies in database (regardless of their active or soft deleted status).
      *
      * @param string $localeCode
      *                           IETF tag. Data will be translated in this language
      *
      * @return CurrencyCollection
-     *                            The available currencies
+     *                            The installed currencies in database
      */
-    public function getAllCurrenciesInDatabase($localeCode);
+    public function getAllInstalledCurrencies($localeCode);
 }

@@ -92,9 +92,9 @@ class CurrencyDataSource implements DataSourceInterface
     /**
      * {@inheritdoc}
      */
-    public function getAllCurrenciesDataInDatabase($localeCode)
+    public function getAllInstalledCurrenciesData($localeCode)
     {
-        return $this->formatCurrenciesData($this->installedDataLayer->getAllCurrencyCodesInDatabase(), $localeCode);
+        return $this->formatCurrenciesData($this->installedDataLayer->getAllInstalledCurrencyIsoCodes(), $localeCode);
     }
 
     /**

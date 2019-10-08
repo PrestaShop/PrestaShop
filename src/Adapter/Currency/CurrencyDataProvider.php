@@ -79,9 +79,9 @@ class CurrencyDataProvider implements CurrencyDataProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function findAllInDatabase()
+    public function findAllInstalled()
     {
-        return Currency::findAllInDatabase();
+        return Currency::findAllInstalled();
     }
 
     /**

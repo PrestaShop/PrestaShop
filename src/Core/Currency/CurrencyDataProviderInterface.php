@@ -56,11 +56,11 @@ interface CurrencyDataProviderInterface
     public function findAll($currentShopOnly = true);
 
     /**
-     * Return raw currencies data from the database (regardless of their active or soft deleted status).
+     * Return raw data of all installed currencies in the database (regardless of their active or soft deleted status).
      *
-     * @return array[] Currencies in database
+     * @return array[] Currencies installed in database
      */
-    public function findAllInDatabase();
+    public function findAllInstalled();
 
     /**
      * Get a Currency entity instance by ISO code.
