@@ -67,7 +67,7 @@ interface DataSourceInterface
     public function getAvailableCurrenciesData($localeCode);
 
     /**
-     * Get all the database currencies' data (present in database no matter if it's deleted or active).
+     * Get all the database currencies' data (present in database no matter if it's soft deleted or inactive).
      *
      * @param string $localeCode
      *                           Data will be translated in this language
