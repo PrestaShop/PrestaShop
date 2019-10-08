@@ -25,54 +25,36 @@
 
 {% block order_preview %}
   <div class="row order-preview-content mt-2">
-    <table class="col-4 table-responsive-sm details">
-      <thead>
-        <tr>
-          <th class="mb-1">
-            <i class="material-icons">receipt</i>
-            {{ 'Invoice details'|trans({}, 'Admin.Global') }}:
-          </th>
-          <th class="mb-1">
-            <i class="material-icons">local_shipping</i>
-            {{ 'Shipping details'|trans({}, 'Admin.Global') }}:
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>{{ orderPreview.invoiceDetails.firstName }} {{ orderPreview.invoiceDetails.lastName }}</td>
-          <td>{{ orderPreview.invoiceDetails.firstName }} {{ orderPreview.shippingDetails.lastName }}</td>
-        </tr>
+    <div class="col-4">
+      <div class="row">
+        <div class="col">
+          <p class="mb-1">
+            <i class="material-icons pr-1">receipt</i>
+            <strong>{{ 'Invoice details'|trans({}, 'Admin.Global') }}:</strong>
+          </p>
 
-        <tr>
-          <td>{{ orderPreview.invoiceDetails.company }}</td>
-          <td>{{ orderPreview.shippingDetails.address1 }}</td>
-        </tr>
+          <p class="mb-0 ml-4">{{ orderPreview.invoiceDetails.firstName }} {{ orderPreview.invoiceDetails.lastName }}</p>
+          <p class="mb-0 ml-4">{{ orderPreview.invoiceDetails.company }}</p>
+          <p class="mb-0 ml-4">{{ orderPreview.invoiceDetails.address1 }}</p>
+          <p class="mb-0 ml-4">{{ orderPreview.invoiceDetails.address2 }}</p>
+          <p class="mb-0 ml-4">{{ orderPreview.invoiceDetails.country }}</p>
+          <p class="mb-0 ml-4">{{ orderPreview.invoiceDetails.phone }}</p>
+          <p class="mb-0 ml-4">{{ orderPreview.invoiceDetails.email }}</p>
+        </div>
+        <div class="col">
+          <p class="mb-1">
+            <i class="material-icons pr-1">local_shipping</i>
+            <strong>{{ 'Shipping details'|trans({}, 'Admin.Global') }}:</strong>
+          </p>
 
-        <tr>
-          <td>{{ orderPreview.invoiceDetails.address1 }}</td>
-          <td>{{ orderPreview.shippingDetails.address2 }}</td>
-        </tr>
-
-        <tr>
-          <td>{{ orderPreview.invoiceDetails.address2 }}</td>
-          <td>{{ orderPreview.shippingDetails.country }}</td>
-        </tr>
-
-        <tr>
-          <td>{{ orderPreview.invoiceDetails.country }}</td>
-          <td>{{ orderPreview.shippingDetails.phone }}</td>
-        </tr>
-
-        <tr>
-          <td>{{ orderPreview.invoiceDetails.phone }}</td>
-        </tr>
-
-        <tr>
-          <td>{{ orderPreview.invoiceDetails.email }}</td>
-        </tr>
-      </tbody>
-    </table>
+          <p class="mb-0 ml-4">{{ orderPreview.shippingDetails.firstName }} {{ orderPreview.shippingDetails.lastName }}</p>
+          <p class="mb-0 ml-4">{{ orderPreview.shippingDetails.address1 }}</p>
+          <p class="mb-0 ml-4">{{ orderPreview.shippingDetails.address2 }}</p>
+          <p class="mb-0 ml-4">{{ orderPreview.shippingDetails.country }}</p>
+          <p class="mb-0 ml-4">{{ orderPreview.shippingDetails.phone }}</p>
+        </div>
+      </div>
+    </div>
     <div class="offset-2 col-6 ">
       <div class="table-responsive">
         <table class="table product table-borderless border-bottom-0">
