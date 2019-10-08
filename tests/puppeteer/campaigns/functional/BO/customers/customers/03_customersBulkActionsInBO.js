@@ -149,9 +149,9 @@ describe('Create Customers, Then disable / Enable and Delete with Bulk actions',
       if (await this.pageObjects.customersPage.elementVisible(this.pageObjects.customersPage.filterResetButton, 2000)) {
         await this.pageObjects.customersPage.resetFilter();
       }
-      numberOfCustomers = await this.pageObjects.customersPage.getNumberFromText(
+      const numberOfCustomersAfterReset = await this.pageObjects.customersPage.getNumberFromText(
         this.pageObjects.customersPage.customerGridTitle);
-      await expect(numberOfCustomers).to.be.above(0);
+      await expect(numberOfCustomersAfterReset).to.be.equal(numberOfCustomers);
     });
   });
 });
