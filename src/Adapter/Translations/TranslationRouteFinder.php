@@ -204,7 +204,6 @@ class TranslationRouteFinder
     private function isModuleUsingNewTranslationSystem($moduleName)
     {
         $module = $this->moduleRepository->getInstanceByName($moduleName);
-        
         if (Validate::isLoadedObject($module)) {
             return $module->isUsingNewTranslationSystem();
         } else {
