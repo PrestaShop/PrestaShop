@@ -347,10 +347,10 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
         /** @var Currency $currency */
         $currency = SharedStorage::getStorage()->get($reference);
 
-        if ('valid' === $numericIsoCode) {
-            if ((int) $currency->numeric_iso_code <= 0) {
+        if ('null' === $numericIsoCode) {
+            if (null !== $currency->numeric_iso_code) {
                 throw new RuntimeException(sprintf(
-                    'Currency "%s" has invalid numeric iso code "%s".',
+                    'Currency "%s" has "%s" numeric iso code, but null was expected.',
                     $reference,
                     $currency->numeric_iso_code
                 ));
