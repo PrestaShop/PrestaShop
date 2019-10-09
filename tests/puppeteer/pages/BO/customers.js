@@ -5,6 +5,7 @@ module.exports = class Customers extends BOBasePage {
     super(page);
 
     this.pageTitle = 'Manage your Customers • ';
+    this.successfulUpdateStatusMessage = 'The status has been successfully updated.';
 
     // Selectors
     // Header links
@@ -95,7 +96,7 @@ module.exports = class Customers extends BOBasePage {
    * @param row, row in table
    * @param column, column to update
    * @param valueWanted, Value wanted in column
-   * @return {Promise<void>}
+   * @return {Promise<boolean>}, return true if action is done, false otherwise
    */
   async updateToggleColumnValue(row, column, valueWanted = 'Yes') {
     if (await this.getToggleColumnValue(row, column) !== valueWanted) {
@@ -103,7 +104,9 @@ module.exports = class Customers extends BOBasePage {
         this.page.waitForNavigation({waitUntil: 'networkidle0'}),
         this.page.click(this.customersListTableColumn.replace('%ROW', row).replace('%COLUMN', column)),
       ]);
+      return true;
     }
+    return false;
   }
 
   /**

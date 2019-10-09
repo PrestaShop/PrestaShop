@@ -256,7 +256,15 @@ describe('Filter And Quick Edit Customers', async () => {
       await expect(numberOfCustomersAfterFilter).to.be.at.above(0);
     });
     it('should disable first Customer', async function () {
-      await this.pageObjects.customersPage.updateToggleColumnValue(1, 'active', 'No');
+      const isActionPerformed = await this.pageObjects.customersPage.updateToggleColumnValue(
+        '1',
+        'active',
+        'No');
+      if (isActionPerformed) {
+        const resultMessage = await this.pageObjects.customersPage.getTextContent(
+          this.pageObjects.customersPage.alertSuccessBlockParagraph);
+        await expect(resultMessage).to.contains(this.pageObjects.customersPage.successfulUpdateStatusMessage);
+      }
       const isStatusChanged = await this.pageObjects.customersPage.elementVisible(
         this.pageObjects.customersPage.customersListColumnNotValidIcon
           .replace('%ROW', 1).replace('%COLUMN', 'active'),
@@ -265,7 +273,15 @@ describe('Filter And Quick Edit Customers', async () => {
       await expect(isStatusChanged).to.be.true;
     });
     it('should enable first Customer', async function () {
-      await this.pageObjects.customersPage.updateToggleColumnValue('1', 'active', 'Yes');
+      const isActionPerformed = await this.pageObjects.customersPage.updateToggleColumnValue(
+        '1',
+        'active',
+        'Yes');
+      if (isActionPerformed) {
+        const resultMessage = await this.pageObjects.customersPage.getTextContent(
+          this.pageObjects.customersPage.alertSuccessBlockParagraph);
+        await expect(resultMessage).to.contains(this.pageObjects.customersPage.successfulUpdateStatusMessage);
+      }
       const isStatusChanged = await this.pageObjects.customersPage.elementVisible(
         this.pageObjects.customersPage.customersListColumnValidIcon
           .replace('%ROW', 1).replace('%COLUMN', 'active'),
@@ -274,7 +290,15 @@ describe('Filter And Quick Edit Customers', async () => {
       await expect(isStatusChanged).to.be.true;
     });
     it('should Change Newsletter to "No" for first Customer', async function () {
-      await this.pageObjects.customersPage.updateToggleColumnValue('1', 'newsletter', 'No');
+      const isActionPerformed = await this.pageObjects.customersPage.updateToggleColumnValue(
+        '1',
+        'newsletter',
+        'No');
+      if (isActionPerformed) {
+        const resultMessage = await this.pageObjects.customersPage.getTextContent(
+          this.pageObjects.customersPage.alertSuccessBlockParagraph);
+        await expect(resultMessage).to.contains(this.pageObjects.customersPage.successfulUpdateStatusMessage);
+      }
       const isStatusChanged = await this.pageObjects.customersPage.elementVisible(
         this.pageObjects.customersPage.customersListColumnNotValidIcon
           .replace('%ROW', 1).replace('%COLUMN', 'newsletter'),
@@ -283,7 +307,15 @@ describe('Filter And Quick Edit Customers', async () => {
       await expect(isStatusChanged).to.be.true;
     });
     it('should Change Newsletter to "Yes" for first Customer', async function () {
-      await this.pageObjects.customersPage.updateToggleColumnValue('1', 'newsletter', 'Yes');
+      const isActionPerformed = await this.pageObjects.customersPage.updateToggleColumnValue(
+        '1',
+        'newsletter',
+        'Yes');
+      if (isActionPerformed) {
+        const resultMessage = await this.pageObjects.customersPage.getTextContent(
+          this.pageObjects.customersPage.alertSuccessBlockParagraph);
+        await expect(resultMessage).to.contains(this.pageObjects.customersPage.successfulUpdateStatusMessage);
+      }
       const isStatusChanged = await this.pageObjects.customersPage.elementVisible(
         this.pageObjects.customersPage.customersListColumnValidIcon.replace('%ROW', 1)
           .replace('%COLUMN', 'newsletter'),
@@ -292,7 +324,15 @@ describe('Filter And Quick Edit Customers', async () => {
       await expect(isStatusChanged).to.be.true;
     });
     it('should Change Partner offers to "No" for first Customer', async function () {
-      await this.pageObjects.customersPage.updateToggleColumnValue('1', 'optin', 'No');
+      const isActionPerformed = await this.pageObjects.customersPage.updateToggleColumnValue(
+        '1',
+        'optin',
+        'No');
+      if (isActionPerformed) {
+        const resultMessage = await this.pageObjects.customersPage.getTextContent(
+          this.pageObjects.customersPage.alertSuccessBlockParagraph);
+        await expect(resultMessage).to.contains(this.pageObjects.customersPage.successfulUpdateStatusMessage);
+      }
       const isStatusChanged = await this.pageObjects.customersPage.elementVisible(
         this.pageObjects.customersPage.customersListColumnNotValidIcon.replace('%ROW', 1)
           .replace('%COLUMN', 'optin'),
@@ -301,7 +341,15 @@ describe('Filter And Quick Edit Customers', async () => {
       await expect(isStatusChanged).to.be.true;
     });
     it('should Change Partner offers to "Yes" for first Customer', async function () {
-      await this.pageObjects.customersPage.updateToggleColumnValue('1', 'optin', 'Yes');
+      const isActionPerformed = await this.pageObjects.customersPage.updateToggleColumnValue(
+        '1',
+        'optin',
+        'Yes');
+      if (isActionPerformed) {
+        const resultMessage = await this.pageObjects.customersPage.getTextContent(
+          this.pageObjects.customersPage.alertSuccessBlockParagraph);
+        await expect(resultMessage).to.contains(this.pageObjects.customersPage.successfulUpdateStatusMessage);
+      }
       const isStatusChanged = await this.pageObjects.customersPage.elementVisible(
         this.pageObjects.customersPage.customersListColumnValidIcon.replace('%ROW', 1)
           .replace('%COLUMN', 'optin'),
