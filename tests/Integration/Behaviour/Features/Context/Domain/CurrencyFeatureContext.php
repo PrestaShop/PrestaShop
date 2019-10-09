@@ -31,7 +31,7 @@ use Currency;
 use DbQuery;
 use Db;
 use Configuration;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddCurrencyCommand;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddOfficialCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddUnofficialCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\DeleteCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\EditCurrencyCommand;
@@ -65,7 +65,7 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
                 (bool) $data['is_enabled']
             );
         } else {
-            $command = new AddCurrencyCommand(
+            $command = new AddOfficialCurrencyCommand(
                 $data['iso_code'],
                 (float) $data['exchange_rate'],
                 (bool) $data['is_enabled']
@@ -73,7 +73,7 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
         }
 
         if (isset($data['numeric_iso_code'])) {
-            $command->setNumericIsoCode((int) $data['numeric_iso_code']);
+            $command->setNumericIsoCode($data['numeric_iso_code']);
         }
 
         if (isset($data['precision'])) {
@@ -99,6 +99,9 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
 
             SharedStorage::getStorage()->set($reference, new Currency($currencyId->getValue()));
         } catch (CoreException $e) {
+            if ('currency14' == $reference) {
+                throw $e;
+            }
             $this->lastException = $e;
         }
     }
@@ -118,10 +121,6 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
 
         if (isset($data['iso_code'])) {
             $command->setIsoCode($data['iso_code']);
-        }
-
-        if (isset($data['numeric_iso_code'])) {
-            $command->setNumericIsoCode((int) $data['numeric_iso_code']);
         }
 
         if (isset($data['exchange_rate'])) {
@@ -207,33 +206,19 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then /^I should get error that unofficial currency has invalid (isoCode|numericIsoCode)$/
+     * @Then /^I should get error that unofficial currency is invalid$/
      */
-    public function assertLastErrorIsInvalidUnofficialCurrency($errorType)
+    public function assertLastErrorIsInvalidUnofficialCurrency()
     {
-        $errorCode = 'isoCode' == $errorType ? InvalidUnofficialCurrencyException::INVALID_ISO_CODE : InvalidUnofficialCurrencyException::INVALID_NUMERIC_ISO_CODE;
-
-        $this->assertLastErrorIs(InvalidUnofficialCurrencyException::class, $errorCode);
+        $this->assertLastErrorIs(InvalidUnofficialCurrencyException::class);
     }
 
     /**
-     * @Then /^I should get error that (isoCode|numericIsoCode) is immutable$/
+     * @Then /^I should get error that field is immutable$/
      */
-    public function assertLastErrorIsImmutableCurrencyField($errorType)
+    public function assertLastErrorIsImmutableCurrencyField()
     {
-        switch ($errorType) {
-            case 'isoCode':
-                $errorCode = ImmutableCurrencyFieldException::IMMUTABLE_ISO_CODE;
-                break;
-            case 'numericIsoCode':
-                $errorCode = ImmutableCurrencyFieldException::IMMUTABLE_NUMERIC_ISO_CODE;
-                break;
-            default:
-                $errorCode = null;
-                break;
-        }
-
-        $this->assertLastErrorIs(ImmutableCurrencyFieldException::class, $errorCode);
+        $this->assertLastErrorIs(ImmutableCurrencyFieldException::class);
     }
 
     /**

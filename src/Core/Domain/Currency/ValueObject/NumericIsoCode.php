@@ -34,40 +34,40 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintExcep
 class NumericIsoCode
 {
     /**
-     * @var int
+     * @var string
      */
     private $numericIsoCode;
 
     /**
-     * @param int|string $numericIsoCode
+     * @param string $numericIsoCode
      *
      * @throws CurrencyConstraintException
      */
     public function __construct($numericIsoCode)
     {
         $this->assertIsValidNumericIsoCode($numericIsoCode);
-        $this->numericIsoCode = (int) $numericIsoCode;
+        $this->numericIsoCode = $numericIsoCode;
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getValue()
+    public function getValue(): string
     {
         return $this->numericIsoCode;
     }
 
     /**
-     * @param int|string $numericIsoCode
+     * @param string $numericIsoCode
      *
      * @throws CurrencyConstraintException
      */
     private function assertIsValidNumericIsoCode($numericIsoCode)
     {
-        if ((!is_int($numericIsoCode) && !ctype_digit($numericIsoCode)) || (int) $numericIsoCode <= 0) {
+        if (!is_string($numericIsoCode) || !preg_match('/^[0-9]{3}$/', $numericIsoCode)) {
             throw new CurrencyConstraintException(
                 sprintf(
-                    'Given numeric iso code "%s" is not valid. It must be a strictly positive integer',
+                    'Given numeric iso code "%s" is not valid. It must be a string composed of three digits',
                     var_export($numericIsoCode, true)
                 ),
                 CurrencyConstraintException::INVALID_NUMERIC_ISO_CODE

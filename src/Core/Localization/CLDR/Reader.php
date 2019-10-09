@@ -568,7 +568,11 @@ class Reader implements ReaderInterface
                 if (!empty($codesMapping)) {
                     /** @var SimplexmlElement $codesMapping */
                     $codesMapping = $codesMapping[0];
-                    $currencyData->setNumericIsoCode((string) $codesMapping->attributes()->numeric);
+                    $numericIsoCode = (string) $codesMapping->attributes()->numeric;
+                    if (strlen($numericIsoCode) < 3) {
+                        $numericIsoCode = str_repeat('0', 3 - strlen($numericIsoCode)) . $numericIsoCode;
+                    }
+                    $currencyData->setNumericIsoCode($numericIsoCode);
                 }
 
                 $fractionsData = $this->supplementalXml->supplementalData->xpath(
