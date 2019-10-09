@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\CatalogPriceRule\CommandHandler;
 
+use PrestaShop\PrestaShop\Adapter\CatalogPriceRule\AbstractCatalogPriceRuleHandler;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Command\AddCatalogPriceRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\CommandHandler\AddCatalogPriceRuleHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\CatalogPriceRuleException;
@@ -36,7 +37,7 @@ use SpecificPriceRule;
 /**
  * Handles adding new catalog price rule using legacy object model
  */
-final class AddCatalogPriceRuleHandler implements AddCatalogPriceRuleHandlerInterface
+final class AddCatalogPriceRuleHandler extends AbstractCatalogPriceRuleHandler implements AddCatalogPriceRuleHandlerInterface
 {
     /**
      * {@inheritdoc}
@@ -89,12 +90,19 @@ final class AddCatalogPriceRuleHandler implements AddCatalogPriceRuleHandlerInte
         $specificPriceRule->reduction = (string) $command->getReduction()->getValue();
         $specificPriceRule->reduction_tax = $command->isTaxIncluded();
 
-        if ($command->getDateTimeFrom()) {
-            $specificPriceRule->from = $command->getDateTimeFrom()->format('Y-m-d H:i:s');
+        $from = $command->getDateTimeFrom();
+        $to = $command->getDateTimeTo();
+
+        if ($from && $to) {
+            $this->assertDateRangeIsNotInverse($from, $to);
         }
 
-        if ($command->getDateTimeTo()) {
-            $specificPriceRule->to = $command->getDateTimeTo()->format('Y-m-d H:i:s');
+        if ($from) {
+            $specificPriceRule->from = $from->format('Y-m-d H:i:s');
+        }
+
+        if ($to) {
+            $specificPriceRule->to = $to->format('Y-m-d H:i:s');
         }
 
         return $specificPriceRule;
