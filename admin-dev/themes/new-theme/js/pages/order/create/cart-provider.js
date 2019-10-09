@@ -61,7 +61,7 @@ export default class CartProvider {
     return $.ajax(this.router.generate('admin_carts_create'), {
       method: 'POST',
       data: {
-        customerId,
+        customer_id: customerId,
       },
       dataType: 'json',
     });
