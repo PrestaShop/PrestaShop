@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Cart\QueryHandler;
 
 use Address;
 use AddressFormat;
+use Carrier;
 use Cart;
 use Currency;
 use Customer;
@@ -40,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\QueryHandler\GetCartInformationHandle
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartAddress;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartProduct;
+use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartShipping;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleInterface;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Locale\RepositoryInterface;
@@ -91,7 +93,7 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
             (int) $language->id,
             $this->extractCartRulesFromLegacySummary($legacySummary, $currency),
             $this->getAddresses($cart),
-            [],
+            $this->extractShippingFromLegacySummary($legacySummary),
             []
         );
     }
@@ -171,5 +173,32 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
         }
 
         return $products;
+    }
+
+    /**
+     * @param array $legacySummary
+     *
+     * @return CartShipping|null
+     */
+    private function extractShippingFromLegacySummary(array $legacySummary): ?CartShipping
+    {
+        $carrierIsDefined = isset($legacySummary['carrier']) &&
+            $legacySummary['carrier'] instanceof Carrier &&
+            (int) $legacySummary['carrier']->id;
+
+        if (!$carrierIsDefined) {
+            return null;
+        }
+
+        /** @var Carrier $carrier */
+        $carrier = $legacySummary['carrier'];
+
+        return new CartShipping(
+            (int) $carrier->id,
+            $carrier->name,
+            $carrier->delay,
+            (string) $legacySummary['total_shipping'],
+            (bool) $legacySummary['free_ship']
+        );
     }
 }

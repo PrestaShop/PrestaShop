@@ -28,4 +28,85 @@ namespace PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation;
 
 class CartShipping
 {
+    /**
+     * @var int
+     */
+    private $carrierId;
+    /**
+     * @var string
+     */
+    private $carrierName;
+    /**
+     * @var string
+     */
+    private $carrierDelay;
+    /**
+     * @var string
+     */
+    private $shippingPrice;
+    /**
+     * @var bool
+     */
+    private $freeShipping;
+
+    /**
+     * @param int $carrierId
+     * @param string $carrierName
+     * @param string $carrierDelay
+     * @param string $shippingPrice
+     * @param bool $freeShipping
+     */
+    public function __construct(
+        int $carrierId,
+        string $carrierName,
+        string $carrierDelay,
+        string $shippingPrice,
+        bool $freeShipping
+    ) {
+        $this->carrierId = $carrierId;
+        $this->carrierName = $carrierName;
+        $this->carrierDelay = $carrierDelay;
+        $this->shippingPrice = $shippingPrice;
+        $this->freeShipping = $freeShipping;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCarrierId(): int
+    {
+        return $this->carrierId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCarrierName(): string
+    {
+        return $this->carrierName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCarrierDelay(): string
+    {
+        return $this->carrierDelay;
+    }
+
+    /**
+     * @return string
+     */
+    public function getShippingPrice(): string
+    {
+        return $this->shippingPrice;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isFreeShipping(): bool
+    {
+        return $this->freeShipping;
+    }
 }
