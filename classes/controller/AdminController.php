@@ -2887,6 +2887,11 @@ class AdminControllerCore extends Controller
      */
     public function initShopContext()
     {
+        // Do not initialize context when the shop is not installed
+        if (defined('PS_INSTALLATION_IN_PROGRESS')) {
+            return;
+        }
+
         // Change shop context ?
         if (Shop::isFeatureActive() && Tools::getValue('setShopContext') !== false) {
             $this->context->cookie->shopContext = Tools::getValue('setShopContext');
