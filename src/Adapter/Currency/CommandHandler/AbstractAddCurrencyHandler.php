@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Currency\CommandHandler;
 use Currency;
 use Language;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddCurrencyCommand;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddOfficialCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintException;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
 
@@ -72,11 +73,11 @@ class AbstractAddCurrencyHandler extends AbstractCurrencyHandler
     }
 
     /**
-     * @param AddCurrencyCommand $command
+     * @param AddOfficialCurrencyCommand $command
      *
      * @throws CurrencyConstraintException
      */
-    protected function assertCurrencyWithNumericIsoCodeDoesNotExist(AddCurrencyCommand $command)
+    protected function assertCurrencyWithNumericIsoCodeDoesNotExist(AddOfficialCurrencyCommand $command)
     {
         if (null === $command->getNumericIsoCode()) {
             return;

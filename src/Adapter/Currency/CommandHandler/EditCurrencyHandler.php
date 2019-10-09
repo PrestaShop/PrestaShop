@@ -26,11 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Currency\CommandHandler;
 
-use Configuration;
-use Currency;
-use Language;
-use PrestaShop\PrestaShop\Adapter\Entity\Db;
-use PrestaShop\PrestaShop\Adapter\Entity\DbQuery;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\EditCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\CommandHandler\EditCurrencyHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDisableDefaultCurrencyException;
@@ -40,8 +35,16 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintExcep
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\ImmutableCurrencyFieldException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\InvalidUnofficialCurrencyException;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
+use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
+use Configuration;
+use Currency;
+use Language;
+use Db;
+use DbQuery;
 use PrestaShopException;
+use PrestaShopDatabaseException;
 use Shop;
 
 /**
@@ -81,8 +84,6 @@ final class EditCurrencyHandler extends AbstractCurrencyHandler implements EditC
     public function handle(EditCurrencyCommand $command)
     {
         try {
-            $this->assertDefaultCurrencyIsNotBeingDisabled($command);
-
             $entity = new Currency($command->getCurrencyId()->getValue());
             if (0 >= $entity->id) {
                 throw new CurrencyNotFoundException(
@@ -92,59 +93,8 @@ final class EditCurrencyHandler extends AbstractCurrencyHandler implements EditC
                     )
                 );
             }
-
-            if ($entity->unofficial) {
-                if (null !== $command->getIsoCode()) {
-                    $this->assertUnofficialCurrencyDoesNotMatchAnyRealIsoCode($command->getIsoCode()->getValue());
-                }
-                if (null !== $command->getNumericIsoCode()) {
-                    $this->assertUnofficialCurrencyDoesNotMatchAnyRealNumericIsoCode($command->getNumericIsoCode()->getValue());
-                }
-            } else {
-                $this->assertCurrencyImmutableFields($entity, $command);
-            }
-
-            $this->assertOtherCurrencyWithIsoCodeDoesNotExist($entity, $command);
-            $this->assertOtherCurrencyWithNumericIsoCodeDoesNotExist($entity, $command);
-
-            //todo: if the immutable check is validated by PO then these assignments become useless
-            if (null !== $command->getIsoCode()) {
-                $entity->iso_code = $command->getIsoCode()->getValue();
-            }
-            if (null !== $command->getNumericIsoCode()) {
-                $entity->numeric_iso_code = $command->getNumericIsoCode()->getValue();
-            }
-            if (null !== $command->getExchangeRate()) {
-                $entity->conversion_rate = $command->getExchangeRate()->getValue();
-            }
-            if (null !== $command->getPrecision()) {
-                $entity->precision = $command->getPrecision()->getValue();
-            }
-            $entity->active = $command->isEnabled();
-
-            if (!empty($command->getLocalizedNames())) {
-                $entity->setNames($command->getLocalizedNames());
-            }
-            if (!empty($command->getLocalizedSymbols())) {
-                $entity->setSymbols($command->getLocalizedSymbols());
-            }
-            //This method will insert the missing localized names/symbols and detect if the currency has been modified
-            $entity->refreshLocalizedCurrencyData(Language::getLanguages(), $this->localeRepoCLDR);
-
-            if (false === $entity->update()) {
-                throw new CannotUpdateCurrencyException(
-                    sprintf(
-                        'An error occurred when updating currency object with id "%s"',
-                        $command->getCurrencyId()->getValue()
-                    )
-                );
-            }
-
-            if (!empty($command->getShopIds())) {
-                $this->assertDefaultCurrencyIsNotBeingRemovedOrDisabledFromShop($entity, $command->getShopIds());
-                $this->associateWithShops($entity, $command->getShopIds());
-                $this->associateConversionRateToShops($entity, $command->getShopIds());
-            }
+            $this->verify($entity, $command);
+            $this->updateEntity($entity, $command);
         } catch (PrestaShopException $exception) {
             throw new CurrencyException(
                 sprintf(
@@ -158,8 +108,78 @@ final class EditCurrencyHandler extends AbstractCurrencyHandler implements EditC
     }
 
     /**
+     * @param Currency $entity
+     * @param EditCurrencyCommand $command
+     *
+     * @throws CannotUpdateCurrencyException
+     * @throws PrestaShopException
+     * @throws PrestaShopDatabaseException
+     * @throws LocalizationException
+     */
+    private function updateEntity(Currency $entity, EditCurrencyCommand $command)
+    {
+        if (null !== $command->getIsoCode()) {
+            $entity->iso_code = $command->getIsoCode()->getValue();
+        }
+        if (null !== $command->getExchangeRate()) {
+            $entity->conversion_rate = $command->getExchangeRate()->getValue();
+        }
+        if (null !== $command->getPrecision()) {
+            $entity->precision = $command->getPrecision()->getValue();
+        }
+        $entity->active = $command->isEnabled();
+
+        if (!empty($command->getLocalizedNames())) {
+            $entity->setNames($command->getLocalizedNames());
+        }
+        if (!empty($command->getLocalizedSymbols())) {
+            $entity->setSymbols($command->getLocalizedSymbols());
+        }
+        //This method will insert the missing localized names/symbols and detect if the currency has been modified
+        $entity->refreshLocalizedCurrencyData(Language::getLanguages(), $this->localeRepoCLDR);
+
+        //IMPORTANT: specify that we want to save null values
+        if (false === $entity->update(true)) {
+            throw new CannotUpdateCurrencyException(
+                sprintf(
+                    'An error occurred when updating currency object with id "%s"',
+                    $command->getCurrencyId()->getValue()
+                )
+            );
+        }
+
+        if (!empty($command->getShopIds())) {
+            $this->associateWithShops($entity, $command->getShopIds());
+            $this->associateConversionRateToShops($entity, $command->getShopIds());
+        }
+    }
+
+    /**
+     * @param Currency $entity
+     * @param EditCurrencyCommand $command
+     *
+     * @throws CannotDisableDefaultCurrencyException
+     * @throws CurrencyConstraintException
+     * @throws DefaultCurrencyInMultiShopException
+     * @throws ImmutableCurrencyFieldException
+     * @throws InvalidUnofficialCurrencyException
+     */
+    private function verify(Currency $entity, EditCurrencyCommand $command)
+    {
+        $this->assertDefaultCurrencyIsNotBeingDisabled($command);
+        if ($entity->unofficial && null !== $command->getIsoCode()) {
+            $this->assertUnofficialCurrencyDoesNotMatchAnyRealIsoCode($command->getIsoCode()->getValue());
+        }
+        $this->assertCurrencyImmutableFields($entity, $command);
+
+        $this->assertOtherCurrencyWithIsoCodeDoesNotExist($entity, $command);
+        $this->assertDefaultCurrencyIsNotBeingRemovedOrDisabledFromShop($entity, $command);
+    }
+
+    /**
      * When editing the currency it checks if new iso code does not exist
-     * so it will not create multiple currencies with same iso codes,
+     * so it will not create multiple currencies with same iso codes (only
+     * useful for unofficial currencies since official one are immutable)
      *
      * @param Currency $currency
      * @param EditCurrencyCommand $command
@@ -187,56 +207,13 @@ final class EditCurrencyHandler extends AbstractCurrencyHandler implements EditC
             ->where('iso_code = "' . pSQL($newIsoCode) . '"')
         ;
 
-        $result = Db::getInstance()->getValue($qb);
+        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($qb);
 
         if (is_numeric($result)) {
             throw new CurrencyConstraintException(
                 sprintf(
                     'Currency with iso code "%s" already exist and cannot be created',
                     $newIsoCode
-                ),
-                CurrencyConstraintException::CURRENCY_ALREADY_EXISTS
-            );
-        }
-    }
-
-    /**
-     * When editing the currency it checks if new numeric iso code does not exist
-     * so it will not create multiple currencies with same numeric iso codes,
-     *
-     * @param Currency $currency
-     * @param EditCurrencyCommand $command
-     *
-     * @throws CurrencyConstraintException
-     */
-    private function assertOtherCurrencyWithNumericIsoCodeDoesNotExist(Currency $currency, EditCurrencyCommand $command)
-    {
-        if (null === $command->getNumericIsoCode()) {
-            return;
-        }
-
-        $currencyId = $command->getCurrencyId()->getValue();
-        $currentNumericIsoCode = $currency->numeric_iso_code;
-        $newNumericIsoCode = $command->getNumericIsoCode()->getValue();
-        if ($currentNumericIsoCode === $newNumericIsoCode) {
-            return;
-        }
-
-        $qb = new DbQuery();
-        $qb
-            ->select('id_currency')
-            ->from('currency')
-            ->where('id_currency !=' . (int) $currencyId)
-            ->where('numeric_iso_code = "' . pSQL($newNumericIsoCode) . '"')
-        ;
-
-        $result = Db::getInstance()->getValue($qb);
-
-        if (is_numeric($result)) {
-            throw new CurrencyConstraintException(
-                sprintf(
-                    'Currency with iso code "%s" already exist and cannot be created',
-                    $newNumericIsoCode
                 ),
                 CurrencyConstraintException::CURRENCY_ALREADY_EXISTS
             );
@@ -267,12 +244,16 @@ final class EditCurrencyHandler extends AbstractCurrencyHandler implements EditC
      * from each shop and checks that the shop is not being disabled as well.
      *
      * @param Currency $currency
-     * @param array $shopIds
+     * @param EditCurrencyCommand $command
      *
      * @throws DefaultCurrencyInMultiShopException
      */
-    private function assertDefaultCurrencyIsNotBeingRemovedOrDisabledFromShop(Currency $currency, array $shopIds)
+    private function assertDefaultCurrencyIsNotBeingRemovedOrDisabledFromShop(Currency $currency, EditCurrencyCommand $command)
     {
+        if (empty($command->getShopIds())) {
+            return;
+        }
+        $shopIds = $command->getShopIds();
         $allShopIds = Shop::getShops(false, null, true);
 
         foreach ($allShopIds as $shopId) {
@@ -301,7 +282,7 @@ final class EditCurrencyHandler extends AbstractCurrencyHandler implements EditC
                 );
             }
 
-            if (!$currency->active) {
+            if (!$command->isEnabled()) {
                 $shop = new Shop($shopId);
                 throw new DefaultCurrencyInMultiShopException(
                     $currency->getName(),
@@ -325,16 +306,13 @@ final class EditCurrencyHandler extends AbstractCurrencyHandler implements EditC
      */
     private function assertCurrencyImmutableFields(Currency $currency, EditCurrencyCommand $command)
     {
+        if ($currency->unofficial) {
+            return;
+        }
+
         if (null !== $command->getIsoCode() && $currency->iso_code != $command->getIsoCode()->getValue()) {
             throw new ImmutableCurrencyFieldException(
-                'You can not change iso code field on a real currency',
-                ImmutableCurrencyFieldException::IMMUTABLE_ISO_CODE
-            );
-        }
-        if (null !== $command->getNumericIsoCode() && $currency->numeric_iso_code != $command->getNumericIsoCode()->getValue()) {
-            throw new ImmutableCurrencyFieldException(
-                'You can not change numeric iso code field on a real currency',
-                ImmutableCurrencyFieldException::IMMUTABLE_NUMERIC_ISO_CODE
+                'You can not change iso code field on a currency from the CLDR database'
             );
         }
     }

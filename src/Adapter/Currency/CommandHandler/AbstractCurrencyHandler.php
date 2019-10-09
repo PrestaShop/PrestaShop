@@ -85,36 +85,10 @@ abstract class AbstractCurrencyHandler extends AbstractObjectModelHandler
             if (null !== $cldrCurrency) {
                 throw new InvalidUnofficialCurrencyException(
                     sprintf(
-                        'Unofficial currency with iso code "%s" is invalid because it matches a real currency',
+                        'Unofficial currency with iso code "%s" is invalid because it matches a currency from CLDR database',
                         $isoCode
-                    ),
-                    InvalidUnofficialCurrencyException::INVALID_ISO_CODE
+                    )
                 );
-            }
-        }
-    }
-
-    /**
-     * @param int $numericIsoCode
-     *
-     * @throws InvalidUnofficialCurrencyException
-     */
-    protected function assertUnofficialCurrencyDoesNotMatchAnyRealNumericIsoCode($numericIsoCode)
-    {
-        $allLanguages = Language::getLanguages(false);
-        foreach ($allLanguages as $languageData) {
-            // CLDR locale give us the CLDR reference specification
-            $cldrLocale = $this->localeRepoCLDR->getLocale($languageData['locale']);
-            foreach ($cldrLocale->getAllCurrencies() as $cldrCurrency) {
-                if ($numericIsoCode == $cldrCurrency->getNumericIsoCode()) {
-                    throw new InvalidUnofficialCurrencyException(
-                        sprintf(
-                            'Unofficial currency with numeric iso code "%s" is invalid because it matches a real currency',
-                            $numericIsoCode
-                        ),
-                        InvalidUnofficialCurrencyException::INVALID_NUMERIC_ISO_CODE
-                    );
-                }
             }
         }
     }
