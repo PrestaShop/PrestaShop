@@ -1,5 +1,6 @@
+<?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -23,25 +24,33 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import createOrderPageMap from './create-order-map';
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\Query;
 
-const $ = window.$;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 
 /**
- * Manupulates UI of Shipping block in Order creation page
+ * Query for getting summarized customer orders
  */
-export default class ShippingRenderer {
-  constructor() {
-    this.$container = $(createOrderPageMap.shippingBlock);
-  }
+class GetCustomerOrders
+{
+    /**
+     * @var CustomerId
+     */
+    private $customerId;
 
-  show() {
-    this.$container.removeClass('d-none');
-  }
+    /**
+     * @param int $customerId
+     */
+    public function __construct(int $customerId)
+    {
+        $this->customerId = new CustomerId($customerId);
+    }
 
-  hide() {
-    this.$container.addClass('d-none');
-  }
-
-
+    /**
+     * @return CustomerId
+     */
+    public function getCustomerId(): CustomerId
+    {
+        return $this->customerId;
+    }
 }

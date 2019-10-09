@@ -24,53 +24,36 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult;
+namespace PrestaShop\PrestaShop\Core\Domain\Cart\Query;
 
-class CartSummary
+use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
+
+/**
+ * Query for getting cart information
+ */
+class GetCartInformation
 {
     /**
-     * @var array
+     * @var CartId
      */
-    private $summary;
+    private $cartId;
 
     /**
-     * @var array
+     * @param int $cartId
+     *
+     * @throws CartConstraintException
      */
-    private $deliveryOptions;
+    public function __construct(int $cartId)
+    {
+        $this->cartId = new CartId($cartId);
+    }
 
     /**
-     * @var array
+     * @return CartId
      */
-    private $addresses;
-
-    /**
-     * @var bool
-     */
-    private $isFreeShipping;
-
-    /**
-     * @var string
-     */
-    private $orderMessage;
-
-    /**
-     * @param array $summary
-     * @param array $deliveryOptions
-     * @param array $addresses
-     * @param bool $isFreeShipping
-     * @param string $orderMessage
-     */
-    public function __construct(
-        array $summary,
-        array $deliveryOptions,
-        array $addresses,
-        $isFreeShipping,
-        $orderMessage
-    ) {
-        $this->summary = $summary;
-        $this->deliveryOptions = $deliveryOptions;
-        $this->addresses = $addresses;
-        $this->isFreeShipping = $isFreeShipping;
-        $this->orderMessage = $orderMessage;
+    public function getCartId(): CartId
+    {
+        return $this->cartId;
     }
 }

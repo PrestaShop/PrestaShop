@@ -1,4 +1,3 @@
-<?php
 /**
  * 2007-2019 PrestaShop SA and Contributors
  *
@@ -24,20 +23,43 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Cart\QueryHandler;
+import createOrderPageMap from './create-order-map';
+import Router from '../../../components/router';
 
-use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartSummary;
-use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartSummary;
+const $ = window.$;
 
 /**
- * Interface for service that retrieves cart summary.
+ * Provides ajax calls for getting customer information
  */
-interface GetCartSummaryHandlerInterface
-{
-    /**
-     * @param GetCartSummary $query
-     *
-     * @return CartSummary
-     */
-    public function handle(GetCartSummary $query);
+export default class CustomerInfoProvider {
+  constructor() {
+    this.$container = $(createOrderPageMap.orderCreationContainer);
+    this.router = new Router();
+  }
+
+  /**
+   * Gets customer carts
+   *
+   * @param customerId
+   *
+   * @returns {jqXHR}. Array of carts in response.
+   */
+  getCustomerCarts(customerId) {
+    return $.ajax(this.router.generate('admin_customers_carts', {customerId}), {
+      method: 'GET',
+    });
+  }
+
+  /**
+   * Gets customer orders
+   *
+   * @param customerId
+   *
+   * @returns {jqXHR}. Array of orders in response.
+   */
+  getCustomerOrders(customerId) {
+    return $.ajax(this.router.generate('admin_customers_orders', {customerId}), {
+      method: 'GET',
+    });
+  }
 }

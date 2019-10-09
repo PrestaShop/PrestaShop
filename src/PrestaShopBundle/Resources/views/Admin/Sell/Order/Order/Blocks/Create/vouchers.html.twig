@@ -1,5 +1,5 @@
 {#**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -42,5 +42,28 @@
         </button>
       </div>
     </div>
+    <table class="table d-none" id="vouchersTable">
+      <thead>
+      <tr>
+        <th>{{ 'Name'|trans({}, 'Admin.Global') }}</th>
+        <th>{{ 'Description'|trans({}, 'Admin.Global') }}</th>
+        <th>{{ 'Value'|trans({}, 'Admin.Global') }}</th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
   </div>
 </div>
+
+<script id="vouchersTableRowTemplate" type="text/html">
+  <tr>
+    <td class="js-voucher-name"></td>
+    <td class="js-voucher-description"></td>
+    <td class="js-voucher-value"></td>
+    <td class="text-right">
+      <button class="btn btn-outline-danger js-voucher-delete">{{ 'Delete'|trans({}, 'Admin.Global') }}</button>
+    </td>
+  </tr>
+</script>
+

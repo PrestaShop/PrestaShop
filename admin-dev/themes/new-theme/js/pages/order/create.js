@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -22,7 +22,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-import CreateOrderPage from './create-order-page';
+import CreateOrderPage from './create/create-order-page';
 
 const $ = window.$;
 
@@ -30,5 +30,8 @@ $(document).ready(() => {
   const createOrderPage = new CreateOrderPage();
 
   createOrderPage.listenForCustomerSearch();
-  createOrderPage.listenForCustomerChooseForOrderCreation();
+  createOrderPage.listenForCustomerSelect();
+  createOrderPage.listenForCartSelect();
+  createOrderPage.listenForOrderSelect();
+  createOrderPage.listenForCartUpdate();
 });

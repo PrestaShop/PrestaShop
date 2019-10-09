@@ -1,5 +1,5 @@
 {#**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -29,8 +29,6 @@
 
 {% block content %}
   <div id="orderCreationContainer"
-       data-last-empty-cart-url="{{ getAdminLink('AdminCarts', true, {'action': 'searchCarts', 'ajax': 1}) }}"
-       data-cart-addresses-url="{{ getAdminLink('AdminCarts', true, {'action': 'updateAddresses', 'ajax': 1}) }}"
        data-cart-summary-url="{{ getAdminLink('AdminCarts', true, {'action': 'getSummary', 'ajax': 1}) }}"
   >
     <div class="row">
