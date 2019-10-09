@@ -32,7 +32,6 @@ use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use Symfony\Component\Translation\TranslatorInterface;
-use Tools;
 
 /**
  * Class CurrencyGridDataFactory is responsible for providing modified currency list grid data.
@@ -91,21 +90,38 @@ final class CurrencyGridDataFactory implements GridDataFactoryInterface
         $result = [];
         foreach ($records as $key => $record) {
             $result[$key] = $record;
-            $result[$key]['currency'] = Tools::ucfirst($result[$key]['name']);
-            if (isset($result[$key]['unofficial']) && $result[$key]['unofficial']) {
-                $result[$key]['currency'] .= sprintf(
-                    ' (%s)',
-                    $this->translator->trans('Unofficial', [], 'Admin.International.Feature')
-                );
-            } elseif (isset($result[$key]['modified']) && $result[$key]['modified']) {
-                $result[$key]['currency'] .= sprintf(
-                    ' (%s)',
-                    $this->translator->trans('Modified', [], 'Admin.International.Feature')
-                );
-            }
+            $result[$key]['currency'] = $this->buildCurrencyName($result[$key]);
             $result[$key]['conversion_rate'] = (float) $result[$key]['conversion_rate'];
         }
 
         return new RecordCollection($result);
+    }
+
+    /**
+     * @param array $currency
+     *
+     * @return string
+     */
+    private function buildCurrencyName(array $currency)
+    {
+        $currencyName = mb_ucfirst($currency['name']);
+
+        if (isset($currency['unofficial']) && $currency['unofficial']) {
+            return sprintf(
+                '%s (%s)',
+                $currencyName,
+                $this->translator->trans('Unofficial', [], 'Admin.International.Feature')
+            );
+        }
+
+        if (isset($currency['modified']) && $currency['modified']) {
+            return sprintf(
+                '%s (%s)',
+                $currencyName,
+                $this->translator->trans('Modified', [], 'Admin.International.Feature')
+            );
+        }
+
+        return $currencyName;
     }
 }
