@@ -50,12 +50,7 @@ final class AddUnofficialCurrencyHandler extends AbstractAddCurrencyHandler impl
     public function handle(AddUnofficialCurrencyCommand $command)
     {
         $this->assertUnofficialCurrencyDoesNotMatchAnyRealIsoCode($command->getIsoCode()->getValue());
-        if (null !== $command->getNumericIsoCode()) {
-            $this->assertUnofficialCurrencyDoesNotMatchAnyRealNumericIsoCode($command->getNumericIsoCode()->getValue());
-        }
-
         $this->assertCurrencyWithIsoCodeDoesNotExist($command);
-        $this->assertCurrencyWithNumericIsoCodeDoesNotExist($command);
 
         try {
             $entity = new Currency();
@@ -64,7 +59,7 @@ final class AddUnofficialCurrencyHandler extends AbstractAddCurrencyHandler impl
             $entity->active = $command->isEnabled();
             $entity->unofficial = true;
             $entity->conversion_rate = $command->getExchangeRate()->getValue();
-            $entity->numeric_iso_code = $this->getNumericIsoCode($command);
+            $entity->numeric_iso_code = null;
             if (null !== $command->getPrecision()) {
                 $entity->precision = $command->getPrecision()->getValue();
             }
@@ -78,7 +73,8 @@ final class AddUnofficialCurrencyHandler extends AbstractAddCurrencyHandler impl
             //This method will insert the missing localized names/symbols and detect if the currency has been modified
             $entity->refreshLocalizedCurrencyData(Language::getLanguages(), $this->localeRepoCLDR);
 
-            if (false === $entity->add()) {
+            //IMPORTANT: specify that we want to save null values
+            if (false === $entity->add(true, true)) {
                 throw new CannotCreateCurrencyException('Failed to create new currency');
             }
 
@@ -89,52 +85,5 @@ final class AddUnofficialCurrencyHandler extends AbstractAddCurrencyHandler impl
         }
 
         return new CurrencyId((int) $entity->id);
-    }
-
-    /**
-     * @param AddUnofficialCurrencyCommand $command
-     *
-     * @return int
-     */
-    private function getNumericIsoCode(AddUnofficialCurrencyCommand $command)
-    {
-        if (null !== $command->getNumericIsoCode()) {
-            return $command->getNumericIsoCode()->getValue();
-        }
-
-        return $this->getRandomNumericIsoCode();
-    }
-
-    /**
-     * @return int
-     */
-    private function getRandomNumericIsoCode()
-    {
-        $defaultLocaleCLDR = $this->localeRepoCLDR->getLocale($this->defaultLanguage->getLocale());
-        $allCurrencies = $defaultLocaleCLDR->getAllCurrencies();
-
-        $realNumericIsoCodes = [];
-        foreach ($allCurrencies as $currencyData) {
-            if (!empty($currencyData->getNumericIsoCode()) && is_int($currencyData->getNumericIsoCode())) {
-                $realNumericIsoCodes[] = (int) $currencyData->getNumericIsoCode();
-            }
-        }
-
-        $databaseCurrencies = Currency::findAll(false);
-        $databaseNumericIsoCodes = [];
-        foreach ($databaseCurrencies as $databaseCurrency) {
-            if (!empty($databaseCurrency['numeric_iso_code']) && is_int($databaseCurrency['numeric_iso_code'])) {
-                $databaseNumericIsoCodes[] = $databaseCurrency['numeric_iso_code'];
-            }
-        }
-
-        $allowedNumericIsoCodes = [];
-        for ($i = 1; $i < 1000; ++$i) {
-            if (!in_array($i, $realNumericIsoCodes) && !in_array($i, $databaseNumericIsoCodes)) {
-                $allowedNumericIsoCodes[] = $i;
-            }
-        }
-
-        return $allowedNumericIsoCodes[rand(0, count($allowedNumericIsoCodes) - 1)];
     }
 }

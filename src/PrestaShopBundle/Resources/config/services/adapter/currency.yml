@@ -19,12 +19,12 @@ services:
             - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Command\DeleteCurrencyCommand' }
 
     prestashop.adapter.currency.command_handler.create_currency:
-        class: 'PrestaShop\PrestaShop\Adapter\Currency\CommandHandler\AddCurrencyHandler'
+        class: 'PrestaShop\PrestaShop\Adapter\Currency\CommandHandler\AddOfficialCurrencyHandler'
         arguments:
             - '@prestashop.core.localization.cldr.locale_repository'
             - "@=service('prestashop.adapter.legacy.configuration').getInt('PS_LANG_DEFAULT')"
         tags:
-            - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddCurrencyCommand' }
+            - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddOfficialCurrencyCommand' }
 
     prestashop.adapter.currency.command_handler.create_unofficial_currency:
       class: 'PrestaShop\PrestaShop\Adapter\Currency\CommandHandler\AddUnofficialCurrencyHandler'

@@ -26,18 +26,18 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Currency\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddCurrencyCommand;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddOfficialCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 
 /**
- * Interface AddCurrencyHandlerInterface defines contract for AddCurrencyHandler
+ * Interface AddCurrencyHandlerInterface defines contract for AddOfficialCurrencyHandler
  */
 interface AddCurrencyHandlerInterface
 {
     /**
-     * @param AddCurrencyCommand $command
+     * @param AddOfficialCurrencyCommand $command
      *
      * @return CurrencyId
      */
-    public function handle(AddCurrencyCommand $command);
+    public function handle(AddOfficialCurrencyCommand $command);
 }

@@ -29,53 +29,47 @@ namespace PrestaShop\PrestaShop\Core\Domain\Currency\Command;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\ExchangeRate;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\AlphaIsoCode;
-use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\NumericIsoCode;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\Precision;
 
 /**
  * Class AddCurrencyCommand
  */
-class AddCurrencyCommand implements CurrencyCommandInterface
+class AddCurrencyCommand
 {
     /**
      * @var AlphaIsoCode
      */
-    private $isoCode;
-
-    /**
-     * @var NumericIsoCode|null
-     */
-    private $numericIsoCode;
+    protected $isoCode;
 
     /**
      * @var ExchangeRate
      */
-    private $exchangeRate;
+    protected $exchangeRate;
 
     /**
      * @var Precision|null
      */
-    private $precision;
+    protected $precision;
 
     /**
      * @var string[]
      */
-    private $localizedNames;
+    protected $localizedNames;
 
     /**
      * @var string[]
      */
-    private $localizedSymbols;
+    protected $localizedSymbols;
 
     /**
      * @var bool
      */
-    private $isEnabled;
+    protected $isEnabled;
 
     /**
      * @var int[]
      */
-    private $shopIds;
+    protected $shopIds;
 
     /**
      * @param string $isoCode
@@ -103,28 +97,6 @@ class AddCurrencyCommand implements CurrencyCommandInterface
     public function getIsoCode()
     {
         return $this->isoCode;
-    }
-
-    /**
-     * @return NumericIsoCode|null
-     */
-    public function getNumericIsoCode()
-    {
-        return $this->numericIsoCode;
-    }
-
-    /**
-     * @param int $numericIsoCode
-     *
-     * @return self
-     *
-     * @throws CurrencyConstraintException
-     */
-    public function setNumericIsoCode($numericIsoCode)
-    {
-        $this->numericIsoCode = new NumericIsoCode($numericIsoCode);
-
-        return $this;
     }
 
     /**

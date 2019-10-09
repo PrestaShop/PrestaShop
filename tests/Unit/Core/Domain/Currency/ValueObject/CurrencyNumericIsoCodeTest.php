@@ -76,6 +76,15 @@ class CurrencyNumericIsoCodeTest extends TestCase
             [
                 -42,
             ],
+            [
+                8
+            ],
+            [
+                '8'
+            ],
+            [
+                '08'
+            ],
         ];
     }
 
@@ -97,24 +106,12 @@ class CurrencyNumericIsoCodeTest extends TestCase
                 8,
             ],
             [
-                '8',
-                8,
-            ],
-            [
                 '981',
                 981,
             ],
             [
-                '49',
+                '049',
                 49,
-            ],
-            [
-                8,
-                8,
-            ],
-            [
-                981,
-                981,
             ],
         ];
     }
