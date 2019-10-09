@@ -16,7 +16,7 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2019 PrestaShop SA and Contributors
@@ -26,22 +26,38 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Currency\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\AlphaIsoCode;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\NumericIsoCode;
 
 /**
- * Interface CurrencyCommandInterface is common between AddCurrencyCommand and EditCurrencyCommand
- * and is used by AbstractCurrencyHandler
+ * Class AddOfficialCurrencyCommand
  */
-interface CurrencyCommandInterface
+class AddOfficialCurrencyCommand extends AddCurrencyCommand
 {
     /**
-     * @return AlphaIsoCode
+     * @var NumericIsoCode|null
      */
-    public function getIsoCode();
+    private $numericIsoCode;
 
     /**
-     * @return NumericIsoCode
+     * @return NumericIsoCode|null
      */
-    public function getNumericIsoCode();
+    public function getNumericIsoCode()
+    {
+        return $this->numericIsoCode;
+    }
+
+    /**
+     * @param int $numericIsoCode
+     *
+     * @return self
+     *
+     * @throws CurrencyConstraintException
+     */
+    public function setNumericIsoCode($numericIsoCode)
+    {
+        $this->numericIsoCode = new NumericIsoCode($numericIsoCode);
+
+        return $this;
+    }
 }

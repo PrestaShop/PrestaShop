@@ -422,7 +422,7 @@ class CurrencyCore extends ObjectModel
     }
 
     /**
-     * List of currency names, the array needs to be idnex by language id.
+     * List of currency names, the array needs to be indexed by language id.
      *
      * @param string[] $names
      *
@@ -444,7 +444,7 @@ class CurrencyCore extends ObjectModel
     }
 
     /**
-     * List of currency symbols, the array needs to be idnex by language id.
+     * List of currency symbols, the array needs to be indexed by language id.
      *
      * @param string[] $symbols
      *

@@ -330,7 +330,7 @@ class ValidateCore
 
     public static function isNumericIsoCode($iso_code)
     {
-        return preg_match('/^[0-9]{1,3}$/', $iso_code);
+        return preg_match('/^[0-9]{3}$/', $iso_code);
     }
 
     /**
