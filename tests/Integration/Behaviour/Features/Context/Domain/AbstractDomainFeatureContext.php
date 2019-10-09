@@ -30,6 +30,7 @@ use Behat\Behat\Context\Context;
 use Behat\Testwork\Hook\Scope\BeforeSuiteScope;
 use ObjectModel;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use Psr\Container\ContainerInterface;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
@@ -77,6 +78,11 @@ abstract class AbstractDomainFeatureContext implements Context
     protected function getSharedStorage()
     {
         return SharedStorage::getStorage();
+    }
+
+    protected function getContainer(): ContainerInterface
+    {
+        return CommonFeatureContext::getContainer();
     }
 
     /**

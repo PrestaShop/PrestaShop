@@ -84,6 +84,8 @@ module.exports = {
     order_create: './js/pages/order/create.js',
     catalog_price_rule: './js/pages/catalog-price-rule',
     feature_form: './js/pages/feature/form',
+    order_message_form: './js/pages/order_message/form',
+    order_message: './js/pages/order_message',
   },
   output: {
     path: path.resolve(__dirname, '../public'),
