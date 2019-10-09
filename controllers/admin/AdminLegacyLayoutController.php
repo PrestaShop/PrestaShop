@@ -138,13 +138,4 @@ class AdminLegacyLayoutControllerCore extends AdminController
 
         $this->outPutHtml;
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function addJquery($version = null, $folder = null, $minifier = true)
-    {
-        // jQuery is already included, so do nothing
-        @trigger_error(__FUNCTION__ . 'is deprecated and has no effect in the New Theme since version 1.7.6.0.', E_USER_DEPRECATED);
-    }
 }
