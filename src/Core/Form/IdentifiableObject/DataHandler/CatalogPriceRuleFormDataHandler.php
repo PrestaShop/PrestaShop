@@ -93,11 +93,11 @@ final class CatalogPriceRuleFormDataHandler implements FormDataHandlerInterface
             (float) $data['price']
         );
 
-        if ($data['from']) {
+        if ($data['date_range']['from']) {
             $command->setDateTimeFrom($data['from']);
         }
 
-        if ($data['to']) {
+        if ($data['date_range']['to']) {
             $command->setDateTimeTo($data['to']);
         }
 
@@ -142,12 +142,12 @@ final class CatalogPriceRuleFormDataHandler implements FormDataHandlerInterface
         $command->setIncludeTax((bool) $data['include_tax']);
         $command->setReduction($data['reduction']['type'], (float) $data['reduction']['value']);
 
-        if ($data['from']) {
-            $command->setDateTimeFrom($data['from']);
+        if ($data['date_range']['from']) {
+            $command->setDateTimeFrom($data['date_range']['from']);
         }
 
-        if ($data['to']) {
-            $command->setDateTimeTo($data['to']);
+        if ($data['date_range']['to']) {
+            $command->setDateTimeTo($data['date_range']['to']);
         }
     }
 }

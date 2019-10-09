@@ -78,8 +78,10 @@ final class CatalogPriceRuleFormDataProvider implements FormDataProviderInterfac
             'from_quantity' => $editableCatalogPriceRule->getFromQuantity(),
             'price' => null === $price ? $price : (string) $price,
             'leave_initial_price' => $leaveInitialPrice,
-            'from' => $from ? $from->format($dateTimeFormat) : '',
-            'to' => $to ? $to->format($dateTimeFormat) : '',
+            'date_range' => [
+                'from' => $from ? $from->format($dateTimeFormat) : '',
+                'to' => $to ? $to->format($dateTimeFormat) : '',
+            ],
             'include_tax' => $editableCatalogPriceRule->isTaxIncluded(),
             'reduction' => [
                 'type' => $editableCatalogPriceRule->getReduction()->getType(),

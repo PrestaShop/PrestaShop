@@ -27,8 +27,9 @@
 namespace PrestaShopBundle\Form\Admin\Sell\CatalogPriceRule;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DateRange;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\Reduction;
-use PrestaShopBundle\Form\Admin\Type\DatePickerType;
+use PrestaShopBundle\Form\Admin\Type\DateRangeType;
 use PrestaShopBundle\Form\Admin\Type\ReductionType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -112,8 +113,6 @@ class CatalogPriceRuleType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $dateTimeFormat = 'YYYY-MM-DD HH:mm:ss';
-
         $builder
             ->add('name', TextType::class, [
                 'constraints' => [
@@ -165,13 +164,17 @@ class CatalogPriceRuleType extends AbstractType
             ->add('leave_initial_price', CheckboxType::class, [
                 'required' => false,
             ])
-            ->add('from', DatePickerType::class, [
-                'required' => false,
-                'date_format' => $dateTimeFormat,
-            ])
-            ->add('to', DatePickerType::class, [
-                'required' => false,
-                'date_format' => $dateTimeFormat,
+            ->add('date_range', DateRangeType::class, [
+                'date_format' => 'YYYY-MM-DD HH:mm:ss',
+                'constraints' => [
+                    new DateRange([
+                        'message' => $this->translator->trans(
+                            'The selected date range is not valid.',
+                            [],
+                            'Admin.Notifications.Error'
+                        ),
+                    ]),
+                ],
             ])
             ->add('include_tax', ChoiceType::class, [
                 'placeholder' => false,

@@ -26,17 +26,20 @@
 
 namespace PrestaShop\PrestaShop\Adapter\CatalogPriceRule\CommandHandler;
 
+use PrestaShop\PrestaShop\Adapter\CatalogPriceRule\AbstractCatalogPriceRuleHandler;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Command\EditCatalogPriceRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\CommandHandler\EditCatalogPriceRuleHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\CatalogPriceRuleConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\CatalogPriceRuleException;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\CannotUpdateCatalogPriceRuleException;
+use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 use PrestaShopException;
 use SpecificPriceRule;
 
 /**
  * Handles command which edits catalog price rule handler using legacy object model
  */
-final class EditCatalogPriceRuleHandler implements EditCatalogPriceRuleHandlerInterface
+final class EditCatalogPriceRuleHandler extends AbstractCatalogPriceRuleHandler implements EditCatalogPriceRuleHandlerInterface
 {
     /**
      * {@inheritdoc}
@@ -81,6 +84,7 @@ final class EditCatalogPriceRuleHandler implements EditCatalogPriceRuleHandlerIn
     private function fetchSpecificPriceRuleFromCommand(EditCatalogPriceRuleCommand $command): SpecificPriceRule
     {
         $specificPriceRule = new SpecificPriceRule($command->getCatalogPriceRuleId()->getValue());
+        $this->fetchDateRange($command, $specificPriceRule);
 
         if (null !== $command->getName()) {
             $specificPriceRule->name = $command->getName();
@@ -103,12 +107,7 @@ final class EditCatalogPriceRuleHandler implements EditCatalogPriceRuleHandlerIn
         if (null !== $command->getPrice()) {
             $specificPriceRule->price = $command->getPrice();
         }
-        if (null !== $command->getDateTimeFrom()) {
-            $specificPriceRule->from = $command->getDateTimeFrom()->format('Y-m-d H:i:s');
-        }
-        if (null !== $command->getDateTimeTo()) {
-            $specificPriceRule->to = $command->getDateTimeTo()->format('Y-m-d H:i:s');
-        }
+
         if (null !== $command->isTaxIncluded()) {
             $specificPriceRule->reduction_tax = $command->isTaxIncluded();
         }
@@ -118,5 +117,44 @@ final class EditCatalogPriceRuleHandler implements EditCatalogPriceRuleHandlerIn
         }
 
         return $specificPriceRule;
+    }
+
+    /**
+     * Fetches date range from command to object model also asserting that the range is not inverse
+     *
+     * @param EditCatalogPriceRuleCommand $command
+     * @param SpecificPriceRule $specificPriceRule
+     *
+     * @throws CatalogPriceRuleConstraintException
+     */
+    private function fetchDateRange(EditCatalogPriceRuleCommand $command, SpecificPriceRule $specificPriceRule)
+    {
+        $commandDateFrom = $command->getDateTimeFrom();
+        $commandDateTo = $command->getDateTimeTo();
+
+        $modelDateFrom = $specificPriceRule->from;
+        $modelDateTo = $specificPriceRule->to;
+
+        //if `date from` value is being updated
+        if (null !== $commandDateFrom) {
+            //and if `date to` is set in database
+            if (DateTime::NULL_VALUE !== $modelDateTo) {
+                //asserts that range between these values is not inverse
+                $this->assertDateRangeIsNotInverse($commandDateFrom, new \DateTime($modelDateTo));
+            }
+
+            $specificPriceRule->from = $commandDateFrom->format('Y-m-d H:i:s');
+        }
+
+        //if `date to` value is being updated
+        if (null !== $commandDateTo) {
+            //and if `date from` is set in database
+            if (DateTime::NULL_VALUE !== $modelDateFrom) {
+                //asserts that range between these values is not inverse
+                $this->assertDateRangeIsNotInverse(new \DateTime($modelDateFrom), $commandDateTo);
+            }
+
+            $specificPriceRule->to = $commandDateTo->format('Y-m-d H:i:s');
+        }
     }
 }

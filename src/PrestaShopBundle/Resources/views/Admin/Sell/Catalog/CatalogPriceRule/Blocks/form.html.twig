@@ -65,11 +65,11 @@
 
       {{ ps.form_group_row(catalogPriceRuleForm.leave_initial_price, {}, {'label': ''}) }}
 
-      {{ ps.form_group_row(catalogPriceRuleForm.from, {}, {
+      {{ ps.form_group_row(catalogPriceRuleForm.date_range.from, {}, {
         'label': 'From'|trans({}, 'Admin.Global'),
       }) }}
 
-      {{ ps.form_group_row(catalogPriceRuleForm.to, {}, {
+      {{ ps.form_group_row(catalogPriceRuleForm.date_range.to, {}, {
         'label': 'To'|trans({}, 'Admin.Global'),
       }) }}
 

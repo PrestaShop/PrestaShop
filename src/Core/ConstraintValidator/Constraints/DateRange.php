@@ -24,25 +24,23 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception;
+namespace PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints;
+
+use PrestaShop\PrestaShop\Core\ConstraintValidator\DateRangeValidator;
+use Symfony\Component\Validator\Constraint;
 
 /**
- * Thrown when catalog price rule constraints are violated
+ * Provides date range validation
  */
-class CatalogPriceRuleConstraintException extends CatalogPriceRuleException
+class DateRange extends Constraint
 {
-    /**
-     * When catalog price rule id is not valid
-     */
-    const INVALID_ID = 10;
+    public $message = 'The selected date range is not valid.';
 
     /**
-     * When date-time format is invalid
+     * {@inheritdoc}
      */
-    const INVALID_DATETIME = 20;
-
-    /**
-     * When date range is not valid
-     */
-    const INVALID_DATE_RANGE = 30;
+    public function validatedBy()
+    {
+        return DateRangeValidator::class;
+    }
 }
