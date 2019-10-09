@@ -27,14 +27,15 @@
 namespace PrestaShop\PrestaShop\Core\Currency;
 
 use PrestaShop\CircuitBreaker\Contract\CircuitBreakerInterface;
+use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Core\Currency\Exception\CurrencyFeedException;
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
 use SimpleXMLElement;
 
 /**
- * Class ExchangeRateProvider is used to get the exchange rate of a currency (based on the default
- * currency). It uses a circuit breaker to avoid being blocked in case of network problems and it
- * saves each of its request in a cache to be able to have a fallback response.
+ * Retrieves the exchange rate of a currency (based on the default currency). It uses a circuit breaker
+ * to avoid being blocked in case of network problems and it saves each of its request in a cache to be
+ * able to have a fallback response.
  */
 class ExchangeRateProvider
 {
@@ -61,7 +62,7 @@ class ExchangeRateProvider
     private $defaultCurrencyIsoCode;
 
     /** @var CircuitBreakerInterface */
-    private $circuitBreaker;
+    private $remoteServiceProvider;
 
     /** @var string */
     private $cacheDir;
@@ -69,27 +70,27 @@ class ExchangeRateProvider
     /** @var string */
     private $cacheFile;
 
-    /** @var SimpleXMLElement */
-    private $xmlFeed;
+    /** @var string */
+    private $sourceIsoCode;
 
-    /** @var SimpleXMLElement */
-    private $xmlCurrencies;
+    /** @var array */
+    private $currencies;
 
     /**
      * @param string $currencyFeedUrl
      * @param string $defaultCurrencyIsoCode
-     * @param CircuitBreakerInterface $circuitBreaker
+     * @param CircuitBreakerInterface $remoteServiceProvider
      * @param string $cacheDir
      */
     public function __construct(
         $currencyFeedUrl,
         $defaultCurrencyIsoCode,
-        CircuitBreakerInterface $circuitBreaker,
+        CircuitBreakerInterface $remoteServiceProvider,
         $cacheDir
     ) {
         $this->currencyFeedUrl = $currencyFeedUrl;
         $this->defaultCurrencyIsoCode = $defaultCurrencyIsoCode;
-        $this->circuitBreaker = $circuitBreaker;
+        $this->remoteServiceProvider = $remoteServiceProvider;
         $this->cacheDir = $cacheDir;
         $this->cacheFile = $cacheDir . '/currency_feed.xml';
     }
@@ -97,7 +98,7 @@ class ExchangeRateProvider
     /**
      * @param string $currencyIsoCode
      *
-     * @return float
+     * @return Number
      *
      * @throws CurrencyFeedException
      */
@@ -106,73 +107,134 @@ class ExchangeRateProvider
         $this->fetchCurrencyFeed();
 
         // Default feed currency (usually EUR)
-        $sourceIsoCode = (string) ($this->xmlFeed->source['iso_code']);
         if ($this->defaultCurrencyIsoCode == $currencyIsoCode) {
-            return self::DEFAULT_EXCHANGE_RATE;
+            return new Number((string) self::DEFAULT_EXCHANGE_RATE);
         }
 
-        // Search for the currency rate in the source feed
-        if ($sourceIsoCode == $currencyIsoCode) {
-            $sourceRate = 1.0;
+        /*
+         * Search for the currency rate in the source feed, this represents the rate
+         * relative to the source feed (compared to the feed default currency)
+         */
+        $sourceRate = null;
+        if ($this->sourceIsoCode == $currencyIsoCode) {
+            $sourceRate = new Number((string) 1.0);
         } else {
-            foreach ($this->xmlCurrencies as $obj) {
-                if ((string) ($obj['iso_code']) == $currencyIsoCode) {
-                    $sourceRate = (float) $obj['rate'];
+            foreach ($this->currencies as $currency) {
+                if ($currency['iso_code'] == $currencyIsoCode) {
+                    $sourceRate = $currency['rate'];
 
                     break;
                 }
             }
         }
 
-        if (!isset($sourceRate)) {
+        if (null === $sourceRate) {
             throw new CurrencyFeedException(sprintf(
                 'Exchange rate for currency with ISO code %s was not found',
                 $currencyIsoCode
             ));
         }
 
-        // Fetch the exchange rate of the default currency (compared to the source currency)
+        /*
+         * Fetch the exchange rate of the default currency (compared to the source currency)
+         * and finally compute the asked currency rate compared to the shop default currency rate
+         */
         $defaultExchangeRate = $this->getDefaultCurrencyRelativeExchangeRate();
 
-        return round($sourceRate / $defaultExchangeRate, 6);
+        return $sourceRate->dividedBy($defaultExchangeRate);
     }
 
     /**
      * Fetch the currency from its url using circuit breaker, if no content was fetched
-     * fallback on the cache file.
+     * fallback on the cache file. If the feed has already been fetch there is nothing to do.
      *
      * @throws CurrencyFeedException
      */
     private function fetchCurrencyFeed()
     {
-        if ($this->hasValidFeed()) {
+        if (!empty($this->currencies)) {
             return;
         }
 
-        $feedData = $this->circuitBreaker->call($this->currencyFeedUrl);
+        $remoteFeedData = $this->remoteServiceProvider->call($this->currencyFeedUrl);
         $cachedFeedData = $this->getCachedCurrencyFeed();
-        if (empty($feedData) && empty($cachedFeedData)) {
+        if (empty($remoteFeedData) && empty($cachedFeedData)) {
             throw new CurrencyFeedException('Currency feed could not be fetched');
         }
 
-        $this->xmlFeed = @simplexml_load_string($feedData);
-        if ($this->hasValidFeed()) {
-            if (!empty($feedData)) {
-                if (!is_dir($this->cacheDir)) {
-                    mkdir($this->cacheDir, FileSystem::DEFAULT_MODE_FOLDER);
-                }
-                file_put_contents($this->cacheFile, $feedData);
-            }
-        } else {
-            //Fallback on cached feed if needed
-            $this->xmlFeed = @simplexml_load_string($cachedFeedData);
+        $xmlFeed = $this->parseAndSaveXMLFeed($remoteFeedData);
+        if (null === $xmlFeed) {
+            $xmlFeed = $this->parseAndSaveXMLFeed($cachedFeedData);
         }
 
-        if (!$this->hasValidFeed()) {
+        if (null === $xmlFeed) {
             throw new CurrencyFeedException('Invalid currency XML feed');
         }
 
-        $this->xmlCurrencies = $this->xmlFeed->list->currency;
+        $this->parseXmlFeed($xmlFeed);
+    }
+
+    /**
+     * @return SimpleXMLElement|null
+     */
+    private function fetchRemoteFeed()
+    {
+        $remoteFeedData = $this->remoteServiceProvider->call($this->currencyFeedUrl);
+        if (empty($remoteFeedData)) {
+            return null;
+        }
+
+        return $this->parseAndSaveXMLFeed($remoteFeedData);
+    }
+
+    /**
+     * @return SimpleXMLElement|null
+     */
+    private function fetchCachedFeed()
+    {
+        $cachedFeedData = $this->getCachedCurrencyFeed();
+        if (empty($cachedFeedData)) {
+            return null;
+        }
+
+        return $this->parseAndSaveXMLFeed($cachedFeedData);
+    }
+
+    /**
+     * @param string $feedContent
+     *
+     * @return SimpleXMLElement|null
+     */
+    private function parseAndSaveXMLFeed($feedContent)
+    {
+        $xmlFeed = @simplexml_load_string($feedContent);
+        if (!$xmlFeed || !$this->isValidXMLFeed($xmlFeed)) {
+            return null;
+        }
+
+        //Cache the feed
+        if (!is_dir($this->cacheDir)) {
+            mkdir($this->cacheDir, FileSystem::DEFAULT_MODE_FOLDER);
+        }
+        file_put_contents($this->cacheFile, $feedContent);
+
+        return $xmlFeed;
+    }
+
+    /**
+     * @param SimpleXMLElement $xmlFeed
+     */
+    private function parseXmlFeed($xmlFeed)
+    {
+        $xmlCurrencies = $xmlFeed->list->currency;
+
+        $this->sourceIsoCode = (string) ($xmlFeed->source['iso_code']);
+        foreach ($xmlCurrencies as $currency) {
+            $this->currencies[] = [
+                'iso_code' => (string) $currency['iso_code'],
+                'rate' => new Number((string) $currency['rate']),
+            ];
+        }
     }
 
     /**
@@ -190,35 +252,36 @@ class ExchangeRateProvider
     }
 
     /**
+     * @param SimpleXMLElement $xmlFeed
+     *
      * @return bool
      */
-    private function hasValidFeed()
+    private function isValidXMLFeed(SimpleXMLElement $xmlFeed)
     {
-        return $this->xmlFeed && $this->xmlFeed->list && count($this->xmlFeed->list->currency) && $this->xmlFeed->source;
+        return $xmlFeed && $xmlFeed->list && count($xmlFeed->list->currency) && $xmlFeed->source;
     }
 
     /**
-     * @return float
+     * @return Number
      *
      * @throws CurrencyFeedException
      */
     private function getDefaultCurrencyRelativeExchangeRate()
     {
-        $sourceIsoCode = (string) ($this->xmlFeed->source['iso_code']);
-
-        if ($this->defaultCurrencyIsoCode == $sourceIsoCode) {
-            $defaultExchangeRate = 1.0;
+        $defaultExchangeRate = null;
+        if ($this->defaultCurrencyIsoCode == $this->sourceIsoCode) {
+            $defaultExchangeRate = new Number('1.0');
         } else {
-            foreach ($this->xmlCurrencies as $currency) {
+            foreach ($this->currencies as $currency) {
                 if ($currency['iso_code'] == $this->defaultCurrencyIsoCode) {
-                    $defaultExchangeRate = round((float) $currency['rate'], 6);
+                    $defaultExchangeRate = $currency['rate'];
 
                     break;
                 }
             }
         }
 
-        if (!isset($defaultExchangeRate)) {
+        if (null === $defaultExchangeRate) {
             throw new CurrencyFeedException(sprintf(
                 'Could not find default currency %s in the currency feed',
                 $this->defaultCurrencyIsoCode
