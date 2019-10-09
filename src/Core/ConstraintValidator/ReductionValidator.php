@@ -55,22 +55,34 @@ final class ReductionValidator extends ConstraintValidator
         }
 
         if (!$this->isAllowedType($value['type'])) {
-            $this->buildViolation($constraint->invalidTypeMessage, [
-                '%type%' => $value['type'],
-                '%types%' => implode(', ', [Reduction::TYPE_PERCENTAGE, Reduction::TYPE_AMOUNT]),
-            ]);
+            $this->buildViolation(
+                $constraint->invalidTypeMessage,
+                [
+                    '%type%' => $value['type'],
+                    '%types%' => implode(', ', [Reduction::TYPE_PERCENTAGE, Reduction::TYPE_AMOUNT]),
+                ],
+                '[type]'
+            );
         }
 
         if (Reduction::TYPE_AMOUNT === $value['type']) {
             if (!$this->assertIsValidAmount($value['value'])) {
-                $this->buildViolation($constraint->invalidAmountValueMessage, ['%value%' => $value['value']]);
+                $this->buildViolation(
+                    $constraint->invalidAmountValueMessage,
+                    ['%value%' => $value['value']],
+                    '[value]'
+                );
             }
         } elseif (Reduction::TYPE_PERCENTAGE === $value['type']) {
             if (!$this->assertIsValidPercentage($value['value'])) {
-                $this->buildViolation($constraint->invalidPercentageValueMessage, [
-                    '%value%' => $value['value'],
-                    '%max%' => Reduction::MAX_ALLOWED_PERCENTAGE,
-                ]);
+                $this->buildViolation(
+                    $constraint->invalidPercentageValueMessage,
+                    [
+                        '%value%' => $value['value'],
+                        '%max%' => Reduction::MAX_ALLOWED_PERCENTAGE,
+                    ],
+                    '[value]'
+                );
             }
         }
     }
@@ -116,11 +128,13 @@ final class ReductionValidator extends ConstraintValidator
      *
      * @param string $message
      * @param array $params
+     * @param string $errorPath
      */
-    private function buildViolation(string $message, array $params)
+    private function buildViolation(string $message, array $params, string $errorPath)
     {
         $this->context->buildViolation($message, $params)
             ->setTranslationDomain('Admin.Notifications.Error')
+            ->atPath($errorPath)
             ->setParameters($params)
             ->addViolation()
         ;
