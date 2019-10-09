@@ -41,8 +41,8 @@
                 {$product.name}
               </a>
             </strong><br/>
-            {if $product.reference}
-              {l s='Reference' d='Shop.Theme.Catalog'}: {$product.reference}<br/>
+            {if $product.product_reference}
+              {l s='Reference' d='Shop.Theme.Catalog'}: {$product.product_reference}<br/>
             {/if}
             {if $product.customizations}
               {foreach from=$product.customizations item="customization"}
@@ -122,8 +122,8 @@
         <div class="row">
           <div class="col-sm-5 desc">
             <div class="name">{$product.name}</div>
-            {if $product.reference}
-              <div class="ref">{l s='Reference' d='Shop.Theme.Catalog'}: {$product.reference}</div>
+            {if $product.product_reference}
+              <div class="ref">{l s='Reference' d='Shop.Theme.Catalog'}: {$product.product_reference}</div>
             {/if}
             {if $product.customizations}
               {foreach $product.customizations as $customization}
