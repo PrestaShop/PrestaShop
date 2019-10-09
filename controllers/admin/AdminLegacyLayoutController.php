@@ -1,7 +1,5 @@
 <?php
 
-use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
-
 /**
  * 2007-2019 PrestaShop SA and Contributors
  *
@@ -29,6 +27,7 @@ use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 class AdminLegacyLayoutControllerCore extends AdminController
 {
     public $outPutHtml = '';
+    public $jsRouterMetadata;
     protected $headerToolbarBtn = array();
     protected $title;
     protected $showContentHeader = true;
@@ -36,8 +35,17 @@ class AdminLegacyLayoutControllerCore extends AdminController
     protected $enableSidebar = false;
     protected $helpLink;
 
-    public function __construct($controllerName = '', $title = '', $headerToolbarBtn = array(), $displayType = '', $showContentHeader = true, $headerTabContent = '', $enableSidebar = false, $helpLink = '')
-    {
+    public function __construct(
+        $controllerName = '',
+        $title = '',
+        $headerToolbarBtn = array(),
+        $displayType = '',
+        $showContentHeader = true,
+        $headerTabContent = '',
+        $enableSidebar = false,
+        $helpLink = '',
+        $jsRouterMetadata = []
+    ) {
         // Compatibility with legacy behavior.
         // Some controllers can only be used in "All shops" context.
         // This makes sure that user cannot switch shop contexts
@@ -63,6 +71,7 @@ class AdminLegacyLayoutControllerCore extends AdminController
         $this->helpLink = $helpLink;
         $this->php_self = $controllerName;
         $this->className = 'LegacyLayout';
+        $this->jsRouterMetadata = $jsRouterMetadata;
     }
 
     public function setMedia($isNewTheme = false)
@@ -112,14 +121,8 @@ class AdminLegacyLayoutControllerCore extends AdminController
             'toggle_navigation_url' => $this->context->link->getAdminLink('AdminEmployees', true, [], [
                 'action' => 'toggleMenu',
             ]),
-            // base url for javascript router
-            'base_url' => SymfonyContainer::getInstance()->get('request_stack')
-                ->getCurrentRequest()
-                ->getBaseUrl(),
-            //security token for javascript router
-            'token' => SymfonyContainer::getInstance()->get('security.csrf.token_manager')
-                ->getToken(SymfonyContainer::getInstance()->get('prestashop.user_provider')->getUsername())
-                ->getValue(),
+            /* base_url and security token for js router. @since 1.7.7 */
+            'js_router_metadata' => $this->jsRouterMetadata,
         );
 
         if ($this->helpLink === false || !empty($this->helpLink)) {
