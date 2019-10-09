@@ -109,7 +109,7 @@ export default class CreateOrderPage {
       const self = this;
       this.cartProvider.getCart(cartId).then((response) => {
         self._renderCartInfo(response);
-        self.shippingRenderer.show();
+        self.shippingRenderer.render(response.shipping);
       });
     });
   }
@@ -126,6 +126,7 @@ export default class CreateOrderPage {
       const self = this;
       this.cartProvider.duplicateOrderCart(orderId).then((response) => {
         self._renderCartInfo(response);
+        self.shippingRenderer.render(response.shipping);
       });
     });
   }

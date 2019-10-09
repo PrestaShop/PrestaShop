@@ -73,4 +73,6 @@ export default {
 
   // selectors related to shipping block
   shippingBlock: '#shippingBlock',
+  shippingFormBlock: '.js-shipping-form',
+  noCarrierBlock: '.js-no-carrier-block',
 };
