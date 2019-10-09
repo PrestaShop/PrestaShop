@@ -84,9 +84,10 @@ export default class CreateOrderPage {
       const customerId = this.customerSearcher.onCustomerChooseForOrderCreation(event);
       this.data.customer_id = customerId;
 
+      const self = this;
       this.cartProvider.loadEmptyCart(customerId).then((response) => {
-        this.data.cart_id = response.cartId;
-        this._renderCartInfo(response);
+        self.data.cart_id = response.cartId;
+        self._renderCartInfo(response);
       });
 
       this._loadCustomerCarts(customerId);
@@ -105,8 +106,10 @@ export default class CreateOrderPage {
     this.$container.on('click', '.js-use-cart-btn', (e) => {
       const cartId = $(e.currentTarget).data('cart-id');
 
+      const self = this;
       this.cartProvider.getCart(cartId).then((response) => {
-        this._renderCartInfo(response);
+        self._renderCartInfo(response);
+        self.shippingRenderer.show();
       });
     });
   }
@@ -120,8 +123,9 @@ export default class CreateOrderPage {
     this.$container.on('click', '.js-use-order-btn', (e) => {
       const orderId = $(e.currentTarget).data('order-id');
 
+      const self = this;
       this.cartProvider.duplicateOrderCart(orderId).then((response) => {
-        this._renderCartInfo(response);
+        self._renderCartInfo(response);
       });
     });
   }
@@ -144,10 +148,11 @@ export default class CreateOrderPage {
    * @private
    */
   _loadCustomerCarts(customerId) {
+    const self = this;
     this.customerInfoProvider.getCustomerCarts(customerId).then((response) => {
-      this.cartsRenderer.render({
+      self.cartsRenderer.render({
         carts: response.carts,
-        currentCartId: this.data.cart_id,
+        currentCartId: self.data.cart_id,
       });
       $(createOrderPageMap.customerCheckoutHistory).removeClass('d-none');
     });
@@ -161,8 +166,9 @@ export default class CreateOrderPage {
    * @private
    */
   _loadCustomerOrders(customerId) {
+    const self = this;
     this.customerInfoProvider.getCustomerOrders(customerId).then((response) => {
-      this.ordersRenderer.render(response.orders);
+      self.ordersRenderer.render(response.orders);
       $(createOrderPageMap.customerCheckoutHistory).removeClass('d-none');
     });
   }
@@ -200,10 +206,11 @@ export default class CreateOrderPage {
    * @private
    */
   _changeCartAddresses() {
+    const self = this;
     $.ajax(this.$container.data('edit-address-url'), {
       method: 'POST',
       data: {
-        cart_id: this.data.cart_id,
+        cart_id: self.data.cart_id,
         delivery_address_id: $(createOrderPageMap.deliveryAddressSelect).val(),
         invoice_address_id: $(createOrderPageMap.invoiceAddressSelect).val(),
       },
@@ -211,7 +218,7 @@ export default class CreateOrderPage {
     }).then((response) => {
       // this._persistCartInfoData(response);
 
-      this.addressesRenderer.render(response.addresses);
+      self.addressesRenderer.render(response.addresses);
     });
   }
 
@@ -236,6 +243,7 @@ export default class CreateOrderPage {
    * @private
    */
   _choosePreviousCart(cartId) {
+    const self = this;
     $.ajax(this.$container.data('cart-summary-url'), {
       method: 'POST',
       data: {
@@ -244,9 +252,9 @@ export default class CreateOrderPage {
       },
       dataType: 'json',
     }).then((response) => {
-      this._persistCartInfoData(response);
+      self._persistCartInfoData(response);
 
-      this._renderCartInfo(response);
+      self._renderCartInfo(response);
     });
   }
 }
