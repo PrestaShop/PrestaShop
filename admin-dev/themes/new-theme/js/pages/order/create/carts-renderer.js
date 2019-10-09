@@ -50,7 +50,6 @@ export default class CartsRenderer {
 
     for (const key in carts) {
       const cart = carts[key];
-
       // do not render current cart
       if (cart.cartId === currentCartId) {
         continue;
