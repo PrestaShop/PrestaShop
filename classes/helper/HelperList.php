@@ -182,6 +182,10 @@ class HelperListCore extends Helper
 
         $this->orderWay = preg_replace('/^([a-z _]*!)/Ui', '', $this->orderWay);
 
+        if($this->listTotal == 0 && is_array($list) && count($list) > 0) {
+            $this->listTotal = count($list);
+        }        
+        
         $this->tpl->assign(array(
             'header' => $this->displayListHeader(), // Display list header (filtering, pagination and column names)
             'content' => $this->displayListContent(), // Show the content of the table
