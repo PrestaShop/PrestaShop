@@ -33,15 +33,43 @@ const $ = window.$;
 export default class ShippingRenderer {
   constructor() {
     this.$container = $(createOrderPageMap.shippingBlock);
+    this.$form = $(createOrderPageMap.shippingFormBlock);
+    this.$noCarrierBlock = $(createOrderPageMap.noCarrierBlock);
   }
 
-  show() {
+  render(shipping) {
+    if (shipping !== null && shipping.length !== 0) {
+      this.hideNoCarrierBlock();
+      this.showContainer();
+      this.showForm();
+    } else {
+      this.showContainer();
+      this.hideForm();
+      this.showNoCarrierBlock();
+    }
+  }
+
+  showContainer() {
     this.$container.removeClass('d-none');
   }
 
-  hide() {
+  hideContainer() {
     this.$container.addClass('d-none');
   }
 
+  showForm() {
+    this.$form.removeClass('d-none');
+  }
 
+  hideForm() {
+    this.$form.addClass('d-none');
+  }
+
+  showNoCarrierBlock() {
+    this.$noCarrierBlock.removeClass('d-none');
+  }
+
+  hideNoCarrierBlock() {
+    this.$noCarrierBlock.addClass('d-none');
+  }
 }
