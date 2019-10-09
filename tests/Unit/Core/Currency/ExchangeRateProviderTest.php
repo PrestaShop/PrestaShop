@@ -74,13 +74,13 @@ class ExchangeRateProviderTest extends TestCase
         );
 
         $exchangeRate = $exchangeRateProvider->getExchangeRate('ALL');
-        $this->assertEquals(121.098455, $exchangeRate);
+        $this->assertEquals(121.098455, $exchangeRate->round(6));
 
         $exchangeRate = $exchangeRateProvider->getExchangeRate('EUR');
-        $this->assertEquals(1.0, $exchangeRate);
+        $this->assertEquals(1.0, $exchangeRate->round(6));
 
         $exchangeRate = $exchangeRateProvider->getExchangeRate('USD');
-        $this->assertEquals(1.12026, $exchangeRate);
+        $this->assertEquals(1.12026, $exchangeRate->round(6));
     }
 
     public function testGetRateFromFeedWithOtherDefault()
@@ -95,13 +95,13 @@ class ExchangeRateProviderTest extends TestCase
         );
 
         $exchangeRate = $exchangeRateProvider->getExchangeRate('ALL');
-        $this->assertEquals(108.098526, $exchangeRate);
+        $this->assertEquals(108.098526, $exchangeRate->round(6));
 
         $exchangeRate = $exchangeRateProvider->getExchangeRate('EUR');
-        $this->assertEquals(0.89265, $exchangeRate);
+        $this->assertEquals(0.892649, $exchangeRate->round(6));
 
         $exchangeRate = $exchangeRateProvider->getExchangeRate('USD');
-        $this->assertEquals(1.0, $exchangeRate);
+        $this->assertEquals(1.0, $exchangeRate->round(6));
     }
 
     public function testFeedIsCached()
@@ -117,7 +117,7 @@ class ExchangeRateProviderTest extends TestCase
 
         $this->assertFalse($this->fileSystem->exists($this->cacheFile));
         $exchangeRate = $exchangeRateProvider->getExchangeRate('EUR');
-        $this->assertEquals(1.0, $exchangeRate);
+        $this->assertEquals(1.0, $exchangeRate->round(6));
 
         $this->assertTrue($this->fileSystem->exists($this->cacheFile));
         $cacheContent = file_get_contents($this->cacheFile);
@@ -138,13 +138,13 @@ class ExchangeRateProviderTest extends TestCase
         );
 
         $exchangeRate = $exchangeRateProvider->getExchangeRate('ALL');
-        $this->assertEquals(121.098455, $exchangeRate);
+        $this->assertEquals(121.098455, $exchangeRate->round(6));
 
         $exchangeRate = $exchangeRateProvider->getExchangeRate('EUR');
-        $this->assertEquals(1.0, $exchangeRate);
+        $this->assertEquals(1.0, $exchangeRate->round(6));
 
         $exchangeRate = $exchangeRateProvider->getExchangeRate('USD');
-        $this->assertEquals(1.12026, $exchangeRate);
+        $this->assertEquals(1.12026, $exchangeRate->round(6));
     }
 
     public function testCacheFallbackAfterInvalidCall()
@@ -160,13 +160,13 @@ class ExchangeRateProviderTest extends TestCase
         );
 
         $exchangeRate = $exchangeRateProvider->getExchangeRate('ALL');
-        $this->assertEquals(121.098455, $exchangeRate);
+        $this->assertEquals(121.098455, $exchangeRate->round(6));
 
         $exchangeRate = $exchangeRateProvider->getExchangeRate('EUR');
-        $this->assertEquals(1.0, $exchangeRate);
+        $this->assertEquals(1.0, $exchangeRate->round(6));
 
         $exchangeRate = $exchangeRateProvider->getExchangeRate('USD');
-        $this->assertEquals(1.12026, $exchangeRate);
+        $this->assertEquals(1.12026, $exchangeRate->round(6));
     }
 
     /**
