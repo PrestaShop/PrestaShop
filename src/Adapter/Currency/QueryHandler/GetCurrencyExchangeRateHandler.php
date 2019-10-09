@@ -67,6 +67,6 @@ class GetCurrencyExchangeRateHandler implements GetCurrencyExchangeRateHandlerIn
                 $e);
         }
 
-        return new ExchangeRate($currencyExchangeRate);
+        return new ExchangeRate($currencyExchangeRate->round(6));
     }
 }
