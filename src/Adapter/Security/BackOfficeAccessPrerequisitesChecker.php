@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Security;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Install\InstallationOptions;
 use PrestaShop\PrestaShop\Core\Security\BackOfficeAccessPrerequisitesCheckerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -60,8 +61,10 @@ final class BackOfficeAccessPrerequisitesChecker implements BackOfficeAccessPrer
      */
     public function isAdminDirectoryRenamed()
     {
-        return basename($this->adminDir) != 'admin'
-            || !$this->filesystem->exists($this->adminDir . '/../admin/')
+        $defaultAdminDir = InstallationOptions::DEFAULT_ADMIN_DIR;
+
+        return basename($this->adminDir) != $defaultAdminDir
+            || !$this->filesystem->exists($this->adminDir . "/../{$defaultAdminDir}/")
         ;
     }
 
@@ -70,6 +73,8 @@ final class BackOfficeAccessPrerequisitesChecker implements BackOfficeAccessPrer
      */
     public function installDirectoryExists()
     {
-        return $this->filesystem->exists($this->adminDir . '/../install');
+        $installDir = InstallationOptions::INSTALL_DIR;
+
+        return $this->filesystem->exists($this->adminDir . "/../{$installDir}");
     }
 }
