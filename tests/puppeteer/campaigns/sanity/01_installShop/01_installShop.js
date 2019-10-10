@@ -1,9 +1,10 @@
+require('module-alias/register');
 // Using chai
 const {expect} = require('chai');
-const helper = require('../../utils/helpers');
+const helper = require('@utils/helpers');
 // Importing pages
-const InstallPage = require('../../../pages/Install/install');
-const HomePage = require('../../../pages/FO/home');
+const InstallPage = require('@pages/Install/install');
+const HomePage = require('@pages/FO/home');
 
 let browser;
 let page;

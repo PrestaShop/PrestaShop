@@ -1,12 +1,13 @@
+require('module-alias/register');
 // Using chai
 const {expect} = require('chai');
-const helper = require('../../utils/helpers');
+const helper = require('@utils/helpers');
 
 // Importing pages
-const HomePage = require('../../../pages/FO/home');
-const ProductPage = require('../../../pages/FO/product');
-const CartPage = require('../../../pages/FO/cart');
-const CartData = require('../../data/FO/cart');
+const HomePage = require('@pages/FO/home');
+const ProductPage = require('@pages/FO/product');
+const CartPage = require('@pages/FO/cart');
+const CartData = require('@data/FO/cart');
 
 let browser;
 let page;
