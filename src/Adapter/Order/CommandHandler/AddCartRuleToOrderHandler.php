@@ -216,7 +216,7 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
             $cartRuleObj = new CartRule();
             $cartRuleObj->date_from = date('Y-m-d H:i:s', strtotime('-1 hour', strtotime($order->date_add)));
             $cartRuleObj->date_to = date('Y-m-d H:i:s', strtotime('+1 hour'));
-            $cartRuleObj->name[Configuration::get('PS_LANG_DEFAULT')] = Tools::getValue('discount_name');
+            $cartRuleObj->name[Configuration::get('PS_LANG_DEFAULT')] = $command->getCartRuleName();
             $cartRuleObj->quantity = 0;
             $cartRuleObj->quantity_per_user = 1;
 
