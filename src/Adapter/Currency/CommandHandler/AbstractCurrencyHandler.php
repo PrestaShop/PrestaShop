@@ -79,7 +79,7 @@ abstract class AbstractCurrencyHandler extends AbstractObjectModelHandler
     {
         $allLanguages = Language::getLanguages(false);
         foreach ($allLanguages as $languageData) {
-            // CLDR locale give us the CLDR reference specification
+            // CLDR locale gives us the CLDR reference specification
             $cldrLocale = $this->localeRepoCLDR->getLocale($languageData['locale']);
             $cldrCurrency = $cldrLocale->getCurrency($isoCode);
             if (null !== $cldrCurrency) {

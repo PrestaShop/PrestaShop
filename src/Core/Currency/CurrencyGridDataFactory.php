@@ -106,7 +106,7 @@ final class CurrencyGridDataFactory implements GridDataFactoryInterface
     {
         $currencyName = mb_ucfirst($currency['name']);
 
-        if (isset($currency['unofficial']) && $currency['unofficial']) {
+        if (!empty($currency['unofficial'])) {
             return sprintf(
                 '%s (%s)',
                 $currencyName,
@@ -114,7 +114,7 @@ final class CurrencyGridDataFactory implements GridDataFactoryInterface
             );
         }
 
-        if (isset($currency['modified']) && $currency['modified']) {
+        if (!empty($currency['modified'])) {
             return sprintf(
                 '%s (%s)',
                 $currencyName,
