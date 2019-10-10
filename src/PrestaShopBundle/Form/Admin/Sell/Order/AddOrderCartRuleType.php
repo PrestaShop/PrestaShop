@@ -107,8 +107,7 @@ class AddOrderCartRuleType extends AbstractType
             ->add('value', TextType::class, [
                 'constraints' => new Type([
                     'type' => 'numeric',
-                    'message' =>
-                        $this->translator->trans('Discount value must be a number', [], 'Admin.Notifications.Error'),
+                    'message' => $this->translator->trans('Discount value must be a number', [], 'Admin.Notifications.Error'),
                 ]),
             ])
             ->add('invoice_id', ChoiceType::class, [

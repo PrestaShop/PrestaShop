@@ -750,7 +750,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             $shippingRefundable = max(0, $shipping_refundable_tax_incl);
         }
 
-        $taxesAmount = $order->total_paid_tax_incl-$order->total_paid_tax_excl;
+        $taxesAmount = $order->total_paid_tax_incl - $order->total_paid_tax_excl;
         $totalAmount = (float) $order->total_paid_tax_incl;
 
         return new OrderPricesForViewing(
@@ -762,7 +762,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             $taxesAmount,
             $totalAmount,
             Tools::displayPrice($productsPrice, $currency),
-            Tools::displayPrice($discountsAmount, $currency) ,
+            Tools::displayPrice($discountsAmount, $currency),
             Tools::displayPrice($wrappingPrice, $currency),
             Tools::displayPrice($shippingPrice, $currency),
             Tools::displayPrice($shippingRefundable, $currency),
