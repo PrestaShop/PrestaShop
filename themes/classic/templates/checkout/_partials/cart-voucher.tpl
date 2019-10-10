@@ -1,5 +1,5 @@
 {**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -34,7 +34,9 @@
                   <span class="label">{$voucher.name}</span>
                   <div class="float-xs-right">
                     <span>{$voucher.reduction_formatted}</span>
-                    <a href="{$voucher.delete_url}" data-link-action="remove-voucher"><i class="material-icons">&#xE872;</i></a>
+                      {if isset($voucher.code) && $voucher.code !== ''}
+                        <a href="{$voucher.delete_url}" data-link-action="remove-voucher"><i class="material-icons">&#xE872;</i></a>
+                      {/if}
                   </div>
                 </li>
               {/foreach}

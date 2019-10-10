@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -43,7 +43,7 @@ final class RemoveProductFromCartHandler extends AbstractCartHandler implements 
      */
     public function handle(RemoveProductFromCartCommand $command)
     {
-        $cart = $this->getContextCartObject($command->getCartId());
+        $cart = $this->getCart($command->getCartId());
 
         $removed = $cart->deleteProduct(
             $command->getProductId()->getValue(),

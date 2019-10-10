@@ -70,10 +70,6 @@ npm-debug.log.*
 /vendor/*
 /docs/phpdoc-sf/
 /composer.lock
-/tests/Selenium/errorShots/
-!/tests/Selenium/errorShots/.gitkeep
-/tests/Selenium/errorDumps/
-!/tests/Selenium/errorDumps/.gitkeep
 *.hot-update.js
 *.hot-update.json
 
@@ -106,7 +102,6 @@ config/settings.old.php
 config/xml/*
 config/themes/*
 !config/xml/themes/default.xml
-tests/Selenium/settings.js
 themes/*/config/settings_*.json
 app/config/parameters.old.yml
 app/config/config.php
@@ -132,8 +127,8 @@ php-cs-fixer
 
 translations/*
 mails/*
-!mails/en/
 !mails/themes/
+!mails/_partials/
 themes/default-bootstrap/lang/*
 themes/default-bootstrap/modules/*/translations/*.php
 themes/default-bootstrap/mails/*

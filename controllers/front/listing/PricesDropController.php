@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -65,5 +65,17 @@ class PricesDropControllerCore extends ProductListingFrontController
             array(),
             'Shop.Theme.Catalog'
         );
+    }
+
+    public function getBreadcrumbLinks()
+    {
+        $breadcrumb = parent::getBreadcrumbLinks();
+
+        $breadcrumb['links'][] = [
+            'title' => $this->trans('On sale', array(), 'Shop.Theme.Catalog'),
+            'url' => $this->context->link->getPageLink('prices-drop', true),
+        ];
+
+        return $breadcrumb;
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -174,6 +174,8 @@ class SurvivalTest extends WebTestCase
             'admin_themes_import' => ['Add new theme', 'admin_themes_import'],
             'admin_mail_theme_index' => ['Email Theme', 'admin_mail_theme_index'],
             'admin_emails_index' => ['Advanced parameters E-mail', 'admin_emails_index'],
+            'admin_order_messages_index' => ['Order messages', 'admin_order_messages_index'],
+            'admin_order_messages_create' => ['Add new', 'admin_order_messages_create'],
         ];
     }
 

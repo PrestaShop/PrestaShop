@@ -16,7 +16,7 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2019 PrestaShop SA and Contributors
@@ -29,6 +29,7 @@ namespace Tests\Unit\PrestaShopBundle\Translation\Loader;
 use PrestaShopBundle\Translation\Loader\LegacyFileLoader;
 use PrestaShopBundle\Translation\Loader\LegacyFileReader;
 use Symfony\Component\Translation\MessageCatalogue;
+use PrestaShopBundle\Translation\Exception\InvalidLegacyTranslationKeyException;
 
 class LegacyFileLoaderTest extends \PHPUnit_Framework_TestCase
 {
@@ -67,11 +68,10 @@ class LegacyFileLoaderTest extends \PHPUnit_Framework_TestCase
         $this->verifyCatalogue($catalogue, $expected);
     }
 
-    /**
-     * @expectedException \PrestaShopBundle\Translation\Exception\InvalidLegacyTranslationKeyException
-     */
     public function testItThrowsAnExceptionIfKeyIsInvalid()
     {
+        $this->setExpectedException(InvalidLegacyTranslationKeyException::class);
+
         $path = '/some/path/to/module/translations/';
         $locale = 'fr-FR';
         $translations = [

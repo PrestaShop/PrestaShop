@@ -96,3 +96,19 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ManufacturerAddressFormDataHandler'
     arguments:
       - '@prestashop.core.command_bus'
+
+  prestashop.core.form.identifiable_object.data_handler.supplier_form_data_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\SupplierFormDataHandler'
+    arguments:
+      - '@prestashop.core.command_bus'
+      - '@prestashop.adapter.image.uploader.supplier_image_uploader'
+
+  prestashop.core.form.identifiable_object.data_handler.feature_form_data_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\FeatureFormDataHandler'
+    arguments:
+      - '@prestashop.core.command_bus'
+
+  prestashop.core.form.identifiable_object.data_handler.order_message_form_data_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\OrderMessageFormDataHandler'
+    arguments:
+      - '@prestashop.core.command_bus'

@@ -1,5 +1,5 @@
 {#**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -30,6 +30,8 @@
   {% else %}
     {{- block('form_widget_simple') -}}
   {% endif %}
+
+  {{- block('form_help') -}}
 {%- endblock form_widget -%}
 
 {%- block form_widget_simple -%}

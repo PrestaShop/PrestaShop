@@ -243,14 +243,14 @@
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ 'We are pleased to inform you that a voucher has been generated in your name for order with the reference <span class="label">{order_name}</span>.'|trans({}, 'Emails.Body', locale)|raw }}
+                                          {{ 'We are pleased to inform you that a voucher has been generated in your name for order with the reference [1]{order_name}[/1].'|trans({'[1]': '<span class="label">', '[/1]': '</span>'}, 'Emails.Body', locale)|raw }}
                                         </div>
                                       </td>
                                     </tr>
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ '<span class="label">VOUCHER CODE: {voucher_num}</span> in the amount of <span class="label">{voucher_amount}</span>'|trans({}, 'Emails.Body', locale)|raw }}
+                                          {{ '[1]VOUCHER CODE: {voucher_num}[/1] in the amount of [1]{voucher_amount}[/1]'|trans({'[1]': '<span class="label">', '[/1]': '</span>'}, 'Emails.Body', locale)|raw }}
                                         </div>
                                       </td>
                                     </tr>

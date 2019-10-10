@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -137,11 +137,10 @@ class CurrencyTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException \PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException
-     */
     public function testGetSymbolsWithInvalidSymbolType()
     {
+        $this->setExpectedException(LocalizationException::class);
+
         $this->cldrCurrency->getSymbol('foobar');
     }
 }

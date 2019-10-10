@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -118,6 +118,7 @@ class AdminModelAdapterTest extends KernelTestCase
                 "tags" => [],
                 "display_options" => [],
                 "upc" => '',
+                "mpn" => '',
                 "ean13" => '',
                 "isbn" => '',
                 "reference" => '',
@@ -142,6 +143,7 @@ class AdminModelAdapterTest extends KernelTestCase
             "ean13" => "",
             "isbn" => "",
             "upc" => "",
+            "mpn" => "",
             "wholesale_price" => "0.000000",
             "price" => "0.000000",
             "ecotax" => "0.000000",
@@ -239,6 +241,7 @@ class AdminModelAdapterTest extends KernelTestCase
             "attribute_ean13" => "",
             "attribute_isbn" => "",
             "attribute_upc" => "",
+            "attribute_mpn" => "",
             "attribute_wholesale_price" => "0.000000",
             "attribute_price_impact" => 0,
             "attribute_price" => "0.000000",

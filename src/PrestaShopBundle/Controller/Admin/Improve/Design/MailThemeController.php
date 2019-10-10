@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -34,11 +34,9 @@ use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
-use PrestaShop\PrestaShop\Core\Hook\HookDispatcher;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use PrestaShop\PrestaShop\Core\Language\LanguageRepositoryInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutInterface;
-use PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutVariablesBuilderInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateRendererInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\ThemeCatalogInterface;
@@ -47,7 +45,6 @@ use PrestaShop\PrestaShop\Core\MailTemplate\Transformation\MailVariablesTransfor
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Improve\Design\MailTheme\GenerateMailsType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use PrestaShopBundle\Service\Hook\HookEvent;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -436,15 +433,15 @@ class MailThemeController extends FrameworkBundleAdminController
             throw new InvalidArgumentException(sprintf('Cannot find Language with locale or isoCode %s', $locale));
         }
 
-        /** @var HookDispatcher $hookDispatcher */
-        $hookDispatcher = $this->get('prestashop.core.hook.dispatcher');
-        $hookDispatcher->addListener(LayoutVariablesBuilderInterface::BUILD_MAIL_LAYOUT_VARIABLES_HOOK, [$this, 'addLayoutVariablesListener']);
+        /** @var MailPreviewVariablesBuilder $variableBuilder */
+        $variablesBuilder = $this->get('prestashop.adapter.mail_template.preview_variables_builder');
+        $mailLayoutVariables = $variablesBuilder->buildTemplateVariables($layout);
 
         /** @var MailTemplateRendererInterface $renderer */
         $renderer = $this->get('prestashop.core.mail_template.mail_template_renderer');
         //Special case for preview, we fill the mail variables
-        $renderer->addTransformation(new MailVariablesTransformation(MailTemplateInterface::HTML_TYPE));
-        $renderer->addTransformation(new MailVariablesTransformation(MailTemplateInterface::TXT_TYPE));
+        $renderer->addTransformation(new MailVariablesTransformation(MailTemplateInterface::HTML_TYPE, $mailLayoutVariables));
+        $renderer->addTransformation(new MailVariablesTransformation(MailTemplateInterface::TXT_TYPE, $mailLayoutVariables));
 
         switch ($type) {
             case MailTemplateInterface::HTML_TYPE:
@@ -504,24 +501,6 @@ class MailThemeController extends FrameworkBundleAdminController
         }
 
         return $layout;
-    }
-
-    /**
-     * @param HookEvent $event
-     *
-     * @throws \SmartyException
-     */
-    public function addLayoutVariablesListener(HookEvent $event)
-    {
-        $hookParameters = $event->getHookParameters();
-        $mailLayoutVariables = $hookParameters['mailLayoutVariables'];
-
-        /** @var MailPreviewVariablesBuilder $variableBuilder */
-        $variablesBuilder = $this->get('prestashop.adapter.mail_template.preview_variables_builder');
-        $mailLayoutVariables['templateVars'] = $variablesBuilder->buildTemplateVariables($hookParameters['mailLayout']);
-
-        $hookParameters['mailLayoutVariables'] = $mailLayoutVariables;
-        $event->setHookParameters($hookParameters);
     }
 
     /**

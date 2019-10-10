@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -1667,7 +1667,8 @@ class OrderCore extends ObjectModel
         $history = new OrderHistory();
         $history->id_order = (int) $this->id;
         $history->id_employee = (int) $id_employee;
-        $history->changeIdOrderState((int) $id_order_state, $this);
+        $use_existings_payment = !$this->hasInvoice();
+        $history->changeIdOrderState((int) $id_order_state, $this, $use_existings_payment);
         $res = Db::getInstance()->getRow('
             SELECT `invoice_number`, `invoice_date`, `delivery_number`, `delivery_date`
             FROM `' . _DB_PREFIX_ . 'orders`
@@ -1744,8 +1745,8 @@ class OrderCore extends ObjectModel
     }
 
     /**
-     * Gennerate a unique reference for orders generated with the same cart id
-     * This references, is usefull for check payment.
+     * Generate a unique reference for orders generated with the same cart id
+     * This references, is useful for check payment.
      *
      * @return string
      */
@@ -2412,7 +2413,7 @@ class OrderCore extends ObjectModel
 
     /**
      * By default this function was made for invoice, to compute tax amounts and balance delta (because of computation made on round values).
-     * If you provide $limitToOrderDetails, only these item will be taken into account. This option is usefull for order slip for example,
+     * If you provide $limitToOrderDetails, only these item will be taken into account. This option is useful for order slip for example,
      * where only sublist of the order is refunded.
      *
      * @param $limitToOrderDetails Optional array of OrderDetails to take into account. False by default to take all OrderDetails from the current Order.
@@ -2665,11 +2666,11 @@ class OrderCore extends ObjectModel
         $diff_shipping_tax_incl = $this->total_shipping_tax_incl - $base_total_shipping_tax_incl;
         $diff_shipping_tax_excl = $this->total_shipping_tax_excl - $base_total_shipping_tax_excl;
 
-        $this->total_shipping_tax_excl = $this->total_shipping_tax_excl - $diff_shipping_tax_excl;
-        $this->total_shipping_tax_incl = $this->total_shipping_tax_incl - $diff_shipping_tax_incl;
+        $this->total_shipping_tax_excl -= $diff_shipping_tax_excl;
+        $this->total_shipping_tax_incl -= $diff_shipping_tax_incl;
         $this->total_shipping = $this->total_shipping_tax_incl;
-        $this->total_paid_tax_excl = $this->total_paid_tax_excl - $diff_shipping_tax_excl;
-        $this->total_paid_tax_incl = $this->total_paid_tax_incl - $diff_shipping_tax_incl;
+        $this->total_paid_tax_excl -= $diff_shipping_tax_excl;
+        $this->total_paid_tax_incl -= $diff_shipping_tax_incl;
         $this->total_paid = $this->total_paid_tax_incl;
         $this->update();
 

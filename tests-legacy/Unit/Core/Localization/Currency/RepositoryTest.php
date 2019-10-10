@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -146,11 +146,11 @@ class RepositoryTest extends TestCase
      * Given an unknown or invalid currency code
      * When asking the currency repository for the corresponding Currency
      * Then an exception should be raised
-     *
-     * @expectedException \PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException
      */
     public function testGetCurrencyWithUnknownCode()
     {
+        $this->setExpectedException(LocalizationException::class);
+
         $this->currencyRepository->getCurrency('foo', 'bar');
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -503,7 +503,14 @@ class FrontControllerCore extends Controller
             'token' => Tools::getToken(),
         );
 
-        $modulesVariables = Hook::exec('actionFrontControllerSetVariables', [], null, true);
+        $modulesVariables = Hook::exec(
+            'actionFrontControllerSetVariables',
+            [
+                'templateVars' => &$templateVars,
+            ],
+            null,
+            true
+        );
 
         if (is_array($modulesVariables)) {
             foreach ($modulesVariables as $moduleName => $variables) {
@@ -1174,18 +1181,6 @@ class FrontControllerCore extends Controller
                 $this->unregisterJavascript(sha1($uri));
             }
         }
-    }
-
-    /**
-     * @deprecated 1.7  This function has no effect in PrestaShop 1.7 theme. jQuery2 is register by the core on every theme.
-     *                  Have a look at the /themes/_core folder.
-     */
-    public function addJquery($version = null, $folder = null, $minifier = true)
-    {
-        /*
-        This is deprecated in PrestaShop 1.7 and has no effect in PrestaShop 1.7 theme.
-        jQuery2 is register by the core on every theme. Have a look at the /themes/_core folder.
-        */
     }
 
     /**

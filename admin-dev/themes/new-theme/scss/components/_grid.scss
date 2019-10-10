@@ -85,6 +85,17 @@ table .column-filters td:last-child .grid-reset-button {
 
 .grid {
   table.grid-table {
+    thead {
+      tr {
+        td {
+          .min-field,
+          .max-field {
+            display: inline-block;
+            width: 60px;
+          }
+        }
+      }
+    }
     tbody {
       tr {
         $tr: &;
@@ -135,6 +146,14 @@ table .column-filters td:last-child .grid-reset-button {
           }
 
           &.action-type {
+            .inline-dropdown-item {
+              &:only-child {
+                margin-left: auto;
+              }
+
+              width: inherit;
+            }
+
             .btn-group > .dropdown-item {
               &:hover,
               &:focus {
@@ -146,8 +165,8 @@ table .column-filters td:last-child .grid-reset-button {
       }
     }
   }
-  .table-responsive {
-    overflow-x: inherit;
+  .table-responsive .row {
+    margin: 0;
   }
 }
 

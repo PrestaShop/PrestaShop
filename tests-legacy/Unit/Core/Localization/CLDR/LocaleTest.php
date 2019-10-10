@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Localization\CLDR\CurrencyInterface;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\Locale;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleData;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\NumberSymbolsData;
+use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 
 class LocaleTest extends TestCase
 {
@@ -192,11 +193,11 @@ class LocaleTest extends TestCase
      * Given a valid CLDR Locale object and an invalid numbering system
      * When asking for the number symbols of this system
      * Then an exception should be raised
-     *
-     * @expectedException \PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException
      */
     public function testGetNumberSymbolsByNumberingSystemWithUnknownNumberingSystem()
     {
+        $this->setExpectedException(LocalizationException::class);
+
         $this->cldrLocale->getNumberSymbolsByNumberingSystem('foobar');
     }
 
@@ -223,11 +224,11 @@ class LocaleTest extends TestCase
      * Given a valid CLDR Locale object and an invalid numbering system
      * When asking for decimal pattern of this system
      * Then an exception should be raised
-     *
-     * @expectedException \PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException
      */
     public function testGetDecimalPatternWithUnknownNumberingSystem()
     {
+        $this->setExpectedException(LocalizationException::class);
+
         $this->cldrLocale->getDecimalPattern('foobar');
     }
 
@@ -254,11 +255,11 @@ class LocaleTest extends TestCase
      * Given a valid CLDR Locale object and an invalid numbering system
      * When asking for percentage pattern of this system
      * Then an exception should be raised
-     *
-     * @expectedException \PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException
      */
     public function testGetPercentPatternWithUnknownNumberingSystem()
     {
+        $this->setExpectedException(LocalizationException::class);
+
         $this->cldrLocale->getPercentPattern('foobar');
     }
 
@@ -285,11 +286,11 @@ class LocaleTest extends TestCase
      * Given a valid CLDR Locale object and an invalid numbering system
      * When asking for currency (price formatting) pattern of this system
      * Then an exception should be raised
-     *
-     * @expectedException \PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException
      */
     public function testGetCurrencyPatternWithUnknownNumberingSystem()
     {
+        $this->setExpectedException(LocalizationException::class);
+
         $this->cldrLocale->getCurrencyPattern('foobar');
     }
 

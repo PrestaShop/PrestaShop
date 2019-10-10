@@ -1,0 +1,46 @@
+admin_carts_index:
+  path: /
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Cart:index
+    _legacy_controller: AdminCarts
+
+admin_carts_view:
+  path: /{cartId}/view
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Cart:view
+    _legacy_controller: AdminCarts
+  requirements:
+    cartId: \d+
+
+admin_carts_info:
+  path: /{cartId}/info
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Cart:getInfo
+    _legacy_controller: AdminCarts
+  requirements:
+    cartId: \d+
+  options:
+    expose: true
+
+admin_carts_create:
+  path: /new
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Cart:create
+    _legacy_controller: AdminCarts
+  options:
+    expose: true
+
+admin_carts_edit_address:
+  path: /{cartId}/edit-address
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Cart:editAddress
+    _legacy_controller: AdminCarts
+  requirements:
+    cartId: \d+
+  options:
+    expose: true

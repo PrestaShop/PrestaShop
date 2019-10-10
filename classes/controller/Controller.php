@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -183,6 +183,7 @@ abstract class ControllerCore
         if (null === $this->getContainer()) {
             $this->container = $this->buildContainer();
         }
+
         $localeRepo = $this->get(self::SERVICE_LOCALE_REPOSITORY);
         $this->context->currentLocale = $localeRepo->getLocale(
             $this->context->language->getLocale()
@@ -535,10 +536,15 @@ abstract class ControllerCore
      * @param string|null $version jQuery library version
      * @param string|null $folder jQuery file folder
      * @param bool $minifier if set tot true, a minified version will be included
+     *
+     * @deprecated 1.7.7 jQuery is always included, this method should no longer be used
      */
     public function addJquery($version = null, $folder = null, $minifier = true)
     {
-        $this->addJS(Media::getJqueryPath($version, $folder, $minifier), false);
+        @trigger_error(
+            'Controller->addJquery() is deprecated since version 1.7.7.0, jQuery is always included',
+            E_USER_DEPRECATED
+        );
     }
 
     /**

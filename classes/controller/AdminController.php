@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -25,26 +25,12 @@
  */
 use PrestaShop\PrestaShop\Adapter\ContainerBuilder;
 use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
+use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Price as PriceSpecification;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecification;
 
 class AdminControllerCore extends Controller
 {
-    /** @var array */
-    const DEFAULT_SPECIFICATION_SYMBOL = [
-        '.',
-        ',',
-        ';',
-        '%',
-        '-',
-        '+',
-        'E',
-        '×',
-        '‰',
-        '∞',
-        'NaN',
-    ];
-
     /** @var string */
     public $path;
 
@@ -595,17 +581,17 @@ class AdminControllerCore extends Controller
             'tab' => $dummy,
             'action' => $dummy,
         );
-        if (isset($tabs[0])) {
+        if (!empty($tabs[0])) {
             $this->addMetaTitle($tabs[0]['name']);
             $breadcrumbs2['tab']['name'] = $tabs[0]['name'];
-            $breadcrumbs2['tab']['href'] = $this->context->link->getAdminLink($tabs[0]['class_name']);
+            $breadcrumbs2['tab']['href'] = $this->context->link->getTabLink($tabs[0]);
             if (!isset($tabs[1])) {
                 $breadcrumbs2['tab']['icon'] = 'icon-' . $tabs[0]['class_name'];
             }
         }
-        if (isset($tabs[1])) {
+        if (!empty($tabs[1])) {
             $breadcrumbs2['container']['name'] = $tabs[1]['name'];
-            $breadcrumbs2['container']['href'] = $this->context->link->getAdminLink($tabs[1]['class_name']);
+            $breadcrumbs2['container']['href'] = $this->context->link->getTabLink($tabs[1]);
             $breadcrumbs2['container']['icon'] = 'icon-' . $tabs[1]['class_name'];
         }
 
@@ -789,11 +775,11 @@ class AdminControllerCore extends Controller
         }
 
         $token = Tools::getValue('token');
-        if (!empty($token) && $token === $this->token) {
+        if ($token === $this->token) {
             return true;
         }
 
-        if (count($_POST) || !isset($_GET['controller']) || !Validate::isControllerName($_GET['controller']) || $token) {
+        if (count($_POST) || !isset($_GET['controller']) || !Validate::isControllerName($_GET['controller']) || !$token) {
             return false;
         }
 
@@ -2067,6 +2053,7 @@ class AdminControllerCore extends Controller
 
         foreach ($tabs as $index => $tab) {
             if (!Tab::checkTabRights($tab['id_tab'])
+                || !$tab['enabled']
                 || ($tab['class_name'] == 'AdminStock' && Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') == 0)
                 || $tab['class_name'] == 'AdminCarrierWizard') {
                 unset($tabs[$index]);
@@ -2082,7 +2069,7 @@ class AdminControllerCore extends Controller
                 $tabs[$index]['current'] = false;
             }
             $tabs[$index]['img'] = null;
-            $tabs[$index]['href'] = $this->context->link->getAdminLink($tab['class_name']);
+            $tabs[$index]['href'] = $this->context->link->getTabLink($tab);
             $tabs[$index]['sub_tabs'] = array_values($this->getTabs($tab['id_tab'], $level + 1));
 
             $subTabHref = $this->getTabLinkFromSubTabs($tabs[$index]['sub_tabs']);
@@ -2715,7 +2702,12 @@ class AdminControllerCore extends Controller
             $this->addCSS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/' . $this->bo_theme . '/css/vendor/titatoggle-min.css', 'all', 0);
             $this->addCSS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/' . $this->bo_theme . '/public/theme.css', 'all', 0);
 
-            $this->addJquery();
+            // add Jquery 3 and its migration script
+            $this->addJs(_PS_JS_DIR_ . 'jquery/jquery-3.4.1.min.js');
+            $this->addJs(_PS_JS_DIR_ . 'jquery/jquery-migrate-3.1.0.min.js');
+            // implement $.browser object, that has been removed since jquery 1.9
+            $this->addJs(_PS_JS_DIR_ . 'jquery/jquery.browser-0.1.0.min.js');
+
             $this->addJqueryPlugin(array('scrollTo', 'alerts', 'chosen', 'autosize', 'fancybox'));
             $this->addJqueryPlugin('growl', null, false);
             $this->addJqueryUI(array('ui.slider', 'ui.datepicker'));
@@ -4060,7 +4052,7 @@ class AdminControllerCore extends Controller
 
             // Evaluate the memory required to resize the image: if it's too much, you can't resize it.
             if (!ImageManager::checkImageMemoryLimit($tmp_name)) {
-                $this->errors[] = $this->trans('Due to memory limit restrictions, this image cannot be loaded. Please increase your memory_limit value via your server\'s configuration settings. ', array(), 'Admin.Notifications.Error');
+                $this->errors[] = $this->trans('Due to memory limit restrictions, this image cannot be loaded. Please increase your memory_limit value via your server\'s configuration settings.', array(), 'Admin.Notifications.Error');
             }
 
             // Copy new image
@@ -4831,7 +4823,7 @@ class AdminControllerCore extends Controller
     private function getTabLinkFromSubTabs(array $subtabs)
     {
         foreach ($subtabs as $tab) {
-            if ($tab['active']) {
+            if ($tab['active'] && $tab['enabled']) {
                 return $tab['href'];
             }
         }
@@ -4857,7 +4849,7 @@ class AdminControllerCore extends Controller
         }
 
         return array_merge(
-            ['symbol' => self::DEFAULT_SPECIFICATION_SYMBOL],
+            ['symbol' => $priceSpecification->getSymbolsByNumberingSystem(Locale::NUMBERING_SYSTEM_LATIN)->toArray()],
             $priceSpecification->toArray()
         );
     }
@@ -4878,7 +4870,7 @@ class AdminControllerCore extends Controller
         }
 
         return array_merge(
-            ['symbol' => self::DEFAULT_SPECIFICATION_SYMBOL],
+            ['symbol' => $numberSpecification->getSymbolsByNumberingSystem(Locale::NUMBERING_SYSTEM_LATIN)->toArray()],
             $numberSpecification->toArray()
         );
     }

@@ -312,6 +312,9 @@
     <value>1</value>
   </configuration>
   <configuration id="PS_DISPLAY_SUPPLIERS" name="PS_DISPLAY_SUPPLIERS">
+    <value>0</value>
+  </configuration>
+  <configuration id="PS_DISPLAY_MANUFACTURERS" name="PS_DISPLAY_MANUFACTURERS">
     <value>1</value>
   </configuration>
   <configuration id="PS_DISPLAY_BEST_SELLERS" name="PS_DISPLAY_BEST_SELLERS">

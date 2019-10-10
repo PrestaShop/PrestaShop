@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -26,9 +26,9 @@ export default {
   computed: {
     thumbnail() {
       if (this.product.combination_thumbnail !== 'N/A') {
-        return `${window.data.baseUrl}/${this.product.combination_thumbnail}`;
+        return `${this.product.combination_thumbnail}`;
       } else if (this.product.product_thumbnail !== 'N/A') {
-        return `${window.data.baseUrl}/${this.product.product_thumbnail}`;
+        return `${this.product.product_thumbnail}`;
       }
       return null;
     },

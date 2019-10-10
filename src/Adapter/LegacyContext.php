@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -205,7 +205,8 @@ class LegacyContext
         $showContentHeader,
         $headerTabContent,
         $enableSidebar,
-        $helpLink = ''
+        $helpLink = '',
+        $jsRouterMetadata = []
     ) {
         $originCtrl = new AdminLegacyLayoutControllerCore(
             $controllerName,
@@ -215,7 +216,8 @@ class LegacyContext
             $showContentHeader,
             $headerTabContent,
             $enableSidebar,
-            $helpLink
+            $helpLink,
+            $jsRouterMetadata
         );
         $originCtrl->run();
 

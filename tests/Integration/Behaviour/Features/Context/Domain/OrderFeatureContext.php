@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -30,8 +30,11 @@ use Context;
 use Order;
 use OrderState;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddOrderFromBackOfficeCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\AddProductToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
+use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Command\GenerateInvoiceCommand;
+use Product;
 
 class OrderFeatureContext extends AbstractDomainFeatureContext
 {
@@ -65,5 +68,47 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         );
 
         SharedStorage::getStorage()->set($orderReference, new Order($orderId->getValue()));
+    }
+
+    /**
+     * @When I add :quantity products with reference :productReference, price :price and free shipping to order :orderReference with new invoice
+     */
+    public function addProductToOrderWithFreeShippingAndNewInvoice(
+        $quantity,
+        $productReference,
+        $price,
+        $orderReference
+    ) {
+        $orders = Order::getByReference($orderReference);
+        /** @var Order $order */
+        $order = $orders->getFirst();
+
+        $productId = Product::getIdByReference($productReference);
+
+        $this->getCommandBus()->handle(
+            AddProductToOrderCommand::withNewInvoice(
+                (int) $order->id,
+                (int) $productId,
+                0,
+                (float) $price,
+                (float) $price,
+                (int) $quantity,
+                true
+            )
+        );
+    }
+
+    /**
+     * @When I generate invoice for :invoiceReference order
+     */
+    public function generateOrderInvoice($orderReference)
+    {
+        $orders = Order::getByReference($orderReference);
+        /** @var Order $order */
+        $order = $orders->getFirst();
+
+        $this->getCommandBus()->handle(
+            new GenerateInvoiceCommand((int) $order->id)
+        );
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -43,9 +43,11 @@ class CheckoutPaymentStepCore extends AbstractCheckoutStep
 
     public function handleRequest(array $requestParams = array())
     {
-        $allProductsInStock = $this->getCheckoutSession()->getCart()->isAllProductsInStock();
+        $cart = $this->getCheckoutSession()->getCart();
+        $allProductsInStock = $cart->isAllProductsInStock();
+        $allProductsExist = $cart->checkAllProductsAreStillAvailableInThisState();
 
-        if ($allProductsInStock !== true) {
+        if ($allProductsInStock !== true || $allProductsExist !== true) {
             $cartShowUrl = $this->context->link->getPageLink(
                 'cart',
                 null,

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -40,6 +40,7 @@ use PrestaShop\PrestaShop\Core\MailTemplate\ThemeCollection;
 use PrestaShop\PrestaShop\Core\MailTemplate\ThemeCollectionInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\ThemeInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 
 class FolderThemeCatalogTest extends TestCase
 {
@@ -162,12 +163,10 @@ class FolderThemeCatalogTest extends TestCase
         $this->assertEquals('modern', $theme->getName());
     }
 
-    /**
-     * @expectedException \PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Invalid requested theme "unknown", only available themes are: classic, modern
-     */
     public function testInvalidTheme()
     {
+        $this->setExpectedException(InvalidArgumentException::class, 'Invalid requested theme "unknown", only available themes are: classic, modern');
+
         /** @var HookDispatcherInterface $dispatcherMock */
         $dispatcherMock = $this->getMockBuilder(HookDispatcherInterface::class)
             ->disableOriginalConstructor()

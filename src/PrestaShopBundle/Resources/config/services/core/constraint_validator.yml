@@ -5,7 +5,7 @@ services:
   prestashop.core.constraint_validator.is_url_rewrite_validator:
     class: 'PrestaShop\PrestaShop\Core\ConstraintValidator\IsUrlRewriteValidator'
     arguments:
-      - '@=service("prestashop.adapter.legacy.configuration").get("PS_ALLOW_ACCENTED_CHARS_URL")'
+      - '@prestashop.adapter.legacy.configuration'
     tags:
       - { name: validator.constraint_validator }
 
@@ -13,5 +13,19 @@ services:
     class: 'PrestaShop\PrestaShop\Core\ConstraintValidator\DefaultLanguageValidator'
     arguments:
       - '@=service("prestashop.adapter.legacy.configuration").get("PS_LANG_DEFAULT")'
+    tags:
+      - { name: validator.constraint_validator }
+
+  prestashop.core.constraint_validator.customer_name_validator:
+    class: 'PrestaShop\PrestaShop\Core\ConstraintValidator\CustomerNameValidator'
+    arguments:
+      - '@prestashop.core.string.character_cleaner'
+    tags:
+      - { name: validator.constraint_validator }
+
+  prestashop.core.constraint_validator.typed_regex_validator:
+    class: 'PrestaShop\PrestaShop\Core\ConstraintValidator\TypedRegexValidator'
+    arguments:
+      - '@prestashop.core.string.character_cleaner'
     tags:
       - { name: validator.constraint_validator }

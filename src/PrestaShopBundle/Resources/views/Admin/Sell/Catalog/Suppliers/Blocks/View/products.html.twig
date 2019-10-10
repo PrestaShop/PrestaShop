@@ -1,5 +1,5 @@
 {#**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -82,5 +82,11 @@
         </div>
       </div>
     {% endfor %}
+    {% if viewableSupplier.supplierProducts is empty %}
+      <div class="text-center grid-table-empty">
+        <p class="mb-0 mt-2"><i class="material-icons">warning</i></p>
+        <p class="mb-2">{{ 'No records found'|trans({}, 'Admin.Global') }}</p>
+      </div>
+    {% endif %}
   </div>
 </div>

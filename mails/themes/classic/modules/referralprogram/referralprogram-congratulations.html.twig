@@ -19,8 +19,8 @@
         <td>
           <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
             <span>
-              {{ 'Your referred friend <span><strong>{sponsored_firstname} {sponsored_lastname}</strong></span> has placed his or her first order on <a href="{shop_url}">{shop_name}</a>!'|trans({}, 'Emails.Body', locale)|raw }}<br/><br/>
-              {{ 'We are pleased to offer you a voucher worth <span><strong>{discount_display} (voucher # {discount_name})</strong></span> that you can use on your next order.'|trans({}, 'Emails.Body', locale)|raw }}
+              {{ 'Your referred friend [1]{sponsored_firstname} {sponsored_lastname}[/1] has placed his or her first order on <a href="{shop_url}">{shop_name}</a>!'|trans({'[1]': '<span><strong>', '[/1]': '</strong></span>'}, 'Emails.Body', locale)|raw }}<br/><br/>
+              {{ 'We are pleased to offer you a voucher worth [1]{discount_display} (voucher # {discount_name})[/1] that you can use on your next order.'|trans({'[1]': '<span><strong>', '[/1]': '</strong></span>'}, 'Emails.Body', locale)|raw }}
             </span>
           </font>
         </td>

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -24,6 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 use PrestaShop\PrestaShop\Adapter\StockManager;
+use PrestaShop\PrestaShop\Adapter\MailTemplate\MailPartialTemplateRenderer;
 
 abstract class PaymentModuleCore extends Module
 {
@@ -34,6 +35,9 @@ abstract class PaymentModuleCore extends Module
     public $currencies_mode = 'checkbox';
 
     const DEBUG_MODE = false;
+
+    /** @var MailPartialTemplateRenderer */
+    protected $partialRenderer;
 
     public function install()
     {
@@ -166,7 +170,7 @@ abstract class PaymentModuleCore extends Module
             $shops = Shop::getShops(true, null, true);
         }
 
-        $carriers = Carrier::getCarriers((int) Context::getContext()->language->id);
+        $carriers = Carrier::getCarriers((int) Context::getContext()->language->id, false, false, false, null, Carrier::ALL_CARRIERS);
         $carrier_ids = array();
         foreach ($carriers as $carrier) {
             $carrier_ids[] = $carrier['id_reference'];
@@ -192,7 +196,7 @@ abstract class PaymentModuleCore extends Module
      * @param int $id_order_state
      * @param float $amount_paid Amount really paid by customer (in the default currency)
      * @param string $payment_method Payment method (eg. 'Credit card')
-     * @param null $message Message to attach to order
+     * @param string|null $message Message to attach to order
      * @param array $extra_vars
      * @param null $currency_special
      * @param bool $dont_touch_amount
@@ -768,7 +772,7 @@ abstract class PaymentModuleCore extends Module
     /**
      * @param int $current_id_currency optional but on 1.5 it will be REQUIRED
      *
-     * @return Currency
+     * @return Currency|false
      */
     public function getCurrency($current_id_currency = null)
     {
@@ -878,6 +882,18 @@ abstract class PaymentModuleCore extends Module
     }
 
     /**
+     * @return MailPartialTemplateRenderer
+     */
+    protected function getPartialRenderer()
+    {
+        if (!$this->partialRenderer) {
+            $this->partialRenderer = new MailPartialTemplateRenderer($this->context->smarty);
+        }
+
+        return $this->partialRenderer;
+    }
+
+    /**
      * Fetch the content of $template_name inside the folder
      * current_theme/mails/current_iso_lang/ if found, otherwise in
      * mails/current_iso_lang.
@@ -895,22 +911,7 @@ abstract class PaymentModuleCore extends Module
             return '';
         }
 
-        $pathToFindEmail = array(
-            _PS_THEME_DIR_ . 'mails' . DIRECTORY_SEPARATOR . $this->context->language->iso_code . DIRECTORY_SEPARATOR . $template_name,
-            _PS_THEME_DIR_ . 'mails' . DIRECTORY_SEPARATOR . 'en' . DIRECTORY_SEPARATOR . $template_name,
-            _PS_MAIL_DIR_ . $this->context->language->iso_code . DIRECTORY_SEPARATOR . $template_name,
-            _PS_MAIL_DIR_ . 'en' . DIRECTORY_SEPARATOR . $template_name,
-        );
-
-        foreach ($pathToFindEmail as $path) {
-            if (Tools::file_exists_cache($path)) {
-                $this->context->smarty->assign('list', $var);
-
-                return $this->context->smarty->fetch($path);
-            }
-        }
-
-        return '';
+        return $this->getPartialRenderer()->render($template_name, $this->context->language, $var);
     }
 
     protected function createOrderFromCart(

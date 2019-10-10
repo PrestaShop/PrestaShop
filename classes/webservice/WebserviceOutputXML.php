@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -135,7 +135,7 @@ class WebserviceOutputXMLCore implements WebserviceOutputInterface
                 $ret .= ' read_only="true"';
             }
 
-            if ($field['value'] != '') {
+            if ($field['value'] !== '') {
                 $node_content .= '<![CDATA[' . $field['value'] . ']]>';
             }
         }
