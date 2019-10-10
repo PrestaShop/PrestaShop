@@ -338,25 +338,33 @@ class OrderController extends FrameworkBundleAdminController
      */
     public function addCartRuleAction(int $orderId, Request $request): RedirectResponse
     {
-        $addOrderCartRuleForm = $this->createForm(AddOrderCartRuleType::class);
+        $addOrderCartRuleForm = $this->createForm(AddOrderCartRuleType::class, [], [
+            'order_id' => $orderId,
+        ]);
         $addOrderCartRuleForm->handleRequest($request);
 
-        if ($addOrderCartRuleForm->isSubmitted() && $addOrderCartRuleForm->isValid()) {
-            $data = $addOrderCartRuleForm->getData();
+        if ($addOrderCartRuleForm->isSubmitted()) {
+            if ($addOrderCartRuleForm->isValid()) {
+                $data = $addOrderCartRuleForm->getData();
 
-            $invoiceId = $data['apply_on_all_invoices'] ? null : $data['invoice_id'];
+                $invoiceId = $data['apply_on_all_invoices'] ? null : (int) $data['invoice_id'];
 
-            $this->getCommandBus()->handle(
-                new AddCartRuleToOrderCommand(
-                    $orderId,
-                    $data['name'],
-                    $data['type'],
-                    $data['value'] ?? null,
-                    $invoiceId
-                )
-            );
+                $this->getCommandBus()->handle(
+                    new AddCartRuleToOrderCommand(
+                        $orderId,
+                        $data['name'],
+                        $data['type'],
+                        $data['value'] ?? null,
+                        $invoiceId
+                    )
+                );
 
-            $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+            } else {
+                foreach ($addOrderCartRuleForm->getErrors(true) as $error) {
+                    $this->addFlash('error', $error->getMessage());
+                }
+            }
         }
 
         return $this->redirectToRoute('admin_orders_view', [
