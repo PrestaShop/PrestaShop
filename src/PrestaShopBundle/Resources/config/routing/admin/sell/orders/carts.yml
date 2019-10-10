@@ -44,3 +44,14 @@ admin_carts_edit_address:
     cartId: \d+
   options:
     expose: true
+
+admin_carts_edit_shipping:
+  path: /{cartId}/edit-shipping
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Cart:editShipping
+    _legacy_controller: AdminCarts
+  requirements:
+    cartId: \d+
+  options:
+    expose: true

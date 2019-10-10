@@ -33,7 +33,7 @@ const $ = window.$;
 export default class ShippingRenderer {
   constructor() {
     this.$container = $(createOrderPageMap.shippingBlock);
-    this.$form = $(createOrderPageMap.shippingFormBlock);
+    this.$form = $(createOrderPageMap.shippingForm);
     this.$noCarrierBlock = $(createOrderPageMap.noCarrierBlock);
   }
 
@@ -51,8 +51,7 @@ export default class ShippingRenderer {
 
   _renderForm(shipping) {
     this._renderDeliveryOptions(shipping.deliveryOptions, shipping.carrierId);
-    //@todo: render total
-    //@todo: render switch
+    this._renderTotalShipping(shipping.shippingPrice);
     this._showForm();
   }
 
@@ -74,6 +73,13 @@ export default class ShippingRenderer {
 
       $deliveryOptionSelect.append($('<option>', deliveryOption));
     }
+  }
+
+  _renderTotalShipping(shippingPrice) {
+    const $totalShippingField = $(createOrderPageMap.totalShippingField);
+    $totalShippingField.empty();
+
+    $totalShippingField.append(shippingPrice);
   }
 
   _showContainer() {

@@ -27,29 +27,29 @@
     {{ 'Shipping'|trans({}, 'Admin.Actions') }}
   </h3>
   <div class="card-body">
-    <div class="js-shipping-form d-none">
 
-      <div class="row">
+    <form class="js-shipping-form d-none">
+      <div class="form-group row">
         <div class="col-3">
         <span class="float-right">
           {{ 'Delivery option'|trans({}, 'Admin.Orderscustomers.Feature') }}
         </span>
         </div>
         <div class="col-4">
-          <select class="form-control" id="deliveryOptionSelect"></select>
+          <select class="form-control" id="deliveryOptionSelect" name="delivery_option"></select>
         </div>
       </div>
-      <div class="row">
+      <div class="form-group row">
         <div class="col-3">
         <span class="float-right">
           {{ 'Shipping price (Tax incl.)'|trans({}, 'Admin.Orderscustomers.Feature') }}
         </span>
         </div>
         <div class="col-4">
-          <p><strong>0</strong></p>
+          <p><strong class="js-total-shipping"></strong></p>
         </div>
       </div>
-      <div class="row">
+      <div class="form-group row">
         <div class="col-3">
         <span class="float-right">
           {{ 'Free shipping'|trans({}, 'Admin.Shipping.Feature') }}
@@ -57,16 +57,15 @@
         </div>
         <div class="col-4">
         <span class="ps-switch">
-          <input id="form_general_enable_token_0" class="ps-switch" name="form[general][enable_token]" value="0" type="radio">
-          <label for="form_general_enable_token_0">No</label>
-          <input id="form_general_enable_token_1" class="ps-switch" name="form[general][enable_token]" value="1" checked="" type="radio">
-          <label for="form_general_enable_token_1">Yes</label>
+          <input id="freeShipping_0" class="js-free-shipping-switch" name="free_shipping" value="0" type="radio">
+          <label for="freeShipping_0">No</label>
+          <input id="freeShipping_1" class="js-free-shipping-switch" name="free_shipping" value="1" checked="" type="radio">
+          <label for="freeShipping_1">Yes</label>
           <span class="slide-button"></span>
         </span>
         </div>
       </div>
-
-    </div>
+    </form>
 
     <div class="js-no-carrier-block d-none">
       <div class="alert alert-warning">

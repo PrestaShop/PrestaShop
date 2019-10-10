@@ -138,6 +138,12 @@ class CartController extends FrameworkBundleAdminController
         return $this->json($this->getCartInfo($cartId));
     }
 
+    public function editShippingAction(Request $request, int $cartId)
+    {
+        //@todo;
+        dump($request);
+    }
+
     /**
      * @param int $cartId
      *

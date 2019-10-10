@@ -139,6 +139,7 @@ export default class CreateOrderPage {
   _handleCartUpdate() {
     // @todo: add other actions
     this.$container.on('change', createOrderPageMap.addressSelect, () => this._changeCartAddresses());
+    this.$container.on('change', createOrderPageMap.shippingForm, () => this._editShipping());
   }
 
   /**
@@ -208,7 +209,7 @@ export default class CreateOrderPage {
    */
   _changeCartAddresses() {
     const self = this;
-    $.ajax(this.router.generate('admin_carts_edit_address', {cartId: self.data.cart_id}), {
+    $.ajax(this.router.generate('admin_carts_edit_address', {cartId: this.data.cart_id}), {
       method: 'POST',
       data: {
         delivery_address_id: $(createOrderPageMap.deliveryAddressSelect).val(),
@@ -219,6 +220,24 @@ export default class CreateOrderPage {
       // this._persistCartInfoData(response);
 
       self.addressesRenderer.render(response.addresses);
+    });
+  }
+
+  _editShipping() {
+    const $deliveryOption = $(createOrderPageMap.deliveryOptionSelect).val();
+    const $freeShipping = $(`${createOrderPageMap.freeShippingSwitch}:checked`).val();
+
+    $.ajax(this.router.generate('admin_carts_edit_shipping', {cartId: this.data.cart_id}), {
+      method: 'POST',
+      data: {
+        delivery_option: $deliveryOption,
+        free_shipping: $freeShipping,
+      },
+      dataType: 'json',
+    }).then((response) => {
+      // this._persistCartInfoData(response);
+
+      // self.addressesRenderer.render(response.addresses);
     });
   }
 
