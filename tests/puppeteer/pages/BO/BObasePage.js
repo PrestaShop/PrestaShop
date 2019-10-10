@@ -26,6 +26,8 @@ module.exports = class BOBasePage extends CommonPage {
     this.productsParentLink = 'li#subtab-AdminCatalog';
     this.productsLink = '#subtab-AdminProducts';
 
+    this.categoriesLink = '#subtab-AdminCategories';
+
     this.customersParentLink = 'li#subtab-AdminParentCustomer';
     this.customersLink = '#subtab-AdminCustomers';
 
@@ -48,6 +50,7 @@ module.exports = class BOBasePage extends CommonPage {
 
     // Growls
     this.growlMessageBloc = '#growls .growl-message';
+    this.growlDefaultMessageBloc = '#growls-default .growl-message';
 
     // Alert Text
     this.alertSuccessBloc = 'div.alert.alert-success:not([style=\'display: none;\'])';
