@@ -64,7 +64,8 @@ class GetCurrencyExchangeRateHandler implements GetCurrencyExchangeRateHandlerIn
                     $query->getIsoCode()->getValue()
                 ),
                 0,
-                $e);
+                $e
+            );
         }
 
         return new ExchangeRate($currencyExchangeRate->round(6));

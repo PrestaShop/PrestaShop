@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 export function showGrowl(type, message, duration) {
-  duration = typeof(duration) != "undefined" ? duration : 2000;
+  duration = undefined !== duration ? duration : 2000;
   window.$.growl[type]({
     title: '',
     size: "large",
