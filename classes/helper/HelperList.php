@@ -182,7 +182,7 @@ class HelperListCore extends Helper
 
         $this->orderWay = preg_replace('/^([a-z _]*!)/Ui', '', $this->orderWay);
 
-        if($this->listTotal == 0 && is_array($list) && count($list) > 0) {
+        if ($this->listTotal == 0 && is_array($list) && count($list) > 0) {
             $this->listTotal = count($list);
         }        
         
