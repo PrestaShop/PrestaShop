@@ -208,10 +208,9 @@ export default class CreateOrderPage {
    */
   _changeCartAddresses() {
     const self = this;
-    $.ajax(this.$container.data('edit-address-url'), {
+    $.ajax(this.router.generate('admin_carts_edit_address', {cartId: self.data.cart_id}), {
       method: 'POST',
       data: {
-        cart_id: self.data.cart_id,
         delivery_address_id: $(createOrderPageMap.deliveryAddressSelect).val(),
         invoice_address_id: $(createOrderPageMap.invoiceAddressSelect).val(),
       },
