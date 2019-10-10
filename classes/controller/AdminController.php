@@ -2705,8 +2705,9 @@ class AdminControllerCore extends Controller
             // add Jquery 3 and its migration script
             $this->addJs(_PS_JS_DIR_ . 'jquery/jquery-3.4.1.min.js');
             $this->addJs(_PS_JS_DIR_ . 'jquery/jquery-migrate-3.1.0.min.js');
-            // implement $.browser object, that has been removed since jquery 1.9
+            // implement $.browser object and live method, that has been removed since jquery 1.9
             $this->addJs(_PS_JS_DIR_ . 'jquery/jquery.browser-0.1.0.min.js');
+            $this->addJs(_PS_JS_DIR_ . 'jquery/jquery.live.js');
 
             $this->addJqueryPlugin(array('scrollTo', 'alerts', 'chosen', 'autosize', 'fancybox'));
             $this->addJqueryPlugin('growl', null, false);
