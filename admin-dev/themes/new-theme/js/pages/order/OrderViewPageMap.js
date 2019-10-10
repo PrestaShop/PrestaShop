@@ -38,4 +38,5 @@ export default {
   addCartRuleInvoiceIdSelect: '#add_order_cart_rule_invoice_id',
   addCartRuleTypeSelect: '#add_order_cart_rule_type',
   addCartRuleValueInput: '#add_order_cart_rule_value',
+  cartRuleHelpText: '.js-cart-rule-value-help',
 };
