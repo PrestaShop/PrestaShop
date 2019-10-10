@@ -87,6 +87,7 @@ module.exports = {
     order_message_form: './js/pages/order_message/form',
     order_message: './js/pages/order_message',
     order_view: './js/pages/order/view.js',
+    attachment: './js/pages/attachment',
   },
   output: {
     path: path.resolve(__dirname, '../public'),
