@@ -55,7 +55,7 @@ module.exports = {
     invoices: './js/pages/invoices',
     language: './js/pages/language',
     localization: './js/pages/localization',
-    login: './js/pages/login/index',
+    login: './js/pages/login',
     logs: './js/pages/logs',
     main: './js/theme.js',
     maintenance: './js/pages/maintenance',
@@ -85,7 +85,6 @@ module.exports = {
     order_create: './js/pages/order/create.js',
     catalog_price_rule: './js/pages/catalog-price-rule',
     feature_form: './js/pages/feature/form',
-    login_page: './js/pages/login/index',
   },
   output: {
     path: path.resolve(__dirname, '../public'),
