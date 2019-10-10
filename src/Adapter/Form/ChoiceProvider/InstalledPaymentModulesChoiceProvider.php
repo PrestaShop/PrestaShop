@@ -33,20 +33,24 @@ use Validate;
 
 final class InstalledPaymentModulesChoiceProvider implements FormChoiceProviderInterface
 {
+    private static $paymentModules;
+
     /**
      * {@inheritdoc}
      */
     public function getChoices(): array
     {
-        $paymentModules = [];
+        if (!self::$paymentModules) {
+            self::$paymentModules = [];
 
-        foreach (PaymentModule::getInstalledPaymentModules() as $payment) {
-            $module = Module::getInstanceByName($payment['name']);
-            if (Validate::isLoadedObject($module) && $module->active) {
-                $paymentModules[$module->name] = $module->displayName;
+            foreach (PaymentModule::getInstalledPaymentModules() as $payment) {
+                $module = Module::getInstanceByName($payment['name']);
+                if (Validate::isLoadedObject($module) && $module->active) {
+                    self::$paymentModules[$module->name] = $module->displayName;
+                }
             }
         }
 
-        return $paymentModules;
+        return self::$paymentModules;
     }
 }

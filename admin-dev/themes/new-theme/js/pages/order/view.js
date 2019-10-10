@@ -34,11 +34,7 @@ $(() => {
     $(OrderViewPageMap.orderPaymentDetailsBtn).on('click', (event) => {
       const $paymentDetailRow = $(event.currentTarget).closest('tr').next(':first');
 
-      if ($paymentDetailRow.hasClass('d-none')) {
-        $paymentDetailRow.removeClass('d-none');
-      } else {
-        $paymentDetailRow.addClass('d-none');
-      }
+      $paymentDetailRow.toggleClass('d-none');
     });
   }
 });

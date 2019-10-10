@@ -79,7 +79,7 @@ class AddPaymentCommand
      * @param float $paymentAmount
      * @param float $paymentCurrencyId
      * @param int|null $orderInvoiceId
-     * @param string|null $transactionId
+     * @param string|null $transactionId Transaction ID, usually payment ID from payment gateway.
      */
     public function __construct(
         $orderId,
