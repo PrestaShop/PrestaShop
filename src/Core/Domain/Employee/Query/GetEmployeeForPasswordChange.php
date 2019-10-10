@@ -24,15 +24,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Employee\QueryResult;
+namespace PrestaShop\PrestaShop\Core\Domain\Employee\Query;
 
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
-use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
 
 /**
- * Stores data of password resetting employee
+ * Gets employee for password change.
  */
-class PasswordResettingEmployee
+class GetEmployeeForPasswordChange
 {
     /**
      * @var EmployeeId
@@ -40,18 +39,11 @@ class PasswordResettingEmployee
     private $employeeId;
 
     /**
-     * @var Email
+     * @param int $employeeId
      */
-    private $email;
-
-    /**
-     * @param EmployeeId $employeeId
-     * @param Email $email
-     */
-    public function __construct(EmployeeId $employeeId, Email $email)
+    public function __construct($employeeId)
     {
-        $this->employeeId = $employeeId;
-        $this->email = $email;
+        $this->employeeId = new EmployeeId($employeeId);
     }
 
     /**
@@ -60,13 +52,5 @@ class PasswordResettingEmployee
     public function getEmployeeId()
     {
         return $this->employeeId;
-    }
-
-    /**
-     * @return Email
-     */
-    public function getEmail()
-    {
-        return $this->email;
     }
 }

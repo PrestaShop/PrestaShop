@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Profile\Employee\QueryHandler;
+namespace PrestaShop\PrestaShop\Adapter\Employee\QueryHandler;
 
 use Employee;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeNotFoundException;

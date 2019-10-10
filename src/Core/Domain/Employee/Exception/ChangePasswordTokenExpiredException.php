@@ -27,8 +27,8 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Employee\Exception;
 
 /**
- * Thrown when password resetting token has expired.
+ * Thrown when password change token has expired.
  */
-class ResetPasswordTokenExpiredException extends EmployeeException
+class ChangePasswordTokenExpiredException extends EmployeeException
 {
 }

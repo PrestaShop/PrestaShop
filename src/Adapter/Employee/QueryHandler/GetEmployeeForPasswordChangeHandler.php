@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -24,31 +24,30 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler;
+namespace PrestaShop\PrestaShop\Adapter\Employee\QueryHandler;
 
 use Employee;
-use PrestaShop\PrestaShop\Core\Domain\Employee\Command\BulkUpdateEmployeeStatusCommand;
-use PrestaShop\PrestaShop\Core\Domain\Employee\CommandHandler\BulkUpdateEmployeeStatusHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeForPasswordChange;
+use PrestaShop\PrestaShop\Core\Domain\Employee\QueryHandler\GetEmployeeForPasswordChangeHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Employee\QueryResult\EmployeeForPasswordChange;
+use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
 
 /**
- * Class BulkUpdateEmployeeStatusHandler.
+ * Handle getting employee for password change query.
  */
-final class BulkUpdateEmployeeStatusHandler extends AbstractEmployeeHandler implements BulkUpdateEmployeeStatusHandlerInterface
+final class GetEmployeeForPasswordChangeHandler implements GetEmployeeForPasswordChangeHandlerInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function handle(BulkUpdateEmployeeStatusCommand $command)
+    public function handle(GetEmployeeForPasswordChange $query)
     {
-        foreach ($command->getEmployeeIds() as $employeeId) {
-            $employee = new Employee($employeeId->getValue());
+        $employee = new Employee($query->getEmployeeId()->getValue());
 
-            $this->assertEmployeeWasFoundById($employeeId, $employee);
-            $this->assertLoggedInEmployeeIsNotTheSameAsBeingUpdatedEmployee($employee);
-            $this->assertEmployeeIsNotTheOnlyAdminInShop($employee);
-
-            $employee->active = $command->getStatus();
-            $employee->save();
-        }
+        return new EmployeeForPasswordChange(
+            new EmployeeId($employee->id),
+            new Email($employee->email)
+        );
     }
 }

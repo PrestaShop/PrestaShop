@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler;
+namespace PrestaShop\PrestaShop\Adapter\Employee\CommandHandler;
 
 use Employee;
 use Language;
@@ -32,23 +32,23 @@ use Mail;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Crypto\Hashing;
-use PrestaShop\PrestaShop\Core\Domain\Employee\Command\ResetPasswordCommand;
-use PrestaShop\PrestaShop\Core\Domain\Employee\CommandHandler\ResetPasswordHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Command\ChangePasswordCommand;
+use PrestaShop\PrestaShop\Core\Domain\Employee\CommandHandler\ChangePasswordHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\PasswordResetTooFrequentException;
-use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\ResetPasswordTokenExpiredException;
-use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\UnableToResetPasswordException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\PasswordChangeTooFrequentException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\ChangePasswordTokenExpiredException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\UnableToChangePasswordException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\Password;
 use Shop;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Handles the command which resets employee's password.
+ * Handles the command which changes employee's password.
  *
  * @internal
  */
-final class ResetPasswordHandler implements ResetPasswordHandlerInterface
+final class ChangePasswordHandler implements ChangePasswordHandlerInterface
 {
     /**
      * @var ConfigurationInterface
@@ -91,7 +91,7 @@ final class ResetPasswordHandler implements ResetPasswordHandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function handle(ResetPasswordCommand $command)
+    public function handle(ChangePasswordCommand $command)
     {
         $employee = new Employee();
 
@@ -120,14 +120,14 @@ final class ResetPasswordHandler implements ResetPasswordHandlerInterface
             (string) $employee->last_passwd_gen,
             (string) $this->configuration->get('PS_PASSWD_TIME_BACK')
         );
-        $canResetPassword = (strtotime($timeExpression) - time()) <= 0;
+        $canChangePassword = (strtotime($timeExpression) - time()) <= 0;
 
-        if (!$canResetPassword) {
-            throw new PasswordResetTooFrequentException('Password has been reset too recently, you must wait.');
+        if (!$canChangePassword) {
+            throw new PasswordChangeTooFrequentException('Password has been changed recently, you must wait.');
         }
 
-        if ($employee->getValidResetPasswordToken() !== $command->getResetToken()) {
-            throw new ResetPasswordTokenExpiredException('Reset password token has expired.');
+        if ($employee->getValidResetPasswordToken() !== $command->getToken()) {
+            throw new ChangePasswordTokenExpiredException('Change password token has expired.');
         }
 
         $employee->passwd = $this->hashing->hash($command->getNewPlainPassword());
@@ -156,14 +156,14 @@ final class ResetPasswordHandler implements ResetPasswordHandlerInterface
         );
 
         if (!$mailWasSent) {
-            throw new UnableToResetPasswordException('Password reset email could not be sent.');
+            throw new UnableToChangePasswordException('Password change email could not be sent.');
         }
 
         // Update employee only if the mail can be sent
         Shop::setContext(Shop::CONTEXT_SHOP, (int) min($employee->getAssociatedShops()));
 
         if (!$employee->update()) {
-            throw new UnableToResetPasswordException('Employee\'s password could not be updated.');
+            throw new UnableToChangePasswordException('Employee\'s password could not be updated.');
         }
 
         $employee->removeResetPasswordToken(); // Delete temporary reset token

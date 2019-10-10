@@ -24,11 +24,33 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Employee\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Employee\Command;
+
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
 
 /**
- * Thrown when password reset is executed too frequently than allowed.
+ * Send change password email to an employee.
  */
-class PasswordResetTooFrequentException extends EmployeeException
+class SendChangePasswordEmailCommand
 {
+    /**
+     * @var Email
+     */
+    private $email;
+
+    /**
+     * @param $email
+     */
+    public function __construct($email)
+    {
+        $this->email = new Email($email);
+    }
+
+    /**
+     * @return Email
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
 }

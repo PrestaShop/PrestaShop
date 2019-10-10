@@ -948,8 +948,8 @@ services:
         tags:
             - { name: form.type }
 
-    form.type.reset_password:
-        class: 'PrestaShopBundle\Form\Admin\Login\ResetPasswordType'
+    form.type.login.change_password:
+        class: 'PrestaShopBundle\Form\Admin\Login\ChangePasswordType'
         public: true
         calls:
             - { method: setTranslator, arguments: ['@translator'] }

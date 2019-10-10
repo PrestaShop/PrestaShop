@@ -24,17 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Employee\CommandHandler;
-
-use PrestaShop\PrestaShop\Core\Domain\Employee\Command\SendResetPasswordEmailCommand;
+namespace PrestaShop\PrestaShop\Core\Domain\Employee\Exception;
 
 /**
- * Interface for services that handle command which sends reset password email for employees.
+ * Thrown when password change fails
  */
-interface SendResetPasswordEmailHandlerInterface
+class UnableToChangePasswordException extends EmployeeException
 {
-    /**
-     * @param SendResetPasswordEmailCommand $command
-     */
-    public function handle(SendResetPasswordEmailCommand $command);
 }

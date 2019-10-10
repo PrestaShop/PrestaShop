@@ -24,26 +24,26 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler;
+namespace PrestaShop\PrestaShop\Adapter\Employee\CommandHandler;
 
 use Employee;
 use Language;
 use Mail;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Domain\Employee\Command\SendResetPasswordEmailCommand;
-use PrestaShop\PrestaShop\Core\Domain\Employee\CommandHandler\SendResetPasswordEmailHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Command\SendChangePasswordEmailCommand;
+use PrestaShop\PrestaShop\Core\Domain\Employee\CommandHandler\SendChangePasswordEmailHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\FailedToSendEmailException;
-use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\PasswordResetTooFrequentException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\PasswordChangeTooFrequentException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Handles the command which sends reset password email to the employee.
+ * Handles the command which sends change password email to the employee.
  *
  * @internal
  */
-final class SendResetPasswordEmailHandler implements SendResetPasswordEmailHandlerInterface
+final class SendChangePasswordEmailHandler implements SendChangePasswordEmailHandlerInterface
 {
     /**
      * @var ConfigurationInterface
@@ -78,7 +78,7 @@ final class SendResetPasswordEmailHandler implements SendResetPasswordEmailHandl
     /**
      * {@inheritdoc}
      */
-    public function handle(SendResetPasswordEmailCommand $command)
+    public function handle(SendChangePasswordEmailCommand $command)
     {
         $employee = new Employee();
 
@@ -91,10 +91,10 @@ final class SendResetPasswordEmailHandler implements SendResetPasswordEmailHandl
             (string) $employee->last_passwd_gen,
             (string) $this->configuration->get('PS_PASSWD_TIME_BACK')
         );
-        $canResetPassword = (strtotime($timeExpression) - time()) <= 0;
+        $canChangePassword = (strtotime($timeExpression) - time()) <= 0;
 
-        if (!$canResetPassword) {
-            throw new PasswordResetTooFrequentException('Password has been reset too recently, you must wait.');
+        if (!$canChangePassword) {
+            throw new PasswordChangeTooFrequentException('Password has been changed recently, you must wait.');
         }
 
         if (!$employee->hasRecentResetPasswordToken()) {
@@ -102,11 +102,11 @@ final class SendResetPasswordEmailHandler implements SendResetPasswordEmailHandl
             $employee->update();
         }
 
-        $resetPasswordUrl = $this->urlGenerator->generate(
-            '_admin_reset_password',
+        $changePasswordUrl = $this->urlGenerator->generate(
+            '_admin_change_password',
             [
                 'employeeId' => (int) $employee->id,
-                'resetToken' => $employee->reset_password_token,
+                'token' => $employee->reset_password_token,
             ],
             UrlGeneratorInterface::ABSOLUTE_URL
         );
@@ -114,7 +114,7 @@ final class SendResetPasswordEmailHandler implements SendResetPasswordEmailHandl
             '{email}' => $employee->email,
             '{lastname}' => $employee->lastname,
             '{firstname}' => $employee->firstname,
-            '{url}' => $resetPasswordUrl,
+            '{url}' => $changePasswordUrl,
         );
 
         $employeeLanguage = new Language((int) $employee->id_lang);
