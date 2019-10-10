@@ -23,6 +23,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+// Login page is loaded without all back office assets,
+// therefore we need to include some dependencies manually.
+
 // Dependencies
 import 'prestakit/dist/js/prestashop-ui-kit';
 import 'jquery-ui-dist/jquery-ui';
