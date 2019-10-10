@@ -53,6 +53,12 @@ final class CategoryDeleteModeChoiceProvider implements FormChoiceProviderInterf
      */
     public function getChoices()
     {
+        $associateOnlyLabel = $this->translator->trans(
+            'If they have no other category, I want to associate them with the parent category.',
+            [],
+            'Admin.Catalog.Notification'
+        );
+
         $associateAndDisableLabel = sprintf(
             '%s %s',
             $this->translator->trans(
@@ -61,12 +67,6 @@ final class CategoryDeleteModeChoiceProvider implements FormChoiceProviderInterf
                 'Admin.Catalog.Notification'
             ),
             $this->translator->trans('(Recommended)', [], 'Admin.Catalog.Notification')
-        );
-
-        $associateOnlyLabel = $this->translator->trans(
-            'If they have no other category, I want to associate them with the parent category.',
-            [],
-            'Admin.Catalog.Notification'
         );
 
         $deleteProductLabel = $this->translator->trans(
