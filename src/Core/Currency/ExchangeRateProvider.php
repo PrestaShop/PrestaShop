@@ -74,7 +74,7 @@ class ExchangeRateProvider
     private $sourceIsoCode;
 
     /** @var array */
-    private $currencies;
+    private $currencies = [];
 
     /**
      * @param string $currencyFeedUrl

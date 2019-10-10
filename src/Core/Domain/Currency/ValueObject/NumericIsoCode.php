@@ -34,6 +34,11 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintExcep
 class NumericIsoCode
 {
     /**
+     * @var string Numeric ISO Code validation pattern
+     */
+    const PATTERN = '/^[0-9]{3}$/';
+
+    /**
      * @var string
      */
     private $numericIsoCode;
@@ -64,7 +69,7 @@ class NumericIsoCode
      */
     private function assertIsValidNumericIsoCode($numericIsoCode)
     {
-        if (!is_string($numericIsoCode) || !preg_match('/^[0-9]{3}$/', $numericIsoCode)) {
+        if (!is_string($numericIsoCode) || !preg_match(self::PATTERN, $numericIsoCode)) {
             throw new CurrencyConstraintException(
                 sprintf(
                     'Given numeric iso code "%s" is not valid. It must be a string composed of three digits',

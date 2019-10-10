@@ -28,6 +28,10 @@ namespace PrestaShop\PrestaShop\Core\Currency\Exception;
 
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 
+/**
+ * Thrown when an error occurred while fetching a currency exchange rate (network issue, invalid response, ...)
+ * @see ExchangeRateProvider
+ */
 class CurrencyFeedException extends CoreException
 {
 }

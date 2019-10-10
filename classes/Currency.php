@@ -965,7 +965,7 @@ class CurrencyCore extends ObjectModel
 
             // Symbol is localized, we check if it was manually modified
             $symbol = (string) $cldrCurrency->getSymbol() ?: $this->iso_code;
-            if (!empty($symbol) && !empty($originalSymbols[$language->id]) && $symbol != $originalSymbols[$language->id]) {
+            if (!empty($symbol) && !empty($originalSymbols[$language->id]) && $symbol !== $originalSymbols[$language->id]) {
                 $symbol = $originalSymbols[$language->id];
                 $this->modified = true;
             }
@@ -973,7 +973,7 @@ class CurrencyCore extends ObjectModel
 
             // Name is localized, we check if it was manually modified
             $name = $cldrCurrency->getDisplayName();
-            if (!empty($originalNames[$language->id]) && $name != $originalNames[$language->id]) {
+            if (!empty($originalNames[$language->id]) && $name !== $originalNames[$language->id]) {
                 $name = $originalNames[$language->id];
                 $this->modified = true;
             }
