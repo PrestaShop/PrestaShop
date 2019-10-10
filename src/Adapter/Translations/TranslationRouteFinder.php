@@ -209,6 +209,5 @@ class TranslationRouteFinder
         }
 
         return false;
-        }
     }
 }
