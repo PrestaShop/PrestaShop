@@ -31,13 +31,53 @@ namespace PrestaShop\PrestaShop\Core\Domain\Currency\Exception;
  */
 class CurrencyConstraintException extends CurrencyException
 {
+    /**
+     * Code used when the ISO code doesn't respect it's appropriate format
+     * @see AlphaIsoCode::PATTERN
+     */
     const INVALID_ISO_CODE = 1;
+
+    /**
+     * Code used when an invalid exchange rate is used (positive float expected)
+     * @see ExchangeRate
+     */
     const INVALID_EXCHANGE_RATE = 2;
+
+    /**
+     * Code used when trying to insert a currency already in database
+     */
     const CURRENCY_ALREADY_EXISTS = 3;
+
+    /**
+     * Code used when an invalid liveExchangeRate is used (boolean expected)
+     */
     const INVALID_LIVE_EXCHANGE_RATES = 4;
+
+    /**
+     * Code used when the numeric ISO code doesn't respect it's appropriate format
+     * @see NumericIsoCode::PATTERN
+     */
     const INVALID_NUMERIC_ISO_CODE = 5;
+
+    /**
+     * Code used when trying to set an empty array of names
+     */
     const EMPTY_NAME = 6;
+
+    /**
+     * Code used when trying to set an empty array of symbols
+     */
     const EMPTY_SYMBOL = 7;
+
+    /**
+     * Code used when trying to insert a currency referenced in CLDR database but ISO code and
+     * numeric ISO code are not matching the expected ones
+     */
     const ISO_CODES_MISMATCH = 8;
+
+    /**
+     * Code used when an invalid precision is used (positive integer expected)
+     * @see Precision
+     */
     const INVALID_PRECISION = 9;
 }

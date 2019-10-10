@@ -54,12 +54,12 @@ class AddCurrencyCommand
     /**
      * @var string[]
      */
-    protected $localizedNames;
+    protected $localizedNames = [];
 
     /**
      * @var string[]
      */
-    protected $localizedSymbols;
+    protected $localizedSymbols = [];
 
     /**
      * @var bool
@@ -69,7 +69,7 @@ class AddCurrencyCommand
     /**
      * @var int[]
      */
-    protected $shopIds;
+    protected $shopIds = [];
 
     /**
      * @param string $isoCode
@@ -86,9 +86,6 @@ class AddCurrencyCommand
         $this->isoCode = new AlphaIsoCode($isoCode);
         $this->exchangeRate = new ExchangeRate($exchangeRate);
         $this->isEnabled = $isEnabled;
-        $this->localizedNames = [];
-        $this->localizedSymbols = [];
-        $this->shopIds = [];
     }
 
     /**
@@ -100,9 +97,9 @@ class AddCurrencyCommand
     }
 
     /**
-     * @return Precision
+     * @return Precision|null
      */
-    public function getPrecision()
+    public function getPrecision(): ?Precision
     {
         return $this->precision;
     }
@@ -114,7 +111,7 @@ class AddCurrencyCommand
      *
      * @throws CurrencyConstraintException
      */
-    public function setPrecision($precision)
+    public function setPrecision($precision): AddCurrencyCommand
     {
         $this->precision = new Precision($precision);
 
@@ -132,19 +129,19 @@ class AddCurrencyCommand
     /**
      * @return string[]
      */
-    public function getLocalizedNames()
+    public function getLocalizedNames(): array
     {
         return $this->localizedNames;
     }
 
     /**
-     * @param string[] $localizedNames
+     * @param string[] $localizedNames Currency's localized names, indexed by language id.
      *
      * @return $this
      *
      * @throws CurrencyConstraintException
      */
-    public function setLocalizedNames(array $localizedNames)
+    public function setLocalizedNames(array $localizedNames): AddCurrencyCommand
     {
         if (empty($localizedNames)) {
             throw new CurrencyConstraintException(
@@ -161,19 +158,19 @@ class AddCurrencyCommand
     /**
      * @return string[]
      */
-    public function getLocalizedSymbols()
+    public function getLocalizedSymbols(): array
     {
         return $this->localizedSymbols;
     }
 
     /**
-     * @param string[] $localizedSymbols
+     * @param string[] $localizedSymbols Currency's localized symbols, indexed by language id.
      *
      * @return $this
      *
      * @throws CurrencyConstraintException
      */
-    public function setLocalizedSymbols(array $localizedSymbols)
+    public function setLocalizedSymbols(array $localizedSymbols): AddCurrencyCommand
     {
         if (empty($localizedSymbols)) {
             throw new CurrencyConstraintException(

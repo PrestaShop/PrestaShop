@@ -42,19 +42,19 @@ class AddOfficialCurrencyCommand extends AddCurrencyCommand
     /**
      * @return NumericIsoCode|null
      */
-    public function getNumericIsoCode()
+    public function getNumericIsoCode(): ?NumericIsoCode
     {
         return $this->numericIsoCode;
     }
 
     /**
-     * @param int $numericIsoCode
+     * @param string $numericIsoCode
      *
      * @return self
      *
      * @throws CurrencyConstraintException
      */
-    public function setNumericIsoCode($numericIsoCode)
+    public function setNumericIsoCode(string $numericIsoCode): AddOfficialCurrencyCommand
     {
         $this->numericIsoCode = new NumericIsoCode($numericIsoCode);
 
