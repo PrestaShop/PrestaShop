@@ -39,37 +39,64 @@ export default class ShippingRenderer {
 
   render(shipping) {
     if (shipping !== null && shipping.length !== 0) {
-      this.hideNoCarrierBlock();
-      this.showContainer();
-      this.showForm();
+      this._hideNoCarrierBlock();
+      this._showContainer();
+      this._renderForm(shipping);
     } else {
-      this.showContainer();
-      this.hideForm();
-      this.showNoCarrierBlock();
+      this._showContainer();
+      this._hideForm();
+      this._showNoCarrierBlock();
     }
   }
 
-  showContainer() {
+  _renderForm(shipping) {
+    this._renderDeliveryOptions(shipping.deliveryOptions, shipping.carrierId);
+    //@todo: render total
+    //@todo: render switch
+    this._showForm();
+  }
+
+  _renderDeliveryOptions(deliveryOptions, selectedVal) {
+    const $deliveryOptionSelect = $(createOrderPageMap.deliveryOptionSelect);
+    $deliveryOptionSelect.empty();
+
+    for (const key in Object.keys(deliveryOptions)) {
+      const option = deliveryOptions[key];
+
+      const deliveryOption = {
+        value: option.carrierId,
+        text: `${option.carrierName} - ${option.carrierDelay}`,
+      };
+
+      if (selectedVal === deliveryOption.value) {
+        deliveryOption.selected = 'selected';
+      }
+
+      $deliveryOptionSelect.append($('<option>', deliveryOption));
+    }
+  }
+
+  _showContainer() {
     this.$container.removeClass('d-none');
   }
 
-  hideContainer() {
+  _hideContainer() {
     this.$container.addClass('d-none');
   }
 
-  showForm() {
+  _showForm() {
     this.$form.removeClass('d-none');
   }
 
-  hideForm() {
+  _hideForm() {
     this.$form.addClass('d-none');
   }
 
-  showNoCarrierBlock() {
+  _showNoCarrierBlock() {
     this.$noCarrierBlock.removeClass('d-none');
   }
 
-  hideNoCarrierBlock() {
+  _hideNoCarrierBlock() {
     this.$noCarrierBlock.addClass('d-none');
   }
 }

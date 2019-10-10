@@ -40,6 +40,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryHandler\GetCartInformationHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartAddress;
+use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartDeliveryOption;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartProduct;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartShipping;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleInterface;
@@ -93,7 +94,7 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
             (int) $language->id,
             $this->extractCartRulesFromLegacySummary($legacySummary, $currency),
             $this->getAddresses($cart),
-            $this->extractShippingFromLegacySummary($legacySummary),
+            $this->extractShippingFromLegacySummary($cart, $legacySummary),
             []
         );
     }
@@ -180,7 +181,7 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
      *
      * @return CartShipping|null
      */
-    private function extractShippingFromLegacySummary(array $legacySummary): ?CartShipping
+    private function extractShippingFromLegacySummary(Cart $cart, array $legacySummary): ?CartShipping
     {
         $carrierIsDefined = isset($legacySummary['carrier']) &&
             $legacySummary['carrier'] instanceof Carrier &&
@@ -198,7 +199,41 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
             $carrier->name,
             $carrier->delay,
             (string) $legacySummary['total_shipping'],
-            (bool) $legacySummary['free_ship']
+            (bool) $legacySummary['free_ship'],
+            $this->fetchCartDeliveryOptions($cart)
         );
+    }
+
+    /**
+     * Get cart delivery options
+     *
+     * @param Cart $cart
+     *
+     * @return array
+     */
+    private function fetchCartDeliveryOptions(Cart $cart)
+    {
+        $deliveryOptions = [];
+        //legacy multishipping feature required to use carrier list per one package.
+        // One cart had multiple packages which could have been split by several delivery addresses
+        foreach ($cart->getPackageList() as $packages) {
+            //now there should always be only one package because multishipping feature is removed
+            foreach ($packages as $package) {
+                //so the list of carriers should be shared across whole cart for single delivery address
+                foreach ($package['carrier_list'] as $carrierId) {
+                    $carrierId = (int) $carrierId;
+                    $carrier = new Carrier($carrierId);
+                    // make sure no duplicate
+                    $deliveryOptions[$carrierId] = new CartDeliveryOption(
+                        $carrierId,
+                        $carrier->name,
+                        $carrier->delay[\Context::getContext()->employee->id_lang]
+                    );
+                }
+            }
+        }
+
+        //make sure array is not associative
+        return array_values($deliveryOptions);
     }
 }
