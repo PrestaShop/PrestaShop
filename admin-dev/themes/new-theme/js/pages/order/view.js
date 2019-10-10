@@ -57,6 +57,7 @@ $(() => {
   function initAddCartRuleFormHandler() {
     const $modal = $(OrderViewPageMap.addCartRuleModal);
     const $form = $modal.find('form');
+    const $valueHelp = $modal.find(OrderViewPageMap.cartRuleHelpText);
     const $invoiceSelect = $modal.find(OrderViewPageMap.addCartRuleInvoiceIdSelect);
     const $valueInput = $form.find(OrderViewPageMap.addCartRuleValueInput);
     const $valueFormGroup = $valueInput.closest('.form-group');
@@ -69,6 +70,12 @@ $(() => {
 
     $form.find(OrderViewPageMap.addCartRuleTypeSelect).on('change', (event) => {
       const selectedCartRuleType = $(event.currentTarget).val();
+
+      if (selectedCartRuleType === 'amount') {
+        $valueHelp.removeClass('d-none');
+      } else {
+        $valueHelp.addClass('d-none');
+      }
 
       if (selectedCartRuleType === 'free_shipping') {
         $valueFormGroup.addClass('d-none');
