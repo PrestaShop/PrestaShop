@@ -207,7 +207,8 @@ class TranslationRouteFinder
         if (Validate::isLoadedObject($module)) {
             return $module->isUsingNewTranslationSystem();
         }
-            return false;
+
+        return false;
         }
     }
 }
