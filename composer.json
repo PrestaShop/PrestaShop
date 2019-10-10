@@ -38,7 +38,7 @@
         "pear/archive_tar": "^1.4.6",
         "pelago/emogrifier": "^2.1",
         "phpoffice/phpspreadsheet": "~1.5",
-        "prestashop/blockreassurance": "^3",
+        "prestashop/blockreassurance": "^4.1",
         "prestashop/circuit-breaker": "^3.0",
         "prestashop/contactform": "^4",
         "prestashop/dashactivity": "^2",
