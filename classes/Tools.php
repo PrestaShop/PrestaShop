@@ -768,7 +768,7 @@ class ToolsCore
      *
      * @throws Exception
      */
-    protected static function getContextLocale(Context $context)
+    public static function getContextLocale(Context $context)
     {
         $locale = $context->getCurrentLocale();
         if (null !== $locale) {
@@ -932,7 +932,7 @@ class ToolsCore
             $amount *= $currency_to->conversion_rate;
         }
 
-        return Tools::ps_round($amount, _PS_PRICE_COMPUTE_PRECISION_);
+        return Tools::ps_round($amount, Context::getContext()->getComputingPrecision());
     }
 
     /**
