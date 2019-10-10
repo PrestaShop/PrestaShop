@@ -19,3 +19,6 @@ services:
             - '@prestashop.adapter.cache.clearer.xml_cache_clearer'
             - '@prestashop.adapter.cache.clearer.media_cache_clearer'
             - '@prestashop.adapter.cache.clearer.class_index_cache_clearer'
+
+    prestashop.core.cache.employee_cache_key_generator:
+        class: PrestaShop\PrestaShop\Core\Cache\EmployeeCacheKeyGenerator

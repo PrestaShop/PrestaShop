@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Security\Admin;
 use Context;
 use Employee as LegacyEmployee;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\Cache\CacheKeyGeneratorInterface;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\AuthenticatingEmployeeNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeForAuthentication;
@@ -61,18 +62,27 @@ final class UserProvider implements UserProviderInterface
     private $queryBus;
 
     /**
+     * @var CacheKeyGeneratorInterface
+     */
+    private $employeeCacheKeyGenerator;
+
+    /**
      * @param LegacyContext $context
      * @param CacheItemPoolInterface $cache
      * @param CommandBusInterface $queryBus
+     * @param CacheKeyGeneratorInterface $employeeCacheKeyGenerator
      */
     public function __construct(
         LegacyContext $context,
         CacheItemPoolInterface $cache,
-        CommandBusInterface $queryBus
+        CommandBusInterface $queryBus,
+        CacheKeyGeneratorInterface $employeeCacheKeyGenerator
     ) {
         $this->legacyContext = $context->getContext();
         $this->cache = $cache;
         $this->queryBus = $queryBus;
+        $this->context = $context;
+        $this->employeeCacheKeyGenerator = $employeeCacheKeyGenerator;
     }
 
     /**
@@ -88,8 +98,8 @@ final class UserProvider implements UserProviderInterface
      */
     public function loadUserByUsername($username)
     {
-        $cacheKey = sha1($username);
-        $cachedEmployee = $this->cache->getItem("app.employees_${cacheKey}");
+        $cacheKey = $this->employeeCacheKeyGenerator->generateFromString($username);
+        $cachedEmployee = $this->cache->getItem($cacheKey);
 
         if ($cachedEmployee->isHit()) {
             return $cachedEmployee->get();
