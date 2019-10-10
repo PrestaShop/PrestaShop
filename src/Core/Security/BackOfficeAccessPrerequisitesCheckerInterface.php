@@ -33,11 +33,12 @@ namespace PrestaShop\PrestaShop\Core\Security;
 interface BackOfficeAccessPrerequisitesCheckerInterface
 {
     /**
-     * Checks if admin directory is renamed, or is it still with the default name.
+     * Checks if admin directory with default name exists.
+     * It should be renamed to a different name after successful installation.
      *
      * @return bool
      */
-    public function isAdminDirectoryRenamed();
+    public function defaultAdminDirectoryExists();
 
     /**
      * Checks if install directory exists.
