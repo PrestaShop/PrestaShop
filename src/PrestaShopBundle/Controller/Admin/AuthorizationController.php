@@ -27,25 +27,25 @@
 namespace PrestaShopBundle\Controller\Admin;
 
 use DateTime;
-use PrestaShop\PrestaShop\Core\Domain\Employee\Command\ResetPasswordCommand;
-use PrestaShop\PrestaShop\Core\Domain\Employee\Command\SendResetPasswordEmailCommand;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Command\ChangePasswordCommand;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Command\SendChangePasswordEmailCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\FailedToSendEmailException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\InvalidEmployeeIdException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\InvalidPasswordException;
-use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\PasswordResetTooFrequentException;
-use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\ResetPasswordInformationMissingException;
-use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\ResetPasswordTokenExpiredException;
-use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\UnableToResetPasswordException;
-use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeForPasswordReset;
-use PrestaShop\PrestaShop\Core\Domain\Employee\QueryResult\PasswordResettingEmployee;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\PasswordChangeTooFrequentException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\ChangePasswordInformationMissingException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\ChangePasswordTokenExpiredException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\UnableToChangePasswordException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeForPasswordChange;
+use PrestaShop\PrestaShop\Core\Domain\Employee\QueryResult\EmployeeForPasswordChange;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 use PrestaShop\PrestaShop\Core\Security\Exception\UnableToRenameAdminDirectoryException;
 use PrestaShopBundle\Form\Admin\Login\ForgotPasswordType;
 use PrestaShopBundle\Form\Admin\Login\LoginType;
-use PrestaShopBundle\Form\Admin\Login\ResetPasswordType;
+use PrestaShopBundle\Form\Admin\Login\ChangePasswordType;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -91,7 +91,7 @@ class AuthorizationController extends FrameworkBundleAdminController
     }
 
     /**
-     * Handle sending reset password link to the employee.
+     * Handle sending change password link to the employee.
      *
      * @DemoRestricted(redirectRoute="_admin_login")
      *
@@ -114,7 +114,7 @@ class AuthorizationController extends FrameworkBundleAdminController
 
             try {
                 $this->getCommandBus()->handle(
-                    new SendResetPasswordEmailCommand($forgotPasswordForm->getData()['email'])
+                    new SendChangePasswordEmailCommand($forgotPasswordForm->getData()['email'])
                 );
 
                 $this->addSuccess($successMessage);
@@ -137,39 +137,39 @@ class AuthorizationController extends FrameworkBundleAdminController
     }
 
     /**
-     * Handle password resetting.
+     * Handle password change.
      *
      * @DemoRestricted(redirectRoute="_admin_login")
      *
      * @param Request $request
      * @param int $employeeId
-     * @param string $resetToken generated password reset token
+     * @param string $token generated password change token
      *
      * @return Response
      */
-    public function resetPasswordAction(Request $request, $employeeId, $resetToken)
+    public function changePasswordAction(Request $request, $employeeId, $token)
     {
         try {
-            /** @var PasswordResettingEmployee $employee */
-            $employee = $this->getQueryBus()->handle(new GetEmployeeForPasswordReset((int) $employeeId));
+            /** @var EmployeeForPasswordChange $employee */
+            $employee = $this->getQueryBus()->handle(new GetEmployeeForPasswordChange((int) $employeeId));
         } catch (DomainException $e) {
             $this->addError($this->getErrorMessageForException($e, $this->getErrorMessages()));
 
             return $this->redirectToRoute('_admin_login');
         }
 
-        $resetPasswordForm = $this->createForm(ResetPasswordType::class, null, [
+        $changePasswordForm = $this->createForm(ChangePasswordType::class, null, [
             'email' => $employee->getEmail()->getValue(),
         ]);
-        $resetPasswordForm->handleRequest($request);
+        $changePasswordForm->handleRequest($request);
 
-        if ($resetPasswordForm->isSubmitted() && $resetPasswordForm->isValid()) {
+        if ($changePasswordForm->isSubmitted() && $changePasswordForm->isValid()) {
             try {
-                $this->getCommandBus()->handle(new ResetPasswordCommand(
+                $this->getCommandBus()->handle(new ChangePasswordCommand(
                     $employee->getEmployeeId()->getValue(),
                     $employee->getEmail()->getValue(),
-                    $resetToken,
-                    $resetPasswordForm->getData()['reset_password']
+                    $token,
+                    $changePasswordForm->getData()['reset_password']
                 ));
 
                 $this->addSuccess($this->trans(
@@ -191,10 +191,10 @@ class AuthorizationController extends FrameworkBundleAdminController
         return $this->renderLoginPage($request, [
             'showLoginForm' => false,
             'showForgotPasswordForm' => false,
-            'showResetPasswordForm' => true,
-            'resetPasswordForm' => $resetPasswordForm->createView(),
+            'showChangePasswordForm' => true,
+            'changePasswordForm' => $changePasswordForm->createView(),
             'employeeId' => $employeeId,
-            'resetToken' => $resetToken,
+            'token' => $token,
         ]);
     }
 
@@ -251,7 +251,7 @@ class AuthorizationController extends FrameworkBundleAdminController
             'currentYear' => (new DateTime())->format('Y'),
             'showLoginForm' => true,
             'showForgotPasswordForm' => false,
-            'showResetPasswordForm' => false,
+            'showChangePasswordForm' => false,
             'isInsecureMode' => $isInsecureMode,
             'canAccessInsecureMode' => $canAccessInsecureMode,
             'secureUrl' => $secureModeChecker->secureUrl(
@@ -271,7 +271,7 @@ class AuthorizationController extends FrameworkBundleAdminController
         if (!$adminDirectoryRenamed || $installDirectoryExists) {
             $templateVars['showLoginForm'] = false;
             $templateVars['showForgotPasswordForm'] = false;
-            $templateVars['showResetPasswordForm'] = false;
+            $templateVars['showChangePasswordForm'] = false;
         }
 
         return $this->render('@PrestaShop/Admin/Login/index.html.twig', $templateVars);
@@ -299,7 +299,7 @@ class AuthorizationController extends FrameworkBundleAdminController
             UsernameNotFoundException::class => $invalidCredentialsMessage,
             DomainConstraintException::class => $invalidCredentialsMessage,
             EmployeeNotFoundException::class => $invalidCredentialsMessage,
-            PasswordResetTooFrequentException::class => $this->trans(
+            PasswordChangeTooFrequentException::class => $this->trans(
                 'You can reset your password every %interval% minute(s) only. Please try again later.',
                 'Admin.Login.Notification',
                 ['%interval%' => $this->configuration->get('PS_PASSWD_TIME_BACK')]
@@ -308,17 +308,17 @@ class AuthorizationController extends FrameworkBundleAdminController
                 'An error occurred while attempting to reset your password.',
                 'Admin.Login.Notification'
             ),
-            ResetPasswordInformationMissingException::class => $missingInformationMessage,
+            ChangePasswordInformationMissingException::class => $missingInformationMessage,
             InvalidEmployeeIdException::class => $missingInformationMessage,
             InvalidPasswordException::class => $this->trans(
                 'The password is not in a valid format.',
                 'Admin.Login.Notification'
             ),
-            ResetPasswordTokenExpiredException::class => $this->trans(
+            ChangePasswordTokenExpiredException::class => $this->trans(
                 'Your password reset request expired. Please start again.',
                 'Admin.Login.Notification'
             ),
-            UnableToResetPasswordException::class => $this->trans(
+            UnableToChangePasswordException::class => $this->trans(
                 'An error occurred while attempting to change your password.',
                 'Admin.Login.Notification'
             ),

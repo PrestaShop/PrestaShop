@@ -31,7 +31,7 @@ security:
         - { path: ^/$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         # Forgot password page is accessible for everyone
         - { path: ^/forgot$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        # Reset password page is accessible for everyone
-        - { path: ^/reset/, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        # Change password page is accessible for everyone
+        - { path: ^/change-password/, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         # Every other page is accessible only for employees
         - { path: ^/, roles: ROLE_EMPLOYEE }

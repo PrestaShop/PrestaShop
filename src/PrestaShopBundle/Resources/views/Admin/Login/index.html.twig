@@ -65,12 +65,12 @@
       } %}
     </div>
 
-    {% if showLoginForm or showForgotPasswordForm or showResetPasswordForm %}
+    {% if showLoginForm or showForgotPasswordForm or showChangePasswordForm %}
       <div class="card login-card flip-card-inner">
         <div class="card-block">
           <div class="card-text mx-auto flip-card-back">
-            {% if showResetPasswordForm %}
-              {% include '@PrestaShop/Admin/Login/Blocks/reset_password_form.html.twig' %}
+            {% if showChangePasswordForm %}
+              {% include '@PrestaShop/Admin/Login/Blocks/change_password_form.html.twig' %}
             {% else %}
               <div class="js-login-form-container{% if not showLoginForm %} d-none{% endif %}">
                 {% include '@PrestaShop/Admin/Login/Blocks/login_form.html.twig' %}

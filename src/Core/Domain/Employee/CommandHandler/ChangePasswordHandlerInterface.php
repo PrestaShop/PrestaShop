@@ -24,20 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Employee\QueryHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Employee\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeForPasswordReset;
-use PrestaShop\PrestaShop\Core\Domain\Employee\QueryResult\PasswordResettingEmployee;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Command\ChangePasswordCommand;
 
 /**
- * Interface for services that get employee data for password resetting.
+ * Interface for services that handle change employee password command.
  */
-interface GetEmployeeForPasswordResetHandlerInterface
+interface ChangePasswordHandlerInterface
 {
     /**
-     * @param GetEmployeeForPasswordReset $query
-     *
-     * @return PasswordResettingEmployee
+     * @param ChangePasswordCommand $command
      */
-    public function handle(GetEmployeeForPasswordReset $query);
+    public function handle(ChangePasswordCommand $command);
 }

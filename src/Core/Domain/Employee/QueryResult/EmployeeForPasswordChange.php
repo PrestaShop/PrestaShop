@@ -24,17 +24,49 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Employee\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Employee\QueryResult;
 
-use PrestaShop\PrestaShop\Core\Domain\Employee\Command\ResetPasswordCommand;
+use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
 
 /**
- * Interface for services that handle reset employee password command.
+ * Stores data of employee, that is required for password change
  */
-interface ResetPasswordHandlerInterface
+class EmployeeForPasswordChange
 {
     /**
-     * @param ResetPasswordCommand $command
+     * @var EmployeeId
      */
-    public function handle(ResetPasswordCommand $command);
+    private $employeeId;
+
+    /**
+     * @var Email
+     */
+    private $email;
+
+    /**
+     * @param EmployeeId $employeeId
+     * @param Email $email
+     */
+    public function __construct(EmployeeId $employeeId, Email $email)
+    {
+        $this->employeeId = $employeeId;
+        $this->email = $email;
+    }
+
+    /**
+     * @return EmployeeId
+     */
+    public function getEmployeeId()
+    {
+        return $this->employeeId;
+    }
+
+    /**
+     * @return Email
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
 }

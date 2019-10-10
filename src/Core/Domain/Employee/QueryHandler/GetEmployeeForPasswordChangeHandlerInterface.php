@@ -24,33 +24,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Employee\Query;
+namespace PrestaShop\PrestaShop\Core\Domain\Employee\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeForPasswordChange;
+use PrestaShop\PrestaShop\Core\Domain\Employee\QueryResult\EmployeeForPasswordChange;
 
 /**
- * Gets employee for password reset.
+ * Interface for services that get employee data for password change.
  */
-class GetEmployeeForPasswordReset
+interface GetEmployeeForPasswordChangeHandlerInterface
 {
     /**
-     * @var EmployeeId
+     * @param GetEmployeeForPasswordChange $query
+     *
+     * @return EmployeeForPasswordChange
      */
-    private $employeeId;
-
-    /**
-     * @param int $employeeId
-     */
-    public function __construct($employeeId)
-    {
-        $this->employeeId = new EmployeeId($employeeId);
-    }
-
-    /**
-     * @return EmployeeId
-     */
-    public function getEmployeeId()
-    {
-        return $this->employeeId;
-    }
+    public function handle(GetEmployeeForPasswordChange $query);
 }

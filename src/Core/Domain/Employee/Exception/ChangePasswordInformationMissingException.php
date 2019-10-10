@@ -27,8 +27,8 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Employee\Exception;
 
 /**
- * Thrown when password resetting fails
+ * Thrown when some information is missing when changing a password.
  */
-class UnableToResetPasswordException extends EmployeeException
+class ChangePasswordInformationMissingException extends EmployeeException
 {
 }

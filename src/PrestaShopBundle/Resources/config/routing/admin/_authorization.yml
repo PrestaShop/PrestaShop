@@ -17,16 +17,16 @@ _admin_forgot_password:
         _legacy_controller: AdminLogin:submitForgot
         _legacy_link: AdminLogin:submitForgot
 
-_admin_reset_password:
-    path: /reset/{employeeId}/{resetToken}
+_admin_change_password:
+    path: /change-password/{employeeId}/{token}
     methods: [GET,POST]
     defaults:
-        _controller: PrestaShopBundle:Admin\Authorization:resetPassword
+        _controller: PrestaShopBundle:Admin\Authorization:changePassword
         _legacy_controller: AdminLogin:submitReset
         _legacy_link: AdminLogin:submitReset
         _legacy_parameters:
             id_employee: employeeId
-            reset_token: resetToken
+            reset_token: token
     requirements:
         employeeId: \d+
 

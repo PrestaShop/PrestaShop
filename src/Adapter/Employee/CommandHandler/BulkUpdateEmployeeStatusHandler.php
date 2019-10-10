@@ -24,22 +24,21 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler;
+namespace PrestaShop\PrestaShop\Adapter\Employee\CommandHandler;
 
 use Employee;
-use PrestaShop\PrestaShop\Core\Domain\Employee\Command\BulkDeleteEmployeeCommand;
-use PrestaShop\PrestaShop\Core\Domain\Employee\CommandHandler\BulkDeleteEmployeeHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\CannotDeleteEmployeeException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Command\BulkUpdateEmployeeStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Employee\CommandHandler\BulkUpdateEmployeeStatusHandlerInterface;
 
 /**
- * Class BulkDeleteEmployeeHandler.
+ * Class BulkUpdateEmployeeStatusHandler.
  */
-final class BulkDeleteEmployeeHandler extends AbstractEmployeeHandler implements BulkDeleteEmployeeHandlerInterface
+final class BulkUpdateEmployeeStatusHandler extends AbstractEmployeeHandler implements BulkUpdateEmployeeStatusHandlerInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function handle(BulkDeleteEmployeeCommand $command)
+    public function handle(BulkUpdateEmployeeStatusCommand $command)
     {
         foreach ($command->getEmployeeIds() as $employeeId) {
             $employee = new Employee($employeeId->getValue());
@@ -47,14 +46,9 @@ final class BulkDeleteEmployeeHandler extends AbstractEmployeeHandler implements
             $this->assertEmployeeWasFoundById($employeeId, $employee);
             $this->assertLoggedInEmployeeIsNotTheSameAsBeingUpdatedEmployee($employee);
             $this->assertEmployeeIsNotTheOnlyAdminInShop($employee);
-            $this->assertEmployeeDoesNotManageWarehouse($employee);
 
-            if (!$employee->delete()) {
-                throw new CannotDeleteEmployeeException(
-                    $employeeId,
-                    sprintf('Cannot delete employee with id "%s".', $employeeId->getValue())
-                );
-            }
+            $employee->active = $command->getStatus();
+            $employee->save();
         }
     }
 }

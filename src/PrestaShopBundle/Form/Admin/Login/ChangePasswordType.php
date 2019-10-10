@@ -37,9 +37,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
 
 /**
- * Builds "reset password" form
+ * Builds "change password" form
  */
-class ResetPasswordType extends AbstractType
+class ChangePasswordType extends AbstractType
 {
     use TranslatorAwareTrait;
 

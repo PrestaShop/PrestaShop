@@ -3,27 +3,27 @@ services:
     public: true
 
   prestashop.adapter.profile.employee.command_handler.toggle_employee_status_handler:
-    class: 'PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler\ToggleEmployeeStatusHandler'
+    class: 'PrestaShop\PrestaShop\Adapter\Employee\CommandHandler\ToggleEmployeeStatusHandler'
     tags:
       - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Employee\Command\ToggleEmployeeStatusCommand }
 
   prestashop.adapter.profile.employee.command_handler.bulk_update_employee_status_handler:
-    class: 'PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler\BulkUpdateEmployeeStatusHandler'
+    class: 'PrestaShop\PrestaShop\Adapter\Employee\CommandHandler\BulkUpdateEmployeeStatusHandler'
     tags:
       - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Employee\Command\BulkUpdateEmployeeStatusCommand }
 
   prestashop.adapter.profile.employee.command_handler.delete_employee_handler:
-    class: 'PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler\DeleteEmployeeHandler'
+    class: 'PrestaShop\PrestaShop\Adapter\Employee\CommandHandler\DeleteEmployeeHandler'
     tags:
       - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Employee\Command\DeleteEmployeeCommand }
 
   prestashop.adapter.profile.employee.command_handler.bulk_delete_employee_handler:
-    class: 'PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler\BulkDeleteEmployeeHandler'
+    class: 'PrestaShop\PrestaShop\Adapter\Employee\CommandHandler\BulkDeleteEmployeeHandler'
     tags:
       - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Employee\Command\BulkDeleteEmployeeCommand }
 
   prestashop.adapter.employee.query_handler.get_employee_for_editing:
-    class: 'PrestaShop\PrestaShop\Adapter\Profile\Employee\QueryHandler\GetEmployeeForEditingHandler'
+    class: 'PrestaShop\PrestaShop\Adapter\Employee\QueryHandler\GetEmployeeForEditingHandler'
     tags:
       - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeForEditing }
 
@@ -35,7 +35,7 @@ services:
       - '@prestashop.core.admin.tab.repository'
 
   prestashop.adapter.employee.command_handler.add_employee_handler:
-    class: 'PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler\AddEmployeeHandler'
+    class: 'PrestaShop\PrestaShop\Adapter\Employee\CommandHandler\AddEmployeeHandler'
     arguments:
       - '@prestashop.core.crypto.hashing'
       - '@prestashop.core.employee.profile_access_checker'
@@ -44,7 +44,7 @@ services:
       - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Employee\Command\AddEmployeeCommand }
 
   prestashop.adapter.employee.command_handler.edit_employee_handler:
-    class: 'PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler\EditEmployeeHandler'
+    class: 'PrestaShop\PrestaShop\Adapter\Employee\CommandHandler\EditEmployeeHandler'
     arguments:
       - '@prestashop.core.crypto.hashing'
       - '@prestashop.core.employee.profile_access_checker'
@@ -71,32 +71,32 @@ services:
       - '@prestashop.adapter.legacy.context'
 
   prestashop.adapter.employee.query_handler.get_employee_for_authentication:
-    class: 'PrestaShop\PrestaShop\Adapter\Profile\Employee\QueryHandler\GetEmployeeForAuthenticationHandler'
+    class: 'PrestaShop\PrestaShop\Adapter\Employee\QueryHandler\GetEmployeeForAuthenticationHandler'
     arguments:
       - '@prestashop.adapter.legacy.context'
     tags:
       - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeForAuthentication }
 
-  prestashop.adapter.employee.command_handler.send_reset_password_email:
-    class: 'PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler\SendResetPasswordEmailHandler'
+  prestashop.adapter.employee.command_handler.send_change_password_email:
+    class: 'PrestaShop\PrestaShop\Adapter\Employee\CommandHandler\SendChangePasswordEmailHandler'
     arguments:
       - '@prestashop.adapter.legacy.configuration'
       - '@translator'
       - '@router'
     tags:
-      - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Employee\Command\SendResetPasswordEmailCommand }
+      - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Employee\Command\SendChangePasswordEmailCommand }
 
-  prestashop.adapter.employee.query_handler.get_employee_for_password_reset:
-    class: 'PrestaShop\PrestaShop\Adapter\Profile\Employee\QueryHandler\GetEmployeeForPasswordResetHandler'
+  prestashop.adapter.employee.query_handler.get_employee_for_password_change:
+    class: 'PrestaShop\PrestaShop\Adapter\Employee\QueryHandler\GetEmployeeForPasswordChangeHandler'
     tags:
-      - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeForPasswordReset }
+      - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeForPasswordChange }
 
-  prestashop.adapter.employee.command_handler.reset_password:
-    class: 'PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler\ResetPasswordHandler'
+  prestashop.adapter.employee.command_handler.change_password:
+    class: 'PrestaShop\PrestaShop\Adapter\Employee\CommandHandler\ChangePasswordHandler'
     arguments:
       - '@prestashop.adapter.legacy.configuration'
       - '@prestashop.core.crypto.hashing'
       - '@prestashop.adapter.legacy.context'
       - '@translator'
     tags:
-      - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Employee\Command\ResetPasswordCommand }
+      - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Employee\Command\ChangePasswordCommand }

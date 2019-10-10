@@ -26,14 +26,14 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Employee\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\ResetPasswordInformationMissingException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\ChangePasswordInformationMissingException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
 
 /**
- * Reset employee's password
+ * Change employee's password
  */
-class ResetPasswordCommand
+class ChangePasswordCommand
 {
     /**
      * @var EmployeeId
@@ -43,7 +43,7 @@ class ResetPasswordCommand
     /**
      * @var string
      */
-    private $resetToken;
+    private $token;
 
     /**
      * @var Email
@@ -58,21 +58,21 @@ class ResetPasswordCommand
     /**
      * @param int $employeeId
      * @param string $email
-     * @param string $resetToken
+     * @param string $token
      * @param string $newPlainPassword
      */
-    public function __construct($employeeId, $email, $resetToken, $newPlainPassword)
+    public function __construct($employeeId, $email, $token, $newPlainPassword)
     {
-        if (empty($resetToken)) {
-            throw new ResetPasswordInformationMissingException('Reset token cannot be empty.');
+        if (empty($token)) {
+            throw new ChangePasswordInformationMissingException('Token cannot be empty.');
         }
 
         if (empty(trim($email))) {
-            throw new ResetPasswordInformationMissingException('Employee email cannot be empty.');
+            throw new ChangePasswordInformationMissingException('Employee email cannot be empty.');
         }
 
         $this->employeeId = new EmployeeId($employeeId);
-        $this->resetToken = $resetToken;
+        $this->token = $token;
         $this->email = new Email($email);
         $this->newPlainPassword = $newPlainPassword;
     }
@@ -88,9 +88,9 @@ class ResetPasswordCommand
     /**
      * @return string
      */
-    public function getResetToken()
+    public function getToken()
     {
-        return $this->resetToken;
+        return $this->token;
     }
 
     /**
