@@ -23,11 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-define('PS_SEARCH_MAX_WORDS_IN_TABLE', 100000); /* Max numer of words in ps_search_word, above which $coefs for target length will be everytime equal to 1 */
-define('PS_SEARCH_ORDINATE_MIN', 0.5);
-define('PS_SEARCH_ORDINATE_MAX', -1);
-define('PS_SEARCH_ABSCISSA_MIN', 0.5);
-define('PS_SEARCH_ABSCISSA_MAX', 2);
 /* Copied from Drupal search module, except for \x{0}-\x{2f} that has been replaced by \x{0}-\x{2c}\x{2e}-\x{2f} in order to keep the char '-' */
 define(
     'PREG_CLASS_SEARCH_EXCLUDE',
@@ -106,6 +101,12 @@ class SearchCore
     public static $coefMax;
     public static $targetLengthMin;
     public static $targetLengthMax;
+
+    const PS_SEARCH_MAX_WORDS_IN_TABLE = 100000; /* Max numer of words in ps_search_word, above which $coefs for target length will be everytime equal to 1 */
+    const PS_SEARCH_ORDINATE_MIN = 0.5;
+    const PS_SEARCH_ORDINATE_MAX = -1;
+    const PS_SEARCH_ABSCISSA_MIN = 0.5;
+    const PS_SEARCH_ABSCISSA_MAX = 2;
 
     public static function extractKeyWords($string, $id_lang, $indexation = false, $iso_code = false)
     {
@@ -999,7 +1000,7 @@ class SearchCore
          * If we use the auto-acale && self::$totalWordInSearchWordTable > PS_SEARCH_MAX_WORDS_IN_TABLE,
          * we will get $coefMax < 1 following by $coefMax < $coefMin, this is a non-sense.
          * So, we test it before and assign a right value for both target lengths */
-        if (self::$totalWordInSearchWordTable > PS_SEARCH_MAX_WORDS_IN_TABLE) {
+        if (self::$totalWordInSearchWordTable > self::PS_SEARCH_MAX_WORDS_IN_TABLE) {
             self::$targetLengthMin = self::$targetLengthMax = (int) (strlen($queryString));
         } else {
             /* This part of code could be see like an auto-scale.
@@ -1021,8 +1022,8 @@ class SearchCore
             *  100,000 words id DB give $coefMin : 1, $coefMax : 1*/
             if (!self::$coefMin) {
                 //self::$coefMin && self::$coefMax depend of the number of total words in ps_search_word table, need to calculate only for every search
-                self::$coefMin = PS_SEARCH_ORDINATE_MIN / PS_SEARCH_MAX_WORDS_IN_TABLE * self::$totalWordInSearchWordTable + PS_SEARCH_ABSCISSA_MIN; //y = ax + b
-                self::$coefMax = PS_SEARCH_ORDINATE_MAX / PS_SEARCH_MAX_WORDS_IN_TABLE * self::$totalWordInSearchWordTable + PS_SEARCH_ABSCISSA_MAX; //y = ax + b
+                self::$coefMin = self::PS_SEARCH_ORDINATE_MIN / self::PS_SEARCH_MAX_WORDS_IN_TABLE * self::$totalWordInSearchWordTable + self::PS_SEARCH_ABSCISSA_MIN; //y = ax + b
+                self::$coefMax = self::PS_SEARCH_ORDINATE_MAX / self::PS_SEARCH_MAX_WORDS_IN_TABLE * self::$totalWordInSearchWordTable + self::PS_SEARCH_ABSCISSA_MAX; //y = ax + b
             }
             // self::$targetLengthMin depends of the length of the $queryString, need to calculate for every word
             self::$targetLengthMin = (int) (strlen($queryString) * self::$coefMin);
