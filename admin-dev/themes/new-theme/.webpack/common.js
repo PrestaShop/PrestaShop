@@ -55,7 +55,6 @@ module.exports = {
     invoices: './js/pages/invoices',
     language: './js/pages/language',
     localization: './js/pages/localization',
-    login: './js/pages/login/index',
     logs: './js/pages/logs',
     main: './js/theme.js',
     maintenance: './js/pages/maintenance',
