@@ -120,7 +120,8 @@ class AuthorizationController extends FrameworkBundleAdminController
                 $this->addSuccess($successMessage);
                 $showForgotPasswordForm = false;
             } catch (EmployeeNotFoundException $e) {
-                // Not showing an error message when employee is not found
+                // Not showing an error message when employee is not found,
+                // to not expose that a user does not exist with such email.
                 $this->addSuccess($successMessage);
                 $showForgotPasswordForm = false;
             } catch (DomainException $e) {
@@ -218,7 +219,7 @@ class AuthorizationController extends FrameworkBundleAdminController
         $isInsecureMode = false;
         $canAccessInsecureMode = false;
         $installDirectoryExists = $boAccessPrerequisitesChecker->installDirectoryExists();
-        $adminDirectoryRenamed = $boAccessPrerequisitesChecker->isAdminDirectoryRenamed();
+        $adminDirectoryRenamed = $boAccessPrerequisitesChecker->defaultAdminDirectoryExists();
         $newAdminDirectoryName = '';
 
         if (!$adminDirectoryRenamed) {

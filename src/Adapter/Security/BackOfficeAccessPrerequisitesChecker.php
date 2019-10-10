@@ -59,7 +59,7 @@ final class BackOfficeAccessPrerequisitesChecker implements BackOfficeAccessPrer
     /**
      * {@inheritdoc}
      */
-    public function isAdminDirectoryRenamed()
+    public function defaultAdminDirectoryExists()
     {
         $defaultAdminDir = InstallationOptions::DEFAULT_ADMIN_DIR;
 
