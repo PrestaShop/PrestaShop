@@ -67,7 +67,7 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Given currency :reference with isoCode :isoCode exists
+     * @Given currency :reference with ISO code :isoCode exists
      */
     public function createCurrencyWithIsoCode($reference, $isoCode)
     {
@@ -161,7 +161,7 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Then there should be :expectedCount currencies of :currencyIsoCode
+     * @Given database contains :expectedCount rows of currency :currencyIsoCode
      */
     public function countCurrencies($expectedCount, $currencyIsoCode)
     {

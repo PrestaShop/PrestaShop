@@ -32,7 +32,7 @@ use RuntimeException;
 class CLDRFeatureContext extends AbstractPrestaShopFeatureContext
 {
     /**
-     * @Then display a price of :price :currencyIsoCode with locale :locale should look like :expectedPrice
+     * @Then a price of :price using :currencyIsoCode in locale :locale should look like :expectedPrice
      */
     public function assertDisplayPrice($price, $currencyIsoCode, $locale, $expectedPrice)
     {
