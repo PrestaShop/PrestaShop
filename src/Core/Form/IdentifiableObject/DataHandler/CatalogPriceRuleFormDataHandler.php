@@ -94,11 +94,11 @@ final class CatalogPriceRuleFormDataHandler implements FormDataHandlerInterface
         );
 
         if ($data['date_range']['from']) {
-            $command->setDateTimeFrom($data['from']);
+            $command->setDateTimeFrom($data['date_range']['from']);
         }
 
         if ($data['date_range']['to']) {
-            $command->setDateTimeTo($data['to']);
+            $command->setDateTimeTo($data['date_range']['to']);
         }
 
         /** @var CatalogPriceRuleId $catalogPriceRuleId */
