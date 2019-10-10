@@ -17,7 +17,7 @@ services:
         - "@prestashop.adapter.legacy.context"
         - "@prestashop.static_cache.adapter"
         - "@prestashop.core.query_bus"
-
+        - "@prestashop.core.cache.employee_cache_key_generator"
 
     prestashop.security.admin.login_form_authenticator:
         class: PrestaShopBundle\Security\Admin\LoginFormAuthenticator

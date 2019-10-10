@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Security;
 
 use Employee;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\Cache\CacheKeyGeneratorInterface;
 use PrestaShop\PrestaShop\Core\Domain\Employee\QueryResult\EmployeeForAuthentication;
 use PrestaShop\PrestaShop\Core\Security\EmployeeAuthenticationHandlerInterface;
 use Psr\Cache\CacheItemPoolInterface;
@@ -67,24 +68,32 @@ final class EmployeeAuthenticationHandler implements EmployeeAuthenticationHandl
     private $requestStack;
 
     /**
+     * @var CacheKeyGeneratorInterface
+     */
+    private $employeeCacheKeyGenerator;
+
+    /**
      * @param LegacyContext $legacyContext
      * @param TokenStorageInterface $tokenStorage
      * @param UserProviderInterface $userProvider
      * @param CacheItemPoolInterface $cache
      * @param RequestStack $requestStack
+     * @param CacheKeyGeneratorInterface $employeeCacheKeyGenerator
      */
     public function __construct(
         LegacyContext $legacyContext,
         TokenStorageInterface $tokenStorage,
         UserProviderInterface $userProvider,
         CacheItemPoolInterface $cache,
-        RequestStack $requestStack
+        RequestStack $requestStack,
+        CacheKeyGeneratorInterface $employeeCacheKeyGenerator
     ) {
         $this->legacyContext = $legacyContext;
         $this->tokenStorage = $tokenStorage;
         $this->userProvider = $userProvider;
         $this->cache = $cache;
         $this->requestStack = $requestStack;
+        $this->employeeCacheKeyGenerator = $employeeCacheKeyGenerator;
     }
 
     /**
@@ -161,7 +170,7 @@ final class EmployeeAuthenticationHandler implements EmployeeAuthenticationHandl
      */
     private function updateSecurityToken($email)
     {
-        $cacheKey = sprintf('app.employees_%s', sha1($email));
+        $cacheKey = $this->employeeCacheKeyGenerator->generateFromString($email);
 
         if ($this->cache->hasItem($cacheKey)) {
             $this->cache->deleteItem($cacheKey);
