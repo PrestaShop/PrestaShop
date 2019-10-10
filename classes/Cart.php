@@ -1954,6 +1954,7 @@ class CartCore extends ObjectModel
         if (in_array($type, [Cart::BOTH, Cart::BOTH_WITHOUT_SHIPPING, Cart::ONLY_DISCOUNTS])) {
             $cartRules = $this->getTotalCalculationCartRules($type, $type == Cart::BOTH);
         }
+
         $calculator = $this->newCalculator($products, $cartRules, $id_carrier);
         $computePrecision = $this->configuration->get('_PS_PRICE_COMPUTE_PRECISION_');
         switch ($type) {
@@ -2123,9 +2124,9 @@ class CartCore extends ObjectModel
         if ($withShipping || $type == Cart::ONLY_DISCOUNTS) {
             $cartRules = $this->getCartRules(CartRule::FILTER_ACTION_ALL);
         } else {
-            $cartRules = $this->getCartRules(CartRule::FILTER_ACTION_REDUCTION);
+            $cartRules = $this->getCartRules(CartRule::FILTER_ACTION_REDUCTION, false);
             // Cart Rules array are merged manually in order to avoid doubles
-            foreach ($this->getCartRules(CartRule::FILTER_ACTION_GIFT) as $cartRuleCandidate) {
+            foreach ($this->getCartRules(CartRule::FILTER_ACTION_GIFT, false) as $cartRuleCandidate) {
                 $alreadyAddedCartRule = false;
                 foreach ($cartRules as $cartRule) {
                     if ($cartRuleCandidate['id_cart_rule'] == $cartRule['id_cart_rule']) {
