@@ -51,7 +51,10 @@ export default class ChoiceExtension {
    * @private
    */
   _submitForm(url, selectedStatusId) {
-    //todo: locks
+    if (this._isLocked(url)) {
+      return;
+    }
+
     const $form = $(`<form method="POST" action="${url}">
         <input type="text" name="value" value="${selectedStatusId}">
     </form>`);
@@ -59,6 +62,7 @@ export default class ChoiceExtension {
     $form.appendTo('body');
 
     $form.submit();
+    this._lock(url);
   }
 
   /**
