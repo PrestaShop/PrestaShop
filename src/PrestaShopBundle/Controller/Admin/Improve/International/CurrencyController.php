@@ -268,7 +268,7 @@ class CurrencyController extends FrameworkBundleAdminController
         try {
             /** @var ExchangeRate $exchangeRate */
             $exchangeRate = $this->getQueryBus()->handle(new GetCurrencyExchangeRate($currencyIsoCode));
-            $cldrCurrency['exchange_rate'] = $exchangeRate->getValue();
+            $cldrCurrency['exchange_rate'] = $exchangeRate->getValue()->round(6);
         } catch (CurrencyException $e) {
             $logger = $this->container->get('logger');
             $logger->error(sprintf('Unable to find the exchange rate: %s', $e->getMessage()));
