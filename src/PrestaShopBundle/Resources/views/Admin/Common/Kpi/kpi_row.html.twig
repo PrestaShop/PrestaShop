@@ -26,14 +26,6 @@
 {% block kpi_row %}
     <div class="container">
         <div class="kpi-container">
-{#            {% if kpiRow.allowRefresh %}#}
-{#                <div class="kpi-refresh">#}
-{#                    <button class="refresh-kpis btn btn-primary" type="button">#}
-{#                        <i class="material-icons">refresh</i>#}
-{#                    </button>#}
-{#                </div>#}
-{#            {% endif %}#}
-
             <div class="row justify-content-around">
                 {% for kpi in kpiRow.kpis %}
                     <div>
@@ -43,4 +35,12 @@
             </div>
         </div>
     </div>
+
+    {% if kpiRow.allowRefresh %}
+      <div class="kpi-refresh">
+        <button class="refresh-kpis btn btn-primary" type="button">
+          <i class="material-icons">refresh</i>
+        </button>
+      </div>
+    {% endif %}
 {% endblock %}
