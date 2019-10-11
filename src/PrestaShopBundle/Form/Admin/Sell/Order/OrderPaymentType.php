@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Form\Admin\Sell\Order;
 
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use PrestaShopBundle\Form\Admin\Type\DatePickerType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -89,9 +90,8 @@ class OrderPaymentType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('date', DateType::class, [
-                'widget' => 'single_text',
-                'input' => 'string',
+            ->add('date', DatePickerType::class, [
+                'date_format' => 'YYYY-MM-DD H:m:s',
             ])
             ->add('payment_method', TextType::class, [
                 'data_list' => $this->installedPaymentModulesChoiceProvider->getChoices(),
