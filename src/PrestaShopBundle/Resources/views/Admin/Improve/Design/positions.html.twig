@@ -126,8 +126,8 @@
                             {% endif %}
                           </span>
                         </div>
-                        
-                        <div class="module-column-description">
+
+                        <div class="module-column-description{% if not selectedModule and hook['modules_count'] > 1 %} hasColumnPosition{% endif %}">
                           <span class="module-description">{{ moduleInstance.description | escape }}</span>
                         </div>
 
