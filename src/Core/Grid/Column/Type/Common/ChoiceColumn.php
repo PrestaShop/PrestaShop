@@ -43,19 +43,6 @@ final class ChoiceColumn extends AbstractColumn
         return 'choice';
     }
 
-    /**
-     * Gets choices from provider.
-     *
-     * @return array
-     */
-    public function getChoices(): array
-    {
-        /** @var FormChoiceProviderInterface $choiceProvider */
-        $choiceProvider = $this->getOptions()['choice_provider'];
-
-        return $choiceProvider->getChoices();
-    }
-
     protected function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);
