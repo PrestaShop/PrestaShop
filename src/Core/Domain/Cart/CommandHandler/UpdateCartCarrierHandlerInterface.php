@@ -26,15 +26,15 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartDeliveryOptionCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartCarrierCommand;
 
 /**
  * Interface for service that updates delivery options for cart
  */
-interface UpdateCartDeliveryOptionHandlerInterface
+interface UpdateCartCarrierHandlerInterface
 {
     /**
-     * @param UpdateCartDeliveryOptionCommand $command
+     * @param UpdateCartCarrierCommand $command
      */
-    public function handle(UpdateCartDeliveryOptionCommand $command);
+    public function handle(UpdateCartCarrierCommand $command);
 }

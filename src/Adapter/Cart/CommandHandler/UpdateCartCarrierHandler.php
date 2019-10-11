@@ -27,25 +27,43 @@
 namespace PrestaShop\PrestaShop\Adapter\Cart\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
-use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartDeliveryOptionCommand;
-use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\UpdateCartDeliveryOptionHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartCarrierCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\UpdateCartCarrierHandlerInterface;
 
 /**
  * @internal
  */
-final class UpdateCartDeliveryOptionHandler extends AbstractCartHandler implements UpdateCartDeliveryOptionHandlerInterface
+final class UpdateCartCarrierHandler extends AbstractCartHandler implements UpdateCartCarrierHandlerInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function handle(UpdateCartDeliveryOptionCommand $command)
+    public function handle(UpdateCartCarrierCommand $command)
     {
         $cart = $this->getCart($command->getCartId());
 
         $cart->setDeliveryOption([
-            $cart->id_address_delivery => $command->getNewDeliveryOption(),
+            $cart->id_address_delivery => $this->formatLegacyDeliveryOptionFromCarrierId($command->getNewCarrierId()),
         ]);
 
-        $cart->save();
+        $cart->update();
+    }
+
+    /**
+     * Delivery option consists of deliveryAddress and carrierId.
+     *
+     * Legacy multishipping feature used comma separated carriers in delivery option (e.g. {'1':'6,7'}
+     * Now that multishipping is gone - delivery option should consist of one carrier and one address.
+     *
+     * However the structure of deliveryOptions is still used with comma in legacy, so
+     * this method provides assurance for deliveryOption structure until major refactoring
+     *
+     * @param int $carrierId
+     *
+     * @return string
+     */
+    private function formatLegacyDeliveryOptionFromCarrierId(int $carrierId): string
+    {
+        return sprintf('%s,', $carrierId);
     }
 }

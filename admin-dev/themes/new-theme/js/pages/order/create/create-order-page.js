@@ -110,6 +110,7 @@ export default class CreateOrderPage {
       this.cartProvider.getCart(cartId).then((response) => {
         self._renderCartInfo(response);
         self.shippingRenderer.render(response.shipping);
+        self.data.cart_id = response.cartId;
       });
     });
   }
@@ -127,6 +128,7 @@ export default class CreateOrderPage {
       this.cartProvider.duplicateOrderCart(orderId).then((response) => {
         self._renderCartInfo(response);
         self.shippingRenderer.render(response.shipping);
+        self.data.cart_id = response.cartId;
       });
     });
   }
@@ -139,7 +141,7 @@ export default class CreateOrderPage {
   _handleCartUpdate() {
     // @todo: add other actions
     this.$container.on('change', createOrderPageMap.addressSelect, () => this._changeCartAddresses());
-    this.$container.on('change', createOrderPageMap.shippingForm, () => this._editShipping());
+    this.$container.on('change', createOrderPageMap.deliveryOptionSelect, e => this._editDeliveryOption(e));
   }
 
   /**
@@ -223,21 +225,15 @@ export default class CreateOrderPage {
     });
   }
 
-  _editShipping() {
-    const $deliveryOption = $(createOrderPageMap.deliveryOptionSelect).val();
-    const $freeShipping = $(`${createOrderPageMap.freeShippingSwitch}:checked`).val();
-
-    $.ajax(this.router.generate('admin_carts_edit_shipping', {cartId: this.data.cart_id}), {
+  _editDeliveryOption(e) {
+    $.ajax(this.router.generate('admin_carts_edit_carrier', {cartId: this.data.cart_id}), {
       method: 'POST',
       data: {
-        delivery_option: $deliveryOption,
-        free_shipping: $freeShipping,
+        [e.currentTarget.name]: e.currentTarget.value,
       },
       dataType: 'json',
     }).then((response) => {
-      // this._persistCartInfoData(response);
-
-      // self.addressesRenderer.render(response.addresses);
+      this.shippingRenderer.render(response.shipping);
     });
   }
 
