@@ -55,7 +55,7 @@ class EditableCurrency
     private $isoCode;
 
     /**
-     * @var int
+     * @var string
      */
     private $numericIsoCode;
 
@@ -87,7 +87,7 @@ class EditableCurrency
     /**
      * @param int $currencyId
      * @param string $isoCode
-     * @param int $numericIsoCode
+     * @param string $numericIsoCode
      * @param array $names
      * @param array $symbols
      * @param float $exchangeRate
@@ -131,6 +131,8 @@ class EditableCurrency
     }
 
     /**
+     * Currency ISO code
+     *
      * @return string
      */
     public function getIsoCode()
@@ -139,14 +141,18 @@ class EditableCurrency
     }
 
     /**
-     * @return int
+     * Currency numeric ISO code
+     *
+     * @return string
      */
-    public function getNumericIsoCode(): int
+    public function getNumericIsoCode(): string
     {
         return $this->numericIsoCode;
     }
 
     /**
+     * Currency's names, indexed by language id.
+     *
      * @return array
      */
     public function getNames()
@@ -155,6 +161,8 @@ class EditableCurrency
     }
 
     /**
+     * Currency's names, indexed by language id.
+     *
      * @return array
      */
     public function getSymbols()
@@ -163,6 +171,8 @@ class EditableCurrency
     }
 
     /**
+     * Exchange rate of the currency compared to the shop's default one
+     *
      * @return float
      */
     public function getExchangeRate()
@@ -171,6 +181,8 @@ class EditableCurrency
     }
 
     /**
+     * Currency decimal precision
+     *
      * @return int
      */
     public function getPrecision()
@@ -179,6 +191,8 @@ class EditableCurrency
     }
 
     /**
+     * Whether the currency is enabled on the front
+     *
      * @return bool
      */
     public function isEnabled()
@@ -187,6 +201,8 @@ class EditableCurrency
     }
 
     /**
+     * Whether the currency is an unofficial one (custom created)
+     *
      * @return bool
      */
     public function isUnofficial()
@@ -195,6 +211,8 @@ class EditableCurrency
     }
 
     /**
+     * List of shops that use this currency (shop IDs)
+     *
      * @return int[]
      */
     public function getAssociatedShopIds()
