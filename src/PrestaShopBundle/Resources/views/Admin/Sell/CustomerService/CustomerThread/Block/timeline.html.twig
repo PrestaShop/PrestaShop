@@ -49,6 +49,17 @@
               <span>
                 {{ timelineItem.content|raw|nl2br }}
               </span>
+
+              {% if timelineItem.relatedOrderId %}
+                <p class="mb-0 mt-2">
+                  <a href="{{ getAdminLink('AdminOrders', true, {'vieworder': 1, 'id_order': timelineItem.relatedOrderId}) }}"
+                     class="btn btn-outline-secondary btn-sm"
+                     target="_blank"
+                  >
+                    {{ 'See more'|trans({}, 'Admin.Actions') }}
+                  </a>
+                </p>
+              {% endif %}
             </div>
           </div>
         </article>

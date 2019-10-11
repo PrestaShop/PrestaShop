@@ -212,6 +212,7 @@ final class GetCustomerThreadForViewingHandler implements GetCustomerThreadForVi
                 'icon' => 'email',
                 'content' => $content,
                 'date' => $message['date_add'],
+                'related_order_id' => null,
             ];
         }
 
@@ -246,6 +247,7 @@ final class GetCustomerThreadForViewingHandler implements GetCustomerThreadForVi
                     'content' => $content,
                     'date' => $history['date_add'],
                     'see_more_link' => $link_order,
+                    'related_order_id' => (int) $order->id,
                 ];
             }
         }
@@ -261,7 +263,8 @@ final class GetCustomerThreadForViewingHandler implements GetCustomerThreadForVi
                     $item['icon'],
                     $item['arrow'],
                     $item['date'],
-                    isset($item['background_color']) ? $item['background_color'] : null
+                    isset($item['background_color']) ? $item['background_color'] : null,
+                    $item['related_order_id']
                 );
             }
         }

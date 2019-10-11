@@ -57,24 +57,32 @@ class CustomerThreadTimelineItem
     private $color;
 
     /**
+     * @var int|null
+     */
+    private $relatedOrderId;
+
+    /**
      * @param string $content
      * @param string $icon
      * @param string $arrow
      * @param string $date
      * @param string|null $color
+     * @param int|null $relatedOrderId
      */
     public function __construct(
         $content,
         $icon,
         $arrow,
         $date,
-        $color = null
+        $color = null,
+        $relatedOrderId = null
     ) {
         $this->content = $content;
         $this->icon = $icon;
         $this->arrow = $arrow;
         $this->date = $date;
         $this->color = $color;
+        $this->relatedOrderId = $relatedOrderId;
     }
 
     /**
@@ -115,5 +123,13 @@ class CustomerThreadTimelineItem
     public function getColor()
     {
         return $this->color;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getRelatedOrderId()
+    {
+        return $this->relatedOrderId;
     }
 }
