@@ -707,6 +707,7 @@ class CustomerController extends AbstractAdminController
     }
 
     /**
+     * @todo: check access for order create page as its used there (customer OR order access)
      * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
      *
      * @param int $customerId
@@ -723,6 +724,7 @@ class CustomerController extends AbstractAdminController
     }
 
     /**
+     * @todo: check access for order create page as its used there (customer OR order access)
      * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
      *
      * @param int $customerId

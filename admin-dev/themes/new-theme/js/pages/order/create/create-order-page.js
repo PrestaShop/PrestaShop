@@ -142,6 +142,7 @@ export default class CreateOrderPage {
     // @todo: add other actions
     this.$container.on('change', createOrderPageMap.addressSelect, () => this._changeCartAddresses());
     this.$container.on('change', createOrderPageMap.deliveryOptionSelect, e => this._editDeliveryOption(e));
+    this.$container.on('change', createOrderPageMap.freeShippingSwitch, e => this._editFreeShipping(e));
   }
 
   /**
@@ -222,18 +223,33 @@ export default class CreateOrderPage {
       // this._persistCartInfoData(response);
 
       self.addressesRenderer.render(response.addresses);
+      self.shippingRenderer.render(response.shipping);
     });
   }
 
   _editDeliveryOption(e) {
+    const self = this;
     $.ajax(this.router.generate('admin_carts_edit_carrier', {cartId: this.data.cart_id}), {
       method: 'POST',
       data: {
-        [e.currentTarget.name]: e.currentTarget.value,
+        carrier_id: e.currentTarget.value,
       },
       dataType: 'json',
     }).then((response) => {
-      this.shippingRenderer.render(response.shipping);
+      self.shippingRenderer.render(response.shipping);
+    });
+  }
+
+  _editFreeShipping(e) {
+    const self = this;
+    $.ajax(this.router.generate('admin_carts_edit_free_shipping', {cartId: this.data.cart_id}), {
+      method: 'POST',
+      data: {
+        free_shipping: e.currentTarget.value,
+      },
+      dataType: 'json',
+    }).then((response) => {
+      self.shippingRenderer.render(response.shipping);
     });
   }
 
