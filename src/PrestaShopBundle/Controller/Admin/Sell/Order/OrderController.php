@@ -54,7 +54,7 @@ use PrestaShopBundle\Form\Admin\Sell\Order\AddOrderProductType;
 use PrestaShopBundle\Form\Admin\Sell\Order\AddProductToOrderType;
 use PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrdersStatusType;
 use PrestaShopBundle\Form\Admin\Sell\Order\OrderPaymentType;
-use PrestaShopBundle\Form\Admin\Sell\Order\UpdateOrderProductType;
+use PrestaShopBundle\Form\Admin\Sell\Order\UpdateProductInOrderType;
 use PrestaShopBundle\Form\Admin\Sell\Order\UpdateOrderStatusType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Service\Grid\ResponseBuilder;
@@ -266,7 +266,7 @@ class OrderController extends FrameworkBundleAdminController
         ]);
         $addOrderProductForm = $this->createForm(AddOrderProductType::class);
         $addProductToOrderForm = $this->createForm(AddProductToOrderType::class);
-        $updateOrderProductForm = $this->createForm(UpdateOrderProductType::class);
+        $updateOrderProductForm = $this->createForm(UpdateProductInOrderType::class);
 
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/view.html.twig', [
             'showContentHeader' => false,
@@ -302,7 +302,7 @@ class OrderController extends FrameworkBundleAdminController
 
     public function updateProductAction(int $orderId, int $orderDetailId, Request $request): RedirectResponse
     {
-        $updateOrderProductForm = $this->createForm(UpdateOrderProductType::class);
+        $updateOrderProductForm = $this->createForm(UpdateProductInOrderType::class);
         $updateOrderProductForm->handleRequest($request);
 
         if ($updateOrderProductForm->isSubmitted() && $updateOrderProductForm->isValid()) {
