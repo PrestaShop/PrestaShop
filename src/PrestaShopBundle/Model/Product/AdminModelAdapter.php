@@ -639,6 +639,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                 'online_only' => (bool) $product->online_only,
             ],
             'upc' => $product->upc,
+            'mpn' => $product->mpn,
             'ean13' => $product->ean13,
             'isbn' => $product->isbn,
             'reference' => $product->reference,

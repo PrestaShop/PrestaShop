@@ -1,3 +1,5 @@
+// Using chai
+const {expect} = require('chai');
 const helper = require('../../utils/helpers');
 // Importing pages
 const HomePage = require('../../../pages/FO/home');
@@ -34,13 +36,19 @@ describe('Check the Product page', async () => {
   });
   // Steps
   it('should open the shop page', async function () {
-    await this.pageObjects.homePage.goTo(global.URL_FO);
+    await this.pageObjects.homePage.goTo(global.FO.URL);
     await this.pageObjects.homePage.checkHomePage();
   });
   it('should go to the first product page', async function () {
     await this.pageObjects.homePage.goToProductPage('1');
   });
   it('should check the product page', async function () {
-    await this.pageObjects.productPage.checkProduct(ProductData.firstProductData);
+    const result = await this.pageObjects.productPage.checkProduct(ProductData.firstProductData);
+    await Promise.all([
+      expect(result.name).to.be.true,
+      expect(result.price).to.be.true,
+      expect(result.quantity_wanted).to.be.true,
+      expect(result.description).to.be.true,
+    ]);
   });
 });

@@ -4,7 +4,11 @@
   {$header}
 </head>
 
-<body class="lang-{$iso_user}{if $lang_is_rtl} lang-rtl{/if} {$smarty.get.controller|escape|strtolower}{if $collapse_menu} page-sidebar-closed{/if}">
+<body
+  class="lang-{$iso_user}{if $lang_is_rtl} lang-rtl{/if} {$smarty.get.controller|escape|strtolower}{if $collapse_menu} page-sidebar-closed{/if}"
+  {if isset($js_router_metadata.base_url)}data-base-url="{$js_router_metadata.base_url}"{/if}
+  {if isset($js_router_metadata.token)}data-token="{$js_router_metadata.token}"{/if}
+>
 
 {if $display_header}
   <header id="header">
@@ -31,11 +35,11 @@
              data-toggle="pstooltip"
              data-placement="bottom"
              data-html="true"
-             title="<p class='text-left'><strong>{l s='Your shop is in debug mode.'}</strong></p><p class='text-left'>{l s='All the PHP errors and messages are displayed. When you no longer need it, [1]turn off[/1] this mode.' html=true sprintf=['[1]' => '<strong>', '[/1]' => '</strong>']}</p>"
+             title="<p class='text-left'><strong>{l s='Your shop is in debug mode.' d='Admin.Navigation.Notification'}</strong></p><p class='text-left'>{l s='All the PHP errors and messages are displayed. When you no longer need it, [1]turn off[/1] this mode.' html=true sprintf=['[1]' => '<strong>', '[/1]' => '</strong>'] d='Admin.Navigation.Notification'}</p>"
              href="{$link->getAdminLink('AdminPerformance')|escape:'html':'UTF-8'}"
           >
             <i class="material-icons">bug_report</i>
-            <span>{l s='Debug mode'}</span>
+            <span>{l s='Debug mode' d='Admin.Navigation.Header'}</span>
           </a>
         </div>
       {/if}
@@ -47,10 +51,10 @@
              data-toggle="pstooltip"
              data-placement="bottom"
              data-html="true"
-             title="<p class='text-left'><strong>{l s='Your shop is in maintenance.'}</strong></p><p class='text-left'>{l s='Your visitors and customers cannot access your shop while in maintenance mode.%s To manage the maintenance settings, go to Shop Parameters > Maintenance tab.' sprintf=['<br />']}</p>" href="{$link->getAdminLink('AdminMaintenance')|escape:'html':'UTF-8'}"
+             title="<p class='text-left'><strong>{l s='Your shop is in maintenance.' d='Admin.Navigation.Notification'}</strong></p><p class='text-left'>{l s='Your visitors and customers cannot access your shop while in maintenance mode.%s To manage the maintenance settings, go to Shop Parameters > Maintenance tab.' sprintf=['<br />'] d='Admin.Navigation.Notification'}</p>" href="{$link->getAdminLink('AdminMaintenance')|escape:'html':'UTF-8'}"
           >
             <i class="material-icons">build</i>
-            <span>{l s='Maintenance mode'}</span>
+            <span>{l s='Maintenance mode' d='Admin.Navigation.Header'}</span>
           </a>
         </div>
       {/if}
@@ -80,7 +84,7 @@
 <div id="main-div">
     {if $install_dir_exists}
       <div class="alert alert-warning">
-        {l s='For security reasons, you must also delete the /install folder.'}
+        {l s='For security reasons, you must also delete the /install folder.' d='Admin.Login.Notification'}
       </div>
     {else}
       {if isset($page_header_toolbar)}{$page_header_toolbar}{/if}

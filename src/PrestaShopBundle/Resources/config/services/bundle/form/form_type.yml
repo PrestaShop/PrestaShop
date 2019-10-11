@@ -930,3 +930,12 @@ services:
         - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
       tags:
         - { name: form.type }
+
+    form.type.feature:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Catalog\FeatureType'
+        arguments:
+            - '@=service("prestashop.adapter.multistore_feature").isUsed()'
+        calls:
+            - { method: setTranslator, arguments: ['@translator'] }
+        tags:
+            - { name: form.type }

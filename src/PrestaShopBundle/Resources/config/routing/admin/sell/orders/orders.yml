@@ -5,6 +5,13 @@ admin_orders_index:
     _controller: PrestaShopBundle:Admin/Sell/Order/Order:index
     _legacy_controller: AdminOrders
 
+admin_orders_create:
+  path: /new
+  methods: [GET, POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Sell\Order\Order:create
+    _legacy_controller: AdminOrders
+
 admin_orders_search:
   path: /
   methods: [POST]
@@ -81,3 +88,13 @@ admin_orders_preview:
     _legacy_controller: AdminOrders
   requirements:
     orderId: \d+
+
+admin_orders_duplicate_cart:
+  path: /{orderId}/duplicate-cart
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:duplicateOrderCart
+  requirements:
+    orderId: \d+
+  options:
+    expose: true

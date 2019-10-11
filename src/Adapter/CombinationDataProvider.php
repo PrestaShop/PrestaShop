@@ -155,6 +155,7 @@ class CombinationDataProvider
             'attribute_ean13' => $combination['ean13'],
             'attribute_isbn' => $combination['isbn'],
             'attribute_upc' => $combination['upc'],
+            'attribute_mpn' => $combination['mpn'],
             'attribute_wholesale_price' => $combination['wholesale_price'],
             'attribute_price_impact' => $attribute_price_impact,
             'attribute_price' => $combination['price'],

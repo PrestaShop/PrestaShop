@@ -18,6 +18,7 @@
     "compass": "^0.1.1",
     "dropzone": "^5.5.1",
     "eonasdan-bootstrap-datetimepicker": "^4.17.47",
+    "fos-routing": "0.0.6",
     "jets": "0.11.0",
     "jquery-ui-dist": "^1.12.1",
     "jwerty": "^0.3.2",

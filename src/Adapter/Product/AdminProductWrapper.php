@@ -159,7 +159,8 @@ class AdminProductWrapper
             array(),
             $combinationValues['attribute_isbn'],
             $combinationValues['attribute_low_stock_threshold'],
-            $combinationValues['attribute_low_stock_alert']
+            $combinationValues['attribute_low_stock_alert'],
+            $combinationValues['attribute_mpn']
         );
 
         StockAvailable::setProductDependsOnStock((int) $product->id, $product->depends_on_stock, null, $id_product_attribute);

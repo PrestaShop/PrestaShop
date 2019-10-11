@@ -132,6 +132,11 @@ class LightWebTestCase extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
+        // If getCMSLink() is not mocked,
+        // it returns null, thus breaking code that expects it to return string,
+        // as string is the only valid return type for this method.
+        $linkMock->method('getCMSLink')->willReturn('');
+
         $contextMock->link = $linkMock;
 
         $currencyDataProviderMock->method('getDefaultCurrencyIsoCode')

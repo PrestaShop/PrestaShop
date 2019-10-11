@@ -86,7 +86,7 @@ class CheckoutSessionCore
 
     public function setMessage($message)
     {
-        $this->_updateMessage(Tools::safeOutput($message));
+        $this->_updateMessage($message);
 
         return $this;
     }

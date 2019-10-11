@@ -38,6 +38,8 @@
 {% block textarea_widget -%}
     {% set attr = attr|merge({class: (attr.class|default('') ~ ' form-control')|trim}) %}
     {{- parent() -}}
+
+    {{ block('form_help') }}
 {%- endblock textarea_widget %}
 
 {% block button_widget -%}
@@ -425,7 +427,6 @@
 {# Labels #}
 
 {% block form_label -%}
-    {%- set label_attr = label_attr|merge({class: (label_attr.class|default('') ~ ' control-label')|trim}) -%}
     {{- parent() -}}
 {%- endblock form_label %}
 
@@ -797,4 +798,14 @@
 {% block number_min_max_filter_widget %}
   {{ form_widget(form['min_field'], { attr: {class: 'min-field'}}) }}
   {{ form_widget(form['max_field'], { attr: {class: 'max-field'}}) }}
+{% endblock %}
+
+{% block form_help %}
+  {% if help %}
+    <small class="form-text">{{ help }}</small>
+  {% endif %}
+{% endblock form_help %}
+
+{% block custom_content_widget %}
+  {% include template with data %}
 {% endblock %}

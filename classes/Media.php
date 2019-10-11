@@ -291,10 +291,16 @@ class MediaCore
      *
      * @param mixed $version
      *
-     * @return string
+     * @return array
+     *
+     * @deprecated 1.7.7 jQuery is always included, this method should no longer be used
      */
     public static function getJqueryPath($version = null, $folder = null, $minifier = true)
     {
+        @trigger_error(
+            'Media::getJqueryPath() is deprecated since version 1.7.7.0, jquery is always included',
+            E_USER_DEPRECATED
+        );
         $addNoConflict = false;
         if ($version === null) {
             $version = _PS_JQUERY_VERSION_;
@@ -771,6 +777,11 @@ class MediaCore
         }
     }
 
+    /**
+     * @param $output
+     *
+     * @return string|string[]|null
+     */
     public static function deferInlineScripts($output)
     {
         /* Try to enqueue in js_files inline scripts with src but without conditionnal comments */

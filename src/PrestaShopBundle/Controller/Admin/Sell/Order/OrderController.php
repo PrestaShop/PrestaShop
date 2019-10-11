@@ -27,8 +27,11 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddCartRuleToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\BulkChangeOrderStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\DuplicateOrderCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\ChangeOrderStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
@@ -48,6 +51,7 @@ use PrestaShopBundle\Form\Admin\Sell\Order\OrderPaymentType;
 use PrestaShopBundle\Form\Admin\Sell\Order\UpdateOrderStatusType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Service\Grid\ResponseBuilder;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -84,6 +88,15 @@ class OrderController extends FrameworkBundleAdminController
                 'orderKpi' => $orderKpiFactory->build(),
             ]
         );
+    }
+
+    //@todo: wip
+    public function createAction()
+    {
+        return $this->render('@PrestaShop/Admin/Sell/Order/Order/create.html.twig', [
+            'currencies' => \Currency::getCurrenciesByIdShop(\Context::getContext()->shop->id),
+            'languages' => \Language::getLanguages(true, \Context::getContext()->shop->id),
+        ]);
     }
 
     /**
@@ -372,6 +385,24 @@ class OrderController extends FrameworkBundleAdminController
                 Response::HTTP_BAD_REQUEST
             );
         }
+    }
+
+    /**
+     * Duplicates cart from specified order
+     *
+     * @param int $orderId
+     *
+     * @return JsonResponse
+     *
+     * @throws CartConstraintException
+     */
+    public function duplicateOrderCartAction(int $orderId)
+    {
+        $cartId = $this->getCommandBus()->handle(new DuplicateOrderCartCommand($orderId))->getValue();
+
+        return $this->json(
+            $this->getQueryBus()->handle(new GetCartInformation($cartId))
+        );
     }
 
     /**

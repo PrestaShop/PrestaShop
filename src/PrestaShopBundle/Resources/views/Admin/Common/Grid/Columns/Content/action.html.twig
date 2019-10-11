@@ -26,50 +26,82 @@
 {% set actions = column.options.actions %}
 
 {% if actions is not empty %}
-  <div class="btn-group-action text-right">
-    <div class="btn-group">
-      {% set skippedActions, isFirstRendered = 0, false %}
+    {% set inlineActions = [] %}
+    {% set regularActions = [] %}
 
-      {# Render first item that is not in dropwdown #}
-      {% for action in actions %}
-        {% if not isFirstRendered %}
-          {% set skippedActions = skippedActions + 1 %}
-        {% endif %}
+    {% for action in actions %}
+      {% if action.options['use_inline_display'] == true %}
+          {% set inlineActions = inlineActions|merge([action]) %}
+        {% else %}
+          {% set regularActions = regularActions|merge([action]) %}
+      {% endif %}
+    {% endfor %}
 
-        {% if action.isApplicable(record) and not isFirstRendered %}
-          {{ include('@PrestaShop/Admin/Common/Grid/Actions/Row/'~action.type~'.html.twig', {
-            'grid': grid,
-            'column': column,
-            'attributes': {'class': 'dropdown-item', 'tooltip_name': true},
-            'record': record,
-            'action': action
-          }) }}
+    <div class="btn-group-action text-right">
+      {% if inlineActions is not empty %}
+        <div class="btn-group d-flex justify-content-between text-right">
+          {% for inlineAction in inlineActions -%}
+            {% if inlineAction.isApplicable(record) %}
 
-          {% set isFirstRendered = true %}
-        {% endif %}
-      {% endfor %}
+              {% set class = 'dropdown-item inline-dropdown-item' %}
 
-      {# Render remaining items in dropdown #}
-      {% if actions|length > skippedActions %}
-        <a class="btn btn-link dropdown-toggle dropdown-toggle-dots dropdown-toggle-split"
-           data-toggle="dropdown"
-           aria-haspopup="true"
-           aria-expanded="false"
-        >
-        </a>
-
-        <div class="dropdown-menu dropdown-menu-right">
-          {% for action in actions|slice(skippedActions) if action.isApplicable(record) %}
-            {{ include('@PrestaShop/Admin/Common/Grid/Actions/Row/'~action.type~'.html.twig', {
-              'grid': grid,
-              'column': column,
-              'attributes': {'class': 'dropdown-item', 'tooltip_name': false},
-              'record': record,
-              'action': action
-            }) }}
+              {{ include('@PrestaShop/Admin/Common/Grid/Actions/Row/'~inlineAction.type~'.html.twig', {
+                'grid': grid,
+                'column': column,
+                'attributes': {'class': class, 'tooltip_name': true},
+                'record': record,
+                'action': inlineAction
+              }) }}
+            {% endif %}
           {% endfor %}
         </div>
       {% endif %}
+
+      {% if regularActions is not empty %}
+        <div class="btn-group">
+          {% set skippedActions, isFirstRendered = 0, false %}
+
+          {# Render first item that is not in dropwdown #}
+          {% for action in regularActions  %}
+            {% if not isFirstRendered %}
+              {% set skippedActions = skippedActions + 1 %}
+            {% endif %}
+
+            {% if action.isApplicable(record) and not isFirstRendered %}
+              {{ include('@PrestaShop/Admin/Common/Grid/Actions/Row/'~action.type~'.html.twig', {
+                'grid': grid,
+                'column': column,
+                'attributes': {'class': 'dropdown-item', 'tooltip_name': true},
+                'record': record,
+                'action': action
+              }) }}
+
+              {% set isFirstRendered = true %}
+            {% endif %}
+          {% endfor %}
+
+          {# Render remaining items in dropdown #}
+          {% if regularActions|length > skippedActions %}
+            <a class="btn btn-link dropdown-toggle dropdown-toggle-dots dropdown-toggle-split"
+               data-toggle="dropdown"
+               aria-haspopup="true"
+               aria-expanded="false"
+            >
+            </a>
+
+            <div class="dropdown-menu dropdown-menu-right">
+              {% for action in regularActions|slice(skippedActions) if action.isApplicable(record) %}
+                {{ include('@PrestaShop/Admin/Common/Grid/Actions/Row/'~action.type~'.html.twig', {
+                  'grid': grid,
+                  'column': column,
+                  'attributes': {'class': 'dropdown-item', 'tooltip_name': false},
+                  'record': record,
+                  'action': action
+                }) }}
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+      {% endif %}
     </div>
-  </div>
 {% endif %}

@@ -1,5 +1,3 @@
-// Using chai
-const {expect} = require('chai');
 // Using CommonPage
 const CommonPage = require('../commonPage');
 
@@ -68,22 +66,22 @@ module.exports = class Install extends CommonPage {
    * To check each step title
    * @param selector, where to get actual title
    * @param pageTitle, expected title
+   * @return {Promise<*>}
    */
   async checkStepTitle(selector, pageTitle) {
     await this.page.waitForSelector(selector, {visible: true});
     const title = await this.getTextContent(selector);
     if (Array.isArray(pageTitle)) {
-      const result = await pageTitle.some(arrVal => title.includes(arrVal));
-      await expect(result).to.be.true;
+      return pageTitle.some(arrVal => title.includes(arrVal));
     }
-    else await expect(title).to.contains(pageTitle);
+    return title.includes(pageTitle);
   }
 
   /**
    * Change install language in step 1
    */
   async setInstallLanguage() {
-    await this.page.select(this.languageSelect, global.INSTALL_LANGUAGE);
+    await this.page.select(this.languageSelect, global.INSTALL.LANGUAGE);
   }
 
   /**
@@ -108,13 +106,13 @@ module.exports = class Install extends CommonPage {
    * Fill Information and Account Forms in step 4
    */
   async fillInformationForm() {
-    await this.page.type(this.shopNameInput, global.SHOPNAME);
-    await this.page.select(this.countrySelect, global.INSTALL_COUNTRY);
+    await this.page.type(this.shopNameInput, global.INSTALL.SHOPNAME);
+    await this.page.select(this.countrySelect, global.INSTALL.COUNTRY);
     await this.page.type(this.firstNameInput, 'demo');
     await this.page.type(this.lastNameInput, 'demo');
-    await this.page.type(this.emailInput, global.EMAIL);
-    await this.page.type(this.passwordInput, global.PASSWD);
-    await this.page.type(this.repeatPasswordInput, global.PASSWD);
+    await this.page.type(this.emailInput, global.BO.EMAIL);
+    await this.page.type(this.passwordInput, global.BO.PASSWD);
+    await this.page.type(this.repeatPasswordInput, global.BO.PASSWD);
   }
 
   /**
@@ -122,9 +120,9 @@ module.exports = class Install extends CommonPage {
    */
   async fillDatabaseForm() {
     await this.page.click(this.dbLoginInput, {clickCount: 3});
-    await this.page.type(this.dbLoginInput, global.db_user);
+    await this.page.type(this.dbLoginInput, global.INSTALL.DB_USER);
     await this.page.click(this.dbPasswordInput, {clickCount: 3});
-    await this.page.type(this.dbPasswordInput, global.db_passwd);
+    await this.page.type(this.dbPasswordInput, global.INSTALL.DB_PASSWD);
   }
 
   /**

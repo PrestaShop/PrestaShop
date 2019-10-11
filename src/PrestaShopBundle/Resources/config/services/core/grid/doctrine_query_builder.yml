@@ -217,3 +217,28 @@ services:
             - '@=service("prestashop.adapter.shop.context").getShops(true, true)'
             - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
         public: true
+
+    prestashop.core.grid.query_builder.order_message:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Query\OrderMessageQueryBuilder'
+      arguments:
+        - '@doctrine.dbal.default_connection'
+        - '%database_prefix%'
+        - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
+        - '@prestashop.core.grid.query.filter.doctrine_filter_applicator'
+        - '@prestashop.core.query.doctrine_search_criteria_applicator'
+
+    prestashop.core.grid.query_builder.attachment:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Query\AttachmentQueryBuilder'
+      parent: 'prestashop.core.grid.abstract_query_builder'
+      arguments:
+        - '@prestashop.core.query.doctrine_search_criteria_applicator'
+        - "@=service('prestashop.adapter.legacy.context').getContext().employee.id_lang"
+      public: true
+
+    prestashop.core.grid.query_builder.attachment:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Query\AttachmentQueryBuilder'
+      parent: 'prestashop.core.grid.abstract_query_builder'
+      arguments:
+        - '@prestashop.core.query.doctrine_search_criteria_applicator'
+        - "@=service('prestashop.adapter.legacy.context').getContext().employee.id_lang"
+      public: true

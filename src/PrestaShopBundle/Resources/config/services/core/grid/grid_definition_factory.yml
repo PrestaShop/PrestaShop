@@ -193,6 +193,8 @@ services:
             - '@prestashop.core.form.choice_provider.order_state_by_id'
             - '@=service("prestashop.adapter.legacy.context").getContext().language.date_format_full'
             - '@prestashop.adapter.feature.multistore'
+            - '@prestashop.core.grid.action.row.accessibility_checker.print_invoice'
+            - '@prestashop.core.grid.action.row.accessibility_checker.print_delivery_slip'
         public: true
 
     prestashop.core.grid.definition.factory.catalog_price_rule:
@@ -204,3 +206,17 @@ services:
             - '@=service("prestashop.adapter.multistore_feature").isUsed()'
         public: true
 
+    prestashop.core.grid.definition.factory.order_message:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderMessageGridDefinitionFactory'
+      parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+      public: true
+
+    prestashop.core.grid.definition.factory.attachment:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AttachmentGridDefinitionFactory'
+      parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+      public: true
+
+    prestashop.core.grid.definition.factory.attachment:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AttachmentGridDefinitionFactory'
+      parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+      public: true

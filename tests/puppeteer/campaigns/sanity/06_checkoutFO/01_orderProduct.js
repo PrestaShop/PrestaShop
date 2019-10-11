@@ -44,7 +44,7 @@ describe('Order a product and check order confirmation', async () => {
   });
   // Steps
   it('should open the shop page', async function () {
-    await this.pageObjects.homePage.goTo(global.URL_FO);
+    await this.pageObjects.homePage.goTo(global.FO.URL);
     await this.pageObjects.homePage.checkHomePage();
   });
   it('should go to login page', async function () {
@@ -68,7 +68,12 @@ describe('Order a product and check order confirmation', async () => {
     await expect(pageTitle).to.equal(this.pageObjects.cartPage.pageTitle);
   });
   it('should check the cart details', async function () {
-    await this.pageObjects.cartPage.checkProductInCart(CartData.customCartData.firstProduct, '1');
+    const result = await this.pageObjects.cartPage.checkProductInCart(CartData.customCartData.firstProduct, '1');
+    await Promise.all([
+      expect(result.name).to.be.true,
+      expect(result.price).to.be.true,
+      expect(result.quantity).to.be.true,
+    ]);
   });
   it('should proceed to checkout and check Step Address', async function () {
     await this.pageObjects.cartPage.clickOnProceedToCheckout();
