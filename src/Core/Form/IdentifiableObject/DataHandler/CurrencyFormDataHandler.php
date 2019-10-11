@@ -67,10 +67,9 @@ final class CurrencyFormDataHandler implements FormDataHandlerInterface
                 (float) $data['exchange_rate'],
                 $data['active']
             );
-        }
-
-        if (!empty($data['numeric_iso_code'])) {
-            $command->setNumericIsoCode((int) $data['numeric_iso_code']);
+            if (!empty($data['numeric_iso_code'])) {
+                $command->setNumericIsoCode($data['numeric_iso_code']);
+            }
         }
 
         $command
@@ -95,7 +94,6 @@ final class CurrencyFormDataHandler implements FormDataHandlerInterface
 
         $command
             ->setIsoCode($data['iso_code'])
-            ->setNumericIsoCode($data['numeric_iso_code'])
             ->setLocalizedNames($data['names'])
             ->setLocalizedSymbols($data['symbols'])
             ->setExchangeRate((float) $data['exchange_rate'])

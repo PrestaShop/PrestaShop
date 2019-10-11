@@ -38,11 +38,11 @@ class Precision
     private $precision;
 
     /**
-     * @param int|string $precision
+     * @param int $precision
      *
      * @throws CurrencyConstraintException
      */
-    public function __construct($precision)
+    public function __construct(int $precision)
     {
         $this->assertIsPositiveInteger($precision);
         $this->precision = $precision;
@@ -57,13 +57,13 @@ class Precision
     }
 
     /**
-     * @param int|string $precision
+     * @param int $precision
      *
      * @throws CurrencyConstraintException
      */
-    private function assertIsPositiveInteger($precision)
+    private function assertIsPositiveInteger(int $precision)
     {
-        if ((!is_int($precision) && !ctype_digit($precision)) || (int) $precision < 0) {
+        if ((int) $precision < 0) {
             throw new CurrencyConstraintException(
                 sprintf(
                     'Given precision "%s" is not valid. It must be a positive integer',
