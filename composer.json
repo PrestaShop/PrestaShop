@@ -199,7 +199,7 @@
             "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/old-controllers.xml"
         ],
         "integration-behaviour-tests": [
-            "@php -d date.timezone=UTC ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml"
+            "@php -d date.timezone=UTC ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml --no-snippets --strict"
         ],
         "create-release": "@php tools/build/CreateRelease.php",
         "git-hook-install": "@php .github/contrib/install.php",
