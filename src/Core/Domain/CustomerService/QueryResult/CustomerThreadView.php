@@ -70,7 +70,13 @@ class CustomerThreadView
     private $timeline;
 
     /**
+     * @var CustomerThreadId
+     */
+    private $nextCustomerThreadId;
+
+    /**
      * @param CustomerThreadId $customerThreadId
+     * @param CustomerThreadId $nextCustomerThreadId
      * @param LanguageId $languageId
      * @param array $actions
      * @param CustomerInformation $customerInformation
@@ -80,6 +86,7 @@ class CustomerThreadView
      */
     public function __construct(
         CustomerThreadId $customerThreadId,
+        CustomerThreadId $nextCustomerThreadId,
         LanguageId $languageId,
         array $actions,
         CustomerInformation $customerInformation,
@@ -94,6 +101,7 @@ class CustomerThreadView
         $this->messages = $messages;
         $this->languageId = $languageId;
         $this->timeline = $timeline;
+        $this->nextCustomerThreadId = $nextCustomerThreadId;
     }
 
     /**
@@ -150,5 +158,13 @@ class CustomerThreadView
     public function getTimeline()
     {
         return $this->timeline;
+    }
+
+    /**
+     * @return CustomerThreadId
+     */
+    public function getNextCustomerThreadId()
+    {
+        return $this->nextCustomerThreadId;
     }
 }

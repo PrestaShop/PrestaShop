@@ -84,8 +84,11 @@ final class GetCustomerThreadForViewingHandler implements GetCustomerThreadForVi
 
         $messages = CustomerThread::getMessageCustomerThreads($query->getCustomerThreadId()->getValue());
 
+        $customerThreadId = CustomerThread::getNextThread((int) $customerThread->id);
+
         return new CustomerThreadView(
             $query->getCustomerThreadId(),
+            new CustomerThreadId((int) $customerThreadId),
             new LanguageId((int) $customerThread->id_lang),
             $this->getAvailableActions($customerThread),
             $this->getCustomerInformation($customerThread),
