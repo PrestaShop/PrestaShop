@@ -47,30 +47,37 @@ export default class ChoiceExtension {
       const $button = $(e.currentTarget);
       const $parent = $button.closest('.js-choice-options');
       const url = $parent.data('url');
-      const selectedStatusId = $button.data('value');
 
-      this._submitForm(url, selectedStatusId);
+      this._submitForm(url, $button);
     });
   }
 
   /**
    * Submits the form.
    * @param {string} url
-   * @param {number} selectedStatusId
+   * @param {jQuery} $button
    * @private
    */
-  _submitForm(url, selectedStatusId) {
+  _submitForm(url, $button) {
+    const selectedStatusId = $button.data('value');
+
     if (this._isLocked(url)) {
       return;
     }
 
-    const $form = $(`<form method="POST" action="${url}">
-        <input type="text" name="value" value="${selectedStatusId}">
-    </form>`);
+    const $form = $('<form>', {
+      action: url,
+      method: 'POST',
+    }).append(
+      $('<input>', {
+        name: 'value',
+        value: selectedStatusId,
+        type: 'hidden',
+      }));
 
     $form.appendTo('body');
-
     $form.submit();
+
     this._lock(url);
   }
 
