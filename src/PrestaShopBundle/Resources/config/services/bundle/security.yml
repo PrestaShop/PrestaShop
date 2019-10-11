@@ -5,6 +5,8 @@ services:
     _defaults:
         public: true
 
+    # This service is deprecated since 1.7.7
+    # Use @prestashop.security.admin.user_provider instead.
     prestashop.security.admin.provider:
         class: PrestaShopBundle\Security\Admin\EmployeeProvider
         arguments:

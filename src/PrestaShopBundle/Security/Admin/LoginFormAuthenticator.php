@@ -145,7 +145,7 @@ final class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
     public function getUser($credentials, UserProviderInterface $userProvider)
     {
         if (null === $credentials['username']) {
-            return;
+            return null;
         }
 
         return $userProvider->loadUserByUsername($credentials['username']);
