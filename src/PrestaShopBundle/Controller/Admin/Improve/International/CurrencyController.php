@@ -219,7 +219,7 @@ class CurrencyController extends FrameworkBundleAdminController
     }
 
     /**
-     * Get the default data for a currency (from CLDR)
+     * Get the data for a currency (from CLDR)
      *
      * @param string $currencyIsoCode
      *
@@ -228,7 +228,7 @@ class CurrencyController extends FrameworkBundleAdminController
      *
      * @return JsonResponse
      */
-    public function getCLDRDataAction($currencyIsoCode)
+    public function getReferenceDataAction($currencyIsoCode)
     {
         /** @var LegacyContext $legacyContext */
         $legacyContext = $this->get('prestashop.adapter.legacy.context');
@@ -247,7 +247,7 @@ class CurrencyController extends FrameworkBundleAdminController
 
             $currency = new Currency($currencyData);
             $cldrCurrency['iso_code'] = $currencyData->getIsoCode();
-            $cldrCurrency['numeric_iso_code'] = (int) $currencyData->getNumericIsoCode();
+            $cldrCurrency['numeric_iso_code'] = $currencyData->getNumericIsoCode();
             $cldrCurrency['precision'] = $currencyData->getDecimalDigits();
             $cldrCurrency['names'][$language['id_lang']] = $currency->getDisplayName();
             $cldrCurrency['symbols'][$language['id_lang']] = $currency->getSymbol(CurrencyInterface::SYMBOL_TYPE_NARROW) ?: $currencyData->getIsoCode();
@@ -510,23 +510,17 @@ class CurrencyController extends FrameworkBundleAdminController
                 'You cannot disable the default currency',
                 'Admin.International.Notification'
             ),
-            InvalidUnofficialCurrencyException::class => [
-                InvalidUnofficialCurrencyException::INVALID_ISO_CODE => $this->trans(
-                    'You cannot create an unofficial currency which ISO code matches a real one',
-                    'Admin.International.Notification'
-                ),
-                InvalidUnofficialCurrencyException::INVALID_NUMERIC_ISO_CODE => $this->trans(
-                    'You cannot create an unofficial currency which numeric ISO code matches a real one',
-                    'Admin.International.Notification'
-                ),
-            ],
+            InvalidUnofficialCurrencyException::class => $this->trans(
+                'You cannot create an unofficial currency whose ISO code matches a real one',
+                'Admin.International.Notification'
+            ),
             ImmutableCurrencyFieldException::class => [
                 ImmutableCurrencyFieldException::IMMUTABLE_ISO_CODE => $this->trans(
-                    'You cannot modify ISO code of a real currency',
+                    'You cannot modify the ISO code of a real currency',
                     'Admin.International.Notification'
                 ),
                 ImmutableCurrencyFieldException::IMMUTABLE_NUMERIC_ISO_CODE => $this->trans(
-                    'You cannot modify numeric ISO code of a real currency',
+                    'You cannot modify the numeric ISO code of a real currency',
                     'Admin.International.Notification'
                 ),
             ],

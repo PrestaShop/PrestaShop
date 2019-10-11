@@ -570,7 +570,7 @@ class Reader implements ReaderInterface
                     $codesMapping = $codesMapping[0];
                     $numericIsoCode = (string) $codesMapping->attributes()->numeric;
                     if (strlen($numericIsoCode) < 3) {
-                        $numericIsoCode = str_repeat('0', 3 - strlen($numericIsoCode)) . $numericIsoCode;
+                        $numericIsoCode = str_pad($numericIsoCode, 3, '0', STR_PAD_LEFT);
                     }
                     $currencyData->setNumericIsoCode($numericIsoCode);
                 }

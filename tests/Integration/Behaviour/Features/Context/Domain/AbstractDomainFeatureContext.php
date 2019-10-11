@@ -86,6 +86,20 @@ abstract class AbstractDomainFeatureContext implements Context
     }
 
     /**
+     * @Then I should get no error
+     */
+    public function assertNoErrorOccurred()
+    {
+        if (null !== $this->lastException) {
+            throw new RuntimeException(sprintf(
+                'An unexpected exception was thrown %s: %s',
+                get_class($this->lastException),
+                $this->lastException->getMessage()
+            ), 0, $this->lastException);
+        }
+    }
+
+    /**
      * @param string $expectedError
      * @param int|null $errorCode
      */
@@ -96,14 +110,14 @@ abstract class AbstractDomainFeatureContext implements Context
                 'Last error should be "%s", but got "%s"',
                 $expectedError,
                 $this->lastException ? get_class($this->lastException) : 'null'
-            ));
+            ), 0, $this->lastException);
         }
         if (null !== $errorCode && $this->lastException->getCode() !== $errorCode) {
             throw new RuntimeException(sprintf(
                 'Last error should have code "%s", but has "%s"',
                 $errorCode,
                 $this->lastException ? $this->lastException->getCode() : 'null'
-            ));
+            ), 0, $this->lastException);
         }
     }
 }

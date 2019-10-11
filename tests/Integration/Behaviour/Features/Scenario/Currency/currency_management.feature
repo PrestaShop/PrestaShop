@@ -18,7 +18,8 @@ Feature: Currency Management
       | is_enabled       | 1         |
       | is_unofficial    | 0         |
       | shop_association | shop1     |
-    Then currency "currency1" should be "EUR"
+    Then I should get no error
+    And currency "currency1" should be "EUR"
     And currency "currency1" exchange rate should be 0.88
     And currency "currency1" numeric iso code should be 978
     And currency "currency1" name should be "My Euros"
@@ -102,7 +103,8 @@ Feature: Currency Management
       | is_enabled       | 1             |
       | is_unofficial    | 0             |
       | shop_association | shop1         |
-    Then currency "currency5" should be "GBP"
+    Then I should get no error
+    And currency "currency5" should be "GBP"
     And currency "currency5" exchange rate should be 0.88
     And currency "currency5" numeric iso code should be 826
     And currency "currency5" name should be "British Pound"
@@ -133,7 +135,8 @@ Feature: Currency Management
       | is_enabled       | 1                |
       | is_unofficial    | 1                |
       | shop_association | shop1            |
-    Then currency "currency7" should be "CST"
+    Then I should get no error
+    And currency "currency7" should be "CST"
     And currency "currency7" exchange rate should be 0.77
     And currency "currency7" numeric iso code should be null
     And currency "currency7" name should be "Unofficial Money"
@@ -150,7 +153,8 @@ Feature: Currency Management
       | is_enabled       | 0             |
       | is_unofficial    | 1             |
       | shop_association | shop1         |
-    Then currency "currency7" should be "CUS"
+    Then I should get no error
+    And currency "currency7" should be "CUS"
     And currency "currency7" exchange rate should be 0.66
     And currency "currency7" numeric iso code should be null
     And currency "currency7" name should be "Unofficial Money"
@@ -171,7 +175,8 @@ Feature: Currency Management
       | is_enabled       | 1                |
       | is_unofficial    | 1                |
       | shop_association | shop1            |
-    Then currency "currency8" should be "CST"
+    Then I should get no error
+    And currency "currency8" should be "CST"
     And currency "currency8" exchange rate should be 0.77
     And currency "currency8" numeric iso code should be null
     And currency "currency8" name should be "Unofficial Money"
@@ -255,7 +260,8 @@ Feature: Currency Management
       | is_enabled       | 1         |
       | is_unofficial    | 0         |
       | shop_association | shop1     |
-    Then currency "currency14" should be "AUD"
+    Then I should get no error
+    And currency "currency14" should be "AUD"
     And currency "currency14" exchange rate should be 0.88
     And currency "currency14" numeric iso code should be 036
     And currency "currency14" name should be "Australian Dollar"
@@ -273,7 +279,8 @@ Feature: Currency Management
       | is_enabled       | 1         |
       | is_unofficial    | 1         |
       | shop_association | shop1     |
-    Then currency "currency15" should be "BTC"
+    Then I should get no error
+    And currency "currency15" should be "BTC"
     And currency "currency15" exchange rate should be 0.88
     And currency "currency15" numeric iso code should be null
     And currency "currency15" name should be "BTC"
