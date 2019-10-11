@@ -200,13 +200,7 @@ class CurrencyType extends TranslatorAwareType
                 'constraints' => [
                     new Type([
                         'type' => 'integer',
-                        'message' => $this->trans(
-                            'This value should be of type {{ type }}.',
-                            'Admin.Notifications.Error',
-                            [
-                                '%value%' => 0,
-                            ]
-                        ),
+                        'message' => $this->trans('This field is invalid', 'Admin.Notifications.Error'),
                     ]),
                     new GreaterThanOrEqual([
                         'value' => 0,
@@ -220,7 +214,7 @@ class CurrencyType extends TranslatorAwareType
                     ]),
                 ],
                 'invalid_message' => $this->trans(
-                    'This field is invalid, it must contain positive integer',
+                    'This field is invalid, it must contain a positive integer',
                     'Admin.Notifications.Error'
                 ),
             ])
