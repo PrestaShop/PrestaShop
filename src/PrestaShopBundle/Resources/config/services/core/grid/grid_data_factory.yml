@@ -310,3 +310,8 @@ services:
             - '@prestashop.core.hook.dispatcher'
             - '@prestashop.core.grid.query.doctrine_query_parser'
             - 'attribute_group'
+
+    prestashop.core.grid.data.factory.attribute_group_decorator:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Data\Factory\AttributeGroupGridDataFactory'
+      arguments:
+        - '@prestashop.core.grid.data.factory.attribute_group'

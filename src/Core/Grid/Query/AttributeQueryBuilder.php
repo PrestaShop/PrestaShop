@@ -57,9 +57,9 @@ final class AttributeQueryBuilder extends AbstractDoctrineQueryBuilder
     private $multistoreContextChecker;
 
     /**
-     * @var int
+     * @var int[]
      */
-    private $contextShopId;
+    private $contextShopIds;
 
     /**
      * @param Connection $connection
@@ -68,7 +68,7 @@ final class AttributeQueryBuilder extends AbstractDoctrineQueryBuilder
      * @param int $contextLangId
      * @param int $attributeGroupId
      * @param MultistoreContextCheckerInterface $multistoreContextChecker
-     * @param $contextShopId
+     * @param int[] $contextShopIds
      */
     public function __construct(
         Connection $connection,
@@ -77,14 +77,14 @@ final class AttributeQueryBuilder extends AbstractDoctrineQueryBuilder
         $contextLangId,
         $attributeGroupId,
         MultistoreContextCheckerInterface $multistoreContextChecker,
-        $contextShopId
+        $contextShopIds
     ) {
         parent::__construct($connection, $dbPrefix);
         $this->contextLangId = $contextLangId;
         $this->searchCriteriaApplicator = $searchCriteriaApplicator;
         $this->attributeGroupId = $attributeGroupId;
         $this->multistoreContextChecker = $multistoreContextChecker;
-        $this->contextShopId = $contextShopId;
+        $this->contextShopIds = $contextShopIds;
     }
 
     /**
@@ -97,7 +97,7 @@ final class AttributeQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters())
-            ->select('a.id_attribute, a.color, a.id_attribute_group, al.name AS value, a.position');
+            ->select('DISTINCT a.id_attribute, a.color, a.id_attribute_group, al.name AS value, a.position');
 
         $this->searchCriteriaApplicator
             ->applyPagination($searchCriteria, $qb)
@@ -132,30 +132,32 @@ final class AttributeQueryBuilder extends AbstractDoctrineQueryBuilder
             ->from($this->dbPrefix . 'attribute', 'a')
             ->setParameter('contextLangId', $this->contextLangId)
             ->setParameter('attributeGroupId', $this->attributeGroupId)
-            ->setParameter('contextShopId', $this->contextShopId);
+            ->setParameter('contextShopIds', $this->contextShopIds, Connection::PARAM_INT_ARRAY)
+            ->andWhere('al.id_lang = :contextLangId')
+            ->andWhere('ag.id_attribute_group = :attributeGroupId');
 
-        if ($this->multistoreContextChecker->isSingleShopContext()) {
-            $qb->leftJoin(
-                'a',
-                $this->dbPrefix . 'attribute_shop',
-                'shop',
-                'a.id_attribute = shop.id_attribute AND shop.id_shop = :contextShopId'
-            );
-            $qb->andWhere('shop.id_shop = :contextShopId');
+        if (!$this->multistoreContextChecker->isAllShopContext()) {
+            $qb->andWhere('ashop.id_shop IN (:contextShopIds)');
         }
+
+        $qb->leftJoin(
+            'a',
+            $this->dbPrefix . 'attribute_shop',
+            'ashop',
+            'a.id_attribute = ashop.id_attribute'
+        );
 
         $qb->leftJoin(
             'a',
             $this->dbPrefix . 'attribute_group',
             'ag',
-            'a.id_attribute_group = ag.id_attribute_group')
-            ->andWhere('ag.id_attribute_group = :attributeGroupId');
+            'a.id_attribute_group = ag.id_attribute_group');
 
         $qb->leftJoin(
             'a',
             $this->dbPrefix . 'attribute_lang',
             'al',
-            'a.id_attribute = al.id_attribute AND al.id_lang = :contextLangId'
+            'a.id_attribute = al.id_attribute'
         );
 
         $this->applyFilters($filters, $qb);

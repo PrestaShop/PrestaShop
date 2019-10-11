@@ -247,14 +247,6 @@ services:
         - '@prestashop.core.grid.filter.form_factory'
         - '@prestashop.core.hook.dispatcher'
 
-    prestashop.core.grid.factory.attachment:
-      class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
-      arguments:
-        - '@prestashop.core.grid.definition.factory.attachment'
-        - '@prestashop.core.grid.data_factory.attachment_decorator'
-        - '@prestashop.core.grid.filter.form_factory'
-        - '@prestashop.core.hook.dispatcher'
-
     prestashop.core.grid.factory.attribute:
         class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
         arguments:
@@ -267,6 +259,6 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
         arguments:
             - '@prestashop.core.grid.definition.factory.attribute_group'
-            - '@prestashop.core.grid.data.factory.attribute_group'
+            - '@prestashop.core.grid.data.factory.attribute_group_decorator'
             - '@prestashop.core.grid.filter.form_factory'
             - '@prestashop.core.hook.dispatcher'

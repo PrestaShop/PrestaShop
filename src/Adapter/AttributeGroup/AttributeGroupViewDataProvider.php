@@ -75,11 +75,11 @@ final class AttributeGroupViewDataProvider implements AttributeGroupViewDataProv
     {
         $attributeGroup = $this->getAttributeGroupById($attributeGroupId);
 
-        if (!isset($attributeGroup->public_name[$this->contextLangId])) {
-            return $attributeGroup->public_name[$this->configuration->get('PS_LANG_DEFAULT')];
+        if (!isset($attributeGroup->name[$this->contextLangId])) {
+            return $attributeGroup->name[$this->configuration->get('PS_LANG_DEFAULT')];
         }
 
-        return $attributeGroup->public_name[$this->contextLangId];
+        return $attributeGroup->name[$this->contextLangId];
     }
 
     /**
