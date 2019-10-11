@@ -122,7 +122,9 @@
             </div>
           </td>
           <td>
-            {{ form_widget(addOrderPaymentForm.id_invoice) }}
+            <div {% if addOrderPaymentForm.id_invoice.vars.choices is empty %}class="d-none"{% endif %}>
+              {{ form_widget(addOrderPaymentForm.id_invoice) }}
+            </div>
           </td>
           <td>
             <button type="submit" class="btn btn-primary btn-sm">{{ 'Add'|trans({}, 'Admin.Actions') }}</button>
