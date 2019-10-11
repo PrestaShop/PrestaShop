@@ -81,7 +81,6 @@ final class UserProvider implements UserProviderInterface
         $this->legacyContext = $context->getContext();
         $this->cache = $cache;
         $this->queryBus = $queryBus;
-        $this->context = $context;
         $this->employeeCacheKeyGenerator = $employeeCacheKeyGenerator;
     }
 
