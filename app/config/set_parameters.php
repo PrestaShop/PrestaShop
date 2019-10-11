@@ -62,7 +62,7 @@ if ($container instanceof \Symfony\Component\DependencyInjection\Container) {
 
     // Parameter used only in dev and test env
     $envParameter = getenv('DISABLE_DEBUG_TOOLBAR');
-    if (!isset($parameters['use_debug_toolbar']) || false !== $envParameter) {
+    if (!isset($parameters['parameters']['use_debug_toolbar']) || false !== $envParameter) {
         $container->setParameter('use_debug_toolbar', !$envParameter);
     }
 }
