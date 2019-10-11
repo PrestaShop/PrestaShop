@@ -26,12 +26,13 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Cart\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 
 /**
- * Updates cart delivery option with new one.
+ * Updates cart carrier (a.k.a delivery option) with new one.
  */
-class UpdateCartDeliveryOptionCommand
+class UpdateCartCarrierCommand
 {
     /**
      * @var CartId
@@ -39,33 +40,35 @@ class UpdateCartDeliveryOptionCommand
     private $cartId;
 
     /**
-     * @var string
+     * @var int
      */
-    private $newDeliveryOption;
+    private $newCarrierId;
 
     /**
      * @param int $cartId
-     * @param string $newDeliveryOption
+     * @param $newCarrierId
+     *
+     * @throws CartConstraintException
      */
-    public function __construct($cartId, $newDeliveryOption)
+    public function __construct($cartId, $newCarrierId)
     {
         $this->cartId = new CartId($cartId);
-        $this->newDeliveryOption = $newDeliveryOption;
+        $this->newCarrierId = $newCarrierId;
     }
 
     /**
      * @return CartId
      */
-    public function getCartId()
+    public function getCartId(): CartId
     {
         return $this->cartId;
     }
 
     /**
-     * @return string
+     * @return int
      */
-    public function getNewDeliveryOption()
+    public function getNewCarrierId(): int
     {
-        return $this->newDeliveryOption;
+        return $this->newCarrierId;
     }
 }

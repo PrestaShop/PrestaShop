@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\CreateEmptyCustomerCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartAddressesCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartCarrierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForViewing;
@@ -138,7 +139,26 @@ class CartController extends FrameworkBundleAdminController
         return $this->json($this->getCartInfo($cartId));
     }
 
-    public function editShippingAction(Request $request, int $cartId)
+    /**
+     * @param Request $request
+     * @param int $cartId
+     *
+     * @return JsonResponse
+     *
+     * @throws CartConstraintException
+     */
+    public function editCarrierAction(Request $request, int $cartId): JsonResponse
+    {
+        $carrierId = (int) $request->request->get('carrier_id');
+        $this->getCommandBus()->handle(new UpdateCartCarrierCommand(
+            $cartId,
+            $carrierId
+        ));
+
+        return $this->json($this->getCartInfo($cartId));
+    }
+
+    public function editFreeShippingAction(Request $request, int $cartId)
     {
         //@todo;
         dump($request);
