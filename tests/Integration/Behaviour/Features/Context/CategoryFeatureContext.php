@@ -1,10 +1,6 @@
 <?php
 /**
-<<<<<<< HEAD
  * 2007-2019 PrestaShop SA and Contributors
-=======
- * 2007-2019 PrestaShop and Contributors
->>>>>>> 7a8ba35755fad1eeffa35df95dfdf7de8b95e0a1
  *
  * NOTICE OF LICENSE
  *
@@ -30,8 +26,9 @@
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
-<<<<<<< HEAD
+use Context;
 use Category;
+use Tools;
 use Configuration;
 use Group;
 use RuntimeException;
@@ -39,10 +36,17 @@ use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class CategoryFeatureContext extends AbstractPrestaShopFeatureContext
 {
+    use CartAwareTrait;
+
     /**
      * @var int
      */
     private $defaultLanguageId;
+
+    /**
+     * @var Category[]
+     */
+    protected $categories = [];
 
     public function __construct()
     {
@@ -213,19 +217,7 @@ class CategoryFeatureContext extends AbstractPrestaShopFeatureContext
                 )
             );
         }
-=======
-use Context;
-use Category;
-use Tools;
-
-class CategoryFeatureContext extends AbstractPrestaShopFeatureContext
-{
-    use CartAwareTrait;
-
-    /**
-     * @var Category[]
-     */
-    protected $categories = [];
+    }
 
     /**
      * @Given /^there is a category named "(.+)"$/
@@ -268,6 +260,5 @@ class CategoryFeatureContext extends AbstractPrestaShopFeatureContext
         }
 
         $this->categories = [];
->>>>>>> 7a8ba35755fad1eeffa35df95dfdf7de8b95e0a1
     }
 }
