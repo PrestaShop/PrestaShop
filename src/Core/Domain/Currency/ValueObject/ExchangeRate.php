@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject;
 
+use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintException;
 
 /**
@@ -34,6 +35,16 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintExcep
 class ExchangeRate
 {
     const DEFAULT_RATE = 1.0;
+
+    /**
+     * Get the default exchange rate as a Number
+     *
+     * @return Number
+     */
+    public static function getDefaultExchangeRate(): Number
+    {
+        return new Number((string) self::DEFAULT_RATE);
+    }
 
     /**
      * @var float
