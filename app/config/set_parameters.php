@@ -59,5 +59,10 @@ if ($container instanceof \Symfony\Component\DependencyInjection\Container) {
     }
 
     $container->setParameter('cache.driver', extension_loaded('apc') ? 'apc': 'array');
+
+    // Parameter used only in dev and test env
+    if (false !== ($envParameter = getenv('DISABLE_DEBUG_TOOLBAR'))) {
+        $container->setParameter('use_debug_toolbar', !$envParameter);
+    }
 }
 

@@ -1,6 +1,10 @@
 <?php
 /**
+<<<<<<< HEAD
  * 2007-2019 PrestaShop SA and Contributors
+=======
+ * 2007-2019 PrestaShop and Contributors
+>>>>>>> 7a8ba35755fad1eeffa35df95dfdf7de8b95e0a1
  *
  * NOTICE OF LICENSE
  *
@@ -26,6 +30,7 @@
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
+<<<<<<< HEAD
 use Category;
 use Configuration;
 use Group;
@@ -208,5 +213,61 @@ class CategoryFeatureContext extends AbstractPrestaShopFeatureContext
                 )
             );
         }
+=======
+use Context;
+use Category;
+use Tools;
+
+class CategoryFeatureContext extends AbstractPrestaShopFeatureContext
+{
+    use CartAwareTrait;
+
+    /**
+     * @var Category[]
+     */
+    protected $categories = [];
+
+    /**
+     * @Given /^there is a category named "(.+)"$/
+     */
+    public function createCategory($categoryName)
+    {
+        $idLang = (int) Context::getContext()->language->id;
+        $category = new Category();
+        $category->name = [$idLang => $categoryName];
+        $category->link_rewrite = [$idLang => Tools::link_rewrite($categoryName)];
+        $category->add();
+        $this->categories[$categoryName] = $category;
+    }
+
+    /**
+     * @param $categoryName
+     */
+    public function checkCategoryWithNameExists($categoryName)
+    {
+        $this->checkFixtureExists($this->categories, 'Category', $categoryName);
+    }
+
+    /**
+     * @param $categoryName
+     *
+     * @return Category
+     */
+    public function getCategoryWithName($categoryName)
+    {
+        return $this->categories[$categoryName];
+    }
+
+    /**
+     * @AfterScenario
+     */
+    public function cleanCategoryFixtures()
+    {
+        foreach ($this->categories as $category) {
+            $category->delete();
+        }
+
+        $this->categories = [];
+>>>>>>> 7a8ba35755fad1eeffa35df95dfdf7de8b95e0a1
     }
 }

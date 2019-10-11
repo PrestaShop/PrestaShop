@@ -26,6 +26,7 @@
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
+use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Cart;
 use Combination;
 use Context;
@@ -65,6 +66,17 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
      * @var CustomizationField[][]
      */
     protected $customizationFields = [];
+
+    /**
+     * @var CategoryFeatureContext
+     */
+    protected $categoryFeatureContext;
+
+    /** @BeforeScenario */
+    public function before(BeforeScenarioScope $scope)
+    {
+        $this->categoryFeatureContext = $scope->getEnvironment()->getContext(CategoryFeatureContext::class);
+    }
 
     /* PRODUCTS */
 
@@ -628,7 +640,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @Given /^product "(.+)" is virtual$/
      */
-    public function productWithNameProductisVirtual($productName)
+    public function productWithNameProductIsVirtual($productName)
     {
         $this->checkProductWithNameExists($productName);
         $this->products[$productName]->is_virtual = 1;
@@ -645,5 +657,20 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
         if (!$productId) {
             throw new \RuntimeException(sprintf('Product with reference "%s" does not exist.', $productReference));
         }
+    }
+
+    /**
+     * @Given /^product "(.+?)" is in category "(.+?)"$/
+     */
+    public function productWithNameProductInInCategory($productName, $categoryName)
+    {
+        $this->checkProductWithNameExists($productName);
+        $this->categoryFeatureContext->checkCategoryWithNameExists($categoryName);
+
+        $category = $this->categoryFeatureContext->getCategoryWithName($categoryName);
+
+        $this->products[$productName]->id_category_default = $category->id_category;
+        $this->products[$productName]->addToCategories([$category->id]);
+        $this->products[$productName]->save();
     }
 }
