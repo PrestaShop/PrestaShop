@@ -87,7 +87,7 @@ export default class ChoiceExtension {
   }
 
   /**
-   * Locks the current url so it cant be used twice to execute same requesat
+   * Locks the current url so it cant be used twice to execute same request
    * @param url
    * @private
    */
