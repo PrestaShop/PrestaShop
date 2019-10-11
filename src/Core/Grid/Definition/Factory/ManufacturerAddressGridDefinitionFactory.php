@@ -131,6 +131,7 @@ final class ManufacturerAddressGridDefinitionFactory extends AbstractGridDefinit
                                 'route' => 'admin_manufacturer_addresses_edit',
                                 'route_param_name' => 'addressId',
                                 'route_param_field' => 'id_address',
+                                'clickable_row' => true,
                             ])
                         )
                         ->add((new SubmitRowAction('delete'))

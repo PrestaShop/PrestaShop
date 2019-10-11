@@ -176,6 +176,7 @@ class CmsPageDefinitionFactory extends AbstractGridDefinitionFactory
                                 'route' => 'admin_cms_pages_edit',
                                 'route_param_name' => 'cmsPageId',
                                 'route_param_field' => 'id_cms',
+                                'clickable_row' => true,
                             ])
                         )
                         ->add((new SubmitRowAction('delete'))
