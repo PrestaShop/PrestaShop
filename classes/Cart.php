@@ -2415,8 +2415,9 @@ class CartCore extends ObjectModel
                 }
             }
 
-            if(empty($product['carrier_list']))
+            if (!$product['is_virtual'] && empty($product['carrier_list'])) {
                 return array();
+            }
 
             if (!isset($grouped_by_warehouse[$product['id_address_delivery']]['in_stock'][$id_warehouse])) {
                 $grouped_by_warehouse[$product['id_address_delivery']]['in_stock'][$id_warehouse] = array();
@@ -2436,10 +2437,6 @@ class CartCore extends ObjectModel
                     $product['cart_quantity'] -= $out_stock_part;
                     $grouped_by_warehouse[$product['id_address_delivery']]['out_of_stock'][$id_warehouse][] = $product_bis;
                 }
-            }
-
-            if (empty($product['carrier_list'])) {
-                $product['carrier_list'] = array(0 => 0);
             }
 
             $grouped_by_warehouse[$product['id_address_delivery']][$key][$id_warehouse][] = $product;
