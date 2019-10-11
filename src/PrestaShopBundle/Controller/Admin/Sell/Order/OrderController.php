@@ -52,6 +52,7 @@ use PrestaShopBundle\Form\Admin\Sell\Customer\PrivateNoteType;
 use PrestaShopBundle\Form\Admin\Sell\Order\AddOrderCartRuleType;
 use PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrderCurrencyType;
 use PrestaShopBundle\Form\Admin\Sell\Order\AddOrderProductType;
+use PrestaShopBundle\Form\Admin\Sell\Order\AddProductToOrderType;
 use PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrdersStatusType;
 use PrestaShopBundle\Form\Admin\Sell\Order\OrderPaymentType;
 use PrestaShopBundle\Form\Admin\Sell\Order\UpdateOrderProductType;
@@ -249,8 +250,6 @@ class OrderController extends FrameworkBundleAdminController
         /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
 
-        dump($orderForViewing);
-
         $addOrderCartRuleForm = $this->createForm(AddOrderCartRuleType::class, [], [
             'order_id' => $orderId,
         ]);
@@ -262,6 +261,7 @@ class OrderController extends FrameworkBundleAdminController
         ], [
             'id_order' => $orderId,
         ]);
+
         $changeOrderCurrencyForm = $this->createForm(ChangeOrderCurrencyType::class, [], [
             'current_currency_id' => $orderForViewing->getCurrencyId(),
         ]);
@@ -269,6 +269,7 @@ class OrderController extends FrameworkBundleAdminController
             'note' => $orderForViewing->getCustomer()->getPrivateNote(),
         ]);
         $addOrderProductForm = $this->createForm(AddOrderProductType::class);
+        $addProductToOrderForm = $this->createForm(AddProductToOrderType::class);
         $updateOrderProductForm = $this->createForm(UpdateOrderProductType::class);
 
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/view.html.twig', [
@@ -280,6 +281,7 @@ class OrderController extends FrameworkBundleAdminController
             'changeOrderCurrencyForm' => $changeOrderCurrencyForm->createView(),
             'privateNoteForm' => $privateNoteForm->createView(),
             'addOrderProductForm' => $addOrderProductForm->createView(),
+            'addProductToOrderForm' => $addProductToOrderForm->createView(),
             'updateOrderProductForm' => $updateOrderProductForm->createView(),
         ]);
     }
