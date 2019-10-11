@@ -299,6 +299,8 @@ class OrderController extends FrameworkBundleAdminController
      * @param int $orderId
      * @param Request $request
      *
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
+     *
      * @return RedirectResponse
      */
     public function updateStatusAction(int $orderId, Request $request): RedirectResponse
@@ -320,6 +322,8 @@ class OrderController extends FrameworkBundleAdminController
      *
      * @param int $orderId
      * @param Request $request
+     *
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
      *
      * @return RedirectResponse
      */
