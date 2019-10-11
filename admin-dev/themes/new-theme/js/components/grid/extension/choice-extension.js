@@ -25,6 +25,15 @@
 
 const $ = global.$;
 
+/**
+ * This extension enables submit functionality of the choice fields in grid.
+ *
+ * Usage of the extension:
+ *
+ * const myGrid = new Grid('myGrid');
+ * myGrid.addExtension(new ChoiceExtension());
+ *
+ */
 export default class ChoiceExtension {
   constructor() {
     this.lock = [];
