@@ -180,30 +180,29 @@ class DiscountControllerCore extends FrontController
      *
      * @return array
      */
-    protected function buildCartRuleFromVoucher($voucher)
+    protected function buildCartRuleFromVoucher(array $voucher): array
     {
-        $cart_rule = $voucher;
-        $cart_rule['voucher_date'] = Tools::displayDate($voucher['date_to'], null, false);
+        $voucher['voucher_date'] = Tools::displayDate($voucher['date_to'], null, false);
 
-        if ($voucher['minimum_amount'] > 0) {
-            $cart_rule['voucher_minimal'] = Tools::displayPrice(
+        if ($voucher['minimum_amount'] === 0) {
+            $voucher['voucher_minimal'] = $this->trans('None', array(), 'Shop.Theme.Global');
+        } else {
+            $voucher['voucher_minimal'] = Tools::displayPrice(
                 $voucher['minimum_amount'],
                 (int) $voucher['minimum_amount_currency']
             );
-        } else {
-            $cart_rule['voucher_minimal'] = $this->trans('None', array(), 'Shop.Theme.Global');
         }
 
-        $cart_rule['voucher_cumulable'] = $this->getCombinableVoucherTranslation($voucher);
+        $voucher['voucher_cumulable'] = $this->getCombinableVoucherTranslation($voucher);
 
         $cartRuleValues = $this->accumulateCartRuleValue($voucher);
 
         if (0 === count($cartRuleValues)) {
-            $cart_rule['value'] = '-';
+            $voucher['value'] = '-';
         } else {
-            $cart_rule['value'] = implode(' + ', $cartRuleValues);
+            $voucher['value'] = implode(' + ', $cartRuleValues);
         }
 
-        return $cart_rule;
+        return $voucher;
     }
 }
