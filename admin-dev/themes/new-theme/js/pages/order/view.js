@@ -28,6 +28,10 @@ import OrderViewPageMap from './OrderViewPageMap';
 const $ = window.$;
 
 $(() => {
+  const DISCOUNT_TYPE_AMOUNT = 'amount';
+  const DISCOUNT_TYPE_PERCENT = 'percent';
+  const DISCOUNT_TYPE_FREE_SHIPPING = 'free_shipping';
+
   handlePaymentDetailsToggle();
   handlePrivateNoteChange();
 
@@ -104,13 +108,13 @@ $(() => {
     $form.find(OrderViewPageMap.addCartRuleTypeSelect).on('change', (event) => {
       const selectedCartRuleType = $(event.currentTarget).val();
 
-      if (selectedCartRuleType === 'amount') {
+      if (selectedCartRuleType === DISCOUNT_TYPE_AMOUNT) {
         $valueHelp.removeClass('d-none');
       } else {
         $valueHelp.addClass('d-none');
       }
 
-      if (selectedCartRuleType === 'free_shipping') {
+      if (selectedCartRuleType === DISCOUNT_TYPE_FREE_SHIPPING) {
         $valueFormGroup.addClass('d-none');
         $valueInput.attr('disabled', true);
       } else {
