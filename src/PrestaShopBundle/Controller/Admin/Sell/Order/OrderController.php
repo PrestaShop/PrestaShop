@@ -51,6 +51,7 @@ use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Order\AddOrderCartRuleType;
 use PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrderCurrencyType;
 use PrestaShopBundle\Form\Admin\Sell\Order\AddOrderProductType;
+use PrestaShopBundle\Form\Admin\Sell\Order\AddProductToOrderType;
 use PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrdersStatusType;
 use PrestaShopBundle\Form\Admin\Sell\Order\OrderPaymentType;
 use PrestaShopBundle\Form\Admin\Sell\Order\UpdateOrderProductType;
@@ -248,8 +249,6 @@ class OrderController extends FrameworkBundleAdminController
         /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
 
-        dump($orderForViewing);
-
         $addOrderCartRuleForm = $this->createForm(AddOrderCartRuleType::class, [], [
             'order_id' => $orderId,
         ]);
@@ -261,10 +260,12 @@ class OrderController extends FrameworkBundleAdminController
         ], [
             'id_order' => $orderId,
         ]);
+
         $changeOrderCurrencyForm = $this->createForm(ChangeOrderCurrencyType::class, [], [
             'current_currency_id' => $orderForViewing->getCurrencyId(),
         ]);
         $addOrderProductForm = $this->createForm(AddOrderProductType::class);
+        $addProductToOrderForm = $this->createForm(AddProductToOrderType::class);
         $updateOrderProductForm = $this->createForm(UpdateOrderProductType::class);
 
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/view.html.twig', [
@@ -275,6 +276,7 @@ class OrderController extends FrameworkBundleAdminController
             'addOrderPaymentForm' => $addOrderPaymentForm->createView(),
             'changeOrderCurrencyForm' => $changeOrderCurrencyForm->createView(),
             'addOrderProductForm' => $addOrderProductForm->createView(),
+            'addProductToOrderForm' => $addProductToOrderForm->createView(),
             'updateOrderProductForm' => $updateOrderProductForm->createView(),
         ]);
     }

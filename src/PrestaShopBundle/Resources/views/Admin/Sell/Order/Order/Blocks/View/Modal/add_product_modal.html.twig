@@ -24,7 +24,7 @@
  *#}
 
 <div class="modal fade" id="addOrderProductModal" tabindex="-1" role="dialog">
-  {{ form_start(addOrderProductForm, {'action': '#'}) }}
+  {{ form_start(addProductToOrderForm, {'action': '#'}) }}
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -39,11 +39,11 @@
         <div class="row">
           <div class="col">
             <div class="form-group">
-              <label class="form-control-label" for="{{ addOrderProductForm.product_id.vars.id }}">
+              <label class="form-control-label" for="{{ addProductToOrderForm.product_id.vars.id }}">
                 {{ 'Product'|trans({}, 'Admin.Global') }}
               </label>
 
-              {{ form_widget(addOrderProductForm.product_id) }}
+              {{ form_widget(addProductToOrderForm.product_id) }}
             </div>
           </div>
         </div>
@@ -51,11 +51,11 @@
         <div class="row">
           <div class="col">
             <div class="form-group">
-              <label class="form-control-label" for="{{ addOrderProductForm.combination_id.vars.id }}">
+              <label class="form-control-label" for="{{ addProductToOrderForm.combination_id.vars.id }}">
                 {{ 'Combination'|trans({}, 'Admin.Global') }}
               </label>
 
-              {{ form_widget(addOrderProductForm.combination_id) }}
+              {{ form_widget(addProductToOrderForm.combination_id) }}
             </div>
           </div>
         </div>
@@ -63,12 +63,12 @@
         <div class="row">
           <div class="col">
             <div class="form-group">
-              <label class="form-control-label" for="{{ addOrderProductForm.price_tax_excl.vars.id }}">
+              <label class="form-control-label" for="{{ addProductToOrderForm.price_tax_excl.vars.id }}">
                 {{ 'Price tax excluded'|trans({}, 'Admin.Global') }}
               </label>
 
               <div class="input-group">
-                {{ form_widget(addOrderProductForm.price_tax_excl) }}
+                {{ form_widget(addProductToOrderForm.price_tax_excl) }}
                 <div class="input-group-append">
                   <span class="input-group-text">{{ orderForViewing.currencyId }}</span>
                 </div>
@@ -77,12 +77,12 @@
           </div>
           <div class="col">
             <div class="form-group mb-0">
-              <label class="form-control-label" for="{{ addOrderProductForm.price_tax_incl.vars.id }}">
+              <label class="form-control-label" for="{{ addProductToOrderForm.price_tax_incl.vars.id }}">
                 {{ 'Price tax included'|trans({}, 'Admin.Global') }}
               </label>
 
               <div class="input-group">
-                {{ form_widget(addOrderProductForm.price_tax_incl) }}
+                {{ form_widget(addProductToOrderForm.price_tax_incl) }}
                 <div class="input-group-append">
                   <span class="input-group-text">{{ orderForViewing.currencyId }}</span>
                 </div>
@@ -94,11 +94,11 @@
         <div class="row">
           <div class="col">
             <div class="form-group">
-              <label class="form-control-label" for="{{ addOrderProductForm.quantity.vars.id }}">
+              <label class="form-control-label" for="{{ addProductToOrderForm.quantity.vars.id }}">
                 {{ 'Quantity'|trans({}, 'Admin.Global') }}
               </label>
 
-              {{ form_widget(addOrderProductForm.quantity) }}
+              {{ form_widget(addProductToOrderForm.quantity) }}
             </div>
           </div>
         </div>
@@ -113,5 +113,5 @@
       </div>
     </div>
   </div>
-  {{ form_end(addOrderProductForm) }}
+  {{ form_end(addProductToOrderForm) }}
 </div>
