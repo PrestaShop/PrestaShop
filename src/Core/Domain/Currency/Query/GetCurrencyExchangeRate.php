@@ -29,6 +29,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\Currency\Query;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\AlphaIsoCode;
 
+/**
+ * Retrieves the exchange rate for a currency compared to the shop's default
+ */
 class GetCurrencyExchangeRate
 {
     /**
@@ -37,7 +40,7 @@ class GetCurrencyExchangeRate
     private $isoCode;
 
     /**
-     * @param string $isoCode
+     * @param string $isoCode Currency ISO code
      *
      * @throws CurrencyException
      */

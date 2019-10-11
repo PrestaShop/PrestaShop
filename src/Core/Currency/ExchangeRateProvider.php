@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Currency;
 use PrestaShop\CircuitBreaker\Contract\CircuitBreakerInterface;
 use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Core\Currency\Exception\CurrencyFeedException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\ExchangeRate;
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
 use SimpleXMLElement;
 
@@ -45,8 +46,6 @@ class ExchangeRateProvider
      * it properly here.
      */
     const CURRENCY_FEED_URL = 'http://api.prestashop.com/xml/currencies.xml';
-
-    const DEFAULT_EXCHANGE_RATE = 1.0;
 
     const CLOSED_ALLOWED_FAILURES = 3;
     const CLOSED_TIMEOUT_SECONDS = 1;
@@ -108,7 +107,7 @@ class ExchangeRateProvider
 
         // Default feed currency (usually EUR)
         if ($this->defaultCurrencyIsoCode == $currencyIsoCode) {
-            return new Number((string) self::DEFAULT_EXCHANGE_RATE);
+            return ExchangeRate::getDefaultExchangeRate();
         }
 
         /*
