@@ -184,7 +184,7 @@ class DiscountControllerCore extends FrontController
     {
         $voucher['voucher_date'] = Tools::displayDate($voucher['date_to'], null, false);
 
-        if ($voucher['minimum_amount'] === 0) {
+        if ((int) $voucher['minimum_amount'] === 0) {
             $voucher['voucher_minimal'] = $this->trans('None', array(), 'Shop.Theme.Global');
         } else {
             $voucher['voucher_minimal'] = Tools::displayPrice(
