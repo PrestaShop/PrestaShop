@@ -29,12 +29,14 @@
     <div class="thumbnail-container">
       {block name='product_thumbnail'}
         {if $product.cover}
-          <a href="{$product.url}" class="thumbnail product-thumbnail">
+          {assign var='coverImage' value=Product::getCover($product->id)}
+          {assign var='coverImageId' value="{$product->id}-{$coverImage.id_image}"}
+          <a href="{$product.canonical_url}" class="thumbnail product-thumbnail">
             <img
-              src="{$product.cover.bySize.home_default.url}"
+              src="{$link->getImageLink($product.link_rewrite, $coverImageId)}"
               alt="{if !empty($product.cover.legend)}{$product.cover.legend}{else}{$product.name|truncate:30:'...'}{/if}"
               data-full-size-image-url="{$product.cover.large.url}"
-            />
+              />
           </a>
         {else}
           <a href="{$product.url}" class="thumbnail product-thumbnail">

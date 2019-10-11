@@ -1,7 +1,7 @@
 {
-  "name": "e2e",
+  "name": "puppeteer",
   "version": "1.0.0",
-  "description": "E2E tests based on puppeteer",
+  "description": "Tests based on puppeteer",
   "directories": {
     "test": "test"
   },
@@ -17,7 +17,7 @@
     "url": "git+https://github.com/PrestaShop/PrestaShop.git"
   },
   "keywords": [
-    "e2e"
+    "puppeteer", "sanity", "functional"
   ],
   "author": "Prestashop",
   "license": "OSL-3.0",

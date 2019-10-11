@@ -214,9 +214,9 @@ class Repository implements RepositoryInterface
                 $cldrLocale,
                 $currency,
                 $this->numberGroupingUsed,
-                $this->currencyDisplayType
+                $this->currencyDisplayType,
+                (int) $currency->getDecimalPrecision()
             );
-            $thisPriceSpecification->setMaxFractionDigits((int) $currency->getDecimalPrecision());
 
             // Add the spec to the collection
             $priceSpecifications->add(

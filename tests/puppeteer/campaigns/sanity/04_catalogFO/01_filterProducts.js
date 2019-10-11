@@ -35,7 +35,7 @@ describe('Filter Products by categories in Home page', async () => {
   });
   // Steps
   it('should open the shop page', async () => {
-    await this.pageObjects.homePage.goTo(global.URL_FO);
+    await this.pageObjects.homePage.goTo(global.FO.URL);
     await this.pageObjects.homePage.checkHomePage();
   });
   it('should check and get the products number', async () => {
@@ -44,12 +44,12 @@ describe('Filter Products by categories in Home page', async () => {
     await expect(allProductsNumber).to.be.above(0);
   });
   it('should filter products by the category "Accessories" and check result', async () => {
-    await this.pageObjects.homePage.filterByCategory(Categories.accessories.id);
+    await this.pageObjects.homePage.goToCategory(Categories.accessories.id);
     const numberOfProducts = await this.pageObjects.homePage.getNumberFromText(this.pageObjects.homePage.totalProducts);
     await expect(numberOfProducts).to.be.below(allProductsNumber);
   });
   it('should filter products by the subcategory "Stationery" and check result', async () => {
-    await this.pageObjects.homePage.filterSubCategory(Categories.accessories.id, Categories.stationery.id);
+    await this.pageObjects.homePage.goToSubCategory(Categories.accessories.id, Categories.stationery.id);
     const numberOfProducts = await this.pageObjects.homePage.getNumberFromText(this.pageObjects.homePage.totalProducts);
     await expect(numberOfProducts).to.be.below(allProductsNumber);
   });

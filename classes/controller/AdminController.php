@@ -2702,7 +2702,12 @@ class AdminControllerCore extends Controller
             $this->addCSS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/' . $this->bo_theme . '/css/vendor/titatoggle-min.css', 'all', 0);
             $this->addCSS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/' . $this->bo_theme . '/public/theme.css', 'all', 0);
 
-            $this->addJquery();
+            // add Jquery 3 and its migration script
+            $this->addJs(_PS_JS_DIR_ . 'jquery/jquery-3.4.1.min.js');
+            $this->addJs(_PS_JS_DIR_ . 'jquery/jquery-migrate-3.1.0.min.js');
+            // implement $.browser object, that has been removed since jquery 1.9
+            $this->addJs(_PS_JS_DIR_ . 'jquery/jquery.browser-0.1.0.min.js');
+
             $this->addJqueryPlugin(array('scrollTo', 'alerts', 'chosen', 'autosize', 'fancybox'));
             $this->addJqueryPlugin('growl', null, false);
             $this->addJqueryUI(array('ui.slider', 'ui.datepicker'));

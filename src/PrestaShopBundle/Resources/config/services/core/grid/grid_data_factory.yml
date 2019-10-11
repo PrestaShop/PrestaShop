@@ -275,3 +275,30 @@ services:
         - '@prestashop.core.hook.dispatcher'
         - '@prestashop.core.grid.query.doctrine_query_parser'
         - 'tax_rules_group'
+
+    prestashop.core.grid.data.factory.order_message:
+      class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
+      arguments:
+        - '@prestashop.core.grid.query_builder.order_message'
+        - '@prestashop.core.hook.dispatcher'
+        - '@prestashop.core.grid.query.doctrine_query_parser'
+        - 'order_message'
+
+    prestashop.core.grid.data_factory.attachment:
+      class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
+      arguments:
+        - '@prestashop.core.grid.query_builder.attachment'
+        - '@prestashop.core.hook.dispatcher'
+        - '@prestashop.core.grid.query.doctrine_query_parser'
+        - 'attachment'
+
+    prestashop.core.grid.data_factory.attachment_decorator:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Data\Factory\AttachmentGridDataFactoryDecorator'
+      arguments:
+        - '@prestashop.core.grid.data_factory.attachment'
+        - "@=service('prestashop.adapter.legacy.context').getContext().employee.id_lang"
+        - '@doctrine.dbal.default_connection'
+        - '%database_prefix%'
+        - "@prestashop.core.util.file_size.size_converter"
+      calls:
+        - [setTranslator, ['@translator']]

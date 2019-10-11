@@ -30,6 +30,7 @@ use Behat\Behat\Context\Context;
 use Behat\Testwork\Hook\Scope\BeforeSuiteScope;
 use ObjectModel;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use Psr\Container\ContainerInterface;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
@@ -40,6 +41,11 @@ abstract class AbstractDomainFeatureContext implements Context
      * @var \Exception|null
      */
     protected $lastException;
+
+    /**
+     * @var int
+     */
+    protected $lastErrorCode;
 
     /**
      * @BeforeSuite
@@ -74,6 +80,11 @@ abstract class AbstractDomainFeatureContext implements Context
         return SharedStorage::getStorage();
     }
 
+    protected function getContainer(): ContainerInterface
+    {
+        return CommonFeatureContext::getContainer();
+    }
+
     /**
      * @param string $expectedError
      */
@@ -85,6 +96,19 @@ abstract class AbstractDomainFeatureContext implements Context
                 $expectedError,
                 $this->lastException ? get_class($this->lastException) : 'null'
             ));
+        }
+    }
+
+    protected function assertLastErrorCodeIs($errorCode)
+    {
+        if ($this->lastErrorCode !== $errorCode) {
+            throw new RuntimeException(
+                sprintf(
+                    'Last error code should be "%s" but got "%s"',
+                    var_export($this->lastErrorCode, true),
+                    var_export($errorCode, true)
+                )
+            );
         }
     }
 }

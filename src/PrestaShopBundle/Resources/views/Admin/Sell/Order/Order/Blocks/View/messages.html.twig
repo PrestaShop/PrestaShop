@@ -1,0 +1,113 @@
+{#**
+ * 2007-2019 PrestaShop SA and Contributors
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+
+<div class="card mt-2">
+  <div class="card-header">
+    <h3 class="card-header-title">
+      {{ 'Messages'|trans({}, 'Admin.Global') }} ({{ orderForViewing.payments.payments|length }})
+    </h3>
+  </div>
+  <div class="card-body p-0">
+    {% if orderForViewing.messages.messages is not empty %}
+      <ul class="list-unstyled p-4" style="background-color: #f8f8f8;">
+      {% for message in orderForViewing.messages.messages %}
+        <li class="mb-2">
+          <div class="row">
+            {% if not message.employeeId %}
+              <div class="col-md-1">
+                <i class="material-icons">person</i>
+              </div>
+              <div class="col-md-11">
+                <p class="mb-0" style="background-color: #fff; padding: 10px; border-radius: 5px;">
+                  {{ message.message|nl2br }}
+                </p>
+                <p class="text-muted mb-0">
+                  {{ message.customerFirstName ~ ' ' ~ message.customerLastName }}
+                  {{ message.date|date('Y-m-d H:i:s') }}
+                </p>
+              </div>
+            {% endif %}
+
+            {% if message.employeeId %}
+              <div class="col-md-11">
+                <p class="mb-0" style="background-color: #d3f1f7; padding: 10px; border-radius: 5px;">
+                  {{ message.message|nl2br }}
+                </p>
+                <p class="text-muted mb-0 text-right">
+                  {{ message.employeeFirstName ~ ' ' ~ message.employeeLastName }}
+                  {{ message.date|date('Y-m-d H:i:s') }}
+                </p>
+              </div>
+              <div class="col-md-1">
+                <i class="material-icons" style="color: #36b9d7;">person</i>
+              </div>
+            {% endif %}
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+
+    <form class="form p-3" action="">
+      <div class="form-group">
+        <label class="form-control-label" for="input4">
+          {{ 'Choose your order message'|trans({}, 'Admin.Orderscustomers.Feature') }}
+        </label>
+        <select name="" id="" class="form-control">
+          <option value="1">--</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <div class="md-checkbox">
+          <label>
+            <input type="checkbox" name="checkbox[]">
+            <i class="md-checkbox-control"></i>
+            {{ 'Display to customer?'|trans({}, 'Admin.Orderscustomers.Feature') }}
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group mb-1">
+        <label class="form-control-label" for="input4">
+          {{ 'Message'|trans({}, 'Admin.Global') }}
+        </label>
+        <textarea name="" id="" cols="30" rows="3" class="form-control"></textarea>
+        <small class="text-muted">0/600</small>
+      </div>
+
+      <div class="mb-2">
+        <a href="#" class="btn btn-outline-secondary">
+          {{ 'Show all'|trans({}, 'Admin.Actions') }}
+          <i class="material-icons">open_in_new</i>
+        </a>
+        <button type="submit" class="btn btn-primary float-right">
+          {{ 'Send message'|trans({}, 'Admin.Orderscustomers.Feature') }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+

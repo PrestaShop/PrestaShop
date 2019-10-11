@@ -44,6 +44,8 @@ final class DeleteCustomerRowAction extends AbstractRowAction
      */
     protected function configureOptions(OptionsResolver $resolver)
     {
+        parent::configureOptions($resolver);
+
         $resolver
             ->setRequired([
                 'customer_id_field',

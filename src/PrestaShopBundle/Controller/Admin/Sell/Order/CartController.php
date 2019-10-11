@@ -27,10 +27,16 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\CreateEmptyCustomerCartCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartAddressesCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
+use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -74,6 +80,74 @@ class CartController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'cartKpi' => $kpiRowFactory->build(),
         ]);
+    }
+
+    /**
+     * Gets requested cart information
+     *
+     * @param int $cartId
+     *
+     * @return JsonResponse
+     *
+     * @throws CartConstraintException
+     */
+    public function getInfoAction(int $cartId)
+    {
+        $cartInfo = $this->getQueryBus()->handle(new GetCartInformation($cartId));
+
+        return $this->json($cartInfo);
+    }
+
+    /**
+     * Creates empty cart
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     *
+     * @throws CartConstraintException
+     */
+    public function createAction(Request $request): JsonResponse
+    {
+        $customerId = $request->request->getInt('customer_id');
+        $cartId = $this->getCommandBus()->handle(new CreateEmptyCustomerCartCommand($customerId))->getValue();
+
+        return $this->json($this->getCartInfo($cartId));
+    }
+
+    /**
+     * Changes the cart address information
+     *
+     * @param int $cartId
+     * @param Request $request
+     *
+     * @return JsonResponse
+     *
+     * @throws CartConstraintException
+     */
+    public function editAddressAction(int $cartId, Request $request): JsonResponse
+    {
+        $updateAddressCommand = new UpdateCartAddressesCommand(
+            $cartId,
+            $request->request->getInt('delivery_address_id'),
+            $invoiceAddressId = $request->request->getInt('invoice_address_id')
+        );
+
+        $this->getCommandBus()->handle($updateAddressCommand);
+
+        return $this->json($this->getCartInfo($cartId));
+    }
+
+    /**
+     * @param int $cartId
+     *
+     * @return CartInformation
+     *
+     * @throws CartConstraintException
+     */
+    private function getCartInfo(int $cartId): CartInformation
+    {
+        return $this->getQueryBus()->handle(new GetCartInformation($cartId));
     }
 
     /**

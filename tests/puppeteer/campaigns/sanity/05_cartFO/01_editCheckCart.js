@@ -44,7 +44,7 @@ describe('Check the Product page', async () => {
   });
   // Steps
   it('should open the shop page', async function () {
-    await this.pageObjects.homePage.goTo(global.URL_FO);
+    await this.pageObjects.homePage.goTo(global.FO.URL);
     await this.pageObjects.homePage.checkHomePage();
   });
   it('should go to the first product page', async function () {
@@ -61,6 +61,7 @@ describe('Check the Product page', async () => {
   });
   it('should go to the home page', async function () {
     await this.pageObjects.homePage.goToHomePage();
+    await this.pageObjects.homePage.checkHomePage();
   });
   it('should go to the second product page', async function () {
     await this.pageObjects.homePage.goToProductPage('2');
@@ -75,10 +76,20 @@ describe('Check the Product page', async () => {
     await expect(notificationsNumber).to.be.equal(2);
   });
   it('should check the first product details', async function () {
-    await this.pageObjects.cartPage.checkProductInCart(CartData.customCartData.firstProduct, '1');
+    const result = await this.pageObjects.cartPage.checkProductInCart(CartData.customCartData.firstProduct, '1');
+    await Promise.all([
+      expect(result.name).to.be.true,
+      expect(result.price).to.be.true,
+      expect(result.quantity).to.be.true,
+    ]);
   });
   it('should check the second product details', async function () {
-    await this.pageObjects.cartPage.checkProductInCart(CartData.customCartData.secondProduct, '2');
+    const result = await this.pageObjects.cartPage.checkProductInCart(CartData.customCartData.secondProduct, '2');
+    await Promise.all([
+      expect(result.name).to.be.true,
+      expect(result.price).to.be.true,
+      expect(result.quantity).to.be.true,
+    ]);
   });
   it('should get the Total TTC', async function () {
     // getNumberFromText is used to get the Total TTC price

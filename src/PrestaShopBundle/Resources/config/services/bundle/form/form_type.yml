@@ -906,3 +906,36 @@ services:
             - '@=service("prestashop.adapter.multistore_feature").isActive()'
         tags:
             - { name: form.type }
+
+    form.type.order.add_order_cart_rule:
+      class: 'PrestaShopBundle\Form\Admin\Sell\Order\AddOrderCartRuleType'
+      arguments:
+          - '@prestashop.core.form.choice.provider.order_discount_type'
+      tags:
+          - { name: form.type }
+
+    form.type.order.update_order_status:
+      class: 'PrestaShopBundle\Form\Admin\Sell\Order\UpdateOrderStatusType'
+      arguments:
+        - '@prestashop.core.form.choice_provider.order_state_by_id'
+      tags:
+        - { name: form.type }
+
+    form.type.order.order_payment:
+      class: 'PrestaShopBundle\Form\Admin\Sell\Order\OrderPaymentType'
+      arguments:
+        - '@prestashop.adapter.form.choice_provider.currency_symbol_by_id'
+        - '@prestashop.adapter.form.choice_provider.order_invoice_by_id'
+        - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
+        - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
+      tags:
+        - { name: form.type }
+
+    form.type.feature:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Catalog\FeatureType'
+        arguments:
+            - '@=service("prestashop.adapter.multistore_feature").isUsed()'
+        calls:
+            - { method: setTranslator, arguments: ['@translator'] }
+        tags:
+            - { name: form.type }

@@ -49,7 +49,7 @@ final class AddCartRuleToCartHandler extends AbstractCartHandler implements AddC
             throw new CartException('Invalid cart rule.');
         }
 
-        $cart = $this->getContextCartObject($command->getCartId());
+        $cart = $this->getCart($command->getCartId());
 
         if (!$cart->addCartRule($cartRule->id)) {
             throw new CartException('Failed to add cart rule to cart.');

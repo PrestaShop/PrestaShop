@@ -704,6 +704,7 @@ class CartCore extends ObjectModel
                 IF (IFNULL(pa.`ean13`, \'\') = \'\', p.`ean13`, pa.`ean13`) AS ean13,
                 IF (IFNULL(pa.`isbn`, \'\') = \'\', p.`isbn`, pa.`isbn`) AS isbn,
                 IF (IFNULL(pa.`upc`, \'\') = \'\', p.`upc`, pa.`upc`) AS upc,
+                IF (IFNULL(pa.`mpn`, \'\') = \'\', p.`mpn`, pa.`mpn`) AS mpn,
                 IFNULL(product_attribute_shop.`minimal_quantity`, product_shop.`minimal_quantity`) as minimal_quantity,
                 IF(product_attribute_shop.wholesale_price > 0,  product_attribute_shop.wholesale_price, product_shop.`wholesale_price`) wholesale_price
             ');
@@ -713,7 +714,7 @@ class CartCore extends ObjectModel
         } else {
             $sql->select(
                 'p.`reference` AS reference, p.`ean13`, p.`isbn`,
-                p.`upc` AS upc, product_shop.`minimal_quantity` AS minimal_quantity, product_shop.`wholesale_price` wholesale_price'
+                p.`upc` AS upc, p.`mpn` AS mpn, product_shop.`minimal_quantity` AS minimal_quantity, product_shop.`wholesale_price` wholesale_price'
             );
         }
 
@@ -965,11 +966,11 @@ class CartCore extends ObjectModel
             case Order::ROUND_LINE:
                 $row['total'] = Tools::ps_round(
                     $row['price_with_reduction_without_tax'] * $productQuantity,
-                    _PS_PRICE_COMPUTE_PRECISION_
+                    Context::getContext()->getComputingPrecision()
                 );
                 $row['total_wt'] = Tools::ps_round(
                     $row['price_with_reduction'] * $productQuantity,
-                    _PS_PRICE_COMPUTE_PRECISION_
+                    Context::getContext()->getComputingPrecision()
                 );
 
                 break;
@@ -978,11 +979,11 @@ class CartCore extends ObjectModel
             default:
                 $row['total'] = Tools::ps_round(
                         $row['price_with_reduction_without_tax'],
-                        _PS_PRICE_COMPUTE_PRECISION_
+                        Context::getContext()->getComputingPrecision()
                     ) * $productQuantity;
                 $row['total_wt'] = Tools::ps_round(
                         $row['price_with_reduction'],
-                        _PS_PRICE_COMPUTE_PRECISION_
+                        Context::getContext()->getComputingPrecision()
                     ) * $productQuantity;
 
                 break;
@@ -1955,7 +1956,7 @@ class CartCore extends ObjectModel
             $cartRules = $this->getTotalCalculationCartRules($type, $type == Cart::BOTH);
         }
         $calculator = $this->newCalculator($products, $cartRules, $id_carrier);
-        $computePrecision = $this->configuration->get('_PS_PRICE_COMPUTE_PRECISION_');
+        $computePrecision = Context::getContext()->getComputingPrecision();
         switch ($type) {
             case Cart::ONLY_SHIPPING:
                 $calculator->calculateRows();
@@ -2000,9 +2001,7 @@ class CartCore extends ObjectModel
 
         // ROUND AND RETURN
 
-        $compute_precision = $this->configuration->get('_PS_PRICE_COMPUTE_PRECISION_');
-
-        return Tools::ps_round($value, $compute_precision);
+        return Tools::ps_round($value, $computePrecision);
     }
 
     /**
@@ -2023,7 +2022,7 @@ class CartCore extends ObjectModel
 
         // set cart rows (products)
         $useEcotax = $this->configuration->get('PS_USE_ECOTAX');
-        $precision = $this->configuration->get('_PS_PRICE_COMPUTE_PRECISION_');
+        $precision = Context::getContext()->getComputingPrecision();
         $configRoundType = $this->configuration->get('PS_ROUND_TYPE');
         $roundTypes = [
             Order::ROUND_TOTAL => CartRow::ROUND_MODE_TOTAL,
@@ -2214,7 +2213,7 @@ class CartCore extends ObjectModel
         // With PS_ATCP_SHIPWRAP on the gift wrapping cost computation calls getOrderTotal
         // with $type === Cart::ONLY_PRODUCTS, so the flag below prevents an infinite recursion.
         $includeGiftWrapping = (!$this->configuration->get('PS_ATCP_SHIPWRAP') || $type !== Cart::ONLY_PRODUCTS);
-        $computePrecision = $this->configuration->get('_PS_PRICE_COMPUTE_PRECISION_');
+        $computePrecision = Context::getContext()->getComputingPrecision();
 
         if ($this->gift && $includeGiftWrapping) {
             $wrapping_fees = Tools::convertPrice(
@@ -2278,7 +2277,7 @@ class CartCore extends ObjectModel
             // when asked for the pre tax price.
             $wrapping_fees = Tools::ps_round(
                 $wrapping_fees / (1 + $this->getAverageProductsTaxRate()),
-                _PS_PRICE_COMPUTE_PRECISION_
+                Context::getContext()->getComputingPrecision()
             );
         }
 
@@ -3813,8 +3812,8 @@ class CartCore extends ObjectModel
             if ($cart_rule['free_shipping'] && (empty($cart_rule['code']) || preg_match('/^' . CartRule::BO_ORDER_CODE_PREFIX . '[0-9]+/', $cart_rule['code']))) {
                 $cart_rule['value_real'] -= $total_shipping;
                 $cart_rule['value_tax_exc'] -= $total_shipping_tax_exc;
-                $cart_rule['value_real'] = Tools::ps_round($cart_rule['value_real'], (int) $context->currency->decimals * _PS_PRICE_COMPUTE_PRECISION_);
-                $cart_rule['value_tax_exc'] = Tools::ps_round($cart_rule['value_tax_exc'], (int) $context->currency->decimals * _PS_PRICE_COMPUTE_PRECISION_);
+                $cart_rule['value_real'] = Tools::ps_round($cart_rule['value_real'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
+                $cart_rule['value_tax_exc'] = Tools::ps_round($cart_rule['value_tax_exc'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
                 if ($total_discounts > $cart_rule['value_real']) {
                     $total_discounts -= $total_shipping;
                 }
@@ -3831,20 +3830,20 @@ class CartCore extends ObjectModel
                 foreach ($products as $key => &$product) {
                     if (empty($product['gift']) && $product['id_product'] == $cart_rule['gift_product'] && $product['id_product_attribute'] == $cart_rule['gift_product_attribute']) {
                         // Update total products
-                        $total_products_wt = Tools::ps_round($total_products_wt - $product['price_wt'], (int) $context->currency->decimals * _PS_PRICE_COMPUTE_PRECISION_);
-                        $total_products = Tools::ps_round($total_products - $product['price'], (int) $context->currency->decimals * _PS_PRICE_COMPUTE_PRECISION_);
+                        $total_products_wt = Tools::ps_round($total_products_wt - $product['price_wt'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
+                        $total_products = Tools::ps_round($total_products - $product['price'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
 
                         // Update total discounts
-                        $total_discounts = Tools::ps_round($total_discounts - $product['price_wt'], (int) $context->currency->decimals * _PS_PRICE_COMPUTE_PRECISION_);
-                        $total_discounts_tax_exc = Tools::ps_round($total_discounts_tax_exc - $product['price'], (int) $context->currency->decimals * _PS_PRICE_COMPUTE_PRECISION_);
+                        $total_discounts = Tools::ps_round($total_discounts - $product['price_wt'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
+                        $total_discounts_tax_exc = Tools::ps_round($total_discounts_tax_exc - $product['price'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
 
                         // Update cart rule value
-                        $cart_rule['value_real'] = Tools::ps_round($cart_rule['value_real'] - $product['price_wt'], (int) $context->currency->decimals * _PS_PRICE_COMPUTE_PRECISION_);
-                        $cart_rule['value_tax_exc'] = Tools::ps_round($cart_rule['value_tax_exc'] - $product['price'], (int) $context->currency->decimals * _PS_PRICE_COMPUTE_PRECISION_);
+                        $cart_rule['value_real'] = Tools::ps_round($cart_rule['value_real'] - $product['price_wt'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
+                        $cart_rule['value_tax_exc'] = Tools::ps_round($cart_rule['value_tax_exc'] - $product['price'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
 
                         // Update product quantity
-                        $product['total_wt'] = Tools::ps_round($product['total_wt'] - $product['price_wt'], (int) $currency->decimals * _PS_PRICE_COMPUTE_PRECISION_);
-                        $product['total'] = Tools::ps_round($product['total'] - $product['price'], (int) $currency->decimals * _PS_PRICE_COMPUTE_PRECISION_);
+                        $product['total_wt'] = Tools::ps_round($product['total_wt'] - $product['price_wt'], (int) $currency->decimals * Context::getContext()->getComputingPrecision());
+                        $product['total'] = Tools::ps_round($product['total'] - $product['price'], (int) $currency->decimals * Context::getContext()->getComputingPrecision());
                         --$product['cart_quantity'];
 
                         if (!$product['cart_quantity']) {
@@ -4836,6 +4835,26 @@ class CartCore extends ObjectModel
             FROM `' . _DB_PREFIX_ . 'customer` cu
             LEFT JOIN `' . _DB_PREFIX_ . 'cart` ca ON (ca.`id_customer` = cu.`id_customer`)
             WHERE ca.`id_cart` = ' . (int) $id_cart);
+    }
+
+    /**
+     * Are all products of the Cart still available in the current state ? They might have been converted to another
+     * type of product since then
+     *
+     * @return bool False if one of the products from the cart has been changed into a new type of product
+     */
+    public function checkAllProductsAreStillAvailableInThisState()
+    {
+        foreach ($this->getProducts(false, false, null, false) as $product) {
+            $currentProduct = new Product();
+            $currentProduct->hydrate($product);
+
+            if ($currentProduct->hasAttributes() && $product['id_product_attribute'] === '0') {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**

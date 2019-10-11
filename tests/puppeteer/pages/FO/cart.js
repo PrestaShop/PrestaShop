@@ -1,6 +1,6 @@
-const CommonPage = require('../commonPage');
+const FOBasePage = require('../FO/FObasePage');
 
-module.exports = class Cart extends CommonPage {
+module.exports = class Cart extends FOBasePage {
   constructor(page) {
     super(page);
 
@@ -24,9 +24,12 @@ module.exports = class Cart extends CommonPage {
    * @param productID, product id to check
    */
   async checkProductInCart(cartData, productID) {
-    await this.checkTextValue(this.productName.replace('%NUMBER', productID), cartData.name);
-    await this.checkTextValue(this.productPrice.replace('%NUMBER', productID), cartData.price);
-    await this.checkAttributeValue(this.productQuantity.replace('%NUMBER', productID), 'value', cartData.quantity);
+    return {
+      name: await this.checkTextValue(this.productName.replace('%NUMBER', productID), cartData.name),
+      price: await this.checkTextValue(this.productPrice.replace('%NUMBER', productID), cartData.price),
+      quantity: await this.checkAttributeValue(this.productQuantity.replace('%NUMBER', productID), 'value',
+        cartData.quantity),
+    };
   }
 
   /**
