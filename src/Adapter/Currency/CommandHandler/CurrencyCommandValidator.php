@@ -74,8 +74,8 @@ final class CurrencyCommandValidator
     public function assertCurrencyIsNotInReference(string $isoCode)
     {
         /*
-         * Every locale has the same list of currency so it doesn't matter which one is used
-         * to perform this check.
+         * Every locale has the same list of currencies (even those defined in only one language) so it
+         * doesn't matter which one is used to perform this check.
          */
         $locale = $this->localeRepoCLDR->getLocale('en');
         $cldrCurrency = $locale->getCurrency($isoCode);

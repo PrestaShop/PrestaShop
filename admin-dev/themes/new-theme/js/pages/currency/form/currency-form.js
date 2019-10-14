@@ -36,7 +36,6 @@ export default class CurrencyForm {
     this.$currencySelector = $(this.map.currencySelector);
     this.$isUnofficialCheckbox = $(this.map.isUnofficialCheckbox);
     this.$isoCodeInput = $(this.map.isoCodeInput);
-    this.$numericIsoCodeInput = $(this.map.numericIsoCodeInput);
     this.$exchangeRateInput = $(this.map.exchangeRateInput);
     this.$precisionInput = $(this.map.precisionInput);
     this.$resetDefaultSettingsButton = $(this.map.resetDefaultSettingsInput);
@@ -77,6 +76,10 @@ export default class CurrencyForm {
   }
 
   _isUnofficialCurrency() {
+    if ('hidden' === this.$isUnofficialCheckbox.prop('type')) {
+      return parseInt(this.$isUnofficialCheckbox.attr('value'));
+    }
+
     return this.$isUnofficialCheckbox.prop('checked');
   }
 
@@ -110,7 +113,6 @@ export default class CurrencyForm {
           $(langSymbolSelector).val(currencyData.symbols[langId]);
         }
         this.$isoCodeInput.val(currencyData.iso_code);
-        this.$numericIsoCodeInput.val(currencyData.numeric_iso_code);
         if (currencyData.exchange_rate) {
           this.$exchangeRateInput.val(currencyData.exchange_rate);
         }

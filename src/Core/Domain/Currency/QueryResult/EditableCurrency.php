@@ -55,7 +55,7 @@ class EditableCurrency
     private $isoCode;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $numericIsoCode;
 
@@ -87,7 +87,7 @@ class EditableCurrency
     /**
      * @param int $currencyId
      * @param string $isoCode
-     * @param string $numericIsoCode
+     * @param string|null $numericIsoCode
      * @param array $names
      * @param array $symbols
      * @param float $exchangeRate
@@ -143,9 +143,9 @@ class EditableCurrency
     /**
      * Currency numeric ISO code
      *
-     * @return string
+     * @return string|null
      */
-    public function getNumericIsoCode(): string
+    public function getNumericIsoCode(): ?string
     {
         return $this->numericIsoCode;
     }
