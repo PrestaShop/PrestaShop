@@ -24,7 +24,7 @@
         "friendsofsymfony/jsrouting-bundle": "^2.4",
         "geoip2/geoip2": "~2.4.2",
         "greenlion/php-sql-parser": "^4.1",
-        "guzzlehttp/cache-subscriber": "~0.2.0",
+        "guzzlehttp/cache-subscriber": "^0.2.0",
         "guzzlehttp/guzzle": "~5.0",
         "incenteev/composer-parameter-handler": "~2.0",
         "ircmaxell/password-compat": "^1.0.4",
