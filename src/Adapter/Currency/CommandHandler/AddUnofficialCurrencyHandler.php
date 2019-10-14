@@ -28,11 +28,13 @@ namespace PrestaShop\PrestaShop\Adapter\Currency\CommandHandler;
 
 use Currency;
 use Language;
+use PrestaShop\PrestaShop\Adapter\Currency\CurrencyCommandValidator;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddUnofficialCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\CommandHandler\AddUnofficialCurrencyHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotCreateCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
 use PrestaShopException;
 
 /**
@@ -40,8 +42,31 @@ use PrestaShopException;
  *
  * @internal
  */
-final class AddUnofficialCurrencyHandler extends AbstractAddCurrencyHandler implements AddUnofficialCurrencyHandlerInterface
+final class AddUnofficialCurrencyHandler extends AbstractCurrencyHandler implements AddUnofficialCurrencyHandlerInterface
 {
+    /**
+     * @var Language
+     */
+    protected $defaultLanguage;
+
+    /**
+     * @var CurrencyCommandValidator
+     */
+    protected $validator;
+
+    /**
+     * @param LocaleRepository $localeRepoCLDR
+     * @param int $defaultLanguageId
+     */
+    public function __construct(
+        LocaleRepository $localeRepoCLDR,
+        $defaultLanguageId
+    ) {
+        parent::__construct($localeRepoCLDR);
+        $this->defaultLanguage = new Language((int) $defaultLanguageId);
+        $this->validator = new CurrencyCommandValidator($localeRepoCLDR, $this->defaultLanguage->getLocale());
+    }
+
     /**
      * {@inheritdoc}
      *
@@ -49,8 +74,8 @@ final class AddUnofficialCurrencyHandler extends AbstractAddCurrencyHandler impl
      */
     public function handle(AddUnofficialCurrencyCommand $command)
     {
-        $this->assertUnofficialCurrencyDoesNotMatchAnyRealIsoCode($command->getIsoCode()->getValue());
-        $this->assertCurrencyWithIsoCodeDoesNotExist($command);
+        $this->validator->assertCurrencyIsNotInReference($command->getIsoCode()->getValue());
+        $this->validator->assertCurrencyIsNotAvailableInDatabase($command->getIsoCode()->getValue());
 
         try {
             $entity = new Currency();
