@@ -34,11 +34,11 @@ admin_carts_create:
   options:
     expose: true
 
-admin_carts_edit_address:
-  path: /{cartId}/address
+admin_carts_edit_addresses:
+  path: /{cartId}/addresses
   methods: [POST]
   defaults:
-    _controller: PrestaShopBundle:Admin/Sell/Order/Cart:editAddress
+    _controller: PrestaShopBundle:Admin/Sell/Order/Cart:editAddresses
     _legacy_controller: AdminCarts
   requirements:
     cartId: \d+
@@ -57,11 +57,11 @@ admin_carts_edit_carrier:
     expose: true
 
 
-admin_carts_edit_free_shipping:
+admin_carts_set_free_shipping:
   path: /{cartId}/free-shipping
   methods: [POST]
   defaults:
-    _controller: PrestaShopBundle:Admin/Sell/Order/Cart:editFreeShipping
+    _controller: PrestaShopBundle:Admin/Sell/Order/Cart:setFreeShipping
     _legacy_controller: AdminCarts
   requirements:
     cartId: \d+

@@ -59,14 +59,22 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
     private $locale;
 
     /**
+     * @var int
+     */
+    private $contextLangId;
+
+    /**
      * @param RepositoryInterface $localeRepository
      * @param string $locale
+     * @param int $contextLangId
      */
     public function __construct(
         RepositoryInterface $localeRepository,
-        string $locale
+        string $locale,
+        int $contextLangId
     ) {
         $this->locale = $localeRepository->getLocale($locale);
+        $this->contextLangId = $contextLangId;
     }
 
     /**
@@ -224,7 +232,7 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
                 $deliveryOptions[(int) $carrier->id] = new CartDeliveryOption(
                     (int) $carrier->id,
                     $carrier->name,
-                    $carrier->delay[\Context::getContext()->employee->id_lang]
+                    $carrier->delay[$this->contextLangId]
                 );
             }
         }

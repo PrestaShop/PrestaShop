@@ -97,6 +97,15 @@ export default class AddressesRenderer {
       $invoiceAddressDetails.html(invoiceAddressDetailsContent);
     }
 
+    this._showAddressesBlock();
+  }
+
+  /**
+   * Shows addresses block
+   *
+   * @private
+   */
+  _showAddressesBlock() {
     $(createOrderPageMap.addressesBlock).removeClass('d-none');
   }
 }
