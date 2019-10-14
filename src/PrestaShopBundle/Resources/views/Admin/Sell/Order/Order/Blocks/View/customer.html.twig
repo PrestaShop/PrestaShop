@@ -43,7 +43,7 @@
           </h2>
         </div>
         <div class="col-md-6 text-right">
-          <a href="{{ path('admin_customers_view', {'customerId': orderForViewing.customer.id }) }}" class="">
+          <a href="{{ path('admin_customers_view', {'customerId': orderForViewing.customer.id }) }}">
             {{ 'View full details'|trans({}, 'Admin.Actions') }}
           </a>
         </div>
@@ -87,7 +87,13 @@
           <p>
             <strong>{{ 'Shipping address'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
 
-            <a href="#"
+            <a href="{{ getAdminLink('AdminAddresses', true, {
+              'realedit': 1,
+              'addaddress': 1,
+              'address_type': 1,
+              'id_order': orderForViewing.id,
+              'id_address': orderForViewing.shippingAddress.addressId
+            }) }}"
                class="float-right tooltip-link"
                data-toggle="pstooltip"
                data-placement="top"
@@ -122,7 +128,13 @@
           <p>
             <strong>{{ 'Invoice address'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
 
-            <a href="#"
+            <a href="{{ getAdminLink('AdminAddresses', true, {
+              'realedit': 1,
+              'addaddress': 1,
+              'address_type': 2,
+              'id_order': orderForViewing.id,
+              'id_address': orderForViewing.invoiceAddress.addressId
+            }) }}"
                class="float-right tooltip-link"
                data-toggle="pstooltip"
                data-placement="top"
