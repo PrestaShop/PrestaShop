@@ -47,25 +47,7 @@ class CurrencyPrecisionTest extends TestCase
     {
         return [
             [
-                '',
-            ],
-            [
-                'LTUU',
-            ],
-            [
-                'L',
-            ],
-            [
-                null,
-            ],
-            [
-                false,
-            ],
-            [
-                [],
-            ],
-            [
-                '-51',
+                '-42',
             ],
             [
                 -42,
@@ -74,16 +56,16 @@ class CurrencyPrecisionTest extends TestCase
     }
 
     /**
-     * @dataProvider getCorrectNumericIsoCodes
+     * @dataProvider getCorrectPrecisions
      */
     public function testItReturnsRightPrecision($correctNumericIsoCode, $expectedValue)
     {
-        $currencyNumericIsoCode = new Precision($correctNumericIsoCode);
+        $precision = new Precision($correctNumericIsoCode);
 
-        $this->assertEquals($expectedValue, $currencyNumericIsoCode->getValue());
+        $this->assertEquals($expectedValue, $precision->getValue());
     }
 
-    public function getCorrectNumericIsoCodes()
+    public function getCorrectPrecisions()
     {
         return [
             [
