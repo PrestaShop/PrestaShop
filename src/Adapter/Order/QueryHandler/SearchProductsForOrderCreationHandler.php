@@ -42,7 +42,7 @@ use PrestaShopException;
 use Product;
 
 /**
- * Handles product search for order creation
+ * Handles product for order creation search
  */
 final class SearchProductsForOrderCreationHandler implements SearchProductsForOrderCreationHandlerInterface
 {
