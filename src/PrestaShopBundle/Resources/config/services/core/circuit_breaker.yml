@@ -12,6 +12,7 @@ services:
     class: GuzzleHttp\Subscriber\Cache\CacheStorage
     arguments:
       - "@prestashop.core.circuit_breaker.doctrine_cache"
+      - "circuit_breaker_"
       - 86400
 
   prestashop.core.circuit_breaker.guzzle.cache_subscriber:
