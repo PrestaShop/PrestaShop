@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddCartRuleToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\BulkChangeOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\DuplicateOrderCartCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\ChangeOrderStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
@@ -45,6 +46,7 @@ use PrestaShop\PrestaShop\Core\Search\Filters\OrderFilters;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Order\AddOrderCartRuleType;
+use PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrderCurrencyType;
 use PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrdersStatusType;
 use PrestaShopBundle\Form\Admin\Sell\Order\OrderPaymentType;
 use PrestaShopBundle\Form\Admin\Sell\Order\UpdateOrderStatusType;
@@ -250,6 +252,9 @@ class OrderController extends FrameworkBundleAdminController
         ], [
             'id_order' => $orderId,
         ]);
+        $changeOrderCurrencyForm = $this->createForm(ChangeOrderCurrencyType::class, [], [
+            'current_currency_id' => $orderForViewing->getCurrencyId(),
+        ]);
 
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/view.html.twig', [
             'showContentHeader' => false,
@@ -257,6 +262,7 @@ class OrderController extends FrameworkBundleAdminController
             'addOrderCartRuleForm' => $addOrderCartRuleForm->createView(),
             'updateOrderStatusForm' => $updateOrderStatusForm->createView(),
             'addOrderPaymentForm' => $addOrderPaymentForm->createView(),
+            'changeOrderCurrencyForm' => $changeOrderCurrencyForm->createView(),
         ]);
     }
 
@@ -382,6 +388,40 @@ class OrderController extends FrameworkBundleAdminController
         return $this->json(
             $this->getQueryBus()->handle(new GetCartInformation($cartId))
         );
+    }
+
+    /**
+     * @param int $orderId
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function changeCurrencyAction(int $orderId, Request $request): RedirectResponse
+    {
+        $changeOrderCurrencyForm = $this->createForm(ChangeOrderCurrencyType::class);
+        $changeOrderCurrencyForm->handleRequest($request);
+
+        if (!$changeOrderCurrencyForm->isSubmitted() || !$changeOrderCurrencyForm->isValid()) {
+            return $this->redirectToRoute('admin_orders_view', [
+                'orderId' => $orderId,
+            ]);
+        }
+
+        $data = $changeOrderCurrencyForm->getData();
+
+        try {
+            $this->getCommandBus()->handle(
+                new ChangeOrderCurrencyCommand($orderId, (int) $data['new_currency_id'])
+            );
+
+            $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e));
+        }
+
+        return $this->redirectToRoute('admin_orders_view', [
+            'orderId' => $orderId,
+        ]);
     }
 
     /**

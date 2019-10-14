@@ -24,49 +24,33 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Order\Command;
+namespace PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider;
 
-use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
-use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
+use Module;
+use PaymentModule;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use Validate;
 
-/**
- * Changes currency for given order.
- */
-class ChangeOrderCurrencyCommand
+final class InstalledPaymentModulesChoiceProvider implements FormChoiceProviderInterface
 {
-    /**
-     * @var OrderId
-     */
-    private $orderId;
+    private static $paymentModules;
 
     /**
-     * @var CurrencyId
+     * {@inheritdoc}
      */
-    private $newCurrencyId;
-
-    /**
-     * @param int $orderId
-     * @param int $newCurrencyId
-     */
-    public function __construct($orderId, $newCurrencyId)
+    public function getChoices(): array
     {
-        $this->orderId = new OrderId($orderId);
-        $this->newCurrencyId = new CurrencyId($newCurrencyId);
-    }
+        if (!self::$paymentModules) {
+            self::$paymentModules = [];
 
-    /**
-     * @return OrderId
-     */
-    public function getOrderId()
-    {
-        return $this->orderId;
-    }
+            foreach (PaymentModule::getInstalledPaymentModules() as $payment) {
+                $module = Module::getInstanceByName($payment['name']);
+                if (Validate::isLoadedObject($module) && $module->active) {
+                    self::$paymentModules[$module->name] = $module->displayName;
+                }
+            }
+        }
 
-    /**
-     * @return CurrencyId
-     */
-    public function getNewCurrencyId()
-    {
-        return $this->newCurrencyId;
+        return self::$paymentModules;
     }
 }

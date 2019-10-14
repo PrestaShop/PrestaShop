@@ -86,6 +86,7 @@ module.exports = {
     feature_form: './js/pages/feature/form',
     order_message_form: './js/pages/order_message/form',
     order_message: './js/pages/order_message',
+    order_view: './js/pages/order/view.js',
     attachment: './js/pages/attachment',
     attribute: './js/pages/attribute',
     attribute_group: './js/pages/attribute-group',

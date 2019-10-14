@@ -24,49 +24,45 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Order\Command;
+namespace PrestaShopBundle\Form\Extension;
 
-use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
-use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
+use Symfony\Component\Form\AbstractTypeExtension;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Changes currency for given order.
+ * Extends TextType with <datalist> tag feature
  */
-class ChangeOrderCurrencyCommand
+class DataListExtension extends AbstractTypeExtension
 {
     /**
-     * @var OrderId
+     * {@inheritdoc}
      */
-    private $orderId;
-
-    /**
-     * @var CurrencyId
-     */
-    private $newCurrencyId;
-
-    /**
-     * @param int $orderId
-     * @param int $newCurrencyId
-     */
-    public function __construct($orderId, $newCurrencyId)
+    public function configureOptions(OptionsResolver $resolver): void
     {
-        $this->orderId = new OrderId($orderId);
-        $this->newCurrencyId = new CurrencyId($newCurrencyId);
+        $resolver
+            ->setDefaults([
+                'data_list' => null,
+            ])
+            ->setAllowedTypes('data_list', ['null', 'array'])
+        ;
     }
 
     /**
-     * @return OrderId
+     * {@inheritdoc}
      */
-    public function getOrderId()
+    public function buildView(FormView $view, FormInterface $form, array $options): void
     {
-        return $this->orderId;
+        $view->vars['data_list'] = $options['data_list'];
     }
 
     /**
-     * @return CurrencyId
+     * {@inheritdoc}
      */
-    public function getNewCurrencyId()
+    public function getExtendedType(): string
     {
-        return $this->newCurrencyId;
+        return TextType::class;
     }
 }

@@ -1,4 +1,3 @@
-<?php
 /**
  * 2007-2019 PrestaShop SA and Contributors
  *
@@ -24,49 +23,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Order\Command;
-
-use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
-use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
-
-/**
- * Changes currency for given order.
- */
-class ChangeOrderCurrencyCommand
-{
-    /**
-     * @var OrderId
-     */
-    private $orderId;
-
-    /**
-     * @var CurrencyId
-     */
-    private $newCurrencyId;
-
-    /**
-     * @param int $orderId
-     * @param int $newCurrencyId
-     */
-    public function __construct($orderId, $newCurrencyId)
-    {
-        $this->orderId = new OrderId($orderId);
-        $this->newCurrencyId = new CurrencyId($newCurrencyId);
-    }
-
-    /**
-     * @return OrderId
-     */
-    public function getOrderId()
-    {
-        return $this->orderId;
-    }
-
-    /**
-     * @return CurrencyId
-     */
-    public function getNewCurrencyId()
-    {
-        return $this->newCurrencyId;
-    }
-}
+export default {
+  orderPaymentDetailsBtn: '.js-payment-details-btn',
+};
