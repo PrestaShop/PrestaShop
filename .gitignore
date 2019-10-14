@@ -97,6 +97,7 @@ themes/*/cache/*
 
 # Config
 
+config/defines_custom.inc.php
 config/settings.inc.php
 config/settings.old.php
 config/xml/*
