@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepositoryInterface;
 use PrestaShopBundle\Service\TranslationService;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\PropertyAccess\PropertyAccess;
-use Validate;
+use Module;
 
 /**
  * Class TranslationRouteFinder finds the correct route for translations.
