@@ -191,7 +191,7 @@ class CMSCategoryCore extends ObjectModel
             $category['children'][] = CMSCategory::getRecurseCategory($id_lang, $row['id_cms_category'], $active, $links);
         }
 
-		$sql = 'SELECT c.`id_cms`, cl.`meta_title`, cl.`link_rewrite`
+        $sql = 'SELECT c.`id_cms`, cl.`meta_title`, cl.`link_rewrite`
 				FROM `' . _DB_PREFIX_ . 'cms` c
 				' . Shop::addSqlAssociation('cms', 'c') . '
 				JOIN `' . _DB_PREFIX_ . 'cms_lang` cl ON c.`id_cms` = cl.`id_cms`
