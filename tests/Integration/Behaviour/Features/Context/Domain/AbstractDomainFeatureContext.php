@@ -85,10 +85,7 @@ abstract class AbstractDomainFeatureContext implements Context
         return CommonFeatureContext::getContainer();
     }
 
-    /**
-     * @Then I should get no error
-     */
-    public function assertNoErrorOccurred()
+    protected function assertLastErrorIsNull()
     {
         if (null !== $this->lastException) {
             throw new RuntimeException(sprintf(
