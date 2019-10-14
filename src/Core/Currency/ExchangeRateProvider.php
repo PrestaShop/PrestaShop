@@ -114,38 +114,44 @@ class ExchangeRateProvider
          * Search for the currency rate in the source feed, this represents the rate
          * relative to the source feed (compared to the feed default currency)
          */
-        $sourceRate = null;
-        if ($this->sourceIsoCode == $currencyIsoCode) {
-            $sourceRate = new Number((string) 1.0);
-        } else {
-            foreach ($this->currencies as $currency) {
-                if ($currency['iso_code'] == $currencyIsoCode) {
-                    $sourceRate = $currency['rate'];
+        $sourceRate = $this->getExchangeRateFromFeed($currencyIsoCode);
 
-                    break;
-                }
-            }
+        /*
+         * Fetch the exchange rate of the default currency (compared to the source currency)
+         * and finally compute the asked currency rate compared to the shop default currency rate
+         */
+        $defaultExchangeRate = $this->getExchangeRateFromFeed($this->defaultCurrencyIsoCode);
+
+        return $sourceRate->dividedBy($defaultExchangeRate);
+    }
+
+    /**
+     * @param string $currencyIsoCode
+     *
+     * @return Number
+     *
+     * @throws CurrencyFeedException
+     */
+    private function getExchangeRateFromFeed(string $currencyIsoCode)
+    {
+        if ($this->sourceIsoCode == $currencyIsoCode) {
+            return new Number('1.0');
         }
 
-        if (null === $sourceRate) {
+        if (!isset($this->currencies[$currencyIsoCode])) {
             throw new CurrencyFeedException(sprintf(
                 'Exchange rate for currency with ISO code %s was not found',
                 $currencyIsoCode
             ));
         }
 
-        /*
-         * Fetch the exchange rate of the default currency (compared to the source currency)
-         * and finally compute the asked currency rate compared to the shop default currency rate
-         */
-        $defaultExchangeRate = $this->getDefaultCurrencyRelativeExchangeRate();
-
-        return $sourceRate->dividedBy($defaultExchangeRate);
+        return $this->currencies[$currencyIsoCode];
     }
 
     /**
      * Fetch the currency from its url using circuit breaker, if no content was fetched
-     * fallback on the cache file. If the feed has already been fetch there is nothing to do.
+     * fallback on the cache file. This is only performed once per process, if the currencies
+     * are already present then there is nothing to do.
      *
      * @throws CurrencyFeedException
      */
@@ -171,32 +177,6 @@ class ExchangeRateProvider
         }
 
         $this->parseXmlFeed($xmlFeed);
-    }
-
-    /**
-     * @return SimpleXMLElement|null
-     */
-    private function fetchRemoteFeed()
-    {
-        $remoteFeedData = $this->remoteServiceProvider->call($this->currencyFeedUrl);
-        if (empty($remoteFeedData)) {
-            return null;
-        }
-
-        return $this->parseAndSaveXMLFeed($remoteFeedData);
-    }
-
-    /**
-     * @return SimpleXMLElement|null
-     */
-    private function fetchCachedFeed()
-    {
-        $cachedFeedData = $this->getCachedCurrencyFeed();
-        if (empty($cachedFeedData)) {
-            return null;
-        }
-
-        return $this->parseAndSaveXMLFeed($cachedFeedData);
     }
 
     /**
@@ -229,10 +209,7 @@ class ExchangeRateProvider
 
         $this->sourceIsoCode = (string) ($xmlFeed->source['iso_code']);
         foreach ($xmlCurrencies as $currency) {
-            $this->currencies[] = [
-                'iso_code' => (string) $currency['iso_code'],
-                'rate' => new Number((string) $currency['rate']),
-            ];
+            $this->currencies[(string) $currency['iso_code']] = new Number((string) $currency['rate']);
         }
     }
 
@@ -258,35 +235,5 @@ class ExchangeRateProvider
     private function isValidXMLFeed(SimpleXMLElement $xmlFeed)
     {
         return $xmlFeed && $xmlFeed->list && count($xmlFeed->list->currency) && $xmlFeed->source;
-    }
-
-    /**
-     * @return Number
-     *
-     * @throws CurrencyFeedException
-     */
-    private function getDefaultCurrencyRelativeExchangeRate()
-    {
-        $defaultExchangeRate = null;
-        if ($this->defaultCurrencyIsoCode == $this->sourceIsoCode) {
-            $defaultExchangeRate = new Number('1.0');
-        } else {
-            foreach ($this->currencies as $currency) {
-                if ($currency['iso_code'] == $this->defaultCurrencyIsoCode) {
-                    $defaultExchangeRate = $currency['rate'];
-
-                    break;
-                }
-            }
-        }
-
-        if (null === $defaultExchangeRate) {
-            throw new CurrencyFeedException(sprintf(
-                'Could not find default currency %s in the currency feed',
-                $this->defaultCurrencyIsoCode
-            ));
-        }
-
-        return $defaultExchangeRate;
     }
 }
