@@ -214,6 +214,15 @@ class CurrencyCore extends ObjectModel
             if (empty($idLang)) {
                 $idLang = Context::getContext()->language->id;
             }
+
+            /**
+             * Both these fields used to be string, but they were turned into translatable
+             * fields so now they are arrays (indexed by language id). But to avoid BC breaks
+             * the field is turned into a string in the constructor (using either the specified
+             * language or the default one).
+             * Since we want to keep the original array we store it in another field before setting
+             * the field as a string.
+             */
             if (is_array($this->symbol)) {
                 $this->symbols = $this->symbol;
                 $this->sign = $this->symbol = $this->symbol[$idLang];
@@ -424,9 +433,11 @@ class CurrencyCore extends ObjectModel
     }
 
     /**
-     * List of currency names, the array needs to be indexed by language id.
+     * This setter updates the name field because it is used whe you want to update
+     * the database (legacy core feature). But to be consistent the names field also
+     * needs to be updated.
      *
-     * @param string[] $names
+     * @param string[] $names List of currency names, the array needs to be indexed by language id.
      *
      * @return $this
      */
@@ -446,9 +457,11 @@ class CurrencyCore extends ObjectModel
     }
 
     /**
-     * List of currency symbols, the array needs to be indexed by language id.
+     * This setter updates the symbol field because it is used whe you want to update
+     * the database (legacy core feature). But to be consistent the symbols field also
+     * needs to be updated.
      *
-     * @param string[] $symbols
+     * @param string[] $symbols List of currency symbols, the array needs to be indexed by language id.
      *
      * @return CurrencyCore
      */
