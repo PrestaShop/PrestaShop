@@ -48,7 +48,7 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterf
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CurrencyGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\Currency;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\CurrencyInterface;
-use PrestaShop\PrestaShop\Core\Localization\CLDR\Reader;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
 use PrestaShop\PrestaShop\Core\Search\Filters\CurrencyFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -233,23 +233,22 @@ class CurrencyController extends FrameworkBundleAdminController
         $legacyContext = $this->get('prestashop.adapter.legacy.context');
         $languages = $legacyContext->getAvailableLanguages();
 
-        /** @var Reader $dataSource */
-        $reader = $this->get('prestashop.core.localization.cldr.reader');
+        /** @var LocaleRepository $localeRepository */
+        $localeRepository = $this->get('prestashop.core.localization.cldr.locale_repository');
 
         $cldrCurrency = [];
         foreach ($languages as $language) {
-            $localeData = $reader->readLocaleData($language['locale']);
-            $currencyData = $localeData->getCurrencyByIsoCode($currencyIsoCode);
-            if (null === $currencyData || empty($currencyData)) {
+            $locale = $localeRepository->getLocale($language['locale']);
+            $localeCurrency = $locale->getCurrency($currencyIsoCode);
+            if (null === $localeCurrency) {
                 continue;
             }
 
-            $currency = new Currency($currencyData);
-            $cldrCurrency['iso_code'] = $currencyData->getIsoCode();
-            $cldrCurrency['numeric_iso_code'] = $currencyData->getNumericIsoCode();
-            $cldrCurrency['precision'] = $currencyData->getDecimalDigits();
-            $cldrCurrency['names'][$language['id_lang']] = $currency->getDisplayName();
-            $cldrCurrency['symbols'][$language['id_lang']] = $currency->getSymbol(CurrencyInterface::SYMBOL_TYPE_NARROW) ?: $currencyData->getIsoCode();
+            $cldrCurrency['iso_code'] = $localeCurrency->getIsoCode();
+            $cldrCurrency['numeric_iso_code'] = $localeCurrency->getNumericIsoCode();
+            $cldrCurrency['precision'] = $localeCurrency->getDecimalDigits();
+            $cldrCurrency['names'][$language['id_lang']] = $localeCurrency->getDisplayName();
+            $cldrCurrency['symbols'][$language['id_lang']] = $localeCurrency->getSymbol(CurrencyInterface::SYMBOL_TYPE_NARROW) ?: $localeCurrency->getIsoCode();
         }
 
         if (empty($cldrCurrency)) {
