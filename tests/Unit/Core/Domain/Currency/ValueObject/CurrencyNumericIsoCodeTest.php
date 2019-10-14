@@ -77,13 +77,13 @@ class CurrencyNumericIsoCodeTest extends TestCase
                 -42,
             ],
             [
-                8
+                8,
             ],
             [
-                '8'
+                '8',
             ],
             [
-                '08'
+                '08',
             ],
         ];
     }
