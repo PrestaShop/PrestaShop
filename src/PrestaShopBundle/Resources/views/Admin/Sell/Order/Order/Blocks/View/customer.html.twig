@@ -92,7 +92,8 @@
               'addaddress': 1,
               'address_type': 1,
               'id_order': orderForViewing.id,
-              'id_address': orderForViewing.shippingAddress.addressId
+              'id_address': orderForViewing.shippingAddress.addressId,
+              'back': path('admin_orders_view', {'orderId': orderForViewing.id})
             }) }}"
                class="float-right tooltip-link"
                data-toggle="pstooltip"
@@ -133,7 +134,8 @@
               'addaddress': 1,
               'address_type': 2,
               'id_order': orderForViewing.id,
-              'id_address': orderForViewing.invoiceAddress.addressId
+              'id_address': orderForViewing.invoiceAddress.addressId,
+              'back': path('admin_orders_view', {'orderId': orderForViewing.id})
             }) }}"
                class="float-right tooltip-link"
                data-toggle="pstooltip"
