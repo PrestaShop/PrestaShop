@@ -154,6 +154,24 @@ Feature: Currency Management
     And currency "currency7" should have modified true
     And currency "currency7" should have status disabled
     And currency "currency7" should be available in shop "shop1"
+    When I edit currency "currency7" with following properties:
+      | iso_code         | CUS           |
+      | exchange_rate    | 0.88          |
+      | precision        | 3             |
+      | is_enabled       | 1             |
+      | is_unofficial    | 1             |
+      | shop_association | shop1         |
+    Then I should get no error
+    And currency "currency7" should be "CUS"
+    And currency "currency7" exchange rate should be 0.88
+    And currency "currency7" numeric iso code should be null
+    And currency "currency7" name should be "Unofficial Money"
+    And currency "currency7" symbol should be "@"
+    And currency "currency7" precision should be 3
+    And currency "currency7" should have unofficial true
+    And currency "currency7" should have modified true
+    And currency "currency7" should have status enabled
+    And currency "currency7" should be available in shop "shop1"
 
   Scenario: Adding then editing invalid unofficial currency
     When I add new currency "currency8" with following properties:

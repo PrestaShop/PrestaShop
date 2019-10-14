@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddOfficialCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddUnofficialCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\EditCurrencyCommand;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Command\EditUnofficialCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 
 /**
@@ -67,9 +68,6 @@ final class CurrencyFormDataHandler implements FormDataHandlerInterface
                 (float) $data['exchange_rate'],
                 $data['active']
             );
-            if (!empty($data['numeric_iso_code'])) {
-                $command->setNumericIsoCode($data['numeric_iso_code']);
-            }
         }
 
         $command
@@ -90,10 +88,16 @@ final class CurrencyFormDataHandler implements FormDataHandlerInterface
      */
     public function update($id, array $data)
     {
-        $command = new EditCurrencyCommand((int) $id);
+        if ($data['unofficial']) {
+            $command = new EditUnofficialCurrencyCommand((int) $id);
+            $command
+                ->setIsoCode($data['iso_code'])
+            ;
+        } else {
+            $command = new EditCurrencyCommand((int) $id);
+        }
 
         $command
-            ->setIsoCode($data['iso_code'])
             ->setLocalizedNames($data['names'])
             ->setLocalizedSymbols($data['symbols'])
             ->setExchangeRate((float) $data['exchange_rate'])
