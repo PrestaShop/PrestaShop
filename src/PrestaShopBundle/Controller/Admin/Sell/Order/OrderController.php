@@ -264,7 +264,6 @@ class OrderController extends FrameworkBundleAdminController
         $changeOrderCurrencyForm = $this->createForm(ChangeOrderCurrencyType::class, [], [
             'current_currency_id' => $orderForViewing->getCurrencyId(),
         ]);
-        $addOrderProductForm = $this->createForm(AddOrderProductType::class);
         $addProductToOrderForm = $this->createForm(AddProductToOrderType::class);
         $updateOrderProductForm = $this->createForm(UpdateProductInOrderType::class);
 
@@ -275,7 +274,6 @@ class OrderController extends FrameworkBundleAdminController
             'updateOrderStatusForm' => $updateOrderStatusForm->createView(),
             'addOrderPaymentForm' => $addOrderPaymentForm->createView(),
             'changeOrderCurrencyForm' => $changeOrderCurrencyForm->createView(),
-            'addOrderProductForm' => $addOrderProductForm->createView(),
             'addProductToOrderForm' => $addProductToOrderForm->createView(),
             'updateOrderProductForm' => $updateOrderProductForm->createView(),
         ]);
