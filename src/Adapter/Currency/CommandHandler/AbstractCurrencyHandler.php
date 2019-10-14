@@ -27,9 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Currency\CommandHandler;
 
 use Currency;
-use Language;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\InvalidUnofficialCurrencyException;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
 
 /**
@@ -68,28 +66,5 @@ abstract class AbstractCurrencyHandler extends AbstractObjectModelHandler
         }
 
         $this->updateMultiStoreColumns($entity, $columnsToUpdate);
-    }
-
-    /**
-     * @param string $isoCode
-     *
-     * @throws InvalidUnofficialCurrencyException
-     */
-    protected function assertUnofficialCurrencyDoesNotMatchAnyRealIsoCode($isoCode)
-    {
-        $allLanguages = Language::getLanguages(false);
-        foreach ($allLanguages as $languageData) {
-            // CLDR locale gives us the CLDR reference specification
-            $cldrLocale = $this->localeRepoCLDR->getLocale($languageData['locale']);
-            $cldrCurrency = $cldrLocale->getCurrency($isoCode);
-            if (null !== $cldrCurrency) {
-                throw new InvalidUnofficialCurrencyException(
-                    sprintf(
-                        'Unofficial currency with iso code "%s" is invalid because it matches a currency from CLDR database',
-                        $isoCode
-                    )
-                );
-            }
-        }
     }
 }
