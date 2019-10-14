@@ -90,11 +90,13 @@ export default class AddressesRenderer {
     }
 
     if (deliveryAddressDetailsContent) {
-      $(createOrderPageMap.deliveryAddressDetails).html(deliveryAddressDetailsContent);
+      $deliveryAddressDetails.html(deliveryAddressDetailsContent);
     }
 
     if (invoiceAddressDetailsContent) {
-      $(createOrderPageMap.invoiceAddressDetails).html(invoiceAddressDetailsContent);
+      $invoiceAddressDetails.html(invoiceAddressDetailsContent);
     }
+
+    $(createOrderPageMap.addressesBlock).removeClass('d-none');
   }
 }

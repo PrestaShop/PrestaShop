@@ -37,22 +37,32 @@ export default class ShippingRenderer {
     this.$noCarrierBlock = $(createOrderPageMap.noCarrierBlock);
   }
 
-  render(shipping) {
-    if (shipping !== null && shipping.length !== 0) {
-      this._hideNoCarrierBlock();
-      this._showContainer();
-      this._renderForm(shipping);
+  /**
+   * @param {Object} shipping
+   * @param {Boolean} emptyCart
+   */
+  render(shipping, emptyCart) {
+    if (emptyCart) {
+      this._hideContainer();
+    } else if (shipping !== null && shipping.length !== 0) {
+      this._displayForm(shipping);
     } else {
-      this._showContainer();
-      this._hideForm();
-      this._showNoCarrierBlock();
+      this._displayNoCarriersWarning();
     }
   }
 
-  _renderForm(shipping) {
-    this._renderDeliveryOptions(shipping.deliveryOptions, shipping.carrierId);
+  _displayForm(shipping) {
+    this._hideNoCarrierBlock();
+    this._renderDeliveryOptions(shipping.deliveryOptions, shipping.selectedCarrierId);
     this._renderTotalShipping(shipping.shippingPrice);
     this._showForm();
+    this._showContainer();
+  }
+
+  _displayNoCarriersWarning() {
+    this._showContainer();
+    this._hideForm();
+    this._showNoCarrierBlock();
   }
 
   _renderDeliveryOptions(deliveryOptions, selectedVal) {

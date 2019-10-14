@@ -64,5 +64,7 @@ export default class VouchersRenderer {
 
       $vouchersTable.find('tbody').append($template);
     }
+
+    $(createOrderPageMap.vouchersBlock).removeClass('d-none');
   }
 }

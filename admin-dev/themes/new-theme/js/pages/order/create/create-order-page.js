@@ -108,9 +108,8 @@ export default class CreateOrderPage {
 
       const self = this;
       this.cartProvider.getCart(cartId).then((response) => {
-        self._renderCartInfo(response);
-        self.shippingRenderer.render(response.shipping);
         self.data.cart_id = response.cartId;
+        self._renderCartInfo(response);
       });
     });
   }
@@ -188,21 +187,11 @@ export default class CreateOrderPage {
   _renderCartInfo(cartInfo) {
     this.addressesRenderer.render(cartInfo.addresses);
     this.vouchersRenderer.render(cartInfo.cartRules);
-    // render Summary block when at least 1 product is in cart
+    this.shippingRenderer.render(cartInfo.shipping, cartInfo.products.length === 0);
+    // @todo: render Summary block when at least 1 product is in cart
     // and delivery options are available
 
-    this._showCartInfo();
-  }
-
-  /**
-   * Shows Cart, Vouchers, Addresses blocks
-   *
-   * @private
-   */
-  _showCartInfo() {
     $(createOrderPageMap.cartBlock).removeClass('d-none');
-    $(createOrderPageMap.vouchersBlock).removeClass('d-none');
-    $(createOrderPageMap.addressesBlock).removeClass('d-none');
   }
 
   /**
@@ -254,6 +243,7 @@ export default class CreateOrderPage {
   }
 
   /**
+   * @todo
    * Stores cart summary into "session" like variable
    *
    * @param {Object} cartInfo
