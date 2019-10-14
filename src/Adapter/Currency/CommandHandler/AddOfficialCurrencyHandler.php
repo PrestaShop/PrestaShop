@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Currency\CommandHandler;
 
 use Currency;
 use Language;
+use PrestaShop\PrestaShop\Adapter\Currency\CurrencyCommandValidator;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddOfficialCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\CommandHandler\AddCurrencyHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotCreateCurrencyException;
@@ -35,6 +36,8 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintExcep
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
+use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShopException;
 
 /**
@@ -42,18 +45,43 @@ use PrestaShopException;
  *
  * @internal
  */
-final class AddOfficialCurrencyHandler extends AbstractAddCurrencyHandler implements AddCurrencyHandlerInterface
+final class AddOfficialCurrencyHandler extends AbstractCurrencyHandler implements AddCurrencyHandlerInterface
 {
+    /**
+     * @var Language
+     */
+    protected $defaultLanguage;
+
+    /**
+     * @var CurrencyCommandValidator
+     */
+    protected $validator;
+
+    /**
+     * @param LocaleRepository $localeRepoCLDR
+     * @param int $defaultLanguageId
+     */
+    public function __construct(
+        LocaleRepository $localeRepoCLDR,
+        $defaultLanguageId
+    ) {
+        parent::__construct($localeRepoCLDR);
+        $this->defaultLanguage = new Language((int) $defaultLanguageId);
+        $this->validator = new CurrencyCommandValidator($localeRepoCLDR, $this->defaultLanguage->getLocale());
+    }
+
     /**
      * {@inheritdoc}
      *
+     * @throws CannotCreateCurrencyException
+     * @throws CurrencyConstraintException
      * @throws CurrencyException
+     * @throws CurrencyNotFoundException
+     * @throws LocalizationException
      */
     public function handle(AddOfficialCurrencyCommand $command)
     {
-        $this->assertIsoCodesMatch($command);
-        $this->assertCurrencyWithIsoCodeDoesNotExist($command);
-        $this->assertCurrencyWithNumericIsoCodeDoesNotExist($command);
+        $this->validator->assertCurrencyIsNotAvailableInDatabase($command->getIsoCode()->getValue());
 
         try {
             $entity = new Currency();
@@ -62,7 +90,7 @@ final class AddOfficialCurrencyHandler extends AbstractAddCurrencyHandler implem
             $entity->active = $command->isEnabled();
             $entity->unofficial = false;
             $entity->conversion_rate = $command->getExchangeRate()->getValue();
-            $entity->numeric_iso_code = $this->getNumericIsoCode($command);
+            $entity->numeric_iso_code = $this->findNumericIsoCodeFromAlphaCode($command->getIsoCode()->getValue());
             $entity->precision = $this->getPrecision($command);
 
             if (!empty($command->getLocalizedNames())) {
@@ -107,22 +135,6 @@ final class AddOfficialCurrencyHandler extends AbstractAddCurrencyHandler implem
     }
 
     /**
-     * @param AddOfficialCurrencyCommand $command
-     *
-     * @return string
-     *
-     * @throws CurrencyNotFoundException
-     */
-    private function getNumericIsoCode(AddOfficialCurrencyCommand $command): string
-    {
-        if (null !== $command->getNumericIsoCode()) {
-            return $command->getNumericIsoCode()->getValue();
-        }
-
-        return $this->findNumericIsoCodeFromAlphaCode($command->getIsoCode()->getValue());
-    }
-
-    /**
      * @param string $isoCode
      *
      * @return string
@@ -152,40 +164,5 @@ final class AddOfficialCurrencyHandler extends AbstractAddCurrencyHandler implem
         }
 
         return $matchingRealCurrency->getNumericIsoCode();
-    }
-
-    /**
-     * @param AddOfficialCurrencyCommand $command
-     *
-     * @throws CurrencyConstraintException
-     */
-    private function assertIsoCodesMatch(AddOfficialCurrencyCommand $command)
-    {
-        //Numeric ISO code will be deduced from ISO code, only check real currencies
-        if (null === $command->getNumericIsoCode()) {
-            return;
-        }
-
-        $defaultLocaleCLDR = $this->localeRepoCLDR->getLocale($this->defaultLanguage->getLocale());
-        $allCurrencies = $defaultLocaleCLDR->getAllCurrencies();
-        $matchingRealCurrency = null;
-        foreach ($allCurrencies as $currencyData) {
-            if ($currencyData->getIsoCode() == $command->getIsoCode()->getValue() &&
-                $currencyData->getNumericIsoCode() == $command->getNumericIsoCode()->getValue()) {
-                $matchingRealCurrency = $currencyData;
-                break;
-            }
-        }
-
-        if (null === $matchingRealCurrency) {
-            throw new CurrencyConstraintException(
-                sprintf(
-                    'Could not find any currency in CLDR database matching ISO code "%s" and numeric ISO code "%s"',
-                    $command->getIsoCode()->getValue(),
-                    $command->getNumericIsoCode()->getValue()
-                ),
-                CurrencyConstraintException::ISO_CODES_MISMATCH
-            );
-        }
     }
 }
