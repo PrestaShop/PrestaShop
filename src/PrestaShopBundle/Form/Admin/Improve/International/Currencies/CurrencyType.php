@@ -92,6 +92,10 @@ class CurrencyType extends TranslatorAwareType
                     'choice_translation_domain' => false,
                     'required' => false,
                     'placeholder' => '--',
+                    'attr' => [
+                        'data-toggle' => 'select2',
+                        'data-minimumResultsForSearch' => '1',
+                    ],
                 ])
                 ->add('unofficial', CheckboxType::class, [
                     'required' => false,
@@ -167,7 +171,6 @@ class CurrencyType extends TranslatorAwareType
                     ]),
                 ],
             ])
-            ->add('numeric_iso_code', HiddenType::class)
             ->add('exchange_rate', NumberType::class, [
                 'scale' => 6,
                 'constraints' => [

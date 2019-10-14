@@ -26,8 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Currency\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Currency\Command\EditCurrencyCommand;
-use PrestaShop\PrestaShop\Core\Domain\Currency\CommandHandler\EditCurrencyHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Command\EditUnofficialCurrencyCommand;
+use PrestaShop\PrestaShop\Core\Domain\Currency\CommandHandler\EditUnofficialCurrencyHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDisableDefaultCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\DefaultCurrencyInMultiShopException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotUpdateCurrencyException;
@@ -47,7 +47,7 @@ use PrestaShopDatabaseException;
  *
  * @internal
  */
-final class EditUnofficialCurrencyHandler extends AbstractCurrencyHandler implements EditCurrencyHandlerInterface
+final class EditUnofficialCurrencyHandler extends AbstractCurrencyHandler implements EditUnofficialCurrencyHandlerInterface
 {
     /**
      * @var CurrencyCommandValidator
@@ -71,7 +71,7 @@ final class EditUnofficialCurrencyHandler extends AbstractCurrencyHandler implem
      *
      * @throws CurrencyException
      */
-    public function handle(EditCurrencyCommand $command)
+    public function handle(EditUnofficialCurrencyCommand $command)
     {
         try {
             $entity = new Currency($command->getCurrencyId()->getValue());
@@ -99,14 +99,14 @@ final class EditUnofficialCurrencyHandler extends AbstractCurrencyHandler implem
 
     /**
      * @param Currency $entity
-     * @param EditCurrencyCommand $command
+     * @param EditUnofficialCurrencyCommand $command
      *
      * @throws CannotUpdateCurrencyException
      * @throws PrestaShopException
      * @throws PrestaShopDatabaseException
      * @throws LocalizationException
      */
-    private function updateEntity(Currency $entity, EditCurrencyCommand $command)
+    private function updateEntity(Currency $entity, EditUnofficialCurrencyCommand $command)
     {
         if (null !== $command->getIsoCode()) {
             $entity->iso_code = $command->getIsoCode()->getValue();
@@ -146,19 +146,21 @@ final class EditUnofficialCurrencyHandler extends AbstractCurrencyHandler implem
 
     /**
      * @param Currency $entity
-     * @param EditCurrencyCommand $command
+     * @param EditUnofficialCurrencyCommand $command
      *
      * @throws CannotDisableDefaultCurrencyException
      * @throws CurrencyConstraintException
      * @throws DefaultCurrencyInMultiShopException
      * @throws InvalidUnofficialCurrencyException
      */
-    private function verify(Currency $entity, EditCurrencyCommand $command)
+    private function verify(Currency $entity, EditUnofficialCurrencyCommand $command)
     {
         $this->validator->assertDefaultCurrencyIsNotBeingDisabled($command);
         if (null !== $command->getIsoCode()) {
             $this->validator->assertCurrencyIsNotInReference($command->getIsoCode()->getValue());
-            $this->validator->assertCurrencyIsNotAvailableInDatabase($command->getIsoCode()->getValue());
+            if ($entity->iso_code !== $command->getIsoCode()->getValue()) {
+                $this->validator->assertCurrencyIsNotAvailableInDatabase($command->getIsoCode()->getValue());
+            }
         }
         $this->validator->assertDefaultCurrencyIsNotBeingRemovedOrDisabledFromShop($entity, $command);
     }

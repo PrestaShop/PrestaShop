@@ -31,10 +31,8 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\CommandHandler\EditCurrencyHandle
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDisableDefaultCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\DefaultCurrencyInMultiShopException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotUpdateCurrencyException;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\InvalidUnofficialCurrencyException;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use Currency;
@@ -125,8 +123,7 @@ final class EditOfficialCurrencyHandler extends AbstractCurrencyHandler implemen
         //This method will insert the missing localized names/symbols and detect if the currency has been modified
         $entity->refreshLocalizedCurrencyData(Language::getLanguages(), $this->localeRepoCLDR);
 
-        //IMPORTANT: specify that we want to save null values
-        if (false === $entity->update(true)) {
+        if (false === $entity->update()) {
             throw new CannotUpdateCurrencyException(
                 sprintf(
                     'An error occurred when updating currency object with id "%s"',
@@ -146,9 +143,7 @@ final class EditOfficialCurrencyHandler extends AbstractCurrencyHandler implemen
      * @param EditCurrencyCommand $command
      *
      * @throws CannotDisableDefaultCurrencyException
-     * @throws CurrencyConstraintException
      * @throws DefaultCurrencyInMultiShopException
-     * @throws InvalidUnofficialCurrencyException
      */
     private function verify(Currency $entity, EditCurrencyCommand $command)
     {
