@@ -31,7 +31,7 @@
         <span class="float-right">{{ 'Search for a product'|trans({}, 'Admin.Orderscustomers.Feature') }}</span>
       </div>
       <div class="col-4">
-        <input type="text"
+        <input id="productSearch" data-url="{{ path('admin_search_product_for_order_creation') }}" type="text"
                class="form-control"
         >
         <small class="form-text">
@@ -44,40 +44,42 @@
 
     <div class="row">
       <div class="col">
-        <div class="row">
-          <div class="col-3">
-            <span class="float-right">{{ 'Product'|trans({}, 'Admin.Global') }}</span>
+        <div id="productSearchResults" class="d-none">
+          <div class="row js-product-select-row">
+            <div class="col-3">
+              <span class="float-right">{{ 'Product'|trans({}, 'Admin.Global') }}</span>
+            </div>
+            <div class="col-4">
+              <select id="productSelect" class="form-control" data-customization-label="{{ 'Customization'|trans({}, 'Admin.Catalog.Feature') }}"></select>
+            </div>
           </div>
-          <div class="col-4">
-            <select class="form-control"></select>
+
+          <div class="row mt-3 js-quantity-row">
+            <div class="col-3">
+              <span class="float-right">{{ 'Quantity'|trans({}, 'Admin.Global') }}</span>
+            </div>
+            <div class="col-2">
+              <input id="quantityInput" type="number" min="1" value="1" class="form-control">
+              <small class="form-text">
+                {{ 'In stock'|trans({}, 'Admin.Orderscustomers.Feature') }}
+                <span  class="js-in-stock-counter"></span>
+              </small>
+            </div>
+          </div>
+          <div class="row mt-3">
+            <div class="col-1 offset-sm-3">
+              <button id="addToCartButton" type="button" class="btn btn-primary">
+                {{ 'Add to cart'|trans({}, 'Admin.Orderscustomers.Feature') }}
+              </button>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <hr>
+            </div>
           </div>
         </div>
-        <div class="row mt-3">
-          <div class="col-3">
-            <span class="float-right">{{ 'Combination'|trans({}, 'Admin.Global') }}</span>
-          </div>
-          <div class="col-4">
-            <select class="form-control"></select>
-          </div>
-        </div>
-        <div class="row mt-3">
-          <div class="col-3">
-            <span class="float-right">{{ 'Quantity'|trans({}, 'Admin.Global') }}</span>
-          </div>
-          <div class="col-1">
-            <input type="text" class="form-control">
-          </div>
-        </div>
-        <div class="row mt-3">
-          <div class="col-1 offset-sm-3">
-            <button type="button" class="btn btn-primary">{{ 'Add to cart'|trans({}, 'Admin.Orderscustomers.Feature') }}</button>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col">
-            <hr>
-          </div>
-        </div>
+        <div class="js-no-records-found"></div>
         <div class="row">
           <table class="table">
             <thead>
@@ -88,11 +90,12 @@
                 <th>{{ 'Price per unit'|trans({}, 'Admin.Catalog.Feature') }}</th>
                 <th>{{ 'Quantity'|trans({}, 'Admin.Global') }}</th>
                 <th>{{ 'Price'|trans({}, 'Admin.Global') }}</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td><img src="http://prestashop.local/2-small_default/hummingbird-printed-t-shirt.jpg" alt=""></td>
+                <td><img src="http://presta.local/img/p/2/2-small_default.jpg" alt=""></td>
                 <td>
                   <p class="mb-0">Hummingbird printed t-shirt</p>
                   <p>S- White</p>
@@ -104,10 +107,13 @@
                   <input type="text" class="form-control">
                 </td>
                 <td>
-                  <input type="text" class="form-control" style="max-width: 100px;">
+                  <input type="number" min="1" class="form-control" style="max-width: 100px;">
                 </td>
                 <td>
                   45
+                </td>
+                <td class="text-right">
+                  <button class="btn btn-primary">{{ 'Remove'|trans({}, 'Admin.Actions') }}</button>
                 </td>
               </tr>
             </tbody>
@@ -154,3 +160,60 @@
     </div>
   </div>
 </div>
+
+<div id="productSearchEmptyResultTemplate" class="d-none">
+  <div class="row js-no-records-found-row">
+    <div class="col">
+      <div class="alert alert-warning" role="alert">
+        <p class="alert-text">{{ 'No products found'|trans({}, 'Admin.Orderscustomers.Notification') }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script id="cartProductsTableRowTemplate" type="text/html">
+  <tr>
+    <td class="js-product-image"></td>
+    <td class="js-product-description"></td>
+    <td class="js-product-reference"></td>
+    <td class="js-product-base-price"></td>
+    <td class="js-product-quantity"></td>
+    <td class="js-product-price"></td>
+    <td class="text-right">
+      <button class="btn btn-primary">{{ 'Remove'|trans({}, 'Admin.Actions') }}</button>
+    </td>
+  </tr>
+</script>
+
+<script id="cartProductCustomizedFieldTemplate" type="text/html">
+  <div class="row mt-3 js-customized-field-container">
+    <div class="col-3">
+      <span class="float-right js-customized-field-label"></span>
+    </div>
+    <div class="col-4 js-customized-field-input-wrapper"></div>
+  </div>
+</script>
+
+<script id="cartProductCustomizedFieldInputTemplate-1" type="text/html">
+  <input type="text" class="form-control js-customized-field-input">
+</script>
+
+<script id="cartProductCustomizedFieldInputTemplate-0" type="text/html">
+  <div class="custom-file">
+    <input type="file" class="custom-file-input js-customized-field-input">
+    <label class="custom-file-label">
+      {{ 'Choose file(s)'|trans({}, 'Admin.Actions') }}
+    </label>
+  </div>
+</script>
+
+<script id="combinationsTemplate" type="text/html">
+  <div class="row mt-3 js-combinations-row">
+    <div class="col-3">
+      <span class="float-right">{{ 'Combination'|trans({}, 'Admin.Global') }}</span>
+    </div>
+    <div class="col-4">
+      <select id="combinationsSelect" class="form-control"></select>
+    </div>
+  </div>
+</script>
