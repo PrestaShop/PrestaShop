@@ -53,7 +53,19 @@
               {{ form_widget(attachmentForm.file) }}
               {{ form_errors(attachmentForm.file) }}
             </div>
+            {% block attachment_download %}{% endblock %}
           </div>
+
+          {% if attachmentId is defined %}
+            <div class="form-group row">
+              <div class="col-sm float-right">
+                <a href="{{ path('admin_attachment_view', {'attachmentId': attachmentId}) }}" class="btn btn-primary float-right">
+                  <i class="material-icons">cloud_download</i>
+                  {{'Download current file'|trans({}, 'messages')}}
+                </a>
+              </div>
+            </div>
+          {% endif %}
 
           {% block attachment_form_rest %}
             {{ form_rest(attachmentForm) }}

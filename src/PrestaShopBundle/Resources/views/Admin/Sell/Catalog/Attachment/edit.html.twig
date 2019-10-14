@@ -28,7 +28,7 @@
 {% block content %}
   <div class="row justify-content-center">
     <div class="col">
-      {% include '@PrestaShop/Admin/Sell/Attachment/Blocks/form.html.twig' %}
+      {% include '@PrestaShop/Admin/Sell/Catalog/Attachment/Blocks/form.html.twig' with {'attachmentId': attachmentId} %}
     </div>
   </div>
 {% endblock %}

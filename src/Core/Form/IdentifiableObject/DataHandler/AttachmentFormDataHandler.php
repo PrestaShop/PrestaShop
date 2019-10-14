@@ -116,16 +116,23 @@ final class AttachmentFormDataHandler implements FormDataHandlerInterface
      */
     private function createAddAttachmentCommand(array $data)
     {
-        /** @var UploadedFile $file */
-        $file = $data['file'];
-
-        return new AddAttachmentCommand(
-            $file->getPathname(),
-            $file->getSize(),
+        $addAttachmentCommand = new AddAttachmentCommand(
             $data['name'],
-            $data['file_description'],
-            $file->getMimeType(),
-            $file->getClientOriginalName()
+            $data['file_description']
         );
+
+        if (isset($data['file']) && $data['file'] !== null) {
+            /** @var UploadedFile $file */
+            $file = $data['file'];
+
+            $addAttachmentCommand->setFileInformation(
+                $file->getPathname(),
+                $file->getSize(),
+                $file->getMimeType(),
+                $file->getClientOriginalName()
+            );
+        }
+
+        return $addAttachmentCommand;
     }
 }

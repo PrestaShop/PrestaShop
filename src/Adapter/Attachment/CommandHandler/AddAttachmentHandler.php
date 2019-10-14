@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Attachment\CommandHandler;
 
 use Attachment;
+use PrestaShop\PrestaShop\Adapter\Attachment\AbstractAttachmentHandler;
 use PrestaShop\PrestaShop\Adapter\File\Uploader\AttachmentFileUploader;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\AttachmentFileUploaderInterface;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\AddAttachmentCommand;
@@ -35,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentConstraintE
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\CannotAddAttachmentException;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\EmptyFileException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\ValueObject\AttachmentId;
 use PrestaShopException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -70,6 +72,10 @@ final class AddAttachmentHandler extends AbstractAttachmentHandler implements Ad
     public function handle(AddAttachmentCommand $command): AttachmentId
     {
         try {
+            if ($command->getFilePathName() === null) {
+                throw new EmptyFileException('No file found to be uploaded');
+            }
+
             $attachment = new Attachment();
 
             $this->assertDescriptionContainsCleanHtml($command->getLocalizedDescriptions());
