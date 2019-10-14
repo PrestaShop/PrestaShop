@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddOfficialCurrencyComman
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddUnofficialCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\DeleteCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\EditCurrencyCommand;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Command\EditUnofficialCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\ToggleCurrencyStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDeleteDefaultCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDisableDefaultCurrencyException;
@@ -70,10 +71,6 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
                 (float) $data['exchange_rate'],
                 (bool) $data['is_enabled']
             );
-        }
-
-        if (isset($data['numeric_iso_code'])) {
-            $command->setNumericIsoCode($data['numeric_iso_code']);
         }
 
         if (isset($data['precision'])) {
@@ -117,10 +114,13 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
         /** @var Currency $currency */
         $currency = SharedStorage::getStorage()->get($reference);
 
-        $command = new EditCurrencyCommand((int) $currency->id);
-
-        if (isset($data['iso_code'])) {
-            $command->setIsoCode($data['iso_code']);
+        if (!empty($data['is_unofficial'])) {
+            $command = new EditUnofficialCurrencyCommand((int) $currency->id);
+            if (isset($data['iso_code'])) {
+                $command->setIsoCode($data['iso_code']);
+            }
+        } else {
+            $command = new EditCurrencyCommand((int) $currency->id);
         }
 
         if (isset($data['exchange_rate'])) {

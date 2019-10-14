@@ -32,9 +32,11 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\AlphaIsoCode;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\Precision;
 
 /**
- * Class AddCurrencyCommand
+ * Base class for both add commands this class is abstract because it must not be used
+ * as is since no handler is expecting it. Instead use AddOfficialCurrencyCommand or
+ * AddUnofficialCurrencyCommand.
  */
-class AddCurrencyCommand
+abstract class AddCurrencyCommand
 {
     /**
      * @var AlphaIsoCode
