@@ -84,10 +84,10 @@ export default class CreateOrderPage {
       const customerId = this.customerSearcher.onCustomerChooseForOrderCreation(event);
       this.data.customer_id = customerId;
 
-      const self = this;
+
       this.cartProvider.loadEmptyCart(customerId).then((response) => {
-        self.data.cart_id = response.cartId;
-        self._renderCartInfo(response);
+        this.data.cart_id = response.cartId;
+        this._renderCartInfo(response);
       });
 
       this._loadCustomerCarts(customerId);
@@ -106,10 +106,9 @@ export default class CreateOrderPage {
     this.$container.on('click', '.js-use-cart-btn', (e) => {
       const cartId = $(e.currentTarget).data('cart-id');
 
-      const self = this;
       this.cartProvider.getCart(cartId).then((response) => {
-        self.data.cart_id = response.cartId;
-        self._renderCartInfo(response);
+        this.data.cart_id = response.cartId;
+        this._renderCartInfo(response);
       });
     });
   }
@@ -123,11 +122,10 @@ export default class CreateOrderPage {
     this.$container.on('click', '.js-use-order-btn', (e) => {
       const orderId = $(e.currentTarget).data('order-id');
 
-      const self = this;
       this.cartProvider.duplicateOrderCart(orderId).then((response) => {
-        self._renderCartInfo(response);
-        self.shippingRenderer.render(response.shipping);
-        self.data.cart_id = response.cartId;
+        this._renderCartInfo(response);
+        this.shippingRenderer.render(response.shipping);
+        this.data.cart_id = response.cartId;
       });
     });
   }
@@ -152,11 +150,10 @@ export default class CreateOrderPage {
    * @private
    */
   _loadCustomerCarts(customerId) {
-    const self = this;
     this.customerInfoProvider.getCustomerCarts(customerId).then((response) => {
-      self.cartsRenderer.render({
+      this.cartsRenderer.render({
         carts: response.carts,
-        currentCartId: self.data.cart_id,
+        currentCartId: this.data.cart_id,
       });
       $(createOrderPageMap.customerCheckoutHistory).removeClass('d-none');
     });
@@ -170,9 +167,8 @@ export default class CreateOrderPage {
    * @private
    */
   _loadCustomerOrders(customerId) {
-    const self = this;
     this.customerInfoProvider.getCustomerOrders(customerId).then((response) => {
-      self.ordersRenderer.render(response.orders);
+      this.ordersRenderer.render(response.orders);
       $(createOrderPageMap.customerCheckoutHistory).removeClass('d-none');
     });
   }
@@ -200,7 +196,6 @@ export default class CreateOrderPage {
    * @private
    */
   _changeCartAddresses() {
-    const self = this;
     $.ajax(this.router.generate('admin_carts_edit_address', {cartId: this.data.cart_id}), {
       method: 'POST',
       data: {
@@ -211,13 +206,12 @@ export default class CreateOrderPage {
     }).then((response) => {
       // this._persistCartInfoData(response);
 
-      self.addressesRenderer.render(response.addresses);
-      self.shippingRenderer.render(response.shipping);
+      this.addressesRenderer.render(response.addresses);
+      this.shippingRenderer.render(response.shipping, response.products.length === 0);
     });
   }
 
   _editDeliveryOption(e) {
-    const self = this;
     $.ajax(this.router.generate('admin_carts_edit_carrier', {cartId: this.data.cart_id}), {
       method: 'POST',
       data: {
@@ -225,12 +219,11 @@ export default class CreateOrderPage {
       },
       dataType: 'json',
     }).then((response) => {
-      self.shippingRenderer.render(response.shipping);
+      this.shippingRenderer.render(response.shipping);
     });
   }
 
   _editFreeShipping(e) {
-    const self = this;
     $.ajax(this.router.generate('admin_carts_edit_free_shipping', {cartId: this.data.cart_id}), {
       method: 'POST',
       data: {
@@ -238,7 +231,7 @@ export default class CreateOrderPage {
       },
       dataType: 'json',
     }).then((response) => {
-      self.shippingRenderer.render(response.shipping);
+      this.shippingRenderer.render(response.shipping);
     });
   }
 
@@ -264,7 +257,6 @@ export default class CreateOrderPage {
    * @private
    */
   _choosePreviousCart(cartId) {
-    const self = this;
     $.ajax(this.$container.data('cart-summary-url'), {
       method: 'POST',
       data: {
@@ -273,9 +265,8 @@ export default class CreateOrderPage {
       },
       dataType: 'json',
     }).then((response) => {
-      self._persistCartInfoData(response);
-
-      self._renderCartInfo(response);
+      this._persistCartInfoData(response);
+      this._renderCartInfo(response);
     });
   }
 }
