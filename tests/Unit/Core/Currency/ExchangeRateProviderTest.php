@@ -104,6 +104,56 @@ class ExchangeRateProviderTest extends TestCase
         $this->assertEquals(1.0, $exchangeRate->round(6));
     }
 
+    public function testGetRateFromFeedWithDifferentDefaultSource()
+    {
+        // This is basically the same file, but USD is the source reference and 42 was appended to all rates
+        $this->feedFilePath = _PS_ROOT_DIR_ . '/tests/Unit/Resources/rss/currencies-usd.xml';
+        $this->feedContent = file_get_contents($this->feedFilePath);
+
+        $circuitBreaker = $this->buildCircuitBreakerMock($this->feedContent, $this->feedFilePath);
+
+        $exchangeRateProvider = new ExchangeRateProvider(
+            $this->feedFilePath,
+            'USD',
+            $circuitBreaker,
+            $this->cacheDir
+        );
+
+        $exchangeRate = $exchangeRateProvider->getExchangeRate('ALL');
+        $this->assertEquals(42121.098455, $exchangeRate->round(6));
+
+        $exchangeRate = $exchangeRateProvider->getExchangeRate('EUR');
+        $this->assertEquals(421.0, $exchangeRate->round(6));
+
+        $exchangeRate = $exchangeRateProvider->getExchangeRate('USD');
+        $this->assertEquals(1.0, $exchangeRate->round(6));
+    }
+
+    public function testGetRateFromFeedWithDifferentDefaultSourceAndDifferentLocaleDefault()
+    {
+        // This is basically the same file, but USD is the source reference and 42 was appended to all rates
+        $this->feedFilePath = _PS_ROOT_DIR_ . '/tests/Unit/Resources/rss/currencies-usd.xml';
+        $this->feedContent = file_get_contents($this->feedFilePath);
+
+        $circuitBreaker = $this->buildCircuitBreakerMock($this->feedContent, $this->feedFilePath);
+
+        $exchangeRateProvider = new ExchangeRateProvider(
+            $this->feedFilePath,
+            'AUD',
+            $circuitBreaker,
+            $this->cacheDir
+        );
+
+        $exchangeRate = $exchangeRateProvider->getExchangeRate('ALL');
+        $this->assertEquals(99.895639, $exchangeRate->round(6));
+
+        $exchangeRate = $exchangeRateProvider->getExchangeRate('EUR');
+        $this->assertEquals(0.998456, $exchangeRate->round(6));
+
+        $exchangeRate = $exchangeRateProvider->getExchangeRate('USD');
+        $this->assertEquals(0.002371, $exchangeRate->round(6));
+    }
+
     public function testFeedIsCached()
     {
         $circuitBreaker = $this->buildCircuitBreakerMock($this->feedContent, $this->feedFilePath);
@@ -226,7 +276,7 @@ class ExchangeRateProviderTest extends TestCase
 
     /**
      * @expectedException \PrestaShop\PrestaShop\Core\Currency\Exception\CurrencyFeedException
-     * @expectedExceptionMessage Could not find default currency XYZ in the currency feed
+     * @expectedExceptionMessage Exchange rate for currency with ISO code XYZ was not found
      */
     public function testUnknownDefaultCurrency()
     {

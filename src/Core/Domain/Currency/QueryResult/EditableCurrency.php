@@ -107,7 +107,7 @@ class EditableCurrency
         $exchangeRate,
         $precision,
         $isEnabled,
-        $isUnofficial,
+        bool $isUnofficial,
         array $associatedShopIds
     ) {
         $this->currencyId = new CurrencyId($currencyId);
@@ -155,7 +155,7 @@ class EditableCurrency
      *
      * @return array
      */
-    public function getNames()
+    public function getNames(): array
     {
         return $this->names;
     }
@@ -165,7 +165,7 @@ class EditableCurrency
      *
      * @return array
      */
-    public function getSymbols()
+    public function getSymbols(): array
     {
         return $this->symbols;
     }
@@ -185,7 +185,7 @@ class EditableCurrency
      *
      * @return int
      */
-    public function getPrecision()
+    public function getPrecision(): int
     {
         return $this->precision;
     }
@@ -205,7 +205,7 @@ class EditableCurrency
      *
      * @return bool
      */
-    public function isUnofficial()
+    public function isUnofficial(): bool
     {
         return $this->isUnofficial;
     }
