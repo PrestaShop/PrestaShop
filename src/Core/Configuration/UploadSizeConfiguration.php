@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -24,13 +24,28 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Attachment\Exception;
+namespace PrestaShop\PrestaShop\Core\Configuration;
 
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
-
-/**
- * Class AttachmentException base exception for Attachment subdomain
- */
-class AttachmentException extends DomainException
+class UploadSizeConfiguration implements UploadSizeConfigurationInterface
 {
+    /**
+     * @var IniConfiguration
+     */
+    private $iniConfiguration;
+
+    /**
+     * @param IniConfiguration $iniConfiguration
+     */
+    public function __construct(IniConfiguration $iniConfiguration)
+    {
+        $this->iniConfiguration = $iniConfiguration;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getMaxUploadSizeInBytes(): int
+    {
+        return $this->iniConfiguration->getUploadMaxSizeInBytes();
+    }
 }

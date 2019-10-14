@@ -2,14 +2,17 @@ services:
   _defaults:
     public: true
 
-  prestashop.adapter.attachment.query_handler.get_attachment_handler:
   prestashop.adapter.attachment.command_handler.delete_attachment_handler:
+    public: true
     class: 'PrestaShop\PrestaShop\Adapter\Attachment\CommandHandler\DeleteAttachmentHandler'
+    parent: 'prestashop.adapter.attachment.command_handler.abstract_attachment_handler'
     tags:
       - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Attachment\Command\DeleteAttachmentCommand' }
 
   prestashop.adapter.attachment.command_handler.bulk_delete_attachment_handler:
+    public: true
     class: 'PrestaShop\PrestaShop\Adapter\Attachment\CommandHandler\BulkDeleteAttachmentsHandler'
+    parent: 'prestashop.adapter.attachment.command_handler.abstract_attachment_handler'
     tags:
       - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Attachment\Command\BulkDeleteAttachmentsCommand' }
 
@@ -29,10 +32,11 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\File\Uploader\AttachmentFileUploader'
     arguments:
       - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.core.configuration.upload_size_configuration'
 
   prestashop.adapter.attachment.command_handler.abstract_attachment_handler:
     abstract:  true
-    class: 'PrestaShop\PrestaShop\Adapter\Attachment\CommandHandler\AbstractAttachmentHandler'
+    class: 'PrestaShop\PrestaShop\Adapter\Attachment\AbstractAttachmentHandler'
     arguments:
       - '@validator'
 

@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\File\Uploader;
 
 use Attachment;
-use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShop\PrestaShop\Core\Configuration\UploadSizeConfigurationInterface;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\AttachmentFileUploaderInterface;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentConstraintException;
@@ -35,7 +35,6 @@ use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentNotFoundExc
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentUploadFailedException;
 use PrestaShopException;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
-use Tools;
 
 /**
  * Uploads attachment file and if needed deletes old attachment file
@@ -50,11 +49,20 @@ final class AttachmentFileUploader implements AttachmentFileUploaderInterface
     private $configuration;
 
     /**
-     * @param ConfigurationInterface $configuration
+     * @var UploadSizeConfigurationInterface
      */
-    public function __construct(ConfigurationInterface $configuration)
-    {
+    private $uploadSizeConfiguration;
+
+    /**
+     * @param ConfigurationInterface $configuration
+     * @param UploadSizeConfigurationInterface $uploadSizeConfiguration
+     */
+    public function __construct(
+        ConfigurationInterface $configuration,
+        UploadSizeConfigurationInterface $uploadSizeConfiguration
+    ) {
         $this->configuration = $configuration;
+        $this->uploadSizeConfiguration = $uploadSizeConfiguration;
     }
 
     /**
@@ -75,14 +83,23 @@ final class AttachmentFileUploader implements AttachmentFileUploaderInterface
 
     /**
      * @param int $attachmentId
+     * @param bool $throwExceptionOnFailure
      *
      * @throws AttachmentNotFoundException
      */
-    private function deleteOldFile(int $attachmentId): void
+    private function deleteOldFile(int $attachmentId, $throwExceptionOnFailure = true): void
     {
         try {
             $attachment = new Attachment($attachmentId);
-            unlink(_PS_DOWNLOAD_DIR_ . $attachment->file);
+            $fileLink = _PS_DOWNLOAD_DIR_ . $attachment->file;
+
+            if ($throwExceptionOnFailure) {
+                unlink($fileLink);
+
+                return;
+            }
+
+            @unlink($fileLink);
         } catch (PrestaShopException $e) {
             throw new AttachmentNotFoundException(sprintf('Attachment with id "%s" was not found.', $attachmentId));
         }
@@ -122,7 +139,7 @@ final class AttachmentFileUploader implements AttachmentFileUploaderInterface
      */
     private function checkFileAllowedForUpload(int $fileSize): void
     {
-        $maxFileSize = Tools::getMaxUploadSize();
+        $maxFileSize = $this->uploadSizeConfiguration->getMaxUploadSizeInBytes();
 
         if ($maxFileSize > 0 && $fileSize > $maxFileSize) {
             throw new AttachmentConstraintException(

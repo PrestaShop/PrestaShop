@@ -32,12 +32,12 @@ namespace PrestaShop\PrestaShop\Core\Domain\Attachment\Command;
 class AddAttachmentCommand
 {
     /**
-     * @var string
+     * @var string|null
      */
     private $pathName;
 
     /**
-     * @var int
+     * @var int|null
      */
     private $fileSize;
 
@@ -52,48 +52,57 @@ class AddAttachmentCommand
     private $localizedDescriptions = [];
 
     /**
-     * @var string
+     * @var string|null
      */
     private $mimeType;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $originalName;
 
     /**
-     * @param string $pathName
-     * @param int $fileSize
      * @param array $localizedNames
      * @param array $localizedDescriptions
+     */
+    public function __construct(
+        array $localizedNames,
+        array $localizedDescriptions
+    ) {
+        $this->localizedNames = $localizedNames;
+        $this->localizedDescriptions = $localizedDescriptions;
+    }
+
+    /**
+     * @param string $pathName
+     * @param int $fileSize
      * @param string $mimeType
      * @param string $originalName
      */
-    public function __construct(
+    public function setFileInformation(
         string $pathName,
         int $fileSize,
-        array $localizedNames,
-        array $localizedDescriptions,
         string $mimeType,
         string $originalName
-    ) {
+    ): void {
         $this->pathName = $pathName;
         $this->fileSize = $fileSize;
-        $this->localizedNames = $localizedNames;
-        $this->localizedDescriptions = $localizedDescriptions;
         $this->mimeType = $mimeType;
         $this->originalName = $originalName;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getFilePathName(): string
+    public function getFilePathName(): ?string
     {
         return $this->pathName;
     }
 
-    public function getFileSize(): int
+    /**
+     * @return int|null
+     */
+    public function getFileSize(): ?int
     {
         return $this->fileSize;
     }
@@ -115,17 +124,17 @@ class AddAttachmentCommand
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getMimeType(): string
+    public function getMimeType(): ?string
     {
         return $this->mimeType;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getOriginalName(): string
+    public function getOriginalName(): ?string
     {
         return $this->originalName;
     }

@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
+use ErrorException;
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\BulkDeleteAttachmentsCommand;
@@ -36,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\CannotAddAttachmentEx
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\CannotUpdateAttachmentException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\BulkDeleteAttachmentsException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\DeleteAttachmentException;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\EmptyFileException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachment;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\Attachment;
 use PrestaShop\PrestaShop\Core\Search\Filters\AttachmentFilters;
@@ -44,6 +46,7 @@ use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\EditableAttachment;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
+use Symfony\Component\Debug\Exception\ContextErrorException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -96,12 +99,7 @@ class AttachmentController extends FrameworkBundleAdminController
             'prestashop.core.form.identifiable_object.handler.attachment_form_handler'
         );
 
-        $attachmentForm = $attachmentFormBuilder->getForm(
-            [],
-            [
-                'is_edit_form' => false,
-            ]
-        );
+        $attachmentForm = $attachmentFormBuilder->getForm();
 
         $attachmentForm->handleRequest($request);
 
@@ -114,10 +112,10 @@ class AttachmentController extends FrameworkBundleAdminController
                 return $this->redirectToRoute('admin_attachments_index');
             }
         } catch (Exception $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
-        return $this->render('@PrestaShop/Admin/Sell/Attachment/add.html.twig', [
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Attachment/add.html.twig', [
             'enableSidebar' => true,
             'layoutTitle' => $this->trans('Add new file', 'Admin.Catalog.Feature'),
             'attachmentForm' => $attachmentForm->createView(),
@@ -152,14 +150,7 @@ class AttachmentController extends FrameworkBundleAdminController
                 'prestashop.core.form.identifiable_object.handler.attachment_form_handler'
             );
 
-            $attachmentForm = $attachmentFormBuilder->getFormFor(
-                (int) $attachmentId,
-                [],
-                [
-                    'is_edit_form' => true,
-                    'has_old_file' => $attachmentInformation->getFile() !== null,
-                ]
-            );
+            $attachmentForm = $attachmentFormBuilder->getFormFor((int) $attachmentId);
 
             $attachmentForm->handleRequest($request);
             $result = $attachmentFormHandler->handleFor((int) $attachmentId, $attachmentForm);
@@ -171,14 +162,14 @@ class AttachmentController extends FrameworkBundleAdminController
             }
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
-            if ($e instanceof AttachmentNotFoundException) {
+            if ($e instanceof AttachmentNotFoundException || $e instanceof ErrorException) {
                 return $this->redirectToRoute('admin_attachments_index');
             }
         }
 
         $names = $attachmentInformation->getName();
 
-        return $this->render('@PrestaShop/Admin/Sell/Attachment/edit.html.twig', [
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Attachment/edit.html.twig', [
             'enableSidebar' => true,
             'layoutTitle' => $this->trans(
                 'Edit: %value%',
@@ -186,6 +177,7 @@ class AttachmentController extends FrameworkBundleAdminController
                 ['%value%' => reset($names)]
             ),
             'attachmentForm' => $attachmentForm->createView(),
+            'attachmentId' => $attachmentId,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
         ]);
     }
@@ -211,7 +203,7 @@ class AttachmentController extends FrameworkBundleAdminController
 
             return $this->file($attachment->getPath(), $attachment->getName());
         } catch (Exception $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
         return $this->redirectToRoute('admin_attachments_index');
@@ -236,7 +228,7 @@ class AttachmentController extends FrameworkBundleAdminController
                 $this->trans('Successful deletion.', 'Admin.Notifications.Success')
             );
         } catch (Exception $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
         return $this->redirectToRoute('admin_attachments_index');
@@ -340,6 +332,23 @@ class AttachmentController extends FrameworkBundleAdminController
                     'Admin.Notifications.Error'
                 ),
                 $e instanceof BulkDeleteAttachmentsException ? implode(', ', $e->getAttachmentIds()) : ''
+            ),
+            EmptyFileException::class => $this->trans('No file has been selected', 'Admin.Notifications.Error'),
+            ErrorException::class => $this->trans(
+                'An unexpected error occurred. [%type% code %code%]',
+                'Admin.Notification.Error',
+                [
+                    '%type%' => $e->getMessage(),
+                    '%code%' => $e->getCode(),
+                ]
+            ),
+            ContextErrorException::class => $this->trans(
+                'An unexpected error occurred. [%type% code %code%]',
+                'Admin.Notification.Error',
+                [
+                    '%type%' => $e->getMessage(),
+                    '%code%' => $e->getCode(),
+                ]
             ),
         ];
     }

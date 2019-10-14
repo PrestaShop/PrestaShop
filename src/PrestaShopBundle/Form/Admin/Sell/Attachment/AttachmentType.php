@@ -36,10 +36,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
-use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
  * Attachment form type definition
@@ -53,8 +50,6 @@ class AttachmentType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $isFileRequired = !$options['is_edit_form'] || (isset($options['has_old_file']) && !$options['has_old_file']);
-
         $builder
             ->add('name', TranslatableType::class, [
                 'type' => TextType::class,
@@ -92,45 +87,8 @@ class AttachmentType extends AbstractType
                 ],
             ])
             ->add('file', FileType::class, [
-                'required' => $isFileRequired,
-                'constraints' => [
-                    new NotBlank([
-                        'message' => $this->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
-                        'groups' => ['validate'],
-                    ]),
-                ],
+                'required' => false,
             ])
         ;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver->setRequired(['is_edit_form', 'has_old_file']);
-        $resolver->setDefaults([
-            'validation_groups' => function (FormInterface $form) {
-                $groups = ['Default'];
-                $data = $form->getData();
-                $options = $form->getConfig()->getOptions();
-
-                $shouldValidateFile = (!$options['is_edit_form'] ||
-                    (isset($options['has_old_file']) &&
-                    !$options['has_old_file'])) &&
-                    $data['file'] === null;
-
-                if ($shouldValidateFile) {
-                    array_push($groups, 'validate');
-                }
-
-                return $groups;
-            },
-            'has_old_file' => false,
-            'is_edit_form' => false,
-        ]);
-
-        $resolver->setAllowedTypes('has_old_file', 'bool');
-        $resolver->setAllowedTypes('is_edit_form', 'bool');
     }
 }
