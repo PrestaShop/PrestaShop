@@ -137,7 +137,7 @@ abstract class AddCurrencyCommand
     }
 
     /**
-     * @param string[] $localizedNames Currency's localized names, indexed by language id.
+     * @param string[] $localizedNames currency's localized names, indexed by language id
      *
      * @return $this
      *
@@ -166,7 +166,7 @@ abstract class AddCurrencyCommand
     }
 
     /**
-     * @param string[] $localizedSymbols Currency's localized symbols, indexed by language id.
+     * @param string[] $localizedSymbols currency's localized symbols, indexed by language id
      *
      * @return $this
      *

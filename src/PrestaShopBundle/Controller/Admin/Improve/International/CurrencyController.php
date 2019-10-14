@@ -40,7 +40,6 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintExcep
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\AutomateExchangeRatesUpdateException;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\ImmutableCurrencyFieldException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\InvalidUnofficialCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Query\GetCurrencyExchangeRate;
 use PrestaShop\PrestaShop\Core\Domain\Currency\QueryResult\ExchangeRate;
@@ -514,16 +513,6 @@ class CurrencyController extends FrameworkBundleAdminController
                 'You cannot create an unofficial currency whose ISO code matches a real one',
                 'Admin.International.Notification'
             ),
-            ImmutableCurrencyFieldException::class => [
-                ImmutableCurrencyFieldException::IMMUTABLE_ISO_CODE => $this->trans(
-                    'You cannot modify the ISO code of a real currency',
-                    'Admin.International.Notification'
-                ),
-                ImmutableCurrencyFieldException::IMMUTABLE_NUMERIC_ISO_CODE => $this->trans(
-                    'You cannot modify the numeric ISO code of a real currency',
-                    'Admin.International.Notification'
-                ),
-            ],
         ];
     }
 }

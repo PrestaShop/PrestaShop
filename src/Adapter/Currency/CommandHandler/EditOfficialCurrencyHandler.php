@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Currency\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Currency\CurrencyCommandValidator;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\EditCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\CommandHandler\EditCurrencyHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDisableDefaultCurrencyException;
@@ -35,18 +34,13 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotUpdateCurrencyExc
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\ImmutableCurrencyFieldException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\InvalidUnofficialCurrencyException;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
-use Configuration;
 use Currency;
 use Language;
-use Db;
-use DbQuery;
 use PrestaShopException;
 use PrestaShopDatabaseException;
-use Shop;
 
 /**
  * Class EditOfficialCurrencyHandler is responsible for updating currencies.
@@ -56,34 +50,20 @@ use Shop;
 final class EditOfficialCurrencyHandler extends AbstractCurrencyHandler implements EditCurrencyHandlerInterface
 {
     /**
-     * @var int
-     */
-    private $defaultCurrencyId;
-
-    /**
-     * @var string
-     */
-    private $contextLocale;
-
-    /**
      * @var CurrencyCommandValidator
      */
     private $validator;
 
     /**
-     * @param int $defaultCurrencyId
      * @param LocaleRepository $localeRepository
-     * @param string $contextLocale
+     * @param CurrencyCommandValidator $validator
      */
     public function __construct(
-        $defaultCurrencyId,
         LocaleRepository $localeRepository,
-        $contextLocale
+        CurrencyCommandValidator $validator
     ) {
         parent::__construct($localeRepository);
-        $this->defaultCurrencyId = (int) $defaultCurrencyId;
-        $this->contextLocale = $contextLocale;
-        $this->validator = new CurrencyCommandValidator($localeRepository, $contextLocale);
+        $this->validator = $validator;
     }
 
     /**
@@ -168,91 +148,11 @@ final class EditOfficialCurrencyHandler extends AbstractCurrencyHandler implemen
      * @throws CannotDisableDefaultCurrencyException
      * @throws CurrencyConstraintException
      * @throws DefaultCurrencyInMultiShopException
-     * @throws ImmutableCurrencyFieldException
      * @throws InvalidUnofficialCurrencyException
      */
     private function verify(Currency $entity, EditCurrencyCommand $command)
     {
-        $this->assertDefaultCurrencyIsNotBeingDisabled($command);
-
-        $this->assertDefaultCurrencyIsNotBeingRemovedOrDisabledFromShop($entity, $command);
-    }
-
-    /**
-     * Prevents from default currency being disabled.
-     *
-     * @param EditCurrencyCommand $command
-     *
-     * @throws CannotDisableDefaultCurrencyException
-     */
-    private function assertDefaultCurrencyIsNotBeingDisabled(EditCurrencyCommand $command)
-    {
-        if (!$command->isEnabled() && $command->getCurrencyId()->getValue() === $this->defaultCurrencyId) {
-            throw new CannotDisableDefaultCurrencyException(
-                sprintf(
-                    'Currency with id "%s" is the default currency and cannot be disabled.',
-                    $command->getCurrencyId()->getValue()
-                )
-            );
-        }
-    }
-
-    /**
-     * On each shop there might be different default currency. This function prevents from removing shop association
-     * from each shop and checks that the shop is not being disabled as well.
-     *
-     * @param Currency $currency
-     * @param EditCurrencyCommand $command
-     *
-     * @throws DefaultCurrencyInMultiShopException
-     */
-    private function assertDefaultCurrencyIsNotBeingRemovedOrDisabledFromShop(Currency $currency, EditCurrencyCommand $command)
-    {
-        if (empty($command->getShopIds())) {
-            return;
-        }
-        $shopIds = $command->getShopIds();
-        $allShopIds = Shop::getShops(false, null, true);
-
-        foreach ($allShopIds as $shopId) {
-            $shopDefaultCurrencyId = (int) Configuration::get(
-                'PS_CURRENCY_DEFAULT',
-                null,
-                null,
-                $shopId
-            );
-
-            if ((int) $currency->id !== $shopDefaultCurrencyId) {
-                continue;
-            }
-
-            if (!in_array($shopId, $shopIds)) {
-                $shop = new Shop($shopId);
-                throw new DefaultCurrencyInMultiShopException(
-                    $currency->getName(),
-                    $shop->name,
-                    sprintf(
-                        'Currency with id %s cannot be unassigned from shop with id %s because its the default currency.',
-                        $currency->id,
-                        $shopId
-                    ),
-                    DefaultCurrencyInMultiShopException::CANNOT_REMOVE_CURRENCY
-                );
-            }
-
-            if (!$command->isEnabled()) {
-                $shop = new Shop($shopId);
-                throw new DefaultCurrencyInMultiShopException(
-                    $currency->getName(),
-                    $shop->name,
-                    sprintf(
-                        'Currency with id %s cannot be disabled from shop with id %s because its the default currency.',
-                        $currency->id,
-                        $shopId
-                    ),
-                    DefaultCurrencyInMultiShopException::CANNOT_DISABLE_CURRENCY
-                );
-            }
-        }
+        $this->validator->assertDefaultCurrencyIsNotBeingDisabled($command);
+        $this->validator->assertDefaultCurrencyIsNotBeingRemovedOrDisabledFromShop($entity, $command);
     }
 }
