@@ -11,7 +11,6 @@ Feature: Currency Management
   Scenario: Adding and editing currency
     When I add new currency "currency1" with following properties:
       | iso_code         | EUR       |
-      | numeric_iso_code | 978       |
       | exchange_rate    | 0.88      |
       | name             | My Euros  |
       | symbol           | €€        |
@@ -29,13 +28,6 @@ Feature: Currency Management
     And currency "currency1" should have modified true
     And currency "currency1" should have status enabled
     And currency "currency1" should be available in shop "shop1"
-    When I edit currency "currency1" with following properties:
-      | iso_code         | GBP       |
-      | exchange_rate    | 0.88      |
-      | is_enabled       | 1         |
-      | is_unofficial    | 0         |
-      | shop_association | shop1     |
-    Then I should get error that field is immutable
     When I edit currency "currency1" with following properties:
       | iso_code         | EUR       |
       | exchange_rate    | 1.0       |
@@ -80,7 +72,6 @@ Feature: Currency Management
   Scenario: Deleting non default currency should be allowed
     When I add new currency "currency4" with following properties:
       | iso_code         | GBP           |
-      | numeric_iso_code | 826           |
       | exchange_rate    | 0.88          |
       | name             | British Pound |
       | symbol           | £             |
@@ -94,7 +85,6 @@ Feature: Currency Management
     Given currency with "GBP" has been deleted
     When I add new currency "currency5" with following properties:
       | iso_code         | GBP           |
-      | numeric_iso_code | 826           |
       | exchange_rate    | 0.88          |
       | precision        | 0             |
       | name             | British Pound |
@@ -205,7 +195,7 @@ Feature: Currency Management
       | shop_association | shop1     |
     Then I should get error that currency already exists
 
-  Scenario: Editing unofficial currency with existing ISO code should not be allowed
+  Scenario: Editing unofficial currency with existing unofficial ISO code should not be allowed
     Given currency "currency11" with "CST" exists
     Given currency "currency12" with "CUS" exists
     Then currency "currency11" should be "CST"
@@ -219,38 +209,6 @@ Feature: Currency Management
       | is_unofficial    | 1             |
       | shop_association | shop1         |
     Then I should get error that currency already exists
-
-  Scenario: Adding real currency whose ISO code and numeric iso code don't match should not be allowed
-    When I add new currency "currency13" with following properties:
-      | iso_code         | AUD               |
-      | numeric_iso_code | 044                |
-      | exchange_rate    | 1.656967          |
-      | name             | Australian Dollar |
-      | symbol           | $                 |
-      | is_enabled       | 1                 |
-      | is_unofficial    | 0                 |
-      | shop_association | shop1             |
-    Then I should get error that currency iso codes don't match
-    When I add new currency "currency13" with following properties:
-      | iso_code         | USD               |
-      | numeric_iso_code | 036                |
-      | exchange_rate    | 1.656967          |
-      | name             | Australian Dollar |
-      | symbol           | $                 |
-      | is_enabled       | 1                 |
-      | is_unofficial    | 0                 |
-      | shop_association | shop1             |
-    Then I should get error that currency iso codes don't match
-    When I add new currency "currency13" with following properties:
-      | iso_code         | ASD               |
-      | numeric_iso_code | 036                |
-      | exchange_rate    | 1.656967          |
-      | name             | Australian Dollar |
-      | symbol           | $                 |
-      | is_enabled       | 1                 |
-      | is_unofficial    | 0                 |
-      | shop_association | shop1             |
-    Then I should get error that currency iso codes don't match
 
   Scenario: Adding real currency with basic input is automatically filled
     When I add new currency "currency14" with following properties:
