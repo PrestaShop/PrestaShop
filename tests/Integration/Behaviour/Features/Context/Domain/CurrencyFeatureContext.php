@@ -40,7 +40,6 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Command\ToggleCurrencyStatusComma
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDeleteDefaultCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDisableDefaultCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\ImmutableCurrencyFieldException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\InvalidUnofficialCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
@@ -211,14 +210,6 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
     public function assertLastErrorIsInvalidUnofficialCurrency()
     {
         $this->assertLastErrorIs(InvalidUnofficialCurrencyException::class);
-    }
-
-    /**
-     * @Then /^I should get error that field is immutable$/
-     */
-    public function assertLastErrorIsImmutableCurrencyField()
-    {
-        $this->assertLastErrorIs(ImmutableCurrencyFieldException::class);
     }
 
     /**

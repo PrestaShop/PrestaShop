@@ -215,7 +215,7 @@ class CurrencyCore extends ObjectModel
                 $idLang = Context::getContext()->language->id;
             }
 
-            /**
+            /*
              * Both these fields used to be string, but they were turned into translatable
              * fields so now they are arrays (indexed by language id). But to avoid BC breaks
              * the field is turned into a string in the constructor (using either the specified
@@ -437,7 +437,7 @@ class CurrencyCore extends ObjectModel
      * the database (legacy core feature). But to be consistent the names field also
      * needs to be updated.
      *
-     * @param string[] $names List of currency names, the array needs to be indexed by language id.
+     * @param string[] $names list of currency names, the array needs to be indexed by language id
      *
      * @return $this
      */
@@ -461,7 +461,7 @@ class CurrencyCore extends ObjectModel
      * the database (legacy core feature). But to be consistent the symbols field also
      * needs to be updated.
      *
-     * @param string[] $symbols List of currency symbols, the array needs to be indexed by language id.
+     * @param string[] $symbols list of currency symbols, the array needs to be indexed by language id
      *
      * @return CurrencyCore
      */

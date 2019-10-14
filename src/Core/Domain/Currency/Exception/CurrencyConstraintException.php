@@ -33,12 +33,14 @@ class CurrencyConstraintException extends CurrencyException
 {
     /**
      * Code used when the ISO code doesn't respect it's appropriate format
+     *
      * @see AlphaIsoCode::PATTERN
      */
     const INVALID_ISO_CODE = 1;
 
     /**
      * Code used when an invalid exchange rate is used (positive float expected)
+     *
      * @see ExchangeRate
      */
     const INVALID_EXCHANGE_RATE = 2;
@@ -55,6 +57,7 @@ class CurrencyConstraintException extends CurrencyException
 
     /**
      * Code used when the numeric ISO code doesn't respect it's appropriate format
+     *
      * @see NumericIsoCode::PATTERN
      */
     const INVALID_NUMERIC_ISO_CODE = 5;
@@ -77,6 +80,7 @@ class CurrencyConstraintException extends CurrencyException
 
     /**
      * Code used when an invalid precision is used (positive integer expected)
+     *
      * @see Precision
      */
     const INVALID_PRECISION = 9;
