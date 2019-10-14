@@ -51,6 +51,13 @@ export default class ShippingRenderer {
     }
   }
 
+  /**
+   * Show form block with rendered delivery options instead of warning message
+   *
+   * @param shipping
+   *
+   * @private
+   */
   _displayForm(shipping) {
     this._hideNoCarrierBlock();
     this._renderDeliveryOptions(shipping.deliveryOptions, shipping.selectedCarrierId);
@@ -59,12 +66,25 @@ export default class ShippingRenderer {
     this._showContainer();
   }
 
+  /**
+   * Show warning message that no carriers are available and hide form block
+   *
+   * @private
+   */
   _displayNoCarriersWarning() {
     this._showContainer();
     this._hideForm();
     this._showNoCarrierBlock();
   }
 
+  /**
+   * Renders delivery options selection block
+   *
+   * @param deliveryOptions
+   * @param selectedVal
+   *
+   * @private
+   */
   _renderDeliveryOptions(deliveryOptions, selectedVal) {
     const $deliveryOptionSelect = $(createOrderPageMap.deliveryOptionSelect);
     $deliveryOptionSelect.empty();
@@ -85,6 +105,13 @@ export default class ShippingRenderer {
     }
   }
 
+  /**
+   * Renders dynamic value of shipping price
+   *
+   * @param shippingPrice
+   *
+   * @private
+   */
   _renderTotalShipping(shippingPrice) {
     const $totalShippingField = $(createOrderPageMap.totalShippingField);
     $totalShippingField.empty();
@@ -92,26 +119,56 @@ export default class ShippingRenderer {
     $totalShippingField.append(shippingPrice);
   }
 
+  /**
+   * Show whole shipping container
+   *
+   * @private
+   */
   _showContainer() {
     this.$container.removeClass('d-none');
   }
 
+  /**
+   * Hide whole shipping container
+   *
+   * @private
+   */
   _hideContainer() {
     this.$container.addClass('d-none');
   }
 
+  /**
+   * Show form block
+   *
+   * @private
+   */
   _showForm() {
     this.$form.removeClass('d-none');
   }
 
+  /**
+   * Hide form block
+   *
+   * @private
+   */
   _hideForm() {
     this.$form.addClass('d-none');
   }
 
+  /**
+   * Show warning message block which warns that no carriers are available
+   *
+   * @private
+   */
   _showNoCarrierBlock() {
     this.$noCarrierBlock.removeClass('d-none');
   }
 
+  /**
+   * Hide warning message block which warns that no carriers are available
+   *
+   * @private
+   */
   _hideNoCarrierBlock() {
     this.$noCarrierBlock.addClass('d-none');
   }

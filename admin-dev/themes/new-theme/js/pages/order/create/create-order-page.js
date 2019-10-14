@@ -139,7 +139,7 @@ export default class CreateOrderPage {
     // @todo: add other actions
     this.$container.on('change', createOrderPageMap.addressSelect, () => this._changeCartAddresses());
     this.$container.on('change', createOrderPageMap.deliveryOptionSelect, e => this._editDeliveryOption(e));
-    this.$container.on('change', createOrderPageMap.freeShippingSwitch, e => this._editFreeShipping(e));
+    this.$container.on('change', createOrderPageMap.freeShippingSwitch, e => this._setFreeShipping(e));
   }
 
   /**
@@ -196,7 +196,7 @@ export default class CreateOrderPage {
    * @private
    */
   _changeCartAddresses() {
-    $.ajax(this.router.generate('admin_carts_edit_address', {cartId: this.data.cart_id}), {
+    $.ajax(this.router.generate('admin_carts_edit_addresses', {cartId: this.data.cart_id}), {
       method: 'POST',
       data: {
         delivery_address_id: $(createOrderPageMap.deliveryAddressSelect).val(),
@@ -211,23 +211,18 @@ export default class CreateOrderPage {
     });
   }
 
-  _editDeliveryOption(e) {
+  /**
+   * Modifies cart delivery option
+   *
+   * @param event
+   *
+   * @private
+   */
+  _editDeliveryOption(event) {
     $.ajax(this.router.generate('admin_carts_edit_carrier', {cartId: this.data.cart_id}), {
       method: 'POST',
       data: {
-        carrier_id: e.currentTarget.value,
-      },
-      dataType: 'json',
-    }).then((response) => {
-      this.shippingRenderer.render(response.shipping);
-    });
-  }
-
-  _editFreeShipping(e) {
-    $.ajax(this.router.generate('admin_carts_edit_free_shipping', {cartId: this.data.cart_id}), {
-      method: 'POST',
-      data: {
-        free_shipping: e.currentTarget.value,
+        carrier_id: event.currentTarget.value,
       },
       dataType: 'json',
     }).then((response) => {
@@ -236,7 +231,26 @@ export default class CreateOrderPage {
   }
 
   /**
-   * @todo
+   * Sets free shipping value of cart
+   *
+   * @param event
+   *
+   * @private
+   */
+  _setFreeShipping(event) {
+    $.ajax(this.router.generate('admin_carts_set_free_shipping', {cartId: this.data.cart_id}), {
+      method: 'POST',
+      data: {
+        free_shipping: event.currentTarget.value,
+      },
+      dataType: 'json',
+    }).then((response) => {
+      this.shippingRenderer.render(response.shipping);
+    });
+  }
+
+  /**
+   * @todo: for cart to order convertion
    * Stores cart summary into "session" like variable
    *
    * @param {Object} cartInfo
@@ -250,6 +264,7 @@ export default class CreateOrderPage {
   }
 
   /**
+   * @todo: for cart to order convertion
    * Choses previous cart from which order will be created
    *
    * @param {Number} cartId
