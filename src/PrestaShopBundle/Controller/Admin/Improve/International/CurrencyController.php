@@ -46,6 +46,7 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\QueryResult\ExchangeRate;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CurrencyGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\Currency;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\CurrencyInterface;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
@@ -266,7 +267,9 @@ class CurrencyController extends FrameworkBundleAdminController
         try {
             /** @var ExchangeRate $exchangeRate */
             $exchangeRate = $this->getQueryBus()->handle(new GetCurrencyExchangeRate($currencyIsoCode));
-            $cldrCurrency['exchange_rate'] = $exchangeRate->getValue()->round(6);
+
+            $computingPrecision = new ComputingPrecision();
+            $cldrCurrency['exchange_rate'] = $exchangeRate->getValue()->round($computingPrecision->getPrecision($cldrCurrency['precision']));
         } catch (CurrencyException $e) {
             $logger = $this->container->get('logger');
             $logger->error(sprintf('Unable to find the exchange rate: %s', $e->getMessage()));
