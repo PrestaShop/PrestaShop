@@ -177,17 +177,18 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
     }
 
     /**
+     * @param Cart $cart
      * @param array $legacySummary
      *
      * @return CartShipping|null
      */
     private function extractShippingFromLegacySummary(Cart $cart, array $legacySummary): ?CartShipping
     {
-        $carrierIsDefined = isset($legacySummary['carrier']) &&
-            $legacySummary['carrier'] instanceof Carrier &&
-            (int) $legacySummary['carrier']->id;
+        $deliveryOptionsByAddress = $cart->getDeliveryOptionList();
+        $deliveryAddress = (int) $cart->id_address_delivery;
 
-        if (!$carrierIsDefined) {
+        //Check if there is any delivery options available for cart delivery address
+        if (!array_key_exists($deliveryAddress, $deliveryOptionsByAddress)) {
             return null;
         }
 
@@ -195,41 +196,36 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
         $carrier = $legacySummary['carrier'];
 
         return new CartShipping(
-            (int) $carrier->id,
-            $carrier->name,
-            $carrier->delay,
             (string) $legacySummary['total_shipping'],
             (bool) $legacySummary['free_ship'],
-            $this->fetchCartDeliveryOptions($cart)
+            $this->fetchCartDeliveryOptions($deliveryOptionsByAddress, $deliveryAddress),
+            (int) $carrier->id ?: null
         );
     }
 
     /**
-     * Get cart delivery options
+     * Fetch CartDeliveryOption[] DTO's from legacy array
      *
-     * @param Cart $cart
+     * @param array $deliveryOptionsByAddress
+     * @param int $deliveryAddressId
      *
      * @return array
      */
-    private function fetchCartDeliveryOptions(Cart $cart)
+    private function fetchCartDeliveryOptions(array $deliveryOptionsByAddress, int $deliveryAddressId)
     {
         $deliveryOptions = [];
-        //legacy multishipping feature required to use carrier list per one package.
-        // One cart had multiple packages which could have been split by several delivery addresses
-        foreach ($cart->getPackageList() as $packages) {
-            //now there should always be only one package because multishipping feature is removed
-            foreach ($packages as $package) {
-                //so the list of carriers should be shared across whole cart for single delivery address
-                foreach ($package['carrier_list'] as $carrierId) {
-                    $carrierId = (int) $carrierId;
-                    $carrier = new Carrier($carrierId);
-                    // make sure no duplicate
-                    $deliveryOptions[$carrierId] = new CartDeliveryOption(
-                        $carrierId,
-                        $carrier->name,
-                        $carrier->delay[\Context::getContext()->employee->id_lang]
-                    );
-                }
+        // legacy multishipping feature allowed to split cart shipping to multiple addresses.
+        // now when the multishipping feature is removed
+        // the list of carriers should be shared across whole cart for single delivery address
+        foreach ($deliveryOptionsByAddress[$deliveryAddressId] as $deliveryOption) {
+            foreach ($deliveryOption['carrier_list'] as $carrier) {
+                $carrier = $carrier['instance'];
+                // make sure there is no duplicate carrier
+                $deliveryOptions[(int) $carrier->id] = new CartDeliveryOption(
+                    (int) $carrier->id,
+                    $carrier->name,
+                    $carrier->delay[\Context::getContext()->employee->id_lang]
+                );
             }
         }
 

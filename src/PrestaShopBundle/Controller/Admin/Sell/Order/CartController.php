@@ -132,7 +132,7 @@ class CartController extends FrameworkBundleAdminController
         $updateAddressCommand = new UpdateCartAddressesCommand(
             $cartId,
             $request->request->getInt('delivery_address_id'),
-            $invoiceAddressId = $request->request->getInt('invoice_address_id')
+            $request->request->getInt('invoice_address_id')
         );
 
         $this->getCommandBus()->handle($updateAddressCommand);

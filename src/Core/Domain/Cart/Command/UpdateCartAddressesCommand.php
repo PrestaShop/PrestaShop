@@ -51,7 +51,7 @@ class UpdateCartAddressesCommand
      * @param int $newDeliveryAddressId
      * @param int $newInvoiceAddressId
      */
-    public function __construct($cartId, $newDeliveryAddressId, $newInvoiceAddressId)
+    public function __construct(int $cartId, int $newDeliveryAddressId, int $newInvoiceAddressId)
     {
         $this->cartId = new CartId($cartId);
         $this->newDeliveryAddressId = new AddressId($newDeliveryAddressId);
@@ -61,7 +61,7 @@ class UpdateCartAddressesCommand
     /**
      * @return CartId
      */
-    public function getCartId()
+    public function getCartId(): CartId
     {
         return $this->cartId;
     }
@@ -69,7 +69,7 @@ class UpdateCartAddressesCommand
     /**
      * @return AddressId
      */
-    public function getNewDeliveryAddressId()
+    public function getNewDeliveryAddressId(): AddressId
     {
         return $this->newDeliveryAddressId;
     }
@@ -77,7 +77,7 @@ class UpdateCartAddressesCommand
     /**
      * @return AddressId
      */
-    public function getNewInvoiceAddressId()
+    public function getNewInvoiceAddressId(): AddressId
     {
         return $this->newInvoiceAddressId;
     }
