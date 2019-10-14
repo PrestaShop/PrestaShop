@@ -28,7 +28,6 @@ namespace PrestaShop\PrestaShop\Adapter\Currency\CommandHandler;
 
 use Currency;
 use Language;
-use PrestaShop\PrestaShop\Adapter\Currency\CurrencyCommandValidator;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddUnofficialCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\CommandHandler\AddUnofficialCurrencyHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotCreateCurrencyException;
@@ -47,24 +46,26 @@ final class AddUnofficialCurrencyHandler extends AbstractCurrencyHandler impleme
     /**
      * @var Language
      */
-    protected $defaultLanguage;
+    private $defaultLanguage;
 
     /**
      * @var CurrencyCommandValidator
      */
-    protected $validator;
+    private $validator;
 
     /**
      * @param LocaleRepository $localeRepoCLDR
      * @param int $defaultLanguageId
+     * @param CurrencyCommandValidator $validator
      */
     public function __construct(
         LocaleRepository $localeRepoCLDR,
-        $defaultLanguageId
+        $defaultLanguageId,
+        CurrencyCommandValidator $validator
     ) {
         parent::__construct($localeRepoCLDR);
         $this->defaultLanguage = new Language((int) $defaultLanguageId);
-        $this->validator = new CurrencyCommandValidator($localeRepoCLDR, $this->defaultLanguage->getLocale());
+        $this->validator = $validator;
     }
 
     /**
