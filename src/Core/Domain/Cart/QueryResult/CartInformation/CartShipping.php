@@ -26,79 +26,47 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation;
 
+/**
+ * Holds data for cart shipping information
+ */
 class CartShipping
 {
     /**
-     * @var int
+     * @var ?int
      */
-    private $carrierId;
-    /**
-     * @var string
-     */
-    private $carrierName;
-    /**
-     * @var string
-     */
-    private $carrierDelay;
+    private $selectedCarrierId;
+
     /**
      * @var string
      */
     private $shippingPrice;
+
     /**
      * @var bool
      */
     private $freeShipping;
+
     /**
      * @var CartDeliveryOption[]
      */
     private $deliveryOptions;
 
     /**
-     * @param int $carrierId
-     * @param string $carrierName
-     * @param string $carrierDelay
      * @param string $shippingPrice
      * @param bool $freeShipping
      * @param CartDeliveryOption[] $deliveryOptions
+     * @param int|null $selectedCarrierId
      */
     public function __construct(
-        int $carrierId,
-        string $carrierName,
-        string $carrierDelay,
         string $shippingPrice,
         bool $freeShipping,
-        array $deliveryOptions
+        array $deliveryOptions,
+        ?int $selectedCarrierId
     ) {
-        $this->carrierId = $carrierId;
-        $this->carrierName = $carrierName;
-        $this->carrierDelay = $carrierDelay;
         $this->shippingPrice = $shippingPrice;
         $this->freeShipping = $freeShipping;
         $this->deliveryOptions = $deliveryOptions;
-    }
-
-    /**
-     * @return int
-     */
-    public function getCarrierId(): int
-    {
-        return $this->carrierId;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCarrierName(): string
-    {
-        return $this->carrierName;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCarrierDelay(): string
-    {
-        return $this->carrierDelay;
+        $this->selectedCarrierId = $selectedCarrierId;
     }
 
     /**
@@ -123,5 +91,13 @@ class CartShipping
     public function getDeliveryOptions(): array
     {
         return $this->deliveryOptions;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSelectedCarrierId()
+    {
+        return $this->selectedCarrierId;
     }
 }
