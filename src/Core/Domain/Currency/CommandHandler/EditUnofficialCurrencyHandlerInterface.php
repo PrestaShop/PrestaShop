@@ -1,3 +1,4 @@
+<?php
 /**
  * 2007-2019 PrestaShop SA and Contributors
  *
@@ -23,19 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+namespace PrestaShop\PrestaShop\Core\Domain\Currency\CommandHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\Currency\Command\EditUnofficialCurrencyCommand;
+
 /**
- * Defines all selectors that are used in currency add/edit form.
+ * Interface EditUnofficialCurrencyHandlerInterface defines contract for UpdateCurrencyHandler.
  */
-export default {
-  currencyForm: '#currency_form',
-  currencySelector: '#currency_selected_iso_code',
-  isUnofficialCheckbox: '#currency_unofficial',
-  namesInput: langId => `#currency_names_${langId}`,
-  symbolsInput: langId => `#currency_symbols_${langId}`,
-  isoCodeInput: '#currency_iso_code',
-  exchangeRateInput: '#currency_exchange_rate',
-  resetDefaultSettingsInput: '#currency_reset_default_settings',
-  loadingDataModal: '#currency_loading_data_modal',
-  precisionInput: '#currency_precision',
-  shopAssociationTree: '#currency_shop_association',
+interface EditUnofficialCurrencyHandlerInterface
+{
+    /**
+     * @param EditUnofficialCurrencyCommand $command
+     */
+    public function handle(EditUnofficialCurrencyCommand $command);
 }
