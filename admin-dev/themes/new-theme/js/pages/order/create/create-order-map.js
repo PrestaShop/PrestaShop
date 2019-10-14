@@ -91,4 +91,26 @@ export default {
   deliveryOptionSelect: '#delivery-option-select',
   totalShippingField: '.js-total-shipping',
   freeShippingSwitch: '.js-free-shipping-switch',
+
+  // selectors related to products cart block
+  productSearch: '#productSearch',
+  combinationsSelect: '#combinationsSelect',
+  productResultBlock: '#productSearchResults',
+  productSelect: '#productSelect',
+  quantityInput: '#quantityInput',
+  noRecordsFound: '.js-no-records-found',
+  noRecordsFoundRow: '.js-no-records-found-row',
+  inStockCounter: '.js-in-stock-counter',
+  combinationsTemplate: '#combinationsTemplate',
+  combinationsRow: '.js-combinations-row',
+  productSelectRow: '.js-product-select-row',
+  customizedFieldContainer: '.js-customized-field-container',
+  quantityRow: '.js-quantity-row',
+  customizedLabelClass: '.js-customized-field-label',
+  cartProductCustomizedFieldTemplate: '#cartProductCustomizedFieldTemplate',
+  customizedFieldInputWrapper: '.js-customized-field-input-wrapper',
+  customizedFieldTypes: {
+    0: '#cartProductCustomizedFieldInputTemplate-0',
+    1: '#cartProductCustomizedFieldInputTemplate-1',
+  },
 };
