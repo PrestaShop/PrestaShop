@@ -56,9 +56,8 @@ admin_carts_edit_carrier:
   options:
     expose: true
 
-
 admin_carts_set_free_shipping:
-  path: /{cartId}/free-shipping
+  path: /{cartId}/rules/free-shipping
   methods: [POST]
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Order/Cart:setFreeShipping
