@@ -1,13 +1,13 @@
 // Using chai
 const {expect} = require('chai');
-const helper = require('../../../../utils/helpers');
-const loginCommon = require('../../../../commonTests/loginBO');
-const {DefaultAccount} = require('../../../../data/demo/customer');
+const helper = require('@utils/helpers');
+const loginCommon = require('@commonTests/loginBO');
+const {DefaultAccount} = require('@data/demo/customer');
 // Importing pages
-const BOBasePage = require('../../../../../pages/BO/BObasePage');
-const LoginPage = require('../../../../../pages/BO/login');
-const DashboardPage = require('../../../../../pages/BO/dashboard');
-const CustomersPage = require('../../../../../pages/BO/customers');
+const BOBasePage = require('@pages/BO/BObasePage');
+const LoginPage = require('@pages/BO/login');
+const DashboardPage = require('@pages/BO/dashboard');
+const CustomersPage = require('@pages/BO/customers');
 
 let browser;
 let page;

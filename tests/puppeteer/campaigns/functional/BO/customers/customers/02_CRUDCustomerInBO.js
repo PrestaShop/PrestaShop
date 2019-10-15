@@ -1,17 +1,17 @@
 // Using chai
 const {expect} = require('chai');
-const helper = require('../../../../utils/helpers');
-const loginCommon = require('../../../../commonTests/loginBO');
+const helper = require('@utils/helpers');
+const loginCommon = require('@commonTests/loginBO');
 // Importing pages
-const BOBasePage = require('../../../../../pages/BO/BObasePage');
-const LoginPage = require('../../../../../pages/BO/login');
-const DashboardPage = require('../../../../../pages/BO/dashboard');
-const CustomersPage = require('../../../../../pages/BO/customers');
-const AddCustomerPage = require('../../../../../pages/BO/addCustomer');
-const ViewCustomerPage = require('../../../../../pages/BO/viewCustomer');
-const FOLoginPage = require('../../../../../pages/FO/login');
-const FOBasePage = require('../../../../../pages/FO/FObasePage');
-const CustomerFaker = require('../../../../data/faker/customer');
+const BOBasePage = require('@pages/BO/BObasePage');
+const LoginPage = require('@pages/BO/login');
+const DashboardPage = require('@pages/BO/dashboard');
+const CustomersPage = require('@pages/BO/customers');
+const AddCustomerPage = require('@pages/BO/addCustomer');
+const ViewCustomerPage = require('@pages/BO/viewCustomer');
+const FOLoginPage = require('@pages/FO/login');
+const FOBasePage = require('@pages/FO/FObasePage');
+const CustomerFaker = require('@data/faker/customer');
 
 let browser;
 let page;
