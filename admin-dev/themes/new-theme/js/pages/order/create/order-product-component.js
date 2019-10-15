@@ -28,7 +28,7 @@ import createOrderPageMap from '../create-order-map';
 const $ = window.$;
 
 /**
- * Page Object for "Create order" page
+ * Product component Object for "Create order" page
  */
 export default class OrderProductComponent {
   constructor() {
@@ -48,6 +48,11 @@ export default class OrderProductComponent {
   _initEvents() {
     $(createOrderPageMap.productSearch).on('input', (event) => this._handleProductSearch(event));
     $(createOrderPageMap.productSelect).on('change', (event) => this._handleProductChange(event));
+    $(createOrderPageMap.productResultBlock).on(
+        'change',
+        createOrderPageMap.combinationsSelect,
+        (event) => this._handleCombinationChange(event)
+    );
   }
 
   /**
@@ -56,26 +61,29 @@ export default class OrderProductComponent {
    * @private
    */
   _handleProductSearch(event) {
-    const name = $(event.target).val();
+    const minSearchPhraseLength = 3;
+    const $productSearchInput = $(event.currentTarget);
+    const name = $productSearchInput.val();
 
-    if (name.length < 3) {
+    if (name.length < minSearchPhraseLength) {
       return;
     }
 
-    $.ajax($(event.target).data('url'), {
+    $.ajax($productSearchInput.data('product-search-url'), {
       method: 'GET',
       data: {
         product_search_phrase: name,
       },
     }).then((response) => {
       this.products = JSON.parse(response);
-      this._renderProductSearchResult();
-    }).catch((response) => {
-      if (response.status === 404) {
+      if (this.products.length === 0) {
         this._showNotFoundProducts();
-        this.products = [];
+
+        return;
       }
 
+      this._renderProductSearchResult();
+    }).catch((response) => {
       if (typeof response.responseJSON !== 'undefined') {
         showErrorMessage(response.responseJSON.message);
       }
@@ -90,23 +98,26 @@ export default class OrderProductComponent {
   _renderProductSearchResult() {
     $(createOrderPageMap.productSelect).empty();
 
-    for (const [index, value] of this.products.entries()) {
+    for (const [index, product] of this.products.entries()) {
       if (index === 0) {
-        this._fillRelatedProductFields(value);
+        this._fillFieldsRelatedToProduct(product);
       }
 
-      let name = value.name;
+      let name = product.name;
+      const combinationsCollection = product.combinations;
 
-      if (value.combinations === null) {
-        name += ' - ' + value.formatted_price;
+      if (combinationsCollection === null) {
+        name += ' - ' + product.formatted_price;
       }
 
-      if (value.combinations === null && index === 0) {
-        this._updateStock(value.stock);
+      const shouldUpdateStockValue = combinationsCollection === null && index === 0;
+
+      if (shouldUpdateStockValue) {
+        this._updateStock(product.stock);
       }
 
       $(createOrderPageMap.productSelect).append(
-        $('<option></option>').attr('value', value.product_id).text(name).attr('data-index', index)
+        $('<option></option>').attr('value', product.product_id).text(name).attr('data-index', index)
       );
     }
 
@@ -138,7 +149,7 @@ export default class OrderProductComponent {
    * @param product
    * @private
    */
-  _fillRelatedProductFields(product) {
+  _fillFieldsRelatedToProduct(product) {
     this._fillCombinations(product.combinations);
     this._resolveCustomizationFields(product.customization_fields);
   }
@@ -150,10 +161,10 @@ export default class OrderProductComponent {
    * @private
    */
   _handleProductChange(event) {
-    const index = $(event.target).find(':selected').data('index');
+    const index = $(event.currentTarget).find(':selected').data('index');
     const product = this.products[index];
 
-    this._fillRelatedProductFields(product);
+    this._fillFieldsRelatedToProduct(product);
 
     if (product.combinations === null) {
       this.combinations = [];
@@ -170,7 +181,7 @@ export default class OrderProductComponent {
    * @private
    */
   _handleCombinationChange(event) {
-    const index = $(event.target).find(':selected').data('index');
+    const index = $(event.currentTarget).find(':selected').val();
     const combination = this.combinations[index];
 
     this._updateStock(combination.stock);
@@ -196,7 +207,8 @@ export default class OrderProductComponent {
       $(createOrderPageMap.productSelectRow).after($combinationsTemplate);
     }
 
-    $(createOrderPageMap.combinationsSelect).empty();
+    const $combinationsSelect = $(createOrderPageMap.combinationsSelect);
+    $combinationsSelect.empty();
 
     const entries = Object.entries(combinations.combinations);
 
@@ -208,14 +220,11 @@ export default class OrderProductComponent {
       }
 
       const name = combination.attribute + ' - ' + combination.formatted_price;
-      $(createOrderPageMap.combinationsSelect).append($('<option></option>')
+      $combinationsSelect.append($('<option></option>')
         .attr('value', id).text(name));
 
       i += 1;
     }
-
-    $(createOrderPageMap.combinationsSelect)
-      .on('change', (event) => this._handleCombinationChange(event));
   }
 
   /**
@@ -281,7 +290,7 @@ export default class OrderProductComponent {
    * @private
    */
   _showNotFoundProducts() {
-    const $emptyResultTemplate = $($('#productSearchEmptyResultTemplate').html());
+    const $emptyResultTemplate = $($(createOrderPageMap.productSearchEmptyResultTemplate).html());
 
     this._hideResultBlock();
 
