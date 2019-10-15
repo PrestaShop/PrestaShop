@@ -172,7 +172,7 @@ class ImageManagerCore
         &$sourceHeight = null
     ) {
 		if ($this->isImagick()) {
-			return $this->resizeWithImagick(
+			return ImageManager::resizeWithImagick(
 				$sourceFile,
 				$destinationFile,
 				$destinationWidth,
