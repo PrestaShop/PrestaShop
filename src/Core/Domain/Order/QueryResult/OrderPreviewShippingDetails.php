@@ -67,15 +67,27 @@ class OrderPreviewShippingDetails
     private $phone;
 
     /**
+     * @var string|null
+     */
+    private $carrierName;
+
+    /**
+     * @var string|null
+     */
+    private $trackingNumber;
+
+    /**
      * InvoiceDetails constructor.
      *
      * @param string $firstName
      * @param string $lastName
      * @param string $address1
+     * @param string $address2
      * @param string $city
      * @param string $country
      * @param string $phone
-     * @param string $address2
+     * @param string|null $carrierName
+     * @param string|null $trackingNumber
      */
     public function __construct(
         string $firstName,
@@ -84,7 +96,9 @@ class OrderPreviewShippingDetails
         string $address2,
         string $city,
         string $country,
-        string $phone
+        string $phone,
+        ?string $carrierName,
+        ?string $trackingNumber
     ) {
         $this->firstName = $firstName;
         $this->lastName = $lastName;
@@ -93,6 +107,8 @@ class OrderPreviewShippingDetails
         $this->city = $city;
         $this->country = $country;
         $this->phone = $phone;
+        $this->carrierName = $carrierName;
+        $this->trackingNumber = $trackingNumber;
     }
 
     /**
@@ -149,5 +165,21 @@ class OrderPreviewShippingDetails
     public function getAddress2(): string
     {
         return $this->address2;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getCarrierName(): ?string
+    {
+        return $this->carrierName;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getTrackingNumber(): ?string
+    {
+        return $this->trackingNumber;
     }
 }
