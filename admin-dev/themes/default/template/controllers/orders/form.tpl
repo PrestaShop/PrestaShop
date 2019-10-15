@@ -125,16 +125,16 @@
 			setupCustomer({$cart->id_customer|intval});
 			useCart('{$cart->id|intval}');
 		{/if}
-		$('body').on('click', '.delete_product', function(e) {
+		$(document).on('click', '.delete_product', function(e) {
 			e.preventDefault();
 			var to_delete = $(this).attr('rel').split('_');
 			deleteProduct(to_delete[1], to_delete[2], to_delete[3]);
 		});
-		$('body').on('click', '.delete_discount', function(e) {
+		$(document).on('click', '.delete_discount', function(e) {
 			e.preventDefault();
 			deleteVoucher($(this).attr('rel'));
 		});
-		$('body').on('click', '.use_cart', function(e) {
+		$(document).on('click', '.use_cart', function(e) {
 			e.preventDefault();
 			useCart($(this).attr('rel'));
 			return false;
@@ -162,11 +162,11 @@
 				}
 			});
 		});
-		$('body').on('click', '.duplicate_order', function(e) {
+		$(document).on('click', '.duplicate_order', function(e) {
 			e.preventDefault();
 			duplicateOrder($(this).attr('rel'));
 		});
-		$('body').on('change', '.cart_quantity', function(e) {
+		$(document).on('change', '.cart_quantity', function(e) {
 			e.preventDefault();
 			if ($(this).val() != cart_quantity[$(this).attr('rel')])
 			{
@@ -174,7 +174,7 @@
 				updateQty(product[0], product[1], product[2], $(this).val() - cart_quantity[$(this).attr('rel')]);
 			}
 		});
-		$('body').on('click', '.increaseqty_product, .decreaseqty_product', function(e) {
+		$(document).on('click', '.increaseqty_product, .decreaseqty_product', function(e) {
 			e.preventDefault();
 			var product = $(this).attr('rel').split('_');
 			var sign = '';
@@ -182,24 +182,24 @@
 				sign = '-';
 			updateQty(product[0], product[1],product[2], sign+1);
 		});
-		$('body').on('keydown', '#id_product', function(e) {
+		$(document).on('keydown', '#id_product', function(e) {
 			$(this).click();
 			return true;
 		});
-		$('body').on('change', '#id_product, .id_product_attribute', function(e) {
+		$(document).on('change', '#id_product, .id_product_attribute', function(e) {
 			e.preventDefault();
 			displayQtyInStock(this.id);
 		});
-		$('body').on('keydown', '#id_product, .id_product_attribute', function(e) {
+		$(document).on('keydown', '#id_product, .id_product_attribute', function(e) {
 			$(this).change();
 			return true;
 		});
-		$('body').on('change', '.product_unit_price', function(e) {
+		$(document).on('change', '.product_unit_price', function(e) {
 			e.preventDefault();
 			var product = $(this).attr('rel').split('_');
 			updateProductPrice(product[0], product[1], $(this).val());
 		});
-		$('body').on('change', '#order_message', function(e) {
+		$(document).on('change', '#order_message', function(e) {
 			e.preventDefault();
 			$.ajax({
 				type:"POST",
