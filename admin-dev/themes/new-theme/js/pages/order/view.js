@@ -29,6 +29,7 @@ const $ = window.$;
 
 $(() => {
   handlePaymentDetailsToggle();
+  handlePrivateNoteChange();
 
   $(OrderViewPageMap.privateNoteToggleBtn).on('click', (event) => {
     event.preventDefault();
@@ -44,7 +45,6 @@ $(() => {
   }
 
   function togglePrivateNoteBlock() {
-    //debugger;
     const $block = $(OrderViewPageMap.privateNoteBlock);
     const $btn = $(OrderViewPageMap.privateNoteToggleBtn);
     const isPrivateNoteOpened = $btn.hasClass('is-opened');
@@ -59,5 +59,19 @@ $(() => {
 
     const $icon = $btn.find('.material-icons');
     $icon.text(isPrivateNoteOpened ? 'add' : 'remove');
+  }
+
+  function handlePrivateNoteChange() {
+    const $submitBtn = $(OrderViewPageMap.privateNoteSubmitBtn);
+
+    $(OrderViewPageMap.privateNoteInput).on('input', (event) => {
+      const note = $(event.currentTarget).val();
+
+      if (note) {
+        $submitBtn.attr('disabled', false);
+      } else {
+        $submitBtn.attr('disabled', true);
+      }
+    });
   }
 });

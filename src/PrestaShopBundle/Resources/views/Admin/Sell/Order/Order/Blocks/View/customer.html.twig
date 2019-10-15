@@ -204,7 +204,10 @@
             </div>
 
             <div class="mt-2 text-right">
-              <button type="submit" class="btn btn-primary btn-sm js-private-note-btn">
+              <button type="submit"
+                      class="btn btn-primary btn-sm js-private-note-btn"
+                      {% if orderForViewing.customer.privateNote is empty %}disabled{% endif %}
+              >
                 {{ 'Save'|trans({}, 'Admin.Actions') }}
               </button>
             </div>
