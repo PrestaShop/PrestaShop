@@ -9,12 +9,18 @@ module.exports = class Categories extends BOBasePage {
     this.successfulUpdateStatusMessage = 'The status has been successfully updated.';
 
     // Selectors
+    // Header links
+    this.addNewCategoryLink = '#page-header-desc-configuration-add[title=\'Add new category\']';
     // List of categories
     this.categpryGridPanel = '#category_grid_panel';
     this.categoryGridTitle = `${this.categpryGridPanel} h3.card-header-title`;
     this.categoriesListForm = '#category_grid';
     this.categoriesListTableRow = `${this.categoriesListForm} tbody tr:nth-child(%ROW)`;
     this.categoriesListTableColumn = `${this.categoriesListTableRow} td.column-%COLUMN`;
+    this.categoriesListTableEditLink = `${this.categoriesListTableColumn} a[data-original-title='Edit']`;
+    this.categoriesListTableToggleDropDown = `${this.categoriesListTableColumn} a[data-toggle='dropdown']`;
+    this.categoriesListTableViewLink = `${this.categoriesListTableColumn} a[data-original-title="View"]`;
+    this.categoriesListTableDeleteLink = `${this.categoriesListTableColumn} a[data-category-delete-url]`;
     this.categoriesListColumnValidIcon = `${this.categoriesListTableColumn} i.grid-toggler-icon-valid`;
     this.categoriesListColumnNotValidIcon = `${this.categoriesListTableColumn} i.grid-toggler-icon-not-valid`;
 
@@ -22,6 +28,11 @@ module.exports = class Categories extends BOBasePage {
     this.categoryFilterInput = `${this.categoriesListForm} #category_%FILTERBY`;
     this.filterSearchButton = `${this.categoriesListForm} button[name='category[actions][search]']`;
     this.filterResetButton = `${this.categoriesListForm} button[name='category[actions][reset]']`;
+
+    // Modal Dialog
+    this.deleteCategoryModal = '#category_grid_delete_categories_modal.show';
+    this.deleteCategoryModalDeleteButton = `${this.deleteCategoryModal} button.js-submit-delete-categories`;
+    this.deleteCategoryModalModeInput = `${this.deleteCategoryModal} #delete_categories_delete_mode_%ID`;
   }
 
   /*
@@ -97,5 +108,82 @@ module.exports = class Categories extends BOBasePage {
       return true;
     }
     return false;
+  }
+
+  /**
+   * Go to Category Page
+   * @return {Promise<void>}
+   */
+  async goToAddNewCategoryPage() {
+    await Promise.all([
+      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
+      this.page.click(this.addNewCategoryLink),
+    ]);
+  }
+
+  /**
+   * Go to Edit Category page
+   * @param row, row in table
+   * @return {Promise<void>}
+   */
+  async goToEditCategoryPage(row) {
+    await Promise.all([
+      this.page.click(this.categoriesListTableEditLink.replace('%ROW', row).replace('%COLUMN', 'actions')),
+      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
+    ]);
+  }
+
+  /**
+   * Go to Sub Category page
+   * @param row, row in table
+   * @return {Promise<void>}
+   */
+  async goToSubCategoryPage(row) {
+    await Promise.all([
+      this.page.click(`${this.categoriesListTableColumn.replace('%ROW', row).replace('%COLUMN', 'name')} a`),
+      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
+    ]);
+  }
+
+  /**
+   * Delete Category
+   * @param row, row in table
+   * @param associateProductsToParentAndDisable, Deletion method to choose in modal
+   * @return {Promise<textContent>}
+   */
+  async deleteCategory(row, associateProductsToParentAndDisable = true) {
+    // Click on dropDown
+    await Promise.all([
+      this.page.click(this.categoriesListTableToggleDropDown.replace('%ROW', row).replace('%COLUMN', 'actions')),
+      this.page.waitForSelector(
+        `${this.categoriesListTableToggleDropDown
+          .replace('%ROW', row).replace('%COLUMN', 'actions')}[aria-expanded='true']`,
+        {visible: true},
+      ),
+    ]);
+    // Click on delete and wait for modal
+    await Promise.all([
+      this.page.click(this.categoriesListTableDeleteLink.replace('%ROW', row).replace('%COLUMN', 'actions')),
+      this.page.waitForSelector(this.deleteCategoryModal, {visible: true}),
+    ]);
+    await this.chooseOptionAndDelete(associateProductsToParentAndDisable);
+    return this.getTextContent(this.alertSuccessBlockParagraph);
+  }
+
+  /**
+   * Choose if associate product to the parent category, then disable them, delete category and perform delete action
+   * @param associateThenDisable
+   * @return {Promise<void>}
+   */
+  async chooseOptionAndDelete(associateThenDisable) {
+    // Choose deletion method
+    if (associateThenDisable) await this.page.click(this.deleteCategoryModalModeInput.replace('%ID', '0'));
+    else await this.page.click(this.deleteCategoryModalModeInput.replace('%ID', '1'));
+    // Click on delete button and wait for action to finish
+    await Promise.all([
+      this.page.click(this.deleteCategoryModalDeleteButton),
+      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
+      this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true}),
+    ]);
   }
 };
