@@ -1,3 +1,5 @@
+import createOrderPageMap from "./create-order-map";
+
 /**
  * 2007-2019 PrestaShop SA and Contributors
  *
@@ -23,44 +25,55 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import createOrderPageMap from './create-order-map';
 import Router from '../../../components/router';
 import {EventEmitter} from '../../../components/event-emitter';
 
 const $ = window.$;
 
 /**
- * Provides ajax calls for getting customer information
+ * Provides ajax calls for cart editing actions
+ * Each method emits an event with updated cart information after success.
  */
-export default class CustomerInfoProvider {
+export default class CartEditor {
   constructor() {
-    this.$container = $(createOrderPageMap.orderCreationContainer);
     this.router = new Router();
   }
 
   /**
-   * Gets customer carts
-   *
-   * @param customerId
-   *
-   * @returns {jqXHR}. Array of carts in response.
+   * Changes cart addresses
    */
-  getCustomerCarts(customerId) {
-    $.get(this.router.generate('admin_customers_carts', {customerId})).then((cartInfo) => {
-      EventEmitter.emit('customerCartsLoaded', cartInfo);
+  changeCartAddresses(cartId, addresses) {
+    $.post(this.router.generate('admin_carts_edit_addresses', {cartId}), addresses).then((cartInfo) => {
+      // this._persistCartInfoData(response);
+      EventEmitter.emit('cartAddressesChanged', cartInfo);
     });
   }
 
   /**
-   * Gets customer orders
+   * Modifies cart delivery option
    *
-   * @param customerId
-   *
-   * @returns {jqXHR}. Array of orders in response.
+   * @param cartId
+   * @param value
    */
-  getCustomerOrders(customerId) {
-    $.get(this.router.generate('admin_customers_orders', {customerId})).then((cartInfo) => {
-      EventEmitter.emit('customerOrdersLoaded', cartInfo);
+  changeDeliveryOption(cartId, value) {
+    $.post(this.router.generate('admin_carts_edit_carrier', {cartId}), {
+      carrier_id: value,
+    }).then((cartInfo) => {
+      EventEmitter.emit('deliveryOptionChanged', cartInfo);
+    });
+  }
+
+  /**
+   * Changes cart free shipping value
+   *
+   * @param {Number} cartId
+   * @param {Boolean} value
+   */
+  setFreeShipping(cartId, value) {
+    $.post(this.router.generate('admin_carts_set_free_shipping', {cartId}), {
+      free_shipping: value,
+    }).then((cartInfo) => {
+      EventEmitter.emit('freeShippingChanged', cartInfo);
     });
   }
 }

@@ -42,6 +42,8 @@ export default {
   customerSearchResultId: '.js-customer-id',
   customerSearchResultBirthday: '.js-customer-birthday',
   customerDetailsBtn: '.js-details-customer-btn',
+  useCartBtn: '.js-use-cart-btn',
+  useOrderBtn: '.js-use-order-btn',
   customerSearchResultColumn: '.js-customer-search-result-col',
   customerSearchBlock: '#customerSearchBlock',
   customerCartsTable: '#customerCartsTable',

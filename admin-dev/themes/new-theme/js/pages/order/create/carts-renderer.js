@@ -48,6 +48,8 @@ export default class CartsRenderer {
       return;
     }
 
+    this._showCheckoutHistoryBlock();
+
     for (const key in carts) {
       const cart = carts[key];
       // do not render current cart
@@ -64,5 +66,14 @@ export default class CartsRenderer {
 
       $cartsTable.find('tbody').append($template);
     }
+  }
+
+  /**
+   * Shows checkout history block where carts and orders are rendered
+   *
+   * @private
+   */
+  _showCheckoutHistoryBlock() {
+    $(createOrderPageMap.customerCheckoutHistory).removeClass('d-none');
   }
 }

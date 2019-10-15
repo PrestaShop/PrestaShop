@@ -25,6 +25,7 @@
 
 import createOrderPageMap from './create-order-map';
 import Router from '../../../components/router';
+import {EventEmitter} from '../../../components/event-emitter';
 
 const $ = window.$;
 
@@ -45,8 +46,8 @@ export default class CartProvider {
    * @returns {jqXHR}. Object with cart information in response.
    */
   getCart(cartId) {
-    return $.ajax(this.router.generate('admin_carts_info', {cartId}), {
-      method: 'GET',
+    $.get(this.router.generate('admin_carts_info', {cartId})).then((cartInfo) => {
+      EventEmitter.emit('cartLoaded', cartInfo);
     });
   }
 
@@ -58,12 +59,10 @@ export default class CartProvider {
    * @returns {jqXHR}. Object with cart information in response
    */
   loadEmptyCart(customerId) {
-    return $.ajax(this.router.generate('admin_carts_create'), {
-      method: 'POST',
-      data: {
-        customer_id: customerId,
-      },
-      dataType: 'json',
+    $.post(this.router.generate('admin_carts_create'), {
+      customer_id: customerId,
+    }).then((cartInfo) => {
+      EventEmitter.emit('cartLoaded', cartInfo);
     });
   }
 
@@ -75,8 +74,8 @@ export default class CartProvider {
    * @returns {jqXHR}. Object with cart information in response
    */
   duplicateOrderCart(orderId) {
-    return $.ajax(this.router.generate('admin_orders_duplicate_cart', {orderId}), {
-      method: 'POST',
+    $.post(this.router.generate('admin_orders_duplicate_cart', {orderId})).then((cartInfo) => {
+      EventEmitter.emit('cartLoaded', cartInfo);
     });
   }
 }

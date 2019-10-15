@@ -46,6 +46,8 @@ export default class OrdersRenderer {
       return;
     }
 
+    this._showCheckoutHistoryBlock();
+
     for (const key in Object.keys(orders)) {
       const order = orders[key];
       const $template = $rowTemplate.clone();
@@ -60,5 +62,14 @@ export default class OrdersRenderer {
 
       $ordersTable.find('tbody').append($template);
     }
+  }
+
+  /**
+   * Shows checkout history block where carts and orders are rendered
+   *
+   * @private
+   */
+  _showCheckoutHistoryBlock() {
+    $(createOrderPageMap.customerCheckoutHistory).removeClass('d-none');
   }
 }
