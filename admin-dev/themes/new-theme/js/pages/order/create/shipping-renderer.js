@@ -42,9 +42,11 @@ export default class ShippingRenderer {
    * @param {Boolean} emptyCart
    */
   render(shipping, emptyCart) {
+    const shippingIsAvailable = typeof shipping !== 'undefined' && shipping !== null && shipping.length !== 0;
+
     if (emptyCart) {
       this._hideContainer();
-    } else if (shipping !== null && shipping.length !== 0) {
+    } else if (shippingIsAvailable) {
       this._displayForm(shipping);
     } else {
       this._displayNoCarriersWarning();
