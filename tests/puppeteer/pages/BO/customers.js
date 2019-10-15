@@ -87,8 +87,8 @@ module.exports = class Customers extends BOBasePage {
    */
   async getToggleColumnValue(row, column) {
     if (await this.elementVisible(
-      this.customersListColumnValidIcon.replace('%ROW', row).replace('%COLUMN', column), 100)) return 'Yes';
-    return 'No';
+      this.customersListColumnValidIcon.replace('%ROW', row).replace('%COLUMN', column), 100)) return true;
+    return false;
   }
 
   /**
@@ -98,7 +98,7 @@ module.exports = class Customers extends BOBasePage {
    * @param valueWanted, Value wanted in column
    * @return {Promise<boolean>}, return true if action is done, false otherwise
    */
-  async updateToggleColumnValue(row, column, valueWanted = 'Yes') {
+  async updateToggleColumnValue(row, column, valueWanted = true) {
     if (await this.getToggleColumnValue(row, column) !== valueWanted) {
       await Promise.all([
         this.page.waitForNavigation({waitUntil: 'networkidle0'}),

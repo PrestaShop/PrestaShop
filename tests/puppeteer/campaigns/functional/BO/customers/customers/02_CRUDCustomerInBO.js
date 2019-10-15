@@ -41,7 +41,7 @@ describe('Create, Read, Update and Delete Customer in BO', async () => {
     page = await helper.newTab(browser);
     this.pageObjects = await init();
     createCustomerData = await (new CustomerFaker());
-    editCustomerData = await (new CustomerFaker({enabled: 'No'}));
+    editCustomerData = await (new CustomerFaker({enabled: false}));
   });
   after(async () => {
     await helper.closeBrowser(browser);

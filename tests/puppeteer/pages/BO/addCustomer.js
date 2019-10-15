@@ -42,9 +42,9 @@ module.exports = class AddCustomer extends BOBasePage {
     await this.page.select(this.yearOfBirthSelect, customerData.yearOfBirth);
     await this.page.select(this.monthOfBirthSelect, customerData.monthOfBirth);
     await this.page.select(this.dayOfBirthSelect, customerData.dayOfBirth);
-    if (customerData.enabled === 'Yes') await this.page.click(this.enabledSwitchlabel.replace('%ID', '1'));
+    if (customerData.enabled) await this.page.click(this.enabledSwitchlabel.replace('%ID', '1'));
     else await this.page.click(this.enabledSwitchlabel.replace('%ID', '0'));
-    if (customerData.partnerOffers === 'Yes') await this.page.click(this.partnerOffersSwitchlabel.replace('%ID', '1'));
+    if (customerData.partnerOffers) await this.page.click(this.partnerOffersSwitchlabel.replace('%ID', '1'));
     else await this.page.click(this.partnerOffersSwitchlabel.replace('%ID', '0'));
     await this.page.click(this.selectAllGroupAccessCheckbox);
     await this.selectByVisibleText(this.defaultCustomerGroupSelect, customerData.defaultCustomerGroup);

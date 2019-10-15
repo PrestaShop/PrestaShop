@@ -6,8 +6,8 @@ module.exports = {
     lastName: 'DOE',
     email: 'pub@prestashop.com',
     password: '123456789',
-    enabled: 'Yes',
-    newsletter: 'Yes',
-    partnerOffers: 'Yes',
+    enabled: true,
+    newsletter: true,
+    partnerOffers: true,
   },
 };

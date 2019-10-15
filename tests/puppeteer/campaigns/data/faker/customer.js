@@ -14,8 +14,8 @@ module.exports = class Customer {
     this.yearOfBirth = customerToCreate.yearOfBirth || this.birthDate.getFullYear().toString();
     this.monthOfBirth = customerToCreate.monthOfBirth || (this.birthDate.getMonth() + 1).toString();
     this.dayOfBirth = customerToCreate.dayOfBirth || this.birthDate.getDate().toString();
-    this.enabled = customerToCreate.enabled || 'Yes';
-    this.partnerOffers = customerToCreate.partnerOffers || 'Yes';
+    this.enabled = customerToCreate.enabled || true;
+    this.partnerOffers = customerToCreate.partnerOffers || true;
     this.defaultCustomerGroup = customerToCreate.defaultCustomerGroup
       || faker.random.arrayElement(defaultCustomerGroups);
   }
