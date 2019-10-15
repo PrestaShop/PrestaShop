@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\QueryResult;
 
-class ProductForOrderCreationCombination
+class ProductCombinationForOrderCreation
 {
     /**
      * @var int

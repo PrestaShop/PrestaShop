@@ -47,18 +47,18 @@ class ProductCustomizationFields
     }
 
     /**
-     * @param ProductCustomizationField $productCustomizationField
-     */
-    private function addProductCustomizationField(ProductCustomizationField $productCustomizationField): void
-    {
-        $this->fields[] = $productCustomizationField;
-    }
-
-    /**
      * @return ProductCustomizationField[]
      */
     public function getProductCustomizationFields(): array
     {
         return $this->fields;
+    }
+
+    /**
+     * @param ProductCustomizationField $productCustomizationField
+     */
+    private function addProductCustomizationField(ProductCustomizationField $productCustomizationField): void
+    {
+        $this->fields[] = $productCustomizationField;
     }
 }
