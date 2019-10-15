@@ -1,3 +1,4 @@
+require('module-alias/register');
 // Using BOBasePage
 const BOBasePage = require('@pages/BO/BObasePage');
 

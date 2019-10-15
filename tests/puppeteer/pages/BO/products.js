@@ -1,3 +1,4 @@
+require('module-alias/register');
 // Importing page
 const BOBasePage = require('@pages/BO/BObasePage');
 

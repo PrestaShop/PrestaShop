@@ -1,3 +1,4 @@
+require('module-alias/register');
 const FOBasePage = require('@pages/FO/FObasePage');
 
 module.exports = class Login extends FOBasePage {

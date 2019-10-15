@@ -23,7 +23,9 @@
     "url": "git+https://github.com/PrestaShop/PrestaShop.git"
   },
   "keywords": [
-    "puppeteer", "sanity", "functional"
+    "puppeteer",
+    "sanity",
+    "functional"
   ],
   "author": "Prestashop",
   "license": "OSL-3.0",

@@ -1,3 +1,4 @@
+require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
 module.exports = class moduleManager extends BOBasePage {
