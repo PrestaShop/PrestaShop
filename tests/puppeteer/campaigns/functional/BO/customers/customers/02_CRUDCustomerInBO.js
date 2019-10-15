@@ -208,9 +208,9 @@ describe('Create, Read, Update and Delete Customer in BO', async () => {
       const textResult = await this.pageObjects.customersPage.deleteCustomer('1');
       await expect(textResult).to.equal(this.pageObjects.customersPage.successfulDeleteMessage);
       await this.pageObjects.customersPage.resetFilter();
-      const numberOfCustomersAfterCreation = await this.pageObjects.customersPage.getNumberFromText(
+      const numberOfCustomersAfterDelete = await this.pageObjects.customersPage.getNumberFromText(
         this.pageObjects.customersPage.customerGridTitle);
-      await expect(numberOfCustomersAfterCreation).to.be.equal(numberOfCustomers);
+      await expect(numberOfCustomersAfterDelete).to.be.equal(numberOfCustomers);
     });
   });
 });
