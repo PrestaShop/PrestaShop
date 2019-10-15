@@ -652,8 +652,8 @@ form#importDropzone {
     }
 
     input[type="checkbox"]:checked ~ label {
-      background-color: #25b9d7;
-      border-color: #25b9d7;
+      background-color: $primary;
+      border-color: $primary;
 
       .done {
         opacity: 1;
@@ -683,7 +683,7 @@ form#importDropzone {
     text-align: center;
     vertical-align: middle;
     img {
-      max-width: 40px;
+      max-width: 2.85em;
     }
   }
 
@@ -694,7 +694,7 @@ form#importDropzone {
     vertical-align: middle;
     font-size:.95em;
     .module-name {
-      color: #25b9d7;
+      color: $primary;
     }
 
     .module-description {
@@ -709,10 +709,9 @@ form#importDropzone {
 
   .module-column-description {
     width: 679px;
-  }
-
-  .module-column-description.hasColumnPosition {
-    width: 600px;
+    &.hasColumnPosition {
+      width: 600px;
+    }
   }
 
   .module-column-actions {

@@ -150,7 +150,7 @@
                               {% set linkParams = linkParams|merge({'show_modules': selectedModule}) %}
                             {% endif %}
 
-                            <a class="btn btn-outline-primary btn-sm" href="{{ getAdminLink('AdminModulesPositions', true, linkParams) }}">
+                            <a class="btn btn-outline-primary btn-sm" href="{{ getAdminLink('AdminModulesPositions', true, linkParams) }}" aria-label="{{ 'Edit' | trans({}, 'Admin.Actions') }}">
                               <i class="material-icons">edit</i>
                             </a>
 
