@@ -27,12 +27,12 @@
  * Encapsulates selectors for "Create order" page
  */
 export default {
-  orderCreationContainer: '#orderCreationContainer',
+  orderCreationContainer: '#order_creation_container',
 
   // selectors related to customer block
-  customerSearchInput: '#customerSearchInput',
+  customerSearchInput: '#customer_search_input',
   customerSearchResultsBlock: '.js-customer-search-results',
-  customerSearchResultTemplate: '#customerSearchResultTemplate',
+  customerSearchResultTemplate: '#customer_search_result_template',
   changeCustomerBtn: '.js-change-customer-btn',
   customerSearchRow: '.js-search-customer-row',
   chooseCustomerBtn: '.js-choose-customer-btn',
@@ -45,39 +45,39 @@ export default {
   useCartBtn: '.js-use-cart-btn',
   useOrderBtn: '.js-use-order-btn',
   customerSearchResultColumn: '.js-customer-search-result-col',
-  customerSearchBlock: '#customerSearchBlock',
-  customerCartsTable: '#customerCartsTable',
-  customerCartsTableRowTemplate: '#customerCartsTableRowTemplate',
-  customerCheckoutHistory: '#customerCheckoutHistory',
-  customerOrdersTable: '#customerOrdersTable',
-  customerOrdersTableRowTemplate: '#customerOrdersTableRowTemplate',
-  vouchersTable: '#vouchersTable',
-  vouchersTableRowTemplate: '#vouchersTableRowTemplate',
+  customerSearchBlock: '#customer_search_block',
+  customerCartsTable: '#customer_carts_table',
+  customerCartsTableRowTemplate: '#customer_carts_table_row_template',
+  customerCheckoutHistory: '#customer_checkout_history',
+  customerOrdersTable: '#customer_orders_table',
+  customerOrdersTableRowTemplate: '#customer_orders_table_row_template',
+  vouchersTable: '#vouchers_table',
+  vouchersTableRowTemplate: '#vouchers_table_row_template',
 
   // selectors related to cart block
-  cartBlock: '#cartBlock',
+  cartBlock: '#cart_block',
 
   // selectors related to vouchers block
-  vouchersBlock: '#vouchersBlock',
+  vouchersBlock: '#vouchers_block',
 
   // selectors related to addresses block
-  addressesBlock: '#addressesBlock',
-  deliveryAddressDetails: '#deliveryAddressDetails',
-  invoiceAddressDetails: '#invoiceAddressDetails',
-  deliveryAddressSelect: '#deliveryAddressSelect',
-  invoiceAddressSelect: '#invoiceAddressSelect',
+  addressesBlock: '#addresses_block',
+  deliveryAddressDetails: '#delivery_address_details',
+  invoiceAddressDetails: '#invoice_address_details',
+  deliveryAddressSelect: '#delivery_address_select',
+  invoiceAddressSelect: '#invoice_address_select',
   addressSelect: '.js-address-select',
-  addressesContent: '#addressesContent',
-  addressesWarning: '#addressesWarning',
+  addressesContent: '#addresses_content',
+  addressesWarning: '#addresses_warning',
 
   // selectors related to summary block
-  summaryBlock: '#summaryBlock',
+  summaryBlock: '#summary_block',
 
   // selectors related to shipping block
-  shippingBlock: '#shippingBlock',
+  shippingBlock: '#shipping_block',
   shippingForm: '.js-shipping-form',
   noCarrierBlock: '.js-no-carrier-block',
-  deliveryOptionSelect: '#deliveryOptionSelect',
+  deliveryOptionSelect: '#delivery_option_select',
   totalShippingField: '.js-total-shipping',
   freeShippingSwitch: '.js-free-shipping-switch',
 };
