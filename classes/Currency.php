@@ -413,10 +413,26 @@ class CurrencyCore extends ObjectModel
             SELECT *
             FROM `' . _DB_PREFIX_ . 'currency` c
             ' . ($currentShopOnly ? Shop::addSqlAssociation('currency', 'c') : '') . '
-                WHERE `deleted` = 0' .
+                WHERE c.`deleted` = 0' .
                 ($active ? ' AND c.`active` = 1' : '') .
                 ($groupBy ? ' GROUP BY c.`id_currency`' : '') .
                 ' ORDER BY `iso_code` ASC');
+
+        return $currencies;
+    }
+
+    /**
+     * Retrieve all currencies data from the database.
+     *
+     * @return array Currency data from database
+     *
+     * @throws PrestaShopDatabaseException
+     */
+    public static function findAllInstalled()
+    {
+        $currencies = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
+            'SELECT * FROM `' . _DB_PREFIX_ . 'currency` c ORDER BY `iso_code` ASC'
+        );
 
         return $currencies;
     }
@@ -574,13 +590,14 @@ class CurrencyCore extends ObjectModel
      *
      * @param string $isoCode ISO code
      * @param int $idShop Shop ID
+     * @param bool $forceRefreshCache [default=false] Set to TRUE to forcefully refresh any currently cached results
      *
      * @return int Currency ID
      */
-    public static function getIdByIsoCode($isoCode, $idShop = 0)
+    public static function getIdByIsoCode($isoCode, $idShop = 0, $forceRefreshCache = false)
     {
         $cacheId = 'Currency::getIdByIsoCode_' . pSQL($isoCode) . '-' . (int) $idShop;
-        if (!Cache::isStored($cacheId)) {
+        if ($forceRefreshCache || !Cache::isStored($cacheId)) {
             $query = Currency::getIdByQuery($idShop);
             $query->where('iso_code = \'' . pSQL($isoCode) . '\'');
 
@@ -800,7 +817,7 @@ class CurrencyCore extends ObjectModel
         $symbolsByLang = $namesByLang = [];
         foreach ($languages as $languageData) {
             $language = new Language($languageData['id_lang']);
-            if ($language->locale === '') {
+            if (empty($language->locale)) {
                 // Language doesn't have locale we can't install this language
                 continue;
             }

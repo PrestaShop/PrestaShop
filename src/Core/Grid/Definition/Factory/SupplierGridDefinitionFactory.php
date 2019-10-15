@@ -126,6 +126,7 @@ final class SupplierGridDefinitionFactory extends AbstractGridDefinitionFactory
                                 'route' => 'admin_suppliers_view',
                                 'route_param_name' => 'supplierId',
                                 'route_param_field' => 'id_supplier',
+                                'clickable_row' => true,
                             ])
                         )
                         ->add((new LinkRowAction('edit'))
