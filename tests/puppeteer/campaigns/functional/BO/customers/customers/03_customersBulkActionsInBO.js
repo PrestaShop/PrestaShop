@@ -59,7 +59,7 @@ describe('Create Customers, Then disable / Enable and Delete with Bulk actions',
       );
     await expect(numberOfCustomers).to.be.above(0);
   });
-
+  // 1 : Create 2 customers In BO
   describe('Create  2 customers in BO', async () => {
     it('should go to add new customer page', async function () {
       await this.pageObjects.customersPage.goToAddNewCustomerPage();
@@ -88,6 +88,7 @@ describe('Create Customers, Then disable / Enable and Delete with Bulk actions',
       await expect(numberOfCustomersAfterCreation).to.be.equal(numberOfCustomers + 2);
     });
   });
+  // 2 : Enable/Disable customers created with bulk actions
   describe('Enable and Disable customers with Bulk Actions', async () => {
     it('should filter list by firstName', async function () {
       await this.pageObjects.customersPage.filterCustomers(
@@ -133,6 +134,7 @@ describe('Create Customers, Then disable / Enable and Delete with Bulk actions',
       /* eslint-enable no-await-in-loop */
     });
   });
+  // 3 : Delete Customers created with bulk actions
   describe('Delete customers with Bulk Actions', async () => {
     it('should filter list by firstName', async function () {
       await this.pageObjects.customersPage.filterCustomers(

@@ -65,7 +65,7 @@ describe('Create, Read, Update and Delete Customer in BO', async () => {
       );
     await expect(numberOfCustomers).to.be.above(0);
   });
-
+  // 1 : Create customer and go to FO to check sign in is OK
   describe('Create Customer in BO and check Sign in in FO', async () => {
     it('should go to add new customer page', async function () {
       await this.pageObjects.customersPage.goToAddNewCustomerPage();
@@ -93,6 +93,7 @@ describe('Create, Read, Update and Delete Customer in BO', async () => {
       this.pageObjects = await init();
     });
   });
+  // 2 : View Customer and check Creation data are correct
   describe('View Customer Created', async () => {
     it('should filter list by email', async function () {
       await this.pageObjects.customersPage.filterCustomers(
@@ -119,6 +120,7 @@ describe('Create, Read, Update and Delete Customer in BO', async () => {
       await expect(cardHeaderText).to.contains(createCustomerData.email);
     });
   });
+  // 3 : Update customer and check that customer can't sign in in BO (enabled = false)
   describe('Update Customer Created', async () => {
     it('should go to customers page', async function () {
       await this.pageObjects.boBasePage.goToSubMenu(
@@ -164,6 +166,7 @@ describe('Create, Read, Update and Delete Customer in BO', async () => {
       this.pageObjects = await init();
     });
   });
+  // 4 : View customer and check data are correct
   describe('View Customer Updated', async () => {
     it('should filter list by email', async function () {
       await this.pageObjects.customersPage.filterCustomers(
@@ -190,6 +193,7 @@ describe('Create, Read, Update and Delete Customer in BO', async () => {
       await expect(cardHeaderText).to.contains(editCustomerData.email);
     });
   });
+  // 5 : Delete Customer from BO
   describe('Delete Customer', async () => {
     it('should go to customers page', async function () {
       await this.pageObjects.boBasePage.goToSubMenu(

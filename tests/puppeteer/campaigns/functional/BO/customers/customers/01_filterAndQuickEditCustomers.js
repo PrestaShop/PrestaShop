@@ -53,7 +53,7 @@ describe('Filter And Quick Edit Customers', async () => {
       );
     await expect(numberOfCustomers).to.be.above(0);
   });
-
+  // 1 : Filter Customers with all inputs and selects in grid table
   describe('Filter Customers', async () => {
     it('should filter by Id \'2\'', async function () {
       await this.pageObjects.customersPage.filterCustomers('input', 'id_customer', DefaultAccount.id);
@@ -259,7 +259,7 @@ describe('Filter And Quick Edit Customers', async () => {
       await expect(numberOfCustomersAfterReset).to.equal(numberOfCustomers);
     });
   });
-
+  // 2 : Editing customers from grid table
   describe('Quick Edit Customers', async () => {
     // Steps
     it('should filter by Email \'pub@prestashop.com\'', async function () {
