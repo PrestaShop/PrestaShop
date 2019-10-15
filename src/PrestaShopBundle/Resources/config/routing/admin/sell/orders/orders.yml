@@ -151,4 +151,4 @@ admin_search_product_for_order_creation:
   path: /search
   methods: [GET]
   defaults:
-    _controller: PrestaShopBundle:Admin/Product:searchProducts
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:searchProducts

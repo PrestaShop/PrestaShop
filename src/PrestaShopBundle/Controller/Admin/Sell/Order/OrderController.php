@@ -39,6 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotEditDeliveredOrderProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\ChangeOrderStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderEmailResendException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\OrderConstraints;
 use PrestaShop\PrestaShop\Core\Domain\Order\Payment\Command\AddPaymentCommand;
@@ -590,10 +591,6 @@ class OrderController extends FrameworkBundleAdminController
             /** @var ProductsForOrderCreation $productsForOrderCreation */
             $productsForOrderCreation = $this->getQueryBus()->handle(new SearchProductsForOrderCreation($searchPhrase));
 
-            if (empty($productsForOrderCreation->getProducts())) {
-                return new Response('', Response::HTTP_NOT_FOUND);
-            }
-
             $serializer = $this->get('prestashop.bundle.snake_case_serializer_json');
 
             return new Response($serializer->serialize($productsForOrderCreation->getProducts(), 'json'));
@@ -625,6 +622,9 @@ class OrderController extends FrameworkBundleAdminController
                 'An error occurred while sending the e-mail to the customer.',
                 'Admin.Orderscustomers.Notification'
             ),
+            OrderConstraintException::class => [
+                OrderConstraintException::INVALID_PRODUCT_SEARCH_PHRASE => $this->trans('Inval')
+            ]
         ];
     }
 

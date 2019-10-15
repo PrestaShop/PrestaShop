@@ -26,17 +26,17 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\QueryResult;
 
-class ProductForOrderCreationCombinations
+class ProductCombinationsForOrderCreation
 {
     /**
-     * @var ProductForOrderCreationCombination[]
+     * @var ProductCombinationForOrderCreation[]
      */
     private $combinations = [];
 
     /**
-     * @param ProductForOrderCreationCombination $combination
+     * @param ProductCombinationForOrderCreation $combination
      */
-    public function addCombination(ProductForOrderCreationCombination $combination): void
+    public function addCombination(ProductCombinationForOrderCreation $combination): void
     {
         $this->combinations[$combination->getAttributeCombinationId()] = $combination;
     }
@@ -44,15 +44,15 @@ class ProductForOrderCreationCombinations
     /**
      * @param int $id
      *
-     * @return ProductForOrderCreationCombination|null
+     * @return ProductCombinationForOrderCreation|null
      */
-    public function getCombination(int $id): ?ProductForOrderCreationCombination
+    public function getCombination(int $id): ?ProductCombinationForOrderCreation
     {
         return isset($this->combinations[$id]) ? $this->combinations[$id] : null;
     }
 
     /**
-     * @return ProductForOrderCreationCombination[]
+     * @return ProductCombinationForOrderCreation[]
      */
     public function getCombinations(): array
     {

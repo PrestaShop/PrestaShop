@@ -32,8 +32,8 @@ use PrestaShop\PrestaShop\Core\Domain\Order\QueryHandler\SearchProductsForOrderC
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\ProductCustomizationField;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\ProductCustomizationFields;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\ProductForOrderCreation;
-use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\ProductForOrderCreationCombination;
-use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\ProductForOrderCreationCombinations;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\ProductCombinationForOrderCreation;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\ProductCombinationsForOrderCreation;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\ProductsForOrderCreation;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
@@ -169,13 +169,13 @@ final class SearchProductsForOrderCreationHandler implements SearchProductsForOr
      * @param array $combinations
      * @param int $productId
      *
-     * @return ProductForOrderCreationCombinations|null
+     * @return ProductCombinationsForOrderCreation|null
      *
      * @throws LocalizationException
      */
-    private function getProductCombinations(array $combinations, int $productId): ?ProductForOrderCreationCombinations
+    private function getProductCombinations(array $combinations, int $productId): ?ProductCombinationsForOrderCreation
     {
-        $productCombinations = new ProductForOrderCreationCombinations();
+        $productCombinations = new ProductCombinationsForOrderCreation();
 
         /** @var Locale $locale */
         $locale = $this->localeRepository->getLocale($this->locale);
@@ -190,7 +190,7 @@ final class SearchProductsForOrderCreationHandler implements SearchProductsForOr
 
             $priceTaxExcluded = Product::getPriceStatic($productId, false, $productAttributeId);
 
-            $productCombination = new ProductForOrderCreationCombination(
+            $productCombination = new ProductCombinationForOrderCreation(
                 $productAttributeId,
                 $combination['attribute_name'],
                 $combination['quantity'],

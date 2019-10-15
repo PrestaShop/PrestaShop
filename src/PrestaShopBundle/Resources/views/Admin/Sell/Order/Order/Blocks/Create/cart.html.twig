@@ -31,7 +31,7 @@
         <span class="float-right">{{ 'Search for a product'|trans({}, 'Admin.Orderscustomers.Feature') }}</span>
       </div>
       <div class="col-4">
-        <input id="productSearch" data-url="{{ path('admin_search_product_for_order_creation') }}" type="text"
+        <input id="productSearch" data-product-search-url="{{ path('admin_search_product_for_order_creation') }}" type="text"
                class="form-control"
         >
         <small class="form-text">
