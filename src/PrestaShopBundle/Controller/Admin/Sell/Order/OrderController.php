@@ -41,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Exception\ChangeOrderStatusException
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderEmailResendException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Order\OrderConstraints;
 use PrestaShop\PrestaShop\Core\Domain\Order\Payment\Command\AddPaymentCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\UpdateProductInOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
@@ -466,6 +467,7 @@ class OrderController extends FrameworkBundleAdminController
             return $this->json([
                 'preview' => $this->renderView('@PrestaShop/Admin/Sell/Order/Order/preview.html.twig', [
                     'orderPreview' => $orderPreview,
+                    'productsPreviewLimit' => OrderConstraints::PRODUCTS_PREVIEW_LIMIT,
                     'orderId' => $orderId,
                 ]),
             ]);

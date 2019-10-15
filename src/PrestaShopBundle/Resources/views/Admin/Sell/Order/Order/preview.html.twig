@@ -80,12 +80,14 @@
           </thead>
           <tbody>
           {% for productDetail in orderPreview.productDetails %}
-            <tr>
-              <td class="p-1">{{ productDetail.name }}</td>
-              <td class="p-1">{{ productDetail.unitPrice }}</td>
-              <td class="p-1">{{ productDetail.quantity }}</td>
-              <td class="p-1">{{ productDetail.totalPrice }}</td>
-            </tr>
+            {% if loop.index <= productsPreviewLimit %}
+              <tr>
+                <td class="p-1">{{ productDetail.name }}</td>
+                <td class="p-1">{{ productDetail.unitPrice }}</td>
+                <td class="p-1">{{ productDetail.quantity }}</td>
+                <td class="p-1">{{ productDetail.totalPrice }}</td>
+              </tr>
+            {% endif %}
           {% endfor %}
           </tbody>
         </table>
@@ -93,7 +95,11 @@
 
       <div class="text-right">
         <a href="{{ path('admin_orders_view', {'orderId': orderId}) }}" class="btn btn-primary btn-sm">
-          {{ 'Order details'|trans({}, 'Admin.Orderscustomers.Feature') }}
+          {% if orderPreview.productDetails|length > productsPreviewLimit %}
+            {{ 'View the other %count% products'|trans({'%count%': orderPreview.productDetails|length - productsPreviewLimit}, 'Admin.Orderscustomers.Feature') }}
+          {% else %}
+            {{ 'Order details'|trans({}, 'Admin.Orderscustomers.Feature') }}
+          {% endif %}
           <i class="material-icons">arrow_right_alt</i>
         </a>
       </div>
