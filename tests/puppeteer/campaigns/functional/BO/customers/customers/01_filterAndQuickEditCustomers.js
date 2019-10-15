@@ -185,7 +185,7 @@ describe('Filter And Quick Edit Customers', async () => {
       await this.pageObjects.customersPage.filterCustomers(
         'select',
         'active',
-        DefaultAccount.enabled,
+        DefaultAccount.enabled ? 'Yes' : 'NO',
       );
       const numberOfCustomersAfterFilter = await this.pageObjects.customersPage.getNumberFromText(
         this.pageObjects.customersPage.customerGridTitle,
@@ -210,7 +210,7 @@ describe('Filter And Quick Edit Customers', async () => {
       await this.pageObjects.customersPage.filterCustomers(
         'select',
         'newsletter',
-        DefaultAccount.newsletter,
+        DefaultAccount.newsletter ? 'Yes' : 'NO',
       );
       const numberOfCustomersAfterFilter = await this.pageObjects.customersPage.getNumberFromText(
         this.pageObjects.customersPage.customerGridTitle,
@@ -236,7 +236,7 @@ describe('Filter And Quick Edit Customers', async () => {
       await this.pageObjects.customersPage.filterCustomers(
         'select',
         'optin',
-        DefaultAccount.partnerOffers,
+        DefaultAccount.partnerOffers ? 'Yes' : 'NO',
       );
       const numberOfCustomersAfterFilter = await this.pageObjects.customersPage.getNumberFromText(
         this.pageObjects.customersPage.customerGridTitle,
@@ -277,7 +277,8 @@ describe('Filter And Quick Edit Customers', async () => {
       const isActionPerformed = await this.pageObjects.customersPage.updateToggleColumnValue(
         '1',
         'active',
-        'No');
+        false,
+      );
       if (isActionPerformed) {
         const resultMessage = await this.pageObjects.customersPage.getTextContent(
           this.pageObjects.customersPage.alertSuccessBlockParagraph,
@@ -295,7 +296,7 @@ describe('Filter And Quick Edit Customers', async () => {
       const isActionPerformed = await this.pageObjects.customersPage.updateToggleColumnValue(
         '1',
         'active',
-        'Yes',
+        true,
       );
       if (isActionPerformed) {
         const resultMessage = await this.pageObjects.customersPage.getTextContent(
@@ -314,7 +315,7 @@ describe('Filter And Quick Edit Customers', async () => {
       const isActionPerformed = await this.pageObjects.customersPage.updateToggleColumnValue(
         '1',
         'newsletter',
-        'No',
+        false,
       );
       if (isActionPerformed) {
         const resultMessage = await this.pageObjects.customersPage.getTextContent(
@@ -333,7 +334,7 @@ describe('Filter And Quick Edit Customers', async () => {
       const isActionPerformed = await this.pageObjects.customersPage.updateToggleColumnValue(
         '1',
         'newsletter',
-        'Yes',
+        true,
       );
       if (isActionPerformed) {
         const resultMessage = await this.pageObjects.customersPage.getTextContent(
@@ -352,7 +353,7 @@ describe('Filter And Quick Edit Customers', async () => {
       const isActionPerformed = await this.pageObjects.customersPage.updateToggleColumnValue(
         '1',
         'optin',
-        'No',
+        false,
       );
       if (isActionPerformed) {
         const resultMessage = await this.pageObjects.customersPage.getTextContent(
@@ -371,7 +372,7 @@ describe('Filter And Quick Edit Customers', async () => {
       const isActionPerformed = await this.pageObjects.customersPage.updateToggleColumnValue(
         '1',
         'optin',
-        'Yes',
+        true,
       );
       if (isActionPerformed) {
         const resultMessage = await this.pageObjects.customersPage.getTextContent(

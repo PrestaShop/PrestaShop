@@ -159,7 +159,7 @@ describe('Create, Read, Update and Delete Customer in BO', async () => {
       page = await this.pageObjects.boBasePage.viewMyShop();
       this.pageObjects = await init();
       await this.pageObjects.foBasePage.goToLoginPage();
-      await this.pageObjects.foLoginPage.customerLogin(createCustomerData);
+      await this.pageObjects.foLoginPage.customerLogin(editCustomerData);
       const isCustomerConnected = await this.pageObjects.foBasePage.isCustomerConnected();
       await expect(isCustomerConnected).to.be.false;
       page = await this.pageObjects.foBasePage.closePage(browser, 1);
