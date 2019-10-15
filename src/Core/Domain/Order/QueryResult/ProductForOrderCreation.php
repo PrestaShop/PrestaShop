@@ -49,7 +49,7 @@ class ProductForOrderCreation
     private $stock;
 
     /**
-     * @var ProductForOrderCreationCombinations|null
+     * @var ProductCombinationsForOrderCreation|null
      */
     private $combinations;
 
@@ -109,19 +109,19 @@ class ProductForOrderCreation
     }
 
     /**
-     * @return ProductForOrderCreationCombinations|null
+     * @return ProductCombinationsForOrderCreation|null
      */
-    public function getCombinations(): ?ProductForOrderCreationCombinations
+    public function getCombinations(): ?ProductCombinationsForOrderCreation
     {
         return $this->combinations;
     }
 
     /**
-     * @param ProductForOrderCreationCombinations $combinations
+     * @param ProductCombinationsForOrderCreation $combinations
      *
      * @return ProductForOrderCreation
      */
-    public function setCombinations(ProductForOrderCreationCombinations $combinations): ProductForOrderCreation
+    public function setCombinations(ProductCombinationsForOrderCreation $combinations): ProductForOrderCreation
     {
         $this->combinations = $combinations;
 

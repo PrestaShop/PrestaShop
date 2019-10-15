@@ -26,6 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\Query;
 
+
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+
 class SearchProductsForOrderCreation
 {
     /**
@@ -35,9 +38,12 @@ class SearchProductsForOrderCreation
 
     /**
      * @param string $phrase
+     *
+     * @throws ProductException
      */
     public function __construct(string $phrase)
     {
+        $this->assertIsNotEmptyString($phrase);
         $this->phrase = $phrase;
     }
 
@@ -47,5 +53,16 @@ class SearchProductsForOrderCreation
     public function getPhrase()
     {
         return $this->phrase;
+    }
+
+    /**
+     * @param string $phrase
+     * @throws ProductException
+     */
+    private function assertIsNotEmptyString(string $phrase): void
+    {
+        if (empty($phrase) || !is_string($phrase)) {
+            throw new ProductException('Product search phrase must be a not empty string');
+        }
     }
 }
