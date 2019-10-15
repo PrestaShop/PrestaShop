@@ -139,4 +139,9 @@ module.exports = class BOBasePage extends CommonPage {
       await this.page.click(this.sfCloseToolbarLink);
     }
   }
+
+  async uploadFile(selector, fileName) {
+    const input = await this.page.$(selector);
+    await input.uploadFile(fileName);
+  }
 };
