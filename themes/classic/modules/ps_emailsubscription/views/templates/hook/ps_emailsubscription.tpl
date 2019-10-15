@@ -49,6 +49,7 @@
                 value="{$value}"
                 placeholder="{l s='Your email address' d='Shop.Forms.Labels'}"
                 aria-labelledby="block-newsletter-label"
+                required
               >
             </div>
             <input type="hidden" name="blockHookName" value="{$hookName}" />

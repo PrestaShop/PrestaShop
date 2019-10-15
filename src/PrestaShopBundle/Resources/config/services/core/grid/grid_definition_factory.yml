@@ -207,16 +207,24 @@ services:
         public: true
 
     prestashop.core.grid.definition.factory.order_message:
-      class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderMessageGridDefinitionFactory'
-      parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
-      public: true
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderMessageGridDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        public: true
 
     prestashop.core.grid.definition.factory.attachment:
-      class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AttachmentGridDefinitionFactory'
-      parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
-      public: true
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AttachmentGridDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        public: true
 
-    prestashop.core.grid.definition.factory.attachment:
-      class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AttachmentGridDefinitionFactory'
-      parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
-      public: true
+    prestashop.core.grid.definition.factory.attribute:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AttributeGridDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        arguments:
+            - '@=service("request_stack").getCurrentRequest().attributes.getInt("attributeGroupId")'
+            - '@prestashop.core.attribute_group.attribute_group_view_data_provider'
+        public: true
+
+    prestashop.core.grid.definition.factory.attribute_group:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AttributeGroupGridDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        public: true

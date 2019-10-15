@@ -347,12 +347,7 @@ class AddressCore extends ObjectModel
         }
 
         // Special validation for dni, check if the country needs it
-        $result = (bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-			SELECT c.`need_identification_number`
-			FROM `' . _DB_PREFIX_ . 'country` c
-			WHERE c.`id_country` = ' . (int) $this->id_country);
-
-        if ($result && Tools::isEmpty($value)) {
+        if (static::dniRequired((int) $this->id_country) && Tools::isEmpty($value)) {
             if ($human_errors) {
                 return $this->trans(
                     'The %s field is required.',
@@ -369,6 +364,23 @@ class AddressCore extends ObjectModel
         }
 
         return true;
+    }
+
+    /**
+     * Request to check if DNI field is required
+     * depending on the current selected country.
+     *
+     * @param int $idCountry
+     *
+     * @return bool
+     */
+    public static function dniRequired($idCountry)
+    {
+        return (bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+            'SELECT c.`need_identification_number` ' .
+            'FROM `' . _DB_PREFIX_ . 'country` c ' .
+            'WHERE c.`id_country` = ' . (int) $idCountry
+        );
     }
 
     /**

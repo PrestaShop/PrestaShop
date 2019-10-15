@@ -43,7 +43,7 @@ describe('Install Prestashop', async () => {
     await this.pageObjects.installPage.setInstallLanguage();
     const result = await this.pageObjects.installPage.checkStepTitle(
       this.pageObjects.installPage.firstStepPageTitle,
-      this.pageObjects.installPage.firstStepEnTitle
+      this.pageObjects.installPage.firstStepEnTitle,
     );
     await expect(result).to.be.true;
   });
@@ -51,7 +51,7 @@ describe('Install Prestashop', async () => {
     await this.pageObjects.installPage.nextStep();
     const result = await this.pageObjects.installPage.checkStepTitle(
       this.pageObjects.installPage.secondStepPageTitle,
-      this.pageObjects.installPage.secondStepEnTitle
+      this.pageObjects.installPage.secondStepEnTitle,
     );
     await expect(result).to.be.true;
   });
@@ -61,7 +61,7 @@ describe('Install Prestashop', async () => {
     if (!this.pageObjects.installPage.elementVisible(this.pageObjects.installPage.thirdStepFinishedListItem)) {
       const result = await this.pageObjects.installPage.checkStepTitle(
         this.pageObjects.installPage.thirdStepPageTitle,
-        this.pageObjects.installPage.thirdStepEnTitle
+        this.pageObjects.installPage.thirdStepEnTitle,
       );
       await expect(result).to.be.true;
     }
@@ -72,7 +72,7 @@ describe('Install Prestashop', async () => {
     }
     const result = await this.pageObjects.installPage.checkStepTitle(
       this.pageObjects.installPage.fourthStepPageTitle,
-      this.pageObjects.installPage.fourthStepEnTitle
+      this.pageObjects.installPage.fourthStepEnTitle,
     );
     await expect(result).to.be.true;
   });
@@ -81,7 +81,7 @@ describe('Install Prestashop', async () => {
     await this.pageObjects.installPage.nextStep();
     const result = await this.pageObjects.installPage.checkStepTitle(
       this.pageObjects.installPage.fifthStepPageTitle,
-      this.pageObjects.installPage.fifthStepEnTitle
+      this.pageObjects.installPage.fifthStepEnTitle,
     );
     await expect(result).to.be.true;
   });

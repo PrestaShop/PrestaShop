@@ -43,7 +43,7 @@ describe('Filter the Orders table by ID, REFERENCE, STATUS', async () => {
   it('should go to the Orders page', async function () {
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.ordersParentLink,
-      this.pageObjects.orderPage.ordersLink
+      this.pageObjects.orderPage.ordersLink,
     );
     const pageTitle = await this.pageObjects.orderPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.orderPage.pageTitle);
@@ -52,11 +52,11 @@ describe('Filter the Orders table by ID, REFERENCE, STATUS', async () => {
     await this.pageObjects.orderPage.filterTableByInput(
       this.pageObjects.orderPage.orderFilterIdInput,
       Orders.firstOrder.id,
-      this.pageObjects.orderPage.searchButton
+      this.pageObjects.orderPage.searchButton,
     );
     const result = await this.pageObjects.boBasePage.checkTextValue(
       this.pageObjects.orderPage.orderfirstLineIdTD,
-      Orders.firstOrder.id
+      Orders.firstOrder.id,
     );
     await expect(result).to.be.true;
     await this.pageObjects.orderPage.waitForSelectorAndClick(this.pageObjects.orderPage.resetButton);
@@ -65,11 +65,11 @@ describe('Filter the Orders table by ID, REFERENCE, STATUS', async () => {
     await this.pageObjects.orderPage.filterTableByInput(
       this.pageObjects.orderPage.orderFilterReferenceInput,
       Orders.fourthOrder.ref,
-      this.pageObjects.orderPage.searchButton
+      this.pageObjects.orderPage.searchButton,
     );
     const result = await this.pageObjects.boBasePage.checkTextValue(
       this.pageObjects.orderPage.orderfirstLineReferenceTD,
-      Orders.fourthOrder.ref
+      Orders.fourthOrder.ref,
     );
     await expect(result).to.be.true;
     await this.pageObjects.orderPage.waitForSelectorAndClick(this.pageObjects.orderPage.resetButton);
@@ -77,11 +77,11 @@ describe('Filter the Orders table by ID, REFERENCE, STATUS', async () => {
   it('should filter the Orders table by STATUS and check the result', async function () {
     await this.pageObjects.orderPage.filterTableBySelect(
       this.pageObjects.orderPage.orderFilterStatusSelect,
-      Statuses.paymentError.index
+      Statuses.paymentError.index,
     );
     const result = await this.pageObjects.orderPage.checkTextValue(
       this.pageObjects.orderPage.orderfirstLineStatusTD,
-      Statuses.paymentError.status
+      Statuses.paymentError.status,
     );
     await expect(result).to.be.true;
   });

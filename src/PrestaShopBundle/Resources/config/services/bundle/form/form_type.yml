@@ -926,6 +926,7 @@ services:
       arguments:
         - '@prestashop.adapter.form.choice_provider.currency_symbol_by_id'
         - '@prestashop.adapter.form.choice_provider.order_invoice_by_id'
+        - '@prestashop.adapter.form.choice_provider.installed_payment_modules'
         - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
         - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
       tags:
@@ -939,3 +940,10 @@ services:
             - { method: setTranslator, arguments: ['@translator'] }
         tags:
             - { name: form.type }
+
+    form.type.order.change_order_currency:
+      class: 'PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrderCurrencyType'
+      arguments:
+        - '@prestashop.core.form.choice_provider.currency_by_id'
+      tags:
+        - { name: form.type }

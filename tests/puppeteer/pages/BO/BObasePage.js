@@ -4,6 +4,12 @@ module.exports = class BOBasePage extends CommonPage {
   constructor(page) {
     super(page);
 
+    // Successful Messages
+    this.successfulCreationMessage = 'Successful creation.';
+    this.successfulUpdateMessage = 'Successful update.';
+    this.successfulDeleteMessage = 'Successful deletion.';
+    this.successfulMultiDeleteMessage = 'The selection has been successfully deleted.';
+
     // top navbar
     this.headerLogoImage = '#header_logo';
     this.userProfileIcon = '#employee_infos';
@@ -102,8 +108,7 @@ module.exports = class BOBasePage extends CommonPage {
    * @return FOPage, page opened
    */
   async viewMyShop() {
-    const FOPage = await this.openLinkWithTargetBlank(this.page, this.headerShopNameLink);
-    return FOPage;
+    return this.openLinkWithTargetBlank(this.page, this.headerShopNameLink, false);
   }
 
   /**

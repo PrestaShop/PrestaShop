@@ -240,8 +240,7 @@ class MetaFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertItShouldGetErrorThatDefaultLanguageIsMissingForUrlRewrite()
     {
-        $this->assertLastErrorIs(MetaConstraintException::class);
-        $this->assertLastErrorCodeIs(MetaConstraintException::INVALID_URL_REWRITE);
+        $this->assertLastErrorIs(MetaConstraintException::class, MetaConstraintException::INVALID_URL_REWRITE);
     }
 
     /**
@@ -249,8 +248,7 @@ class MetaFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertItShouldGetErrorThatPageNameValueIsIncorrect()
     {
-        $this->assertLastErrorIs(MetaConstraintException::class);
-        $this->assertLastErrorCodeIs(MetaConstraintException::INVALID_PAGE_NAME);
+        $this->assertLastErrorIs(MetaConstraintException::class, MetaConstraintException::INVALID_PAGE_NAME);
     }
 
     /**
