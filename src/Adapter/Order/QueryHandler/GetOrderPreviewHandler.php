@@ -26,10 +26,12 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Order\QueryHandler;
 
+use Carrier;
 use Country;
 use Currency;
 use Customer;
 use Order;
+use OrderCarrier;
 use PrestaShop\PrestaShop\Adapter\Entity\Address;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderPreview;
@@ -40,6 +42,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPreviewProductDetai
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPreviewShippingDetails;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
+use Validate;
 
 /**
  * Handles GetOrderPreview query using legacy object model
@@ -135,6 +138,16 @@ final class GetOrderPreviewHandler implements GetOrderPreviewHandlerInterface
         $customer = new Customer($order->id_customer);
         $address = new Address($order->id_address_delivery);
         $country = new Country($address->id_country);
+        $carrier = new Carrier($order->id_carrier);
+
+        $carrierName = null;
+
+        if (Validate::isLoadedObject($carrier)) {
+            $carrierName = $carrier->name;
+        }
+
+        $orderCarrierId = $order->getIdOrderCarrier();
+        $orderCarrier = new OrderCarrier($orderCarrierId);
 
         return new OrderPreviewShippingDetails(
             $customer->firstname,
@@ -143,7 +156,9 @@ final class GetOrderPreviewHandler implements GetOrderPreviewHandlerInterface
             $address->address2,
             $address->city,
             $country->name[$order->id_lang],
-            $address->phone
+            $address->phone,
+            $carrierName,
+            $orderCarrier->tracking_number ?: null
         );
     }
 

@@ -28,6 +28,34 @@
     <div class="col-4">
       <div class="row">
         <div class="col">
+          <p class="mb-0">
+            <i class="material-icons pr-1">local_shipping</i>
+            <strong>{{ 'Carrier'|trans({}, 'Admin.Global') }}:</strong>
+            {% if orderPreview.shippingDetails.carrierName %}
+              {{ orderPreview.shippingDetails.carrierName }}
+            {% else %}
+              -
+            {% endif %}
+          </p>
+
+          {% if orderPreview.shippingDetails.trackingNumber %}
+            <p class="mb-0">
+              <strong>{{ 'Tracking ID'|trans({}, 'Admin.Global') }}:</strong>
+              {{ orderPreview.shippingDetails.trackingNumber }}
+            </p>
+          {% endif %}
+
+          <p class="mb-2 ml-4">
+            <strong>{{ 'Shipping details'|trans({}, 'Admin.Global') }}:</strong>
+          </p>
+
+          <p class="mb-0 ml-4">{{ orderPreview.shippingDetails.firstName }} {{ orderPreview.shippingDetails.lastName }}</p>
+          <p class="mb-0 ml-4">{{ orderPreview.shippingDetails.address1 }}</p>
+          <p class="mb-0 ml-4">{{ orderPreview.shippingDetails.address2 }}</p>
+          <p class="mb-0 ml-4">{{ orderPreview.shippingDetails.country }}</p>
+          <p class="mb-0 ml-4">{{ orderPreview.shippingDetails.phone }}</p>
+        </div>
+        <div class="col">
           <p class="mb-1">
             <i class="material-icons pr-1">receipt</i>
             <strong>{{ 'Invoice details'|trans({}, 'Admin.Global') }}:</strong>
@@ -40,18 +68,6 @@
           <p class="mb-0 ml-4">{{ orderPreview.invoiceDetails.country }}</p>
           <p class="mb-0 ml-4">{{ orderPreview.invoiceDetails.phone }}</p>
           <p class="mb-0 ml-4">{{ orderPreview.invoiceDetails.email }}</p>
-        </div>
-        <div class="col">
-          <p class="mb-1">
-            <i class="material-icons pr-1">local_shipping</i>
-            <strong>{{ 'Shipping details'|trans({}, 'Admin.Global') }}:</strong>
-          </p>
-
-          <p class="mb-0 ml-4">{{ orderPreview.shippingDetails.firstName }} {{ orderPreview.shippingDetails.lastName }}</p>
-          <p class="mb-0 ml-4">{{ orderPreview.shippingDetails.address1 }}</p>
-          <p class="mb-0 ml-4">{{ orderPreview.shippingDetails.address2 }}</p>
-          <p class="mb-0 ml-4">{{ orderPreview.shippingDetails.country }}</p>
-          <p class="mb-0 ml-4">{{ orderPreview.shippingDetails.phone }}</p>
         </div>
       </div>
     </div>
