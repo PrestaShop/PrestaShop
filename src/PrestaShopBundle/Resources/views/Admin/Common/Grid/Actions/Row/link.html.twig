@@ -44,6 +44,7 @@
     data-placement="top"
     data-original-title="{{ action.name }}"
   {% endif %}
+  data-clickable-row="{{ action.options.clickable_row|default(false) }}"
 >
   {% if action.icon is not empty %}
     <i class="material-icons">{{ action.icon }}</i>

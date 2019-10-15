@@ -16,8 +16,12 @@ Feature: Currency Management
       | shop_association | shop1 |
     Then currency "currency1" should be "EUR"
     And currency "currency1" exchange rate should be 0.88
+    And currency "currency1" numeric iso code should be 978
+    And currency "currency1" name should be "Euro"
+    And currency "currency1" symbol should be "€"
     And currency "currency1" should have status enabled
     And currency "currency1" should be available in shop "shop1"
+    And there should be 1 currencies of "EUR"
     When I edit currency "currency1" with following properties:
       | iso_code         | GBP   |
       | exchange_rate    | 1.22  |
@@ -25,6 +29,10 @@ Feature: Currency Management
       | shop_association | shop1 |
     Then currency "currency1" should be "GBP"
     And currency "currency1" exchange rate should be 1.22
+    And currency "currency1" numeric iso code should be 978
+    And currency "currency1" name should be "Euro"
+    And currency "currency1" symbol should be "€"
+    And currency "currency1" precision should be 2
     And currency "currency1" should have status disabled
 
   Scenario: Disabling default currency should not be allowed

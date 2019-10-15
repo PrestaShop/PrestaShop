@@ -226,6 +226,7 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                                 'route' => 'admin_customers_view',
                                 'route_param_name' => 'customerId',
                                 'route_param_field' => 'id_customer',
+                                'clickable_row' => true,
                             ])
                         )
                         ->add((new DeleteCustomerRowAction('delete'))

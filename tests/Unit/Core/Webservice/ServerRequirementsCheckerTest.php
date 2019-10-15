@@ -67,28 +67,6 @@ class ServerRequirementsCheckerTest extends TestCase
         $this->mockedPhpExtensionChecker = $this->createMock(PhpExtensionCheckerInterface::class);
     }
 
-    public function testErrorIsReturnedWhenNonApacheWebServerIsUsed()
-    {
-        $this->mockedHostingInformation
-            ->method('getServerInformation')
-            ->willReturn(['version' => 'nginx']);
-
-        $errors = $this->createNewServerRequirementsChecker()->checkForErrors();
-
-        $this->assertContains('To avoid operating problems, please use an Apache server.', $errors);
-    }
-
-    public function testNoErrorsAreReturnedWhenUsingApacheWebServer()
-    {
-        $this->mockedHostingInformation
-            ->method('getServerInformation')
-            ->willReturn(['version' => 'Apache/2.4.29 (Ubuntu)']);
-
-        $errors = $this->createNewServerRequirementsChecker()->checkForErrors();
-
-        $this->assertNotContains('To avoid operating problems, please use an Apache server.', $errors);
-    }
-
     public function testNoErrorsAreReturnedWhenSslIsEnabled()
     {
         $this->mockedConfiguration
