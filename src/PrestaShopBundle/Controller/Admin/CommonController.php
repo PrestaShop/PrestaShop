@@ -29,6 +29,8 @@ namespace PrestaShopBundle\Controller\Admin;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+use PrestaShop\PrestaShop\Core\Domain\Notification\Command\UpdateEmployeeNotificationLastElementCommand;
+use PrestaShop\PrestaShop\Core\Domain\Notification\Query\GetNotificationLastElements;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinitionInterface;
 use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowInterface;
@@ -56,8 +58,8 @@ class CommonController extends FrameworkBundleAdminController
      */
     public function notificationsAction()
     {
-        // TODO: Use CQRS
-        return new JsonResponse((new \Notification())->getLastElements());
+        $elements = $this->getQueryBus()->handle(new GetNotificationLastElements());
+        return new JsonResponse($elements);
     }
 
     /**
@@ -68,8 +70,7 @@ class CommonController extends FrameworkBundleAdminController
     public function notificationsAckAction(Request $request)
     {
         $type = $request->request->get('type');
-        // TODO: Use CQRS
-        return new JsonResponse((new \Notification())->updateEmployeeLastElement($type));
+        $this->getCommandBus()->handle(new UpdateEmployeeNotificationLastElementCommand($type));
     }
 
     /**
