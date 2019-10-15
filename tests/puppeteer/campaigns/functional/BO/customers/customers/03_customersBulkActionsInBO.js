@@ -46,7 +46,7 @@ describe('Create Customers, Then disable / Enable and Delete with Bulk actions',
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.customersParentLink,
       this.pageObjects.boBasePage.customersLink,
-      );
+    );
     const pageTitle = await this.pageObjects.customersPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.customersPage.pageTitle);
   });
@@ -56,7 +56,7 @@ describe('Create Customers, Then disable / Enable and Delete with Bulk actions',
     }
     numberOfCustomers = await this.pageObjects.customersPage.getNumberFromText(
       this.pageObjects.customersPage.customerGridTitle,
-      );
+    );
     await expect(numberOfCustomers).to.be.above(0);
   });
   // 1 : Create 2 customers In BO
@@ -71,7 +71,7 @@ describe('Create Customers, Then disable / Enable and Delete with Bulk actions',
       await expect(textResult).to.equal(this.pageObjects.customersPage.successfulCreationMessage);
       const numberOfCustomersAfterCreation = await this.pageObjects.customersPage.getNumberFromText(
         this.pageObjects.customersPage.customerGridTitle,
-        );
+      );
       await expect(numberOfCustomersAfterCreation).to.be.equal(numberOfCustomers + 1);
     });
     it('should go to add new customer page', async function () {
@@ -84,7 +84,7 @@ describe('Create Customers, Then disable / Enable and Delete with Bulk actions',
       await expect(textResult).to.equal(this.pageObjects.customersPage.successfulCreationMessage);
       const numberOfCustomersAfterCreation = await this.pageObjects.customersPage.getNumberFromText(
         this.pageObjects.customersPage.customerGridTitle,
-        );
+      );
       await expect(numberOfCustomersAfterCreation).to.be.equal(numberOfCustomers + 2);
     });
   });
@@ -106,7 +106,7 @@ describe('Create Customers, Then disable / Enable and Delete with Bulk actions',
       await expect(disableTextResult).to.be.equal(this.pageObjects.customersPage.successfulUpdateMessage);
       const numberOfCustomersInGrid = await this.pageObjects.customersPage.getNumberFromText(
         this.pageObjects.customersPage.customerGridTitle,
-        );
+      );
       await expect(numberOfCustomersInGrid).to.be.at.most(numberOfCustomers);
       /* eslint-disable no-await-in-loop */
       for (let i = 1; i <= numberOfCustomersInGrid; i++) {
@@ -122,7 +122,7 @@ describe('Create Customers, Then disable / Enable and Delete with Bulk actions',
       await expect(enableTextResult).to.be.equal(this.pageObjects.customersPage.successfulUpdateMessage);
       const numberOfCustomersInGrid = await this.pageObjects.customersPage.getNumberFromText(
         this.pageObjects.customersPage.customerGridTitle,
-        );
+      );
       await expect(numberOfCustomersInGrid).to.be.at.most(numberOfCustomers);
       /* eslint-disable no-await-in-loop */
       for (let i = 1; i <= numberOfCustomersInGrid; i++) {
@@ -158,7 +158,7 @@ describe('Create Customers, Then disable / Enable and Delete with Bulk actions',
       }
       const numberOfCustomersAfterReset = await this.pageObjects.customersPage.getNumberFromText(
         this.pageObjects.customersPage.customerGridTitle,
-        );
+      );
       await expect(numberOfCustomersAfterReset).to.be.equal(numberOfCustomers);
     });
   });

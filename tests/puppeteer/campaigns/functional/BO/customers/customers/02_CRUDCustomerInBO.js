@@ -62,7 +62,7 @@ describe('Create, Read, Update and Delete Customer in BO', async () => {
     }
     numberOfCustomers = await this.pageObjects.customersPage.getNumberFromText(
       this.pageObjects.customersPage.customerGridTitle,
-      );
+    );
     await expect(numberOfCustomers).to.be.above(0);
   });
   // 1 : Create customer and go to FO to check sign in is OK
@@ -77,7 +77,7 @@ describe('Create, Read, Update and Delete Customer in BO', async () => {
       await expect(textResult).to.equal(this.pageObjects.customersPage.successfulCreationMessage);
       const numberOfCustomersAfterCreation = await this.pageObjects.customersPage.getNumberFromText(
         this.pageObjects.customersPage.customerGridTitle,
-        );
+      );
       await expect(numberOfCustomersAfterCreation).to.be.equal(numberOfCustomers + 1);
     });
     it('should go to FO and check sign in with new account', async function () {
@@ -126,7 +126,7 @@ describe('Create, Read, Update and Delete Customer in BO', async () => {
       await this.pageObjects.boBasePage.goToSubMenu(
         this.pageObjects.boBasePage.customersParentLink,
         this.pageObjects.boBasePage.customersLink,
-        );
+      );
       const pageTitle = await this.pageObjects.customersPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.customersPage.pageTitle);
     });
@@ -152,7 +152,7 @@ describe('Create, Read, Update and Delete Customer in BO', async () => {
       await this.pageObjects.customersPage.resetFilter();
       const numberOfCustomersAfterUpdate = await this.pageObjects.customersPage.getNumberFromText(
         this.pageObjects.customersPage.customerGridTitle,
-        );
+      );
       await expect(numberOfCustomersAfterUpdate).to.be.equal(numberOfCustomers + 1);
     });
     it('should go to FO and check sign in with edited account', async function () {
@@ -199,7 +199,7 @@ describe('Create, Read, Update and Delete Customer in BO', async () => {
       await this.pageObjects.boBasePage.goToSubMenu(
         this.pageObjects.boBasePage.customersParentLink,
         this.pageObjects.boBasePage.customersLink,
-        );
+      );
       const pageTitle = await this.pageObjects.customersPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.customersPage.pageTitle);
     });
@@ -220,7 +220,7 @@ describe('Create, Read, Update and Delete Customer in BO', async () => {
       await this.pageObjects.customersPage.resetFilter();
       const numberOfCustomersAfterDelete = await this.pageObjects.customersPage.getNumberFromText(
         this.pageObjects.customersPage.customerGridTitle,
-        );
+      );
       await expect(numberOfCustomersAfterDelete).to.be.equal(numberOfCustomers);
     });
   });
