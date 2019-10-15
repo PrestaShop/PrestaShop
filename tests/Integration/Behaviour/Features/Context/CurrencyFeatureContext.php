@@ -311,6 +311,24 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
+     * @Given currency with :isoCode has been deactivated
+     */
+    public function assertCurrencyHasBeenDeactivated($isoCode)
+    {
+        $query = new DbQuery();
+        $query->select('c.id_currency');
+        $query->from('currency', 'c');
+        $query->where('active = 0');
+        $query->where('iso_code = \'' . pSQL($isoCode) . '\'');
+
+        $currencyId = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query->build());
+
+        if (!$currencyId) {
+            throw new RuntimeException(sprintf('Currency with ISO Code "%s" should be deactivated in database', $isoCode));
+        }
+    }
+
+    /**
      * @Given currency :currencyReference is default in :shopReference shop
      */
     public function assertCurrencyIsDefaultInShop($currencyReference, $shopReference)
