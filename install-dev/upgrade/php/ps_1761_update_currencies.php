@@ -60,7 +60,7 @@ function ps_1761_update_currencies()
         $cldrCurrency = $cldrLocale->getCurrency($currency->iso_code);
         if (!empty($cldrCurrency)) {
             $currency->precision = (int) $cldrCurrency->getDecimalDigits();
-            $currency->numeric_iso_code = (int) $cldrCurrency->getNumericIsoCode();
+            $currency->numeric_iso_code = $cldrCurrency->getNumericIsoCode();
         }
         $currency->save();
     }
