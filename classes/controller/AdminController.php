@@ -2927,7 +2927,7 @@ class AdminControllerCore extends Controller
     public function initShopContext()
     {
         // Do not initialize context when the shop is not installed
-        if (defined('PS_INSTALLATION_IN_PROGRESS')) {
+        if (defined('PS_INSTALLATION_IN_PROGRESS') || defined('_PS_IN_TEST_')) {
             return;
         }
 
