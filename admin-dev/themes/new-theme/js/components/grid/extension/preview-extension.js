@@ -43,10 +43,10 @@ export default class PreviewExtension {
    * @param grid
    */
   extend(grid) {
-    const $gridContainer = $(grid.getContainer);
+    this.$gridContainer = $(grid.getContainer);
 
-    $gridContainer.find('tbody tr').on('mouseover mouseleave', event => this._handleIconHovering(event));
-    $gridContainer.find(this.previewToggleSelector).on('click', event => this._togglePreview(event));
+    this.$gridContainer.find('tbody tr').on('mouseover mouseleave', event => this._handleIconHovering(event));
+    this.$gridContainer.find(this.previewToggleSelector).on('click', event => this._togglePreview(event));
   }
 
   /**
@@ -83,6 +83,9 @@ export default class PreviewExtension {
 
       return;
     }
+
+    this._closeOpenedPreviews();
+
     const dataUrl = $(event.currentTarget).data('preview-data-url');
 
     if (this._isLocked(dataUrl)) {
@@ -190,5 +193,49 @@ export default class PreviewExtension {
     }
 
     this.lock.splice(index, 1);
+  }
+
+  /**
+   * Close all previews that are open.
+   *
+   * @private
+   */
+  _closeOpenedPreviews() {
+    const $rows = this.$gridContainer.find('.grid-table tbody').find('tr:not(.preview-row)');
+
+    $.each($rows, (i, row) => {
+      const $row = $(row);
+
+      if (!$row.hasClass(this.previewOpenClass)) {
+        return;
+      }
+
+      const $previewRow = $row.next();
+
+      if (!$previewRow.hasClass('preview-row')) {
+        return;
+      }
+
+      $previewRow.remove();
+      $row.removeClass(this.previewOpenClass);
+      this._hideCollapseIcon($row);
+    });
+
+    // $rows.forEach(($row) => {
+    //   if (!$row.hasClass(this.previewOpenClass)) {
+    //     return;
+    //   }
+    //
+    //   const $previewRow = $row.next();
+    //
+    //   if (!$previewRow.hasClass('preview-row')) {
+    //     return;
+    //   }
+    //
+    //   $previewRow.remove();
+    //   $row.removeClass(this.previewOpenClass);
+    //   this._showExpandIcon($row);
+    //   this._hideCollapseIcon($row);
+    // });
   }
 }
