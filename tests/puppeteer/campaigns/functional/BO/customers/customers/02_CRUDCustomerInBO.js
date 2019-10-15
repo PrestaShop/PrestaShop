@@ -51,7 +51,8 @@ describe('Create, Read, Update and Delete Customer in BO', async () => {
   it('should go to customers page', async function () {
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.customersParentLink,
-      this.pageObjects.boBasePage.customersLink);
+      this.pageObjects.boBasePage.customersLink,
+    );
     const pageTitle = await this.pageObjects.customersPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.customersPage.pageTitle);
   });
@@ -60,7 +61,8 @@ describe('Create, Read, Update and Delete Customer in BO', async () => {
       await this.pageObjects.customersPage.resetFilter();
     }
     numberOfCustomers = await this.pageObjects.customersPage.getNumberFromText(
-      this.pageObjects.customersPage.customerGridTitle);
+      this.pageObjects.customersPage.customerGridTitle,
+      );
     await expect(numberOfCustomers).to.be.above(0);
   });
 
@@ -74,7 +76,8 @@ describe('Create, Read, Update and Delete Customer in BO', async () => {
       const textResult = await this.pageObjects.addCustomerPage.createEditCustomer(createCustomerData);
       await expect(textResult).to.equal(this.pageObjects.customersPage.successfulCreationMessage);
       const numberOfCustomersAfterCreation = await this.pageObjects.customersPage.getNumberFromText(
-        this.pageObjects.customersPage.customerGridTitle);
+        this.pageObjects.customersPage.customerGridTitle,
+        );
       await expect(numberOfCustomersAfterCreation).to.be.equal(numberOfCustomers + 1);
     });
     it('should go to FO and check sign in with new account', async function () {
@@ -120,7 +123,8 @@ describe('Create, Read, Update and Delete Customer in BO', async () => {
     it('should go to customers page', async function () {
       await this.pageObjects.boBasePage.goToSubMenu(
         this.pageObjects.boBasePage.customersParentLink,
-        this.pageObjects.boBasePage.customersLink);
+        this.pageObjects.boBasePage.customersLink,
+        );
       const pageTitle = await this.pageObjects.customersPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.customersPage.pageTitle);
     });
@@ -145,7 +149,8 @@ describe('Create, Read, Update and Delete Customer in BO', async () => {
       await expect(textResult).to.equal(this.pageObjects.customersPage.successfulUpdateMessage);
       await this.pageObjects.customersPage.resetFilter();
       const numberOfCustomersAfterUpdate = await this.pageObjects.customersPage.getNumberFromText(
-        this.pageObjects.customersPage.customerGridTitle);
+        this.pageObjects.customersPage.customerGridTitle,
+        );
       await expect(numberOfCustomersAfterUpdate).to.be.equal(numberOfCustomers + 1);
     });
     it('should go to FO and check sign in with edited account', async function () {
@@ -189,7 +194,8 @@ describe('Create, Read, Update and Delete Customer in BO', async () => {
     it('should go to customers page', async function () {
       await this.pageObjects.boBasePage.goToSubMenu(
         this.pageObjects.boBasePage.customersParentLink,
-        this.pageObjects.boBasePage.customersLink);
+        this.pageObjects.boBasePage.customersLink,
+        );
       const pageTitle = await this.pageObjects.customersPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.customersPage.pageTitle);
     });
@@ -209,7 +215,8 @@ describe('Create, Read, Update and Delete Customer in BO', async () => {
       await expect(textResult).to.equal(this.pageObjects.customersPage.successfulDeleteMessage);
       await this.pageObjects.customersPage.resetFilter();
       const numberOfCustomersAfterDelete = await this.pageObjects.customersPage.getNumberFromText(
-        this.pageObjects.customersPage.customerGridTitle);
+        this.pageObjects.customersPage.customerGridTitle,
+        );
       await expect(numberOfCustomersAfterDelete).to.be.equal(numberOfCustomers);
     });
   });
