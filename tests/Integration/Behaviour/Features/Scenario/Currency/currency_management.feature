@@ -79,11 +79,14 @@ Feature: Currency Management
       | is_enabled       | 1             |
       | is_unofficial    | 0             |
       | shop_association | shop1         |
+    And database contains 1 rows of currency "GBP"
     When I delete currency "currency4"
     Then "GBP" currency should be deleted
+    And database contains 1 rows of currency "GBP"
 
-  Scenario: Adding a new instance of deleted currency should be allowed
+  Scenario: Adding a new instance of deleted currency should be allowed (even though it's duplicated...)
     Given currency with "GBP" has been deleted
+    And database contains 1 rows of currency "GBP"
     When I add new currency "currency5" with following properties:
       | iso_code         | GBP           |
       | exchange_rate    | 0.88          |
@@ -94,6 +97,7 @@ Feature: Currency Management
       | is_unofficial    | 0             |
       | shop_association | shop1         |
     Then I should get no currency error
+    And database contains 2 rows of currency "GBP"
     And currency "currency5" should be "GBP"
     And currency "currency5" exchange rate should be 0.88
     And currency "currency5" numeric iso code should be 826
@@ -126,6 +130,7 @@ Feature: Currency Management
       | is_unofficial    | 1                |
       | shop_association | shop1            |
     Then I should get no currency error
+    And database contains 1 rows of currency "CST"
     And currency "currency7" should be "CST"
     And currency "currency7" exchange rate should be 0.77
     And currency "currency7" numeric iso code should be null
@@ -144,6 +149,8 @@ Feature: Currency Management
       | is_unofficial    | 1             |
       | shop_association | shop1         |
     Then I should get no currency error
+    And database contains 0 rows of currency "CST"
+    And database contains 1 rows of currency "CUS"
     And currency "currency7" should be "CUS"
     And currency "currency7" exchange rate should be 0.66
     And currency "currency7" numeric iso code should be null
@@ -184,6 +191,7 @@ Feature: Currency Management
       | is_unofficial    | 1                |
       | shop_association | shop1            |
     Then I should get no currency error
+    And database contains 1 rows of currency "CST"
     And currency "currency8" should be "CST"
     And currency "currency8" exchange rate should be 0.77
     And currency "currency8" numeric iso code should be null
@@ -221,6 +229,8 @@ Feature: Currency Management
     And currency "currency11" numeric iso code should be null
     Then currency "currency12" should be "CUS"
     And currency "currency12" numeric iso code should be null
+    And database contains 1 rows of currency "CST"
+    And database contains 1 rows of currency "CUS"
     When I edit currency "currency11" with following properties:
       | iso_code         | CUS           |
       | exchange_rate    | 0.66          |
@@ -228,6 +238,8 @@ Feature: Currency Management
       | is_unofficial    | 1             |
       | shop_association | shop1         |
     Then I should get error that currency already exists
+    And database contains 1 rows of currency "CST"
+    And database contains 1 rows of currency "CUS"
 
   Scenario: Adding real currency with basic input is automatically filled
     When I add new currency "currency14" with following properties:
