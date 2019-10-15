@@ -220,22 +220,5 @@ export default class PreviewExtension {
       $row.removeClass(this.previewOpenClass);
       this._hideCollapseIcon($row);
     });
-
-    // $rows.forEach(($row) => {
-    //   if (!$row.hasClass(this.previewOpenClass)) {
-    //     return;
-    //   }
-    //
-    //   const $previewRow = $row.next();
-    //
-    //   if (!$previewRow.hasClass('preview-row')) {
-    //     return;
-    //   }
-    //
-    //   $previewRow.remove();
-    //   $row.removeClass(this.previewOpenClass);
-    //   this._showExpandIcon($row);
-    //   this._hideCollapseIcon($row);
-    // });
   }
 }
