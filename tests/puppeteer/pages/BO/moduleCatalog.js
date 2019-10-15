@@ -1,4 +1,4 @@
-const BOBasePage = require('../../pages/BO/BObasePage');
+const BOBasePage = require('@pages/BO/BObasePage');
 
 module.exports = class moduleCatalog extends BOBasePage {
   constructor(page) {

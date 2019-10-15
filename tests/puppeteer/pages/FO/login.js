@@ -1,4 +1,4 @@
-const FOBasePage = require('../FO/FObasePage');
+const FOBasePage = require('@pages/FO/FObasePage');
 
 module.exports = class Login extends FOBasePage {
   constructor(page) {

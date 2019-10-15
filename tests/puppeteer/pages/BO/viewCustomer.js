@@ -1,4 +1,4 @@
-const BOBasePage = require('../../pages/BO/BObasePage');
+const BOBasePage = require('@pages/BO/BObasePage');
 
 module.exports = class ViewCustomer extends BOBasePage {
   constructor(page) {

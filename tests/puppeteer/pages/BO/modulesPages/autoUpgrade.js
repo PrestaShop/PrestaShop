@@ -1,5 +1,5 @@
 // Using BOBasePage
-const BOBasePage = require('../../BO/BObasePage');
+const BOBasePage = require('@pages/BO/BObasePage');
 
 module.exports = class autoUpgrade extends BOBasePage {
   constructor(page) {
