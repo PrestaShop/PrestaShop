@@ -21,13 +21,13 @@ Feature: Currency Management
     And currency "currency1" symbol should be "€"
     And currency "currency1" should have status enabled
     And currency "currency1" should be available in shop "shop1"
-    And there should be 1 currencies of "EUR"
+    And database contains 1 rows of currency "EUR"
     When I edit currency "currency1" with following properties:
-      | iso_code         | GBP   |
+      | iso_code         | EUR   |
       | exchange_rate    | 1.22  |
       | is_enabled       | 0     |
       | shop_association | shop1 |
-    Then currency "currency1" should be "GBP"
+    Then currency "currency1" should be "EUR"
     And currency "currency1" exchange rate should be 1.22
     And currency "currency1" numeric iso code should be 978
     And currency "currency1" name should be "Euro"
