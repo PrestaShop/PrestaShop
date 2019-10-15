@@ -74,5 +74,6 @@ Feature: Cart rule (amount) calculation with multiple cart rules
     Given cart rule "cartrule-free-gift" is restricted to the category "Awesome" with a quantity of 1
     Given cart rule "cartrule-free-gift" is restricted to product "product8"
     When I add 1 item of product "product8" in my cart
-    Then my cart total should be 2.4 tax included
-    Then my cart total using previous calculation method should be 2.4 tax included
+    Then my cart total should be precisely 2.345 tax included
+    Then my cart total should be 2.3 tax included
+    Then my cart total using previous calculation method should be 2.3 tax included
