@@ -25,4 +25,6 @@
 
 export default {
   orderPaymentDetailsBtn: '.js-payment-details-btn',
+  privateNoteToggleBtn: '.js-private-note-toggle-btn',
+  privateNoteBlock: '.js-private-note-block',
 };

@@ -30,11 +30,34 @@ const $ = window.$;
 $(() => {
   handlePaymentDetailsToggle();
 
+  $(OrderViewPageMap.privateNoteToggleBtn).on('click', (event) => {
+    event.preventDefault();
+    togglePrivateNoteBlock();
+  });
+
   function handlePaymentDetailsToggle() {
     $(OrderViewPageMap.orderPaymentDetailsBtn).on('click', (event) => {
       const $paymentDetailRow = $(event.currentTarget).closest('tr').next(':first');
 
       $paymentDetailRow.toggleClass('d-none');
     });
+  }
+
+  function togglePrivateNoteBlock() {
+    //debugger;
+    const $block = $(OrderViewPageMap.privateNoteBlock);
+    const $btn = $(OrderViewPageMap.privateNoteToggleBtn);
+    const isPrivateNoteOpened = $btn.hasClass('is-opened');
+
+    if (isPrivateNoteOpened) {
+      $btn.removeClass('is-opened');
+      $block.addClass('d-none');
+    } else {
+      $btn.addClass('is-opened');
+      $block.removeClass('d-none');
+    }
+
+    const $icon = $btn.find('.material-icons');
+    $icon.text(isPrivateNoteOpened ? 'add' : 'remove');
   }
 });

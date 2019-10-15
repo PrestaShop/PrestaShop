@@ -177,14 +177,38 @@
           </h3>
         </div>
         <div class="col-md-6 text-right">
+          {% set isPrivateNoteOpen = not orderForViewing.customer.privateNote is empty %}
+
           <a href="#"
-             class="float-right tooltip-link"
-             data-toggle="pstooltip"
-             data-placement="top"
-             data-original-title="{{ 'Add'|trans({}, 'Admin.Actions') }}"
+             class="float-right tooltip-link js-private-note-toggle-btn {% if isPrivateNoteOpen %}is-opened{% endif %}"
           >
-            <i class="material-icons">add</i>
+            {% if isPrivateNoteOpen %}
+              <i class="material-icons">remove</i>
+            {% else %}
+              <i class="material-icons">add</i>
+            {% endif %}
           </a>
+        </div>
+
+        <div class="col-md-12 mt-3 js-private-note-block {% if not isPrivateNoteOpen %}d-none{% endif %}">
+          {{ form_start(privateNoteForm, {
+            'action': path('admin_customers_set_private_note', {
+              'customerId': orderForViewing.customer.id,
+              'back': path('admin_orders_view', {'orderId': orderForViewing.id})
+            })
+          }) }}
+
+          {{ form_widget(privateNoteForm.note) }}
+            <div class="d-none">
+              {{ form_rest(privateNoteForm) }}
+            </div>
+
+            <div class="mt-2 text-right">
+              <button type="submit" class="btn btn-primary btn-sm js-private-note-btn">
+                {{ 'Save'|trans({}, 'Admin.Actions') }}
+              </button>
+            </div>
+          {{ form_end(privateNoteForm) }}
         </div>
       </div>
     </div>
