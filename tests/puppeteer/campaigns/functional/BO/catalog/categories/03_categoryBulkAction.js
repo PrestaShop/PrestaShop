@@ -62,7 +62,8 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
   // 1 : Create 2 categories In BO
   describe('Create 2 categories in BO', async () => {
     it('should go to add new category page', async function () {
-      await this.pageObjects.categoriesPage.clickAndWaitForNavigation(this.pageObjects.categoriesPage.addNewCategoryLink);
+      await this.pageObjects.categoriesPage.clickAndWaitForNavigation(
+        this.pageObjects.categoriesPage.addNewCategoryLink);
       const pageTitle = await this.pageObjects.addCategoryPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.addCategoryPage.pageTitleCreate);
     });
@@ -74,7 +75,8 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
       await expect(numberOfCategoriesAfterCreation).to.be.equal(numberOfCategories + 1);
     });
     it('should go to add new category page', async function () {
-      await this.pageObjects.categoriesPage.clickAndWaitForNavigation(this.pageObjects.categoriesPage.addNewCategoryLink);
+      await this.pageObjects.categoriesPage.clickAndWaitForNavigation(
+        this.pageObjects.categoriesPage.addNewCategoryLink);
       const pageTitle = await this.pageObjects.addCategoryPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.addCategoryPage.pageTitleCreate);
     });

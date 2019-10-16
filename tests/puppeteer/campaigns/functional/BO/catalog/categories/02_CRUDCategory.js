@@ -69,7 +69,8 @@ describe('Create, Read, Update and Delete Category', async () => {
   describe('Create Category and subcategory in BO and check it in FO', async () => {
     describe('Create Category and check it in FO', async () => {
       it('should go to add new category page', async function () {
-        await this.pageObjects.categoriesPage.clickAndWaitForNavigation(this.pageObjects.categoriesPage.addNewCategoryLink);
+        await this.pageObjects.categoriesPage.clickAndWaitForNavigation(
+          this.pageObjects.categoriesPage.addNewCategoryLink);
         const pageTitle = await this.pageObjects.addCategoryPage.getPageTitle();
         await expect(pageTitle).to.contains(this.pageObjects.addCategoryPage.pageTitleCreate);
       });
@@ -125,7 +126,8 @@ describe('Create, Read, Update and Delete Category', async () => {
         await expect(pageTitle).to.contains(createCategoryData.name);
       });
       it('should go to add new category page', async function () {
-        await this.pageObjects.categoriesPage.clickAndWaitForNavigation(this.pageObjects.categoriesPage.addNewCategoryLink);
+        await this.pageObjects.categoriesPage.clickAndWaitForNavigation(
+          this.pageObjects.categoriesPage.addNewCategoryLink);
         const pageTitle = await this.pageObjects.addCategoryPage.getPageTitle();
         await expect(pageTitle).to.contains(this.pageObjects.addCategoryPage.pageTitleCreate);
       });
