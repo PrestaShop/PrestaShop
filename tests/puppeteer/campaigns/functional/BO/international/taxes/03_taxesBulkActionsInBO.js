@@ -46,7 +46,8 @@ describe('Create Taxes, Then disable / Enable and Delete with Bulk actions', asy
   it('should go to Taxes page', async function () {
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.internationalParentLink,
-      this.pageObjects.boBasePage.taxesLink);
+      this.pageObjects.boBasePage.taxesLink,
+    );
     const pageTitle = await this.pageObjects.taxesPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.taxesPage.pageTitle);
   });
@@ -55,7 +56,8 @@ describe('Create Taxes, Then disable / Enable and Delete with Bulk actions', asy
       await this.pageObjects.taxesPage.resetFilter();
     }
     numberOfTaxes = await this.pageObjects.taxesPage.getNumberFromText(
-      this.pageObjects.taxesPage.gridHeaderTitle);
+      this.pageObjects.taxesPage.gridHeaderTitle,
+    );
     await expect(numberOfTaxes).to.be.above(0);
   });
   // 1 : Create 2 taxes with data from faker
@@ -69,7 +71,8 @@ describe('Create Taxes, Then disable / Enable and Delete with Bulk actions', asy
       const textResult = await this.pageObjects.addTaxPage.createEditTax(firstTaxData);
       await expect(textResult).to.equal(this.pageObjects.taxesPage.successfulCreationMessage);
       const numberOfTaxesAfterCreation = await this.pageObjects.taxesPage.getNumberFromText(
-        this.pageObjects.taxesPage.gridHeaderTitle);
+        this.pageObjects.taxesPage.gridHeaderTitle,
+      );
       await expect(numberOfTaxesAfterCreation).to.be.equal(numberOfTaxes + 1);
     });
     it('should go to add new tax page', async function () {
@@ -81,7 +84,8 @@ describe('Create Taxes, Then disable / Enable and Delete with Bulk actions', asy
       const textResult = await this.pageObjects.addTaxPage.createEditTax(secondTaxData);
       await expect(textResult).to.equal(this.pageObjects.taxesPage.successfulCreationMessage);
       const numberOfTaxesAfterCreation = await this.pageObjects.taxesPage.getNumberFromText(
-        this.pageObjects.taxesPage.gridHeaderTitle);
+        this.pageObjects.taxesPage.gridHeaderTitle,
+      );
       await expect(numberOfTaxesAfterCreation).to.be.equal(numberOfTaxes + 2);
     });
   });
@@ -102,7 +106,8 @@ describe('Create Taxes, Then disable / Enable and Delete with Bulk actions', asy
       const disableTextResult = await this.pageObjects.taxesPage.changeTaxesEnabledColumnBulkActions(false);
       await expect(disableTextResult).to.be.equal(this.pageObjects.taxesPage.successfulUpdateStatusMessage);
       const numberOfTaxesInGrid = await this.pageObjects.taxesPage.getNumberFromText(
-        this.pageObjects.taxesPage.gridHeaderTitle);
+        this.pageObjects.taxesPage.gridHeaderTitle,
+      );
       await expect(numberOfTaxesInGrid).to.be.at.most(numberOfTaxes);
       /* eslint-disable no-await-in-loop */
       for (let i = 1; i <= numberOfTaxesInGrid; i++) {
@@ -117,7 +122,8 @@ describe('Create Taxes, Then disable / Enable and Delete with Bulk actions', asy
       const enableTextResult = await this.pageObjects.taxesPage.changeTaxesEnabledColumnBulkActions(true);
       await expect(enableTextResult).to.be.equal(this.pageObjects.taxesPage.successfulUpdateStatusMessage);
       const numberOfTaxesInGrid = await this.pageObjects.taxesPage.getNumberFromText(
-        this.pageObjects.taxesPage.gridHeaderTitle);
+        this.pageObjects.taxesPage.gridHeaderTitle,
+      );
       await expect(numberOfTaxesInGrid).to.be.at.most(numberOfTaxes);
       /* eslint-disable no-await-in-loop */
       for (let i = 1; i <= numberOfTaxesInGrid; i++) {
@@ -133,7 +139,8 @@ describe('Create Taxes, Then disable / Enable and Delete with Bulk actions', asy
         await this.pageObjects.taxesPage.resetFilter();
       }
       const numberOfTaxesAfterReset = await this.pageObjects.taxesPage.getNumberFromText(
-        this.pageObjects.taxesPage.gridHeaderTitle);
+        this.pageObjects.taxesPage.gridHeaderTitle,
+      );
       await expect(numberOfTaxesAfterReset).to.be.equal(numberOfTaxes + 2);
     });
   });
@@ -160,7 +167,8 @@ describe('Create Taxes, Then disable / Enable and Delete with Bulk actions', asy
         await this.pageObjects.taxesPage.resetFilter();
       }
       const numberOfTaxesAfterReset = await this.pageObjects.taxesPage.getNumberFromText(
-        this.pageObjects.taxesPage.gridHeaderTitle);
+        this.pageObjects.taxesPage.gridHeaderTitle,
+      );
       await expect(numberOfTaxesAfterReset).to.be.equal(numberOfTaxes);
     });
   });

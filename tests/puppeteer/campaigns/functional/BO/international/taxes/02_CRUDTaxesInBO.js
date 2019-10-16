@@ -45,7 +45,8 @@ describe('Create, Update and Delete Tax in BO', async () => {
   it('should go to Taxes page', async function () {
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.internationalParentLink,
-      this.pageObjects.boBasePage.taxesLink);
+      this.pageObjects.boBasePage.taxesLink,
+    );
     const pageTitle = await this.pageObjects.taxesPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.taxesPage.pageTitle);
   });
@@ -54,7 +55,8 @@ describe('Create, Update and Delete Tax in BO', async () => {
       await this.pageObjects.taxesPage.resetFilter();
     }
     numberOfTaxes = await this.pageObjects.taxesPage.getNumberFromText(
-      this.pageObjects.taxesPage.gridHeaderTitle);
+      this.pageObjects.taxesPage.gridHeaderTitle,
+    );
     await expect(numberOfTaxes).to.be.above(0);
   });
   // 1 : Create tax with data generated from faker
@@ -68,7 +70,8 @@ describe('Create, Update and Delete Tax in BO', async () => {
       const textResult = await this.pageObjects.addTaxPage.createEditTax(createTaxData);
       await expect(textResult).to.equal(this.pageObjects.addTaxPage.successfulCreationMessage);
       const numberOfTaxesAfterCreation = await this.pageObjects.addTaxPage.getNumberFromText(
-        this.pageObjects.taxesPage.gridHeaderTitle);
+        this.pageObjects.taxesPage.gridHeaderTitle,
+      );
       await expect(numberOfTaxesAfterCreation).to.be.equal(numberOfTaxes + 1);
     });
   });
@@ -77,7 +80,8 @@ describe('Create, Update and Delete Tax in BO', async () => {
     it('should go to tax page', async function () {
       await this.pageObjects.boBasePage.goToSubMenu(
         this.pageObjects.boBasePage.internationalParentLink,
-        this.pageObjects.boBasePage.taxesLink);
+        this.pageObjects.boBasePage.taxesLink,
+      );
       const pageTitle = await this.pageObjects.taxesPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.taxesPage.pageTitle);
     });
@@ -113,7 +117,8 @@ describe('Create, Update and Delete Tax in BO', async () => {
       await expect(textResult).to.equal(this.pageObjects.taxesPage.successfulUpdateMessage);
       await this.pageObjects.taxesPage.resetFilter();
       const numberOfTaxesAfterUpdate = await this.pageObjects.taxesPage.getNumberFromText(
-        this.pageObjects.taxesPage.gridHeaderTitle);
+        this.pageObjects.taxesPage.gridHeaderTitle,
+      );
       await expect(numberOfTaxesAfterUpdate).to.be.equal(numberOfTaxes + 1);
     });
   });
@@ -122,7 +127,8 @@ describe('Create, Update and Delete Tax in BO', async () => {
     it('should go to Taxes page', async function () {
       await this.pageObjects.boBasePage.goToSubMenu(
         this.pageObjects.boBasePage.internationalParentLink,
-        this.pageObjects.boBasePage.taxesLink);
+        this.pageObjects.boBasePage.taxesLink,
+      );
       const pageTitle = await this.pageObjects.taxesPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.taxesPage.pageTitle);
     });
@@ -153,7 +159,8 @@ describe('Create, Update and Delete Tax in BO', async () => {
       await expect(textResult).to.equal(this.pageObjects.taxesPage.successfulDeleteMessage);
       await this.pageObjects.taxesPage.resetFilter();
       const numberOfTaxesAfterDelete = await this.pageObjects.taxesPage.getNumberFromText(
-        this.pageObjects.taxesPage.gridHeaderTitle);
+        this.pageObjects.taxesPage.gridHeaderTitle,
+      );
       await expect(numberOfTaxesAfterDelete).to.be.equal(numberOfTaxes);
     });
   });
