@@ -534,7 +534,7 @@ class OrderController extends FrameworkBundleAdminController
     private function getErrorMessages(OrderException $e)
     {
         return [
-            CannotEditDeliveredOrderProductException::class => $this->trans('Cannot edit product for delivered order', 'Admin.Orderscustomers.Notification'),
+            CannotEditDeliveredOrderProductException::class => $this->trans('You cannot edit the cart once the order delivered', 'Admin.Orderscustomers.Notification'),
             OrderNotFoundException::class => $e instanceof OrderNotFoundException ?
                 $this->trans(
                     'Order #%d cannot be loaded',
