@@ -1803,7 +1803,7 @@ class CartCore extends ObjectModel
                 WHERE `id_customization` = ' . (int) $id_customization);
 
             // Delete customization picture if necessary
-            if (isset($cust_data['type']) && $cust_data['type'] == Product::CUSTOMIZE_FILE) {
+            if (isset($cust_data['type']) && $cust_data['type'] == Product::CUSTOMIZE_FILE && file_exists(_PS_UPLOAD_DIR_ . $cust_data['value'])) {
                 $result &= (@unlink(_PS_UPLOAD_DIR_ . $cust_data['value']) && @unlink(_PS_UPLOAD_DIR_ . $cust_data['value'] . '_small'));
             }
 
@@ -4169,7 +4169,7 @@ class CartCore extends ObjectModel
         );
 
         // Delete customization picture if necessary
-        if ($cust_data['type'] == Product::CUSTOMIZE_FILE) {
+        if ($cust_data['type'] == Product::CUSTOMIZE_FILE && file_exists(_PS_UPLOAD_DIR_ . $cust_data['value'])) {
             $result &= (@unlink(_PS_UPLOAD_DIR_ . $cust_data['value']) && @unlink(_PS_UPLOAD_DIR_ . $cust_data['value'] . '_small'));
         }
 
