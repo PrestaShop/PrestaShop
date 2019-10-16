@@ -58,7 +58,7 @@ describe('Create Taxes, Then disable / Enable and Delete with Bulk actions', asy
       this.pageObjects.taxesPage.gridHeaderTitle);
     await expect(numberOfTaxes).to.be.above(0);
   });
-
+  // 1 : Create 2 taxes with data from faker
   describe('Create 2 Taxes in BO', async () => {
     it('should go to add new tax page page', async function () {
       await this.pageObjects.taxesPage.goToAddNewTaxPage();
@@ -85,6 +85,7 @@ describe('Create Taxes, Then disable / Enable and Delete with Bulk actions', asy
       await expect(numberOfTaxesAfterCreation).to.be.equal(numberOfTaxes + 2);
     });
   });
+  // 2 : Enable/Disable with bulk actions
   describe('Enable and Disable Taxes with Bulk Actions', async () => {
     it('should filter list by name', async function () {
       await this.pageObjects.taxesPage.filterTaxes(
@@ -136,6 +137,7 @@ describe('Create Taxes, Then disable / Enable and Delete with Bulk actions', asy
       await expect(numberOfTaxesAfterReset).to.be.equal(numberOfTaxes + 2);
     });
   });
+  // 3 : Delete with bulk actions
   describe('Delete Taxes with Bulk Actions', async () => {
     it('should filter list by name', async function () {
       await this.pageObjects.taxesPage.filterTaxes(

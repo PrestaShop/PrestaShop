@@ -52,7 +52,7 @@ describe('Filter And Quick Edit taxes', async () => {
       this.pageObjects.taxesPage.gridHeaderTitle);
     await expect(numberOfTaxes).to.be.above(0);
   });
-
+  // 1 : Filter Taxes
   describe('Filter Taxes', async () => {
     it('should filter by Id \'1\'', async function () {
       await this.pageObjects.taxesPage.filterTaxes('input', 'id_tax', DefaultFrTax.id);
@@ -135,7 +135,7 @@ describe('Filter And Quick Edit taxes', async () => {
       await expect(numberOfTaxesAfterReset).to.equal(numberOfTaxes);
     });
   });
-
+  // 2 : Edit taxes in list
   describe('Quick Edit Taxes', async () => {
     // Steps
     it('should filter by name', async function () {

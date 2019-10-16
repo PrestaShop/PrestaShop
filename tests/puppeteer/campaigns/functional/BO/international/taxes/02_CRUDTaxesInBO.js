@@ -57,7 +57,7 @@ describe('Create, Update and Delete Tax in BO', async () => {
       this.pageObjects.taxesPage.gridHeaderTitle);
     await expect(numberOfTaxes).to.be.above(0);
   });
-
+  // 1 : Create tax with data generated from faker
   describe('Create tax in BO', async () => {
     it('should go to add new tax page', async function () {
       await this.pageObjects.taxesPage.goToAddNewTaxPage();
@@ -72,6 +72,7 @@ describe('Create, Update and Delete Tax in BO', async () => {
       await expect(numberOfTaxesAfterCreation).to.be.equal(numberOfTaxes + 1);
     });
   });
+  // 2 : Update Tax with data generated with faker
   describe('Update Tax Created', async () => {
     it('should go to tax page', async function () {
       await this.pageObjects.boBasePage.goToSubMenu(
@@ -116,6 +117,7 @@ describe('Create, Update and Delete Tax in BO', async () => {
       await expect(numberOfTaxesAfterUpdate).to.be.equal(numberOfTaxes + 1);
     });
   });
+  // 3 : Delete Tax created from dropdown Menu
   describe('Delete Tax', async () => {
     it('should go to Taxes page', async function () {
       await this.pageObjects.boBasePage.goToSubMenu(
