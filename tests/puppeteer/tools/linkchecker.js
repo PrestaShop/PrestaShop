@@ -12,15 +12,22 @@ let output = {
   endDate : null,
   urls : []
 };
+let outputEntry = {
+  name : '',
+  url : '',
+  passed : [],
+  failed: []
+};
 
 const run = async () => {
+  console.log(global.BROWSER_CONFIG);
   const browser = await puppeteer.launch(global.BROWSER_CONFIG);
   const page = await browser.newPage();
-  await page.setRequestInterception(true);
-  await page.on('request', (request) => {
+  //await page.setRequestInterception(true);
+  /*page.on('request', (request) => {
     request.continue();
   });
-  await page.on('response', async (response) => {
+  page.on('response', async (response) => {
     const request = response.request();
     const url = request.url();
     const status = response.status().toString();
@@ -36,37 +43,46 @@ const run = async () => {
         status : status
       });
     }
-  });
+  });*/
 
   // Start testing BO
   console.log('Begin testing');
 
   let count = 1;
-  urlsList.forEach(function(section) {
-    console.log(' - Section '+section.description);
-    //crawl every page
-    let pagesToCrawl = section.urls;
-    pagesToCrawl.forEach(async function (pageToCrawl) {
-      pageToCrawl.urlPrefix = section.urlPrefix.replace('URL_BO', global.BO.URL).replace('URL_FO', global.FO.URL);
-      pageToCrawl.sectionName = section.name;
-      pageToCrawl.sectionDescription = section.description;
-      console.log(`Crawling ${pageToCrawl.name} (${count}/${pagesToCrawl.length})`);
+  (async function() {
+    urlsList.forEach(function(section) {
+      (async function() {
+        console.log(' - Section '+section.description);
+        //crawl every page
+        let pagesToCrawl = section.urls;
+        pagesToCrawl.forEach(function(pageToCrawl) {
+          pageToCrawl.urlPrefix = section.urlPrefix.replace('URL_BO', global.INFORMATIONS.URL_BO).replace('URL_FO', global.INFORMATIONS.URL_FO);
+          pageToCrawl.sectionName = section.name;
+          pageToCrawl.sectionDescription = section.description;
+          console.log(`Crawling ${pageToCrawl.name} (${count}/${pagesToCrawl.length})`);
 
-      let outputEntry = {
-        name : pageToCrawl.name,
-        url : `${pageToCrawl.urlPrefix}${pageToCrawl.url}`,
-        passed : [],
-        failed: []
-      };
-
-      await Promise.all([
-        page.goto(`${pageToCrawl.urlPrefix}${pageToCrawl.url}`),
-        page.waitForNavigation({waitUntil: 'networkidle0'})
-      ]);
-      await output.urls.push(outputEntry);
-      count += 1;
+          outputEntry = {
+            name : pageToCrawl.name,
+            url : `${pageToCrawl.urlPrefix}${pageToCrawl.url}`,
+            passed : [],
+            failed: []
+          };
+          (async function () {
+            await Promise.all([
+              page.goto(`${pageToCrawl.urlPrefix}${pageToCrawl.url}`),
+              page.waitForNavigation({waitUntil: 'networkidle0'})
+            ]);
+            if (typeof(pageToCrawl.customAction) !== 'undefined') {
+              await pageToCrawl.customAction({page, infos: global.INFORMATIONS});
+            }
+            await output.urls.push(outputEntry);
+          })();
+          count += 1;
+        });
+      })();
     });
-  });
+  })();
+
 
   output.endDate = new Date().toISOString();
 

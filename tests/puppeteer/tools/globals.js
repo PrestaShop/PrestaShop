@@ -1,15 +1,13 @@
-global.FO = {
-  URL: process.env.URL_FO || 'http://localhost/prestashop/',
-  EMAIL: process.env.CLIENT_LOGIN || 'pub@prestashop.com',
-  PASSWD: process.env.CLIENT_PASSWD || '123456789',
-};
-global.BO = {
-  URL: process.env.URL_BO || `${global.FO.URL}admin-dev/`,
+global.INFORMATIONS = {
+  URL_FO: process.env.URL_FO || 'http://localhost/prestashop/',
+  EMAIL_CLIENT: process.env.CLIENT_LOGIN || 'pub@prestashop.com',
+  PASSWD_CLIENT: process.env.CLIENT_PASSWD || '123456789',
+  URL_BO: process.env.URL_BO || `http://localhost/prestashop/admin-dev/`,
   EMAIL: process.env.LOGIN || 'demo@prestashop.com',
   PASSWD: process.env.PASSWD || 'prestashop_demo',
 };
 global.BROWSER_CONFIG = {
-  headless: JSON.parse(process.env.HEADLESS || true),
+  headless: JSON.parse(process.env.HEADLESS || false),
   timeout: 0,
   slowMo: 25,
   args: ['--start-maximized', '--no-sandbox', '--lang=en-GB'],
