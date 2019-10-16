@@ -66,12 +66,7 @@ $(() => {
 
     $(OrderViewPageMap.privateNoteInput).on('input', (event) => {
       const note = $(event.currentTarget).val();
-
-      if (note) {
-        $submitBtn.attr('disabled', false);
-      } else {
-        $submitBtn.attr('disabled', true);
-      }
+      $submitBtn.attr('disabled', !note);
     });
   }
 });
