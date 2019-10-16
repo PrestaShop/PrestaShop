@@ -4670,7 +4670,7 @@ class AdminImportControllerCore extends AdminController
     {
         $iso_lang = trim(Tools::getValue('iso_lang'));
         setlocale(LC_COLLATE, strtolower($iso_lang) . '_' . strtoupper($iso_lang) . '.UTF-8');
-        setlocale(LC_CTYPE, strtolower($iso_lang) . '_' . strtoupper($iso_lang) . '.UTF-8');
+        setlocale(LC_CTYPE, 'en_US.UTF-8', 'en_US.utf8');
     }
 
     protected function addProductWarning($product_name, $product_id = null, $message = '')
