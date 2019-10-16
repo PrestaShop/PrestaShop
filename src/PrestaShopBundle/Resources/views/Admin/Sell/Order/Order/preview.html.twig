@@ -94,7 +94,7 @@
         </div>
       </div>
     </div>
-    <div class="offset-2 col-6 ">
+    <div class="offset-1 col-7">
       <div class="table-responsive">
         <table class="table product table-borderless border-bottom-0">
           <thead>
@@ -106,12 +106,13 @@
             {% endif %}
 
             <th>{{ 'Product'|trans({}, 'Admin.Global') }}</th>
-            <th>
-              {{ 'Base price'|trans({}, 'Admin.Global') }}
-              <small>{{ taxInclusion }}</small>
+            <th>{{ 'Reference'|trans({}, 'Admin.Global') }}</th>
+            <th>{{ 'Stock location'|trans({}, 'Admin.Global') }}</th>
+            <th class="text-center">
+              {{ 'Tax'|trans({}, 'Admin.Global') }}
             </th>
-            <th>{{ 'Quantity'|trans({}, 'Admin.Global') }}</th>
-            <th>
+            <th class="text-center">{{ 'Quantity'|trans({}, 'Admin.Global') }}</th>
+            <th class="text-center">
               {{ 'Total'|trans({}, 'Admin.Global') }}
               <small>{{ taxInclusion }}</small>
             </th>
@@ -122,9 +123,13 @@
             {% if loop.index <= productsPreviewLimit %}
               <tr>
                 <td class="p-1">{{ productDetail.name }}</td>
-                <td class="p-1">{{ productDetail.unitPrice }}</td>
-                <td class="p-1">{{ productDetail.quantity }}</td>
-                <td class="p-1">{{ productDetail.totalPrice }}</td>
+                <td class="p-1">{{ productDetail.reference }}</td>
+                <td class="p-1">
+                  {% if productDetail.location is not empty %}{{ productDetail.location }}{% else %}-{% endif %}
+                </td>
+                <td class="p-1 text-center">{{ productDetail.totalTax }}</td>
+                <td class="p-1 text-center">{{ productDetail.quantity }}</td>
+                <td class="p-1 text-center">{{ productDetail.totalPrice }}</td>
               </tr>
             {% endif %}
           {% endfor %}

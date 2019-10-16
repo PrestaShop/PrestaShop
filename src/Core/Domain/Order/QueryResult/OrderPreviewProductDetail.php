@@ -52,21 +52,45 @@ class OrderPreviewProductDetail
     private $totalPrice;
 
     /**
+     * @var string
+     */
+    private $totalTax;
+
+    /**
+     * @var string
+     */
+    private $reference;
+
+    /**
+     * @var string
+     */
+    private $location;
+
+    /**
      * @param string $name
+     * @param string $reference
+     * @param string $location
      * @param int $quantity
      * @param string $unitPrice
      * @param string $totalPrice
+     * @param string $totalTax
      */
     public function __construct(
         string $name,
+        string $reference,
+        string $location,
         int $quantity,
         string $unitPrice,
-        string $totalPrice
+        string $totalPrice,
+        string $totalTax
     ) {
         $this->name = $name;
         $this->quantity = $quantity;
         $this->unitPrice = $unitPrice;
         $this->totalPrice = $totalPrice;
+        $this->totalTax = $totalTax;
+        $this->reference = $reference;
+        $this->location = $location;
     }
 
     /**
@@ -75,6 +99,14 @@ class OrderPreviewProductDetail
     public function getName(): string
     {
         return $this->name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getReference(): string
+    {
+        return $this->reference;
     }
 
     /**
@@ -99,5 +131,21 @@ class OrderPreviewProductDetail
     public function getQuantity(): int
     {
         return $this->quantity;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTotalTax(): string
+    {
+        return $this->totalTax;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLocation(): string
+    {
+        return $this->location;
     }
 }
