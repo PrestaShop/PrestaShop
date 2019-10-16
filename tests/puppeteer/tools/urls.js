@@ -1,5 +1,5 @@
 module.exports = [
-  /* {
+   {
     name:'BO',
     urlPrefix: 'URL_BO', //replaced
     description: 'Parcours du Back Office',
@@ -144,7 +144,7 @@ module.exports = [
       {name: 'BO_webservice', url: 'index.php/configure/advanced/webservice-keys/'},
       {name: 'BO_add_webservice_key', url: 'index.php/configure/advanced/webservice-keys/new'},
     ]
-  }, */
+  },
   {
     name: 'FO',
     urlPrefix: 'URL_FO',
