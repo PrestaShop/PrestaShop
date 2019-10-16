@@ -36,6 +36,7 @@ import {EventEmitter} from '../../../components/event-emitter';
 import CartEditor from './cart-editor';
 import eventMap from './event-map';
 import CartRuleManager from './cart-rule-manager';
+import OrderProductComponent from './order-product-component';
 
 const $ = window.$;
 
@@ -57,6 +58,7 @@ export default class CreateOrderPage {
     this.router = new Router();
     this.cartEditor = new CartEditor();
     this.cartRuleManager = new CartRuleManager();
+    this.orderProducts = new OrderProductComponent();
 
     return {
       listenForCustomerSearch: () => this._handleCustomerSearch(),
