@@ -1,4 +1,4 @@
-{#**
+/**
  * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,19 +21,27 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
+/**
+ * This formatter is used by VueI18n, the basic format for variables looks
+ * like 'Hi {name}' or 'Hi {0}' Sadly it doesn't match the PrestaShop usual
+ * placeholders format.
+ * So this custom formatter allows us to simple replace in order to use formats
+ * like 'Hi %name%' the parameters then should be an object like {'%name%': 'John'}
+ */
+export default class ReplaceFormatter {
+  /**
+   * @param message {string}
+   * @param values {object}
+   *
+   * @returns {array}
+   */
+  interpolate (message, values) {
+    for (let param in values) {
+      message = message.replace(param, values[param]);
+    }
 
-{% block content %}
-  <div class="row justify-content-center">
-    <div class="col">
-      {{ include('@PrestaShop/Admin/Improve/International/Currency/Blocks/form.html.twig', {'currencyForm': currencyForm, 'languages': languages}) }}
-    </div>
-  </div>
-{% endblock %}
-
-{% block javascripts %}
-  {{ parent() }}
-  <script src="{{ asset('themes/new-theme/public/currency_form.bundle.js') }}"></script>
-{% endblock %}
+    return [message];
+  }
+}

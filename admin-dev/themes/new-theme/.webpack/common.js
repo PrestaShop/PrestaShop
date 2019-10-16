@@ -114,6 +114,7 @@ module.exports = {
       '@components': path.resolve(__dirname, '../js/components'),
       '@scss': path.resolve(__dirname, '../scss'),
       '@node_modules': path.resolve(__dirname, '../node_modules'),
+      '@vue': path.resolve(__dirname, '../js/vue'),
     },
   },
   module: {
@@ -126,7 +127,11 @@ module.exports = {
           options: {
             presets: [
               ['es2015', {modules: false}],
+              ["env", {
+                "useBuiltIns": "usage"
+              }]
             ],
+            "plugins": ["transform-runtime"]
           },
         }],
       },

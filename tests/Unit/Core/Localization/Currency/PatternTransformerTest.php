@@ -123,4 +123,64 @@ class PatternTransformerTest extends TestCase
             ],
         ];
     }
+
+    /**
+     * @param string $expectedTransformationType
+     * @param array $patterns
+     *
+     * @dataProvider getTransformationTypes
+     */
+    public function testGetTransformationType(string $expectedTransformationType, array $patterns)
+    {
+        $transformer = new PatternTransformer();
+        foreach ($patterns as $pattern) {
+            $transformationType = $transformer->getTransformationType($pattern);
+            $this->assertEquals($expectedTransformationType, $transformationType, 'Invalid pattern match ' . $pattern);
+        }
+    }
+
+    /**
+     * @return array
+     */
+    public function getTransformationTypes()
+    {
+        return [
+            PatternTransformer::TYPE_LEFT_SYMBOL_WITH_SPACE => [
+                PatternTransformer::TYPE_LEFT_SYMBOL_WITH_SPACE,
+                [
+                    "¤\u{00A0}#,##0.00",
+                    "¤\u{00A0}#,##,##0.00",
+                    "¤\u{00A0}#,##0.00;¤\u{00A0}-#,##0.00",
+                    "\u{200F}¤\u{00A0}#,##0.00;\u{200F}¤\u{00A0}-#,##0.00",
+                ],
+            ],
+            PatternTransformer::TYPE_LEFT_SYMBOL_WITHOUT_SPACE => [
+                PatternTransformer::TYPE_LEFT_SYMBOL_WITHOUT_SPACE,
+                [
+                    '¤#,##0.00',
+                    '¤#,##,##0.00',
+                    '¤#,##0.00;¤-#,##0.00',
+                    "\u{200F}¤#,##0.00;\u{200F}¤-#,##0.00",
+                ],
+            ],
+            PatternTransformer::TYPE_RIGHT_SYMBOL_WITH_SPACE => [
+                PatternTransformer::TYPE_RIGHT_SYMBOL_WITH_SPACE,
+                [
+                    "#,##0.00\u{a0}¤",
+                    "#,##,##0.00\u{00A0}¤",
+                    "#,##0.00\u{00A0}¤;-#,##0.00\u{00A0}¤",
+                    "\u{200F}#,##0.00\u{00A0}¤;\u{200F}-#,##0.00\u{00A0}¤",
+                ],
+            ],
+            PatternTransformer::TYPE_RIGHT_SYMBOL_WITHOUT_SPACE => [
+                PatternTransformer::TYPE_RIGHT_SYMBOL_WITHOUT_SPACE,
+                [
+                    '#,##0.00¤',
+                    '#,##,##0.00¤',
+                    '#,##0.00¤;-#,##0.00¤',
+                    "\u{200F}#,##0.00¤;\u{200F}-#,##0.00¤",
+                ],
+            ],
+        ];
+    }
 }
