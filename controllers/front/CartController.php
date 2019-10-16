@@ -98,7 +98,7 @@ class CartControllerCore extends FrontController
             Tools::redirect('index.php');
         }
 
-        /**
+        /*
          * Check that minimal quantity conditions are respected for each product in the cart
          * (this is to be applied only on page load, not for ajax calls)
          */
