@@ -45,27 +45,36 @@ class OrderPreview
      * @var OrderPreviewProductDetail[]
      */
     private $productDetails;
+
     /**
      * @var bool
      */
     private $taxIncluded;
 
     /**
+     * @var bool
+     */
+    private $isVirtual;
+
+    /**
      * @param OrderPreviewInvoiceDetails $invoiceDetails
      * @param OrderPreviewShippingDetails $shippingDetails
      * @param array $productDetails
+     * @param bool $isVirtual
      * @param bool $taxIncluded
      */
     public function __construct(
         OrderPreviewInvoiceDetails $invoiceDetails,
         OrderPreviewShippingDetails $shippingDetails,
         array $productDetails,
+        bool $isVirtual,
         bool $taxIncluded
     ) {
         $this->invoiceDetails = $invoiceDetails;
         $this->shippingDetails = $shippingDetails;
         $this->productDetails = $productDetails;
         $this->taxIncluded = $taxIncluded;
+        $this->isVirtual = $isVirtual;
     }
 
     /**
@@ -98,5 +107,13 @@ class OrderPreview
     public function isTaxIncluded(): bool
     {
         return $this->taxIncluded;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isVirtual(): bool
+    {
+        return $this->isVirtual;
     }
 }

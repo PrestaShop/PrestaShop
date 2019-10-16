@@ -82,6 +82,7 @@ final class GetOrderPreviewHandler implements GetOrderPreviewHandlerInterface
             $this->getInvoiceDetails($order),
             $this->getShippingDetails($order),
             $this->getProductDetails($order),
+            $order->isVirtual(),
             PS_TAX_INC === $order->getTaxCalculationMethod()
         );
     }
@@ -165,7 +166,7 @@ final class GetOrderPreviewHandler implements GetOrderPreviewHandlerInterface
     /**
      * @param Order $order
      *
-     * @return array
+     * @return OrderPreviewProductDetail[]
      */
     private function getProductDetails(Order $order): array
     {
