@@ -91,7 +91,7 @@ class CartInformation
         int $langId,
         array $cartRules,
         array $addresses,
-        $shipping = null,
+        CartShipping $shipping = null,
         array $summary = null
     ) {
         $this->cartId = $cartId;

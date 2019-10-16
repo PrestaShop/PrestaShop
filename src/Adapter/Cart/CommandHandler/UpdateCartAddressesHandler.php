@@ -43,7 +43,7 @@ final class UpdateCartAddressesHandler extends AbstractCartHandler implements Up
     public function handle(UpdateCartAddressesCommand $command)
     {
         $cart = $this->getCart($command->getCartId());
-        $this->fetchCartWithCommandData($cart, $command);
+        $this->fillCartWithCommandData($cart, $command);
 
         if (false === $cart->update()) {
             throw new CartException(sprintf(
@@ -59,7 +59,7 @@ final class UpdateCartAddressesHandler extends AbstractCartHandler implements Up
      * @param Cart $cart
      * @param UpdateCartAddressesCommand $command
      */
-    private function fetchCartWithCommandData(Cart $cart, UpdateCartAddressesCommand $command): void
+    private function fillCartWithCommandData(Cart $cart, UpdateCartAddressesCommand $command): void
     {
         if ($command->getNewDeliveryAddressId()) {
             $cart->id_address_delivery = $command->getNewDeliveryAddressId()->getValue();
