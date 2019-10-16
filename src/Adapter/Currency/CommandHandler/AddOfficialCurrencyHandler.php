@@ -96,10 +96,14 @@ final class AddOfficialCurrencyHandler extends AbstractCurrencyHandler implement
             if (!empty($command->getLocalizedSymbols())) {
                 $entity->setLocalizedSymbols($command->getLocalizedSymbols());
             }
+            if (!empty($command->getLocalizedPatterns())) {
+                $entity->setLocalizedPatterns($command->getLocalizedPatterns());
+            }
 
             $this->refreshLocalizedData($entity);
 
-            if (false === $entity->add()) {
+            //IMPORTANT: specify that we want to save null values
+            if (false === $entity->add(true, true)) {
                 throw new CannotCreateCurrencyException('Failed to create new currency');
             }
 

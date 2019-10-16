@@ -100,6 +100,18 @@ class CurrencyData
      */
     protected $names;
 
+    /**
+     * Currency's patterns, by locale code.
+     *
+     * eg.: $patternsUSD = [
+     *     'fr-FR' => '#,##0.00 ¤',
+     *     'en-EN' => '¤#,##0.00',
+     * ]
+     *
+     * @var string[]
+     */
+    protected $patterns;
+
     public function overrideWith(CurrencyData $currencyData)
     {
         if ($currencyData->isActive() !== null) {
@@ -134,6 +146,13 @@ class CurrencyData
                 $this->names = [];
             }
             $this->names = array_merge($this->names, $currencyData->getNames());
+        }
+
+        if ($currencyData->getPatterns() !== null) {
+            if (null === $this->patterns) {
+                $this->patterns = [];
+            }
+            $this->patterns = array_merge($this->patterns, $currencyData->getPatterns());
         }
 
         return $this;
@@ -249,5 +268,21 @@ class CurrencyData
     public function setNames($names)
     {
         $this->names = $names;
+    }
+
+    /**
+     * @return string[]|null
+     */
+    public function getPatterns(): ?array
+    {
+        return $this->patterns;
+    }
+
+    /**
+     * @param string[] $patterns
+     */
+    public function setPatterns(array $patterns)
+    {
+        $this->patterns = $patterns;
     }
 }

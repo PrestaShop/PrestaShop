@@ -65,15 +65,7 @@ class Repository implements CurrencyRepositoryInterface
                 new LocalizedCurrencyId($currencyCode, $localeCode)
             );
 
-            $this->currencies[$currencyCode] = new Currency(
-                $data->isActive(),
-                $data->getConversionRate(),
-                $data->getIsoCode(),
-                $data->getNumericIsoCode(),
-                $data->getSymbols(),
-                $data->getPrecision(),
-                $data->getNames()
-            );
+            $this->currencies[$currencyCode] = $this->formatCurrency($data);
         }
 
         return $this->currencies[$currencyCode];
@@ -105,17 +97,28 @@ class Repository implements CurrencyRepositoryInterface
         $currencies = new CurrencyCollection();
         /** @var CurrencyData $currencyDatum */
         foreach ($currenciesData as $currencyDatum) {
-            $currencies->add(new Currency(
-                $currencyDatum->isActive(),
-                $currencyDatum->getConversionRate(),
-                $currencyDatum->getIsoCode(),
-                $currencyDatum->getNumericIsoCode(),
-                $currencyDatum->getSymbols(),
-                $currencyDatum->getPrecision(),
-                $currencyDatum->getNames()
-            ));
+            $currencies->add($this->formatCurrency($currencyDatum));
         }
 
         return $currencies;
+    }
+
+    /**
+     * @param CurrencyData $currencyData
+     *
+     * @return Currency
+     */
+    private function formatCurrency(CurrencyData $currencyData)
+    {
+        return new Currency(
+            $currencyData->isActive(),
+            $currencyData->getConversionRate(),
+            $currencyData->getIsoCode(),
+            $currencyData->getNumericIsoCode(),
+            $currencyData->getSymbols(),
+            $currencyData->getPrecision(),
+            $currencyData->getNames(),
+            $currencyData->getPatterns()
+        );
     }
 }

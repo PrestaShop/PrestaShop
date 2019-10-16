@@ -74,6 +74,11 @@ abstract class AddCurrencyCommand
     protected $shopIds = [];
 
     /**
+     * @var string[]
+     */
+    protected $localizedPatterns = [];
+
+    /**
      * @param string $isoCode
      * @param float $exchangeRate
      * @param bool $isEnabled
@@ -210,6 +215,26 @@ abstract class AddCurrencyCommand
     public function setShopIds(array $shopIds)
     {
         $this->shopIds = $shopIds;
+
+        return $this;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getLocalizedPatterns(): array
+    {
+        return $this->localizedPatterns;
+    }
+
+    /**
+     * @param string[] $localizedPatterns currency's localized patterns, indexed by language id
+     *
+     * @return $this
+     */
+    public function setLocalizedPatterns(array $localizedPatterns): AddCurrencyCommand
+    {
+        $this->localizedPatterns = $localizedPatterns;
 
         return $this;
     }

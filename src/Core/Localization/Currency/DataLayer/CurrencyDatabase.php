@@ -27,9 +27,11 @@
 
 namespace PrestaShop\PrestaShop\Core\Localization\Currency\DataLayer;
 
+use Language;
 use PrestaShop\PrestaShop\Core\Currency\CurrencyDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Data\Layer\AbstractDataLayer;
 use PrestaShop\PrestaShop\Core\Data\Layer\DataLayerException;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository as CldrLocaleRepository;
 use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyData;
 use PrestaShop\PrestaShop\Core\Localization\Currency\LocalizedCurrencyId;
 use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyDataLayerInterface;
@@ -42,11 +44,31 @@ use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
  */
 class CurrencyDatabase extends AbstractDataLayer implements CurrencyDataLayerInterface
 {
+    /**
+     * CLDR locale repository.
+     *
+     * Provides LocaleData objects
+     *
+     * @var CldrLocaleRepository
+     */
+    protected $cldrLocaleRepository;
+
+    /**
+     * @var CurrencyDataProviderInterface
+     */
     protected $dataProvider;
 
-    public function __construct(CurrencyDataProviderInterface $dataProvider)
-    {
+    /**
+     * @param CurrencyDataProviderInterface $dataProvider
+     * @param CldrLocaleRepository $cldrLocaleRepository
+     */
+    public function __construct(
+        CurrencyDataProviderInterface $dataProvider,
+        CldrLocaleRepository $cldrLocaleRepository
+    ) {
         $this->dataProvider = $dataProvider;
+        $this->cldrLocaleRepository = $cldrLocaleRepository;
+        $this->isWritable = false;
     }
 
     /**
@@ -95,12 +117,17 @@ class CurrencyDatabase extends AbstractDataLayer implements CurrencyDataLayerInt
         }
 
         $currencyData = new CurrencyData();
-
         $currencyData->setIsoCode($currencyEntity->iso_code);
-        $currencyData->setNames([$localeCode => $currencyEntity->name]);
         $currencyData->setNumericIsoCode($currencyEntity->numeric_iso_code);
-        $currencyData->setSymbols([$localeCode => $currencyEntity->symbol]);
         $currencyData->setPrecision($currencyEntity->precision);
+        $currencyData->setNames([$localeCode => $currencyEntity->name]);
+        $currencyData->setSymbols([$localeCode => $currencyEntity->symbol]);
+
+        $idLang = Language::getIdByLocale($localeCode, true);
+        $currencyPattern = $currencyEntity->getPattern($idLang);
+        if (!empty($currencyPattern)) {
+            $currencyData->setPatterns([$localeCode => $currencyEntity->getPattern($idLang)]);
+        }
 
         return $currencyData;
     }
