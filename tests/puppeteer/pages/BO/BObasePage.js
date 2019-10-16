@@ -1,5 +1,7 @@
 require('module-alias/register');
 const CommonPage = require('@pages/commonPage');
+const fs = require('fs');
+const imgGen = require('js-image-generator');
 
 module.exports = class BOBasePage extends CommonPage {
   constructor(page) {
@@ -140,8 +142,28 @@ module.exports = class BOBasePage extends CommonPage {
     }
   }
 
-  async uploadFile(selector, fileName) {
+  /**
+   * Generate an image then upload it
+   * @param selector
+   * @param imageName
+   * @return {Promise<void>}
+   */
+  async GenerateAndUploadImage(selector, imageName) {
+    await imgGen.generateImage(200, 200, 1, (err, image) => {
+      fs.writeFileSync(imageName, image.data);
+    });
     const input = await this.page.$(selector);
-    await input.uploadFile(fileName);
+    await input.uploadFile(imageName);
+  }
+
+  /**
+   * Delete a file from the project
+   * @param file
+   * @param wait
+   * @return {Promise<void>}
+   */
+  async deleteFile(file, wait = 0) {
+    fs.unlinkSync(file);
+    await this.page.waitFor(wait);
   }
 };

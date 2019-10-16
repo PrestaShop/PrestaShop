@@ -200,12 +200,13 @@ module.exports = class CommonPage {
   }
 
   /**
-   * Go to Page
+   * Go to Page and wait for navigation
+   * @param selector
    * @return {Promise<void>}
    */
-  async goToPage(Selector) {
+  async clickAndWaitForNavigation(selector) {
     await Promise.all([
-      this.page.click(Selector),
+      this.page.click(selector),
       this.page.waitForNavigation({waitUntil: 'networkidle0'}),
     ]);
   }

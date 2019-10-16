@@ -12,8 +12,6 @@ module.exports = class AddCategory extends BOBasePage {
     this.displayed = 'label[for=\'category_active_%ID\']';
     this.descriptionIframe = '#category_description_1_ifr';
     this.categoryCoverImage = '#category_cover_image';
-    this.categoryThumbnail = '#category_thumbnail_image';
-    this.menuThumbnail = '#category_menu_thumbnail_images';
     this.metaTitleInput = '#category_meta_title_1';
     this.metaDescriptionTextarea = '#category_meta_description_1';
     this.selectAllGroupAccessCheckbox = '.choice-table .table-bordered label .md-checkbox-control';
@@ -33,9 +31,7 @@ module.exports = class AddCategory extends BOBasePage {
     await this.setValue(this.nameInput, categoryData.name);
     if (categoryData.displayed === 'No') await this.page.click(this.displayed.replace('%ID', '0'));
     await this.setValueOnTinymceInput(this.descriptionIframe, categoryData.description);
-    // await this.uploadFile(this.categoryCoverImage, categoryData.coverImage);
-    // await this.uploadFile(this.categoryThumbnail, categoryData.coverImage);
-    // await this.uploadFile(this.menuThumbnail, categoryData.coverImage);
+    await this.GenerateAndUploadImage(this.categoryCoverImage, `${categoryData.name}.jpg`);
     await this.setValue(this.metaTitleInput, categoryData.metaTitle);
     await this.setValue(this.metaDescriptionTextarea, categoryData.metaDescription);
     await this.page.click(this.selectAllGroupAccessCheckbox);

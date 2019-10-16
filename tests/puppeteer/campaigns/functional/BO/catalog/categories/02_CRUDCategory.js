@@ -46,7 +46,7 @@ describe('Create, Read, Update and Delete Category', async () => {
   after(async () => {
     await helper.closeBrowser(browser);
   });
-  // Login into BO and go to Categories page
+  // Login into BO and go to categories page
   loginCommon.loginBO();
   it('should go to "Catalog>Categories" page', async function () {
     await this.pageObjects.boBasePage.goToSubMenu(
@@ -55,7 +55,7 @@ describe('Create, Read, Update and Delete Category', async () => {
     const pageTitle = await this.pageObjects.categoriesPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.categoriesPage.pageTitle);
   });
-  it('should reset all filters and get Number of Categories in BO', async function () {
+  it('should reset all filters and get number of categories in BO', async function () {
     if (await this.pageObjects.categoriesPage.elementVisible(
       this.pageObjects.categoriesPage.filterResetButton,
       2000)) {
@@ -65,15 +65,15 @@ describe('Create, Read, Update and Delete Category', async () => {
       this.pageObjects.categoriesPage.categoryGridTitle);
     await expect(numberOfCategories).to.be.above(0);
   });
-
+  // 1 : Create category and subcategory then go to FO to check the existence of the new categories
   describe('Create Category and subcategory in BO and check it in FO', async () => {
     describe('Create Category and check it in FO', async () => {
       it('should go to add new category page', async function () {
-        await this.pageObjects.categoriesPage.goToAddNewCategoryPage();
+        await this.pageObjects.categoriesPage.clickAndWaitForNavigation(this.pageObjects.categoriesPage.addNewCategoryLink);
         const pageTitle = await this.pageObjects.addCategoryPage.getPageTitle();
         await expect(pageTitle).to.contains(this.pageObjects.addCategoryPage.pageTitleCreate);
       });
-      it('should create category and check the new categories number', async function () {
+      it('should create category and check the categories number', async function () {
         const textResult = await this.pageObjects.addCategoryPage.createEditCategory(createCategoryData);
         await expect(textResult).to.equal(this.pageObjects.categoriesPage.successfulCreationMessage);
         const numberOfCategoriesAfterCreation = await this.pageObjects.categoriesPage.getNumberFromText(
@@ -107,7 +107,7 @@ describe('Create, Read, Update and Delete Category', async () => {
         page = await this.pageObjects.boBasePage.viewMyShop();
         this.pageObjects = await init();
         await this.pageObjects.foBasePage.changeLanguage('en');
-        await this.pageObjects.foBasePage.goToPage(this.pageObjects.foBasePage.siteMapLink);
+        await this.pageObjects.foBasePage.clickAndWaitForNavigation(this.pageObjects.foBasePage.siteMapLink);
         const pageTitle = await this.pageObjects.siteMapPage.getPageTitle();
         await expect(pageTitle).to.equal(this.pageObjects.siteMapPage.pageTitle);
         const categoryName = await this.pageObjects.categoriesPage.getTextContent(
@@ -117,15 +117,15 @@ describe('Create, Read, Update and Delete Category', async () => {
         this.pageObjects = await init();
       });
     });
-    // test related to the bug described in this issue https://github.com/PrestaShop/PrestaShop/issues/15588
-    describe('Create SubCategory and check it in FO', async () => {
-      it('should display the subcategories table', async function () {
-        await this.pageObjects.categoriesPage.goToSubCategoryPage('1');
+    /* test related to the bug described in this issue https://github.com/PrestaShop/PrestaShop/issues/15588 */
+    describe('Create Subcategory and check it in FO', async () => {
+      it('should display the subcategories table related to the created category', async function () {
+        await this.pageObjects.categoriesPage.goToViewSubCategoriesPage('1');
         const pageTitle = await this.pageObjects.categoriesPage.getPageTitle();
         await expect(pageTitle).to.contains(createCategoryData.name);
       });
       it('should go to add new category page', async function () {
-        await this.pageObjects.categoriesPage.goToAddNewCategoryPage();
+        await this.pageObjects.categoriesPage.clickAndWaitForNavigation(this.pageObjects.categoriesPage.addNewCategoryLink);
         const pageTitle = await this.pageObjects.addCategoryPage.getPageTitle();
         await expect(pageTitle).to.contains(this.pageObjects.addCategoryPage.pageTitleCreate);
       });
@@ -144,7 +144,7 @@ describe('Create, Read, Update and Delete Category', async () => {
         );
         await expect(textColumn).to.contains(createSubCategoryData.name);
       });
-      it.skip('should go to FO and check the created SubCategory', async function () {
+      it.skip('should go to FO and check the created Subcategory', async function () {
         const categoryID = await this.pageObjects.categoriesPage.getTextContent(
           this.pageObjects.categoriesPage.categoriesListTableColumn.replace('%ROW', 1).replace(
             '%COLUMN',
@@ -153,7 +153,7 @@ describe('Create, Read, Update and Delete Category', async () => {
         page = await this.pageObjects.boBasePage.viewMyShop();
         this.pageObjects = await init();
         await this.pageObjects.foBasePage.changeLanguage('en');
-        await this.pageObjects.foBasePage.goToPage(this.pageObjects.foBasePage.siteMapLink);
+        await this.pageObjects.foBasePage.clickAndWaitForNavigation(this.pageObjects.foBasePage.siteMapLink);
         const pageTitle = await this.pageObjects.siteMapPage.getPageTitle();
         await expect(pageTitle).to.equal(this.pageObjects.siteMapPage.pageTitle);
         const categoryName = await this.pageObjects.categoriesPage.getTextContent(
@@ -164,12 +164,53 @@ describe('Create, Read, Update and Delete Category', async () => {
       });
     });
   });
-
-  describe('Update Category created', async () => {
-    it('should go to Catalog>Categories page and check for the created category', async function () {
+  // 2 : View Category and check the subcategories related
+  describe('View Category Created', async () => {
+    it('should go to Catalog>Categories page', async function () {
       await this.pageObjects.boBasePage.goToSubMenu(
         this.pageObjects.boBasePage.productsParentLink,
         this.pageObjects.boBasePage.categoriesLink);
+      const pageTitle = await this.pageObjects.categoriesPage.getPageTitle();
+      await expect(pageTitle).to.contains(this.pageObjects.categoriesPage.pageTitle);
+    });
+    it('should filter list by name', async function () {
+      await this.pageObjects.categoriesPage.filterCategories(
+        'input',
+        'name',
+        createCategoryData.name,
+      );
+      const textColumn = await this.pageObjects.categoriesPage.getTextContent(
+        this.pageObjects.categoriesPage.categoriesListTableColumn.replace('%ROW', 1).replace('%COLUMN', 'name'),
+      );
+      await expect(textColumn).to.contains(createCategoryData.name);
+    });
+    it('should click on view category', async function () {
+      await this.pageObjects.categoriesPage.goToViewSubCategoriesPage('1');
+      const pageTitle = await this.pageObjects.categoriesPage.getPageTitle();
+      await expect(pageTitle).to.contains(createCategoryData.name);
+    });
+    it.skip('should check subcategories list', async function () {
+      await this.pageObjects.categoriesPage.filterCategories(
+        'input',
+        'name',
+        createSubCategoryData.name,
+      );
+      const textColumn = await this.pageObjects.categoriesPage.getTextContent(
+        this.pageObjects.categoriesPage.categoriesListTableColumn.replace('%ROW', 1).replace('%COLUMN', 'name'),
+      );
+      await expect(textColumn).to.contains(createSubCategoryData.name);
+    });
+  });
+  // 3 : Update category and check that category isn't displayed in FO (displayed = false)
+  describe('Update Category created', async () => {
+    it('should go to Catalog>Categories page', async function () {
+      await this.pageObjects.boBasePage.goToSubMenu(
+        this.pageObjects.boBasePage.productsParentLink,
+        this.pageObjects.boBasePage.categoriesLink);
+      const pageTitle = await this.pageObjects.categoriesPage.getPageTitle();
+      await expect(pageTitle).to.contains(this.pageObjects.categoriesPage.pageTitle);
+    });
+    it('should filter list by name', async function () {
       await this.pageObjects.categoriesPage.filterCategories(
         'input',
         'name',
@@ -185,7 +226,7 @@ describe('Create, Read, Update and Delete Category', async () => {
       const pageTitle = await this.pageObjects.addCategoryPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.addCategoryPage.pageTitleEdit + createCategoryData.name);
     });
-    it('should disable the category', async function () {
+    it('should update the category', async function () {
       const textResult = await this.pageObjects.addCategoryPage.createEditCategory(editCategoryData);
       await expect(textResult).to.equal(this.pageObjects.categoriesPage.successfulUpdateMessage);
       await this.pageObjects.categoriesPage.resetFilter();
@@ -213,7 +254,7 @@ describe('Create, Read, Update and Delete Category', async () => {
       page = await this.pageObjects.boBasePage.viewMyShop();
       this.pageObjects = await init();
       await this.pageObjects.foBasePage.changeLanguage('en');
-      await this.pageObjects.foBasePage.goToPage(this.pageObjects.foBasePage.siteMapLink);
+      await this.pageObjects.foBasePage.clickAndWaitForNavigation(this.pageObjects.foBasePage.siteMapLink);
       const pageTitle = await this.pageObjects.siteMapPage.getPageTitle();
       await expect(pageTitle).to.equal(this.pageObjects.siteMapPage.pageTitle);
       const categoryName = await this.pageObjects.categoriesPage.elementVisible(
@@ -223,7 +264,7 @@ describe('Create, Read, Update and Delete Category', async () => {
       this.pageObjects = await init();
     });
   });
-
+  // 4 : Delete Category from BO
   describe('Delete Category', async () => {
     it('should go to "Catalog>Categories" page', async function () {
       await this.pageObjects.boBasePage.goToSubMenu(
@@ -250,6 +291,10 @@ describe('Create, Read, Update and Delete Category', async () => {
       const numberOfCategoriesAfterCreation = await this.pageObjects.categoriesPage.getNumberFromText(
         this.pageObjects.categoriesPage.categoryGridTitle);
       await expect(numberOfCategoriesAfterCreation).to.be.equal(numberOfCategories);
+      /* Delete the generated images */
+      await this.pageObjects.categoriesPage.deleteFile(`${createCategoryData.name}.jpg`);
+      await this.pageObjects.categoriesPage.deleteFile(`${createSubCategoryData.name}.jpg`);
+      await this.pageObjects.categoriesPage.deleteFile(`${editCategoryData.name}.jpg`);
     });
   });
 });
