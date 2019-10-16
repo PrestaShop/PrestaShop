@@ -17,18 +17,21 @@ module.exports = class Categories extends BOBasePage {
     this.categoriesListForm = '#category_grid';
     this.categoriesListTableRow = `${this.categoriesListForm} tbody tr:nth-child(%ROW)`;
     this.categoriesListTableColumn = `${this.categoriesListTableRow} td.column-%COLUMN`;
-    this.categoriesListTableEditLink = `${this.categoriesListTableColumn} a[data-original-title='Edit']`;
     this.categoriesListTableToggleDropDown = `${this.categoriesListTableColumn} a[data-toggle='dropdown']`;
-    this.categoriesListTableViewLink = `${this.categoriesListTableColumn} a[data-original-title="View"]`;
     this.categoriesListTableDeleteLink = `${this.categoriesListTableColumn} a[data-category-delete-url]`;
+    this.categoriesListTableEditLink = `${this.categoriesListTableColumn} a[href*='edit']`;
     this.categoriesListColumnValidIcon = `${this.categoriesListTableColumn} i.grid-toggler-icon-valid`;
     this.categoriesListColumnNotValidIcon = `${this.categoriesListTableColumn} i.grid-toggler-icon-not-valid`;
-
     // Filters input
     this.categoryFilterInput = `${this.categoriesListForm} #category_%FILTERBY`;
     this.filterSearchButton = `${this.categoriesListForm} button[name='category[actions][search]']`;
     this.filterResetButton = `${this.categoriesListForm} button[name='category[actions][reset]']`;
-
+    // Bulk Actions
+    this.selectAllRowsLabel = `${this.categoriesListForm} .md-checkbox label`;
+    this.bulkActionsToggleButton = `${this.categoriesListForm} button.dropdown-toggle`;
+    this.bulkActionsEnableButton = `${this.categoriesListForm} #category_grid_bulk_action_enable_selection`;
+    this.bulkActionsDisableButton = `${this.categoriesListForm} #category_grid_bulk_action_disable_selection`;
+    this.bulkActionsDeleteButton = `${this.categoriesListForm} #category_grid_bulk_action_delete_selection`;
     // Modal Dialog
     this.deleteCategoryModal = '#category_grid_delete_categories_modal.show';
     this.deleteCategoryModalDeleteButton = `${this.deleteCategoryModal} button.js-submit-delete-categories`;
@@ -127,6 +130,12 @@ module.exports = class Categories extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToEditCategoryPage(row) {
+    // Click on dropDown
+    await Promise.all([
+      this.page.click(this.categoriesListTableToggleDropDown.replace('%ROW', row).replace('%COLUMN', 'actions')),
+      this.page.waitForSelector(this.categoriesListTableEditLink.replace('%ROW', row).replace('%COLUMN', 'actions')),
+    ]);
+    // Click on edit
     await Promise.all([
       this.page.click(this.categoriesListTableEditLink.replace('%ROW', row).replace('%COLUMN', 'actions')),
       this.page.waitForNavigation({waitUntil: 'networkidle0'}),
@@ -148,10 +157,10 @@ module.exports = class Categories extends BOBasePage {
   /**
    * Delete Category
    * @param row, row in table
-   * @param associateProductsToParentAndDisable, Deletion method to choose in modal
+   * @param modeID, Deletion method to choose in modal
    * @return {Promise<textContent>}
    */
-  async deleteCategory(row, associateProductsToParentAndDisable = true) {
+  async deleteCategory(row, modeID = '0') {
     // Click on dropDown
     await Promise.all([
       this.page.click(this.categoriesListTableToggleDropDown.replace('%ROW', row).replace('%COLUMN', 'actions')),
@@ -166,24 +175,70 @@ module.exports = class Categories extends BOBasePage {
       this.page.click(this.categoriesListTableDeleteLink.replace('%ROW', row).replace('%COLUMN', 'actions')),
       this.page.waitForSelector(this.deleteCategoryModal, {visible: true}),
     ]);
-    await this.chooseOptionAndDelete(associateProductsToParentAndDisable);
+    await this.chooseOptionAndDelete(modeID);
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 
   /**
-   * Choose if associate product to the parent category, then disable them, delete category and perform delete action
-   * @param associateThenDisable
+   * Choose the option number and delete
+   * @param modeID, Deletion mode ID to choose in modal
    * @return {Promise<void>}
    */
-  async chooseOptionAndDelete(associateThenDisable) {
-    // Choose deletion method
-    if (associateThenDisable) await this.page.click(this.deleteCategoryModalModeInput.replace('%ID', '0'));
-    else await this.page.click(this.deleteCategoryModalModeInput.replace('%ID', '1'));
-    // Click on delete button and wait for action to finish
+  async chooseOptionAndDelete(modeID) {
+    await this.page.click(this.deleteCategoryModalModeInput.replace('%ID', modeID));
     await Promise.all([
       this.page.click(this.deleteCategoryModalDeleteButton),
       this.page.waitForNavigation({waitUntil: 'networkidle0'}),
       this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true}),
     ]);
+  }
+
+  /**
+   * Enable / disable customers by Bulk Actions
+   * @param enable
+   * @return {Promise<textContent>}
+   */
+  async changeCategoriesEnabledColumnBulkActions(enable = true) {
+    // Click on Select All
+    await Promise.all([
+      this.page.click(this.selectAllRowsLabel),
+      this.page.waitForSelector(`${this.selectAllRowsLabel}:not([disabled])`, {visible: true}),
+    ]);
+    // Click on Button Bulk actions
+    await Promise.all([
+      this.page.click(this.bulkActionsToggleButton),
+      this.page.waitForSelector(`${this.bulkActionsToggleButton}`, {visible: true}),
+    ]);
+    // Click on delete and wait for modal
+    await Promise.all([
+      this.page.click(enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton),
+      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
+    ]);
+    return this.getTextContent(this.alertSuccessBlockParagraph);
+  }
+
+  /**
+   * Delete all Categories with Bulk Actions
+   * @param modeID, Deletion mode ID to choose in modal
+   * @return {Promise<textContent>}
+   */
+  async deleteCategoriesBulkActions(modeID = 1) {
+    // Click on Select All
+    await Promise.all([
+      this.page.click(this.selectAllRowsLabel),
+      this.page.waitForSelector(`${this.selectAllRowsLabel}:not([disabled])`, {visible: true}),
+    ]);
+    // Click on Button Bulk actions
+    await Promise.all([
+      this.page.click(this.bulkActionsToggleButton),
+      this.page.waitForSelector(`${this.bulkActionsToggleButton}`, {visible: true}),
+    ]);
+    // Click on delete and wait for modal
+    await Promise.all([
+      this.page.click(this.bulkActionsDeleteButton),
+      this.page.waitForSelector(this.deleteCategoryModal, {visible: true}),
+    ]);
+    await this.chooseOptionAndDelete(modeID);
+    return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 };

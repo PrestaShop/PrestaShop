@@ -117,6 +117,7 @@ describe('Create, Read, Update and Delete Category', async () => {
         this.pageObjects = await init();
       });
     });
+    // test related to the bug described in this issue https://github.com/PrestaShop/PrestaShop/issues/15588
     describe('Create SubCategory and check it in FO', async () => {
       it('should display the subcategories table', async function () {
         await this.pageObjects.categoriesPage.goToSubCategoryPage('1');
@@ -132,7 +133,7 @@ describe('Create, Read, Update and Delete Category', async () => {
         const textResult = await this.pageObjects.addCategoryPage.createEditCategory(createSubCategoryData);
         await expect(textResult).to.equal(this.pageObjects.categoriesPage.successfulCreationMessage);
       });
-      it('should search for the subcategory and check result', async function () {
+      it.skip('should search for the subcategory and check result #15588', async function () {
         await this.pageObjects.categoriesPage.filterCategories(
           'input',
           'name',
@@ -143,7 +144,7 @@ describe('Create, Read, Update and Delete Category', async () => {
         );
         await expect(textColumn).to.contains(createSubCategoryData.name);
       });
-      it('should go to FO and check the created SubCategory', async function () {
+      it.skip('should go to FO and check the created SubCategory', async function () {
         const categoryID = await this.pageObjects.categoriesPage.getTextContent(
           this.pageObjects.categoriesPage.categoriesListTableColumn.replace('%ROW', 1).replace(
             '%COLUMN',
@@ -174,6 +175,10 @@ describe('Create, Read, Update and Delete Category', async () => {
         'name',
         createCategoryData.name,
       );
+      const textColumn = await this.pageObjects.categoriesPage.getTextContent(
+        this.pageObjects.categoriesPage.categoriesListTableColumn.replace('%ROW', 1).replace('%COLUMN', 'name'),
+      );
+      await expect(textColumn).to.contains(createCategoryData.name);
     });
     it('should go to edit category page', async function () {
       await this.pageObjects.categoriesPage.goToEditCategoryPage('1');
