@@ -109,6 +109,7 @@ module.exports = {
     alias: {
       vue$: 'vue/dist/vue.common.js',
       app: path.resolve(__dirname, '../js/app'),
+      psvue: path.resolve(__dirname, '../js/vue'),
     },
   },
   module: {
@@ -121,7 +122,11 @@ module.exports = {
           options: {
             presets: [
               ['es2015', {modules: false}],
+              ["env", {
+                "useBuiltIns": "usage"
+              }]
             ],
+            "plugins": ["transform-runtime"]
           },
         }],
       },
