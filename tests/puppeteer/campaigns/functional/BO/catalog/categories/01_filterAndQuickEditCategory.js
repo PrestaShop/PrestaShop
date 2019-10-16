@@ -34,7 +34,7 @@ describe('Filter And Quick Edit Categories', async () => {
   after(async () => {
     await helper.closeBrowser(browser);
   });
-  // Login into BO and go to Categories page
+  // Login into BO and go to categories page
   loginCommon.loginBO();
   it('should go to "Catalog>Categories" page', async function () {
     await this.pageObjects.boBasePage.goToSubMenu(
@@ -53,7 +53,7 @@ describe('Filter And Quick Edit Categories', async () => {
       this.pageObjects.categoriesPage.categoryGridTitle);
     await expect(numberOfCategories).to.be.above(0);
   });
-
+  // 1 : Filter Categories with all inputs and selects in grid table
   describe('Filter Categories', async () => {
     it('should filter by Id \'9\'', async function () {
       await this.pageObjects.categoriesPage.filterCategories(
@@ -178,7 +178,7 @@ describe('Filter And Quick Edit Categories', async () => {
       await expect(numberOfCategoriesAfterReset).to.equal(numberOfCategories);
     });
   });
-
+  // 2 : Editing categories from grid table
   describe('Quick Edit Categories', async () => {
     // Steps
     it('should filter by Name \'Art\'', async function () {
@@ -195,7 +195,7 @@ describe('Filter And Quick Edit Categories', async () => {
       const isActionPerformed = await this.pageObjects.categoriesPage.updateToggleColumnValue(
         '1',
         'active',
-        'No');
+        false);
       if (isActionPerformed) {
         const resultMessage = await this.pageObjects.categoriesPage.getTextContent(
           this.pageObjects.categoriesPage.growlDefaultMessageBloc);

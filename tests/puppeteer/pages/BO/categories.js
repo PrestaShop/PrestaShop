@@ -19,10 +19,11 @@ module.exports = class Categories extends BOBasePage {
     this.categoriesListTableColumn = `${this.categoriesListTableRow} td.column-%COLUMN`;
     this.categoriesListTableToggleDropDown = `${this.categoriesListTableColumn} a[data-toggle='dropdown']`;
     this.categoriesListTableDeleteLink = `${this.categoriesListTableColumn} a[data-category-delete-url]`;
+    this.categoriesListTableViewLink = `${this.categoriesListTableColumn} a[data-original-title='View']`;
     this.categoriesListTableEditLink = `${this.categoriesListTableColumn} a[href*='edit']`;
     this.categoriesListColumnValidIcon = `${this.categoriesListTableColumn} i.grid-toggler-icon-valid`;
     this.categoriesListColumnNotValidIcon = `${this.categoriesListTableColumn} i.grid-toggler-icon-not-valid`;
-    // Filters input
+    // Filters
     this.categoryFilterInput = `${this.categoriesListForm} #category_%FILTERBY`;
     this.filterSearchButton = `${this.categoriesListForm} button[name='category[actions][search]']`;
     this.filterResetButton = `${this.categoriesListForm} button[name='category[actions][reset]']`;
@@ -55,7 +56,7 @@ module.exports = class Categories extends BOBasePage {
   /**
    * Filter list of categories
    * @param filterType, input or select to choose method of filter
-   * @param filterBy, colomn to filter
+   * @param filterBy, column to filter
    * @param value, value to filter with
    * @return {Promise<void>}
    */
@@ -85,8 +86,8 @@ module.exports = class Categories extends BOBasePage {
    */
   async getToggleColumnValue(row, column) {
     if (await this.elementVisible(
-      this.categoriesListColumnValidIcon.replace('%ROW', row).replace('%COLUMN', column), 100)) return 'Yes';
-    return 'No';
+      this.categoriesListColumnValidIcon.replace('%ROW', row).replace('%COLUMN', column), 100)) return true;
+    return false;
   }
 
   /**
@@ -94,14 +95,12 @@ module.exports = class Categories extends BOBasePage {
    * @param row, row in table
    * @param column, column to update
    * @param valueWanted, Value wanted in column
-   * @return {Promise<boolean>}
+   * @return {Promise<boolean>} return true if action is done, false otherwise
    */
-  async updateToggleColumnValue(row, column, valueWanted = 'Yes') {
+  async updateToggleColumnValue(row, column, valueWanted = true) {
     if (await this.getToggleColumnValue(row, column) !== valueWanted) {
-      await Promise.all([
-        this.page.click(this.categoriesListTableColumn.replace('%ROW', row).replace('%COLUMN', column)),
-      ]);
-      if (valueWanted === 'Yes') {
+      this.page.click(this.categoriesListTableColumn.replace('%ROW', row).replace('%COLUMN', column));
+      if (valueWanted) {
         await this.page.waitForSelector(this.categoriesListColumnValidIcon
           .replace('%ROW', 1).replace('%COLUMN', 'active'));
       } else {
@@ -111,17 +110,6 @@ module.exports = class Categories extends BOBasePage {
       return true;
     }
     return false;
-  }
-
-  /**
-   * Go to Category Page
-   * @return {Promise<void>}
-   */
-  async goToAddNewCategoryPage() {
-    await Promise.all([
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-      this.page.click(this.addNewCategoryLink),
-    ]);
   }
 
   /**
@@ -143,15 +131,23 @@ module.exports = class Categories extends BOBasePage {
   }
 
   /**
-   * Go to Sub Category page
+   * View subcategories in list
    * @param row, row in table
    * @return {Promise<void>}
    */
-  async goToSubCategoryPage(row) {
-    await Promise.all([
-      this.page.click(`${this.categoriesListTableColumn.replace('%ROW', row).replace('%COLUMN', 'name')} a`),
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-    ]);
+  async goToViewSubCategoriesPage(row) {
+    if (await this.elementVisible(
+      this.categoriesListTableViewLink.replace('%ROW', row).replace('%COLUMN', 'actions'), 100)) {
+      await Promise.all([
+        this.page.click(this.categoriesListTableViewLink.replace('%ROW', row).replace('%COLUMN', 'actions')),
+        this.page.waitForNavigation({waitUntil: 'networkidle0'}),
+      ]);
+    } else {
+      await Promise.all([
+        this.page.click(`${this.categoriesListTableColumn.replace('%ROW', row).replace('%COLUMN', 'name')} a`),
+        this.page.waitForNavigation({waitUntil: 'networkidle0'}),
+      ]);
+    }
   }
 
   /**
@@ -180,7 +176,7 @@ module.exports = class Categories extends BOBasePage {
   }
 
   /**
-   * Choose the option number and delete
+   * Choose the option and delete
    * @param modeID, Deletion mode ID to choose in modal
    * @return {Promise<void>}
    */
@@ -194,7 +190,7 @@ module.exports = class Categories extends BOBasePage {
   }
 
   /**
-   * Enable / disable customers by Bulk Actions
+   * Enable / disable categories by Bulk Actions
    * @param enable
    * @return {Promise<textContent>}
    */

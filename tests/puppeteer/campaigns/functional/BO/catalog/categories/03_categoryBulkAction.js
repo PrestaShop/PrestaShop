@@ -59,10 +59,10 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
       this.pageObjects.categoriesPage.categoryGridTitle);
     await expect(numberOfCategories).to.be.above(0);
   });
-
+  // 1 : Create 2 categories In BO
   describe('Create 2 categories in BO', async () => {
     it('should go to add new category page', async function () {
-      await this.pageObjects.categoriesPage.goToAddNewCategoryPage();
+      await this.pageObjects.categoriesPage.clickAndWaitForNavigation(this.pageObjects.categoriesPage.addNewCategoryLink);
       const pageTitle = await this.pageObjects.addCategoryPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.addCategoryPage.pageTitleCreate);
     });
@@ -74,7 +74,7 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
       await expect(numberOfCategoriesAfterCreation).to.be.equal(numberOfCategories + 1);
     });
     it('should go to add new category page', async function () {
-      await this.pageObjects.categoriesPage.goToAddNewCategoryPage();
+      await this.pageObjects.categoriesPage.clickAndWaitForNavigation(this.pageObjects.categoriesPage.addNewCategoryLink);
       const pageTitle = await this.pageObjects.addCategoryPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.addCategoryPage.pageTitleCreate);
     });
@@ -86,7 +86,7 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
       await expect(numberOfCategoriesAfterCreation).to.be.equal(numberOfCategories + 2);
     });
   });
-
+  // 2 : Enable/Disable categories created with bulk actions
   describe('Enable and Disable categories with Bulk Actions', async () => {
     it('should filter list by Name', async function () {
       await this.pageObjects.categoriesPage.filterCategories(
@@ -130,6 +130,7 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
       /* eslint-enable no-await-in-loop */
     });
   });
+  // 3 : Delete Categories created with bulk actions
   describe('Delete categories with Bulk Actions', async () => {
     it('should filter list by Name', async function () {
       await this.pageObjects.categoriesPage.filterCategories(
@@ -145,6 +146,8 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
     it('should delete categories with Bulk Actions and check Result', async function () {
       const deleteTextResult = await this.pageObjects.categoriesPage.deleteCategoriesBulkActions();
       await expect(deleteTextResult).to.be.equal(this.pageObjects.categoriesPage.successfulMultiDeleteMessage);
+      /* Delete the generated images */
+      await this.pageObjects.categoriesPage.deleteFile(`${firstCategoryData.name}.jpg`);
     });
 
     it('should reset all filters', async function () {
