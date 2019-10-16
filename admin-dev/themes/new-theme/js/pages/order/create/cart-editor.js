@@ -27,6 +27,7 @@ import createOrderPageMap from "./create-order-map";
 
 import Router from '../../../components/router';
 import {EventEmitter} from '../../../components/event-emitter';
+import eventMap from './event-map';
 
 const $ = window.$;
 
@@ -44,8 +45,7 @@ export default class CartEditor {
    */
   changeCartAddresses(cartId, addresses) {
     $.post(this.router.generate('admin_carts_edit_addresses', {cartId}), addresses).then((cartInfo) => {
-      // this._persistCartInfoData(response);
-      EventEmitter.emit('cartAddressesChanged', cartInfo);
+      EventEmitter.emit(eventMap.cartAddressesChanged, cartInfo);
     });
   }
 
@@ -59,7 +59,7 @@ export default class CartEditor {
     $.post(this.router.generate('admin_carts_edit_carrier', {cartId}), {
       carrier_id: value,
     }).then((cartInfo) => {
-      EventEmitter.emit('deliveryOptionChanged', cartInfo);
+      EventEmitter.emit(eventMap.cartDeliveryOptionChanged, cartInfo);
     });
   }
 
@@ -73,7 +73,7 @@ export default class CartEditor {
     $.post(this.router.generate('admin_carts_set_free_shipping', {cartId}), {
       free_shipping: value,
     }).then((cartInfo) => {
-      EventEmitter.emit('freeShippingChanged', cartInfo);
+      EventEmitter.emit(eventMap.cartFreeShippingSet, cartInfo);
     });
   }
 }

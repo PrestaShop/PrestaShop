@@ -35,6 +35,7 @@ import VouchersRenderer from './vouchers-renderer';
 import Router from '../../../components/router';
 import {EventEmitter} from '../../../components/event-emitter';
 import CartEditor from './cart-editor';
+import eventMap from './event-map';
 
 const $ = window.$;
 
@@ -73,7 +74,7 @@ export default class CreateOrderPage {
    * @private
    */
   _onCartLoaded() {
-    EventEmitter.on('cartLoaded', (cartInfo) => {
+    EventEmitter.on(eventMap.cartLoaded, (cartInfo) => {
       this.data.cart_id = cartInfo.cartId;
       this._renderCartInfo(cartInfo);
     });
@@ -153,7 +154,7 @@ export default class CreateOrderPage {
    */
   _loadCustomerCarts(customerId) {
     this.customerInfoProvider.getCustomerCarts(customerId);
-    EventEmitter.on('customerCartsLoaded', (cartInfo) => {
+    EventEmitter.on(eventMap.customerCartsLoaded, (cartInfo) => {
       this.cartsRenderer.render({
         carts: cartInfo.carts,
         currentCartId: this.data.cart_id,
@@ -170,7 +171,7 @@ export default class CreateOrderPage {
    */
   _loadCustomerOrders(customerId) {
     this.customerInfoProvider.getCustomerOrders(customerId);
-    EventEmitter.on('customerOrdersLoaded', (cartInfo) => {
+    EventEmitter.on(eventMap.customerOrdersLoaded, (cartInfo) => {
       this.ordersRenderer.render(cartInfo.orders);
     });
   }
@@ -204,7 +205,7 @@ export default class CreateOrderPage {
     };
 
     this.cartEditor.changeCartAddresses(this.data.cart_id, addresses);
-    EventEmitter.on('cartAddressesChanged', (cartInfo) => {
+    EventEmitter.on(eventMap.cartAddressesChanged, (cartInfo) => {
       this.addressesRenderer.render(cartInfo.addresses);
       this.shippingRenderer.render(cartInfo.shipping, cartInfo.products.length === 0);
     });
@@ -219,7 +220,7 @@ export default class CreateOrderPage {
    */
   _changeDeliveryOption(event) {
     this.cartEditor.changeDeliveryOption(this.data.cart_id, event.currentTarget.value);
-    EventEmitter.on('deliveryOptionChanged', (cartInfo) => {
+    EventEmitter.on(eventMap.cartDeliveryOptionChanged, (cartInfo) => {
       this.shippingRenderer.render(cartInfo.shipping, cartInfo.products.length === 0);
     });
   }
@@ -233,7 +234,7 @@ export default class CreateOrderPage {
    */
   _setFreeShipping(event) {
     this.cartEditor.setFreeShipping(this.data.cart_id, event.currentTarget.value);
-    EventEmitter.on('freeShippingChanged', (cartInfo) => {
+    EventEmitter.on(eventMap.cartFreeShippingSet, (cartInfo) => {
       this.shippingRenderer.render(cartInfo.shipping, cartInfo.products.length === 0);
     });
   }

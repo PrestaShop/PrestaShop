@@ -26,6 +26,7 @@
 import createOrderPageMap from './create-order-map';
 import Router from '../../../components/router';
 import {EventEmitter} from '../../../components/event-emitter';
+import eventMap from './event-map';
 
 const $ = window.$;
 
@@ -47,7 +48,7 @@ export default class CustomerInfoProvider {
    */
   getCustomerCarts(customerId) {
     $.get(this.router.generate('admin_customers_carts', {customerId})).then((cartInfo) => {
-      EventEmitter.emit('customerCartsLoaded', cartInfo);
+      EventEmitter.emit(eventMap.customerCartsLoaded, cartInfo);
     });
   }
 
@@ -60,7 +61,7 @@ export default class CustomerInfoProvider {
    */
   getCustomerOrders(customerId) {
     $.get(this.router.generate('admin_customers_orders', {customerId})).then((cartInfo) => {
-      EventEmitter.emit('customerOrdersLoaded', cartInfo);
+      EventEmitter.emit(eventMap.customerOrdersLoaded, cartInfo);
     });
   }
 }
