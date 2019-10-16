@@ -9,6 +9,7 @@ module.exports = class Home extends FOBasePage {
     this.homePageSection = 'section#content.page-home';
     this.productArticle = '#content .products div:nth-child(%NUMBER) article';
     this.productImg = `${this.productArticle} img`;
+    this.productDescriptionDiv = `${this.productArticle} div.product-description`;
     this.productQuickViewLink = `${this.productArticle} a.quick-view`;
     this.allProductLink = '#content a.all-product-link';
     this.totalProducts = '#js-product-list-top .total-products > p';
@@ -42,12 +43,19 @@ module.exports = class Home extends FOBasePage {
    * @return {Promise<void>}
    */
   async quickViewProduct(id) {
+    await this.page.hover(this.productImg.replace('%NUMBER', id));
+    let displayed = false;
+    for (let i=0; i<10 && !displayed; i++) {
+      displayed = await this.page.evaluate(
+        (selector) =>
+        window.getComputedStyle(document.querySelector(selector), ':after')
+          .getPropertyValue('display') === 'block',
+        this.productDescriptionDiv.replace('%NUMBER', id),
+      );
+      await this.page.waitFor(100);
+    }
     await Promise.all([
-      this.page.waitForSelector(`${this.productQuickViewLink.replace('%NUMBER', id)}`),
-      this.page.hover(this.productImg.replace('%NUMBER', id)),
-    ]);
-    await Promise.all([
-      this.page.waitForSelector(this.quickViewModalDiv),
+      this.page.waitForSelector(this.quickViewModalDiv, {visible: true}),
       this.page.$eval(this.productQuickViewLink.replace('%NUMBER', id), el => el.click()),
     ]);
   }
