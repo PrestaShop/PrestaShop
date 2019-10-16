@@ -1,16 +1,17 @@
+require('module-alias/register');
 // Using chai
 const {expect} = require('chai');
-const helper = require('../../utils/helpers');
+const helper = require('@utils/helpers');
 
 // Importing pages
-const HomePage = require('../../../pages/FO/home');
-const CartPage = require('../../../pages/FO/cart');
-const LoginPage = require('../../../pages/FO/login');
-const CheckoutPage = require('../../../pages/FO/checkout');
-const OrderConfirmationPage = require('../../../pages/FO/orderConfirmation');
-const {DefaultAccount} = require('../../data/demo/customer');
-const CartData = require('../../data/FO/cart');
-const {PaymentMethods} = require('../../data/demo/orders');
+const HomePage = require('@pages/FO/home');
+const CartPage = require('@pages/FO/cart');
+const LoginPage = require('@pages/FO/login');
+const CheckoutPage = require('@pages/FO/checkout');
+const OrderConfirmationPage = require('@pages/FO/orderConfirmation');
+const {DefaultAccount} = require('@data/demo/customer');
+const CartData = require('@data/FO/cart');
+const {PaymentMethods} = require('@data/demo/orders');
 
 let browser;
 let page;

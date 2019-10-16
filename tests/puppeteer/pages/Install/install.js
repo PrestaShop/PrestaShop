@@ -1,5 +1,6 @@
+require('module-alias/register');
 // Using CommonPage
-const CommonPage = require('../commonPage');
+const CommonPage = require('@pages/commonPage');
 
 module.exports = class Install extends CommonPage {
   constructor(page) {

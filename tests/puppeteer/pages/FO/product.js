@@ -1,4 +1,5 @@
-const FOBasePage = require('../FO/FObasePage');
+require('module-alias/register');
+const FOBasePage = require('@pages/FO/FObasePage');
 
 module.exports = class Product extends FOBasePage {
   constructor(page) {

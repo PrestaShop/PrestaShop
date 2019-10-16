@@ -1,16 +1,17 @@
+require('module-alias/register');
 // Using chai
 const {expect} = require('chai');
-const helper = require('../../utils/helpers');
-const loginCommon = require('../../commonTests/loginBO');
+const helper = require('@utils/helpers');
+const loginCommon = require('@commonTests/loginBO');
 
 // importing pages
-const LoginPage = require('../../../pages/BO/login');
-const DashboardPage = require('../../../pages/BO/dashboard');
-const BOBasePage = require('../../../pages/BO/BObasePage');
-const ProductsPage = require('../../../pages/BO/products');
-const AddProductPage = require('../../../pages/BO/addProduct');
-const FOProductPage = require('../../../pages/FO/product');
-const ProductFaker = require('../../data/faker/product');
+const LoginPage = require('@pages/BO/login');
+const DashboardPage = require('@pages/BO/dashboard');
+const BOBasePage = require('@pages/BO/BObasePage');
+const ProductsPage = require('@pages/BO/products');
+const AddProductPage = require('@pages/BO/addProduct');
+const FOProductPage = require('@pages/FO/product');
+const ProductFaker = require('@data/faker/product');
 
 let browser;
 let page;

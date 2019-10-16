@@ -30,7 +30,6 @@ use DateTimeImmutable;
 use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 
 /**
@@ -79,8 +78,8 @@ class AddPaymentCommand
      * @param string $paymentMethod
      * @param float $paymentAmount
      * @param float $paymentCurrencyId
-     * @param null $orderInvoiceId
-     * @param string $transactionId
+     * @param int|null $orderInvoiceId
+     * @param string|null $transactionId transaction ID, usually payment ID from payment gateway
      */
     public function __construct(
         $orderId,
@@ -89,10 +88,9 @@ class AddPaymentCommand
         $paymentAmount,
         $paymentCurrencyId,
         $orderInvoiceId = null,
-        $transactionId = ''
+        $transactionId = null
     ) {
         $this->assertPaymentMethodIsGenericName($paymentMethod);
-        $this->assertTransactionIdIsString($transactionId);
 
         $this->orderId = new OrderId($orderId);
         $this->paymentDate = new DateTimeImmutable($paymentDate);
@@ -163,16 +161,6 @@ class AddPaymentCommand
     {
         if (empty($paymentMethod) || !preg_match('/^[^<>={}]*$/u', $paymentMethod)) {
             throw new OrderConstraintException('The selected payment method is invalid.');
-        }
-    }
-
-    /**
-     * @param string $transactionId
-     */
-    private function assertTransactionIdIsString($transactionId)
-    {
-        if (!is_string($transactionId)) {
-            throw new OrderException('The transaction ID is invalid.');
         }
     }
 }
