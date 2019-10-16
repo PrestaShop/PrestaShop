@@ -35,7 +35,6 @@ return PhpCsFixer\Config::create()
         'psr4' => false,
         'self_accessor' => false,
         'yoda_style' => null,
-        'non_printable_character' => true,
         'combine_consecutive_issets' => true,
     ])
     ->setFinder($finder)

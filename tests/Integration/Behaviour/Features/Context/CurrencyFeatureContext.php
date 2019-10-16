@@ -33,6 +33,7 @@ use Db;
 use DbQuery;
 use RuntimeException;
 use Cache;
+use Language;
 
 class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
 {
@@ -120,6 +121,27 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
         $this->checkCurrencyWithNameExists($currencyName);
         $this->getCurrentCart()->id_currency = $this->currencies[$currencyName]->id;
         Context::getContext()->currency = $this->currencies[$currencyName];
+    }
+
+    /**
+     * @When I set the transformation :transformation for currency :reference in locale :localeIsoCode
+     */
+    public function setCurrencyTransformation($transformation, $reference, $localeIsoCode)
+    {
+        $languageId = Language::getIdByLocale($localeIsoCode, true);
+        /** @var Currency $currency */
+        $currency = SharedStorage::getStorage()->get($reference);
+        $transformations = $currency->transformation;
+        if (is_array($transformations)) {
+            $transformations[$languageId] = $transformation;
+        } else {
+            $transformations = [$languageId => $transformation];
+        }
+        $currency->setLocalizedTransformations($transformations);
+
+        if (!$currency->save(true, true)) {
+            throw new RuntimeException('Could not save format modification');
+        }
     }
 
     /**
@@ -419,6 +441,30 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
                 $reference,
                 $currency->modified,
                 (int) $expectedModified
+            ));
+        }
+    }
+
+    /**
+     * @Then currency :reference should have transformation :transformation for language :localeCode
+     */
+    public function assertCurrencyTransformation($reference, $transformation, $localeCode)
+    {
+        /** @var Currency $currency */
+        $currency = SharedStorage::getStorage()->get($reference);
+        $langId = Language::getIdByLocale($localeCode, true);
+        $currencyTransformation = $currency->getPatternTransformation($langId);
+        if ('empty' === $transformation) {
+            $transformation = '';
+        }
+
+        if ($currencyTransformation !== $transformation) {
+            throw new RuntimeException(sprintf(
+                'Currency "%s" has "%s" transformation for language %s, but "%s" was expected.',
+                $reference,
+                $currencyTransformation,
+                $localeCode,
+                $transformation
             ));
         }
     }

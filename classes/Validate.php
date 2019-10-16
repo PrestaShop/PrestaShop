@@ -26,6 +26,7 @@
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CustomerName;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Factory\CustomerNameValidatorFactory;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\NumericIsoCode;
+use PrestaShop\PrestaShop\Core\Localization\Currency\PatternTransformer;
 use PrestaShop\PrestaShop\Core\String\CharacterCleaner;
 use Symfony\Component\Validator\Validation;
 
@@ -332,6 +333,27 @@ class ValidateCore
     public static function isNumericIsoCode($iso_code)
     {
         return preg_match(NumericIsoCode::PATTERN, $iso_code);
+    }
+
+    /**
+     * Checks if the transformation type is one of the allowed ones.
+     *
+     * @see PatternTransformer
+     *
+     * @param string $transformation
+     *
+     * @return bool
+     */
+    public static function isCurrencyPatternTransformation(string $transformation)
+    {
+        $allowedTransformations = [
+            PatternTransformer::TYPE_LEFT_SYMBOL_WITH_SPACE,
+            PatternTransformer::TYPE_LEFT_SYMBOL_WITHOUT_SPACE,
+            PatternTransformer::TYPE_RIGHT_SYMBOL_WITH_SPACE,
+            PatternTransformer::TYPE_RIGHT_SYMBOL_WITHOUT_SPACE,
+        ];
+
+        return in_array($transformation, $allowedTransformations);
     }
 
     /**
