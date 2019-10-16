@@ -51,8 +51,7 @@ module.exports = class AddTax extends BOBasePage {
     await this.setValue(this.rateInput, taxData.rate);
     if (taxData.enabled) {
       await this.page.click(this.enabledSwitchlabel.replace('%ID', '1'));
-    }
-    else {
+    } else {
       await this.page.click(this.enabledSwitchlabel.replace('%ID', '0'));
     }
     await Promise.all([
