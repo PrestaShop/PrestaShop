@@ -45,15 +45,16 @@ module.exports = class Home extends FOBasePage {
   async quickViewProduct(id) {
     await this.page.hover(this.productImg.replace('%NUMBER', id));
     let displayed = false;
-    for (let i=0; i<10 && !displayed; i++) {
+    /* eslint-disable no-await-in-loop */
+    for (let i = 0; i < 10 && !displayed; i++) {
       displayed = await this.page.evaluate(
-        (selector) =>
-        window.getComputedStyle(document.querySelector(selector), ':after')
+        selector => window.getComputedStyle(document.querySelector(selector), ':after')
           .getPropertyValue('display') === 'block',
         this.productDescriptionDiv.replace('%NUMBER', id),
       );
       await this.page.waitFor(100);
     }
+    /* eslint-enable no-await-in-loop */
     await Promise.all([
       this.page.waitForSelector(this.quickViewModalDiv, {visible: true}),
       this.page.$eval(this.productQuickViewLink.replace('%NUMBER', id), el => el.click()),
