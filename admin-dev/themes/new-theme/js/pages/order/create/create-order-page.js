@@ -33,6 +33,7 @@ import OrdersRenderer from './orders-renderer';
 import AddressesRenderer from './addresses-renderer';
 import VouchersRenderer from './vouchers-renderer';
 import Router from '../../../components/router';
+import OrderProductComponent from './order-product-component';
 
 const $ = window.$;
 
@@ -53,6 +54,7 @@ export default class CreateOrderPage {
     this.addressesRenderer = new AddressesRenderer();
     this.vouchersRenderer = new VouchersRenderer();
     this.router = new Router();
+    this.orderProducts = new OrderProductComponent();
 
     return {
       listenForCustomerSearch: () => this._handleCustomerSearch(),

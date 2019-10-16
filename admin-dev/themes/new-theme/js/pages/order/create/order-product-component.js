@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import createOrderPageMap from '../create-order-map';
+import createOrderPageMap from './create-order-map';
 
 const $ = window.$;
 
@@ -53,6 +53,8 @@ export default class OrderProductComponent {
         createOrderPageMap.combinationsSelect,
         (event) => this._handleCombinationChange(event)
     );
+
+    $(createOrderPageMap.addToCartButton).on('click', () => this._addProductToCart());
   }
 
   /**
@@ -249,18 +251,24 @@ export default class OrderProductComponent {
 
     $(createOrderPageMap.quantityRow).before($customizedFieldTemplateContent);
 
-    $.each(customizationFields.product_customization_fields, function(index, value) {
-      const $fieldTemplate = $($(createOrderPageMap.customizedFieldTypes[value.type]).html());
+    $.each(customizationFields.product_customization_fields, function(index, field) {
+      const $fieldTemplate = $($(createOrderPageMap.customizedFieldTypes[field.type]).html());
+
       $customizedFieldTemplateContent = $($customizedFieldTemplate.html());
-      if (value.required) {
+      if (field.required) {
         $customizedFieldTemplateContent.find(createOrderPageMap.customizedLabelClass)
           .append('<span class="text-danger">*</span>');
       }
 
       $customizedFieldTemplateContent.find(createOrderPageMap.customizedLabelClass)
-        .append(value.name);
-      $customizedFieldTemplateContent.find(createOrderPageMap.customizedFieldInputWrapper)
-        .append($fieldTemplate);
+        .append(field.name);
+
+      const $fieldWrapper = $customizedFieldTemplateContent
+        .find(createOrderPageMap.customizedFieldInputWrapper);
+
+      $fieldWrapper.append($fieldTemplate);
+      $fieldWrapper.find(createOrderPageMap.customizedFieldInput)
+        .attr('data-customization-field-id', field.customization_field_id);
 
       $(createOrderPageMap.quantityRow).before($customizedFieldTemplateContent);
     });
@@ -318,5 +326,72 @@ export default class OrderProductComponent {
    */
   _hideResultBlock() {
     $(createOrderPageMap.productResultBlock).hide();
+  }
+
+  /**
+   * Adds selected product to current cart
+   *
+   * @private
+   */
+  _addProductToCart() {
+    $.ajax($(createOrderPageMap.addToCartButton).data('add-product-url'), {
+      method: 'POST',
+      data: this._getProductData(),
+      processData: false,
+      contentType: false,
+      cache: false,
+    }).then((response) => {
+      console.log(response);
+    }).catch((response) => {
+      console.log('labai nepasiseke');
+    });
+  }
+
+  /**
+   * Retrieves product data from product search result block fields
+   *
+   * @returns {FormData}
+   * @private
+   */
+  _getProductData() {
+    const formData = new FormData();
+    const productId = $(createOrderPageMap.productSelect).find(':selected').val();
+
+    formData.append('product_id', productId);
+
+    if ($(createOrderPageMap.combinationsSelect).length !== 0) {
+      const combinationId = $(createOrderPageMap.combinationsSelect).find(':selected').val();
+      formData.append('combination_id', combinationId);
+    }
+
+    this._resolveCustomizationValuesForAddProduct(formData);
+
+    return formData;
+  }
+
+  /**
+   * Resolves product customization fields to be added to formData object
+   *
+   * @param {FormData} formData
+   * @returns {FormData}
+   * @private
+   */
+  _resolveCustomizationValuesForAddProduct(formData) {
+    const customizationKey = 'customization';
+    const customizedFields = $(createOrderPageMap.customizedFieldInput);
+
+    $.each(customizedFields, (index, field) => {
+      const customizationFieldId = $(field).data('customization-field-id');
+      const formKey = `${customizationKey}[${customizationFieldId}]`;
+      if ($(field).attr('type') === 'file') {
+        formData.append(formKey, $(field)[0].files[0]);
+
+        return;
+      }
+
+      formData.append(formKey, $(field).val());
+    });
+
+    return formData;
   }
 }
