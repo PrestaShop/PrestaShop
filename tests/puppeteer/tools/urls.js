@@ -1,13 +1,13 @@
 module.exports = [
-  {
+  /*{
     name:'BO',
     urlPrefix: 'URL_BO', //replaced
     description: 'Parcours du Back Office',
     urls: [
       {name: 'BO_login', url: 'index.php?controller=AdminLogin'},
-      {name: 'BO_dashboard', url: 'index.php?controller=AdminLogin', customAction: async function({page, loginInfos}) {
-          await page.type('#email', loginInfos.admin.login);
-          await page.type('#passwd', loginInfos.admin.password);
+      {name: 'BO_dashboard', url: 'index.php?controller=AdminLogin', customAction: async function({page, LOGININFOS}) {
+          await page.type('#email', LOGININFOS.admin.login);
+          await page.type('#passwd', LOGININFOS.admin.password);
           await Promise.all([
             page.click('#submit_login'),
             page.waitForNavigation({waitUntil: 'networkidle0'})
@@ -144,7 +144,7 @@ module.exports = [
       {name: 'BO_webservice', url: 'index.php/configure/advanced/webservice-keys/'},
       {name: 'BO_add_webservice_key', url: 'index.php/configure/advanced/webservice-keys/new'},
     ]
-  },
+  },*/
   {
     name:'FO',
     urlPrefix: 'URL_FO',
@@ -152,9 +152,9 @@ module.exports = [
     urls: [
       {name: 'FO_homepage', url:'index.php'},
       {name: 'FO_login', url:'index.php?controller=authentication&back=my-account'},
-      {name: 'FO_my_account', url:'index.php?controller=authentication&back=my-account', customAction: async function({page, loginInfos}) {
-          await page.type('#login-form input[name=email]', loginInfos.user.login);
-          await page.type('#login-form input[name=password]', loginInfos.user.password);
+      {name: 'FO_my_account', url:'index.php?controller=authentication&back=my-account', customAction: async function({page, LOGININFOS}) {
+          await page.type('#login-form input[name=email]', LOGININFOS.user.login);
+          await page.type('#login-form input[name=password]', LOGININFOS.user.password);
           await page.click('#submit-login');
         }},
       {name: 'FO_product_1', url: 'index.php?id_product=1&id_product_attribute=1&rewrite=hummingbird-printed-t-shirt&controller=product&id_lang=1#/1-size-s/8-color-white'},

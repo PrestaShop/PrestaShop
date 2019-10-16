@@ -2,7 +2,7 @@ const puppeteer = require('puppeteer');
 const expect = require('chai').expect;
 const fs = require('fs');
 
-const reportPath = 'reports';
+const reportPath = 'tools/reports';
 // filename
 const curDate = new Date();
 const dateString = curDate.toJSON().slice(0, 10);
@@ -15,10 +15,10 @@ const urlsList = require('./urls.js');
 
 const URL_FO = process.env.URL_FO || 'http://localhost/prestashop/';
 const URL_BO = process.env.URL_BO || `${URL_FO}admin-dev/`;
-
 const LOG_PASSED = process.env.LOG_PASSED || false;
+const HEADLESS = process.env.HEADLESS || true;
 
-const loginInfos = {
+const LOGININFOS = {
   user : {
     login: process.env.CLIENT_LOGIN || 'pub@prestashop.com',
     password : process.env.CLIENT_PASSWD || '123456789'
@@ -28,7 +28,6 @@ const loginInfos = {
     password : process.env.PASSWD || 'prestashop_demo',
   }
 };
-const HEADLESS = process.env.HEADLESS || true;
 
 let output = {
   startDate : new Date().toISOString(),
@@ -39,8 +38,11 @@ let outputEntry = {
   name : '',
   url : '',
   passed : [],
-  failed: []
+  failed: [],
+  jsError: []
 };
+let requestError = false;
+let javascriptError = false;
 
 let page = null;
 
@@ -54,7 +56,7 @@ let page = null;
 describe('Crawl every page for defects and issues', async () => {
   before(async function() {
     browser = await puppeteer.launch({
-      headless: JSON.parse(true),
+      headless: JSON.parse(HEADLESS),
       timeout: 0,
       slowMo: 5,
       args: ['--start-maximized', '--no-sandbox', '--lang=en-GB'],
@@ -70,17 +72,18 @@ describe('Crawl every page for defects and issues', async () => {
     });
 
     await page.setRequestInterception(true);
-
+    //intercepts requests
     await page.on('request', (request) => {
       request.continue();
     });
+    //intercepts responses
     await page.on('response', (response) => {
       const request = response.request();
       const url = request.url();
       const status = response.status().toString();
 
       if (status.startsWith('4') || status.startsWith('5')) {
-        console.warn(` !! Failed response : ${url} (${status})`);
+        requestError = true;
         outputEntry.failed.push({
           url : url,
           status: status
@@ -92,8 +95,16 @@ describe('Crawl every page for defects and issues', async () => {
             status: status
           });
         }
-
       }
+    });
+    //intercepts JS errors
+    await page.on('pageerror', (pageerr) => {
+      const jsError = pageerr.toString();
+      //console.error(`Javascript error : ${jsError}`);
+      javascriptError = true;
+      outputEntry.jsError.push({
+        error : jsError
+      });
     });
 
   });
@@ -103,9 +114,9 @@ describe('Crawl every page for defects and issues', async () => {
     output.endDate = new Date().toISOString();
     fs.writeFile(`${reportPath}/${filename}.json`, JSON.stringify(output), (err) => {
       if (err) {
-        return console.error(err);
+        //return console.error(err);
       }
-      return console.log(`File ${reportPath}/${filename}.json saved!`);
+      //return console.log(`File ${reportPath}/${filename}.json saved!`);
     });
   });
 
@@ -116,27 +127,34 @@ describe('Crawl every page for defects and issues', async () => {
       let count = 1;
       pagesToCrawl.forEach(function (pageToCrawl) {
         pageToCrawl.urlPrefix = section.urlPrefix.replace('URL_BO', URL_BO).replace('URL_FO', URL_FO);
-        pageToCrawl.sectionName = section.name;
-        pageToCrawl.sectionDescription = section.description;
         it(`Crawling ${pageToCrawl.name} (${count}/${pagesToCrawl.length})`, async function () {
-          outputEntry = {
-            name : pageToCrawl.name,
-            url : pageToCrawl.url,
-            passed : [],
-            failed: []
-          };
-          await Promise.all([
-            page.goto(`${pageToCrawl.urlPrefix}${pageToCrawl.url}`),
-            page.waitForNavigation({waitUntil: 'networkidle0'})
-          ]);
-
-          if (typeof(pageToCrawl.customAction) !== 'undefined') {
-            await pageToCrawl.customAction({page, loginInfos});
-          }
-          output.pages.push(outputEntry);
+          await crawlPage({page, pageToCrawl});
+          await expect(requestError, 'Request error').to.be.false;
+          await expect(javascriptError, 'Javascript error').to.be.false;
         });
         count += 1;
       });
     });
   });
 });
+
+async function crawlPage({page, pageToCrawl}) {
+  requestError = false;
+  javascriptError = false;
+  outputEntry = {
+    name : pageToCrawl.name,
+    url : pageToCrawl.url,
+    passed : [],
+    failed: [],
+    jsError: []
+  };
+  await Promise.all([
+    page.goto(`${pageToCrawl.urlPrefix}${pageToCrawl.url}`),
+    page.waitForNavigation({waitUntil: 'networkidle0'})
+  ]);
+
+  if (typeof(pageToCrawl.customAction) !== 'undefined') {
+    await pageToCrawl.customAction({page, LOGININFOS});
+  }
+  output.pages.push(outputEntry);
+}
