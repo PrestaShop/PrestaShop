@@ -3,6 +3,6 @@ module.exports = {
     id: '1',
     name: 'TVA FR 20%',
     rate: '20',
-    enabled: 'Yes',
+    enabled: true,
   },
 };

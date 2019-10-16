@@ -49,8 +49,12 @@ module.exports = class AddTax extends BOBasePage {
     await this.changeInputLanguage('fr');
     await this.setValue(this.nameFrInput, taxData.frName);
     await this.setValue(this.rateInput, taxData.rate);
-    if (taxData.enabled === 'Yes') await this.page.click(this.enabledSwitchlabel.replace('%ID', '1'));
-    else await this.page.click(this.enabledSwitchlabel.replace('%ID', '0'));
+    if (taxData.enabled) {
+      await this.page.click(this.enabledSwitchlabel.replace('%ID', '1'));
+    }
+    else {
+      await this.page.click(this.enabledSwitchlabel.replace('%ID', '0'));
+    }
     await Promise.all([
       this.page.waitForNavigation({waitUntil: 'networkidle0'}),
       this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true}),

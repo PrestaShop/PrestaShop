@@ -85,8 +85,8 @@ module.exports = class Taxes extends BOBasePage {
    */
   async getToggleColumnValue(row, column) {
     if (await this.elementVisible(
-      this.toggleColumnValidIcon.replace('%ROW', row).replace('%COLUMN', column), 100)) return 'Yes';
-    return 'No';
+      this.toggleColumnValidIcon.replace('%ROW', row).replace('%COLUMN', column), 100)) return true;
+    return false;
   }
 
   /**
@@ -95,7 +95,7 @@ module.exports = class Taxes extends BOBasePage {
    * @param valueWanted
    * @return {Promise<boolean>}, true if click has been performed
    */
-  async updateEnabledValue(row, valueWanted = 'Yes') {
+  async updateEnabledValue(row, valueWanted = true) {
     if (await this.getToggleColumnValue(row, 'active') !== valueWanted) {
       await Promise.all([
         this.page.waitForNavigation({waitUntil: 'networkidle0'}),

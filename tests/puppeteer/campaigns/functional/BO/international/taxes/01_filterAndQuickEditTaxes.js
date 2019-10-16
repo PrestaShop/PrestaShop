@@ -120,7 +120,7 @@ describe('Filter And Quick Edit taxes', async () => {
       await this.pageObjects.taxesPage.filterTaxes(
         'select',
         'active',
-        DefaultFrTax.enabled,
+        DefaultFrTax.enabled ? 'Yes' : 'NO',
       );
       const numberOfTaxesAfterFilter = await this.pageObjects.taxesPage.getNumberFromText(
         this.pageObjects.taxesPage.gridHeaderTitle,
@@ -162,8 +162,7 @@ describe('Filter And Quick Edit taxes', async () => {
     it('should disable first tax', async function () {
       const isActionPerformed = await this.pageObjects.taxesPage.updateEnabledValue(
         '1',
-        'active',
-        'No',
+        false,
       );
       if (isActionPerformed) {
         const resultMessage = await this.pageObjects.taxesPage.getTextContent(
@@ -181,8 +180,7 @@ describe('Filter And Quick Edit taxes', async () => {
     it('should enable first tax', async function () {
       const isActionPerformed = await this.pageObjects.taxesPage.updateEnabledValue(
         '1',
-        'active',
-        'Yes',
+        true,
       );
       if (isActionPerformed) {
         const resultMessage = await this.pageObjects.taxesPage.getTextContent(
