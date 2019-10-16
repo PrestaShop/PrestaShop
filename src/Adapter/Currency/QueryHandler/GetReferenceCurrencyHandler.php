@@ -74,6 +74,7 @@ class GetReferenceCurrencyHandler implements GetReferenceCurrencyHandlerInterfac
     {
         $localizedNames = [];
         $localizedSymbols = [];
+        $localizedPatterns = [];
         $currency = null;
         /** @var LanguageInterface $language */
         foreach ($this->languages as $language) {
@@ -87,6 +88,7 @@ class GetReferenceCurrencyHandler implements GetReferenceCurrencyHandlerInterfac
                 $localizedNames[$language->getId()] = $query->getIsoCode()->getValue();
                 $localizedSymbols[$language->getId()] = $query->getIsoCode()->getValue();
             }
+            $localizedPatterns[$language->getId()] = $locale->getCurrencyPattern();
         }
 
         if (null === $currency) {
@@ -101,6 +103,7 @@ class GetReferenceCurrencyHandler implements GetReferenceCurrencyHandlerInterfac
             $currency->getNumericIsoCode(),
             $localizedNames,
             $localizedSymbols,
+            $localizedPatterns,
             $currency->getDecimalDigits()
         );
     }

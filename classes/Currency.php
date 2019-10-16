@@ -153,6 +153,20 @@ class CurrencyCore extends ObjectModel
     public $precision;
 
     /**
+     * CLDR price formatting transformation
+     *
+     * @var string
+     */
+    public $transformation;
+
+    /**
+     * CLDR price formatting transform, the array is indexed by language id
+     *
+     * @var string[]
+     */
+    private $localizedTransformations;
+
+    /**
      * @see ObjectModel::$definition
      */
     public static $definition = array(
@@ -172,6 +186,7 @@ class CurrencyCore extends ObjectModel
             /* Lang fields */
             'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
             'symbol' => array('type' => self::TYPE_STRING, 'lang' => true, 'size' => 255),
+            'transformation' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCurrencyPatternTransformation', 'size' => 64),
         ),
     );
 
@@ -235,8 +250,14 @@ class CurrencyCore extends ObjectModel
                 $this->localizedNames = $this->name;
                 $this->name = Tools::ucfirst($this->name[$idLang]);
             } else {
-                $this->localizedNames = [$idLang = $this->name];
+                $this->localizedNames = [$idLang => $this->name];
                 $this->name = Tools::ucfirst($this->name);
+            }
+
+            if (is_array($this->transformation)) {
+                $this->localizedTransformations = $this->transformation;
+            } else {
+                $this->localizedTransformations = [$idLang => $this->transformation];
             }
 
             $this->iso_code_num = $this->numeric_iso_code;
@@ -472,6 +493,37 @@ class CurrencyCore extends ObjectModel
         return $this;
     }
 
+    /**
+     * @return string
+     */
+    public function getPatternTransformation($idLang)
+    {
+        return !empty($this->localizedTransformations[$idLang]) ? $this->localizedTransformations[$idLang] : '';
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getLocalizedTransformations()
+    {
+        return $this->localizedTransformations;
+    }
+
+    /**
+     * This setter updates the transformation field because it is used when you want to update
+     * the database (legacy core feature). But to be consistent the transformations field also
+     * needs to be updated.
+     *
+     * @param string[] $localizedTransformations list of currency transformations, the array needs to be indexed by language id
+     *
+     * @return CurrencyCore
+     */
+    public function setLocalizedTransformations(array $localizedTransformations)
+    {
+        $this->localizedTransformations = $this->transformation = $localizedTransformations;
+
+        return $this;
+    }
     /**
      * Return available currencies.
      *
@@ -974,8 +1026,9 @@ class CurrencyCore extends ObjectModel
 
             if (empty($cldrCurrency)) {
                 // The currency may not be declared in the locale, eg with unofficial iso code
-                $namesByLang[$language->id] = $originalNames[$language->id] ?: $this->iso_code;
-                $symbolsByLang[$language->id] = $originalSymbols[$language->id] ?: $this->iso_code;
+                // Check if data is present in case it's not available for all languages
+                $namesByLang[$language->id] = !empty($originalNames[$language->id]) ? $originalNames[$language->id] : $this->iso_code;
+                $symbolsByLang[$language->id] = !empty($originalSymbols[$language->id]) ? $originalSymbols[$language->id] : $this->iso_code;
                 $this->modified = true;
                 continue;
             }
@@ -997,7 +1050,7 @@ class CurrencyCore extends ObjectModel
             $namesByLang[$language->id] = $name;
         }
 
-        $this->name = $namesByLang;
-        $this->symbol = $symbolsByLang;
+        $this->names = $this->name = $namesByLang;
+        $this->symbols = $this->symbol = $symbolsByLang;
     }
 }

@@ -24,3 +24,8 @@ ALTER TABLE `PREFIX_hook` CHANGE `name` `name` VARCHAR(191) NOT NULL;
 ALTER TABLE `PREFIX_hook` CHANGE `title` `title` VARCHAR(255) NOT NULL;
 ALTER TABLE `PREFIX_hook_alias` CHANGE `name` `name` VARCHAR(191) NOT NULL;
 ALTER TABLE `PREFIX_hook_alias` CHANGE `alias` `alias` VARCHAR(191) NOT NULL;
+
+/* Add fields for currencies */
+ALTER TABLE `PREFIX_currency` ADD `unofficial` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER `active`;
+ALTER TABLE `PREFIX_currency` ADD `modified` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER `active`;
+ALTER TABLE `PREFIX_currency_lang` ADD `transformation` varchar(64) DEFAULT NULL AFTER `symbol`;
