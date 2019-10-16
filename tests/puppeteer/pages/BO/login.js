@@ -1,4 +1,5 @@
-const BOBasePage = require('../BO/BObasePage');
+require('module-alias/register');
+const BOBasePage = require('@pages/BO/BObasePage');
 
 module.exports = class Login extends BOBasePage {
   constructor(page) {

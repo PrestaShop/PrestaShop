@@ -1,18 +1,19 @@
+require('module-alias/register');
 // Using chai
 const {expect} = require('chai');
-const helper = require('../utils/helpers');
+const helper = require('@utils/helpers');
 
 // importing pages
-const LoginPage = require('../../pages/BO/login');
-const DashboardPage = require('../../pages/BO/dashboard');
-const BOBasePage = require('../../pages/BO/BObasePage');
-const ModuleCatalogPage = require('../../pages/BO/moduleCatalog');
-const ModuleManagerPage = require('../../pages/BO/moduleManager');
-const ShopParamsGeneralPage = require('../../pages/BO/shopParamsGeneral');
-const ShopParamsMaintenancePage = require('../../pages/BO/shopParamsMaintenance');
-const AutoUpgradePage = require('../../pages/BO/modulesPages/autoUpgrade');
-const HomePage = require('../../pages/FO/home');
-const loginCommon = require('../commonTests/loginBO');
+const LoginPage = require('@pages/BO/login');
+const DashboardPage = require('@pages/BO/dashboard');
+const BOBasePage = require('@pages/BO/BObasePage');
+const ModuleCatalogPage = require('@pages/BO/moduleCatalog');
+const ModuleManagerPage = require('@pages/BO/moduleManager');
+const ShopParamsGeneralPage = require('@pages/BO/shopParamsGeneral');
+const ShopParamsMaintenancePage = require('@pages/BO/shopParamsMaintenance');
+const AutoUpgradePage = require('@pages/BO/modulesPages/autoUpgrade');
+const HomePage = require('@pages/FO/home');
+const loginCommon = require('@commonTests/loginBO');
 
 let browser;
 let page;

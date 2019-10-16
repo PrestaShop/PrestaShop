@@ -25,20 +25,20 @@
 
 <script type="text/javascript">
 $().ready(function() {
-	$('.input_all_shop').live('click', function() {
+	$(document).on('click', '.input_all_shop', function(e) {
 		var checked = $(this).prop('checked');
 		$('.input_shop_group:not(:disabled)').attr('checked', checked);
 		$('.input_shop:not(:disabled)').attr('checked', checked);
 	});
 
 	// Click on a group shop
-	$('.input_shop_group').live('click', function() {
+	$(document).on('click', '.input_shop_group', function(e) {
 		$('.input_shop[value='+$(this).val()+']').attr('checked', $(this).prop('checked'));
 		check_all_shop();
 	});
 
 	// Click on a shop
-	$('.input_shop').live('click', function() {
+	$(document).on('click', '.input_shop', function(e) {
 		check_shop_group_status($(this).val());
 		check_all_shop();
 	});

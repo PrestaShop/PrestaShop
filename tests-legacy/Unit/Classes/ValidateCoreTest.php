@@ -254,7 +254,7 @@ class ValidateCoreTest extends TestCase
             array(true, '1991-04-19'),
             array(true, '2015-03-22'),
             array(true, '1945-07-25'),
-            array(false, '2020-03-19'),
+            array(false, '3000-03-19'),
             array(false, '1991-03-33'),
             array(false, '1991-15-19'),
             array(true, date('Y-m-d', strtotime('now'))),

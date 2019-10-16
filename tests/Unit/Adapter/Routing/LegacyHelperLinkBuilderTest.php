@@ -35,20 +35,26 @@ class LegacyHelperLinkBuilderTest extends TestCase
     {
         $builder = new LegacyHelperLinkBuilder();
         $viewLink = $builder->getViewLink('product', ['id_product' => 42, 'current_index' => 'index.php?controller=AdminProducts']);
-        $this->assertEquals('index.php?controller=AdminProducts&id_product=42&viewproduct=1', $viewLink);
+        $this->assertEquals('index.php?controller=AdminProducts&viewproduct=&id_product=42', $viewLink);
 
         $viewLink = $builder->getViewLink('product', ['id_product' => 42, 'current_index' => 'index.php?controller=AdminProducts', 'token' => 'toto']);
-        $this->assertEquals('index.php?controller=AdminProducts&id_product=42&token=toto&viewproduct=1', $viewLink);
+        $this->assertEquals('index.php?controller=AdminProducts&viewproduct=&id_product=42&token=toto', $viewLink);
+
+        $viewLink = $builder->getViewLink('product', ['id_product' => 42, 'current_index' => 'index.php?controller=AdminProducts', 'viewproduct' => 'on']);
+        $this->assertEquals('index.php?controller=AdminProducts&viewproduct=on&id_product=42', $viewLink);
     }
 
     public function testBuildEditLink()
     {
         $builder = new LegacyHelperLinkBuilder();
         $editLink = $builder->getEditLink('product', ['id_product' => 42, 'current_index' => 'index.php?controller=AdminProducts']);
-        $this->assertEquals('index.php?controller=AdminProducts&id_product=42&updateproduct=1', $editLink);
+        $this->assertEquals('index.php?controller=AdminProducts&updateproduct=&id_product=42', $editLink);
 
         $editLink = $builder->getEditLink('product', ['id_product' => 42, 'current_index' => 'index.php?controller=AdminProducts', 'token' => 'toto']);
-        $this->assertEquals('index.php?controller=AdminProducts&id_product=42&token=toto&updateproduct=1', $editLink);
+        $this->assertEquals('index.php?controller=AdminProducts&updateproduct=&id_product=42&token=toto', $editLink);
+
+        $viewLink = $builder->getEditLink('product', ['id_product' => 42, 'current_index' => 'index.php?controller=AdminProducts', 'updateproduct' => 'enabled']);
+        $this->assertEquals('index.php?controller=AdminProducts&updateproduct=enabled&id_product=42', $viewLink);
     }
 
     /**

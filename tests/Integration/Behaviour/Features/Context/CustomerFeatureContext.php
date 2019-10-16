@@ -146,7 +146,7 @@ class CustomerFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @param $productName
+     * @param $customerName
      *
      * @return Customer
      */

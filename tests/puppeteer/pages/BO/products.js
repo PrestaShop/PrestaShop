@@ -1,5 +1,6 @@
+require('module-alias/register');
 // Importing page
-const BOBasePage = require('../BO/BObasePage');
+const BOBasePage = require('@pages/BO/BObasePage');
 
 module.exports = class Product extends BOBasePage {
   constructor(page) {

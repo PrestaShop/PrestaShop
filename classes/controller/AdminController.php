@@ -247,6 +247,9 @@ class AdminControllerCore extends Controller
     /** @var HelperList */
     protected $helper;
 
+    /** @var bool */
+    private $allowAnonymous = false;
+
     /** @var int DELETE access level */
     const LEVEL_DELETE = 4;
 
@@ -770,7 +773,7 @@ class AdminControllerCore extends Controller
      */
     public function checkToken()
     {
-        if (TokenInUrls::isDisabled()) {
+        if (TokenInUrls::isDisabled() || $this->isAnonymousAllowed()) {
             return true;
         }
 
@@ -2705,8 +2708,9 @@ class AdminControllerCore extends Controller
             // add Jquery 3 and its migration script
             $this->addJs(_PS_JS_DIR_ . 'jquery/jquery-3.4.1.min.js');
             $this->addJs(_PS_JS_DIR_ . 'jquery/jquery-migrate-3.1.0.min.js');
-            // implement $.browser object, that has been removed since jquery 1.9
+            // implement $.browser object and live method, that has been removed since jquery 1.9
             $this->addJs(_PS_JS_DIR_ . 'jquery/jquery.browser-0.1.0.min.js');
+            $this->addJs(_PS_JS_DIR_ . 'jquery/jquery.live-polyfill-1.0.3.min.js');
 
             $this->addJqueryPlugin(array('scrollTo', 'alerts', 'chosen', 'autosize', 'fancybox'));
             $this->addJqueryPlugin('growl', null, false);
@@ -2833,7 +2837,17 @@ class AdminControllerCore extends Controller
                 $this->context->cookie->last_activity = time();
             }
         }
-        if ($this->controller_name != 'AdminLogin' && (!isset($this->context->employee) || !$this->context->employee->isLoggedBack())) {
+
+        if (
+            !$this->isAnonymousAllowed()
+            && (
+                $this->controller_name != 'AdminLogin'
+                && (
+                    !isset($this->context->employee)
+                    || !$this->context->employee->isLoggedBack()
+                )
+            )
+        ) {
             if (isset($this->context->employee)) {
                 $this->context->employee->logout();
             }
@@ -2843,6 +2857,7 @@ class AdminControllerCore extends Controller
             }
             Tools::redirectAdmin($this->context->link->getAdminLink('AdminLogin') . ((!isset($_GET['logout']) && $this->controller_name != 'AdminNotFound' && Tools::getValue('controller')) ? '&redirect=' . $this->controller_name : '') . ($email ? '&email=' . $email : ''));
         }
+
         // Set current index
         $current_index = 'index.php' . (($controller = Tools::getValue('controller')) ? '?controller=' . $controller : '');
         if ($back = Tools::getValue('back')) {
@@ -2912,7 +2927,8 @@ class AdminControllerCore extends Controller
      */
     public function initShopContext()
     {
-        if (!$this->context->employee->isLoggedBack()) {
+        // Do not initialize context when the shop is not installed
+        if (defined('PS_INSTALLATION_IN_PROGRESS')) {
             return;
         }
 
@@ -2927,13 +2943,13 @@ class AdminControllerCore extends Controller
             $this->redirect_after = $url['path'] . ($http_build_query ? '?' . $http_build_query : '');
         } elseif (!Shop::isFeatureActive()) {
             $this->context->cookie->shopContext = 's-' . (int) Configuration::get('PS_SHOP_DEFAULT');
-        } elseif (Shop::getTotalShops(false, null) < 2) {
+        } elseif (Shop::getTotalShops(false, null) < 2 && $this->context->employee->isLoggedBack()) {
             $this->context->cookie->shopContext = 's-' . (int) $this->context->employee->getDefaultShopID();
         }
 
-        $shop_id = '';
+        $shop_id = null;
         Shop::setContext(Shop::CONTEXT_ALL);
-        if ($this->context->cookie->shopContext) {
+        if ($this->context->cookie->shopContext && $this->context->employee->isLoggedBack()) {
             $split = explode('-', $this->context->cookie->shopContext);
             if (count($split) == 2) {
                 if ($split[0] == 'g') {
@@ -4873,5 +4889,27 @@ class AdminControllerCore extends Controller
             ['symbol' => $numberSpecification->getSymbolsByNumberingSystem(Locale::NUMBERING_SYSTEM_LATIN)->toArray()],
             $numberSpecification->toArray()
         );
+    }
+
+    /**
+     * Set if anonymous is allowed to run this controller
+     *
+     * @param bool $value
+     *
+     * @return bool
+     */
+    protected function setAllowAnonymous($value)
+    {
+        $this->allowAnonymous = (bool) $value;
+    }
+
+    /**
+     * Return if an anonymous is allowed to run this controller
+     *
+     * @return bool
+     */
+    protected function isAnonymousAllowed()
+    {
+        return $this->allowAnonymous;
     }
 }

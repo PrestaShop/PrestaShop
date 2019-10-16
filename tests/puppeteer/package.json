@@ -12,12 +12,20 @@
     "sanity-tests": "./node_modules/mocha/bin/mocha campaigns/sanity/*",
     "sanity-travis": "./node_modules/mocha/bin/mocha --bail campaigns/sanity/*"
   },
+  "_moduleAliases": {
+    "@pages": "pages",
+    "@commonTests": "campaigns/commonTests",
+    "@data": "campaigns/data",
+    "@utils": "campaigns/utils"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/PrestaShop/PrestaShop.git"
   },
   "keywords": [
-    "puppeteer", "sanity", "functional"
+    "puppeteer",
+    "sanity",
+    "functional"
   ],
   "author": "Prestashop",
   "license": "OSL-3.0",
@@ -32,7 +40,8 @@
     "mocha": "^6.1.4",
     "mochawesome": "^4.0.1",
     "puppeteer": "^1.18.1",
-    "faker": "^4.1.0"
+    "faker": "^4.1.0",
+    "module-alias": "^2.2.2"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.2",

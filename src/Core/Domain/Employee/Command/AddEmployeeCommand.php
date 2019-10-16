@@ -52,11 +52,6 @@ class AddEmployeeCommand
     private $email;
 
     /**
-     * @var bool
-     */
-    private $isSubscribedToNewsletter;
-
-    /**
      * @var int
      */
     private $defaultPageId;
@@ -91,7 +86,6 @@ class AddEmployeeCommand
      * @param string $lastName
      * @param string $email
      * @param string $plainPassword
-     * @param bool $isSubscribedToNewsletter
      * @param int $defaultPageId
      * @param int $languageId
      * @param bool $active
@@ -103,7 +97,6 @@ class AddEmployeeCommand
         $lastName,
         $email,
         $plainPassword,
-        $isSubscribedToNewsletter,
         $defaultPageId,
         $languageId,
         $active,
@@ -113,7 +106,6 @@ class AddEmployeeCommand
         $this->firstName = new FirstName($firstName);
         $this->lastName = new LastName($lastName);
         $this->email = new Email($email);
-        $this->isSubscribedToNewsletter = $isSubscribedToNewsletter;
         $this->defaultPageId = $defaultPageId;
         $this->languageId = $languageId;
         $this->active = $active;
@@ -144,14 +136,6 @@ class AddEmployeeCommand
     public function getEmail()
     {
         return $this->email;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isSubscribedToNewsletter()
-    {
-        return $this->isSubscribedToNewsletter;
     }
 
     /**

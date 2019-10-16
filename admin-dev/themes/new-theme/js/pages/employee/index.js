@@ -36,6 +36,7 @@ import SubmitRowActionExtension from '../../components/grid/extension/action/row
 import ColumnTogglingExtension from '../../components/grid/extension/column-toggling-extension';
 import ShowcaseCard from '../../components/showcase-card/showcase-card';
 import ShowcaseCardCloseExtension from '../../components/showcase-card/extension/showcase-card-close-extension';
+import LinkRowActionExtension from '../../components/grid/extension/link-row-action-extension';
 
 const $ = window.$;
 
@@ -51,6 +52,7 @@ $(() => {
   employeeGrid.addExtension(new SubmitRowActionExtension());
   employeeGrid.addExtension(new ColumnTogglingExtension());
   employeeGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
+  employeeGrid.addExtension(new LinkRowActionExtension());
 
   const showcaseCard = new ShowcaseCard('employeesShowcaseCard');
   showcaseCard.addExtension(new ShowcaseCardCloseExtension());
