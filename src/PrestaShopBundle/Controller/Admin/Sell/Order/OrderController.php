@@ -305,6 +305,8 @@ class OrderController extends FrameworkBundleAdminController
      * @param int $orderId
      * @param Request $request
      *
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
+     *
      * @return RedirectResponse
      */
     public function updateStatusAction(int $orderId, Request $request): RedirectResponse
@@ -313,23 +315,29 @@ class OrderController extends FrameworkBundleAdminController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                $this->getCommandBus()->handle(
-                    new UpdateOrderStatusCommand(
-                        $orderId,
-                        (int) $form->getData()['new_order_status_id']
-                    )
-                );
-
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
-            } catch (Exception $e) {
-                $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
-            }
+            $this->handleOrderStatusUpdate($orderId, (int) $form->getData()['new_order_status_id']);
         }
 
         return $this->redirectToRoute('admin_orders_view', [
             'orderId' => $orderId,
         ]);
+    }
+
+    /**
+     * Updates order status directly from list page.
+     *
+     * @param int $orderId
+     * @param Request $request
+     *
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
+     *
+     * @return RedirectResponse
+     */
+    public function updateStatusFromListAction(int $orderId, Request $request): RedirectResponse
+    {
+        $this->handleOrderStatusUpdate($orderId, $request->request->getInt('value'));
+
+        return $this->redirectToRoute('admin_orders_index');
     }
 
     /**
@@ -388,6 +396,28 @@ class OrderController extends FrameworkBundleAdminController
         return $this->json(
             $this->getQueryBus()->handle(new GetCartInformation($cartId))
         );
+    }
+
+    /**
+     * Initializes order status update
+     *
+     * @param int $orderId
+     * @param int $orderStatusId
+     */
+    private function handleOrderStatusUpdate(int $orderId, int $orderStatusId): void
+    {
+        try {
+            $this->getCommandBus()->handle(
+                new UpdateOrderStatusCommand(
+                    $orderId,
+                    $orderStatusId
+                )
+            );
+
+            $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
     }
 
     /**

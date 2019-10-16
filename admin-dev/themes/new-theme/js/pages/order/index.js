@@ -35,6 +35,7 @@ import BulkActionCheckboxExtension from '../../components/grid/extension/bulk-ac
 import FiltersSubmitButtonEnablerExtension
   from '../../components/grid/extension/filters-submit-button-enabler-extension';
 import ModalFormSubmitExtension from "../../components/grid/extension/modal-form-submit-extension";
+import ChoiceExtension from '../../components/grid/extension/choice-extension';
 
 const $ = window.$;
 
@@ -50,4 +51,5 @@ $(() => {
   orderGrid.addExtension(new BulkActionCheckboxExtension());
   orderGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
   orderGrid.addExtension(new ModalFormSubmitExtension());
+  orderGrid.addExtension(new ChoiceExtension());
 });

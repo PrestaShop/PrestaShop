@@ -145,6 +145,43 @@ table .column-filters td:last-child .grid-reset-button {
             }
           }
 
+          &.choice-type {
+            @mixin display-dropdown-arrow() {
+              &::after {
+                visibility: visible;
+              }
+            }
+
+            .dropdown {
+              &.show {
+                .dropdown-toggle {
+                  @include display-dropdown-arrow();
+                }
+              }
+
+              .dropdown-toggle {
+                padding: 0 5px 0 5px;
+                &.coloured {
+                  border: 0;
+                }
+
+                &::after {
+                  visibility: hidden;
+                }
+
+                &:hover {
+                  @include display-dropdown-arrow();
+                }
+              }
+
+              .dropdown-menu {
+                .dropdown-item {
+                  cursor: pointer;
+                }
+              }
+            }
+          }
+
           &.action-type {
             .inline-dropdown-item {
               &:only-child {
