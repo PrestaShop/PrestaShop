@@ -1,14 +1,15 @@
+require('module-alias/register');
 // Using chai
 const {expect} = require('chai');
-const helper = require('../../../../utils/helpers');
-const loginCommon = require('../../../../commonTests/loginBO');
+const helper = require('@utils/helpers');
+const loginCommon = require('@commonTests/loginBO');
 // Importing pages
-const BOBasePage = require('../../../../../pages/BO/BObasePage');
-const LoginPage = require('../../../../../pages/BO/login');
-const DashboardPage = require('../../../../../pages/BO/dashboard');
-const CategoriesPage = require('../../../../../pages/BO/categories');
-const AddCategoryPage = require('../../../../../pages/BO/addCategory');
-const CategoryFaker = require('../../../../data/faker/category');
+const BOBasePage = require('@pages/BO/BObasePage');
+const LoginPage = require('@pages/BO/login');
+const DashboardPage = require('@pages/BO/dashboard');
+const CategoriesPage = require('@pages/BO/categories');
+const AddCategoryPage = require('@pages/BO/addCategory');
+const CategoryFaker = require('@data/faker/category');
 
 let browser;
 let page;
