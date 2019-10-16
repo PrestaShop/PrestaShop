@@ -46,6 +46,8 @@ module.exports = class Home extends FOBasePage {
     await this.page.hover(this.productImg.replace('%NUMBER', id));
     let displayed = false;
     /* eslint-disable no-await-in-loop */
+    // Only way to detect if element is displayed is to get value of computed style 'product description' after hover
+    // and compare it with value 'block'
     for (let i = 0; i < 10 && !displayed; i++) {
       displayed = await this.page.evaluate(
         selector => window.getComputedStyle(document.querySelector(selector), ':after')
