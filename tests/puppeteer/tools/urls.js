@@ -1,5 +1,5 @@
 module.exports = [
-  /*{
+  /* {
     name:'BO',
     urlPrefix: 'URL_BO', //replaced
     description: 'Parcours du Back Office',
@@ -144,20 +144,28 @@ module.exports = [
       {name: 'BO_webservice', url: 'index.php/configure/advanced/webservice-keys/'},
       {name: 'BO_add_webservice_key', url: 'index.php/configure/advanced/webservice-keys/new'},
     ]
-  },*/
+  }, */
   {
-    name:'FO',
+    name: 'FO',
     urlPrefix: 'URL_FO',
     description: 'Parcours du Front Office',
     urls: [
-      {name: 'FO_homepage', url:'index.php'},
-      {name: 'FO_login', url:'index.php?controller=authentication&back=my-account'},
-      {name: 'FO_my_account', url:'index.php?controller=authentication&back=my-account', customAction: async function({page, LOGININFOS}) {
+      {name: 'FO_homepage', url: 'index.php'},
+      {name: 'FO_login', url: 'index.php?controller=authentication&back=my-account'},
+      {
+        name: 'FO_my_account',
+        url: 'index.php?controller=authentication&back=my-account',
+        async customAction({page, LOGININFOS}) {
           await page.type('#login-form input[name=email]', LOGININFOS.user.login);
           await page.type('#login-form input[name=password]', LOGININFOS.user.password);
           await page.click('#submit-login');
-        }},
-      {name: 'FO_product_1', url: 'index.php?id_product=1&id_product_attribute=1&rewrite=hummingbird-printed-t-shirt&controller=product&id_lang=1#/1-size-s/8-color-white'},
+        },
+      },
+      {
+        name: 'FO_product_1',
+        url: 'index.php?id_product=1&id_product_attribute=1&rewrite=hummingbird-printed-t-shirt'
+          + '&controller=product&id_lang=1#/1-size-s/8-color-white',
+      },
       {name: 'FO_category_clothes', url: 'index.php?id_category=3&controller=category&id_lang=1'},
       {name: 'FO_contact_us', url: 'index.php?controller=contact'},
       {name: 'FO_prices_drop', url: 'index.php?controller=prices-drop'},
@@ -170,6 +178,6 @@ module.exports = [
       {name: 'FO_account_history', url: 'index.php?controller=history'},
       {name: 'FO_account_credit_slips', url: 'index.php?controller=order-slip'},
       {name: 'FO_account_gdpr', url: 'index.php?fc=module&module=psgdpr&controller=gdpr&id_lang=1'},
-    ]
-  }
+    ],
+  },
 ];
