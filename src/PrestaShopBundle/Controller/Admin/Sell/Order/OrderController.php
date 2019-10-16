@@ -51,6 +51,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderPreview;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPreview;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\ProductsForOrderCreation;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
+use PrestaShop\PrestaShop\Core\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\OrderFilters;
 use PrestaShopBundle\Component\CsvResponse;
@@ -75,6 +76,8 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class OrderController extends FrameworkBundleAdminController
 {
+    const PRODUCT_CUSTOMIZATION_FIELDS_REQUEST_KEY = 'customization';
+
     /**
      * Shows list of orders
      *
@@ -604,6 +607,25 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
+     * @param Request $request
+     * @return Response
+     */
+    public function addProductAction(Request $request): Response
+    {
+        try {
+            $this->addCustomizationFields($request);
+
+            return new Response();
+        } catch (Exception $e) {
+            return $this->json([
+                'message' => $this->getErrorMessageForException($e, []),
+            ],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
+    }
+
+    /**
      * @param Exception $e
      *
      * @return array
@@ -624,7 +646,7 @@ class OrderController extends FrameworkBundleAdminController
             ),
             OrderConstraintException::class => [
                 OrderConstraintException::INVALID_PRODUCT_SEARCH_PHRASE => $this->trans('Inval')
-            ]
+            ],
         ];
     }
 
@@ -660,5 +682,17 @@ class OrderController extends FrameworkBundleAdminController
                 )
             );
         }
+    }
+
+    /**
+     * @param Request $request
+     * @return int|null
+     */
+    private function addCustomizationFields(Request $request): ?int
+    {
+        $customizationFields = $request->request->get(self::PRODUCT_CUSTOMIZATION_FIELDS_REQUEST_KEY);
+        $customizationFiles = $request->files->get(self::PRODUCT_CUSTOMIZATION_FIELDS_REQUEST_KEY);
+
+        return null;
     }
 }
