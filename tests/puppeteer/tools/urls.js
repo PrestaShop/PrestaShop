@@ -6,10 +6,12 @@ module.exports = [
     urls: [
       {name: 'BO_login', url: 'index.php?controller=AdminLogin'},
       {name: 'BO_dashboard', url: 'index.php?controller=AdminLogin', customAction: async function({page, loginInfos}) {
-          await page.type('#email', loginInfos.EMAIL);
-          await page.type('#passwd', loginInfos.PASSWD);
-          await page.click('#submit_login');
-          await page.waitForNavigation({waitUntil: 'networkidle0'});
+          await page.type('#email', loginInfos.admin.login);
+          await page.type('#passwd', loginInfos.admin.password);
+          await Promise.all([
+            page.click('#submit_login'),
+            page.waitForNavigation({waitUntil: 'networkidle0'})
+          ]);
 
           page.evaluate(async () => {
             const block = document.querySelector("button.onboarding-button-shut-down");
@@ -151,8 +153,8 @@ module.exports = [
       {name: 'FO_homepage', url:'index.php'},
       {name: 'FO_login', url:'index.php?controller=authentication&back=my-account'},
       {name: 'FO_my_account', url:'index.php?controller=authentication&back=my-account', customAction: async function({page, loginInfos}) {
-          await page.type('#login-form input[name=email]', loginInfos.EMAIL_CLIENT);
-          await page.type('#login-form input[name=password]', loginInfos.PASSWD_CLIENT);
+          await page.type('#login-form input[name=email]', loginInfos.user.login);
+          await page.type('#login-form input[name=password]', loginInfos.user.password);
           await page.click('#submit-login');
         }},
       {name: 'FO_product_1', url: 'index.php?id_product=1&id_product_attribute=1&rewrite=hummingbird-printed-t-shirt&controller=product&id_lang=1#/1-size-s/8-color-white'},
