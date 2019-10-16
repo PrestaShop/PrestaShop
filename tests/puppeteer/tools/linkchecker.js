@@ -1,6 +1,7 @@
 const puppeteer = require('puppeteer');
 const {expect} = require('chai');
 const fs = require('fs');
+const urlsList = require('./urls.js');
 
 const reportPath = 'tools/reports';
 // filename
@@ -9,9 +10,8 @@ const dateString = curDate.toJSON().slice(0, 10);
 const hours = curDate.getHours();
 const minutes = curDate.getMinutes();
 const seconds = curDate.getSeconds();
-const filename = `report_${dateString}_${hours}${minutes}${seconds}`;
+const filename = `report_${dateString}_${hours}-${minutes}-${seconds}`;
 
-const urlsList = require('./urls.js');
 
 const URL_FO = process.env.URL_FO || 'http://localhost/prestashop/';
 const URL_BO = process.env.URL_BO || `${URL_FO}admin-dev/`;
