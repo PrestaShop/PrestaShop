@@ -224,6 +224,9 @@ class CurrencyType extends TranslatorAwareType
             ->add('active', SwitchType::class, [
                 'required' => false,
             ])
+            ->add('transformations', TranslatableType::class, [
+                'type' => HiddenType::class,
+            ])
         ;
 
         if ($this->isShopFeatureEnabled) {

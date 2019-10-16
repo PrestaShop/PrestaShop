@@ -332,6 +332,7 @@ class Number implements NumberInterface
     public function toArray()
     {
         return [
+            'numberSymbols' => $this->getSymbolsByNumberingSystem()->toArray(),
             'positivePattern' => $this->getPositivePattern(),
             'negativePattern' => $this->getNegativePattern(),
             'maxFractionDigits' => $this->getMaxFractionDigits(),
