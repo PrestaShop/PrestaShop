@@ -1,4 +1,5 @@
-const CommonPage = require('../commonPage');
+require('module-alias/register');
+const CommonPage = require('@pages/commonPage');
 
 module.exports = class Home extends CommonPage {
   constructor(page) {
