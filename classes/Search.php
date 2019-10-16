@@ -1000,7 +1000,7 @@ class SearchCore
          * If we use the auto-acale && self::$totalWordInSearchWordTable > PS_SEARCH_MAX_WORDS_IN_TABLE,
          * we will get $coefMax < 1 following by $coefMax < $coefMin, this is a non-sense.
          * So, we test it before and assign a right value for both target lengths */
-        if (self::$totalWordInSearchWordTable > self::PS_SEARCH_MAX_WORDS_IN_TABLE) {
+        if (self::$totalWordInSearchWordTable > static::PS_SEARCH_MAX_WORDS_IN_TABLE) {
             self::$targetLengthMin = self::$targetLengthMax = (int) (strlen($queryString));
         } else {
             /* This part of code could be see like an auto-scale.
@@ -1022,8 +1022,8 @@ class SearchCore
             *  100,000 words id DB give $coefMin : 1, $coefMax : 1*/
             if (!self::$coefMin) {
                 //self::$coefMin && self::$coefMax depend of the number of total words in ps_search_word table, need to calculate only for every search
-                self::$coefMin = self::PS_SEARCH_ORDINATE_MIN / self::PS_SEARCH_MAX_WORDS_IN_TABLE * self::$totalWordInSearchWordTable + self::PS_SEARCH_ABSCISSA_MIN; //y = ax + b
-                self::$coefMax = self::PS_SEARCH_ORDINATE_MAX / self::PS_SEARCH_MAX_WORDS_IN_TABLE * self::$totalWordInSearchWordTable + self::PS_SEARCH_ABSCISSA_MAX; //y = ax + b
+                self::$coefMin = static::PS_SEARCH_ORDINATE_MIN / static::PS_SEARCH_MAX_WORDS_IN_TABLE * self::$totalWordInSearchWordTable + static::PS_SEARCH_ABSCISSA_MIN; //y = ax + b
+                self::$coefMax = static::PS_SEARCH_ORDINATE_MAX / static::PS_SEARCH_MAX_WORDS_IN_TABLE * self::$totalWordInSearchWordTable + static::PS_SEARCH_ABSCISSA_MAX; //y = ax + b
             }
             // self::$targetLengthMin depends of the length of the $queryString, need to calculate for every word
             self::$targetLengthMin = (int) (strlen($queryString) * self::$coefMin);
