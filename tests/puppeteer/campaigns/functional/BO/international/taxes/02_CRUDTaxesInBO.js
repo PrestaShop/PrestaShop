@@ -163,5 +163,14 @@ describe('Create, Update and Delete Tax in BO', async () => {
       );
       await expect(numberOfTaxesAfterDelete).to.be.equal(numberOfTaxes);
     });
+    it('should reset all filters', async function () {
+      if (await this.pageObjects.taxesPage.elementVisible(this.pageObjects.taxesPage.resetFilterButton, 2000)) {
+        await this.pageObjects.taxesPage.resetFilter();
+      }
+      const numberOfTaxesAfterReset = await this.pageObjects.taxesPage.getNumberFromText(
+        this.pageObjects.taxesPage.gridHeaderTitle,
+      );
+      await expect(numberOfTaxesAfterReset).to.equal(numberOfTaxes);
+    });
   });
 });
