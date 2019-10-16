@@ -58,11 +58,6 @@ class EditEmployeeCommand
     private $email;
 
     /**
-     * @var bool
-     */
-    private $isSubscribedToNewsletter;
-
-    /**
      * @var int
      */
     private $defaultPageId;
@@ -176,26 +171,6 @@ class EditEmployeeCommand
     public function setEmail($email)
     {
         $this->email = new Email($email);
-
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isSubscribedToNewsletter()
-    {
-        return $this->isSubscribedToNewsletter;
-    }
-
-    /**
-     * @param bool $isSubscribedToNewsletter
-     *
-     * @return EditEmployeeCommand
-     */
-    public function setIsSubscribedToNewsletter($isSubscribedToNewsletter)
-    {
-        $this->isSubscribedToNewsletter = $isSubscribedToNewsletter;
 
         return $this;
     }
