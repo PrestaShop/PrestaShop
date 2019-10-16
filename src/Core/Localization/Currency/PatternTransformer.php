@@ -93,6 +93,29 @@ class PatternTransformer
     }
 
     /**
+     * @param string $currencyPattern
+     *
+     * @return string
+     */
+    public function getTransformationType(string $currencyPattern)
+    {
+        $patterns = explode(';', $currencyPattern);
+        $pattern = str_replace(self::RTL_CHARACTER, '', $patterns[0]);
+
+        if (preg_match("/^¤[ \u{a0}].+/", $pattern)) {
+            return self::TYPE_LEFT_SYMBOL_WITH_SPACE;
+        } elseif (preg_match('/^¤.+/', $pattern)) {
+            return self::TYPE_LEFT_SYMBOL_WITHOUT_SPACE;
+        } elseif (preg_match("/.[ \u{a0}]+¤\$/", $pattern)) {
+            return self::TYPE_RIGHT_SYMBOL_WITH_SPACE;
+        } elseif (preg_match('/.+¤$/', $pattern)) {
+            return self::TYPE_RIGHT_SYMBOL_WITHOUT_SPACE;
+        }
+
+        return '';
+    }
+
+    /**
      * @param string $basePattern
      * @param string $transformationType
      *

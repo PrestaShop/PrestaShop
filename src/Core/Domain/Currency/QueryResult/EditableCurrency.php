@@ -50,6 +50,11 @@ class EditableCurrency
     private $symbols;
 
     /**
+     * @var array
+     */
+    private $transformations;
+
+    /**
      * @var string
      */
     private $isoCode;
@@ -84,6 +89,7 @@ class EditableCurrency
      * @param string $isoCode
      * @param array $names
      * @param array $symbols
+     * @param array $transformations
      * @param float $exchangeRate
      * @param int $precision
      * @param bool $isEnabled
@@ -97,6 +103,7 @@ class EditableCurrency
         $isoCode,
         array $names,
         array $symbols,
+        array $transformations,
         $exchangeRate,
         int $precision,
         $isEnabled,
@@ -107,6 +114,7 @@ class EditableCurrency
         $this->isoCode = $isoCode;
         $this->names = $names;
         $this->symbols = $symbols;
+        $this->transformations = $transformations;
         $this->exchangeRate = $exchangeRate;
         $this->precision = $precision;
         $this->isEnabled = $isEnabled;
@@ -150,6 +158,16 @@ class EditableCurrency
     public function getSymbols(): array
     {
         return $this->symbols;
+    }
+
+    /**
+     * Currency's transformations, indexed by language id.
+     *
+     * @return array
+     */
+    public function getTransformations(): array
+    {
+        return $this->transformations;
     }
 
     /**
