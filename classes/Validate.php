@@ -638,7 +638,7 @@ class ValidateCore
             return false;
         }
 
-        return $d->getTimestamp() <= time();
+        return $d->setTime(0, 0, 0)->getTimestamp() <= time();
     }
 
     /**
