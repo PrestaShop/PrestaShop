@@ -153,6 +153,20 @@ class CurrencyCore extends ObjectModel
     public $precision;
 
     /**
+     * CLDR price pattern
+     *
+     * @var string
+     */
+    public $pattern;
+
+    /**
+     * CLDR price patterns, the array is indexed by language id
+     *
+     * @var string[]
+     */
+    private $localizedPatterns;
+
+    /**
      * @see ObjectModel::$definition
      */
     public static $definition = array(
@@ -172,6 +186,7 @@ class CurrencyCore extends ObjectModel
             /* Lang fields */
             'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
             'symbol' => array('type' => self::TYPE_STRING, 'lang' => true, 'size' => 255),
+            'pattern' => array('type' => self::TYPE_STRING, 'lang' => true, 'size' => 64),
         ),
     );
 
@@ -235,8 +250,14 @@ class CurrencyCore extends ObjectModel
                 $this->localizedNames = $this->name;
                 $this->name = Tools::ucfirst($this->name[$idLang]);
             } else {
-                $this->localizedNames = [$idLang = $this->name];
+                $this->localizedNames = [$idLang => $this->name];
                 $this->name = Tools::ucfirst($this->name);
+            }
+
+            if (is_array($this->pattern)) {
+                $this->localizedPatterns = $this->pattern;
+            } else {
+                $this->localizedPatterns = [$idLang => $this->pattern];
             }
 
             $this->iso_code_num = $this->numeric_iso_code;
@@ -468,6 +489,38 @@ class CurrencyCore extends ObjectModel
     public function setLocalizedSymbols(array $localizedSymbols)
     {
         $this->localizedSymbols = $this->symbol = $localizedSymbols;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPattern($idLang)
+    {
+        return $this->localizedPatterns[$idLang] ?? '';
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getLocalizedPatterns()
+    {
+        return $this->localizedPatterns;
+    }
+
+    /**
+     * This setter updates the pattern field because it is used when you want to update
+     * the database (legacy core feature). But to be consistent the patterns field also
+     * needs to be updated.
+     *
+     * @param string[] $localizedPatterns list of currency patterns, the array needs to be indexed by language id
+     *
+     * @return CurrencyCore
+     */
+    public function setLocalizedPatterns(array $localizedPatterns)
+    {
+        $this->localizedPatterns = $this->pattern = $localizedPatterns;
 
         return $this;
     }
@@ -974,8 +1027,9 @@ class CurrencyCore extends ObjectModel
 
             if (empty($cldrCurrency)) {
                 // The currency may not be declared in the locale, eg with unofficial iso code
-                $namesByLang[$language->id] = $originalNames[$language->id] ?: $this->iso_code;
-                $symbolsByLang[$language->id] = $originalSymbols[$language->id] ?: $this->iso_code;
+                // Check if data is present in case it's not available for all languages
+                $namesByLang[$language->id] = !empty($originalNames[$language->id]) ? $originalNames[$language->id] : $this->iso_code;
+                $symbolsByLang[$language->id] = !empty($originalSymbols[$language->id]) ? $originalSymbols[$language->id] : $this->iso_code;
                 $this->modified = true;
                 continue;
             }
@@ -997,7 +1051,7 @@ class CurrencyCore extends ObjectModel
             $namesByLang[$language->id] = $name;
         }
 
-        $this->name = $namesByLang;
-        $this->symbol = $symbolsByLang;
+        $this->localizedNames = $this->name = $namesByLang;
+        $this->localizedSymbols = $this->symbol = $symbolsByLang;
     }
 }
