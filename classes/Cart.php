@@ -4914,6 +4914,23 @@ class CartCore extends ObjectModel
     }
 
     /**
+     * Checks that all products in cart have minimal required quantities
+     *
+     * @return bool
+     */
+    public function checkAllProductsHaveMinimalQuantities()
+    {
+        $productList = $this->getProducts(true);
+        foreach ($productList as $product) {
+            if ($product['minimal_quantity'] > $product['cart_quantity']) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * Execute hook displayCarrierList (extraCarrier) and merge them into the $array.
      *
      * @deprecated since 1.7.6.0.
