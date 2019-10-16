@@ -109,6 +109,9 @@ export default {
   customizedLabelClass: '.js-customized-field-label',
   cartProductCustomizedFieldTemplate: '#cartProductCustomizedFieldTemplate',
   customizedFieldInputWrapper: '.js-customized-field-input-wrapper',
+  customizedFieldInput: '.js-customized-field-input',
+  productSearchEmptyResultTemplate: '#productSearchEmptyResultTemplate',
+  addToCartButton: '#addToCartButton',
   customizedFieldTypes: {
     0: '#cartProductCustomizedFieldInputTemplate-0',
     1: '#cartProductCustomizedFieldInputTemplate-1',
