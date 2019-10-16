@@ -100,7 +100,6 @@ describe('Crawl every page for defects and issues', async () => {
     // intercepts JS errors
     await page.on('pageerror', (pageerr) => {
       const jsError = pageerr.toString();
-      // console.error(`Javascript error : ${jsError}`);
       javascriptError = true;
       outputEntry.jsError.push({
         error: jsError,
@@ -113,9 +112,8 @@ describe('Crawl every page for defects and issues', async () => {
     output.endDate = new Date().toISOString();
     fs.writeFile(`${reportPath}/${filename}.json`, JSON.stringify(output), (err) => {
       if (err) {
-        // return console.error(err);
+        return console.error(err);
       }
-      // return console.log(`File ${reportPath}/${filename}.json saved!`);
     });
   });
 
