@@ -39,4 +39,7 @@ export default {
   addCartRuleTypeSelect: '#add_order_cart_rule_type',
   addCartRuleValueInput: '#add_order_cart_rule_value',
   cartRuleHelpText: '.js-cart-rule-value-help',
+  updateOrderStatusActionBtn: '#update_order_status_action_btn',
+  updateOrderStatusActionInput: '#update_order_status_action_input',
+  updateOrderStatusActionForm: '#update_order_status_action_form',
 };

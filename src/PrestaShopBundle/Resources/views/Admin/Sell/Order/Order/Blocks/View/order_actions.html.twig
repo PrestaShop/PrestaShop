@@ -26,13 +26,20 @@
 <div class="mb-3">
   {{ form_start(updateOrderStatusForm, {
     'action': path('admin_orders_update_status', {'orderId': orderForViewing.id}),
-    'attr': {'class': 'form-inline d-inline-block'}}
-  ) }}
+    'attr': {
+      'class': 'form-inline d-inline-block',
+      'id': 'update_order_status_action_form'
+    }
+  }) }}
     <div class="input-group">
-      {{ form_widget(updateOrderStatusForm.new_order_status_id, {'attr': {'class': 'mr-1'}}) }}
+      {{ form_widget(updateOrderStatusForm.new_order_status_id, {'attr': {'class': 'mr-1'}, 'id': 'update_order_status_action_input'}) }}
 
-      <button class="btn" style="background-color: white; border-radius: 4px; box-shadow: 0 0 10px 0 rgba(0,0,0,0.1);">
-        <i class="material-icons">print</i>
+      <button class="btn"
+              id="update_order_status_action_btn"
+              style="background-color: white; border-radius: 4px; box-shadow: 0 0 10px 0 rgba(0,0,0,0.1);"
+              disabled
+              data-order-status-id="{{ orderForViewing.history.currentOrderStatusId }}"
+      >
         {{ 'Update status'|trans({}, 'Admin.Orderscustomers.Feature') }}
       </button>
     </div>
@@ -41,9 +48,4 @@
       {{ form_rest(updateOrderStatusForm) }}
     </div>
   {{ form_end(updateOrderStatusForm) }}
-
-  <button class="btn" style="background-color: white; border-radius: 4px; box-shadow: 0 0 10px 0 rgba(0,0,0,0.1);">
-    <i class="material-icons">print</i>
-    {{ 'Print order'|trans({}, 'Admin.Orderscustomers.Feature') }}
-  </button>
 </div>
