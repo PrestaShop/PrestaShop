@@ -197,7 +197,7 @@ class CMSCategoryCore extends ObjectModel
 				JOIN `' . _DB_PREFIX_ . 'cms_lang` cl ON c.`id_cms` = cl.`id_cms`
 				WHERE `id_cms_category` = ' . (int) $current . ($active ? ' AND c.`active` = 1' : '') . ' 
 				AND cl.`id_shop` = ' . (int) Context::getContext()->shop->id . ' 
-				AND cl.`id_lang` = ' . (int) $id_lang . ') 
+				AND cl.`id_lang` = ' . (int) $id_lang . ' 
 				GROUP BY c.id_cms
 				ORDER BY c.`position`';
 
