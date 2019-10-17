@@ -42,6 +42,7 @@ describe('Filter And Quick Edit Categories', async () => {
       this.pageObjects.boBasePage.productsParentLink,
       this.pageObjects.boBasePage.categoriesLink,
     );
+    await this.pageObjects.boBasePage.closeSfToolBar();
     const pageTitle = await this.pageObjects.categoriesPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.categoriesPage.pageTitle);
   });
