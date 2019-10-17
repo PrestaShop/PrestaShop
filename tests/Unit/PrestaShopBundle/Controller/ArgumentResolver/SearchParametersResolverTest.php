@@ -28,7 +28,6 @@ namespace Tests\Unit\PrestaShopBundle\Controller\ArgumentResolver;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\Domain\Employee\AuthorizationOptions;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeForAuthentication;
 use PrestaShop\PrestaShop\Core\Domain\Employee\QueryResult\EmployeeForAuthentication;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
@@ -458,7 +457,7 @@ class SearchParametersResolverTest extends TestCase
                     'verysecurepasswordhash',
                     '',
                     1,
-                    [AuthorizationOptions::DEFAULT_EMPLOYEE_ROLE]
+                    [Employee::DEFAULT_EMPLOYEE_ROLE]
                 )
             )
         ;

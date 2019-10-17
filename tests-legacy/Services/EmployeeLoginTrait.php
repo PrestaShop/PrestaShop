@@ -3,7 +3,6 @@
 namespace LegacyTests\Services;
 
 use Context;
-use PrestaShop\PrestaShop\Core\Domain\Employee\AuthorizationOptions;
 use PrestaShopBundle\Security\Admin\Employee as LoggedEmployee;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -25,7 +24,7 @@ trait EmployeeLoginTrait
             $loggedEmployeeMock,
             null,
             'admin',
-            [new Role(AuthorizationOptions::DEFAULT_EMPLOYEE_ROLE)]
+            [new Role(LoggedEmployee::DEFAULT_EMPLOYEE_ROLE)]
         );
 
         $tokenStorageMock = $this->getMockBuilder(TokenStorage::class)
