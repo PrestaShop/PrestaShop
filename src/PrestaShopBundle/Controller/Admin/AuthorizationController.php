@@ -213,16 +213,16 @@ class AuthorizationController extends FrameworkBundleAdminController
         $languageDataProvider = $this->get('prestashop.adapter.data_provider.language');
         $secureModeChecker = $this->get('prestashop.adapter.security.secure_mode_checker');
         $boAccessPrerequisitesChecker = $this->get(
-            'prestashop.adapter.security.backoffice_access_prerequisites_checker'
+            'prestashop.core.security.backoffice_access_prerequisites_checker'
         );
         $adminDirectoryRenamer = $this->get('prestashop.adapter.security.admin_directory_renamer');
         $isInsecureMode = false;
         $canAccessInsecureMode = false;
         $installDirectoryExists = $boAccessPrerequisitesChecker->installDirectoryExists();
-        $adminDirectoryRenamed = $boAccessPrerequisitesChecker->defaultAdminDirectoryExists();
+        $defaultAdminDirectoryExists = $boAccessPrerequisitesChecker->defaultAdminDirectoryExists();
         $newAdminDirectoryName = '';
 
-        if (!$adminDirectoryRenamed) {
+        if ($defaultAdminDirectoryExists) {
             try {
                 $newAdminDirectoryName = $adminDirectoryRenamer->renameToRandomName();
 
@@ -259,7 +259,7 @@ class AuthorizationController extends FrameworkBundleAdminController
                 $this->generateUrl('_admin_login', [], UrlGeneratorInterface::ABSOLUTE_URL)
             ),
             'installDirectoryExists' => $installDirectoryExists,
-            'adminDirectoryRenamed' => $adminDirectoryRenamed,
+            'defaultAdminDirectoryExists' => $defaultAdminDirectoryExists,
             'newAdminDirectoryName' => $newAdminDirectoryName,
             'newAdminDirectoryUrl' => sprintf(
                 '%s%s%s',
@@ -269,7 +269,7 @@ class AuthorizationController extends FrameworkBundleAdminController
             ),
         ];
 
-        if (!$adminDirectoryRenamed || $installDirectoryExists) {
+        if ($defaultAdminDirectoryExists || $installDirectoryExists) {
             $templateVars['showLoginForm'] = false;
             $templateVars['showForgotPasswordForm'] = false;
             $templateVars['showChangePasswordForm'] = false;

@@ -39,7 +39,7 @@
 {% endif %}
 
 {# Install directory and admin directory name related error messages #}
-{% if installDirectoryExists or not adminDirectoryRenamed %}
+{% if installDirectoryExists or defaultAdminDirectoryExists %}
   <div class="alert alert-danger mt-1" role="alert">
 
     <div class="alert-text">
@@ -48,13 +48,13 @@
         {% if installDirectoryExists %}
           <li>{{ 'deleted the /install folder'|trans({}, 'Admin.Login.Notification') }}</li>
         {% endif %}
-        {% if not adminDirectoryRenamed %}
+        {% if defaultAdminDirectoryExists %}
           <li>{{ 'renamed the /admin folder (e.g. %s)'|trans({'%s': newAdminDirectoryName}, 'Admin.Login.Notification') }}</li>
         {% endif %}
       </ul>
     </div>
 
-    {% if not adminDirectoryRenamed %}
+    {% if defaultAdminDirectoryExists %}
       <p>
         <a href="{{ newAdminDirectoryUrl }}">
           {{ 'Please access this page by the new URL (e.g. %s)'|trans({'%s': newAdminDirectoryUrl}, 'Admin.Login.Notification') }}
