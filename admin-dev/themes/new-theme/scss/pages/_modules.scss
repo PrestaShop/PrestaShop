@@ -524,6 +524,9 @@ form#importDropzone {
 #modules-position-selection-panel {
   position: relative;
   display: none;
+  .btn {
+    white-space: normal;
+  }
 }
 
 .hook-panel {
@@ -541,7 +544,7 @@ form#importDropzone {
     .hook-name {
       font-size: 1.4em;
       color: $brand-primary;
-      background-color: white;
+      background-color: #fff;
       padding: 0 4px;
       border-radius: 3px;
     }
@@ -563,17 +566,16 @@ form#importDropzone {
 
 .module-list {
   .module-item {
-    display: table;
     width: 100%;
     padding: 5px 0;
-    border-bottom: solid 1px #bbcdd2;
+    border-bottom: solid 1px $gray-light;
     background: #fff;
 
     &:hover {
-      background-color: #fafbfc;
+      background-color: $gray-soft;
 
       .drag_indicator {
-        color: #b3c7cd;
+        color: #15b7d7;
         opacity: 1;
       }
     }
@@ -582,11 +584,10 @@ form#importDropzone {
       outline: none;
     }
 
-    &:active,
-    &:visited {
+    &.ui-sortable-helper{
       border-radius: 3px;
       box-shadow: 3px 3px 8px 0 rgba(0, 0, 0, 0.2);
-      background-color: #6c868e;
+      background-color: $medium-gray;
 
       .module-name,
       .module-description {
@@ -636,7 +637,7 @@ form#importDropzone {
     .selectbox {
       width: 16px;
       height: 16px;
-      border: 1.5px solid #bbcdd2;
+      border: 1.5px solid $gray-light;
       border-radius: 2px;
       vertical-align: middle;
       margin: 0;
@@ -668,7 +669,7 @@ form#importDropzone {
     text-align: right;
 
     .index-position {
-      border: solid 1px #bbcdd2;
+      border: solid 1px $gray-light;
       background-color: #fff;
       padding: 0 5px;
       font-size: 1em;
@@ -698,7 +699,7 @@ form#importDropzone {
     }
 
     .module-description {
-      color: #363a41;
+      color: $gray-dark;
     }
   }
 
@@ -725,7 +726,7 @@ form#importDropzone {
 
       .btn-outline-primary {
         border: none;
-        color: #6c868e;
+        color: $medium-gray;
       }
     }
   }

@@ -127,7 +127,7 @@
                           </span>
                         </div>
 
-                        <div class="module-column-description{% if not selectedModule and hook['modules_count'] > 1 %} hasColumnPosition{% endif %}">
+                        <div class="module-column-description{% if not selectedModule and hook['modules_count'] > 1 %} hasColumnPosition{% endif %} d-none d-md-table-cell">
                           <span class="module-description">{{ moduleInstance.description | escape }}</span>
                         </div>
 
@@ -165,6 +165,10 @@
                               </a>
                             </div>
                           </div>
+                        </div>
+
+                        <div class="module-column-description d-block d-md-none w-100">
+                          <span class="module-description">{{ moduleInstance.description | escape }}</span>
                         </div>
                       </li>
                     {% endfor %}
