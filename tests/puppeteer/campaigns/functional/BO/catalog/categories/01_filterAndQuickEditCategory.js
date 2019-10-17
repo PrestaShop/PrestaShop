@@ -40,18 +40,18 @@ describe('Filter And Quick Edit Categories', async () => {
   it('should go to "Catalog>Categories" page', async function () {
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.productsParentLink,
-      this.pageObjects.boBasePage.categoriesLink);
+      this.pageObjects.boBasePage.categoriesLink,
+    );
     const pageTitle = await this.pageObjects.categoriesPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.categoriesPage.pageTitle);
   });
   it('should reset all filters and get Number of Categories in BO', async function () {
-    if (await this.pageObjects.categoriesPage.elementVisible(
-      this.pageObjects.categoriesPage.filterResetButton,
-      2000)) {
+    if (await this.pageObjects.categoriesPage.elementVisible(this.pageObjects.categoriesPage.filterResetButton, 2000)) {
       await this.pageObjects.categoriesPage.resetFilter();
     }
     numberOfCategories = await this.pageObjects.categoriesPage.getNumberFromText(
-      this.pageObjects.categoriesPage.categoryGridTitle);
+      this.pageObjects.categoriesPage.categoryGridTitle,
+    );
     await expect(numberOfCategories).to.be.above(0);
   });
   // 1 : Filter Categories with all inputs and selects in grid table
@@ -60,7 +60,8 @@ describe('Filter And Quick Edit Categories', async () => {
       await this.pageObjects.categoriesPage.filterCategories(
         'input',
         'id_category',
-        Categories.art.id);
+        Categories.art.id,
+      );
       const numberOfCategoriesAfterFilter = await this.pageObjects.categoriesPage.getNumberFromText(
         this.pageObjects.categoriesPage.categoryGridTitle);
       await expect(numberOfCategoriesAfterFilter).to.be.at.most(numberOfCategories);
@@ -158,7 +159,7 @@ describe('Filter And Quick Edit Categories', async () => {
       await this.pageObjects.categoriesPage.filterCategories(
         'select',
         'active',
-        Categories.art.displayed,
+        Categories.art.displayed ? 'Yes' : 'NO',
       );
       const numberOfCategoriesAfterFilter = await this.pageObjects.categoriesPage.getNumberFromText(
         this.pageObjects.categoriesPage.categoryGridTitle);
@@ -196,7 +197,8 @@ describe('Filter And Quick Edit Categories', async () => {
       const isActionPerformed = await this.pageObjects.categoriesPage.updateToggleColumnValue(
         '1',
         'active',
-        false);
+        false,
+      );
       if (isActionPerformed) {
         const resultMessage = await this.pageObjects.categoriesPage.getTextContent(
           this.pageObjects.categoriesPage.growlDefaultMessageBloc);
@@ -212,7 +214,8 @@ describe('Filter And Quick Edit Categories', async () => {
     it('should enable the Category', async function () {
       const isActionPerformed = await this.pageObjects.categoriesPage.updateToggleColumnValue(
         '1',
-        'active');
+        'active',
+      );
       if (isActionPerformed) {
         const resultMessage = await this.pageObjects.categoriesPage.getTextContent(
           this.pageObjects.categoriesPage.growlDefaultMessageBloc);

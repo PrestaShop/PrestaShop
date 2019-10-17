@@ -30,7 +30,8 @@ module.exports = class AddCategory extends BOBasePage {
    */
   async createEditCategory(categoryData) {
     await this.setValue(this.nameInput, categoryData.name);
-    if (categoryData.displayed === 'No') await this.page.click(this.displayed.replace('%ID', '0'));
+    if (categoryData.displayed) await this.page.click(this.displayed.replace('%ID', '1'));
+    else await this.page.click(this.displayed.replace('%ID', '0'));
     await this.setValueOnTinymceInput(this.descriptionIframe, categoryData.description);
     await this.GenerateAndUploadImage(this.categoryCoverImage, `${categoryData.name}.jpg`);
     await this.setValue(this.metaTitleInput, categoryData.metaTitle);

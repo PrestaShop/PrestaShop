@@ -46,14 +46,13 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
   it('should go to "Catalog>Categories" page', async function () {
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.productsParentLink,
-      this.pageObjects.boBasePage.categoriesLink);
+      this.pageObjects.boBasePage.categoriesLink,
+    );
     const pageTitle = await this.pageObjects.categoriesPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.categoriesPage.pageTitle);
   });
   it('should reset all filters and get Number of Categories in BO', async function () {
-    if (await this.pageObjects.categoriesPage.elementVisible(
-      this.pageObjects.categoriesPage.filterResetButton,
-      2000)) {
+    if (await this.pageObjects.categoriesPage.elementVisible(this.pageObjects.categoriesPage.filterResetButton, 2000)) {
       await this.pageObjects.categoriesPage.resetFilter();
     }
     numberOfCategories = await this.pageObjects.categoriesPage.getNumberFromText(
@@ -64,7 +63,8 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
   describe('Create 2 categories in BO', async () => {
     it('should go to add new category page', async function () {
       await this.pageObjects.categoriesPage.clickAndWaitForNavigation(
-        this.pageObjects.categoriesPage.addNewCategoryLink);
+        this.pageObjects.categoriesPage.addNewCategoryLink,
+      );
       const pageTitle = await this.pageObjects.addCategoryPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.addCategoryPage.pageTitleCreate);
     });
@@ -72,12 +72,14 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
       const textResult = await this.pageObjects.addCategoryPage.createEditCategory(firstCategoryData);
       await expect(textResult).to.equal(this.pageObjects.categoriesPage.successfulCreationMessage);
       const numberOfCategoriesAfterCreation = await this.pageObjects.categoriesPage.getNumberFromText(
-        this.pageObjects.categoriesPage.categoryGridTitle);
+        this.pageObjects.categoriesPage.categoryGridTitle,
+      );
       await expect(numberOfCategoriesAfterCreation).to.be.equal(numberOfCategories + 1);
     });
     it('should go to add new category page', async function () {
       await this.pageObjects.categoriesPage.clickAndWaitForNavigation(
-        this.pageObjects.categoriesPage.addNewCategoryLink);
+        this.pageObjects.categoriesPage.addNewCategoryLink,
+      );
       const pageTitle = await this.pageObjects.addCategoryPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.addCategoryPage.pageTitleCreate);
     });
@@ -98,7 +100,8 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
         'todelete',
       );
       const textResult = await this.pageObjects.categoriesPage.getTextContent(
-        this.pageObjects.categoriesPage.categoriesListTableColumn.replace('%ROW', '1').replace('%COLUMN', 'name'),
+        this.pageObjects.categoriesPage.categoriesListTableColumn.replace('%ROW', '1').replace('%COLUMN', 'name',
+        ),
       );
       await expect(textResult).to.contains('todelete');
     });
@@ -121,7 +124,8 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
       const enableTextResult = await this.pageObjects.categoriesPage.changeCategoriesEnabledColumnBulkActions(true);
       await expect(enableTextResult).to.be.equal(this.pageObjects.categoriesPage.successfulUpdateStatusMessage);
       const numberOfCategoriesInGrid = await this.pageObjects.categoriesPage.getNumberFromText(
-        this.pageObjects.categoriesPage.categoryGridTitle);
+        this.pageObjects.categoriesPage.categoryGridTitle,
+      );
       await expect(numberOfCategoriesInGrid).to.be.at.most(numberOfCategories);
       /* eslint-disable no-await-in-loop */
       for (let i = 1; i <= numberOfCategoriesInGrid; i++) {
@@ -142,7 +146,8 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
         'todelete',
       );
       const textResult = await this.pageObjects.categoriesPage.getTextContent(
-        this.pageObjects.categoriesPage.categoriesListTableColumn.replace('%ROW', '1').replace('%COLUMN', 'name'),
+        this.pageObjects.categoriesPage.categoriesListTableColumn.replace('%ROW', '1').replace('%COLUMN', 'name',
+        ),
       );
       await expect(textResult).to.contains('todelete');
     });
@@ -156,7 +161,8 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
     it('should reset all filters', async function () {
       await this.pageObjects.categoriesPage.resetFilter();
       const numberOfCategoriesAfterReset = await this.pageObjects.categoriesPage.getNumberFromText(
-        this.pageObjects.categoriesPage.categoryGridTitle);
+        this.pageObjects.categoriesPage.categoryGridTitle,
+      );
       await expect(numberOfCategoriesAfterReset).to.equal(numberOfCategories);
     });
   });
