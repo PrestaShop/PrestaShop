@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Query\SearchCartRules;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -36,7 +37,17 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class CartRuleController extends FrameworkBundleAdminController
 {
-    //@todo: isnt it confusing with list filtering action, which is called 'search' in other controllers ?
+    /**
+     * Searches for cart rules by provided search phrase
+     *
+     * //@todo security fallback to order create
+     *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
     public function searchAction(Request $request): JsonResponse
     {
         $searchPhrase = $request->query->get('search_phrase');

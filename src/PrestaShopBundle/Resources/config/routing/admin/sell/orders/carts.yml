@@ -66,3 +66,12 @@ admin_carts_set_free_shipping:
     cartId: \d+
   options:
     expose: true
+
+admin_carts_add_rule:
+  path: /{cartId}/rules/add
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Cart:addCartRuleToCart
+    _legacy_controller: AdminCarts
+  options:
+    expose: true

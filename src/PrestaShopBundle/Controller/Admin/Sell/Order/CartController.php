@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCartRuleToCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\CreateEmptyCustomerCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\SetFreeShippingToCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartAddressesCommand;
@@ -87,6 +88,8 @@ class CartController extends FrameworkBundleAdminController
     /**
      * Gets requested cart information
      *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     *
      * @param int $cartId
      *
      * @return JsonResponse
@@ -102,6 +105,8 @@ class CartController extends FrameworkBundleAdminController
 
     /**
      * Creates empty cart
+     *
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -119,6 +124,8 @@ class CartController extends FrameworkBundleAdminController
 
     /**
      * Changes the cart address information
+     *
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
      *
      * @param int $cartId
      * @param Request $request
@@ -163,6 +170,8 @@ class CartController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+     *
      * @param Request $request
      * @param int $cartId
      *
@@ -176,6 +185,14 @@ class CartController extends FrameworkBundleAdminController
             $cartId,
             $request->query->getBoolean('free_shipping')
         ));
+
+        return $this->json($this->getCartInfo($cartId));
+    }
+
+    public function addCartRuleToCartAction(Request $request, int $cartId): JsonResponse
+    {
+        $cartRuleId = $request->request->getInt('cart_rule_id');
+        $this->getCommandBus()->handle(new AddCartRuleToCartCommand($cartId, $cartRuleId));
 
         return $this->json($this->getCartInfo($cartId));
     }
