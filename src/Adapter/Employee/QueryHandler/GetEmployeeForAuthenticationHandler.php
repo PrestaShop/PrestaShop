@@ -27,15 +27,15 @@
 namespace PrestaShop\PrestaShop\Adapter\Employee\QueryHandler;
 
 use Access;
-use Employee;
+use Employee as LegacyEmployee;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use PrestaShop\PrestaShop\Core\Domain\Employee\AuthorizationOptions;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\AuthenticatingEmployeeNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeForAuthentication;
 use PrestaShop\PrestaShop\Core\Domain\Employee\QueryHandler\GetEmployeeForAuthenticationHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Employee\QueryResult\EmployeeForAuthentication;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
+use PrestaShopBundle\Security\Admin\Employee;
 use PrestaShopException;
 
 /**
@@ -78,7 +78,7 @@ final class GetEmployeeForAuthenticationHandler implements GetEmployeeForAuthent
             $this->context->getAdminLink($employee->getDefaultTabClassName()),
             (int) $employee->id_profile,
             array_merge(
-                [AuthorizationOptions::DEFAULT_EMPLOYEE_ROLE],
+                [Employee::DEFAULT_EMPLOYEE_ROLE],
                 Access::getRoles($employee->id_profile)
             )
         );
@@ -89,14 +89,14 @@ final class GetEmployeeForAuthenticationHandler implements GetEmployeeForAuthent
      *
      * @param GetEmployeeForAuthentication $query
      *
-     * @return Employee
+     * @return LegacyEmployee
      */
-    private function getLegacyEmployee(GetEmployeeForAuthentication $query)
+    private function getLegacyEmployee(GetEmployeeForAuthentication $query) : LegacyEmployee
     {
         if (null !== $query->getEmployeeId()) {
-            return new Employee($query->getEmployeeId()->getValue());
+            return new LegacyEmployee($query->getEmployeeId()->getValue());
         }
 
-        return (new Employee())->getByEmail($query->getEmail());
+        return (new LegacyEmployee())->getByEmail($query->getEmail());
     }
 }

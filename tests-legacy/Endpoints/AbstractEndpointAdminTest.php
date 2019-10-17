@@ -32,7 +32,6 @@ use Context;
 use Employee;
 use PhpEncryption;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
-use PrestaShop\PrestaShop\Core\Domain\Employee\AuthorizationOptions;
 use PrestaShopBundle\Security\Admin\Employee as LoggedEmployee;
 use ReflectionClass;
 use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
@@ -103,7 +102,7 @@ abstract class AbstractEndpointAdminTest extends AbstractEndpointTest
 
         $tokenMock->expects($this->any())
             ->method('getRoles')
-            ->willReturn([new Role(AuthorizationOptions::DEFAULT_EMPLOYEE_ROLE)]);
+            ->willReturn([new Role(LoggedEmployee::DEFAULT_EMPLOYEE_ROLE)]);
 
         $tokenMock->expects($this->any())
             ->method('isAuthenticated')
