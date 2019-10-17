@@ -41,8 +41,8 @@ describe('Create, Read, Update and Delete Category', async () => {
     page = await helper.newTab(browser);
     this.pageObjects = await init();
     createCategoryData = await (new CategoryFaker());
-    createSubCategoryData = await (new CategoryFaker());
-    editCategoryData = await (new CategoryFaker({displayed: false}));
+    createSubCategoryData = await (new CategoryFaker({name: `subCategory${createCategoryData.name}`}));
+    editCategoryData = await (new CategoryFaker({displayed: false, name: `update${createCategoryData.name}`}));
   });
   after(async () => {
     await helper.closeBrowser(browser);
