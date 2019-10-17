@@ -120,7 +120,7 @@ describe('Filter And Quick Edit taxes', async () => {
       await this.pageObjects.taxesPage.filterTaxes(
         'select',
         'active',
-        DefaultFrTax.enabled ? 'Yes' : 'No',
+        DefaultFrTax.enabled,
       );
       const numberOfTaxesAfterFilter = await this.pageObjects.taxesPage.getNumberFromText(
         this.pageObjects.taxesPage.gridHeaderTitle,

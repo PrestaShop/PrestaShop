@@ -186,7 +186,7 @@ describe('Filter And Quick Edit Customers', async () => {
       await this.pageObjects.customersPage.filterCustomers(
         'select',
         'active',
-        DefaultAccount.enabled ? 'Yes' : 'No',
+        DefaultAccount.enabled,
       );
       const numberOfCustomersAfterFilter = await this.pageObjects.customersPage.getNumberFromText(
         this.pageObjects.customersPage.customerGridTitle,
@@ -211,7 +211,7 @@ describe('Filter And Quick Edit Customers', async () => {
       await this.pageObjects.customersPage.filterCustomers(
         'select',
         'newsletter',
-        DefaultAccount.newsletter ? 'Yes' : 'No',
+        DefaultAccount.newsletter,
       );
       const numberOfCustomersAfterFilter = await this.pageObjects.customersPage.getNumberFromText(
         this.pageObjects.customersPage.customerGridTitle,
@@ -237,7 +237,7 @@ describe('Filter And Quick Edit Customers', async () => {
       await this.pageObjects.customersPage.filterCustomers(
         'select',
         'optin',
-        DefaultAccount.partnerOffers ? 'Yes' : 'No',
+        DefaultAccount.partnerOffers,
       );
       const numberOfCustomersAfterFilter = await this.pageObjects.customersPage.getNumberFromText(
         this.pageObjects.customersPage.customerGridTitle,

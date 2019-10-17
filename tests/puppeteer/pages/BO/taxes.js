@@ -72,7 +72,10 @@ module.exports = class Taxes extends BOBasePage {
         await this.setValue(this.taxesFilterColumnInput.replace('%FILTERBY', filterBy), value);
         break;
       case 'select':
-        await this.selectByVisibleText(this.taxesFilterColumnInput.replace('%FILTERBY', filterBy), value);
+        await this.selectByVisibleText(
+          this.taxesFilterColumnInput.replace('%FILTERBY', filterBy),
+          value ? 'Yes' : 'No',
+        );
         break;
       default:
       // Do nothing
