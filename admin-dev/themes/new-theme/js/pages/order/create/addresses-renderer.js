@@ -90,11 +90,22 @@ export default class AddressesRenderer {
     }
 
     if (deliveryAddressDetailsContent) {
-      $(createOrderPageMap.deliveryAddressDetails).html(deliveryAddressDetailsContent);
+      $deliveryAddressDetails.html(deliveryAddressDetailsContent);
     }
 
     if (invoiceAddressDetailsContent) {
-      $(createOrderPageMap.invoiceAddressDetails).html(invoiceAddressDetailsContent);
+      $invoiceAddressDetails.html(invoiceAddressDetailsContent);
     }
+
+    this._showAddressesBlock();
+  }
+
+  /**
+   * Shows addresses block
+   *
+   * @private
+   */
+  _showAddressesBlock() {
+    $(createOrderPageMap.addressesBlock).removeClass('d-none');
   }
 }

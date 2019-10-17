@@ -22,17 +22,21 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-import CreateOrderPage from './create/create-order-page';
 
-const $ = window.$;
-
-$(document).ready(() => {
-  const createOrderPage = new CreateOrderPage();
-
-  createOrderPage.listenForCustomerSearch();
-  createOrderPage.listenForCustomerSelect();
-  createOrderPage.listenForCartSelect();
-  createOrderPage.listenForOrderSelect();
-  createOrderPage.listenForCartEdit();
-  createOrderPage.listenForCartLoading();
-});
+/**
+ * Encapsulates js events used in create order page
+ */
+export default {
+  // when new cart is loaded, no matter if its empty, selected from carts list or duplicated by order.
+  cartLoaded: 'cartLoaded',
+  // when customer carts list is loaded.
+  customerCartsLoaded: 'customerCartsLoaded',
+  // when customer orders list is loaded
+  customerOrdersLoaded: 'customerOrdersLoaded',
+  // when cart addresses information has been changed
+  cartAddressesChanged: 'cartAddressesChanged',
+  // when cart delivery option has been changed
+  cartDeliveryOptionChanged: 'cartDeliveryOptionChanged',
+  // when cart free shipping value has been changed
+  cartFreeShippingSet: 'cartFreeShippingSet',
+};

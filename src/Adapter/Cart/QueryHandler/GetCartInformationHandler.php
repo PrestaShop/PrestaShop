@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Cart\QueryHandler;
 
 use Address;
 use AddressFormat;
+use Carrier;
 use Cart;
 use Currency;
 use Customer;
@@ -37,9 +38,11 @@ use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryHandler\GetCartInformationHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartDeliveryOption;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartAddress;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartProduct;
+use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartShipping;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleInterface;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Locale\RepositoryInterface;
@@ -56,14 +59,22 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
     private $locale;
 
     /**
+     * @var int
+     */
+    private $contextLangId;
+
+    /**
      * @param RepositoryInterface $localeRepository
      * @param string $locale
+     * @param int $contextLangId
      */
     public function __construct(
         RepositoryInterface $localeRepository,
-        string $locale
+        string $locale,
+        int $contextLangId
     ) {
         $this->locale = $localeRepository->getLocale($locale);
+        $this->contextLangId = $contextLangId;
     }
 
     /**
@@ -91,7 +102,7 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
             (int) $language->id,
             $this->extractCartRulesFromLegacySummary($legacySummary, $currency),
             $this->getAddresses($cart),
-            [],
+            $this->extractShippingFromLegacySummary($cart, $legacySummary),
             []
         );
     }
@@ -171,5 +182,62 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
         }
 
         return $products;
+    }
+
+    /**
+     * @param Cart $cart
+     * @param array $legacySummary
+     *
+     * @return CartShipping|null
+     */
+    private function extractShippingFromLegacySummary(Cart $cart, array $legacySummary): ?CartShipping
+    {
+        $deliveryOptionsByAddress = $cart->getDeliveryOptionList();
+        $deliveryAddress = (int) $cart->id_address_delivery;
+
+        //Check if there is any delivery options available for cart delivery address
+        if (!array_key_exists($deliveryAddress, $deliveryOptionsByAddress)) {
+            return null;
+        }
+
+        /** @var Carrier $carrier */
+        $carrier = $legacySummary['carrier'];
+
+        return new CartShipping(
+            (string) $legacySummary['total_shipping'],
+            (bool) $legacySummary['free_ship'],
+            $this->fetchCartDeliveryOptions($deliveryOptionsByAddress, $deliveryAddress),
+            (int) $carrier->id ?: null
+        );
+    }
+
+    /**
+     * Fetch CartDeliveryOption[] DTO's from legacy array
+     *
+     * @param array $deliveryOptionsByAddress
+     * @param int $deliveryAddressId
+     *
+     * @return array
+     */
+    private function fetchCartDeliveryOptions(array $deliveryOptionsByAddress, int $deliveryAddressId)
+    {
+        $deliveryOptions = [];
+        // legacy multishipping feature allowed to split cart shipping to multiple addresses.
+        // now when the multishipping feature is removed
+        // the list of carriers should be shared across whole cart for single delivery address
+        foreach ($deliveryOptionsByAddress[$deliveryAddressId] as $deliveryOption) {
+            foreach ($deliveryOption['carrier_list'] as $carrier) {
+                $carrier = $carrier['instance'];
+                // make sure there is no duplicate carrier
+                $deliveryOptions[(int) $carrier->id] = new CartDeliveryOption(
+                    (int) $carrier->id,
+                    $carrier->name,
+                    $carrier->delay[$this->contextLangId]
+                );
+            }
+        }
+
+        //make sure array is not associative
+        return array_values($deliveryOptions);
     }
 }

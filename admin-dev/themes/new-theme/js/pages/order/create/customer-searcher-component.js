@@ -24,6 +24,7 @@
  */
 
 import createOrderPageMap from './create-order-map';
+import Router from '../../../components/router';
 
 const $ = window.$;
 
@@ -32,6 +33,7 @@ const $ = window.$;
  */
 export default class CustomerSearcherComponent {
   constructor() {
+    this.router = new Router();
     this.$container = $(createOrderPageMap.customerSearchBlock);
     this.$searchInput = $(createOrderPageMap.customerSearchInput);
     this.$customerSearchResultBlock = $(createOrderPageMap.customerSearchResultsBlock);
@@ -83,11 +85,8 @@ export default class CustomerSearcherComponent {
       return;
     }
 
-    $.ajax(this.$searchInput.data('url'), {
-      method: 'GET',
-      data: {
-        customer_search: name,
-      },
+    $.get(this.router.generate('admin_customers_search'), {
+      customer_search: name,
     }).then((response) => {
       this._clearShownCustomers();
 

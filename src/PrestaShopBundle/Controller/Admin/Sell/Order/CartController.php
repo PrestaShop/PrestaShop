@@ -28,7 +28,9 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\CreateEmptyCustomerCartCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\SetFreeShippingToCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartAddressesCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartCarrierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForViewing;
@@ -125,15 +127,55 @@ class CartController extends FrameworkBundleAdminController
      *
      * @throws CartConstraintException
      */
-    public function editAddressAction(int $cartId, Request $request): JsonResponse
+    public function editAddressesAction(int $cartId, Request $request): JsonResponse
     {
-        $updateAddressCommand = new UpdateCartAddressesCommand(
-            $cartId,
-            $request->request->getInt('delivery_address_id'),
-            $invoiceAddressId = $request->request->getInt('invoice_address_id')
-        );
+        $updateAddressCommand = new UpdateCartAddressesCommand($cartId);
+        if ($deliveryAddressId = $request->request->getInt('delivery_address_id')) {
+            $updateAddressCommand->setNewDeliveryAddressId($deliveryAddressId);
+        }
+
+        if ($invoiceAddressId = $request->request->getInt('invoice_address_id')) {
+            $updateAddressCommand->setNewInvoiceAddressId($invoiceAddressId);
+        }
 
         $this->getCommandBus()->handle($updateAddressCommand);
+
+        return $this->json($this->getCartInfo($cartId));
+    }
+
+    /**
+     * @param Request $request
+     * @param int $cartId
+     *
+     * @return JsonResponse
+     *
+     * @throws CartConstraintException
+     */
+    public function editCarrierAction(Request $request, int $cartId): JsonResponse
+    {
+        $carrierId = (int) $request->request->get('carrier_id');
+        $this->getCommandBus()->handle(new UpdateCartCarrierCommand(
+            $cartId,
+            $carrierId
+        ));
+
+        return $this->json($this->getCartInfo($cartId));
+    }
+
+    /**
+     * @param Request $request
+     * @param int $cartId
+     *
+     * @return JsonResponse
+     *
+     * @throws CartConstraintException
+     */
+    public function setFreeShippingAction(Request $request, int $cartId)
+    {
+        $this->getCommandBus()->handle(new SetFreeShippingToCartCommand(
+            $cartId,
+            $request->query->getBoolean('free_shipping')
+        ));
 
         return $this->json($this->getCartInfo($cartId));
     }

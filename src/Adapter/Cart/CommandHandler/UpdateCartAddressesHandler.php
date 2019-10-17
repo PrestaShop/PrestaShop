@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Cart\CommandHandler;
 
+use Cart;
 use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartAddressesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\UpdateCartAddressesHandlerInterface;
@@ -42,15 +43,30 @@ final class UpdateCartAddressesHandler extends AbstractCartHandler implements Up
     public function handle(UpdateCartAddressesCommand $command)
     {
         $cart = $this->getCart($command->getCartId());
-
-        $cart->id_address_delivery = $command->getNewDeliveryAddressId()->getValue();
-        $cart->id_address_invoice = $command->getNewInvoiceAddressId()->getValue();
+        $this->fillCartWithCommandData($cart, $command);
 
         if (false === $cart->update()) {
             throw new CartException(sprintf(
                 'Failed to update addresses for cart with id "%s"',
                 $cart->id
             ));
+        }
+    }
+
+    /**
+     * Fetches updatable fields from command to cart
+     *
+     * @param Cart $cart
+     * @param UpdateCartAddressesCommand $command
+     */
+    private function fillCartWithCommandData(Cart $cart, UpdateCartAddressesCommand $command): void
+    {
+        if ($command->getNewDeliveryAddressId()) {
+            $cart->id_address_delivery = $command->getNewDeliveryAddressId()->getValue();
+        }
+
+        if ($command->getNewInvoiceAddressId()) {
+            $cart->id_address_invoice = $command->getNewInvoiceAddressId()->getValue();
         }
     }
 }

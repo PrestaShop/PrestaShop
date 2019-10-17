@@ -33,6 +33,9 @@ import OrdersRenderer from './orders-renderer';
 import AddressesRenderer from './addresses-renderer';
 import VouchersRenderer from './vouchers-renderer';
 import Router from '../../../components/router';
+import {EventEmitter} from '../../../components/event-emitter';
+import CartEditor from './cart-editor';
+import eventMap from './event-map';
 
 const $ = window.$;
 
@@ -53,14 +56,28 @@ export default class CreateOrderPage {
     this.addressesRenderer = new AddressesRenderer();
     this.vouchersRenderer = new VouchersRenderer();
     this.router = new Router();
+    this.cartEditor = new CartEditor();
 
     return {
       listenForCustomerSearch: () => this._handleCustomerSearch(),
       listenForCustomerSelect: () => this._handleCustomerChooseForOrderCreation(),
       listenForCartSelect: () => this._handleUseCartForOrderCreation(),
       listenForOrderSelect: () => this._handleDuplicateOrderCart(),
-      listenForCartUpdate: () => this._handleCartUpdate(),
+      listenForCartEdit: () => this._handleCartEdit(),
+      listenForCartLoading: () => this._onCartLoaded(),
     };
+  }
+
+  /**
+   * Handles event when cart is loaded.
+   *
+   * @private
+   */
+  _onCartLoaded() {
+    EventEmitter.on(eventMap.cartLoaded, (cartInfo) => {
+      this.data.cart_id = cartInfo.cartId;
+      this._renderCartInfo(cartInfo);
+    });
   }
 
   /**
@@ -84,11 +101,7 @@ export default class CreateOrderPage {
       const customerId = this.customerSearcher.onCustomerChooseForOrderCreation(event);
       this.data.customer_id = customerId;
 
-      this.cartProvider.loadEmptyCart(customerId).then((response) => {
-        this.data.cart_id = response.cartId;
-        this._renderCartInfo(response);
-      });
-
+      this.cartProvider.loadEmptyCart(customerId);
       this._loadCustomerCarts(customerId);
       this._loadCustomerOrders(customerId);
     });
@@ -102,12 +115,9 @@ export default class CreateOrderPage {
    * @private
    */
   _handleUseCartForOrderCreation() {
-    this.$container.on('click', '.js-use-cart-btn', (e) => {
+    this.$container.on('click', createOrderPageMap.useCartBtn, (e) => {
       const cartId = $(e.currentTarget).data('cart-id');
-
-      this.cartProvider.getCart(cartId).then((response) => {
-        this._renderCartInfo(response);
-      });
+      this.cartProvider.getCart(cartId);
     });
   }
 
@@ -117,12 +127,9 @@ export default class CreateOrderPage {
    * @private
    */
   _handleDuplicateOrderCart() {
-    this.$container.on('click', '.js-use-order-btn', (e) => {
+    this.$container.on('click', createOrderPageMap.useOrderBtn, (e) => {
       const orderId = $(e.currentTarget).data('order-id');
-
-      this.cartProvider.duplicateOrderCart(orderId).then((response) => {
-        this._renderCartInfo(response);
-      });
+      this.cartProvider.duplicateOrderCart(orderId);
     });
   }
 
@@ -131,9 +138,11 @@ export default class CreateOrderPage {
    *
    * @private
    */
-  _handleCartUpdate() {
+  _handleCartEdit() {
     // @todo: add other actions
     this.$container.on('change', createOrderPageMap.addressSelect, () => this._changeCartAddresses());
+    this.$container.on('change', createOrderPageMap.deliveryOptionSelect, e => this._changeDeliveryOption(e));
+    this.$container.on('change', createOrderPageMap.freeShippingSwitch, e => this._setFreeShipping(e));
   }
 
   /**
@@ -144,12 +153,12 @@ export default class CreateOrderPage {
    * @private
    */
   _loadCustomerCarts(customerId) {
-    this.customerInfoProvider.getCustomerCarts(customerId).then((response) => {
+    this.customerInfoProvider.getCustomerCarts(customerId);
+    EventEmitter.on(eventMap.customerCartsLoaded, (cartInfo) => {
       this.cartsRenderer.render({
-        carts: response.carts,
+        carts: cartInfo.carts,
         currentCartId: this.data.cart_id,
       });
-      $(createOrderPageMap.customerCheckoutHistory).removeClass('d-none');
     });
   }
 
@@ -161,9 +170,9 @@ export default class CreateOrderPage {
    * @private
    */
   _loadCustomerOrders(customerId) {
-    this.customerInfoProvider.getCustomerOrders(customerId).then((response) => {
-      this.ordersRenderer.render(response.orders);
-      $(createOrderPageMap.customerCheckoutHistory).removeClass('d-none');
+    this.customerInfoProvider.getCustomerOrders(customerId);
+    EventEmitter.on(eventMap.customerOrdersLoaded, (cartInfo) => {
+      this.ordersRenderer.render(cartInfo.orders);
     });
   }
 
@@ -177,21 +186,11 @@ export default class CreateOrderPage {
   _renderCartInfo(cartInfo) {
     this.addressesRenderer.render(cartInfo.addresses);
     this.vouchersRenderer.render(cartInfo.cartRules);
-    // render Summary block when at least 1 product is in cart
+    this.shippingRenderer.render(cartInfo.shipping, cartInfo.products.length === 0);
+    // @todo: render Summary block when at least 1 product is in cart
     // and delivery options are available
 
-    this._showCartInfo();
-  }
-
-  /**
-   * Shows Cart, Vouchers, Addresses blocks
-   *
-   * @private
-   */
-  _showCartInfo() {
     $(createOrderPageMap.cartBlock).removeClass('d-none');
-    $(createOrderPageMap.vouchersBlock).removeClass('d-none');
-    $(createOrderPageMap.addressesBlock).removeClass('d-none');
   }
 
   /**
@@ -200,22 +199,48 @@ export default class CreateOrderPage {
    * @private
    */
   _changeCartAddresses() {
-    $.ajax(this.$container.data('edit-address-url'), {
-      method: 'POST',
-      data: {
-        cart_id: this.data.cart_id,
-        delivery_address_id: $(createOrderPageMap.deliveryAddressSelect).val(),
-        invoice_address_id: $(createOrderPageMap.invoiceAddressSelect).val(),
-      },
-      dataType: 'json',
-    }).then((response) => {
-      // this._persistCartInfoData(response);
+    const addresses = {
+      delivery_address_id: $(createOrderPageMap.deliveryAddressSelect).val(),
+      invoice_address_id: $(createOrderPageMap.invoiceAddressSelect).val(),
+    };
 
-      this.addressesRenderer.render(response.addresses);
+    this.cartEditor.changeCartAddresses(this.data.cart_id, addresses);
+    EventEmitter.on(eventMap.cartAddressesChanged, (cartInfo) => {
+      this.addressesRenderer.render(cartInfo.addresses);
+      this.shippingRenderer.render(cartInfo.shipping, cartInfo.products.length === 0);
     });
   }
 
   /**
+   * Modifies cart delivery option
+   *
+   * @param event
+   *
+   * @private
+   */
+  _changeDeliveryOption(event) {
+    this.cartEditor.changeDeliveryOption(this.data.cart_id, event.currentTarget.value);
+    EventEmitter.on(eventMap.cartDeliveryOptionChanged, (cartInfo) => {
+      this.shippingRenderer.render(cartInfo.shipping, cartInfo.products.length === 0);
+    });
+  }
+
+  /**
+   * Sets free shipping value of cart
+   *
+   * @param event
+   *
+   * @private
+   */
+  _setFreeShipping(event) {
+    this.cartEditor.setFreeShipping(this.data.cart_id, event.currentTarget.value);
+    EventEmitter.on(eventMap.cartFreeShippingSet, (cartInfo) => {
+      this.shippingRenderer.render(cartInfo.shipping, cartInfo.products.length === 0);
+    });
+  }
+
+  /**
+   * @todo: for cart to order convertion
    * Stores cart summary into "session" like variable
    *
    * @param {Object} cartInfo
@@ -229,6 +254,7 @@ export default class CreateOrderPage {
   }
 
   /**
+   * @todo: for cart to order convertion
    * Choses previous cart from which order will be created
    *
    * @param {Number} cartId
@@ -242,10 +268,8 @@ export default class CreateOrderPage {
         id_cart: cartId,
         id_customer: this.data.customer_id,
       },
-      dataType: 'json',
     }).then((response) => {
       this._persistCartInfoData(response);
-
       this._renderCartInfo(response);
     });
   }

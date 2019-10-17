@@ -161,6 +161,8 @@ admin_customers_search:
     _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:search
     _legacy_controller: AdminCustomers
     _legacy_link: AdminCustomers:searchCustomers
+  options:
+    expose: true
 
 admin_customers_carts:
   path: /{customerId}/carts

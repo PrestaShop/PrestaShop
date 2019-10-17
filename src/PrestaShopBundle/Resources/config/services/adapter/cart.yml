@@ -41,11 +41,11 @@ services:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductQuantityInCartCommand'
 
-  prestashop.adapter.command_handler.update_cart_delivery_option_handler:
-    class: 'PrestaShop\PrestaShop\Adapter\Cart\CommandHandler\UpdateCartDeliveryOptionHandler'
+  prestashop.adapter.command_handler.update_cart_carrier_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Cart\CommandHandler\UpdateCartCarrierHandler'
     tags:
       - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartDeliveryOptionCommand'
+        command: 'PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartCarrierCommand'
 
   prestashop.adapter.command_handler.add_cart_rule_to_cart_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Cart\CommandHandler\AddCartRuleToCartHandler'
@@ -96,6 +96,7 @@ services:
     arguments:
       - '@prestashop.core.localization.locale.repository'
       - '@=service("prestashop.adapter.legacy.context").getContext().language.getLocale()'
+      - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation'

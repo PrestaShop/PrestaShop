@@ -24,48 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Cart\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartCarrierCommand;
 
 /**
- * Updates cart delivery option with new one.
+ * Interface for service that updates delivery options for cart
  */
-class UpdateCartDeliveryOptionCommand
+interface UpdateCartCarrierHandlerInterface
 {
     /**
-     * @var CartId
+     * @param UpdateCartCarrierCommand $command
      */
-    private $cartId;
-
-    /**
-     * @var string
-     */
-    private $newDeliveryOption;
-
-    /**
-     * @param int $cartId
-     * @param string $newDeliveryOption
-     */
-    public function __construct($cartId, $newDeliveryOption)
-    {
-        $this->cartId = new CartId($cartId);
-        $this->newDeliveryOption = $newDeliveryOption;
-    }
-
-    /**
-     * @return CartId
-     */
-    public function getCartId()
-    {
-        return $this->cartId;
-    }
-
-    /**
-     * @return string
-     */
-    public function getNewDeliveryOption()
-    {
-        return $this->newDeliveryOption;
-    }
+    public function handle(UpdateCartCarrierCommand $command);
 }

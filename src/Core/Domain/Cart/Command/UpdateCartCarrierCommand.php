@@ -26,11 +26,13 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Cart\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 
-class UpdateCartAddressesCommand
+/**
+ * Updates cart carrier (a.k.a delivery option) with new one.
+ */
+class UpdateCartCarrierCommand
 {
     /**
      * @var CartId
@@ -38,21 +40,20 @@ class UpdateCartAddressesCommand
     private $cartId;
 
     /**
-     * @var AddressId|null
+     * @var int
      */
-    private $newDeliveryAddressId;
-
-    /**
-     * @var AddressId|null
-     */
-    private $newInvoiceAddressId;
+    private $newCarrierId;
 
     /**
      * @param int $cartId
+     * @param $newCarrierId
+     *
+     * @throws CartConstraintException
      */
-    public function __construct(int $cartId)
+    public function __construct($cartId, $newCarrierId)
     {
         $this->cartId = new CartId($cartId);
+        $this->newCarrierId = $newCarrierId;
     }
 
     /**
@@ -64,38 +65,10 @@ class UpdateCartAddressesCommand
     }
 
     /**
-     * @return AddressId
+     * @return int
      */
-    public function getNewDeliveryAddressId(): ?AddressId
+    public function getNewCarrierId(): int
     {
-        return $this->newDeliveryAddressId;
-    }
-
-    /**
-     * @return AddressId
-     */
-    public function getNewInvoiceAddressId(): ?AddressId
-    {
-        return $this->newInvoiceAddressId;
-    }
-
-    /**
-     * @param int $newDeliveryAddressId
-     *
-     * @throws AddressConstraintException
-     */
-    public function setNewDeliveryAddressId(int $newDeliveryAddressId): void
-    {
-        $this->newDeliveryAddressId = new AddressId($newDeliveryAddressId);
-    }
-
-    /**
-     * @param int $newInvoiceAddressId
-     *
-     * @throws AddressConstraintException
-     */
-    public function setNewInvoiceAddressId(int $newInvoiceAddressId): void
-    {
-        $this->newInvoiceAddressId = new AddressId($newInvoiceAddressId);
+        return $this->newCarrierId;
     }
 }

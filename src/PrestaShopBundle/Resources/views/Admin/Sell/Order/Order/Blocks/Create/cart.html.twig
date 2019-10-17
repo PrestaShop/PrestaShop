@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-<div class="card d-none" id="cartBlock">
+<div class="card d-none" id="cart-block">
   <h3 class="card-header">{{ 'Cart'|trans({}, 'Admin.Orderscustomers.Feature') }}</h3>
   <div class="card-body">
     <div class="row">
@@ -143,7 +143,7 @@
             </span>
           </div>
           <div class="col-4">
-            <select class="form-control" id="cartLanguageSelect">
+            <select class="form-control" id="cart-language-select">
               {% for language in languages %}
                 <option value="{{ language.id_lang }}">{{ language.name }}</option>
               {% endfor %}

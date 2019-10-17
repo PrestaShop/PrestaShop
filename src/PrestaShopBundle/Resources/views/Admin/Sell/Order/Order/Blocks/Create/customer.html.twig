@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-<div class="card" id="customerSearchBlock">
+<div class="card" id="customer-search-block">
   <h3 class="card-header">{{ 'Customer'|trans({}, 'Admin.Global') }}</h3>
   <div class="card-body">
     <div class="row js-search-customer-row mb-3">
@@ -33,8 +33,7 @@
       <div class="col-4">
         <input type="text"
                class="form-control"
-               id="customerSearchInput"
-               data-url="{{ path('admin_customers_search') }}"
+               id="customer-search-input"
         >
         <small class="form-text">
           {{ 'Search for an existing customer by typing the first letters of his/her name.'|trans({}, 'Admin.Orderscustomers.Help') }}
@@ -53,14 +52,14 @@
         <div class="row js-customer-search-results"></div>
       </div>
     </div>
-    <div class="row d-none" id="customerCheckoutHistory">
+    <div class="row d-none" id="customer-checkout-history">
       <div class="col">
         <ul class="nav nav-pills" role="tablist">
           <li class="nav-item">
             <a class="nav-link active show"
-               id="customerCartsTab"
+               id="customer-carts-tab"
                data-toggle="pill"
-               href="#customerCartsTabContent"
+               href="#customer-carts-tab-content"
                role="tab"
                aria-controls="pills-home"
                aria-expanded="true"
@@ -71,9 +70,9 @@
           </li>
           <li class="nav-item">
             <a class="nav-link"
-               id="customerOrdersTab"
+               id="customer-orders-tab"
                data-toggle="pill"
-               href="#customerOrdersTabContent"
+               href="#customer-orders-tab-content"
                role="tab"
                aria-controls="pills-home"
                aria-expanded="true"
@@ -84,8 +83,8 @@
           </li>
         </ul>
         <div class="tab-content">
-          <div class="tab-pane fade active show" id="customerCartsTabContent" role="tabpanel" aria-labelledby="pills-home-tab">
-            <table class="table" id="customerCartsTable">
+          <div class="tab-pane fade active show" id="customer-carts-tab-content" role="tabpanel" aria-labelledby="pills-home-tab">
+            <table class="table" id="customer-carts-table">
               <thead>
                 <tr>
                   <th>{{ 'ID'|trans({}, 'Admin.Global') }}</th>
@@ -97,8 +96,8 @@
               <tbody></tbody>
             </table>
           </div>
-          <div class="tab-pane fade" id="customerOrdersTabContent" role="tabpanel" aria-labelledby="pills-home-tab">
-            <table class="table" id="customerOrdersTable">
+          <div class="tab-pane fade" id="customer-orders-tab-content" role="tabpanel" aria-labelledby="pills-home-tab">
+            <table class="table" id="customer-orders-table">
               <thead>
               <tr>
                 <th>{{ 'ID'|trans({}, 'Admin.Global') }}</th>
@@ -119,7 +118,7 @@
   </div>
 </div>
 
-<div id="customerSearchResultTemplate" class="d-none">
+<div id="customer-search-result-template" class="d-none">
   <div class="col-4 js-customer-search-result-col">
     <div class="card js-customer-search-result">
       <div class="card-header">
@@ -147,7 +146,7 @@
   </div>
 </div>
 
-<div id="customerSearchEmptyResultTemplate" class="d-none">
+<div id="customer-search-empty-result-template" class="d-none">
   <div class="col">
     <div class="alert alert-warning" role="alert">
       <p class="alert-text">{{ 'No customers found'|trans({}, 'Admin.Orderscustomers.Notification') }}</p>
@@ -155,7 +154,7 @@
   </div>
 </div>
 
-<script id="customerCartsTableRowTemplate" type="text/html">
+<script id="customer-carts-table-row-template" type="text/html">
   <tr>
     <td class="js-cart-id"></td>
     <td class="js-cart-date"></td>
@@ -167,7 +166,7 @@
   </tr>
 </script>
 
-<script id="customerOrdersTableRowTemplate" type="text/html">
+<script id="customer-orders-table-row-template" type="text/html">
   <tr>
     <td class="js-order-id"></td>
     <td class="js-order-date"></td>
