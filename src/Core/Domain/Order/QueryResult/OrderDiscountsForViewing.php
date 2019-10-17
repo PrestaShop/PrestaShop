@@ -24,17 +24,36 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Order\QueryResult;
 
-use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddCartRuleToOrderCommand;
-
-/**
- * @internal
- */
-interface AddCartRuleToOrderHandlerInterface
+class OrderDiscountsForViewing
 {
+    /** @var OrderDiscountForViewing[] */
+    private $discounts = [];
+
     /**
-     * @param AddCartRuleToOrderCommand $command
+     * @param OrderDiscountForViewing[] $discounts
      */
-    public function handle(AddCartRuleToOrderCommand $command): void;
+    public function __construct(array $discounts)
+    {
+        foreach ($discounts as $discount) {
+            $this->addDiscount($discount);
+        }
+    }
+
+    /**
+     * @return OrderDiscountForViewing[]
+     */
+    public function getDiscounts(): array
+    {
+        return $this->discounts;
+    }
+
+    /**
+     * @param OrderDiscountForViewing $discount
+     */
+    private function addDiscount(OrderDiscountForViewing $discount): void
+    {
+        $this->discounts[] = $discount;
+    }
 }

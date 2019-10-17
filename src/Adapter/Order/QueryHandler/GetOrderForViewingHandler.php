@@ -51,6 +51,8 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryHandler\GetOrderForViewingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderCarrierForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderCustomerForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderDiscountForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderDiscountsForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderDocumentForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderDocumentsForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
@@ -60,6 +62,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderMessageForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderMessagesForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPaymentForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPaymentsForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPricesForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductsForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderReturnForViewing;
@@ -122,16 +125,21 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
     {
         $order = $this->getOrder($query->getOrderId());
 
-        $taxMethod = $order->getTaxCalculationMethod() == PS_TAX_EXC ?
-            $this->translator->trans('Tax excluded', [], 'Admin.Global') :
-            $this->translator->trans('Tax included', [], 'Admin.Global');
+        $isTaxIncluded = $order->getTaxCalculationMethod() == PS_TAX_INC;
+
+        $taxMethod = $isTaxIncluded ?
+            $this->translator->trans('Tax included', [], 'Admin.Global') :
+            $this->translator->trans('Tax excluded', [], 'Admin.Global');
 
         return new OrderForViewing(
             (int) $order->id,
             (int) $order->id_currency,
             $order->reference,
             $taxMethod,
+            $isTaxIncluded,
             (bool) $order->valid,
+            $order->hasInvoice(),
+            $order->hasBeenDelivered(),
             $this->getOrderCustomer($order),
             $this->getOrderShippingAddress($order),
             $this->getOrderInvoiceAddress($order),
@@ -141,7 +149,9 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             $this->getOrderShipping($order),
             $this->getOrderReturns($order),
             $this->getOrderPayments($order),
-            $this->getOrderMessages($order)
+            $this->getOrderMessages($order),
+            $this->getOrderPrices($order),
+            $this->getOrderDiscounts($order)
         );
     }
 
@@ -379,6 +389,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             $totalPriceFormatted = Tools::displayPrice($totalPrice, $currency);
 
             $productsForViewing[] = new OrderProductForViewing(
+                $product['id_order_detail'],
                 $product['product_id'],
                 $product['product_name'],
                 $product['reference'],
@@ -387,7 +398,9 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
                 $unitPriceFormatted,
                 $totalPriceFormatted,
                 $product['current_stock'],
-                $this->imageTagSourceParser->parse($product['image_tag'])
+                $this->imageTagSourceParser->parse($product['image_tag']),
+                Tools::ps_round($product['unit_price_tax_excl'], 2),
+                Tools::ps_round($product['unit_price_tax_incl'], 2)
             );
         }
 
@@ -706,5 +719,73 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
         }
 
         return new OrderMessagesForViewing($messages);
+    }
+
+    private function getOrderPrices(Order $order): OrderPricesForViewing
+    {
+        $currency = new Currency($order->id_currency);
+        $customer = $order->getCustomer();
+
+        $isTaxExcluded = $order->getTaxCalculationMethod() == PS_TAX_EXC;
+
+        $shipping_refundable_tax_excl = $order->total_shipping_tax_excl;
+        $shipping_refundable_tax_incl = $order->total_shipping_tax_incl;
+        $slips = OrderSlip::getOrdersSlip($customer->id, $order->id);
+        foreach ($slips as $slip) {
+            $shipping_refundable_tax_excl -= $slip['total_shipping_tax_excl'];
+            $shipping_refundable_tax_incl -= $slip['total_shipping_tax_incl'];
+        }
+
+        if ($isTaxExcluded) {
+            $productsPrice = (float) $order->total_products;
+            $discountsAmount = (float) $order->total_discounts_tax_excl;
+            $wrappingPrice = (float) $order->total_wrapping_tax_excl;
+            $shippingPrice = (float) $order->total_shipping_tax_excl;
+            $shippingRefundable = max(0, $shipping_refundable_tax_excl);
+        } else {
+            $productsPrice = (float) $order->total_products_wt;
+            $discountsAmount = (float) $order->total_discounts_tax_incl;
+            $wrappingPrice = (float) $order->total_wrapping_tax_incl;
+            $shippingPrice = (float) $order->total_shipping_tax_incl;
+            $shippingRefundable = max(0, $shipping_refundable_tax_incl);
+        }
+
+        $taxesAmount = $order->total_paid_tax_incl - $order->total_paid_tax_excl;
+        $totalAmount = (float) $order->total_paid_tax_incl;
+
+        return new OrderPricesForViewing(
+            $productsPrice,
+            $discountsAmount,
+            $wrappingPrice,
+            $shippingPrice,
+            $shippingRefundable,
+            $taxesAmount,
+            $totalAmount,
+            Tools::displayPrice($productsPrice, $currency),
+            Tools::displayPrice($discountsAmount, $currency),
+            Tools::displayPrice($wrappingPrice, $currency),
+            Tools::displayPrice($shippingPrice, $currency),
+            Tools::displayPrice($shippingRefundable, $currency),
+            Tools::displayPrice($taxesAmount, $currency),
+            Tools::displayPrice($totalAmount, $currency)
+        );
+    }
+
+    private function getOrderDiscounts(Order $order): OrderDiscountsForViewing
+    {
+        $currency = new Currency($order->id_currency);
+        $discounts = $order->getCartRules();
+        $discountsForViewing = [];
+
+        foreach ($discounts as $discount) {
+            $discountsForViewing[] = new OrderDiscountForViewing(
+                (int) $discount['id_cart_rule'],
+                $discount['name'],
+                (float) $discount['value'],
+                Tools::displayPrice($discount['value'], $currency)
+            );
+        }
+
+        return new OrderDiscountsForViewing($discountsForViewing);
     }
 }

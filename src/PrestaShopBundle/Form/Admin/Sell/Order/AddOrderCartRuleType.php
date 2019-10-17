@@ -26,11 +26,17 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Order;
 
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
+use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Constraints\Type;
 
 class AddOrderCartRuleType extends AbstractType
 {
@@ -40,24 +46,91 @@ class AddOrderCartRuleType extends AbstractType
     private $orderDiscountTypeChoiceProvider;
 
     /**
-     * @param FormChoiceProviderInterface $orderDiscountTypeChoiceProvider
+     * @var ConfigurableFormChoiceProviderInterface
      */
-    public function __construct(FormChoiceProviderInterface $orderDiscountTypeChoiceProvider)
-    {
+    private $orderInvoiceByIdChoiceProvider;
+
+    /**
+     * @var int
+     */
+    private $contextLangId;
+
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
+     * @param FormChoiceProviderInterface $orderDiscountTypeChoiceProvider
+     * @param ConfigurableFormChoiceProviderInterface $orderInvoiceByIdChoiceProvider
+     * @param int $contextLangId
+     * @param TranslatorInterface $translator
+     */
+    public function __construct(
+        FormChoiceProviderInterface $orderDiscountTypeChoiceProvider,
+        ConfigurableFormChoiceProviderInterface $orderInvoiceByIdChoiceProvider,
+        int $contextLangId,
+        TranslatorInterface $translator
+    ) {
         $this->orderDiscountTypeChoiceProvider = $orderDiscountTypeChoiceProvider;
+        $this->orderInvoiceByIdChoiceProvider = $orderInvoiceByIdChoiceProvider;
+        $this->contextLangId = $contextLangId;
+        $this->translator = $translator;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $optional): void
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $invoices = $options['order_id'] ?
+            $this->orderInvoiceByIdChoiceProvider->getChoices([
+                'id_order' => $options['order_id'],
+                'id_lang' => $this->contextLangId,
+            ]) : [];
+
         $builder
-            ->add('name', TextType::class)
+            ->add('name', TextType::class, [
+                'constraints' => [
+                    new CleanHtml([
+                        'message' => $this->translator->trans(
+                            'Cart rule name must contain clean HTML',
+                            [],
+                            'Admin.Notifications.Error'
+                        ),
+                    ]),
+                ],
+            ])
             ->add('type', ChoiceType::class, [
                 'choices' => $this->orderDiscountTypeChoiceProvider->getChoices(),
             ])
-            ->add('value', TextType::class)
+            ->add('value', TextType::class, [
+                'constraints' => new Type([
+                    'type' => 'numeric',
+                    'message' => $this->translator->trans('Discount value must be a number', [], 'Admin.Notifications.Error'),
+                ]),
+            ])
+            ->add('invoice_id', ChoiceType::class, [
+                'choices' => $invoices,
+                'required' => false,
+                'placeholder' => false,
+            ])
+            ->add('apply_on_all_invoices', CheckboxType::class, [
+                'required' => false,
+            ])
+        ;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver
+            ->setDefaults([
+                'order_id' => null,
+            ])
+            ->setAllowedTypes('order_id', ['int', 'null'])
         ;
     }
 }

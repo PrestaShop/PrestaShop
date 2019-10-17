@@ -65,6 +65,35 @@
                 </label>
 
                 {{ form_widget(addOrderCartRuleForm.value) }}
+                <small class="text-muted js-cart-rule-value-help d-none">
+                  {{ 'This value must include taxes.'|trans({}, 'Admin.Orderscustomers.Notification') }}
+                </small>
+              </div>
+            </div>
+          </div>
+
+          <div class="{% if not orderForViewing.hasInvoice %}d-none{% endif %}">
+            <div class="row">
+              <div class="col">
+                <div class="form-group">
+                  <label class="form-control-label" for="{{ addOrderCartRuleForm.invoice_id.vars.id }}">
+                    {{ 'Invoice'|trans({}, 'Admin.Global') }}
+                  </label>
+
+                  {{ form_widget(addOrderCartRuleForm.invoice_id, {'attr': {
+                    'disabled': not orderForViewing.hasInvoice
+                  }}) }}
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col">
+                <div class="form-group mb-0">
+                  {{ form_widget(addOrderCartRuleForm.apply_on_all_invoices, {'material_design': true, 'attr': {
+                    'disabled': not orderForViewing.hasInvoice
+                  }}) }}
+                </div>
               </div>
             </div>
           </div>

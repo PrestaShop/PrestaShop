@@ -28,6 +28,10 @@ import OrderViewPageMap from './OrderViewPageMap';
 const $ = window.$;
 
 $(() => {
+  const DISCOUNT_TYPE_AMOUNT = 'amount';
+  const DISCOUNT_TYPE_PERCENT = 'percent';
+  const DISCOUNT_TYPE_FREE_SHIPPING = 'free_shipping';
+
   handlePaymentDetailsToggle();
   handlePrivateNoteChange();
 
@@ -35,6 +39,9 @@ $(() => {
     event.preventDefault();
     togglePrivateNoteBlock();
   });
+
+  initAddCartRuleFormHandler();
+  initAddProductFormHandler();
 
   function handlePaymentDetailsToggle() {
     $(OrderViewPageMap.orderPaymentDetailsBtn).on('click', (event) => {
@@ -67,6 +74,53 @@ $(() => {
     $(OrderViewPageMap.privateNoteInput).on('input', (event) => {
       const note = $(event.currentTarget).val();
       $submitBtn.prop('disabled', !note);
+    });
+  }
+
+  function initAddProductFormHandler() {
+    const $modal = $(OrderViewPageMap.updateOrderProductModal);
+
+    $modal.on('click', '.js-order-product-update-btn', (event) => {
+      const $btn = $(event.currentTarget);
+
+      $modal.find('.js-update-product-name').text($btn.data('product-name'));
+      $modal.find(OrderViewPageMap.updateOrderProductPriceTaxExclInput).val($btn.data('product-price-tax-excl'));
+      $modal.find(OrderViewPageMap.updateOrderProductPriceTaxInclInput).val($btn.data('product-price-tax-incl'));
+      $modal.find(OrderViewPageMap.updateOrderProductQuantityInput).val($btn.data('product-quantity'));
+      $modal.find('form').attr('action', $btn.data('update-url'));
+    });
+  }
+
+  function initAddCartRuleFormHandler() {
+    const $modal = $(OrderViewPageMap.addCartRuleModal);
+    const $form = $modal.find('form');
+    const $valueHelp = $modal.find(OrderViewPageMap.cartRuleHelpText);
+    const $invoiceSelect = $modal.find(OrderViewPageMap.addCartRuleInvoiceIdSelect);
+    const $valueInput = $form.find(OrderViewPageMap.addCartRuleValueInput);
+    const $valueFormGroup = $valueInput.closest('.form-group');
+
+    $form.find(OrderViewPageMap.addCartRuleApplyOnAllInvoicesCheckbox).on('change', (event) => {
+      const isChecked = $(event.currentTarget).is(':checked');
+
+      $invoiceSelect.attr('disabled', isChecked);
+    });
+
+    $form.find(OrderViewPageMap.addCartRuleTypeSelect).on('change', (event) => {
+      const selectedCartRuleType = $(event.currentTarget).val();
+
+      if (selectedCartRuleType === DISCOUNT_TYPE_AMOUNT) {
+        $valueHelp.removeClass('d-none');
+      } else {
+        $valueHelp.addClass('d-none');
+      }
+
+      if (selectedCartRuleType === DISCOUNT_TYPE_FREE_SHIPPING) {
+        $valueFormGroup.addClass('d-none');
+        $valueInput.attr('disabled', true);
+      } else {
+        $valueFormGroup.removeClass('d-none');
+        $valueInput.attr('disabled', false);
+      }
     });
   }
 });

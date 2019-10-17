@@ -107,3 +107,21 @@ admin_orders_change_currency:
     _controller: PrestaShopBundle:Admin/Sell/Order/Order:changeCurrency
   requirements:
     orderId: \d+
+
+admin_orders_update_product:
+  path: /{orderId}/products/{orderDetailId}
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:updateProduct
+  requirements:
+    orderId: \d+
+    orderDetailId: \d+
+
+admin_orders_remove_cart_rule:
+  path: /{orderId}/cart-rules/{orderCartRuleId}/delete
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:removeCartRule
+  requirements:
+    orderId: \d+
+    orderCartRuleId: \d+

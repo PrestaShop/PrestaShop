@@ -105,12 +105,40 @@ class OrderForViewing
      */
     private $currencyId;
 
+    /**
+     * @var bool
+     */
+    private $isDelivered;
+
+    /**
+     * @var OrderPricesForViewing
+     */
+    private $prices;
+
+    /**
+     * @var bool
+     */
+    private $isTaxIncluded;
+
+    /**
+     * @var bool
+     */
+    private $hasInvoice;
+
+    /**
+     * @var OrderDiscountsForViewing
+     */
+    private $discounts;
+
     public function __construct(
         int $orderId,
         int $currencyId,
         string $reference,
         string $taxMethod,
+        bool $isTaxIncluded,
         bool $isValid,
+        bool $hasInvoice,
+        bool $isDelivered,
         OrderCustomerForViewing $customer,
         OrderShippingAddressForViewing $shippingAddress,
         OrderInvoiceAddressForViewing $invoiceAddress,
@@ -120,7 +148,9 @@ class OrderForViewing
         OrderShippingForViewing $shipping,
         OrderReturnsForViewing $returns,
         OrderPaymentsForViewing $payments,
-        OrderMessagesForViewing $messages
+        OrderMessagesForViewing $messages,
+        OrderPricesForViewing $prices,
+        OrderDiscountsForViewing $discounts
     ) {
         $this->reference = $reference;
         $this->customer = $customer;
@@ -137,6 +167,11 @@ class OrderForViewing
         $this->messages = $messages;
         $this->orderId = $orderId;
         $this->currencyId = $currencyId;
+        $this->isDelivered = $isDelivered;
+        $this->prices = $prices;
+        $this->isTaxIncluded = $isTaxIncluded;
+        $this->hasInvoice = $hasInvoice;
+        $this->discounts = $discounts;
     }
 
     /**
@@ -257,5 +292,45 @@ class OrderForViewing
     public function getMessages(): OrderMessagesForViewing
     {
         return $this->messages;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDelivered(): bool
+    {
+        return $this->isDelivered;
+    }
+
+    /**
+     * @return OrderPricesForViewing
+     */
+    public function getPrices(): OrderPricesForViewing
+    {
+        return $this->prices;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isTaxIncluded(): bool
+    {
+        return $this->isTaxIncluded;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasInvoice(): bool
+    {
+        return $this->hasInvoice;
+    }
+
+    /**
+     * @return OrderDiscountsForViewing
+     */
+    public function getDiscounts(): OrderDiscountsForViewing
+    {
+        return $this->discounts;
     }
 }

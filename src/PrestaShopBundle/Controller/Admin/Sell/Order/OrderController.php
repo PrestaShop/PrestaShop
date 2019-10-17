@@ -33,11 +33,14 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddCartRuleToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\BulkChangeOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\DuplicateOrderCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderCurrencyCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\DeleteCartRuleFromOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotEditDeliveredOrderProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\ChangeOrderStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Payment\Command\AddPaymentCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\UpdateProductInOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
@@ -48,8 +51,10 @@ use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Customer\PrivateNoteType;
 use PrestaShopBundle\Form\Admin\Sell\Order\AddOrderCartRuleType;
 use PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrderCurrencyType;
+use PrestaShopBundle\Form\Admin\Sell\Order\AddProductToOrderType;
 use PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrdersStatusType;
 use PrestaShopBundle\Form\Admin\Sell\Order\OrderPaymentType;
+use PrestaShopBundle\Form\Admin\Sell\Order\UpdateProductInOrderType;
 use PrestaShopBundle\Form\Admin\Sell\Order\UpdateOrderStatusType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Service\Grid\ResponseBuilder;
@@ -244,7 +249,9 @@ class OrderController extends FrameworkBundleAdminController
         /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
 
-        $addOrderCartRuleForm = $this->createForm(AddOrderCartRuleType::class);
+        $addOrderCartRuleForm = $this->createForm(AddOrderCartRuleType::class, [], [
+            'order_id' => $orderId,
+        ]);
         $updateOrderStatusForm = $this->createForm(UpdateOrderStatusType::class, [
             'new_order_status_id' => $orderForViewing->getHistory()->getCurrentOrderStatusId(),
         ]);
@@ -253,12 +260,15 @@ class OrderController extends FrameworkBundleAdminController
         ], [
             'id_order' => $orderId,
         ]);
+
         $changeOrderCurrencyForm = $this->createForm(ChangeOrderCurrencyType::class, [], [
             'current_currency_id' => $orderForViewing->getCurrencyId(),
         ]);
         $privateNoteForm = $this->createForm(PrivateNoteType::class, [
             'note' => $orderForViewing->getCustomer()->getPrivateNote(),
         ]);
+        $addProductToOrderForm = $this->createForm(AddProductToOrderType::class);
+        $updateOrderProductForm = $this->createForm(UpdateProductInOrderType::class);
 
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/view.html.twig', [
             'showContentHeader' => false,
@@ -268,6 +278,53 @@ class OrderController extends FrameworkBundleAdminController
             'addOrderPaymentForm' => $addOrderPaymentForm->createView(),
             'changeOrderCurrencyForm' => $changeOrderCurrencyForm->createView(),
             'privateNoteForm' => $privateNoteForm->createView(),
+            'addProductToOrderForm' => $addProductToOrderForm->createView(),
+            'updateOrderProductForm' => $updateOrderProductForm->createView(),
+        ]);
+    }
+
+    /**
+     * @param int $orderId
+     * @param int $orderCartRuleId
+     *
+     * @return RedirectResponse
+     */
+    public function removeCartRuleAction(int $orderId, int $orderCartRuleId): RedirectResponse
+    {
+        $this->getCommandBus()->handle(
+            new DeleteCartRuleFromOrderCommand($orderId, $orderCartRuleId)
+        );
+
+        $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+
+        return $this->redirectToRoute('admin_orders_view', [
+            'orderId' => $orderId,
+        ]);
+    }
+
+    public function updateProductAction(int $orderId, int $orderDetailId, Request $request): RedirectResponse
+    {
+        $updateOrderProductForm = $this->createForm(UpdateProductInOrderType::class);
+        $updateOrderProductForm->handleRequest($request);
+
+        if ($updateOrderProductForm->isSubmitted() && $updateOrderProductForm->isValid()) {
+            $data = $updateOrderProductForm->getData();
+
+            $this->getCommandBus()->handle(
+                new UpdateProductInOrderCommand(
+                    $orderId,
+                    $orderDetailId,
+                    $data['price_tax_excl'],
+                    $data['price_tax_incl'],
+                    $data['quantity']
+                )
+            );
+
+            $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+        }
+
+        return $this->redirectToRoute('admin_orders_view', [
+            'orderId' => $orderId,
         ]);
     }
 
@@ -279,25 +336,32 @@ class OrderController extends FrameworkBundleAdminController
      */
     public function addCartRuleAction(int $orderId, Request $request): RedirectResponse
     {
-        $addOrderCartRuleForm = $this->createForm(AddOrderCartRuleType::class);
+        $addOrderCartRuleForm = $this->createForm(AddOrderCartRuleType::class, [], [
+            'order_id' => $orderId,
+        ]);
         $addOrderCartRuleForm->handleRequest($request);
 
-        if ($addOrderCartRuleForm->isSubmitted() && $addOrderCartRuleForm->isValid()) {
-            $data = $addOrderCartRuleForm->getData();
+        if ($addOrderCartRuleForm->isSubmitted()) {
+            if ($addOrderCartRuleForm->isValid()) {
+                $data = $addOrderCartRuleForm->getData();
 
-            try {
+                $invoiceId = $data['apply_on_all_invoices'] ? null : (int) $data['invoice_id'];
+
                 $this->getCommandBus()->handle(
                     new AddCartRuleToOrderCommand(
                         $orderId,
                         $data['name'],
                         $data['type'],
-                        $data['value']
+                        $data['value'] ?? null,
+                        $invoiceId
                     )
                 );
 
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
-            } catch (Exception $e) {
-                $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+            } else {
+                foreach ($addOrderCartRuleForm->getErrors(true) as $error) {
+                    $this->addFlash('error', $error->getMessage());
+                }
             }
         }
 
@@ -467,6 +531,7 @@ class OrderController extends FrameworkBundleAdminController
     private function getErrorMessages(OrderException $e)
     {
         return [
+            CannotEditDeliveredOrderProductException::class => $this->trans('You cannot edit the cart once the order delivered', 'Admin.Orderscustomers.Notification'),
             OrderNotFoundException::class => $e instanceof OrderNotFoundException ?
                 $this->trans(
                     'Order #%d cannot be loaded',

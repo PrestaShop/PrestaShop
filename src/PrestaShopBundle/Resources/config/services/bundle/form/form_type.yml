@@ -911,6 +911,9 @@ services:
       class: 'PrestaShopBundle\Form\Admin\Sell\Order\AddOrderCartRuleType'
       arguments:
           - '@prestashop.core.form.choice.provider.order_discount_type'
+          - '@prestashop.adapter.form.choice_provider.order_invoice_by_id'
+          - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
+          - '@translator'
       tags:
           - { name: form.type }
 

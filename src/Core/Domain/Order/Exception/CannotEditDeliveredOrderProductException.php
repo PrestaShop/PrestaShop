@@ -24,17 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Order\Exception;
 
-use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddCartRuleToOrderCommand;
-
-/**
- * @internal
- */
-interface AddCartRuleToOrderHandlerInterface
+class CannotEditDeliveredOrderProductException extends OrderException
 {
-    /**
-     * @param AddCartRuleToOrderCommand $command
-     */
-    public function handle(AddCartRuleToOrderCommand $command): void;
 }
