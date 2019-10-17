@@ -267,7 +267,6 @@ class OrderController extends FrameworkBundleAdminController
         $privateNoteForm = $this->createForm(PrivateNoteType::class, [
             'note' => $orderForViewing->getCustomer()->getPrivateNote(),
         ]);
-        $addOrderProductForm = $this->createForm(AddOrderProductType::class);
         $addProductToOrderForm = $this->createForm(AddProductToOrderType::class);
         $updateOrderProductForm = $this->createForm(UpdateProductInOrderType::class);
 
@@ -279,7 +278,6 @@ class OrderController extends FrameworkBundleAdminController
             'addOrderPaymentForm' => $addOrderPaymentForm->createView(),
             'changeOrderCurrencyForm' => $changeOrderCurrencyForm->createView(),
             'privateNoteForm' => $privateNoteForm->createView(),
-            'addOrderProductForm' => $addOrderProductForm->createView(),
             'addProductToOrderForm' => $addProductToOrderForm->createView(),
             'updateOrderProductForm' => $updateOrderProductForm->createView(),
         ]);
@@ -327,7 +325,6 @@ class OrderController extends FrameworkBundleAdminController
 
         return $this->redirectToRoute('admin_orders_view', [
             'orderId' => $orderId,
->>>>>>> 068f2bffca... Implement updating order products
         ]);
     }
 
