@@ -62,7 +62,7 @@ describe('Create Taxes, Then disable / Enable and Delete with Bulk actions', asy
   });
   // 1 : Create 2 taxes with data from faker
   describe('Create 2 Taxes in BO', async () => {
-    it('should go to add new tax page page', async function () {
+    it('should go to add new tax page', async function () {
       await this.pageObjects.taxesPage.goToAddNewTaxPage();
       const pageTitle = await this.pageObjects.addTaxPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.addTaxPage.pageTitleCreate);
