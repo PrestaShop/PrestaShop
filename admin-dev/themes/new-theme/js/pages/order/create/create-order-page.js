@@ -31,11 +31,12 @@ import CustomerInfoProvider from './customer-info-provider';
 import CartsRenderer from './carts-renderer';
 import OrdersRenderer from './orders-renderer';
 import AddressesRenderer from './addresses-renderer';
-import VouchersRenderer from './vouchers-renderer';
+import CartRulesRenderer from './cart-rules-renderer';
 import Router from '../../../components/router';
 import {EventEmitter} from '../../../components/event-emitter';
 import CartEditor from './cart-editor';
 import eventMap from './event-map';
+import CartRuleSearcher from './cart-rule-searcher';
 
 const $ = window.$;
 
@@ -54,9 +55,10 @@ export default class CreateOrderPage {
     this.cartsRenderer = new CartsRenderer();
     this.ordersRenderer = new OrdersRenderer();
     this.addressesRenderer = new AddressesRenderer();
-    this.vouchersRenderer = new VouchersRenderer();
+    this.cartRulesRenderer = new CartRulesRenderer();
     this.router = new Router();
     this.cartEditor = new CartEditor();
+    this.cartRuleSearcher = new CartRuleSearcher();
 
     return {
       listenForCustomerSearch: () => this._handleCustomerSearch(),
@@ -65,6 +67,8 @@ export default class CreateOrderPage {
       listenForOrderSelect: () => this._handleDuplicateOrderCart(),
       listenForCartEdit: () => this._handleCartEdit(),
       listenForCartLoading: () => this._onCartLoaded(),
+      listenForCartRuleSearch: () => this._handleCartRuleSearch(),
+      listenForCartRuleSelect: () => this._handleCartRuleSelect(),
     };
   }
 
@@ -145,6 +149,28 @@ export default class CreateOrderPage {
     this.$container.on('change', createOrderPageMap.freeShippingSwitch, e => this._setFreeShipping(e));
   }
 
+  _handleCartRuleSearch() {
+    this.$container.on('input', createOrderPageMap.cartRuleSearchInput, () => {
+      this.cartRuleSearcher.onCartRuleSearch();
+    });
+    this.$container.on('blur', createOrderPageMap.cartRuleSearchInput, () => {
+      this.cartRuleSearcher.onDoneSearchingCartRule();
+    });
+  }
+
+  _handleCartRuleSelect() {
+    this.$container.on('mousedown', createOrderPageMap.foundCartRuleListItem, (event) => {
+      // prevent blur event to allow selecting cart rule
+      event.preventDefault();
+      const cartRuleId = $(event.currentTarget).data('cart-rule-id');
+      this.cartRuleSearcher.onCartRuleSelect(cartRuleId, this.data.cart_id);
+
+      // manually fire blur event after cart rule is selected.
+    }).on('click', createOrderPageMap.foundCartRuleListItem, () => {
+      $(createOrderPageMap.cartRuleSearchInput).blur();
+    });
+  }
+
   /**
    * Gets and renders customer carts
    *
@@ -185,7 +211,7 @@ export default class CreateOrderPage {
    */
   _renderCartInfo(cartInfo) {
     this.addressesRenderer.render(cartInfo.addresses);
-    this.vouchersRenderer.render(cartInfo.cartRules);
+    this.cartRulesRenderer.render(cartInfo.cartRules, cartInfo.products.length === 0);
     this.shippingRenderer.render(cartInfo.shipping, cartInfo.products.length === 0);
     // @todo: render Summary block when at least 1 product is in cart
     // and delivery options are available

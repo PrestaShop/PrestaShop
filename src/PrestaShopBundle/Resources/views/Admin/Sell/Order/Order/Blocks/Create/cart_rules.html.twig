@@ -23,26 +23,29 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-<div class="card d-none" id="vouchers-block">
+<div class="card d-none" id="cart-rules-block">
   <h3 class="card-header">
     {{ 'Vouchers'|trans({}, 'Admin.Orderscustomers.Feature') }}
   </h3>
   <div class="card-body">
     <div class="row">
       <div class="col-3">
-        <span class="float-right">{{ 'Search for a voucher'|trans({}, 'Admin.Orderscustomers.Feature') }}</span>
+        <span class="float-right">{{ 'Search for a cart-rule'|trans({}, 'Admin.Orderscustomers.Feature') }}</span>
       </div>
-      <div class="col-4">
-        <input type="text" class="form-control" id="search-vouchers-input">
+      <div class="col-4" id="cart-rules-search-block">
+        <div class="col p-0">
+          <input type="text" class="form-control" id="search-cart-rules-input">
+          <ul id="search-cart-rules-result-box" class="position-absolute bg-white w-100 form-control d-none list-unstyled"></ul>
+        </div>
       </div>
       <div class="col">
         <span class="mr-2">{{ 'or'|trans({}, 'Admin.Global') }}</span>
         <button class="btn btn-primary" type="button">
-          {{ 'Add new voucher'|trans({}, 'Admin.Orderscustomers.Feature') }}
+          {{ 'Add new cart-rule'|trans({}, 'Admin.Orderscustomers.Feature') }}
         </button>
       </div>
     </div>
-    <table class="table d-none" id="vouchers-table">
+    <table class="table d-none" id="cart-rules-table">
       <thead>
       <tr>
         <th>{{ 'Name'|trans({}, 'Admin.Global') }}</th>
@@ -56,14 +59,22 @@
   </div>
 </div>
 
-<script id="vouchers-table-row-template" type="text/html">
+<script id="cart-rules-table-row-template" type="text/html">
   <tr>
-    <td class="js-voucher-name"></td>
-    <td class="js-voucher-description"></td>
-    <td class="js-voucher-value"></td>
+    <td class="js-cart-rule-name"></td>
+    <td class="js-cart-rule-description"></td>
+    <td class="js-cart-rule-value"></td>
     <td class="text-right">
-      <button class="btn btn-outline-danger js-voucher-delete">{{ 'Delete'|trans({}, 'Admin.Global') }}</button>
+      <button class="btn btn-outline-danger js-cart-rule-delete">{{ 'Delete'|trans({}, 'Admin.Global') }}</button>
     </td>
   </tr>
+</script>
+
+<script id="cart-rules-not-found-template" type="text/html">
+  <li>{{ 'No voucher was found'|trans({}, 'Admin.Orderscustomers.Feature') }}</li>
+</script>
+
+<script id="found-cart-rule-template" type="text/html">
+  <li data-cart-rule-id="" class="js-found-cart-rule"></li>
 </script>
 

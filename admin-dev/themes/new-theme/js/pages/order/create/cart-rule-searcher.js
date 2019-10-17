@@ -25,15 +25,15 @@
 
 import Router from '../../../components/router';
 import createOrderMap from './create-order-map';
-import VouchersRenderer from './vouchers-renderer';
+import CartRulesRenderer from './cart-rules-renderer';
 
 const $ = window.$;
 
 export default class CartRuleSearcher {
   constructor() {
     this.router = new Router();
-    this.$searchInput = $(createOrderMap.vouchersSearchInput);
-    this.vouchersRenderer = new VouchersRenderer();
+    this.$searchInput = $(createOrderMap.cartRuleSearchInput);
+    this.cartRulesRenderer = new CartRulesRenderer();
 
     return {
       onCartRuleSearch: () => {
@@ -58,7 +58,7 @@ export default class CartRuleSearcher {
 
   _addCartRuleToCart(cartRuleId, cartId) {
     $.post(this.router.generate('admin_carts_add_rule', {cartId})).then((cartInfo) => {
-      this.vouchersRenderer.render(cartInfo.cartRules);
+      this.cartRulesRenderer.render(cartInfo.cartRules, cartInfo.products.length === 0);
     });
   }
 
@@ -73,35 +73,35 @@ export default class CartRuleSearcher {
   }
 
   _renderCartRules(cartRules) {
-    const $cartRuleTemplate = $($(createOrderMap.foundVoucherTemplate).html());
+    const $cartRuleTemplate = $($(createOrderMap.foundCartRuleTemplate).html());
     for (const key in cartRules) {
       const $template = $cartRuleTemplate.clone();
       const cartRule = cartRules[key];
       $template.text(cartRule.name);
 
       $template.data('cart-rule-id', cartRule.cartRuleId);
-      $(createOrderMap.vouchersSearchResultBox).append($template);
+      $(createOrderMap.cartRulesSearchResultBox).append($template);
     }
 
     this._showResultsDropdown();
   }
 
   _renderNotFound() {
-    const $template = $($(createOrderMap.vouchersNotFoundTemplate).html()).clone();
-    $(createOrderMap.vouchersSearchResultBox).html($template);
+    const $template = $($(createOrderMap.cartRulesNotFoundTemplate).html()).clone();
+    $(createOrderMap.cartRulesSearchResultBox).html($template);
 
     this._showResultsDropdown();
   }
 
   _clearSearchResults() {
-    $(createOrderMap.vouchersSearchResultBox).empty();
+    $(createOrderMap.cartRulesSearchResultBox).empty();
   }
 
   _showResultsDropdown() {
-    $(createOrderMap.vouchersSearchResultBox).removeClass('d-none');
+    $(createOrderMap.cartRulesSearchResultBox).removeClass('d-none');
   }
 
   _hideResultsDropdown() {
-    $(createOrderMap.vouchersSearchResultBox).addClass('d-none');
+    $(createOrderMap.cartRulesSearchResultBox).addClass('d-none');
   }
 }

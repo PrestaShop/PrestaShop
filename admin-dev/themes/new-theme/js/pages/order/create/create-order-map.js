@@ -51,14 +51,23 @@ export default {
   customerCheckoutHistory: '#customer-checkout-history',
   customerOrdersTable: '#customer-orders-table',
   customerOrdersTableRowTemplate: '#customer-orders-table-row-template',
-  vouchersTable: '#vouchers-table',
-  vouchersTableRowTemplate: '#vouchers-table-row-template',
+  cartRulesTable: '#cart-rules-table',
+  cartRulesTableRowTemplate: '#cart-rules-table-row-template',
 
   // selectors related to cart block
   cartBlock: '#cart-block',
 
-  // selectors related to vouchers block
-  vouchersBlock: '#vouchers-block',
+  // selectors related to cartRules block
+  cartRulesBlock: '#cart-rules-block',
+  cartRuleSearchInput: '#search-cart-rules-input',
+  cartRulesSearchResultBox: '#search-cart-rules-result-box',
+  cartRulesNotFoundTemplate: '#cart-rules-not-found-template',
+  foundCartRuleTemplate: '#found-cart-rule-template',
+  foundCartRuleListItem: '.js-found-cart-rule',
+  cartRuleNameField: '.js-cart-rule-name',
+  cartRuleDescriptionField: '.js-cart-rule-description',
+  cartRuleValueField: '.js-cart-rule-value',
+  cartRuleDeleteBtn: '.js-cart-rule-delete-btn',
 
   // selectors related to addresses block
   addressesBlock: '#addresses-block',
