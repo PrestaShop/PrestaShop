@@ -191,7 +191,8 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             $customer->email,
             new DateTimeImmutable($customer->date_add),
             Tools::displayPrice(Tools::ps_round(Tools::convertPrice($customerStats['total_orders'], $order->id_currency), PS_ROUND_HALF_UP), (int) $order->id_currency),
-            $customerStats['nb_orders']
+            $customerStats['nb_orders'],
+            $customer->note
         );
     }
 

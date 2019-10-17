@@ -45,6 +45,7 @@ use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderGridDefinitionFactor
 use PrestaShop\PrestaShop\Core\Search\Filters\OrderFilters;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Form\Admin\Sell\Customer\PrivateNoteType;
 use PrestaShopBundle\Form\Admin\Sell\Order\AddOrderCartRuleType;
 use PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrderCurrencyType;
 use PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrdersStatusType;
@@ -255,6 +256,9 @@ class OrderController extends FrameworkBundleAdminController
         $changeOrderCurrencyForm = $this->createForm(ChangeOrderCurrencyType::class, [], [
             'current_currency_id' => $orderForViewing->getCurrencyId(),
         ]);
+        $privateNoteForm = $this->createForm(PrivateNoteType::class, [
+            'note' => $orderForViewing->getCustomer()->getPrivateNote(),
+        ]);
 
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/view.html.twig', [
             'showContentHeader' => false,
@@ -263,6 +267,7 @@ class OrderController extends FrameworkBundleAdminController
             'updateOrderStatusForm' => $updateOrderStatusForm->createView(),
             'addOrderPaymentForm' => $addOrderPaymentForm->createView(),
             'changeOrderCurrencyForm' => $changeOrderCurrencyForm->createView(),
+            'privateNoteForm' => $privateNoteForm->createView(),
         ]);
     }
 

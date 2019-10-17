@@ -29,12 +29,44 @@ const $ = window.$;
 
 $(() => {
   handlePaymentDetailsToggle();
+  handlePrivateNoteChange();
+
+  $(OrderViewPageMap.privateNoteToggleBtn).on('click', (event) => {
+    event.preventDefault();
+    togglePrivateNoteBlock();
+  });
 
   function handlePaymentDetailsToggle() {
     $(OrderViewPageMap.orderPaymentDetailsBtn).on('click', (event) => {
       const $paymentDetailRow = $(event.currentTarget).closest('tr').next(':first');
 
       $paymentDetailRow.toggleClass('d-none');
+    });
+  }
+
+  function togglePrivateNoteBlock() {
+    const $block = $(OrderViewPageMap.privateNoteBlock);
+    const $btn = $(OrderViewPageMap.privateNoteToggleBtn);
+    const isPrivateNoteOpened = $btn.hasClass('is-opened');
+
+    if (isPrivateNoteOpened) {
+      $btn.removeClass('is-opened');
+      $block.addClass('d-none');
+    } else {
+      $btn.addClass('is-opened');
+      $block.removeClass('d-none');
+    }
+
+    const $icon = $btn.find('.material-icons');
+    $icon.text(isPrivateNoteOpened ? 'add' : 'remove');
+  }
+
+  function handlePrivateNoteChange() {
+    const $submitBtn = $(OrderViewPageMap.privateNoteSubmitBtn);
+
+    $(OrderViewPageMap.privateNoteInput).on('input', (event) => {
+      const note = $(event.currentTarget).val();
+      $submitBtn.prop('disabled', !note);
     });
   }
 });
