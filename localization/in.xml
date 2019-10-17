@@ -10,7 +10,7 @@
 		<currency name="Indian Rupee" iso_code="INR" iso_code_num="356" sign="₹" blank="1" conversion_rate="60.748205" format="1" decimals="1" />
 	</currencies>
 	<taxes>
-		<tax id="1" name="IGST 5%" rate="5" />
+		<tax id="1" name="GST 5%" rate="5" />
 		<tax id="2" name="IGST 12%" rate="12" />
 		<tax id="3" name="IGST 18%" rate="18" />
     <tax id="4" name="IGST 28%" rate="28" />
