@@ -218,7 +218,7 @@ module.exports = class Categories extends BOBasePage {
    * @param modeID, Deletion mode ID to choose in modal
    * @return {Promise<textContent>}
    */
-  async deleteCategoriesBulkActions(modeID = 1) {
+  async deleteCategoriesBulkActions(modeID = '0') {
     // Click on Select All
     await Promise.all([
       this.page.click(this.selectAllRowsLabel),
