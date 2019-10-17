@@ -173,7 +173,7 @@ class OrderCustomerForViewing
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getPrivateNote(): ?string
     {
