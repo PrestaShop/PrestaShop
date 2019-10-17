@@ -34,6 +34,14 @@ module.exports = class Taxes extends BOBasePage {
     this.taxesGridDeleteLink = `${this.taxesGridColumn} a[data-url*='delete']`;
     this.toggleColumnValidIcon = `${this.taxesGridColumn} i.grid-toggler-icon-valid`;
     this.toggleColumnNotValidIcon = `${this.taxesGridColumn} i.grid-toggler-icon-not-valid`;
+
+    // Form Taxes Options
+    this.enabledTaxSwitchlabel = 'label[for=\'form_options_enable_tax_%ID\']';
+    this.displayTaxInCartSwitchlabel = 'label[for=\'form_options_display_tax_in_cart_%ID\']';
+    this.taxAddressTypeSelect = '#form_options_tax_address_type';
+    this.useEcoTaxSwitchlabel = 'label[for=\'form_options_use_eco_tax_%ID\']';
+    this.ecoTaxSelect = '#form_options_eco_tax_rule_group';
+    this.saveTaxOptionButton = '.card-footer button';
   }
 
   /*
@@ -84,9 +92,8 @@ module.exports = class Taxes extends BOBasePage {
    * @return {Promise<string>}
    */
   async getToggleColumnValue(row, column) {
-    if (await this.elementVisible(
-      this.toggleColumnValidIcon.replace('%ROW', row).replace('%COLUMN', column), 100)) return true;
-    return false;
+    return this.elementVisible(
+      this.toggleColumnValidIcon.replace('%ROW', row).replace('%COLUMN', column), 100);
   }
 
   /**
@@ -200,6 +207,40 @@ module.exports = class Taxes extends BOBasePage {
     // Click on delete
     await Promise.all([
       this.page.click(this.deleteSelectionButton),
+      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
+      this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true}),
+    ]);
+    return this.getTextContent(this.alertSuccessBlockParagraph);
+  }
+
+  /**
+   * Update Tax Options
+   * @param taxOptionData
+   * @return {Promise<textContent>}
+   */
+  async updateTaxOption(taxOptionData) {
+    if (taxOptionData.enabled) {
+      await this.page.click(this.enabledTaxSwitchlabel.replace('%ID', '1'));
+      if (taxOptionData.displayInShoppingCart) {
+        await this.page.click(this.displayTaxInCartSwitchlabel.replace('%ID', '1'));
+      } else {
+        await this.page.click(this.displayTaxInCartSwitchlabel.replace('%ID', '0'));
+      }
+    } else {
+      await this.page.click(this.enabledTaxSwitchlabel.replace('%ID', '0'));
+    }
+    await this.selectByVisibleText(this.taxAddressTypeSelect, taxOptionData.basedOn);
+    if (taxOptionData.useEcoTax) {
+      await this.page.click(this.useEcoTaxSwitchlabel.replace('%ID', '1'));
+      if (taxOptionData.ecoTax !== undefined) {
+        await this.selectByVisibleText(this.ecoTaxSelect, taxOptionData.ecoTax);
+      }
+    } else {
+      await this.page.click(this.useEcoTaxSwitchlabel.replace('%ID', '0'));
+    }
+    // Click on save tax Option
+    await Promise.all([
+      this.page.click(this.saveTaxOptionButton),
       this.page.waitForNavigation({waitUntil: 'networkidle0'}),
       this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true}),
     ]);
