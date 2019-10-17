@@ -260,7 +260,7 @@ class SearchCore
                 while (!($result = $db->executeS($sql . "'" . $sql_param_search . "';", true, false))) {
                     if (!$psFuzzySearch ||
                         $fuzzyLoop++ > $fuzzyMaxLoop ||
-                        !($sql_param_search = self::findClosestWeightestWord($context, $word))) {
+                        !($sql_param_search = static::findClosestWeightestWord($context, $word))) {
                         break;
                     }
                 }
