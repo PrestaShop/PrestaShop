@@ -24,11 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Security;
+namespace PrestaShop\PrestaShop\Core\Security;
 
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Install\InstallationOptions;
-use PrestaShop\PrestaShop\Core\Security\BackOfficeAccessPrerequisitesCheckerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
@@ -37,22 +35,22 @@ use Symfony\Component\Filesystem\Filesystem;
 final class BackOfficeAccessPrerequisitesChecker implements BackOfficeAccessPrerequisitesCheckerInterface
 {
     /**
-     * @var string
-     */
-    private $adminDir;
-
-    /**
      * @var Filesystem
      */
     private $filesystem;
 
     /**
-     * @param ConfigurationInterface $configuration
-     * @param Filesystem $filesystem
+     * @var string
      */
-    public function __construct(ConfigurationInterface $configuration, Filesystem $filesystem)
+    private $rootDir;
+
+    /**
+     * @param Filesystem $filesystem
+     * @param string $rootDirectory root directory of PrestaShop
+     */
+    public function __construct(Filesystem $filesystem, string $rootDirectory)
     {
-        $this->adminDir = $configuration->get('_PS_ADMIN_DIR_');
+        $this->rootDir = $rootDirectory;
         $this->filesystem = $filesystem;
     }
 
@@ -63,9 +61,7 @@ final class BackOfficeAccessPrerequisitesChecker implements BackOfficeAccessPrer
     {
         $defaultAdminDir = InstallationOptions::DEFAULT_ADMIN_DIR;
 
-        return basename($this->adminDir) != $defaultAdminDir
-            || !$this->filesystem->exists($this->adminDir . "/../{$defaultAdminDir}/")
-        ;
+        return $this->filesystem->exists($this->rootDir . "/{$defaultAdminDir}");
     }
 
     /**
@@ -75,6 +71,6 @@ final class BackOfficeAccessPrerequisitesChecker implements BackOfficeAccessPrer
     {
         $installDir = InstallationOptions::INSTALL_DIR;
 
-        return $this->filesystem->exists($this->adminDir . "/../{$installDir}");
+        return $this->filesystem->exists($this->rootDir . "/{$installDir}");
     }
 }

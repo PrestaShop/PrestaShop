@@ -4,3 +4,9 @@ services:
 
   prestashop.core.crypto.hashing:
     class: 'PrestaShop\PrestaShop\Core\Crypto\Hashing'
+
+  prestashop.core.security.backoffice_access_prerequisites_checker:
+    class: PrestaShop\PrestaShop\Core\Security\BackOfficeAccessPrerequisitesChecker
+    arguments:
+      - '@filesystem'
+      - '%kernel.project_dir%'

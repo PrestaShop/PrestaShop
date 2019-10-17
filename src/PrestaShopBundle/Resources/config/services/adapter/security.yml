@@ -23,12 +23,6 @@ services:
       - '@prestashop.adapter.legacy.configuration'
       - '@prestashop.adapter.tools'
 
-  prestashop.adapter.security.backoffice_access_prerequisites_checker:
-    class: PrestaShop\PrestaShop\Adapter\Security\BackOfficeAccessPrerequisitesChecker
-    arguments:
-      - '@prestashop.adapter.legacy.configuration'
-      - '@filesystem'
-
   prestashop.adapter.security.admin_directory_renamer:
     class: PrestaShop\PrestaShop\Adapter\Security\AdminDirectoryRenamer
     arguments:
