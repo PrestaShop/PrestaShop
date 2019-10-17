@@ -162,15 +162,10 @@ final class ChangePasswordHandler implements ChangePasswordHandlerInterface
         // Update employee only if the mail can be sent
         Shop::setContext(Shop::CONTEXT_SHOP, (int) min($employee->getAssociatedShops()));
 
+        $employee->removeResetPasswordToken(); // Delete temporary reset token
+
         if (!$employee->update()) {
             throw new UnableToChangePasswordException('Employee\'s password could not be updated.');
         }
-
-        $employee->removeResetPasswordToken(); // Delete temporary reset token
-
-        // Not sure if we need to call $employee->update() again, as it was called a few lines above,
-        // but this is copied from the legacy logic and it's risky to change it
-        // without knowing the reasoning behind it.
-        $employee->update();
     }
 }
