@@ -24,7 +24,7 @@
  *#}
 
 <div class="mb-3">
-  {{ form_start(updateOrderStatusForm, {
+  {{ form_start(updateOrderStatusActionBarForm, {
     'action': path('admin_orders_update_status', {'orderId': orderForViewing.id}),
     'attr': {
       'class': 'form-inline d-inline-block',
@@ -32,7 +32,7 @@
     }
   }) }}
     <div class="input-group">
-      {{ form_widget(updateOrderStatusForm.new_order_status_id, {'attr': {'class': 'mr-1'}, 'id': 'update_order_status_action_input'}) }}
+      {{ form_widget(updateOrderStatusActionBarForm.new_order_status_id, {'attr': {'class': 'mr-1'}, 'id': 'update_order_status_action_input'}) }}
 
       <button class="btn btn-action"
               id="update_order_status_action_btn"
@@ -44,7 +44,7 @@
     </div>
 
     <div class="d-none">
-      {{ form_rest(updateOrderStatusForm) }}
+      {{ form_rest(updateOrderStatusActionBarForm) }}
     </div>
-  {{ form_end(updateOrderStatusForm) }}
+  {{ form_end(updateOrderStatusActionBarForm) }}
 </div>

@@ -255,6 +255,9 @@ class OrderController extends FrameworkBundleAdminController
         $updateOrderStatusForm = $this->createForm(UpdateOrderStatusType::class, [
             'new_order_status_id' => $orderForViewing->getHistory()->getCurrentOrderStatusId(),
         ]);
+        $updateOrderStatusActionBarForm = $this->createForm(UpdateOrderStatusType::class, [
+            'new_order_status_id' => $orderForViewing->getHistory()->getCurrentOrderStatusId(),
+        ]);
         $addOrderPaymentForm = $this->createForm(OrderPaymentType::class, [
             'id_currency' => $orderForViewing->getCurrencyId(),
         ], [
@@ -275,6 +278,7 @@ class OrderController extends FrameworkBundleAdminController
             'orderForViewing' => $orderForViewing,
             'addOrderCartRuleForm' => $addOrderCartRuleForm->createView(),
             'updateOrderStatusForm' => $updateOrderStatusForm->createView(),
+            'updateOrderStatusActionBarForm' => $updateOrderStatusActionBarForm->createView(),
             'addOrderPaymentForm' => $addOrderPaymentForm->createView(),
             'changeOrderCurrencyForm' => $changeOrderCurrencyForm->createView(),
             'privateNoteForm' => $privateNoteForm->createView(),
