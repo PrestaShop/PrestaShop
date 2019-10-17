@@ -150,11 +150,8 @@ describe('Create, Read, Update and Delete Category', async () => {
       });
       it.skip('should go to FO and check the created Subcategory', async function () {
         const categoryID = await this.pageObjects.categoriesPage.getTextContent(
-          this.pageObjects.categoriesPage.categoriesListTableColumn.replace('%ROW', 1).replace(
-            '%COLUMN',
-            'id_category',
-          ),
-        );
+          this.pageObjects.categoriesPage.categoriesListTableColumn
+            .replace('%ROW', 1).replace('%COLUMN', 'id_category'));
         page = await this.pageObjects.boBasePage.viewMyShop();
         this.pageObjects = await init();
         await this.pageObjects.foBasePage.changeLanguage('en');
