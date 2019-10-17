@@ -34,9 +34,8 @@
     <div class="input-group">
       {{ form_widget(updateOrderStatusForm.new_order_status_id, {'attr': {'class': 'mr-1'}, 'id': 'update_order_status_action_input'}) }}
 
-      <button class="btn"
+      <button class="btn btn-action"
               id="update_order_status_action_btn"
-              style="background-color: white; border-radius: 4px; box-shadow: 0 0 10px 0 rgba(0,0,0,0.1);"
               disabled
               data-order-status-id="{{ orderForViewing.history.currentOrderStatusId }}"
       >
