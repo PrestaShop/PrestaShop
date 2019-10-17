@@ -11,7 +11,7 @@
 	</currencies>
 	<taxes>
 		<tax id="1" name="GST 5%" rate="5" />
-		<tax id="2" name="IGST 12%" rate="12" />
+		<tax id="2" name="GST 12%" rate="12" />
 		<tax id="3" name="GST 18%" rate="18" />
     <tax id="4" name="GST 28%" rate="28" />
     
