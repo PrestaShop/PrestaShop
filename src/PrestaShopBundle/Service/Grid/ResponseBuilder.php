@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -89,6 +89,9 @@ class ResponseBuilder
         foreach ($queryParamsToKeep as $paramName) {
             if ($request->query->has($paramName)) {
                 $redirectParams[$paramName] = $request->query->get($paramName);
+            }
+            if ($request->attributes->has($paramName)) {
+                $redirectParams[$paramName] = $request->attributes->get($paramName);
             }
         }
 

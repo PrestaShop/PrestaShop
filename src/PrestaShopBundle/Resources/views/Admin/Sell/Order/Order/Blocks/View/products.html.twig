@@ -1,0 +1,152 @@
+{#**
+ * 2007-2019 PrestaShop SA and Contributors
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+
+<div class="card">
+  <div class="card-header">
+    <h3 class="card-header-title">
+      {{ 'Products'|trans({}, 'Admin.Global') }} ({{ orderForViewing.products.products|length }})
+    </h3>
+  </div>
+
+  <div class="card-body">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>
+            <p>{{ 'Product'|trans({}, 'Admin.Global') }}</p>
+          </th>
+          <th></th>
+          <th>
+            <p class="mb-0">{{ 'Price per unit'|trans({}, 'Admin.Advparameters.Feature') }}</p>
+            <small class="text-muted">{{ orderForViewing.taxMethod }}</small>
+          </th>
+          <th>
+            <p>{{ 'Qty'|trans({}, 'Admin.Orderscustomers.Feature') }}</p>
+          </th>
+          <th>
+            <p class="mb-0">{{ 'Total'|trans({}, 'Admin.Global') }}</p>
+            <small class="text-muted">{{ orderForViewing.taxMethod }}</small>
+          </th>
+          <th class="text-right">
+            <p>{{ 'Actions'|trans({}, 'Admin.Global') }}</p>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for product in orderForViewing.products.products %}
+          <tr>
+            <td><img src="{{ product.imagePath }}" alt="{{ product.name }}"></td>
+            <td>
+              <a href="{{ path('admin_product_form', {'id': product.id}) }}">
+                <p class="mb-0">{{ product.name }}</p>
+                <p class="mb-0">
+                  {{ 'Reference number:'|trans({}, 'Admin.Orderscustomers.Feature') }}
+                  {{ product.reference }}
+                </p>
+                {% if product.supplierReference is not empty %}
+                  <p class="mb-0">
+                    {{ 'Supplier reference:'|trans({}, 'Admin.Orderscustomers.Feature') }}
+                    {{ product.supplierReference }}
+                  </p>
+                {% endif %}
+              </a>
+            </td>
+            <td>{{ product.unitPrice }}</td>
+            <td>{{ product.quantity }}</td>
+            <td>{{ product.totalPrice }}</td>
+            <td class="text-right">
+              <a href="#"
+                 class="tooltip-link"
+                 data-toggle="pstooltip"
+                 data-placement="top"
+                 data-original-title="{{ 'Edit'|trans({}, 'Admin.Actions') }}"
+              >
+                <i class="material-icons">edit</i>
+              </a>
+
+              <a href="#"
+                 class="ml-2 tooltip-link"
+                 data-toggle="pstooltip"
+                 data-placement="top"
+                 data-original-title="{{ 'Delete'|trans({}, 'Admin.Actions') }}"
+              >
+                <i class="material-icons">delete</i>
+              </a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <div class="row mb-3">
+      <div class="col-md-12 text-right">
+        <button type="button" class="btn btn-outline-secondary">
+          <i class="material-icons">add_circle_outline</i>
+          {{ 'Add a product'|trans({}, 'Admin.Orderscustomers.Feature') }}
+        </button>
+        <button type="button" class="btn btn-outline-secondary" data-toggle="modal" data-target="#addOrderDiscountModal">
+          <i class="material-icons">confirmation_number</i>
+          {{ 'Add a new discount'|trans({}, 'Admin.Orderscustomers.Feature') }}
+        </button>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <div style="background-color: #F8F8F8; padding-top: 18px; padding-left: 18px; padding-right: 18px; padding-bottom: 16px;">
+          <div class="row">
+            <div class="col-sm text-center">
+              <p class="text-muted mb-0"><strong>{{ 'Products'|trans({}, 'Admin.Global') }}</strong></p>
+              <strong>14.99</strong>
+            </div>
+            <div class="col-sm text-center">
+              <p class="text-muted mb-0"><strong>{{ 'Shipping'|trans({}, 'Admin.Catalog.Feature') }}</strong></p>
+              <strong>99.99</strong>
+            </div>
+            <div class="col-sm text-center">
+              <p class="text-muted mb-0"><strong>{{ 'Total'|trans({}, 'Admin.Global') }}</strong></p>
+              <strong>85</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <p class="mb-0 mt-1 text-center text-muted">
+          <small>
+            {{ 'For this customer group, prices are displayed as: [1]%tax_method%[/1]'|trans({
+              '%tax_method%': orderForViewing.taxMethod,
+              '[1]': '<strong>',
+              '[/1]': '</strong>'
+            }, 'Admin.Orderscustomers.Notification')|raw }}.
+
+            {% if not 'PS_ORDER_RETURN'|configuration %}
+              <strong>{{ 'Merchandise returns are disabled'|trans({}, 'Admin.Orderscustomers.Notification') }}</strong>
+            {% endif %}
+          </small>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

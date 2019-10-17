@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -60,6 +60,11 @@ class CategoryConstraintException extends CategoryException
      * Code is used when too many menu thumbnails is being set for category.
      */
     const TOO_MANY_MENU_THUMBNAILS = 8;
+
+    /**
+     * Code is used when invalid id is supplied.
+     */
+    const INVALID_ID = 10;
 
     /**
      * Code is used when performing bulk delete of categories with empty data.

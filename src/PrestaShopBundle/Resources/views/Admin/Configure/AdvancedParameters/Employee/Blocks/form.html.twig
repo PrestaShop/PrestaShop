@@ -1,5 +1,5 @@
 {#**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -65,7 +65,7 @@
                 {{ 'Your avatar in PrestaShop 1.7.x is your profile picture on %url%. To change your avatar, log in to PrestaShop.com with your email %email% and follow the on-screen instructions.'|trans({}, 'Admin.Advparameters.Help')
                     |replace({
                       '%url%': '<a href="https://www.prestashop.com/forums/" class="alert-link" target="_blank">PrestaShop.com</a>',
-                      '%email%': employeeForm.email.vars.value
+                      '%email%': (employeeForm.email.vars.value|escape)
                     })|raw
                 }}
               </p>
@@ -200,11 +200,6 @@
             </div>
           </div>
         {% endif %}
-
-        {{ ps.form_group_row(employeeForm.optin, {}, {
-          'label': 'Subscribe to PrestaShop newsletter'|trans,
-          'help': 'PrestaShop can provide you with guidance on a regular basis by sending you tips on how to optimize the management of your store which will help you grow your business. If you do not wish to receive these tips, you can disable this option.'|trans({}, 'Admin.Advparameters.Help')
-        }) }}
 
         {{ ps.form_group_row(employeeForm.default_page, {'attr': {'data-minimumResultsForSearch': '7', 'data-toggle': 'select2'}}, {
           'label': 'Default page'|trans,

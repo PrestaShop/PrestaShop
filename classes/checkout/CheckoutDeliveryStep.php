@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -102,9 +102,9 @@ class CheckoutDeliveryStepCore extends AbstractCheckoutStep
             $priceFormatter = new PriceFormatter();
 
             if ($this->getIncludeTaxes() && $this->getDisplayTaxesLabel()) {
-                $taxLabel .= ' tax incl.';
+                $taxLabel .= $this->getTranslator()->trans('tax incl.', array(), 'Shop.Theme.Checkout');
             } elseif ($this->getDisplayTaxesLabel()) {
-                $taxLabel .= ' tax excl.';
+                $taxLabel .= $this->getTranslator()->trans('tax excl.', array(), 'Shop.Theme.Checkout');
             }
 
             return $this->getTranslator()->trans(

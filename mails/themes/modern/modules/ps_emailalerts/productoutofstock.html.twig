@@ -242,7 +242,7 @@
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ 'There are now less than <span class="label">{last_qty}</span> items in stock.'|trans({}, 'Emails.Body', locale)|raw }}
+                                          {{ 'There are now less than [1]{last_qty}[/1] items in stock.'|trans({'[1]': '<span class="label">', '[/1]': '</span>'}, 'Emails.Body', locale)|raw }}
                                         </div>
                                       </td>
                                     </tr>
@@ -255,7 +255,7 @@
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ 'Replenish your inventory, go to the <span class="label">"Catalog" &gt; "Stocks"</span> section of your back office to manage your stock.'|trans({}, 'Emails.Body', locale)|raw }}
+                                          {{ 'Replenish your inventory, go to the [1]Catalog > Stocks[/1] section of your back office to manage your stock.'|trans({'[1]': '<span class="label">', '[/1]': '</span>'}, 'Emails.Body', locale)|raw }}
                                         </div>
                                       </td>
                                     </tr>

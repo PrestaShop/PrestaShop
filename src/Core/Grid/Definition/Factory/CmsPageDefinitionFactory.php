@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -176,6 +176,7 @@ class CmsPageDefinitionFactory extends AbstractGridDefinitionFactory
                                 'route' => 'admin_cms_pages_edit',
                                 'route_param_name' => 'cmsPageId',
                                 'route_param_field' => 'id_cms',
+                                'clickable_row' => true,
                             ])
                         )
                         ->add((new SubmitRowAction('delete'))

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -50,7 +50,7 @@ abstract class AbstractEndpointAdminTest extends AbstractEndpointTest
     {
         $cipherTool = new PhpEncryption(_NEW_COOKIE_KEY_);
         $cookieContent = 'id_employee|1¤';
-        $cookieContent .= 'checksum|' . crc32(_COOKIE_IV_ . $cookieContent);
+        $cookieContent .= 'checksum|' . hash('sha256', _COOKIE_IV_ . $cookieContent);
         $cookieName = 'PrestaShop-' . md5(_PS_VERSION_ . 'psAdmin');
         $_COOKIE[$cookieName] = $cipherTool->encrypt($cookieContent);
         Cache::store('isLoggedBack' . 1, true);

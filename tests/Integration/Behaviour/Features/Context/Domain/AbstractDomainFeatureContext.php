@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -27,9 +27,13 @@
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Behat\Context\Context;
+use Behat\Testwork\Hook\Scope\BeforeSuiteScope;
+use ObjectModel;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use Psr\Container\ContainerInterface;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
+use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
 abstract class AbstractDomainFeatureContext implements Context
 {
@@ -37,6 +41,20 @@ abstract class AbstractDomainFeatureContext implements Context
      * @var \Exception|null
      */
     protected $lastException;
+
+    /**
+     * @var int
+     */
+    protected $lastErrorCode;
+
+    /**
+     * @BeforeSuite
+     */
+    public static function prepare(BeforeSuiteScope $scope)
+    {
+        // Disable legacy object model cache to prevent conflicts between scenarios.
+        ObjectModel::disableCache();
+    }
 
     /**
      * @return CommandBusInterface
@@ -55,15 +73,36 @@ abstract class AbstractDomainFeatureContext implements Context
     }
 
     /**
-     * @param string $expectedError
+     * @return SharedStorage
      */
-    protected function assertLastErrorIs($expectedError)
+    protected function getSharedStorage()
+    {
+        return SharedStorage::getStorage();
+    }
+
+    protected function getContainer(): ContainerInterface
+    {
+        return CommonFeatureContext::getContainer();
+    }
+
+    /**
+     * @param string $expectedError
+     * @param int|null $errorCode
+     */
+    protected function assertLastErrorIs($expectedError, $errorCode = null)
     {
         if (!$this->lastException instanceof $expectedError) {
             throw new RuntimeException(sprintf(
                 'Last error should be "%s", but got "%s"',
                 $expectedError,
                 $this->lastException ? get_class($this->lastException) : 'null'
+            ));
+        }
+        if (null !== $errorCode && $this->lastException->getCode() !== $errorCode) {
+            throw new RuntimeException(sprintf(
+                'Last error should have code "%s", but has "%s"',
+                $errorCode,
+                $this->lastException ? $this->lastException->getCode() : 'null'
             ));
         }
     }

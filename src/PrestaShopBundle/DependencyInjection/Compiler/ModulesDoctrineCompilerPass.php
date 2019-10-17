@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -32,6 +32,8 @@ use Symfony\Component\Config\Resource\DirectoryResource;
 use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
@@ -85,12 +87,36 @@ class ModulesDoctrineCompilerPass implements CompilerPassInterface
                 }
                 $modulePrefix = 'Module' . Inflector::camelize($moduleFolder->getFilename());
                 $moduleEntityDirectory = realpath($moduleFolder . '/src/Entity');
-                $mappingPass = DoctrineOrmMappingsPass::createAnnotationMappingDriver([$moduleNamespace], [$moduleEntityDirectory], [], false, [$modulePrefix => $moduleNamespace]);
+                $mappingPass = $this->createAnnotationMappingDriver($moduleNamespace, $moduleEntityDirectory, $modulePrefix);
                 $mappingsPassList[$moduleEntityDirectory] = $mappingPass;
             }
         }
 
         return $mappingsPassList;
+    }
+
+    /**
+     * This method is derived from DoctrineOrmMappingsPass::createAnnotationMappingDriver, sadly the driver includes
+     * ALL the files present in the folder and as modules include an index.php file containing an exit statement the
+     * whole process was stopped. So we manually create the DoctrineOrmMappingsPass so that AnnotationDriver ignores
+     * the index.php file.
+     *
+     * @param string $moduleNamespace
+     * @param string $moduleEntityDirectory
+     * @param string $modulePrefix
+     *
+     * @return DoctrineOrmMappingsPass
+     */
+    private function createAnnotationMappingDriver($moduleNamespace, $moduleEntityDirectory, $modulePrefix)
+    {
+        $reader = new Reference('annotation_reader');
+        $driverDefinition = new Definition('Doctrine\ORM\Mapping\Driver\AnnotationDriver', [$reader, [$moduleEntityDirectory]]);
+        $indexFile = $moduleEntityDirectory . '/index.php';
+        if (file_exists($indexFile)) {
+            $driverDefinition->addMethodCall('addExcludePaths', [[$indexFile]]);
+        }
+
+        return new DoctrineOrmMappingsPass($driverDefinition, [$moduleNamespace], [], false, [$modulePrefix => $moduleNamespace]);
     }
 
     /**

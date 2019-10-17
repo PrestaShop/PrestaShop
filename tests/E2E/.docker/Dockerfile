@@ -18,8 +18,7 @@ RUN rm -rf /var/lib/apt/lists/*
 
 RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
 RUN apt-get update
-RUN apt-get install -y nodejs
-RUN npm i npm@latest -g
+RUN apt-get install -y nodejs npm
 
 # Repository update
 WORKDIR /var/www/html/tests/E2E

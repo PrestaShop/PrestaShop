@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -40,6 +40,7 @@ class SearchResultProductFilter extends HashMapWhitelistFilter
             'active',
             'add_to_cart_url',
             'canonical_url',
+            'category_name',
             'cover',
             'description_short',
             'discount_amount',

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -446,64 +446,19 @@ class AdminDashboardControllerCore extends AdminController
         die('k' . Configuration::get('PS_DASHBOARD_SIMULATION') . 'k');
     }
 
-    public function ajaxProcessGetBlogRss()
+    /**
+     * Returns last news from the blog
+     *
+     * @throws PrestaShopException
+     */
+    public function displayAjaxGetBlogRss()
     {
-        $return = array('has_errors' => false, 'rss' => array());
-        if (!$this->isFresh('/config/xml/blog-' . $this->context->language->iso_code . '.xml', 86400)) {
-            if (!$this->refresh('/config/xml/blog-' . $this->context->language->iso_code . '.xml', _PS_API_URL_ . '/rss/blog/blog-' . $this->context->language->iso_code . '.xml')) {
-                $return['has_errors'] = true;
-            }
-        }
+        $newsFetcher = $this->get('prestashop.adapter.news.provider');
+        $return = $newsFetcher->getData($this->context->language->iso_code);
 
-        if (!$return['has_errors']) {
-            $rss = @simplexml_load_file(_PS_ROOT_DIR_ . '/config/xml/blog-' . $this->context->language->iso_code . '.xml');
-            if (!$rss) {
-                $return['has_errors'] = true;
-            }
-            $articles_limit = 2;
-            if ($rss) {
-                foreach ($rss->channel->item as $item) {
-                    if ($articles_limit > 0 && Validate::isCleanHtml((string) $item->title) && Validate::isCleanHtml((string) $item->description)
-                        && isset($item->link, $item->title)) {
-                        if (in_array($this->context->mode, array(Context::MODE_HOST, Context::MODE_HOST_CONTRIB))) {
-                            $utm_content = 'cloud';
-                        } else {
-                            $utm_content = 'download';
-                        }
-
-                        $shop_default_country_id = (int) Configuration::get('PS_COUNTRY_DEFAULT');
-                        $shop_default_iso_country = (string) Tools::strtoupper(Country::getIsoById($shop_default_country_id));
-                        $analytics_params = array('utm_source' => 'back-office',
-                            'utm_medium' => 'rss',
-                            'utm_campaign' => 'back-office-' . $shop_default_iso_country,
-                            'utm_content' => $utm_content,
-                        );
-                        $url_query = parse_url($item->link, PHP_URL_QUERY);
-                        parse_str($url_query, $link_query_params);
-
-                        if ($link_query_params) {
-                            $full_url_params = array_merge($link_query_params, $analytics_params);
-                            $base_url = explode('?', (string) $item->link);
-                            $base_url = (string) $base_url[0];
-                            $article_link = $base_url . '?' . http_build_query($full_url_params);
-                        } else {
-                            $article_link = (string) $item->link . '?' . http_build_query($analytics_params);
-                        }
-
-                        $return['rss'][] = array(
-                            'date' => Tools::displayDate(date('Y-m-d', strtotime((string) $item->pubDate))),
-                            'title' => (string) Tools::htmlentitiesUTF8($item->title),
-                            'short_desc' => Tools::truncateString(strip_tags((string) $item->description), 150),
-                            'link' => (string) $article_link,
-                        );
-                    } else {
-                        break;
-                    }
-                    --$articles_limit;
-                }
-            }
-        }
-        die(json_encode($return));
+        // Response
+        header('Content-Type: application/json');
+        $this->ajaxRender(json_encode($return));
     }
 
     public function ajaxProcessSaveDashConfig()

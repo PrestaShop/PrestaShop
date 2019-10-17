@@ -1,6 +1,7 @@
 <?php
+
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -26,6 +27,7 @@
 class AdminLegacyLayoutControllerCore extends AdminController
 {
     public $outPutHtml = '';
+    public $jsRouterMetadata;
     protected $headerToolbarBtn = array();
     protected $title;
     protected $showContentHeader = true;
@@ -33,13 +35,22 @@ class AdminLegacyLayoutControllerCore extends AdminController
     protected $enableSidebar = false;
     protected $helpLink;
 
-    public function __construct($controllerName = '', $title = '', $headerToolbarBtn = array(), $displayType = '', $showContentHeader = true, $headerTabContent = '', $enableSidebar = false, $helpLink = '')
-    {
+    public function __construct(
+        $controllerName = '',
+        $title = '',
+        $headerToolbarBtn = array(),
+        $displayType = '',
+        $showContentHeader = true,
+        $headerTabContent = '',
+        $enableSidebar = false,
+        $helpLink = '',
+        $jsRouterMetadata = []
+    ) {
         // Compatibility with legacy behavior.
         // Some controllers can only be used in "All shops" context.
         // This makes sure that user cannot switch shop contexts
         // when in one of pages (controller) below.
-        $controllers = ['AdminLanguages', 'AdminProfiles'];
+        $controllers = ['AdminLanguages', 'AdminProfiles', 'AdminSpecificPriceRule'];
 
         if (in_array($controllerName, $controllers)) {
             $this->multishop_context = Shop::CONTEXT_ALL;
@@ -60,6 +71,7 @@ class AdminLegacyLayoutControllerCore extends AdminController
         $this->helpLink = $helpLink;
         $this->php_self = $controllerName;
         $this->className = 'LegacyLayout';
+        $this->jsRouterMetadata = $jsRouterMetadata;
     }
 
     public function setMedia($isNewTheme = false)
@@ -109,6 +121,8 @@ class AdminLegacyLayoutControllerCore extends AdminController
             'toggle_navigation_url' => $this->context->link->getAdminLink('AdminEmployees', true, [], [
                 'action' => 'toggleMenu',
             ]),
+            /* base_url and security token for js router. @since 1.7.7 */
+            'js_router_metadata' => $this->jsRouterMetadata,
         );
 
         if ($this->helpLink === false || !empty($this->helpLink)) {
@@ -137,14 +151,5 @@ class AdminLegacyLayoutControllerCore extends AdminController
         ob_end_clean();
 
         $this->outPutHtml;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function addJquery($version = null, $folder = null, $minifier = true)
-    {
-        // jQuery is already included, so do nothing
-        @trigger_error(__FUNCTION__ . 'is deprecated and has no effect in the New Theme since version 1.7.6.0.', E_USER_DEPRECATED);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -159,7 +159,8 @@ class AdminProductWrapper
             array(),
             $combinationValues['attribute_isbn'],
             $combinationValues['attribute_low_stock_threshold'],
-            $combinationValues['attribute_low_stock_alert']
+            $combinationValues['attribute_low_stock_alert'],
+            $combinationValues['attribute_mpn']
         );
 
         StockAvailable::setProductDependsOnStock((int) $product->id, $product->depends_on_stock, null, $id_product_attribute);
@@ -473,7 +474,7 @@ class AdminProductWrapper
                     }
 
                     $price = Tools::ps_round($specific_price['price'], 2);
-                    $fixed_price = ($price == Tools::ps_round($product->price, 2) || $specific_price['price'] == -1) ? '--' : Tools::displayPrice($price, $current_specific_currency);
+                    $fixed_price = (($price == Tools::ps_round($product->price, 2) && $current_specific_currency['id_currency'] == $defaultCurrency->id) || $specific_price['price'] == -1) ? '--' : Tools::displayPrice($price, $current_specific_currency);
 
                     $content[] = [
                         'id_specific_price' => $specific_price['id_specific_price'],

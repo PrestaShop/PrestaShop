@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -44,10 +44,28 @@ final class KpiRow implements KpiRowInterface
     private $kpis = [];
 
     /**
+     * @var array
+     */
+    private $options;
+
+    /**
+     * @param array $options
+     */
+    public function __construct(array $options = [])
+    {
+        $this->options = $options;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function addKpi(KpiInterface $kpi)
     {
+        // setOptions() is optional & not part of interface to avoid BC break
+        if (method_exists($kpi, 'setOptions')) {
+            $kpi->setOptions($this->options);
+        }
+
         $this->kpis[] = $kpi;
     }
 
@@ -73,5 +91,13 @@ final class KpiRow implements KpiRowInterface
     public function isRefreshAllowed()
     {
         return $this->allowRefresh;
+    }
+
+    /**
+     * @return array
+     */
+    public function getOptions()
+    {
+        return $this->options;
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -158,11 +158,11 @@ final class CustomerQueryBuilder extends AbstractDoctrineQueryBuilder
     private function appendLastVisitQuery(QueryBuilder $queryBuilder)
     {
         $lastVisitQueryBuilder = $this->connection->createQueryBuilder()
-            ->select('c.date_add')
+            ->select('con.date_add')
             ->from($this->dbPrefix . 'guest', 'g')
             ->leftJoin('g', $this->dbPrefix . 'connections', 'con', 'con.id_guest = g.id_guest')
             ->where('g.id_customer = c.id_customer')
-            ->orderBy('c.date_add', 'DESC')
+            ->orderBy('con.date_add', 'DESC')
             ->setMaxResults(1);
 
         $queryBuilder->addSelect('(' . $lastVisitQueryBuilder->getSQL() . ') as connect');

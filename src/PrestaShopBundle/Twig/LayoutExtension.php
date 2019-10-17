@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -166,7 +166,8 @@ class LayoutExtension extends \Twig_Extension implements \Twig_Extension_Globals
         $showContentHeader = true,
         $headerTabContent = '',
         $enableSidebar = false,
-        $helpLink = ''
+        $helpLink = '',
+        $jsRouterMetadata = []
     ) {
         if ($this->environment == 'test') {
             return <<<'EOF'
@@ -195,7 +196,8 @@ EOF;
             $showContentHeader,
             $headerTabContent,
             $enableSidebar,
-            $helpLink
+            $helpLink,
+            $jsRouterMetadata
         );
 
         //test if legacy template from "content.tpl" has '{$content}'

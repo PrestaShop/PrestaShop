@@ -3,6 +3,7 @@ GitHub contributors:
 - (d)oekia
 - 0kph
 - 123monsite-regis
+- 202 ecommerce
 - 1RV34
 - Abdelaziz JRIBI
 - Adam
@@ -217,6 +218,7 @@ GitHub contributors:
 - Fourat Achour
 - fram
 - Francisco Jiménez Cabrera
+- Franck Lefèvre
 - Franck Ribeiro
 - FrancMunoz
 - François Gaillard
@@ -407,6 +409,7 @@ GitHub contributors:
 - Matthieu Mota
 - MatthieuB
 - Matthieu Deroubaix
+- Matthieu Rolland
 - mauglee
 - MaX3315
 - Maxence
@@ -482,6 +485,7 @@ GitHub contributors:
 - Oleg Rumyancev
 - Olivier Bonvalet
 - Olivier Monaco
+- OneDotIT
 - Oskar Andersson
 - Otto Nascarella
 - Pablo Borowicz
@@ -524,6 +528,7 @@ GitHub contributors:
 - Prestashark.eu
 - Prestaspirit
 - Priyank Bolia
+- Priyank Desai
 - ProBackup-nl
 - Profileo
 - Pronux
@@ -557,6 +562,7 @@ GitHub contributors:
 - Rimas Kudelis
 - Robbie Thompson
 - robert
+- Roja45
 - Rokas
 - Rokas Zygmantas
 - Roland Schütz

@@ -1,0 +1,20 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.adapter.attachment.command_handler.delete_attachment_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Attachment\CommandHandler\DeleteAttachmentHandler'
+    tags:
+      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Attachment\Command\DeleteAttachmentCommand' }
+
+  prestashop.adapter.attachment.command_handler.bulk_delete_attachment_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Attachment\CommandHandler\BulkDeleteAttachmentsHandler'
+    tags:
+      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Attachment\Command\BulkDeleteAttachmentsCommand' }
+
+  prestashop.adapter.attachment.query_handler.get_attachment_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Attachment\QueryHandler\GetAttachmentHandler'
+    arguments:
+      - !php/const _PS_DOWNLOAD_DIR_
+    tags:
+      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachment' }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Customer\QueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\SearchCustomers;
 
 /**
- * Interface for service that handlers customers searching command
+ * Interface for service that handles customers searching command
  */
 interface SearchCustomersHandlerInterface
 {

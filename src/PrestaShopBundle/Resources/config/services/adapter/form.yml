@@ -15,6 +15,7 @@ services:
     arguments:
       - '@prestashop.adapter.data_provider.category'
       - '@=service("prestashop.adapter.data_provider.category").getRootCategory().id'
+      - false
 
   prestashop.adapter.form.choice_provider.gender_by_id_choice_provider:
     class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\GenderByIdChoiceProvider'
@@ -38,3 +39,15 @@ services:
 
   prestashop.adapter.form.choice_provider.country_state_by_id:
     class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\CountryStateByIdChoiceProvider'
+
+  prestashop.adapter.form.choice_provider.order_countries:
+    class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\OrderCountriesChoiceProvider'
+
+  prestashop.adapter.form.choice_provider.order_invoice_by_id:
+    class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\OrderInvoiceByIdChoiceProvider'
+
+  prestashop.adapter.form.choice_provider.currency_symbol_by_id:
+    class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\CurrencySymbolByIdChoiceProvider'
+
+  prestashop.adapter.form.choice_provider.installed_payment_modules:
+    class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\InstalledPaymentModulesChoiceProvider'

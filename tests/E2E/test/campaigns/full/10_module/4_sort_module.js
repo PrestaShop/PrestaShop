@@ -22,18 +22,8 @@ scenario('Check sort module by "Name"', () => {
   scenario('Check the sort module by name, increasing price, decreasing price and popularity', client => {
     test('should go to "Modules > Modules Catalog" page', () => client.goToSubtabMenuPage(Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_catalog_submenu));
     test('should get module number', () => client.getModuleNumber(ModulePage.modules_number_span, 'modules_number'));
-    /**
-     * This error is based on the bug described in this ticket
-     * https://github.com/PrestaShop/ps_mbo/issues/82
-     **/
-    moduleCommonScenarios.sortModule(client, ModulePage, true, 0, 'Name', 'name', 'data-name', false, true);
     moduleCommonScenarios.sortModule(client, ModulePage, true, 0, 'Increasing price', 'price', 'data-price', true, true);
     moduleCommonScenarios.sortModule(client, ModulePage, true, 0, 'Decreasing price', 'price-desc', 'data-price', true, false);
-    /**
-     * This error is based on the bug described in this ticket
-     * https://github.com/PrestaShop/ps_mbo/issues/83
-     **/
-    moduleCommonScenarios.sortModule(client, ModulePage, true, 0, 'Popularity', 'scoring-desc', 'data-scoring', true, false);
   }, 'module');
   scenario('Select specific category then check the sort module by name, increasing price, decreasing price', client => {
     test('should select "Administration" from categories list', async () => {
@@ -43,14 +33,6 @@ scenario('Check sort module by "Name"', () => {
       await client.waitForExistAndClick(ModulePage.categories_option_link.replace('%CAT', 'Administration'));
     });
     test('should get module number', () => client.getModuleNumber(ModulePage.modules_number_span, 'modules_number'));
-
-    /**
-     * This error is based on the bug described in this ticket
-     * https://github.com/PrestaShop/ps_mbo/issues/82
-     **/
-    moduleCommonScenarios.sortModule(client, ModulePage, true, 1, 'Name', 'name', 'data-name', false, true);
-    moduleCommonScenarios.sortModule(client, ModulePage, true, 1, 'Increasing price', 'price', 'data-price', true, true);
-    moduleCommonScenarios.sortModule(client, ModulePage, true, 1, 'Decreasing price', 'price-desc', 'data-price', true, false);
     test('should verify if the modules displayed are only modules of the selected category', () => client.checkNumberModule(ModulePage.modules_number_span, tab['modules_number']));
   }, 'module');
   scenario('Select category then search module that is in the selected category in module catalog page', client => {

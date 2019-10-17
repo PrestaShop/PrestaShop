@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -154,9 +154,9 @@ class Install extends AbstractInstall
             return false;
         }
 
-        $secret = Tools::passwdGen(56);
-        $cookie_key = defined('_COOKIE_KEY_') ? _COOKIE_KEY_ : Tools::passwdGen(56);
-        $cookie_iv = defined('_COOKIE_IV_') ? _COOKIE_IV_ : Tools::passwdGen(8);
+        $secret = Tools::passwdGen(64);
+        $cookie_key = defined('_COOKIE_KEY_') ? _COOKIE_KEY_ : Tools::passwdGen(64);
+        $cookie_iv = defined('_COOKIE_IV_') ? _COOKIE_IV_ : Tools::passwdGen(32);
         $database_port = null;
 
         $splits = preg_split('#:#', $database_host);
@@ -817,7 +817,6 @@ class Install extends AbstractInstall
             $employee->bo_theme = 'default';
             $employee->default_tab = 1;
             $employee->active = true;
-            $employee->optin = true;
             $employee->id_profile = 1;
             $employee->id_lang = Configuration::get('PS_LANG_DEFAULT');
             $employee->bo_menu = 1;

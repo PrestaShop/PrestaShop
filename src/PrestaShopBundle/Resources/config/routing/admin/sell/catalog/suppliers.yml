@@ -4,6 +4,7 @@ admin_suppliers_index:
   defaults:
     _controller: 'PrestaShopBundle:Admin\Sell\Catalog\Supplier:index'
     _legacy_controller: AdminSuppliers
+    _legacy_link: AdminSuppliers
 
 admin_suppliers_search:
   path: /
@@ -11,6 +12,7 @@ admin_suppliers_search:
   defaults:
     _controller: 'PrestaShopBundle:Admin\Sell\Catalog\Supplier:search'
     _legacy_controller: AdminSuppliers
+    _legacy_link: AdminSuppliers:submitFiltersupplier
 
 admin_suppliers_view:
   path: /{supplierId}/products
@@ -18,6 +20,11 @@ admin_suppliers_view:
   defaults:
     _controller: 'PrestaShopBundle:Admin\Sell\Catalog\Supplier:view'
     _legacy_controller: AdminSuppliers
+    _legacy_link: AdminSuppliers:viewsupplier
+    _legacy_parameters:
+      id_supplier: supplierId
+  requirements:
+    supplierId: \d+
 
 admin_suppliers_create:
   path: /new
@@ -25,6 +32,7 @@ admin_suppliers_create:
   defaults:
     _controller: 'PrestaShopBundle:Admin\Sell\Catalog\Supplier:create'
     _legacy_controller: AdminSuppliers
+    _legacy_link: AdminSuppliers:addsupplier
 
 admin_suppliers_edit:
   path: /{supplierId}/edit
@@ -32,6 +40,11 @@ admin_suppliers_edit:
   defaults:
     _controller: 'PrestaShopBundle:Admin\Sell\Catalog\Supplier:edit'
     _legacy_controller: AdminSuppliers
+    _legacy_link: AdminSuppliers:updatesupplier
+    _legacy_parameters:
+      id_supplier: supplierId
+  requirements:
+    supplierId: \d+
 
 admin_suppliers_delete:
   path: /{supplierId}/delete
@@ -39,6 +52,11 @@ admin_suppliers_delete:
   defaults:
     _controller: 'PrestaShopBundle:Admin\Sell\Catalog\Supplier:delete'
     _legacy_controller: AdminSuppliers
+    _legacy_link: AdminSuppliers:deletesupplier
+    _legacy_parameters:
+      id_supplier: supplierId
+  requirements:
+    supplierId: \d+
 
 admin_suppliers_bulk_delete:
   path: /bulk-delete
@@ -46,6 +64,7 @@ admin_suppliers_bulk_delete:
   defaults:
     _controller: 'PrestaShopBundle:Admin\Sell\Catalog\Supplier:bulkDelete'
     _legacy_controller: AdminSuppliers
+    _legacy_link: AdminSuppliers:submitBulkdeletesupplier
 
 admin_suppliers_bulk_enable:
   path: /bulk-enable
@@ -53,6 +72,7 @@ admin_suppliers_bulk_enable:
   defaults:
     _controller: 'PrestaShopBundle:Admin\Sell\Catalog\Supplier:bulkEnable'
     _legacy_controller: AdminSuppliers
+    _legacy_link: AdminSuppliers:submitBulkenableSelectionsupplier
 
 admin_suppliers_bulk_disable:
   path: /bulk-disable
@@ -60,6 +80,7 @@ admin_suppliers_bulk_disable:
   defaults:
     _controller: 'PrestaShopBundle:Admin\Sell\Catalog\Supplier:bulkDisable'
     _legacy_controller: AdminSuppliers
+    _legacy_link: AdminSuppliers:submitBulkdisableSelectionsupplier
 
 admin_suppliers_toggle_status:
   path: /{supplierId}/toggle-status
@@ -67,6 +88,11 @@ admin_suppliers_toggle_status:
   defaults:
     _controller: 'PrestaShopBundle:Admin\Sell\Catalog\Supplier:toggleStatus'
     _legacy_controller: AdminSuppliers
+    _legacy_link: AdminSuppliers:statussupplier
+    _legacy_parameters:
+      id_supplier: supplierId
+  requirements:
+    supplierId: \d+
 
 admin_suppliers_export:
   path: /export
@@ -74,3 +100,5 @@ admin_suppliers_export:
   defaults:
     _controller: 'PrestaShopBundle:Admin\Sell\Catalog\Supplier:export'
     _legacy_controller: AdminSuppliers
+    _legacy_link: AdminSuppliers:exportsupplier
+

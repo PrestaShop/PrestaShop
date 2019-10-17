@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -49,7 +49,7 @@ final class UpdateProductQuantityInCartHandler extends AbstractCartHandler imple
      */
     public function handle(UpdateProductQuantityInCartCommand $command)
     {
-        $cart = $this->getContextCartObject($command->getCartId());
+        $cart = $this->getCart($command->getCartId());
 
         $this->assertOrderDoesNotExistForCart($cart);
 

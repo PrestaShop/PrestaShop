@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -53,24 +53,24 @@ final class CategoryDeleteModeChoiceProvider implements FormChoiceProviderInterf
      */
     public function getChoices()
     {
+        $associateOnlyLabel = $this->translator->trans(
+            'If they have no other category, I want to associate them with the parent category.',
+            [],
+            'Admin.Catalog.Notification'
+        );
+
         $associateAndDisableLabel = sprintf(
             '%s %s',
             $this->translator->trans(
-                'I want to associate the products without other categories to the parent category, then disable these products for now. I re-enable them when they are moved in their new category.',
+                'If they have no other category, I want to associate them with the parent category and turn them offline.',
                 [],
                 'Admin.Catalog.Notification'
             ),
             $this->translator->trans('(Recommended)', [], 'Admin.Catalog.Notification')
         );
 
-        $associateOnlyLabel = $this->translator->trans(
-            'I want to associate the products without other categories to the parent category, and keep them enabled.',
-            [],
-            'Admin.Catalog.Notification'
-        );
-
         $deleteProductLabel = $this->translator->trans(
-            'I want to remove the products which are listed only within this category and no others.',
+            'If they have no other category, I want to delete them as well.',
             [],
             'Admin.Catalog.Notification'
         );

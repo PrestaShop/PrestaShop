@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,11 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CustomerName;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Factory\CustomerNameValidatorFactory;
+use PrestaShop\PrestaShop\Core\String\CharacterCleaner;
+use Symfony\Component\Validator\Validation;
+
 class ValidateCore
 {
     const ADMIN_PASSWORD_LENGTH = 8;
@@ -161,15 +166,20 @@ class ValidateCore
      *
      * @param string $name Name to validate
      *
-     * @return int 1 if given input is a name, 0 else
+     * @return bool
      */
     public static function isCustomerName($name)
     {
-        $validityPattern = Tools::cleanNonUnicodeSupport(
-            '/^(?:[^0-9!<>,;?=+()\/\\@#"°*`{}_^$%:¤\[\]|\.。]|[\.。](?:\s|$))*$/u'
+        $validatorBuilder = Validation::createValidatorBuilder();
+        $validatorBuilder->setConstraintValidatorFactory(
+            new CustomerNameValidatorFactory(new CharacterCleaner())
         );
+        $validator = $validatorBuilder->getValidator();
+        $violations = $validator->validate($name, [
+            new CustomerName(),
+        ]);
 
-        return preg_match($validityPattern, $name);
+        return (count($violations) !== 0) ? 0 : 1;
     }
 
     /**
@@ -177,7 +187,7 @@ class ValidateCore
      *
      * @param string $name Name to validate
      *
-     * @return int 1 if given input is a name, 0 else
+     * @return bool
      */
     public static function isName($name)
     {
@@ -628,7 +638,7 @@ class ValidateCore
             return false;
         }
 
-        return $d->getTimestamp() <= time();
+        return $d->setTime(0, 0, 0)->getTimestamp() <= time();
     }
 
     /**
@@ -689,6 +699,18 @@ class ValidateCore
     public static function isUpc($upc)
     {
         return !$upc || preg_match('/^[0-9]{0,12}$/', $upc);
+    }
+
+    /**
+     * Check for MPN validity.
+     *
+     * @param string $mpn to validate
+     *
+     * @return bool Validity is ok or not
+     */
+    public static function isMpn($mpn)
+    {
+        return Tools::strlen($mpn) <= 40;
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -26,6 +26,7 @@
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
+use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Cart;
 use Combination;
 use Context;
@@ -65,6 +66,17 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
      * @var CustomizationField[][]
      */
     protected $customizationFields = [];
+
+    /**
+     * @var CategoryFeatureContext
+     */
+    protected $categoryFeatureContext;
+
+    /** @BeforeScenario */
+    public function before(BeforeScenarioScope $scope)
+    {
+        $this->categoryFeatureContext = $scope->getEnvironment()->getContext(CategoryFeatureContext::class);
+    }
 
     /* PRODUCTS */
 
@@ -290,6 +302,16 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     public function checkSpecificPriceWithNameExists($productName, $specificPriceName)
     {
         $this->checkFixtureExists($this->specificPrices[$productName], 'SpecificPrice', $specificPriceName);
+    }
+
+    /**
+     * @When /^product "(.+)" has following tax rule group id: (\d+)$/
+     */
+    public function setProductTaxRuleGroupId($productName, $taxRuleGroupId)
+    {
+        $this->checkProductWithNameExists($productName);
+        $this->products[$productName]->id_tax_rules_group = $taxRuleGroupId;
+        $this->products[$productName]->save();
     }
 
     /* COMBINATION */
@@ -628,10 +650,37 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @Given /^product "(.+)" is virtual$/
      */
-    public function productWithNameProductisVirtual($productName)
+    public function productWithNameProductIsVirtual($productName)
     {
         $this->checkProductWithNameExists($productName);
         $this->products[$productName]->is_virtual = 1;
         $this->products[$productName]->save();
+    }
+
+    /**
+     * @Given /^product "(.+?)" is in category "(.+?)"$/
+     */
+    public function productWithNameProductInInCategory($productName, $categoryName)
+    {
+        $this->checkProductWithNameExists($productName);
+        $this->categoryFeatureContext->checkCategoryWithNameExists($categoryName);
+
+        $category = $this->categoryFeatureContext->getCategoryWithName($categoryName);
+
+        $this->products[$productName]->id_category_default = $category->id_category;
+        $this->products[$productName]->addToCategories([$category->id]);
+        $this->products[$productName]->save();
+    }
+
+    /**
+     * @Given there is product with reference :productReference
+     */
+    public function thereIsProductOfTypeWithReference($productReference)
+    {
+        $productId = Product::getIdByReference($productReference);
+
+        if (!$productId) {
+            throw new \RuntimeException(sprintf('Product with reference "%s" does not exist.', $productReference));
+        }
     }
 }

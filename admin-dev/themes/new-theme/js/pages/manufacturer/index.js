@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -40,6 +40,7 @@ import FiltersSubmitButtonEnablerExtension
 import ChoiceTree from '../../components/form/choice-tree';
 import TranslatableField from '../../components/translatable-field';
 import TinyMCEEditor from '../../components/tinymce-editor';
+import LinkRowActionExtension from '../../components/grid/extension/link-row-action-extension';
 
 const $ = window.$;
 
@@ -55,6 +56,7 @@ $(() => {
     grid.addExtension(new SubmitBulkExtension());
     grid.addExtension(new BulkActionCheckboxExtension());
     grid.addExtension(new FiltersSubmitButtonEnablerExtension());
+    grid.addExtension(new LinkRowActionExtension());
   });
 
   new TranslatableInput();

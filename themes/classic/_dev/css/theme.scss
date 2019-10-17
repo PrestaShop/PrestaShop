@@ -27,6 +27,7 @@
 @import "components/errors";
 @import "components/customization-modal";
 @import "components/sitemap";
+@import "components/newsletter";
 /*** HEADER ***/
 #header {
   background: white;
@@ -389,5 +390,14 @@
   #left-column, #content-wrapper {
     padding-left: 0 !important;
     padding-right: 0 !important;
+  }
+}
+
+input[type=number] {
+  -moz-appearance:textfield;
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
   }
 }

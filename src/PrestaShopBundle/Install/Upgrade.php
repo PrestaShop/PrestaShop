@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -164,7 +164,6 @@ namespace PrestaShopBundle\Install {
             'blockstore',
             'blocktags',
             'blockwishlist',
-            'productcomments',
             'productpaymentlogos',
             'sendtoafriend',
             'themeconfigurator',
@@ -1167,7 +1166,7 @@ namespace PrestaShopBundle\Install {
                 @unlink($tmp_settings_file);
                 $factory = new RandomLib\Factory();
                 $generator = $factory->getLowStrengthGenerator();
-                $secret = $generator->generateString(56);
+                $secret = $generator->generateString(64);
 
                 if (!defined('_LEGACY_NEW_COOKIE_KEY_')) {
                     define('_LEGACY_NEW_COOKIE_KEY_', $default_parameters['parameters']['new_cookie_key']);

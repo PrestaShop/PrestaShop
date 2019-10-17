@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -40,7 +40,7 @@ final class UpdateCartDeliveryOptionHandler extends AbstractCartHandler implemen
      */
     public function handle(UpdateCartDeliveryOptionCommand $command)
     {
-        $cart = $this->getContextCartObject($command->getCartId());
+        $cart = $this->getCart($command->getCartId());
 
         $cart->setDeliveryOption([
             $cart->id_address_delivery => $command->getNewDeliveryOption(),

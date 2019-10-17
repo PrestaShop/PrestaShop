@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -113,7 +113,17 @@ class CategoryCore extends ObjectModel
             'date_upd' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
             /* Lang fields */
             'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCatalogName', 'required' => true, 'size' => 128),
-            'link_rewrite' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isLinkRewrite', 'required' => true, 'size' => 128),
+            'link_rewrite' => array(
+                'type' => self::TYPE_STRING,
+                'lang' => true,
+                'validate' => 'isLinkRewrite',
+                'required' => false,
+                'size' => 128,
+                'ws_modifier' => array(
+                    'http_method' => WebserviceRequest::HTTP_POST,
+                    'modifier' => 'modifierWsLinkRewrite',
+                ),
+            ),
             'description' => array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'),
             'meta_title' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
             'meta_description' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 512),
@@ -1766,16 +1776,19 @@ class CategoryCore extends ObjectModel
         }
         // < and > statements rather than BETWEEN operator
         // since BETWEEN is treated differently according to databases
-        $result = (Db::getInstance()->execute('
-            UPDATE `' . _DB_PREFIX_ . 'category` c ' . Shop::addSqlAssociation('category', 'c') . '
-            SET c.`position`= c.`position` ' . ($way ? '- 1' : '+ 1') . ',
-            category_shop.`position`= category_shop.`position` ' . ($way ? '- 1' : '+ 1') . ',
-            c.`date_upd` = "' . date('Y-m-d H:i:s') . '"
-            WHERE category_shop.`position`
-            ' . ($way
+        $increment = ($way ? '- 1' : '+ 1');
+        $result = (Db::getInstance()->execute(
+            'UPDATE `' . _DB_PREFIX_ . 'category` c ' . Shop::addSqlAssociation('category', 'c') . ' ' .
+            'SET c.`position`= ' .
+            'IF(cast(c.`position` as signed) ' . $increment . ' > 0, c.`position` ' . $increment . ', 0), ' .
+            'category_shop.`position` = ' .
+            'IF(cast(category_shop.`position` as signed) ' . $increment . ' > 0, category_shop.`position` ' . $increment . ', 0), ' .
+            'c.`date_upd` = "' . date('Y-m-d H:i:s') . '" ' .
+            'WHERE category_shop.`position`' .
+            ($way
                 ? '> ' . (int) $movedCategory['position'] . ' AND category_shop.`position` <= ' . (int) $position
-                : '< ' . (int) $movedCategory['position'] . ' AND category_shop.`position` >= ' . (int) $position) . '
-            AND c.`id_parent`=' . (int) $movedCategory['id_parent'])
+                : '< ' . (int) $movedCategory['position'] . ' AND category_shop.`position` >= ' . (int) $position) . ' ' .
+            'AND c.`id_parent`=' . (int) $movedCategory['id_parent'])
         && Db::getInstance()->execute('
             UPDATE `' . _DB_PREFIX_ . 'category` c ' . Shop::addSqlAssociation('category', 'c') . '
             SET c.`position` = ' . (int) $position . ',
@@ -1991,6 +2004,22 @@ class CategoryCore extends ObjectModel
 		FROM `' . _DB_PREFIX_ . 'category_product` cp
 		WHERE cp.`id_category` = ' . (int) $this->id . '
 		ORDER BY `position` ASC');
+    }
+
+    /*
+        Create the link rewrite if not exists or invalid on category creation
+    */
+    public function modifierWsLinkRewrite()
+    {
+        foreach ($this->name as $id_lang => $name) {
+            if (empty($this->link_rewrite[$id_lang])) {
+                $this->link_rewrite[$id_lang] = Tools::link_rewrite($name);
+            } elseif (!Validate::isLinkRewrite($this->link_rewrite[$id_lang])) {
+                $this->link_rewrite[$id_lang] = Tools::link_rewrite($this->link_rewrite[$id_lang]);
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -2224,29 +2253,43 @@ class CategoryCore extends ObjectModel
      */
     public function addPosition($position, $idShop = null)
     {
+        $position = (int) $position;
         $return = true;
-        if (null === $idShop) {
+
+        if (null !== $idShop) {
+            $shopIds = [(int) $idShop];
+        } else {
             if (Shop::getContext() != Shop::CONTEXT_SHOP) {
-                foreach (Shop::getContextListShopID() as $idShop) {
-                    $return &= Db::getInstance()->execute('
-						INSERT INTO `' . _DB_PREFIX_ . 'category_shop` (`id_category`, `id_shop`, `position`) VALUES
-						(' . (int) $this->id . ', ' . (int) $idShop . ', ' . (int) $position . ')
-						ON DUPLICATE KEY UPDATE `position` = ' . (int) $position);
-                }
+                $shopIds = Shop::getContextListShopID();
             } else {
                 $id = Context::getContext()->shop->id;
-                $idShop = $id ? $id : Configuration::get('PS_SHOP_DEFAULT');
-                $return &= Db::getInstance()->execute('
-					INSERT INTO `' . _DB_PREFIX_ . 'category_shop` (`id_category`, `id_shop`, `position`) VALUES
-					(' . (int) $this->id . ', ' . (int) $idShop . ', ' . (int) $position . ')
-					ON DUPLICATE KEY UPDATE `position` = ' . (int) $position);
+                $shopIds = [$id ? $id : Configuration::get('PS_SHOP_DEFAULT')];
             }
-        } else {
-            $return &= Db::getInstance()->execute('
-			INSERT INTO `' . _DB_PREFIX_ . 'category_shop` (`id_category`, `id_shop`, `position`) VALUES
-			(' . (int) $this->id . ', ' . (int) $idShop . ', ' . (int) $position . ')
-			ON DUPLICATE KEY UPDATE `position` = ' . (int) $position);
         }
+
+        foreach ($shopIds as $idShop) {
+            $return &= Db::getInstance()->execute(
+                sprintf(
+                    'INSERT INTO `' . _DB_PREFIX_ . 'category_shop` ' .
+                    '(`id_category`, `id_shop`, `position`) VALUES ' .
+                    '(%d, %d, %d) ' .
+                    'ON DUPLICATE KEY UPDATE `position` = %d',
+                    (int) $this->id,
+                    (int) $idShop,
+                    $position,
+                    $position
+                )
+            );
+        }
+
+        $return &= Db::getInstance()->execute(
+            sprintf(
+                'UPDATE `' . _DB_PREFIX_ . 'category` c ' .
+                'SET c.`position`= %d WHERE c.id_category = %d',
+                $position,
+                (int) $this->id
+            )
+        );
 
         return $return;
     }

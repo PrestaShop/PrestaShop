@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -71,7 +71,15 @@ class ReleaseCreator
      *
      * @var array
      */
-    protected $filesRemoveList = ['.DS_Store', '.gitignore', '.gitmodules', '.travis.yml'];
+    protected $filesRemoveList = [
+        '.DS_Store',
+        '.gitignore',
+        '.gitmodules',
+        '.travis.yml',
+        'package-lock.json',
+        '.babelrc',
+        'postcss.config.js',
+    ];
 
     /**
      * Folders to remove.
@@ -86,7 +94,7 @@ class ReleaseCreator
      * @var array
      */
     protected $patternsRemoveList = [
-        'tests$',
+        'tests(\-legacy)?$',
         'tools/contrib$',
         'travis\-scripts$',
         'CONTRIBUTING\.md$',
@@ -111,13 +119,13 @@ class ReleaseCreator
         'app/cache/..*$',
         '\.t9n\.yml$',
         '\.scrutinizer\.yml$',
-        'admin\-dev/(.*/)?webpack\.config\.js$',
-        'admin\-dev/(.*/)?package\.json$',
-        'admin\-dev/(.*/)?bower\.json$',
-        'admin\-dev/(.*/)?config\.rb$',
-        'admin\-dev/themes/default/sass$',
-        'admin\-dev/themes/new\-theme/js$',
-        'admin\-dev/themes/new\-theme/scss$',
+        'admin/(.*/)?webpack\.config\.js$',
+        'admin/(.*/)?package\.json$',
+        'admin/(.*/)?bower\.json$',
+        'admin/(.*/)?config\.rb$',
+        'admin/themes/default/sass$',
+        //'admin/themes/new\-theme/js$',
+        'admin/themes/new\-theme/scss$',
         'themes/_core$',
         'themes/classic/_dev',
         'themes/webpack\.config\.js$',
@@ -129,6 +137,12 @@ class ReleaseCreator
         'tools/build$',
         'tools/foreignkeyGenerator$',
         '.*node_modules.*',
+        '\.eslintignore$',
+        '\.eslintrc\.js$',
+        '\.php_cs\.dist$',
+        '\.docker-compose\.yml$',
+        'tools/assets$',
+        '\.webpack$',
     ];
 
     /**
@@ -350,7 +364,7 @@ class ReleaseCreator
 
     /**
      * Get the current version in the project
-     * 
+     *
      * @return string PrestaShop version
      */
     protected function getCurrentVersion()

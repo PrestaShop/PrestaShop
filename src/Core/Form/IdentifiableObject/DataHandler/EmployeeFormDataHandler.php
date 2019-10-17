@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -111,7 +111,6 @@ final class EmployeeFormDataHandler implements FormDataHandlerInterface
             $data['lastname'],
             $data['email'],
             $data['password'],
-            $data['optin'],
             $data['default_page'],
             $data['language'],
             $data['active'],
@@ -131,7 +130,6 @@ final class EmployeeFormDataHandler implements FormDataHandlerInterface
             ->setFirstName($data['firstname'])
             ->setLastName($data['lastname'])
             ->setEmail($data['email'])
-            ->setIsSubscribedToNewsletter((bool) $data['optin'])
             ->setDefaultPageId((int) $data['default_page'])
             ->setLanguageId((int) $data['language'])
             ->setActive((bool) $data['active'])

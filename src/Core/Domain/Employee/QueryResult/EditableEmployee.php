@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -57,11 +57,6 @@ class EditableEmployee
     private $email;
 
     /**
-     * @var bool
-     */
-    private $isSubscribedToNewsletter;
-
-    /**
      * @var int
      */
     private $defaultPageId;
@@ -97,7 +92,6 @@ class EditableEmployee
      * @param LastName $lastName
      * @param Email $email
      * @param string $avatarUrl
-     * @param bool $isSubscribedToNewsletter
      * @param int $defaultPageId
      * @param int $languageId
      * @param bool $active
@@ -110,7 +104,6 @@ class EditableEmployee
         LastName $lastName,
         Email $email,
         $avatarUrl,
-        $isSubscribedToNewsletter,
         $defaultPageId,
         $languageId,
         $active,
@@ -121,7 +114,6 @@ class EditableEmployee
         $this->firstName = $firstName;
         $this->lastName = $lastName;
         $this->email = $email;
-        $this->isSubscribedToNewsletter = $isSubscribedToNewsletter;
         $this->defaultPageId = $defaultPageId;
         $this->languageId = $languageId;
         $this->active = $active;
@@ -160,14 +152,6 @@ class EditableEmployee
     public function getEmail()
     {
         return $this->email;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isSubscribedToNewsletter()
-    {
-        return $this->isSubscribedToNewsletter;
     }
 
     /**

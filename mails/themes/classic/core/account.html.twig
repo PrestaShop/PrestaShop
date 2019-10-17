@@ -22,12 +22,12 @@
             {% if templateType == 'html' %}
 
               <p style="border-bottom:1px solid #D6D4D4;">
-                {{ 'Your {shop_name} login details'|trans({}, 'Emails.Body', locale) }}
+                {{ 'Your login email address on {shop_name}'|trans({}, 'Emails.Body', locale)|raw }}
               </p>
             
 {% endif %}
             <span>
-              {{ 'Here are your login details:'|trans({}, 'Emails.Body', locale)|raw }}<br/>
+              {{ 'Here is your login email address:'|trans({}, 'Emails.Body', locale)|raw }}<br/>
               <span><strong>{{ 'E-mail address:'|trans({}, 'Emails.Body', locale)|raw }} <a href="mailto:{email}">{email}</a></strong></span>
             </span>
           </font>

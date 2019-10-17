@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -453,8 +453,6 @@ class ProductController extends FrameworkBundleAdminController
                 'iso_code' => $this
                     ->get('prestashop.adapter.legacy.context')
                     ->getContext()->currency->iso_code,
-                'price_display_precision' => $this->configuration
-                    ->get('_PS_PRICE_DISPLAY_PRECISION_'),
             ]
         );
 
@@ -627,6 +625,7 @@ class ProductController extends FrameworkBundleAdminController
             'is_multishop_context' => $isMultiShopContext,
             'is_combination_active' => $this->get('prestashop.adapter.legacy.configuration')->combinationIsActive(),
             'showContentHeader' => false,
+            'seo_link' => $adminProductWrapper->getPreviewUrl($product, false),
             'preview_link' => $preview_url,
             'preview_link_deactivate' => $preview_url_deactive,
             'stats_link' => $this->getAdminLink('AdminStats', ['module' => 'statsproduct', 'id_product' => $id]),
