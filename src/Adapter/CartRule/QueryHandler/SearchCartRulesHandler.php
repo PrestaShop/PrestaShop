@@ -41,6 +41,9 @@ final class SearchCartRulesHandler implements SearchCartRulesHandlerInterface
      */
     private $contextLangId;
 
+    /**
+     * @param int $contextLangId
+     */
     public function __construct(int $contextLangId)
     {
         $this->contextLangId = $contextLangId;

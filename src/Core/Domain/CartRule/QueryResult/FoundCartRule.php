@@ -35,6 +35,7 @@ class FoundCartRule
      * @var int
      */
     private $cartRuleId;
+
     /**
      * @var string
      */
