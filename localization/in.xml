@@ -12,7 +12,7 @@
 	<taxes>
 		<tax id="1" name="GST 5%" rate="5" />
 		<tax id="2" name="IGST 12%" rate="12" />
-		<tax id="3" name="IGST 18%" rate="18" />
+		<tax id="3" name="GST 18%" rate="18" />
     <tax id="4" name="IGST 28%" rate="28" />
     
 		<taxRulesGroup name="5% GST Rate Slab (5%)">
