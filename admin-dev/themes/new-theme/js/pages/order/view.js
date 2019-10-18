@@ -34,6 +34,7 @@ $(() => {
 
   handlePaymentDetailsToggle();
   handlePrivateNoteChange();
+  handleUpdateOrderStatusButton();
 
   $(OrderViewPageMap.privateNoteToggleBtn).on('click', (event) => {
     event.preventDefault();
@@ -121,6 +122,16 @@ $(() => {
         $valueFormGroup.removeClass('d-none');
         $valueInput.attr('disabled', false);
       }
+    });
+  }
+
+  function handleUpdateOrderStatusButton() {
+    const $btn = $(OrderViewPageMap.updateOrderStatusActionBtn);
+
+    $(OrderViewPageMap.updateOrderStatusActionInput).on('change', (event) => {
+      const selectedOrderStatusId = $(event.currentTarget).val();
+
+      $btn.prop('disabled', parseInt(selectedOrderStatusId, 10) === $btn.data('order-status-id'));
     });
   }
 });

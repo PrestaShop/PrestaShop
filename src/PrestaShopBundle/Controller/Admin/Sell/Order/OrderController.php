@@ -34,9 +34,11 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Command\BulkChangeOrderStatusCommand
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\DuplicateOrderCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\DeleteCartRuleFromOrderCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\ResendOrderEmailCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotEditDeliveredOrderProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\ChangeOrderStatusException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderEmailResendException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Payment\Command\AddPaymentCommand;
@@ -255,6 +257,9 @@ class OrderController extends FrameworkBundleAdminController
         $updateOrderStatusForm = $this->createForm(UpdateOrderStatusType::class, [
             'new_order_status_id' => $orderForViewing->getHistory()->getCurrentOrderStatusId(),
         ]);
+        $updateOrderStatusActionBarForm = $this->createForm(UpdateOrderStatusType::class, [
+            'new_order_status_id' => $orderForViewing->getHistory()->getCurrentOrderStatusId(),
+        ]);
         $addOrderPaymentForm = $this->createForm(OrderPaymentType::class, [
             'id_currency' => $orderForViewing->getCurrencyId(),
         ], [
@@ -275,6 +280,7 @@ class OrderController extends FrameworkBundleAdminController
             'orderForViewing' => $orderForViewing,
             'addOrderCartRuleForm' => $addOrderCartRuleForm->createView(),
             'updateOrderStatusForm' => $updateOrderStatusForm->createView(),
+            'updateOrderStatusActionBarForm' => $updateOrderStatusActionBarForm->createView(),
             'addOrderPaymentForm' => $addOrderPaymentForm->createView(),
             'changeOrderCurrencyForm' => $changeOrderCurrencyForm->createView(),
             'privateNoteForm' => $privateNoteForm->createView(),
@@ -484,6 +490,8 @@ class OrderController extends FrameworkBundleAdminController
             );
 
             $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+        } catch (ChangeOrderStatusException $e) {
+            $this->handleChangeOrderStatusException($e);
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
@@ -515,7 +523,27 @@ class OrderController extends FrameworkBundleAdminController
 
             $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
         } catch (Exception $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e));
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirectToRoute('admin_orders_view', [
+            'orderId' => $orderId,
+        ]);
+    }
+
+    public function resendEmailAction(int $orderId, int $orderStatusId, int $orderHistoryId): RedirectResponse
+    {
+        try {
+            $this->getCommandBus()->handle(
+                new ResendOrderEmailCommand($orderId, $orderStatusId, $orderHistoryId)
+            );
+
+            $this->addFlash(
+                'success',
+                $this->trans('The message was successfully sent to the customer.', 'Admin.Orderscustomers.Notification')
+            );
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
         return $this->redirectToRoute('admin_orders_view', [
@@ -538,6 +566,10 @@ class OrderController extends FrameworkBundleAdminController
                     'Admin.Orderscustomers.Notification',
                     ['#%d' => $e->getOrderId()->getValue()]
                 ) : '',
+            OrderEmailResendException::class => $this->trans(
+                'An error occurred while sending the e-mail to the customer.',
+                'Admin.Orderscustomers.Notification'
+            ),
         ];
     }
 

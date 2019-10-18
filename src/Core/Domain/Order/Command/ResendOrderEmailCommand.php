@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,30 +22,57 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-<div class="mb-3">
-  {{ form_start(updateOrderStatusActionBarForm, {
-    'action': path('admin_orders_update_status', {'orderId': orderForViewing.id}),
-    'attr': {
-      'class': 'form-inline d-inline-block',
-      'id': 'update_order_status_action_form'
+namespace PrestaShop\PrestaShop\Core\Domain\Order\Command;
+
+use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
+
+class ResendOrderEmailCommand
+{
+    /**
+     * @var OrderId
+     */
+    private $orderId;
+
+    /**
+     * @var int
+     */
+    private $orderStatusId;
+
+    /**
+     * @var int
+     */
+    private $orderHistoryId;
+
+    public function __construct(int $orderId, int $orderStatusId, int $orderHistoryId)
+    {
+        $this->orderId = new OrderId($orderId);
+        $this->orderStatusId = $orderStatusId;
+        $this->orderHistoryId = $orderHistoryId;
     }
-  }) }}
-    <div class="input-group">
-      {{ form_widget(updateOrderStatusActionBarForm.new_order_status_id, {'attr': {'class': 'mr-1'}, 'id': 'update_order_status_action_input'}) }}
 
-      <button class="btn btn-action"
-              id="update_order_status_action_btn"
-              disabled
-              data-order-status-id="{{ orderForViewing.history.currentOrderStatusId }}"
-      >
-        {{ 'Update status'|trans({}, 'Admin.Orderscustomers.Feature') }}
-      </button>
-    </div>
+    /**
+     * @return OrderId
+     */
+    public function getOrderId(): OrderId
+    {
+        return $this->orderId;
+    }
 
-    <div class="d-none">
-      {{ form_rest(updateOrderStatusActionBarForm) }}
-    </div>
-  {{ form_end(updateOrderStatusActionBarForm) }}
-</div>
+    /**
+     * @return int
+     */
+    public function getOrderStatusId(): int
+    {
+        return $this->orderStatusId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getOrderHistoryId(): int
+    {
+        return $this->orderHistoryId;
+    }
+}

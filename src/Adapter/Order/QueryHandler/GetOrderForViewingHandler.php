@@ -451,6 +451,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
 
         foreach ($history as $item) {
             $statuses[] = new OrderStatusForViewing(
+                (int) $item['id_order_history'],
                 (int) $item['id_order_state'],
                 $item['ostate_name'],
                 $item['color'],

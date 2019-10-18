@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,30 +22,16 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-<div class="mb-3">
-  {{ form_start(updateOrderStatusActionBarForm, {
-    'action': path('admin_orders_update_status', {'orderId': orderForViewing.id}),
-    'attr': {
-      'class': 'form-inline d-inline-block',
-      'id': 'update_order_status_action_form'
-    }
-  }) }}
-    <div class="input-group">
-      {{ form_widget(updateOrderStatusActionBarForm.new_order_status_id, {'attr': {'class': 'mr-1'}, 'id': 'update_order_status_action_input'}) }}
+namespace PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler;
 
-      <button class="btn btn-action"
-              id="update_order_status_action_btn"
-              disabled
-              data-order-status-id="{{ orderForViewing.history.currentOrderStatusId }}"
-      >
-        {{ 'Update status'|trans({}, 'Admin.Orderscustomers.Feature') }}
-      </button>
-    </div>
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\ResendOrderEmailCommand;
 
-    <div class="d-none">
-      {{ form_rest(updateOrderStatusActionBarForm) }}
-    </div>
-  {{ form_end(updateOrderStatusActionBarForm) }}
-</div>
+interface ResendOrderEmailHandlerInterface
+{
+    /**
+     * @param ResendOrderEmailCommand $command
+     */
+    public function handle(ResendOrderEmailCommand $command): void;
+}

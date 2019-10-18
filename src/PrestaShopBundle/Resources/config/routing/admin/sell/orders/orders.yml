@@ -125,3 +125,13 @@ admin_orders_remove_cart_rule:
   requirements:
     orderId: \d+
     orderCartRuleId: \d+
+
+admin_orders_resend_email:
+  path: /{orderId}/history/{orderHistoryId}/statuses/{orderStatusId}/resend-email
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:resendEmail
+  requirements:
+    orderId: \d+
+    orderHistoryId: \d+
+    orderStatusId: \d+
