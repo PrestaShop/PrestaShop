@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+use PrestaShop\PrestaShop\Adapter\MailTemplate\MailPartialTemplateRenderer;
 use PrestaShop\PrestaShop\Adapter\StockManager as StockManagerAdapter;
 use PrestaShop\PrestaShop\Core\Stock\StockManager;
 
@@ -42,6 +43,12 @@ class OrderHistoryCore extends ObjectModel
 
     /** @var string Object last modification date */
     public $date_upd;
+
+    /** @var MailPartialTemplateRenderer */
+    protected $partialRenderer;
+
+    /** @var Context */
+    protected $context;
 
     /**
      * @see ObjectModel::$definition
@@ -133,27 +140,32 @@ class OrderHistoryCore extends ObjectModel
                 }
 
                 $customer = new Customer((int) $order->id_customer);
-
-                $links = '<ul>';
+                $links = array();
                 foreach ($assign as $product) {
-                    $links .= '<li>';
-                    $links .= '<a href="' . $product['link'] . '">' . Tools::htmlentitiesUTF8($product['name']) . '</a>';
+                    $text = Tools::htmlentitiesUTF8($product['name']);
                     if (isset($product['deadline'])) {
-                        $links .= '&nbsp;' . $this->trans('expires on %s.', array($product['deadline']), 'Admin.Orderscustomers.Notification');
+                        $text .= '&nbsp;' . $this->trans('expires on %s.', array($product['deadline']), 'Admin.Orderscustomers.Notification');
                     }
                     if (isset($product['downloadable'])) {
-                        $links .= '&nbsp;' . $this->trans('downloadable %d time(s)', array((int) $product['downloadable']), 'Admin.Orderscustomers.Notification');
+                        $text .= '&nbsp;' . $this->trans('downloadable %d time(s)', array((int) $product['downloadable']), 'Admin.Orderscustomers.Notification');
                     }
-                    $links .= '</li>';
+                    $links[] = array(
+                        'text' => $text,
+                        'url' => $product['link'],
+                    );
                 }
-                $links .= '</ul>';
+
+                $links_txt = $this->getEmailTemplateContent('download_product_virtual_products.txt', Mail::TYPE_TEXT, $links);
+                $links_html = $this->getEmailTemplateContent('download_product_virtual_products.tpl', Mail::TYPE_HTML, $links);
+
                 $data = array(
                     '{lastname}' => $customer->lastname,
                     '{firstname}' => $customer->firstname,
                     '{id_order}' => (int) $order->id,
                     '{order_name}' => $order->getUniqReference(),
                     '{nbProducts}' => count($virtual_products),
-                    '{virtualProducts}' => $links,
+                    '{virtualProducts}' => $links_html,
+                    '{virtualProductsTxt}' => $links_txt,
                 );
                 // If there is at least one downloadable file
                 if (!empty($assign)) {
@@ -614,5 +626,48 @@ class OrderHistoryCore extends ObjectModel
         } else {
             return $this->add();
         }
+    }
+
+    /**
+     * @return MailPartialTemplateRenderer
+     */
+    protected function getPartialRenderer()
+    {
+        if (!$this->partialRenderer) {
+            $this->partialRenderer = new MailPartialTemplateRenderer($this->context->smarty);
+        }
+
+        return $this->partialRenderer;
+    }
+
+    /**
+     * Fetch the content of $template_name inside the folder
+     * current_theme/mails/current_iso_lang/ if found, otherwise in
+     * mails/current_iso_lang.
+     *
+     * @param string $template_name template name with extension
+     * @param int $mail_type Mail::TYPE_HTML or Mail::TYPE_TEXT
+     * @param array $var sent to smarty as 'list'
+     *
+     * @return string
+     */
+    protected function getEmailTemplateContent($template_name, $mail_type, $var)
+    {
+        $email_configuration = Configuration::get('PS_MAIL_TYPE');
+        if ($email_configuration != $mail_type && $email_configuration != Mail::TYPE_BOTH) {
+            return '';
+        }
+
+        if (!isset($this->context)) {
+            $this->context = Context::getContext();
+        }
+
+        $content = $this->getPartialRenderer()->render($template_name, $this->context->language, $var);
+        if ($mail_type == Mail::TYPE_TEXT) {
+            // delete html comments in text mode so it's not visible in the mail
+            $content = preg_replace('/\n?<!--.*-->\n?/i', '', $content);
+        }
+
+        return $content;
     }
 }
