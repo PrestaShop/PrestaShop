@@ -9,5 +9,7 @@ module.exports = class SiteMap extends FOBasePage {
 
     // Selectors
     this.categoryNameSelect = '#category-page-%ID';
+    this.categoryPageNameSelect = '#cms-category-%ID';
+    this.pageNameSelect = '#cms-page-%ID';
   }
 };
