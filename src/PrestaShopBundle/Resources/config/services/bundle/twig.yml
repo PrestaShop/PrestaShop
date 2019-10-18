@@ -105,3 +105,10 @@ services:
         - '@=service("prestashop.user_provider").getUsername()'
       tags:
         - { name: twig.extension }
+
+    prestashop.bundle.twig.extension.localization_extension:
+      class: 'PrestaShopBundle\Twig\Extension\LocalizationExtension'
+      arguments:
+        - '@=service("prestashop.adapter.legacy.context").getContext().language.date_format_full'
+      tags:
+        - { name: twig.extension }
