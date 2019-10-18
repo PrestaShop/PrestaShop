@@ -1,3 +1,4 @@
+#@todo: legacy links after page is fully migrated
 admin_carts_index:
   path: /
   methods: [GET]

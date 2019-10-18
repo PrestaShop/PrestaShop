@@ -190,6 +190,16 @@ class CartController extends FrameworkBundleAdminController
         return $this->json($this->getCartInfo($cartId));
     }
 
+    /**
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
+     *
+     * @param Request $request
+     * @param int $cartId
+     *
+     * @return JsonResponse
+     *
+     * @throws CartConstraintException
+     */
     public function addCartRuleToCartAction(Request $request, int $cartId): JsonResponse
     {
         $cartRuleId = $request->request->getInt('cart_rule_id');
