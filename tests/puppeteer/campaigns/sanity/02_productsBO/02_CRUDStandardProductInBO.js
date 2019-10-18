@@ -49,8 +49,10 @@ describe('Create, read, update and delete Standard product in BO', async () => {
   // Steps
   loginCommon.loginBO();
   it('should go to Products page', async function () {
-    await this.pageObjects.boBasePage.goToSubMenu(this.pageObjects.boBasePage.productsParentLink,
-      this.pageObjects.boBasePage.productsLink);
+    await this.pageObjects.boBasePage.goToSubMenu(
+      this.pageObjects.boBasePage.productsParentLink,
+      this.pageObjects.boBasePage.productsLink,
+    );
     await this.pageObjects.boBasePage.closeSfToolBar();
     const pageTitle = await this.pageObjects.productsPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.productsPage.pageTitle);
