@@ -154,6 +154,17 @@
       <taxRule iso_code_country="sk" id_tax="29"/>
     </taxRulesGroup>
   </taxes>
+  <states>
+    <state name="Burgenland" iso_code="AT-1" country="AT" zone="Europe" tax_behavior="0" />
+    <state name="Kärnten" iso_code="AT-2" country="AT" zone="Europe" tax_behavior="0" />
+    <state name="Niederösterreich" iso_code="AT-3" country="AT" zone="Europe" tax_behavior="0" />
+    <state name="Oberösterreich" iso_code="AT-4" country="AT" zone="Europe" tax_behavior="0" />
+    <state name="Salzburg" iso_code="AT-5" country="AT" zone="Europe" tax_behavior="0" />
+    <state name="Steiermark" iso_code="AT-6" country="AT" zone="Europe" tax_behavior="0" />
+    <state name="Tirol" iso_code="AT-7" country="AT" zone="Europe" tax_behavior="0" />
+    <state name="Vorarlberg" iso_code="AT-8" country="AT" zone="Europe" tax_behavior="0" />
+    <state name="Wien" iso_code="AT-9" country="AT" zone="Europe" tax_behavior="0" />
+  </states>
   <units>
     <unit type="weight" value="kg"/>
     <unit type="volume" value="L"/>

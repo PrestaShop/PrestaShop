@@ -95,11 +95,18 @@
       <taxRule iso_code_country="sk" id_tax="28"/>
     </taxRulesGroup>
   </taxes>
+  <states>
+    <state name="Hovedstaden" iso_code="DK-84" country="DK" zone="Europe" tax_behavior="0" />
+    <state name="Midtjylland" iso_code="DK-82" country="DK" zone="Europe" tax_behavior="0" />
+    <state name="Nordjylland" iso_code="DK-81" country="DK" zone="Europe" tax_behavior="0" />
+    <state name="Sjælland" iso_code="DK-85" country="DK" zone="Europe" tax_behavior="0" />
+    <state name="Syddanmark" iso_code="DK-83" country="DK" zone="Europe" tax_behavior="0" />
+  </states>
   <units>
     <unit type="weight" value="kg"/>
     <unit type="volume" value="L"/>
-    <unit type="short_distance" value="in"/>
-    <unit type="base_distance" value="ft"/>
-    <unit type="long_distance" value="mi"/>
+    <unit type="short_distance" value="cm"/>
+    <unit type="base_distance" value="m"/>
+    <unit type="long_distance" value="km"/>
   </units>
 </localizationPack>
