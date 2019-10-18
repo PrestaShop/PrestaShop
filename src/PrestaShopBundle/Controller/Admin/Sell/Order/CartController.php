@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleValidityException;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -192,7 +193,14 @@ class CartController extends FrameworkBundleAdminController
     public function addCartRuleToCartAction(Request $request, int $cartId): JsonResponse
     {
         $cartRuleId = $request->request->getInt('cart_rule_id');
-        $this->getCommandBus()->handle(new AddCartRuleToCartCommand($cartId, $cartRuleId));
+        try {
+            $this->getCommandBus()->handle(new AddCartRuleToCartCommand($cartId, $cartRuleId));
+        } catch (CartRuleValidityException $e) {
+            return $this->json(
+                ['message' => $e->getMessage()],
+                Response::HTTP_BAD_REQUEST
+            );
+        }
 
         return $this->json($this->getCartInfo($cartId));
     }
