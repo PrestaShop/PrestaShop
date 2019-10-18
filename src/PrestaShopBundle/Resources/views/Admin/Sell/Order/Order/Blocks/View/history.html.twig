@@ -40,7 +40,7 @@
         {% endif %}
       </td>
       <td class="text-right">
-        {{ status.createdAt.format('Y-m-d H:i:s') }}
+        {{ status.createdAt|date_format_full }}
       </td>
       <td class="text-right">
         {% if status.withEmail %}
