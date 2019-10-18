@@ -14,14 +14,14 @@
 		</taxRulesGroup>
 	</taxes>
 	<states>
-    <state name="Australian Capital Territory" iso_code="ACT" country="AU" zone="Oceania" tax_behavior="0" />
-    <state name="Victoria" iso_code="VIC" country="AU" zone="Oceania" tax_behavior="0" />
-    <state name="Tasmania" iso_code="TAS" country="AU" zone="Oceania" tax_behavior="0" />
-    <state name="New South Wales" iso_code="NSW" country="AU" zone="Oceania" tax_behavior="0" />
-    <state name="Northern Territory" iso_code="NT" country="AU" zone="Oceania" tax_behavior="0" />
-    <state name="Queensland" iso_code="QLD" country="AU" zone="Oceania" tax_behavior="0" />
-    <state name="South Australia" iso_code="SA" country="AU" zone="Oceania" tax_behavior="0" />
-    <state name="Western Australia" iso_code="WA" country="AU" zone="Oceania" tax_behavior="0" />
+		<state name="Australian Capital Territory" iso_code="ACT" country="AU" zone="Oceania" tax_behavior="0" />
+		<state name="Victoria" iso_code="VIC" country="AU" zone="Oceania" tax_behavior="0" />
+		<state name="Tasmania" iso_code="TAS" country="AU" zone="Oceania" tax_behavior="0" />
+		<state name="New South Wales" iso_code="NSW" country="AU" zone="Oceania" tax_behavior="0" />
+		<state name="Northern Territory" iso_code="NT" country="AU" zone="Oceania" tax_behavior="0" />
+		<state name="Queensland" iso_code="QLD" country="AU" zone="Oceania" tax_behavior="0" />
+		<state name="South Australia" iso_code="SA" country="AU" zone="Oceania" tax_behavior="0" />
+		<state name="Western Australia" iso_code="WA" country="AU" zone="Oceania" tax_behavior="0" />
 	</states>
 	<units>
 		<unit type="weight" value="kg" />
