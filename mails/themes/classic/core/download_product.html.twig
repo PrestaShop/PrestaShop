@@ -24,11 +24,16 @@
               <p style="border-bottom:1px solid #D6D4D4;">
                 {{ 'Product(s) now available for download'|trans({}, 'Emails.Body', locale)|raw }}
               </p>
-            
+
 {% endif %}
             <span>
-              {{ 'You have <span><strong>{nbProducts}</strong></span> product(s) now available for download using the following link(s):'|trans({}, 'Emails.Body', locale)|raw }}<br/><br/>
-              {virtualProducts}
+              {{ 'You have [1]{nbProducts}[/1] product(s) now available for download using the following link(s):'|trans({'[1]': '<span><strong>', '[/1]': '</strong></span>'}, 'Emails.Body', locale)|raw }}<br/><br/>
+              {% if templateType == 'html' %}
+                {virtualProducts}
+              {% endif %}
+              {% if templateType == 'txt' %}
+                {virtualProductsTxt}
+              {% endif %}
             </span>
           </font>
         </td>

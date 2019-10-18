@@ -23,3 +23,5 @@ parameters:
     locale: en-US
     cookie_key: ThisTokenIsNotSoSecretChangeIt
     cookie_iv: ThisTokenIsNotSoSecretChangeIt
+
+    use_debug_toolbar: false

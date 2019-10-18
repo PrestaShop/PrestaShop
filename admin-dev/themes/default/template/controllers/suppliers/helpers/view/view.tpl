@@ -1,5 +1,5 @@
 {**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -38,6 +38,7 @@
 				<th><span class="title_box">{l s='Reference' d='Admin.Global'}</span></th>
 				<th><span class="title_box">{l s='EAN13'}</span></th>
 				<th><span class="title_box">{l s='UPC'}</span></th>
+				<th><span class="title_box">{l s='MPN'}</span></th>
 				{if $stock_management && $shopContext != Shop::CONTEXT_ALL}<th class="right"><span class="title_box">{l s='Available Quantity'}</span></th>{/if}
 			</tr>
 		</thead>
@@ -52,6 +53,7 @@
 					<td>{if empty($product->reference)}{l s='N/A'}{else}{$product->reference}{/if}</td>
 					<td>{if empty($product->ean13)}{l s='N/A'}{else}{$product->ean13}{/if}</td>
 					<td>{if empty($product->upc)}{l s='N/A'}{else}{$product->upc}{/if}</td>
+					<td>{if empty($product->mpn)}{l s='N/A'}{else}{$product->mpn}{/if}</td>
 					{if $stock_management && $shopContext != Shop::CONTEXT_ALL}<td class="right" width="150">{$product->quantity}</td>{/if}
 				</tr>
 			{else}
@@ -64,6 +66,7 @@
 						<td>{if empty($product_attribute.reference)}{l s='N/A'}{else}{$product_attribute.reference}{/if}</td>
 						<td>{if empty($product_attribute.ean13)}{l s='N/A'}{else}{$product_attribute.ean13}{/if}</td>
 						<td>{if empty($product_attribute.upc)}{l s='N/A'}{else}{$product_attribute.upc}{/if}</td>
+						<td>{if empty($product_attribute.mpn)}{l s='N/A'}{else}{$product_attribute.mpn}{/if}</td>
 						{if $stock_management && $shopContext != Shop::CONTEXT_ALL}<td class="right">{$product_attribute.quantity}</td>{/if}
 					</tr>
 				{/foreach}

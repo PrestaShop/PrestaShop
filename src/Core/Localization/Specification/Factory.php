@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -100,7 +100,8 @@ class Factory
         CldrLocaleInterface $cldrLocale,
         Currency $currency,
         $numberGroupingUsed,
-        $currencyDisplayType
+        $currencyDisplayType,
+        ?int $maxFractionDigits = null
     ) {
         $currencyPattern = $cldrLocale->getCurrencyPattern();
         $numbersSymbols = $cldrLocale->getAllNumberSymbols();
@@ -111,7 +112,7 @@ class Factory
             $positivePattern,
             $this->getNegativePattern($currencyPattern),
             $this->computeNumberSymbolLists($numbersSymbols),
-            $this->getMaxFractionDigits($positivePattern),
+            $maxFractionDigits ?? $this->getMaxFractionDigits($positivePattern),
             $this->getMinFractionDigits($positivePattern),
             $numberGroupingUsed && $this->getPrimaryGroupSize($positivePattern) > 1,
             $this->getPrimaryGroupSize($positivePattern),

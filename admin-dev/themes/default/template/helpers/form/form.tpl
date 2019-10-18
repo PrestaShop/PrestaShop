@@ -1,5 +1,5 @@
 {**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -67,7 +67,7 @@
 					<div class="form-wrapper">
 					{foreach $field as $input}
 						{block name="input_row"}
-						<div class="form-group{if isset($input.form_group_class)} {$input.form_group_class}{/if}{if $input.type == 'hidden'} hide{/if}"{if $input.name == 'id_state'} id="contains_states"{if !$contains_states} style="display:none;"{/if}{/if}{if isset($tabs) && isset($input.tab)} data-tab-id="{$input.tab}"{/if}>
+						<div class="form-group{if isset($input.form_group_class)} {$input.form_group_class}{/if}{if $input.type == 'hidden'} hide{/if}"{if $input.name == 'id_state'} id="contains_states"{if !$contains_states} style="display:none;"{/if}{/if}{if $input.name == 'dni'} id="dni_required"{if !$dni_required} style="display:none;"{/if}{/if}{if isset($tabs) && isset($input.tab)} data-tab-id="{$input.tab}"{/if}>
 						{if $input.type == 'hidden'}
 							<input type="hidden" name="{$input.name}" id="{$input.name}" value="{$fields_value[$input.name]|escape:'html':'UTF-8'}" />
 						{else}
@@ -948,6 +948,9 @@
 				}
 			{/if}
 
+			dniRequired();
+			$('#id_country').change(dniRequired);
+
 			if ($(".datepicker").length > 0)
 				$(".datepicker").datepicker({
 					prevText: '',
@@ -977,7 +980,8 @@
 			$(".textarea-autosize").autosize();
 			{/if}
 		});
-	state_token = '{getAdminToken tab='AdminStates'}';
+		state_token = '{getAdminToken tab='AdminStates'}';
+		address_token = '{getAdminToken tab='AdminAddresses'}';
 	{block name="script"}{/block}
 	</script>
 {/if}

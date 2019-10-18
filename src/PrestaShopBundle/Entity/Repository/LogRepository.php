@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -256,10 +256,8 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
                     !empty($filterValue['to'])
                 ) {
                     $qb->andWhere('l.date_add BETWEEN :date_from AND :date_to');
-                    $qb->setParameters(array(
-                        'date_from' => $filterValue['from'],
-                        'date_to' => $filterValue['to'],
-                    ));
+                    $qb->setParameter('date_from', $filterValue['from']);
+                    $qb->setParameter('date_to', $filterValue['to']);
                 }
 
                 continue;

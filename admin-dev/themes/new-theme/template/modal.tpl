@@ -1,5 +1,5 @@
 {**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -36,7 +36,7 @@
 
 			{if isset($modal_actions)}
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">{l s='Close'}</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">{l s='Close' d='Admin.Actions'}</button>
 				{foreach $modal_actions as $action}
 					{if $action.type == 'link'}
 						<a href="{$action.href}" class="btn {$action.class}">{$action.label}</a>

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -226,7 +226,7 @@ final class EditCurrencyHandler extends AbstractCurrencyHandler implements EditC
             if (!in_array($shopId, $shopIds)) {
                 $shop = new Shop($shopId);
                 throw new DefaultCurrencyInMultiShopException(
-                    $currency->name,
+                    $currency->getName(),
                     $shop->name,
                     sprintf(
                         'Currency with id %s cannot be unassigned from shop with id %s because its the default currency.',
@@ -240,7 +240,7 @@ final class EditCurrencyHandler extends AbstractCurrencyHandler implements EditC
             if (!$currency->active) {
                 $shop = new Shop($shopId);
                 throw new DefaultCurrencyInMultiShopException(
-                    $currency->name,
+                    $currency->getName(),
                     $shop->name,
                     sprintf(
                         'Currency with id %s cannot be disabled from shop with id %s because its the default currency.',
@@ -268,6 +268,7 @@ final class EditCurrencyHandler extends AbstractCurrencyHandler implements EditC
                 $langIds = Language::getLanguages(true, false, true);
                 $entity->name = [];
                 $entity->symbol = [];
+                $entity->numeric_iso_code = $currency->getNumericIsoCode();
 
                 foreach ($langIds as $langId) {
                     $entity->name[$langId] = $currency->getDisplayName();

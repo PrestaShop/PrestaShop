@@ -1,5 +1,5 @@
 {**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -33,23 +33,23 @@
     <a href="#" class="clear_search hide"><i class="icon-remove"></i></a>
   {/if}
   <div class="input-group">
-    <input type="text" class="form-control js-form-search" id="bo_query" name="bo_query" value="{$bo_query}" placeholder="{l s='Search (e.g.: product reference, customer name…)'}">
+    <input type="text" class="form-control js-form-search" id="bo_query" name="bo_query" value="{$bo_query}" placeholder="{l s='Search (e.g.: product reference, customer name…)'} d='Admin.Navigation.Header'">
     <div class="input-group-append">
       <button type="button" class="btn btn-outline-secondary dropdown-toggle js-dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        {l s='Everywhere'}
+        {l s='Everywhere' d='Admin.Navigation.Header'}
       </button>
       <div class="dropdown-menu js-items-list">
-        <a class="dropdown-item" data-item="{l s='Everywhere'}" href="#" data-value="0" data-placeholder="{l s='What are you looking for?'}" data-icon="icon-search"><i class="material-icons">search</i> {l s='Everywhere'}</a>
+        <a class="dropdown-item" data-item="{l s='Everywhere' d='Admin.Navigation.Header'}" href="#" data-value="0" data-placeholder="{l s='What are you looking for?' d='Admin.Navigation.Header'}" data-icon="icon-search"><i class="material-icons">search</i> {l s='Everywhere' d='Admin.Navigation.Header'}</a>
         <div class="dropdown-divider"></div>
-        <a class="dropdown-item" data-item="{l s='Catalog'}" href="#" data-value="1" data-placeholder="{l s='Product name, SKU, reference...'}" data-icon="icon-book"><i class="material-icons">store_mall_directory</i> {l s='Catalog'}</a>
-        <a class="dropdown-item" data-item="{l s='Customers'} {l s='by name'}" href="#" data-value="2" data-placeholder="{l s='Email, name...'}" data-icon="icon-group"><i class="material-icons">group</i> {l s='Customers'} {l s='by name'}</a>
-        <a class="dropdown-item" data-item="{l s='Customers'} {l s='by ip address'}" href="#" data-value="6" data-placeholder="{l s='123.45.67.89'}" data-icon="icon-desktop"><i class="material-icons">desktop_mac</i> {l s='Customers'} {l s='by IP address'}</a>
-        <a class="dropdown-item" data-item="{l s='Orders'}" href="#" data-value="3" data-placeholder="{l s='Order ID'}" data-icon="icon-credit-card"><i class="material-icons">shopping_basket</i> {l s='Orders'}</a>
-        <a class="dropdown-item" data-item="{l s='Invoices'}" href="#" data-value="4" data-placeholder="{l s='Invoice Number'}" data-icon="icon-book"><i class="material-icons">book</i> {l s='Invoices'}</a>
-        <a class="dropdown-item" data-item="{l s='Carts'}" href="#" data-value="5" data-placeholder="{l s='Cart ID'}" data-icon="icon-shopping-cart"><i class="material-icons">shopping_cart</i> {l s='Carts'}</a>
-        <a class="dropdown-item" data-item="{l s='Modules'}" href="#" data-value="7" data-placeholder="{l s='Module name'}" data-icon="icon-puzzle-piece"><i class="material-icons">extension</i> {l s='Modules'}</a>
+        <a class="dropdown-item" data-item="{l s='Catalog' d='Admin.Global'}" href="#" data-value="1" data-placeholder="{l s='Product name, reference, etc.' d='Admin.Navigation.Header'}" data-icon="icon-book"><i class="material-icons">store_mall_directory</i> {l s='Catalog' d='Admin.Global'}</a>
+        <a class="dropdown-item" data-item="{l s='Customers' d='Admin.Navigation.Header'} {l s='by name'}" href="#" data-value="2" data-placeholder="{l s='Name' d='Admin.Navigation.Header'}" data-icon="icon-group"><i class="material-icons">group</i> {l s='Customers' d='Admin.Navigation.Header'} {l s='by name' d='Admin.Navigation.Header'}</a>
+        <a class="dropdown-item" data-item="{l s='Customers' d='Admin.Navigation.Header'} {l s='by ip address'}" href="#" data-value="6" data-placeholder="{l s='123.45.67.89' d='Admin.Navigation.Header'}" data-icon="icon-desktop"><i class="material-icons">desktop_mac</i> {l s='Customers' d='Admin.Navigation.Header'} {l s='by IP address' d='Admin.Navigation.Header'}</a>
+        <a class="dropdown-item" data-item="{l s='Orders' d='Admin.Global'}" href="#" data-value="3" data-placeholder="{l s='Order ID' d='Admin.Navigation.Header'}" data-icon="icon-credit-card"><i class="material-icons">shopping_basket</i> {l s='Orders' d='Admin.Global'}</a>
+        <a class="dropdown-item" data-item="{l s='Invoices' d='Admin.Global'}" href="#" data-value="4" data-placeholder="{l s='Invoice number' d='Admin.Navigation.Header'}" data-icon="icon-book"><i class="material-icons">book</i> {l s='Invoices' d='Admin.Global'}</a>
+        <a class="dropdown-item" data-item="{l s='Carts' d='Admin.Global'}" href="#" data-value="5" data-placeholder="{l s='Cart ID' d='Admin.Navigation.Header'}" data-icon="icon-shopping-cart"><i class="material-icons">shopping_cart</i> {l s='Carts' d='Admin.Global'}</a>
+        <a class="dropdown-item" data-item="{l s='Modules' d='Admin.Global'}" href="#" data-value="7" data-placeholder="{l s='Module name' d='Admin.Navigation.Header'}" data-icon="icon-puzzle-piece"><i class="material-icons">extension</i> {l s='Modules' d='Admin.Global'}</a>
       </div>
-      <button class="btn btn-primary" type="submit"><span class="d-none">{l s='SEARCH'}</span><i class="material-icons">search</i></button>
+      <button class="btn btn-primary" type="submit"><span class="d-none">{l s='SEARCH' d='Admin.Navigation.Header'}</span><i class="material-icons">search</i></button>
     </div>
   </div>
 </form>

@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -35,12 +35,54 @@ export default class LinkRowActionExtension {
    * @param {Grid} grid
    */
   extend(grid) {
+    this.initRowLinks(grid);
+    this.initConfirmableActions(grid);
+  }
+
+  /**
+   * Extend grid
+   *
+   * @param {Grid} grid
+   */
+  initConfirmableActions(grid) {
     grid.getContainer().on('click', '.js-link-row-action', (event) => {
       const confirmMessage = $(event.currentTarget).data('confirm-message');
 
       if (confirmMessage.length && !confirm(confirmMessage)) {
         event.preventDefault();
       }
+    });
+  }
+
+  /**
+   * Add a click event on rows that matches the first link action (if present)
+   *
+   * @param {Grid} grid
+   */
+  initRowLinks(grid) {
+    $('tr', grid.getContainer()).each(function initEachRow() {
+      const $parentRow = $(this);
+
+      $('.js-link-row-action[data-clickable-row=1]:first', $parentRow).each(function propagateFirstLinkAction() {
+        const $rowAction = $(this);
+        const $parentCell = $rowAction.closest('td');
+
+        /*
+         * Only search for cells with non clickable contents to avoid conflicts with
+         * previous cell behaviour (action, toggle, ...)
+         */
+        const clickableCells = $('td.data-type, td.identifier-type, td.badge-type, td.position-type', $parentRow)
+          .not($parentCell)
+        ;
+
+        clickableCells.addClass('cursor-pointer').click(() => {
+          const confirmMessage = $rowAction.data('confirm-message');
+
+          if (!confirmMessage.length || confirm(confirmMessage)) {
+            document.location = $rowAction.attr('href');
+          }
+        });
+      });
     });
   }
 }

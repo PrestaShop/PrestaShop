@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -91,6 +91,7 @@ $(() => {
   cmsGrid.addExtension(new SubmitRowActionExtension());
   cmsGrid.addExtension(new PositionExtension());
   cmsGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
+  cmsGrid.addExtension(new LinkRowActionExtension());
 
   const helperBlock = new ShowcaseCard('cms-pages-showcase-card');
   helperBlock.addExtension(new ShowcaseCardCloseExtension());

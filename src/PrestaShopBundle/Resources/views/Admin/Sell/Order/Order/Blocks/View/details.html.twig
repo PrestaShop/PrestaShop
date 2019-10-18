@@ -1,0 +1,64 @@
+{#**
+ * 2007-2019 PrestaShop SA and Contributors
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+
+<div class="mt-2">
+  <ul class="nav nav nav-tabs" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active show" id="historyTab" data-toggle="tab" href="#historyTabContent" role="tab" aria-controls="historyTabContent" aria-expanded="true" aria-selected="false">
+        {{ 'Status'|trans({}, 'Admin.Global') }} ({{ orderForViewing.history.statuses|length }})
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="orderDocumentsTab" data-toggle="tab" href="#orderDocumentsTabContent" role="tab" aria-controls="orderDocumentsTabContent" aria-expanded="true" aria-selected="false">
+        {{ 'Documents'|trans({}, 'Admin.Orderscustomers.Feature') }} ({{ orderForViewing.documents.documents|length }})
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="orderShippingTab" data-toggle="tab" href="#orderShippingTabContent" role="tab" aria-controls="orderShippingTabContent" aria-expanded="true" aria-selected="false">
+        {{ 'Carriers'|trans({}, 'Admin.Orderscustomers.Feature') }} ({{ orderForViewing.shipping.carriers|length }})
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="orderReturnsTab" data-toggle="tab" href="#orderReturnsTabContent" role="tab" aria-controls="orderReturnsTabContent" aria-expanded="true" aria-selected="false">
+        {{ 'Merchandise returns'|trans({}, 'Admin.Orderscustomers.Feature') }} ({{ orderForViewing.returns.orderReturns|length }})
+      </a>
+    </li>
+  </ul>
+
+  <div class="tab-content">
+    <div class="tab-pane fade show active" id="historyTabContent" role="tabpanel" aria-labelledby="historyTab">
+      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/history.html.twig' %}
+    </div>
+    <div class="tab-pane fade" id="orderDocumentsTabContent" role="tabpanel" aria-labelledby="orderDocumentsTab">
+      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/documents.html.twig' %}
+    </div>
+    <div class="tab-pane fade" id="orderShippingTabContent" role="tabpanel" aria-labelledby="orderShippingTab">
+      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/shipping.html.twig' %}
+    </div>
+    <div class="tab-pane fade" id="orderReturnsTabContent" role="tabpanel" aria-labelledby="orderReturnsTab">
+      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/merchandise_returns.html.twig' %}
+    </div>
+  </div>
+</div>

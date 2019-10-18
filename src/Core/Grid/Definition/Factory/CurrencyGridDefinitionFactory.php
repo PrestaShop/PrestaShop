@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -120,6 +120,7 @@ final class CurrencyGridDefinitionFactory extends AbstractGridDefinitionFactory
                                 'route' => 'admin_currencies_edit',
                                 'route_param_name' => 'currencyId',
                                 'route_param_field' => 'id_currency',
+                                'clickable_row' => true,
                             ])
                         )
                         ->add((new SubmitRowAction('delete'))

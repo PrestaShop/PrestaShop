@@ -74,7 +74,7 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\DeleteCartRuleFromOrderHandler
     tags:
       - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Order\Command\RemoveCartRuleFromOrderCommand
+        command: PrestaShop\PrestaShop\Core\Domain\Order\Command\DeleteCartRuleFromOrderCommand
 
   prestashop.adapter.order.command_handler.add_cart_rule_to_order_handler:
     class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\AddCartRuleToOrderHandler
@@ -99,3 +99,25 @@ services:
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\DeleteProductFromOrderCommand
+
+  prestashop.adapter.order.command_handler.bulk_change_order_status_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Order\CommandHandler\BulkChangeOrderStatusHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Order\Command\BulkChangeOrderStatusCommand'
+
+  prestashop.adapter.order.query_handler.get_order_for_viewing_handler:
+    class: PrestaShop\PrestaShop\Adapter\Order\QueryHandler\GetOrderForViewingHandler
+    arguments:
+      - '@prestashop.core.image.parser.image_tag_source_parser'
+      - '@translator'
+      - '@=service("prestashop.adapter.legacy.context").getContext()'
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing
+
+  prestashop.adapter.order.command_handler.resend_order_email_handler:
+    class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\ResendOrderEmailHandler
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Order\Command\ResendOrderEmailCommand

@@ -1,5 +1,5 @@
 {**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -35,6 +35,6 @@
   </p>
   <a href="{$default_tab_link|escape:'html':'UTF-8'}" class="btn btn-primary py-1 mt-3">
     <i class="material-icons">arrow_back</i>
-    {l s='Back'}
+    {l s='Back' d='Admin.Global'}
   </a>
 </div>

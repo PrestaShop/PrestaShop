@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -41,7 +41,7 @@ final class RemoveCartRuleFromCartHandler extends AbstractCartHandler implements
      */
     public function handle(RemoveCartRuleFromCartCommand $command)
     {
-        $cart = $this->getContextCartObject($command->getCartId());
+        $cart = $this->getCart($command->getCartId());
 
         if (!$cart->removeCartRule($command->getCartRuleId()->getValue())) {
             throw new CartException(

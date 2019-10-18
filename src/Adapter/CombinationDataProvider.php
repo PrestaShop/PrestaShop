@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -155,6 +155,7 @@ class CombinationDataProvider
             'attribute_ean13' => $combination['ean13'],
             'attribute_isbn' => $combination['isbn'],
             'attribute_upc' => $combination['upc'],
+            'attribute_mpn' => $combination['mpn'],
             'attribute_wholesale_price' => $combination['wholesale_price'],
             'attribute_price_impact' => $attribute_price_impact,
             'attribute_price' => $combination['price'],

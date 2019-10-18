@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -33,6 +33,7 @@ import ChoiceTree from '../../components/form/choice-tree';
 import ExchangeRatesUpdateScheduler from './ExchangeRatesUpdateScheduler';
 import FiltersSubmitButtonEnablerExtension
   from '../../components/grid/extension/filters-submit-button-enabler-extension';
+import LinkRowActionExtension from '../../components/grid/extension/link-row-action-extension';
 
 const $ = window.$;
 
@@ -44,6 +45,7 @@ $(() => {
   currency.addExtension(new ColumnTogglingExtension());
   currency.addExtension(new SubmitRowActionExtension());
   currency.addExtension(new FiltersSubmitButtonEnablerExtension());
+  currency.addExtension(new LinkRowActionExtension());
 
   const choiceTree = new ChoiceTree('#currency_shop_association');
   choiceTree.enableAutoCheckChildren();

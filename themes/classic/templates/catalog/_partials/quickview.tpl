@@ -1,5 +1,5 @@
 {**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -72,7 +72,9 @@
       </div>
      </div>
      <div class="modal-footer">
-       {hook h='displayProductAdditionalInfo' product=$product}
+        <div class="product-additional-info">
+          {hook h='displayProductAdditionalInfo' product=$product}
+        </div>
     </div>
    </div>
  </div>

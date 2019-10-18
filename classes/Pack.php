@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -225,7 +225,7 @@ class PackCore extends Product
     }
 
     /**
-     * Returns the available quantity of a given pack.
+     * Returns the available quantity of a given pack (this method already have decreased products in cart).
      *
      * @param int $id_product Product id
      * @param int $id_product_attribute Product attribute id (optional)

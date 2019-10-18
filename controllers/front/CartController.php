@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -98,6 +98,13 @@ class CartControllerCore extends FrontController
             Tools::redirect('index.php');
         }
 
+        /*
+         * Check that minimal quantity conditions are respected for each product in the cart
+         * (this is to be applied only on page load, not for ajax calls)
+         */
+        if (!Tools::getValue('ajax')) {
+            $this->checkCartProductsMinimalQuantities();
+        }
         $presenter = new CartPresenter();
         $presented_cart = $presenter->present($this->context->cart, $shouldSeparateGifts = true);
 
@@ -562,7 +569,13 @@ class CartControllerCore extends FrontController
     }
 
     /**
-     * Check product quantity availability.
+     * Check product quantity availability to acknowledge whether
+     * an availability error should be raised.
+     *
+     * If shop has been configured to oversell, answer is no.
+     * If there is no items available (no stock), answer is yes.
+     * If there is items available, but the Cart already contains more than the quantity,
+     * answer is yes.
      *
      * @param Product $product
      * @param int $qtyToCheck
@@ -578,8 +591,18 @@ class CartControllerCore extends FrontController
             return false;
         }
 
-        // product quantity is the available quantity after decreasing products in cart
-        $productQuantity = Product::getQuantity(
+        // Check if this product is out-of-stock
+        $availableProductQuantity = StockAvailable::getQuantityAvailableByProduct(
+            $this->id_product,
+            $this->id_product_attribute
+        );
+        if ($availableProductQuantity <= 0) {
+            return true;
+        }
+
+        // Check if this product is out-of-stock after cart quantities have been removed from stock
+        // Be aware that Product::getQuantity() returns the available quantity after decreasing products in cart
+        $productQuantityAvailableAfterCartItemsHaveBeenRemovedFromStock = Product::getQuantity(
             $this->id_product,
             $this->id_product_attribute,
             null,
@@ -587,7 +610,7 @@ class CartControllerCore extends FrontController
             $this->customization_id
         );
 
-        return $productQuantity < 0;
+        return $productQuantityAvailableAfterCartItemsHaveBeenRemovedFromStock < 0;
     }
 
     /**
@@ -597,11 +620,27 @@ class CartControllerCore extends FrontController
      */
     protected function areProductsAvailable()
     {
+        $products = $this->context->cart->getProducts();
+
+        foreach ($products as $product) {
+            $currentProduct = new Product();
+            $currentProduct->hydrate($product);
+
+            if ($currentProduct->hasAttributes() && $product['id_product_attribute'] === '0') {
+                return $this->trans(
+                   'The item %product% in your cart is now a product with attributes. Please delete it and choose one of its combinations to proceed with your order.',
+                    array('%product%' => $product['name']),
+                    'Shop.Notifications.Error'
+                );
+            }
+        }
+
         $product = $this->context->cart->checkQuantities(true);
 
         if (true === $product || !is_array($product)) {
             return true;
         }
+
         if ($product['active']) {
             return $this->trans(
                 'The item %product% in your cart is no longer available in this quantity. You cannot proceed with your order until the quantity is adjusted.',
@@ -615,5 +654,27 @@ class CartControllerCore extends FrontController
             array('%product%' => $product['name']),
             'Shop.Notifications.Error'
         );
+    }
+
+    /**
+     * Check that minimal quantity conditions are respected for each product in the cart
+     */
+    private function checkCartProductsMinimalQuantities()
+    {
+        $productList = $this->context->cart->getProducts();
+
+        foreach ($productList as $product) {
+            if ($product['minimal_quantity'] > $product['cart_quantity']) {
+                // display minimal quantity warning error message
+                $this->errors[] = $this->trans(
+                    'The minimum purchase order quantity for the product %product% is %quantity%.',
+                    array(
+                        '%product%' => $product['name'],
+                        '%quantity%' => $product['minimal_quantity'],
+                    ),
+                    'Shop.Notifications.Error'
+                );
+            }
+        }
     }
 }

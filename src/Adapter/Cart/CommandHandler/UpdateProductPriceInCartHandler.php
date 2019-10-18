@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -43,7 +43,7 @@ final class UpdateProductPriceInCartHandler extends AbstractCartHandler implemen
      */
     public function handle(UpdateProductPriceInCartCommand $command)
     {
-        $cart = $this->getContextCartObject($command->getCartId());
+        $cart = $this->getCart($command->getCartId());
 
         $this->deleteSpecificPriceIfExists($command);
 

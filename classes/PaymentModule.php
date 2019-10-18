@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -170,7 +170,7 @@ abstract class PaymentModuleCore extends Module
             $shops = Shop::getShops(true, null, true);
         }
 
-        $carriers = Carrier::getCarriers((int) Context::getContext()->language->id);
+        $carriers = Carrier::getCarriers((int) Context::getContext()->language->id, false, false, false, null, Carrier::ALL_CARRIERS);
         $carrier_ids = array();
         foreach ($carriers as $carrier) {
             $carrier_ids[] = $carrier['id_reference'];
@@ -196,7 +196,7 @@ abstract class PaymentModuleCore extends Module
      * @param int $id_order_state
      * @param float $amount_paid Amount really paid by customer (in the default currency)
      * @param string $payment_method Payment method (eg. 'Credit card')
-     * @param null $message Message to attach to order
+     * @param string|null $message Message to attach to order
      * @param array $extra_vars
      * @param null $currency_special
      * @param bool $dont_touch_amount
@@ -772,7 +772,7 @@ abstract class PaymentModuleCore extends Module
     /**
      * @param int $current_id_currency optional but on 1.5 it will be REQUIRED
      *
-     * @return Currency
+     * @return Currency|false
      */
     public function getCurrency($current_id_currency = null)
     {
@@ -974,7 +974,7 @@ abstract class PaymentModuleCore extends Module
         $order->gift_message = $cart->gift_message;
         $order->mobile_theme = $cart->mobile_theme;
         $order->conversion_rate = $currency->conversion_rate;
-        $amount_paid = !$dont_touch_amount ? Tools::ps_round((float) $amount_paid, _PS_PRICE_COMPUTE_PRECISION_) : $amount_paid;
+        $amount_paid = !$dont_touch_amount ? Tools::ps_round((float) $amount_paid, Context::getContext()->getComputingPrecision()) : $amount_paid;
         $order->total_paid_real = 0;
 
         $order->total_products = (float) $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS, $order->product_list, $carrierId);
@@ -995,8 +995,8 @@ abstract class PaymentModuleCore extends Module
         $order->total_wrapping_tax_incl = (float) abs($cart->getOrderTotal(true, Cart::ONLY_WRAPPING, $order->product_list, $carrierId));
         $order->total_wrapping = $order->total_wrapping_tax_incl;
 
-        $order->total_paid_tax_excl = (float) Tools::ps_round((float) $cart->getOrderTotal(false, Cart::BOTH, $order->product_list, $carrierId), _PS_PRICE_COMPUTE_PRECISION_);
-        $order->total_paid_tax_incl = (float) Tools::ps_round((float) $cart->getOrderTotal(true, Cart::BOTH, $order->product_list, $carrierId), _PS_PRICE_COMPUTE_PRECISION_);
+        $order->total_paid_tax_excl = (float) Tools::ps_round((float) $cart->getOrderTotal(false, Cart::BOTH, $order->product_list, $carrierId), Context::getContext()->getComputingPrecision());
+        $order->total_paid_tax_incl = (float) Tools::ps_round((float) $cart->getOrderTotal(true, Cart::BOTH, $order->product_list, $carrierId), Context::getContext()->getComputingPrecision());
         $order->total_paid = $order->total_paid_tax_incl;
         $order->round_mode = Configuration::get('PS_PRICE_ROUND_MODE');
         $order->round_type = Configuration::get('PS_ROUND_TYPE');
@@ -1020,7 +1020,7 @@ abstract class PaymentModuleCore extends Module
         // We don't use the following condition to avoid the float precision issues : http://www.php.net/manual/en/language.types.float.php
         // if ($order->total_paid != $order->total_paid_real)
         // We use number_format in order to compare two string
-        if ($order_status->logable && number_format($cart_total_paid, _PS_PRICE_COMPUTE_PRECISION_) != number_format($amount_paid, _PS_PRICE_COMPUTE_PRECISION_)) {
+        if ($order_status->logable && number_format($cart_total_paid, Context::getContext()->getComputingPrecision()) != number_format($amount_paid, Context::getContext()->getComputingPrecision())) {
             $id_order_state = Configuration::get('PS_OS_ERROR');
         }
 
@@ -1062,7 +1062,7 @@ abstract class PaymentModuleCore extends Module
 
         // prepare cart calculator to correctly get the value of each cart rule
         $calculator = $cart->newCalculator($order->product_list, $cart->getCartRules(), $order->id_carrier);
-        $calculator->processCalculation(_PS_PRICE_COMPUTE_PRECISION_);
+        $calculator->processCalculation(Context::getContext()->getComputingPrecision());
         $cartRulesData = $calculator->getCartRulesData();
 
         $cart_rules_list = array();

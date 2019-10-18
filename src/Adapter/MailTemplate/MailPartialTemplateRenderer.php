@@ -16,7 +16,7 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2019 PrestaShop SA and Contributors
@@ -55,10 +55,11 @@ class MailPartialTemplateRenderer
      * @param string $partialTemplateName template name with extension
      * @param LanguageInterface $language
      * @param array $variables sent to smarty as 'list'
+     * @param bool $cleanComments
      *
      * @return string
      */
-    public function render($partialTemplateName, LanguageInterface $language, array $variables = [])
+    public function render($partialTemplateName, LanguageInterface $language, array $variables = [], $cleanComments = false)
     {
         $potentialPaths = array(
             _PS_THEME_DIR_ . 'mails' . DIRECTORY_SEPARATOR . $language->getIsoCode() . DIRECTORY_SEPARATOR . $partialTemplateName,
@@ -71,8 +72,12 @@ class MailPartialTemplateRenderer
         foreach ($potentialPaths as $path) {
             if (Tools::file_exists_cache($path)) {
                 $this->smarty->assign('list', $variables);
+                $content = $this->smarty->fetch($path);
+                if ($cleanComments) {
+                    $content = preg_replace('/\s?<!--.*?-->\s?/s', '', $content);
+                }
 
-                return $this->smarty->fetch($path);
+                return $content;
             }
         }
 

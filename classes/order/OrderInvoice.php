@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -212,7 +212,7 @@ class OrderInvoiceCore extends ObjectModel
             $row['ecotax_tax'] = $row['ecotax_tax_incl'] - $row['ecotax_tax_excl'];
 
             if ($round_mode == Order::ROUND_ITEM) {
-                $row['ecotax_tax_incl'] = Tools::ps_round($row['ecotax_tax_incl'], _PS_PRICE_COMPUTE_PRECISION_, $round_mode);
+                $row['ecotax_tax_incl'] = Tools::ps_round($row['ecotax_tax_incl'], Context::getContext()->getComputingPrecision(), $round_mode);
             }
 
             $row['total_ecotax_tax_excl'] = $row['ecotax_tax_excl'] * $row['product_quantity'];
@@ -228,7 +228,7 @@ class OrderInvoiceCore extends ObjectModel
                 'total_ecotax_tax_incl',
                 'total_ecotax_tax',
             ) as $ecotax_field) {
-                $row[$ecotax_field] = Tools::ps_round($row[$ecotax_field], _PS_PRICE_COMPUTE_PRECISION_, $round_mode);
+                $row[$ecotax_field] = Tools::ps_round($row[$ecotax_field], Context::getContext()->getComputingPrecision(), $round_mode);
             }
 
             // Aliases
@@ -392,8 +392,8 @@ class OrderInvoiceCore extends ObjectModel
         }
 
         foreach ($breakdown as $rate => $data) {
-            $breakdown[$rate]['total_price_tax_excl'] = Tools::ps_round($data['total_price_tax_excl'], _PS_PRICE_COMPUTE_PRECISION_, $order->round_mode);
-            $breakdown[$rate]['total_amount'] = Tools::ps_round($data['total_amount'], _PS_PRICE_COMPUTE_PRECISION_, $order->round_mode);
+            $breakdown[$rate]['total_price_tax_excl'] = Tools::ps_round($data['total_price_tax_excl'], Context::getContext()->getComputingPrecision(), $order->round_mode);
+            $breakdown[$rate]['total_amount'] = Tools::ps_round($data['total_amount'], Context::getContext()->getComputingPrecision(), $order->round_mode);
         }
 
         ksort($breakdown);
@@ -438,13 +438,13 @@ class OrderInvoiceCore extends ObjectModel
             $sum_of_tax_bases = 0;
             foreach ($shipping_breakdown as &$row) {
                 if (Configuration::get('PS_ATCP_SHIPWRAP')) {
-                    $row['total_tax_excl'] = Tools::ps_round($row['total_amount'] / $row['rate'] * 100, _PS_PRICE_COMPUTE_PRECISION_, $this->getOrder()->round_mode);
+                    $row['total_tax_excl'] = Tools::ps_round($row['total_amount'] / $row['rate'] * 100, Context::getContext()->getComputingPrecision(), $this->getOrder()->round_mode);
                     $sum_of_tax_bases += $row['total_tax_excl'];
                 } else {
                     $row['total_tax_excl'] = $this->total_shipping_tax_excl;
                 }
 
-                $row['total_amount'] = Tools::ps_round($row['total_amount'], _PS_PRICE_COMPUTE_PRECISION_, $this->getOrder()->round_mode);
+                $row['total_amount'] = Tools::ps_round($row['total_amount'], Context::getContext()->getComputingPrecision(), $this->getOrder()->round_mode);
                 $sum_of_split_taxes += $row['total_amount'];
             }
             unset($row);
@@ -452,13 +452,13 @@ class OrderInvoiceCore extends ObjectModel
             $delta_amount = $shipping_tax_amount - $sum_of_split_taxes;
 
             if ($delta_amount != 0) {
-                Tools::spreadAmount($delta_amount, _PS_PRICE_COMPUTE_PRECISION_, $shipping_breakdown, 'total_amount');
+                Tools::spreadAmount($delta_amount, Context::getContext()->getComputingPrecision(), $shipping_breakdown, 'total_amount');
             }
 
             $delta_base = $this->total_shipping_tax_excl - $sum_of_tax_bases;
 
             if ($delta_base != 0) {
-                Tools::spreadAmount($delta_base, _PS_PRICE_COMPUTE_PRECISION_, $shipping_breakdown, 'total_tax_excl');
+                Tools::spreadAmount($delta_base, Context::getContext()->getComputingPrecision(), $shipping_breakdown, 'total_tax_excl');
             }
         } else {
             $shipping_breakdown = array(
@@ -499,13 +499,13 @@ class OrderInvoiceCore extends ObjectModel
         $total_tax_rate = 0;
         foreach ($wrapping_breakdown as &$row) {
             if (Configuration::get('PS_ATCP_SHIPWRAP')) {
-                $row['total_tax_excl'] = Tools::ps_round($row['total_amount'] / $row['rate'] * 100, _PS_PRICE_COMPUTE_PRECISION_, $this->getOrder()->round_mode);
+                $row['total_tax_excl'] = Tools::ps_round($row['total_amount'] / $row['rate'] * 100, Context::getContext()->getComputingPrecision(), $this->getOrder()->round_mode);
                 $sum_of_tax_bases += $row['total_tax_excl'];
             } else {
                 $row['total_tax_excl'] = $this->total_wrapping_tax_excl;
             }
 
-            $row['total_amount'] = Tools::ps_round($row['total_amount'], _PS_PRICE_COMPUTE_PRECISION_, $this->getOrder()->round_mode);
+            $row['total_amount'] = Tools::ps_round($row['total_amount'], Context::getContext()->getComputingPrecision(), $this->getOrder()->round_mode);
             $sum_of_split_taxes += $row['total_amount'];
             $total_tax_rate += (float) $row['rate'];
         }
@@ -514,13 +514,13 @@ class OrderInvoiceCore extends ObjectModel
         $delta_amount = $wrapping_tax_amount - $sum_of_split_taxes;
 
         if ($delta_amount != 0) {
-            Tools::spreadAmount($delta_amount, _PS_PRICE_COMPUTE_PRECISION_, $wrapping_breakdown, 'total_amount');
+            Tools::spreadAmount($delta_amount, Context::getContext()->getComputingPrecision(), $wrapping_breakdown, 'total_amount');
         }
 
         $delta_base = $this->total_wrapping_tax_excl - $sum_of_tax_bases;
 
         if ($delta_base != 0) {
-            Tools::spreadAmount($delta_base, _PS_PRICE_COMPUTE_PRECISION_, $wrapping_breakdown, 'total_tax_excl');
+            Tools::spreadAmount($delta_base, Context::getContext()->getComputingPrecision(), $wrapping_breakdown, 'total_tax_excl');
         }
 
         if (!Configuration::get('PS_INVOICE_TAXES_BREAKDOWN') && !Configuration::get('PS_ATCP_SHIPWRAP')) {
@@ -552,11 +552,12 @@ class OrderInvoiceCore extends ObjectModel
         AND `id_order_invoice` = ' . (int) $this->id . '
         GROUP BY `ecotax_tax_rate`');
 
+        $priceDisplayPrecision = Context::getContext()->getComputingPrecision();
         $taxes = array();
         foreach ($result as $row) {
             if ($row['ecotax_tax_excl'] > 0) {
-                $row['ecotax_tax_incl'] = Tools::ps_round($row['ecotax_tax_excl'] + ($row['ecotax_tax_excl'] * $row['rate'] / 100), _PS_PRICE_DISPLAY_PRECISION_);
-                $row['ecotax_tax_excl'] = Tools::ps_round($row['ecotax_tax_excl'], _PS_PRICE_DISPLAY_PRECISION_);
+                $row['ecotax_tax_incl'] = Tools::ps_round($row['ecotax_tax_excl'] + ($row['ecotax_tax_excl'] * $row['rate'] / 100), $priceDisplayPrecision);
+                $row['ecotax_tax_excl'] = Tools::ps_round($row['ecotax_tax_excl'], $priceDisplayPrecision);
                 $taxes[] = $row;
             }
         }

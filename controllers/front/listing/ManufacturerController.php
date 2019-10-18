@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -71,7 +71,7 @@ class ManufacturerControllerCore extends ProductListingFrontController
      */
     public function initContent()
     {
-        if (Configuration::get('PS_DISPLAY_SUPPLIERS')) {
+        if (Configuration::get('PS_DISPLAY_MANUFACTURERS')) {
             parent::initContent();
 
             if (Validate::isLoadedObject($this->manufacturer) && $this->manufacturer->active && $this->manufacturer->isAssociatedToShop()) {

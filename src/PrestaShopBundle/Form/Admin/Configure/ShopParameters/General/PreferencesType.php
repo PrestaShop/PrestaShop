@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -30,7 +30,6 @@ use PrestaShop\PrestaShop\Adapter\Entity\Order;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -122,12 +121,8 @@ class PreferencesType extends TranslatorAwareType
                     'Round on the total' => Order::ROUND_TOTAL,
                 ],
             ])
-            ->add('price_display_precision', IntegerType::class, [
-                'attr' => [
-                    'min' => 0,
-                ],
-            ])
             ->add('display_suppliers', SwitchType::class)
+            ->add('display_manufacturers', SwitchType::class)
             ->add('display_best_sellers', SwitchType::class)
             ->add('multishop_feature_active', SwitchType::class, [
                 'disabled' => !$this->isContextDependantOptionEnabled(),

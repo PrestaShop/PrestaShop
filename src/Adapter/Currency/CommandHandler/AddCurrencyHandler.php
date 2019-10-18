@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -86,6 +86,7 @@ final class AddCurrencyHandler extends AbstractCurrencyHandler implements AddCur
             if (!empty($cldrCurrency)) {
                 // The currency may not be declared in the locale, eg with custom iso code
                 $entity->precision = (int) $cldrCurrency->getDecimalDigits();
+                $entity->numeric_iso_code = $cldrCurrency->getNumericIsoCode();
             }
 
             $entity->refreshLocalizedCurrencyData(Language::getLanguages(), $this->localeRepoCLDR);

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -91,7 +91,6 @@ final class EmptyCategoryGridDefinitionFactory extends AbstractGridDefinitionFac
                     ->setName($this->trans('Description', [], 'Admin.Global'))
                     ->setOptions([
                         'field' => 'description',
-                        'sortable' => false,
                     ])
             )
             ->add(

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -59,7 +59,7 @@ class ImageManager
      *
      * @return string The HTML < img > tag
      */
-    public function getThumbnailForListing($imageId, $imageType = 'jpg', $tableName = 'product', $imageDir = 'p')
+    public function getThumbnailForListing($imageId, $imageType = 'jpg', $tableName = 'product', $imageDir = _PS_PROD_IMG_DIR_)
     {
         $thumbPath = $this->getThumbnailTag($imageId, $imageType, $tableName, $imageDir);
 
@@ -74,7 +74,7 @@ class ImageManager
     {
         $imageType = 'jpg';
         $tableName = 'product';
-        $imageDir = 'p';
+        $imageDir = _PS_PROD_IMG_DIR_;
 
         $imagePath = $this->getImagePath($imageId, $imageType, $tableName, $imageDir);
         $thumbnailCachedImageName = $this->makeCachedImageName($imageId, $imageType, $tableName);
@@ -118,15 +118,13 @@ class ImageManager
      */
     private function getImagePath($imageId, $imageType, $tableName, $imageDir)
     {
-        $parentDirectory = _PS_IMG_DIR_ . $imageDir;
-
         if ($tableName == 'product') {
             $image = new Image($imageId);
 
-            return $parentDirectory . '/' . $image->getExistingImgPath() . '.' . $imageType;
+            return $imageDir . $image->getExistingImgPath() . '.' . $imageType;
         }
 
-        return $parentDirectory . '/' . $imageId . '.' . $imageType;
+        return $imageDir . $imageId . '.' . $imageType;
     }
 
     /**

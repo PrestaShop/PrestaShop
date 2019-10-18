@@ -1,0 +1,19 @@
+admin_features_create:
+  path: /new
+  methods: [GET, POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Sell\Catalog\Feature:create
+    _legacy_controller: AdminFeatures
+    #_legacy_link: AdminFeatures:addfeature
+
+admin_features_edit:
+  path: /{featureId}/edit
+  methods: [GET, POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Sell\Catalog\Feature:edit
+    _legacy_controller: AdminFeatures
+    #_legacy_link: AdminFeatures:updatefeature
+    _legacy_parameters:
+      id_feature: featureId
+  requirements:
+    featureId: \d+

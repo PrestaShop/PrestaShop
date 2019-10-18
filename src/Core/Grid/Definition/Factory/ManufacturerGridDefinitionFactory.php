@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -130,6 +130,7 @@ final class ManufacturerGridDefinitionFactory extends AbstractGridDefinitionFact
                                 'route' => 'admin_manufacturers_view',
                                 'route_param_name' => 'manufacturerId',
                                 'route_param_field' => 'id_manufacturer',
+                                'clickable_row' => true,
                             ])
                         )
                         ->add((new LinkRowAction('edit'))

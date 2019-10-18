@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -29,6 +29,8 @@ namespace Tests\Integration\Behaviour\Features\Context;
 use Context;
 use Currency;
 use Configuration;
+use DbQuery;
+use Db;
 use RuntimeException;
 
 class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
@@ -65,15 +67,50 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
+     * @Given currency :reference with ISO code :isoCode exists
+     */
+    public function createCurrencyWithIsoCode($reference, $isoCode)
+    {
+        /*
+         * Currency::getIdByIsoCode only returns not deleted currency so we check the storage to avoid
+         * duplicate contents, if it matches the expected iso code then we do nothing
+         */
+        if (SharedStorage::getStorage()->exists($reference)) {
+            /** @var Currency $currency */
+            $currency = SharedStorage::getStorage()->get($reference);
+            if ($currency->iso_code == $isoCode) {
+                return;
+            }
+        }
+
+        $currencyId = Currency::getIdByIsoCode($isoCode, 0, true);
+
+        if (!$currencyId) {
+            $currency = new Currency();
+            $currency->name = $isoCode;
+            $currency->iso_code = $isoCode;
+            $currency->active = 1;
+            $currency->deleted = 0;
+            $currency->conversion_rate = 1;
+            $currency->add();
+        } else {
+            $currency = new Currency($currencyId);
+        }
+
+        SharedStorage::getStorage()->set($reference, $currency);
+    }
+
+    /**
      * @Given /^there is a currency named "(.+)" with iso code "(.+)" and exchange rate of (\d+\.\d+)$/
      */
     public function thereIsACurrency($currencyName, $currencyIsoCode, $changeRate)
     {
-        $currencyId = Currency::getIdByIsoCode($currencyIsoCode);
+        $currencyId = Currency::getIdByIsoCode($currencyIsoCode, 0, true);
         // soft delete here...
         if (!$currencyId) {
             $currency = new Currency();
             $currency->name = $currencyIsoCode;
+            $currency->precision = 2;
             $currency->iso_code = $currencyIsoCode;
             $currency->active = 1;
             $currency->conversion_rate = $changeRate;
@@ -81,11 +118,13 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
         } else {
             $currency = new Currency($currencyId);
             $currency->name = $currencyIsoCode;
+            $currency->precision = 2;
             $currency->active = 1;
             $currency->conversion_rate = $changeRate;
             $currency->save();
         }
         $this->currencies[$currencyName] = $currency;
+        SharedStorage::getStorage()->set($currencyName, $currency);
     }
 
     /**
@@ -121,6 +160,28 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
     public function checkCurrencyWithNameExists($currencyName)
     {
         $this->checkFixtureExists($this->currencies, 'Currency', $currencyName);
+    }
+
+    /**
+     * @Given database contains :expectedCount rows of currency :currencyIsoCode
+     */
+    public function countCurrencies($expectedCount, $currencyIsoCode)
+    {
+        $query = new DbQuery();
+        $query->select('COUNT(c.id_currency)');
+        $query->from('currency', 'c');
+        $query->where('iso_code = \'' . pSQL($currencyIsoCode) . '\'');
+
+        $databaseCount = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query->build());
+
+        if ((int) $expectedCount !== $databaseCount) {
+            throw new RuntimeException(sprintf(
+                'Found %s currencies with iso code %s, expected %s',
+                $databaseCount,
+                $currencyIsoCode,
+                $expectedCount
+            ));
+        }
     }
 
     /**

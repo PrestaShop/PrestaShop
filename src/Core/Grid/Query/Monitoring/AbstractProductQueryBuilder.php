@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -28,7 +28,6 @@ namespace PrestaShop\PrestaShop\Core\Grid\Query\Monitoring;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
-use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShop\PrestaShop\Core\Grid\Query\AbstractDoctrineQueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineSearchCriteriaApplicator;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
@@ -70,18 +69,12 @@ abstract class AbstractProductQueryBuilder extends AbstractDoctrineQueryBuilder
     protected $multistoreContextChecker;
 
     /**
-     * @var FeatureInterface
-     */
-    protected $multistoreFeature;
-
-    /**
      * @param Connection $connection
      * @param string $dbPrefix
      * @param DoctrineSearchCriteriaApplicator $searchCriteriaApplicator
      * @param int $contextLangId
      * @param int $contextShopId
      * @param MultistoreContextCheckerInterface $multistoreContextChecker
-     * @param FeatureInterface $multistoreFeature
      */
     public function __construct(
         Connection $connection,
@@ -89,15 +82,13 @@ abstract class AbstractProductQueryBuilder extends AbstractDoctrineQueryBuilder
         $contextLangId,
         $contextShopId,
         DoctrineSearchCriteriaApplicator $searchCriteriaApplicator,
-        MultistoreContextCheckerInterface $multistoreContextChecker,
-        FeatureInterface $multistoreFeature
+        MultistoreContextCheckerInterface $multistoreContextChecker
     ) {
         parent::__construct($connection, $dbPrefix);
         $this->contextLangId = $contextLangId;
         $this->contextShopId = $contextShopId;
         $this->searchCriteriaApplicator = $searchCriteriaApplicator;
         $this->multistoreContextChecker = $multistoreContextChecker;
-        $this->multistoreFeature = $multistoreFeature;
     }
 
     /**
@@ -109,8 +100,7 @@ abstract class AbstractProductQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     protected function getProductsCommonQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
-        $isSingleShopContext = $this->multistoreFeature->isUsed() &&
-            $this->multistoreContextChecker->isSingleShopContext();
+        $isSingleShopContext = $this->multistoreContextChecker->isSingleShopContext();
 
         $qb = $this->connection
             ->createQueryBuilder()
