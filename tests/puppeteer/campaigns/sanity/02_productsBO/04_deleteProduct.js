@@ -45,7 +45,8 @@ describe('Create Standard product in BO and Delete it with DropDown Menu', async
   // Steps
   loginCommon.loginBO();
   it('should go to Products page', async function () {
-    await this.pageObjects.boBasePage.goToSubMenu(this.pageObjects.boBasePage.productsParentLink,
+    await this.pageObjects.boBasePage.goToSubMenu(
+      this.pageObjects.boBasePage.productsParentLink,
       this.pageObjects.boBasePage.productsLink,
     );
     const pageTitle = await this.pageObjects.productsPage.getPageTitle();

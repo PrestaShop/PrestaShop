@@ -48,6 +48,7 @@ module.exports = class Cart extends FOBasePage {
    */
   async editProductQuantity(productID, quantity) {
     await this.setValue(this.productQuantity.replace('%NUMBER', productID), quantity);
+    // click on price to see that its changed
     await this.page.click(this.productPrice.replace('%NUMBER', productID));
   }
 
