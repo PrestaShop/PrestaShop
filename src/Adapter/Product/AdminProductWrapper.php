@@ -42,6 +42,7 @@ use PrestaShop\PrestaShop\Adapter\Entity\Customization;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Foundation\Database\EntityNotFoundException;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
+use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
 use PrestaShopBundle\Utils\FloatParser;
 use Product;
 use ProductDownload;
@@ -84,13 +85,14 @@ class AdminProductWrapper
      *
      * @param object $translator
      * @param LegacyContext $legacyContext
-     * @param Locale $locale
+     * @param LocaleRepository $localeRepository
+     * @param string $locale
      */
-    public function __construct($translator, $legacyContext, Locale $locale)
+    public function __construct($translator, $legacyContext, LocaleRepository $localeRepository, string $locale)
     {
         $this->translator = $translator;
         $this->legacyContext = $legacyContext->getContext();
-        $this->locale = $locale;
+        $this->locale = $localeRepository->getLocale($locale);
     }
 
     /**

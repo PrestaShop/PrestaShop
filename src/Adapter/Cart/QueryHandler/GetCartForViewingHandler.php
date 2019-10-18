@@ -40,6 +40,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryHandler\GetCartForViewingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartView;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
+use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
 use Product;
 use StockAvailable;
 use Validate;
@@ -61,12 +62,13 @@ final class GetCartForViewingHandler implements GetCartForViewingHandlerInterfac
 
     /**
      * @param ImageManager $imageManager
-     * @param Locale $locale
+     * @param LocaleRepository $localeRepository
+     * @param string $localeCode
      */
-    public function __construct(ImageManager $imageManager, Locale $locale)
+    public function __construct(ImageManager $imageManager, LocaleRepository $localeRepository, string $localeCode)
     {
         $this->imageManager = $imageManager;
-        $this->locale = $locale;
+        $this->locale = $localeRepository->getLocale($localeCode);
     }
 
     /**
