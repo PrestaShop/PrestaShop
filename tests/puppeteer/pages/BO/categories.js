@@ -63,7 +63,7 @@ module.exports = class Categories extends BOBasePage {
   async filterCategories(filterType, filterBy, value = '') {
     switch (filterType) {
       case 'input':
-        await this.setValue(this.categoryFilterInput.replace('%FILTERBY', filterBy), value);
+        await this.setValue(this.categoryFilterInput.replace('%FILTERBY', filterBy), value.toString());
         break;
       case 'select':
         await this.selectByVisibleText(this.categoryFilterInput.replace('%FILTERBY', filterBy), value ? 'Yes' : 'No');
