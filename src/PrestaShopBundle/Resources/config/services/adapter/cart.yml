@@ -49,6 +49,8 @@ services:
 
   prestashop.adapter.command_handler.add_cart_rule_to_cart_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Cart\CommandHandler\AddCartRuleToCartHandler'
+    arguments:
+      - '@translator'
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCartRuleToCartCommand'
