@@ -155,6 +155,17 @@ module.exports = class CommonPage {
   }
 
   /**
+   * Switch to tabId
+   * @return page opened
+   */
+  async switchTab(browser, tabId) {
+    this.page = (await browser.pages())[tabId];
+    await this.page.bringToFront();
+    await this.page.waitForSelector('body', {visible: true});
+    return this.page;
+  }
+
+  /**
    * Scroll to element
    * @param selector
    * @return {Promise<void>}
