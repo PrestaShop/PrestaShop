@@ -25,8 +25,8 @@ module.exports = class Home extends FOBasePage {
   /**
    * Check home page
    */
-  async checkHomePage() {
-    await this.page.waitForSelector(this.homePageSection);
+  async isHomePage() {
+    return this.elementVisible(this.homePageSection, 3000);
   }
 
   /**

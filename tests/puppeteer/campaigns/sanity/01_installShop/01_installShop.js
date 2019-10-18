@@ -87,15 +87,18 @@ describe('Install Prestashop', async () => {
   });
   it('should fill database configuration form and check database connection', async function () {
     await this.pageObjects.installPage.fillDatabaseForm();
-    await this.pageObjects.installPage.checkDatabaseConnected();
+    const result = await this.pageObjects.installPage.isDatabaseConnected();
+    await expect(result).to.be.true;
   });
   it('should finish installation and check that installation is successful', async function () {
     await this.pageObjects.installPage.nextStep();
-    await this.pageObjects.installPage.checkInstallationSuccessful();
+    const result = await this.pageObjects.installPage.isInstallationSuccessful();
+    await expect(result).to.be.true;
   });
   it('should go to FO and check that Prestashop logo exists', async function () {
     page = await this.pageObjects.installPage.goToFOAfterInstall();
     this.pageObjects = await init();
-    await this.pageObjects.homePage.checkHomePage();
+    const result = await this.pageObjects.homePage.isHomePage();
+    await expect(result).to.be.true;
   });
 });
