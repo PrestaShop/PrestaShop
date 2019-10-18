@@ -34,6 +34,10 @@ module.exports = class BOBasePage extends CommonPage {
     this.moduleCatalogueLink = '#subtab-AdminParentModulesCatalog';
     this.moduleManagerLink = '#subtab-AdminModulesSf';
 
+    // International
+    this.internationalParentLink = '#subtab-AdminInternational';
+    this.taxesLink = '#subtab-AdminParentTaxes';
+
     // Shop Parameters
     this.shopParametersParentLink = '#subtab-ShopParameters';
     this.shopParametersGeneralLink = '#subtab-AdminParentPreferences';
