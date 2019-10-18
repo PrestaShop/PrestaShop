@@ -262,9 +262,9 @@ class SearchCore
             return false;
         }
 
-        $eligibleProducts2 = [];
         $scoreArray = [];
         $fuzzyLoop = 0;
+        $eligibleProducts2 = null;
         $words = Search::extractKeyWords($expr, $id_lang, false, $context->language->iso_code);
         $fuzzyMaxLoop = (int) Configuration::get('PS_SEARCH_FUZZY_MAX_LOOP');
         $psFuzzySearch = (int) Configuration::get('PS_SEARCH_FUZZY');
@@ -302,8 +302,11 @@ class SearchCore
                 continue;
             }
 
-            foreach ($result as $row) {
-                $eligibleProducts2[] = $row['id_product'];
+            $productIds = array_column($result, 'id_product');
+            if ($eligibleProducts2 === null) {
+                $eligibleProducts2 = $productIds;
+            } else {
+                $eligibleProducts2 = array_intersect($eligibleProducts2, $productIds);
             }
 
             $scoreArray[] = 'sw.word LIKE \'' . $sql_param_search . '\'';
