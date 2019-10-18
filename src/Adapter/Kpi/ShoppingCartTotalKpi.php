@@ -31,10 +31,8 @@ use Context;
 use Group;
 use HelperKpi;
 use Order;
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Kpi\KpiInterface;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
-use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
 use Validate;
 
 /**
@@ -42,11 +40,6 @@ use Validate;
  */
 final class ShoppingCartTotalKpi implements KpiInterface
 {
-    /**
-     * @var LegacyContext
-     */
-    private $context;
-
     /**
      * @var Locale
      */
@@ -58,14 +51,11 @@ final class ShoppingCartTotalKpi implements KpiInterface
     private $options;
 
     /**
-     * @param LocaleRepository $repository
+     * @param Locale $locale
      */
-    public function __construct(LocaleRepository $repository)
+    public function __construct(Locale $locale)
     {
-        $this->context = new LegacyContext();
-        $this->locale = $repository->getLocale(
-            $this->context->getContext()->language->getLocale()
-        );
+        $this->locale = $locale;
     }
 
     /**

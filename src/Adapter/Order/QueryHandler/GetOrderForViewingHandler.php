@@ -73,7 +73,6 @@ use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderStatusForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Image\Parser\ImageTagSourceParserInterface;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
-use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
 use Shop;
 use State;
 use StockAvailable;
@@ -114,20 +113,18 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
      * @param ImageTagSourceParserInterface $imageTagSourceParser
      * @param TranslatorInterface $translator
      * @param Context $context
-     * @param LocaleRepository $repository
+     * @param Locale $locale
      */
     public function __construct(
         ImageTagSourceParserInterface $imageTagSourceParser,
         TranslatorInterface $translator,
         Context $context,
-        LocaleRepository $repository
+        Locale $locale
     ) {
         $this->imageTagSourceParser = $imageTagSourceParser;
         $this->translator = $translator;
         $this->context = $context;
-        $this->locale = $repository->getLocale(
-            $this->context->getContext()->language->getLocale()
-        );
+        $this->locale = $locale;
     }
 
     /**
@@ -331,7 +328,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             $product['amount_refundable'] = $product['total_price_tax_excl'] - $resume['amount_tax_excl'];
             $product['amount_refundable_tax_incl'] = $product['total_price_tax_incl'] - $resume['amount_tax_incl'];
             $resumeAmount = $order->getTaxCalculationMethod() ? 'amount_tax_excl' : 'amount_tax_incl';
-            $product['amount_refund'] = is_null($resume[$resumeAmount]) ? $resume[$resumeAmount] : $this->locale->formatPrice($resume[$resumeAmount], $currency->iso_code);
+            $product['amount_refund'] = !is_null($resume[$resumeAmount]) ? $this->locale->formatPrice($resume[$resumeAmount], $currency->iso_code) : null;
             $product['refund_history'] = OrderSlip::getProductSlipDetail($product['id_order_detail']);
             $product['return_history'] = OrderReturn::getProductReturnDetail($product['id_order_detail']);
 
