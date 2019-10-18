@@ -955,6 +955,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      */
     private function tryToGetAvailableIdProductAttribute($checkedIdProductAttribute)
     {
+        // wash attributes list (if some attributes are unavailable and only if allowed to wash them), just like in assignAttributesGroups()
         if (!Product::isAvailableWhenOutOfStock($this->product->out_of_stock) && Configuration::get('PS_DISP_UNAVAILABLE_ATTR') == 0) {
             $availableProductAttributes = $this->product->getAttributeCombinations();
             if (!Product::isAvailableWhenOutOfStock($this->product->out_of_stock)) {
