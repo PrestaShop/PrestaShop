@@ -8,7 +8,8 @@ services:
       - '@translator'
       - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
       - "@=service('prestashop.adapter.legacy.context').getContext().link"
-      - '@=service("prestashop.adapter.legacy.context").getContext().getCurrentLocale()'
+      - "@prestashop.core.localization.locale.repository"
+      - '@=service("prestashop.adapter.legacy.context").getContext().language.getLocale()'
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForViewing'
