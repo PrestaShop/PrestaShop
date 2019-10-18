@@ -68,6 +68,8 @@ export default {
   cartRuleDescriptionField: '.js-cart-rule-description',
   cartRuleValueField: '.js-cart-rule-value',
   cartRuleDeleteBtn: '.js-cart-rule-delete-btn',
+  cartRuleErrorBlock: '#js-cart-rule-error-block',
+  cartRuleErrorText: '#js-cart-rule-error-text',
 
   // selectors related to addresses block
   addressesBlock: '#addresses-block',

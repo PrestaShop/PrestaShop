@@ -43,6 +43,7 @@ export default class CartRulesRenderer {
    * @param {Boolean} emptyCart
    */
   render(cartRules, emptyCart) {
+    this._hideError();
     // do not render cart rules block at all if cart has no products
     if (emptyCart) {
       this._hideCartRulesBlock();
@@ -68,6 +69,7 @@ export default class CartRulesRenderer {
    * @private
    */
   _renderList(cartRules) {
+    this._cleanCartRulesList();
     const $cartRulesTableRowTemplate = $($(createOrderPageMap.cartRulesTableRowTemplate).html());
 
     for (const key in cartRules) {
@@ -83,6 +85,15 @@ export default class CartRulesRenderer {
     }
 
     this._showCartRulesList();
+  }
+
+  /**
+   * Hides error block which can be visible after cart rules search
+   *
+   * @private
+   */
+  _hideError() {
+    $(createOrderPageMap.cartRuleErrorBlock).addClass('d-none');
   }
 
   /**

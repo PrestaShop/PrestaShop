@@ -53,19 +53,25 @@ export default class CartRuleSearcher {
   }
 
   /**
+   * Searches for cart rules by search phrase
    *
    * @private
    */
   _search() {
+    const searchPhrase = this.$searchInput.val();
+    if (searchPhrase.length < 3) {
+      return;
+    }
+
     $.get(this.router.generate('admin_cart_rules_search'), {
-      search_phrase: this.$searchInput.val(),
+      search_phrase: searchPhrase,
     }).then((cartRules) => {
       this._renderSearchResults(cartRules);
     });
   }
 
   /**
-   *
+   * Adds cart rule to cart
    *
    * @param cartRuleId
    * @param cartId
@@ -73,9 +79,36 @@ export default class CartRuleSearcher {
    * @private
    */
   _addCartRuleToCart(cartRuleId, cartId) {
-    $.post(this.router.generate('admin_carts_add_rule', {cartId})).then((cartInfo) => {
+    $.post(this.router.generate('admin_carts_add_rule', {cartId}), {
+      cart_rule_id: cartRuleId,
+    }).then((cartInfo) => {
       this.cartRulesRenderer.render(cartInfo.cartRules, cartInfo.products.length === 0);
+    }).catch((response) => {
+      if (typeof response.responseJSON.message !== 'undefined') {
+        this._displayErrorMessage(response.responseJSON.message);
+      }
     });
+  }
+
+  /**
+   * Displays error message
+   *
+   * @param message
+   *
+   * @private
+   */
+  _displayErrorMessage(message) {
+    $(createOrderMap.cartRuleErrorText).text(message);
+    this._showErrorBlock();
+  }
+
+  /**
+   * Shows error block
+   *
+   * @private
+   */
+  _showErrorBlock() {
+    $(createOrderMap.cartRuleErrorBlock).removeClass('d-none');
   }
 
   /**
@@ -99,6 +132,7 @@ export default class CartRuleSearcher {
    * Renders found cart rules after search
    *
    * @param cartRules
+   *
    * @private
    */
   _renderFoundCartRules(cartRules) {

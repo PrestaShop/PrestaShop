@@ -198,7 +198,7 @@ class CartController extends FrameworkBundleAdminController
         } catch (CartRuleValidityException $e) {
             return $this->json(
                 ['message' => $e->getMessage()],
-                Response::HTTP_BAD_REQUEST
+                Response::HTTP_INTERNAL_SERVER_ERROR
             );
         }
 

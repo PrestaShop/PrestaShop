@@ -36,6 +36,10 @@
         <div class="col p-0">
           <input type="text" class="form-control" id="search-cart-rules-input">
           <ul id="search-cart-rules-result-box" class="position-absolute bg-white w-100 form-control d-none list-unstyled"></ul>
+          <div class="text-danger align-top d-none" id="js-cart-rule-error-block">
+            <i class="material-icons form-error-icon">error_outline</i>
+            <span id="js-cart-rule-error-text"></span>
+          </div>
         </div>
       </div>
       <div class="col">
@@ -45,7 +49,8 @@
         </button>
       </div>
     </div>
-    <table class="table d-none" id="cart-rules-table">
+
+    <table class="table d-none mt-2" id="cart-rules-table">
       <thead>
       <tr>
         <th>{{ 'Name'|trans({}, 'Admin.Global') }}</th>
@@ -75,6 +80,6 @@
 </script>
 
 <script id="found-cart-rule-template" type="text/html">
-  <li data-cart-rule-id="" class="js-found-cart-rule"></li>
+  <li data-cart-rule-id="" class="js-found-cart-rule found-cart-rule"></li>
 </script>
 

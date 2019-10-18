@@ -12,3 +12,11 @@
   padding-right: 18px;
   padding-bottom: 16px;
 }
+
+#order-creation-container {
+  .found-cart-rule:hover {
+    cursor: pointer;
+    color: $primary;
+  }
+}
+
