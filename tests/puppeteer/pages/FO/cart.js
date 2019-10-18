@@ -8,15 +8,13 @@ module.exports = class Cart extends FOBasePage {
     this.pageTitle = 'Cart';
 
     // Selectors for cart page
-    this.productName = '#main li:nth-of-type(%NUMBER) div.product-line-info > a';
-    this.productPrice = '#main li:nth-of-type(%NUMBER) div.current-price > span';
-    this.productQuantity = '#main li:nth-of-type(%NUMBER) div.input-group input.js-cart-line-product-quantity';
+    this.productItem = '#main li:nth-of-type(%NUMBER)';
+    this.productName = `${this.productItem} div.product-line-info > a`;
+    this.productPrice = `${this.productItem} div.current-price > span`;
+    this.productQuantity = `${this.productItem} div.input-group input.js-cart-line-product-quantity`;
     this.proceedToCheckoutButton = '#main div.checkout a';
     this.cartTotalTTC = '.cart-summary-totals span.value';
     this.itemsNumber = '#cart-subtotal-products span.label.js-subtotal';
-
-    // Selectors for checkout page
-    this.checkoutStepOneTitle = '#checkout-personal-information-step > h1';
   }
 
   /**
@@ -37,8 +35,10 @@ module.exports = class Cart extends FOBasePage {
    * Click on Proceed to checkout button
    */
   async clickOnProceedToCheckout() {
-    await this.waitForSelectorAndClick(this.proceedToCheckoutButton);
-    await this.page.waitForSelector(this.checkoutStepOneTitle);
+    await Promise.all([
+      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
+      this.page.click(this.proceedToCheckoutButton),
+    ]);
   }
 
   /**
@@ -48,5 +48,19 @@ module.exports = class Cart extends FOBasePage {
    */
   async editProductQuantity(productID, quantity) {
     await this.setValue(this.productQuantity.replace('%NUMBER', productID), quantity);
+    await this.page.click(this.productPrice.replace('%NUMBER', productID));
+  }
+
+  /**
+   * To get a number from text
+   * @param selector
+   * @param timeout
+   * @return integer
+   */
+  async getPriceFromText(selector, timeout = 0) {
+    await this.page.waitFor(timeout);
+    const text = await this.getTextContent(selector);
+    const number = /[+-]?\d+(\.\d+)?/g.exec(text).toString();
+    return parseFloat(number);
   }
 };

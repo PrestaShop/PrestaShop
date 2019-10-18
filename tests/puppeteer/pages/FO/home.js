@@ -34,7 +34,10 @@ module.exports = class Home extends FOBasePage {
    * @param id, product id
    */
   async goToProductPage(id) {
-    await this.waitForSelectorAndClick(this.productImg.replace('%NUMBER', id), 5000);
+    await Promise.all([
+      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
+      this.page.click(this.productImg.replace('%NUMBER', id)),
+    ]);
   }
 
   /**

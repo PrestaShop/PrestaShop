@@ -10,5 +10,6 @@ module.exports = {
       quantity: '1',
       price: '€34.46',
     },
+    cartTotalTTC: 57.41,
   },
 };
