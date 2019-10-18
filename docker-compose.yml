@@ -2,6 +2,8 @@ version: '2'
 
 volumes:
   db-data:
+  vendor:
+  var:
 
 services:
   mysql:
@@ -27,5 +29,6 @@ services:
     ports:
       - "8001:80"
     volumes:
-      - ./:/var/www/html/
-    restart: always
+      - ./:/var/www/html/:delegated
+      - vendor:/var/www/html/vendor
+      - var:/var/www/html/var
