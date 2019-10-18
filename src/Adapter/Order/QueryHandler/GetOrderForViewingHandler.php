@@ -73,6 +73,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderStatusForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Image\Parser\ImageTagSourceParserInterface;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
+use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
 use Shop;
 use State;
 use StockAvailable;
@@ -113,18 +114,20 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
      * @param ImageTagSourceParserInterface $imageTagSourceParser
      * @param TranslatorInterface $translator
      * @param Context $context
-     * @param Locale $locale
+     * @param LocaleRepository $localeRepository
+     * @param string $localeCode
      */
     public function __construct(
         ImageTagSourceParserInterface $imageTagSourceParser,
         TranslatorInterface $translator,
         Context $context,
-        Locale $locale
+        LocaleRepository $localeRepository,
+        string $localeCode
     ) {
         $this->imageTagSourceParser = $imageTagSourceParser;
         $this->translator = $translator;
         $this->context = $context;
-        $this->locale = $locale;
+        $this->locale = $localeRepository->getLocale($localeCode);
     }
 
     /**

@@ -33,6 +33,7 @@ use HelperKpi;
 use Order;
 use PrestaShop\PrestaShop\Core\Kpi\KpiInterface;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
+use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
 use Validate;
 
 /**
@@ -51,11 +52,12 @@ final class ShoppingCartTotalKpi implements KpiInterface
     private $options;
 
     /**
-     * @param Locale $locale
+     * @param LocaleRepository $localeRepository
+     * @param string $localeCode
      */
-    public function __construct(Locale $locale)
+    public function __construct(LocaleRepository $localeRepository, string $localeCode)
     {
-        $this->locale = $locale;
+        $this->locale = $localeRepository->getLocale($localeCode);
     }
 
     /**
