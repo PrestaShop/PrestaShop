@@ -34,13 +34,28 @@ class OrderDocumentsForViewing
     private $documents = [];
 
     /**
+     * @var bool
+     */
+    private $canGenerateInvoice;
+
+    /**
+     * @var bool
+     */
+    private $canGenerateDeliverySlip;
+
+    /**
+     * @param bool $canGenerateInvoice
+     * @param bool $canGenerateDeliverySlip
      * @param OrderDocumentForViewing[] $documents
      */
-    public function __construct(array $documents)
+    public function __construct(bool $canGenerateInvoice, bool $canGenerateDeliverySlip, array $documents)
     {
         foreach ($documents as $document) {
             $this->add($document);
         }
+
+        $this->canGenerateInvoice = $canGenerateInvoice;
+        $this->canGenerateDeliverySlip = $canGenerateDeliverySlip;
     }
 
     /**
@@ -49,6 +64,22 @@ class OrderDocumentsForViewing
     public function getDocuments(): array
     {
         return $this->documents;
+    }
+
+    /**
+     * @return bool
+     */
+    public function canGenerateInvoice(): bool
+    {
+        return $this->canGenerateInvoice;
+    }
+
+    /**
+     * @return bool
+     */
+    public function canGenerateDeliverySlip(): bool
+    {
+        return $this->canGenerateDeliverySlip;
     }
 
     private function add(OrderDocumentForViewing $document): void
