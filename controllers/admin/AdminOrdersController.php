@@ -1806,7 +1806,7 @@ class AdminOrdersControllerCore extends AdminController
             $product['amount_refundable'] = $product['total_price_tax_excl'] - $resume['amount_tax_excl'];
             $product['amount_refundable_tax_incl'] = $product['total_price_tax_incl'] - $resume['amount_tax_incl'];
             $resumeAmount = $order->getTaxCalculationMethod() ? 'amount_tax_excl' : 'amount_tax_incl';
-            $product['amount_refund'] = is_null($resume[$resumeAmount]) ? $resume[$resumeAmount] : $this->context->getCurrentLocale()->formatPrice($resume[$resumeAmount], $currency->iso_code);
+            $product['amount_refund'] = !is_null($resume[$resumeAmount]) ? $this->context->getCurrentLocale()->formatPrice($resume[$resumeAmount], $currency->iso_code) : null;
             $product['refund_history'] = OrderSlip::getProductSlipDetail($product['id_order_detail']);
             $product['return_history'] = OrderReturn::getProductReturnDetail($product['id_order_detail']);
 
@@ -2342,7 +2342,7 @@ class AdminOrdersControllerCore extends AdminController
         $resume = OrderSlip::getProductSlipResume((int) $product['id_order_detail']);
         $product['quantity_refundable'] = $product['product_quantity'] - $resume['product_quantity'];
         $product['amount_refundable'] = $product['total_price_tax_excl'] - $resume['amount_tax_excl'];
-        $product['amount_refund'] = is_null($resume['amount_tax_incl']) ? $resume['amount_tax_incl'] : $this->context->getCurrentLocale()->formatPrice($resume['amount_tax_incl'], $this->context->currency->iso_code);
+        $product['amount_refund'] = !is_null($resume['amount_tax_incl']) ? $this->context->getCurrentLocale()->formatPrice($resume['amount_tax_incl'], $this->context->currency->iso_code) : null;
         $product['return_history'] = OrderReturn::getProductReturnDetail((int) $product['id_order_detail']);
         $product['refund_history'] = OrderSlip::getProductSlipDetail((int) $product['id_order_detail']);
         if ($product['id_warehouse'] != 0) {
@@ -2601,7 +2601,7 @@ class AdminOrdersControllerCore extends AdminController
         $resume = OrderSlip::getProductSlipResume($order_detail->id);
         $product['quantity_refundable'] = $product['product_quantity'] - $resume['product_quantity'];
         $product['amount_refundable'] = $product['total_price_tax_excl'] - $resume['amount_tax_excl'];
-        $product['amount_refund'] = is_null($resume['amount_tax_incl']) ? $resume['amount_tax_incl'] : $this->context->getCurrentLocale()->formatPrice($resume['amount_tax_incl'], $this->context->currency->iso_code);
+        $product['amount_refund'] = !is_null($resume['amount_tax_incl']) ? $this->context->getCurrentLocale()->formatPrice($resume['amount_tax_incl'], $this->context->currency->iso_code) : null;
         $product['refund_history'] = OrderSlip::getProductSlipDetail($order_detail->id);
         if ($product['id_warehouse'] != 0) {
             $warehouse = new Warehouse((int) $product['id_warehouse']);

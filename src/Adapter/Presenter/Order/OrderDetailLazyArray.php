@@ -31,6 +31,7 @@ use Configuration;
 use Context;
 use HistoryController;
 use Order;
+use PrestaShop\PrestaShop\Adapter\ContainerFinder;
 use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
@@ -81,11 +82,8 @@ class OrderDetailLazyArray extends AbstractLazyArray
      */
     protected function getCldrLocaleRepository()
     {
-        $context = Context::getContext();
-        $container = isset($context->controller) ? $context->controller->getContainer() : null;
-        if (null === $container) {
-            $container = SymfonyContainer::getInstance();
-        }
+        $containerFinder = new ContainerFinder($this->context);
+        $container = $containerFinder->getContainer();
 
         /** @var LocaleRepository $localeRepoCLDR */
         $localeRepoCLDR = $container->get('prestashop.core.localization.cldr.locale_repository');

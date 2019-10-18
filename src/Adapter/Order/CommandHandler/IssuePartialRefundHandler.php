@@ -36,12 +36,10 @@ use Mail;
 use OrderCarrier;
 use OrderDetail;
 use OrderSlip;
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\IssuePartialRefundCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\IssuePartialRefundHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
-use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
 use StockAvailable;
 use Tax;
 use TaxCalculator;
@@ -53,24 +51,16 @@ use Validate;
 final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implements IssuePartialRefundHandlerInterface
 {
     /**
-     * @var LegacyContext
-     */
-    private $context;
-
-    /**
      * @var Locale
      */
     private $locale;
 
     /**
-     * @param LocaleRepository $repository
+     * @param Locale $locale
      */
-    public function __construct(LocaleRepository $repository)
+    public function __construct(Locale $locale)
     {
-        $this->context = new LegacyContext();
-        $this->locale = $repository->getLocale(
-            $this->context->getContext()->language->getLocale()
-        );
+        $this->locale = $locale;
     }
 
     /**

@@ -35,13 +35,11 @@ use Gender;
 use Group;
 use Order;
 use PrestaShop\PrestaShop\Adapter\ImageManager;
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryHandler\GetCartForViewingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartView;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
-use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
 use Product;
 use StockAvailable;
 use Validate;
@@ -51,11 +49,6 @@ use Validate;
  */
 final class GetCartForViewingHandler implements GetCartForViewingHandlerInterface
 {
-    /**
-     * @var LegacyContext
-     */
-    private $context;
-
     /**
      * @var ImageManager
      */
@@ -68,15 +61,12 @@ final class GetCartForViewingHandler implements GetCartForViewingHandlerInterfac
 
     /**
      * @param ImageManager $imageManager
-     * @param LocaleRepository $repository
+     * @param Locale $locale
      */
-    public function __construct(ImageManager $imageManager, LocaleRepository $repository)
+    public function __construct(ImageManager $imageManager, Locale $locale)
     {
         $this->imageManager = $imageManager;
-        $this->context = new LegacyContext();
-        $this->locale = $repository->getLocale(
-            $this->context->getContext()->language->getLocale()
-        );
+        $this->locale = $locale;
     }
 
     /**

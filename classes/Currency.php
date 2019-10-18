@@ -82,6 +82,8 @@ class CurrencyCore extends ObjectModel
     /**
      * Currency's symbol
      *
+     * @deprecated Use $symbol
+     *
      * @var string
      */
     public $sign;
