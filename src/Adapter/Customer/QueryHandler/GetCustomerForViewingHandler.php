@@ -63,7 +63,6 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryHandler\GetCustomerForViewingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
-use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
 use Product;
 use Referrer;
 use Shop;
@@ -107,21 +106,19 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
      * @param TranslatorInterface $translator
      * @param int $contextLangId
      * @param Link $link
-     * @param LocaleRepository $repository
+     * @param Locale $locale
      */
     public function __construct(
         TranslatorInterface $translator,
         $contextLangId,
         Link $link,
-        LocaleRepository $repository
+        Locale $locale
     ) {
         $this->context = new LegacyContext();
         $this->contextLangId = $contextLangId;
         $this->translator = $translator;
         $this->link = $link;
-        $this->locale = $repository->getLocale(
-            $this->context->getContext()->language->getLocale()
-        );
+        $this->locale = $locale;
     }
 
     /**

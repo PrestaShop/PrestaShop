@@ -675,8 +675,8 @@ class AdminCartsControllerCore extends AdminController
             foreach ($summary['products'] as &$product) {
                 $product['numeric_price'] = $product['price'];
                 $product['numeric_total'] = $product['total'];
-                $product['price'] = str_replace($currency->sign, '', $this->context->getCurrentLocale()->formatPrice($product['price'], $currency->iso_code));
-                $product['total'] = str_replace($currency->sign, '', $this->context->getCurrentLocale()->formatPrice($product['total'], $currency->iso_code));
+                $product['price'] = str_replace($currency->symbol, '', $this->context->getCurrentLocale()->formatPrice($product['price'], $currency->iso_code));
+                $product['total'] = str_replace($currency->symbol, '', $this->context->getCurrentLocale()->formatPrice($product['total'], $currency->iso_code));
                 $product['image_link'] = $this->context->link->getImageLink($product['link_rewrite'], $product['id_image'], 'small_default');
                 if (!isset($product['attributes_small'])) {
                     $product['attributes_small'] = '';
