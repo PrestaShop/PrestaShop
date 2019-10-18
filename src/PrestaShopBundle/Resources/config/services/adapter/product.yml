@@ -24,7 +24,7 @@ services:
         arguments:
             - "@translator"
             - "@prestashop.adapter.legacy.context"
-            - '@=service("prestashop.adapter.legacy.context").getContext().language.getLocale()'
+            - '@=service("prestashop.adapter.legacy.context").getContext().getCurrentLocale()'
 
     prestashop.adapter.admin.controller.attribute_generator:
         class: PrestaShop\PrestaShop\Adapter\Attribute\AdminAttributeGeneratorControllerWrapper
