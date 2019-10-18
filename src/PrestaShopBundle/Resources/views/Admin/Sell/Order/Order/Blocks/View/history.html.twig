@@ -44,7 +44,11 @@
       </td>
       <td class="text-right">
         {% if status.withEmail %}
-          <a href="#">{{ 'Resend email'|trans({}, 'Admin.Orderscustomers.Feature') }}</a>
+          <form method="post" action="{{ path('admin_orders_resend_email', {'orderId': orderForViewing.id, 'orderHistoryId': status.orderHistoryId, 'orderStatusId': status.orderStatusId}) }}">
+            <button class="btn btn-link pt-0 pb-0">
+              {{ 'Resend email'|trans({}, 'Admin.Orderscustomers.Feature') }}
+            </button>
+          </form>
         {% endif %}
       </td>
     </tr>

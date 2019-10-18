@@ -66,6 +66,12 @@ class OrderStatusForViewing
     private $employeeLastName;
 
     /**
+     * @var int
+     */
+    private $orderHistoryId;
+
+    /**
+     * @param int $orderHistoryId
      * @param int $orderStatusId
      * @param string $name
      * @param string $color
@@ -75,6 +81,7 @@ class OrderStatusForViewing
      * @param string|null $employeeLastName
      */
     public function __construct(
+        int $orderHistoryId,
         int $orderStatusId,
         string $name,
         string $color,
@@ -90,6 +97,15 @@ class OrderStatusForViewing
         $this->withEmail = $withEmail;
         $this->employeeFirstName = $employeeFirstName;
         $this->employeeLastName = $employeeLastName;
+        $this->orderHistoryId = $orderHistoryId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getOrderHistoryId(): int
+    {
+        return $this->orderHistoryId;
     }
 
     /**
