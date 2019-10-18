@@ -29,10 +29,14 @@ import CartRulesRenderer from './cart-rules-renderer';
 
 const $ = window.$;
 
+/**
+ * Responsible for searching cart rules and managing cart rules search block
+ */
 export default class CartRuleSearcher {
   constructor() {
     this.router = new Router();
     this.$searchInput = $(createOrderMap.cartRuleSearchInput);
+    this.$searchResultBox = $(createOrderMap.cartRulesSearchResultBox);
     this.cartRulesRenderer = new CartRulesRenderer();
 
     return {
@@ -48,6 +52,10 @@ export default class CartRuleSearcher {
     };
   }
 
+  /**
+   *
+   * @private
+   */
   _search() {
     $.get(this.router.generate('admin_cart_rules_search'), {
       search_phrase: this.$searchInput.val(),
@@ -56,12 +64,27 @@ export default class CartRuleSearcher {
     });
   }
 
+  /**
+   *
+   *
+   * @param cartRuleId
+   * @param cartId
+   *
+   * @private
+   */
   _addCartRuleToCart(cartRuleId, cartId) {
     $.post(this.router.generate('admin_carts_add_rule', {cartId})).then((cartInfo) => {
       this.cartRulesRenderer.render(cartInfo.cartRules, cartInfo.products.length === 0);
     });
   }
 
+  /**
+   * Responsible for rendering search results dropdown
+   *
+   * @param searchResults
+   *
+   * @private
+   */
   _renderSearchResults(searchResults) {
     this._clearSearchResults();
     if (searchResults.cart_rules.length === 0) {
@@ -69,10 +92,16 @@ export default class CartRuleSearcher {
 
       return;
     }
-    this._renderCartRules(searchResults.cart_rules);
+    this._renderFoundCartRules(searchResults.cart_rules);
   }
 
-  _renderCartRules(cartRules) {
+  /**
+   * Renders found cart rules after search
+   *
+   * @param cartRules
+   * @private
+   */
+  _renderFoundCartRules(cartRules) {
     const $cartRuleTemplate = $($(createOrderMap.foundCartRuleTemplate).html());
     for (const key in cartRules) {
       const $template = $cartRuleTemplate.clone();
@@ -80,28 +109,48 @@ export default class CartRuleSearcher {
       $template.text(cartRule.name);
 
       $template.data('cart-rule-id', cartRule.cartRuleId);
-      $(createOrderMap.cartRulesSearchResultBox).append($template);
+      this.$searchResultBox.append($template);
     }
 
     this._showResultsDropdown();
   }
 
+  /**
+   * Renders warning that no cart rule was found
+   *
+   * @private
+   */
   _renderNotFound() {
     const $template = $($(createOrderMap.cartRulesNotFoundTemplate).html()).clone();
-    $(createOrderMap.cartRulesSearchResultBox).html($template);
+    this.$searchResultBox.html($template);
 
     this._showResultsDropdown();
   }
 
+  /**
+   * Empties cart rule search results block
+   *
+   * @private
+   */
   _clearSearchResults() {
-    $(createOrderMap.cartRulesSearchResultBox).empty();
+    this.$searchResultBox.empty();
   }
 
+  /**
+   * Displays cart rules search result dropdown
+   *
+   * @private
+   */
   _showResultsDropdown() {
-    $(createOrderMap.cartRulesSearchResultBox).removeClass('d-none');
+    this.$searchResultBox.removeClass('d-none');
   }
 
+  /**
+   * Hides cart rules search result dropdown
+   *
+   * @private
+   */
   _hideResultsDropdown() {
-    $(createOrderMap.cartRulesSearchResultBox).addClass('d-none');
+    this.$searchResultBox.addClass('d-none');
   }
 }

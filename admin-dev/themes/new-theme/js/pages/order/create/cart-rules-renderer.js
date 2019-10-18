@@ -35,6 +35,7 @@ export default class CartRulesRenderer {
     this.$cartRulesBlock = $(createOrderPageMap.cartRulesBlock);
     this.$cartRulesTable = $(createOrderPageMap.cartRulesTable);
   }
+
   /**
    * Responsible for rendering cartRules (a.k.a cart rules/discounts) block
    *
@@ -48,7 +49,6 @@ export default class CartRulesRenderer {
       return;
     }
     this._showCartRulesBlock();
-
 
     // do not render cart rules list when there are no cart rules
     if (cartRules.length === 0) {
