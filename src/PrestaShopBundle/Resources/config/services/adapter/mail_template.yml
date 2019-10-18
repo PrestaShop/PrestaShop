@@ -28,4 +28,4 @@ services:
       - '@prestashop.adapter.legacy.context'
       - '@prestashop.adapter.data_provider.employee'
       - "@prestashop.adapter.mail_template.partial_template_renderer"
-      - '@=service("prestashop.adapter.legacy.context").getContext().language.getLocale()'
+      - '@=service("prestashop.adapter.legacy.context").getContext().getCurrentLocale()'

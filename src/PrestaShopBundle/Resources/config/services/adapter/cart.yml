@@ -83,7 +83,7 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Cart\QueryHandler\GetCartForViewingHandler'
     arguments:
       - '@prestashop.adapter.image_manager'
-      - '@=service("prestashop.adapter.legacy.context").getContext().language.getLocale()'
+      - '@=service("prestashop.adapter.legacy.context").getContext().getCurrentLocale()'
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForViewing'
