@@ -160,7 +160,7 @@ describe('Filter And Quick Edit Categories', async () => {
       await this.pageObjects.categoriesPage.filterCategories(
         'select',
         'active',
-        Categories.art.displayed ? 'Yes' : 'No',
+        Categories.art.displayed,
       );
       const numberOfCategoriesAfterFilter = await this.pageObjects.categoriesPage.getNumberFromText(
         this.pageObjects.categoriesPage.categoryGridTitle);
