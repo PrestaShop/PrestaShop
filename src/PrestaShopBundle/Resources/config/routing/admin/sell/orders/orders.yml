@@ -5,6 +5,13 @@ admin_orders_index:
     _controller: PrestaShopBundle:Admin/Sell/Order/Order:index
     _legacy_controller: AdminOrders
 
+admin_orders_create:
+  path: /new
+  methods: [GET, POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Sell\Order\Order:create
+    _legacy_controller: AdminOrders
+
 admin_orders_search:
   path: /
   methods: [POST]
@@ -43,3 +50,88 @@ admin_orders_export:
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Order/Order:export
     _legacy_controller: AdminOrders
+
+admin_orders_view:
+  path: /{orderId}/view
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:view
+
+admin_orders_add_cart_rule:
+  path: /{orderId}/cart-rules
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:addCartRule
+  requirements:
+    orderId: \d+
+
+admin_orders_list_update_status:
+  path: /list/{orderId}/status
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:updateStatusFromList
+    _legacy_controller: AdminOrders
+  requirements:
+    orderId: \d+
+
+admin_orders_update_status:
+  path: /{orderId}/status
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:updateStatus
+    _legacy_controller: AdminOrders
+  requirements:
+    orderId: \d+
+
+admin_orders_add_payment:
+  path: /{orderId}/payment
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:addPayment
+  requirements:
+    orderId: \d+
+
+admin_orders_duplicate_cart:
+  path: /{orderId}/duplicate-cart
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:duplicateOrderCart
+  requirements:
+    orderId: \d+
+  options:
+    expose: true
+
+admin_orders_change_currency:
+  path: /{orderId}/currency/change
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:changeCurrency
+  requirements:
+    orderId: \d+
+
+admin_orders_update_product:
+  path: /{orderId}/products/{orderDetailId}
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:updateProduct
+  requirements:
+    orderId: \d+
+    orderDetailId: \d+
+
+admin_orders_remove_cart_rule:
+  path: /{orderId}/cart-rules/{orderCartRuleId}/delete
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:removeCartRule
+  requirements:
+    orderId: \d+
+    orderCartRuleId: \d+
+
+admin_orders_resend_email:
+  path: /{orderId}/history/{orderHistoryId}/statuses/{orderStatusId}/resend-email
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:resendEmail
+  requirements:
+    orderId: \d+
+    orderHistoryId: \d+
+    orderStatusId: \d+

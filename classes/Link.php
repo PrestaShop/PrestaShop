@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -656,7 +656,7 @@ class LinkCore
      * @param string $module Module name
      * @param string $controller
      * @param array $params
-     * @param null $ssl
+     * @param bool|null $ssl
      * @param int $idLang
      * @param null $idShop
      * @param bool $relativeProtocol

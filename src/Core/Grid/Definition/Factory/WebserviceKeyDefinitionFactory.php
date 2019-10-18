@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -150,6 +150,7 @@ final class WebserviceKeyDefinitionFactory extends AbstractGridDefinitionFactory
                                 'route' => 'admin_webservice_keys_edit',
                                 'route_param_name' => 'webserviceKeyId',
                                 'route_param_field' => 'id_webservice_account',
+                                'clickable_row' => true,
                             ])
                         )
                         ->add(

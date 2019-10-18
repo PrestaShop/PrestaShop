@@ -1,5 +1,5 @@
 {**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -28,7 +28,7 @@
 	// At the loading
 	($("input[name='is_free']:checked").val() == 0) ? $('#shipping_costs_div').show('toggle'): $('#shipping_costs_div').hide();
 
-	$("input[name='is_free']").live('change', function() {ldelim}
+	$(document).on('change', "input[name='is_free']", function() {ldelim}
 		($("input[name='is_free']:checked").val() == 0) ? $('#shipping_costs_div').show('toggle'): $('#shipping_costs_div').hide();
 	{rdelim});
 {/block}

@@ -1,4 +1,5 @@
-const BOBasePage = require('../BO/BObasePage');
+require('module-alias/register');
+const BOBasePage = require('@pages/BO/BObasePage');
 
 module.exports = class Login extends BOBasePage {
   constructor(page) {
@@ -24,7 +25,9 @@ module.exports = class Login extends BOBasePage {
   async login(email, passwd) {
     await this.page.type(this.emailInput, email);
     await this.page.type(this.passwordInput, passwd);
-    await this.page.click(this.submitLoginButton);
-    await this.page.waitForNavigation();
+    await Promise.all([
+      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
+      this.page.click(this.submitLoginButton),
+    ]);
   }
 };

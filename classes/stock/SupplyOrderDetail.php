@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -75,6 +75,11 @@ class SupplyOrderDetailCore extends ObjectModel
      * @var string UPC
      */
     public $upc;
+
+    /**
+     * @var string MPN
+     */
+    public $mpn;
 
     /**
      * @var int Currency used to buy this particular product
@@ -164,6 +169,7 @@ class SupplyOrderDetailCore extends ObjectModel
             'ean13' => array('type' => self::TYPE_STRING, 'validate' => 'isEan13'),
             'isbn' => array('type' => self::TYPE_STRING, 'validate' => 'isIsbn'),
             'upc' => array('type' => self::TYPE_STRING, 'validate' => 'isUpc'),
+            'mpn' => array('type' => self::TYPE_STRING, 'validate' => 'isMpn'),
             'id_currency' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
             'exchange_rate' => array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true),
             'unit_price_te' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),

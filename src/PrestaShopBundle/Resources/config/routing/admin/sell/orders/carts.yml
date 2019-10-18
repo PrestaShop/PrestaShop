@@ -13,3 +13,56 @@ admin_carts_view:
     _legacy_controller: AdminCarts
   requirements:
     cartId: \d+
+
+admin_carts_info:
+  path: /{cartId}/info
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Cart:getInfo
+    _legacy_controller: AdminCarts
+  requirements:
+    cartId: \d+
+  options:
+    expose: true
+
+admin_carts_create:
+  path: /new
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Cart:create
+    _legacy_controller: AdminCarts
+  options:
+    expose: true
+
+admin_carts_edit_addresses:
+  path: /{cartId}/addresses
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Cart:editAddresses
+    _legacy_controller: AdminCarts
+  requirements:
+    cartId: \d+
+  options:
+    expose: true
+
+admin_carts_edit_carrier:
+  path: /{cartId}/carrier
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Cart:editCarrier
+    _legacy_controller: AdminCarts
+  requirements:
+    cartId: \d+
+  options:
+    expose: true
+
+admin_carts_set_free_shipping:
+  path: /{cartId}/rules/free-shipping
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Cart:setFreeShipping
+    _legacy_controller: AdminCarts
+  requirements:
+    cartId: \d+
+  options:
+    expose: true

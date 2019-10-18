@@ -70,10 +70,6 @@ npm-debug.log.*
 /vendor/*
 /docs/phpdoc-sf/
 /composer.lock
-/tests/Selenium/errorShots/
-!/tests/Selenium/errorShots/.gitkeep
-/tests/Selenium/errorDumps/
-!/tests/Selenium/errorDumps/.gitkeep
 *.hot-update.js
 *.hot-update.json
 
@@ -97,6 +93,18 @@ tests-legacy/resources/modules/referralprogram/
 !/admin-dev/export/.htaccess
 !/admin-dev/export/index.php
 
+# Downloaded RTL files
+/admin-dev/themes/default/css/bundle/default_rtl.css
+/admin-dev/themes/default/css/bundle/shared_rtl.css
+/admin-dev/themes/default/css/font_rtl.css
+/admin-dev/themes/default/css/overrides_rtl.css
+/admin-dev/themes/default/css/vendor/font-awesome/font-awesome_rtl.css
+/admin-dev/themes/default/css/vendor/nv.d3_rtl.css
+/admin-dev/themes/default/css/vendor/titatoggle-min_rtl.css
+/admin-dev/themes/default/public/theme_rtl.css
+/admin-dev/themes/new-theme/css/module/drop_rtl.css
+/admin-dev/themes/new-theme/css/right-sidebar_rtl.css
+
 themes/*/cache/*
 
 # Config
@@ -106,7 +114,6 @@ config/settings.old.php
 config/xml/*
 config/themes/*
 !config/xml/themes/default.xml
-tests/Selenium/settings.js
 themes/*/config/settings_*.json
 app/config/parameters.old.yml
 app/config/config.php

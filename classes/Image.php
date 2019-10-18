@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -207,12 +207,14 @@ class ImageCore extends ObjectModel
      * @param int $idLang Language ID
      * @param int $idProduct Product ID
      * @param int $idProductAttribute Product Attribute ID
+     * @param int $idShop Shop ID
      *
      * @return array Images
      */
-    public static function getImages($idLang, $idProduct, $idProductAttribute = null)
+    public static function getImages($idLang, $idProduct, $idProductAttribute = null, $idShop = null)
     {
         $attributeFilter = ($idProductAttribute ? ' AND ai.`id_product_attribute` = ' . (int) $idProductAttribute : '');
+        $shopFilter = ($idShop ? ' AND ims.`id_shop` = ' . (int) $idShop : '');
         $sql = 'SELECT *
 			FROM `' . _DB_PREFIX_ . 'image` i
 			LEFT JOIN `' . _DB_PREFIX_ . 'image_lang` il ON (i.`id_image` = il.`id_image`)';
@@ -221,7 +223,11 @@ class ImageCore extends ObjectModel
             $sql .= ' LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute_image` ai ON (i.`id_image` = ai.`id_image`)';
         }
 
-        $sql .= ' WHERE i.`id_product` = ' . (int) $idProduct . ' AND il.`id_lang` = ' . (int) $idLang . $attributeFilter . '
+        if ($idShop) {
+            $sql .= ' LEFT JOIN `' . _DB_PREFIX_ . 'image_shop` ims ON (i.`id_image` = ims.`id_image`)';
+        }
+
+        $sql .= ' WHERE i.`id_product` = ' . (int) $idProduct . ' AND il.`id_lang` = ' . (int) $idLang . $attributeFilter . $shopFilter . '
 			ORDER BY i.`position` ASC';
 
         return Db::getInstance()->executeS($sql);

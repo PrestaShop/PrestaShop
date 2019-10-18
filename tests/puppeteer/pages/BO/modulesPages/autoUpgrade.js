@@ -1,7 +1,6 @@
-// Using chai
-const {expect} = require('chai');
+require('module-alias/register');
 // Using BOBasePage
-const BOBasePage = require('../../BO/BObasePage');
+const BOBasePage = require('@pages/BO/BObasePage');
 
 module.exports = class autoUpgrade extends BOBasePage {
   constructor(page) {
@@ -50,7 +49,7 @@ module.exports = class autoUpgrade extends BOBasePage {
    * Upgrade Prestashop
    * And check successful message and that all steps are passed
    * @param upgradeChannelValue, value to select
-   * @return {Promise<void>}
+   * @return {Promise<*>}
    */
   async upgradePrestashop(upgradeChannelValue) {
     await this.chooseUpgradeChannel(upgradeChannelValue);
@@ -63,6 +62,6 @@ module.exports = class autoUpgrade extends BOBasePage {
     });
     await this.page.click(this.upgradePrestashopNowButton);
     await this.page.waitForSelector(this.upgradeResultMessageBloc, {visible: true, timeout: 300000});
-    await expect(this.actualStepsDoneForUpgradeTable).to.include.members(this.expectedStepsDoneForUpgradeTable);
+    return this.actualStepsDoneForUpgradeTable;
   }
 };

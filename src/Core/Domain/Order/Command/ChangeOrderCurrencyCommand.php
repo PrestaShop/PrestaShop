@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -50,8 +50,8 @@ class ChangeOrderCurrencyCommand
      */
     public function __construct($orderId, $newCurrencyId)
     {
-        $this->orderId = $orderId;
-        $this->newCurrencyId = $newCurrencyId;
+        $this->orderId = new OrderId($orderId);
+        $this->newCurrencyId = new CurrencyId($newCurrencyId);
     }
 
     /**

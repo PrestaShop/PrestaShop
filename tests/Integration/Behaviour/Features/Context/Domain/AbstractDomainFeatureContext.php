@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -30,6 +30,7 @@ use Behat\Behat\Context\Context;
 use Behat\Testwork\Hook\Scope\BeforeSuiteScope;
 use ObjectModel;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use Psr\Container\ContainerInterface;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
@@ -40,6 +41,11 @@ abstract class AbstractDomainFeatureContext implements Context
      * @var \Exception|null
      */
     protected $lastException;
+
+    /**
+     * @var int
+     */
+    protected $lastErrorCode;
 
     /**
      * @BeforeSuite
@@ -74,16 +80,29 @@ abstract class AbstractDomainFeatureContext implements Context
         return SharedStorage::getStorage();
     }
 
+    protected function getContainer(): ContainerInterface
+    {
+        return CommonFeatureContext::getContainer();
+    }
+
     /**
      * @param string $expectedError
+     * @param int|null $errorCode
      */
-    protected function assertLastErrorIs($expectedError)
+    protected function assertLastErrorIs($expectedError, $errorCode = null)
     {
         if (!$this->lastException instanceof $expectedError) {
             throw new RuntimeException(sprintf(
                 'Last error should be "%s", but got "%s"',
                 $expectedError,
                 $this->lastException ? get_class($this->lastException) : 'null'
+            ));
+        }
+        if (null !== $errorCode && $this->lastException->getCode() !== $errorCode) {
+            throw new RuntimeException(sprintf(
+                'Last error should have code "%s", but has "%s"',
+                $errorCode,
+                $this->lastException ? $this->lastException->getCode() : 'null'
             ));
         }
     }

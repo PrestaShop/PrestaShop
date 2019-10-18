@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -157,6 +157,7 @@ final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
                                 'route' => 'admin_languages_edit',
                                 'route_param_name' => 'languageId',
                                 'route_param_field' => 'id_lang',
+                                'clickable_row' => true,
                             ])
                         )
                         ->add(

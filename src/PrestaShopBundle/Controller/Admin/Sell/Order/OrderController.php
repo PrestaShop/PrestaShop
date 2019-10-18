@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -27,18 +27,40 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddCartRuleToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\BulkChangeOrderStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\DuplicateOrderCartCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderCurrencyCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\DeleteCartRuleFromOrderCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\ResendOrderEmailCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotEditDeliveredOrderProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\ChangeOrderStatusException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderEmailResendException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Payment\Command\AddPaymentCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\UpdateProductInOrderCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\OrderFilters;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Form\Admin\Sell\Customer\PrivateNoteType;
+use PrestaShopBundle\Form\Admin\Sell\Order\AddOrderCartRuleType;
+use PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrderCurrencyType;
+use PrestaShopBundle\Form\Admin\Sell\Order\AddProductToOrderType;
 use PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrdersStatusType;
+use PrestaShopBundle\Form\Admin\Sell\Order\OrderPaymentType;
+use PrestaShopBundle\Form\Admin\Sell\Order\UpdateProductInOrderType;
+use PrestaShopBundle\Form\Admin\Sell\Order\UpdateOrderStatusType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Service\Grid\ResponseBuilder;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -75,6 +97,15 @@ class OrderController extends FrameworkBundleAdminController
                 'orderKpi' => $orderKpiFactory->build(),
             ]
         );
+    }
+
+    //@todo: wip
+    public function createAction()
+    {
+        return $this->render('@PrestaShop/Admin/Sell/Order/Order/create.html.twig', [
+            'currencies' => \Currency::getCurrenciesByIdShop(\Context::getContext()->shop->id),
+            'languages' => \Language::getLanguages(true, \Context::getContext()->shop->id),
+        ]);
     }
 
     /**
@@ -215,6 +246,311 @@ class OrderController extends FrameworkBundleAdminController
             ->setFileName('order_' . date('Y-m-d_His') . '.csv');
     }
 
+    public function viewAction(int $orderId): Response
+    {
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+
+        $addOrderCartRuleForm = $this->createForm(AddOrderCartRuleType::class, [], [
+            'order_id' => $orderId,
+        ]);
+        $updateOrderStatusForm = $this->createForm(UpdateOrderStatusType::class, [
+            'new_order_status_id' => $orderForViewing->getHistory()->getCurrentOrderStatusId(),
+        ]);
+        $updateOrderStatusActionBarForm = $this->createForm(UpdateOrderStatusType::class, [
+            'new_order_status_id' => $orderForViewing->getHistory()->getCurrentOrderStatusId(),
+        ]);
+        $addOrderPaymentForm = $this->createForm(OrderPaymentType::class, [
+            'id_currency' => $orderForViewing->getCurrencyId(),
+        ], [
+            'id_order' => $orderId,
+        ]);
+
+        $changeOrderCurrencyForm = $this->createForm(ChangeOrderCurrencyType::class, [], [
+            'current_currency_id' => $orderForViewing->getCurrencyId(),
+        ]);
+        $privateNoteForm = $this->createForm(PrivateNoteType::class, [
+            'note' => $orderForViewing->getCustomer()->getPrivateNote(),
+        ]);
+        $addProductToOrderForm = $this->createForm(AddProductToOrderType::class);
+        $updateOrderProductForm = $this->createForm(UpdateProductInOrderType::class);
+
+        return $this->render('@PrestaShop/Admin/Sell/Order/Order/view.html.twig', [
+            'showContentHeader' => false,
+            'orderForViewing' => $orderForViewing,
+            'addOrderCartRuleForm' => $addOrderCartRuleForm->createView(),
+            'updateOrderStatusForm' => $updateOrderStatusForm->createView(),
+            'updateOrderStatusActionBarForm' => $updateOrderStatusActionBarForm->createView(),
+            'addOrderPaymentForm' => $addOrderPaymentForm->createView(),
+            'changeOrderCurrencyForm' => $changeOrderCurrencyForm->createView(),
+            'privateNoteForm' => $privateNoteForm->createView(),
+            'addProductToOrderForm' => $addProductToOrderForm->createView(),
+            'updateOrderProductForm' => $updateOrderProductForm->createView(),
+        ]);
+    }
+
+    /**
+     * @param int $orderId
+     * @param int $orderCartRuleId
+     *
+     * @return RedirectResponse
+     */
+    public function removeCartRuleAction(int $orderId, int $orderCartRuleId): RedirectResponse
+    {
+        $this->getCommandBus()->handle(
+            new DeleteCartRuleFromOrderCommand($orderId, $orderCartRuleId)
+        );
+
+        $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+
+        return $this->redirectToRoute('admin_orders_view', [
+            'orderId' => $orderId,
+        ]);
+    }
+
+    public function updateProductAction(int $orderId, int $orderDetailId, Request $request): RedirectResponse
+    {
+        $updateOrderProductForm = $this->createForm(UpdateProductInOrderType::class);
+        $updateOrderProductForm->handleRequest($request);
+
+        if ($updateOrderProductForm->isSubmitted() && $updateOrderProductForm->isValid()) {
+            $data = $updateOrderProductForm->getData();
+
+            $this->getCommandBus()->handle(
+                new UpdateProductInOrderCommand(
+                    $orderId,
+                    $orderDetailId,
+                    $data['price_tax_excl'],
+                    $data['price_tax_incl'],
+                    $data['quantity']
+                )
+            );
+
+            $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+        }
+
+        return $this->redirectToRoute('admin_orders_view', [
+            'orderId' => $orderId,
+        ]);
+    }
+
+    /**
+     * @param int $orderId
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function addCartRuleAction(int $orderId, Request $request): RedirectResponse
+    {
+        $addOrderCartRuleForm = $this->createForm(AddOrderCartRuleType::class, [], [
+            'order_id' => $orderId,
+        ]);
+        $addOrderCartRuleForm->handleRequest($request);
+
+        if ($addOrderCartRuleForm->isSubmitted()) {
+            if ($addOrderCartRuleForm->isValid()) {
+                $data = $addOrderCartRuleForm->getData();
+
+                $invoiceId = $data['apply_on_all_invoices'] ? null : (int) $data['invoice_id'];
+
+                $this->getCommandBus()->handle(
+                    new AddCartRuleToOrderCommand(
+                        $orderId,
+                        $data['name'],
+                        $data['type'],
+                        $data['value'] ?? null,
+                        $invoiceId
+                    )
+                );
+
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+            } else {
+                foreach ($addOrderCartRuleForm->getErrors(true) as $error) {
+                    $this->addFlash('error', $error->getMessage());
+                }
+            }
+        }
+
+        return $this->redirectToRoute('admin_orders_view', [
+            'orderId' => $orderId,
+        ]);
+    }
+
+    /**
+     * @param int $orderId
+     * @param Request $request
+     *
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
+     *
+     * @return RedirectResponse
+     */
+    public function updateStatusAction(int $orderId, Request $request): RedirectResponse
+    {
+        $form = $this->createForm(UpdateOrderStatusType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->handleOrderStatusUpdate($orderId, (int) $form->getData()['new_order_status_id']);
+        }
+
+        return $this->redirectToRoute('admin_orders_view', [
+            'orderId' => $orderId,
+        ]);
+    }
+
+    /**
+     * Updates order status directly from list page.
+     *
+     * @param int $orderId
+     * @param Request $request
+     *
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
+     *
+     * @return RedirectResponse
+     */
+    public function updateStatusFromListAction(int $orderId, Request $request): RedirectResponse
+    {
+        $this->handleOrderStatusUpdate($orderId, $request->request->getInt('value'));
+
+        return $this->redirectToRoute('admin_orders_index');
+    }
+
+    /**
+     * @param int $orderId
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function addPaymentAction(int $orderId, Request $request): RedirectResponse
+    {
+        $form = $this->createForm(OrderPaymentType::class, [], [
+            'id_order' => $orderId,
+        ]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+
+            try {
+                $this->getCommandBus()->handle(
+                    new AddPaymentCommand(
+                        $orderId,
+                        $data['date'],
+                        $data['payment_method'],
+                        $data['amount'],
+                        $data['id_currency'],
+                        $data['id_invoice'],
+                        $data['transaction_id']
+                    )
+                );
+
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+            } catch (Exception $e) {
+                $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+            }
+        }
+
+        return $this->redirectToRoute('admin_orders_view', [
+            'orderId' => $orderId,
+        ]);
+    }
+
+    /**
+     * Duplicates cart from specified order
+     *
+     * @param int $orderId
+     *
+     * @return JsonResponse
+     *
+     * @throws CartConstraintException
+     */
+    public function duplicateOrderCartAction(int $orderId)
+    {
+        $cartId = $this->getCommandBus()->handle(new DuplicateOrderCartCommand($orderId))->getValue();
+
+        return $this->json(
+            $this->getQueryBus()->handle(new GetCartInformation($cartId))
+        );
+    }
+
+    /**
+     * Initializes order status update
+     *
+     * @param int $orderId
+     * @param int $orderStatusId
+     */
+    private function handleOrderStatusUpdate(int $orderId, int $orderStatusId): void
+    {
+        try {
+            $this->getCommandBus()->handle(
+                new UpdateOrderStatusCommand(
+                    $orderId,
+                    $orderStatusId
+                )
+            );
+
+            $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+        } catch (ChangeOrderStatusException $e) {
+            $this->handleChangeOrderStatusException($e);
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+    }
+
+    /**
+     * @param int $orderId
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function changeCurrencyAction(int $orderId, Request $request): RedirectResponse
+    {
+        $changeOrderCurrencyForm = $this->createForm(ChangeOrderCurrencyType::class);
+        $changeOrderCurrencyForm->handleRequest($request);
+
+        if (!$changeOrderCurrencyForm->isSubmitted() || !$changeOrderCurrencyForm->isValid()) {
+            return $this->redirectToRoute('admin_orders_view', [
+                'orderId' => $orderId,
+            ]);
+        }
+
+        $data = $changeOrderCurrencyForm->getData();
+
+        try {
+            $this->getCommandBus()->handle(
+                new ChangeOrderCurrencyCommand($orderId, (int) $data['new_currency_id'])
+            );
+
+            $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirectToRoute('admin_orders_view', [
+            'orderId' => $orderId,
+        ]);
+    }
+
+    public function resendEmailAction(int $orderId, int $orderStatusId, int $orderHistoryId): RedirectResponse
+    {
+        try {
+            $this->getCommandBus()->handle(
+                new ResendOrderEmailCommand($orderId, $orderStatusId, $orderHistoryId)
+            );
+
+            $this->addFlash(
+                'success',
+                $this->trans('The message was successfully sent to the customer.', 'Admin.Orderscustomers.Notification')
+            );
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirectToRoute('admin_orders_view', [
+            'orderId' => $orderId,
+        ]);
+    }
+
     /**
      * @param OrderException $e
      *
@@ -223,12 +559,17 @@ class OrderController extends FrameworkBundleAdminController
     private function getErrorMessages(OrderException $e)
     {
         return [
+            CannotEditDeliveredOrderProductException::class => $this->trans('You cannot edit the cart once the order delivered', 'Admin.Orderscustomers.Notification'),
             OrderNotFoundException::class => $e instanceof OrderNotFoundException ?
                 $this->trans(
                     'Order #%d cannot be loaded',
                     'Admin.Orderscustomers.Notification',
                     ['#%d' => $e->getOrderId()->getValue()]
                 ) : '',
+            OrderEmailResendException::class => $this->trans(
+                'An error occurred while sending the e-mail to the customer.',
+                'Admin.Orderscustomers.Notification'
+            ),
         ];
     }
 

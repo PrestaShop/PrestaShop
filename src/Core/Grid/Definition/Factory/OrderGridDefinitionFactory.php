@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\ModalFormSubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\AccessibilityCheckerInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\LinkGridAction;
@@ -40,11 +41,10 @@ use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\BooleanColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ChoiceColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DateTimeColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\LinkGroupColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\OrderPriceColumn;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\ColorColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
@@ -80,10 +80,25 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
      * @var string
      */
     private $contextDateFormat;
+
     /**
      * @var FeatureInterface
      */
     private $multistoreFeature;
+    /**
+     * @var FormChoiceProviderInterface
+     */
+    private $orderStatesChoiceProvider;
+
+    /**
+     * @var AccessibilityCheckerInterface
+     */
+    private $printInvoiceAccessibilityChecker;
+
+    /**
+     * @var AccessibilityCheckerInterface
+     */
+    private $printDeliverySlipAccessibilityChecker;
 
     /**
      * @param HookDispatcherInterface $dispatcher
@@ -92,6 +107,9 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
      * @param FormChoiceProviderInterface $orderStatusesChoiceProvider
      * @param string $contextDateFormat
      * @param FeatureInterface $multistoreFeature
+     * @param AccessibilityCheckerInterface $printInvoiceAccessibilityChecker
+     * @param AccessibilityCheckerInterface $printDeliverySlipAccessibilityChecker
+     * @param FormChoiceProviderInterface $orderStatesChoiceProvider
      */
     public function __construct(
         HookDispatcherInterface $dispatcher,
@@ -99,7 +117,10 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
         FormChoiceProviderInterface $orderCountriesChoiceProvider,
         FormChoiceProviderInterface $orderStatusesChoiceProvider,
         $contextDateFormat,
-        FeatureInterface $multistoreFeature
+        FeatureInterface $multistoreFeature,
+        AccessibilityCheckerInterface $printInvoiceAccessibilityChecker,
+        AccessibilityCheckerInterface $printDeliverySlipAccessibilityChecker,
+        FormChoiceProviderInterface $orderStatesChoiceProvider
     ) {
         parent::__construct($dispatcher);
 
@@ -108,6 +129,9 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
         $this->orderStatusesChoiceProvider = $orderStatusesChoiceProvider;
         $this->contextDateFormat = $contextDateFormat;
         $this->multistoreFeature = $multistoreFeature;
+        $this->printInvoiceAccessibilityChecker = $printInvoiceAccessibilityChecker;
+        $this->printDeliverySlipAccessibilityChecker = $printDeliverySlipAccessibilityChecker;
+        $this->orderStatesChoiceProvider = $orderStatesChoiceProvider;
     }
 
     /**
@@ -177,11 +201,16 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'field' => 'payment',
                 ])
             )
-            ->add((new ColorColumn('osname'))
+            ->add((new ChoiceColumn('osname'))
                 ->setName($this->trans('Status', [], 'Admin.Global'))
                 ->setOptions([
-                    'field' => 'osname',
+                    'field' => 'current_state',
+                    'route' => 'admin_orders_list_update_status',
                     'color_field' => 'color',
+                    'choice_provider' => $this->orderStatesChoiceProvider,
+                    'record_route_params' => [
+                        'id_order' => 'orderId',
+                    ],
                 ])
             )
             ->add((new DateTimeColumn('date_add'))
@@ -189,27 +218,6 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setOptions([
                     'field' => 'date_add',
                     'format' => $this->contextDateFormat,
-                ])
-            )
-            ->add((new LinkGroupColumn('pdf'))
-                ->setName($this->trans('PDF', [], 'Admin.Global'))
-                ->setOptions([
-                        'links' => [
-                            [
-                                'icon' => 'picture_as_pdf',
-                                'is_link_available_field' => 'is_invoice_available',
-                                'route' => 'admin_orders_generate_invoice_pdf',
-                                'route_param_name' => 'orderId',
-                                'route_param_field' => 'id_order',
-                            ],
-                            [
-                                'icon' => 'local_shipping',
-                                'is_link_available_field' => 'delivery_number',
-                                'route' => 'admin_orders_generate_delivery_slip_pdf',
-                                'route_param_name' => 'orderId',
-                                'route_param_field' => 'id_order',
-                            ],
-                        ],
                 ])
             )
             ->add((new ActionColumn('actions'))
@@ -413,9 +421,33 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
     /**
      * @return RowActionCollection
      */
-    private function getRowActions()
+    private function getRowActions(): RowActionCollection
     {
         return (new RowActionCollection())
+            ->add(
+                (new LinkRowAction('print_invoice'))
+                    ->setName($this->trans('View invoice', [], 'Admin.Orderscustomers.Feature'))
+                    ->setIcon('receipt')
+                    ->setOptions([
+                        'accessibility_checker' => $this->printInvoiceAccessibilityChecker,
+                        'route' => 'admin_orders_generate_invoice_pdf',
+                        'route_param_name' => 'orderId',
+                        'route_param_field' => 'id_order',
+                        'use_inline_display' => true,
+                    ])
+            )
+            ->add(
+                (new LinkRowAction('print_delivery_slip'))
+                    ->setName($this->trans('View delivery slip', [], 'Admin.Orderscustomers.Feature'))
+                    ->setIcon('local_shipping')
+                    ->setOptions([
+                        'accessibility_checker' => $this->printDeliverySlipAccessibilityChecker,
+                        'route' => 'admin_orders_generate_delivery_slip_pdf',
+                        'route_param_name' => 'orderId',
+                        'route_param_field' => 'id_order',
+                        'use_inline_display' => true,
+                    ])
+            )
             ->add(
                 (new LinkRowAction('view'))
                     ->setName($this->trans('View', [], 'Admin.Actions'))
@@ -424,6 +456,7 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'route' => 'admin_orders_index',
                         'route_param_name' => 'id_order',
                         'route_param_field' => 'id_order',
+                        'use_inline_display' => true,
                     ])
             )
         ;

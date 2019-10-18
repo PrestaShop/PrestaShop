@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -69,6 +69,15 @@ class CustomerNameValidatorTest extends ConstraintValidatorTestCase
         return [
             ['.'], ['。'],
         ];
+    }
+
+    public function testIfFailsWhenInputIsOnlyBlank()
+    {
+        $this->validator->validate(' ', new CustomerName());
+
+        $this->buildViolation((new CustomerName())->message)
+            ->assertRaised()
+        ;
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -322,16 +322,6 @@ class Number implements NumberInterface
         ) {
             throw new LocalizationException('Invalid secondaryGroupSize');
         }
-    }
-
-    /**
-     * @deprecated https://github.com/PrestaShop/PrestaShop/issues/13168
-     *
-     * @param int $maxFractionDigits
-     */
-    public function setMaxFractionDigits($maxFractionDigits)
-    {
-        $this->maxFractionDigits = $maxFractionDigits;
     }
 
     /**

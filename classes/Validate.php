@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -166,7 +166,7 @@ class ValidateCore
      *
      * @param string $name Name to validate
      *
-     * @return int 1 if given input is a name, 0 else
+     * @return bool
      */
     public static function isCustomerName($name)
     {
@@ -187,7 +187,7 @@ class ValidateCore
      *
      * @param string $name Name to validate
      *
-     * @return int 1 if given input is a name, 0 else
+     * @return bool
      */
     public static function isName($name)
     {
@@ -638,7 +638,7 @@ class ValidateCore
             return false;
         }
 
-        return $d->getTimestamp() <= time();
+        return $d->setTime(0, 0, 0)->getTimestamp() <= time();
     }
 
     /**
@@ -699,6 +699,18 @@ class ValidateCore
     public static function isUpc($upc)
     {
         return !$upc || preg_match('/^[0-9]{0,12}$/', $upc);
+    }
+
+    /**
+     * Check for MPN validity.
+     *
+     * @param string $mpn to validate
+     *
+     * @return bool Validity is ok or not
+     */
+    public static function isMpn($mpn)
+    {
+        return Tools::strlen($mpn) <= 40;
     }
 
     /**

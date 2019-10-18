@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -1395,6 +1395,22 @@ function ajaxStates(id_state_selected)
       }
     });
   }
+}
+
+function dniRequired() {
+  $.ajax({
+    url: 'index.php',
+    dataType: 'json',
+    cache: false,
+    data: 'token=' + address_token + '&ajax=1&dni_required=1&tab=AdminAddresses&id_country=' + $('#id_country').val(),
+    success: function(resp) {
+      if (resp && resp.dni_required) {
+        $("#dni_required").fadeIn();
+      } else {
+        $("#dni_required").fadeOut();
+      }
+    }
+  });
 }
 
 function check_for_all_accesses(tabsize, tabnumber)

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -128,7 +128,6 @@ class ControllerTest extends TestCase
             array('AdminAttributesGroupsController'),
             array('AdminNotFoundController'),
             array('AdminFeaturesController'),
-            array('AdminOrderMessageController'),
             array('AdminSearchEnginesController'),
             array('AdminGendersController'),
             array('AdminTagsController'),

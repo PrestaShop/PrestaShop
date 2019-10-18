@@ -1,8 +1,15 @@
-const CommonPage = require('../commonPage');
+require('module-alias/register');
+const CommonPage = require('@pages/commonPage');
 
 module.exports = class BOBasePage extends CommonPage {
   constructor(page) {
     super(page);
+
+    // Successful Messages
+    this.successfulCreationMessage = 'Successful creation.';
+    this.successfulUpdateMessage = 'Successful update.';
+    this.successfulDeleteMessage = 'Successful deletion.';
+    this.successfulMultiDeleteMessage = 'The selection has been successfully deleted.';
 
     // top navbar
     this.headerLogoImage = '#header_logo';
@@ -27,6 +34,10 @@ module.exports = class BOBasePage extends CommonPage {
     this.moduleCatalogueLink = '#subtab-AdminParentModulesCatalog';
     this.moduleManagerLink = '#subtab-AdminModulesSf';
 
+    // International
+    this.internationalParentLink = '#subtab-AdminInternational';
+    this.taxesLink = '#subtab-AdminParentTaxes';
+
     // Shop Parameters
     this.shopParametersParentLink = '#subtab-ShopParameters';
     this.shopParametersGeneralLink = '#subtab-AdminParentPreferences';
@@ -39,7 +50,17 @@ module.exports = class BOBasePage extends CommonPage {
     this.growlMessageBloc = '#growls .growl-message';
 
     // Alert Text
-    this.alertSuccessBloc = 'div.alert.alert-success';
+    this.alertSuccessBloc = 'div.alert.alert-success:not([style=\'display: none;\'])';
+    this.alertSuccessBlockParagraph = `${this.alertSuccessBloc} div.alert-text p`;
+
+    // Modal dialog
+    this.modalDialog = '#confirmation_modal.show .modal-dialog';
+    this.modalDialogYesButton = `${this.modalDialog} button.continue`;
+    this.modalDialogNoButton = `${this.modalDialog} button.cancel`;
+
+    // Symfony Toolbar
+    this.sfToolbarMainContentDiv = 'div[id*=\'sfToolbarMainContent\']';
+    this.sfCloseToolbarLink = 'a[id*=\'sfToolbarHideButton\']';
   }
 
   /*
@@ -92,7 +113,27 @@ module.exports = class BOBasePage extends CommonPage {
    * @return FOPage, page opened
    */
   async viewMyShop() {
-    const FOPage = await this.openLinkWithTargetBlank(this.page, this.headerShopNameLink);
-    return FOPage;
+    return this.openLinkWithTargetBlank(this.page, this.headerShopNameLink, false);
+  }
+
+  /**
+   * Set value on tinyMce textareas
+   * @param iFrameSelector
+   * @param value
+   * @return {Promise<void>}
+   */
+  async setValueOnTinymceInput(iFrameSelector, value) {
+    await this.page.click(iFrameSelector, {clickCount: 3});
+    await this.page.keyboard.type(value);
+  }
+
+  /**
+   * Close symfony Toolbar
+   * @return {Promise<void>}
+   */
+  async closeSfToolBar() {
+    if (await this.elementVisible(`${this.sfToolbarMainContentDiv}[style='display: block;']`, 1000)) {
+      await this.page.click(this.sfCloseToolbarLink);
+    }
   }
 };

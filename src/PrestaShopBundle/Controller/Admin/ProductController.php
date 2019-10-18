@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -453,8 +453,6 @@ class ProductController extends FrameworkBundleAdminController
                 'iso_code' => $this
                     ->get('prestashop.adapter.legacy.context')
                     ->getContext()->currency->iso_code,
-                'price_display_precision' => $this->configuration
-                    ->get('_PS_PRICE_DISPLAY_PRECISION_'),
             ]
         );
 

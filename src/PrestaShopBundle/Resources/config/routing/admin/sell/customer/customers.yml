@@ -161,3 +161,29 @@ admin_customers_search:
     _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:search
     _legacy_controller: AdminCustomers
     _legacy_link: AdminCustomers:searchCustomers
+  options:
+    expose: true
+
+admin_customers_carts:
+  path: /{customerId}/carts
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:getCarts
+    _legacy_controller: AdminCustomers
+    _legacy_link: AdminCustomers
+  requirements:
+    customerId: \d+
+  options:
+    expose: true
+
+admin_customers_orders:
+  path: /{customerId}/orders
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Customer/Customer:getOrders
+    _legacy_controller: AdminCustomers
+    _legacy_link: AdminCustomers
+  requirements:
+    customerId: \d+
+  options:
+    expose: true

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -98,6 +98,7 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
         $qb = $this
             ->getBaseQueryBuilder($searchCriteria->getFilters())
             ->addSelect('o.id_order, o.reference, o.total_paid_tax_incl, os.paid, osl.name AS osname')
+            ->addSelect('o.current_state')
             ->addSelect('CONCAT(LEFT(cu.`firstname`, 1), \'. \', cu.`lastname`) AS `customer`')
             ->addSelect('os.color, o.payment, s.name AS shop_name')
             ->addSelect('o.date_add, cu.company, cl.name AS country_name, o.invoice_number, o.delivery_number')

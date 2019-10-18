@@ -12,7 +12,8 @@ use Symfony\Component\Debug\Debug;
 
 set_time_limit(0);
 
-require_once __DIR__.'/../config/config.inc.php';
+require_once __DIR__ . '/../config/config.inc.php';
+
 
 $input = new ArgvInput();
 $env = $input->getParameterOption(['--env', '-e'], getenv('SYMFONY_ENV') ?: 'dev');

@@ -1,5 +1,5 @@
 {**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -32,7 +32,7 @@
               <a itemprop="item" href="{$path.url}"><span itemprop="name">{$path.title}</span></a>
               <meta itemprop="position" content="{$smarty.foreach.breadcrumb.iteration}">
             </li>
-          {else}
+          {elseif isset($path.title)}
             <li>
               <span>{$path.title}</span>
             </li>

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -290,7 +290,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
         );
 
         foreach ($footer as $key => $value) {
-            $footer[$key] = Tools::ps_round($value, _PS_PRICE_COMPUTE_PRECISION_, $this->order->round_mode);
+            $footer[$key] = Tools::ps_round($value, Context::getContext()->getComputingPrecision(), $this->order->round_mode);
         }
 
         /**
@@ -341,7 +341,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
             'tax_tab' => $this->getTaxTabContent(),
             'customer' => $customer,
             'footer' => $footer,
-            'ps_price_compute_precision' => _PS_PRICE_COMPUTE_PRECISION_,
+            'ps_price_compute_precision' => Context::getContext()->getComputingPrecision(),
             'round_type' => $round_type,
             'legal_free_text' => $legal_free_text,
         );

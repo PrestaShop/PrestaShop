@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -37,7 +37,7 @@ use Symfony\Component\Validator\ConstraintValidator;
  */
 class CustomerNameValidator extends ConstraintValidator
 {
-    const PATTERN_NAME = '/^(?:[^0-9!<>,;?=+()\/\\\\@#"°*`{}_^$%:¤\[\]|\.。]|[。\.](?:\s|$))*$/u';
+    const PATTERN_NAME = '/^(?!\s*$)(?:[^0-9!<>,;?=+()\/\\\\@#"°*`{}_^$%:¤\[\]|\.。]|[。\.](?:\s|$))*$/u';
     const PATTERN_DOT_SPACED = '/[\.。](\s{1}[^\ ]|$)/';
 
     /**

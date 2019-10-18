@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Category\QueryHandler;
 
+use Shop;
 use Category;
 use Db;
 use ImageManager;
@@ -66,7 +67,7 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
     {
         $category = new Category($query->getCategoryId()->getValue());
 
-        if (!$category->id) {
+        if (!$category->id || (!$category->isAssociatedToShop() && Shop::getContext() == Shop::CONTEXT_SHOP)) {
             throw new CategoryNotFoundException(
                 $query->getCategoryId(),
                 sprintf('Category with id "%s" was not found', $query->getCategoryId()->getValue())

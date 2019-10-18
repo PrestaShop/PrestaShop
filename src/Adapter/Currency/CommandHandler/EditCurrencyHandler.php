@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -268,6 +268,7 @@ final class EditCurrencyHandler extends AbstractCurrencyHandler implements EditC
                 $langIds = Language::getLanguages(true, false, true);
                 $entity->name = [];
                 $entity->symbol = [];
+                $entity->numeric_iso_code = $currency->getNumericIsoCode();
 
                 foreach ($langIds as $langId) {
                     $entity->name[$langId] = $currency->getDisplayName();

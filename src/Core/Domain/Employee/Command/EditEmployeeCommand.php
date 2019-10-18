@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -56,11 +56,6 @@ class EditEmployeeCommand
      * @var Email
      */
     private $email;
-
-    /**
-     * @var bool
-     */
-    private $isSubscribedToNewsletter;
 
     /**
      * @var int
@@ -176,26 +171,6 @@ class EditEmployeeCommand
     public function setEmail($email)
     {
         $this->email = new Email($email);
-
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isSubscribedToNewsletter()
-    {
-        return $this->isSubscribedToNewsletter;
-    }
-
-    /**
-     * @param bool $isSubscribedToNewsletter
-     *
-     * @return EditEmployeeCommand
-     */
-    public function setIsSubscribedToNewsletter($isSubscribedToNewsletter)
-    {
-        $this->isSubscribedToNewsletter = $isSubscribedToNewsletter;
 
         return $this;
     }

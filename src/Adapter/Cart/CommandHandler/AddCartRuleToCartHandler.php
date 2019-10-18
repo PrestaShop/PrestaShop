@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -49,7 +49,7 @@ final class AddCartRuleToCartHandler extends AbstractCartHandler implements AddC
             throw new CartException('Invalid cart rule.');
         }
 
-        $cart = $this->getContextCartObject($command->getCartId());
+        $cart = $this->getCart($command->getCartId());
 
         if (!$cart->addCartRule($cartRule->id)) {
             throw new CartException('Failed to add cart rule to cart.');

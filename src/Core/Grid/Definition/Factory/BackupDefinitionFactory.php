@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -112,6 +112,7 @@ final class BackupDefinitionFactory extends AbstractGridDefinitionFactory
                                 'route' => 'admin_backups_download_view',
                                 'route_param_name' => 'downloadFileName',
                                 'route_param_field' => 'file_name',
+                                'clickable_row' => true,
                             ])
                         )
                         ->add(

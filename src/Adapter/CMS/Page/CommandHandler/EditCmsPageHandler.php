@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -86,7 +86,7 @@ final class EditCmsPageHandler extends AbstractCmsPageHandler implements EditCms
     private function createCmsFromCommand(EditCmsPageCommand $command)
     {
         $cms = $this->getCmsPageIfExistsById($command->getCmsPageId()->getValue());
-        $cmsCategoryId = $command->getCmsPageCategoryId()->getValue();
+        $cmsCategoryId = null === $command->getCmsPageCategoryId() ?: $command->getCmsPageCategoryId()->getValue();
 
         if (null !== $cmsCategoryId && $this->assertCmsCategoryExists($cmsCategoryId)) {
             $cms->id_cms_category = $cmsCategoryId;

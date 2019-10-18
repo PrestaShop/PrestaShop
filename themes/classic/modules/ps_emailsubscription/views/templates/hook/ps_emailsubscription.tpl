@@ -1,5 +1,5 @@
 {**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -49,6 +49,7 @@
                 value="{$value}"
                 placeholder="{l s='Your email address' d='Shop.Forms.Labels'}"
                 aria-labelledby="block-newsletter-label"
+                required
               >
             </div>
             <input type="hidden" name="blockHookName" value="{$hookName}" />

@@ -1,5 +1,5 @@
 {**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -65,7 +65,7 @@
 		var from_msg = '{l s='From:' js=1 d='Admin.Global'} ';
 		var see_order_msg = '{l s='View this order' js=1 d='Admin.Orderscustomers.Feature'}';
 		var new_customer_msg = '{l s='A new customer registered on your shop.' js=1 d='Admin.Navigation.Header'}';
-		var customer_name_msg = '{l s='registered' js=1 d='Admin.Navigation.Notification'} ';
+		var customer_name_msg = '{l s='Customer name:' js=1 d='Admin.Navigation.Header'} ';
 		var new_msg = '{l s='A new message was posted on your shop.' js=1 d='Admin.Navigation.Header'}';
 		var see_msg = '{l s='Read this message' js=1 d='Admin.Navigation.Header'}';
 		var token = '{$token|addslashes}';
