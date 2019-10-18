@@ -955,7 +955,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      */
     private function tryToGetAvailableIdProductAttribute($checkedIdProductAttribute)
     {
-        if (!Configuration::get('PS_DISP_UNAVAILABLE_ATTR')) {
+        if (!Product::isAvailableWhenOutOfStock($this->product->out_of_stock) && Configuration::get('PS_DISP_UNAVAILABLE_ATTR') == 0) {
             $availableProductAttributes = $this->product->getAttributeCombinations();
             if (!Product::isAvailableWhenOutOfStock($this->product->out_of_stock)) {
                 $availableProductAttributes = array_filter(
