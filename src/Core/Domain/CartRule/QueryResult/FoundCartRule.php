@@ -42,15 +42,23 @@ class FoundCartRule
     private $name;
 
     /**
+     * @var string
+     */
+    private $code;
+
+    /**
      * @param int $cartRuleId
      * @param string $name
+     * @param string $code
      */
     public function __construct(
         int $cartRuleId,
-        string $name
+        string $name,
+        string $code
     ) {
         $this->cartRuleId = $cartRuleId;
         $this->name = $name;
+        $this->code = $code;
     }
 
     /**
@@ -67,5 +75,13 @@ class FoundCartRule
     public function getName(): string
     {
         return $this->name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCode(): string
+    {
+        return $this->code;
     }
 }

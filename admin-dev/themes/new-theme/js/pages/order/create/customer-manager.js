@@ -25,13 +25,15 @@
 
 import createOrderPageMap from './create-order-map';
 import Router from '../../../components/router';
+import {EventEmitter} from '../../../components/event-emitter';
+import eventMap from './event-map';
 
 const $ = window.$;
 
 /**
  * Searches customers for which order is being created
  */
-export default class CustomerSearcherComponent {
+export default class CustomerManager {
   constructor() {
     this.router = new Router();
     this.$container = $(createOrderPageMap.customerSearchBlock);
@@ -46,7 +48,41 @@ export default class CustomerSearcherComponent {
       onCustomerChange: () => {
         this._showCustomerSearch();
       },
+      getCustomerCarts: (customerId) => {
+        this._getCustomerCarts(customerId);
+      },
+      getCustomerOrders: (customerId) => {
+        this._getCustomerOrders(customerId);
+      },
     };
+  }
+
+  /**
+   * Gets customer carts
+   * After Request is complete, emits event providing carts list
+   *
+   * @param customerId
+   */
+  _getCustomerCarts(customerId) {
+    $.get(this.router.generate('admin_customers_carts', {customerId})).then((carts) => {
+      EventEmitter.emit(eventMap.customerCartsLoaded, carts);
+    }).catch((e) => {
+      showErrorMessage(e.responseJSON.message);
+    });
+  }
+
+  /**
+   * Gets customer carts
+   * After Request is complete, emits event providing orders list
+   *
+   * @param customerId
+   */
+  _getCustomerOrders(customerId) {
+    $.get(this.router.generate('admin_customers_orders', {customerId})).then((orders) => {
+      EventEmitter.emit(eventMap.customerOrdersLoaded, orders);
+    }).catch((e) => {
+      showErrorMessage(e.responseJSON.message);
+    });
   }
 
   /**

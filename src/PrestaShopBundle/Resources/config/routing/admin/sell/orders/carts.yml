@@ -76,3 +76,12 @@ admin_carts_add_rule:
     _legacy_controller: AdminCarts
   options:
     expose: true
+
+admin_carts_delete_rule:
+  path: /{cartId}/rules/{cartRuleId}/delete
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Cart:removeCartRuleFromCart
+    _legacy_controller: AdminCarts
+  options:
+    expose: true

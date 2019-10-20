@@ -18,5 +18,9 @@
     cursor: pointer;
     color: $primary;
   }
+
+  #search-cart-rules-result-box {
+    z-index: 10;
+  }
 }
 

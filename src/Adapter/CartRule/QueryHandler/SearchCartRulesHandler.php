@@ -63,7 +63,8 @@ final class SearchCartRulesHandler implements SearchCartRulesHandlerInterface
         foreach ($cartRules as $cartRule) {
             $foundCartRules[] = new FoundCartRule(
                 (int) $cartRule['id_cart_rule'],
-                $cartRule['name']
+                $cartRule['name'],
+                $cartRule['code']
             );
         }
 

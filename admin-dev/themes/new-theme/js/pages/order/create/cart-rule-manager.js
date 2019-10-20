@@ -26,13 +26,15 @@
 import Router from '../../../components/router';
 import createOrderMap from './create-order-map';
 import CartRulesRenderer from './cart-rules-renderer';
+import {EventEmitter} from '../../../components/event-emitter';
+import eventMap from './event-map';
 
 const $ = window.$;
 
 /**
  * Responsible for searching cart rules and managing cart rules search block
  */
-export default class CartRuleSearcher {
+export default class CartRuleManager {
   constructor() {
     this.router = new Router();
     this.$searchInput = $(createOrderMap.cartRuleSearchInput);
@@ -48,6 +50,9 @@ export default class CartRuleSearcher {
       },
       onDoneSearchingCartRule: () => {
         this._hideResultsDropdown();
+      },
+      onCartRuleRemove: (cartRuleId, cartId) => {
+        this._removeCartRuleFromCart(cartRuleId, cartId);
       },
     };
   }
@@ -85,10 +90,27 @@ export default class CartRuleSearcher {
       cart_rule_id: cartRuleId,
     }).then((cartInfo) => {
       this.cartRulesRenderer.render(cartInfo.cartRules, cartInfo.products.length === 0);
-    }).catch((response) => {
-      if (typeof response.responseJSON.message !== 'undefined') {
-        this._displayErrorMessage(response.responseJSON.message);
-      }
+    }).catch((e) => {
+      this._displayErrorMessage(e.responseJSON.message);
+    });
+  }
+
+  /**
+   * Removes cart rule from cart
+   *
+   * @param cartRuleId
+   * @param cartId
+   *
+   * @private
+   */
+  _removeCartRuleFromCart(cartRuleId, cartId) {
+    $.post(this.router.generate('admin_carts_delete_rule', {
+      cartId,
+      cartRuleId,
+    })).then((cartInfo) => {
+      EventEmitter.emit(eventMap.cartRuleRemoved, cartInfo);
+    }).catch((e) => {
+      showErrorMessage(e.responseJSON.message);
     });
   }
 
@@ -142,8 +164,13 @@ export default class CartRuleSearcher {
     for (const key in cartRules) {
       const $template = $cartRuleTemplate.clone();
       const cartRule = cartRules[key];
-      $template.text(cartRule.name);
 
+      let cartRuleName = cartRule.name;
+      if (cartRule.code !== '') {
+        cartRuleName = `${cartRule.name} - ${cartRule.code}`;
+      }
+
+      $template.text(cartRuleName);
       $template.data('cart-rule-id', cartRule.cartRuleId);
       this.$searchResultBox.append($template);
     }

@@ -716,7 +716,14 @@ class CustomerController extends AbstractAdminController
      */
     public function getCartsAction(int $customerId)
     {
-        $carts = $this->getQueryBus()->handle(new GetCustomerCarts($customerId));
+        try {
+            $carts = $this->getQueryBus()->handle(new GetCustomerCarts($customerId));
+        } catch (Exception $e) {
+            return $this->json(
+                ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
 
         return $this->json([
             'carts' => $carts,
@@ -733,7 +740,14 @@ class CustomerController extends AbstractAdminController
      */
     public function getOrdersAction(int $customerId)
     {
-        $orders = $this->getQueryBus()->handle(new GetCustomerOrders($customerId));
+        try {
+            $orders = $this->getQueryBus()->handle(new GetCustomerOrders($customerId));
+        } catch (Exception $e) {
+            return $this->json(
+                ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
 
         return $this->json([
             'orders' => $orders,

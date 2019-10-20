@@ -39,4 +39,6 @@ export default {
   cartDeliveryOptionChanged: 'cartDeliveryOptionChanged',
   // when cart free shipping value has been changed
   cartFreeShippingSet: 'cartFreeShippingSet',
+  // when cart rule is removed from cart
+  cartRuleRemoved: 'cartRuleRemoved',
 };
