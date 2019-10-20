@@ -67,6 +67,8 @@ export default class CartRuleSearcher {
       search_phrase: searchPhrase,
     }).then((cartRules) => {
       this._renderSearchResults(cartRules);
+    }).catch((e) => {
+      showErrorMessage(e.responseJSON.message);
     });
   }
 

@@ -26,11 +26,13 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
+use Exception;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Query\SearchCartRules;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Responsible for Cart rules (a.k.a cart discounts/vouchers) actions in Back Office
@@ -54,7 +56,14 @@ class CartRuleController extends FrameworkBundleAdminController
         $cartRules = [];
 
         if ($searchPhrase) {
-            $cartRules = $this->getQueryBus()->handle(new SearchCartRules($searchPhrase));
+            try {
+                $cartRules = $this->getQueryBus()->handle(new SearchCartRules($searchPhrase));
+            } catch (Exception $e) {
+                return $this->json(
+                    ['message' => $this->getFallbackErrorMessage(get_class($e), $e->getCode())],
+                    Response::HTTP_INTERNAL_SERVER_ERROR
+                );
+            }
         }
 
         return $this->json([
