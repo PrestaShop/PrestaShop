@@ -81,8 +81,9 @@
         </div>
         <div class="js-no-records-found"></div>
         <div class="row">
-          <table class="table">
-            <thead>
+          <div class="col">
+            <table id="products-table" class="table d-none">
+              <thead>
               <tr>
                 <th>{{ 'Product'|trans({}, 'Admin.Global') }}</th>
                 <th>{{ 'Description'|trans({}, 'Admin.Global') }}</th>
@@ -92,32 +93,10 @@
                 <th>{{ 'Price'|trans({}, 'Admin.Global') }}</th>
                 <th></th>
               </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><img src="http://presta.local/img/p/2/2-small_default.jpg" alt=""></td>
-                <td>
-                  <p class="mb-0">Hummingbird printed t-shirt</p>
-                  <p>S- White</p>
-                </td>
-                <td>
-                  demo_1
-                </td>
-                <td>
-                  <input type="text" class="form-control">
-                </td>
-                <td>
-                  <input type="number" min="1" class="form-control" style="max-width: 100px;">
-                </td>
-                <td>
-                  45
-                </td>
-                <td class="text-right">
-                  <button class="btn btn-primary">{{ 'Remove'|trans({}, 'Admin.Actions') }}</button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
         </div>
         <div class="row">
           <div class="col-4 offset-sm-3">
@@ -216,4 +195,30 @@
       <select id="combination-select" class="form-control"></select>
     </div>
   </div>
+</script>
+
+<script id="products-table-row-template" type="text/html">
+  <tr>
+    <td><img class="js-product-image" src="" alt=""></td>
+
+    <td>
+      <p class="mb-0 js-product-name"></p>
+      <p class="js-product-attr"></p>
+    </td>
+
+    <td class="js-product-ref"></td>
+
+    <td>
+      <input class="form-control js-product-unit-input" type="text">
+    </td>
+
+    <td>
+      <input type="number" min="1" class="form-control js-product-qty-input" style="max-width: 100px;"></td>
+    <td class="js-product-total-price"></td>
+
+    <td class="text-right">
+      <button class="btn btn-primary js-product-remove-btn">{{ 'Remove'|trans({}, 'Admin.Actions') }}</button>
+    </td>
+
+  </tr>
 </script>

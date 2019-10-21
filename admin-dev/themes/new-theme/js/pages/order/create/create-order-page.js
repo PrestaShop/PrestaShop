@@ -36,7 +36,7 @@ import {EventEmitter} from '../../../components/event-emitter';
 import CartEditor from './cart-editor';
 import eventMap from './event-map';
 import CartRuleManager from './cart-rule-manager';
-import OrderProductComponent from './order-product-component';
+import ProductManager from './product-manager';
 
 const $ = window.$;
 
@@ -58,8 +58,7 @@ export default class CreateOrderPage {
     this.router = new Router();
     this.cartEditor = new CartEditor();
     this.cartRuleManager = new CartRuleManager();
-    this.orderProducts = new OrderProductComponent();
-    this.cartProducts = new OrderProductComponent();
+    this.cartProducts = new ProductManager();
 
     return {
       listenForCustomerSearch: () => this._handleCustomerSearch(),
@@ -69,9 +68,6 @@ export default class CreateOrderPage {
       listenForCartEdit: () => this._handleCartEdit(),
       listenForCartLoading: () => this._onCartLoaded(),
       listenForCartRuleSearch: () => this._handleCartRuleSearch(),
-      listenForCartRuleSelect: () => this._handleCartRuleSelect(),
-      listenForCartRuleRemove: () => this._handleCartRuleRemove(),
-      listenForAddToCartClick: () => this._handleAddProductToCart(),
     };
   }
 
@@ -118,15 +114,6 @@ export default class CreateOrderPage {
   }
 
   /**
-   * Add chosen product to cart
-   *
-   * @private
-   */
-  _handleAddProductToCart() {
-    $(createOrderPageMap.addToCartButton).on('click', () => this.cartProducts.onAddProductToCart(this.data.cart_id));
-  }
-
-  /**
    * Handles use case when cart is selected for order creation
    *
    * @private
@@ -160,6 +147,9 @@ export default class CreateOrderPage {
     this.$container.on('change', createOrderPageMap.addressSelect, () => this._changeCartAddresses());
     this.$container.on('change', createOrderPageMap.deliveryOptionSelect, e => this._changeDeliveryOption(e));
     this.$container.on('change', createOrderPageMap.freeShippingSwitch, e => this._setFreeShipping(e));
+    this.$container.on('click', createOrderPageMap.addToCartButton, () => this.cartProducts.onAddProductToCart(this.data.cart_id));
+    this._selectCartRule();
+    this._removeCartRule();
   }
 
   /**
@@ -181,7 +171,7 @@ export default class CreateOrderPage {
    *
    * @private
    */
-  _handleCartRuleSelect() {
+  _selectCartRule() {
     this.$container.on('mousedown', createOrderPageMap.foundCartRuleListItem, (event) => {
       // prevent blur event to allow selecting cart rule
       event.preventDefault();
@@ -199,7 +189,7 @@ export default class CreateOrderPage {
    *
    * @private
    */
-  _handleCartRuleRemove() {
+  _removeCartRule() {
     this.$container.on('click', createOrderPageMap.cartRuleDeleteBtn, (event) => {
       this.cartRuleManager.onCartRuleRemove(
         $(event.currentTarget).data('cart-rule-id'),

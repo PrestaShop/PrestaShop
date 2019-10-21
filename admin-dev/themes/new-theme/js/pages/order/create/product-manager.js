@@ -24,16 +24,18 @@
  */
 
 import createOrderPageMap from './create-order-map';
+import ProductsListRenderer from './products-list-renderer';
 
 const $ = window.$;
 
 /**
  * Product component Object for "Create order" page
  */
-export default class OrderProductComponent {
+export default class ProductManager {
   constructor() {
     this.products = [];
     this.combinations = [];
+    this.renderer = new ProductsListRenderer();
 
     this._initEvents();
 
@@ -50,12 +52,12 @@ export default class OrderProductComponent {
    * @private
    */
   _initEvents() {
-    $(createOrderPageMap.productSearch).on('input', (event) => this._handleProductSearch(event));
-    $(createOrderPageMap.productSelect).on('change', (event) => this._handleProductChange(event));
+    $(createOrderPageMap.productSearch).on('input', event => this._handleProductSearch(event));
+    $(createOrderPageMap.productSelect).on('change', event => this._handleProductChange(event));
     $(createOrderPageMap.productResultBlock).on(
         'change',
         createOrderPageMap.combinationsSelect,
-        (event) => this._handleCombinationChange(event)
+        event => this._handleCombinationChange(event),
     );
   }
 
@@ -111,7 +113,7 @@ export default class OrderProductComponent {
       const combinationsCollection = product.combinations;
 
       if (combinationsCollection === null) {
-        name += ' - ' + product.formatted_price;
+        name += ` - ${  product.formatted_price}`;
       }
 
       const shouldUpdateStockValue = combinationsCollection === null && index === 0;
@@ -121,12 +123,12 @@ export default class OrderProductComponent {
       }
 
       $(createOrderPageMap.productSelect).append(
-        $('<option></option>').attr('value', product.product_id).text(name).attr('data-index', index)
+        $('<option></option>').attr('value', product.product_id).text(name).attr('data-index', index),
       );
     }
 
     const $noRecordsRow = $(createOrderPageMap.noRecordsFound).find(
-      createOrderPageMap.noRecordsFoundRow
+      createOrderPageMap.noRecordsFoundRow,
     );
 
     if ($noRecordsRow.length !== 0) {
@@ -223,7 +225,7 @@ export default class OrderProductComponent {
         this._updateStock(combination.stock);
       }
 
-      const name = combination.attribute + ' - ' + combination.formatted_price;
+      const name = `${combination.attribute  } - ${  combination.formatted_price}`;
       $combinationsSelect.append($('<option></option>')
         .attr('value', id).text(name));
 
@@ -253,7 +255,7 @@ export default class OrderProductComponent {
 
     $(createOrderPageMap.quantityRow).before($customizedFieldTemplateContent);
 
-    $.each(customizationFields.product_customization_fields, function(index, field) {
+    $.each(customizationFields.product_customization_fields, (index, field) => {
       const $fieldTemplate = $($(createOrderPageMap.customizedFieldTypes[field.type]).html());
 
       $customizedFieldTemplateContent = $($customizedFieldTemplate.html());
@@ -343,7 +345,7 @@ export default class OrderProductComponent {
       contentType: false,
       cache: false,
     }).then((response) => {
-      //TODO add product to list
+      this.renderer.render(response.products);
     }).catch((response) => {
       if (typeof response.responseJSON !== 'undefined') {
         showErrorMessage(response.responseJSON.message);
