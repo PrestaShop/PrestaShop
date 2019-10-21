@@ -441,7 +441,7 @@ class AdminProductWrapper
                 if ($specific_price['reduction_type'] == 'percentage') {
                     $impact = '- ' . ($specific_price['reduction'] * 100) . ' %';
                 } elseif ($specific_price['reduction'] > 0) {
-                    $impact = '- ' . $this->locale->formatPrice(Tools::ps_round($specific_price['reduction'], 2), $current_specific_currency->iso_code) . ' ';
+                    $impact = '- ' . $this->locale->formatPrice($specific_price['reduction'], $current_specific_currency->iso_code) . ' ';
                     if ($specific_price['reduction_tax']) {
                         $impact .= '(' . $this->translator->trans('Tax incl.', array(), 'Admin.Global') . ')';
                     } else {

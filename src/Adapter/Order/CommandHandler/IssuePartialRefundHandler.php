@@ -40,7 +40,6 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Command\IssuePartialRefundCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\IssuePartialRefundHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
-use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
 use StockAvailable;
 use Tax;
 use TaxCalculator;
@@ -57,12 +56,11 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
     private $locale;
 
     /**
-     * @param LocaleRepository $localeRepository
-     * @param string $localeCode
+     * @param Locale $locale
      */
-    public function __construct(LocaleRepository $localeRepository, string $localeCode)
+    public function __construct(Locale $locale)
     {
-        $this->locale = $localeRepository->getLocale($localeCode);
+        $this->locale = $locale;
     }
 
     /**

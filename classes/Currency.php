@@ -613,6 +613,27 @@ class CurrencyCore extends ObjectModel
     }
 
     /**
+     * Get Currency ISO Code by ID
+     *
+     * @param int $id
+     * @param bool $forceRefreshCache
+     *
+     * @return string
+     */
+    public static function getIsoCodeById(int $id, bool $forceRefreshCache = false)
+    {
+        $cacheId = 'Currency::getIsoCodeById' . pSQL($id);
+        if ($forceRefreshCache || !Cache::isStored($cacheId)) {
+            $result = Currency::getCurrencyInstance($id);
+            Cache::store($cacheId, $result->iso_code);
+
+            return $result->iso_code;
+        }
+
+        return Cache::retrieve($cacheId);
+    }
+
+    /**
      * Get Currency ID query.
      *
      * @param int $idShop Shop ID

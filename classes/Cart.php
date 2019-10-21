@@ -1849,7 +1849,7 @@ class CartCore extends ObjectModel
 
         $with_taxes = $use_tax_display ? $cart->_taxCalculationMethod != PS_TAX_EXC : true;
 
-        return Context::getContext()->getCurrentLocale()->formatPrice($cart->getOrderTotal($with_taxes, $type), Currency::getCurrencyInstance((int) $cart->id_currency)->iso_code, false);
+        return Context::getContext()->getCurrentLocale()->formatPrice($cart->getOrderTotal($with_taxes, $type), Currency::getIsoCodeById((int) $cart->id_currency), false);
     }
 
     /**

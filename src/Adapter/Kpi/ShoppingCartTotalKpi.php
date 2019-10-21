@@ -33,7 +33,6 @@ use HelperKpi;
 use Order;
 use PrestaShop\PrestaShop\Core\Kpi\KpiInterface;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
-use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
 use Validate;
 
 /**
@@ -52,12 +51,11 @@ final class ShoppingCartTotalKpi implements KpiInterface
     private $options;
 
     /**
-     * @param LocaleRepository $localeRepository
-     * @param string $localeCode
+     * @param Locale $locale
      */
-    public function __construct(LocaleRepository $localeRepository, string $localeCode)
+    public function __construct(Locale $locale)
     {
-        $this->locale = $localeRepository->getLocale($localeCode);
+        $this->locale = $locale;
     }
 
     /**
@@ -76,7 +74,7 @@ final class ShoppingCartTotalKpi implements KpiInterface
         $helper->subtitle = $translator->trans('Cart #%ID%', ['%ID%' => $cart->id], 'Admin.Orderscustomers.Feature');
         $helper->value = $this->locale->formatPrice(
             $this->getCartTotalPrice($cart),
-            \Currency::getCurrencyInstance((int) $cart->id_currency)->iso_code
+            \Currency::getIsoCodeById((int) $cart->id_currency)
         );
 
         return $helper->generate();

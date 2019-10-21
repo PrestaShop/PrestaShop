@@ -73,7 +73,6 @@ use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderStatusForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Image\Parser\ImageTagSourceParserInterface;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
-use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
 use Shop;
 use State;
 use StockAvailable;
@@ -114,20 +113,18 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
      * @param ImageTagSourceParserInterface $imageTagSourceParser
      * @param TranslatorInterface $translator
      * @param Context $context
-     * @param LocaleRepository $localeRepository
-     * @param string $localeCode
+     * @param Locale $locale
      */
     public function __construct(
         ImageTagSourceParserInterface $imageTagSourceParser,
         TranslatorInterface $translator,
         Context $context,
-        LocaleRepository $localeRepository,
-        string $localeCode
+        Locale $locale
     ) {
         $this->imageTagSourceParser = $imageTagSourceParser;
         $this->translator = $translator;
         $this->context = $context;
-        $this->locale = $localeRepository->getLocale($localeCode);
+        $this->locale = $locale;
     }
 
     /**
@@ -213,7 +210,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             $genderName,
             $customer->email,
             new DateTimeImmutable($customer->date_add),
-            $this->locale->formatPrice(Tools::ps_round(Tools::convertPrice($customerStats['total_orders'], $order->id_currency), PS_ROUND_HALF_UP), $currency->iso_code),
+            $this->locale->formatPrice(Tools::convertPrice($customerStats['total_orders'], $order->id_currency), $currency->iso_code),
             $customerStats['nb_orders'],
             $customer->note
         );

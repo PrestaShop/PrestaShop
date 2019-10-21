@@ -249,7 +249,7 @@ class OrderDetailLazyArray extends AbstractLazyArray
                     (!$order->getTaxCalculationMethod()) ? $shipping['shipping_cost_tax_excl']
                         : $shipping['shipping_cost_tax_incl'];
                 $orderShipping[$shippingId]['shipping_cost'] =
-                    ($shippingCost > 0) ? $this->locale->formatPrice($shippingCost, (\Currency::getCurrencyInstance((int) $order->id_currency)->iso_code))
+                    ($shippingCost > 0) ? $this->locale->formatPrice($shippingCost, (\Currency::getIsoCodeById((int) $order->id_currency)))
                         : $this->translator->trans('Free', array(), 'Shop.Theme.Checkout');
 
                 $tracking_line = '-';

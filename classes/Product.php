@@ -3674,7 +3674,7 @@ class ProductCore extends ObjectModel
     public static function convertPriceWithCurrency($params, &$smarty)
     {
         $currency = $params['currency'];
-        $currency = is_object($currency) ? $currency->iso_code : Currency::getCurrencyInstance($currency)->iso_code;
+        $currency = is_object($currency) ? $currency->iso_code : Currency::getIsoCodeById((int) $currency);
 
         return Context::getContext()->getCurrentLocale()->formatPrice($params['price'], $currency);
     }
@@ -3695,7 +3695,7 @@ class ProductCore extends ObjectModel
     public static function displayWtPriceWithCurrency($params, &$smarty)
     {
         $currency = $params['currency'];
-        $currency = is_object($currency) ? $currency->iso_code : Currency::getCurrencyInstance($currency)->iso_code;
+        $currency = is_object($currency) ? $currency->iso_code : Currency::getIsoCodeById((int) $currency);
 
         return Context::getContext()->getCurrentLocale()->formatPrice($params['price'], $currency);
     }

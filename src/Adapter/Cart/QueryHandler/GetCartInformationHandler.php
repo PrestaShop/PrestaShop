@@ -45,7 +45,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartProdu
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartShipping;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleInterface;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
-use PrestaShop\PrestaShop\Core\Localization\Locale\RepositoryInterface;
+use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShopException;
 
 /**
@@ -64,16 +64,14 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
     private $contextLangId;
 
     /**
-     * @param RepositoryInterface $localeRepository
-     * @param string $locale
+     * @param Locale $locale
      * @param int $contextLangId
      */
     public function __construct(
-        RepositoryInterface $localeRepository,
-        string $locale,
+        Locale $locale,
         int $contextLangId
     ) {
-        $this->locale = $localeRepository->getLocale($locale);
+        $this->locale = $locale;
         $this->contextLangId = $contextLangId;
     }
 

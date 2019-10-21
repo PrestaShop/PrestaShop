@@ -125,7 +125,7 @@ class DiscountControllerCore extends FrontController
 
         return sprintf(
             '%s ' . $taxTranslation,
-            $this->context->getCurrentLocale()->formatPrice($amount, Currency::getCurrencyInstance((int) $currencyId)->iso_code)
+            $this->context->getCurrentLocale()->formatPrice($amount, Currency::getIsoCodeById((int) $currencyId))
         );
     }
 
@@ -188,7 +188,7 @@ class DiscountControllerCore extends FrontController
         } else {
             $voucher['voucher_minimal'] = $this->context->getCurrentLocale()->formatPrice(
                 $voucher['minimum_amount'],
-                Currency::getCurrencyInstance((int) $voucher['minimum_amount_currency'])->iso_code
+                Currency::getIsoCodeById((int) $voucher['minimum_amount_currency'])
             );
         }
 
