@@ -92,7 +92,7 @@ export default {
   totalShippingField: '.js-total-shipping',
   freeShippingSwitch: '.js-free-shipping-switch',
 
-  // selectors related to products cart block
+  // selectors related to cart products block
   productSearch: '#product-search',
   combinationsSelect: '#combination-select',
   productResultBlock: '#product-search-results',
@@ -116,4 +116,13 @@ export default {
     0: '#cart-product-customized-field-input-template-0',
     1: '#cart-product-customized-field-input-template-1',
   },
+  productsTable: '#products-table',
+  productsTableRowTemplate: '#products-table-row-template',
+  productImageField: '.js-product-image',
+  productNameField: '.js-product-name',
+  productAttrField: '.js-product-attr',
+  productReferenceField: '.js-product-ref',
+  productUnitPriceInput: '.js-product-unit-input',
+  productTotalPriceField: '.js-product-total-price',
+  productRemoveBtn: '.js-product-remove-btn',
 };
