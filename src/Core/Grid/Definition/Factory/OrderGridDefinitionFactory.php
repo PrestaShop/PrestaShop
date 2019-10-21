@@ -46,7 +46,6 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DateTimeColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\IdentifierColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\OrderPriceColumn;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\ColorColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\PreviewColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
