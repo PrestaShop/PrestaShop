@@ -38,4 +38,5 @@ $(document).ready(() => {
   createOrderPage.listenForCartRuleSearch();
   createOrderPage.listenForCartRuleSelect();
   createOrderPage.listenForCartRuleRemove();
+  createOrderPage.listenForAddToCartClick();
 });

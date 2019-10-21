@@ -37,7 +37,11 @@ export default class OrderProductComponent {
 
     this._initEvents();
 
-    return {};
+    return {
+      onAddProductToCart: (cartId) => {
+        this._addProductToCart(cartId);
+      },
+    };
   }
 
   /**
@@ -53,8 +57,6 @@ export default class OrderProductComponent {
         createOrderPageMap.combinationsSelect,
         (event) => this._handleCombinationChange(event)
     );
-
-    $(createOrderPageMap.addToCartButton).on('click', () => this._addProductToCart());
   }
 
   /**
@@ -333,17 +335,19 @@ export default class OrderProductComponent {
    *
    * @private
    */
-  _addProductToCart() {
+  _addProductToCart(cartId) {
     $.ajax($(createOrderPageMap.addToCartButton).data('add-product-url'), {
       method: 'POST',
-      data: this._getProductData(),
+      data: this._getProductData(cartId),
       processData: false,
       contentType: false,
       cache: false,
     }).then((response) => {
-      console.log(response);
+      //TODO add product to list
     }).catch((response) => {
-      console.log('labai nepasiseke');
+      if (typeof response.responseJSON !== 'undefined') {
+        showErrorMessage(response.responseJSON.message);
+      }
     });
   }
 
@@ -353,11 +357,12 @@ export default class OrderProductComponent {
    * @returns {FormData}
    * @private
    */
-  _getProductData() {
+  _getProductData(cartId) {
     const formData = new FormData();
-    const productId = $(createOrderPageMap.productSelect).find(':selected').val();
 
-    formData.append('product_id', productId);
+    formData.append('cart_id', cartId);
+    formData.append('product_id', $(createOrderPageMap.productSelect).find(':selected').val());
+    formData.append('quantity', $(createOrderPageMap.quantityInput).val());
 
     if ($(createOrderPageMap.combinationsSelect).length !== 0) {
       const combinationId = $(createOrderPageMap.combinationsSelect).find(':selected').val();
