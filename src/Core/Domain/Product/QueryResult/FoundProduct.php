@@ -24,9 +24,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Order\QueryResult;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
 
-class ProductForOrderCreation
+/**
+ * DTO for product that was found by search
+ */
+class FoundProduct
 {
     /**
      * @var int
@@ -49,12 +52,12 @@ class ProductForOrderCreation
     private $stock;
 
     /**
-     * @var ProductCombinationsForOrderCreation|null
+     * @var ProductCombination[]
      */
     private $combinations;
 
     /**
-     * @var ProductCustomizationFields|null
+     * @var ProductCustomizationField[]
      */
     private $customizationFields;
 
@@ -63,17 +66,23 @@ class ProductForOrderCreation
      * @param string $name
      * @param string $formattedPrice
      * @param int $stock
+     * @param ProductCombination[] $combinations
+     * @param ProductCustomizationField[] $customizationFields
      */
     public function __construct(
         int $productId,
         string $name,
         string $formattedPrice,
-        int $stock
+        int $stock,
+        array $combinations = [],
+        array $customizationFields = []
     ) {
         $this->productId = $productId;
         $this->name = $name;
         $this->formattedPrice = $formattedPrice;
         $this->stock = $stock;
+        $this->combinations = $combinations;
+        $this->customizationFields = $customizationFields;
     }
 
     /**
@@ -109,42 +118,18 @@ class ProductForOrderCreation
     }
 
     /**
-     * @return ProductCombinationsForOrderCreation|null
+     * @return ProductCombination[]
      */
-    public function getCombinations(): ?ProductCombinationsForOrderCreation
+    public function getCombinations(): array
     {
         return $this->combinations;
     }
 
     /**
-     * @param ProductCombinationsForOrderCreation $combinations
-     *
-     * @return ProductForOrderCreation
+     * @return ProductCustomizationField[]
      */
-    public function setCombinations(ProductCombinationsForOrderCreation $combinations): ProductForOrderCreation
-    {
-        $this->combinations = $combinations;
-
-        return $this;
-    }
-
-    /**
-     * @return ProductCustomizationFields|null
-     */
-    public function getCustomizationFields(): ?ProductCustomizationFields
+    public function getCustomizationFields(): array
     {
         return $this->customizationFields;
-    }
-
-    /**
-     * @param ProductCustomizationFields $customizationFields
-     *
-     * @return ProductForOrderCreation
-     */
-    public function setCustomizationFields(ProductCustomizationFields $customizationFields): ProductForOrderCreation
-    {
-        $this->customizationFields = $customizationFields;
-
-        return $this;
     }
 }

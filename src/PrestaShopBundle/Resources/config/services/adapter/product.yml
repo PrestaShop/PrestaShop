@@ -40,3 +40,13 @@ services:
         public: true
         tags:
             - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Product\Command\AssignProductToCategoryCommand }
+
+    prestashop.adapter.product.query_handler.search_products:
+        class: PrestaShop\PrestaShop\Adapter\Product\QueryHandler\SearchProductsHandler
+        arguments:
+            - '@prestashop.adapter.legacy.context'
+            - '@prestashop.core.localization.locale.repository'
+            - "@=service('prestashop.adapter.legacy.context').getContext().language.getLocale()"
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts

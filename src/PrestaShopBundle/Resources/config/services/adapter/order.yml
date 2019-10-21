@@ -140,7 +140,6 @@ services:
       - '@prestashop.adapter.legacy.context'
       - '@prestashop.core.localization.locale.repository'
       - "@=service('prestashop.adapter.legacy.context').getContext().language.getLocale()"
-
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Order\Query\SearchProductsForOrderCreation

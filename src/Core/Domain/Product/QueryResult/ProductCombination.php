@@ -24,9 +24,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Order\QueryResult;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
 
-class ProductCombinationForOrderCreation
+/**
+ * Holds product combination data
+ */
+class ProductCombination
 {
     /**
      * @var int

@@ -24,17 +24,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Order\QueryHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Order\Query\SearchProductsForOrderCreation;
-use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\ProductsForOrderCreation;
+use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
 
-interface SearchProductsForOrderCreationHandlerInterface
+/**
+ * Interface for handling SearchProducts query
+ */
+interface SearchProductsHandlerInterface
 {
     /**
-     * @param SearchProductsForOrderCreation $query
+     * @param SearchProducts $query
      *
-     * @return ProductsForOrderCreation
+     * @return FoundProduct[]
      */
-    public function handle(SearchProductsForOrderCreation $query): ProductsForOrderCreation;
+    public function handle(SearchProducts $query): array;
 }
