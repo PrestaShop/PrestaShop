@@ -29,12 +29,13 @@ const $ = window.$;
  * Extends grid with preview functionality.
  */
 export default class PreviewExtension {
-  constructor() {
+  constructor(previewCustomization) {
     this.lock = [];
     this.expandSelector = '.js-expand';
     this.collapseSelector = '.js-collapse';
     this.previewOpenClass = 'preview-open';
     this.previewToggleSelector = '.preview-toggle';
+    this.previewCustomization = previewCustomization;
   }
 
   /**
@@ -47,6 +48,10 @@ export default class PreviewExtension {
 
     this.$gridContainer.find('tbody tr').on('mouseover mouseleave', event => this._handleIconHovering(event));
     this.$gridContainer.find(this.previewToggleSelector).on('click', event => this._togglePreview(event));
+
+    if (typeof this.previewCustomization === 'function') {
+      this.previewCustomization(this.$gridContainer);
+    }
   }
 
   /**

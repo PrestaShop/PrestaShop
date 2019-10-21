@@ -120,30 +120,37 @@
           </thead>
           <tbody>
           {% for productDetail in orderPreview.productDetails %}
-            {% if loop.index <= productsPreviewLimit %}
-              <tr>
-                <td class="p-1">{{ productDetail.name }}</td>
-                <td class="p-1">{{ productDetail.reference }}</td>
-                <td class="p-1">
-                  {% if productDetail.location is not empty %}{{ productDetail.location }}{% else %}-{% endif %}
-                </td>
-                <td class="p-1 text-center">{{ productDetail.totalTax }}</td>
-                <td class="p-1 text-center">{{ productDetail.quantity }}</td>
-                <td class="p-1 text-center">{{ productDetail.totalPrice }}</td>
-              </tr>
-            {% endif %}
+            <tr class="{% if loop.index > productsPreviewLimit %}js-product-preview-more d-none{% endif %}">
+              <td class="p-1">{{ productDetail.name }}</td>
+              <td class="p-1">{{ productDetail.reference }}</td>
+              <td class="p-1">
+                {% if productDetail.location is not empty %}{{ productDetail.location }}{% else %}-{% endif %}
+              </td>
+              <td class="p-1 text-center">{{ productDetail.totalTax }}</td>
+              <td class="p-1 text-center">{{ productDetail.quantity }}</td>
+              <td class="p-1 text-center">{{ productDetail.totalPrice }}</td>
+            </tr>
           {% endfor %}
+
+          {% if orderPreview.productDetails|length > productsPreviewLimit %}
+            <tr>
+              <td colspan="6">
+                <a href="#" class="js-preview-more-products-btn text-dark">
+                  <i class="material-icons">more_horiz</i>
+                  {{ '(%count% more)'|trans({
+                    '%count%': orderPreview.productDetails|length - productsPreviewLimit
+                  }, 'Admin.Global') }}
+                </a>
+              </td>
+            </tr>
+          {% endif %}
           </tbody>
         </table>
       </div>
 
       <div class="text-right">
         <a href="{{ path('admin_orders_view', {'orderId': orderId}) }}" class="btn btn-primary btn-sm">
-          {% if orderPreview.productDetails|length > productsPreviewLimit %}
-            {{ 'View the other %count% products'|trans({'%count%': orderPreview.productDetails|length - productsPreviewLimit}, 'Admin.Orderscustomers.Feature') }}
-          {% else %}
-            {{ 'Order details'|trans({}, 'Admin.Orderscustomers.Feature') }}
-          {% endif %}
+          {{ 'Open order'|trans({}, 'Admin.Orderscustomers.Feature') }}
           <i class="material-icons">arrow_right_alt</i>
         </a>
       </div>
