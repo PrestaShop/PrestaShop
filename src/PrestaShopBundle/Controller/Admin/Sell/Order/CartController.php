@@ -33,12 +33,14 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Command\RemoveCartRuleFromCartCommand
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\SetFreeShippingToCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartAddressesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartCarrierCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductQuantityInCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleValidityException;
+use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\QuantityAction;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -262,6 +264,29 @@ class CartController extends FrameworkBundleAdminController
     }
 
     /**
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function addProductAction(Request $request): Response
+    {
+        $cartId = (int) $request->get('cart_id');
+
+        try {
+            $addProductToCartCommand = $this->getAddProductToCartCommand($request, $cartId);
+            $this->getCommandBus()->handle($addProductToCartCommand);
+
+            return $this->json($this->getCartInfo($cartId));
+        } catch (Exception $e) {
+            return $this->json([
+                'message' => $this->getErrorMessageForException($e, []),
+            ],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
+    }
+
+    /**
      * @param int $cartId
      *
      * @return CartInformation
@@ -282,5 +307,26 @@ class CartController extends FrameworkBundleAdminController
             CartNotFoundException::class => $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
             CartRuleValidityException::class => $e->getMessage(),
         ];
+    }
+
+    /**
+     * @param Request $request
+     * @param int $cartId
+     *
+     * @return UpdateProductQuantityInCartCommand
+     */
+    private function getAddProductToCartCommand(Request $request, int $cartId): UpdateProductQuantityInCartCommand
+    {
+        $productId = $request->get('product_id');
+        $quantity = $request->get('quantity');
+        $combinationId = $request->get('combination_id');
+
+        return new UpdateProductQuantityInCartCommand(
+            $cartId,
+            (int) $productId,
+            (int) $quantity,
+            QuantityAction::INCREASE_PRODUCT_QUANTITY,
+            $combinationId !== null ? (int) $combinationId : null
+        );
     }
 }
