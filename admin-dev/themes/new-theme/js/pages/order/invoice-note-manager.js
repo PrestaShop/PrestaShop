@@ -23,9 +23,33 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+const $ = window.$;
+
 /**
  * Manages adding/editing note for invoice documents.
  */
 export default class InvoiceNoteManager {
+  constructor() {
+    this._initShowNoteFormEventHandler();
+    this._initCloseNoteFormEventHandler();
 
+    return {};
+  }
+
+  _initShowNoteFormEventHandler() {
+    $('.js-open-invoice-note-btn').on('click', (event) => {
+      event.preventDefault();
+
+      const $btn = $(event.currentTarget);
+      const $noteRow = $btn.closest('tr').siblings('tr:first');
+
+      $noteRow.removeClass('d-none');
+    });
+  }
+
+  _initCloseNoteFormEventHandler() {
+    $('.js-cancel-invoice-note-btn').on('click', (event) => {
+      $(event.currentTarget).closest('tr').addClass('d-none');
+    });
+  }
 }

@@ -24,6 +24,7 @@
  */
 
 import OrderViewPageMap from './OrderViewPageMap';
+import InvoiceNoteManager from './invoice-note-manager';
 
 const $ = window.$;
 
@@ -35,6 +36,8 @@ $(() => {
   handlePaymentDetailsToggle();
   handlePrivateNoteChange();
   handleUpdateOrderStatusButton();
+
+  new InvoiceNoteManager();
 
   $(OrderViewPageMap.privateNoteToggleBtn).on('click', (event) => {
     event.preventDefault();
