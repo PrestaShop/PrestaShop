@@ -24,7 +24,8 @@
  */
 
 import createOrderPageMap from './create-order-map';
-import ProductsListRenderer from './products-list-renderer';
+import ProductRenderer from './product-renderer';
+import Router from '../../../components/router';
 
 const $ = window.$;
 
@@ -35,7 +36,8 @@ export default class ProductManager {
   constructor() {
     this.products = [];
     this.combinations = [];
-    this.renderer = new ProductsListRenderer();
+    this.renderer = new ProductRenderer();
+    this.router = new Router();
 
     this._initEvents();
 
@@ -53,11 +55,14 @@ export default class ProductManager {
    */
   _initEvents() {
     $(createOrderPageMap.productSearch).on('input', event => this._handleProductSearch(event));
-    $(createOrderPageMap.productSelect).on('change', event => this._handleProductChange(event));
+    $(createOrderPageMap.productSelect).on('change', event => {
+      const index = $(event.currentTarget).find(':selected').data('index');
+      this.renderer._handleProductChange(this.products[index])
+    });
     $(createOrderPageMap.productResultBlock).on(
         'change',
         createOrderPageMap.combinationsSelect,
-        event => this._handleCombinationChange(event),
+        event => this.renderer._handleCombinationChange(event),
     );
   }
 
@@ -75,11 +80,8 @@ export default class ProductManager {
       return;
     }
 
-    $.ajax($productSearchInput.data('product-search-url'), {
-      method: 'GET',
-      data: {
-        product_search_phrase: name,
-      },
+    $.get(this.router.generate('admin_products_search'), {
+        search_phrase: name,
     }).then((response) => {
       this.products = JSON.parse(response);
       if (this.products.length === 0) {
@@ -88,213 +90,212 @@ export default class ProductManager {
         return;
       }
 
-      this._renderProductSearchResult();
+      this.renderer.renderSearchResults(this.products);
     }).catch((response) => {
       if (typeof response.responseJSON !== 'undefined') {
         showErrorMessage(response.responseJSON.message);
       }
     });
   }
+  // /**
+  //  * Renders product result block
+  //  *
+  //  * @private
+  //  */
+  // _renderProductSearchResult() {
+  //   $(createOrderPageMap.productSelect).empty();
+  //
+  //   for (const [index, product] of this.products.entries()) {
+  //     if (index === 0) {
+  //       this._fillFieldsRelatedToProduct(product);
+  //     }
+  //
+  //     let name = product.name;
+  //     const combinationsCollection = product.combinations;
+  //
+  //     if (combinationsCollection === null) {
+  //       name += ` - ${  product.formatted_price}`;
+  //     }
+  //
+  //     const shouldUpdateStockValue = combinationsCollection === null && index === 0;
+  //
+  //     if (shouldUpdateStockValue) {
+  //       this._updateStock(product.stock);
+  //     }
+  //
+  //     $(createOrderPageMap.productSelect).append(
+  //       $('<option></option>').attr('value', product.product_id).text(name).attr('data-index', index),
+  //     );
+  //   }
+  //
+  //   const $noRecordsRow = $(createOrderPageMap.noRecordsFound).find(
+  //     createOrderPageMap.noRecordsFoundRow,
+  //   );
+  //
+  //   if ($noRecordsRow.length !== 0) {
+  //     $noRecordsRow.remove();
+  //   }
+  //
+  //   this._showResultBlock();
+  // }
 
-  /**
-   * Renders product result block
-   *
-   * @private
-   */
-  _renderProductSearchResult() {
-    $(createOrderPageMap.productSelect).empty();
+  // /**
+  //  * Updates stock text helper value
+  //  *
+  //  * @param stock
+  //  * @private
+  //  */
+  // _updateStock(stock) {
+  //   $(createOrderPageMap.inStockCounter).text(stock);
+  //   $(createOrderPageMap.quantityInput).attr('max', stock);
+  // }
 
-    for (const [index, product] of this.products.entries()) {
-      if (index === 0) {
-        this._fillFieldsRelatedToProduct(product);
-      }
+  // /**
+  //  * Adds available fields related to selected product
+  //  *
+  //  * @param product
+  //  * @private
+  //  */
+  // _fillFieldsRelatedToProduct(product) {
+  //   this._fillCombinations(product.combinations);
+  //   this._resolveCustomizationFields(product.customization_fields);
+  // }
 
-      let name = product.name;
-      const combinationsCollection = product.combinations;
+  // /**
+  //  * Handles product select change
+  //  *
+  //  * @param event
+  //  * @private
+  //  */
+  // _handleProductChange(event) {
+  //   const index = $(event.currentTarget).find(':selected').data('index');
+  //   const product = this.products[index];
+  //
+  //   this._fillFieldsRelatedToProduct(product);
+  //
+  //   if (product.combinations === null) {
+  //     this.combinations = [];
+  //     this._updateStock(product.stock);
+  //   }
+  //
+  //   this._fillCombinations(product.combinations);
+  // }
+  //
+  // /**
+  //  * Handles combination select change
+  //  *
+  //  * @param event
+  //  * @private
+  //  */
+  // _handleCombinationChange(event) {
+  //   const index = $(event.currentTarget).find(':selected').val();
+  //   const combination = this.combinations[index];
+  //
+  //   this._updateStock(combination.stock);
+  // }
+  //
+  // /**
+  //  * Fills combination select with options
+  //  *
+  //  * @param combinations
+  //  * @private
+  //  */
+  // _fillCombinations(combinations) {
+  //   if (combinations === null) {
+  //     this._removeCombinationSelect();
+  //
+  //     return;
+  //   }
+  //
+  //   this.combinations = combinations.combinations;
+  //
+  //   if ($(createOrderPageMap.combinationsRow).length === 0) {
+  //     const $combinationsTemplate = $($(createOrderPageMap.combinationsTemplate).html());
+  //     $(createOrderPageMap.productSelectRow).after($combinationsTemplate);
+  //   }
+  //
+  //   const $combinationsSelect = $(createOrderPageMap.combinationsSelect);
+  //   $combinationsSelect.empty();
+  //
+  //   const entries = Object.entries(combinations.combinations);
+  //
+  //   let i = 0; // This is needed because index in this case is attribute combination id
+  //
+  //   for (const [id, combination] of entries) {
+  //     if (i === 0) {
+  //       this._updateStock(combination.stock);
+  //     }
+  //
+  //     const name = `${combination.attribute  } - ${  combination.formatted_price}`;
+  //     $combinationsSelect.append($('<option></option>')
+  //       .attr('value', id).text(name));
+  //
+  //     i += 1;
+  //   }
+  // }
+  //
+  // /**
+  //  * Resolves weather to add customization fields to result block and adds them if needed
+  //  *
+  //  * @param customizationFields
+  //  * @private
+  //  */
+  // _resolveCustomizationFields(customizationFields) {
+  //   this._removeCustomizedFields();
+  //   if (customizationFields === null) {
+  //     return;
+  //   }
+  //
+  //   const $customizedFieldTemplate = $(createOrderPageMap.cartProductCustomizedFieldTemplate);
+  //   let $customizedFieldTemplateContent = $($customizedFieldTemplate.html());
+  //
+  //   const customizationLabel = $(createOrderPageMap.productSelect).data('customization-label');
+  //
+  //   $customizedFieldTemplateContent.find(createOrderPageMap.customizedLabelClass)
+  //     .text(customizationLabel);
+  //
+  //   $(createOrderPageMap.quantityRow).before($customizedFieldTemplateContent);
+  //
+  //   $.each(customizationFields.product_customization_fields, (index, field) => {
+  //     const $fieldTemplate = $($(createOrderPageMap.customizedFieldTypes[field.type]).html());
+  //
+  //     $customizedFieldTemplateContent = $($customizedFieldTemplate.html());
+  //     if (field.required) {
+  //       $customizedFieldTemplateContent.find(createOrderPageMap.customizedLabelClass)
+  //         .append('<span class="text-danger">*</span>');
+  //     }
+  //
+  //     $customizedFieldTemplateContent.find(createOrderPageMap.customizedLabelClass)
+  //       .append(field.name);
+  //
+  //     const $fieldWrapper = $customizedFieldTemplateContent
+  //       .find(createOrderPageMap.customizedFieldInputWrapper);
+  //
+  //     $fieldWrapper.append($fieldTemplate);
+  //     $fieldWrapper.find(createOrderPageMap.customizedFieldInput)
+  //       .attr('data-customization-field-id', field.customization_field_id);
+  //
+  //     $(createOrderPageMap.quantityRow).before($customizedFieldTemplateContent);
+  //   });
+  // }
 
-      if (combinationsCollection === null) {
-        name += ` - ${  product.formatted_price}`;
-      }
-
-      const shouldUpdateStockValue = combinationsCollection === null && index === 0;
-
-      if (shouldUpdateStockValue) {
-        this._updateStock(product.stock);
-      }
-
-      $(createOrderPageMap.productSelect).append(
-        $('<option></option>').attr('value', product.product_id).text(name).attr('data-index', index),
-      );
-    }
-
-    const $noRecordsRow = $(createOrderPageMap.noRecordsFound).find(
-      createOrderPageMap.noRecordsFoundRow,
-    );
-
-    if ($noRecordsRow.length !== 0) {
-      $noRecordsRow.remove();
-    }
-
-    this._showResultBlock();
-  }
-
-  /**
-   * Updates stock text helper value
-   *
-   * @param stock
-   * @private
-   */
-  _updateStock(stock) {
-    $(createOrderPageMap.inStockCounter).text(stock);
-    $(createOrderPageMap.quantityInput).attr('max', stock);
-  }
-
-  /**
-   * Adds available fields related to selected product
-   *
-   * @param product
-   * @private
-   */
-  _fillFieldsRelatedToProduct(product) {
-    this._fillCombinations(product.combinations);
-    this._resolveCustomizationFields(product.customization_fields);
-  }
-
-  /**
-   * Handles product select change
-   *
-   * @param event
-   * @private
-   */
-  _handleProductChange(event) {
-    const index = $(event.currentTarget).find(':selected').data('index');
-    const product = this.products[index];
-
-    this._fillFieldsRelatedToProduct(product);
-
-    if (product.combinations === null) {
-      this.combinations = [];
-      this._updateStock(product.stock);
-    }
-
-    this._fillCombinations(product.combinations);
-  }
-
-  /**
-   * Handles combination select change
-   *
-   * @param event
-   * @private
-   */
-  _handleCombinationChange(event) {
-    const index = $(event.currentTarget).find(':selected').val();
-    const combination = this.combinations[index];
-
-    this._updateStock(combination.stock);
-  }
-
-  /**
-   * Fills combination select with options
-   *
-   * @param combinations
-   * @private
-   */
-  _fillCombinations(combinations) {
-    if (combinations === null) {
-      this._removeCombinationSelect();
-
-      return;
-    }
-
-    this.combinations = combinations.combinations;
-
-    if ($(createOrderPageMap.combinationsRow).length === 0) {
-      const $combinationsTemplate = $($(createOrderPageMap.combinationsTemplate).html());
-      $(createOrderPageMap.productSelectRow).after($combinationsTemplate);
-    }
-
-    const $combinationsSelect = $(createOrderPageMap.combinationsSelect);
-    $combinationsSelect.empty();
-
-    const entries = Object.entries(combinations.combinations);
-
-    let i = 0; // This is needed because index in this case is attribute combination id
-
-    for (const [id, combination] of entries) {
-      if (i === 0) {
-        this._updateStock(combination.stock);
-      }
-
-      const name = `${combination.attribute  } - ${  combination.formatted_price}`;
-      $combinationsSelect.append($('<option></option>')
-        .attr('value', id).text(name));
-
-      i += 1;
-    }
-  }
-
-  /**
-   * Resolves weather to add customization fields to result block and adds them if needed
-   *
-   * @param customizationFields
-   * @private
-   */
-  _resolveCustomizationFields(customizationFields) {
-    this._removeCustomizedFields();
-    if (customizationFields === null) {
-      return;
-    }
-
-    const $customizedFieldTemplate = $(createOrderPageMap.cartProductCustomizedFieldTemplate);
-    let $customizedFieldTemplateContent = $($customizedFieldTemplate.html());
-
-    const customizationLabel = $(createOrderPageMap.productSelect).data('customization-label');
-
-    $customizedFieldTemplateContent.find(createOrderPageMap.customizedLabelClass)
-      .text(customizationLabel);
-
-    $(createOrderPageMap.quantityRow).before($customizedFieldTemplateContent);
-
-    $.each(customizationFields.product_customization_fields, (index, field) => {
-      const $fieldTemplate = $($(createOrderPageMap.customizedFieldTypes[field.type]).html());
-
-      $customizedFieldTemplateContent = $($customizedFieldTemplate.html());
-      if (field.required) {
-        $customizedFieldTemplateContent.find(createOrderPageMap.customizedLabelClass)
-          .append('<span class="text-danger">*</span>');
-      }
-
-      $customizedFieldTemplateContent.find(createOrderPageMap.customizedLabelClass)
-        .append(field.name);
-
-      const $fieldWrapper = $customizedFieldTemplateContent
-        .find(createOrderPageMap.customizedFieldInputWrapper);
-
-      $fieldWrapper.append($fieldTemplate);
-      $fieldWrapper.find(createOrderPageMap.customizedFieldInput)
-        .attr('data-customization-field-id', field.customization_field_id);
-
-      $(createOrderPageMap.quantityRow).before($customizedFieldTemplateContent);
-    });
-  }
-
-  /**
-   * Removes combination select for products with no combinations
-   *
-   * @private
-   */
-  _removeCombinationSelect() {
-    $(createOrderPageMap.combinationsRow).remove();
-  }
-
-  /**
-   * Removes customized fields select for products with no customized fields
-   *
-   * @private
-   */
-  _removeCustomizedFields() {
-    $(createOrderPageMap.customizedFieldContainer).remove();
-  }
+  // /**
+  //  * Removes combination select for products with no combinations
+  //  *
+  //  * @private
+  //  */
+  // _removeCombinationSelect() {
+  //   $(createOrderPageMap.combinationsRow).remove();
+  // }
+  //
+  // /**
+  //  * Removes customized fields select for products with no customized fields
+  //  *
+  //  * @private
+  //  */
+  // _removeCustomizedFields() {
+  //   $(createOrderPageMap.customizedFieldContainer).remove();
+  // }
 
   /**
    * Shows empty result when product is not found

@@ -24,38 +24,63 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Order\QueryResult;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Query;
 
-class ProductsForOrderCreation
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+
+/**
+ * Queries for products by provided search phrase
+ */
+class SearchProducts
 {
     /**
-     * @var ProductForOrderCreation[]
+     * @var string
      */
-    private $products = [];
+    private $phrase;
 
     /**
-     * @param ProductForOrderCreation[] $products
+     * @var int
      */
-    public function __construct(array $products)
+    private $resultsLimit;
+
+    /**
+     * @param string $phrase
+     * @param int $resultsLimit
+     *
+     * @throws ProductException
+     */
+    public function __construct(string $phrase, int $resultsLimit)
     {
-        foreach ($products as $product) {
-            $this->addProductForOrderCreation($product);
+        $this->assertIsNotEmptyString($phrase);
+        $this->phrase = $phrase;
+        $this->resultsLimit = $resultsLimit;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPhrase()
+    {
+        return $this->phrase;
+    }
+
+    /**
+     * @return int
+     */
+    public function getResultsLimit(): int
+    {
+        return $this->resultsLimit;
+    }
+
+    /**
+     * @param string $phrase
+     *
+     * @throws ProductException
+     */
+    private function assertIsNotEmptyString(string $phrase): void
+    {
+        if (empty($phrase) || !is_string($phrase)) {
+            throw new ProductException('Product search phrase must be a not empty string');
         }
-    }
-
-    /**
-     * @param ProductForOrderCreation $productForOrderCreation
-     */
-    private function addProductForOrderCreation(ProductForOrderCreation $productForOrderCreation): void
-    {
-        $this->products[] = $productForOrderCreation;
-    }
-
-    /**
-     * @return ProductForOrderCreation[]
-     */
-    public function getProducts(): array
-    {
-        return $this->products;
     }
 }

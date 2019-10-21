@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Order\QueryResult;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
 
 /**
  * Holds data of product customization field

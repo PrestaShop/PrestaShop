@@ -4236,7 +4236,7 @@ class ProductCore extends ObjectModel
      *
      * @return array Matching products
      */
-    public static function searchByName($id_lang, $query, Context $context = null)
+    public static function searchByName($id_lang, $query, Context $context = null, $limit = null)
     {
         if (!$context) {
             $context = Context::getContext();
@@ -4264,6 +4264,10 @@ class ProductCore extends ObjectModel
         OR EXISTS(SELECT * FROM `' . _DB_PREFIX_ . 'product_supplier` sp WHERE sp.`id_product` = p.`id_product` AND `product_supplier_reference` LIKE \'%' . pSQL($query) . '%\')';
 
         $sql->orderBy('pl.`name` ASC');
+
+        if ($limit) {
+            $sql->limit($limit);
+        }
 
         if (Combination::isFeatureActive()) {
             $where .= ' OR EXISTS(SELECT * FROM `' . _DB_PREFIX_ . 'product_attribute` `pa` WHERE pa.`id_product` = p.`id_product` AND (pa.`reference` LIKE \'%' . pSQL($query) . '%\'
