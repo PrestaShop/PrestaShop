@@ -1,5 +1,5 @@
 {#**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -23,26 +23,18 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-{% if column.options.with_bulk_field %}
-  <div class="md-checkbox d-inline-block">
-    <label>
-      <input type="checkbox"
-             title="{{ column.name }}"
-             class="js-bulk-action-checkbox"
-             name="{{ grid.id~'_'~column.id }}[]"
-             value="{{ record[column.options.bulk_field] }}"
-      >
-      <i class="md-checkbox-control"></i>
-    </label>
-  </div>
-{% endif %}
-
-{{ record[column.options.identifier_field] }}
-
-{% if column.options.preview is not null %}
-  {% include '@PrestaShop/Admin/Common/Grid/Columns/Content/preview.html.twig' with {
-    'column': column.options.preview,
-    'record': record,
-  }
-  %}
-{% endif %}
+<span
+  class="preview-toggle"
+  {% if column.options.preview_data_route is defined %}
+    {% set params = {} %}
+    {% if column.options.preview_route_params is defined %}
+      {% for param_name, record_field in column.options.preview_route_params %}
+        {% set params = params|merge({(param_name) : record[record_field]}) %}
+      {% endfor %}
+    {% endif %}
+    data-preview-data-url="{{ path(column.options.preview_data_route, params) }}"
+  {% endif %}
+>
+  <i class="text-primary material-icons js-expand d-none">{{ column.options.icon_expand }}</i>
+  <i class="text-primary material-icons js-collapse d-none">{{ column.options.icon_collapse }}</i>
+</span>

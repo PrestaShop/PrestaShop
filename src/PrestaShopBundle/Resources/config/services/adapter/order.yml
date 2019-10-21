@@ -121,3 +121,12 @@ services:
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Order\Command\ResendOrderEmailCommand
+
+  prestashop.adapter.order.query_handler.get_order_preview_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Order\QueryHandler\GetOrderPreviewHandler'
+    arguments:
+      - '@prestashop.core.localization.locale.repository'
+      - "@=service('prestashop.adapter.legacy.context').getContext().language.getLocale()"
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderPreview'

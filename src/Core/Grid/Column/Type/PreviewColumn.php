@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -24,23 +24,22 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Column\Type\Common;
+namespace PrestaShop\PrestaShop\Core\Grid\Column\Type;
 
 use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\PreviewColumn;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Columns is used as identifier in grid (e.g. Product ID, Category ID & etc)
+ * Allows adding Preview functionality to grid rows
  */
-final class IdentifierColumn extends AbstractColumn
+final class PreviewColumn extends AbstractColumn
 {
     /**
      * {@inheritdoc}
      */
     public function getType()
     {
-        return 'identifier';
+        return 'preview';
     }
 
     /**
@@ -50,21 +49,17 @@ final class IdentifierColumn extends AbstractColumn
     {
         $resolver
             ->setRequired([
-                'identifier_field',
+                'icon_expand',
+                'icon_collapse',
+                'preview_data_route',
             ])
-            ->setDefaults([
-                'sortable' => true,
-                'with_bulk_field' => false,
-                'bulk_field' => null,
-                'preview' => null,
+            ->setDefined([
+                'preview_route_params',
             ])
-            ->setAllowedTypes('identifier_field', 'string')
-            ->setAllowedTypes('sortable', 'bool')
-            ->setAllowedTypes('with_bulk_field', 'bool')
-            ->setAllowedTypes('bulk_field', ['string', 'null'])
-            ->setAllowedValues('preview', function ($previewColumn) {
-                return $previewColumn instanceof PreviewColumn || $previewColumn === null;
-            })
+            ->setAllowedTypes('preview_data_route', 'string')
+            ->setAllowedTypes('preview_route_params', 'array')
+            ->setAllowedTypes('icon_expand', 'string')
+            ->setAllowedTypes('icon_collapse', 'string')
         ;
     }
 }

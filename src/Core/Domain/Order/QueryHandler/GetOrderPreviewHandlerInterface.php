@@ -1,5 +1,6 @@
-{#**
- * 2007-2019 PrestaShop SA and Contributors
+<?php
+/**
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -21,28 +22,22 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% if column.options.with_bulk_field %}
-  <div class="md-checkbox d-inline-block">
-    <label>
-      <input type="checkbox"
-             title="{{ column.name }}"
-             class="js-bulk-action-checkbox"
-             name="{{ grid.id~'_'~column.id }}[]"
-             value="{{ record[column.options.bulk_field] }}"
-      >
-      <i class="md-checkbox-control"></i>
-    </label>
-  </div>
-{% endif %}
+namespace PrestaShop\PrestaShop\Core\Domain\Order\QueryHandler;
 
-{{ record[column.options.identifier_field] }}
+use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderPreview;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPreview;
 
-{% if column.options.preview is not null %}
-  {% include '@PrestaShop/Admin/Common/Grid/Columns/Content/preview.html.twig' with {
-    'column': column.options.preview,
-    'record': record,
-  }
-  %}
-{% endif %}
+/**
+ * Defines contract for getOrderPreview query handler
+ */
+interface GetOrderPreviewHandlerInterface
+{
+    /**
+     * @param GetOrderPreview $query
+     *
+     * @return OrderPreview
+     */
+    public function handle(GetOrderPreview $query): OrderPreview;
+}

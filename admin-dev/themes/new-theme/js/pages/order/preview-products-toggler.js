@@ -1,4 +1,4 @@
-{#**
+/**
  * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,28 +21,23 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% if column.options.with_bulk_field %}
-  <div class="md-checkbox d-inline-block">
-    <label>
-      <input type="checkbox"
-             title="{{ column.name }}"
-             class="js-bulk-action-checkbox"
-             name="{{ grid.id~'_'~column.id }}[]"
-             value="{{ record[column.options.bulk_field] }}"
-      >
-      <i class="md-checkbox-control"></i>
-    </label>
-  </div>
-{% endif %}
+const $ = window.$;
 
-{{ record[column.options.identifier_field] }}
+/**
+ * Toggles hidden products in order preview block.
+ *
+ * @param {jQuery} $gridContainer
+ */
+export default function previewProductsToggler($gridContainer) {
+  $gridContainer.on('click', '.js-preview-more-products-btn', (event) => {
+    event.preventDefault();
 
-{% if column.options.preview is not null %}
-  {% include '@PrestaShop/Admin/Common/Grid/Columns/Content/preview.html.twig' with {
-    'column': column.options.preview,
-    'record': record,
-  }
-  %}
-{% endif %}
+    const $btn = $(event.currentTarget);
+    const $hiddenProducts = $btn.closest('tbody').find('.js-product-preview-more');
+
+    $hiddenProducts.removeClass('d-none');
+    $btn.closest('tr').remove();
+  });
+}

@@ -3,6 +3,28 @@
   .column-shop_name {
     word-break: normal;
   }
+  .order-preview-content {
+    .details th, .product th, .details td, .product td {
+      border: none;
+      padding-top: 3.2px;
+      padding-bottom: 3.2px;
+    }
+    .details td, .product td {
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+    .product th {
+      background-color: #f8f8f8;
+    }
+
+    $order-details-text-padding-left: 34px;
+
+    .details {
+      td {
+        padding-left: 34px;
+      }
+    }
+  }
 }
 
 .info-block {

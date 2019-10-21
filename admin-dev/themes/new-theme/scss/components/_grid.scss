@@ -104,6 +104,15 @@ table .column-filters td:last-child .grid-reset-button {
           background: #fafbfc;
         }
 
+        &.preview-row,
+        &.empty_row {
+          background: inherit;
+        }
+
+        &.preview-open {
+          background-color: #e9f8fb;
+        }
+
         // styling for row that is being dragged
         &.dragging-row {
           background: #fafbfc;
@@ -204,6 +213,11 @@ table .column-filters td:last-child .grid-reset-button {
   }
   .table-responsive .row {
     margin: 0;
+  }
+  .preview-toggle {
+    i:hover {
+      cursor: pointer;
+    }
   }
 }
 
