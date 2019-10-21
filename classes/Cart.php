@@ -747,12 +747,13 @@ class CartCore extends ObjectModel
 
         if (empty($result)) {
             $this->_products = array();
+
             return array();
         }
 
         if ($fullInfos) {
             $cart_shop_context = Context::getContext()->cloneContext();
-            
+
             $givenAwayProductsIds = array();
 
             if ($this->shouldSplitGiftProductsQuantity) {
@@ -782,7 +783,7 @@ class CartCore extends ObjectModel
                     }
                 }
             }
-            
+
             $this->_products = array();
 
             foreach ($result as &$row) {
