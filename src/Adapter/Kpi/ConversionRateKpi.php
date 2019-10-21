@@ -45,7 +45,7 @@ final class ConversionRateKpi implements KpiInterface
 
         $helper = new HelperKpi();
         $helper->id = 'box-conversion-rate';
-        $helper->icon = 'show_chart';
+        $helper->icon = 'assessment';
         $helper->color = 'color1';
         $helper->title = $translator->trans('Conversion Rate', [], 'Admin.Global');
         $helper->subtitle = $translator->trans('30 days', [], 'Admin.Global');
