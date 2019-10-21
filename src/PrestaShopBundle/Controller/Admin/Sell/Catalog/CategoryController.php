@@ -69,7 +69,10 @@ class CategoryController extends FrameworkBundleAdminController
     /**
      * Show categories listing.
      *
-     * @AdminSecurity("is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller'))")
+     * @AdminSecurity(
+     *     "is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller'))",
+     *     message="You do not have permission to list this."
+     * )
      *
      * @param Request $request
      * @param CategoryFilters $filters
@@ -112,7 +115,8 @@ class CategoryController extends FrameworkBundleAdminController
      *
      * @AdminSecurity(
      *     "is_granted(['create'], request.get('_legacy_controller'))",
-     *     message="You do not have permission to create this."
+     *     message="You do not have permission to create this.",
+     *     redirectRoute="admin_categories_index"
      * )
      *
      * @param Request $request
@@ -162,7 +166,8 @@ class CategoryController extends FrameworkBundleAdminController
      *
      * @AdminSecurity(
      *     "is_granted(['create'], request.get('_legacy_controller'))",
-     *     message="You do not have permission to create this."
+     *     message="You do not have permission to create this.",
+     *     redirectRoute="admin_categories_index"
      * )
      *
      * @param Request $request
@@ -210,7 +215,8 @@ class CategoryController extends FrameworkBundleAdminController
      *
      * @AdminSecurity(
      *     "is_granted(['update'], request.get('_legacy_controller'))",
-     *     message="You do not have permission to edit this."
+     *     message="You do not have permission to edit this.",
+     *     redirectRoute="admin_categories_index"
      * )
      *
      * @param int $categoryId
@@ -280,7 +286,8 @@ class CategoryController extends FrameworkBundleAdminController
      *
      * @AdminSecurity(
      *     "is_granted(['update'], request.get('_legacy_controller'))",
-     *     message="You do not have permission to edit this."
+     *     message="You do not have permission to edit this.",
+     *     redirectRoute="admin_categories_index"
      * )
      *
      * @param int $categoryId
@@ -345,7 +352,9 @@ class CategoryController extends FrameworkBundleAdminController
      *
      * @AdminSecurity(
      *     "is_granted(['update'], request.get('_legacy_controller'))",
-     *     message="You do not have permission to edit this."
+     *     message="You do not have permission to edit this.",
+     *     redirectRoute="admin_categories_edit",
+     *     redirectQueryParamsToKeep={"categoryId"}
      * )
      *
      * @param Request $request
@@ -384,7 +393,9 @@ class CategoryController extends FrameworkBundleAdminController
      *
      * @AdminSecurity(
      *     "is_granted(['update'], request.get('_legacy_controller'))",
-     *     message="You do not have permission to edit this."
+     *     message="You do not have permission to edit this.",
+     *     redirectRoute="admin_categories_edit",
+     *     redirectQueryParamsToKeep={"categoryId"}
      * )
      *
      * @param Request $request
