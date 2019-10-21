@@ -35,8 +35,19 @@
 
     {{ ps.form_group_row(orderMessageForm.order_message, {}, {
       'label': 'Choose your order message'|trans({}, 'Admin.Orderscustomers.Feature'),
-      'label_on_top': true
+      'label_on_top': true,
+      'class': 'mb-0'
     }) }}
+
+    <div class="form-group row">
+      <div class="col-sm">
+        <a href="{{ path('admin_order_messages_index') }}" class="mb-1">
+          {{ 'Configure predefined messages'|trans({}, 'Admin.Orderscustomers.Feature') }}
+          <i class="material-icons">arrow_right_alt</i>
+        </a>
+      </div>
+    </div>
+
 
     {{ ps.form_group_row(orderMessageForm.is_displayed_to_customer, {'material_design': true}) }}
 
