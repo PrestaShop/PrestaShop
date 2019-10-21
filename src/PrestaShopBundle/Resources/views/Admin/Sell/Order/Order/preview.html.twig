@@ -105,7 +105,10 @@
               {% set taxInclusion = 'Tax excluded'|trans({}, 'Admin.Global') %}
             {% endif %}
 
-            <th>{{ 'Product'|trans({}, 'Admin.Global') }}</th>
+            <th>
+              {{ 'Products'|trans({}, 'Admin.Global') }}
+              ({{ orderPreview.productDetails|length }})
+            </th>
             <th>{{ 'Reference'|trans({}, 'Admin.Global') }}</th>
             <th>{{ 'Stock location'|trans({}, 'Admin.Orderscustomers.Feature') }}</th>
             <th class="text-center">
@@ -149,8 +152,8 @@
       </div>
 
       <div class="text-right">
-        <a href="{{ path('admin_orders_view', {'orderId': orderId}) }}" class="btn btn-primary btn-sm">
-          {{ 'Open order'|trans({}, 'Admin.Orderscustomers.Feature') }}
+        <a href="{{ path('admin_orders_view', {'orderId': orderId}) }}" class="btn btn-primary btn-sm mb-3">
+          {{ 'Open details'|trans({}, 'Admin.Orderscustomers.Feature') }}
           <i class="material-icons">arrow_right_alt</i>
         </a>
       </div>
