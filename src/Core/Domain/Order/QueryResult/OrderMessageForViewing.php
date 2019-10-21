@@ -69,6 +69,10 @@ class OrderMessageForViewing
      * @var int
      */
     private $employeeId;
+    /**
+     * @var bool
+     */
+    private $isPrivate;
 
     /**
      * @param int $messageId
@@ -79,6 +83,7 @@ class OrderMessageForViewing
      * @param string $employeeLastName
      * @param string $customerFirstName
      * @param string $customerLastName
+     * @param bool $isPrivate
      */
     public function __construct(
         int $messageId,
@@ -88,7 +93,8 @@ class OrderMessageForViewing
         ?string $employeeFirstName,
         ?string $employeeLastName,
         string $customerFirstName,
-        string $customerLastName
+        string $customerLastName,
+        bool $isPrivate
     ) {
         $this->messageId = $messageId;
         $this->message = $message;
@@ -98,6 +104,7 @@ class OrderMessageForViewing
         $this->customerFirstName = $customerFirstName;
         $this->customerLastName = $customerLastName;
         $this->employeeId = $employeeId;
+        $this->isPrivate = $isPrivate;
     }
 
     /**
@@ -162,5 +169,13 @@ class OrderMessageForViewing
     public function getEmployeeId(): int
     {
         return $this->employeeId;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPrivate(): bool
+    {
+        return $this->isPrivate;
     }
 }
