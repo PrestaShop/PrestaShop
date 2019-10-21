@@ -757,7 +757,8 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
                 $orderMessage['efirstname'],
                 $orderMessage['elastname'],
                 $orderMessage['cfirstname'],
-                $orderMessage['clastname']
+                $orderMessage['clastname'],
+                (bool) $orderMessage['private']
             );
         }
 

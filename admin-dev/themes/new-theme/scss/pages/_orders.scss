@@ -27,13 +27,16 @@
   }
 }
 
+$order-block-background-color: #F8F8F8;
+
 .info-block {
-  background-color: #F8F8F8;
+  background-color: $order-block-background-color;
   padding-top: 18px;
   padding-left: 18px;
   padding-right: 18px;
   padding-bottom: 16px;
 }
+
 
 #order-creation-container {
   .found-cart-rule:hover {
@@ -46,3 +49,39 @@
   }
 }
 
+.messages-block {
+  background-color: $order-block-background-color;
+
+  $private-message-color: #7A8A8F;
+
+  .message {
+    padding: 10px;
+    border-radius: 5px;
+
+    &.customer-message {
+      background-color: #fff;
+    }
+    &.employee-message {
+      background-color: #d3f1f7;
+    }
+    &.employee-message--private {
+      background-color: $private-message-color;
+      color: #fff;
+    }
+  }
+
+  .employee-icon {
+    &:before {
+      font-family: "Material Icons";
+      content: 'account_circle';
+    }
+    color: #36b9d7;
+  }
+  .employee-icon--private {
+    &:before {
+      font-family: "Material Icons";
+      content: 'visibility_off';
+    }
+    color: $private-message-color;
+  }
+}
