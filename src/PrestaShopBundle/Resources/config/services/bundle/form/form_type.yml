@@ -1018,3 +1018,11 @@ services:
             - '@prestashop.adapter.form.choice_provider.employee_name_by_id'
         tags:
             - { name: form.type }
+
+    form.type.order.message:
+      class: 'PrestaShopBundle\Form\Admin\Sell\Order\OrderMessageType'
+      calls:
+        - { method: setTranslator, arguments: ['@translator'] }
+      tags:
+        - { name: form.type }
+
