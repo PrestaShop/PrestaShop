@@ -44,7 +44,7 @@ use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 class CartFeatureContext extends AbstractDomainFeatureContext
 {
     /**
-     * @given the current currency is :currencyIsoCode
+     * @Given the current currency is :currencyIsoCode
      */
     public function addCurrencyToContext($currencyIsoCode)
     {
