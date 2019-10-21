@@ -136,16 +136,17 @@ class OrderHistoryCore extends ObjectModel
                 $customer = new Customer((int) $order->id_customer);
                 $links = array();
                 foreach ($assign as $product) {
-                    $text = Tools::htmlentitiesUTF8($product['name']);
+                    $complementaryText = array();
                     if (isset($product['deadline'])) {
-                        $text .= '&nbsp;' . $this->trans('expires on %s.', array($product['deadline']), 'Admin.Orderscustomers.Notification');
+                        $complementaryText[] = $this->trans('expires on %s.', array($product['deadline']), 'Admin.Orderscustomers.Notification');
                     }
                     if (isset($product['downloadable'])) {
-                        $text .= '&nbsp;' . $this->trans('downloadable %d time(s)', array((int) $product['downloadable']), 'Admin.Orderscustomers.Notification');
+                        $complementaryText[] = $this->trans('downloadable %d time(s)', array((int) $product['downloadable']), 'Admin.Orderscustomers.Notification');
                     }
                     $links[] = array(
-                        'text' => $text,
+                        'text' => Tools::htmlentitiesUTF8($product['name']),
                         'url' => $product['link'],
+                        'complementary_text' => implode(' ', $complementaryText),
                     );
                 }
 
