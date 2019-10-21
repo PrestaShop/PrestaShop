@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Order;
 
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Translation\TranslatorAwareTrait;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -40,13 +41,21 @@ class OrderMessageType extends AbstractType
 {
     use TranslatorAwareTrait;
 
+    /**
+     * @var FormChoiceProviderInterface
+     */
+    private $orderMessageChoiceProvider;
+
+    public function __construct(FormChoiceProviderInterface $orderMessageChoiceProvider)
+    {
+        $this->orderMessageChoiceProvider = $orderMessageChoiceProvider;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('order_message', ChoiceType::class, [
-                'choices' => [
-                    '--' => 0,
-                ],
+                'choices' => $this->orderMessageChoiceProvider->getChoices(),
                 'required' => false,
             ])
             ->add('is_displayed_to_customer', CheckboxType::class, [
