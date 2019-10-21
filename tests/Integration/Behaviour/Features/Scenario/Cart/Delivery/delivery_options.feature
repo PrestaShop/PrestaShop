@@ -38,5 +38,4 @@ Feature: Compute correct delivery options
     # Enables standard cart rule
     When I enable cart rule "bad_cart_rule"
     When I select carrier "carrier1" in my cart
-    # Bad result T_T
-    Then there is no delivery options available for my cart
+    Then there are available delivery options for my cart

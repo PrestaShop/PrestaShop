@@ -1,5 +1,6 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s order
 @reset-database-before-feature
+  @aaa
 Feature: Add Order from Back Office
   PrestaShop allows BO users to add new orders in the Sell > Orders > Add new Order page
   As a BO user
@@ -10,7 +11,8 @@ Feature: Add Order from Back Office
 
   Scenario: Add order from Back Office with free shipping
     Given I am logged in as "test@prestashop.com" employee
-    Given The current currency is "EUR"
+    Given the current currency is "USD"
+    And country "US" is enabled
     And there is customer "customer1" with email "pub@prestashop.com"
     And customer "customer1" has address in "US" country
     And the module "dummy_payment" is installed
