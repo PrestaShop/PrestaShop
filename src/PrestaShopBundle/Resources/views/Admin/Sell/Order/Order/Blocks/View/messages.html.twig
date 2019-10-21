@@ -30,6 +30,47 @@
       {{ 'Messages'|trans({}, 'Admin.Global') }} ({{ orderForViewing.payments.payments|length }})
     </h3>
   </div>
+
+  {% if orderForViewing.messages.messages is not empty %}
+    <ul class="list-unstyled p-4 messages-block">
+      {% for message in orderForViewing.messages.messages %}
+        <li class="mb-2">
+          <div class="row">
+            {% if not message.employeeId %}
+              <div class="col-md-1">
+                <i class="material-icons">account_circle</i>
+              </div>
+              <div class="col-md-11">
+                <p class="mb-0 message customer-message">
+                  {{ message.message|nl2br }}
+                </p>
+                <p class="text-muted mb-0">
+                  {{ message.customerFirstName ~ ' ' ~ message.customerLastName }}
+                  {{ message.date|date('Y-m-d H:i:s') }}
+                </p>
+              </div>
+            {% endif %}
+
+            {% if message.employeeId %}
+              <div class="col-md-11">
+                <p class="mb-0 message employee-message{{ message.isPrivate ? '--private' : '' }}">
+                  {{ message.message|nl2br }}
+                </p>
+                <p class="text-muted mb-0 text-right">
+                  {{ message.employeeFirstName ~ ' ' ~ message.employeeLastName }}
+                  {{ message.date|date('Y-m-d H:i:s') }}
+                </p>
+              </div>
+              <div class="col-md-1">
+                <i class="material-icons employee-icon{{ message.isPrivate ? '--private' : '' }}"></i>
+              </div>
+            {% endif %}
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
   <div class="card-body">
     {{ form_start(orderMessageForm) }}
 
