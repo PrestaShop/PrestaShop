@@ -23,6 +23,34 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
+{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+<div class="card mt-2">
+  <div class="card-header">
+    <h3 class="card-header-title">
+      {{ 'Messages'|trans({}, 'Admin.Global') }} ({{ orderForViewing.payments.payments|length }})
+    </h3>
+  </div>
+  <div class="card-body">
+    {{ form_start(orderMessageForm) }}
+
+    {{ ps.form_group_row(orderMessageForm.order_message, {}, {
+      'label': 'Choose your order message'|trans({}, 'Admin.Orderscustomers.Feature')
+    }) }}
+
+    {{ ps.form_group_row(orderMessageForm.is_displayed_to_customer, {'material_design': true}) }}
+
+    {{ ps.form_group_row(orderMessageForm.message, {}, {
+      'label': 'Message'|trans({}, 'Admin.Global')
+    }) }}
+
+    {% block order_message_form_rest %}
+      {{ form_rest(orderMessageForm) }}
+    {% endblock %}
+
+    {{ form_end(orderMessageForm) }}
+  </div>
+</div>
+
 <div class="card mt-2">
   <div class="card-header">
     <h3 class="card-header-title">
@@ -30,6 +58,9 @@
     </h3>
   </div>
   <div class="card-body p-0">
+
+
+
     {% if orderForViewing.messages.messages is not empty %}
       <ul class="list-unstyled p-4" style="background-color: #f8f8f8;">
       {% for message in orderForViewing.messages.messages %}
