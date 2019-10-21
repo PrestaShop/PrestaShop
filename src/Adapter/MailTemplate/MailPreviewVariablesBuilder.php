@@ -46,6 +46,8 @@ final class MailPreviewVariablesBuilder
 {
     const ORDER_CONFIRMATION = 'order_conf';
 
+    const DOWNLOAD_PRODUCT = 'download_product';
+
     const EMAIL_ALERTS_MODULE = 'ps_emailalerts';
     const NEW_ORDER = 'new_order';
     const RETURN_SLIP = 'return_slip';
@@ -120,6 +122,19 @@ final class MailPreviewVariablesBuilder
     }
 
     /**
+     * @param $id
+     * @param array $parameters
+     * @param null $domain
+     * @param null $local
+     *
+     * @return string
+     */
+    protected function trans($id, $parameters = [], $domain = null, $local = null)
+    {
+        return $this->context->getTranslator()->trans($id, $parameters, $domain, $local);
+    }
+
+    /**
      * @return array
      *
      * @throws \PrestaShopException
@@ -148,6 +163,15 @@ final class MailPreviewVariablesBuilder
                 '{products_txt}' => $productListTxt,
                 '{discounts}' => $cartRulesListHtml,
                 '{discounts_txt}' => $cartRulesListTxt,
+            ];
+        } elseif (self::DOWNLOAD_PRODUCT == $mailLayout->getName()) {
+            $virtualProductTemplateList = $this->getFakeVirtualProductList();
+            $virtualProductListTxt = $this->mailPartialTemplateRenderer->render('download_product_virtual_products.txt', $this->context->language, $virtualProductTemplateList);
+            $virtualProductListHtml = $this->mailPartialTemplateRenderer->render('download_product_virtual_products.tpl', $this->context->language, $virtualProductTemplateList);
+            $productVariables = [
+                '{nbProducts}' => count($virtualProductTemplateList),
+                '{virtualProducts}' => $virtualProductListHtml,
+                '{virtualProductsTxt}' => $virtualProductListTxt,
             ];
         } elseif (self::EMAIL_ALERTS_MODULE == $mailLayout->getModuleName() && self::NEW_ORDER == $mailLayout->getName()) {
             $productVariables = [
@@ -349,6 +373,28 @@ final class MailPreviewVariablesBuilder
         }
 
         return $productTemplateList;
+    }
+
+    /**
+     * @return array
+     */
+    private function getFakeVirtualProductList()
+    {
+        $products = Product::getProducts($this->context->language->getId(), 0, 2, 'id_product', 'ASC');
+        $results = [];
+
+        foreach ($products as $product) {
+            $p = new Product($product['id_product']);
+            $results[] = [
+                'text' => Product::getProductName($product['id_product']),
+                'url' => $p->getLink(),
+                'complementary_text' => '',
+            ];
+        }
+        $results[1]['complementary_text'] = ' ' . $this->trans('expires on %s.', array(date('Y-m-d')), 'Admin.Orderscustomers.Notification');
+        $results[1]['complementary_text'] .= ' ' . $this->trans('downloadable %d time(s)', array(10), 'Admin.Orderscustomers.Notification');
+
+        return $results;
     }
 
     /**
