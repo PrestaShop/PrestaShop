@@ -5,6 +5,8 @@
 	</currencies>
 	<languages>
 		<language iso_code="tw" />
+    <language iso_code="zh" />
+		<language iso_code="hk" />
 	</languages>
 	<units>
 		<unit type="weight" value="市制" />
