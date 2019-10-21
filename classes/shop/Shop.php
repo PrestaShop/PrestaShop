@@ -1282,7 +1282,7 @@ class ShopCore extends ObjectModel
         }
         $query->from('category_shop', 'cs');
         $query->leftJoin('category_lang', 'cl', 'cl.`id_category` = cs.`id_category` AND cl.`id_lang` = ' . (int) Context::getContext()->language->id);
-        $query->where('cs.`id_shop` = ' . (int) $id);
+        $query->where('cs.`id_shop` = ' . (int) $id . ' AND cl.`id_shop` = ' . (int) $id);
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 
         if ($only_id) {
