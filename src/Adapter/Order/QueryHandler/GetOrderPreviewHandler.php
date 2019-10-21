@@ -43,6 +43,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPreviewProductDetai
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPreviewShippingDetails;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
+use State;
 use Validate;
 
 /**
@@ -118,13 +119,19 @@ final class GetOrderPreviewHandler implements GetOrderPreviewHandlerInterface
         $customer = new Customer($order->id_customer);
         $address = new Address($order->id_address_invoice);
         $country = new Country($address->id_country);
+        $state = new State($address->id_state);
+        $stateName = Validate::isLoadedObject($state) ? $state->name : null;
 
         return new OrderPreviewInvoiceDetails(
             $customer->firstname,
             $customer->lastname,
+            $address->company,
+            $address->vat_number,
             $address->address1,
             $address->address2,
             $address->city,
+            $address->postcode,
+            $stateName,
             $country->name[$order->id_lang],
             $customer->email,
             $address->phone,
@@ -141,8 +148,10 @@ final class GetOrderPreviewHandler implements GetOrderPreviewHandlerInterface
         $address = new Address($order->id_address_delivery);
         $country = new Country($address->id_country);
         $carrier = new Carrier($order->id_carrier);
+        $state = new State($address->id_state);
 
         $carrierName = null;
+        $stateName = Validate::isLoadedObject($state) ? $state->name : null;
 
         if (Validate::isLoadedObject($carrier)) {
             $carrierName = $carrier->name;
@@ -154,9 +163,13 @@ final class GetOrderPreviewHandler implements GetOrderPreviewHandlerInterface
         return new OrderPreviewShippingDetails(
             $customer->firstname,
             $customer->lastname,
+            $address->company,
+            $address->vat_number,
             $address->address1,
             $address->address2,
             $address->city,
+            $address->postcode,
+            $stateName,
             $country->name[$order->id_lang],
             $address->phone,
             $carrierName,

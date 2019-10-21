@@ -77,28 +77,49 @@ class OrderPreviewInvoiceDetails
     private $company;
 
     /**
+     * @var string|null
+     */
+    private $vatNumber;
+
+    /**
+     * @var string
+     */
+    private $postalCode;
+
+    /**
+     * @var string|null
+     */
+    private $stateName;
+
+    /**
      * InvoiceDetails constructor.
      *
      * @param string $firstName
      * @param string $lastName
+     * @param string $company
+     * @param string|null $vatNumber
      * @param string $address1
+     * @param string $address2
      * @param string $city
+     * @param string $postalCode
+     * @param string|null $stateName
      * @param string $country
      * @param string $email
      * @param string $phone
-     * @param string $address2
-     * @param string $company
      */
     public function __construct(
         string $firstName,
         string $lastName,
+        ?string $company,
+        ?string $vatNumber,
         string $address1,
         string $address2,
         string $city,
+        string $postalCode,
+        ?string $stateName,
         string $country,
         string $email,
-        string $phone,
-        string $company
+        string $phone
     ) {
         $this->firstName = $firstName;
         $this->lastName = $lastName;
@@ -109,6 +130,9 @@ class OrderPreviewInvoiceDetails
         $this->email = $email;
         $this->phone = $phone;
         $this->company = $company;
+        $this->vatNumber = $vatNumber;
+        $this->postalCode = $postalCode;
+        $this->stateName = $stateName;
     }
 
     /**
@@ -181,5 +205,29 @@ class OrderPreviewInvoiceDetails
     public function getCompany(): string
     {
         return $this->company;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getVatNumber(): ?string
+    {
+        return $this->vatNumber;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPostalCode(): string
+    {
+        return $this->postalCode;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getStateName(): ?string
+    {
+        return $this->stateName;
     }
 }
