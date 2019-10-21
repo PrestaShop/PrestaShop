@@ -59,6 +59,7 @@ export default class CreateOrderPage {
     this.cartEditor = new CartEditor();
     this.cartRuleManager = new CartRuleManager();
     this.orderProducts = new OrderProductComponent();
+    this.cartProducts = new OrderProductComponent();
 
     return {
       listenForCustomerSearch: () => this._handleCustomerSearch(),
@@ -70,6 +71,7 @@ export default class CreateOrderPage {
       listenForCartRuleSearch: () => this._handleCartRuleSearch(),
       listenForCartRuleSelect: () => this._handleCartRuleSelect(),
       listenForCartRuleRemove: () => this._handleCartRuleRemove(),
+      listenForAddToCartClick: () => this._handleAddProductToCart(),
     };
   }
 
@@ -113,6 +115,15 @@ export default class CreateOrderPage {
     });
 
     this.$container.on('click', createOrderPageMap.changeCustomerBtn, () => this.customerManager.onCustomerChange());
+  }
+
+  /**
+   * Add chosen product to cart
+   *
+   * @private
+   */
+  _handleAddProductToCart() {
+    $(createOrderPageMap.addToCartButton).on('click', () => this.cartProducts.onAddProductToCart(this.data.cart_id));
   }
 
   /**
