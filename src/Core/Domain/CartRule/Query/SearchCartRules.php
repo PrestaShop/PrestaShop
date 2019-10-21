@@ -1,3 +1,4 @@
+<?php
 /**
  * 2007-2019 PrestaShop SA and Contributors
  *
@@ -23,22 +24,31 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+namespace PrestaShop\PrestaShop\Core\Domain\CartRule\Query;
+
 /**
- * Encapsulates js events used in create order page
+ * Searches for cart rules
  */
-export default {
-  // when new cart is loaded, no matter if its empty, selected from carts list or duplicated by order.
-  cartLoaded: 'cartLoaded',
-  // when customer carts list is loaded.
-  customerCartsLoaded: 'customerCartsLoaded',
-  // when customer orders list is loaded
-  customerOrdersLoaded: 'customerOrdersLoaded',
-  // when cart addresses information has been changed
-  cartAddressesChanged: 'cartAddressesChanged',
-  // when cart delivery option has been changed
-  cartDeliveryOptionChanged: 'cartDeliveryOptionChanged',
-  // when cart free shipping value has been changed
-  cartFreeShippingSet: 'cartFreeShippingSet',
-  // when cart rule is removed from cart
-  cartRuleRemoved: 'cartRuleRemoved',
-};
+class SearchCartRules
+{
+    /**
+     * @var string
+     */
+    private $searchPhrase;
+
+    /**
+     * @param string $searchPhrase
+     */
+    public function __construct(string $searchPhrase)
+    {
+        $this->searchPhrase = $searchPhrase;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSearchPhrase(): string
+    {
+        return $this->searchPhrase;
+    }
+}

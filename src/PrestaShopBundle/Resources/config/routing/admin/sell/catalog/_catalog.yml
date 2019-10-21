@@ -35,3 +35,7 @@ _attributes:
 _attribute_group:
     resource: "attribute_group.yml"
     prefix: /attribute-groups/
+
+_cart_rule:
+    resource: "cart_rule.yml"
+    prefix: /cart-rules

@@ -1,3 +1,4 @@
+<?php
 /**
  * 2007-2019 PrestaShop SA and Contributors
  *
@@ -23,22 +24,64 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+namespace PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult;
+
 /**
- * Encapsulates js events used in create order page
+ * Holds data for cart rule found after search operation
  */
-export default {
-  // when new cart is loaded, no matter if its empty, selected from carts list or duplicated by order.
-  cartLoaded: 'cartLoaded',
-  // when customer carts list is loaded.
-  customerCartsLoaded: 'customerCartsLoaded',
-  // when customer orders list is loaded
-  customerOrdersLoaded: 'customerOrdersLoaded',
-  // when cart addresses information has been changed
-  cartAddressesChanged: 'cartAddressesChanged',
-  // when cart delivery option has been changed
-  cartDeliveryOptionChanged: 'cartDeliveryOptionChanged',
-  // when cart free shipping value has been changed
-  cartFreeShippingSet: 'cartFreeShippingSet',
-  // when cart rule is removed from cart
-  cartRuleRemoved: 'cartRuleRemoved',
-};
+class FoundCartRule
+{
+    /**
+     * @var int
+     */
+    private $cartRuleId;
+
+    /**
+     * @var string
+     */
+    private $name;
+
+    /**
+     * @var string
+     */
+    private $code;
+
+    /**
+     * @param int $cartRuleId
+     * @param string $name
+     * @param string $code
+     */
+    public function __construct(
+        int $cartRuleId,
+        string $name,
+        string $code
+    ) {
+        $this->cartRuleId = $cartRuleId;
+        $this->name = $name;
+        $this->code = $code;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCartRuleId(): int
+    {
+        return $this->cartRuleId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCode(): string
+    {
+        return $this->code;
+    }
+}

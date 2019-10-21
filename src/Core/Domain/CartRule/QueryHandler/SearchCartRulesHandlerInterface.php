@@ -1,3 +1,4 @@
+<?php
 /**
  * 2007-2019 PrestaShop SA and Contributors
  *
@@ -23,22 +24,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+namespace PrestaShop\PrestaShop\Core\Domain\CartRule\QueryHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Query\SearchCartRules;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult\FoundCartRule;
+
 /**
- * Encapsulates js events used in create order page
+ * Interface for handling SearchCartRules query
  */
-export default {
-  // when new cart is loaded, no matter if its empty, selected from carts list or duplicated by order.
-  cartLoaded: 'cartLoaded',
-  // when customer carts list is loaded.
-  customerCartsLoaded: 'customerCartsLoaded',
-  // when customer orders list is loaded
-  customerOrdersLoaded: 'customerOrdersLoaded',
-  // when cart addresses information has been changed
-  cartAddressesChanged: 'cartAddressesChanged',
-  // when cart delivery option has been changed
-  cartDeliveryOptionChanged: 'cartDeliveryOptionChanged',
-  // when cart free shipping value has been changed
-  cartFreeShippingSet: 'cartFreeShippingSet',
-  // when cart rule is removed from cart
-  cartRuleRemoved: 'cartRuleRemoved',
-};
+interface SearchCartRulesHandlerInterface
+{
+    /**
+     * @param SearchCartRules $query
+     *
+     * @return FoundCartRule[]
+     */
+    public function handle(SearchCartRules $query): array;
+}
