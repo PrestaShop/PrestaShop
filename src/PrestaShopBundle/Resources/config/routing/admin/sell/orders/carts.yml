@@ -88,6 +88,6 @@ admin_carts_delete_rule:
 
 admin_add_product_for_order_creation:
   path: /add-product
-  methods: [POST, GET]
+  methods: [POST]
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Order/Cart:addProduct
