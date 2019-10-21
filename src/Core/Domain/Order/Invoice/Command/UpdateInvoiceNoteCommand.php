@@ -26,13 +26,15 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\ValueObject\OrderInvoiceId;
+
 /**
  * Adds note for given invoice.
  */
 class UpdateInvoiceNoteCommand
 {
     /**
-     * @var int
+     * @var OrderInvoiceId
      */
     private $orderInvoiceId;
 
@@ -47,14 +49,14 @@ class UpdateInvoiceNoteCommand
      */
     public function __construct(int $orderInvoiceId, ?string $note)
     {
-        $this->orderInvoiceId = $orderInvoiceId;
+        $this->orderInvoiceId = new OrderInvoiceId($orderInvoiceId);
         $this->note = $note;
     }
 
     /**
-     * @return int
+     * @return OrderInvoiceId
      */
-    public function getOrderInvoiceId(): int
+    public function getOrderInvoiceId(): OrderInvoiceId
     {
         return $this->orderInvoiceId;
     }

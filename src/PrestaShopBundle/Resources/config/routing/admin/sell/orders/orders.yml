@@ -165,10 +165,10 @@ admin_orders_update_shipping:
     orderId: \d+
 
 admin_orders_update_invoice_note:
-  path: /{orderId}/invoice/{invoiceId}/note
+  path: /{orderId}/invoice/{orderInvoiceId}/note
   methods: [POST]
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Order/Order:updateInvoiceNote
   requirements:
     orderId: \d+
-    invoiceId: \d+
+    orderInvoiceId: \d+

@@ -92,13 +92,13 @@
       </td>
       <td class="text-right">
         {% if document.type == 'invoice' %}
-          <button type="button" class="btn btn-link">
+          <a href="#" class="js-open-invoice-note-btn">
             {% if document.note is empty %}
               {{ 'Add note'|trans({}, 'Admin.Orderscustomers.Feature') }}
             {% else %}
               {{ 'Edit note'|trans({}, 'Admin.Orderscustomers.Feature') }}
             {% endif %}
-          </button>
+          </a>
         {% endif %}
       </td>
     </tr>
@@ -107,14 +107,14 @@
         <td colspan="5">
           <form action="{{ path('admin_orders_update_invoice_note', {
             'orderId': orderForViewing.id,
-            'invoiceId': document.id
+            'orderInvoiceId': document.id
           }) }}" method="post">
             <div class="input-group">
               <input type="text" class="form-control" name="invoice_note" value="{{ document.note }}">
-              <button class="btn btn-secondary ml-2 btn-sm" type="button">
+              <button class="btn btn-secondary ml-2 btn-sm js-cancel-invoice-note-btn" type="button">
                 {{ 'Cancel'|trans({}, 'Admin.Actions') }}
               </button>
-              <button class="btn btn-primary ml-2 btn-sm" type="button">
+              <button class="btn btn-primary ml-2 btn-sm" type="submit">
                 {{ 'Save'|trans({}, 'Admin.Actions') }}
               </button>
             </div>
