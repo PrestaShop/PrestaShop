@@ -257,7 +257,7 @@ class CartController extends FrameworkBundleAdminController
             return $this->json($this->getCartInfo($cartId));
         } catch (Exception $e) {
             return $this->json(
-                ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages())],
+                ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
                 Response::HTTP_INTERNAL_SERVER_ERROR
             );
         }
@@ -270,7 +270,7 @@ class CartController extends FrameworkBundleAdminController
      */
     public function addProductAction(Request $request): Response
     {
-        $cartId = (int) $request->get('cart_id');
+        $cartId = $request->request->getInt('cart_id');
 
         try {
             $addProductToCartCommand = $this->getAddProductToCartCommand($request, $cartId);
@@ -278,9 +278,8 @@ class CartController extends FrameworkBundleAdminController
 
             return $this->json($this->getCartInfo($cartId));
         } catch (Exception $e) {
-            return $this->json([
-                'message' => $this->getErrorMessageForException($e, []),
-            ],
+            return $this->json(
+                ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
                 Response::HTTP_INTERNAL_SERVER_ERROR
             );
         }

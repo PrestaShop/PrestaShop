@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Cart\Command;
 
-
 class AddCustomizationFieldsCommand
 {
 }
