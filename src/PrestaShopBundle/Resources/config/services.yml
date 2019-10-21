@@ -1,3 +1,8 @@
+parameters:
+    const_shop_share_customer: !php/const Shop::SHARE_CUSTOMER
+    const_shop_share_order: !php/const Shop::SHARE_ORDER
+    const_shop_share_stock: !php/const Shop::SHARE_STOCK
+
 imports:
     - { resource: services/bundle/*.yml }
     - { resource: services/core/*.yml }
