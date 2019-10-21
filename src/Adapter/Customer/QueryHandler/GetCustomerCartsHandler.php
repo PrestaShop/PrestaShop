@@ -33,9 +33,8 @@ use PrestaShop\PrestaShop\Adapter\Customer\CommandHandler\AbstractCustomerHandle
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerCarts;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryHandler\GetCustomerCartsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\CartSummary;
-use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleInterface;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
-use PrestaShop\PrestaShop\Core\Localization\Locale\RepositoryInterface;
+use PrestaShop\PrestaShop\Core\Localization\Locale;
 
 /**
  * Handles GetCustomerCartsQuery using legacy object models
@@ -43,19 +42,17 @@ use PrestaShop\PrestaShop\Core\Localization\Locale\RepositoryInterface;
 final class GetCustomerCartsHandler extends AbstractCustomerHandler implements GetCustomerCartsHandlerInterface
 {
     /**
-     * @var LocaleInterface
+     * @var Locale
      */
     private $locale;
 
     /**
-     * @param RepositoryInterface $localeRepository
-     * @param string $locale
+     * @param Locale $locale
      */
     public function __construct(
-        RepositoryInterface $localeRepository,
-        string $locale
+        Locale $locale
     ) {
-        $this->locale = $localeRepository->getLocale($locale);
+        $this->locale = $locale;
     }
 
     /**

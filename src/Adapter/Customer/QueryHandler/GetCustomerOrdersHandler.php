@@ -34,9 +34,8 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundExcepti
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerOrders;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryHandler\GetCustomerOrdersHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\OrderSummary;
-use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleInterface;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
-use PrestaShop\PrestaShop\Core\Localization\Locale\RepositoryInterface;
+use PrestaShop\PrestaShop\Core\Localization\Locale;
 
 /**
  * Handles GetCustomerOrders query using legacy object models
@@ -44,19 +43,17 @@ use PrestaShop\PrestaShop\Core\Localization\Locale\RepositoryInterface;
 final class GetCustomerOrdersHandler extends AbstractCustomerHandler implements GetCustomerOrdersHandlerInterface
 {
     /**
-     * @var LocaleInterface
+     * @var Locale
      */
     private $locale;
 
     /**
-     * @param RepositoryInterface $localeRepository
-     * @param string $locale
+     * @param Locale $locale
      */
     public function __construct(
-        RepositoryInterface $localeRepository,
-        string $locale
+        Locale $locale
     ) {
-        $this->locale = $localeRepository->getLocale($locale);
+        $this->locale = $locale;
     }
 
     /**

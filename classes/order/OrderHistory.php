@@ -520,7 +520,7 @@ class OrderHistoryCore extends ObjectModel
             }
 
             $context = Context::getContext();
-            $data['{total_paid}'] = Tools::getContextLocale($context)->formatPrice((float) $order->total_paid, (new Currency((int) $order->id_currency))->iso_code);
+            $data['{total_paid}'] = Tools::getContextLocale($context)->formatPrice((float) $order->total_paid, Currency::getIsoCodeById((int) $order->id_currency));
 
             if (Validate::isLoadedObject($order)) {
                 // Attach invoice and / or delivery-slip if they exists and status is set to attach them

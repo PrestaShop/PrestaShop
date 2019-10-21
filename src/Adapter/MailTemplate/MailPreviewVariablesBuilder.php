@@ -30,7 +30,6 @@ use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Employee\ContextEmployeeProviderInterface;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
-use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
 use PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutInterface;
 use Address;
 use AddressFormat;
@@ -79,23 +78,21 @@ final class MailPreviewVariablesBuilder
      * @param LegacyContext $legacyContext
      * @param ContextEmployeeProviderInterface $employeeProvider
      * @param MailPartialTemplateRenderer $mailPartialTemplateRenderer
-     * @param LocaleRepository $localeRepository
-     * @param string $localeCode
+     * @param Locale $locale
      */
     public function __construct(
         ConfigurationInterface $configuration,
         LegacyContext $legacyContext,
         ContextEmployeeProviderInterface $employeeProvider,
         MailPartialTemplateRenderer $mailPartialTemplateRenderer,
-        LocaleRepository $localeRepository,
-        string $localeCode
+        Locale $locale
     ) {
         $this->configuration = $configuration;
         $this->legacyContext = $legacyContext;
         $this->context = $this->legacyContext->getContext();
         $this->employeeProvider = $employeeProvider;
         $this->mailPartialTemplateRenderer = $mailPartialTemplateRenderer;
-        $this->locale = $localeRepository->getLocale($localeCode);
+        $this->locale = $locale;
     }
 
     /**

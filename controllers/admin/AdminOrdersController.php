@@ -194,7 +194,7 @@ class AdminOrdersControllerCore extends AdminController
             $idCurrency = (int) $order->id_currency;
         }
 
-        return (new self())->context->getCurrentLocale()->formatPrice($echo, Currency::getCurrencyInstance($idCurrency)->iso_code);
+        return Context::getContext()->getCurrentLocale()->formatPrice($echo, Currency::getIsoCodeById((int) $idCurrency));
     }
 
     public function initPageHeaderToolbar()

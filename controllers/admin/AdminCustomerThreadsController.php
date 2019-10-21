@@ -718,7 +718,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                         $total_ok += $order['total_paid_real'] / $order['conversion_rate'];
                     }
                     $orders[$key]['date_add'] = Tools::displayDate($order['date_add']);
-                    $orders[$key]['total_paid_real'] = $this->context->getCurrentLocale()->formatPrice($order['total_paid_real'], (new Currency((int) $order['id_currency']))->iso_code);
+                    $orders[$key]['total_paid_real'] = $this->context->getCurrentLocale()->formatPrice($order['total_paid_real'], Currency::getIsoCodeById((int) $order['id_currency']));
                 }
             }
 
