@@ -33,40 +33,56 @@
   }
 
   &.-color2 {
-    > .value,
+    .value,
     > .material-icons {
       color: $danger;
     }
   }
 
   &.-color3 {
-    > .value,
+    .value,
     > .material-icons {
       color: $success;
     }
   }
 
-  > .title,
-  > .subtitle,
-  > .value {
+  .title,
+  .subtitle,
+  .value {
     font-size: 0.75rem;
     padding-left: .125rem;
     color: $gray-dark;
   }
 
-  > .title {
+  .title {
     display: inline-block;
   }
 
-  > .subtitle {
+  .subtitle {
     text-transform: uppercase;
     color: $gray-medium;
     display: block;
   }
-  > .value {
+  .value {
     font-size: 1.25rem;
     color: $primary;
     display: block;
+  }
+}
+
+// specific design for orders page. If design tends to repeat use this for all kpi's in all pages
+.orders-kpi {
+  .kpi-content {
+    .kpi-description {
+      display: flex;
+      flex-direction: row-reverse;
+      align-items: center;
+      justify-content: flex-end;
+
+      .value {
+        color: $gray-dark;
+      }
+    }
   }
 }
 
