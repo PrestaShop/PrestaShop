@@ -79,33 +79,49 @@
       </td>
       <td>
         {% if document.amount %}
-          <p class="mb-0">{{ document.amount }}</p>
+          <p class="mb-0">
+            {{ document.amount }}
 
-          {% if document.amountMismatch %}
-            <p class="mb-0">{{ document.amountMismatch }}</p>
-          {% endif %}
+            {% if document.amountMismatch %}
+              ({{ document.amountMismatch }})
+            {% endif %}
+          </p>
         {% else %}
           --
         {% endif %}
       </td>
       <td class="text-right">
-        {% if document.addPaymentAllowed %}
-          <a href="#">
-            {{ 'Enter payment'|trans({}, 'Admin.Orderscustomers.Feature') }}
-          </a>
-        {% endif %}
-
         {% if document.type == 'invoice' %}
-          <a href="#">
+          <button type="button" class="btn btn-link">
             {% if document.note is empty %}
               {{ 'Add note'|trans({}, 'Admin.Orderscustomers.Feature') }}
             {% else %}
               {{ 'Edit note'|trans({}, 'Admin.Orderscustomers.Feature') }}
             {% endif %}
-          </a>
+          </button>
         {% endif %}
       </td>
     </tr>
+    {% if document.type == 'invoice' %}
+      <tr class="d-none">
+        <td colspan="5">
+          <form action="{{ path('admin_orders_update_invoice_note', {
+            'orderId': orderForViewing.id,
+            'invoiceId': document.id
+          }) }}" method="post">
+            <div class="input-group">
+              <input type="text" class="form-control" name="invoice_note" value="{{ document.note }}">
+              <button class="btn btn-secondary ml-2 btn-sm" type="button">
+                {{ 'Cancel'|trans({}, 'Admin.Actions') }}
+              </button>
+              <button class="btn btn-primary ml-2 btn-sm" type="button">
+                {{ 'Save'|trans({}, 'Admin.Actions') }}
+              </button>
+            </div>
+          </form>
+        </td>
+      </tr>
+    {% endif %}
   {% endfor %}
   </tbody>
 </table>

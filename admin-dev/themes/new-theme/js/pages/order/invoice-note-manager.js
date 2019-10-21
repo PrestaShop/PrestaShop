@@ -1,4 +1,3 @@
-<?php
 /**
  * 2007-2019 PrestaShop SA and Contributors
  *
@@ -24,46 +23,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Command;
-
 /**
- * Adds note for given invoice.
+ * Manages adding/editing note for invoice documents.
  */
-class UpdateInvoiceNoteCommand
-{
-    /**
-     * @var int
-     */
-    private $orderInvoiceId;
+export default class InvoiceNoteManager {
 
-    /**
-     * @var string|null
-     */
-    private $note;
-
-    /**
-     * @param int $orderInvoiceId
-     * @param string|null $note
-     */
-    public function __construct(int $orderInvoiceId, ?string $note)
-    {
-        $this->orderInvoiceId = $orderInvoiceId;
-        $this->note = $note;
-    }
-
-    /**
-     * @return int
-     */
-    public function getOrderInvoiceId(): int
-    {
-        return $this->orderInvoiceId;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getNote(): ?string
-    {
-        return $this->note;
-    }
 }

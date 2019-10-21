@@ -43,6 +43,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderEmailResendException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\TransistEmailSendingException;
 use PrestaShop\PrestaShop\Core\Domain\Order\OrderConstraints;
+use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Command\UpdateInvoiceNoteCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Payment\Command\AddPaymentCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\UpdateProductInOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
@@ -256,6 +257,8 @@ class OrderController extends FrameworkBundleAdminController
         /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
 
+        dump($orderForViewing);
+
         $addOrderCartRuleForm = $this->createForm(AddOrderCartRuleType::class, [], [
             'order_id' => $orderId,
         ]);
@@ -346,6 +349,8 @@ class OrderController extends FrameworkBundleAdminController
         ]);
     }
 
+
+
     /**
      * @param int $orderId
      * @param int $orderCartRuleId
@@ -357,6 +362,27 @@ class OrderController extends FrameworkBundleAdminController
         $this->getCommandBus()->handle(
             new DeleteCartRuleFromOrderCommand($orderId, $orderCartRuleId)
         );
+
+        $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+
+        return $this->redirectToRoute('admin_orders_view', [
+            'orderId' => $orderId,
+        ]);
+    }
+
+    /**
+     * @param int $orderId
+     * @param int $orderInvoiceId
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function updateInvoiceNoteAction(int $orderId, int $orderInvoiceId, Request $request): RedirectResponse
+    {
+        $this->getCommandBus()->handle(new UpdateInvoiceNoteCommand(
+            $orderInvoiceId,
+            $request->request->get('invoice_note')
+        ));
 
         $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 

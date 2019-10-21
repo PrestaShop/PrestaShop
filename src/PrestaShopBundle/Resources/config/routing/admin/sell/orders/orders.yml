@@ -163,3 +163,12 @@ admin_orders_update_shipping:
     _legacy_controller: AdminOrders
   requirements:
     orderId: \d+
+
+admin_orders_update_invoice_note:
+  path: /{orderId}/invoice/{invoiceId}/note
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:updateInvoiceNote
+  requirements:
+    orderId: \d+
+    invoiceId: \d+
