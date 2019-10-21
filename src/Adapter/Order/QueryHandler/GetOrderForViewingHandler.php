@@ -744,11 +744,12 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
 
     private function getOrderMessages(Order $order): OrderMessagesForViewing
     {
-        $orderMessages = CustomerThread::getCustomerMessagesOrder($order->id_customer, $order->id);
+        $orderMessagesForOrderPage = CustomerThread::getCustomerMessagesOrder($order->id_customer, $order->id);
+        $totalMessages = $this->getOrderTotalMessages($order->id_customer, $order->id);
 
         $messages = [];
 
-        foreach ($orderMessages as $orderMessage) {
+        foreach ($orderMessagesForOrderPage as $orderMessage) {
             $messages[] = new OrderMessageForViewing(
                 (int) $orderMessage['id_customer_message'],
                 $orderMessage['message'],
@@ -758,11 +759,12 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
                 $orderMessage['elastname'],
                 $orderMessage['cfirstname'],
                 $orderMessage['clastname'],
-                (bool) $orderMessage['private']
+                (bool) $orderMessage['private'],
+                $totalMessages
             );
         }
 
-        return new OrderMessagesForViewing($messages);
+        return new OrderMessagesForViewing($messages, $totalMessages);
     }
 
     private function getOrderPrices(Order $order): OrderPricesForViewing
@@ -833,6 +835,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
         return new OrderDiscountsForViewing($discountsForViewing);
     }
 
+
     /**
      * @param Order $order
      *
@@ -842,6 +845,13 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
     {
         $customer = new Customer($order->id_customer);
 
-        return Group::getPriceDisplayMethod((int) $customer->id_default_group);
+        return Group::getPriceDisplayMethod((int)$customer->id_default_group);
+    }
+
+    private function getOrderTotalMessages(int $customerId, int $orderId): int
+    {
+        $allMessages = CustomerThread::getCustomerMessages($customerId, null, $orderId);
+
+        return \count($allMessages);
     }
 }
