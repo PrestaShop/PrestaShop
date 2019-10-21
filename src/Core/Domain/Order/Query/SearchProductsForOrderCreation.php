@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\Query;
 
-
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 
 class SearchProductsForOrderCreation
@@ -57,6 +56,7 @@ class SearchProductsForOrderCreation
 
     /**
      * @param string $phrase
+     *
      * @throws ProductException
      */
     private function assertIsNotEmptyString(string $phrase): void
