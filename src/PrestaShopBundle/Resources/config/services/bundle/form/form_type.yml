@@ -1052,3 +1052,11 @@ services:
             - { method: setTranslator, arguments: ['@translator'] }
         tags:
             - { name: form.type }
+
+      class: 'PrestaShopBundle\Form\Admin\Sell\Order\OrderMessageType'
+      arguments:
+        - '@prestashop.core.form.choice_provider.customer_service_order_messages'
+      calls:
+        - { method: setTranslator, arguments: ['@translator'] }
+      tags:
+        - { name: form.type }
