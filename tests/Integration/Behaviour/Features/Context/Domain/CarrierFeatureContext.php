@@ -60,7 +60,7 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
         $data = $node->getRowsHash();
 
         $command = AddCarrierCommand::withPricedShipping(
-            [$this->defaultLangId => $data['carrier_name']],
+            $data['carrier_name'],
             [$this->defaultLangId => $data['shipping_delay']],
             (int) $data['speed_grade'],
             $data['tracking_url'],
@@ -92,7 +92,7 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
         $data = $node->getRowsHash();
 
         $command = AddCarrierCommand::withFreeShipping(
-            [$this->defaultLangId => $data['carrier_name']],
+            $data['carrier_name'],
             [$this->defaultLangId => $data['shipping_delay']],
             (int) $data['speed_grade'],
             $data['tracking_url'],
@@ -120,7 +120,7 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
         $data = $node->getRowsHash();
 
         $command = AddModuleCarrierCommand::withFreeShipping(
-            [$this->defaultLangId => $data['carrier_name']],
+            $data['carrier_name'],
             [$this->defaultLangId => $data['shipping_delay']],
             (int) $data['speed_grade'],
             $data['tracking_url'],
@@ -149,7 +149,7 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
         $data = $node->getRowsHash();
 
         $command = AddModuleCarrierCommand::withCoreShippingPrice(
-            [$this->defaultLangId => $data['carrier_name']],
+            $data['carrier_name'],
             [$this->defaultLangId => $data['shipping_delay']],
             (int) $data['speed_grade'],
             $data['tracking_url'],
@@ -182,7 +182,7 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
         $data = $node->getRowsHash();
 
         $command = AddModuleCarrierCommand::withModuleShippingPrice(
-            [$this->defaultLangId => $data['carrier_name']],
+            $data['carrier_name'],
             [$this->defaultLangId => $data['shipping_delay']],
             (int) $data['speed_grade'],
             $data['tracking_url'],

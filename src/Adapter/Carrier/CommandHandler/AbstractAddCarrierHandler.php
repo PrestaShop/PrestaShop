@@ -65,11 +65,7 @@ abstract class AbstractAddCarrierHandler extends AbstractCarrierHandler
         $carrier->is_free = $command->isFreeShipping();
         $carrier->shipping_method = $command->getBilling()->getValue();
 
-        $localizedNames = $command->getLocalizedName();
-        foreach ($localizedNames as $langId => $carrierName) {
-            $carrier->localized_name[$langId] = $carrierName->getValue();
-        }
-        $carrier->name = $localizedNames[$this->configuration->get('PS_LANG_DEFAULT')]->getValue();
+        $carrier->name = $command->getName()->getValue();
 
         foreach ($command->getLocalizedShippingDelays() as $langId => $shippingDelay) {
             $carrier->delay[$langId] = $shippingDelay->getValue();

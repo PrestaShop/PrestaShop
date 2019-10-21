@@ -128,7 +128,6 @@ CREATE TABLE `PREFIX_carrier_lang` (
   `id_shop` int(11) unsigned NOT NULL DEFAULT '1',
   `id_lang` int(10) unsigned NOT NULL,
   `delay` varchar(512) DEFAULT NULL,
-  `localized_name` varchar(64) NOT NULL, /* since 1.7.7.0 */
   PRIMARY KEY (
     `id_lang`, `id_shop`, `id_carrier`
   )

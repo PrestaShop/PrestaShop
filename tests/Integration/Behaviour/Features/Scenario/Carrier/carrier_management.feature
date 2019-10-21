@@ -26,7 +26,6 @@ Feature: carrier Management
       | group_ids                 | 1                                                 |
       | shop_ids                  | 1                                                 |
       | is_enabled                | true                                              |
-    Then carrier "my carrier" "localized name" in default language should be "My carrier"
     And carrier "my carrier" "name" value should be "My carrier"
     And carrier "my carrier" "shipping delay" in default language should be "Pickup in store"
     And carrier "my carrier" "speed grade" value should be "1"
@@ -56,7 +55,6 @@ Feature: carrier Management
       | group_ids                 | 1                                                 |
       | shop_ids                  | 1                                                 |
       | is_enabled                | true                                              |
-    Then carrier "Free shipping carrier" "localized name" in default language should be "Free shipping carrier"
     And carrier "Free shipping carrier" "name" value should be "Free shipping carrier"
     And carrier "Free shipping carrier" "shipping delay" in default language should be "One week"
     And carrier "Free shipping carrier" "speed grade" value should be "4"
@@ -86,7 +84,6 @@ Feature: carrier Management
       | shop_ids                  | 1                                                 |
       | module_name               | fs-shipping                                       |
       | is_enabled                | true                                              |
-    Then carrier "Fs module carrier" "localized name" in default language should be "Free shipping module carrier"
     And carrier "Fs module carrier" "name" value should be "Free shipping module carrier"
     And carrier "Fs module carrier" "shipping delay" in default language should be "Instant"
     And carrier "Fs module carrier" "speed grade" value should be "9"
@@ -123,9 +120,8 @@ Feature: carrier Management
       | max_weight                | 50                                                |
       | group_ids                 | 1,2,3                                             |
       | shop_ids                  | 1                                                 |
-      | is_enabled                | false                                              |
+      | is_enabled                | false                                             |
       | module_name               | p2                                                |
-    Then carrier "P2 carry" "localized name" in default language should be "Pay to carry"
     And carrier "P2 carry" "name" value should be "Pay to carry"
     And carrier "P2 carry" "shipping delay" in default language should be "2 days"
     And carrier "P2 carry" "speed grade" value should be "3"
@@ -166,7 +162,6 @@ Feature: carrier Management
       | is_enabled                             | false                                              |
       | module_name                            | ModRollnCarry                                     |
       | module_needs_core_shipping_price       | true                                              |
-    Then carrier "rollercoaster" "localized name" in default language should be "Rollercoaster"
     And carrier "rollercoaster" "name" value should be "Rollercoaster"
     And carrier "rollercoaster" "shipping delay" in default language should be "Up to one week"
     And carrier "rollercoaster" "speed grade" value should be "3"

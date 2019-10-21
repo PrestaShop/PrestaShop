@@ -42,9 +42,9 @@ use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 abstract class AbstractAddCarrierCommand
 {
     /**
-     * @var CarrierName[]
+     * @var CarrierName
      */
-    protected $localizedName;
+    protected $name;
 
     /**
      * @var ShippingDelay[]
@@ -135,11 +135,11 @@ abstract class AbstractAddCarrierCommand
     }
 
     /**
-     * @return CarrierName[]
+     * @return CarrierName
      */
-    public function getLocalizedName(): array
+    public function getName(): CarrierName
     {
-        return $this->localizedName;
+        return $this->name;
     }
 
     /**
@@ -342,15 +342,13 @@ abstract class AbstractAddCarrierCommand
     }
 
     /**
-     * @param array $localizedName
+     * @param string $name
      *
      * @throws CarrierConstraintException
      */
-    protected function setLocalizedName(array $localizedName)
+    protected function setName(string $name)
     {
-        foreach ($localizedName as $langId => $name) {
-            $this->localizedName[(new LanguageId($langId))->getValue()] = new CarrierName($name);
-        }
+        $this->name = new CarrierName($name);
     }
 
     /**

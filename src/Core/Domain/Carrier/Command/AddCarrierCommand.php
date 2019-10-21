@@ -47,7 +47,7 @@ class AddCarrierCommand extends AbstractAddCarrierCommand
     /**
      * Adds carrier with shipping costs
      *
-     * @param string[] $localizedName
+     * @param string $name
      * @param string[] $localizedShippingDelays
      * @param int $speedGrade
      * @param string $trackingUrl
@@ -69,7 +69,7 @@ class AddCarrierCommand extends AbstractAddCarrierCommand
      * @throws CarrierConstraintException
      */
     public static function withPricedShipping(
-        array $localizedName,
+        string $name,
         array $localizedShippingDelays,
         int $speedGrade,
         string $trackingUrl,
@@ -87,7 +87,7 @@ class AddCarrierCommand extends AbstractAddCarrierCommand
         bool $enabled
     ) {
         $command = new self();
-        $command->setLocalizedName($localizedName);
+        $command->setName($name);
         $command->setLocalizedShippingDelays($localizedShippingDelays);
         $command->setMeasures($maxPackageWidth, $maxPackageHeight, $maxPackageDepth, $maxPackageWeight);
         $command->setShippingRanges($shippingRanges);
@@ -108,7 +108,7 @@ class AddCarrierCommand extends AbstractAddCarrierCommand
     /**
      * Adds carrier with free of charge shipping
      *
-     * @param string[] $localizedName
+     * @param string $name
      * @param string[] $localizedShippingDelays
      * @param int $speedGrade
      * @param string $trackingUrl
@@ -126,7 +126,7 @@ class AddCarrierCommand extends AbstractAddCarrierCommand
      * @throws CarrierConstraintException
      */
     public static function withFreeShipping(
-        array $localizedName,
+        string $name,
         array $localizedShippingDelays,
         int $speedGrade,
         string $trackingUrl,
@@ -140,7 +140,7 @@ class AddCarrierCommand extends AbstractAddCarrierCommand
         bool $enabled
     ) {
         $command = new self();
-        $command->setLocalizedName($localizedName);
+        $command->setName($name);
         $command->setLocalizedShippingDelays($localizedShippingDelays);
         $command->setMeasures($maxPackageWidth, $maxPackageHeight, $maxPackageDepth, $maxPackageWeight);
         $command->speedGrade = new SpeedGrade($speedGrade);
