@@ -293,8 +293,6 @@ class OrderController extends FrameworkBundleAdminController
         ]);
     }
 
-
-
     /**
      * @param int $orderId
      * @param int $orderCartRuleId
