@@ -34,13 +34,15 @@
     {{ form_start(orderMessageForm) }}
 
     {{ ps.form_group_row(orderMessageForm.order_message, {}, {
-      'label': 'Choose your order message'|trans({}, 'Admin.Orderscustomers.Feature')
+      'label': 'Choose your order message'|trans({}, 'Admin.Orderscustomers.Feature'),
+      'label_on_top': true
     }) }}
 
     {{ ps.form_group_row(orderMessageForm.is_displayed_to_customer, {'material_design': true}) }}
 
     {{ ps.form_group_row(orderMessageForm.message, {}, {
-      'label': 'Message'|trans({}, 'Admin.Global')
+      'label': 'Message'|trans({}, 'Admin.Global'),
+      'label_on_top': true
     }) }}
 
     {% block order_message_form_rest %}
