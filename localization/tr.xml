@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <localizationPack name="Turkey" version="1.0">
 	<currencies>
-		<currency name="Lira" iso_code="TRY" iso_code_num="949" sign="TL" blank="1" conversion_rate="1.97638" format="2" decimals="1" />
+		<currency name="Lira" iso_code="TRY" iso_code_num="949" sign="₺" blank="1" conversion_rate="1.97638" format="2" decimals="1" />
 	</currencies>
 	<languages>
 		<language iso_code="tr" />
