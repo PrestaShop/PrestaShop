@@ -37,7 +37,9 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\LessThanOrEqual;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
  * Defines form part for add/edit carrier general-settings step
@@ -63,23 +65,30 @@ class StepGeneralType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name', TranslatableType::class, [
+            ->add('name', TextType::class, [
                 'constraints' => [
-                    new DefaultLanguage([
+                    new NotBlank([
                         'message' => $this->translator->trans(
-                            'This field is required at least in your default language.',
+                            'This field cannot be empty',
                             [],
                             'Admin.Notifications.Error'
                         ),
                     ]),
-                ],
-                'options' => [
-                    'constraints' => [
-                        new TypedRegex([
-                            'type' => 'carrier_name',
-                            'message' => $this->translator->trans('%s is invalid.', [], 'Admin.Notifications.Error'),
-                        ]),
-                    ],
+                    new TypedRegex([
+                        'type' => 'carrier_name',
+                        'message' => $this->translator->trans('%s is invalid.', [], 'Admin.Notifications.Error'),
+                    ]),
+                    new Length([
+                        //@todo: const from CarrierName
+                        'max' => 64,
+                        'maxMessage' => $this->translator->trans(
+                            'This field cannot be longer than %limit% characters',
+                            [
+                                '%limit%' => 64,
+                            ],
+                            'Admin.Notifications.Error'
+                        ),
+                    ]),
                 ],
             ])
             ->add('transit_time', TranslatableType::class, [
