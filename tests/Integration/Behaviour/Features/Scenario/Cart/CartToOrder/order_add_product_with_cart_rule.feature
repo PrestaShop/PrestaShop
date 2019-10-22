@@ -30,10 +30,10 @@ Feature: Check cart to order data copy
     Given there is a cart rule named "cartrule5" that applies an amount discount of 500.0 with priority 5, quantity of 1000 and quantity per user 1000
     Given cart rule "cartrule5" is restricted to product "product2"
     When 2 items of product "product2" are added in my cart order, with prices 32.388 tax excluded and 32.388 tax included
-    Then current cart order total for products should be 87.97 tax included
-    Then current cart order total for products should be 84.59 tax excluded
-    Then current cart order total discount should be 67.37 tax included
-    Then current cart order total discount should be 64.78 tax excluded
+    Then current cart order total for products should be 87.971520 tax included
+    Then current cart order total for products should be 84.588000 tax excluded
+    Then current cart order total discount should be 67.367040 tax included
+    Then current cart order total discount should be 64.776000 tax excluded
     Then current cart order shipping fees should be 7.0 tax included
     Then current cart order shipping fees should be 7.0 tax excluded
 
@@ -64,8 +64,8 @@ Feature: Check cart to order data copy
     Given there is a cart rule named "cartrule5" that applies an amount discount of 5.0 with priority 5, quantity of 1000 and quantity per user 1000
     Given cart rule "cartrule5" is restricted to product "product2"
     When 2 items of product "product2" are added in my cart order, with prices 32.388 tax excluded and 32.388 tax included
-    Then current cart order total for products should be 87.97 tax included
-    Then current cart order total for products should be 84.59 tax excluded
+    Then current cart order total for products should be 87.971520 tax included
+    Then current cart order total for products should be 84.588000 tax excluded
     Then current cart order total discount should be 5.2 tax included
     Then current cart order total discount should be 5.0 tax excluded
     Then current cart order shipping fees should be 7.0 tax included
@@ -98,9 +98,9 @@ Feature: Check cart to order data copy
     Given there is a cart rule named "cartrule5" that applies a percent discount of 15.0% with priority 5, quantity of 1000 and quantity per user 1000
     Given cart rule "cartrule5" is restricted to product "product2"
     When 2 items of product "product2" are added in my cart order, with prices 32.388 tax excluded and 32.388 tax included
-    Then current cart order total for products should be 87.97 tax included
-    Then current cart order total for products should be 84.59 tax excluded
-    Then current cart order total discount should be 10.11 tax included
-    Then current cart order total discount should be 9.72 tax excluded
+    Then current cart order total for products should be 87.971520 tax included
+    Then current cart order total for products should be 84.588000 tax excluded
+    Then current cart order total discount should be 10.105056 tax included
+    Then current cart order total discount should be 9.716400 tax excluded
     Then current cart order shipping fees should be 7.0 tax included
     Then current cart order shipping fees should be 7.0 tax excluded

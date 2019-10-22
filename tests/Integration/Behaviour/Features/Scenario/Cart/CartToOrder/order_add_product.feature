@@ -28,8 +28,8 @@ Feature: Check cart to order data copy
     When I select carrier "carrier1" in my cart
     When I validate my cart using payment module fake
     When 2 items of product "product2" are added in my cart order, with prices 32.388 tax excluded and 32.388 tax included
-    Then current cart order total for products should be 87.97 tax included
-    Then current cart order total for products should be 84.59 tax excluded
+    Then current cart order total for products should be 87.971520 tax included
+    Then current cart order total for products should be 84.588000 tax excluded
     Then current cart order total discount should be 0.0 tax included
     Then current cart order total discount should be 0.0 tax excluded
     Then current cart order shipping fees should be 7.0 tax included
