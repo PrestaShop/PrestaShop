@@ -130,10 +130,16 @@ class OrderForViewing
      */
     private $discounts;
 
+    /**
+     * @var bool
+     */
+    private $isVirtual;
+
     public function __construct(
         int $orderId,
         int $currencyId,
         string $reference,
+        bool $isVirtual,
         string $taxMethod,
         bool $isTaxIncluded,
         bool $isValid,
@@ -172,6 +178,7 @@ class OrderForViewing
         $this->isTaxIncluded = $isTaxIncluded;
         $this->hasInvoice = $hasInvoice;
         $this->discounts = $discounts;
+        $this->isVirtual = $isVirtual;
     }
 
     /**
@@ -332,5 +339,13 @@ class OrderForViewing
     public function getDiscounts(): OrderDiscountsForViewing
     {
         return $this->discounts;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isVirtual(): bool
+    {
+        return $this->isVirtual;
     }
 }
