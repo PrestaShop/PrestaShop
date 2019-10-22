@@ -137,10 +137,16 @@ class OrderForViewing
      */
     private $createdAt;
 
+    /**
+     * @var bool
+     */
+    private $isVirtual;
+
     public function __construct(
         int $orderId,
         int $currencyId,
         string $reference,
+        bool $isVirtual,
         string $taxMethod,
         bool $isTaxIncluded,
         bool $isValid,
@@ -181,6 +187,7 @@ class OrderForViewing
         $this->hasInvoice = $hasInvoice;
         $this->discounts = $discounts;
         $this->createdAt = $createdAt;
+        $this->isVirtual = $isVirtual;
     }
 
     /**
@@ -349,5 +356,13 @@ class OrderForViewing
     public function getCreatedAt(): DateTimeImmutable
     {
         return $this->createdAt;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isVirtual(): bool
+    {
+        return $this->isVirtual;
     }
 }
