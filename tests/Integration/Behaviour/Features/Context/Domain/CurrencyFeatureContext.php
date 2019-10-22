@@ -101,9 +101,6 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
 
             SharedStorage::getStorage()->set($reference, new Currency($currencyId->getValue()));
         } catch (CoreException $e) {
-            if ('currency14' == $reference) {
-                throw $e;
-            }
             $this->lastException = $e;
         }
     }
