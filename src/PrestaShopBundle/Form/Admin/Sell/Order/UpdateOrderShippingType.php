@@ -57,7 +57,7 @@ class UpdateOrderShippingType extends AbstractType
         $builder
             ->add('new_carrier_id', ChoiceType::class, [
                 'choices' => $this->carrierForOrderChoiceProvider->getChoices([
-                    'order_id' => $options['order_id']
+                    'order_id' => $options['order_id'],
                 ]),
             ])
             ->add('current_order_carrier_id', HiddenType::class)
