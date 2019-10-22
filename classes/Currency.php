@@ -82,6 +82,8 @@ class CurrencyCore extends ObjectModel
     /**
      * Currency's symbol
      *
+     * @deprecated Use $symbol
+     *
      * @var string
      */
     public $sign;
@@ -605,6 +607,27 @@ class CurrencyCore extends ObjectModel
             Cache::store($cacheId, $result);
 
             return $result;
+        }
+
+        return Cache::retrieve($cacheId);
+    }
+
+    /**
+     * Get Currency ISO Code by ID
+     *
+     * @param int $id
+     * @param bool $forceRefreshCache
+     *
+     * @return string
+     */
+    public static function getIsoCodeById(int $id, bool $forceRefreshCache = false)
+    {
+        $cacheId = 'Currency::getIsoCodeById' . pSQL($id);
+        if ($forceRefreshCache || !Cache::isStored($cacheId)) {
+            $resultIsoCode = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT `iso_code` FROM ' . _DB_PREFIX_ . 'currency WHERE `id_currency` = ' . (int) $id);
+            Cache::store($cacheId, $resultIsoCode);
+
+            return $resultIsoCode;
         }
 
         return Cache::retrieve($cacheId);

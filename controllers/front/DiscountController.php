@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 2007-2019 PrestaShop SA and Contributors
  *
@@ -126,7 +125,7 @@ class DiscountControllerCore extends FrontController
 
         return sprintf(
             '%s ' . $taxTranslation,
-            Tools::displayPrice($amount, (int) $currencyId)
+            $this->context->getCurrentLocale()->formatPrice($amount, Currency::getIsoCodeById((int) $currencyId))
         );
     }
 
@@ -187,9 +186,9 @@ class DiscountControllerCore extends FrontController
         if ((int) $voucher['minimum_amount'] === 0) {
             $voucher['voucher_minimal'] = $this->trans('None', array(), 'Shop.Theme.Global');
         } else {
-            $voucher['voucher_minimal'] = Tools::displayPrice(
+            $voucher['voucher_minimal'] = $this->context->getCurrentLocale()->formatPrice(
                 $voucher['minimum_amount'],
-                (int) $voucher['minimum_amount_currency']
+                Currency::getIsoCodeById((int) $voucher['minimum_amount_currency'])
             );
         }
 

@@ -29,7 +29,6 @@ namespace PrestaShop\PrestaShop\Adapter\Order\QueryHandler;
 use Address;
 use Carrier;
 use Configuration;
-use Context;
 use Country;
 use Currency;
 use Customer;
@@ -72,6 +71,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderShippingForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderStatusForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Image\Parser\ImageTagSourceParserInterface;
+use PrestaShop\PrestaShop\Core\Localization\Locale;
 use Shop;
 use State;
 use StockAvailable;
@@ -94,28 +94,36 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
     private $imageTagSourceParser;
 
     /**
+     * @var Locale
+     */
+    private $locale;
+
+    /**
      * @var TranslatorInterface
      */
     private $translator;
 
     /**
-     * @var Context
+     * @var int
      */
-    private $context;
+    private $contextLanguageId;
 
     /**
      * @param ImageTagSourceParserInterface $imageTagSourceParser
      * @param TranslatorInterface $translator
-     * @param Context $context
+     * @param int $contextLanguageId
+     * @param Locale $locale
      */
     public function __construct(
         ImageTagSourceParserInterface $imageTagSourceParser,
         TranslatorInterface $translator,
-        Context $context
+        int $contextLanguageId,
+        Locale $locale
     ) {
         $this->imageTagSourceParser = $imageTagSourceParser;
         $this->translator = $translator;
-        $this->context = $context;
+        $this->contextLanguageId = $contextLanguageId;
+        $this->locale = $locale;
     }
 
     /**
@@ -183,6 +191,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
      */
     private function getOrderCustomer(Order $order): OrderCustomerForViewing
     {
+        $currency = new Currency($order->id_currency);
         $customer = new Customer($order->id_customer);
         $gender = new Gender($customer->id_gender);
         $genderName = '';
@@ -200,7 +209,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             $genderName,
             $customer->email,
             new DateTimeImmutable($customer->date_add),
-            Tools::displayPrice(Tools::ps_round(Tools::convertPrice($customerStats['total_orders'], $order->id_currency), PS_ROUND_HALF_UP), (int) $order->id_currency),
+            $this->locale->formatPrice(Tools::convertPrice($customerStats['total_orders'], $order->id_currency), $currency->iso_code),
             $customerStats['nb_orders'],
             $customer->note
         );
@@ -317,7 +326,8 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             $product['quantity_refundable'] = $product['product_quantity'] - $resume['product_quantity'];
             $product['amount_refundable'] = $product['total_price_tax_excl'] - $resume['amount_tax_excl'];
             $product['amount_refundable_tax_incl'] = $product['total_price_tax_incl'] - $resume['amount_tax_incl'];
-            $product['amount_refund'] = $order->getTaxCalculationMethod() ? Tools::displayPrice($resume['amount_tax_excl'], $currency) : Tools::displayPrice($resume['amount_tax_incl'], $currency);
+            $resumeAmount = $order->getTaxCalculationMethod() ? 'amount_tax_excl' : 'amount_tax_incl';
+            $product['amount_refund'] = !is_null($resume[$resumeAmount]) ? $this->locale->formatPrice($resume[$resumeAmount], $currency->iso_code) : null;
             $product['refund_history'] = OrderSlip::getProductSlipDetail($product['id_order_detail']);
             $product['return_history'] = OrderReturn::getProductReturnDetail($product['id_order_detail']);
 
@@ -344,7 +354,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
                 $stockLocationIsAvailable = true;
             }
 
-            $pack_items = $product['cache_is_pack'] ? Pack::getItemTable($product['id_product'], $this->context->language->id, true) : array();
+            $pack_items = $product['cache_is_pack'] ? Pack::getItemTable($product['id_product'], $this->contextLanguageId, true) : array();
             foreach ($pack_items as &$pack_item) {
                 $pack_item['current_stock'] = StockAvailable::getQuantityAvailableByProduct($pack_item['id_product'], $pack_item['id_product_attribute'], $pack_item['id_shop']);
                 // if the current stock requires a warning
@@ -385,8 +395,8 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             ;
             $totalPrice = Tools::ps_round($unitPrice, 2) * ($product['product_quantity'] - $product['customizationQuantityTotal']);
 
-            $unitPriceFormatted = Tools::displayPrice($unitPrice, $currency);
-            $totalPriceFormatted = Tools::displayPrice($totalPrice, $currency);
+            $unitPriceFormatted = $this->locale->formatPrice($unitPrice, $currency->iso_code);
+            $totalPriceFormatted = $this->locale->formatPrice($totalPrice, $currency->iso_code);
 
             $productsForViewing[] = new OrderProductForViewing(
                 $product['id_order_detail'],
@@ -445,7 +455,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
      */
     private function getOrderHistory(Order $order): OrderHistoryForViewing
     {
-        $history = $order->getHistory($this->context->language->id);
+        $history = $order->getHistory($this->contextLanguageId);
 
         $statuses = [];
 
@@ -492,7 +502,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
 
             if ('invoice' === $type) {
                 $number = $document->getInvoiceNumberFormatted(
-                    $this->context->language->id,
+                    $this->contextLanguageId,
                     $order->id_shop
                 );
 
@@ -502,39 +512,39 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             } elseif ('delivery_slip' === $type) {
                 $number = sprintf(
                     '%s%06d',
-                    Configuration::get('PS_DELIVERY_PREFIX', $this->context->language->id, null, $order->id_shop),
+                    Configuration::get('PS_DELIVERY_PREFIX', $this->contextLanguageId, null, $order->id_shop),
                     $document->delivery_number
                 );
             } elseif ('credit_slip' === $type) {
                 $number = sprintf(
                     '%s%06d',
-                    Configuration::get('PS_CREDIT_SLIP_PREFIX', $this->context->language->id),
+                    Configuration::get('PS_CREDIT_SLIP_PREFIX', $this->contextLanguageId),
                     $document->id
                 );
             }
 
             if ($document instanceof OrderInvoice && !isset($document->is_delivery)) {
-                $amount = Tools::displayPrice($document->total_paid_tax_incl, $currency);
+                $amount = $this->locale->formatPrice($document->total_paid_tax_incl, $currency->iso_code);
 
                 if ($document->getTotalPaid()) {
                     if ($document->getRestPaid() > 0) {
                         $amountMismatch = sprintf(
                             '%s %s',
-                            Tools::displayPrice($document->getRestPaid(), $currency),
+                            $this->locale->formatPrice($document->getRestPaid(), $currency->iso_code),
                             $this->translator->trans('not paid', [], 'Admin.Orderscustomers.Feature')
                         );
                     } elseif ($document->getRestPaid() < 0) {
                         $amountMismatch = sprintf(
                             '%s %s',
-                            Tools::displayPrice($document->getRestPaid(), $currency),
+                            $this->locale->formatPrice($document->getRestPaid(), $currency->iso_code),
                             $this->translator->trans('overpaid', [], 'Admin.Orderscustomers.Feature')
                         );
                     }
                 }
             } elseif ($document instanceof OrderSlip) {
-                $amount = Tools::displayPrice(
+                $amount = $this->locale->formatPrice(
                     $document->total_products_tax_incl + $document->total_shipping_tax_incl,
-                    $currency
+                    $currency->iso_code
                 );
             }
 
@@ -572,9 +582,9 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
 
         foreach ($shipping as $item) {
             if ($order->getTaxCalculationMethod() == PS_TAX_INC) {
-                $price = Tools::displayPrice($item['shipping_cost_tax_incl'], $currency);
+                $price = $this->locale->formatPrice($item['shipping_cost_tax_incl'], $currency->iso_code);
             } else {
-                $price = Tools::displayPrice($item['shipping_cost_tax_excl'], $currency);
+                $price = $this->locale->formatPrice($item['shipping_cost_tax_excl'], $currency->iso_code);
             }
 
             $trackingUrl = null;
@@ -660,8 +670,8 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
                 || ($currentState && $currentState->id == 6);
 
             if (!$noPaymentMismatch) {
-                $orderAmountToPay = Tools::displayPrice($order->getOrdersTotalPaid(), $currency);
-                $orderAmountPaid = Tools::displayPrice($order->getTotalPaid(), $currency);
+                $orderAmountToPay = $this->locale->formatPrice($order->getOrdersTotalPaid(), $currency->iso_code);
+                $orderAmountPaid = $this->locale->formatPrice($order->getTotalPaid(), $currency->iso_code);
 
                 foreach ($order->getBrother() as $relatedOrder) {
                     $paymentMismatchOrders[] = $relatedOrder->id;
@@ -673,9 +683,10 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
 
         /** @var OrderPayment $payment */
         foreach ($order->getOrderPaymentCollection() as $payment) {
+            $currency = new Currency($payment->id_currency);
             $invoice = $payment->getOrderInvoice($order->id);
             $invoiceNumber = $invoice ?
-                $invoice->getInvoiceNumberFormatted($this->context->language->id, $order->id_shop) :
+                $invoice->getInvoiceNumberFormatted($this->contextLanguageId, $order->id_shop) :
                 null;
 
             $orderPayments[] = new OrderPaymentForViewing(
@@ -683,7 +694,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
                 new DateTimeImmutable($payment->date_add),
                 $payment->payment_method,
                 $payment->transaction_id,
-                Tools::displayPrice($payment->amount, (int) $payment->id_currency),
+                $this->locale->formatPrice($payment->amount, $currency->iso_code),
                 $invoiceNumber,
                 $payment->card_number,
                 $payment->card_brand,
