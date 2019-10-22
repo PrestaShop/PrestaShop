@@ -188,6 +188,6 @@ final class SearchProductsHandler implements SearchProductsHandlerInterface
             }
         }
 
-        return $productCombinations;
+        return array_values($productCombinations);
     }
 }
