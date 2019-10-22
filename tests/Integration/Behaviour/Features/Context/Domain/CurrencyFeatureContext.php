@@ -29,6 +29,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 use Behat\Gherkin\Node\TableNode;
 use Currency;
 use Configuration;
+use RuntimeException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddOfficialCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddUnofficialCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\DeleteCurrencyCommand;
@@ -39,12 +40,19 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDeleteDefaultCurr
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDisableDefaultCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\InvalidUnofficialCurrencyException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Query\GetCurrencyAPIData;
+use PrestaShop\PrestaShop\Core\Domain\Currency\QueryResult\CurrencyAPIData;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
 class CurrencyFeatureContext extends AbstractDomainFeatureContext
 {
+    /**
+     * @var CurrencyAPIData
+     */
+    private $currencyAPIData;
+
     /**
      * @When I add new currency :reference with following properties:
      */
@@ -183,6 +191,46 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
             $this->getCommandBus()->handle(new DeleteCurrencyCommand((int) $currency->id));
         } catch (CannotDeleteDefaultCurrencyException $e) {
             $this->lastException = $e;
+        }
+    }
+
+    /**
+     * @When I request API data for :currencyIsoCode
+     */
+    public function getCurrencyAPIData($currencyIsoCode)
+    {
+        $this->currencyAPIData = $this->getCommandBus()->handle(new GetCurrencyAPIData($currencyIsoCode));
+    }
+
+    /**
+     * @Then I should get API data:
+     */
+    public function checkAPIData(TableNode $node)
+    {
+        $apiData = $this->currencyAPIData->toArray();
+        $expectedData = $node->getRowsHash();
+        $expectedData['names'] = $this->parseLocalizedArray($expectedData['names']);
+        $expectedData['symbols'] = $this->parseLocalizedArray($expectedData['symbols']);
+
+        //Special case for exchange rate as the value changes regularly, we check that it's positive and use
+        //a value of 0.8 (only when expected data is not 1, because some scenarii check the 1 default value)
+        if ($expectedData['exchange_rate'] != 1 && $apiData['exchange_rate'] > 0) {
+            $apiData['exchange_rate'] = 0.8;
+        }
+
+        foreach ($expectedData as $key => $expectedValue) {
+            if ($expectedValue === 'null') {
+                $expectedValue = null;
+            }
+
+            if ($expectedValue != $apiData[$key]) {
+                throw new RuntimeException(sprintf(
+                    'Invalid API data field %s: %s expected %s',
+                    $key,
+                    $apiData[$key],
+                    $expectedValue
+                ));
+            }
         }
     }
 
