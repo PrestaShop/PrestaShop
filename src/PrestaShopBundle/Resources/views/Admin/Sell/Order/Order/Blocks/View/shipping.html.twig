@@ -51,7 +51,11 @@
           </td>
           <td class="text-right">
             {% if carrier.canEdit %}
-              <a href="#">
+              <a href="#"
+                 data-toggle="modal"
+                 data-target="#updateOrderShippingModal"
+                 data-order-carrier-id="{{ carrier.orderCarrierId }}"
+              >
                 {{ 'Edit'|trans({}, 'Admin.Actions') }}
               </a>
             {% endif %}

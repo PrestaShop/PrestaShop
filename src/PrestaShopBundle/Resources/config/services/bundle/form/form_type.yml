@@ -950,3 +950,10 @@ services:
         - '@prestashop.core.form.choice_provider.currency_by_id'
       tags:
         - { name: form.type }
+
+    form.type.order.update_order_shipping:
+      class: 'PrestaShopBundle\Form\Admin\Sell\Order\UpdateOrderShippingType'
+      arguments:
+        - '@prestashop.adapter.form.choice.provider.carrier_for_order_choice_provider'
+      tags:
+        - { name: form.type }
