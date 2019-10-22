@@ -1535,8 +1535,8 @@ class FrontControllerCore extends Controller
             'quantity_discount' => array(
                 'type' => ($quantity_discount_price) ? 'price' : 'discount',
                 'label' => ($quantity_discount_price)
-                    ? $this->getTranslator()->trans('Price', array(), 'Shop.Theme.Catalog')
-                    : $this->getTranslator()->trans('Discount', array(), 'Shop.Theme.Catalog'),
+                    ? $this->getTranslator()->trans('Unit price', array(), 'Shop.Theme.Catalog')
+                    : $this->getTranslator()->trans('Unit discount', array(), 'Shop.Theme.Catalog'),
             ),
             'voucher_enabled' => (int) CartRule::isFeatureActive(),
             'return_enabled' => (int) Configuration::get('PS_ORDER_RETURN'),
