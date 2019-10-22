@@ -42,4 +42,7 @@ export default {
   updateOrderStatusActionBtn: '#update_order_status_action_btn',
   updateOrderStatusActionInput: '#update_order_status_action_input',
   updateOrderStatusActionForm: '#update_order_status_action_form',
+  showOrderShippingUpdateModalBtn: '.js-update-shipping-btn',
+  updateOrderShippingTrackingNumberInput: '#update_order_shipping_tracking_number',
+  updateOrderShippingCurrentOrderCarrierIdInput: '#update_order_shipping_current_order_carrier_id',
 };

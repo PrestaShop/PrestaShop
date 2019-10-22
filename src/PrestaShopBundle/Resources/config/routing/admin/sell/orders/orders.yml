@@ -144,3 +144,12 @@ admin_orders_preview:
     _legacy_controller: AdminOrders
   requirements:
     orderId: \d+
+
+admin_orders_update_shipping:
+  path: /{orderId}/shipping
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:updateShipping
+    _legacy_controller: AdminOrders
+  requirements:
+    orderId: \d+

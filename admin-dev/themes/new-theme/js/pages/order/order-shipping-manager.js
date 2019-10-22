@@ -22,15 +22,21 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+import OrderViewPageMap from './OrderViewPageMap';
 
 const $ = window.$;
 
 export default class OrderShippingManager {
   constructor() {
-
+    this._initOrderShippingUpdateEventHandler();
   }
 
   _initOrderShippingUpdateEventHandler() {
+    $(OrderViewPageMap.showOrderShippingUpdateModalBtn).on('click', (event) => {
+      const $btn = $(event.currentTarget);
 
+      $(OrderViewPageMap.updateOrderShippingTrackingNumberInput).val($btn.data('order-tracking-number'));
+      $(OrderViewPageMap.updateOrderShippingCurrentOrderCarrierIdInput).val($btn.data('order-carrier-id'));
+    });
   }
 }

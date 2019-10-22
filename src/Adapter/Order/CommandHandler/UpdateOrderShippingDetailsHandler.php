@@ -52,7 +52,7 @@ final class UpdateOrderShippingDetailsHandler extends AbstractOrderHandler imple
         $carrierId = $command->getNewCarrierId();
         $oldTrackingNumber = $order->shipping_number;
 
-        $orderCarrier = new OrderCarrier($order->getIdOrderCarrier());
+        $orderCarrier = new OrderCarrier($command->getCurrentOrderCarrierId());
         if (!Validate::isLoadedObject($orderCarrier)) {
             throw new OrderException('The order carrier ID is invalid.');
         }
