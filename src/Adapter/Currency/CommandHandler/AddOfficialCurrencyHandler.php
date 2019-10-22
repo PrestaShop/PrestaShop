@@ -35,7 +35,9 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintExcep
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
+use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShopException;
 
@@ -47,27 +49,21 @@ use PrestaShopException;
 final class AddOfficialCurrencyHandler extends AbstractCurrencyHandler implements AddCurrencyHandlerInterface
 {
     /**
-     * @var Language
-     */
-    private $defaultLanguage;
-
-    /**
      * @var CurrencyCommandValidator
      */
     private $validator;
 
     /**
      * @param LocaleRepository $localeRepoCLDR
-     * @param int $defaultLanguageId
+     * @param LanguageInterface[] $languages
      * @param CurrencyCommandValidator $validator
      */
     public function __construct(
         LocaleRepository $localeRepoCLDR,
-        $defaultLanguageId,
+        array $languages,
         CurrencyCommandValidator $validator
     ) {
-        parent::__construct($localeRepoCLDR);
-        $this->defaultLanguage = new Language((int) $defaultLanguageId);
+        parent::__construct($localeRepoCLDR, $languages);
         $this->validator = $validator;
     }
 
@@ -100,8 +96,8 @@ final class AddOfficialCurrencyHandler extends AbstractCurrencyHandler implement
             if (!empty($command->getLocalizedSymbols())) {
                 $entity->setSymbols($command->getLocalizedSymbols());
             }
-            //This method will insert the missing localized names/symbols and detect if the currency has been modified
-            $entity->refreshLocalizedCurrencyData(Language::getLanguages(), $this->localeRepoCLDR);
+
+            $this->refreshLocalizedData($entity);
 
             if (false === $entity->add()) {
                 throw new CannotCreateCurrencyException('Failed to create new currency');
@@ -128,7 +124,7 @@ final class AddOfficialCurrencyHandler extends AbstractCurrencyHandler implement
         }
 
         // CLDR locale give us the CLDR reference specification
-        $cldrLocale = $this->localeRepoCLDR->getLocale($this->defaultLanguage->getLocale());
+        $cldrLocale = $this->getCLDRLocale();
         // CLDR currency gives data from CLDR reference, for the given language
         $cldrCurrency = $cldrLocale->getCurrency($command->getIsoCode()->getValue());
 
@@ -144,8 +140,8 @@ final class AddOfficialCurrencyHandler extends AbstractCurrencyHandler implement
      */
     private function findNumericIsoCodeFromAlphaCode($isoCode): string
     {
-        $defaultLocaleCLDR = $this->localeRepoCLDR->getLocale($this->defaultLanguage->getLocale());
-        $allCurrencies = $defaultLocaleCLDR->getAllCurrencies();
+        $cldrLocale = $this->getCLDRLocale();
+        $allCurrencies = $cldrLocale->getAllCurrencies();
 
         $matchingRealCurrency = null;
         foreach ($allCurrencies as $currencyData) {
@@ -165,5 +161,20 @@ final class AddOfficialCurrencyHandler extends AbstractCurrencyHandler implement
         }
 
         return $matchingRealCurrency->getNumericIsoCode();
+    }
+
+    /**
+     * Returns a CLDR locale, since they all contain the same info about currencies
+     * it doesn't matter which one is used so we return the one matching the first
+     * provided language.
+     *
+     * @return Locale
+     */
+    private function getCLDRLocale()
+    {
+        /** @var LanguageInterface $language */
+        $language = $this->languages[0];
+
+        return $this->localeRepoCLDR->getLocale($language->getLocale());
     }
 }

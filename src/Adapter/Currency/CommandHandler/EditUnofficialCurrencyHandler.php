@@ -35,10 +35,10 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintExcep
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\InvalidUnofficialCurrencyException;
+use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use Currency;
-use Language;
 use PrestaShopException;
 use PrestaShopDatabaseException;
 
@@ -56,13 +56,15 @@ final class EditUnofficialCurrencyHandler extends AbstractCurrencyHandler implem
 
     /**
      * @param LocaleRepository $localeRepoCLDR
+     * @param LanguageInterface[] $languages
      * @param CurrencyCommandValidator $validator
      */
     public function __construct(
         LocaleRepository $localeRepoCLDR,
+        array $languages,
         CurrencyCommandValidator $validator
     ) {
-        parent::__construct($localeRepoCLDR);
+        parent::__construct($localeRepoCLDR, $languages);
         $this->validator = $validator;
     }
 
@@ -125,8 +127,8 @@ final class EditUnofficialCurrencyHandler extends AbstractCurrencyHandler implem
         if (!empty($command->getLocalizedSymbols())) {
             $entity->setSymbols($command->getLocalizedSymbols());
         }
-        //This method will insert the missing localized names/symbols and detect if the currency has been modified
-        $entity->refreshLocalizedCurrencyData(Language::getLanguages(), $this->localeRepoCLDR);
+
+        $this->refreshLocalizedData($entity);
 
         //IMPORTANT: specify that we want to save null values
         if (false === $entity->update(true)) {
