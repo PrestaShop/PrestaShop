@@ -55,7 +55,7 @@ final class CarrierForOrderChoiceProvider implements ConfigurableFormChoiceProvi
         foreach ($carriers as $carrier) {
             $delay = $carrier['delay'] ? sprintf(' (%s)', $carrier['delay']) : '';
 
-            $choices[$carrier['name'].$delay] = (int) $carrier['id_carrier'];
+            $choices[$carrier['name'] . $delay] = (int) $carrier['id_carrier'];
         }
 
         return $choices;
