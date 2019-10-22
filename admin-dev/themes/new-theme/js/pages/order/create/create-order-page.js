@@ -24,18 +24,18 @@
  */
 
 import createOrderPageMap from './create-order-map';
-import CustomerSearcherComponent from './customer-searcher-component';
+import CustomerManager from './customer-manager';
 import ShippingRenderer from './shipping-renderer';
 import CartProvider from './cart-provider';
-import CustomerInfoProvider from './customer-info-provider';
 import CartsRenderer from './carts-renderer';
 import OrdersRenderer from './orders-renderer';
 import AddressesRenderer from './addresses-renderer';
-import VouchersRenderer from './vouchers-renderer';
+import CartRulesRenderer from './cart-rules-renderer';
 import Router from '../../../components/router';
 import {EventEmitter} from '../../../components/event-emitter';
 import CartEditor from './cart-editor';
 import eventMap from './event-map';
+import CartRuleManager from './cart-rule-manager';
 
 const $ = window.$;
 
@@ -48,15 +48,15 @@ export default class CreateOrderPage {
     this.$container = $(createOrderPageMap.orderCreationContainer);
 
     this.cartProvider = new CartProvider();
-    this.customerInfoProvider = new CustomerInfoProvider();
-    this.customerSearcher = new CustomerSearcherComponent();
+    this.customerManager = new CustomerManager();
     this.shippingRenderer = new ShippingRenderer();
     this.cartsRenderer = new CartsRenderer();
     this.ordersRenderer = new OrdersRenderer();
     this.addressesRenderer = new AddressesRenderer();
-    this.vouchersRenderer = new VouchersRenderer();
+    this.cartRulesRenderer = new CartRulesRenderer();
     this.router = new Router();
     this.cartEditor = new CartEditor();
+    this.cartRuleManager = new CartRuleManager();
 
     return {
       listenForCustomerSearch: () => this._handleCustomerSearch(),
@@ -65,6 +65,9 @@ export default class CreateOrderPage {
       listenForOrderSelect: () => this._handleDuplicateOrderCart(),
       listenForCartEdit: () => this._handleCartEdit(),
       listenForCartLoading: () => this._onCartLoaded(),
+      listenForCartRuleSearch: () => this._handleCartRuleSearch(),
+      listenForCartRuleSelect: () => this._handleCartRuleSelect(),
+      listenForCartRuleRemove: () => this._handleCartRuleRemove(),
     };
   }
 
@@ -77,6 +80,7 @@ export default class CreateOrderPage {
     EventEmitter.on(eventMap.cartLoaded, (cartInfo) => {
       this.data.cart_id = cartInfo.cartId;
       this._renderCartInfo(cartInfo);
+      this._loadCustomerCarts(this.data.customer_id);
     });
   }
 
@@ -87,7 +91,7 @@ export default class CreateOrderPage {
    */
   _handleCustomerSearch() {
     this.$container.on('input', createOrderPageMap.customerSearchInput, () => {
-      this.customerSearcher.onCustomerSearch();
+      this.customerManager.onCustomerSearch();
     });
   }
 
@@ -98,7 +102,7 @@ export default class CreateOrderPage {
    */
   _handleCustomerChooseForOrderCreation() {
     this.$container.on('click', createOrderPageMap.chooseCustomerBtn, (event) => {
-      const customerId = this.customerSearcher.onCustomerChooseForOrderCreation(event);
+      const customerId = this.customerManager.onCustomerChooseForOrderCreation(event);
       this.data.customer_id = customerId;
 
       this.cartProvider.loadEmptyCart(customerId);
@@ -106,7 +110,7 @@ export default class CreateOrderPage {
       this._loadCustomerOrders(customerId);
     });
 
-    this.$container.on('click', createOrderPageMap.changeCustomerBtn, () => this.customerSearcher.onCustomerChange());
+    this.$container.on('click', createOrderPageMap.changeCustomerBtn, () => this.customerManager.onCustomerChange());
   }
 
   /**
@@ -146,6 +150,55 @@ export default class CreateOrderPage {
   }
 
   /**
+   * Triggers cart rule searching
+   *
+   * @private
+   */
+  _handleCartRuleSearch() {
+    this.$container.on('input', createOrderPageMap.cartRuleSearchInput, () => {
+      this.cartRuleManager.onCartRuleSearch();
+    });
+    this.$container.on('blur', createOrderPageMap.cartRuleSearchInput, () => {
+      this.cartRuleManager.onDoneSearchingCartRule();
+    });
+  }
+
+  /**
+   * Triggers cart rule select
+   *
+   * @private
+   */
+  _handleCartRuleSelect() {
+    this.$container.on('mousedown', createOrderPageMap.foundCartRuleListItem, (event) => {
+      // prevent blur event to allow selecting cart rule
+      event.preventDefault();
+      const cartRuleId = $(event.currentTarget).data('cart-rule-id');
+      this.cartRuleManager.onCartRuleSelect(cartRuleId, this.data.cart_id);
+
+      // manually fire blur event after cart rule is selected.
+    }).on('click', createOrderPageMap.foundCartRuleListItem, () => {
+      $(createOrderPageMap.cartRuleSearchInput).blur();
+    });
+  }
+
+  /**
+   * Triggers cart rule removal from cart
+   *
+   * @private
+   */
+  _handleCartRuleRemove() {
+    this.$container.on('click', createOrderPageMap.cartRuleDeleteBtn, (event) => {
+      this.cartRuleManager.onCartRuleRemove(
+        $(event.currentTarget).data('cart-rule-id'),
+        this.data.cart_id
+      );
+      EventEmitter.on(eventMap.cartRuleRemoved, (cartInfo) => {
+        this.cartRulesRenderer.render(cartInfo.cartRules, cartInfo.products.length === 0);
+      });
+    });
+  }
+
+  /**
    * Gets and renders customer carts
    *
    * @param customerId
@@ -153,7 +206,7 @@ export default class CreateOrderPage {
    * @private
    */
   _loadCustomerCarts(customerId) {
-    this.customerInfoProvider.getCustomerCarts(customerId);
+    this.customerManager.getCustomerCarts(customerId);
     EventEmitter.on(eventMap.customerCartsLoaded, (cartInfo) => {
       this.cartsRenderer.render({
         carts: cartInfo.carts,
@@ -170,7 +223,7 @@ export default class CreateOrderPage {
    * @private
    */
   _loadCustomerOrders(customerId) {
-    this.customerInfoProvider.getCustomerOrders(customerId);
+    this.customerManager.getCustomerOrders(customerId);
     EventEmitter.on(eventMap.customerOrdersLoaded, (cartInfo) => {
       this.ordersRenderer.render(cartInfo.orders);
     });
@@ -185,7 +238,7 @@ export default class CreateOrderPage {
    */
   _renderCartInfo(cartInfo) {
     this.addressesRenderer.render(cartInfo.addresses);
-    this.vouchersRenderer.render(cartInfo.cartRules);
+    this.cartRulesRenderer.render(cartInfo.cartRules, cartInfo.products.length === 0);
     this.shippingRenderer.render(cartInfo.shipping, cartInfo.products.length === 0);
     // @todo: render Summary block when at least 1 product is in cart
     // and delivery options are available

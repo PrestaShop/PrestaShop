@@ -1,3 +1,4 @@
+#@todo: legacy links after page is fully migrated
 admin_carts_index:
   path: /
   methods: [GET]
@@ -64,5 +65,23 @@ admin_carts_set_free_shipping:
     _legacy_controller: AdminCarts
   requirements:
     cartId: \d+
+  options:
+    expose: true
+
+admin_carts_add_rule:
+  path: /{cartId}/rules/add
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Cart:addCartRuleToCart
+    _legacy_controller: AdminCarts
+  options:
+    expose: true
+
+admin_carts_delete_rule:
+  path: /{cartId}/rules/{cartRuleId}/delete
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Cart:removeCartRuleFromCart
+    _legacy_controller: AdminCarts
   options:
     expose: true

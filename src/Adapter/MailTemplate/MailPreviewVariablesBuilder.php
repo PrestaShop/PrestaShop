@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\MailTemplate;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Employee\ContextEmployeeProviderInterface;
+use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutInterface;
 use Address;
 use AddressFormat;
@@ -56,6 +57,11 @@ final class MailPreviewVariablesBuilder
     /** @var LegacyContext */
     private $legacyContext;
 
+    /**
+     * @var Locale
+     */
+    private $locale;
+
     /** @var ContextEmployeeProviderInterface */
     private $employeeProvider;
 
@@ -65,17 +71,28 @@ final class MailPreviewVariablesBuilder
     /** @var MailPartialTemplateRenderer */
     private $mailPartialTemplateRenderer;
 
+    /**
+     * MailPreviewVariablesBuilder constructor.
+     *
+     * @param ConfigurationInterface $configuration
+     * @param LegacyContext $legacyContext
+     * @param ContextEmployeeProviderInterface $employeeProvider
+     * @param MailPartialTemplateRenderer $mailPartialTemplateRenderer
+     * @param Locale $locale
+     */
     public function __construct(
         ConfigurationInterface $configuration,
         LegacyContext $legacyContext,
         ContextEmployeeProviderInterface $employeeProvider,
-        MailPartialTemplateRenderer $mailPartialTemplateRenderer
+        MailPartialTemplateRenderer $mailPartialTemplateRenderer,
+        Locale $locale
     ) {
         $this->configuration = $configuration;
         $this->legacyContext = $legacyContext;
         $this->context = $this->legacyContext->getContext();
         $this->employeeProvider = $employeeProvider;
         $this->mailPartialTemplateRenderer = $mailPartialTemplateRenderer;
+        $this->locale = $locale;
     }
 
     /**
@@ -138,7 +155,7 @@ final class MailPreviewVariablesBuilder
 
             $cartRulesList[] = array(
                 'voucher_name' => 'Promo code',
-                'voucher_reduction' => '-' . Tools::displayPrice(5, $this->context->currency, false),
+                'voucher_reduction' => '-' . $this->locale->formatPrice(5, $this->context->currency->iso_code),
             );
             $cartRulesListTxt = $this->mailPartialTemplateRenderer->render('order_conf_cart_rules.txt', $this->context->language, $cartRulesList);
             $cartRulesListHtml = $this->mailPartialTemplateRenderer->render('order_conf_cart_rules.tpl', $this->context->language, $cartRulesList);
@@ -181,11 +198,11 @@ final class MailPreviewVariablesBuilder
             '{order_name}' => $order->getUniqReference(),
             '{payment}' => Tools::substr($order->payment, 0, 255),
             '{total_products}' => count($order->getProducts()),
-            '{total_discounts}' => Tools::displayPrice($order->total_discounts, $this->context->currency, false),
-            '{total_wrapping}' => Tools::displayPrice($order->total_wrapping, $this->context->currency, false),
-            '{total_shipping}' => Tools::displayPrice($order->total_shipping, $this->context->currency, false),
-            '{total_tax_paid}' => Tools::displayPrice(($order->total_products_wt - $order->total_products) + ($order->total_shipping_tax_incl - $order->total_shipping_tax_excl), $this->context->currency, false),
-            '{total_paid}' => Tools::displayPrice($order->total_paid, $this->context->currency, false),
+            '{total_discounts}' => $this->locale->formatPrice($order->total_discounts, $this->context->currency->iso_code),
+            '{total_wrapping}' => $this->locale->formatPrice($order->total_wrapping, $this->context->currency->iso_code),
+            '{total_shipping}' => $this->locale->formatPrice($order->total_shipping, $this->context->currency->iso_code),
+            '{total_tax_paid}' => $this->locale->formatPrice(($order->total_products_wt - $order->total_products) + ($order->total_shipping_tax_incl - $order->total_shipping_tax_excl), $this->context->currency->iso_code),
+            '{total_paid}' => $this->locale->formatPrice($order->total_paid, $this->context->currency->iso_code),
         ]);
     }
 
@@ -239,10 +256,10 @@ final class MailPreviewVariablesBuilder
                 . (!empty($customizationText) ? '<br />' . $customizationText : '')
                 . '</strong>
 					</td>
-					<td style="padding:0.6em 0.4em; text-align:right;">' . Tools::displayPrice($unitPrice, $this->context->currency, false) . '</td>
+					<td style="padding:0.6em 0.4em; text-align:right;">' . $this->locale->formatPrice($unitPrice, $this->context->currency->iso_code) . '</td>
 					<td style="padding:0.6em 0.4em; text-align:center;">' . (int) $product['product_quantity'] . '</td>
 					<td style="padding:0.6em 0.4em; text-align:right;">'
-                . Tools::displayPrice(($unitPrice * $product['product_quantity']), $this->context->currency, false)
+                . $this->locale->formatPrice(($unitPrice * $product['product_quantity']), $this->context->currency->iso_code)
                 . '</td>
 				</tr>';
         }
@@ -250,7 +267,7 @@ final class MailPreviewVariablesBuilder
             $itemsTable .=
                 '<tr style="background-color:#EBECEE;">
 						<td colspan="4" style="padding:0.6em 0.4em; text-align:right;">' . $this->trans('Voucher code:', array(), 'Modules.Mailalerts.Admin') . ' ' . $discount['name'] . '</td>
-					<td style="padding:0.6em 0.4em; text-align:right;">-' . Tools::displayPrice($discount['value'], $this->context->currency, false) . '</td>
+					<td style="padding:0.6em 0.4em; text-align:right;">-' . $this->locale->formatPrice($discount['value'], $this->context->currency->iso_code) . '</td>
 			</tr>';
         }
 
@@ -308,14 +325,14 @@ final class MailPreviewVariablesBuilder
                 'id_product' => $product['id_product'],
                 'reference' => $product['reference'],
                 'name' => $product['name'] . (isset($product['attributes']) ? ' - ' . $product['attributes'] : ''),
-                'price' => Tools::displayPrice($productPrice * $product['quantity'], $this->context->currency, false),
+                'price' => $this->locale->formatPrice($productPrice * $product['quantity'], $this->context->currency->iso_code),
                 'quantity' => $product['quantity'],
                 'customization' => array(),
             );
 
             if (isset($product['price']) && $product['price']) {
-                $productTemplate['unit_price'] = Tools::displayPrice($productPrice, $this->context->currency, false);
-                $productTemplate['unit_price_full'] = Tools::displayPrice($productPrice, $this->context->currency, false)
+                $productTemplate['unit_price'] = $this->locale->formatPrice($productPrice, $this->context->currency->iso_code);
+                $productTemplate['unit_price_full'] = $this->locale->formatPrice($productPrice, $this->context->currency->iso_code)
                     . ' ' . $product['unity'];
             } else {
                 $productTemplate['unit_price'] = $productTemplate['unit_price_full'] = '';
@@ -341,7 +358,7 @@ final class MailPreviewVariablesBuilder
                     $productTemplate['customization'][] = array(
                         'customization_text' => $customizationText,
                         'customization_quantity' => $customizationQuantity,
-                        'quantity' => Tools::displayPrice($customizationQuantity * $productPrice, $this->context->currency, false),
+                        'quantity' => $this->locale->formatPrice($customizationQuantity * $productPrice, $this->context->currency->iso_code),
                     );
                 }
             }

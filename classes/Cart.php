@@ -1849,7 +1849,7 @@ class CartCore extends ObjectModel
 
         $with_taxes = $use_tax_display ? $cart->_taxCalculationMethod != PS_TAX_EXC : true;
 
-        return Tools::displayPrice($cart->getOrderTotal($with_taxes, $type), Currency::getCurrencyInstance((int) $cart->id_currency), false);
+        return Context::getContext()->getCurrentLocale()->formatPrice($cart->getOrderTotal($with_taxes, $type), Currency::getIsoCodeById((int) $cart->id_currency), false);
     }
 
     /**
@@ -3794,7 +3794,7 @@ class CartCore extends ObjectModel
 
             if ($product['reduction_type'] == 'amount') {
                 $reduction = (!Product::getTaxCalculationMethod() ? (float) $product['price_wt'] : (float) $product['price']) - (float) $product['price_without_quantity_discount'];
-                $product['reduction_formatted'] = Tools::displayPrice($reduction);
+                $product['reduction_formatted'] = $context->getCurrentLocale()->formatPrice($reduction, $context->currency->iso_code);
             }
         }
 

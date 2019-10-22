@@ -820,14 +820,16 @@ class ToolsCore
 
     public static function displayPriceSmarty($params, &$smarty)
     {
+        $context = Context::getContext();
+        $locale = static::getContextLocale($context);
         if (array_key_exists('currency', $params)) {
             $currency = Currency::getCurrencyInstance((int) $params['currency']);
             if (Validate::isLoadedObject($currency)) {
-                return Tools::displayPrice($params['price'], $currency, false);
+                return $locale->formatPrice($params['price'], $currency->iso_code);
             }
         }
 
-        return Tools::displayPrice($params['price']);
+        return $locale->formatPrice($params['price'], $context->currency->iso_code);
     }
 
     /**

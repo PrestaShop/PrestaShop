@@ -562,7 +562,7 @@ class AdminCartRulesControllerCore extends AdminController
                 $combinations = array();
                 $productObj = new Product((int) $product['id_product'], false, (int) $this->context->language->id);
                 $attributes = $productObj->getAttributesGroups((int) $this->context->language->id);
-                $product['formatted_price'] = Tools::displayPrice(Tools::convertPrice($product['price_tax_incl'], $this->context->currency), $this->context->currency);
+                $product['formatted_price'] = $this->context->getCurrentLocale()->formatPrice(Tools::convertPrice($product['price_tax_incl'], $this->context->currency), $this->context->currency->iso_code);
 
                 foreach ($attributes as $attribute) {
                     if (!isset($combinations[$attribute['id_product_attribute']]['attributes'])) {
@@ -573,7 +573,7 @@ class AdminCartRulesControllerCore extends AdminController
                     $combinations[$attribute['id_product_attribute']]['default_on'] = $attribute['default_on'];
                     if (!isset($combinations[$attribute['id_product_attribute']]['price'])) {
                         $price_tax_incl = Product::getPriceStatic((int) $product['id_product'], true, $attribute['id_product_attribute']);
-                        $combinations[$attribute['id_product_attribute']]['formatted_price'] = Tools::displayPrice(Tools::convertPrice($price_tax_incl, $this->context->currency), $this->context->currency);
+                        $combinations[$attribute['id_product_attribute']]['formatted_price'] = $this->context->getCurrentLocale()->formatPrice(Tools::convertPrice($price_tax_incl, $this->context->currency), $this->context->currency->iso_code);
                     }
                 }
 

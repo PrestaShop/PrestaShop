@@ -21,7 +21,10 @@ services:
 
     prestashop.adapter.admin.wrapper.product:
         class: PrestaShop\PrestaShop\Adapter\Product\AdminProductWrapper
-        arguments: ["@translator", "@prestashop.adapter.legacy.context"]
+        arguments:
+            - "@translator"
+            - "@=service('prestashop.adapter.legacy.context').getContext().employee.getAssociatedShops()"
+            - "@prestashop.core.localization.locale.context_locale"
 
     prestashop.adapter.admin.controller.attribute_generator:
         class: PrestaShop\PrestaShop\Adapter\Attribute\AdminAttributeGeneratorControllerWrapper
@@ -32,7 +35,7 @@ services:
     prestashop.adapter.product.list_parameters_updater:
         class: 'PrestaShop\PrestaShop\Adapter\Product\ListParametersUpdater'
 
-    prestashop:.adapter.product.command_handler.add_category_to_product_handler:
+    prestashop.adapter.product.command_handler.add_category_to_product_handler:
         class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\AssignProductToCategoryHandler
         public: true
         tags:

@@ -8,7 +8,7 @@
   </languages>
   <taxes>
     <tax id="1" name="BTW NL 21%" rate="21" eu-tax-group="virtual"/>
-    <tax id="2" name="BTW NL 6%" rate="6"/>
+    <tax id="2" name="BTW NL 9%" rate="9"/>
     <tax id="3" name="USt. AT 20%" rate="20" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="4" name="TVA BE 21%" rate="21" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="5" name="ДДС BG 20%" rate="20" auto-generated="1" from-eu-tax-group="virtual"/>
@@ -65,7 +65,7 @@
       <taxRule iso_code_country="se" id_tax="1"/>
       <taxRule iso_code_country="uk" id_tax="1"/>
     </taxRulesGroup>
-    <taxRulesGroup name="NL Reduced Rate (6%)">
+    <taxRulesGroup name="NL Reduced Rate (9%)">
       <taxRule iso_code_country="be" id_tax="2"/>
       <taxRule iso_code_country="bg" id_tax="2"/>
       <taxRule iso_code_country="cz" id_tax="2"/>
@@ -94,7 +94,7 @@
       <taxRule iso_code_country="se" id_tax="2"/>
       <taxRule iso_code_country="uk" id_tax="2"/>
     </taxRulesGroup>
-    <taxRulesGroup name="NL Foodstuff Rate (6%)">
+    <taxRulesGroup name="NL Foodstuff Rate (9%)">
       <taxRule iso_code_country="be" id_tax="2"/>
       <taxRule iso_code_country="bg" id_tax="2"/>
       <taxRule iso_code_country="cz" id_tax="2"/>
@@ -123,7 +123,7 @@
       <taxRule iso_code_country="se" id_tax="2"/>
       <taxRule iso_code_country="uk" id_tax="2"/>
     </taxRulesGroup>
-    <taxRulesGroup name="NL Books Rate (6%)">
+    <taxRulesGroup name="NL Books Rate (9%)">
       <taxRule iso_code_country="be" id_tax="2"/>
       <taxRule iso_code_country="bg" id_tax="2"/>
       <taxRule iso_code_country="cz" id_tax="2"/>
@@ -183,6 +183,20 @@
       <taxRule iso_code_country="sk" id_tax="29"/>
     </taxRulesGroup>
   </taxes>
+  <states>
+    <state name="Drenthe" iso_code="NL-DR" country="NL" zone="Europe" tax_behavior="0" />
+    <state name="Flevoland" iso_code="NL-FL" country="NL" zone="Europe" tax_behavior="0" />
+    <state name="Fryslân" iso_code="NL-FR" country="NL" zone="Europe" tax_behavior="0" />
+    <state name="Gelderland" iso_code="NL-GE" country="NL" zone="Europe" tax_behavior="0" />
+    <state name="Groningen" iso_code="NL-GR" country="NL" zone="Europe" tax_behavior="0" />
+    <state name="Limburg" iso_code="NL-LI" country="NL" zone="Europe" tax_behavior="0" />
+    <state name="Noord-Brabant" iso_code="NL-NB" country="NL" zone="Europe" tax_behavior="0" />
+    <state name="Noord-Holland" iso_code="NL-NH" country="NL" zone="Europe" tax_behavior="0" />
+    <state name="Overijssel" iso_code="NL-OV" country="NL" zone="Europe" tax_behavior="0" />
+    <state name="Utrecht" iso_code="NL-UT" country="NL" zone="Europe" tax_behavior="0" />
+    <state name="Zeeland" iso_code="NL-ZE" country="NL" zone="Europe" tax_behavior="0" />
+    <state name="Zuid-Holland" iso_code="NL-ZH" country="NL" zone="Europe" tax_behavior="0" />
+  </states>
   <units>
     <unit type="weight" value="kg"/>
     <unit type="volume" value="L"/>

@@ -130,7 +130,7 @@ class NotificationCore
                 'id_customer' => ((!empty($value['id_customer'])) ? (int) $value['id_customer'] : 0),
                 'id_customer_message' => ((!empty($value['id_customer_message'])) ? (int) $value['id_customer_message'] : 0),
                 'id_customer_thread' => ((!empty($value['id_customer_thread'])) ? (int) $value['id_customer_thread'] : 0),
-                'total_paid' => ((!empty($value['total_paid'])) ? Tools::displayPrice((float) $value['total_paid'], (int) $value['id_currency'], false) : 0),
+                'total_paid' => ((!empty($value['total_paid'])) ? Tools::getContextLocale(Context::getContext())->formatPrice((float) $value['total_paid'], Currency::getIsoCodeById((int) $value['id_currency'])) : 0),
                 'carrier' => ((!empty($value['name'])) ? Tools::safeOutput($value['name']) : ''),
                 'iso_code' => ((!empty($value['iso_code'])) ? Tools::safeOutput($value['iso_code']) : ''),
                 'company' => ((!empty($value['company'])) ? Tools::safeOutput($value['company']) : ''),

@@ -27,7 +27,9 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCartRuleToCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\CreateEmptyCustomerCartCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\RemoveCartRuleFromCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\SetFreeShippingToCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartAddressesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartCarrierCommand;
@@ -36,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleValidityException;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -65,7 +68,7 @@ class CartController extends FrameworkBundleAdminController
         try {
             $cartView = $this->getQueryBus()->handle(new GetCartForViewing((int) $cartId));
         } catch (Exception $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
 
             return $this->redirectToRoute('admin_carts_index');
         }
@@ -87,60 +90,81 @@ class CartController extends FrameworkBundleAdminController
     /**
      * Gets requested cart information
      *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     *
      * @param int $cartId
      *
      * @return JsonResponse
-     *
-     * @throws CartConstraintException
      */
     public function getInfoAction(int $cartId)
     {
-        $cartInfo = $this->getQueryBus()->handle(new GetCartInformation($cartId));
+        try {
+            $cartInfo = $this->getQueryBus()->handle(new GetCartInformation($cartId));
 
-        return $this->json($cartInfo);
+            return $this->json($cartInfo);
+        } catch (Exception $e) {
+            return $this->json(
+                ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
     }
 
     /**
      * Creates empty cart
      *
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
+     *
      * @param Request $request
      *
      * @return JsonResponse
-     *
-     * @throws CartConstraintException
      */
     public function createAction(Request $request): JsonResponse
     {
-        $customerId = $request->request->getInt('customer_id');
-        $cartId = $this->getCommandBus()->handle(new CreateEmptyCustomerCartCommand($customerId))->getValue();
+        try {
+            $customerId = $request->request->getInt('customer_id');
+            $cartId = $this->getCommandBus()->handle(new CreateEmptyCustomerCartCommand($customerId))->getValue();
 
-        return $this->json($this->getCartInfo($cartId));
+            return $this->json($this->getCartInfo($cartId));
+        } catch (Exception $e) {
+            return $this->json(
+                ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
     }
 
     /**
      * Changes the cart address information
      *
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+     *
      * @param int $cartId
      * @param Request $request
      *
      * @return JsonResponse
-     *
-     * @throws CartConstraintException
      */
     public function editAddressesAction(int $cartId, Request $request): JsonResponse
     {
-        $updateAddressCommand = new UpdateCartAddressesCommand($cartId);
-        if ($deliveryAddressId = $request->request->getInt('delivery_address_id')) {
-            $updateAddressCommand->setNewDeliveryAddressId($deliveryAddressId);
+        try {
+            $updateAddressCommand = new UpdateCartAddressesCommand($cartId);
+            if ($deliveryAddressId = $request->request->getInt('delivery_address_id')) {
+                $updateAddressCommand->setNewDeliveryAddressId($deliveryAddressId);
+            }
+
+            if ($invoiceAddressId = $request->request->getInt('invoice_address_id')) {
+                $updateAddressCommand->setNewInvoiceAddressId($invoiceAddressId);
+            }
+
+            $this->getCommandBus()->handle($updateAddressCommand);
+
+            return $this->json($this->getCartInfo($cartId));
+        } catch (Exception $e) {
+            return $this->json(
+                ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
         }
-
-        if ($invoiceAddressId = $request->request->getInt('invoice_address_id')) {
-            $updateAddressCommand->setNewInvoiceAddressId($invoiceAddressId);
-        }
-
-        $this->getCommandBus()->handle($updateAddressCommand);
-
-        return $this->json($this->getCartInfo($cartId));
     }
 
     /**
@@ -148,36 +172,93 @@ class CartController extends FrameworkBundleAdminController
      * @param int $cartId
      *
      * @return JsonResponse
-     *
-     * @throws CartConstraintException
      */
     public function editCarrierAction(Request $request, int $cartId): JsonResponse
     {
-        $carrierId = (int) $request->request->get('carrier_id');
-        $this->getCommandBus()->handle(new UpdateCartCarrierCommand(
-            $cartId,
-            $carrierId
-        ));
+        try {
+            $carrierId = (int) $request->request->get('carrier_id');
+            $this->getCommandBus()->handle(new UpdateCartCarrierCommand(
+                $cartId,
+                $carrierId
+            ));
 
-        return $this->json($this->getCartInfo($cartId));
+            return $this->json($this->getCartInfo($cartId));
+        } catch (Exception $e) {
+            return $this->json(
+                ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
     }
 
     /**
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+     *
      * @param Request $request
      * @param int $cartId
      *
      * @return JsonResponse
-     *
-     * @throws CartConstraintException
      */
     public function setFreeShippingAction(Request $request, int $cartId)
     {
-        $this->getCommandBus()->handle(new SetFreeShippingToCartCommand(
-            $cartId,
-            $request->query->getBoolean('free_shipping')
-        ));
+        try {
+            $this->getCommandBus()->handle(new SetFreeShippingToCartCommand(
+                $cartId,
+                $request->request->getBoolean('free_shipping')
+            ));
 
-        return $this->json($this->getCartInfo($cartId));
+            return $this->json($this->getCartInfo($cartId));
+        } catch (Exception $e) {
+            return $this->json(
+                ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
+    }
+
+    /**
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
+     *
+     * @param Request $request
+     * @param int $cartId
+     *
+     * @return JsonResponse
+     */
+    public function addCartRuleToCartAction(Request $request, int $cartId): JsonResponse
+    {
+        $cartRuleId = $request->request->getInt('cart_rule_id');
+        try {
+            $this->getCommandBus()->handle(new AddCartRuleToCartCommand($cartId, $cartRuleId));
+
+            return $this->json($this->getCartInfo($cartId));
+        } catch (Exception $e) {
+            return $this->json(
+                ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
+    }
+
+    /**
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
+     *
+     * @param int $cartId
+     * @param int $cartRuleId
+     *
+     * @return JsonResponse
+     */
+    public function removeCartRuleFromCartAction(int $cartId, int $cartRuleId)
+    {
+        try {
+            $this->getCommandBus()->handle(new RemoveCartRuleFromCartCommand($cartId, $cartRuleId));
+
+            return $this->json($this->getCartInfo($cartId));
+        } catch (Exception $e) {
+            return $this->json(
+                ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages())],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
     }
 
     /**
@@ -195,10 +276,11 @@ class CartController extends FrameworkBundleAdminController
     /**
      * @return array
      */
-    private function getErrorMessages()
+    private function getErrorMessages(Exception $e)
     {
         return [
             CartNotFoundException::class => $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
+            CartRuleValidityException::class => $e->getMessage(),
         ];
     }
 }

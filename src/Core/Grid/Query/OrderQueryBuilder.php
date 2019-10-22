@@ -98,7 +98,7 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
         $qb = $this
             ->getBaseQueryBuilder($searchCriteria->getFilters())
             ->addSelect('o.id_order, o.reference, o.total_paid_tax_incl, os.paid, osl.name AS osname')
-            ->addSelect('o.current_state')
+            ->addSelect('o.current_state, o.id_customer')
             ->addSelect('CONCAT(LEFT(cu.`firstname`, 1), \'. \', cu.`lastname`) AS `customer`')
             ->addSelect('os.color, o.payment, s.name AS shop_name')
             ->addSelect('o.date_add, cu.company, cl.name AS country_name, o.invoice_number, o.delivery_number')

@@ -39,12 +39,14 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotEditDeliveredOrderProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\ChangeOrderStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderEmailResendException;
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Order\OrderConstraints;
 use PrestaShop\PrestaShop\Core\Domain\Order\Payment\Command\AddPaymentCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\UpdateProductInOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderPreview;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPreview;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\OrderFilters;
@@ -455,6 +457,27 @@ class OrderController extends FrameworkBundleAdminController
         ]);
     }
 
+    public function previewAction(int $orderId): Response
+    {
+        try {
+            /** @var OrderPreview $orderPreview */
+            $orderPreview = $this->getQueryBus()->handle(new GetOrderPreview($orderId));
+
+            return $this->json([
+                'preview' => $this->renderView('@PrestaShop/Admin/Sell/Order/Order/preview.html.twig', [
+                    'orderPreview' => $orderPreview,
+                    'productsPreviewLimit' => OrderConstraints::PRODUCTS_PREVIEW_LIMIT,
+                    'orderId' => $orderId,
+                ]),
+            ]);
+        } catch (Exception $e) {
+            return $this->json(
+                ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
+                Response::HTTP_BAD_REQUEST
+            );
+        }
+    }
+
     /**
      * Duplicates cart from specified order
      *
@@ -552,11 +575,11 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @param OrderException $e
+     * @param Exception $e
      *
      * @return array
      */
-    private function getErrorMessages(OrderException $e)
+    private function getErrorMessages(Exception $e)
     {
         return [
             CannotEditDeliveredOrderProductException::class => $this->trans('You cannot edit the cart once the order delivered', 'Admin.Orderscustomers.Notification'),

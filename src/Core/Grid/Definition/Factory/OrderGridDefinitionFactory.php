@@ -43,8 +43,11 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ChoiceColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DateTimeColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\IdentifierColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\LinkColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\OrderPriceColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\PreviewColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
@@ -155,6 +158,17 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getColumns()
     {
+        $previewColumn = (new PreviewColumn('preview'))
+            ->setOptions([
+                'icon_expand' => 'keyboard_arrow_down',
+                'icon_collapse' => 'keyboard_arrow_up',
+                'preview_data_route' => 'admin_orders_preview',
+                'preview_route_params' => [
+                    'orderId' => 'id_order',
+                ],
+            ])
+        ;
+
         $columns = (new ColumnCollection())
             ->add(
                 (new BulkActionColumn('orders_bulk'))
@@ -162,10 +176,11 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'bulk_field' => 'id_order',
                     ])
             )
-            ->add((new DataColumn('id_order'))
+            ->add((new IdentifierColumn('id_order'))
                 ->setName($this->trans('ID', [], 'Admin.Global'))
                 ->setOptions([
-                    'field' => 'id_order',
+                    'identifier_field' => 'id_order',
+                    'preview' => $previewColumn,
                 ])
             )
             ->add((new DataColumn('reference'))
@@ -182,10 +197,13 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'false_name' => $this->trans('No', [], 'Admin.Global'),
                 ])
             )
-            ->add((new DataColumn('customer'))
+            ->add((new LinkColumn('customer'))
                 ->setName($this->trans('Customer', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'customer',
+                    'route' => 'admin_customers_view',
+                    'route_param_name' => 'customerId',
+                    'route_param_field' => 'id_customer',
                 ])
             )
             ->add((new OrderPriceColumn('total_paid_tax_incl'))
