@@ -3794,7 +3794,7 @@ class CartCore extends ObjectModel
 
             if ($product['reduction_type'] == 'amount') {
                 $reduction = (!Product::getTaxCalculationMethod() ? (float) $product['price_wt'] : (float) $product['price']) - (float) $product['price_without_quantity_discount'];
-                $product['reduction_formatted'] = $context->getCurrentLocale()->formatPrice($reduction, $context->currency->iso_code);
+                $product['reduction_formatted'] = Tools::getContextLocale($context)->formatPrice($reduction, $context->currency->iso_code);
             }
         }
 
