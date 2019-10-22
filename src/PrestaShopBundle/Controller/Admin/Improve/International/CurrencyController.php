@@ -27,7 +27,6 @@
 namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
 use Exception;
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\DeleteCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\ToggleCurrencyStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\RefreshExchangeRatesCommand;
@@ -41,15 +40,12 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\AutomateExchangeRatesUpdateException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\InvalidUnofficialCurrencyException;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Query\GetCurrencyExchangeRate;
-use PrestaShop\PrestaShop\Core\Domain\Currency\QueryResult\ExchangeRate;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Query\GetCurrencyAPIData;
+use PrestaShop\PrestaShop\Core\Domain\Currency\QueryResult\CurrencyAPIData;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CurrencyGridDefinitionFactory;
-use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\Currency;
-use PrestaShop\PrestaShop\Core\Localization\CLDR\CurrencyInterface;
-use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
 use PrestaShop\PrestaShop\Core\Search\Filters\CurrencyFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -230,32 +226,13 @@ class CurrencyController extends FrameworkBundleAdminController
      */
     public function getReferenceDataAction($currencyIsoCode)
     {
-        /** @var LegacyContext $legacyContext */
-        $legacyContext = $this->get('prestashop.adapter.legacy.context');
-        $languages = $legacyContext->getAvailableLanguages();
-
-        /** @var LocaleRepository $localeRepository */
-        $localeRepository = $this->get('prestashop.core.localization.cldr.locale_repository');
-
-        $cldrCurrency = [];
-        foreach ($languages as $language) {
-            $locale = $localeRepository->getLocale($language['locale']);
-            $localeCurrency = $locale->getCurrency($currencyIsoCode);
-            if (null === $localeCurrency) {
-                continue;
-            }
-
-            $cldrCurrency['iso_code'] = $localeCurrency->getIsoCode();
-            $cldrCurrency['numeric_iso_code'] = $localeCurrency->getNumericIsoCode();
-            $cldrCurrency['precision'] = $localeCurrency->getDecimalDigits();
-            $cldrCurrency['names'][$language['id_lang']] = $localeCurrency->getDisplayName();
-            $cldrCurrency['symbols'][$language['id_lang']] = $localeCurrency->getSymbol(CurrencyInterface::SYMBOL_TYPE_NARROW) ?: $localeCurrency->getIsoCode();
-        }
-
-        if (empty($cldrCurrency)) {
+        try {
+            /** @var CurrencyAPIData $currencyAPIDAta */
+            $currencyAPIDAta = $this->getQueryBus()->handle(new GetCurrencyAPIData($currencyIsoCode));
+        } catch (CurrencyException $e) {
             return new JsonResponse([
                 'error' => $this->trans(
-                    'Cannot find CLDR data for currency %isoCode%',
+                    'Cannot find reference data for currency %isoCode%',
                     'Admin.International.Feature',
                     [
                         '%isoCode%' => $currencyIsoCode,
@@ -264,22 +241,7 @@ class CurrencyController extends FrameworkBundleAdminController
             ], 404);
         }
 
-        try {
-            /** @var ExchangeRate $exchangeRate */
-            $exchangeRate = $this->getQueryBus()->handle(new GetCurrencyExchangeRate($currencyIsoCode));
-
-            $computingPrecision = new ComputingPrecision();
-            $cldrCurrency['exchange_rate'] = $exchangeRate->getValue()->round($computingPrecision->getPrecision($cldrCurrency['precision']));
-        } catch (CurrencyException $e) {
-            $logger = $this->container->get('logger');
-            $logger->error(sprintf('Unable to find the exchange rate: %s', $e->getMessage()));
-
-            //Unable to find the exchange rate, either the currency doesn't exist (unofficial)
-            //or the currency feed could not be fetched, use the default rate as a fallback
-            $cldrCurrency['exchange_rate'] = \PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\ExchangeRate::DEFAULT_RATE;
-        }
-
-        return new JsonResponse($cldrCurrency);
+        return new JsonResponse($currencyAPIDAta->toArray());
     }
 
     /**
