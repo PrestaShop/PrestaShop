@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Kpi;
 
 use Cart;
 use Context;
+use Currency;
 use Group;
 use HelperKpi;
 use Order;
@@ -74,7 +75,7 @@ final class ShoppingCartTotalKpi implements KpiInterface
         $helper->subtitle = $translator->trans('Cart #%ID%', ['%ID%' => $cart->id], 'Admin.Orderscustomers.Feature');
         $helper->value = $this->locale->formatPrice(
             $this->getCartTotalPrice($cart),
-            \Currency::getIsoCodeById((int) $cart->id_currency)
+            Currency::getIsoCodeById((int) $cart->id_currency)
         );
 
         return $helper->generate();

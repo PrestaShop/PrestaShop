@@ -39,10 +39,8 @@ use Image;
 use Language;
 use ObjectModel;
 use PrestaShop\PrestaShop\Adapter\Entity\Customization;
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Foundation\Database\EntityNotFoundException;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
-use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
 use PrestaShopBundle\Utils\FloatParser;
 use Product;
 use ProductDownload;
@@ -76,23 +74,22 @@ class AdminProductWrapper
     private $translator;
 
     /**
-     * @var Context
+     * @var array
      */
-    private $legacyContext;
+    private $employeeAssociatedShops;
 
     /**
      * Constructor : Inject Symfony\Component\Translation Translator.
      *
      * @param object $translator
-     * @param LegacyContext $legacyContext
-     * @param LocaleRepository $localeRepository
-     * @param string $locale
+     * @param array $employeeAssociatedShops
+     * @param Locale $locale
      */
-    public function __construct($translator, $legacyContext, LocaleRepository $localeRepository, string $locale)
+    public function __construct($translator, array $employeeAssociatedShops, Locale $locale)
     {
         $this->translator = $translator;
-        $this->legacyContext = $legacyContext->getContext();
-        $this->locale = $localeRepository->getLocale($locale);
+        $this->employeeAssociatedShops = $employeeAssociatedShops;
+        $this->locale = $locale;
     }
 
     /**
@@ -482,7 +479,7 @@ class AdminProductWrapper
                 if (!$specific_price['id_shop'] || in_array($specific_price['id_shop'], Shop::getContextListShopID())) {
                     $can_delete_specific_prices = true;
                     if (Shop::isFeatureActive()) {
-                        $can_delete_specific_prices = (count($this->legacyContext->employee->getAssociatedShops()) > 1 && !$specific_price['id_shop']) || $specific_price['id_shop'];
+                        $can_delete_specific_prices = (count($this->employeeAssociatedShops) > 1 && !$specific_price['id_shop']) || $specific_price['id_shop'];
                     }
 
                     $price = Tools::ps_round($specific_price['price'], 2);

@@ -29,7 +29,6 @@ namespace PrestaShop\PrestaShop\Adapter\Order\QueryHandler;
 use Address;
 use Carrier;
 use Configuration;
-use Context;
 use Country;
 use Currency;
 use Customer;
@@ -105,25 +104,25 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
     private $translator;
 
     /**
-     * @var Context
+     * @var int
      */
-    private $context;
+    private $contextLanguageId;
 
     /**
      * @param ImageTagSourceParserInterface $imageTagSourceParser
      * @param TranslatorInterface $translator
-     * @param Context $context
+     * @param int $contextLanguageId
      * @param Locale $locale
      */
     public function __construct(
         ImageTagSourceParserInterface $imageTagSourceParser,
         TranslatorInterface $translator,
-        Context $context,
+        int $contextLanguageId,
         Locale $locale
     ) {
         $this->imageTagSourceParser = $imageTagSourceParser;
         $this->translator = $translator;
-        $this->context = $context;
+        $this->contextLanguageId = $contextLanguageId;
         $this->locale = $locale;
     }
 
@@ -355,7 +354,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
                 $stockLocationIsAvailable = true;
             }
 
-            $pack_items = $product['cache_is_pack'] ? Pack::getItemTable($product['id_product'], $this->context->language->id, true) : array();
+            $pack_items = $product['cache_is_pack'] ? Pack::getItemTable($product['id_product'], $this->contextLanguageId, true) : array();
             foreach ($pack_items as &$pack_item) {
                 $pack_item['current_stock'] = StockAvailable::getQuantityAvailableByProduct($pack_item['id_product'], $pack_item['id_product_attribute'], $pack_item['id_shop']);
                 // if the current stock requires a warning
@@ -456,7 +455,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
      */
     private function getOrderHistory(Order $order): OrderHistoryForViewing
     {
-        $history = $order->getHistory($this->context->language->id);
+        $history = $order->getHistory($this->contextLanguageId);
 
         $statuses = [];
 
@@ -503,7 +502,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
 
             if ('invoice' === $type) {
                 $number = $document->getInvoiceNumberFormatted(
-                    $this->context->language->id,
+                    $this->contextLanguageId,
                     $order->id_shop
                 );
 
@@ -513,13 +512,13 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             } elseif ('delivery_slip' === $type) {
                 $number = sprintf(
                     '%s%06d',
-                    Configuration::get('PS_DELIVERY_PREFIX', $this->context->language->id, null, $order->id_shop),
+                    Configuration::get('PS_DELIVERY_PREFIX', $this->contextLanguageId, null, $order->id_shop),
                     $document->delivery_number
                 );
             } elseif ('credit_slip' === $type) {
                 $number = sprintf(
                     '%s%06d',
-                    Configuration::get('PS_CREDIT_SLIP_PREFIX', $this->context->language->id),
+                    Configuration::get('PS_CREDIT_SLIP_PREFIX', $this->contextLanguageId),
                     $document->id
                 );
             }
@@ -687,7 +686,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             $currency = new Currency($payment->id_currency);
             $invoice = $payment->getOrderInvoice($order->id);
             $invoiceNumber = $invoice ?
-                $invoice->getInvoiceNumberFormatted($this->context->language->id, $order->id_shop) :
+                $invoice->getInvoiceNumberFormatted($this->contextLanguageId, $order->id_shop) :
                 null;
 
             $orderPayments[] = new OrderPaymentForViewing(

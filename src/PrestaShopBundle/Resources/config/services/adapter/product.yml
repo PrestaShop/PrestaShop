@@ -23,9 +23,8 @@ services:
         class: PrestaShop\PrestaShop\Adapter\Product\AdminProductWrapper
         arguments:
             - "@translator"
-            - "@prestashop.adapter.legacy.context"
-            - "@prestashop.core.localization.locale.repository"
-            - '@=service("prestashop.adapter.legacy.context").getContext().language.getLocale()'
+            - "@=service('prestashop.adapter.legacy.context').getContext().employee.getAssociatedShops()"
+            - "@prestashop.core.localization.locale.context_locale"
 
     prestashop.adapter.admin.controller.attribute_generator:
         class: PrestaShop\PrestaShop\Adapter\Attribute\AdminAttributeGeneratorControllerWrapper

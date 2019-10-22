@@ -624,10 +624,10 @@ class CurrencyCore extends ObjectModel
     {
         $cacheId = 'Currency::getIsoCodeById' . pSQL($id);
         if ($forceRefreshCache || !Cache::isStored($cacheId)) {
-            $result = Currency::getCurrencyInstance($id);
-            Cache::store($cacheId, $result->iso_code);
+            $resultIsoCode = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT `iso_code` FROM ' . _DB_PREFIX_ . 'currency WHERE `id_currency` = ' . (int) $id);
+            Cache::store($cacheId, $resultIsoCode);
 
-            return $result->iso_code;
+            return $resultIsoCode;
         }
 
         return Cache::retrieve($cacheId);

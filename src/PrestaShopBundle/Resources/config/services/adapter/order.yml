@@ -113,7 +113,7 @@ services:
     arguments:
       - '@prestashop.core.image.parser.image_tag_source_parser'
       - '@translator'
-      - '@=service("prestashop.adapter.legacy.context").getContext()'
+      - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
       - "@prestashop.core.localization.locale.context_locale"
     tags:
       - name: tactician.handler

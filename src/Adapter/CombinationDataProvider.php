@@ -30,7 +30,6 @@ use Combination;
 use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Adapter\Product\ProductDataProvider;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
-use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Product;
 
@@ -54,13 +53,14 @@ class CombinationDataProvider
      */
     private $locale;
 
-    public function __construct(LocaleRepository $repository)
+    /**
+     * @param Locale $locale
+     */
+    public function __construct(Locale $locale)
     {
         $this->context = new LegacyContext();
         $this->productAdapter = new ProductDataProvider();
-        $this->locale = $repository->getLocale(
-            $this->context->getContext()->language->getLocale()
-        );
+        $this->locale = $locale;
     }
 
     /**
