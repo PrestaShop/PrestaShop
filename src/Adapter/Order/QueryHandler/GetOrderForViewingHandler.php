@@ -603,11 +603,10 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
 
 
                 $trackingUrl = null;
-                $trackingNumber = null;
+                $trackingNumber = $item['tracking_number'];
 
                 if ($item['url'] && $item['tracking_number']) {
                     $trackingUrl = str_replace('@', $item['tracking_number'], $item['url']);
-                    $trackingNumber = $item['tracking_number'];
                 }
 
                 $weight = sprintf('%.3f %s', $item['weight'], Configuration::get('PS_WEIGHT_UNIT'));

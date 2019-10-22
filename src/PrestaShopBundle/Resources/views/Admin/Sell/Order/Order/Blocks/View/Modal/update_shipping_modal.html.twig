@@ -24,7 +24,9 @@
  *#}
 
 <div class="modal fade" id="updateOrderShippingModal" tabindex="-1" role="dialog">
-  {{ form_start(updateOrderShippingForm) }}
+  {{ form_start(updateOrderShippingForm, {
+    'action': path('admin_orders_update_shipping', {'orderId': orderForViewing.id})
+  }) }}
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">

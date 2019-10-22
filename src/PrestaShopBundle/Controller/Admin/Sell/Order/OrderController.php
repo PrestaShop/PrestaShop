@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\DeleteCartRuleFromOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\DuplicateOrderCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\ResendOrderEmailCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderShippingDetailsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotEditDeliveredOrderProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\ChangeOrderStatusException;
@@ -305,8 +306,29 @@ class OrderController extends FrameworkBundleAdminController
      */
     public function updateShippingAction(int $orderId, Request $request): RedirectResponse
     {
+        $form = $this->createForm(UpdateOrderShippingType::class, [], [
+            'order_id' => $orderId,
+        ]);
+        $form->handleRequest($request);
 
-        $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+
+            try {
+                $this->getCommandBus()->handle(
+                    new UpdateOrderShippingDetailsCommand(
+                        $orderId,
+                        (int) $data['current_order_carrier_id'],
+                        (int) $data['new_carrier_id'],
+                        $data['tracking_number']
+                    )
+                );
+
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+            } catch (Exception $e) {
+                $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+            }
+        }
 
         return $this->redirectToRoute('admin_orders_view', [
             'orderId' => $orderId,
