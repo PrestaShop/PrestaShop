@@ -79,7 +79,6 @@ class ThemeCommand extends ContainerAwareCommand
      */
     protected function init(InputInterface $input, OutputInterface $output)
     {
-        require $this->getContainer()->get('kernel')->getRootDir() . '/../config/config.inc.php';
         // the user must be allowed to enable themes
         Context::getContext()->employee = new Employee(1);
 
