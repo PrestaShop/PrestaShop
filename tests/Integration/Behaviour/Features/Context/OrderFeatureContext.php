@@ -47,6 +47,7 @@ use OrderDetail;
 use OrderInvoice;
 use OrderReturn;
 use OrderSlip;
+use PrestaShop\PrestaShop\Core\Localization\Locale;
 use Product;
 use Shop;
 use SpecificPrice;
@@ -147,6 +148,9 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
      */
     protected function addProductToOrder(Order $order, array $product_informations, array $invoice_informations = [], $warehouseId = false)
     {
+        /** @var Locale $locale */
+        $locale = CommonFeatureContext::getContainer()->get('prestashop.core.localization.locale.context_locale');
+
         $old_cart_rules = Context::getContext()->cart->getCartRules();
         if ($order->hasBeenShipped()) {
             die(json_encode(array(
@@ -407,7 +411,7 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
         $resume = OrderSlip::getProductSlipResume((int) $product['id_order_detail']);
         $product['quantity_refundable'] = $product['product_quantity'] - $resume['product_quantity'];
         $product['amount_refundable'] = $product['total_price_tax_excl'] - $resume['amount_tax_excl'];
-        $product['amount_refund'] = Tools::displayPrice($resume['amount_tax_incl']);
+        $product['amount_refund'] = !is_null($resume['amount_tax_incl']) ? $locale->formatPrice($resume['amount_tax_incl'], Context::getContext()->currency->iso_code) : null;
         $product['return_history'] = OrderReturn::getProductReturnDetail((int) $product['id_order_detail']);
         $product['refund_history'] = OrderSlip::getProductSlipDetail((int) $product['id_order_detail']);
         if ($product['id_warehouse'] != 0) {
