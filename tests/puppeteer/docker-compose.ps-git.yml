@@ -5,15 +5,9 @@ services:
     build:
       context: ./
       dockerfile: .docker/prestashop/Dockerfile-from-git
+    env_file:
+      - .docker/prestashop/.env
     environment:
-      - DB_SERVER=db
-      - PS_INSTALL_AUTO=1
-      - PS_COUNTRY=fr
-      - PS_DEV_MODE=0
-      - PS_ERASE_DB=1
-      - PS_DOMAIN=prestashop-web
-      - PS_FOLDER_ADMIN=admin-dev
-      - PS_FOLDER_INSTALL=install-dev
       - PS_VERSION_TO_INSTALL=${PS_VERSION_TO_INSTALL}
     depends_on:
       - "db"
@@ -29,6 +23,5 @@ services:
     image: mysql:5.7.22
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
-      MYSQL_ROOT_PASSWORD: ''
     networks:
       - default
