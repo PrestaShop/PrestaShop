@@ -2078,7 +2078,15 @@ class AdminOrdersControllerCore extends AdminController
         }
     }
 
-    public function ajaxProcessAddProductOnOrder()
+    /**
+     * Add product on an order
+     *
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     * @throws SmartyException
+     * @throws \PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException
+     */
+    public function displayAjaxAddProductOnOrder()
     {
         // Load object
         $order = new Order((int) Tools::getValue('id_order'));
@@ -2093,7 +2101,9 @@ class AdminOrdersControllerCore extends AdminController
         $invoice_informations = $_POST['add_invoice'] ?? [];
 
         $result = $this->addProductToOrder($order, $product_informations, $invoice_informations, Tools::getValue('add_product_warehouse'));
-        die(json_encode(array(
+
+        header('Content-Type: application/json');
+        $this->ajaxRender(json_encode([
             'result' => true,
             'view' => $this->createTemplate('_product_line.tpl')->fetch(),
             'can_edit' => $this->access('add'),
@@ -2103,7 +2113,7 @@ class AdminOrdersControllerCore extends AdminController
             'shipping_html' => $this->createTemplate('_shipping.tpl')->fetch(),
             'discount_form_html' => $this->createTemplate('_discount_form.tpl')->fetch(),
             'refresh' => $result['refresh'],
-        )));
+        ]));
     }
 
     /**
