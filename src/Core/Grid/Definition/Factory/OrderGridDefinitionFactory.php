@@ -44,6 +44,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ChoiceColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DateTimeColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\IdentifierColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\LinkColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\OrderPriceColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\PreviewColumn;
@@ -196,10 +197,13 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'false_name' => $this->trans('No', [], 'Admin.Global'),
                 ])
             )
-            ->add((new DataColumn('customer'))
+            ->add((new LinkColumn('customer'))
                 ->setName($this->trans('Customer', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'customer',
+                    'route' => 'admin_customers_view',
+                    'route_param_name' => 'customerId',
+                    'route_param_field' => 'id_customer',
                 ])
             )
             ->add((new OrderPriceColumn('total_paid_tax_incl'))
