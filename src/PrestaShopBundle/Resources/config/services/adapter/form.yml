@@ -51,3 +51,6 @@ services:
 
   prestashop.adapter.form.choice_provider.installed_payment_modules:
     class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\InstalledPaymentModulesChoiceProvider'
+
+  prestashop.adapter.form.choice.provider.carrier_for_order_choice_provider:
+    class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\CarrierForOrderChoiceProvider'

@@ -58,6 +58,7 @@ use PrestaShopBundle\Form\Admin\Sell\Order\AddProductToOrderType;
 use PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrderCurrencyType;
 use PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrdersStatusType;
 use PrestaShopBundle\Form\Admin\Sell\Order\OrderPaymentType;
+use PrestaShopBundle\Form\Admin\Sell\Order\UpdateOrderShippingType;
 use PrestaShopBundle\Form\Admin\Sell\Order\UpdateOrderStatusType;
 use PrestaShopBundle\Form\Admin\Sell\Order\UpdateProductInOrderType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -276,6 +277,9 @@ class OrderController extends FrameworkBundleAdminController
         ]);
         $addProductToOrderForm = $this->createForm(AddProductToOrderType::class);
         $updateOrderProductForm = $this->createForm(UpdateProductInOrderType::class);
+        $updateOrderShippingForm = $this->createForm(UpdateOrderShippingType::class, [], [
+            'order_id' => $orderId,
+        ]);
 
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/view.html.twig', [
             'showContentHeader' => true,
@@ -289,6 +293,23 @@ class OrderController extends FrameworkBundleAdminController
             'privateNoteForm' => $privateNoteForm->createView(),
             'addProductToOrderForm' => $addProductToOrderForm->createView(),
             'updateOrderProductForm' => $updateOrderProductForm->createView(),
+            'updateOrderShippingForm' => $updateOrderShippingForm->createView(),
+        ]);
+    }
+
+    /**
+     * @param int $orderId
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function updateShippingAction(int $orderId, Request $request): RedirectResponse
+    {
+
+        $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+
+        return $this->redirectToRoute('admin_orders_view', [
+            'orderId' => $orderId,
         ]);
     }
 
