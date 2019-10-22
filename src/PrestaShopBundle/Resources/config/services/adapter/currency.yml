@@ -29,7 +29,7 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\Currency\CommandHandler\AddOfficialCurrencyHandler'
         arguments:
             - '@prestashop.core.localization.cldr.locale_repository'
-            - "@=service('prestashop.adapter.legacy.configuration').getInt('PS_LANG_DEFAULT')"
+            - "@=service('prestashop.core.admin.lang.repository').findAll()"
             - "@prestashop.adapter.currency.command_handler.command_validator"
         tags:
             - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddOfficialCurrencyCommand' }
@@ -38,7 +38,7 @@ services:
       class: 'PrestaShop\PrestaShop\Adapter\Currency\CommandHandler\AddUnofficialCurrencyHandler'
       arguments:
         - '@prestashop.core.localization.cldr.locale_repository'
-        - "@=service('prestashop.adapter.legacy.configuration').getInt('PS_LANG_DEFAULT')"
+        - "@=service('prestashop.core.admin.lang.repository').findAll()"
         - "@prestashop.adapter.currency.command_handler.command_validator"
       tags:
         - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddUnofficialCurrencyCommand' }
@@ -47,6 +47,7 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\Currency\CommandHandler\EditOfficialCurrencyHandler'
         arguments:
           - '@prestashop.core.localization.cldr.locale_repository'
+          - "@=service('prestashop.core.admin.lang.repository').findAll()"
           - "@prestashop.adapter.currency.command_handler.command_validator"
         tags:
             - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Command\EditCurrencyCommand' }
@@ -55,6 +56,7 @@ services:
       class: 'PrestaShop\PrestaShop\Adapter\Currency\CommandHandler\EditUnofficialCurrencyHandler'
       arguments:
         - '@prestashop.core.localization.cldr.locale_repository'
+        - "@=service('prestashop.core.admin.lang.repository').findAll()"
         - "@prestashop.adapter.currency.command_handler.command_validator"
       tags:
         - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Command\EditUnofficialCurrencyCommand' }

@@ -33,10 +33,10 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\DefaultCurrencyInMultiS
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotUpdateCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
+use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use Currency;
-use Language;
 use PrestaShopException;
 use PrestaShopDatabaseException;
 
@@ -54,13 +54,15 @@ final class EditOfficialCurrencyHandler extends AbstractCurrencyHandler implemen
 
     /**
      * @param LocaleRepository $localeRepository
+     * @param LanguageInterface[] $languages
      * @param CurrencyCommandValidator $validator
      */
     public function __construct(
         LocaleRepository $localeRepository,
+        array $languages,
         CurrencyCommandValidator $validator
     ) {
-        parent::__construct($localeRepository);
+        parent::__construct($localeRepository, $languages);
         $this->validator = $validator;
     }
 
@@ -120,8 +122,8 @@ final class EditOfficialCurrencyHandler extends AbstractCurrencyHandler implemen
         if (!empty($command->getLocalizedSymbols())) {
             $entity->setSymbols($command->getLocalizedSymbols());
         }
-        //This method will insert the missing localized names/symbols and detect if the currency has been modified
-        $entity->refreshLocalizedCurrencyData(Language::getLanguages(), $this->localeRepoCLDR);
+
+        $this->refreshLocalizedData($entity);
 
         if (false === $entity->update()) {
             throw new CannotUpdateCurrencyException(
