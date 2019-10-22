@@ -295,9 +295,9 @@ describe('Create, Read, Update and Delete Category', async () => {
       const textResult = await this.pageObjects.categoriesPage.deleteCategory('1');
       await expect(textResult).to.equal(this.pageObjects.categoriesPage.successfulDeleteMessage);
       await this.pageObjects.categoriesPage.resetFilter();
-      const numberOfCategoriesAfterCreation = await this.pageObjects.categoriesPage.getNumberFromText(
+      const numberOfCategoriesAfterDeletion = await this.pageObjects.categoriesPage.getNumberFromText(
         this.pageObjects.categoriesPage.categoryGridTitle);
-      await expect(numberOfCategoriesAfterCreation).to.be.equal(numberOfCategories);
+      await expect(numberOfCategoriesAfterDeletion).to.be.equal(numberOfCategories);
       /* Delete the generated images */
       await this.pageObjects.categoriesPage.deleteFile(`${createCategoryData.name}.jpg`);
       await this.pageObjects.categoriesPage.deleteFile(`${createSubCategoryData.name}.jpg`);
