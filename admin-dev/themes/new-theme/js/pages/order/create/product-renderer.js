@@ -31,17 +31,21 @@ export default class ProductRenderer {
   constructor() {
     this.$productsTable = $(createOrderMap.productsTable);
   }
-  render(products) {
+
+  /**
+   * Renders cart products list
+   *
+   * @param products
+   */
+  renderList(products) {
+    this._cleanProductsList();
+
     if (products.length === 0) {
       this._hideProductsList();
 
       return;
     }
-    this._renderList(products);
-  }
 
-  _renderList(products) {
-    this._cleanProductsList();
     const $productsTableRowTemplate = $($(createOrderMap.productsTableRowTemplate).html());
 
     for (const key in products) {
@@ -59,200 +63,197 @@ export default class ProductRenderer {
       this.$productsTable.find('tbody').append($template);
     }
 
+    this._showTaxWarning();
     this._showProductsList();
   }
 
+  /**
+   * Renders cart products search results block
+   *
+   * @param foundProducts
+   */
   renderSearchResults(foundProducts) {
-    $(createOrderMap.productSelect).empty();
+    this._cleanSearchResults();
+    if (foundProducts.length === 0) {
+      this._showNotFound();
+      this._hideTaxWarning();
 
-    for (const [index, product] of foundProducts.entries()) {
-      if (index === 0) {
-        this._fillFieldsRelatedToProduct(product);
-      }
-
-      let name = product.name;
-      const combinationsCollection = product.combinations;
-
-      if (combinationsCollection === null) {
-        name += ` - ${  product.formatted_price}`;
-      }
-
-      const shouldUpdateStockValue = combinationsCollection === null && index === 0;
-
-      if (shouldUpdateStockValue) {
-        this._updateStock(product.stock);
-      }
-
-      $(createOrderMap.productSelect).append(
-        $('<option></option>').attr('value', product.product_id).text(name).attr('data-index', index),
-      );
+      return;
     }
 
-    const $noRecordsRow = $(createOrderMap.noRecordsFound).find(
-      createOrderMap.noRecordsFoundRow,
-    );
+    this._renderFoundProducts(foundProducts);
+    this.renderProductMetadata(foundProducts[0]);
 
-    if ($noRecordsRow.length !== 0) {
-      $noRecordsRow.remove();
-    }
-
+    this._hideNotFound();
+    this._showTaxWarning();
     this._showResultBlock();
   }
 
-
   /**
-   * Fills combination select with options
-   *
-   * @param combinations
-   * @private
-   */
-  _fillCombinations(combinations) {
-    if (combinations === null) {
-      this._removeCombinationSelect();
-
-      return;
-    }
-
-    this.combinations = combinations;
-
-    if ($(createOrderMap.combinationsRow).length === 0) {
-      const $combinationsTemplate = $($(createOrderMap.combinationsTemplate).html());
-      $(createOrderMap.productSelectRow).after($combinationsTemplate);
-    }
-
-    const $combinationsSelect = $(createOrderMap.combinationsSelect);
-    $combinationsSelect.empty();
-
-    const entries = Object.entries(combinations);
-
-    let i = 0; // This is needed because index in this case is attribute combination id
-
-    for (const [id, combination] of entries) {
-      if (i === 0) {
-        this._updateStock(combination.stock);
-      }
-
-      const name = `${combination.attribute  } - ${  combination.formatted_price}`;
-      $combinationsSelect.append($('<option></option>')
-        .attr('value', id).text(name));
-
-      i += 1;
-    }
-  }
-
-  /**
-   * Resolves weather to add customization fields to result block and adds them if needed
-   *
-   * @param customizationFields
-   * @private
-   */
-  _resolveCustomizationFields(customizationFields) {
-    this._removeCustomizedFields();
-    if (customizationFields === null) {
-      return;
-    }
-
-    const $customizedFieldTemplate = $(createOrderMap.cartProductCustomizedFieldTemplate);
-    let $customizedFieldTemplateContent = $($customizedFieldTemplate.html());
-
-    const customizationLabel = $(createOrderMap.productSelect).data('customization-label');
-
-    $customizedFieldTemplateContent.find(createOrderMap.customizedLabelClass)
-      .text(customizationLabel);
-
-    $(createOrderMap.quantityRow).before($customizedFieldTemplateContent);
-
-    $.each(customizationFields.product_customization_fields, (index, field) => {
-      const $fieldTemplate = $($(createOrderMap.customizedFieldTypes[field.type]).html());
-
-      $customizedFieldTemplateContent = $($customizedFieldTemplate.html());
-      if (field.required) {
-        $customizedFieldTemplateContent.find(createOrderMap.customizedLabelClass)
-          .append('<span class="text-danger">*</span>');
-      }
-
-      $customizedFieldTemplateContent.find(createOrderMap.customizedLabelClass)
-        .append(field.name);
-
-      const $fieldWrapper = $customizedFieldTemplateContent
-        .find(createOrderMap.customizedFieldInputWrapper);
-
-      $fieldWrapper.append($fieldTemplate);
-      $fieldWrapper.find(createOrderMap.customizedFieldInput)
-        .attr('data-customization-field-id', field.customization_field_id);
-
-      $(createOrderMap.quantityRow).before($customizedFieldTemplateContent);
-    });
-  }
-
-  /**
-   * Adds available fields related to selected product
+   * Renders available fields related to selected product
    *
    * @param product
-   * @private
    */
-  _fillFieldsRelatedToProduct(product) {
-    this._fillCombinations(product.combinations);
-    this._resolveCustomizationFields(product.customization_fields);
-  }
-
-  /**
-   * Removes combination select for products with no combinations
-   *
-   * @private
-   */
-  _removeCombinationSelect() {
-    $(createOrderMap.combinationsRow).remove();
-  }
-
-  /**
-   * Removes customized fields select for products with no customized fields
-   *
-   * @private
-   */
-  _removeCustomizedFields() {
-    $(createOrderMap.customizedFieldContainer).remove();
-  }
-
-  /**
-   * Handles product select change
-   *
-   * @param event
-   * @private
-   */
-  _handleProductChange(product) {
-    this._fillFieldsRelatedToProduct(product);
-
-    if (product.combinations === null) {
-      this.combinations = [];
-      this._updateStock(product.stock);
-    }
-
-    this._fillCombinations(product.combinations);
-  }
-
-  /**
-   * Handles combination select change
-   *
-   * @param event
-   * @private
-   */
-  _handleCombinationChange(event) {
-    const index = $(event.currentTarget).find(':selected').val();
-    const combination = this.combinations[index];
-
-    this._updateStock(combination.stock);
+  renderProductMetadata(product) {
+    this._renderCombinations(product.combinations);
+    this._renderCustomizations(product.customization_fields);
+    this.renderStock(product.stock);
   }
 
   /**
    * Updates stock text helper value
    *
    * @param stock
-   * @private
    */
-  _updateStock(stock) {
+  renderStock(stock) {
     $(createOrderMap.inStockCounter).text(stock);
     $(createOrderMap.quantityInput).attr('max', stock);
+  }
+
+  /**
+   * Renders found products select
+   *
+   * @param foundProducts
+   *
+   * @private
+   */
+  _renderFoundProducts(foundProducts) {
+    for (const key in foundProducts) {
+      const product = foundProducts[key];
+
+      $(createOrderMap.productSelect).append(
+        `<option
+          value="${product.product_id}"
+          data-index="${key}">
+            ${product.combinations.length !== 0 ? product.name : `${product.name} - ${product.formatted_price}`}
+        </option>`,
+      );
+    }
+  }
+
+  /**
+   * Cleans product search result fields
+   *
+   * @private
+   */
+  _cleanSearchResults() {
+    $(createOrderMap.productSelect).empty();
+    $(createOrderMap.combinationsSelect).empty();
+    $(createOrderMap.quantityInput).empty();
+  }
+
+  /**
+   * Renders combinations row with select options
+   *
+   * @param {Array} combinations
+   *
+   * @private
+   */
+  _renderCombinations(combinations) {
+    this._cleanCombinations();
+
+    if (combinations.length === 0) {
+      this._hideCombinations();
+
+      return;
+    }
+
+    for (const key in combinations) {
+      const combination = combinations[key];
+      this.renderStock(combination.stock);
+
+      $(createOrderMap.combinationsSelect).append(
+        `<option
+          value="${combination.attribute_combination_id}"
+          data-index="${key}">
+          ${combination.attribute} - ${combination.formatted_price}
+        </option>`,
+      );
+    }
+
+    this._showCombinations();
+  }
+
+  /**
+   * Resolves weather to add customization fields to result block and adds them if needed
+   *
+   * @param customizationFields
+   *
+   * @private
+   */
+  _renderCustomizations(customizationFields) {
+    this._cleanCustomizations();
+    if (customizationFields.length === 0) {
+      this._hideCustomizations();
+
+      return;
+    }
+
+    const $customFieldsContainer = $(createOrderMap.productCustomFieldsContainer);
+
+    const $fileInputTemplate = $($(createOrderMap.productCustomFileTemplate).html());
+    const $textInputTemplate = $($(createOrderMap.productCustomTextTemplate).html());
+
+    const templateTypeMap = {
+      0: $fileInputTemplate,
+      1: $textInputTemplate,
+    };
+
+    for (const key in customizationFields) {
+      const customField = customizationFields[key];
+      const $template = templateTypeMap[customField.type].clone();
+
+      $template.find(createOrderMap.productCustomInput)
+        .attr('name', `customization[${customField.customization_field_id}]`);
+      $template.find(createOrderMap.productCustomInputLabel)
+        .attr('for', `customization[${customField.customization_field_id}]`)
+        .text(customField.name);
+
+      $customFieldsContainer.append($template);
+    }
+
+    this._showCustomizations();
+  }
+
+  /**
+   * Shows product customization container
+   *
+   * @private
+   */
+  _showCustomizations() {
+    $(createOrderMap.productCustomizationContainer).removeClass('d-none');
+  }
+
+  /**
+   * Hides product customization container
+   *
+   * @private
+   */
+  _hideCustomizations() {
+    $(createOrderMap.productCustomizationContainer).addClass('d-none');
+  }
+
+  /**
+   * Empties customization fields container
+   *
+   * @private
+   */
+  _cleanCustomizations() {
+    $(createOrderMap.productCustomFieldsContainer).empty();
+  }
+
+  /**
+   * Handles combination select change
+   *
+   * @param event
+   *
+   * @private
+   */
+  _handleCombinationChange(event) {
+    const index = $(event.currentTarget).find(':selected').val();
+    const combination = this.combinations[index];
+
+    this.renderStock(combination.stock);
   }
 
   /**
@@ -261,7 +262,6 @@ export default class ProductRenderer {
    * @private
    */
   _showResultBlock() {
-    $(createOrderMap.productResultBlock).show();
     $(createOrderMap.productResultBlock).removeClass('d-none');
   }
 
@@ -271,7 +271,7 @@ export default class ProductRenderer {
    * @private
    */
   _hideResultBlock() {
-    $(createOrderMap.productResultBlock).hide();
+    $(createOrderMap.productResultBlock).addClass('d-none');
   }
 
 
@@ -294,11 +294,74 @@ export default class ProductRenderer {
   }
 
   /**
-   * Emptes products list
+   * Empties products list
    *
    * @private
    */
   _cleanProductsList() {
     this.$productsTable.find('tbody').empty();
+  }
+
+  /**
+   * Empties combinations select
+   *
+   * @private
+   */
+  _cleanCombinations() {
+    $(createOrderMap.combinationsSelect).empty();
+  }
+
+  /**
+   * Shows combinations row
+   *
+   * @private
+   */
+  _showCombinations() {
+    $(createOrderMap.combinationsRow).removeClass('d-none');
+  }
+
+  /**
+   * Hides combinations row
+   *
+   * @private
+   */
+  _hideCombinations() {
+    $(createOrderMap.combinationsRow).addClass('d-none');
+  }
+
+  /**
+   * Shows warning of tax included/excluded
+   *
+   * @private
+   */
+  _showTaxWarning() {
+    $(createOrderMap.productTaxWarning).removeClass('d-none');
+  }
+
+  /**
+   * Hides warning of tax included/excluded
+   *
+   * @private
+   */
+  _hideTaxWarning() {
+    $(createOrderMap.productTaxWarning).addClass('d-none');
+  }
+
+  /**
+   * Shows product not found warning
+   *
+   * @private
+   */
+  _showNotFound() {
+    $(createOrderMap.noProductsFoundWarning).removeClass('d-none');
+  }
+
+  /**
+   * Hides product not found warning
+   *
+   * @private
+   */
+  _hideNotFound() {
+    $(createOrderMap.noProductsFoundWarning).addClass('d-none');
   }
 }

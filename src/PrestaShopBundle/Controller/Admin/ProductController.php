@@ -1267,7 +1267,7 @@ class ProductController extends FrameworkBundleAdminController
             $searchPhrase = $request->query->get('search_phrase');
 
             /** @var FoundProduct[] $foundProducts */
-            $foundProducts = $this->getQueryBus()->handle(new SearchProducts($searchPhrase, 5));
+            $foundProducts = $this->getQueryBus()->handle(new SearchProducts($searchPhrase, 10));
 
             $serializer = $this->get('prestashop.bundle.snake_case_serializer_json');
 
