@@ -26,6 +26,62 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Cart\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+
 class AddCustomizationFieldsCommand
 {
+    /**
+     * @var CartId
+     */
+    private $cartId;
+
+    /**
+     * @var ProductId
+     */
+    private $productId;
+
+    /**
+     * @var array
+     */
+    private $customizations;
+
+    /**
+     * @param int $cartId
+     * @param int $productId
+     * @param array $customizations
+     *
+     * @throws CartConstraintException
+     */
+    public function __construct(int $cartId, int $productId, array $customizations)
+    {
+        $this->cartId = new CartId($cartId);
+        $this->productId = new ProductId($productId);
+        $this->customizations = $customizations;
+    }
+
+    /**
+     * @return CartId
+     */
+    public function getCartId(): CartId
+    {
+        return $this->cartId;
+    }
+
+    /**
+     * @return ProductId
+     */
+    public function getProductId(): ProductId
+    {
+        return $this->productId;
+    }
+
+    /**
+     * @return array
+     */
+    public function getCustomizations(): array
+    {
+        return $this->customizations;
+    }
 }

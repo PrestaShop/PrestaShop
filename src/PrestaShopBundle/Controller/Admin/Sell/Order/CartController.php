@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCartRuleToCartCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCustomizationFieldsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\CreateEmptyCustomerCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\RemoveCartRuleFromCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\SetFreeShippingToCartCommand;
@@ -320,7 +321,8 @@ class CartController extends FrameworkBundleAdminController
         $quantity = $request->request->getInt('quantity');
         $combinationId = $request->request->getInt('combination_id');
 
-        if ($request->request->get('customization')) {
+        if ($customizations = $request->request->get('customization')) {
+            $this->getCommandBus()->handle(new AddCustomizationFieldsCommand($cartId, $productId, $customizations));
             //@todo: Add updateCustomizationsCommand
             //check AdminCartsController::jaxProcessUpdateCustomizationFields
             // index is id of customization_field
