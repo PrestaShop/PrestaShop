@@ -1140,7 +1140,7 @@ class OrderCore extends ObjectModel
      *
      * @param int $id_cart Cart id
      *
-     * @return OrderCore|null
+     * @return Order|null
      *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
