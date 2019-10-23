@@ -82,15 +82,10 @@ export default class ProductRenderer {
     }
 
     this._renderFoundProducts(foundProducts);
-    // first product from found products is selected on rendering
-    const selectedProductId = Object.keys(foundProducts)[0];
-    this.renderProductMetadata(foundProducts[selectedProductId]);
 
     this._hideNotFound();
     this._showTaxWarning();
     this._showResultBlock();
-
-    return selectedProductId;
   }
 
   /**
@@ -99,9 +94,9 @@ export default class ProductRenderer {
    * @param product
    */
   renderProductMetadata(product) {
-    this._renderCustomizations(product.customization_fields);
     this.renderStock(product.stock);
     this._renderCombinations(product.combinations);
+    this._renderCustomizations(product.customization_fields);
   }
 
   /**
@@ -172,8 +167,6 @@ export default class ProductRenderer {
       );
     }
 
-    // render stock of first combination which is the selected one
-    this.renderStock(combinations[Object.keys(combinations)[0]].stock);
     this._showCombinations();
   }
 
@@ -243,20 +236,6 @@ export default class ProductRenderer {
    */
   _cleanCustomizations() {
     $(createOrderMap.productCustomFieldsContainer).empty();
-  }
-
-  /**
-   * Handles combination select change
-   *
-   * @param event
-   *
-   * @private
-   */
-  _handleCombinationChange(event) {
-    const index = $(event.currentTarget).find(':selected').val();
-    const combination = this.combinations[index];
-
-    this.renderStock(combination.stock);
   }
 
   /**

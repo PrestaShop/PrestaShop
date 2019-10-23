@@ -35,7 +35,9 @@ const $ = window.$;
 export default class ProductManager {
   constructor() {
     this.products = {};
-    this.currentProductId = {};
+    this.selectedProductId = null;
+    this.selectedCombinationId = null;
+
     this.renderer = new ProductRenderer();
     this.router = new Router();
 
@@ -54,9 +56,15 @@ export default class ProductManager {
    * @private
    */
   _initEvents() {
-    $(createOrderPageMap.productSearch).on('input', event => this._handleProductSearch(event));
-    $(createOrderPageMap.productSelect).on('change', event => this._handleProductSelect(event));
-    $(createOrderPageMap.combinationsSelect).on('change', event => this._handleCombinationSelect(event));
+    $(createOrderPageMap.productSearch).on('input', event => this._search(event));
+    $(createOrderPageMap.productSelect).on('change', (event) => {
+      const productId = Number($(event.currentTarget).find(':selected').val());
+      this._selectProduct(productId);
+    });
+    $(createOrderPageMap.combinationsSelect).on('change', (event) => {
+      const combinationId = Number($(event.currentTarget).find(':selected').val());
+      this.selectCombination(combinationId);
+    });
   }
 
   /**
@@ -64,7 +72,7 @@ export default class ProductManager {
    *
    * @private
    */
-  _handleProductSearch(event) {
+  _search(event) {
     const minSearchPhraseLength = 3;
     const $productSearchInput = $(event.currentTarget);
     const name = $productSearchInput.val();
@@ -77,7 +85,8 @@ export default class ProductManager {
       search_phrase: name,
     }).then((response) => {
       this.products = JSON.parse(response);
-      this.currentProductId = this.renderer.renderSearchResults(this.products);
+      this.renderer.renderSearchResults(this.products);
+      this._selectFirstResult();
     }).catch((response) => {
       if (typeof response.responseJSON !== 'undefined') {
         showErrorMessage(response.responseJSON.message);
@@ -86,30 +95,71 @@ export default class ProductManager {
   }
 
   /**
-   * Handles use case when product is selected from search results
-   *
-   * @param event
+   * Initiate first result dataset after search
    *
    * @private
    */
-  _handleProductSelect(event) {
-    const id = Number($(event.currentTarget).find(':selected').val());
-    this.renderer.renderProductMetadata(this.products[id]);
+  _selectFirstResult() {
+    this._unsetProduct();
 
-    this.currentProductId = id;
+    if (this.products.length !== 0) {
+      this._selectProduct(Object.keys(this.products)[0]);
+    }
+  }
+
+  /**
+   * Handles use case when product is selected from search results
+   *
+   * @private
+   *
+   * @param productId
+   */
+  _selectProduct(productId) {
+    this._unsetCombination();
+
+    this.selectedProductId = productId;
+    const product = this.products[productId];
+
+    this.renderer.renderProductMetadata(product);
+
+    // if product has combinations select the first else leave it null
+    if (product.combinations.length !== 0) {
+      this.selectCombination(Object.keys(product.combinations)[0]);
+    }
+
+    return product;
   }
 
   /**
    * Handles use case when new combination is selected
    *
-   * @param event
+   * @param combinationId
+   */
+  selectCombination(combinationId) {
+    const combination = this.products[this.selectedProductId].combinations[combinationId];
+
+    this.selectedCombinationId = combinationId;
+    this.renderer.renderStock(combination.stock);
+
+    return combination;
+  }
+
+  /**
+   * Sets the selected combination id to null
    *
    * @private
    */
-  _handleCombinationSelect(event) {
-    const combinationId = Number($(event.currentTarget).find(':selected').val());
-    const combination = this.products[this.currentProductId].combinations[combinationId];
-    this.renderer.renderStock(combination.stock);
+  _unsetCombination() {
+    this.selectedCombinationId = null;
+  }
+
+  /**
+   * Sets the selected product id to null
+   *
+   * @private
+   */
+  _unsetProduct() {
+    this.selectedProductId = null;
   }
 
   /**
@@ -143,15 +193,11 @@ export default class ProductManager {
     const formData = new FormData();
 
     formData.append('cart_id', cartId);
-    formData.append('product_id', $(createOrderPageMap.productSelect).find(':selected').val());
+    formData.append('product_id', this.selectedProductId);
     formData.append('quantity', $(createOrderPageMap.quantityInput).val());
+    formData.append('combination_id', this.selectedCombinationId);
 
-    if ($(createOrderPageMap.combinationsSelect).length !== 0) {
-      const combinationId = $(createOrderPageMap.combinationsSelect).find(':selected').val();
-      formData.append('combination_id', combinationId);
-    }
-
-    this._resolveCustomizationValuesForAddProduct(formData);
+    this._getCustomFieldsData(formData);
 
     return formData;
   }
@@ -160,23 +206,23 @@ export default class ProductManager {
    * Resolves product customization fields to be added to formData object
    *
    * @param {FormData} formData
+   *
    * @returns {FormData}
+   *
    * @private
    */
-  _resolveCustomizationValuesForAddProduct(formData) {
-    const customizationKey = 'customization';
-    const customizedFields = $(createOrderPageMap.customizedFieldInput);
+  _getCustomFieldsData(formData) {
+    const $customFields = $(createOrderPageMap.productCustomInput);
 
-    $.each(customizedFields, (index, field) => {
-      const customizationFieldId = $(field).data('customization-field-id');
-      const formKey = `${customizationKey}[${customizationFieldId}]`;
-      if ($(field).attr('type') === 'file') {
-        formData.append(formKey, $(field)[0].files[0]);
+    $customFields.each((key, field) => {
+      const $field = $(field);
+      const name = $field.attr('name');
 
-        return;
+      if ($field.attr('type') === 'file') {
+        formData.append(name, $field[0].files[0]);
+      } else {
+        formData.append(name, $field.val());
       }
-
-      formData.append(formKey, $(field).val());
     });
 
     return formData;
