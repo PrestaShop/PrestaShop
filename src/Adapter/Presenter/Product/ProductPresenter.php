@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Presenter\Product;
 
+use Hook;
 use Language;
 use Link;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
@@ -80,7 +81,7 @@ class ProductPresenter
         array $product,
         Language $language
     ) {
-        return new ProductLazyArray(
+        $productLazyArray = new ProductLazyArray(
             $settings,
             $product,
             $language,
@@ -90,5 +91,9 @@ class ProductPresenter
             $this->productColorsRetriever,
             $this->translator
         );
+
+        Hook::exec('presentProduct', array('product' => $product, 'productLazyArray' => &$productLazyArray));
+
+        return $productLazyArray;
     }
 }

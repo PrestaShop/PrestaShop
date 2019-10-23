@@ -63,6 +63,8 @@ class ObjectPresenter implements PresenterInterface
 
         $this->filterHtmlContent($object::$definition['table'], $presentedObject, $object->getHtmlFields());
 
+        Hook::exec('presentObject', array('object' => $object, 'presentedObject' => &$presentedObject));
+
         return $presentedObject;
     }
 
