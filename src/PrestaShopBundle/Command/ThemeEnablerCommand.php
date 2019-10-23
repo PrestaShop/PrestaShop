@@ -51,8 +51,6 @@ final class ThemeEnablerCommand extends ContainerAwareCommand
      */
     protected function init(InputInterface $input, OutputInterface $output)
     {
-        require $this->getContainer()->get('kernel')->getRootDir() . '/../config/config.inc.php';
-
         Context::getContext()->employee = new Employee();
     }
 
