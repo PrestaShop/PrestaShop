@@ -91,7 +91,6 @@ class AppendConfigurationFileHooksListCommand extends ContainerAwareCommand
      */
     private function initContext()
     {
-        require_once $this->getContainer()->get('kernel')->getRootDir() . '/../config/config.inc.php';
         /** @var LegacyContext $legacyContext */
         $legacyContext = $this->getContainer()->get('prestashop.adapter.legacy.context');
         //We need to have an employee or the listing hooks don't work
