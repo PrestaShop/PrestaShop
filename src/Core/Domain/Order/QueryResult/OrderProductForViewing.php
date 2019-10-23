@@ -69,7 +69,7 @@ class OrderProductForViewing
     private $availableQuantity;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $imagePath;
 
@@ -98,7 +98,7 @@ class OrderProductForViewing
         string $unitPrice,
         string $totalPrice,
         int $availableQuantity,
-        string $imagePath,
+        ?string $imagePath,
         float $unitPriceTaxExclRaw,
         float $unitPriceTaxInclRaw
     ) {
@@ -189,9 +189,9 @@ class OrderProductForViewing
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getImagePath(): string
+    public function getImagePath(): ?string
     {
         return $this->imagePath;
     }
