@@ -110,7 +110,7 @@ module.exports = class Pages extends BOBasePage {
   async filterPages(filterType, filterBy, value = '') {
     switch (filterType) {
       case 'input':
-        await this.setValue(this.pageFilterInput.replace('%FILTERBY', filterBy), value);
+        await this.setValue(this.pageFilterInput.replace('%FILTERBY', filterBy), value.toString());
         break;
       case 'select':
         await this.selectByVisibleText(this.pageFilterInput.replace('%FILTERBY', filterBy), value ? 'Yes' : 'No');
