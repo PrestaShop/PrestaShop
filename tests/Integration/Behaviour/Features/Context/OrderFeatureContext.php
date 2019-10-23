@@ -139,7 +139,7 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
             $commandBus->handle(AddProductToOrderCommand::toExistingInvoice(
                 $order->id,
                 $order_invoice->id,
-                $product_informations['product_id'],
+                (int) $product_informations['product_id'],
                 $product_informations['product_attribute_id'] ?? 0,
                 $product_informations['product_price_tax_incl'],
                 $product_informations['product_price_tax_excl'],
@@ -148,7 +148,7 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
         } else {
             $commandBus->handle(AddProductToOrderCommand::withNewInvoice(
                 $order->id,
-                $product_informations['product_id'],
+                (int) $product_informations['product_id'],
                 $product_informations['product_attribute_id'] ?? 0,
                 $product_informations['product_price_tax_incl'],
                 $product_informations['product_price_tax_excl'],
