@@ -124,8 +124,8 @@ final class GetOrderPreviewHandler implements GetOrderPreviewHandlerInterface
         $stateName = Validate::isLoadedObject($state) ? $state->name : null;
 
         return new OrderPreviewInvoiceDetails(
-            $customer->firstname,
-            $customer->lastname,
+            $address->firstname,
+            $address->lastname,
             $address->company,
             $address->vat_number,
             $address->address1,
@@ -135,8 +135,7 @@ final class GetOrderPreviewHandler implements GetOrderPreviewHandlerInterface
             $stateName,
             $country->name[$order->id_lang],
             $customer->email,
-            $address->phone,
-            $address->company
+            $address->phone
         );
     }
 
@@ -145,7 +144,6 @@ final class GetOrderPreviewHandler implements GetOrderPreviewHandlerInterface
      */
     private function getShippingDetails(Order $order): OrderPreviewShippingDetails
     {
-        $customer = new Customer($order->id_customer);
         $address = new Address($order->id_address_delivery);
         $country = new Country($address->id_country);
         $carrier = new Carrier($order->id_carrier);
@@ -162,8 +160,8 @@ final class GetOrderPreviewHandler implements GetOrderPreviewHandlerInterface
         $orderCarrier = new OrderCarrier($orderCarrierId);
 
         return new OrderPreviewShippingDetails(
-            $customer->firstname,
-            $customer->lastname,
+            $address->firstname,
+            $address->lastname,
             $address->company,
             $address->vat_number,
             $address->address1,
