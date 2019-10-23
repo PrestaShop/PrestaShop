@@ -44,6 +44,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPreviewShippingDeta
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
 use State;
+use StockAvailable;
 use Validate;
 
 /**
@@ -205,7 +206,11 @@ final class GetOrderPreviewHandler implements GetOrderPreviewHandlerInterface
             $productDetails[] = new OrderPreviewProductDetail(
                 $detail['product_name'],
                 $detail['product_reference'],
-                $detail['location'],
+                StockAvailable::getLocation(
+                    $detail['product_id'],
+                    $detail['product_attribute_id'],
+                    $detail['id_shop']
+                ),
                 (int) $detail['product_quantity'],
                 $locale->formatPrice($unitPrice, $currency->iso_code),
                 $locale->formatPrice($totalPrice, $currency->iso_code),
