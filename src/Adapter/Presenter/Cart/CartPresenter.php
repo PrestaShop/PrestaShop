@@ -453,7 +453,7 @@ class CartPresenter implements PresenterInterface
 
             return !array_key_exists($discount['id_cart_rule'], $cartRulesIds);
         });
-        
+
         $presentedCart = array(
             'products' => $products,
             'totals' => $totals,
