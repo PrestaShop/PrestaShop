@@ -454,7 +454,7 @@ class CartPresenter implements PresenterInterface
             return !array_key_exists($discount['id_cart_rule'], $cartRulesIds);
         });
         
-        $presentedItems = array(
+        $presentedCart = array(
             'products' => $products,
             'totals' => $totals,
             'subtotals' => $subtotals,
@@ -479,7 +479,7 @@ class CartPresenter implements PresenterInterface
                 '',
         );
 
-        Hook::exec('presentCart', array('cart' => $cart, 'presentedItems' => &$presentedItems));
+        Hook::exec('presentCart', array('cart' => $cart, 'presentedCart' => &$presentedCart));
 
         return $presentedItems;
     }
