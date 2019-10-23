@@ -17,7 +17,8 @@ module.exports = class CommonPage {
    * @return textContent
    */
   async getTextContent(selector) {
-    return this.page.$eval(selector, el => el.textContent);
+    const textContent = await this.page.$eval(selector, el => el.textContent);
+    return textContent.replace(/\s+/g, ' ').trim();
   }
 
   /**
@@ -196,5 +197,17 @@ module.exports = class CommonPage {
     const text = await this.getTextContent(selector);
     const number = /\d+/g.exec(text).toString();
     return parseInt(number, 10);
+  }
+
+  /**
+   * Go to Page and wait for navigation
+   * @param selector
+   * @return {Promise<void>}
+   */
+  async clickAndWaitForNavigation(selector) {
+    await Promise.all([
+      this.page.click(selector),
+      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
+    ]);
   }
 };
