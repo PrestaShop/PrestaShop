@@ -2080,11 +2080,6 @@ class AdminOrdersControllerCore extends AdminController
 
     /**
      * Add product on an order
-     *
-     * @throws PrestaShopDatabaseException
-     * @throws PrestaShopException
-     * @throws SmartyException
-     * @throws \PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException
      */
     public function displayAjaxAddProductOnOrder()
     {
@@ -2123,10 +2118,6 @@ class AdminOrdersControllerCore extends AdminController
      * @param bool $warehouseId
      *
      * @return array
-     *
-     * @throws PrestaShopDatabaseException
-     * @throws PrestaShopException
-     * @throws \PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException
      */
     protected function addProductToOrder(Order $order, array $product_informations, array $invoice_informations = [], $warehouseId = false)
     {
