@@ -316,16 +316,24 @@ class CartController extends FrameworkBundleAdminController
      */
     private function getAddProductToCartCommand(Request $request, int $cartId): UpdateProductQuantityInCartCommand
     {
-        $productId = $request->get('product_id');
-        $quantity = $request->get('quantity');
-        $combinationId = $request->get('combination_id');
+        $productId = $request->request->getInt('product_id');
+        $quantity = $request->request->getInt('quantity');
+        $combinationId = $request->request->getInt('combination_id');
+
+        if ($request->request->get('customization')) {
+            //@todo: Add updateCustomizationsCommand
+            //check AdminCartsController::jaxProcessUpdateCustomizationFields
+            // index is id of customization_field
+            //id_customization is always empty(0) until it reaches Cart::_updateCustomizationQuantity where it gets linked to product
+            //check Cart::addTextFieldToProduct Cart::addPictureToProduct
+        }
 
         return new UpdateProductQuantityInCartCommand(
             $cartId,
             (int) $productId,
             (int) $quantity,
             QuantityAction::INCREASE_PRODUCT_QUANTITY,
-            $combinationId !== null ? (int) $combinationId : null
+            $combinationId ?: null
         );
     }
 }
