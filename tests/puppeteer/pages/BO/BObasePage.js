@@ -148,7 +148,7 @@ module.exports = class BOBasePage extends CommonPage {
    * @param imageName
    * @return {Promise<void>}
    */
-  async GenerateAndUploadImage(selector, imageName) {
+  async generateAndUploadImage(selector, imageName) {
     await imgGen.generateImage(200, 200, 1, (err, image) => {
       fs.writeFileSync(imageName, image.data);
     });

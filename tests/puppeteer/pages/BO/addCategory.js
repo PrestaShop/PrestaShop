@@ -33,7 +33,7 @@ module.exports = class AddCategory extends BOBasePage {
     if (categoryData.displayed) await this.page.click(this.displayed.replace('%ID', '1'));
     else await this.page.click(this.displayed.replace('%ID', '0'));
     await this.setValueOnTinymceInput(this.descriptionIframe, categoryData.description);
-    await this.GenerateAndUploadImage(this.categoryCoverImage, `${categoryData.name}.jpg`);
+    await this.generateAndUploadImage(this.categoryCoverImage, `${categoryData.name}.jpg`);
     await this.setValue(this.metaTitleInput, categoryData.metaTitle);
     await this.setValue(this.metaDescriptionTextarea, categoryData.metaDescription);
     await this.page.click(this.selectAllGroupAccessCheckbox);
