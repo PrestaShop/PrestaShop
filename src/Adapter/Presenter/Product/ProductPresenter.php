@@ -80,7 +80,7 @@ class ProductPresenter
         array $product,
         Language $language
     ) {
-        return new ProductLazyArray(
+        $productLazyArray = new ProductLazyArray(
             $settings,
             $product,
             $language,
@@ -90,5 +90,9 @@ class ProductPresenter
             $this->productColorsRetriever,
             $this->translator
         );
+
+        Hook::exec('presentProduct', array('product' => $product, 'productLazyArray' => &$productLazyArray));
+
+        return $productLazyArray;
     }
 }
