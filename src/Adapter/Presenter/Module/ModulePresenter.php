@@ -64,11 +64,16 @@ class ModulePresenter implements PresenterInterface
         $attributes['picos'] = $this->addPicos($attributes);
         $attributes['price'] = $this->getModulePrice($attributes['price']);
         $attributes['starsRate'] = str_replace('.', '', round($attributes['avgRate'] * 2) / 2); // Round to the nearest 0.5
-        return array(
+        
+        $presentedModule = array(
             'attributes' => $attributes,
             'disk' => $module->disk->all(),
             'database' => $module->database->all(),
         );
+        
+        Hook::exec('presentModule', array('module' => $module, 'presentedModule' => &$presentedModule));
+        
+        return $presentedModule;
     }
 
     private function getModulePrice($prices)
