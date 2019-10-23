@@ -471,8 +471,8 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setName($this->trans('View', [], 'Admin.Actions'))
                     ->setIcon('zoom_in')
                     ->setOptions([
-                        'route' => 'admin_orders_index',
-                        'route_param_name' => 'id_order',
+                        'route' => 'admin_orders_view',
+                        'route_param_name' => 'orderId',
                         'route_param_field' => 'id_order',
                         'use_inline_display' => true,
                     ])
