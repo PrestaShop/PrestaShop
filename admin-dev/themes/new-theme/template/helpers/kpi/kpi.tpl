@@ -40,7 +40,7 @@
     {/if}
     <span class="title">{$title|escape}</span>
     <div class="kpi-description">
-      <div cLass="subtitle">{$subtitle|escape}</div>
+      <div class="subtitle">{$subtitle|escape}</div>
       <div class="value">{$value|escape|replace:'&amp;':'&'}</div>
     </div>
   </div>
