@@ -107,6 +107,8 @@ final class SearchProductsHandler implements SearchProductsHandlerInterface
      */
     private function createFoundProductFromLegacy(Product $product): FoundProduct
     {
+        //@todo: sort products alphabetically
+
         /** @var Locale $locale */
         $locale = $this->localeRepository->getLocale($this->locale);
         $priceTaxExcluded = Product::getPriceStatic($product->id, false);
