@@ -34,9 +34,8 @@ const $ = window.$;
  */
 export default class ProductManager {
   constructor() {
-    this.products = [];
-    this.selectedProduct = {};
-    this.combinations = {};
+    this.products = {};
+    this.currentProductId = {};
     this.renderer = new ProductRenderer();
     this.router = new Router();
 
@@ -78,8 +77,7 @@ export default class ProductManager {
       search_phrase: name,
     }).then((response) => {
       this.products = JSON.parse(response);
-      this.renderer.renderSearchResults(this.products);
-      this.combinations = this.products[0].combinations;
+      this.currentProductId = this.renderer.renderSearchResults(this.products);
     }).catch((response) => {
       if (typeof response.responseJSON !== 'undefined') {
         showErrorMessage(response.responseJSON.message);
@@ -95,9 +93,10 @@ export default class ProductManager {
    * @private
    */
   _handleProductSelect(event) {
-    const index = $(event.currentTarget).find(':selected').data('index');
-    this.renderer.renderProductMetadata(this.products[index]);
-    this.combinations = this.products[index].combinations;
+    const id = Number($(event.currentTarget).find(':selected').val());
+    this.renderer.renderProductMetadata(this.products[id]);
+
+    this.currentProductId = id;
   }
 
   /**
@@ -108,9 +107,8 @@ export default class ProductManager {
    * @private
    */
   _handleCombinationSelect(event) {
-    const combinationIndex = $(event.currentTarget).find(':selected').data('index');
-    const combination = this.combinations[combinationIndex];
-    debugger;
+    const combinationId = Number($(event.currentTarget).find(':selected').val());
+    const combination = this.products[this.currentProductId].combinations[combinationId];
     this.renderer.renderStock(combination.stock);
   }
 

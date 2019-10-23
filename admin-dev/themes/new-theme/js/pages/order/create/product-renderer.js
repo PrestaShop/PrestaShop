@@ -78,15 +78,19 @@ export default class ProductRenderer {
       this._showNotFound();
       this._hideTaxWarning();
 
-      return;
+      return null;
     }
 
     this._renderFoundProducts(foundProducts);
-    this.renderProductMetadata(foundProducts[0]);
+    // first product from found products is selected on rendering
+    const selectedProductId = Object.keys(foundProducts)[0];
+    this.renderProductMetadata(foundProducts[selectedProductId]);
 
     this._hideNotFound();
     this._showTaxWarning();
     this._showResultBlock();
+
+    return selectedProductId;
   }
 
   /**
@@ -95,9 +99,9 @@ export default class ProductRenderer {
    * @param product
    */
   renderProductMetadata(product) {
-    this._renderCombinations(product.combinations);
     this._renderCustomizations(product.customization_fields);
     this.renderStock(product.stock);
+    this._renderCombinations(product.combinations);
   }
 
   /**
@@ -121,13 +125,12 @@ export default class ProductRenderer {
     for (const key in foundProducts) {
       const product = foundProducts[key];
 
-      $(createOrderMap.productSelect).append(
-        `<option
-          value="${product.product_id}"
-          data-index="${key}">
-            ${product.combinations.length !== 0 ? product.name : `${product.name} - ${product.formatted_price}`}
-        </option>`,
-      );
+      let name = product.name;
+      if (product.combinations.length === 0) {
+        name += ` - ${product.formatted_price}`;
+      }
+
+      $(createOrderMap.productSelect).append(`<option value="${product.product_id}">${name}</option>`);
     }
   }
 
@@ -160,17 +163,17 @@ export default class ProductRenderer {
 
     for (const key in combinations) {
       const combination = combinations[key];
-      this.renderStock(combination.stock);
 
       $(createOrderMap.combinationsSelect).append(
         `<option
-          value="${combination.attribute_combination_id}"
-          data-index="${key}">
+          value="${combination.attribute_combination_id}">
           ${combination.attribute} - ${combination.formatted_price}
         </option>`,
       );
     }
 
+    // render stock of first combination which is the selected one
+    this.renderStock(combinations[Object.keys(combinations)[0]].stock);
     this._showCombinations();
   }
 
