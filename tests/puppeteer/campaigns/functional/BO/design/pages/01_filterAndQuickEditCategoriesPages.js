@@ -9,7 +9,7 @@ const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
 const AddPageCategoryPage = require('@pages/BO/design/pages/addPageCategory');
 const PagesPage = require('@pages/BO/design/pages/pages');
-const CategoryPageFaker = require('@data/faker/CMSCategory');
+const CategoryPageFaker = require('@data/faker/CMScategory');
 const {Pages} = require('@data/demo/CMSpage');
 
 let browser;
@@ -43,7 +43,7 @@ describe('Filter And Quick Edit Categories / Pages', async () => {
   after(async () => {
     await helper.closeBrowser(browser);
   });
-  // Login into BO and go to categories page
+  // Login into BO and go to Pages page
   loginCommon.loginBO();
   it('should go to "Design>Pages" page', async function () {
     await this.pageObjects.boBasePage.goToSubMenu(
@@ -95,7 +95,7 @@ describe('Filter And Quick Edit Categories / Pages', async () => {
       });
     });
     describe('Filter Categories', async () => {
-      it('should get number of categories in BO', async function () {
+      it('should reset filter and get number of categories in BO', async function () {
         if (await this.pageObjects.pagesPage.elementVisible(
           this.pageObjects.pagesPage.categoryfilterResetButton, 2000)) {
           await this.pageObjects.pagesPage.resetFilter(this.pageObjects.pagesPage.categoryfilterResetButton);
