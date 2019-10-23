@@ -3676,12 +3676,12 @@ class ProductCore extends ObjectModel
         $currency = $params['currency'];
         $currency = is_object($currency) ? $currency->iso_code : Currency::getIsoCodeById((int) $currency);
 
-        return Context::getContext()->getCurrentLocale()->formatPrice($params['price'], $currency);
+        return Tools::getContextLocale(Context::getContext())->formatPrice($params['price'], $currency);
     }
 
     public static function displayWtPrice($params, &$smarty)
     {
-        return Context::getContext()->getCurrentLocale()->formatPrice($params['p'], Context::getContext()->currency->iso_code);
+        return Tools::getContextLocale(Context::getContext())->formatPrice($params['p'], Context::getContext()->currency->iso_code);
     }
 
     /**
@@ -3697,7 +3697,7 @@ class ProductCore extends ObjectModel
         $currency = $params['currency'];
         $currency = is_object($currency) ? $currency->iso_code : Currency::getIsoCodeById((int) $currency);
 
-        return Context::getContext()->getCurrentLocale()->formatPrice($params['price'], $currency);
+        return !is_null($params['price']) ? Tools::getContextLocale(Context::getContext())->formatPrice($params['price'], $currency) : null;
     }
 
     /**
@@ -5632,7 +5632,7 @@ class ProductCore extends ObjectModel
     {
         $context = Context::getContext();
 
-        return $context->getCurrentLocale()->formatPrice(Pack::noPackPrice((int) $this->id), $context->currency->iso_code);
+        return Tools::getContextLocale($context)->formatPrice(Pack::noPackPrice((int) $this->id), $context->currency->iso_code);
     }
 
     public function checkAccess($id_customer)
