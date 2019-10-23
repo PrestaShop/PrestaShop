@@ -36,6 +36,14 @@
         </button>
       </div>
       <div class="modal-body">
+        {% if not 'PS_ORDER_RECALCULATE_SHIPPING'|configuration %}
+          <div class="alert alert-info" role="alert">
+            <p class="alert-text">
+              {{ 'Please note that carrier change will not recalculate your shipping costs, if you want to change this please visit Shop Parameters > Order Settings'|trans({}, 'Admin.Orderscustomers.Notification') }}
+            </p>
+          </div>
+        {% endif %}
+
         <div class="form-group">
           <label class="form-control-label" for="{{ updateOrderShippingForm.tracking_number.vars.id }}">
             {{ 'Tracking number'|trans({}, 'Admin.Shipping.Feature') }}
