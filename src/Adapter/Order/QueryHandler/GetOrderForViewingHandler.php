@@ -146,6 +146,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             $taxMethod,
             $isTaxIncluded,
             (bool) $order->valid,
+            (bool) $order->isVirtual(),
             $order->hasInvoice(),
             $order->hasBeenDelivered(),
             $this->getOrderCustomer($order),
