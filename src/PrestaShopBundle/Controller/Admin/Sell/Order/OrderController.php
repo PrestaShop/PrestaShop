@@ -278,7 +278,7 @@ class OrderController extends FrameworkBundleAdminController
         $updateOrderProductForm = $this->createForm(UpdateProductInOrderType::class);
 
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/view.html.twig', [
-            'showContentHeader' => false,
+            'showContentHeader' => true,
             'orderForViewing' => $orderForViewing,
             'addOrderCartRuleForm' => $addOrderCartRuleForm->createView(),
             'updateOrderStatusForm' => $updateOrderStatusForm->createView(),
