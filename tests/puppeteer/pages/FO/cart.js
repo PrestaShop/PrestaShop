@@ -61,7 +61,7 @@ module.exports = class Cart extends FOBasePage {
   async getPriceFromText(selector, timeout = 0) {
     await this.page.waitFor(timeout);
     const text = await this.getTextContent(selector);
-    const number = Number(text.replace(/[^0-9.-]+/g,''));
+    const number = Number(text.replace(/[^0-9.-]+/g, ''));
     return parseFloat(number);
   }
 };
