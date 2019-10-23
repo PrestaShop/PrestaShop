@@ -201,6 +201,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
         }
 
         $customerStats = $customer->getStats();
+        $totalSpentSinceRegistration = Tools::convertPrice($customerStats['total_orders'], $order->id_currency);
 
         return new OrderCustomerForViewing(
             $customer->id,
@@ -209,7 +210,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             $genderName,
             $customer->email,
             new DateTimeImmutable($customer->date_add),
-            $this->locale->formatPrice(Tools::convertPrice($customerStats['total_orders'], $order->id_currency), $currency->iso_code),
+            $totalSpentSinceRegistration !== null ? $this->locale->formatPrice($totalSpentSinceRegistration, $currency->iso_code) : '',
             $customerStats['nb_orders'],
             $customer->note
         );
