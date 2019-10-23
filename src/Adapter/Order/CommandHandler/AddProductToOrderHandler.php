@@ -87,10 +87,9 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
     {
         $order = $this->getOrderObject($command->getOrderId());
 
+        $oldCartRules = [];
         if ($this->context->cart !== null) {
             $oldCartRules = $this->context->cart->getCartRules();
-        } else {
-            $oldCartRules = [];
         }
 
         $this->assertOrderWasNotShipped($order);
@@ -179,10 +178,9 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         sort($oldCartRules);
         sort($newCartRules);
 
+        $result = [];
         if (!empty($newCartRules) && !empty($oldCartRules)) {
             $result = array_diff($newCartRules, $oldCartRules);
-        } else {
-            $result = [];
         }
 
         foreach ($result as $cartRule) {
