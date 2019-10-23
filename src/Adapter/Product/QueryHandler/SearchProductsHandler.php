@@ -90,7 +90,8 @@ final class SearchProductsHandler implements SearchProductsHandlerInterface
 
         if ($products) {
             foreach ($products as $product) {
-                $foundProducts[] = $this->createFoundProductFromLegacy(new Product($product['id_product']));
+                $foundProduct = $this->createFoundProductFromLegacy(new Product($product['id_product']));
+                $foundProducts[$foundProduct->getProductId()] = $foundProduct;
             }
         }
 
@@ -142,7 +143,7 @@ final class SearchProductsHandler implements SearchProductsHandlerInterface
                         (bool) $field[$this->langId]['required']
                     );
 
-                    $customizationFields[] = $customizationField;
+                    $customizationFields[$customizationField->getCustomizationFieldId()] = $customizationField;
                 }
             }
         }
@@ -184,10 +185,10 @@ final class SearchProductsHandler implements SearchProductsHandlerInterface
                     $locale->formatPrice($priceTaxExcluded, $this->currencyCode)
                 );
 
-                $productCombinations[$productAttributeId] = $productCombination;
+                $productCombinations[$productCombination->getAttributeCombinationId()] = $productCombination;
             }
         }
 
-        return array_values($productCombinations);
+        return $productCombinations;
     }
 }
