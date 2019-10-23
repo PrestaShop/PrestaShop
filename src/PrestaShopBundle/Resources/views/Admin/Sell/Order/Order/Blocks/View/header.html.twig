@@ -48,4 +48,13 @@
       {{ orderForViewing.createdAt|date('H:i:s') }}
     </span>
   </p>
+
+  <a class="btn btn-outline-secondary btn-help btn-sidebar float-right" href="#"
+     title="{{ 'Help'|trans({}, 'Admin.Global') }}"
+     data-toggle="sidebar"
+     data-target="#right-sidebar"
+     data-url="{{ help_link }}"
+  >
+    {{ 'Help'|trans({}, 'Admin.Global') }}
+  </a>
 </div>
