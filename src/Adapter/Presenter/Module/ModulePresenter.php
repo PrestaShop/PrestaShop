@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Presenter\Module;
 
 use Currency;
 use Exception;
+use Hook;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Presenter\PresenterInterface;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
