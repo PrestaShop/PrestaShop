@@ -46,7 +46,7 @@ class OrderPresenter implements PresenterInterface
             throw new Exception('OrderPresenter can only present instance of Order');
         }
         
-        $orderLazyArray = new OrderLazyArray($this->prefix, $this->link, $orderReturn);
+        $orderLazyArray = new OrderLazyArray($order);
 
         Hook::exec('presentOrder', array('order' => $order, 'orderLazyArray' => &$orderLazyArray));
 
