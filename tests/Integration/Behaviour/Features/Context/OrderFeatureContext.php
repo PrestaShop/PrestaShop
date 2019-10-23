@@ -111,51 +111,32 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
         $order = $this->getCurrentCartOrder();
         $this->productFeatureContext->checkProductWithNameExists($productName);
         $product = $this->productFeatureContext->getProductWithName($productName);
-        $this->addProductToOrder($order, [
-            'product_id' => $product->id,
-            'product_price_tax_excl' => $priceTaxExcl,
-            'product_price_tax_incl' => $priceTaxIncl,
-            'product_quantity' => $quantity,
-        ]);
-        // restore correct cart since previous method has overridden it
-        Context::getContext()->cart = $cart;
-    }
 
-    /**
-     * Duplicate from AdminOrderController::addProductToOrder
-     *
-     * @param Order $order
-     * @param array $product_informations
-     * @param array $invoice_informations
-     * @param bool $warehouseId
-     *
-     * @return array
-     */
-    protected function addProductToOrder(Order $order, array $product_informations, array $invoice_informations = [], $warehouseId = false)
-    {
         $commandBus = CommonFeatureContext::getContainer()->get('prestashop.core.command_bus');
         if ($order->hasInvoice()) {
-            $order_invoice = new OrderInvoice($product_informations['invoice']);
+            $order_invoice = end($order->getInvoicesCollection()->getResults());
             $commandBus->handle(AddProductToOrderCommand::toExistingInvoice(
                 $order->id,
                 $order_invoice->id,
-                (int) $product_informations['product_id'],
-                $product_informations['product_attribute_id'] ?? 0,
-                $product_informations['product_price_tax_incl'],
-                $product_informations['product_price_tax_excl'],
-                $product_informations['product_quantity']
+                (int) $product->id,
+                0,
+                $priceTaxIncl,
+                $priceTaxExcl,
+                $quantity
             ));
         } else {
             $commandBus->handle(AddProductToOrderCommand::withNewInvoice(
                 $order->id,
-                (int) $product_informations['product_id'],
-                $product_informations['product_attribute_id'] ?? 0,
-                $product_informations['product_price_tax_incl'],
-                $product_informations['product_price_tax_excl'],
-                $product_informations['product_quantity'],
-                $invoice_informations['free_shipping'] ?? false
+                (int) $product->id,
+                0,
+                $priceTaxIncl,
+                $priceTaxExcl,
+                $quantity,
+                false
             ));
         }
+        // restore correct cart since previous method has overridden it
+        Context::getContext()->cart = $cart;
     }
 
     /**
