@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Presenter\Order;
 
 use Exception;
+use Hook;
 use Order;
 use PrestaShop\PrestaShop\Adapter\Presenter\PresenterInterface;
 
@@ -44,7 +45,11 @@ class OrderPresenter implements PresenterInterface
         if (!($order instanceof Order)) {
             throw new Exception('OrderPresenter can only present instance of Order');
         }
+        
+        $orderLazyArray = new OrderLazyArray($this->prefix, $this->link, $orderReturn);
 
-        return new OrderLazyArray($order);
+        Hook::exec('presentOrder', array('order' => $order, 'orderLazyArray' => &$orderLazyArray));
+
+        return $orderLazyArray;
     }
 }
