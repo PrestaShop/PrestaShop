@@ -13,8 +13,8 @@ const AddPagePage = require('@pages/BO/design/pages/addPage');
 const FOBasePage = require('@pages/FO/FObasePage');
 const SiteMapPage = require('@pages/FO/siteMap');
 const CMSPage = require('@pages/FO/cms');
-const CategoryPageFaker = require('@data/faker/CMSCategory');
-const PageFaker = require('@data/faker/CMSPage');
+const CategoryPageFaker = require('@data/faker/CMScategory');
+const PageFaker = require('@data/faker/CMSpage');
 
 let browser;
 let page;
