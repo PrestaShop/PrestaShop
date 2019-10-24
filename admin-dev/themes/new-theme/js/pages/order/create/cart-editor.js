@@ -1,5 +1,3 @@
-import createOrderPageMap from "./create-order-map";
-
 /**
  * 2007-2019 PrestaShop SA and Contributors
  *
@@ -112,6 +110,9 @@ export default class CartEditor {
 
   /**
    * Adds product to cart
+   *
+   * @param {Number} cartId
+   * @param {FormData} product
    */
   addProduct(cartId, product) {
     $.ajax(this.router.generate('admin_carts_add_product', {cartId}), {
