@@ -67,7 +67,7 @@ export default class ProductManager {
     });
     $(createOrderPageMap.combinationsSelect).on('change', (event) => {
       const combinationId = Number($(event.currentTarget).find(':selected').val());
-      this.selectCombination(combinationId);
+      this._selectCombination(combinationId);
     });
   }
 
@@ -128,7 +128,7 @@ export default class ProductManager {
 
     // if product has combinations select the first else leave it null
     if (product.combinations.length !== 0) {
-      this.selectCombination(Object.keys(product.combinations)[0]);
+      this._selectCombination(Object.keys(product.combinations)[0]);
     }
 
     return product;
@@ -138,8 +138,10 @@ export default class ProductManager {
    * Handles use case when new combination is selected
    *
    * @param combinationId
+   *
+   * @private
    */
-  selectCombination(combinationId) {
+  _selectCombination(combinationId) {
     const combination = this.products[this.selectedProductId].combinations[combinationId];
 
     this.selectedCombinationId = combinationId;
