@@ -173,9 +173,8 @@ export default class ProductManager {
    */
   _addProductToCart(cartId) {
     this.cartEditor.addProduct(cartId, this._getProductData(cartId));
-
     EventEmitter.on(eventMap.productAddedToCart, (cartInfo) => {
-      this.renderer.renderList(cartInfo.products);
+      EventEmitter.emit(eventMap.cartLoaded, cartInfo);
     });
   }
 
