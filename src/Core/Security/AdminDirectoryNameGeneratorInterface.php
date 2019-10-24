@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,15 +22,20 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% extends "@PrestaShop/Admin/Login/layout.html.twig" %}
+namespace PrestaShop\PrestaShop\Core\Security;
 
-{% block form_content %}
-  <div class="js-login-form-container{% if showDirectoryMessages %} d-none{% endif %}">
-    {% include '@PrestaShop/Admin/Login/Blocks/login_form.html.twig' %}
-  </div>
-  <div class="js-forgot-form-container d-none">
-    {% include '@PrestaShop/Admin/Login/Blocks/forgot_password_form.html.twig' %}
-  </div>
-{% endblock %}
+/**
+ * Interface AdminDirectoryNameGeneratorInterface describes a service
+ * that takes care of admin directory name generation.
+ */
+interface AdminDirectoryNameGeneratorInterface
+{
+    /**
+     * Generates a random admin directory name.
+     *
+     * @return string the generated name
+     */
+    public function generateRandomName(): string;
+}

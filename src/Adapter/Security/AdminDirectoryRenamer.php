@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Security;
 
-use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Install\InstallationOptions;
 use PrestaShop\PrestaShop\Core\Security\AdminDirectoryRenamerInterface;
@@ -40,11 +39,6 @@ use Symfony\Component\Filesystem\Filesystem;
 final class AdminDirectoryRenamer implements AdminDirectoryRenamerInterface
 {
     /**
-     * @var Tools
-     */
-    private $tools;
-
-    /**
      * @var string
      */
     private $adminDir;
@@ -55,13 +49,11 @@ final class AdminDirectoryRenamer implements AdminDirectoryRenamerInterface
     private $filesystem;
 
     /**
-     * @param Tools $tools
      * @param ConfigurationInterface $configuration
      * @param Filesystem $filesystem
      */
-    public function __construct(Tools $tools, ConfigurationInterface $configuration, Filesystem $filesystem)
+    public function __construct(ConfigurationInterface $configuration, Filesystem $filesystem)
     {
-        $this->tools = $tools;
         $this->adminDir = $configuration->get('_PS_ADMIN_DIR_');
         $this->filesystem = $filesystem;
     }
@@ -69,15 +61,9 @@ final class AdminDirectoryRenamer implements AdminDirectoryRenamerInterface
     /**
      * {@inheritdoc}
      */
-    public function renameToRandomName()
+    public function rename(string $newName): void
     {
         $defaultAdminDir = InstallationOptions::DEFAULT_ADMIN_DIR;
-
-        $newName = sprintf(
-            'admin%03d%s/',
-            mt_rand(0, 999),
-            strtolower($this->tools->generatePassword(6))
-        );
 
         try {
             $this->filesystem->rename(
@@ -93,7 +79,5 @@ final class AdminDirectoryRenamer implements AdminDirectoryRenamerInterface
                 $e
             );
         }
-
-        return $newName;
     }
 }

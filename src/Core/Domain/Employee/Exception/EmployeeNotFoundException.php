@@ -52,7 +52,7 @@ class EmployeeNotFoundException extends EmployeeException
     }
 
     /**
-     * @return EmployeeId| null
+     * @return EmployeeId|null
      */
     public function getEmployeeId()
     {

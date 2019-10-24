@@ -34,11 +34,11 @@ use PrestaShop\PrestaShop\Core\Security\Exception\UnableToRenameAdminDirectoryEx
 interface AdminDirectoryRenamerInterface
 {
     /**
-     * Renames admin directory to a random name.
+     * Renames admin directory.
      *
-     * @return string name of the renamed directory
+     * @param string $newName new admin directory name
      *
      * @throws UnableToRenameAdminDirectoryException
      */
-    public function renameToRandomName();
+    public function rename(string $newName): void;
 }

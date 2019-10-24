@@ -26,6 +26,10 @@ services:
   prestashop.adapter.security.admin_directory_renamer:
     class: PrestaShop\PrestaShop\Adapter\Security\AdminDirectoryRenamer
     arguments:
-      - '@prestashop.adapter.tools'
       - '@prestashop.adapter.legacy.configuration'
       - '@filesystem'
+
+  prestashop.adapter.security.admin_directory_name_generator:
+    class: PrestaShop\PrestaShop\Adapter\Security\AdminDirectoryNameGenerator
+    arguments:
+      - '@prestashop.adapter.tools'

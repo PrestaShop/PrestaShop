@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,15 +22,40 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% extends "@PrestaShop/Admin/Login/layout.html.twig" %}
+namespace PrestaShop\PrestaShop\Adapter\Security;
 
-{% block form_content %}
-  <div class="js-login-form-container{% if showDirectoryMessages %} d-none{% endif %}">
-    {% include '@PrestaShop/Admin/Login/Blocks/login_form.html.twig' %}
-  </div>
-  <div class="js-forgot-form-container d-none">
-    {% include '@PrestaShop/Admin/Login/Blocks/forgot_password_form.html.twig' %}
-  </div>
-{% endblock %}
+use PrestaShop\PrestaShop\Adapter\Tools;
+use PrestaShop\PrestaShop\Core\Security\AdminDirectoryNameGeneratorInterface;
+
+/**
+ * Class responsible for admin directory name generation.
+ */
+final class AdminDirectoryNameGenerator implements AdminDirectoryNameGeneratorInterface
+{
+    /**
+     * @var Tools
+     */
+    private $tools;
+
+    /**
+     * @param Tools $tools
+     */
+    public function __construct(Tools $tools)
+    {
+        $this->tools = $tools;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function generateRandomName(): string
+    {
+        return sprintf(
+            'admin%03d%s/',
+            mt_rand(0, 999),
+            strtolower($this->tools->generatePassword(6))
+        );
+    }
+}
