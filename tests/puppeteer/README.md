@@ -68,7 +68,14 @@ This script will detect not found and erroneous pages, by crawling your back off
 
 
 ### Launch script
-If you want to run the links checker test you can run the script **`campaigns/linkchecker.js`**
+If you want to run the links checker test you can run the script **`tools/linkchecker.js`**.
+It uses a `urls.js` file describing all the URLs it can crawl.
+
+You **must** disable the Security Token before running this script ! Add this line in your `.htaccess` file:
+
+```bash
+SetEnv _TOKEN_ disabled
+``` 
 
 #### With default values
 

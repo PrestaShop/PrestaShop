@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\QueryResult;
 
+use DateTimeImmutable;
+
 /**
  * Contains data about order for viewing
  */
@@ -130,6 +132,11 @@ class OrderForViewing
      */
     private $discounts;
 
+    /**
+     * @var DateTimeImmutable
+     */
+    private $createdAt;
+
     public function __construct(
         int $orderId,
         int $currencyId,
@@ -139,6 +146,7 @@ class OrderForViewing
         bool $isValid,
         bool $hasInvoice,
         bool $isDelivered,
+        DateTimeImmutable $createdAt,
         OrderCustomerForViewing $customer,
         OrderShippingAddressForViewing $shippingAddress,
         OrderInvoiceAddressForViewing $invoiceAddress,
@@ -172,6 +180,7 @@ class OrderForViewing
         $this->isTaxIncluded = $isTaxIncluded;
         $this->hasInvoice = $hasInvoice;
         $this->discounts = $discounts;
+        $this->createdAt = $createdAt;
     }
 
     /**
@@ -332,5 +341,13 @@ class OrderForViewing
     public function getDiscounts(): OrderDiscountsForViewing
     {
         return $this->discounts;
+    }
+
+    /**
+     * @return DateTimeImmutable
+     */
+    public function getCreatedAt(): DateTimeImmutable
+    {
+        return $this->createdAt;
     }
 }
