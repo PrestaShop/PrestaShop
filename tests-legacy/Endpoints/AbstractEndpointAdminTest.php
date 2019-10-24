@@ -43,7 +43,7 @@ abstract class AbstractEndpointAdminTest extends AbstractEndpointTest
     /**
      * @var TokenStorage
      */
-    private $tokenStorage;
+    private $tokenStorageBackup;
 
     protected function setUp()
     {
@@ -54,14 +54,16 @@ abstract class AbstractEndpointAdminTest extends AbstractEndpointTest
         }
         Context::getContext()->employee = new Employee(1);
 
-        $this->tokenStorage = SymfonyContainer::getInstance()->get('security.token_storage');
+        // Backing up token storage because it will be replaced with a mock during testing
+        $this->tokenStorageBackup = SymfonyContainer::getInstance()->get('security.token_storage');
     }
 
     protected function tearDown()
     {
         parent::tearDown();
 
-        SymfonyContainer::getInstance()->set('security.token_storage', $this->tokenStorage);
+        // Restoring the token storage backup
+        SymfonyContainer::getInstance()->set('security.token_storage', $this->tokenStorageBackup);
     }
 
     protected function employeeLogin()

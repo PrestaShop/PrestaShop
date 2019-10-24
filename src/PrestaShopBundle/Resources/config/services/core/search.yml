@@ -15,7 +15,6 @@ services:
           - '@prestashop.core.admin.admin_filter.repository'
           - '@event_dispatcher'
           - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
-          - '@prestashop.core.query_bus'
 #        tags:
 #          - { name: controller.argument_value_resolver, priority: 50 }
 
