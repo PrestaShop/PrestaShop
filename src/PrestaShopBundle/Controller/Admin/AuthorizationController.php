@@ -42,7 +42,6 @@ use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeForPasswordChang
 use PrestaShop\PrestaShop\Core\Domain\Employee\QueryResult\EmployeeForPasswordChange;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
-use PrestaShop\PrestaShop\Core\Security\Exception\UnableToRenameAdminDirectoryException;
 use PrestaShopBundle\Form\Admin\Login\ForgotPasswordType;
 use PrestaShopBundle\Form\Admin\Login\LoginType;
 use PrestaShopBundle\Form\Admin\Login\ChangePasswordType;
@@ -84,10 +83,11 @@ class AuthorizationController extends FrameworkBundleAdminController
 
         $forgotPasswordForm = $this->createForm(ForgotPasswordType::class);
 
-        return $this->renderLoginPage($request, [
-            'loginForm' => $loginForm->createView(),
-            'forgotPasswordForm' => $forgotPasswordForm->createView(),
-        ]);
+        return $this->render('@PrestaShop/Admin/Login/index.html.twig', [
+                'loginForm' => $loginForm->createView(),
+                'forgotPasswordForm' => $forgotPasswordForm->createView(),
+            ] + $this->getLayoutTemplateVariables($request)
+        );
     }
 
     /**
@@ -104,7 +104,6 @@ class AuthorizationController extends FrameworkBundleAdminController
         $loginForm = $this->createForm(LoginType::class);
         $forgotPasswordForm = $this->createForm(ForgotPasswordType::class);
         $forgotPasswordForm->handleRequest($request);
-        $showForgotPasswordForm = true;
 
         if ($forgotPasswordForm->isSubmitted() && $forgotPasswordForm->isValid()) {
             $successMessage = $this->trans(
@@ -118,23 +117,20 @@ class AuthorizationController extends FrameworkBundleAdminController
                 );
 
                 $this->addSuccess($successMessage);
-                $showForgotPasswordForm = false;
             } catch (EmployeeNotFoundException $e) {
                 // Not showing an error message when employee is not found,
                 // to not expose that a user does not exist with such email.
                 $this->addSuccess($successMessage);
-                $showForgotPasswordForm = false;
             } catch (DomainException $e) {
                 $this->addError($this->getErrorMessageForException($e, $this->getErrorMessages()));
             }
         }
 
-        return $this->renderLoginPage($request, [
-            'loginForm' => $loginForm->createView(),
-            'showLoginForm' => false,
-            'forgotPasswordForm' => $forgotPasswordForm->createView(),
-            'showForgotPasswordForm' => $showForgotPasswordForm,
-        ]);
+        return $this->render('@PrestaShop/Admin/Login/index.html.twig', [
+                'loginForm' => $loginForm->createView(),
+                'forgotPasswordForm' => $forgotPasswordForm->createView(),
+            ] + $this->getLayoutTemplateVariables($request)
+        );
     }
 
     /**
@@ -189,60 +185,36 @@ class AuthorizationController extends FrameworkBundleAdminController
             }
         }
 
-        return $this->renderLoginPage($request, [
-            'showLoginForm' => false,
-            'showForgotPasswordForm' => false,
-            'showChangePasswordForm' => true,
+        return $this->render('@PrestaShop/Admin/Login/change_password.html.twig', [
             'changePasswordForm' => $changePasswordForm->createView(),
             'employeeId' => $employeeId,
             'token' => $token,
-        ]);
+        ] + $this->getLayoutTemplateVariables($request));
     }
 
     /**
-     * Render the login page.
+     * Get template variables for login page layout template.
      *
      * @param Request $request
-     * @param array $templateVars
      *
-     * @return Response
+     * @return array
      */
-    private function renderLoginPage(Request $request, array $templateVars = [])
+    private function getLayoutTemplateVariables(Request $request)
     {
         $tools = $this->get('prestashop.adapter.tools');
         $languageDataProvider = $this->get('prestashop.adapter.data_provider.language');
         $secureModeChecker = $this->get('prestashop.adapter.security.secure_mode_checker');
+        $adminDirectoryNameGenerator = $this->get('prestashop.adapter.security.admin_directory_name_generator');
         $boAccessPrerequisitesChecker = $this->get(
             'prestashop.core.security.backoffice_access_prerequisites_checker'
         );
-        $adminDirectoryRenamer = $this->get('prestashop.adapter.security.admin_directory_renamer');
-        $isInsecureMode = false;
-        $canAccessInsecureMode = false;
+
         $installDirectoryExists = $boAccessPrerequisitesChecker->installDirectoryExists();
         $defaultAdminDirectoryExists = $boAccessPrerequisitesChecker->defaultAdminDirectoryExists();
-        $newAdminDirectoryName = '';
+        $newAdminDirectoryName = $adminDirectoryNameGenerator->generateRandomName();
+        $isInsecureMode = $secureModeChecker->isSslActivated() && !$secureModeChecker->isSslUsed();
 
-        if ($defaultAdminDirectoryExists) {
-            try {
-                $newAdminDirectoryName = $adminDirectoryRenamer->renameToRandomName();
-
-                return $this->redirect(sprintf(
-                    '%s/%s%s',
-                    $tools->getShopDomainSsl(true),
-                    $newAdminDirectoryName,
-                    $this->generateUrl('_admin_login', [], UrlGeneratorInterface::RELATIVE_PATH)
-                ));
-            } catch (UnableToRenameAdminDirectoryException $e) {
-                $newAdminDirectoryName = $e->getDestinationName();
-            }
-        }
-
-        if ($secureModeChecker->isSslActivated() && !$secureModeChecker->isSslUsed()) {
-            $isInsecureMode = true;
-            $canAccessInsecureMode = $secureModeChecker->canIpAccessInsecureMode($request->getClientIp());
-        }
-
-        $templateVars += [
+        return [
             'shopName' => $this->configuration->get('PS_SHOP_NAME'),
             'prestashopVersion' => $this->configuration->get('_PS_VERSION_'),
             'imgDir' => $this->configuration->get('_PS_IMG_'),
@@ -250,11 +222,10 @@ class AuthorizationController extends FrameworkBundleAdminController
                 $this->configuration->get('PS_LANG_DEFAULT')
             ),
             'currentYear' => (new DateTime())->format('Y'),
-            'showLoginForm' => true,
-            'showForgotPasswordForm' => false,
-            'showChangePasswordForm' => false,
+            'showDirectoryMessages' => $defaultAdminDirectoryExists || $installDirectoryExists,
             'isInsecureMode' => $isInsecureMode,
-            'canAccessInsecureMode' => $canAccessInsecureMode,
+            'canAccessInsecureMode' => $isInsecureMode &&
+                $secureModeChecker->canIpAccessInsecureMode($request->getClientIp()),
             'secureUrl' => $secureModeChecker->secureUrl(
                 $this->generateUrl('_admin_login', [], UrlGeneratorInterface::ABSOLUTE_URL)
             ),
@@ -268,14 +239,6 @@ class AuthorizationController extends FrameworkBundleAdminController
                 $newAdminDirectoryName
             ),
         ];
-
-        if ($defaultAdminDirectoryExists || $installDirectoryExists) {
-            $templateVars['showLoginForm'] = false;
-            $templateVars['showForgotPasswordForm'] = false;
-            $templateVars['showChangePasswordForm'] = false;
-        }
-
-        return $this->render('@PrestaShop/Admin/Login/index.html.twig', $templateVars);
     }
 
     /**

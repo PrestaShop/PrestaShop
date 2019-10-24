@@ -91,3 +91,16 @@ services:
           - '@prestashop.core.uti.back_url_provider'
         tags:
           - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
+
+    prestashop.bundle.event_listener.admin_directory_rename_listener:
+        class: PrestaShopBundle\EventListener\AdminDirectoryRenameListener
+        arguments:
+            - '@session'
+            - '@prestashop.core.security.backoffice_access_prerequisites_checker'
+            - '@prestashop.adapter.security.admin_directory_renamer'
+            - '@prestashop.adapter.security.admin_directory_name_generator'
+            - '@prestashop.adapter.tools'
+            - '@controller_resolver'
+            - '@router.default'
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }

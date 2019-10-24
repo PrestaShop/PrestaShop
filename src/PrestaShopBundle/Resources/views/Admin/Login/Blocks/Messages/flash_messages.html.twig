@@ -23,47 +23,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-{# SSL-related warnings #}
-{% if isInsecureMode %}
-  <div class="alert alert-warning mt-1" role="alert">
-    <div class="alert-text">
-      <p>
-        {% if canAccessInsecureMode %}
-          {{ 'SSL is activated. However, your IP is allowed to enter unsecure mode for maintenance or local IP issues.'|trans({}, 'Admin.Login.Notification') }}
-        {% else %}
-          {{ 'SSL is activated. Please connect using the following link to [1]log in to secure mode (https://)[/1]'|trans({'[1]': '<a href="' ~ secureUrl ~ '">', '[/1]': '</a>'}, 'Admin.Login.Notification')|raw }}
-        {% endif %}
-      </p>
-    </div>
-  </div>
-{% endif %}
-
-{# Install directory and admin directory name related error messages #}
-{% if installDirectoryExists or defaultAdminDirectoryExists %}
-  <div class="alert alert-danger mt-1" role="alert">
-
-    <div class="alert-text">
-      {{ 'For security reasons, you cannot connect to the back office until you have:'|trans({}, 'Admin.Login.Notification') }}
-      <ul>
-        {% if installDirectoryExists %}
-          <li>{{ 'deleted the /install folder'|trans({}, 'Admin.Login.Notification') }}</li>
-        {% endif %}
-        {% if defaultAdminDirectoryExists %}
-          <li>{{ 'renamed the /admin folder (e.g. %s)'|trans({'%s': newAdminDirectoryName}, 'Admin.Login.Notification') }}</li>
-        {% endif %}
-      </ul>
-    </div>
-
-    {% if defaultAdminDirectoryExists %}
-      <p>
-        <a href="{{ newAdminDirectoryUrl }}">
-          {{ 'Please access this page by the new URL (e.g. %s)'|trans({'%s': newAdminDirectoryUrl}, 'Admin.Login.Notification') }}
-        </a>
-      </p>
-    {% endif %}
-  </div>
-{% endif %}
-
 {# Error messages from flashbag #}
 {% if app.session.flashbag.peek('error')|length() > 0 %}
   <div class="alert alert-danger mt-1" role="alert">
