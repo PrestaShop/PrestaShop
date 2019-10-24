@@ -29,10 +29,6 @@
 export default {
   // when new cart is loaded, no matter if its empty, selected from carts list or duplicated by order.
   cartLoaded: 'cartLoaded',
-  // when customer carts list is loaded.
-  customerCartsLoaded: 'customerCartsLoaded',
-  // when customer orders list is loaded
-  customerOrdersLoaded: 'customerOrdersLoaded',
   // when cart addresses information has been changed
   cartAddressesChanged: 'cartAddressesChanged',
   // when cart delivery option has been changed
