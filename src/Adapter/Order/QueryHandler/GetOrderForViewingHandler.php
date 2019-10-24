@@ -602,7 +602,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             $carriers[] = new OrderCarrierForViewing(
                 (int) $item['id_order_carrier'],
                 new DateTimeImmutable($item['date_add']),
-                $item['carrier_name'],
+                $item['carrier_name'] ?? '',
                 $weight,
                 (int) $item['id_carrier'],
                 $price,
