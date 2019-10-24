@@ -248,7 +248,7 @@ class OrderController extends FrameworkBundleAdminController
             ->setFileName('order_' . date('Y-m-d_His') . '.csv');
     }
 
-    public function viewAction(int $orderId): Response
+    public function viewAction(int $orderId, Request $request): Response
     {
         /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
@@ -278,7 +278,8 @@ class OrderController extends FrameworkBundleAdminController
         $updateOrderProductForm = $this->createForm(UpdateProductInOrderType::class);
 
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/view.html.twig', [
-            'showContentHeader' => false,
+            'showContentHeader' => true,
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'orderForViewing' => $orderForViewing,
             'addOrderCartRuleForm' => $addOrderCartRuleForm->createView(),
             'updateOrderStatusForm' => $updateOrderStatusForm->createView(),

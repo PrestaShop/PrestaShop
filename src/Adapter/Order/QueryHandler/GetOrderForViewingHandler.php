@@ -148,6 +148,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             (bool) $order->valid,
             $order->hasInvoice(),
             $order->hasBeenDelivered(),
+            new DateTimeImmutable($order->date_add),
             $this->getOrderCustomer($order),
             $this->getOrderShippingAddress($order),
             $this->getOrderInvoiceAddress($order),
