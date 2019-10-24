@@ -195,7 +195,7 @@ export default class CreateOrderPage {
         this.data.cartId
       );
       EventEmitter.on(eventMap.cartRuleRemoved, (cartInfo) => {
-        this.cartRulesRenderer.render(cartInfo.cartRules, cartInfo.products.length === 0);
+        this.cartRulesRenderer.renderCartRulesBlock(cartInfo.cartRules, cartInfo.products.length === 0);
       });
     });
   }
@@ -240,7 +240,7 @@ export default class CreateOrderPage {
    */
   _renderCartInfo(cartInfo) {
     this.addressesRenderer.render(cartInfo.addresses);
-    this.cartRulesRenderer.render(cartInfo.cartRules, cartInfo.products.length === 0);
+    this.cartRulesRenderer.renderCartRulesBlock(cartInfo.cartRules, cartInfo.products.length === 0);
     this.shippingRenderer.render(cartInfo.shipping, cartInfo.products.length === 0);
     // @todo: render Summary block when at least 1 product is in cart
     // and delivery options are available
