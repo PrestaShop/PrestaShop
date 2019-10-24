@@ -215,7 +215,7 @@ class TranslationRouteFinder
     {
         $module = $this->moduleRepository->getInstanceByName($moduleName);
         if (!($module instanceof Module)) {
-            throw new Exception($this->translator->trans('Invalid module : %s', array($moduleName),'Admin.International.Notification'));
+            throw new Exception($this->translator->trans('Invalid module : %s', array($moduleName), 'Admin.International.Notification'));
         }
 
         return $module->isUsingNewTranslationSystem();
