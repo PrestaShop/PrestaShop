@@ -534,8 +534,9 @@ class AdminImagesControllerCore extends AdminController
                                     'Admin.Design.Notification'
                                 );
                             }
-
-                            if ($generate_hight_dpi_images) {
+                        }
+                        if ($generate_hight_dpi_images) {
+                            if (!file_exists($dir . $imageObj->getExistingImgPath() . '-' . stripslashes($imageType['name']) . '2x.jpg')) {
                                 if (!ImageManager::resize($existing_img, $dir . $imageObj->getExistingImgPath() . '-' . stripslashes($imageType['name']) . '2x.jpg', (int) $imageType['width'] * 2, (int) $imageType['height'] * 2)) {
                                     $this->errors[] = $this->trans(
                                         'Original image is corrupt (%filename%) for product ID %id% or bad permission on folder.',
