@@ -68,8 +68,8 @@ admin_carts_set_free_shipping:
   options:
     expose: true
 
-admin_carts_add_rule:
-  path: /{cartId}/rules/add
+admin_carts_add_cart_rule:
+  path: /{cartId}/cart-rules
   methods: [POST]
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Order/Cart:addCartRuleToCart
@@ -77,7 +77,7 @@ admin_carts_add_rule:
   options:
     expose: true
 
-admin_carts_delete_rule:
+admin_carts_delete_cart_rule:
   path: /{cartId}/rules/{cartRuleId}/delete
   methods: [POST]
   defaults:
@@ -87,7 +87,7 @@ admin_carts_delete_rule:
     expose: true
 
 admin_carts_add_product:
-  path: /{cartId}/add-product
+  path: /{cartId}/products
   methods: [POST]
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Order/Cart:addProduct

@@ -82,7 +82,7 @@ export default class CartEditor {
    * @param cartId
    */
   addCartRuleToCart(cartRuleId, cartId) {
-    $.post(this.router.generate('admin_carts_add_rule', {cartId}), {
+    $.post(this.router.generate('admin_carts_add_cart_rule', {cartId}), {
       cart_rule_id: cartRuleId,
     }).then((cartInfo) => {
       EventEmitter.emit(eventMap.cartRuleAdded, cartInfo);
@@ -98,7 +98,7 @@ export default class CartEditor {
    * @param cartId
    */
   removeCartRuleFromCart(cartRuleId, cartId) {
-    $.post(this.router.generate('admin_carts_delete_rule', {
+    $.post(this.router.generate('admin_carts_delete_cart_rule', {
       cartId,
       cartRuleId,
     })).then((cartInfo) => {
