@@ -32,6 +32,8 @@ use PrestaShopBundle\Service\TranslationService;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Module;
+use Exception;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class TranslationRouteFinder finds the correct route for translations.
@@ -72,20 +74,28 @@ class TranslationRouteFinder
      * @var ModuleRepositoryInterface
      */
     private $moduleRepository;
+    
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
 
     /**
      * @param TranslationService $translationService
      * @param Link $link
      * @param ModuleRepositoryInterface $moduleRepository
+     * @param TranslatorInterface $translator
      */
     public function __construct(
         TranslationService $translationService,
         Link $link,
-        ModuleRepositoryInterface $moduleRepository
+        ModuleRepositoryInterface $moduleRepository,
+        TranslatorInterface $translator
     ) {
         $this->translationService = $translationService;
         $this->link = $link;
         $this->moduleRepository = $moduleRepository;
+        $this->translator = $translator;
     }
 
     /**
@@ -204,10 +214,10 @@ class TranslationRouteFinder
     private function isModuleUsingNewTranslationSystem($moduleName)
     {
         $module = $this->moduleRepository->getInstanceByName($moduleName);
-        if ($module instanceof Module) {
-            return $module->isUsingNewTranslationSystem();
+        if (!($module instanceof Module)) {
+            throw new Exception($this->translator->trans('Invalid module : %s', array($moduleName),'Admin.International.Notification'));
         }
 
-        return false;
+        return $module->isUsingNewTranslationSystem();
     }
 }
