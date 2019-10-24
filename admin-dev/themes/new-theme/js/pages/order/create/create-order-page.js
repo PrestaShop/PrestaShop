@@ -194,9 +194,6 @@ export default class CreateOrderPage {
         $(event.currentTarget).data('cart-rule-id'),
         this.data.cartId
       );
-      EventEmitter.on(eventMap.cartRuleRemoved, (cartInfo) => {
-        this.cartRulesRenderer.renderCartRulesBlock(cartInfo.cartRules, cartInfo.products.length === 0);
-      });
     });
   }
 

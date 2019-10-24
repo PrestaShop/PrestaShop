@@ -76,4 +76,54 @@ export default class CartEditor {
       EventEmitter.emit(eventMap.cartFreeShippingSet, cartInfo);
     });
   }
+
+  /**
+   * Adds cart rule to cart
+   *
+   * @param cartRuleId
+   * @param cartId
+   */
+  addCartRuleToCart(cartRuleId, cartId) {
+    $.post(this.router.generate('admin_carts_add_rule', {cartId}), {
+      cart_rule_id: cartRuleId,
+    }).then((cartInfo) => {
+      EventEmitter.emit(eventMap.cartRuleAdded, cartInfo);
+    }).catch((response) => {
+      EventEmitter.emit(eventMap.cartRuleFailedToAdd, response.responseJSON.message);
+    });
+  }
+
+  /**
+   * Removes cart rule from cart
+   *
+   * @param cartRuleId
+   * @param cartId
+   */
+  removeCartRuleFromCart(cartRuleId, cartId) {
+    $.post(this.router.generate('admin_carts_delete_rule', {
+      cartId,
+      cartRuleId,
+    })).then((cartInfo) => {
+      EventEmitter.emit(eventMap.cartRuleRemoved, cartInfo);
+    }).catch((response) => {
+      showErrorMessage(response.responseJSON.message);
+    });
+  }
+
+  /**
+   * Adds product to cart
+   */
+  addProduct(cartId, product) {
+    $.ajax(this.router.generate('admin_carts_add_product', {cartId}), {
+      method: 'POST',
+      data: product,
+      processData: false,
+      contentType: false,
+      cache: false,
+    }).then((cartInfo) => {
+      EventEmitter.emit(eventMap.productAddedToCart, cartInfo);
+    }).catch((response) => {
+      showErrorMessage(response.responseJSON.message);
+    });
+  }
 }
