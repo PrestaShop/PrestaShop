@@ -5,6 +5,7 @@ ALTER TABLE `PREFIX_search_word` MODIFY `word` VARCHAR(30) NOT NULL;
 INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES ('PS_DISPLAY_MANUFACTURERS', '1', NOW(), NOW());
 
 /* PHP:ps_1770_preset_tab_enabled(); */;
+/* PHP:ps_1770_update_order_status_colors(); */;
 
 /* Add field MPN to tables */
 ALTER TABLE `PREFIX_order_detail` ADD `product_mpn` VARCHAR(40) NULL AFTER `product_upc`;
