@@ -78,7 +78,7 @@ admin_carts_add_cart_rule:
     expose: true
 
 admin_carts_delete_cart_rule:
-  path: /{cartId}/rules/{cartRuleId}/delete
+  path: /{cartId}/cart-rules/{cartRuleId}/delete
   methods: [POST]
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Order/Cart:removeCartRuleFromCart
@@ -94,3 +94,18 @@ admin_carts_add_product:
     _legacy_controller: AdminCarts
   options:
     expose: true
+  requirements:
+    cartId: \d+
+    productId: \d+
+
+admin_carts_delete_product:
+  path: /{cartId}/products/{productId}/delete
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Cart:deleteProduct
+    _legacy_controller: AdminCarts
+  options:
+    expose: true
+  requirements:
+    cartId: \d+
+    productId: \d+

@@ -24,7 +24,7 @@
  */
 
 import CartEditor from './cart-editor';
-import createOrderPageMap from './create-order-map';
+import createOrderMap from './create-order-map';
 import eventMap from './event-map';
 import {EventEmitter} from '../../../components/event-emitter';
 import ProductRenderer from './product-renderer';
@@ -51,6 +51,9 @@ export default class ProductManager {
       onAddProductToCart: (cartId) => {
         this._addProductToCart(cartId);
       },
+      onRemoveProductFromCart: (cartId, productId) => {
+        this._removeProductFromCart(cartId, productId);
+      }
     };
   }
 
@@ -60,12 +63,12 @@ export default class ProductManager {
    * @private
    */
   _initEvents() {
-    $(createOrderPageMap.productSearch).on('input', event => this._search(event));
-    $(createOrderPageMap.productSelect).on('change', (event) => {
+    $(createOrderMap.productSearch).on('input', event => this._search(event));
+    $(createOrderMap.productSelect).on('change', (event) => {
       const productId = Number($(event.currentTarget).find(':selected').val());
       this._selectProduct(productId);
     });
-    $(createOrderPageMap.combinationsSelect).on('change', (event) => {
+    $(createOrderMap.combinationsSelect).on('change', (event) => {
       const combinationId = Number($(event.currentTarget).find(':selected').val());
       this._selectCombination(combinationId);
     });
@@ -181,6 +184,21 @@ export default class ProductManager {
   }
 
   /**
+   * Removes product from cart
+   *
+   * @param {Number} cartId
+   * @param {Number} productId
+   *
+   * @private
+   */
+  _removeProductFromCart(cartId, productId) {
+    this.cartEditor.removeProductFromCart(productId, productId);
+    EventEmitter.on(eventMap.productRemovedFromCart, (cartInfo) => {
+      EventEmitter.emit(eventMap.cartLoaded, cartInfo);
+    });
+  }
+
+  /**
    * Retrieves product data from product search result block fields
    *
    * @returns {FormData}
@@ -191,7 +209,7 @@ export default class ProductManager {
 
     formData.append('cart_id', cartId);
     formData.append('product_id', this.selectedProductId);
-    formData.append('quantity', $(createOrderPageMap.quantityInput).val());
+    formData.append('quantity', $(createOrderMap.quantityInput).val());
     formData.append('combination_id', this.selectedCombinationId);
 
     this._getCustomFieldsData(formData);
@@ -209,7 +227,7 @@ export default class ProductManager {
    * @private
    */
   _getCustomFieldsData(formData) {
-    const $customFields = $(createOrderPageMap.productCustomInput);
+    const $customFields = $(createOrderMap.productCustomInput);
 
     $customFields.each((key, field) => {
       const $field = $(field);

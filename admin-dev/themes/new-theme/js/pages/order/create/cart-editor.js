@@ -40,6 +40,9 @@ export default class CartEditor {
 
   /**
    * Changes cart addresses
+   *
+   * @param {Number} cartId
+   * @param {Object} addresses
    */
   changeCartAddresses(cartId, addresses) {
     $.post(this.router.generate('admin_carts_edit_addresses', {cartId}), addresses).then((cartInfo) => {
@@ -50,8 +53,8 @@ export default class CartEditor {
   /**
    * Modifies cart delivery option
    *
-   * @param cartId
-   * @param value
+   * @param {Number} cartId
+   * @param {Number} value
    */
   changeDeliveryOption(cartId, value) {
     $.post(this.router.generate('admin_carts_edit_carrier', {cartId}), {
@@ -78,8 +81,8 @@ export default class CartEditor {
   /**
    * Adds cart rule to cart
    *
-   * @param cartRuleId
-   * @param cartId
+   * @param {Number} cartRuleId
+   * @param {Number} cartId
    */
   addCartRuleToCart(cartRuleId, cartId) {
     $.post(this.router.generate('admin_carts_add_cart_rule', {cartId}), {
@@ -94,8 +97,8 @@ export default class CartEditor {
   /**
    * Removes cart rule from cart
    *
-   * @param cartRuleId
-   * @param cartId
+   * @param {Number} cartRuleId
+   * @param {Number} cartId
    */
   removeCartRuleFromCart(cartRuleId, cartId) {
     $.post(this.router.generate('admin_carts_delete_cart_rule', {
@@ -123,6 +126,23 @@ export default class CartEditor {
       cache: false,
     }).then((cartInfo) => {
       EventEmitter.emit(eventMap.productAddedToCart, cartInfo);
+    }).catch((response) => {
+      showErrorMessage(response.responseJSON.message);
+    });
+  }
+
+  /**
+   * Removes product from cart
+   *
+   * @param {Number} cartId
+   * @param {Number} productId
+   */
+  removeProductFromCart(cartId, productId) {
+    $.post(this.router.generate('admin_carts_delete_product', {
+      cartId,
+      productId,
+    })).then((cartInfo) => {
+      EventEmitter.emit(eventMap.productRemovedFromCart, cartInfo);
     }).catch((response) => {
       showErrorMessage(response.responseJSON.message);
     });
