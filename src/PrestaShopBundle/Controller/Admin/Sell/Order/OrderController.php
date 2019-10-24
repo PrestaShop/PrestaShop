@@ -47,7 +47,6 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderPreview;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPreview;
-use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\ProductsForOrderCreation;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\OrderFilters;
@@ -574,49 +573,6 @@ class OrderController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_orders_view', [
             'orderId' => $orderId,
         ]);
-    }
-
-    /**
-     * @param Request $request
-     *
-     * @return Response
-     */
-    public function searchProductsAction(Request $request): Response
-    {
-        try {
-            $searchPhrase = $request->query->get('product_search_phrase');
-
-            /** @var ProductsForOrderCreation $productsForOrderCreation */
-            $productsForOrderCreation = $this->getQueryBus()->handle(new SearchProductsForOrderCreation($searchPhrase));
-
-            $serializer = $this->get('prestashop.bundle.snake_case_serializer_json');
-
-            return new Response($serializer->serialize($productsForOrderCreation->getProducts(), 'json'));
-        } catch (Exception $e) {
-            return $this->json(
-                ['message' => $this->getErrorMessageForException($e, [])],
-                Response::HTTP_INTERNAL_SERVER_ERROR
-            );
-        }
-    }
-
-    /**
-     * @param Request $request
-     * @return Response
-     */
-    public function addProductAction(Request $request): Response
-    {
-        try {
-            $this->addCustomizationFields($request);
-
-            return new Response();
-        } catch (Exception $e) {
-            return $this->json([
-                'message' => $this->getErrorMessageForException($e, []),
-            ],
-                Response::HTTP_INTERNAL_SERVER_ERROR
-            );
-        }
     }
 
     /**
