@@ -29,7 +29,7 @@ module.exports = class AddPageCategory extends BOBasePage {
    * @param pageData
    * @return {Promise<void>}
    */
-  async createEditPage(pageData, saveAndPreview = false) {
+  async createEditPage(pageData) {
     await this.setValue(this.titleInput, pageData.title);
     await this.setValue(this.metaTitleInput, pageData.metaTitle);
     await this.setValue(this.metaDescriptionInput, pageData.metaDescription);
@@ -39,19 +39,16 @@ module.exports = class AddPageCategory extends BOBasePage {
     else await this.page.click(this.indexation.replace('%ID', '0'));
     if (pageData.displayed) await this.page.click(this.displayed.replace('%ID', '1'));
     else await this.page.click(this.displayed.replace('%ID', '0'));
-    if (saveAndPreview) await this.page.click(this.saveAndPreviewPageButton);
-    else {
-      await Promise.all([
-        this.page.click(this.savePageButton),
-        this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-      ]);
-    }
+    await Promise.all([
+      this.page.click(this.savePageButton),
+      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
+    ]);
     await this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true});
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 
-  async cancelPage() {
-    await this.page.waitForSelector(this.cancelButton, 10000);
-    await this.page.click(this.cancelButton);
+  async previewPage() {
+    this.page = await this.openLinkWithTargetBlank(this.page, this.saveAndPreviewPageButton, false);
+    return this.page;
   }
 };
