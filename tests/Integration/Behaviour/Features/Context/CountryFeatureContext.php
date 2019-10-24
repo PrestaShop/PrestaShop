@@ -61,6 +61,7 @@ class CountryFeatureContext extends AbstractPrestaShopFeatureContext
 
     /**
      * @param $countryIsoCode
+     *
      * @throws \RuntimeException
      */
     public function checkCountryWithIsoCodeExists($countryIsoCode)
