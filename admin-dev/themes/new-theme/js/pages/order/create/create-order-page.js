@@ -65,7 +65,7 @@ export default class CreateOrderPage {
       listenForOrderSelect: () => this._handleDuplicateOrderCart(),
       listenForCartEdit: () => this._handleCartEdit(),
       listenForCartLoading: () => this._onCartLoaded(),
-      listenForCartRuleSearch: () => this._handleCartRuleSearch(),
+      listenForCartRuleSearch: () => this._searchCartRule(),
     };
   }
 
@@ -143,6 +143,7 @@ export default class CreateOrderPage {
     this.$container.on('change', createOrderPageMap.deliveryOptionSelect, e => this._changeDeliveryOption(e));
     this.$container.on('change', createOrderPageMap.freeShippingSwitch, e => this._setFreeShipping(e));
     this.$container.on('click', createOrderPageMap.addToCartButton, () => this.productManager.onAddProductToCart(this.cartId));
+    this.$container.on('click', createOrderPageMap.productRemoveBtn, e => this._removeProductFromCart(e));
     this._selectCartRule();
     this._removeCartRule();
   }
@@ -152,13 +153,26 @@ export default class CreateOrderPage {
    *
    * @private
    */
-  _handleCartRuleSearch() {
+  _searchCartRule() {
     this.$container.on('input', createOrderPageMap.cartRuleSearchInput, () => {
       this.cartRuleManager.onCartRuleSearch();
     });
     this.$container.on('blur', createOrderPageMap.cartRuleSearchInput, () => {
       this.cartRuleManager.onDoneSearchingCartRule();
     });
+  }
+
+  /**
+   * Triggers removing product from cart
+   *
+   * @param {Object} event
+   *
+   * @private
+   */
+  _removeProductFromCart(event) {
+    const productId = Number($(event.currentTarget).data('product-id'));
+
+    this.productManager.onRemoveProductFromCart(this.cartId, productId);
   }
 
   /**

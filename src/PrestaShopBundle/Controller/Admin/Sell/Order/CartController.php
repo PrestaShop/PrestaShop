@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCartRuleToCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCustomizationFieldsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\CreateEmptyCustomerCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\RemoveCartRuleFromCartCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\RemoveProductFromCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\SetFreeShippingToCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartAddressesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartCarrierCommand;
@@ -265,18 +266,44 @@ class CartController extends FrameworkBundleAdminController
     }
 
     /**
+     * Adds product to cart
+     *
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
      *
      * @param Request $request
      * @param int $cartId
      *
-     * @return Response
+     * @return JsonResponse
      */
-    public function addProductAction(Request $request, int $cartId): Response
+    public function addProductAction(Request $request, int $cartId): JsonResponse
     {
         try {
             $addProductToCartCommand = $this->getAddProductToCartCommand($request, $cartId);
             $this->getCommandBus()->handle($addProductToCartCommand);
+
+            return $this->json($this->getCartInfo($cartId));
+        } catch (Exception $e) {
+            return $this->json(
+                ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
+    }
+
+    /**
+     * Deletes product from cart
+     *
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
+     *
+     * @param int $cartId
+     * @param int $productId
+     *
+     * @return JsonResponse
+     */
+    public function deleteProductAction(int $cartId, int $productId): JsonResponse
+    {
+        try {
+            $this->getCommandBus()->handle(new RemoveProductFromCartCommand($cartId, $productId));
 
             return $this->json($this->getCartInfo($cartId));
         } catch (Exception $e) {

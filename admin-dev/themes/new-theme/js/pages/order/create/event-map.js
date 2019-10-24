@@ -43,4 +43,6 @@ export default {
   cartRuleFailedToAdd: 'cartRuleFailedToAdd',
   // when product is added to cart
   productAddedToCart: 'productAddedToCart',
+  // when product is removed from cart
+  productRemovedFromCart: 'productRemovedFromCart',
 };
