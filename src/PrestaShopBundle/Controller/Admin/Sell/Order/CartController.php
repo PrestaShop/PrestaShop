@@ -265,14 +265,15 @@ class CartController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+     *
      * @param Request $request
+     * @param int $cartId
      *
      * @return Response
      */
-    public function addProductAction(Request $request): Response
+    public function addProductAction(Request $request, int $cartId): Response
     {
-        $cartId = $request->request->getInt('cart_id');
-
         try {
             $addProductToCartCommand = $this->getAddProductToCartCommand($request, $cartId);
             $this->getCommandBus()->handle($addProductToCartCommand);

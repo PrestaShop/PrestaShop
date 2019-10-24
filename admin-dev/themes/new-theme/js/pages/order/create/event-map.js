@@ -41,4 +41,10 @@ export default {
   cartFreeShippingSet: 'cartFreeShippingSet',
   // when cart rule is removed from cart
   cartRuleRemoved: 'cartRuleRemoved',
+  // when cart rule is added to cart
+  cartRuleAdded: 'cartRuleAdded',
+  // when cart rule cannot be added to cart
+  cartRuleFailedToAdd: 'cartRuleFailedToAdd',
+  // when product is added to cart
+  productAddedToCart: 'productAddedToCart',
 };

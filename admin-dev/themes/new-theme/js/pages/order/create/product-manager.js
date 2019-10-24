@@ -23,7 +23,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+import CartEditor from './cart-editor';
 import createOrderPageMap from './create-order-map';
+import eventMap from './event-map';
+import {EventEmitter} from '../../../components/event-emitter';
 import ProductRenderer from './product-renderer';
 import Router from '../../../components/router';
 
@@ -40,6 +43,7 @@ export default class ProductManager {
 
     this.renderer = new ProductRenderer();
     this.router = new Router();
+    this.cartEditor = new CartEditor();
 
     this._initEvents();
 
@@ -168,18 +172,10 @@ export default class ProductManager {
    * @private
    */
   _addProductToCart(cartId) {
-    $.ajax($(createOrderPageMap.addToCartButton).data('add-product-url'), {
-      method: 'POST',
-      data: this._getProductData(cartId),
-      processData: false,
-      contentType: false,
-      cache: false,
-    }).then((response) => {
-      this.renderer.renderList(response.products);
-    }).catch((response) => {
-      if (typeof response.responseJSON !== 'undefined') {
-        showErrorMessage(response.responseJSON.message);
-      }
+    this.cartEditor.addProduct(cartId, this._getProductData(cartId));
+
+    EventEmitter.on(eventMap.productAddedToCart, (cartInfo) => {
+      this.renderer.renderList(cartInfo.products);
     });
   }
 

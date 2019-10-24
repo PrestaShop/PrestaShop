@@ -23,11 +23,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import Router from '../../../components/router';
-import createOrderMap from './create-order-map';
+import CartEditor from './cart-editor';
 import CartRulesRenderer from './cart-rules-renderer';
+import createOrderMap from './create-order-map';
 import {EventEmitter} from '../../../components/event-emitter';
 import eventMap from './event-map';
+import Router from '../../../components/router';
 
 const $ = window.$;
 
@@ -39,6 +40,7 @@ export default class CartRuleManager {
     this.router = new Router();
     this.$searchInput = $(createOrderMap.cartRuleSearchInput);
     this.renderer = new CartRulesRenderer();
+    this.cartEditor = new CartEditor();
 
     return {
       onCartRuleSearch: () => {
@@ -72,7 +74,7 @@ export default class CartRuleManager {
     }).then((cartRules) => {
       this.renderer.renderSearchResults(cartRules);
     }).catch((e) => {
-      this._showUnexpectedError(e.responseJSON.message);
+      showErrorMessage(e.responseJSON.message);
     });
   }
 
@@ -85,12 +87,13 @@ export default class CartRuleManager {
    * @private
    */
   _addCartRuleToCart(cartRuleId, cartId) {
-    $.post(this.router.generate('admin_carts_add_rule', {cartId}), {
-      cart_rule_id: cartRuleId,
-    }).then((cartInfo) => {
+    this.cartEditor.addCartRuleToCart(cartRuleId, cartId);
+
+    EventEmitter.on(eventMap.cartRuleAdded, (cartInfo) => {
       this.renderer.renderCartRulesBlock(cartInfo.cartRules, cartInfo.products.length === 0);
-    }).catch((e) => {
-      this.renderer.displayErrorMessage(e.responseJSON.message);
+    });
+    EventEmitter.on(eventMap.cartRuleFailedToAdd, (message) => {
+      this.renderer.displayErrorMessage(message);
     });
   }
 
@@ -103,22 +106,10 @@ export default class CartRuleManager {
    * @private
    */
   _removeCartRuleFromCart(cartRuleId, cartId) {
-    $.post(this.router.generate('admin_carts_delete_rule', {
-      cartId,
-      cartRuleId,
-    })).then((cartInfo) => {
-      EventEmitter.emit(eventMap.cartRuleRemoved, cartInfo);
-    }).catch((e) => {
-      this._showUnexpectedError(e.responseJSON.message);
-    });
-  }
+    this.cartEditor.removeCartRuleFromCart(cartRuleId, cartId);
 
-  /**
-   * Wrapper for error message when ajax request fails
-   *
-   * @private
-   */
-  _showUnexpectedError(message) {
-    showErrorMessage(message);
+    EventEmitter.on(eventMap.cartRuleRemoved, (cartInfo) => {
+      this.renderer.renderCartRulesBlock(cartInfo.cartRules, cartInfo.products.length === 0);
+    });
   }
 }
