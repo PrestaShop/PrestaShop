@@ -35,6 +35,7 @@ import CartEditor from './cart-editor';
 import eventMap from './event-map';
 import CartRuleManager from './cart-rule-manager';
 import ProductManager from './product-manager';
+import ProductRenderer from './product-renderer';
 
 const $ = window.$;
 
@@ -55,6 +56,7 @@ export default class CreateOrderPage {
     this.cartEditor = new CartEditor();
     this.cartRuleManager = new CartRuleManager();
     this.productManager = new ProductManager();
+    this.productRenderer = new ProductRenderer();
 
     return {
       listenForCustomerSearch: () => this._handleCustomerSearch(),
@@ -199,6 +201,7 @@ export default class CreateOrderPage {
     this.addressesRenderer.render(cartInfo.addresses);
     this.cartRulesRenderer.renderCartRulesBlock(cartInfo.cartRules, cartInfo.products.length === 0);
     this.shippingRenderer.render(cartInfo.shipping, cartInfo.products.length === 0);
+    this.productRenderer.renderList(cartInfo.products);
     // @todo: render Summary block when at least 1 product is in cart
     // and delivery options are available
 
