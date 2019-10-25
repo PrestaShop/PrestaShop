@@ -262,10 +262,7 @@ module.exports = class Brands extends BOBasePage {
       ),
     ]);
     // Click on delete and wait for modal
-    await Promise.all([
-      this.page.click(enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton),
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-    ]);
+    await this.clickAndWaitForNavigation(enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 
