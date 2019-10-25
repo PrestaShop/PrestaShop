@@ -2,7 +2,7 @@ const faker = require('faker');
 
 const countries = ['Italy', 'France', 'United States', 'Netherlands', 'United Kingdom', 'Germany'];
 
-module.exports = class branAddress {
+module.exports = class brandAddress {
   constructor(brandAddressToCreate = {}) {
     this.brandName = brandAddressToCreate.brandName || '--';
     this.firstName = brandAddressToCreate.firstName || faker.name.firstName();
