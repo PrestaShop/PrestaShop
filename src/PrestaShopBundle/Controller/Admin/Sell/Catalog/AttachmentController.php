@@ -334,22 +334,6 @@ class AttachmentController extends FrameworkBundleAdminController
                 $e instanceof BulkDeleteAttachmentsException ? implode(', ', $e->getAttachmentIds()) : ''
             ),
             EmptyFileException::class => $this->trans('No file has been selected', 'Admin.Notifications.Error'),
-            ErrorException::class => $this->trans(
-                'An unexpected error occurred. [%type% code %code%]',
-                'Admin.Notification.Error',
-                [
-                    '%type%' => $e->getMessage(),
-                    '%code%' => $e->getCode(),
-                ]
-            ),
-            ContextErrorException::class => $this->trans(
-                'An unexpected error occurred. [%type% code %code%]',
-                'Admin.Notification.Error',
-                [
-                    '%type%' => $e->getMessage(),
-                    '%code%' => $e->getCode(),
-                ]
-            ),
         ];
     }
 
