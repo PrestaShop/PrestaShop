@@ -121,7 +121,6 @@ class ThemeCommand extends ContainerAwareCommand
 
                     return self::RETURN_CODE_FAILED;
                 }
-                $this->executeGenericThemeAction($action, $theme);
                 break;
             default:
                 $this->executeGenericThemeAction($action, $theme);
