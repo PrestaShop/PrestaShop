@@ -49,6 +49,8 @@
         {{ 'Merchandise returns'|trans({}, 'Admin.Orderscustomers.Feature') }} ({{ orderForViewing.returns.orderReturns|length }})
       </a>
     </li>
+
+    {{ renderhook('displayAdminOrderTabShip', {'id_order': orderForViewing.id}) }}
   </ul>
 
   <div class="tab-content">
@@ -64,5 +66,7 @@
     <div class="tab-pane fade" id="orderReturnsTabContent" role="tabpanel" aria-labelledby="orderReturnsTab">
       {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/merchandise_returns.html.twig' %}
     </div>
+
+    {{ renderhook('displayAdminOrderContentShip', {'id_order': orderForViewing.id}) }}
   </div>
 </div>
