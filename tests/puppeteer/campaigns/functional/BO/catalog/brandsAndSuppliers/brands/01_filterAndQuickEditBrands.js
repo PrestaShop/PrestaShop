@@ -62,8 +62,10 @@ describe('Filter And Quick Edit brands', async () => {
       );
       await expect(numberOfBrandsAfterFilter).to.be.at.most(numberOfBrands);
       const textColumn = await this.pageObjects.brandsPage.getTextContent(
-        this.pageObjects.brandsPage.tableColumn.replace('%TABLE', 'manufacturer')
-          .replace('%ROW', 1).replace('%COLUMN', 'id_manufacturer'),
+        this.pageObjects.brandsPage.tableColumn
+          .replace('%TABLE', 'manufacturer')
+          .replace('%ROW', 1)
+          .replace('%COLUMN', 'id_manufacturer'),
       );
       await expect(textColumn).to.contains(demoBrands.first.id);
     });
@@ -133,8 +135,10 @@ describe('Filter And Quick Edit brands', async () => {
       );
       await expect(numberOfBrandsAfterFilter).to.be.at.most(numberOfBrands);
       const textColumn = await this.pageObjects.brandsPage.getTextContent(
-        this.pageObjects.brandsPage.tableColumn.replace('%TABLE', 'manufacturer')
-          .replace('%ROW', 1).replace('%COLUMN', 'name'),
+        this.pageObjects.brandsPage.tableColumn
+          .replace('%TABLE', 'manufacturer')
+          .replace('%ROW', 1)
+          .replace('%COLUMN', 'name'),
       );
       await expect(textColumn).to.contains(demoBrands.first.name);
     });

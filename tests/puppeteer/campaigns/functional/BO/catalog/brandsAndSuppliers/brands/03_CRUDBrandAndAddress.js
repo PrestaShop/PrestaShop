@@ -120,8 +120,10 @@ describe('Create, Update and Delete Brand and Address', async () => {
       );
       await expect(numberOfBrandsAfterFilter).to.be.at.most(numberOfBrands);
       const textColumn = await this.pageObjects.brandsPage.getTextContent(
-        this.pageObjects.brandsPage.tableColumn.replace('%TABLE', 'manufacturer')
-          .replace('%ROW', 1).replace('%COLUMN', 'name'),
+        this.pageObjects.brandsPage.tableColumn
+          .replace('%TABLE', 'manufacturer')
+          .replace('%ROW', 1)
+          .replace('%COLUMN', 'name'),
       );
       await expect(textColumn).to.contains(createBrandData.name);
     });
@@ -162,8 +164,10 @@ describe('Create, Update and Delete Brand and Address', async () => {
       );
       await expect(numberOfBrandsAfterFilter).to.be.at.most(numberOfBrands);
       const textColumn = await this.pageObjects.brandsPage.getTextContent(
-        this.pageObjects.brandsPage.tableColumn.replace('%TABLE', 'manufacturer')
-          .replace('%ROW', 1).replace('%COLUMN', 'name'),
+        this.pageObjects.brandsPage.tableColumn
+          .replace('%TABLE', 'manufacturer')
+          .replace('%ROW', 1)
+          .replace('%COLUMN', 'name'),
       );
       await expect(textColumn).to.contains(createBrandData.name);
     });
@@ -238,8 +242,10 @@ describe('Create, Update and Delete Brand and Address', async () => {
       );
       await expect(numberOfBrandsAfterFilter).to.be.at.most(numberOfBrands);
       const textColumn = await this.pageObjects.brandsPage.getTextContent(
-        this.pageObjects.brandsPage.tableColumn.replace('%TABLE', 'manufacturer')
-          .replace('%ROW', 1).replace('%COLUMN', 'name'),
+        this.pageObjects.brandsPage.tableColumn
+          .replace('%TABLE', 'manufacturer')
+          .replace('%ROW', 1)
+          .replace('%COLUMN', 'name'),
       );
       await expect(textColumn).to.contains(editBrandData.name);
     });
@@ -280,8 +286,10 @@ describe('Create, Update and Delete Brand and Address', async () => {
       );
       await expect(numberOfBrandsAfterFilter).to.be.at.most(numberOfBrands);
       const textColumn = await this.pageObjects.brandsPage.getTextContent(
-        this.pageObjects.brandsPage.tableColumn.replace('%TABLE', 'manufacturer')
-          .replace('%ROW', 1).replace('%COLUMN', 'name'),
+        this.pageObjects.brandsPage.tableColumn
+          .replace('%TABLE', 'manufacturer')
+          .replace('%ROW', 1)
+          .replace('%COLUMN', 'name'),
       );
       await expect(textColumn).to.contains(editBrandData.name);
     });
