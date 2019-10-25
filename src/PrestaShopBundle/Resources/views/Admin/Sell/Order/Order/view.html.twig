@@ -50,6 +50,8 @@
 
       {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/details.html.twig' %}
 
+      {{ renderhook('displayAdminOrderLeft', {'id_order': orderForViewing.id}) }}
+
       {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/payments.html.twig' %}
     </div>
   </div>
