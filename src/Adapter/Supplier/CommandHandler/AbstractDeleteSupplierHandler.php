@@ -117,13 +117,15 @@ abstract class AbstractDeleteSupplierHandler
                 );
             }
 
-            if (false === $this->deleteSupplierAddress($supplierId)) {
-                throw new CannotDeleteSupplierAddressException(
-                    sprintf(
-                        'Unable to set deleted flag for supplier with id "%s" address',
-                        $supplierId->getValue()
-                    )
-                );
+            if (1 >= count($entity->getAssociatedShops())) {
+                if (false === $this->deleteSupplierAddress($supplierId)) {
+                    throw new CannotDeleteSupplierAddressException(
+                        sprintf(
+                            'Unable to set deleted flag for supplier with id "%s" address',
+                            $supplierId->getValue()
+                        )
+                    );
+                }
             }
 
             if (false === $entity->delete()) {
