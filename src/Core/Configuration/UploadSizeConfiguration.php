@@ -48,4 +48,12 @@ class UploadSizeConfiguration implements UploadSizeConfigurationInterface
     {
         return $this->iniConfiguration->getUploadMaxSizeInBytes();
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPostMaxSizeInBytes(): int
+    {
+        return $this->iniConfiguration->getPostMaxSizeInBytes();
+    }
 }
