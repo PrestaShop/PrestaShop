@@ -32,9 +32,12 @@ module.exports = class Pages extends BOBasePage {
     // Bulk Actions
     this.categoriesSelectAllRowsLabel = `${this.categoriesListForm} .md-checkbox label`;
     this.categoriesBulkActionsToggleButton = `${this.categoriesListForm} button.dropdown-toggle`;
-    this.categoriesBulkActionsEnableButton = `${this.categoriesListForm} #cms_page_category_grid_bulk_action_enable_selection`;
-    this.categoriesBulkActionsDisableButton = `${this.categoriesListForm} #cms_page_category_grid_bulk_action_disable_selection`;
-    this.categoriesBulkActionsDeleteButton = `${this.categoriesListForm} #cms_page_category_grid_bulk_action_delete_bulk`;
+    this.categoriesBulkActionsEnableButton = `${this.categoriesListForm} 
+    #cms_page_category_grid_bulk_action_enable_selection`;
+    this.categoriesBulkActionsDisableButton = `${this.categoriesListForm} 
+    #cms_page_category_grid_bulk_action_disable_selection`;
+    this.categoriesBulkActionsDeleteButton = `${this.categoriesListForm} 
+    #cms_page_category_grid_bulk_action_delete_bulk`;
     // List of pages
     this.pageGridPanel = '#cms_page_grid_panel';
     this.pageGridTitle = `${this.pageGridPanel} h3.card-header-title`;
@@ -75,15 +78,14 @@ module.exports = class Pages extends BOBasePage {
   }
 
   // Methods for categories
-
   /**
-   * Filter list of page categories
+   * Filter list of categories
    * @param filterType, input or select to choose method of filter
    * @param filterBy, column to filter
    * @param value, value to filter with
    * @return {Promise<void>}
    */
-  async filterPageCategories(filterType, filterBy, value = '') {
+  async filterCategories(filterType, filterBy, value = '') {
     switch (filterType) {
       case 'input':
         await this.setValue(this.categoryFilterInput.replace('%FILTERBY', filterBy), value);
@@ -102,26 +104,6 @@ module.exports = class Pages extends BOBasePage {
   }
 
   /**
-   * View Page categories in list
-   * @param row, row in table
-   * @return {Promise<void>}
-   */
-  async viewCategory(row) {
-    if (await this.elementVisible(
-      this.categoriesListTableViewLink.replace('%ROW', row).replace('%COLUMN', 'actions'), 100)) {
-      await Promise.all([
-        this.page.click(this.categoriesListTableViewLink.replace('%ROW', row).replace('%COLUMN', 'actions')),
-        this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-      ]);
-    } else {
-      await Promise.all([
-        this.page.click(`${this.categoriesListTableColumn.replace('%ROW', row).replace('%COLUMN', 'name')} a`),
-        this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-      ]);
-    }
-  }
-
-  /**
    * Get Value of column Displayed in Categories table
    * @param row, row in table
    * @param column, column to check
@@ -129,7 +111,8 @@ module.exports = class Pages extends BOBasePage {
    */
   async getToggleColumnValueCategory(row, column) {
     if (await this.elementVisible(
-      this.categoriesListColumnValidIcon.replace('%ROW', row).replace('%COLUMN', column), 100)) return true;
+      this.categoriesListColumnValidIcon.replace('%ROW', row)
+        .replace('%COLUMN', column), 100)) return true;
     return false;
   }
 
@@ -147,8 +130,8 @@ module.exports = class Pages extends BOBasePage {
         await this.page.waitForSelector(this.categoriesListColumnValidIcon
           .replace('%ROW', 1).replace('%COLUMN', 'active'));
       } else {
-        await this.page.waitForSelector(
-          this.categoriesListColumnNotValidIcon.replace('%ROW', 1).replace('%COLUMN', 'active'));
+        await this.page.waitForSelector(this.categoriesListColumnNotValidIcon
+          .replace('%ROW', 1).replace('%COLUMN', 'active'));
       }
       return true;
     }
@@ -163,7 +146,8 @@ module.exports = class Pages extends BOBasePage {
   async deleteCategory(row) {
     // Click on dropDown
     await Promise.all([
-      this.page.click(this.categoriesListTableToggleDropDown.replace('%ROW', row).replace('%COLUMN', 'actions')),
+      this.page.click(this.categoriesListTableToggleDropDown
+        .replace('%ROW', row).replace('%COLUMN', 'actions')),
       this.page.waitForSelector(
         `${this.categoriesListTableToggleDropDown
           .replace('%ROW', row).replace('%COLUMN', 'actions')}[aria-expanded='true']`,
@@ -172,7 +156,8 @@ module.exports = class Pages extends BOBasePage {
     ]);
     // Click on delete and wait for modal
     await Promise.all([
-      this.page.click(this.categoriesListTableDeleteLink.replace('%ROW', row).replace('%COLUMN', 'actions')),
+      this.page.click(this.categoriesListTableDeleteLink
+        .replace('%ROW', row).replace('%COLUMN', 'actions')),
       this.dialogListener(),
     ]);
     return this.getTextContent(this.alertSuccessBlockParagraph);
@@ -233,7 +218,8 @@ module.exports = class Pages extends BOBasePage {
   async goToEditCategoryPage(row) {
     // Click on dropDown
     await Promise.all([
-      this.page.click(this.categoriesListTableToggleDropDown.replace('%ROW', row).replace('%COLUMN', 'actions')),
+      this.page.click(this.categoriesListTableToggleDropDown
+        .replace('%ROW', row).replace('%COLUMN', 'actions')),
       this.page.waitForSelector(
         `${this.categoriesListTableToggleDropDown
           .replace('%ROW', row).replace('%COLUMN', 'actions')}[aria-expanded='true']`,
@@ -241,10 +227,8 @@ module.exports = class Pages extends BOBasePage {
       ),
     ]);
     // Click on edit
-    await Promise.all([
-      this.page.click(this.categoriesListTableEditLink.replace('%ROW', row).replace('%COLUMN', 'actions')),
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-    ]);
+    this.clickAndWaitForNavigation(this.categoriesListTableEditLink
+      .replace('%ROW', row).replace('%COLUMN', 'actions'));
   }
 
   // Methods for pages
@@ -308,19 +292,6 @@ module.exports = class Pages extends BOBasePage {
   }
 
   /**
-   * Go to Edit Page
-   * @param row, row in table
-   * @return {Promise<void>}
-   */
-  async goToEditPagePage(row) {
-    // Click on edit
-    await Promise.all([
-      this.page.click(this.pagesListTableEditLink.replace('%ROW', row).replace('%COLUMN', 'actions')),
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-    ]);
-  }
-
-  /**
    * Delete Page
    * @param row, row in table
    * @return {Promise<textContent>}
@@ -328,7 +299,8 @@ module.exports = class Pages extends BOBasePage {
   async deletePage(row) {
     // Click on dropDown
     await Promise.all([
-      this.page.click(this.pageListTableToggleDropDown.replace('%ROW', row).replace('%COLUMN', 'actions')),
+      this.page.click(this.pageListTableToggleDropDown
+        .replace('%ROW', row).replace('%COLUMN', 'actions')),
       this.page.waitForSelector(
         `${this.pageListTableToggleDropDown
           .replace('%ROW', row).replace('%COLUMN', 'actions')}[aria-expanded='true']`,
@@ -337,14 +309,15 @@ module.exports = class Pages extends BOBasePage {
     ]);
     // Click on delete and wait for modal
     await Promise.all([
-      this.page.click(this.pagesListTableDeleteLink.replace('%ROW', row).replace('%COLUMN', 'actions')),
+      this.page.click(this.pagesListTableDeleteLink
+        .replace('%ROW', row).replace('%COLUMN', 'actions')),
       this.dialogListener(),
     ]);
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 
   /**
-   * Delete all Categories with Bulk Actions
+   * Delete all Pages with Bulk Actions
    * @return {Promise<textContent>}
    */
   async deletePagesBulkActions() {
@@ -383,10 +356,8 @@ module.exports = class Pages extends BOBasePage {
       this.page.waitForSelector(`${this.pagesBulkActionsToggleButton}`, {visible: true}),
     ]);
     // Click on delete and wait for modal
-    await Promise.all([
-      this.page.click(enable ? this.pagesBulkActionsEnableButton : this.pagesBulkActionsDisableButton),
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-    ]);
+    await this.clickAndWaitForNavigation(enable ? this.pagesBulkActionsEnableButton
+      : this.pagesBulkActionsDisableButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 };

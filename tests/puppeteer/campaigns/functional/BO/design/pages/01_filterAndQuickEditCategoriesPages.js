@@ -54,9 +54,9 @@ describe('Filter And Quick Edit Categories / Pages', async () => {
     const pageTitle = await this.pageObjects.pagesPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.pagesPage.pageTitle);
   });
-  // 1 : Filter Categories with all inputs and selects in grid table
-  describe('Create 2 categories and filter them', async () => {
-    describe('Create 2 categories', async () => {
+  // 1 : Create two categories and Filter with all inputs and selects in grid table
+  describe('Create 2 categories then filter the table', async () => {
+    describe('Create Categories', async () => {
       it('should go to add new page category', async function () {
         await this.pageObjects.pagesPage.clickAndWaitForNavigation(
           this.pageObjects.pagesPage.addNewPageCategoryLink,
@@ -104,24 +104,18 @@ describe('Filter And Quick Edit Categories / Pages', async () => {
           this.pageObjects.pagesPage.categoryGridTitle);
         await expect(numberOfCategories).to.be.above(0);
       });
-      it('should filter by Id \'1\'', async function () {
-        await this.pageObjects.pagesPage.filterPageCategories(
-          'input',
-          'id_cms_category',
-          '1',
-        );
+      it('should filter by Id \'2\'', async function () {
+        await this.pageObjects.pagesPage.filterCategories('input', 'id_cms_category', '2');
         const numberOfCategoriesAfterFilter = await this.pageObjects.pagesPage.getNumberFromText(
           this.pageObjects.pagesPage.categoryGridTitle);
         await expect(numberOfCategoriesAfterFilter).to.be.at.most(numberOfCategories);
         /* eslint-disable no-await-in-loop */
         for (let i = 1; i <= numberOfCategoriesAfterFilter; i++) {
           const textColumn = await this.pageObjects.pagesPage.getTextContent(
-            this.pageObjects.pagesPage.categoriesListTableColumn.replace('%ROW', i).replace(
-              '%COLUMN',
-              'id_cms_category',
-            ),
+            this.pageObjects.pagesPage.categoriesListTableColumn
+              .replace('%ROW', i).replace('%COLUMN', 'id_cms_category'),
           );
-          await expect(textColumn).to.contains('1');
+          await expect(textColumn).to.contains('2');
         }
         /* eslint-enable no-await-in-loop */
       });
@@ -132,7 +126,7 @@ describe('Filter And Quick Edit Categories / Pages', async () => {
         await expect(numberOfCategoriesAfterFilter).to.be.equal(numberOfCategories);
       });
       it('should filter by Name', async function () {
-        await this.pageObjects.pagesPage.filterPageCategories(
+        await this.pageObjects.pagesPage.filterCategories(
           'input',
           'name',
           createFirstCategoryData.name,
@@ -143,10 +137,8 @@ describe('Filter And Quick Edit Categories / Pages', async () => {
         /* eslint-disable no-await-in-loop */
         for (let i = 1; i <= numberOfCategoriesAfterFilter; i++) {
           const textColumn = await this.pageObjects.pagesPage.getTextContent(
-            this.pageObjects.pagesPage.categoriesListTableColumn.replace('%ROW', i).replace(
-              '%COLUMN',
-              'name',
-            ),
+            this.pageObjects.pagesPage.categoriesListTableColumn
+              .replace('%ROW', i).replace('%COLUMN', 'name'),
           );
           await expect(textColumn).to.contains(createFirstCategoryData.name);
         }
@@ -159,7 +151,7 @@ describe('Filter And Quick Edit Categories / Pages', async () => {
         await expect(numberOfCategoriesAfterFilter).to.be.equal(numberOfCategories);
       });
       it('should filter by Description', async function () {
-        await this.pageObjects.pagesPage.filterPageCategories(
+        await this.pageObjects.pagesPage.filterCategories(
           'input',
           'description',
           createSecondCategoryData.description,
@@ -170,10 +162,8 @@ describe('Filter And Quick Edit Categories / Pages', async () => {
         /* eslint-disable no-await-in-loop */
         for (let i = 1; i <= numberOfCategoriesAfterFilter; i++) {
           const textColumn = await this.pageObjects.pagesPage.getTextContent(
-            this.pageObjects.pagesPage.categoriesListTableColumn.replace('%ROW', i).replace(
-              '%COLUMN',
-              'description',
-            ),
+            this.pageObjects.pagesPage.categoriesListTableColumn
+              .replace('%ROW', i).replace('%COLUMN', 'description'),
           );
           await expect(textColumn).to.contains(createSecondCategoryData.description);
         }
@@ -186,21 +176,15 @@ describe('Filter And Quick Edit Categories / Pages', async () => {
         await expect(numberOfCategoriesAfterFilter).to.be.equal(numberOfCategories);
       });
       it('should filter by Position \'1\'', async function () {
-        await this.pageObjects.pagesPage.filterPageCategories(
-          'input',
-          'position',
-          '1',
-        );
+        await this.pageObjects.pagesPage.filterCategories('input', 'position', '1');
         const numberOfCategoriesAfterFilter = await this.pageObjects.pagesPage.getNumberFromText(
           this.pageObjects.pagesPage.categoryGridTitle);
         await expect(numberOfCategoriesAfterFilter).to.be.at.most(numberOfCategories);
         /* eslint-disable no-await-in-loop */
         for (let i = 1; i <= numberOfCategoriesAfterFilter; i++) {
           const textColumn = await this.pageObjects.pagesPage.getTextContent(
-            this.pageObjects.pagesPage.categoriesListTableColumn.replace('%ROW', i).replace(
-              '%COLUMN',
-              'position',
-            ),
+            this.pageObjects.pagesPage.categoriesListTableColumn
+              .replace('%ROW', i).replace('%COLUMN', 'position'),
           );
           await expect(textColumn).to.contains('1');
         }
@@ -213,7 +197,7 @@ describe('Filter And Quick Edit Categories / Pages', async () => {
         await expect(numberOfCategoriesAfterFilter).to.be.equal(numberOfCategories);
       });
       it('should filter by Displayed \'Yes\'', async function () {
-        await this.pageObjects.pagesPage.filterPageCategories(
+        await this.pageObjects.pagesPage.filterCategories(
           'select',
           'active',
           createSecondCategoryData.displayed,
@@ -224,7 +208,8 @@ describe('Filter And Quick Edit Categories / Pages', async () => {
         /* eslint-disable no-await-in-loop */
         for (let i = 1; i <= numberOfCategoriesAfterFilter; i++) {
           const textColumn = await this.pageObjects.pagesPage.getTextContent(
-            this.pageObjects.pagesPage.categoriesListTableColumn.replace('%ROW', i).replace('%COLUMN', 'active'),
+            this.pageObjects.pagesPage.categoriesListTableColumn
+              .replace('%ROW', i).replace('%COLUMN', 'active'),
           );
           await expect(textColumn).to.contains('check');
         }
@@ -238,167 +223,25 @@ describe('Filter And Quick Edit Categories / Pages', async () => {
       });
     });
   });
-  // 2 : Filter Pages with all inputs and selects in grid table
-  describe('Filter Pages', async () => {
-    it('should reset all filters and get number of pages in BO', async function () {
-      if (await this.pageObjects.pagesPage.elementVisible(this.pageObjects.pagesPage.pagefilterResetButton, 2000)) {
-        await this.pageObjects.pagesPage.resetFilter(this.pageObjects.pagesPage.pagefilterResetButton);
-      }
-      numberOfPages = await this.pageObjects.pagesPage.getNumberFromText(
-        this.pageObjects.pagesPage.pageGridTitle);
-      await expect(numberOfPages).to.be.above(0);
-    });
-    it('should filter by Id \'1\'', async function () {
-      await this.pageObjects.pagesPage.filterPages(
-        'input',
-        'id_cms',
-        Pages.delivery.id,
-      );
-      const numberOfPagesAfterFilter = await this.pageObjects.pagesPage.getNumberFromText(
-        this.pageObjects.pagesPage.pageGridTitle);
-      if (numberOfPages === 0) {
-        await expect(numberOfPagesAfterFilter).to.be.equal(numberOfPages + 1);
-      } else await expect(numberOfPagesAfterFilter).to.be.at.most(numberOfPages);
-      /* eslint-disable no-await-in-loop */
-      for (let i = 1; i <= numberOfPagesAfterFilter; i++) {
-        const textColumn = await this.pageObjects.pagesPage.getTextContent(
-          this.pageObjects.pagesPage.pagesListTableColumn.replace('%ROW', i).replace('%COLUMN', 'id_cms'),
-        );
-        await expect(textColumn).to.contains(Pages.delivery.id);
-      }
-      /* eslint-enable no-await-in-loop */
-    });
-    it('should reset all filters', async function () {
-      await this.pageObjects.pagesPage.resetFilter(this.pageObjects.pagesPage.pagefilterResetButton);
-      const numberOfPagesAfterReset = await this.pageObjects.pagesPage.getNumberFromText(
-        this.pageObjects.pagesPage.pageGridTitle);
-      await expect(numberOfPagesAfterReset).to.be.equal(numberOfPages);
-    });
-    it('should filter by URL \'about-us\'', async function () {
-      await this.pageObjects.pagesPage.filterPages(
-        'input',
-        'link_rewrite',
-        Pages.aboutUs.url,
-      );
-      const numberOfPagesAfterFilter = await this.pageObjects.pagesPage.getNumberFromText(
-        this.pageObjects.pagesPage.pageGridTitle);
-      if (numberOfPages === 0) {
-        await expect(numberOfPagesAfterFilter).to.be.equal(numberOfPages + 1);
-      } else await expect(numberOfPagesAfterFilter).to.be.at.most(numberOfPages);
-      /* eslint-disable no-await-in-loop */
-      for (let i = 1; i <= numberOfPagesAfterFilter; i++) {
-        const textColumn = await this.pageObjects.pagesPage.getTextContent(
-          this.pageObjects.pagesPage.pagesListTableColumn.replace('%ROW', i).replace('%COLUMN', 'link_rewrite'),
-        );
-        await expect(textColumn).to.contains(Pages.aboutUs.url);
-      }
-      /* eslint-enable no-await-in-loop */
-    });
-    it('should reset all filters', async function () {
-      await this.pageObjects.pagesPage.resetFilter(this.pageObjects.pagesPage.pagefilterResetButton);
-      const numberOfPagesAfterReset = await this.pageObjects.pagesPage.getNumberFromText(
-        this.pageObjects.pagesPage.pageGridTitle);
-      await expect(numberOfPagesAfterReset).to.be.equal(numberOfPages);
-    });
-    it('should filter by Title \'Terms and conditions of use\'', async function () {
-      await this.pageObjects.pagesPage.filterPages(
-        'input',
-        'meta_title',
-        Pages.termsAndCondition.title,
-      );
-      const numberOfPagesAfterFilter = await this.pageObjects.pagesPage.getNumberFromText(
-        this.pageObjects.pagesPage.pageGridTitle);
-      if (numberOfPages === 0) {
-        await expect(numberOfPagesAfterFilter).to.be.equal(numberOfPages + 1);
-      } else await expect(numberOfPagesAfterFilter).to.be.at.most(numberOfPages);
-      /* eslint-disable no-await-in-loop */
-      for (let i = 1; i <= numberOfPagesAfterFilter; i++) {
-        const textColumn = await this.pageObjects.pagesPage.getTextContent(
-          this.pageObjects.pagesPage.pagesListTableColumn.replace('%ROW', i).replace('%COLUMN', 'meta_title'),
-        );
-        await expect(textColumn).to.contains(Pages.termsAndCondition.title);
-      }
-      /* eslint-enable no-await-in-loop */
-    });
-    it('should reset all filters', async function () {
-      await this.pageObjects.pagesPage.resetFilter(this.pageObjects.pagesPage.pagefilterResetButton);
-      const numberOfPagesAfterReset = await this.pageObjects.pagesPage.getNumberFromText(
-        this.pageObjects.pagesPage.pageGridTitle);
-      await expect(numberOfPagesAfterReset).to.be.equal(numberOfPages);
-    });
-    it('should filter by Position \'5\'', async function () {
-      await this.pageObjects.pagesPage.filterPages(
-        'input',
-        'position',
-        Pages.securePayment.position,
-      );
-      const numberOfPagesAfterFilter = await this.pageObjects.pagesPage.getNumberFromText(
-        this.pageObjects.pagesPage.pageGridTitle);
-      if (numberOfPages === 0) {
-        await expect(numberOfPagesAfterFilter).to.be.equal(numberOfPages + 1);
-      } else await expect(numberOfPagesAfterFilter).to.be.at.most(numberOfPages);
-      /* eslint-disable no-await-in-loop */
-      for (let i = 1; i <= numberOfPagesAfterFilter; i++) {
-        const textColumn = await this.pageObjects.pagesPage.getTextContent(
-          this.pageObjects.pagesPage.pagesListTableColumn.replace('%ROW', i).replace('%COLUMN', 'position'),
-        );
-        await expect(textColumn).to.contains(Pages.securePayment.position);
-      }
-      /* eslint-enable no-await-in-loop */
-    });
-    it('should reset all filters', async function () {
-      await this.pageObjects.pagesPage.resetFilter(this.pageObjects.pagesPage.pagefilterResetButton);
-      const numberOfPagesAfterReset = await this.pageObjects.pagesPage.getNumberFromText(
-        this.pageObjects.pagesPage.pageGridTitle);
-      await expect(numberOfPagesAfterReset).to.be.equal(numberOfPages);
-    });
-    it('should filter by Displayed \'Yes\'', async function () {
-      await this.pageObjects.pagesPage.filterPages(
-        'select',
-        'active',
-        Pages.securePayment.displayed,
-      );
-      const numberOfPagesAfterFilter = await this.pageObjects.pagesPage.getNumberFromText(
-        this.pageObjects.pagesPage.pageGridTitle);
-      if (numberOfPages === 0) {
-        await expect(numberOfPagesAfterFilter).to.be.equal(numberOfPages + 1);
-      } else await expect(numberOfPagesAfterFilter).to.be.at.most(numberOfPages);
-      /* eslint-disable no-await-in-loop */
-      for (let i = 1; i <= numberOfPagesAfterFilter; i++) {
-        const textColumn = await this.pageObjects.pagesPage.getTextContent(
-          this.pageObjects.pagesPage.pagesListTableColumn.replace('%ROW', i).replace('%COLUMN', 'active'),
-        );
-        await expect(textColumn).to.contains('check');
-      }
-      /* eslint-enable no-await-in-loop */
-    });
-    it('should reset all filters', async function () {
-      await this.pageObjects.pagesPage.resetFilter(this.pageObjects.pagesPage.pagefilterResetButton);
-      const numberOfPagesAfterReset = await this.pageObjects.pagesPage.getNumberFromText(
-        this.pageObjects.pagesPage.pageGridTitle);
-      await expect(numberOfPagesAfterReset).to.be.equal(numberOfPages);
-    });
-  });
-  // 3 : Editing Categories from grid table
+  // 2 : Editing Categories from grid table
   describe('Quick Edit Categories', async () => {
     // Steps
-    it('should filter by Id \'1\'', async function () {
-      await this.pageObjects.pagesPage.filterPages(
+    it('should filter by Name', async function () {
+      await this.pageObjects.pagesPage.filterCategories(
         'input',
-        'id_cms',
-        Pages.delivery.id,
+        'name',
+        createFirstCategoryData.name,
       );
-      const numberOfPagesAfterFilter = await this.pageObjects.pagesPage.getNumberFromText(
-        this.pageObjects.pagesPage.pageGridTitle);
-      if (numberOfPages === 0) {
-        await expect(numberOfPagesAfterFilter).to.be.equal(numberOfPages + 1);
-      } else await expect(numberOfPagesAfterFilter).to.be.at.most(numberOfPages);
+      const numberOfCategoriesAfterFilter = await this.pageObjects.pagesPage.getNumberFromText(
+        this.pageObjects.pagesPage.categoryGridTitle);
+      await expect(numberOfCategoriesAfterFilter).to.be.at.most(numberOfCategories);
       /* eslint-disable no-await-in-loop */
-      for (let i = 1; i <= numberOfPagesAfterFilter; i++) {
+      for (let i = 1; i <= numberOfCategoriesAfterFilter; i++) {
         const textColumn = await this.pageObjects.pagesPage.getTextContent(
-          this.pageObjects.pagesPage.pagesListTableColumn.replace('%ROW', i).replace('%COLUMN', 'id_cms'),
+          this.pageObjects.pagesPage.categoriesListTableColumn
+            .replace('%ROW', i).replace('%COLUMN', 'name'),
         );
-        await expect(textColumn).to.contains(Pages.delivery.id);
+        await expect(textColumn).to.contains(createFirstCategoryData.name);
       }
       /* eslint-enable no-await-in-loop */
     });
@@ -438,6 +281,148 @@ describe('Filter And Quick Edit Categories / Pages', async () => {
       await expect(isStatusChanged).to.be.true;
     });
     it('should reset all filters', async function () {
+      await this.pageObjects.pagesPage.resetFilter(this.pageObjects.pagesPage.categoryfilterResetButton);
+      const numberOfCategoriesAfterReset = await this.pageObjects.pagesPage.getNumberFromText(
+        this.pageObjects.pagesPage.categoryGridTitle);
+      await expect(numberOfCategoriesAfterReset).to.be.equal(numberOfCategories);
+    });
+  });
+  // 3 : Filter Pages with all inputs and selects in grid table
+  describe('Filter Pages', async () => {
+    it('should reset all filters and get number of pages in BO', async function () {
+      if (await this.pageObjects.pagesPage.elementVisible(this.pageObjects.pagesPage.pagefilterResetButton, 2000)) {
+        await this.pageObjects.pagesPage.resetFilter(this.pageObjects.pagesPage.pagefilterResetButton);
+      }
+      numberOfPages = await this.pageObjects.pagesPage.getNumberFromText(
+        this.pageObjects.pagesPage.pageGridTitle);
+      await expect(numberOfPages).to.be.above(0);
+    });
+    it('should filter by Id \'1\'', async function () {
+      await this.pageObjects.pagesPage.filterPages('input', 'id_cms', Pages.delivery.id);
+      const numberOfPagesAfterFilter = await this.pageObjects.pagesPage.getNumberFromText(
+        this.pageObjects.pagesPage.pageGridTitle);
+      if (numberOfPages === 0) {
+        await expect(numberOfPagesAfterFilter).to.be.equal(numberOfPages + 1);
+      } else await expect(numberOfPagesAfterFilter).to.be.at.most(numberOfPages);
+      /* eslint-disable no-await-in-loop */
+      for (let i = 1; i <= numberOfPagesAfterFilter; i++) {
+        const textColumn = await this.pageObjects.pagesPage.getTextContent(
+          this.pageObjects.pagesPage.pagesListTableColumn
+            .replace('%ROW', i).replace('%COLUMN', 'id_cms'),
+        );
+        await expect(textColumn).to.contains(Pages.delivery.id);
+      }
+      /* eslint-enable no-await-in-loop */
+    });
+    it('should reset all filters', async function () {
+      await this.pageObjects.pagesPage.resetFilter(this.pageObjects.pagesPage.pagefilterResetButton);
+      const numberOfPagesAfterReset = await this.pageObjects.pagesPage.getNumberFromText(
+        this.pageObjects.pagesPage.pageGridTitle);
+      await expect(numberOfPagesAfterReset).to.be.equal(numberOfPages);
+    });
+    it('should filter by URL \'about-us\'', async function () {
+      await this.pageObjects.pagesPage.filterPages(
+        'input',
+        'link_rewrite',
+        Pages.aboutUs.url,
+      );
+      const numberOfPagesAfterFilter = await this.pageObjects.pagesPage.getNumberFromText(
+        this.pageObjects.pagesPage.pageGridTitle);
+      if (numberOfPages === 0) {
+        await expect(numberOfPagesAfterFilter).to.be.equal(numberOfPages + 1);
+      } else await expect(numberOfPagesAfterFilter).to.be.at.most(numberOfPages);
+      /* eslint-disable no-await-in-loop */
+      for (let i = 1; i <= numberOfPagesAfterFilter; i++) {
+        const textColumn = await this.pageObjects.pagesPage.getTextContent(
+          this.pageObjects.pagesPage.pagesListTableColumn
+            .replace('%ROW', i).replace('%COLUMN', 'link_rewrite'),
+        );
+        await expect(textColumn).to.contains(Pages.aboutUs.url);
+      }
+      /* eslint-enable no-await-in-loop */
+    });
+    it('should reset all filters', async function () {
+      await this.pageObjects.pagesPage.resetFilter(this.pageObjects.pagesPage.pagefilterResetButton);
+      const numberOfPagesAfterReset = await this.pageObjects.pagesPage.getNumberFromText(
+        this.pageObjects.pagesPage.pageGridTitle);
+      await expect(numberOfPagesAfterReset).to.be.equal(numberOfPages);
+    });
+    it('should filter by Title \'Terms and conditions of use\'', async function () {
+      await this.pageObjects.pagesPage.filterPages(
+        'input',
+        'meta_title',
+        Pages.termsAndCondition.title,
+      );
+      const numberOfPagesAfterFilter = await this.pageObjects.pagesPage.getNumberFromText(
+        this.pageObjects.pagesPage.pageGridTitle);
+      if (numberOfPages === 0) {
+        await expect(numberOfPagesAfterFilter).to.be.equal(numberOfPages + 1);
+      } else await expect(numberOfPagesAfterFilter).to.be.at.most(numberOfPages);
+      /* eslint-disable no-await-in-loop */
+      for (let i = 1; i <= numberOfPagesAfterFilter; i++) {
+        const textColumn = await this.pageObjects.pagesPage.getTextContent(
+          this.pageObjects.pagesPage.pagesListTableColumn
+            .replace('%ROW', i).replace('%COLUMN', 'meta_title'),
+        );
+        await expect(textColumn).to.contains(Pages.termsAndCondition.title);
+      }
+      /* eslint-enable no-await-in-loop */
+    });
+    it('should reset all filters', async function () {
+      await this.pageObjects.pagesPage.resetFilter(this.pageObjects.pagesPage.pagefilterResetButton);
+      const numberOfPagesAfterReset = await this.pageObjects.pagesPage.getNumberFromText(
+        this.pageObjects.pagesPage.pageGridTitle);
+      await expect(numberOfPagesAfterReset).to.be.equal(numberOfPages);
+    });
+    it('should filter by Position \'5\'', async function () {
+      await this.pageObjects.pagesPage.filterPages(
+        'input',
+        'position',
+        Pages.securePayment.position,
+      );
+      const numberOfPagesAfterFilter = await this.pageObjects.pagesPage.getNumberFromText(
+        this.pageObjects.pagesPage.pageGridTitle);
+      if (numberOfPages === 0) {
+        await expect(numberOfPagesAfterFilter).to.be.equal(numberOfPages + 1);
+      } else await expect(numberOfPagesAfterFilter).to.be.at.most(numberOfPages);
+      /* eslint-disable no-await-in-loop */
+      for (let i = 1; i <= numberOfPagesAfterFilter; i++) {
+        const textColumn = await this.pageObjects.pagesPage.getTextContent(
+          this.pageObjects.pagesPage.pagesListTableColumn
+            .replace('%ROW', i).replace('%COLUMN', 'position'),
+        );
+        await expect(textColumn).to.contains(Pages.securePayment.position);
+      }
+      /* eslint-enable no-await-in-loop */
+    });
+    it('should reset all filters', async function () {
+      await this.pageObjects.pagesPage.resetFilter(this.pageObjects.pagesPage.pagefilterResetButton);
+      const numberOfPagesAfterReset = await this.pageObjects.pagesPage.getNumberFromText(
+        this.pageObjects.pagesPage.pageGridTitle);
+      await expect(numberOfPagesAfterReset).to.be.equal(numberOfPages);
+    });
+    it('should filter by Displayed \'Yes\'', async function () {
+      await this.pageObjects.pagesPage.filterPages(
+        'select',
+        'active',
+        Pages.securePayment.displayed,
+      );
+      const numberOfPagesAfterFilter = await this.pageObjects.pagesPage.getNumberFromText(
+        this.pageObjects.pagesPage.pageGridTitle);
+      if (numberOfPages === 0) {
+        await expect(numberOfPagesAfterFilter).to.be.equal(numberOfPages + 1);
+      } else await expect(numberOfPagesAfterFilter).to.be.at.most(numberOfPages);
+      /* eslint-disable no-await-in-loop */
+      for (let i = 1; i <= numberOfPagesAfterFilter; i++) {
+        const textColumn = await this.pageObjects.pagesPage.getTextContent(
+          this.pageObjects.pagesPage.pagesListTableColumn
+            .replace('%ROW', i).replace('%COLUMN', 'active'),
+        );
+        await expect(textColumn).to.contains('check');
+      }
+      /* eslint-enable no-await-in-loop */
+    });
+    it('should reset all filters', async function () {
       await this.pageObjects.pagesPage.resetFilter(this.pageObjects.pagesPage.pagefilterResetButton);
       const numberOfPagesAfterReset = await this.pageObjects.pagesPage.getNumberFromText(
         this.pageObjects.pagesPage.pageGridTitle);
@@ -461,7 +446,8 @@ describe('Filter And Quick Edit Categories / Pages', async () => {
       /* eslint-disable no-await-in-loop */
       for (let i = 1; i <= numberOfPagesAfterFilter; i++) {
         const textColumn = await this.pageObjects.pagesPage.getTextContent(
-          this.pageObjects.pagesPage.pagesListTableColumn.replace('%ROW', i).replace('%COLUMN', 'meta_title'),
+          this.pageObjects.pagesPage.pagesListTableColumn
+            .replace('%ROW', i).replace('%COLUMN', 'meta_title'),
         );
         await expect(textColumn).to.contains(Pages.termsAndCondition.title);
       }
