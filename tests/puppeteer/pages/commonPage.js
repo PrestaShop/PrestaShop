@@ -171,17 +171,19 @@ module.exports = class CommonPage {
    */
   async selectByVisibleText(selector, textValue) {
     let found = false;
-    const options = await this.page.$$(`${selector} option`);
-    for (let i = 0; i < options.length; i++) {
-      /*eslint-disable*/
-      const elementText = await (await options[i].getProperty('textContent')).jsonValue();
-      if (elementText === textValue) {
-        const elementValue = await (await options[i].getProperty('value')).jsonValue();
-        await this.page.select(selector, elementValue);
-        found = true;
-        break;
-      }
-      /* eslint-enable */
+    let options = await this.page.$$eval(
+      `${selector} option`,
+      all => all.map(
+        option => ({
+          textContent: option.textContent,
+          value: option.value,
+        })),
+    );
+    options = await options.filter(option => textValue === option.textContent);
+    if (options.length !== 0) {
+      const elementValue = await options[0].value;
+      await this.page.select(selector, elementValue);
+      found = true;
     }
     if (!found) throw new Error(`${textValue} was not found as option of select`);
   }
@@ -209,5 +211,25 @@ module.exports = class CommonPage {
       this.page.click(selector),
       this.page.waitForNavigation({waitUntil: 'networkidle0'}),
     ]);
+  }
+
+  /**
+   * Replace All occurrences in string
+   * @param str, string to update
+   * @param find, what to replace
+   * @param replace, value to replace with
+   * @return {Promise<*>}
+   */
+  async replaceAll(str, find, replace) {
+    return str.replace(new RegExp(find, 'g'), replace);
+  }
+
+  /**
+   * Navigate to the previous page in history
+   * @param waitUntil
+   * @return {Promise<void>}
+   */
+  async goToPreviousPage(waitUntil = 'networkidle0') {
+    await this.page.goBack({waitUntil});
   }
 };
