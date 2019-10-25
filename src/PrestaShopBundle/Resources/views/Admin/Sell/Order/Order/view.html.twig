@@ -43,6 +43,8 @@
       {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/customer.html.twig' %}
 
       {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/messages.html.twig' %}
+
+      {{ renderhook('displayAdminOrderRight', {'id_order': orderForViewing.id}) }}
     </div>
 
     <div class="col-md-8">
