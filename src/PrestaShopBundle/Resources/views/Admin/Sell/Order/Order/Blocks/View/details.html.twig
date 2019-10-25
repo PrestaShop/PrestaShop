@@ -51,6 +51,7 @@
     </li>
 
     {{ renderhook('displayAdminOrderTabShip', {'id_order': orderForViewing.id}) }}
+    {{ renderhook('displayAdminOrderTabOrder', {'id_order': orderForViewing.id}) }}
   </ul>
 
   <div class="tab-content">
@@ -68,5 +69,6 @@
     </div>
 
     {{ renderhook('displayAdminOrderContentShip', {'id_order': orderForViewing.id}) }}
+    {{ renderhook('displayAdminOrderContentOrder', {'id_order': orderForViewing.id}) }}
   </div>
 </div>
