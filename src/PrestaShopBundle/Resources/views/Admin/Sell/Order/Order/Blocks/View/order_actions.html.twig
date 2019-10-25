@@ -47,4 +47,6 @@
       {{ form_rest(updateOrderStatusActionBarForm) }}
     </div>
   {{ form_end(updateOrderStatusActionBarForm) }}
+
+  {{ renderhook('displayBackOfficeOrderActions', {'id_order': orderForViewing.id}) }}
 </div>
