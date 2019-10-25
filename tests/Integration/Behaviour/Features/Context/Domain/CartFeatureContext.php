@@ -63,6 +63,8 @@ class CartFeatureContext extends AbstractDomainFeatureContext
      */
     public function createEmptyCartForCustomer($cartReference, $customerReference)
     {
+        // Clear static cache each time you create a cart
+        Cart::resetStaticCache();
         $customer = SharedStorage::getStorage()->get($customerReference);
 
         /** @var CartId $cartId */
