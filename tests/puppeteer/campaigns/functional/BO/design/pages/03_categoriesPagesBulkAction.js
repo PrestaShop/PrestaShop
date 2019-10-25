@@ -124,7 +124,7 @@ describe('Create Categories/ Pages, Then disable / Enable and Delete with Bulk a
   // 2 : Enable/Disable categories created with bulk actions
   describe('Enable and Disable categories with Bulk Actions', async () => {
     it('should filter list by Name', async function () {
-      await this.pageObjects.pagesPage.filterPageCategories(
+      await this.pageObjects.pagesPage.filterCategories(
         'input',
         'name',
         'todelete',
@@ -168,7 +168,7 @@ describe('Create Categories/ Pages, Then disable / Enable and Delete with Bulk a
   // 3 : Delete Categories created with bulk actions
   describe('Delete categories with Bulk Actions', async () => {
     it('should filter list by Name', async function () {
-      await this.pageObjects.pagesPage.filterPageCategories(
+      await this.pageObjects.pagesPage.filterCategories(
         'input',
         'name',
         'todelete',
@@ -192,7 +192,7 @@ describe('Create Categories/ Pages, Then disable / Enable and Delete with Bulk a
   });
   // 4 : Create 2 pages In BO
   describe('Create 2 pages', async () => {
-    it('should go to add new page page', async function () {
+    it('should go to add new page', async function () {
       await this.pageObjects.pagesPage.clickAndWaitForNavigation(
         this.pageObjects.pagesPage.addNewPageLink,
       );

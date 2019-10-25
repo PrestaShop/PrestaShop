@@ -55,9 +55,9 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
       title: `update${createPageData.title}`,
     }));
   });
-  /*after(async () => {
+  after(async () => {
     await helper.closeBrowser(browser);
-  });*/
+  });
   // Login into BO and go to categories page
   loginCommon.loginBO();
   it('should go to "Design>Pages" page', async function () {
@@ -83,15 +83,15 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
     } else await expect(numberOfCategories).to.be.above(0);
   });
   // 1 : Create category then go to FO to check it
-  describe('Create Category in BO and check it in FO', async () => {
-    it('should go to add new category page', async function () {
+  describe('Create Page Category in BO and check it in FO', async () => {
+    it('should go to add new page category', async function () {
       await this.pageObjects.pagesPage.clickAndWaitForNavigation(
         this.pageObjects.pagesPage.addNewPageCategoryLink,
       );
       const pageTitle = await this.pageObjects.addPageCategoryPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.addPageCategoryPage.pageTitleCreate);
     });
-    it('should create category ', async function () {
+    it('should create page category ', async function () {
       const textResult = await this.pageObjects.addPageCategoryPage.createEditPageCategory(createCategoryData);
       await expect(textResult).to.equal(this.pageObjects.pagesPage.successfulCreationMessage);
     });
@@ -106,7 +106,7 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
       await expect(numberOfCategoriesAfterCreation).to.be.equal(numberOfCategories + 1);
     });
     it('should search for the new category and check result', async function () {
-      await this.pageObjects.pagesPage.filterPageCategories(
+      await this.pageObjects.pagesPage.filterCategories(
         'input',
         'name',
         createCategoryData.name,
@@ -115,6 +115,8 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
         this.pageObjects.pagesPage.categoryGridTitle);
       if (numberOfCategories === 0) {
         await expect(numberOfCategoriesAfterFilter).to.be.equal(numberOfCategories + 1);
+      } else if (numberOfCategories === 1) {
+        await expect(numberOfCategoriesAfterFilter).to.be.equal(numberOfCategories);
       } else await expect(numberOfCategoriesAfterFilter).to.be.at.most(numberOfCategories);
       /* eslint-disable no-await-in-loop */
       for (let i = 1; i <= numberOfCategoriesAfterFilter; i++) {
@@ -148,13 +150,14 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
   // 2 : Create Page then go to FO to check it
   describe('Create Page in BO and preview it in FO', async () => {
     it('should click on view category', async function () {
-      await this.pageObjects.pagesPage.viewCategory('1');
+      await this.pageObjects.pagesPage.clickAndWaitForNavigation(this.pageObjects.pagesPage.categoriesListTableViewLink
+        .replace('%ROW', '1').replace('%COLUMN', 'actions'));
       const pageTitle = await this.pageObjects.pagesPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.pagesPage.pageTitle);
       numberOfPages = await this.pageObjects.pagesPage.getNumberFromText(
         this.pageObjects.pagesPage.pageGridTitle);
     });
-    it('should go to add new page page', async function () {
+    it('should go to add new page', async function () {
       await this.pageObjects.pagesPage.clickAndWaitForNavigation(
         this.pageObjects.pagesPage.addNewPageLink,
       );
@@ -165,7 +168,7 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
       const textResult = await this.pageObjects.addPagePage.createEditPage(createPageData);
       await expect(textResult).to.equal(this.pageObjects.pagesPage.successfulCreationMessage);
     });
-    it('should search for the created Page and check result', async function () {
+    it('should search for the created page and check result', async function () {
       await this.pageObjects.pagesPage.filterPages(
         'input',
         'meta_title',
@@ -175,6 +178,8 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
         this.pageObjects.pagesPage.pageGridTitle);
       if (numberOfPages === 0) {
         await expect(numberOfPagesAfterFilter).to.be.equal(numberOfPages + 1);
+      } else if (numberOfPages === 0) {
+        await expect(numberOfPagesAfterFilter).to.be.equal(numberOfPages);
       } else await expect(numberOfPagesAfterFilter).to.be.at.most(numberOfPages);
       /* eslint-disable no-await-in-loop */
       for (let i = 1; i <= numberOfPagesAfterFilter; i++) {
@@ -186,7 +191,10 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
       /* eslint-enable no-await-in-loop */
     });
     it('should go to edit page', async function () {
-      await this.pageObjects.pagesPage.goToEditPagePage('1');
+      await this.pageObjects.pagesPage.clickAndWaitForNavigation(this.pageObjects.pagesPage.pagesListTableEditLink
+        .replace('%ROW', '1')
+        .replace('%COLUMN', 'actions'),
+      );
       const pageTitle = await this.pageObjects.pagesPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.pagesPage.pageTitle);
     });
@@ -209,9 +217,9 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
     });
   });
   // 3 : Update category then go to FO to check it
-  describe('Update Category created in BO and check it in FO', async () => {
+  describe('Update Page Category created in BO and check it in FO', async () => {
     it('should search for the created category and check result', async function () {
-      await this.pageObjects.pagesPage.filterPageCategories(
+      await this.pageObjects.pagesPage.filterCategories(
         'input',
         'name',
         createCategoryData.name,
@@ -220,6 +228,8 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
         this.pageObjects.pagesPage.categoryGridTitle);
       if (numberOfCategories === 0) {
         await expect(numberOfCategoriesAfterFilter).to.be.equal(numberOfCategories + 1);
+      } else if (numberOfCategories === 1) {
+        await expect(numberOfCategoriesAfterFilter).to.be.equal(numberOfCategories);
       } else await expect(numberOfCategoriesAfterFilter).to.be.at.most(numberOfCategories);
       /* eslint-disable no-await-in-loop */
       for (let i = 1; i <= numberOfCategoriesAfterFilter; i++) {
@@ -235,7 +245,7 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
       const pageTitle = await this.pageObjects.pagesPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.pagesPage.pageTitle);
     });
-    it('should update the created Category', async function () {
+    it('should update the created page category', async function () {
       const textResult = await this.pageObjects.addPageCategoryPage.createEditPageCategory(editCategoryData);
       await expect(textResult).to.equal(this.pageObjects.addPageCategoryPage.successfulUpdateMessage);
     });
@@ -247,7 +257,7 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
       await expect(pageTitle).to.contains(this.pageObjects.pagesPage.pageTitle);
     });
     it('should search for the updated category and check result', async function () {
-      await this.pageObjects.pagesPage.filterPageCategories(
+      await this.pageObjects.pagesPage.filterCategories(
         'input',
         'name',
         editCategoryData.name,
@@ -256,6 +266,8 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
         this.pageObjects.pagesPage.categoryGridTitle);
       if (numberOfCategories === 0) {
         await expect(numberOfCategoriesAfterFilter).to.be.equal(numberOfCategories + 1);
+      } else if (numberOfCategories === 1) {
+        await expect(numberOfCategoriesAfterFilter).to.be.equal(numberOfCategories);
       } else await expect(numberOfCategoriesAfterFilter).to.be.at.most(numberOfCategories);
       /* eslint-disable no-await-in-loop */
       for (let i = 1; i <= numberOfCategoriesAfterFilter; i++) {
@@ -287,13 +299,15 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
     });
   });
   // 4 : Update page then go to FO to check it
-  describe('Update page created in BO and preview it in FO', async () => {
+  describe('Update Page created in BO and preview it in FO', async () => {
     it('should click on view category', async function () {
-      await this.pageObjects.pagesPage.viewCategory('1');
+      await this.pageObjects.pagesPage.clickAndWaitForNavigation(
+        this.pageObjects.pagesPage.categoriesListTableViewLink
+          .replace('%ROW', '1').replace('%COLUMN', 'actions'));
       const pageTitle = await this.pageObjects.pagesPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.pagesPage.pageTitle);
     });
-    it('should search for the created Page and check result', async function () {
+    it('should search for the created page and check result', async function () {
       await this.pageObjects.pagesPage.filterPages(
         'input',
         'meta_title',
@@ -303,6 +317,8 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
         this.pageObjects.pagesPage.pageGridTitle);
       if (numberOfPages === 0) {
         await expect(numberOfPagesAfterFilter).to.be.equal(numberOfPages + 1);
+      } else if (numberOfPages === 0) {
+        await expect(numberOfPagesAfterFilter).to.be.equal(numberOfPages);
       } else await expect(numberOfPagesAfterFilter).to.be.at.most(numberOfPages);
       /* eslint-disable no-await-in-loop */
       for (let i = 1; i <= numberOfPagesAfterFilter; i++) {
@@ -314,16 +330,18 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
       /* eslint-enable no-await-in-loop */
     });
     it('should go to edit page', async function () {
-      await this.pageObjects.pagesPage.goToEditPagePage('1');
+      await this.pageObjects.pagesPage.clickAndWaitForNavigation(this.pageObjects.pagesPage.pagesListTableEditLink
+        .replace('%ROW', '1')
+        .replace('%COLUMN', 'actions'),
+      );
       const pageTitle = await this.pageObjects.pagesPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.pagesPage.pageTitle);
     });
     it('should update the created page', async function () {
-      //this.pageObjects.addPagePage.page = this.pageObjects.pagesPage.page;
       const textResult = await this.pageObjects.addPagePage.createEditPage(editPageData);
       await expect(textResult).to.equal(this.pageObjects.pagesPage.successfulUpdateMessage);
     });
-    it('should search for the created Page and check result', async function () {
+    it('should search for the updated Page and check result', async function () {
       await this.pageObjects.pagesPage.filterPages(
         'input',
         'meta_title',
@@ -333,6 +351,8 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
         this.pageObjects.pagesPage.pageGridTitle);
       if (numberOfPages === 0) {
         await expect(numberOfPagesAfterFilter).to.be.equal(numberOfPages + 1);
+      } else if (numberOfPages === 0) {
+        await expect(numberOfPagesAfterFilter).to.be.equal(numberOfPages);
       } else await expect(numberOfPagesAfterFilter).to.be.at.most(numberOfPages);
       /* eslint-disable no-await-in-loop */
       for (let i = 1; i <= numberOfPagesAfterFilter; i++) {
@@ -344,11 +364,14 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
       /* eslint-enable no-await-in-loop */
     });
     it('should go to edit page', async function () {
-      await this.pageObjects.pagesPage.goToEditPagePage('1');
+      await this.pageObjects.pagesPage.clickAndWaitForNavigation(
+        this.pageObjects.pagesPage.pagesListTableEditLink
+          .replace('%ROW', '1').replace('%COLUMN', 'actions'),
+      );
       const pageTitle = await this.pageObjects.pagesPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.pagesPage.pageTitle);
     });
-    it('should check that the page does not exist in FO', async function () {
+    it('should click on preview button and check that the page does not exist in FO', async function () {
       page = await this.pageObjects.addPagePage.previewPage();
       this.pageObjects = await init();
       const pageTitle = await this.pageObjects.cmsPage.getTextContent(this.pageObjects.cmsPage.pageTitle);
@@ -356,10 +379,21 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
       page = await this.pageObjects.foBasePage.closePage(browser, 1);
       this.pageObjects = await init();
     });
+    it('should click on cancel button', async function () {
+      await this.pageObjects.addPagePage.clickAndWaitForNavigation(this.pageObjects.addPagePage.cancelButton);
+      const pageTitle = await this.pageObjects.pagesPage.getPageTitle();
+      await expect(pageTitle).to.contains(this.pageObjects.pagesPage.pageTitle);
+    });
   });
   // 4 : Delete Page and Category from BO
- /* describe('Delete Page and Category', async () => {
-    it('should search for the created page and check result', async function () {
+  describe('Delete Page and Category', async () => {
+    it('should click on view category', async function () {
+      await this.pageObjects.pagesPage.clickAndWaitForNavigation(this.pageObjects.pagesPage.categoriesListTableViewLink
+        .replace('%ROW', '1').replace('%COLUMN', 'actions'));
+      const pageTitle = await this.pageObjects.pagesPage.getPageTitle();
+      await expect(pageTitle).to.contains(this.pageObjects.pagesPage.pageTitle);
+    });
+    it('should search for the updated page to delete', async function () {
       await this.pageObjects.pagesPage.filterPages(
         'input',
         'meta_title',
@@ -368,9 +402,9 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
       const textColumn = await this.pageObjects.pagesPage.getTextContent(
         this.pageObjects.pagesPage.pagesListTableColumn.replace('%ROW', 1).replace('%COLUMN', 'meta_title'),
       );
-      await expect(textColumn).to.contains(createPageData.title);
+      await expect(textColumn).to.contains(editPageData.title);
     });
-    it('should delete Page', async function () {
+    it('should delete page', async function () {
       const textResult = await this.pageObjects.pagesPage.deletePage('1');
       await expect(textResult).to.equal(this.pageObjects.pagesPage.successfulDeleteMessage);
       await this.pageObjects.pagesPage.resetFilter(this.pageObjects.pagesPage.pagefilterResetButton);
@@ -393,5 +427,5 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
         this.pageObjects.pagesPage.categoryGridTitle);
       await expect(numberOfCategoriesAfterDeletion).to.be.equal(numberOfCategories);
     });
-  });*/
+  });
 });

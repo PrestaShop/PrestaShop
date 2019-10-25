@@ -1,7 +1,7 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-module.exports = class AddPageCategory extends BOBasePage {
+module.exports = class AddPage extends BOBasePage {
   constructor(page) {
     super(page);
 
@@ -39,16 +39,16 @@ module.exports = class AddPageCategory extends BOBasePage {
     else await this.page.click(this.indexation.replace('%ID', '0'));
     if (pageData.displayed) await this.page.click(this.displayed.replace('%ID', '1'));
     else await this.page.click(this.displayed.replace('%ID', '0'));
-    await Promise.all([
-      this.page.click(this.savePageButton),
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-    ]);
+    await this.clickAndWaitForNavigation(this.savePageButton);
     await this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true});
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 
+  /**
+   * Preview page in new tab
+   * @return page opened
+   */
   async previewPage() {
-    this.page = await this.openLinkWithTargetBlank(this.page, this.saveAndPreviewPageButton, false);
-    return this.page;
+    return this.openLinkWithTargetBlank(this.page, this.saveAndPreviewPageButton, false);
   }
 };
