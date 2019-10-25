@@ -117,7 +117,7 @@ abstract class AbstractDeleteSupplierHandler
                 );
             }
 
-            if (false === $this->deleteSupplierAddress($supplierId)) {
+            if (1 >= count($entity->getAssociatedShops()) && false === $this->deleteSupplierAddress($supplierId)) {
                 throw new CannotDeleteSupplierAddressException(
                     sprintf(
                         'Unable to set deleted flag for supplier with id "%s" address',
