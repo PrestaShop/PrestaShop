@@ -138,10 +138,7 @@ export default class CartEditor {
    * @param {Number} productId
    */
   removeProductFromCart(cartId, productId) {
-    $.post(this.router.generate('admin_carts_delete_product', {
-      cartId,
-      productId,
-    })).then((cartInfo) => {
+    $.post(this.router.generate('admin_carts_delete_product', {cartId, productId})).then((cartInfo) => {
       EventEmitter.emit(eventMap.productRemovedFromCart, cartInfo);
     }).catch((response) => {
       showErrorMessage(response.responseJSON.message);

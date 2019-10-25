@@ -78,7 +78,7 @@ export default class ProductRenderer {
       this._showNotFound();
       this._hideTaxWarning();
 
-      return null;
+      return;
     }
 
     this._renderFoundProducts(foundProducts);
@@ -163,7 +163,7 @@ export default class ProductRenderer {
         `<option
           value="${combination.attribute_combination_id}">
           ${combination.attribute} - ${combination.formatted_price}
-        </option>`,
+        </option>`
       );
     }
 

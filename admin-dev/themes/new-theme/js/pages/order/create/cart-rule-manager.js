@@ -39,23 +39,81 @@ export default class CartRuleManager {
   constructor() {
     this.router = new Router();
     this.$searchInput = $(createOrderMap.cartRuleSearchInput);
-    this.renderer = new CartRulesRenderer();
+    this.cartRulesRenderer = new CartRulesRenderer();
     this.cartEditor = new CartEditor();
 
+    this._initListeners();
+
     return {
-      onCartRuleSearch: () => {
+      search: () => {
         this._search();
       },
-      onCartRuleSelect: (cartRuleId, cartId) => {
-        this._addCartRuleToCart(cartRuleId, cartId);
+      stopSearching: () => {
+        this.cartRulesRenderer.hideResultsDropdown();
       },
-      onDoneSearchingCartRule: () => {
-        this.renderer.hideResultsDropdown();
+      addCartRuleToCart: (cartRuleId, cartId) => {
+        this.cartEditor.addCartRuleToCart(cartRuleId, cartId);
       },
-      onCartRuleRemove: (cartRuleId, cartId) => {
-        this._removeCartRuleFromCart(cartRuleId, cartId);
+      removeCartRuleFromCart: (cartRuleId, cartId) => {
+        this.cartEditor.removeCartRuleFromCart(cartRuleId, cartId);
       },
     };
+  }
+
+  /**
+   * Initiates event listeners for cart rule actions
+   *
+   * @private
+   */
+  _initListeners() {
+    this._onCartRuleSearch();
+    this._onAddCartRuleToCart();
+    this._onAddCartRuleToCartFailure();
+    this._onRemoveCartRuleFromCart();
+  }
+
+  /**
+   * Listens for cart rule search action
+   *
+   * @private
+   */
+  _onCartRuleSearch() {
+    EventEmitter.on(eventMap.cartRuleSearched, (cartRules) => {
+      this.cartRulesRenderer.renderSearchResults(cartRules);
+    });
+  }
+
+  /**
+   * Listens event of add cart rule to cart action
+   *
+   * @private
+   */
+  _onAddCartRuleToCart() {
+    EventEmitter.on(eventMap.cartRuleAdded, (cartInfo) => {
+      this.cartRulesRenderer.renderCartRulesBlock(cartInfo.cartRules, cartInfo.products.length === 0);
+    });
+  }
+
+  /**
+   * Listens event when add cart rule to cart fails
+   *
+   * @private
+   */
+  _onAddCartRuleToCartFailure() {
+    EventEmitter.on(eventMap.cartRuleFailedToAdd, (message) => {
+      this.cartRulesRenderer.displayErrorMessage(message);
+    });
+  }
+
+  /**
+   * Listens event for remove cart rule from cart action
+   *
+   * @private
+   */
+  _onRemoveCartRuleFromCart() {
+    EventEmitter.on(eventMap.cartRuleRemoved, (cartInfo) => {
+      this.cartRulesRenderer.renderCartRulesBlock(cartInfo.cartRules, cartInfo.products.length === 0);
+    });
   }
 
   /**
@@ -63,8 +121,7 @@ export default class CartRuleManager {
    *
    * @private
    */
-  _search() {
-    const searchPhrase = this.$searchInput.val();
+  _search(searchPhrase) {
     if (searchPhrase.length < 3) {
       return;
     }
@@ -72,44 +129,9 @@ export default class CartRuleManager {
     $.get(this.router.generate('admin_cart_rules_search'), {
       search_phrase: searchPhrase,
     }).then((cartRules) => {
-      this.renderer.renderSearchResults(cartRules);
+      EventEmitter.emit(eventMap.cartRuleSearched, cartRules);
     }).catch((e) => {
       showErrorMessage(e.responseJSON.message);
-    });
-  }
-
-  /**
-   * Adds cart rule to cart
-   *
-   * @param cartRuleId
-   * @param cartId
-   *
-   * @private
-   */
-  _addCartRuleToCart(cartRuleId, cartId) {
-    this.cartEditor.addCartRuleToCart(cartRuleId, cartId);
-
-    EventEmitter.on(eventMap.cartRuleAdded, (cartInfo) => {
-      this.renderer.renderCartRulesBlock(cartInfo.cartRules, cartInfo.products.length === 0);
-    });
-    EventEmitter.on(eventMap.cartRuleFailedToAdd, (message) => {
-      this.renderer.displayErrorMessage(message);
-    });
-  }
-
-  /**
-   * Removes cart rule from cart
-   *
-   * @param cartRuleId
-   * @param cartId
-   *
-   * @private
-   */
-  _removeCartRuleFromCart(cartRuleId, cartId) {
-    this.cartEditor.removeCartRuleFromCart(cartRuleId, cartId);
-
-    EventEmitter.on(eventMap.cartRuleRemoved, (cartInfo) => {
-      this.renderer.renderCartRulesBlock(cartInfo.cartRules, cartInfo.products.length === 0);
     });
   }
 }

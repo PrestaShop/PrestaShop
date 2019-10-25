@@ -23,8 +23,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import createOrderPageMap from './create-order-map';
+import createOrderMap from './create-order-map';
 import CustomerRenderer from './customer-renderer';
+import {EventEmitter} from '../../../components/event-emitter';
+import eventMap from './event-map';
 import Router from '../../../components/router';
 
 const $ = window.$;
@@ -37,31 +39,68 @@ export default class CustomerManager {
     this.customerId = null;
 
     this.router = new Router();
-    this.$container = $(createOrderPageMap.customerSearchBlock);
-    this.$searchInput = $(createOrderPageMap.customerSearchInput);
-    this.$customerSearchResultBlock = $(createOrderPageMap.customerSearchResultsBlock);
-    this.renderer = new CustomerRenderer();
+    this.$container = $(createOrderMap.customerSearchBlock);
+    this.$searchInput = $(createOrderMap.customerSearchInput);
+    this.$customerSearchResultBlock = $(createOrderMap.customerSearchResultsBlock);
+    this.customerRenderer = new CustomerRenderer();
+
+    this._initListeners();
 
     return {
-      onCustomerSearch: () => {
-        this._search();
-      },
-      onCustomerSelect: event => this._selectCustomer(event),
-      onCustomerChange: () => {
-        this.renderer.showCustomerSearch();
-      },
-      loadCustomerCarts: (currentCartId) => {
-        this._loadCustomerCarts(currentCartId);
-      },
-      loadCustomerOrders: () => {
-        this._loadCustomerOrders();
-      },
+      search: searchPhrase => this._search(searchPhrase),
+      selectCustomer: event => this._selectCustomer(event),
+      loadCustomerCarts: currentCartId => this._loadCustomerCarts(currentCartId),
+      loadCustomerOrders: () => this._loadCustomerOrders(),
     };
   }
 
   /**
-   * Gets customer carts
-   * After Request is complete, emits event providing carts list
+   * Initializes event listeners
+   *
+   * @private
+   */
+  _initListeners() {
+    this.$container.on('click', createOrderMap.changeCustomerBtn, () => this._changeCustomer());
+    this._onCustomerSearch();
+    this._onCustomerSelect();
+  }
+
+  /**
+   * Listens for customer search event
+   *
+   * @private
+   */
+  _onCustomerSearch() {
+    EventEmitter.on(eventMap.customerSearched, (response) => {
+      this.customerRenderer.renderSearchResults(response.customers);
+    });
+  }
+
+  /**
+   * Listens for customer select event
+   *
+   * @private
+   */
+  _onCustomerSelect() {
+    EventEmitter.on(eventMap.customerSelected, (event) => {
+      const $chooseBtn = $(event.currentTarget);
+      this.customerId = $chooseBtn.data('customer-id');
+
+      this.customerRenderer.displaySelectedCustomerBlock($chooseBtn);
+    });
+  }
+
+  /**
+   * Handles use case when customer is changed
+   *
+   * @private
+   */
+  _changeCustomer() {
+    this.customerRenderer.showCustomerSearch();
+  }
+
+  /**
+   * Loads customer carts list
    *
    * @param currentCartId
    */
@@ -69,21 +108,20 @@ export default class CustomerManager {
     const customerId = this.customerId;
 
     $.get(this.router.generate('admin_customers_carts', {customerId})).then((response) => {
-      this.renderer.renderCarts(response.carts, currentCartId);
+      this.customerRenderer.renderCarts(response.carts, currentCartId);
     }).catch((e) => {
       showErrorMessage(e.responseJSON.message);
     });
   }
 
   /**
-   * Gets customer carts
-   * After Request is complete, emits event providing orders list
+   * Loads customer orders list
    */
   _loadCustomerOrders() {
     const customerId = this.customerId;
 
     $.get(this.router.generate('admin_customers_orders', {customerId})).then((response) => {
-      this.renderer.renderOrders(response.orders);
+      this.customerRenderer.renderOrders(response.orders);
     }).catch((e) => {
       showErrorMessage(e.responseJSON.message);
     });
@@ -95,22 +133,17 @@ export default class CustomerManager {
    * @return {Number}
    */
   _selectCustomer(chooseCustomerEvent) {
-    const $chooseBtn = $(chooseCustomerEvent.currentTarget);
-    this.customerId = $chooseBtn.data('customer-id');
-
-    this.renderer.displaySelectedCustomerBlock($chooseBtn);
+    EventEmitter.emit(eventMap.customerSelected, chooseCustomerEvent);
 
     return this.customerId;
   }
 
   /**
    * Searches for customers
-   *@todo: fix showing not found customers and rerender after change customer
+   * @todo: fix showing not found customers and rerender after change customer
    * @private
    */
-  _search() {
-    const searchPhrase = this.$searchInput.val();
-
+  _search(searchPhrase) {
     if (searchPhrase.length < 3) {
       return;
     }
@@ -118,7 +151,9 @@ export default class CustomerManager {
     $.get(this.router.generate('admin_customers_search'), {
       customer_search: searchPhrase,
     }).then((response) => {
-      this.renderer.renderSearchResults(response.customers);
+      EventEmitter.emit(eventMap.customerSearched, response);
+    }).catch((response) => {
+      showErrorMessage(response.responseJSON.message);
     });
   }
 }

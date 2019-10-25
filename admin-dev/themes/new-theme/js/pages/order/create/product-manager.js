@@ -41,37 +41,96 @@ export default class ProductManager {
     this.selectedProductId = null;
     this.selectedCombinationId = null;
 
-    this.renderer = new ProductRenderer();
+    this.productRenderer = new ProductRenderer();
     this.router = new Router();
     this.cartEditor = new CartEditor();
 
-    this._initEvents();
+    this._initListeners();
 
     return {
-      onAddProductToCart: (cartId) => {
-        this._addProductToCart(cartId);
+      search: (searchPhrase) => {
+        this._search(searchPhrase);
       },
-      onRemoveProductFromCart: (cartId, productId) => {
-        this._removeProductFromCart(cartId, productId);
+      addProductToCart: (cartId) => {
+        this.cartEditor.addProduct(cartId, this._getProductData(cartId));
+      },
+      removeProductFromCart: (cartId, productId) => {
+        this.cartEditor.removeProductFromCart(cartId, productId);
       }
     };
   }
 
   /**
-   * Initialize page's events.
+   * Initializes event listeners
    *
    * @private
    */
-  _initEvents() {
-    $(createOrderMap.productSearch).on('input', event => this._search(event));
-    $(createOrderMap.productSelect).on('change', (event) => {
-      const productId = Number($(event.currentTarget).find(':selected').val());
-      this._selectProduct(productId);
+  _initListeners() {
+    $(createOrderMap.productSelect).on('change', e => this._initProductSelect(e));
+    $(createOrderMap.combinationsSelect).on('change', e => this._initCombinationSelect(e));
+
+    this._onProductSearch();
+    this._onAddProductToCart();
+    this._onRemoveProductFromCart();
+  }
+
+  /**
+   * Listens for product search event
+   *
+   * @private
+   */
+  _onProductSearch() {
+    EventEmitter.on(eventMap.productSearched, (response) => {
+      this.products = JSON.parse(response);
+      this.productRenderer.renderSearchResults(this.products);
+      this._selectFirstResult();
     });
-    $(createOrderMap.combinationsSelect).on('change', (event) => {
-      const combinationId = Number($(event.currentTarget).find(':selected').val());
-      this._selectCombination(combinationId);
+  }
+
+  /**
+   * Listens for add product to cart event
+   *
+   * @private
+   */
+  _onAddProductToCart() {
+    EventEmitter.on(eventMap.productAddedToCart, (cartInfo) => {
+      EventEmitter.emit(eventMap.cartLoaded, cartInfo);
     });
+  }
+
+  /**
+   * Listens for remove product from cart event
+   *
+   * @private
+   */
+  _onRemoveProductFromCart() {
+    EventEmitter.on(eventMap.productRemovedFromCart, (cartInfo) => {
+      EventEmitter.emit(eventMap.cartLoaded, cartInfo);
+    });
+  }
+
+  /**
+   * Initializes product select
+   *
+   * @param event
+   *
+   * @private
+   */
+  _initProductSelect(event) {
+    const productId = Number($(event.currentTarget).find(':selected').val());
+    this._selectProduct(productId);
+  }
+
+  /**
+   * Initializes combination select
+   *
+   * @param event
+   *
+   * @private
+   */
+  _initCombinationSelect(event) {
+    const combinationId = Number($(event.currentTarget).find(':selected').val());
+    this._selectCombination(combinationId);
   }
 
   /**
@@ -79,21 +138,17 @@ export default class ProductManager {
    *
    * @private
    */
-  _search(event) {
+  _search(searchPhrase) {
     const minSearchPhraseLength = 3;
-    const $productSearchInput = $(event.currentTarget);
-    const name = $productSearchInput.val();
 
-    if (name.length < minSearchPhraseLength) {
+    if (searchPhrase.length < minSearchPhraseLength) {
       return;
     }
 
     $.get(this.router.generate('admin_products_search'), {
-      search_phrase: name,
+      search_phrase: searchPhrase,
     }).then((response) => {
-      this.products = JSON.parse(response);
-      this.renderer.renderSearchResults(this.products);
-      this._selectFirstResult();
+      EventEmitter.emit(eventMap.productSearched, response);
     }).catch((response) => {
       if (typeof response.responseJSON !== 'undefined') {
         showErrorMessage(response.responseJSON.message);
@@ -127,7 +182,7 @@ export default class ProductManager {
     this.selectedProductId = productId;
     const product = this.products[productId];
 
-    this.renderer.renderProductMetadata(product);
+    this.productRenderer.renderProductMetadata(product);
 
     // if product has combinations select the first else leave it null
     if (product.combinations.length !== 0) {
@@ -148,7 +203,7 @@ export default class ProductManager {
     const combination = this.products[this.selectedProductId].combinations[combinationId];
 
     this.selectedCombinationId = combinationId;
-    this.renderer.renderStock(combination.stock);
+    this.productRenderer.renderStock(combination.stock);
 
     return combination;
   }
@@ -169,33 +224,6 @@ export default class ProductManager {
    */
   _unsetProduct() {
     this.selectedProductId = null;
-  }
-
-  /**
-   * Adds selected product to current cart
-   *
-   * @private
-   */
-  _addProductToCart(cartId) {
-    this.cartEditor.addProduct(cartId, this._getProductData(cartId));
-    EventEmitter.on(eventMap.productAddedToCart, (cartInfo) => {
-      EventEmitter.emit(eventMap.cartLoaded, cartInfo);
-    });
-  }
-
-  /**
-   * Removes product from cart
-   *
-   * @param {Number} cartId
-   * @param {Number} productId
-   *
-   * @private
-   */
-  _removeProductFromCart(cartId, productId) {
-    this.cartEditor.removeProductFromCart(productId, productId);
-    EventEmitter.on(eventMap.productRemovedFromCart, (cartInfo) => {
-      EventEmitter.emit(eventMap.cartLoaded, cartInfo);
-    });
   }
 
   /**
