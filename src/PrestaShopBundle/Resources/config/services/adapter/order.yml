@@ -133,13 +133,3 @@ services:
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderPreview'
-
-  prestashop.adapter.order.query_handler.search_products_for_order_creation:
-    class: PrestaShop\PrestaShop\Adapter\Order\QueryHandler\SearchProductsForOrderCreationHandler
-    arguments:
-      - '@prestashop.adapter.legacy.context'
-      - '@prestashop.core.localization.locale.repository'
-      - "@=service('prestashop.adapter.legacy.context').getContext().language.getLocale()"
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Order\Query\SearchProductsForOrderCreation

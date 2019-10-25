@@ -180,7 +180,7 @@ class CartController extends FrameworkBundleAdminController
     public function editCarrierAction(Request $request, int $cartId): JsonResponse
     {
         try {
-            $carrierId = (int) $request->request->get('carrier_id');
+            $carrierId = (int) $request->request->get('carrierId');
             $this->getCommandBus()->handle(new UpdateCartCarrierCommand(
                 $cartId,
                 $carrierId
@@ -208,7 +208,7 @@ class CartController extends FrameworkBundleAdminController
         try {
             $this->getCommandBus()->handle(new SetFreeShippingToCartCommand(
                 $cartId,
-                $request->request->getBoolean('free_shipping')
+                $request->request->getBoolean('freeShipping')
             ));
 
             return $this->json($this->getCartInfo($cartId));
@@ -221,6 +221,8 @@ class CartController extends FrameworkBundleAdminController
     }
 
     /**
+     * Adds cart rule to cart
+     *
      * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
      *
      * @param Request $request
@@ -228,9 +230,9 @@ class CartController extends FrameworkBundleAdminController
      *
      * @return JsonResponse
      */
-    public function addCartRuleToCartAction(Request $request, int $cartId): JsonResponse
+    public function addCartRuleAction(Request $request, int $cartId): JsonResponse
     {
-        $cartRuleId = $request->request->getInt('cart_rule_id');
+        $cartRuleId = $request->request->getInt('cartRuleId');
         try {
             $this->getCommandBus()->handle(new AddCartRuleToCartCommand($cartId, $cartRuleId));
 
@@ -244,6 +246,8 @@ class CartController extends FrameworkBundleAdminController
     }
 
     /**
+     * Deletes cart rule from cart
+     *
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
      *
      * @param int $cartId
@@ -251,7 +255,7 @@ class CartController extends FrameworkBundleAdminController
      *
      * @return JsonResponse
      */
-    public function removeCartRuleFromCartAction(int $cartId, int $cartRuleId)
+    public function deleteCartRuleAction(int $cartId, int $cartRuleId)
     {
         try {
             $this->getCommandBus()->handle(new RemoveCartRuleFromCartCommand($cartId, $cartRuleId));
@@ -295,15 +299,24 @@ class CartController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
      *
+     * @param Request $request
      * @param int $cartId
-     * @param int $productId
      *
      * @return JsonResponse
      */
-    public function deleteProductAction(int $cartId, int $productId): JsonResponse
+    public function deleteProductAction(Request $request, int $cartId): JsonResponse
     {
         try {
-            $this->getCommandBus()->handle(new RemoveProductFromCartCommand($cartId, $productId));
+            $productId = $request->request->getInt('productId');
+            $attributeId = $request->request->getInt('attributeId');
+            $customizationId = $request->request->getInt('customizationId');
+
+            $this->getCommandBus()->handle(new RemoveProductFromCartCommand(
+                $cartId,
+                $productId,
+                $attributeId,
+                $customizationId
+            ));
 
             return $this->json($this->getCartInfo($cartId));
         } catch (Exception $e) {
@@ -345,11 +358,12 @@ class CartController extends FrameworkBundleAdminController
      */
     private function getAddProductToCartCommand(Request $request, int $cartId): UpdateProductQuantityInCartCommand
     {
-        $productId = $request->request->getInt('product_id');
+        $productId = $request->request->getInt('productId');
         $quantity = $request->request->getInt('quantity');
-        $combinationId = $request->request->getInt('combination_id');
+        $combinationId = $request->request->getInt('combinationId');
 
-        if ($customizations = $request->request->get('customization')) {
+        if ($customizations = $request->request->get('customizations')) {
+            //@todo: return saved customization id and use it in proceeding command
             $this->getCommandBus()->handle(new AddCustomizationFieldsCommand($cartId, $productId, $customizations));
             //@todo: Add updateCustomizationsCommand
             //check AdminCartsController::jaxProcessUpdateCustomizationFields

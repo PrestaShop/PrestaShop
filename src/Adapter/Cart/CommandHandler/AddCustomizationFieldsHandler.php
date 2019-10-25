@@ -55,17 +55,18 @@ final class AddCustomizationFieldsHandler extends AbstractCartHandler implements
         foreach ($customizationFields as $customizationField) {
             $customizationId = (int) $customizationField['id_customization_field'];
             //@todo validation
-            if (isset($customizations[$customizationId])) {
-                if ($customizationField['type'] == Product::CUSTOMIZE_TEXTFIELD) {
-                    $cart->addTextFieldToProduct(
-                        $productId,
-                        $customizationId,
-                        Product::CUSTOMIZE_TEXTFIELD,
-                        $customizations[$customizationId]
-                    );
-                    continue;
-                }
+            if (!isset($customizations[$customizationId])) {
+                continue;
+            }
 
+            if ($customizationField['type'] == Product::CUSTOMIZE_TEXTFIELD) {
+                $cart->addTextFieldToProduct(
+                    $productId,
+                    $customizationId,
+                    Product::CUSTOMIZE_TEXTFIELD,
+                    $customizations[$customizationId]
+                );
+            } else {
                 //@todo: file validation
                 $cart->addPictureToProduct(
                     $productId,

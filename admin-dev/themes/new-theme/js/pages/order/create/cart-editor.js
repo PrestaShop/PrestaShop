@@ -58,7 +58,7 @@ export default class CartEditor {
    */
   changeDeliveryOption(cartId, value) {
     $.post(this.router.generate('admin_carts_edit_carrier', {cartId}), {
-      carrier_id: value,
+      carrierId: value,
     }).then((cartInfo) => {
       EventEmitter.emit(eventMap.cartDeliveryOptionChanged, cartInfo);
     });
@@ -72,7 +72,7 @@ export default class CartEditor {
    */
   setFreeShipping(cartId, value) {
     $.post(this.router.generate('admin_carts_set_free_shipping', {cartId}), {
-      free_shipping: value,
+      freeShipping: value,
     }).then((cartInfo) => {
       EventEmitter.emit(eventMap.cartFreeShippingSet, cartInfo);
     });
@@ -86,7 +86,7 @@ export default class CartEditor {
    */
   addCartRuleToCart(cartRuleId, cartId) {
     $.post(this.router.generate('admin_carts_add_cart_rule', {cartId}), {
-      cart_rule_id: cartRuleId,
+      cartRuleId,
     }).then((cartInfo) => {
       EventEmitter.emit(eventMap.cartRuleAdded, cartInfo);
     }).catch((response) => {
@@ -123,7 +123,6 @@ export default class CartEditor {
       data: product,
       processData: false,
       contentType: false,
-      cache: false,
     }).then((cartInfo) => {
       EventEmitter.emit(eventMap.productAddedToCart, cartInfo);
     }).catch((response) => {
@@ -135,10 +134,14 @@ export default class CartEditor {
    * Removes product from cart
    *
    * @param {Number} cartId
-   * @param {Number} productId
+   * @param {Object} product
    */
-  removeProductFromCart(cartId, productId) {
-    $.post(this.router.generate('admin_carts_delete_product', {cartId, productId})).then((cartInfo) => {
+  removeProductFromCart(cartId, product) {
+    $.post(this.router.generate('admin_carts_delete_product', {cartId}), {
+      productId: product.productId,
+      attributeId: product.attributeId,
+      customizationId: product.customizationId,
+    }).then((cartInfo) => {
       EventEmitter.emit(eventMap.productRemovedFromCart, cartInfo);
     }).catch((response) => {
       showErrorMessage(response.responseJSON.message);

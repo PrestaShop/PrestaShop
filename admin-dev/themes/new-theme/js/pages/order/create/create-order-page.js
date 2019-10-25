@@ -85,8 +85,6 @@ export default class CreateOrderPage {
    * @private
    */
   _initCartEditing() {
-    this.$container.on('change', createOrderMap.addressSelect, () => this._changeCartAddresses());
-
     this.$container.on('change', createOrderMap.deliveryOptionSelect, e =>
       this.cartEditor.changeDeliveryOption(this.cartId, e.currentTarget.value)
     );
@@ -99,10 +97,8 @@ export default class CreateOrderPage {
       this.productManager.addProductToCart(this.cartId)
     );
 
-    this.$container.on('click', createOrderMap.productRemoveBtn, (e) => {
-      const productId = Number($(e.currentTarget).data('product-id'));
-      this.productManager.removeProductFromCart(this.cartId, productId);
-    });
+    this.$container.on('change', createOrderMap.addressSelect, () => this._changeCartAddresses());
+    this.$container.on('click', createOrderMap.productRemoveBtn, e => this._initProductRemoveFromCart(e));
 
     this._addCartRuleToCart();
     this._removeCartRuleFromCart();
@@ -255,6 +251,23 @@ export default class CreateOrderPage {
   }
 
   /**
+   * Inits product removing from cart
+   *
+   * @param event
+   *
+   * @private
+   */
+  _initProductRemoveFromCart(event) {
+    const product = {
+      productId: $(event.currentTarget).data('product-id'),
+      attributeId: $(event.currentTarget).data('attribute-id'),
+      customizationId: $(event.currentTarget).data('customization-id'),
+    };
+
+    this.productManager.removeProductFromCart(this.cartId, product);
+  }
+
+  /**
    * Renders cart summary on the page
    *
    * @param {Object} cartInfo
@@ -279,8 +292,8 @@ export default class CreateOrderPage {
    */
   _changeCartAddresses() {
     const addresses = {
-      delivery_address_id: $(createOrderMap.deliveryAddressSelect).val(),
-      invoice_address_id: $(createOrderMap.invoiceAddressSelect).val(),
+      deliveryAddressId: $(createOrderMap.deliveryAddressSelect).val(),
+      invoiceAddressId: $(createOrderMap.invoiceAddressSelect).val(),
     };
 
     this.cartEditor.changeCartAddresses(this.cartId, addresses);

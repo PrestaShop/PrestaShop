@@ -26,16 +26,12 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler\SearchProductsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductCombination;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductCustomizationField;
-use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
-use PrestaShop\PrestaShop\Core\Localization\Locale;
-use PrestaShop\PrestaShop\Core\Localization\Locale\RepositoryInterface;
-use PrestaShopException;
+use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
 use Product;
 
 /**
@@ -46,45 +42,45 @@ final class SearchProductsHandler implements SearchProductsHandlerInterface
     /**
      * @var int
      */
-    private $langId;
+    private $contextLangId;
 
     /**
      * @var string
      */
-    private $currencyCode;
+    private $contextCurrencyCode;
 
     /**
-     * @var RepositoryInterface
+     * @var LocaleInterface
      */
-    private $localeRepository;
+    private $contextLocale;
 
     /**
-     * @var string
+     * @param int $contextLangId
+     * @param string $contextCurrencyCode
+     * @param LocaleInterface $contextLocale
      */
-    private $locale;
-
-    /**
-     * @param LegacyContext $context
-     * @param RepositoryInterface $localeRepository
-     * @param string $locale
-     */
-    public function __construct(LegacyContext $context, RepositoryInterface $localeRepository, string $locale)
+    public function __construct(int $contextLangId, string $contextCurrencyCode, LocaleInterface $contextLocale)
     {
-        $this->langId = $context->getLanguage()->getId();
-        $this->currencyCode = $context->getContext()->currency->iso_code;
-        $this->localeRepository = $localeRepository;
-        $this->locale = $locale;
+        $this->contextLangId = $contextLangId;
+        $this->contextCurrencyCode = $contextCurrencyCode;
+        $this->contextLocale = $contextLocale;
     }
 
     /**
      * {@inheritdoc}
      *
-     * @throws LocalizationException
-     * @throws PrestaShopException
+     * @param SearchProducts $query
+     *
+     * @return array
      */
     public function handle(SearchProducts $query): array
     {
-        $products = Product::searchByName($this->langId, $query->getPhrase(), null, $query->getResultsLimit());
+        $products = Product::searchByName(
+            $this->contextLangId,
+            $query->getPhrase(),
+            null,
+            $query->getResultsLimit()
+        );
 
         $foundProducts = [];
 
@@ -102,21 +98,17 @@ final class SearchProductsHandler implements SearchProductsHandlerInterface
      * @param Product $product
      *
      * @return FoundProduct
-     *
-     * @throws LocalizationException
      */
     private function createFoundProductFromLegacy(Product $product): FoundProduct
     {
         //@todo: sort products alphabetically
 
-        /** @var Locale $locale */
-        $locale = $this->localeRepository->getLocale($this->locale);
         $priceTaxExcluded = Product::getPriceStatic($product->id, false);
 
         $foundProduct = new FoundProduct(
             $product->id,
-            $product->name[$this->langId],
-            $locale->formatPrice($priceTaxExcluded, $this->currencyCode),
+            $product->name[$this->contextLangId],
+            $this->contextLocale->formatPrice($priceTaxExcluded, $this->contextCurrencyCode),
             Product::getQuantity($product->id),
             $this->getProductCombinations($product),
             $this->getProductCustomizationFields($product)
@@ -139,10 +131,10 @@ final class SearchProductsHandler implements SearchProductsHandlerInterface
             foreach ($fields as $typeId => $typeFields) {
                 foreach ($typeFields as $field) {
                     $customizationField = new ProductCustomizationField(
-                        (int) $field[$this->langId]['id_customization_field'],
+                        (int) $field[$this->contextLangId]['id_customization_field'],
                         (int) $typeId,
-                        $field[$this->langId]['name'],
-                        (bool) $field[$this->langId]['required']
+                        $field[$this->contextLangId]['name'],
+                        (bool) $field[$this->contextLangId]['required']
                     );
 
                     $customizationFields[$customizationField->getCustomizationFieldId()] = $customizationField;
@@ -157,8 +149,6 @@ final class SearchProductsHandler implements SearchProductsHandlerInterface
      * @param Product $product
      *
      * @return ProductCombination[]
-     *
-     * @throws LocalizationException
      */
     private function getProductCombinations(Product $product): array
     {
@@ -166,9 +156,6 @@ final class SearchProductsHandler implements SearchProductsHandlerInterface
         $combinations = $product->getAttributeCombinations();
 
         if (false !== $combinations) {
-            /** @var Locale $locale */
-            $locale = $this->localeRepository->getLocale($this->locale);
-
             foreach ($combinations as $combination) {
                 $productAttributeId = (int) $combination['id_product_attribute'];
                 $attribute = $combination['attribute_name'];
@@ -184,7 +171,7 @@ final class SearchProductsHandler implements SearchProductsHandlerInterface
                     $productAttributeId,
                     $attribute,
                     $combination['quantity'],
-                    $locale->formatPrice($priceTaxExcluded, $this->currencyCode)
+                    $this->contextLocale->formatPrice($priceTaxExcluded, $this->contextCurrencyCode)
                 );
 
                 $productCombinations[$productCombination->getAttributeCombinationId()] = $productCombination;

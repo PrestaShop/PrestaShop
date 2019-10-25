@@ -48,15 +48,9 @@ export default class ProductManager {
     this._initListeners();
 
     return {
-      search: (searchPhrase) => {
-        this._search(searchPhrase);
-      },
-      addProductToCart: (cartId) => {
-        this.cartEditor.addProduct(cartId, this._getProductData(cartId));
-      },
-      removeProductFromCart: (cartId, productId) => {
-        this.cartEditor.removeProductFromCart(cartId, productId);
-      }
+      search: searchPhrase => this._search(searchPhrase),
+      addProductToCart: cartId => this.cartEditor.addProduct(cartId, this._getProductData()),
+      removeProductFromCart: (cartId, product) => this.cartEditor.removeProductFromCart(cartId, product),
     };
   }
 
@@ -232,13 +226,12 @@ export default class ProductManager {
    * @returns {FormData}
    * @private
    */
-  _getProductData(cartId) {
+  _getProductData() {
     const formData = new FormData();
 
-    formData.append('cart_id', cartId);
-    formData.append('product_id', this.selectedProductId);
+    formData.append('productId', this.selectedProductId);
     formData.append('quantity', $(createOrderMap.quantityInput).val());
-    formData.append('combination_id', this.selectedCombinationId);
+    formData.append('combinationId', this.selectedCombinationId);
 
     this._getCustomFieldsData(formData);
 

@@ -45,18 +45,10 @@ export default class CartRuleManager {
     this._initListeners();
 
     return {
-      search: () => {
-        this._search();
-      },
-      stopSearching: () => {
-        this.cartRulesRenderer.hideResultsDropdown();
-      },
-      addCartRuleToCart: (cartRuleId, cartId) => {
-        this.cartEditor.addCartRuleToCart(cartRuleId, cartId);
-      },
-      removeCartRuleFromCart: (cartRuleId, cartId) => {
-        this.cartEditor.removeCartRuleFromCart(cartRuleId, cartId);
-      },
+      search: () => this._search(),
+      stopSearching: () => this.cartRulesRenderer.hideResultsDropdown(),
+      addCartRuleToCart: (cartRuleId, cartId) => this.cartEditor.addCartRuleToCart(cartRuleId, cartId),
+      removeCartRuleFromCart: (cartRuleId, cartId) => this.cartEditor.removeCartRuleFromCart(cartRuleId, cartId),
     };
   }
 

@@ -59,6 +59,8 @@ export default class ProductRenderer {
       $template.find(createOrderMap.productUnitPriceInput).text(product.unitPrice);
       $template.find(createOrderMap.productTotalPriceField).text(product.price);
       $template.find(createOrderMap.productRemoveBtn).data('product-id', product.productId);
+      $template.find(createOrderMap.productRemoveBtn).data('attribute-id', product.attributeId);
+      $template.find(createOrderMap.productRemoveBtn).data('customization-id', product.customizationId);
 
       this.$productsTable.find('tbody').append($template);
     }
@@ -200,9 +202,9 @@ export default class ProductRenderer {
       const $template = templateTypeMap[customField.type].clone();
 
       $template.find(createOrderMap.productCustomInput)
-        .attr('name', `customization[${customField.customization_field_id}]`);
+        .attr('name', `customizations[${customField.customization_field_id}]`);
       $template.find(createOrderMap.productCustomInputLabel)
-        .attr('for', `customization[${customField.customization_field_id}]`)
+        .attr('for', `customizations[${customField.customization_field_id}]`)
         .text(customField.name);
 
       $customFieldsContainer.append($template);

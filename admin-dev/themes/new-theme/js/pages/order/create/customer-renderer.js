@@ -54,8 +54,8 @@ export default class CustomerRenderer {
       const customerResult = foundCustomers[customerId];
       const customer = {
         id: customerId,
-        first_name: customerResult.firstname,
-        last_name: customerResult.lastname,
+        firstName: customerResult.firstname,
+        lastName: customerResult.lastname,
         email: customerResult.email,
         birthday: customerResult.birthday !== '0000-00-00' ? customerResult.birthday : ' ',
       };
@@ -173,7 +173,7 @@ export default class CustomerRenderer {
     const $customerSearchResultTemplate = $($(createOrderMap.customerSearchResultTemplate).html());
     const $template = $customerSearchResultTemplate.clone();
 
-    $template.find(createOrderMap.customerSearchResultName).text(`${customer.first_name} ${customer.last_name}`);
+    $template.find(createOrderMap.customerSearchResultName).text(`${customer.firstName} ${customer.lastName}`);
     $template.find(createOrderMap.customerSearchResultEmail).text(customer.email);
     $template.find(createOrderMap.customerSearchResultId).text(customer.id);
     $template.find(createOrderMap.customerSearchResultBirthday).text(customer.birthday);
