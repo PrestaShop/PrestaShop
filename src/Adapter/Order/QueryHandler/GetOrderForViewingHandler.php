@@ -601,7 +601,6 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
                     $price = Tools::displayPrice($item['shipping_cost_tax_excl'], $currency);
                 }
 
-
                 $trackingUrl = null;
                 $trackingNumber = $item['tracking_number'];
 
