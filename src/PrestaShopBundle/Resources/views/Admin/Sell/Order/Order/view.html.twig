@@ -54,6 +54,10 @@
     </div>
   </div>
 
+  {% block display_admin_order_hook %}
+    {{ renderhook('displayAdminOrder', {'id_order': orderForViewing.id}) }}
+  {% endblock %}
+
   {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/Modal/add_order_discount_modal.html.twig' %}
   {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/Modal/add_product_modal.html.twig' %}
   {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/Modal/update_product_modal.html.twig' %}
