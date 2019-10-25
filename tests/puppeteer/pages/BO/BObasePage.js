@@ -25,11 +25,16 @@ module.exports = class BOBasePage extends CommonPage {
     this.ordersParentLink = 'li#subtab-AdminParentOrders';
     this.ordersLink = '#subtab-AdminOrders';
 
+    // Catalog
+    // Products
     this.productsParentLink = 'li#subtab-AdminCatalog';
     this.productsLink = '#subtab-AdminProducts';
-
+    // Categories
     this.categoriesLink = '#subtab-AdminCategories';
+    // Brands And Suppliers
+    this.brandsAndSuppliersLink = '#subtab-AdminParentManufacturers';
 
+    // Customers
     this.customersParentLink = 'li#subtab-AdminParentCustomer';
     this.customersLink = '#subtab-AdminCustomers';
 
