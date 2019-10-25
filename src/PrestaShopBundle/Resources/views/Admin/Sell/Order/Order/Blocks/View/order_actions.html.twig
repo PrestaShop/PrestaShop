@@ -69,4 +69,6 @@
       </div>
     </form>
   {% endif %}
+
+  {{ renderhook('displayBackOfficeOrderActions', {'id_order': orderForViewing.id}) }}
 </div>
