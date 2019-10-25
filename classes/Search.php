@@ -107,6 +107,7 @@ class SearchCore
     const PS_SEARCH_ORDINATE_MAX = -1;
     const PS_SEARCH_ABSCISSA_MIN = 0.5;
     const PS_SEARCH_ABSCISSA_MAX = 2;
+    const PS_DISTANCE_MAX = 8;
 
     public static function extractKeyWords($string, $id_lang, $indexation = false, $iso_code = false)
     {
@@ -255,7 +256,7 @@ class SearchCore
                             LEFT JOIN ' . _DB_PREFIX_ . 'search_index si ON sw.id_word = si.id_word
                             WHERE sw.id_lang = ' . (int) $id_lang . '
                                 AND sw.id_shop = ' . $context->shop->id . '
-                                AND sw.word LIKE';
+                                AND sw.word LIKE ';
 
                 while (!($result = $db->executeS($sql . "'" . $sql_param_search . "';", true, false))) {
                     if (!$psFuzzySearch ||
@@ -1004,7 +1005,7 @@ class SearchCore
             self::$targetLengthMin = self::$targetLengthMax = (int) (strlen($queryString));
         } else {
             /* This part of code could be see like an auto-scale.
-            *  Of course, more the contante ps_search_word table is elevate, more server resource is needed.
+            *  Of course, more words in ps_search_word table is elevate, more server resource is needed.
             *  So, we need an algorythm to reduce the server load depending the DB size.
             *  Here will be calculated ranges of target length depending the ps_search_word table size.
             *  If ps_search_word table size tends to PS_SEARCH_MAX_WORDS_IN_TABLE, $coefMax and $coefMin will tend to 1.
@@ -1041,7 +1042,7 @@ class SearchCore
             }
         }
 
-        $sql = 'SELECT sw.`word`, SUM(weight) as weight
+        $sql = 'SELECT null as levenshtein, -SUM(weight) as weight, sw.`word`
                     FROM `' . _DB_PREFIX_ . 'search_word` sw
                     LEFT JOIN `' . _DB_PREFIX_ . 'search_index` si ON (sw.`id_word` = si.`id_word`)
                     WHERE sw.`id_lang` = ' . (int) $context->language->id . '
@@ -1051,22 +1052,17 @@ class SearchCore
                     GROUP BY sw.`word`;';
 
         $selectedWords = Db::getInstance()->executeS($sql);
-        $closestWord = array_reduce($selectedWords, function ($a, $b) use ($queryString, &$distance /* Cache */) {
-            if (!isset($distance[$a['word']])) {
-                $distance[$a['word']] = levenshtein($a['word'], $queryString);
-            }
 
-            if (!isset($distance[$b['word']])) {
-                $distance[$b['word']] = levenshtein($b['word'], $queryString);
-            }
+        $closestWord = array_reduce($selectedWords, static function ($a, $b) use ($queryString) {
+            /* The 'null as levenshtein' column is use as cache
+            *  if $b win, next loop, it will be $a. So, no need to assign $a['levenshtein']*/
+            $b['levenshtein'] = levenshtein($b['word'], $queryString);
 
-            if ($distance[$a['word']] == $distance[$b['word']]) {
-                return $a['weight'] > $b['weight'] ? $a : $b;
-            }
+            /* The array comparaison will follow the order keys as follow: levenshtein, weight, word
+            *  So, were looking for the smaller levenshtein distance, then the smallest weight (-SUM(weight))*/
+            return $a < $b ? $a : $b;
+        }, array('word' => 'initial', 'weight' => 0, 'levenshtein' => 100));
 
-            return $distance[$a['word']] < $distance[$b['word']] ? $a : $b;
-        }, array('word' => 'initial', 'weight' => 0))['word'];
-
-        return $closestWord == 'initial' ? '' : $closestWord;
+        return $closestWord['levenshtein'] < static::PS_DISTANCE_MAX ? $closestWord['word'] : '';
     }
 }
