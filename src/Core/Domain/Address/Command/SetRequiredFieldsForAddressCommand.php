@@ -26,9 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Address\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Address\Exception\InvalidAddressRequiredFieldsException;
-use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\RequiredFields;
-
 /**
  * Sets required fields for new address when adding
  */
@@ -41,8 +38,6 @@ class SetRequiredFieldsForAddressCommand
 
     /**
      * @param string[] $requiredFields
-     *
-     * @throws InvalidAddressRequiredFieldsException
      */
     public function __construct(array $requiredFields)
     {
@@ -63,8 +58,6 @@ class SetRequiredFieldsForAddressCommand
      * Check that all provided fields are allowed.
      *
      * @param string[] $requiredFields
-     *
-     * @throws InvalidAddressRequiredFieldsException
      */
     private function assertContainsOnlyAllowedFields(array $requiredFields)
     {
@@ -72,13 +65,6 @@ class SetRequiredFieldsForAddressCommand
             return;
         }
 
-        if (!empty(array_diff($requiredFields, RequiredFields::ALLOWED_REQUIRED_FIELDS))) {
-            throw new InvalidAddressRequiredFieldsException(
-                sprintf(
-                    'Invalid address required fields provided. Allowed fields are: %s',
-                    implode(',', RequiredFields::ALLOWED_REQUIRED_FIELDS)
-                )
-            );
-        }
+        //TODO add dynamic field validation
     }
 }
