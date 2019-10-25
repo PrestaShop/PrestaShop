@@ -37,6 +37,7 @@ describe('Filter And Quick Edit brands', async () => {
   });
   // Login into BO and go to brands page
   loginCommon.loginBO();
+
   it('should go to brands page', async function () {
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.productsParentLink,
@@ -46,6 +47,7 @@ describe('Filter And Quick Edit brands', async () => {
     const pageTitle = await this.pageObjects.brandsPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.brandsPage.pageTitle);
   });
+
   it('should reset all filters and get Number of brands in BO', async function () {
     await this.pageObjects.brandsPage.resetFilters('manufacturer');
     numberOfBrands = await this.pageObjects.brandsPage.getNumberFromText(
@@ -53,6 +55,7 @@ describe('Filter And Quick Edit brands', async () => {
     );
     await expect(numberOfBrands).to.be.above(0);
   });
+
   // 1 : Filter brands
   describe('Filter brands', async () => {
     it('should filter by Id', async function () {
@@ -69,6 +72,7 @@ describe('Filter And Quick Edit brands', async () => {
       );
       await expect(textColumn).to.contains(demoBrands.first.id);
     });
+
     it('should reset all filters', async function () {
       await this.pageObjects.brandsPage.resetFilters('manufacturer');
       const numberOfBrandsAfterReset = await this.pageObjects.brandsPage.getNumberFromText(
@@ -76,6 +80,7 @@ describe('Filter And Quick Edit brands', async () => {
       );
       await expect(numberOfBrandsAfterReset).to.equal(numberOfBrands);
     });
+
     it('should filter by brand name', async function () {
       await this.pageObjects.brandsPage.filterBrands('input', 'name', demoBrands.first.name);
       const numberOfBrandsAfterFilter = await this.pageObjects.brandsPage.getNumberFromText(
@@ -90,6 +95,7 @@ describe('Filter And Quick Edit brands', async () => {
       );
       await expect(textColumn).to.contains(demoBrands.first.name);
     });
+
     it('should reset all filters', async function () {
       await this.pageObjects.brandsPage.resetFilters('manufacturer');
       const numberOfBrandsAfterReset = await this.pageObjects.brandsPage.getNumberFromText(
@@ -97,6 +103,7 @@ describe('Filter And Quick Edit brands', async () => {
       );
       await expect(numberOfBrandsAfterReset).to.equal(numberOfBrands);
     });
+
     it('should filter by Enabled \'Yes\'', async function () {
       await this.pageObjects.brandsPage.filterBrands(
         'select',
@@ -117,6 +124,7 @@ describe('Filter And Quick Edit brands', async () => {
       }
       /* eslint-enable no-await-in-loop */
     });
+
     it('should reset all filters', async function () {
       await this.pageObjects.brandsPage.resetFilters('manufacturer');
       const numberOfBrandsAfterReset = await this.pageObjects.brandsPage.getNumberFromText(
@@ -142,6 +150,7 @@ describe('Filter And Quick Edit brands', async () => {
       );
       await expect(textColumn).to.contains(demoBrands.first.name);
     });
+
     it('should disable first brand', async function () {
       const isActionPerformed = await this.pageObjects.brandsPage.updateEnabledValue(
         '1',
@@ -159,6 +168,7 @@ describe('Filter And Quick Edit brands', async () => {
       );
       await expect(isStatusChanged).to.be.true;
     });
+
     it('should enable first brand', async function () {
       const isActionPerformed = await this.pageObjects.brandsPage.updateEnabledValue('1', true);
       if (isActionPerformed) {
@@ -173,6 +183,7 @@ describe('Filter And Quick Edit brands', async () => {
       );
       await expect(isStatusChanged).to.be.true;
     });
+
     it('should reset all filters', async function () {
       await this.pageObjects.brandsPage.resetFilters('manufacturer');
       const numberOfBrandsAfterReset = await this.pageObjects.brandsPage.getNumberFromText(
