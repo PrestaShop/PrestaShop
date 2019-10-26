@@ -3,6 +3,7 @@ require('module-alias/register');
 const {expect} = require('chai');
 const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
+const brandsCommon = require('@commonTests/BO/brands');
 const {demoAddresses} = require('@data/demo/brands');
 // Importing pages
 const BOBasePage = require('@pages/BO/BObasePage');
@@ -37,15 +38,10 @@ describe('Filter And Quick Edit Addresses', async () => {
   });
   // Login into BO and go to brands page
   loginCommon.loginBO();
-  it('should go to brands page', async function () {
-    await this.pageObjects.boBasePage.goToSubMenu(
-      this.pageObjects.boBasePage.productsParentLink,
-      this.pageObjects.boBasePage.brandsAndSuppliersLink,
-    );
-    await this.pageObjects.boBasePage.closeSfToolBar();
-    const pageTitle = await this.pageObjects.brandsPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.brandsPage.pageTitle);
-  });
+
+  // GO to Brands Page
+  brandsCommon.goToBrandsPage();
+  
   it('should reset all filters and get Number of brands in BO', async function () {
     await this.pageObjects.brandsPage.resetFilters('manufacturer_address');
     numberOfBrandsAddresses = await this.pageObjects.brandsPage.getNumberFromText(
