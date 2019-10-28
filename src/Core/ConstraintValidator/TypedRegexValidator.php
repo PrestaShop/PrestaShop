@@ -87,6 +87,7 @@ class TypedRegexValidator extends ConstraintValidator
             'message' => '/[<>{}]/i',
             'language_iso_code' => IsoCode::PATTERN,
             'language_code' => '/^[a-zA-Z]{2}(-[a-zA-Z]{2})?$/',
+            'dni_lite' => '/^[0-9A-Za-z-.]{1,16}$/U',
         ];
 
         if (isset($typePatterns[$type])) {

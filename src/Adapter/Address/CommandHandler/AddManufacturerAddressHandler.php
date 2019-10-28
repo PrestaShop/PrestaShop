@@ -30,6 +30,7 @@ use Address;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\AddManufacturerAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\CommandHandler\AddManufacturerAddressHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressException;
+use PrestaShop\PrestaShop\Core\Domain\Address\Exception\InvalidAddressFieldException;
 use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
 use PrestaShopException;
 
@@ -51,7 +52,7 @@ final class AddManufacturerAddressHandler implements AddManufacturerAddressHandl
 
         try {
             if (false === $address->validateFields(false) || false === $address->validateFieldsLang(false)) {
-                throw new AddressException('Address contains invalid field values');
+                throw new InvalidAddressFieldException('Address contains invalid field values');
             }
             if (false === $address->add()) {
                 throw new AddressException(
@@ -87,6 +88,7 @@ final class AddManufacturerAddressHandler implements AddManufacturerAddressHandl
         $address->phone = $command->getHomePhone();
         $address->phone_mobile = $command->getMobilePhone();
         $address->other = $command->getOther();
+        $address->dni = $command->getDni();
         $address->alias = 'manufacturer';
 
         return $address;

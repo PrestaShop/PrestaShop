@@ -78,6 +78,10 @@
         }) }}
       </div>
 
+      {{ ps.form_group_row(addressForm.dni, {}, {
+        'label': 'DNI'|trans({}, 'Admin.Global'),
+      }) }}
+
       {{ ps.form_group_row(addressForm.home_phone, {}, {
         'label': 'Home phone'|trans({}, 'Admin.Global'),
       }) }}

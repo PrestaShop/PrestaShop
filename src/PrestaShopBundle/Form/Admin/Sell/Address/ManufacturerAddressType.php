@@ -36,6 +36,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Country;
 
 /**
  * Defines form for address create/edit actions (Sell > Catalog > Brands & Suppliers)
@@ -95,8 +96,10 @@ class ManufacturerAddressType extends AbstractType
     {
         if ($options['country_id'] !== 0) {
             $countryIdForStateChoices = $options['country_id'];
+            $dniRequired = Country::isNeedDniByCountryId($options['country_id']);
         } else {
             $countryIdForStateChoices = $this->contextCountryId;
+            $dniRequired = Country::isNeedDniByCountryId($this->contextCountryId);
         }
 
         $builder
@@ -259,6 +262,22 @@ class ManufacturerAddressType extends AbstractType
                         'maxMessage' => $this->translator->trans(
                             'This field cannot be longer than %limit% characters',
                             ['%limit%' => 32],
+                            'Admin.Notifications.Error'
+                        ),
+                    ]),
+                ],
+            ])
+            ->add('dni', TextType::class, [
+                'required' => $dniRequired,
+                'constraints' => [
+                    new TypedRegex([
+                        'type' => 'dni_lite',
+                    ]),
+                    new Length([
+                        'max' => 16,
+                        'maxMessage' => $this->translator->trans(
+                            'This field cannot be longer than %limit% characters',
+                            ['%limit%' => 16],
                             'Admin.Notifications.Error'
                         ),
                     ]),
