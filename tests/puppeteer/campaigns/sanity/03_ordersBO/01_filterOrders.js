@@ -8,7 +8,7 @@ const loginCommon = require('@commonTests/loginBO');
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
 const BOBasePage = require('@pages/BO/BObasePage');
-const OrdersPage = require('@pages/BO/orders');
+const OrdersPage = require('@pages/BO/orders/orders/orders');
 const {Orders, Statuses} = require('@data/demo/orders');
 
 let numberOfOrders;
