@@ -59,5 +59,12 @@ export default {
   openAllMessagesBtn: '.js-open-all-messages-btn',
   productDeleteBtn: '.js-order-product-delete-btn',
   productsTable: '#orderProductsTable',
+  // Order price elements
+  orderProductsTotal: '#orderProductsTotal',
+  orderDiscountsTotal: '#orderDiscountsTotal',
+  orderWrappingTotal: '#orderWrappingTotal',
+  orderShippingTotal: '#orderShippingTotal',
+  orderTaxesTotal: '#orderTaxesTotal',
+  orderTotal: '#orderTotal',
   orderHookTabsContainer: '#order_hook_tabs',
 };
