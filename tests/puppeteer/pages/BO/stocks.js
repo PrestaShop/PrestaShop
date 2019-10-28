@@ -12,9 +12,10 @@ module.exports = class Stocks extends BOBasePage {
     this.searchInput = 'form.search-form input.input';
     this.searchButton = 'form.search-form button.search-button';
 
-    //bulk
+    // bulk
     this.bulkCheckbox = 'input#bulk-action';
-    this.bulkEditQuantityInput = '#app > div.card.container-fluid.pa-2.clearfix > section > div.row.product-actions > div.col-md-8.qty.d-flex.align-items-center > div.ml-2 > div > input';
+    this.bulkEditQuantityInput = '#app > div.card.container-fluid.pa-2.clearfix > section > ' +
+      'div.row.product-actions > div.col-md-8.qty.d-flex.align-items-center > div.ml-2 > div > input';
   }
 
   /*
