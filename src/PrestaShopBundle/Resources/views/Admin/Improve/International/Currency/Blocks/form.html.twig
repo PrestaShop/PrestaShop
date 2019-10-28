@@ -96,10 +96,10 @@
             <label for="currency_reset_default_settings" class="form-control-label">
             </label>
             <div class="col-sm">
-              <button id="currency_reset_default_settings" class="btn btn-outline-secondary">
+              <a href="#" id="currency_reset_default_settings" class="btn btn-outline-secondary">
                 <i class="material-icons">refresh</i>
                 {{ 'Reset default settings'|trans({}, 'Admin.International.Feature') }}
-              </button>
+              </a>
             </div>
           </div>
         {% endif %}
@@ -125,7 +125,7 @@
   {{ form_end(currencyForm) }}
 
   <!-- Modal -->
-  <div class="modal fade" id="currency_loading_data_modal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal fade" id="currency_loading_data_modal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
