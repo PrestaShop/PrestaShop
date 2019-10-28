@@ -26,20 +26,16 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Currency\QueryHandler;
 
-use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Query\GetCurrencyAPIData;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Query\GetCurrencyExchangeRate;
-use PrestaShop\PrestaShop\Core\Domain\Currency\QueryHandler\GetCurrencyAPIDataHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Currency\QueryResult\CurrencyAPIData;
-use PrestaShop\PrestaShop\Core\Domain\Currency\QueryResult\ExchangeRate as ExchangeRateResult;
-use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\ExchangeRate;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Query\GetReferenceCurrency;
+use PrestaShop\PrestaShop\Core\Domain\Currency\QueryHandler\GetReferenceCurrencyHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Currency\QueryResult\ReferenceCurrency;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\CurrencyInterface;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
 
-class GetCurrencyAPIDataHandler implements GetCurrencyAPIDataHandlerInterface
+class GetReferenceCurrencyHandler implements GetReferenceCurrencyHandlerInterface
 {
     /**
      * @var LocaleRepository
@@ -74,7 +70,7 @@ class GetCurrencyAPIDataHandler implements GetCurrencyAPIDataHandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function handle(GetCurrencyAPIData $query): CurrencyAPIData
+    public function handle(GetReferenceCurrency $query): ReferenceCurrency
     {
         $localizedNames = [];
         $localizedSymbols = [];
@@ -94,33 +90,17 @@ class GetCurrencyAPIDataHandler implements GetCurrencyAPIDataHandlerInterface
         }
 
         if (null === $currency) {
-            return new CurrencyAPIData(
-                $query->getIsoCode()->getValue(),
-                null,
-                $localizedNames,
-                $localizedSymbols,
-                ExchangeRate::getDefaultExchangeRate(),
-                2
-            );
+            throw new CurrencyNotFoundException(sprintf(
+                'Can not find reference currency with ISO code %s',
+                $query->getIsoCode()->getValue()
+            ));
         }
 
-        try {
-            /** @var ExchangeRateResult $exchangeRateResult */
-            $exchangeRateResult = $this->queryBus->handle(new GetCurrencyExchangeRate($query->getIsoCode()->getValue()));
-            /** @var Number $exchangeRate */
-            $exchangeRate = $exchangeRateResult->getValue();
-        } catch (CurrencyException $e) {
-            //Unable to find the exchange rate, either the currency doesn't exist (unofficial)
-            //or the currency feed could not be fetched, use the default rate as a fallback
-            $exchangeRate = ExchangeRate::getDefaultExchangeRate();
-        }
-
-        return new CurrencyAPIData(
+        return new ReferenceCurrency(
             $currency->getIsoCode(),
             $currency->getNumericIsoCode(),
             $localizedNames,
             $localizedSymbols,
-            $exchangeRate,
             $currency->getDecimalDigits()
         );
     }

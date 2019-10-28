@@ -96,11 +96,11 @@ services:
       tags:
         - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Query\GetCurrencyExchangeRate' }
 
-    prestashop.adapter.currency.query_handler.get_currency_api_data:
-      class: 'PrestaShop\PrestaShop\Adapter\Currency\QueryHandler\GetCurrencyAPIDataHandler'
+    prestashop.adapter.currency.query_handler.get_reference_currency:
+      class: 'PrestaShop\PrestaShop\Adapter\Currency\QueryHandler\GetReferenceCurrencyHandler'
       arguments:
         - '@prestashop.core.localization.cldr.locale_repository'
         - '@prestashop.core.query_bus'
         - '@=service("prestashop.core.admin.lang.repository").findAll()'
       tags:
-        - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Query\GetCurrencyAPIData' }
+        - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Query\GetReferenceCurrency' }
