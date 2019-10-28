@@ -42,4 +42,6 @@ export default {
   updateOrderStatusActionBtn: '#update_order_status_action_btn',
   updateOrderStatusActionInput: '#update_order_status_action_input',
   updateOrderStatusActionForm: '#update_order_status_action_form',
+  productDeleteBtn: '.js-order-product-delete-btn',
+  productsTable: '#orderProductsTable',
 };

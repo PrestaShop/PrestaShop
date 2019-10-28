@@ -24,6 +24,7 @@
  */
 
 import OrderViewPageMap from './OrderViewPageMap';
+import OrderViewPage from './view/order-view-page';
 
 const $ = window.$;
 
@@ -31,6 +32,10 @@ $(() => {
   const DISCOUNT_TYPE_AMOUNT = 'amount';
   const DISCOUNT_TYPE_PERCENT = 'percent';
   const DISCOUNT_TYPE_FREE_SHIPPING = 'free_shipping';
+
+  const orderViewPage = new OrderViewPage();
+
+  orderViewPage.listenForProductDelete();
 
   handlePaymentDetailsToggle();
   handlePrivateNoteChange();
