@@ -26,6 +26,7 @@
 import OrderViewPageMap from './OrderViewPageMap';
 import OrderShippingManager from './order-shipping-manager';
 import InvoiceNoteManager from './invoice-note-manager';
+import OrderViewPage from './view/order-view-page';
 
 const $ = window.$;
 
@@ -35,6 +36,9 @@ $(() => {
   const DISCOUNT_TYPE_FREE_SHIPPING = 'free_shipping';
 
   new OrderShippingManager();
+  const orderViewPage = new OrderViewPage();
+
+  orderViewPage.listenForProductDelete();
 
   handlePaymentDetailsToggle();
   handlePrivateNoteChange();
