@@ -23,28 +23,23 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import OrderProductManager from './order-product-manager';
+import Router from '../../../components/router';
 import OrderViewPageMap from '../OrderViewPageMap';
-import OrderViewEventMap from '../view/order-view-event-map';
-import {EventEmitter} from '../../../components/event-emitter';
-import OrderProductRenderer from './order-product-renderer';
-import OrderPricesRefresher from './order-prices-refresher';
 
 const $ = window.$;
 
-export default class OrderViewPage {
+export default class OrderPricesRefresher {
   constructor() {
-    this.orderProductManager = new OrderProductManager();
-    this.orderProductRenderer = new OrderProductRenderer();
-    this.orderPricesRefresher = new OrderPricesRefresher();
+    this.router = new Router();
   }
 
-  listenForProductDelete() {
-    $(OrderViewPageMap.productDeleteBtn).on('click', event => this.orderProductManager.handleDeleteProductEvent(event));
-
-    EventEmitter.on(OrderViewEventMap.productDeletedFromOrder, (event) => {
-      this.orderProductRenderer.removeProductFromList(event.oldOrderDetailId);
-      this.orderPricesRefresher.refresh(event.orderId);
-    });
+  refresh(orderId) {
+    $.ajax(this.router.generate('admin_orders_get_prices', {orderId}))
+      .then((response) => {
+        $(OrderViewPageMap.orderTotal).text(response.orderTotalFormatted);
+        $(OrderViewPageMap.orderProductsTotal).text(response.productsTotalFormatted);
+        $(OrderViewPageMap.orderShippingTotal).text(response.shippingTotalFormatted);
+        $(OrderViewPageMap.orderTaxesTotal).text(response.taxesTotalFormatted);
+      });
   }
 }
