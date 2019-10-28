@@ -5,7 +5,7 @@ const files = require('@utils/files');
 const BrandFaker = require('@data/faker/brand');
 const BrandAddressFaker = require('@data/faker/brandAddress');
 const loginCommon = require('@commonTests/loginBO');
-const BoBaseCommon = require('@commonTests/BO/BOBase');
+const BoBaseCommonTests = require('@commonTests/BO/BOBase');
 // Importing pages
 const BOBasePage = require('@pages/BO/BObasePage');
 const LoginPage = require('@pages/BO/login');
@@ -61,7 +61,7 @@ describe('Create, Update and Delete Brand and Address', async () => {
   loginCommon.loginBO();
 
   // GO to Brands Page
-  BoBaseCommon.goToBrandsPage();
+  BoBaseCommonTests.goToBrandsPage();
 
   it('should reset all filters', async function () {
     numberOfBrands = await this.pageObjects.brandsPage.resetFilters('manufacturer');
