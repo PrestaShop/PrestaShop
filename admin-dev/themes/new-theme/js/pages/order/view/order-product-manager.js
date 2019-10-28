@@ -52,7 +52,10 @@ export default class OrderProductManager {
     $.ajax(this.router.generate('admin_orders_delete_product', {orderId, orderDetailId}), {
       method: 'POST',
     }).then(() => {
-      EventEmitter.emit(OrderViewEventMap.productDeletedFromOrder, {oldOrderDetailId: orderDetailId});
+      EventEmitter.emit(OrderViewEventMap.productDeletedFromOrder, {
+        oldOrderDetailId: orderDetailId,
+        orderId,
+      });
     });
   }
 }
