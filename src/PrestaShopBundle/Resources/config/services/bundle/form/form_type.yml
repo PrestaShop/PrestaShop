@@ -907,6 +907,13 @@ services:
         tags:
             - { name: form.type }
 
+    form.type.sell.customer.private_note:
+      class: 'PrestaShopBundle\Form\Admin\Sell\Customer\PrivateNoteType'
+      arguments:
+          - "@translator"
+      tags:
+          - { name: form.type }
+
     form.type.order.add_order_cart_rule:
       class: 'PrestaShopBundle\Form\Admin\Sell\Order\AddOrderCartRuleType'
       arguments:

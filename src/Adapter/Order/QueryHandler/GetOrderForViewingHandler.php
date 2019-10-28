@@ -562,7 +562,17 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             );
         }
 
-        return new OrderDocumentsForViewing($documentsForViewing);
+        $canGenerateInvoice = Configuration::get('PS_INVOICE') &&
+            count($order->getInvoicesCollection()) &&
+            $order->invoice_number;
+
+        $canGenerateDeliverySlip = (bool) $order->delivery_number;
+
+        return new OrderDocumentsForViewing(
+            $canGenerateInvoice,
+            $canGenerateDeliverySlip,
+            $documentsForViewing
+        );
     }
 
     private function getOrderShipping(Order $order): OrderShippingForViewing
@@ -584,9 +594,9 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
 
         foreach ($shipping as $item) {
             if ($order->getTaxCalculationMethod() == PS_TAX_INC) {
-                $price = $this->locale->formatPrice($item['shipping_cost_tax_incl'], $currency->iso_code);
+                $price = !empty($item['shipping_cost_tax_incl']) ? $this->locale->formatPrice($item['shipping_cost_tax_incl'], $currency->iso_code) : '';
             } else {
-                $price = $this->locale->formatPrice($item['shipping_cost_tax_excl'], $currency->iso_code);
+                $price = !empty($item['shipping_cost_tax_excl']) ? $this->locale->formatPrice($item['shipping_cost_tax_excl'], $currency->iso_code) : '';
             }
 
             $trackingUrl = null;
@@ -602,7 +612,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             $carriers[] = new OrderCarrierForViewing(
                 (int) $item['id_order_carrier'],
                 new DateTimeImmutable($item['date_add']),
-                $item['carrier_name'],
+                $item['carrier_name'] ?? '',
                 $weight,
                 (int) $item['id_carrier'],
                 $price,

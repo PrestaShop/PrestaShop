@@ -78,10 +78,10 @@ class OrderCarrierForViewing
     /**
      * @param int $orderCarrierId
      * @param DateTimeImmutable $date
-     * @param string $name
+     * @param string $name Carrier name or null in case of virtual order
      * @param string $weight
      * @param int $carrierId
-     * @param string $price
+     * @param string $price Price or null in case of virtual order
      * @param string|null $trackingUrl
      * @param string|null $trackingNumber
      * @param bool $canEdit
@@ -89,10 +89,10 @@ class OrderCarrierForViewing
     public function __construct(
         int $orderCarrierId,
         DateTimeImmutable $date,
-        string $name,
+        ?string $name,
         string $weight,
         int $carrierId,
-        string $price,
+        ?string $price,
         ?string $trackingUrl,
         ?string $trackingNumber,
         bool $canEdit
@@ -127,7 +127,7 @@ class OrderCarrierForViewing
     /**
      * @return string
      */
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }
@@ -143,7 +143,7 @@ class OrderCarrierForViewing
     /**
      * @return string
      */
-    public function getPrice(): string
+    public function getPrice(): ?string
     {
         return $this->price;
     }
