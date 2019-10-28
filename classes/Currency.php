@@ -41,7 +41,7 @@ class CurrencyCore extends ObjectModel
      *
      * @var string[]
      */
-    private $names;
+    private $localizedNames;
 
     /**
      * Alphabetic ISO 4217 code of this currency.
@@ -121,7 +121,7 @@ class CurrencyCore extends ObjectModel
      *
      * @var string[]
      */
-    private $symbols;
+    private $localizedSymbols;
 
     /**
      * CLDR price formatting pattern
@@ -224,18 +224,18 @@ class CurrencyCore extends ObjectModel
              * the field as a string.
              */
             if (is_array($this->symbol)) {
-                $this->symbols = $this->symbol;
+                $this->localizedSymbols = $this->symbol;
                 $this->sign = $this->symbol = $this->symbol[$idLang];
             } else {
-                $this->symbols = [$idLang => $this->symbol];
+                $this->localizedSymbols = [$idLang => $this->symbol];
                 $this->sign = $this->symbol;
             }
 
             if (is_array($this->name)) {
-                $this->names = $this->name;
+                $this->localizedNames = $this->name;
                 $this->name = Tools::ucfirst($this->name[$idLang]);
             } else {
-                $this->names = [$idLang = $this->name];
+                $this->localizedNames = [$idLang = $this->name];
                 $this->name = Tools::ucfirst($this->name);
             }
 
@@ -427,23 +427,23 @@ class CurrencyCore extends ObjectModel
     /**
      * @return string[]
      */
-    public function getNames()
+    public function getLocalizedNames()
     {
-        return $this->names;
+        return $this->localizedNames;
     }
 
     /**
-     * This setter updates the name field because it is used whe you want to update
+     * This setter updates the name field because it is used when you want to update
      * the database (legacy core feature). But to be consistent the names field also
      * needs to be updated.
      *
-     * @param string[] $names list of currency names, the array needs to be indexed by language id
+     * @param string[] $localizedNames list of currency names, the array needs to be indexed by language id
      *
      * @return $this
      */
-    public function setNames(array $names)
+    public function setLocalizedNames(array $localizedNames)
     {
-        $this->names = $this->name = $names;
+        $this->localizedNames = $this->name = $localizedNames;
 
         return $this;
     }
@@ -451,23 +451,23 @@ class CurrencyCore extends ObjectModel
     /**
      * @return string[]
      */
-    public function getSymbols()
+    public function getLocalizedSymbols()
     {
-        return $this->symbols;
+        return $this->localizedSymbols;
     }
 
     /**
-     * This setter updates the symbol field because it is used whe you want to update
+     * This setter updates the symbol field because it is used when you want to update
      * the database (legacy core feature). But to be consistent the symbols field also
      * needs to be updated.
      *
-     * @param string[] $symbols list of currency symbols, the array needs to be indexed by language id
+     * @param string[] $localizedSymbols list of currency symbols, the array needs to be indexed by language id
      *
      * @return CurrencyCore
      */
-    public function setSymbols(array $symbols)
+    public function setLocalizedSymbols(array $localizedSymbols)
     {
-        $this->symbols = $this->symbol = $symbols;
+        $this->localizedSymbols = $this->symbol = $localizedSymbols;
 
         return $this;
     }
@@ -953,8 +953,8 @@ class CurrencyCore extends ObjectModel
     public function refreshLocalizedCurrencyData(array $languages, LocaleRepository $localeRepoCLDR)
     {
         $this->modified = false;
-        $originalNames = $this->names;
-        $originalSymbols = $this->symbols;
+        $originalNames = $this->localizedNames;
+        $originalSymbols = $this->localizedSymbols;
         $symbolsByLang = $namesByLang = [];
         foreach ($languages as $languageData) {
             $language = new Language($languageData['id_lang']);
