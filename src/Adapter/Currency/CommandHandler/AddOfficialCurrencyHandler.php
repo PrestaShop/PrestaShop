@@ -91,10 +91,10 @@ final class AddOfficialCurrencyHandler extends AbstractCurrencyHandler implement
             $entity->precision = $this->getPrecision($command);
 
             if (!empty($command->getLocalizedNames())) {
-                $entity->setNames($command->getLocalizedNames());
+                $entity->setLocalizedNames($command->getLocalizedNames());
             }
             if (!empty($command->getLocalizedSymbols())) {
-                $entity->setSymbols($command->getLocalizedSymbols());
+                $entity->setLocalizedSymbols($command->getLocalizedSymbols());
             }
 
             $this->refreshLocalizedData($entity);
@@ -145,22 +145,17 @@ final class AddOfficialCurrencyHandler extends AbstractCurrencyHandler implement
 
         $matchingRealCurrency = null;
         foreach ($allCurrencies as $currencyData) {
-            if ($currencyData->getIsoCode() == $isoCode) {
-                $matchingRealCurrency = $currencyData;
-                break;
+            if ($currencyData->getIsoCode() === $isoCode) {
+                return $currencyData->getNumericIsoCode();
             }
         }
 
-        if (null === $matchingRealCurrency) {
-            throw new CurrencyNotFoundException(
-                sprintf(
-                    'ISO code "%s" does not match any currency in CLDR database',
-                    $isoCode
-                )
-            );
-        }
-
-        return $matchingRealCurrency->getNumericIsoCode();
+        throw new CurrencyNotFoundException(
+            sprintf(
+                'ISO code "%s" does not match any currency in CLDR database',
+                $isoCode
+            )
+        );
     }
 
     /**
