@@ -899,6 +899,7 @@ $(document).ready(function()
   });
 
   $('.swap-container').each(function() {
+    var swap_container = this;
     /** make sure that all the swap id is present in the dom to prevent mistake **/
     if (typeof $('.addSwap', this) !== undefined && typeof $(".removeSwap", this) !== undefined &&
       typeof $('.selectedSwap', this) !== undefined && typeof $('.availableSwap', this) !== undefined)
@@ -907,7 +908,7 @@ $(document).ready(function()
       bindSwapButton('remove', 'selected', 'available', this);
 
       $('button:submit').click(function() {
-        bindSwapSave(this);
+        bindSwapSave(swap_container);
       });
     }
   });
