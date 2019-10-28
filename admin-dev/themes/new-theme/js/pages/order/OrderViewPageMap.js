@@ -57,4 +57,6 @@ export default {
   allMessagesModal: '#view_all_messages_modal',
   allMessagesList: '#all-messages-list',
   openAllMessagesBtn: '.js-open-all-messages-btn',
+  productDeleteBtn: '.js-order-product-delete-btn',
+  productsTable: '#orderProductsTable',
 };
