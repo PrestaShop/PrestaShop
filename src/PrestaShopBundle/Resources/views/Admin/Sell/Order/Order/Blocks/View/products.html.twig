@@ -218,50 +218,52 @@
           <div class="row">
             <div class="col-sm text-center">
               <p class="text-muted mb-0"><strong>{{ 'Products'|trans({}, 'Admin.Global') }}</strong></p>
-              <strong>{{ orderForViewing.prices.productsPriceFormatted }}</strong>
+              <strong id="orderProductsTotal">{{ orderForViewing.prices.productsPriceFormatted }}</strong>
             </div>
 
             {% if orderForViewing.prices.discountsAmountRaw %}
               <div class="col-sm text-center">
                 <p class="text-muted mb-0"><strong>{{ 'Discounts'|trans({}, 'Admin.Global') }}</strong></p>
-                <strong>-{{ orderForViewing.prices.discountsAmountFormatted }}</strong>
+                <strong class="orderDiscountsTotal">-{{ orderForViewing.prices.discountsAmountFormatted }}</strong>
               </div>
             {% endif %}
 
             {% if orderForViewing.prices.wrappingPriceRaw %}
               <div class="col-sm text-center">
                 <p class="text-muted mb-0"><strong>{{ 'Wrapping'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong></p>
-                <strong>{{ orderForViewing.prices.wrappingPriceFormatted }}</strong>
+                <strong id="orderWrappingTotal">{{ orderForViewing.prices.wrappingPriceFormatted }}</strong>
               </div>
             {% endif %}
 
-            <div class="col-sm text-center shipping-price">
-              <p class="text-muted mb-0"><strong>{{ 'Shipping'|trans({}, 'Admin.Catalog.Feature') }}</strong></p>
-              <strong>{{ orderForViewing.prices.shippingPriceFormatted }}</strong>
-            </div>
-
-            <span class="partial-refund">
-              <p class="text-muted mb-0 text-center"><strong>{{ 'Shipping'|trans({}, 'Admin.Catalog.Feature') }}</strong></p>
-              <div class="col-sm text-center shipping-price-container">
-                <strong>{{ orderForViewing.prices.shippingPriceFormatted }}</strong>
-                {{ form_widget(partialRefundForm.shipping) }}
-                <div class="input-group-append">
-                  <div class="input-group-text">{{ orderCurrency.symbol }}</div>
-                </div>
+            {% if orderForViewing.prices.shippingPriceRaw %}
+              <div class="col-sm text-center shipping-price">
+                <p class="text-muted mb-0"><strong>{{ 'Shipping'|trans({}, 'Admin.Catalog.Feature') }}</strong></p>
+                <strong id="orderShippingTotal">{{ orderForViewing.prices.shippingPriceFormatted }}</strong>
               </div>
-              <p class="text-center">(max {{ orderForViewing.prices.shippingPriceFormatted }} tax included)</p>
-            </span>
+
+              <span class="partial-refund">
+                <p class="text-muted mb-0 text-center"><strong>{{ 'Shipping'|trans({}, 'Admin.Catalog.Feature') }}</strong></p>
+                <div class="col-sm text-center shipping-price-container">
+                  <strong>{{ orderForViewing.prices.shippingPriceFormatted }}</strong>
+                  {{ form_widget(partialRefundForm.shipping) }}
+                  <div class="input-group-append">
+                    <div class="input-group-text">{{ orderCurrency.symbol }}</div>
+                  </div>
+                </div>
+                <p class="text-center">(max {{ orderForViewing.prices.shippingPriceFormatted }} tax included)</p>
+              </span>
+            {% endif %}
 
             {% if not orderForViewing.taxIncluded %}
               <div class="col-sm text-center">
                 <p class="text-muted mb-0"><strong>{{ 'Taxes'|trans({}, 'Admin.Global') }}</strong></p>
-                <strong>{{ orderForViewing.prices.taxesAmountFormatted }}</strong>
+                <strong id="orderTaxesTotal">{{ orderForViewing.prices.taxesAmountFormatted }}</strong>
               </div>
             {% endif %}
 
             <div class="col-sm text-center">
               <p class="text-muted mb-0"><strong>{{ 'Total'|trans({}, 'Admin.Global') }}</strong></p>
-              <span class="badge rounded badge-dark font-size-100">{{ orderForViewing.prices.totalAmountFormatted }}</span>
+              <span class="badge rounded badge-dark font-size-100" id="orderTotal">{{ orderForViewing.prices.totalAmountFormatted }}</span>
             </div>
 
           </div>
