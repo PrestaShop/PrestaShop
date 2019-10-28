@@ -50,7 +50,7 @@ describe('Create, read, update and delete Standard product with combinations in 
   loginCommon.loginBO();
   it('should go to Products page', async function () {
     await this.pageObjects.boBasePage.goToSubMenu(
-      this.pageObjects.boBasePage.productsParentLink,
+      this.pageObjects.boBasePage.catalogParentLink,
       this.pageObjects.boBasePage.productsLink,
     );
     await this.pageObjects.boBasePage.closeSfToolBar();
