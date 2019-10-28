@@ -3,7 +3,7 @@ require('module-alias/register');
 const {expect} = require('chai');
 const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
-const brandsCommon = require('@commonTests/BO/BOBase');
+const BoBaseCommon = require('@commonTests/BO/BOBase');
 const {demoAddresses} = require('@data/demo/brands');
 // Importing pages
 const BOBasePage = require('@pages/BO/BObasePage');
@@ -40,7 +40,7 @@ describe('Filter And Quick Edit Addresses', async () => {
   loginCommon.loginBO();
 
   // GO to Brands Page
-  brandsCommon.goToBrandsPage();
+  BoBaseCommon.goToBrandsPage();
 
   it('should reset all filters and get Number of brands in BO', async function () {
     numberOfBrandsAddresses = await this.pageObjects.brandsPage.resetFilters('manufacturer_address');

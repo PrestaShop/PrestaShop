@@ -3,7 +3,7 @@ const {expect} = require('chai');
 const helper = require('@utils/helpers');
 const BrandAddressFaker = require('@data/faker/brandAddress');
 const loginCommon = require('@commonTests/loginBO');
-const brandsCommon = require('@commonTests/BO/BOBase');
+const BoBaseCommon = require('@commonTests/BO/BOBase');
 // Importing pages
 const BOBasePage = require('@pages/BO/BObasePage');
 const LoginPage = require('@pages/BO/login');
@@ -45,7 +45,7 @@ describe('Create 2 brand Addresses and delete with bulk actions', async () => {
   loginCommon.loginBO();
 
   // GO to Brands Page
-  brandsCommon.goToBrandsPage();
+  BoBaseCommon.goToBrandsPage();
 
   it('should reset all Addresses filters', async function () {
     numberOfBrandAddresses = await this.pageObjects.brandsPage.resetFilters('manufacturer_address');

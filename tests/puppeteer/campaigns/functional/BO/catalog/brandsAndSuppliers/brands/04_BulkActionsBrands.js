@@ -4,7 +4,7 @@ const helper = require('@utils/helpers');
 const files = require('@utils/files');
 const BrandFaker = require('@data/faker/brand');
 const loginCommon = require('@commonTests/loginBO');
-const brandsCommon = require('@commonTests/BO/BOBase');
+const BoBaseCommon = require('@commonTests/BO/BOBase');
 // Importing pages
 const BOBasePage = require('@pages/BO/BObasePage');
 const LoginPage = require('@pages/BO/login');
@@ -50,7 +50,7 @@ describe('Create 2 brands, Enable, disable and delete with bulk actions', async 
   loginCommon.loginBO();
 
   // GO to Brands Page
-  brandsCommon.goToBrandsPage();
+  BoBaseCommon.goToBrandsPage();
 
   it('should reset all Brands filters', async function () {
     numberOfBrands = await this.pageObjects.brandsPage.resetFilters('manufacturer');
