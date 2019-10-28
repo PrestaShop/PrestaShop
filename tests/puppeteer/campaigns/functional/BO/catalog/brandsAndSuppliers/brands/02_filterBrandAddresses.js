@@ -3,7 +3,7 @@ require('module-alias/register');
 const {expect} = require('chai');
 const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
-const brandsCommon = require('@commonTests/BO/brands');
+const brandsCommon = require('@commonTests/BO/BOBase');
 const {demoAddresses} = require('@data/demo/brands');
 // Importing pages
 const BOBasePage = require('@pages/BO/BObasePage');
