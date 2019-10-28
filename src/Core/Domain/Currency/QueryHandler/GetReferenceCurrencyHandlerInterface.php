@@ -26,18 +26,18 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Currency\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Currency\Query\GetCurrencyAPIData;
-use PrestaShop\PrestaShop\Core\Domain\Currency\QueryResult\CurrencyAPIData;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Query\GetReferenceCurrency;
+use PrestaShop\PrestaShop\Core\Domain\Currency\QueryResult\ReferenceCurrency;
 
 /**
- * Interface GetCurrencyAPIDataHandlerInterface defines contract for GetCurrencyAPIDataHandler.
+ * Interface GetReferenceCurrencyHandlerInterface defines contract for GetReferenceCurrencyHandler.
  */
-interface GetCurrencyAPIDataHandlerInterface
+interface GetReferenceCurrencyHandlerInterface
 {
     /**
-     * @param GetCurrencyAPIData $query
+     * @param GetReferenceCurrency $query
      *
-     * @return CurrencyAPIData
+     * @return ReferenceCurrency
      */
-    public function handle(GetCurrencyAPIData $query): CurrencyAPIData;
+    public function handle(GetReferenceCurrency $query): ReferenceCurrency;
 }

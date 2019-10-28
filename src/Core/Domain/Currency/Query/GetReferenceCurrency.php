@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Currency\Query;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\AlphaIsoCode;
 
-class GetCurrencyAPIData
+class GetReferenceCurrency
 {
     /**
      * @var AlphaIsoCode

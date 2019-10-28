@@ -29,6 +29,8 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 use Behat\Gherkin\Node\TableNode;
 use Currency;
 use Configuration;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
 use RuntimeException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddOfficialCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddUnofficialCurrencyCommand;
@@ -40,8 +42,8 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDeleteDefaultCurr
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDisableDefaultCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\InvalidUnofficialCurrencyException;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Query\GetCurrencyAPIData;
-use PrestaShop\PrestaShop\Core\Domain\Currency\QueryResult\CurrencyAPIData;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Query\GetReferenceCurrency;
+use PrestaShop\PrestaShop\Core\Domain\Currency\QueryResult\ReferenceCurrency;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
@@ -49,7 +51,7 @@ use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 class CurrencyFeatureContext extends AbstractDomainFeatureContext
 {
     /**
-     * @var CurrencyAPIData
+     * @var ReferenceCurrency
      */
     private $currencyAPIData;
 
@@ -196,7 +198,12 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
      */
     public function getCurrencyAPIData($currencyIsoCode)
     {
-        $this->currencyAPIData = $this->getCommandBus()->handle(new GetCurrencyAPIData($currencyIsoCode));
+        try {
+            $this->lastException = null;
+            $this->currencyAPIData = $this->getCommandBus()->handle(new GetReferenceCurrency($currencyIsoCode));
+        } catch (CurrencyException $e) {
+            $this->lastException = $e;
+        }
     }
 
     /**
@@ -208,12 +215,6 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
         $expectedData = $node->getRowsHash();
         $expectedData['names'] = $this->parseLocalizedArray($expectedData['names']);
         $expectedData['symbols'] = $this->parseLocalizedArray($expectedData['symbols']);
-
-        //Special case for exchange rate as the value changes regularly, we check that it's positive and use
-        //a value of 0.8 (only when expected data is not 1, because some scenarii check the 1 default value)
-        if ($expectedData['exchange_rate'] != 1 && $apiData['exchange_rate'] > 0) {
-            $apiData['exchange_rate'] = 0.8;
-        }
 
         foreach ($expectedData as $key => $expectedValue) {
             if ($expectedValue === 'null') {
@@ -269,6 +270,14 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
     public function assertLastErrorIsMismatchingIsoCodes()
     {
         $this->assertLastErrorIs(CurrencyConstraintException::class, CurrencyConstraintException::ISO_CODES_MISMATCH);
+    }
+
+    /**
+     * @Then I should get error that currency was not found
+     */
+    public function assertLastErrorIsNotFound()
+    {
+        $this->assertLastErrorIs(CurrencyNotFoundException::class);
     }
 
     /**
