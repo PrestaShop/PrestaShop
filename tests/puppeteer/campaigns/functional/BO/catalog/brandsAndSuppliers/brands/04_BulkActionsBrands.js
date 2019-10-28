@@ -4,7 +4,6 @@ const helper = require('@utils/helpers');
 const files = require('@utils/files');
 const BrandFaker = require('@data/faker/brand');
 const loginCommon = require('@commonTests/loginBO');
-const BoBaseCommonTests = require('@commonTests/BO/BOBase');
 // Importing pages
 const BOBasePage = require('@pages/BO/BObasePage');
 const LoginPage = require('@pages/BO/login');
@@ -50,7 +49,15 @@ describe('Create 2 brands, Enable, disable and delete with bulk actions', async 
   loginCommon.loginBO();
 
   // GO to Brands Page
-  BoBaseCommonTests.goToBrandsPage();
+  it('should go to brands page', async function () {
+    await this.pageObjects.boBasePage.goToSubMenu(
+      this.pageObjects.boBasePage.productsParentLink,
+      this.pageObjects.boBasePage.brandsAndSuppliersLink,
+    );
+    await this.pageObjects.boBasePage.closeSfToolBar();
+    const pageTitle = await this.pageObjects.brandsPage.getPageTitle();
+    await expect(pageTitle).to.contains(this.pageObjects.brandsPage.pageTitle);
+  });
 
   it('should reset all Brands filters', async function () {
     numberOfBrands = await this.pageObjects.brandsPage.resetFilters('manufacturer');

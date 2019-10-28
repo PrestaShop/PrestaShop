@@ -3,7 +3,6 @@ const {expect} = require('chai');
 const helper = require('@utils/helpers');
 const BrandAddressFaker = require('@data/faker/brandAddress');
 const loginCommon = require('@commonTests/loginBO');
-const BoBaseCommonTests = require('@commonTests/BO/BOBase');
 // Importing pages
 const BOBasePage = require('@pages/BO/BObasePage');
 const LoginPage = require('@pages/BO/login');
@@ -45,7 +44,15 @@ describe('Create 2 brand Addresses and delete with bulk actions', async () => {
   loginCommon.loginBO();
 
   // GO to Brands Page
-  BoBaseCommonTests.goToBrandsPage();
+  it('should go to brands page', async function () {
+    await this.pageObjects.boBasePage.goToSubMenu(
+      this.pageObjects.boBasePage.productsParentLink,
+      this.pageObjects.boBasePage.brandsAndSuppliersLink,
+    );
+    await this.pageObjects.boBasePage.closeSfToolBar();
+    const pageTitle = await this.pageObjects.brandsPage.getPageTitle();
+    await expect(pageTitle).to.contains(this.pageObjects.brandsPage.pageTitle);
+  });
 
   it('should reset all Addresses filters', async function () {
     numberOfBrandAddresses = await this.pageObjects.brandsPage.resetFilters('manufacturer_address');
