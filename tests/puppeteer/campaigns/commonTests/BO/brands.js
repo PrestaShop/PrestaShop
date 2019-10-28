@@ -4,7 +4,7 @@ module.exports = {
   goToBrandsPage() {
     it('should go to brands page', async function () {
       await this.pageObjects.boBasePage.goToSubMenu(
-        this.pageObjects.boBasePage.productsPsarentLink,
+        this.pageObjects.boBasePage.productsParentLink,
         this.pageObjects.boBasePage.brandsAndSuppliersLink,
       );
       await this.pageObjects.boBasePage.closeSfToolBar();
