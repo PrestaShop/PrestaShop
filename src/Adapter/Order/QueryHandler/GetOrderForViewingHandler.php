@@ -562,7 +562,17 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             );
         }
 
-        return new OrderDocumentsForViewing($documentsForViewing);
+        $canGenerateInvoice = Configuration::get('PS_INVOICE') &&
+            count($order->getInvoicesCollection()) &&
+            $order->invoice_number;
+
+        $canGenerateDeliverySlip = (bool) $order->delivery_number;
+
+        return new OrderDocumentsForViewing(
+            $canGenerateInvoice,
+            $canGenerateDeliverySlip,
+            $documentsForViewing
+        );
     }
 
     private function getOrderShipping(Order $order): OrderShippingForViewing
