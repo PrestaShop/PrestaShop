@@ -208,3 +208,15 @@ admin_orders_partial_refund:
     _legacy_controller: AdminOrders
   requirements:
     orderId: \d+
+
+admin_orders_delete_product:
+  path: /{orderId}/products/{orderDetailId}/delete
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:deleteProduct
+    _legacy_controller: AdminOrders
+  requirements:
+    orderId: \d+
+    orderDetailId: \d+
+  options:
+    expose: true

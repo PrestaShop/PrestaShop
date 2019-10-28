@@ -31,7 +31,7 @@
   </div>
 
   <div class="card-body">
-    <table class="table">
+    <table class="table" id="orderProductsTable">
       <thead>
         <tr>
           <th>
@@ -65,7 +65,7 @@
       <tbody>
       {{ form_start(partialRefundForm, {'action': path('admin_orders_partial_refund', {'orderId': orderForViewing.id})}) }}
         {% for product in orderForViewing.products.products %}
-          <tr>
+          <tr id="orderProduct_{{ product.orderDetailId }}">
             <td>
               {% if product.imagePath %}
                 <img src="{{ product.imagePath }}" alt="{{ product.name }}">
@@ -120,9 +120,12 @@
                 </a>
 
                 <a href="#"
-                   class="ml-2 tooltip-link"
+                   class="ml-2 tooltip-link js-order-product-delete-btn"
                    data-toggle="pstooltip"
                    data-placement="top"
+                   data-order-id="{{ orderForViewing.id }}"
+                   data-order-detail-id="{{ product.orderDetailId }}"
+                   data-delete-message="{{ 'Are you sure?'|trans({}, 'Admin.Notifications.Warning') }}"
                    data-original-title="{{ 'Delete'|trans({}, 'Admin.Actions') }}"
                 >
                   <i class="material-icons">delete</i>
