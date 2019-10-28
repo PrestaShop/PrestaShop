@@ -58,6 +58,7 @@ describe('Create 2 brand Addresses and delete with bulk actions', async () => {
       const pageTitle = await this.pageObjects.addBrandAddressPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.addBrandAddressPage.pageTitle);
     });
+
     it('should create first brand', async function () {
       const result = await this.pageObjects.addBrandAddressPage.createEditBrandAddress(firstAddressData);
       await expect(result).to.equal(this.pageObjects.brandsPage.successfulCreationMessage);
@@ -66,11 +67,13 @@ describe('Create 2 brand Addresses and delete with bulk actions', async () => {
       );
       await expect(numberOfBrandAddressesAfterCreation).to.be.equal(numberOfBrandAddresses + 1);
     });
+
     it('should go to new brand Address page', async function () {
       await this.pageObjects.brandsPage.goToAddNewBrandAddressPage();
       const pageTitle = await this.pageObjects.addBrandAddressPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.addBrandAddressPage.pageTitle);
     });
+
     it('should create second brand', async function () {
       const result = await this.pageObjects.addBrandAddressPage.createEditBrandAddress(secondAddressData);
       await expect(result).to.equal(this.pageObjects.brandsPage.successfulCreationMessage);
@@ -100,10 +103,12 @@ describe('Create 2 brand Addresses and delete with bulk actions', async () => {
       }
       /* eslint-enable no-await-in-loop */
     });
+
     it('should delete Addresses with Bulk Actions and check Result', async function () {
       const deleteTextResult = await this.pageObjects.brandsPage.deleteWithBulkActions('manufacturer_address');
       await expect(deleteTextResult).to.be.equal(this.pageObjects.brandsPage.successfulDeleteMessage);
     });
+
     it('should reset Addresses filters', async function () {
       const numberOfBrandAddressesAfterReset = await this.pageObjects.brandsPage.resetFilters('manufacturer_address');
       await expect(numberOfBrandAddressesAfterReset).to.be.equal(numberOfBrandAddresses);

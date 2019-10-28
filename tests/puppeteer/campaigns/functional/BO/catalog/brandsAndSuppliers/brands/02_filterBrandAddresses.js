@@ -60,10 +60,12 @@ describe('Filter And Quick Edit Addresses', async () => {
       );
       await expect(textColumn).to.contains(demoAddresses.first.id);
     });
+
     it('should reset all filters', async function () {
       const numberOfBrandsAddressesAfterReset = await this.pageObjects.brandsPage.resetFilters('manufacturer_address');
       await expect(numberOfBrandsAddressesAfterReset).to.equal(numberOfBrandsAddresses);
     });
+
     it('should filter by brand name', async function () {
       await this.pageObjects.brandsPage.filterAddresses('input', 'name', demoAddresses.first.brand);
       const numberOfBrandsAddressesAfterFilter = await this.pageObjects.brandsPage.getNumberFromText(
@@ -78,10 +80,12 @@ describe('Filter And Quick Edit Addresses', async () => {
       );
       await expect(textColumn).to.contains(demoAddresses.first.brand);
     });
+
     it('should reset all filters', async function () {
       const numberOfBrandsAddressesAfterReset = await this.pageObjects.brandsPage.resetFilters('manufacturer_address');
       await expect(numberOfBrandsAddressesAfterReset).to.equal(numberOfBrandsAddresses);
     });
+
     it('should filter by Manufacturer firstname', async function () {
       await this.pageObjects.brandsPage.filterAddresses('input', 'firstname', demoAddresses.first.firstName);
       const numberOfBrandsAddressesAfterFilter = await this.pageObjects.brandsPage.getNumberFromText(
@@ -96,10 +100,12 @@ describe('Filter And Quick Edit Addresses', async () => {
       );
       await expect(textColumn).to.contains(demoAddresses.first.firstName);
     });
+
     it('should reset all filters', async function () {
       const numberOfBrandsAddressesAfterReset = await this.pageObjects.brandsPage.resetFilters('manufacturer_address');
       await expect(numberOfBrandsAddressesAfterReset).to.equal(numberOfBrandsAddresses);
     });
+
     it('should filter by Manufacturer lastname', async function () {
       await this.pageObjects.brandsPage.filterAddresses('input', 'lastname', demoAddresses.first.lastName);
       const numberOfBrandsAddressesAfterFilter = await this.pageObjects.brandsPage.getNumberFromText(
@@ -114,10 +120,12 @@ describe('Filter And Quick Edit Addresses', async () => {
       );
       await expect(textColumn).to.contains(demoAddresses.first.lastName);
     });
+
     it('should reset all filters', async function () {
       const numberOfBrandsAddressesAfterReset = await this.pageObjects.brandsPage.resetFilters('manufacturer_address');
       await expect(numberOfBrandsAddressesAfterReset).to.equal(numberOfBrandsAddresses);
     });
+
     it('should filter by Address postal code', async function () {
       await this.pageObjects.brandsPage.filterAddresses('input', 'postcode', demoAddresses.first.postalCode);
       const numberOfBrandsAddressesAfterFilter = await this.pageObjects.brandsPage.getNumberFromText(
@@ -132,10 +140,12 @@ describe('Filter And Quick Edit Addresses', async () => {
       );
       await expect(textColumn).to.contains(demoAddresses.first.postalCode);
     });
+
     it('should reset all filters', async function () {
       const numberOfBrandsAddressesAfterReset = await this.pageObjects.brandsPage.resetFilters('manufacturer_address');
       await expect(numberOfBrandsAddressesAfterReset).to.equal(numberOfBrandsAddresses);
     });
+
     it('should filter by City', async function () {
       await this.pageObjects.brandsPage.filterAddresses('input', 'city', demoAddresses.first.city);
       const numberOfBrandsAddressesAfterFilter = await this.pageObjects.brandsPage.getNumberFromText(
@@ -150,10 +160,12 @@ describe('Filter And Quick Edit Addresses', async () => {
       );
       await expect(textColumn).to.contains(demoAddresses.first.city);
     });
+
     it('should reset all filters', async function () {
       const numberOfBrandsAddressesAfterReset = await this.pageObjects.brandsPage.resetFilters('manufacturer_address');
       await expect(numberOfBrandsAddressesAfterReset).to.equal(numberOfBrandsAddresses);
     });
+
     it('should filter by Country', async function () {
       await this.pageObjects.brandsPage.filterAddresses('select', 'country', demoAddresses.first.country);
       const numberOfBrandsAddressesAfterFilter = await this.pageObjects.brandsPage.getNumberFromText(
@@ -168,6 +180,7 @@ describe('Filter And Quick Edit Addresses', async () => {
       );
       await expect(textColumn).to.contains(demoAddresses.first.country);
     });
+
     it('should reset all filters', async function () {
       const numberOfBrandsAddressesAfterReset = await this.pageObjects.brandsPage.resetFilters('manufacturer_address');
       await expect(numberOfBrandsAddressesAfterReset).to.equal(numberOfBrandsAddresses);

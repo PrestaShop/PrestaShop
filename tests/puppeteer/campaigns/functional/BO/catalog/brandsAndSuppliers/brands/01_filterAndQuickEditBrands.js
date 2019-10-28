@@ -119,7 +119,6 @@ describe('Filter And Quick Edit brands', async () => {
   });
   // 2 : Edit brands in list
   describe('Quick Edit brands', async () => {
-    // Steps
     it('should filter by brand name', async function () {
       await this.pageObjects.brandsPage.filterBrands('input', 'name', demoBrands.first.name);
       const numberOfBrandsAfterFilter = await this.pageObjects.brandsPage.getNumberFromText(

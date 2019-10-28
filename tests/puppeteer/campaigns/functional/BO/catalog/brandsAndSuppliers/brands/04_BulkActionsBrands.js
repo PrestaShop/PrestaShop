@@ -63,6 +63,7 @@ describe('Create 2 brands, Enable, disable and delete with bulk actions', async 
       const pageTitle = await this.pageObjects.addBrandPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.addBrandPage.pageTitle);
     });
+
     it('should create first brand', async function () {
       const result = await this.pageObjects.addBrandPage.createEditBrand(firstBrandData);
       await expect(result).to.equal(this.pageObjects.brandsPage.successfulCreationMessage);
@@ -71,11 +72,13 @@ describe('Create 2 brands, Enable, disable and delete with bulk actions', async 
       );
       await expect(numberOfBrandsAfterCreation).to.be.equal(numberOfBrands + 1);
     });
+
     it('should go to new brand page', async function () {
       await this.pageObjects.brandsPage.goToAddNewBrandPage();
       const pageTitle = await this.pageObjects.addBrandPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.addBrandPage.pageTitle);
     });
+
     it('should create second brand', async function () {
       const result = await this.pageObjects.addBrandPage.createEditBrand(secondBrandData);
       await expect(result).to.equal(this.pageObjects.brandsPage.successfulCreationMessage);
@@ -105,6 +108,7 @@ describe('Create 2 brands, Enable, disable and delete with bulk actions', async 
       }
       /* eslint-enable no-await-in-loop */
     });
+
     it('should disable brands', async function () {
       const disableTextResult = await this.pageObjects.brandsPage.changeBrandsEnabledColumnBulkActions(false);
       await expect(disableTextResult).to.be.equal(this.pageObjects.brandsPage.successfulUpdateStatusMessage);
@@ -124,6 +128,7 @@ describe('Create 2 brands, Enable, disable and delete with bulk actions', async 
       }
       /* eslint-enable no-await-in-loop */
     });
+
     it('should enable brands', async function () {
       const disableTextResult = await this.pageObjects.brandsPage.changeBrandsEnabledColumnBulkActions(true);
       await expect(disableTextResult).to.be.equal(this.pageObjects.brandsPage.successfulUpdateStatusMessage);
@@ -143,6 +148,7 @@ describe('Create 2 brands, Enable, disable and delete with bulk actions', async 
       }
       /* eslint-enable no-await-in-loop */
     });
+
     it('should reset Brand filters', async function () {
       const numberOfBrandsAfterReset = await this.pageObjects.brandsPage.resetFilters('manufacturer');
       await expect(numberOfBrandsAfterReset).to.be.equal(numberOfBrands + 2);
@@ -168,10 +174,12 @@ describe('Create 2 brands, Enable, disable and delete with bulk actions', async 
       }
       /* eslint-enable no-await-in-loop */
     });
+
     it('should delete Brands with Bulk Actions and check Result', async function () {
       const deleteTextResult = await this.pageObjects.brandsPage.deleteWithBulkActions('manufacturer');
       await expect(deleteTextResult).to.be.equal(this.pageObjects.brandsPage.successfulDeleteMessage);
     });
+
     it('should reset Brand filters', async function () {
       const numberOfBrandsAfterReset = await this.pageObjects.brandsPage.resetFilters('manufacturer');
       await expect(numberOfBrandsAfterReset).to.be.equal(numberOfBrands);
