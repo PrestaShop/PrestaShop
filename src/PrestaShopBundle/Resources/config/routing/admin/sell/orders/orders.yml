@@ -173,14 +173,20 @@ admin_orders_update_invoice_note:
     orderId: \d+
     orderInvoiceId: \d+
 
-admin_search_product_for_order_creation:
-  path: /search
-  methods: [GET]
-  defaults:
-    _controller: PrestaShopBundle:Admin/Sell/Order/Order:searchProducts
-
 admin_orders_generate_invoice:
   path: /{orderId}/invoice
   methods: [POST]
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Order/Order:generateInvoice
+
+admin_orders_delete_product:
+  path: /{orderId}/products/{orderDetailId}/delete
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:deleteProduct
+    _legacy_controller: AdminOrders
+  requirements:
+    orderId: \d+
+    orderDetailId: \d+
+  options:
+    expose: true
