@@ -939,6 +939,19 @@ class OrderController extends FrameworkBundleAdminController
         ]);
     }
 
+    public function getPricesAction(int $orderId): JsonResponse
+    {
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+
+        return $this->json([
+            'orderTotalFormatted' => $orderForViewing->getPrices()->getTotalAmountFormatted(),
+            'productsTotalFormatted' => $orderForViewing->getPrices()->getProductsPriceFormatted(),
+            'shippingTotalFormatted' => $orderForViewing->getPrices()->getShippingPriceFormatted(),
+            'taxesTotalFormatted' => $orderForViewing->getPrices()->getTaxesAmountFormatted(),
+        ]);
+    }
+
     /**
      * Generates invoice for given order
      *
