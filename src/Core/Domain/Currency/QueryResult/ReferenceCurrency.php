@@ -26,10 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Currency\QueryResult;
 
-use PrestaShop\Decimal\Number;
-use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
-
-class CurrencyAPIData
+class ReferenceCurrency
 {
     /**
      * @var array
@@ -52,11 +49,6 @@ class CurrencyAPIData
     private $numericIsoCode;
 
     /**
-     * @var Number
-     */
-    private $exchangeRate;
-
-    /**
      * @var int
      */
     private $precision;
@@ -66,7 +58,6 @@ class CurrencyAPIData
      * @param string|null $numericIsoCode
      * @param array $names
      * @param array $symbols
-     * @param Number $exchangeRate
      * @param int $precision
      */
     public function __construct(
@@ -74,14 +65,12 @@ class CurrencyAPIData
         $numericIsoCode,
         $names,
         $symbols,
-        Number $exchangeRate,
         $precision
     ) {
         $this->isoCode = $isoCode;
         $this->numericIsoCode = $numericIsoCode;
         $this->names = $names;
         $this->symbols = $symbols;
-        $this->exchangeRate = $exchangeRate;
         $this->precision = $precision;
     }
 
@@ -126,16 +115,6 @@ class CurrencyAPIData
     }
 
     /**
-     * Exchange rate of the currency compared to the shop's default one
-     *
-     * @return Number
-     */
-    public function getExchangeRate()
-    {
-        return $this->exchangeRate;
-    }
-
-    /**
      * Currency decimal precision
      *
      * @return int
@@ -147,15 +126,12 @@ class CurrencyAPIData
 
     public function toArray(): array
     {
-        $computingPrecision = new ComputingPrecision();
-
         return [
             'iso_code' => $this->getIsoCode(),
             'numeric_iso_code' => $this->getNumericIsoCode(),
             'precision' => $this->getPrecision(),
             'names' => $this->getNames(),
             'symbols' => $this->getSymbols(),
-            'exchange_rate' => $this->exchangeRate->round($computingPrecision->getPrecision($this->getPrecision())),
         ];
     }
 }

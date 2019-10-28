@@ -39,12 +39,17 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintExcep
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\AutomateExchangeRatesUpdateException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\ExchangeRateNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\InvalidUnofficialCurrencyException;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Query\GetCurrencyAPIData;
-use PrestaShop\PrestaShop\Core\Domain\Currency\QueryResult\CurrencyAPIData;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Query\GetCurrencyExchangeRate;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Query\GetReferenceCurrency;
+use PrestaShop\PrestaShop\Core\Domain\Currency\QueryResult\ExchangeRate as ExchangeRateResult;
+use PrestaShop\PrestaShop\Core\Domain\Currency\QueryResult\ReferenceCurrency;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\ExchangeRate;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CurrencyGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\Currency;
 use PrestaShop\PrestaShop\Core\Search\Filters\CurrencyFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -227,8 +232,8 @@ class CurrencyController extends FrameworkBundleAdminController
     public function getReferenceDataAction($currencyIsoCode)
     {
         try {
-            /** @var CurrencyAPIData $currencyAPIDAta */
-            $currencyAPIDAta = $this->getQueryBus()->handle(new GetCurrencyAPIData($currencyIsoCode));
+            /** @var ReferenceCurrency $referenceCurrency */
+            $referenceCurrency = $this->getQueryBus()->handle(new GetReferenceCurrency($currencyIsoCode));
         } catch (CurrencyException $e) {
             return new JsonResponse([
                 'error' => $this->trans(
@@ -241,7 +246,23 @@ class CurrencyController extends FrameworkBundleAdminController
             ], 404);
         }
 
-        return new JsonResponse($currencyAPIDAta->toArray());
+        try {
+            /** @var ExchangeRateResult $exchangeRate */
+            $exchangeRate = $this->getQueryBus()->handle(new GetCurrencyExchangeRate($currencyIsoCode));
+            $computingPrecision = new ComputingPrecision();
+            $exchangeRateValue = $exchangeRate->getValue()->round($computingPrecision->getPrecision(2));
+        } catch (ExchangeRateNotFoundException $e) {
+            $exchangeRateValue = ExchangeRate::DEFAULT_RATE;
+        }
+
+        return new JsonResponse(
+            array_merge(
+                $referenceCurrency->toArray(),
+                [
+                    'exchange_rate' => $exchangeRateValue,
+                ]
+            )
+        );
     }
 
     /**
