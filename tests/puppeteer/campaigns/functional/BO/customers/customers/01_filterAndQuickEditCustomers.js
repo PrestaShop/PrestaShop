@@ -8,7 +8,7 @@ const {DefaultAccount} = require('@data/demo/customer');
 const BOBasePage = require('@pages/BO/BObasePage');
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
-const CustomersPage = require('@pages/BO/customers');
+const CustomersPage = require('@pages/BO/customers/customers/customers');
 
 let browser;
 let page;

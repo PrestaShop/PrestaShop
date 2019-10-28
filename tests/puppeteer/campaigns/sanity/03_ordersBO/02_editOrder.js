@@ -8,8 +8,8 @@ const loginCommon = require('@commonTests/loginBO');
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
 const BOBasePage = require('@pages/BO/BObasePage');
-const OrderPage = require('@pages/BO/order');
-const OrdersPage = require('@pages/BO/orders');
+const AddOrderPage = require('@pages/BO/orders/orders/addOrder');
+const OrdersPage = require('@pages/BO/orders/orders/orders');
 const {Statuses} = require('@data/demo/orders');
 
 let browser;
@@ -20,7 +20,7 @@ const init = async function () {
     loginPage: new LoginPage(page),
     dashboardPage: new DashboardPage(page),
     boBasePage: new BOBasePage(page),
-    orderPage: new OrderPage(page),
+    addOrderPage: new AddOrderPage(page),
     ordersPage: new OrdersPage(page),
   };
 };
@@ -52,15 +52,15 @@ describe('Edit Order BO', async () => {
   });
   it('should go to the first order page', async function () {
     await this.pageObjects.ordersPage.goToOrder('1');
-    const pageTitle = await this.pageObjects.orderPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.orderPage.pageTitle);
+    const pageTitle = await this.pageObjects.addOrderPage.getPageTitle();
+    await expect(pageTitle).to.contains(this.pageObjects.addOrderPage.pageTitle);
   });
   it('should modify the product quantity and check the validation', async function () {
-    const result = await this.pageObjects.orderPage.modifyProductQuantity('1', '5');
+    const result = await this.pageObjects.addOrderPage.modifyProductQuantity('1', '5');
     await expect(result).to.be.true;
   });
   it('should modify the order status and check the validation', async function () {
-    const result = await this.pageObjects.orderPage.modifyOrderStatus(Statuses.paymentAccepted.status);
+    const result = await this.pageObjects.addOrderPage.modifyOrderStatus(Statuses.paymentAccepted.status);
     await expect(result).to.be.true;
   });
   it('should logout from the BO', async function () {
