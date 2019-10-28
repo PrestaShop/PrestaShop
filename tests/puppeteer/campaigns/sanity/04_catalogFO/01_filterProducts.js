@@ -37,7 +37,8 @@ describe('Filter Products by categories in Home page', async () => {
   // Steps
   it('should open the shop page', async () => {
     await this.pageObjects.homePage.goTo(global.FO.URL);
-    await this.pageObjects.homePage.checkHomePage();
+    const result = await this.pageObjects.homePage.isHomePage();
+    await expect(result).to.be.true;
   });
   it('should check and get the products number', async () => {
     await this.pageObjects.homePage.waitForSelectorAndClick(this.pageObjects.homePage.allProductLink);

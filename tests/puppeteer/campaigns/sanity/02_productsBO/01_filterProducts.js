@@ -40,8 +40,10 @@ describe('Filter in Products Page', async () => {
   // Steps
   loginCommon.loginBO();
   it('should go to Products page', async function () {
-    await this.pageObjects.boBasePage.goToSubMenu(this.pageObjects.boBasePage.productsParentLink,
-      this.pageObjects.boBasePage.productsLink);
+    await this.pageObjects.boBasePage.goToSubMenu(
+      this.pageObjects.boBasePage.productsParentLink,
+      this.pageObjects.boBasePage.productsLink,
+    );
     const pageTitle = await this.pageObjects.productsPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.productsPage.pageTitle);
   });

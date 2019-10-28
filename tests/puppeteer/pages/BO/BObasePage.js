@@ -1,5 +1,7 @@
 require('module-alias/register');
 const CommonPage = require('@pages/commonPage');
+const fs = require('fs');
+const imgGen = require('js-image-generator');
 
 module.exports = class BOBasePage extends CommonPage {
   constructor(page) {
@@ -26,6 +28,8 @@ module.exports = class BOBasePage extends CommonPage {
     this.productsParentLink = 'li#subtab-AdminCatalog';
     this.productsLink = '#subtab-AdminProducts';
 
+    this.categoriesLink = '#subtab-AdminCategories';
+
     this.customersParentLink = 'li#subtab-AdminParentCustomer';
     this.customersLink = '#subtab-AdminCustomers';
 
@@ -48,6 +52,7 @@ module.exports = class BOBasePage extends CommonPage {
 
     // Growls
     this.growlMessageBloc = '#growls .growl-message';
+    this.growlDefaultMessageBloc = '#growls-default .growl-message';
 
     // Alert Text
     this.alertSuccessBloc = 'div.alert.alert-success:not([style=\'display: none;\'])';
@@ -135,5 +140,30 @@ module.exports = class BOBasePage extends CommonPage {
     if (await this.elementVisible(`${this.sfToolbarMainContentDiv}[style='display: block;']`, 1000)) {
       await this.page.click(this.sfCloseToolbarLink);
     }
+  }
+
+  /**
+   * Generate an image then upload it
+   * @param selector
+   * @param imageName
+   * @return {Promise<void>}
+   */
+  async generateAndUploadImage(selector, imageName) {
+    await imgGen.generateImage(200, 200, 1, (err, image) => {
+      fs.writeFileSync(imageName, image.data);
+    });
+    const input = await this.page.$(selector);
+    await input.uploadFile(imageName);
+  }
+
+  /**
+   * Delete a file from the project
+   * @param file
+   * @param wait
+   * @return {Promise<void>}
+   */
+  async deleteFile(file, wait = 0) {
+    fs.unlinkSync(file);
+    await this.page.waitFor(wait);
   }
 };

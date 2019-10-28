@@ -46,7 +46,8 @@ describe('Order a product and check order confirmation', async () => {
   // Steps
   it('should open the shop page', async function () {
     await this.pageObjects.homePage.goTo(global.FO.URL);
-    await this.pageObjects.homePage.checkHomePage();
+    const result = await this.pageObjects.homePage.isHomePage();
+    await expect(result).to.be.true;
   });
   it('should go to login page', async function () {
     await this.pageObjects.homePage.goToLoginPage();
@@ -60,7 +61,8 @@ describe('Order a product and check order confirmation', async () => {
   });
   it('should go to home page', async function () {
     await this.pageObjects.homePage.goToHomePage();
-    await this.pageObjects.homePage.checkHomePage();
+    const result = await this.pageObjects.homePage.isHomePage();
+    await expect(result).to.be.true;
   });
   it('should add first product to cart and Proceed to checkout', async function () {
     await this.pageObjects.homePage.addProductToCartByQuickView('1', '1');

@@ -25,6 +25,10 @@
 
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
+{% block page_header_toolbar %}
+  {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/header.html.twig' %}
+{% endblock %}
+
 {% block content %}
   <div class="row">
     <div class="col-md-12">

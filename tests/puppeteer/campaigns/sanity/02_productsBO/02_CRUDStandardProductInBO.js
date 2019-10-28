@@ -49,8 +49,10 @@ describe('Create, read, update and delete Standard product in BO', async () => {
   // Steps
   loginCommon.loginBO();
   it('should go to Products page', async function () {
-    await this.pageObjects.boBasePage.goToSubMenu(this.pageObjects.boBasePage.productsParentLink,
-      this.pageObjects.boBasePage.productsLink);
+    await this.pageObjects.boBasePage.goToSubMenu(
+      this.pageObjects.boBasePage.productsParentLink,
+      this.pageObjects.boBasePage.productsLink,
+    );
     await this.pageObjects.boBasePage.closeSfToolBar();
     const pageTitle = await this.pageObjects.productsPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.productsPage.pageTitle);
@@ -72,14 +74,15 @@ describe('Create, read, update and delete Standard product in BO', async () => {
     page = await this.pageObjects.addProductPage.previewProduct();
     this.pageObjects = await init();
     const result = await this.pageObjects.foProductPage.checkProduct(productData);
+    page = await this.pageObjects.foProductPage.closePage(browser, 1);
+    this.pageObjects = await init();
+    // Check that all Product attribute are correct
     await Promise.all([
       expect(result.name).to.be.true,
       expect(result.price).to.be.true,
       expect(result.quantity_wanted).to.be.true,
       expect(result.description).to.be.true,
     ]);
-    page = await this.pageObjects.foProductPage.closePage(browser, 1);
-    this.pageObjects = await init();
   });
   it('should edit Product', async function () {
     const createProductMessage = await this.pageObjects.addProductPage.createEditProduct(editedProductData, false);
@@ -89,14 +92,15 @@ describe('Create, read, update and delete Standard product in BO', async () => {
     page = await this.pageObjects.addProductPage.previewProduct();
     this.pageObjects = await init();
     const result = await this.pageObjects.foProductPage.checkProduct(editedProductData);
+    page = await this.pageObjects.foProductPage.closePage(browser, 1);
+    this.pageObjects = await init();
+    // Check that all Product attribute are correct
     await Promise.all([
       expect(result.name).to.be.true,
       expect(result.price).to.be.true,
       expect(result.quantity_wanted).to.be.true,
       expect(result.description).to.be.true,
     ]);
-    page = await this.pageObjects.foProductPage.closePage(browser, 1);
-    this.pageObjects = await init();
   });
   it('should delete Product and be on product list page', async function () {
     const testResult = await this.pageObjects.addProductPage.deleteProduct();
