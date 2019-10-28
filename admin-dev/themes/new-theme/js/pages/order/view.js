@@ -26,6 +26,7 @@
 import OrderViewPageMap from './OrderViewPageMap';
 import OrderShippingManager from './order-shipping-manager';
 import InvoiceNoteManager from './invoice-note-manager';
+import OrderViewPage from './view/order-view-page';
 import OrderViewPageMessagesHandler from './message/order-view-page-messages-handler';
 import TextWithLengthCounter from "../../components/form/text-with-length-counter"
 
@@ -38,6 +39,9 @@ $(() => {
 
   new OrderShippingManager();
   new TextWithLengthCounter();
+  const orderViewPage = new OrderViewPage();
+
+  orderViewPage.listenForProductDelete();
 
   handlePaymentDetailsToggle();
   handlePrivateNoteChange();

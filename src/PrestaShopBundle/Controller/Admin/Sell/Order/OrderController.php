@@ -52,6 +52,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Command\GenerateInvoiceComma
 use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Command\UpdateInvoiceNoteCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\OrderConstraints;
 use PrestaShop\PrestaShop\Core\Domain\Order\Payment\Command\AddPaymentCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\DeleteProductFromOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\UpdateProductInOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderPreview;
@@ -914,6 +915,15 @@ class OrderController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_orders_view', [
             'orderId' => $orderId,
         ]);
+    }
+
+    public function deleteProductAction(int $orderId, int $orderDetailId): JsonResponse
+    {
+        $this->getCommandBus()->handle(
+            new DeleteProductFromOrderCommand($orderId, $orderDetailId)
+        );
+
+        return $this->json(null);
     }
 
     /**

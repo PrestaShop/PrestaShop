@@ -57,6 +57,8 @@ export default {
   allMessagesModal: '#view_all_messages_modal',
   allMessagesList: '#all-messages-list',
   openAllMessagesBtn: '.js-open-all-messages-btn',
+  productDeleteBtn: '.js-order-product-delete-btn',
+  productsTable: '#orderProductsTable',
   orderHookTabsContainer: '#order_hook_tabs',
   displayPartialRefundBtn: 'button.partial-refund-display',
   cancelPartialRefundBtn: 'button.partial-refund-cancel',
