@@ -11,6 +11,8 @@ module.exports = class Stocks extends BOBasePage {
     this.MovementNavItemLink = '#head_tabs li:nth-child(2) > a';
     this.searchInput = 'form.search-form input.input';
     this.searchButton = 'form.search-form button.search-button';
+    //tags
+    this.searchTagslist = 'form.search-form div.tags-wrapper span.tag';
 
     // bulk
     this.bulkCheckbox = 'input#bulk-action';
@@ -19,6 +21,7 @@ module.exports = class Stocks extends BOBasePage {
 
     this.productList = 'table.table';
     this.productRow = `${this.productList} tbody tr`;
+    this.productRowNameColumn = `${this.productList} tbody tr:nth-child(%ROW) td:nth-child(1) div.media-body p`;
   }
 
   /*
@@ -33,8 +36,25 @@ module.exports = class Stocks extends BOBasePage {
     await this.page.click(this.MovementNavItemLink, {waitUntil: 'networkidle2'});
   }
 
-
-  async getNumberOfPRoductsFromList() {
+  /**
+   * Get the number of lines in the main table
+   * @returns {Promise<*>}
+   */
+  async getNumberOfProductsFromList() {
     return (await this.page.$$(this.productRow)).length;
   }
+
+  async removeFilterTags() {
+    const tags = await this.page.evaluate(async () => {
+      const allTags = [...await document.querySelectorAll(this.searchTagslist)];
+      for (let tag in allTags) {
+
+      }
+    });
+  }
+
+  async simpleFilter(filter) {
+
+  }
+
 };

@@ -47,30 +47,24 @@ describe('Filter And Quick Edit Stocks', async () => {
   });
 
   it('should get number of products in list', async function () {
-    numberOfItems = await this.pageObjects.stocksPage.getNumberOfPRoductsFromList();
-    await expect(numberOfItems).to.be.above(0);
+    numberOfProducts = await this.pageObjects.stocksPage.getNumberOfPRoductsFromList();
+    await expect(numberOfProducts).to.be.above(0);
   });
 
 
-  // 1 : Filter products with all inputs and selects in grid table
-  describe('Filter Categories', async () => {
-    it('should filter by Id \'9\'', async function () {
-      await this.pageObjects.categoriesPage.filterCategories(
-        'input',
-        'id_category',
-        Categories.art.id,
+  // 1 : Filter products with name, reference, supplier
+  describe('Filter products', async () => {
+    it('should filter by name \'mug\'', async function () {
+      await this.pageObjects.stocksPage.simpleFilter(
+        'mug',
       );
-      const numberOfCategoriesAfterFilter = await this.pageObjects.categoriesPage.getNumberFromText(
-        this.pageObjects.categoriesPage.categoryGridTitle);
-      await expect(numberOfCategoriesAfterFilter).to.be.at.most(numberOfCategories);
+      const numberOfProductsAfterFilter = await this.pageObjects.stocksPage.getNumberOfProductsFromList();
+      await expect(numberOfProductsAfterFilter).to.be.at.most(numberOfProducts);
       /* eslint-disable no-await-in-loop */
-      for (let i = 1; i <= numberOfCategoriesAfterFilter; i++) {
-        const textColumn = await this.pageObjects.categoriesPage.getTextContent(
-          this.pageObjects.categoriesPage.categoriesListTableColumn.replace('%ROW', i).replace(
-            '%COLUMN',
-            'id_category'),
-        );
-        await expect(textColumn).to.contains(Categories.art.id);
+      for (let i = 1; i <= numberOfProductsAfterFilter; i++) {
+        const textColumn = await this.pageObjects.stocksPage.getTextContent(
+          this.pageObjects.stocksPage.productRowNameColumn.replace('%ROW', i));
+        await expect(textColumn).to.contains('mug');
       }
       /* eslint-enable no-await-in-loop */
     });
