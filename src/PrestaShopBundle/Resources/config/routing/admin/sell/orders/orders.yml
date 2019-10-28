@@ -233,3 +233,15 @@ admin_orders_delete_product:
     orderDetailId: \d+
   options:
     expose: true
+
+admin_orders_get_prices:
+  path: /{orderId}/prices
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:getPrices
+    _legacy_controller: AdminOrders
+  requirements:
+    orderId: \d+
+  options:
+    expose: true
+
