@@ -43,10 +43,7 @@ describe('Filter And Quick Edit brands', async () => {
   brandsCommon.goToBrandsPage();
 
   it('should reset all filters and get Number of brands in BO', async function () {
-    await this.pageObjects.brandsPage.resetFilters('manufacturer');
-    numberOfBrands = await this.pageObjects.brandsPage.getNumberFromText(
-      this.pageObjects.brandsPage.gridHeaderTitle.replace('%TABLE', 'manufacturer'),
-    );
+    numberOfBrands = await this.pageObjects.brandsPage.resetFilters('manufacturer');
     await expect(numberOfBrands).to.be.above(0);
   });
 
@@ -68,10 +65,7 @@ describe('Filter And Quick Edit brands', async () => {
     });
 
     it('should reset all filters', async function () {
-      await this.pageObjects.brandsPage.resetFilters('manufacturer');
-      const numberOfBrandsAfterReset = await this.pageObjects.brandsPage.getNumberFromText(
-        this.pageObjects.brandsPage.gridHeaderTitle.replace('%TABLE', 'manufacturer'),
-      );
+      const numberOfBrandsAfterReset = await this.pageObjects.brandsPage.resetFilters('manufacturer');
       await expect(numberOfBrandsAfterReset).to.equal(numberOfBrands);
     });
 
@@ -91,10 +85,7 @@ describe('Filter And Quick Edit brands', async () => {
     });
 
     it('should reset all filters', async function () {
-      await this.pageObjects.brandsPage.resetFilters('manufacturer');
-      const numberOfBrandsAfterReset = await this.pageObjects.brandsPage.getNumberFromText(
-        this.pageObjects.brandsPage.gridHeaderTitle.replace('%TABLE', 'manufacturer'),
-      );
+      const numberOfBrandsAfterReset = await this.pageObjects.brandsPage.resetFilters('manufacturer');
       await expect(numberOfBrandsAfterReset).to.equal(numberOfBrands);
     });
 
@@ -111,8 +102,10 @@ describe('Filter And Quick Edit brands', async () => {
       /* eslint-disable no-await-in-loop */
       for (let i = 1; i <= numberOfBrandsAfterFilter; i++) {
         const textColumn = await this.pageObjects.brandsPage.getTextContent(
-          this.pageObjects.brandsPage.tableColumn.replace('%TABLE', 'manufacturer')
-            .replace('%ROW', 1).replace('%COLUMN', 'active'),
+          this.pageObjects.brandsPage.tableColumn
+            .replace('%TABLE', 'manufacturer')
+            .replace('%ROW', 1)
+            .replace('%COLUMN', 'active'),
         );
         await expect(textColumn).to.contains('check');
       }
@@ -120,10 +113,7 @@ describe('Filter And Quick Edit brands', async () => {
     });
 
     it('should reset all filters', async function () {
-      await this.pageObjects.brandsPage.resetFilters('manufacturer');
-      const numberOfBrandsAfterReset = await this.pageObjects.brandsPage.getNumberFromText(
-        this.pageObjects.brandsPage.gridHeaderTitle.replace('%TABLE', 'manufacturer'),
-      );
+      const numberOfBrandsAfterReset = await this.pageObjects.brandsPage.resetFilters('manufacturer');
       await expect(numberOfBrandsAfterReset).to.equal(numberOfBrands);
     });
   });
@@ -179,10 +169,7 @@ describe('Filter And Quick Edit brands', async () => {
     });
 
     it('should reset all filters', async function () {
-      await this.pageObjects.brandsPage.resetFilters('manufacturer');
-      const numberOfBrandsAfterReset = await this.pageObjects.brandsPage.getNumberFromText(
-        this.pageObjects.brandsPage.gridHeaderTitle.replace('%TABLE', 'manufacturer'),
-      );
+      const numberOfBrandsAfterReset = await this.pageObjects.brandsPage.resetFilters('manufacturer');
       await expect(numberOfBrandsAfterReset).to.equal(numberOfBrands);
     });
   });

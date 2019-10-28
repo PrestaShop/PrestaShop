@@ -46,12 +46,9 @@ describe('Create 2 brand Addresses and delete with bulk actions', async () => {
 
   // GO to Brands Page
   brandsCommon.goToBrandsPage();
-  
+
   it('should reset all Addresses filters', async function () {
-    await this.pageObjects.brandsPage.resetFilters('manufacturer_address');
-    numberOfBrandAddresses = await this.pageObjects.brandsPage.getNumberFromText(
-      this.pageObjects.brandsPage.gridHeaderTitle.replace('%TABLE', 'manufacturer_address'),
-    );
+    numberOfBrandAddresses = await this.pageObjects.brandsPage.resetFilters('manufacturer_address');
     await expect(numberOfBrandAddresses).to.be.above(0);
   });
   // 1: Create 2 Addresses
@@ -108,10 +105,7 @@ describe('Create 2 brand Addresses and delete with bulk actions', async () => {
       await expect(deleteTextResult).to.be.equal(this.pageObjects.brandsPage.successfulDeleteMessage);
     });
     it('should reset Addresses filters', async function () {
-      await this.pageObjects.brandsPage.resetFilters('manufacturer_address');
-      const numberOfBrandAddressesAfterReset = await this.pageObjects.brandsPage.getNumberFromText(
-        this.pageObjects.brandsPage.gridHeaderTitle.replace('%TABLE', 'manufacturer_address'),
-      );
+      const numberOfBrandAddressesAfterReset = await this.pageObjects.brandsPage.resetFilters('manufacturer_address');
       await expect(numberOfBrandAddressesAfterReset).to.be.equal(numberOfBrandAddresses);
     });
   });

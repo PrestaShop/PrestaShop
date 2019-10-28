@@ -41,12 +41,9 @@ describe('Filter And Quick Edit Addresses', async () => {
 
   // GO to Brands Page
   brandsCommon.goToBrandsPage();
-  
+
   it('should reset all filters and get Number of brands in BO', async function () {
-    await this.pageObjects.brandsPage.resetFilters('manufacturer_address');
-    numberOfBrandsAddresses = await this.pageObjects.brandsPage.getNumberFromText(
-      this.pageObjects.brandsPage.gridHeaderTitle.replace('%TABLE', 'manufacturer_address'),
-    );
+    numberOfBrandsAddresses = await this.pageObjects.brandsPage.resetFilters('manufacturer_address');
     await expect(numberOfBrandsAddresses).to.be.above(0);
   });
   // 1 : Filter brands
@@ -64,10 +61,7 @@ describe('Filter And Quick Edit Addresses', async () => {
       await expect(textColumn).to.contains(demoAddresses.first.id);
     });
     it('should reset all filters', async function () {
-      await this.pageObjects.brandsPage.resetFilters('manufacturer_address');
-      const numberOfBrandsAddressesAfterReset = await this.pageObjects.brandsPage.getNumberFromText(
-        this.pageObjects.brandsPage.gridHeaderTitle.replace('%TABLE', 'manufacturer_address'),
-      );
+      const numberOfBrandsAddressesAfterReset = await this.pageObjects.brandsPage.resetFilters('manufacturer_address');
       await expect(numberOfBrandsAddressesAfterReset).to.equal(numberOfBrandsAddresses);
     });
     it('should filter by brand name', async function () {
@@ -85,10 +79,7 @@ describe('Filter And Quick Edit Addresses', async () => {
       await expect(textColumn).to.contains(demoAddresses.first.brand);
     });
     it('should reset all filters', async function () {
-      await this.pageObjects.brandsPage.resetFilters('manufacturer_address');
-      const numberOfBrandsAddressesAfterReset = await this.pageObjects.brandsPage.getNumberFromText(
-        this.pageObjects.brandsPage.gridHeaderTitle.replace('%TABLE', 'manufacturer_address'),
-      );
+      const numberOfBrandsAddressesAfterReset = await this.pageObjects.brandsPage.resetFilters('manufacturer_address');
       await expect(numberOfBrandsAddressesAfterReset).to.equal(numberOfBrandsAddresses);
     });
     it('should filter by Manufacturer firstname', async function () {
@@ -106,10 +97,7 @@ describe('Filter And Quick Edit Addresses', async () => {
       await expect(textColumn).to.contains(demoAddresses.first.firstName);
     });
     it('should reset all filters', async function () {
-      await this.pageObjects.brandsPage.resetFilters('manufacturer_address');
-      const numberOfBrandsAddressesAfterReset = await this.pageObjects.brandsPage.getNumberFromText(
-        this.pageObjects.brandsPage.gridHeaderTitle.replace('%TABLE', 'manufacturer_address'),
-      );
+      const numberOfBrandsAddressesAfterReset = await this.pageObjects.brandsPage.resetFilters('manufacturer_address');
       await expect(numberOfBrandsAddressesAfterReset).to.equal(numberOfBrandsAddresses);
     });
     it('should filter by Manufacturer lastname', async function () {
@@ -127,10 +115,7 @@ describe('Filter And Quick Edit Addresses', async () => {
       await expect(textColumn).to.contains(demoAddresses.first.lastName);
     });
     it('should reset all filters', async function () {
-      await this.pageObjects.brandsPage.resetFilters('manufacturer_address');
-      const numberOfBrandsAddressesAfterReset = await this.pageObjects.brandsPage.getNumberFromText(
-        this.pageObjects.brandsPage.gridHeaderTitle.replace('%TABLE', 'manufacturer_address'),
-      );
+      const numberOfBrandsAddressesAfterReset = await this.pageObjects.brandsPage.resetFilters('manufacturer_address');
       await expect(numberOfBrandsAddressesAfterReset).to.equal(numberOfBrandsAddresses);
     });
     it('should filter by Address postal code', async function () {
@@ -148,10 +133,7 @@ describe('Filter And Quick Edit Addresses', async () => {
       await expect(textColumn).to.contains(demoAddresses.first.postalCode);
     });
     it('should reset all filters', async function () {
-      await this.pageObjects.brandsPage.resetFilters('manufacturer_address');
-      const numberOfBrandsAddressesAfterReset = await this.pageObjects.brandsPage.getNumberFromText(
-        this.pageObjects.brandsPage.gridHeaderTitle.replace('%TABLE', 'manufacturer_address'),
-      );
+      const numberOfBrandsAddressesAfterReset = await this.pageObjects.brandsPage.resetFilters('manufacturer_address');
       await expect(numberOfBrandsAddressesAfterReset).to.equal(numberOfBrandsAddresses);
     });
     it('should filter by City', async function () {
@@ -169,10 +151,7 @@ describe('Filter And Quick Edit Addresses', async () => {
       await expect(textColumn).to.contains(demoAddresses.first.city);
     });
     it('should reset all filters', async function () {
-      await this.pageObjects.brandsPage.resetFilters('manufacturer_address');
-      const numberOfBrandsAddressesAfterReset = await this.pageObjects.brandsPage.getNumberFromText(
-        this.pageObjects.brandsPage.gridHeaderTitle.replace('%TABLE', 'manufacturer_address'),
-      );
+      const numberOfBrandsAddressesAfterReset = await this.pageObjects.brandsPage.resetFilters('manufacturer_address');
       await expect(numberOfBrandsAddressesAfterReset).to.equal(numberOfBrandsAddresses);
     });
     it('should filter by Country', async function () {
@@ -190,10 +169,7 @@ describe('Filter And Quick Edit Addresses', async () => {
       await expect(textColumn).to.contains(demoAddresses.first.country);
     });
     it('should reset all filters', async function () {
-      await this.pageObjects.brandsPage.resetFilters('manufacturer_address');
-      const numberOfBrandsAddressesAfterReset = await this.pageObjects.brandsPage.getNumberFromText(
-        this.pageObjects.brandsPage.gridHeaderTitle.replace('%TABLE', 'manufacturer_address'),
-      );
+      const numberOfBrandsAddressesAfterReset = await this.pageObjects.brandsPage.resetFilters('manufacturer_address');
       await expect(numberOfBrandsAddressesAfterReset).to.equal(numberOfBrandsAddresses);
     });
   });

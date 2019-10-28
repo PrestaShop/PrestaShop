@@ -83,6 +83,7 @@ module.exports = class Brands extends BOBasePage {
     if (await this.elementVisible(resetButton, 2000)) {
       await this.clickAndWaitForNavigation(resetButton);
     }
+    return this.getNumberFromText(this.gridHeaderTitle.replace('%TABLE', table));
   }
 
   /**

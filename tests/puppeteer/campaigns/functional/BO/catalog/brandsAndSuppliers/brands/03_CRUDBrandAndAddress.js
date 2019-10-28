@@ -56,7 +56,7 @@ describe('Create, Update and Delete Brand and Address', async () => {
       files.deleteFile(editBrandData.logo),
     ]);
   });
-  
+
   // Login into BO and go to brands page
   loginCommon.loginBO();
 
@@ -64,15 +64,9 @@ describe('Create, Update and Delete Brand and Address', async () => {
   brandsCommon.goToBrandsPage();
 
   it('should reset all filters', async function () {
-    await this.pageObjects.brandsPage.resetFilters('manufacturer');
-    numberOfBrands = await this.pageObjects.brandsPage.getNumberFromText(
-      this.pageObjects.brandsPage.gridHeaderTitle.replace('%TABLE', 'manufacturer'),
-    );
+    numberOfBrands = await this.pageObjects.brandsPage.resetFilters('manufacturer');
     await expect(numberOfBrands).to.be.above(0);
-    await this.pageObjects.brandsPage.resetFilters('manufacturer_address');
-    numberOfBrandsAddresses = await this.pageObjects.brandsPage.getNumberFromText(
-      this.pageObjects.brandsPage.gridHeaderTitle.replace('%TABLE', 'manufacturer_address'),
-    );
+    numberOfBrandsAddresses = await this.pageObjects.brandsPage.resetFilters('manufacturer_address');
     await expect(numberOfBrandsAddresses).to.be.above(0);
   });
   // 1: Create Brand
@@ -145,10 +139,7 @@ describe('Create, Update and Delete Brand and Address', async () => {
       await expect(pageTitle).to.contains(this.pageObjects.brandsPage.pageTitle);
     });
     it('should reset brands filters', async function () {
-      await this.pageObjects.brandsPage.resetFilters('manufacturer');
-      const numberOfBrandsAfterReset = await this.pageObjects.brandsPage.getNumberFromText(
-        this.pageObjects.brandsPage.gridHeaderTitle.replace('%TABLE', 'manufacturer'),
-      );
+      const numberOfBrandsAfterReset = await this.pageObjects.brandsPage.resetFilters('manufacturer');
       await expect(numberOfBrandsAfterReset).to.be.equal(numberOfBrands + 1);
     });
   });
@@ -189,15 +180,10 @@ describe('Create, Update and Delete Brand and Address', async () => {
       await expect(textColumn).to.contains(editBrandData.name);
     });
     it('should reset all filters', async function () {
-      await this.pageObjects.brandsPage.resetFilters('manufacturer');
-      const numberOfBrandsAfterReset = await this.pageObjects.brandsPage.getNumberFromText(
-        this.pageObjects.brandsPage.gridHeaderTitle.replace('%TABLE', 'manufacturer'),
-      );
+      const numberOfBrandsAfterReset = await this.pageObjects.brandsPage.resetFilters('manufacturer');
       await expect(numberOfBrandsAfterReset).to.be.equal(numberOfBrands + 1);
-      await this.pageObjects.brandsPage.resetFilters('manufacturer_address');
-      const numberOfBrandsAddressesAfterReset = await this.pageObjects.brandsPage.getNumberFromText(
-        this.pageObjects.brandsPage.gridHeaderTitle.replace('%TABLE', 'manufacturer_address'),
-      );
+
+      const numberOfBrandsAddressesAfterReset = await this.pageObjects.brandsPage.resetFilters('manufacturer_address');
       await expect(numberOfBrandsAddressesAfterReset).to.be.equal(numberOfBrandsAddresses + 1);
     });
   });
@@ -223,10 +209,7 @@ describe('Create, Update and Delete Brand and Address', async () => {
       await expect(result).to.equal(this.pageObjects.brandsPage.successfulUpdateMessage);
     });
     it('should reset Brand Addresses filters', async function () {
-      await this.pageObjects.brandsPage.resetFilters('manufacturer_address');
-      const numberOfBrandsAddressesAfterReset = await this.pageObjects.brandsPage.getNumberFromText(
-        this.pageObjects.brandsPage.gridHeaderTitle.replace('%TABLE', 'manufacturer_address'),
-      );
+      const numberOfBrandsAddressesAfterReset = await this.pageObjects.brandsPage.resetFilters('manufacturer_address');
       await expect(numberOfBrandsAddressesAfterReset).to.be.equal(numberOfBrandsAddresses + 1);
     });
   });
@@ -267,10 +250,7 @@ describe('Create, Update and Delete Brand and Address', async () => {
       await expect(pageTitle).to.contains(this.pageObjects.brandsPage.pageTitle);
     });
     it('should reset brands filters', async function () {
-      await this.pageObjects.brandsPage.resetFilters('manufacturer');
-      const numberOfBrandsAfterReset = await this.pageObjects.brandsPage.getNumberFromText(
-        this.pageObjects.brandsPage.gridHeaderTitle.replace('%TABLE', 'manufacturer'),
-      );
+      const numberOfBrandsAfterReset = await this.pageObjects.brandsPage.resetFilters('manufacturer');
       await expect(numberOfBrandsAfterReset).to.be.equal(numberOfBrands + 1);
     });
   });
@@ -306,10 +286,7 @@ describe('Create, Update and Delete Brand and Address', async () => {
       await expect(textColumn).to.contains('--');
     });
     it('should reset Brand filters', async function () {
-      await this.pageObjects.brandsPage.resetFilters('manufacturer');
-      const numberOfBrandsAfterReset = await this.pageObjects.brandsPage.getNumberFromText(
-        this.pageObjects.brandsPage.gridHeaderTitle.replace('%TABLE', 'manufacturer'),
-      );
+      const numberOfBrandsAfterReset = await this.pageObjects.brandsPage.resetFilters('manufacturer');
       await expect(numberOfBrandsAfterReset).to.be.equal(numberOfBrands);
     });
   });
@@ -338,10 +315,7 @@ describe('Create, Update and Delete Brand and Address', async () => {
       await expect(result).to.be.equal(this.pageObjects.brandsPage.successfulDeleteMessage);
     });
     it('should reset Brand Addresses filters', async function () {
-      await this.pageObjects.brandsPage.resetFilters('manufacturer_address');
-      const numberOfBrandsAddressesAfterReset = await this.pageObjects.brandsPage.getNumberFromText(
-        this.pageObjects.brandsPage.gridHeaderTitle.replace('%TABLE', 'manufacturer_address'),
-      );
+      const numberOfBrandsAddressesAfterReset = await this.pageObjects.brandsPage.resetFilters('manufacturer_address');
       await expect(numberOfBrandsAddressesAfterReset).to.be.equal(numberOfBrandsAddresses);
     });
   });

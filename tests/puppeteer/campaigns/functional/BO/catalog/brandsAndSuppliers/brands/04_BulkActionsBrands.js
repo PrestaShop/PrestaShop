@@ -51,12 +51,9 @@ describe('Create 2 brands, Enable, disable and delete with bulk actions', async 
 
   // GO to Brands Page
   brandsCommon.goToBrandsPage();
-  
+
   it('should reset all Brands filters', async function () {
-    await this.pageObjects.brandsPage.resetFilters('manufacturer');
-    numberOfBrands = await this.pageObjects.brandsPage.getNumberFromText(
-      this.pageObjects.brandsPage.gridHeaderTitle.replace('%TABLE', 'manufacturer'),
-    );
+    numberOfBrands = await this.pageObjects.brandsPage.resetFilters('manufacturer');
     await expect(numberOfBrands).to.be.above(0);
   });
   // 1: Create 2 Brands
@@ -147,10 +144,7 @@ describe('Create 2 brands, Enable, disable and delete with bulk actions', async 
       /* eslint-enable no-await-in-loop */
     });
     it('should reset Brand filters', async function () {
-      await this.pageObjects.brandsPage.resetFilters('manufacturer');
-      const numberOfBrandsAfterReset = await this.pageObjects.brandsPage.getNumberFromText(
-        this.pageObjects.brandsPage.gridHeaderTitle.replace('%TABLE', 'manufacturer'),
-      );
+      const numberOfBrandsAfterReset = await this.pageObjects.brandsPage.resetFilters('manufacturer');
       await expect(numberOfBrandsAfterReset).to.be.equal(numberOfBrands + 2);
     });
   });
@@ -179,10 +173,7 @@ describe('Create 2 brands, Enable, disable and delete with bulk actions', async 
       await expect(deleteTextResult).to.be.equal(this.pageObjects.brandsPage.successfulDeleteMessage);
     });
     it('should reset Brand filters', async function () {
-      await this.pageObjects.brandsPage.resetFilters('manufacturer');
-      const numberOfBrandsAfterReset = await this.pageObjects.brandsPage.getNumberFromText(
-        this.pageObjects.brandsPage.gridHeaderTitle.replace('%TABLE', 'manufacturer'),
-      );
+      const numberOfBrandsAfterReset = await this.pageObjects.brandsPage.resetFilters('manufacturer');
       await expect(numberOfBrandsAfterReset).to.be.equal(numberOfBrands);
     });
   });
