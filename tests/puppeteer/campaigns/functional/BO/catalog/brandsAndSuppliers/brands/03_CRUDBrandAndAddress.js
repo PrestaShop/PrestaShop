@@ -5,7 +5,7 @@ const files = require('@utils/files');
 const BrandFaker = require('@data/faker/brand');
 const BrandAddressFaker = require('@data/faker/brandAddress');
 const loginCommon = require('@commonTests/loginBO');
-const brandsCommon = require('@commonTests/BO/brands');
+const brandsCommon = require('@commonTests/BO/BOBase');
 // Importing pages
 const BOBasePage = require('@pages/BO/BObasePage');
 const LoginPage = require('@pages/BO/login');
