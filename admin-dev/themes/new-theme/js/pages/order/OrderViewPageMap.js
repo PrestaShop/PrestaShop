@@ -49,4 +49,11 @@ export default {
   updateOrderShippingCurrentOrderCarrierIdInput: '#update_order_shipping_current_order_carrier_id',
   productDeleteBtn: '.js-order-product-delete-btn',
   productsTable: '#orderProductsTable',
+  // Order price elements
+  orderProductsTotal: '#orderProductsTotal',
+  orderDiscountsTotal: '#orderDiscountsTotal',
+  orderWrappingTotal: '#orderWrappingTotal',
+  orderShippingTotal: '#orderShippingTotal',
+  orderTaxesTotal: '#orderTaxesTotal',
+  orderTotal: '#orderTotal',
 };
