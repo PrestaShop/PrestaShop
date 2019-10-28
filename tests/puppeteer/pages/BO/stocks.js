@@ -12,7 +12,8 @@ module.exports = class Stocks extends BOBasePage {
     this.searchInput = 'form.search-form input.input';
     this.searchButton = 'form.search-form button.search-button';
     //tags
-    this.searchTagslist = 'form.search-form div.tags-wrapper span.tag';
+    this.searchTagsList = 'form.search-form div.tags-wrapper span.tag';
+    this.searchTagsListCloseSpan = 'form.search-form div.tags-wrapper span.tag i';
 
     // bulk
     this.bulkCheckbox = 'input#bulk-action';
@@ -45,16 +46,14 @@ module.exports = class Stocks extends BOBasePage {
   }
 
   async removeFilterTags() {
-    const tags = await this.page.evaluate(async () => {
-      const allTags = [...await document.querySelectorAll(this.searchTagslist)];
-      for (let tag in allTags) {
-
-      }
-    });
+    const closeButtons = await this.page.$$(this.searchTagsListCloseSpan);
+    for (const closeButton of closeButtons) {
+      await closeButton.click();
+    }
   }
 
   async simpleFilter(filter) {
-
+    this.removeFilterTags();
   }
 
 };
