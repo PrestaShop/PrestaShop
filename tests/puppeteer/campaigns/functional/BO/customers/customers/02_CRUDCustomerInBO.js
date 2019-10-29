@@ -58,12 +58,7 @@ describe('Create, Read, Update and Delete Customer in BO', async () => {
     await expect(pageTitle).to.contains(this.pageObjects.customersPage.pageTitle);
   });
   it('should reset all filters', async function () {
-    if (await this.pageObjects.customersPage.elementVisible(this.pageObjects.customersPage.filterResetButton, 2000)) {
-      await this.pageObjects.customersPage.resetFilter();
-    }
-    numberOfCustomers = await this.pageObjects.customersPage.getNumberFromText(
-      this.pageObjects.customersPage.customerGridTitle,
-    );
+    numberOfCustomers = await this.pageObjects.customersPage.resetFilter();
     await expect(numberOfCustomers).to.be.above(0);
   });
   // 1 : Create customer and go to FO to check sign in is OK
@@ -150,10 +145,7 @@ describe('Create, Read, Update and Delete Customer in BO', async () => {
     it('should update customer', async function () {
       const textResult = await this.pageObjects.addCustomerPage.createEditCustomer(editCustomerData);
       await expect(textResult).to.equal(this.pageObjects.customersPage.successfulUpdateMessage);
-      await this.pageObjects.customersPage.resetFilter();
-      const numberOfCustomersAfterUpdate = await this.pageObjects.customersPage.getNumberFromText(
-        this.pageObjects.customersPage.customerGridTitle,
-      );
+      const numberOfCustomersAfterUpdate = await this.pageObjects.customersPage.resetFilter();
       await expect(numberOfCustomersAfterUpdate).to.be.equal(numberOfCustomers + 1);
     });
     it('should go to FO and check sign in with edited account', async function () {
@@ -218,10 +210,7 @@ describe('Create, Read, Update and Delete Customer in BO', async () => {
     it('should delete customer', async function () {
       const textResult = await this.pageObjects.customersPage.deleteCustomer('1');
       await expect(textResult).to.equal(this.pageObjects.customersPage.successfulDeleteMessage);
-      await this.pageObjects.customersPage.resetFilter();
-      const numberOfCustomersAfterDelete = await this.pageObjects.customersPage.getNumberFromText(
-        this.pageObjects.customersPage.customerGridTitle,
-      );
+      const numberOfCustomersAfterDelete = await this.pageObjects.customersPage.resetFilter();
       await expect(numberOfCustomersAfterDelete).to.be.equal(numberOfCustomers);
     });
   });
