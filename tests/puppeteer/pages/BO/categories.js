@@ -186,11 +186,8 @@ module.exports = class Categories extends BOBasePage {
    */
   async chooseOptionAndDelete(modeID) {
     await this.page.click(this.deleteCategoryModalModeInput.replace('%ID', modeID));
-    await Promise.all([
-      this.page.click(this.deleteCategoryModalDeleteButton),
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-      this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true}),
-    ]);
+    await this.clickAndWaitForNavigation(this.deleteCategoryModalDeleteButton);
+    await this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true})
   }
 
   /**

@@ -225,11 +225,8 @@ module.exports = class Customers extends BOBasePage {
     if (allowRegistrationAfterDelete) await this.page.click(this.deleteCustomerModalMethodInput.replace('%ID', '0'));
     else await this.page.click(this.deleteCustomerModalMethodInput.replace('%ID', '1'));
     // Click on delete button and wait for action to finish
-    await Promise.all([
-      this.page.click(this.deleteCustomerModalDeleteButton),
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-      this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true}),
-    ]);
+    await this.clickAndWaitForNavigation(this.deleteCustomerModalDeleteButton);
+    await this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true});
   }
 
   /**

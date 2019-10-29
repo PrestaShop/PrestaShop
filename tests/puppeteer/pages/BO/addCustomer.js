@@ -49,11 +49,9 @@ module.exports = class AddCustomer extends BOBasePage {
     else await this.page.click(this.partnerOffersSwitchlabel.replace('%ID', '0'));
     await this.page.click(this.selectAllGroupAccessCheckbox);
     await this.selectByVisibleText(this.defaultCustomerGroupSelect, customerData.defaultCustomerGroup);
-    await Promise.all([
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-      this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true}),
-      this.page.click(this.saveCustomerButton),
-    ]);
+    // Save Customer
+    await this.clickAndWaitForNavigation(this.saveCustomerButton);
+    await this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true});
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 };

@@ -37,11 +37,9 @@ module.exports = class AddCategory extends BOBasePage {
     await this.setValue(this.metaTitleInput, categoryData.metaTitle);
     await this.setValue(this.metaDescriptionTextarea, categoryData.metaDescription);
     await this.page.click(this.selectAllGroupAccessCheckbox);
-    await Promise.all([
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-      this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true}),
-      this.page.click(this.saveCategoryButton),
-    ]);
+    // Save Category
+    await this.clickAndWaitForNavigation(this.saveCategoryButton);
+    await this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true});
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 };
