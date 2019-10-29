@@ -58,7 +58,7 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
   after(async () => {
     await helper.closeBrowser(browser);
   });
-  // Login into BO and go to categories page
+  // Login into BO
   loginCommon.loginBO();
 
   // Go to Design>Pages page

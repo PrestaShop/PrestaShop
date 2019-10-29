@@ -43,7 +43,7 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
   after(async () => {
     await helper.closeBrowser(browser);
   });
-  // Login into BO and go to Pages page
+  // Login into BO
   loginCommon.loginBO();
 
   // Go to Design>Pages page
