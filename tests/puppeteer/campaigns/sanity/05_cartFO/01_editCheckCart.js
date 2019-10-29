@@ -30,7 +30,7 @@ const init = async function () {
   Check the cart
   Edit the cart and check it
  */
-describe('Check the Product page', async () => {
+describe('Check Cart in FO', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
