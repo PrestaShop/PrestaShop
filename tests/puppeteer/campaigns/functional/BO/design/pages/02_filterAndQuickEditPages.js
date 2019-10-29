@@ -3,7 +3,6 @@ require('module-alias/register');
 const {expect} = require('chai');
 const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
-const BoBaseCommonTests = require('@commonTests/BO/BOBase');
 const {Pages} = require('@data/demo/CMSpage');
 // Importing pages
 const BOBasePage = require('@pages/BO/BObasePage');
@@ -40,7 +39,16 @@ describe('Filter And Quick Edit Pages', async () => {
   loginCommon.loginBO();
 
   // Go to Design>Pages page
-  BoBaseCommonTests.goToPagesPage();
+  it('should go to "Design>Pages" page', async function () {
+    await this.pageObjects.boBasePage.goToSubMenu(
+      this.pageObjects.boBasePage.designParentLink,
+      this.pageObjects.boBasePage.pagesLink,
+    );
+    await this.pageObjects.boBasePage.closeSfToolBar();
+    const pageTitle = await this.pageObjects.pagesPage.getPageTitle();
+    await expect(pageTitle).to.contains(this.pageObjects.pagesPage.pageTitle);
+  });
+
 
   // 1 : Filter Pages with all inputs and selects in grid table
   describe('Filter Pages', async () => {

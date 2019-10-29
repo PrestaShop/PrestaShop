@@ -3,7 +3,6 @@ require('module-alias/register');
 const {expect} = require('chai');
 const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
-const BoBaseCommonTests = require('@commonTests/BO/BOBase');
 const CategoryPageFaker = require('@data/faker/CMScategory');
 // Importing pages
 const BOBasePage = require('@pages/BO/BObasePage');
@@ -46,7 +45,15 @@ describe('Filter And Quick Edit Categories', async () => {
   loginCommon.loginBO();
 
   // Go to Design>Pages page
-  BoBaseCommonTests.goToPagesPage();
+  it('should go to "Design>Pages" page', async function () {
+    await this.pageObjects.boBasePage.goToSubMenu(
+      this.pageObjects.boBasePage.designParentLink,
+      this.pageObjects.boBasePage.pagesLink,
+    );
+    await this.pageObjects.boBasePage.closeSfToolBar();
+    const pageTitle = await this.pageObjects.pagesPage.getPageTitle();
+    await expect(pageTitle).to.contains(this.pageObjects.pagesPage.pageTitle);
+  });
 
   // 1 : Create two categories and Filter with all inputs and selects in grid table
   describe('Create 2 categories then filter the table', async () => {
@@ -108,15 +115,13 @@ describe('Filter And Quick Edit Categories', async () => {
           this.pageObjects.pagesPage.gridTitle.replace('%TABLE', 'cms_page_category'),
         );
         await expect(numberOfCategoriesAfterFilter).to.be.at.most(numberOfCategories);
-        /* eslint-disable no-await-in-loop */
-        for (let i = 1; i <= numberOfCategoriesAfterFilter; i++) {
-          const textColumn = await this.pageObjects.pagesPage.getTextContent(
-            this.pageObjects.pagesPage.listTableColumn.replace('%TABLE', 'cms_page_category')
-              .replace('%ROW', i).replace('%COLUMN', 'id_cms_category'),
-          );
-          await expect(textColumn).to.contains('2');
-        }
-        /* eslint-enable no-await-in-loop */
+        const textColumn = await this.pageObjects.pagesPage.getTextContent(
+          this.pageObjects.pagesPage.listTableColumn
+            .replace('%TABLE', 'cms_page_category')
+            .replace('%ROW', 1)
+            .replace('%COLUMN', 'id_cms_category'),
+        );
+        await expect(textColumn).to.contains('2');
       });
 
       it('should reset all filters', async function () {
@@ -124,25 +129,23 @@ describe('Filter And Quick Edit Categories', async () => {
         await expect(numberOfCategoriesAfterFilter).to.be.equal(numberOfCategories);
       });
 
-      it('should filter by Name', async function () {
-        await this.pageObjects.pagesPage.filterTable('cms_page_category',
+      it('should filter by category name', async function () {
+        await this.pageObjects.pagesPage.filterTable(
+          'cms_page_category',
           'input',
           'name',
-          createFirstCategoryData.name,
-        );
+          createFirstCategoryData.name);
         const numberOfCategoriesAfterFilter = await this.pageObjects.pagesPage.getNumberFromText(
           this.pageObjects.pagesPage.gridTitle.replace('%TABLE', 'cms_page_category'),
         );
         await expect(numberOfCategoriesAfterFilter).to.be.at.most(numberOfCategories);
-        /* eslint-disable no-await-in-loop */
-        for (let i = 1; i <= numberOfCategoriesAfterFilter; i++) {
-          const textColumn = await this.pageObjects.pagesPage.getTextContent(
-            this.pageObjects.pagesPage.listTableColumn.replace('%TABLE', 'cms_page_category')
-              .replace('%ROW', i).replace('%COLUMN', 'name'),
-          );
-          await expect(textColumn).to.contains(createFirstCategoryData.name);
-        }
-        /* eslint-enable no-await-in-loop */
+        const textColumn = await this.pageObjects.pagesPage.getTextContent(
+          this.pageObjects.pagesPage.listTableColumn
+            .replace('%TABLE', 'cms_page_category')
+            .replace('%ROW', 1)
+            .replace('%COLUMN', 'name'),
+        );
+        await expect(textColumn).to.contains(createFirstCategoryData.name);
       });
 
       it('should reset all filters', async function () {
@@ -160,15 +163,13 @@ describe('Filter And Quick Edit Categories', async () => {
           this.pageObjects.pagesPage.gridTitle.replace('%TABLE', 'cms_page_category'),
         );
         await expect(numberOfCategoriesAfterFilter).to.be.at.most(numberOfCategories);
-        /* eslint-disable no-await-in-loop */
-        for (let i = 1; i <= numberOfCategoriesAfterFilter; i++) {
-          const textColumn = await this.pageObjects.pagesPage.getTextContent(
-            this.pageObjects.pagesPage.listTableColumn.replace('%TABLE', 'cms_page_category')
-              .replace('%ROW', i).replace('%COLUMN', 'description'),
-          );
-          await expect(textColumn).to.contains(createSecondCategoryData.description);
-        }
-        /* eslint-enable no-await-in-loop */
+        const textColumn = await this.pageObjects.pagesPage.getTextContent(
+          this.pageObjects.pagesPage.listTableColumn
+            .replace('%TABLE', 'cms_page_category')
+            .replace('%ROW', 1)
+            .replace('%COLUMN', 'description'),
+        );
+        await expect(textColumn).to.contains(createSecondCategoryData.description);
       });
 
       it('should reset all filters', async function () {
@@ -182,15 +183,13 @@ describe('Filter And Quick Edit Categories', async () => {
           this.pageObjects.pagesPage.gridTitle.replace('%TABLE', 'cms_page_category'),
         );
         await expect(numberOfCategoriesAfterFilter).to.be.at.most(numberOfCategories);
-        /* eslint-disable no-await-in-loop */
-        for (let i = 1; i <= numberOfCategoriesAfterFilter; i++) {
-          const textColumn = await this.pageObjects.pagesPage.getTextContent(
-            this.pageObjects.pagesPage.listTableColumn.replace('%TABLE', 'cms_page_category')
-              .replace('%ROW', i).replace('%COLUMN', 'position'),
-          );
-          await expect(textColumn).to.contains('1');
-        }
-        /* eslint-enable no-await-in-loop */
+        const textColumn = await this.pageObjects.pagesPage.getTextContent(
+          this.pageObjects.pagesPage.listTableColumn
+            .replace('%TABLE', 'cms_page_category')
+            .replace('%ROW', 1)
+            .replace('%COLUMN', 'position'),
+        );
+        await expect(textColumn).to.contains('1');
       });
 
       it('should reset all filters', async function () {
@@ -211,8 +210,10 @@ describe('Filter And Quick Edit Categories', async () => {
         /* eslint-disable no-await-in-loop */
         for (let i = 1; i <= numberOfCategoriesAfterFilter; i++) {
           const textColumn = await this.pageObjects.pagesPage.getTextContent(
-            this.pageObjects.pagesPage.listTableColumn.replace('%TABLE', 'cms_page_category')
-              .replace('%ROW', i).replace('%COLUMN', 'active'),
+            this.pageObjects.pagesPage.listTableColumn
+              .replace('%TABLE', 'cms_page_category')
+              .replace('%ROW', i)
+              .replace('%COLUMN', 'active'),
           );
           await expect(textColumn).to.contains('check');
         }
@@ -227,7 +228,7 @@ describe('Filter And Quick Edit Categories', async () => {
   });
   // 2 : Editing Categories from grid table
   describe('Quick Edit Categories', async () => {
-    it('should filter by Name', async function () {
+    it('should filter by category name', async function () {
       await this.pageObjects.pagesPage.filterTable('cms_page_category',
         'input',
         'name',
@@ -237,15 +238,13 @@ describe('Filter And Quick Edit Categories', async () => {
         this.pageObjects.pagesPage.gridTitle.replace('%TABLE', 'cms_page_category'),
       );
       await expect(numberOfCategoriesAfterFilter).to.be.at.most(numberOfCategories);
-      /* eslint-disable no-await-in-loop */
-      for (let i = 1; i <= numberOfCategoriesAfterFilter; i++) {
-        const textColumn = await this.pageObjects.pagesPage.getTextContent(
-          this.pageObjects.pagesPage.listTableColumn.replace('%TABLE', 'cms_page_category')
-            .replace('%ROW', i).replace('%COLUMN', 'name'),
-        );
-        await expect(textColumn).to.contains(createFirstCategoryData.name);
-      }
-      /* eslint-enable no-await-in-loop */
+      const textColumn = await this.pageObjects.pagesPage.getTextContent(
+        this.pageObjects.pagesPage.listTableColumn
+          .replace('%TABLE', 'cms_page_category')
+          .replace('%ROW', 1)
+          .replace('%COLUMN', 'name'),
+      );
+      await expect(textColumn).to.contains(createFirstCategoryData.name);
     });
 
     it('should disable the Category', async function () {

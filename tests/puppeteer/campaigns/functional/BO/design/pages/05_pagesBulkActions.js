@@ -3,7 +3,6 @@ require('module-alias/register');
 const {expect} = require('chai');
 const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
-const BoBaseCommonTests = require('@commonTests/BO/BOBase');
 const PageFaker = require('@data/faker/CMSpage');
 // Importing pages
 const BOBasePage = require('@pages/BO/BObasePage');
@@ -48,7 +47,16 @@ describe('Create Pages, Then disable / Enable and Delete with Bulk actions', asy
   loginCommon.loginBO();
 
   // Go to Design>Pages page
-  BoBaseCommonTests.goToPagesPage();
+  it('should go to "Design>Pages" page', async function () {
+    await this.pageObjects.boBasePage.goToSubMenu(
+      this.pageObjects.boBasePage.designParentLink,
+      this.pageObjects.boBasePage.pagesLink,
+    );
+    await this.pageObjects.boBasePage.closeSfToolBar();
+    const pageTitle = await this.pageObjects.pagesPage.getPageTitle();
+    await expect(pageTitle).to.contains(this.pageObjects.pagesPage.pageTitle);
+  });
+
 
   it('should reset filter and get number of pages in BO', async function () {
     numberOfPages = await this.pageObjects.pagesPage.resetFilter('cms_page');
