@@ -50,13 +50,13 @@ module.exports = class Taxes extends BOBasePage {
 
   /**
    * Reset Filter in table
-   * @return {Promise<void>}
+   * @return {Promise<integer>}
    */
   async resetFilter() {
-    await Promise.all([
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-      this.page.click(this.resetFilterButton),
-    ]);
+    if (await this.elementVisible(this.resetFilterButton, 2000)) {
+      await this.clickAndWaitForNavigation(this.resetFilterButton);
+    }
+    return this.getNumberFromText(this.gridHeaderTitle);
   }
 
   /**

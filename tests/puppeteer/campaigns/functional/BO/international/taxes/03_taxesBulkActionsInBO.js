@@ -52,12 +52,7 @@ describe('Create Taxes, Then disable / Enable and Delete with Bulk actions', asy
     await expect(pageTitle).to.contains(this.pageObjects.taxesPage.pageTitle);
   });
   it('should reset all filters', async function () {
-    if (await this.pageObjects.taxesPage.elementVisible(this.pageObjects.taxesPage.resetFilterButton, 2000)) {
-      await this.pageObjects.taxesPage.resetFilter();
-    }
-    numberOfTaxes = await this.pageObjects.taxesPage.getNumberFromText(
-      this.pageObjects.taxesPage.gridHeaderTitle,
-    );
+    numberOfTaxes = await this.pageObjects.taxesPage.resetFilter();
     await expect(numberOfTaxes).to.be.above(0);
   });
   // 1 : Create 2 taxes with data from faker
@@ -135,12 +130,7 @@ describe('Create Taxes, Then disable / Enable and Delete with Bulk actions', asy
       /* eslint-enable no-await-in-loop */
     });
     it('should reset all filters', async function () {
-      if (await this.pageObjects.taxesPage.elementVisible(this.pageObjects.taxesPage.resetFilterButton, 2000)) {
-        await this.pageObjects.taxesPage.resetFilter();
-      }
-      const numberOfTaxesAfterReset = await this.pageObjects.taxesPage.getNumberFromText(
-        this.pageObjects.taxesPage.gridHeaderTitle,
-      );
+      const numberOfTaxesAfterReset = await this.pageObjects.taxesPage.resetFilter();
       await expect(numberOfTaxesAfterReset).to.be.equal(numberOfTaxes + 2);
     });
   });
@@ -160,15 +150,7 @@ describe('Create Taxes, Then disable / Enable and Delete with Bulk actions', asy
     it('should delete Taxes with Bulk Actions and check Result', async function () {
       const deleteTextResult = await this.pageObjects.taxesPage.deleteTaxesBulkActions();
       await expect(deleteTextResult).to.be.equal(this.pageObjects.taxesPage.successfulDeleteMessage);
-    });
-
-    it('should reset all filters', async function () {
-      if (await this.pageObjects.taxesPage.elementVisible(this.pageObjects.taxesPage.resetFilterButton, 2000)) {
-        await this.pageObjects.taxesPage.resetFilter();
-      }
-      const numberOfTaxesAfterReset = await this.pageObjects.taxesPage.getNumberFromText(
-        this.pageObjects.taxesPage.gridHeaderTitle,
-      );
+      const numberOfTaxesAfterReset = await this.pageObjects.taxesPage.resetFilter();
       await expect(numberOfTaxesAfterReset).to.be.equal(numberOfTaxes);
     });
   });
