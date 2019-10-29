@@ -76,6 +76,18 @@
             </div>
           </div>
         </div>
+
+        <div class="row {% if updateOrderProductForm.invoice_id.vars.choices is empty or orderForViewing.delivered %}d-none{% endif %}">
+          <div class="col">
+            <div class="form-group">
+              <label class="form-control-label" for="{{ updateOrderProductForm.invoice_id.vars.id }}">
+                {{ 'Invoice'|trans({}, 'Admin.Global') }}
+              </label>
+
+              {{ form_widget(updateOrderProductForm.invoice_id) }}
+            </div>
+          </div>
+        </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">
