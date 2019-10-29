@@ -103,9 +103,9 @@ module.exports = class Customers extends BOBasePage {
   async getToggleColumnValue(row, column) {
     if (
       await this.elementVisible(
-      this.customersListColumnValidIcon.replace('%ROW', row).replace('%COLUMN', column),
+        this.customersListColumnValidIcon.replace('%ROW', row).replace('%COLUMN', column),
         100,
-        )
+      )
     ) return true;
     return false;
   }
