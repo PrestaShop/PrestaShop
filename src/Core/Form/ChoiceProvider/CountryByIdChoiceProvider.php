@@ -51,7 +51,7 @@ final class CountryByIdChoiceProvider implements FormChoiceProviderInterface, Fo
     private $countries;
 
     /**
-     * @var array
+     * @var int[]
      */
     private $dniCountriesId;
 
@@ -115,7 +115,7 @@ final class CountryByIdChoiceProvider implements FormChoiceProviderInterface, Fo
     }
 
     /**
-     * @return array
+     * @return int[]
      */
     private function getDniCountriesId()
     {

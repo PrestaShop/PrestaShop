@@ -64,9 +64,9 @@ class CountryDataProvider
             ->from('country', 'c')
             ->where('c.`need_identification_number` = 1')
         ;
-        $result =  Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
+        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 
-        return array_map(function($country) { return $country['id_country']; }, $result);
+        return array_map(function ($country) { return $country['id_country']; }, $result);
     }
 
     /**

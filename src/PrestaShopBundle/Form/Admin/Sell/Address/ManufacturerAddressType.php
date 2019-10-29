@@ -102,11 +102,7 @@ class ManufacturerAddressType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        if ($options['country_id'] !== 0) {
-            $countryId = $options['country_id'];
-        } else {
-            $countryId = $this->contextCountryId;
-        }
+        $countryId = 0 !== $options['country_id'] ? $options['country_id'] : $this->contextCountryId;
         $dniRequired = Country::isNeedDniByCountryId($countryId);
 
         $builder
