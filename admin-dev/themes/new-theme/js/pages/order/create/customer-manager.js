@@ -23,181 +23,151 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import createOrderPageMap from './create-order-map';
-import Router from '../../../components/router';
+import createOrderMap from './create-order-map';
+import CustomerRenderer from './customer-renderer';
 import {EventEmitter} from '../../../components/event-emitter';
 import eventMap from './event-map';
+import Router from '../../../components/router';
 
 const $ = window.$;
 
 /**
- * Searches customers for which order is being created
+ * Responsible for customers managing. (search, select, get customer info etc.)
  */
 export default class CustomerManager {
   constructor() {
+    this.customerId = null;
+    this.activeSearchRequest = null;
+
     this.router = new Router();
-    this.$container = $(createOrderPageMap.customerSearchBlock);
-    this.$searchInput = $(createOrderPageMap.customerSearchInput);
-    this.$customerSearchResultBlock = $(createOrderPageMap.customerSearchResultsBlock);
+    this.$container = $(createOrderMap.customerSearchBlock);
+    this.$searchInput = $(createOrderMap.customerSearchInput);
+    this.$customerSearchResultBlock = $(createOrderMap.customerSearchResultsBlock);
+    this.customerRenderer = new CustomerRenderer();
+
+    this._initListeners();
 
     return {
-      onCustomerSearch: () => {
-        this._doSearch();
-      },
-      onCustomerChooseForOrderCreation: event => this._chooseCustomerForOrderCreation(event),
-      onCustomerChange: () => {
-        this._showCustomerSearch();
-      },
-      getCustomerCarts: (customerId) => {
-        this._getCustomerCarts(customerId);
-      },
-      getCustomerOrders: (customerId) => {
-        this._getCustomerOrders(customerId);
-      },
+      search: searchPhrase => this._search(searchPhrase),
+      selectCustomer: event => this._selectCustomer(event),
+      loadCustomerCarts: currentCartId => this._loadCustomerCarts(currentCartId),
+      loadCustomerOrders: () => this._loadCustomerOrders(),
     };
   }
 
   /**
-   * Gets customer carts
-   * After Request is complete, emits event providing carts list
+   * Initializes event listeners
    *
-   * @param customerId
+   * @private
    */
-  _getCustomerCarts(customerId) {
-    $.get(this.router.generate('admin_customers_carts', {customerId})).then((carts) => {
-      EventEmitter.emit(eventMap.customerCartsLoaded, carts);
+  _initListeners() {
+    this.$container.on('click', createOrderMap.changeCustomerBtn, () => this._changeCustomer());
+    this._onCustomerSearch();
+    this._onCustomerSelect();
+  }
+
+  /**
+   * Listens for customer search event
+   *
+   * @private
+   */
+  _onCustomerSearch() {
+    EventEmitter.on(eventMap.customerSearched, (response) => {
+      this.activeSearchRequest = null;
+      this.customerRenderer.renderSearchResults(response.customers);
+    });
+  }
+
+  /**
+   * Listens for customer select event
+   *
+   * @private
+   */
+  _onCustomerSelect() {
+    EventEmitter.on(eventMap.customerSelected, (event) => {
+      const $chooseBtn = $(event.currentTarget);
+      this.customerId = $chooseBtn.data('customer-id');
+
+      this.customerRenderer.displaySelectedCustomerBlock($chooseBtn);
+    });
+  }
+
+  /**
+   * Handles use case when customer is changed
+   *
+   * @private
+   */
+  _changeCustomer() {
+    this.customerRenderer.showCustomerSearch();
+  }
+
+  /**
+   * Loads customer carts list
+   *
+   * @param currentCartId
+   */
+  _loadCustomerCarts(currentCartId) {
+    const customerId = this.customerId;
+
+    $.get(this.router.generate('admin_customers_carts', {customerId})).then((response) => {
+      this.customerRenderer.renderCarts(response.carts, currentCartId);
     }).catch((e) => {
       showErrorMessage(e.responseJSON.message);
     });
   }
 
   /**
-   * Gets customer carts
-   * After Request is complete, emits event providing orders list
-   *
-   * @param customerId
+   * Loads customer orders list
    */
-  _getCustomerOrders(customerId) {
-    $.get(this.router.generate('admin_customers_orders', {customerId})).then((orders) => {
-      EventEmitter.emit(eventMap.customerOrdersLoaded, orders);
+  _loadCustomerOrders() {
+    const customerId = this.customerId;
+
+    $.get(this.router.generate('admin_customers_orders', {customerId})).then((response) => {
+      this.customerRenderer.renderOrders(response.orders);
     }).catch((e) => {
       showErrorMessage(e.responseJSON.message);
     });
   }
 
   /**
-   *
    * @param {Event} chooseCustomerEvent
    *
    * @return {Number}
    */
-  _chooseCustomerForOrderCreation(chooseCustomerEvent) {
-    const $chooseBtn = $(chooseCustomerEvent.currentTarget);
-    const $customerCard = $chooseBtn.closest('.card');
+  _selectCustomer(chooseCustomerEvent) {
+    EventEmitter.emit(eventMap.customerSelected, chooseCustomerEvent);
 
-    $chooseBtn.addClass('d-none');
-
-    $customerCard.addClass('border-success');
-    $customerCard.find(createOrderPageMap.changeCustomerBtn).removeClass('d-none');
-
-    this.$container.find(createOrderPageMap.customerSearchRow).addClass('d-none');
-    this.$container.find(createOrderPageMap.notSelectedCustomerSearchResults)
-      .closest(createOrderPageMap.customerSearchResultColumn)
-      .remove()
-    ;
-
-    return $chooseBtn.data('customer-id');
+    return this.customerId;
   }
 
   /**
    * Searches for customers
-   *
+   * @todo: fix showing not found customers and rerender after change customer
    * @private
    */
-  _doSearch() {
-    const name = this.$searchInput.val();
-
-    if (name.length < 4) {
+  _search(searchPhrase) {
+    if (searchPhrase.length < 3) {
       return;
     }
 
-    $.get(this.router.generate('admin_customers_search'), {
-      customer_search: name,
-    }).then((response) => {
-      this._clearShownCustomers();
+    if (this.activeSearchRequest !== null) {
+      this.activeSearchRequest.abort();
+    }
 
-      if (!response.found) {
-        this._showNotFoundCustomers();
+    const $searchRequest = $.get(this.router.generate('admin_customers_search'), {
+      customer_search: searchPhrase,
+    });
+    this.activeSearchRequest = $searchRequest;
 
+    $searchRequest.then((response) => {
+      EventEmitter.emit(eventMap.customerSearched, response);
+    }).catch((response) => {
+      if (response.statusText === 'abort') {
         return;
       }
 
-      for (const customerId in response.customers) {
-        const customerResult = response.customers[customerId];
-        const customer = {
-          id: customerId,
-          first_name: customerResult.firstname,
-          last_name: customerResult.lastname,
-          email: customerResult.email,
-          birthday: customerResult.birthday !== '0000-00-00' ? customerResult.birthday : ' ',
-        };
-
-        this._showCustomer(customer);
-      }
+      showErrorMessage(response.responseJSON.message);
     });
-  }
-
-  /**
-   * Get template as jQuery object with customer data
-   *
-   * @param {Object} customer
-   *
-   * @return {jQuery}
-   *
-   * @private
-   */
-  _showCustomer(customer) {
-    const $customerSearchResultTemplate = $($(createOrderPageMap.customerSearchResultTemplate).html());
-    const $template = $customerSearchResultTemplate.clone();
-
-    $template.find(createOrderPageMap.customerSearchResultName).text(`${customer.first_name} ${customer.last_name}`);
-    $template.find(createOrderPageMap.customerSearchResultEmail).text(customer.email);
-    $template.find(createOrderPageMap.customerSearchResultId).text(customer.id);
-    $template.find(createOrderPageMap.customerSearchResultBirthday).text(customer.birthday);
-
-    $template.find(createOrderPageMap.customerDetailsBtn).data('customer-id', customer.id);
-    $template.find(createOrderPageMap.chooseCustomerBtn).data('customer-id', customer.id);
-
-    return this.$customerSearchResultBlock.append($template);
-  }
-
-  /**
-   * Shows empty result when customer is not found
-   *
-   * @private
-   */
-  _showNotFoundCustomers() {
-    const $emptyResultTemplate = $($('#customerSearchEmptyResultTemplate').html());
-
-    this.$customerSearchResultBlock.append($emptyResultTemplate);
-  }
-
-  /**
-   * Clears shown customers
-   *
-   * @private
-   */
-  _clearShownCustomers() {
-    this.$customerSearchResultBlock.empty();
-  }
-
-  /**
-   * Shows customer search block
-   *
-   * @private
-   */
-  _showCustomerSearch() {
-    this.$container.find(createOrderPageMap.customerSearchRow).removeClass('d-none');
   }
 }
 

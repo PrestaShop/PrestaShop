@@ -1,5 +1,3 @@
-import createOrderPageMap from "./create-order-map";
-
 /**
  * 2007-2019 PrestaShop SA and Contributors
  *
@@ -42,6 +40,9 @@ export default class CartEditor {
 
   /**
    * Changes cart addresses
+   *
+   * @param {Number} cartId
+   * @param {Object} addresses
    */
   changeCartAddresses(cartId, addresses) {
     $.post(this.router.generate('admin_carts_edit_addresses', {cartId}), addresses).then((cartInfo) => {
@@ -52,12 +53,12 @@ export default class CartEditor {
   /**
    * Modifies cart delivery option
    *
-   * @param cartId
-   * @param value
+   * @param {Number} cartId
+   * @param {Number} value
    */
   changeDeliveryOption(cartId, value) {
     $.post(this.router.generate('admin_carts_edit_carrier', {cartId}), {
-      carrier_id: value,
+      carrierId: value,
     }).then((cartInfo) => {
       EventEmitter.emit(eventMap.cartDeliveryOptionChanged, cartInfo);
     });
@@ -71,9 +72,79 @@ export default class CartEditor {
    */
   setFreeShipping(cartId, value) {
     $.post(this.router.generate('admin_carts_set_free_shipping', {cartId}), {
-      free_shipping: value,
+      freeShipping: value,
     }).then((cartInfo) => {
       EventEmitter.emit(eventMap.cartFreeShippingSet, cartInfo);
+    });
+  }
+
+  /**
+   * Adds cart rule to cart
+   *
+   * @param {Number} cartRuleId
+   * @param {Number} cartId
+   */
+  addCartRuleToCart(cartRuleId, cartId) {
+    $.post(this.router.generate('admin_carts_add_cart_rule', {cartId}), {
+      cartRuleId,
+    }).then((cartInfo) => {
+      EventEmitter.emit(eventMap.cartRuleAdded, cartInfo);
+    }).catch((response) => {
+      EventEmitter.emit(eventMap.cartRuleFailedToAdd, response.responseJSON.message);
+    });
+  }
+
+  /**
+   * Removes cart rule from cart
+   *
+   * @param {Number} cartRuleId
+   * @param {Number} cartId
+   */
+  removeCartRuleFromCart(cartRuleId, cartId) {
+    $.post(this.router.generate('admin_carts_delete_cart_rule', {
+      cartId,
+      cartRuleId,
+    })).then((cartInfo) => {
+      EventEmitter.emit(eventMap.cartRuleRemoved, cartInfo);
+    }).catch((response) => {
+      showErrorMessage(response.responseJSON.message);
+    });
+  }
+
+  /**
+   * Adds product to cart
+   *
+   * @param {Number} cartId
+   * @param {FormData} product
+   */
+  addProduct(cartId, product) {
+    $.ajax(this.router.generate('admin_carts_add_product', {cartId}), {
+      method: 'POST',
+      data: product,
+      processData: false,
+      contentType: false,
+    }).then((cartInfo) => {
+      EventEmitter.emit(eventMap.productAddedToCart, cartInfo);
+    }).catch((response) => {
+      showErrorMessage(response.responseJSON.message);
+    });
+  }
+
+  /**
+   * Removes product from cart
+   *
+   * @param {Number} cartId
+   * @param {Object} product
+   */
+  removeProductFromCart(cartId, product) {
+    $.post(this.router.generate('admin_carts_delete_product', {cartId}), {
+      productId: product.productId,
+      attributeId: product.attributeId,
+      customizationId: product.customizationId,
+    }).then((cartInfo) => {
+      EventEmitter.emit(eventMap.productRemovedFromCart, cartInfo);
+    }).catch((response) => {
+      showErrorMessage(response.responseJSON.message);
     });
   }
 }

@@ -51,7 +51,7 @@ describe('Create Standard product in BO and Delete it with Bulk Actions', async 
   loginCommon.loginBO();
   it('should go to Products page', async function () {
     await this.pageObjects.boBasePage.goToSubMenu(
-      this.pageObjects.boBasePage.productsParentLink,
+      this.pageObjects.boBasePage.catalogParentLink,
       this.pageObjects.boBasePage.productsLink,
     );
     const pageTitle = await this.pageObjects.productsPage.getPageTitle();
@@ -71,7 +71,7 @@ describe('Create Standard product in BO and Delete it with Bulk Actions', async 
     await expect(createProductMessage).to.equal(this.pageObjects.addProductPage.settingUpdatedMessage);
   });
   it('should go to Products page', async function () {
-    await this.pageObjects.boBasePage.goToSubMenu(this.pageObjects.boBasePage.productsParentLink,
+    await this.pageObjects.boBasePage.goToSubMenu(this.pageObjects.boBasePage.catalogParentLink,
       this.pageObjects.boBasePage.productsLink);
     const pageTitle = await this.pageObjects.productsPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.productsPage.pageTitle);
@@ -82,7 +82,7 @@ describe('Create Standard product in BO and Delete it with Bulk Actions', async 
     await expect(createProductMessage).to.equal(this.pageObjects.addProductPage.settingUpdatedMessage);
   });
   it('should go to Products page', async function () {
-    await this.pageObjects.boBasePage.goToSubMenu(this.pageObjects.boBasePage.productsParentLink,
+    await this.pageObjects.boBasePage.goToSubMenu(this.pageObjects.boBasePage.catalogParentLink,
       this.pageObjects.boBasePage.productsLink);
     const pageTitle = await this.pageObjects.productsPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.productsPage.pageTitle);

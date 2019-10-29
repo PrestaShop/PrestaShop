@@ -41,7 +41,7 @@ describe('Filter in Products Page', async () => {
   loginCommon.loginBO();
   it('should go to Products page', async function () {
     await this.pageObjects.boBasePage.goToSubMenu(
-      this.pageObjects.boBasePage.productsParentLink,
+      this.pageObjects.boBasePage.catalogParentLink,
       this.pageObjects.boBasePage.productsLink,
     );
     const pageTitle = await this.pageObjects.productsPage.getPageTitle();

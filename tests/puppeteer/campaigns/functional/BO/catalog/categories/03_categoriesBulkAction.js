@@ -45,7 +45,7 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
   loginCommon.loginBO();
   it('should go to "Catalog>Categories" page', async function () {
     await this.pageObjects.boBasePage.goToSubMenu(
-      this.pageObjects.boBasePage.productsParentLink,
+      this.pageObjects.boBasePage.catalogParentLink,
       this.pageObjects.boBasePage.categoriesLink,
     );
     await this.pageObjects.boBasePage.closeSfToolBar();

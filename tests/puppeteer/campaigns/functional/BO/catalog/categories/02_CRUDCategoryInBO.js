@@ -51,7 +51,7 @@ describe('Create, Read, Update and Delete Category', async () => {
   loginCommon.loginBO();
   it('should go to "Catalog>Categories" page', async function () {
     await this.pageObjects.boBasePage.goToSubMenu(
-      this.pageObjects.boBasePage.productsParentLink,
+      this.pageObjects.boBasePage.catalogParentLink,
       this.pageObjects.boBasePage.categoriesLink,
     );
     await this.pageObjects.boBasePage.closeSfToolBar();
@@ -171,7 +171,7 @@ describe('Create, Read, Update and Delete Category', async () => {
   describe('View Category Created', async () => {
     it('should go to "Catalog>Categories" page', async function () {
       await this.pageObjects.boBasePage.goToSubMenu(
-        this.pageObjects.boBasePage.productsParentLink,
+        this.pageObjects.boBasePage.catalogParentLink,
         this.pageObjects.boBasePage.categoriesLink,
       );
       const pageTitle = await this.pageObjects.categoriesPage.getPageTitle();
@@ -209,7 +209,7 @@ describe('Create, Read, Update and Delete Category', async () => {
   describe('Update Category created', async () => {
     it('should go to "Catalog>Categories" page', async function () {
       await this.pageObjects.boBasePage.goToSubMenu(
-        this.pageObjects.boBasePage.productsParentLink,
+        this.pageObjects.boBasePage.catalogParentLink,
         this.pageObjects.boBasePage.categoriesLink,
       );
       const pageTitle = await this.pageObjects.categoriesPage.getPageTitle();
@@ -274,7 +274,7 @@ describe('Create, Read, Update and Delete Category', async () => {
   describe('Delete Category', async () => {
     it('should go to "Catalog>Categories" page', async function () {
       await this.pageObjects.boBasePage.goToSubMenu(
-        this.pageObjects.boBasePage.productsParentLink,
+        this.pageObjects.boBasePage.catalogParentLink,
         this.pageObjects.boBasePage.categoriesLink,
       );
       const pageTitle = await this.pageObjects.categoriesPage.getPageTitle();

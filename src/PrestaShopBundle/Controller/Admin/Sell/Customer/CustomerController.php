@@ -384,7 +384,14 @@ class CustomerController extends AbstractAdminController
         $phrases = explode(' ', $query);
         $isRequestFromLegacyPage = !$request->query->has('sf2');
 
-        $customers = $this->getQueryBus()->handle(new SearchCustomers($phrases));
+        try {
+            $customers = $this->getQueryBus()->handle(new SearchCustomers($phrases));
+        } catch (Exception $e) {
+            return $this->json(
+                ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
 
         // if call is made from legacy page
         // it will return response so legacy can understand it

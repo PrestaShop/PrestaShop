@@ -47,6 +47,8 @@ admin_customers_view:
       id_customer: customerId
   requirements:
     customerId: \d+
+  options:
+    expose: true
 
 admin_customers_set_private_note:
   path: /{customerId}/set-private-note

@@ -1565,10 +1565,11 @@ class CartCore extends ObjectModel
      * @param int $type Customization type can be Product::CUSTOMIZE_FILE or Product::CUSTOMIZE_TEXTFIELD
      * @param string $value Customization value
      * @param int $quantity Quantity value
+     * @param bool $returnId if true - returns the customization record id
      *
      * @return bool Success
      */
-    public function _addCustomization($id_product, $id_product_attribute, $index, $type, $value, $quantity)
+    public function _addCustomization($id_product, $id_product_attribute, $index, $type, $value, $quantity, $returnId = false)
     {
         $exising_customization = Db::getInstance()->executeS(
             'SELECT cu.`id_customization`, cd.`index`, cd.`value`, cd.`type` FROM `' . _DB_PREFIX_ . 'customization` cu
@@ -1610,6 +1611,10 @@ class CartCore extends ObjectModel
 
         if (!Db::getInstance()->execute($query)) {
             return false;
+        }
+
+        if (true === $returnId) {
+            return (int) $id_customization;
         }
 
         return true;
@@ -4109,12 +4114,21 @@ class CartCore extends ObjectModel
      * @param int $index Customization field identifier as id_customization_field in table customization_field
      * @param int $type Customization type can be Product::CUSTOMIZE_FILE or Product::CUSTOMIZE_TEXTFIELD
      * @param string $text_value
+     * @param bool $returnCustomizationId if true - returns the customizationId
      *
      * @return bool Always true
      */
-    public function addTextFieldToProduct($id_product, $index, $type, $text_value)
+    public function addTextFieldToProduct($id_product, $index, $type, $text_value, $returnCustomizationId = false)
     {
-        return $this->_addCustomization($id_product, 0, $index, $type, $text_value, 0);
+        return $this->_addCustomization(
+            $id_product,
+            0,
+            $index,
+            $type,
+            $text_value,
+            0,
+            $returnCustomizationId
+        );
     }
 
     /**
@@ -4124,12 +4138,21 @@ class CartCore extends ObjectModel
      * @param int $index Customization field identifier as id_customization_field in table customization_field
      * @param int $type Customization type can be Product::CUSTOMIZE_FILE or Product::CUSTOMIZE_TEXTFIELD
      * @param string $file Filename
+     * @param bool $returnCustomizationId if true - returns the customizationId
      *
      * @return bool Always true
      */
-    public function addPictureToProduct($id_product, $index, $type, $file)
+    public function addPictureToProduct($id_product, $index, $type, $file, $returnCustomizationId = false)
     {
-        return $this->_addCustomization($id_product, 0, $index, $type, $file, 0);
+        return $this->_addCustomization(
+            $id_product,
+            0,
+            $index,
+            $type,
+            $file,
+            0,
+            $returnCustomizationId
+        );
     }
 
     /**

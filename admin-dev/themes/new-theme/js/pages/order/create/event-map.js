@@ -27,18 +27,30 @@
  * Encapsulates js events used in create order page
  */
 export default {
+  // when customer search action is done
+  customerSearched: 'customerSearched',
+  // when new customer is selected
+  customerSelected: 'customerSelected',
   // when new cart is loaded, no matter if its empty, selected from carts list or duplicated by order.
   cartLoaded: 'cartLoaded',
-  // when customer carts list is loaded.
-  customerCartsLoaded: 'customerCartsLoaded',
-  // when customer orders list is loaded
-  customerOrdersLoaded: 'customerOrdersLoaded',
   // when cart addresses information has been changed
   cartAddressesChanged: 'cartAddressesChanged',
   // when cart delivery option has been changed
   cartDeliveryOptionChanged: 'cartDeliveryOptionChanged',
   // when cart free shipping value has been changed
   cartFreeShippingSet: 'cartFreeShippingSet',
+  // when cart rules search action is done
+  cartRuleSearched: 'cartRuleSearched',
   // when cart rule is removed from cart
   cartRuleRemoved: 'cartRuleRemoved',
+  // when cart rule is added to cart
+  cartRuleAdded: 'cartRuleAdded',
+  // when cart rule cannot be added to cart
+  cartRuleFailedToAdd: 'cartRuleFailedToAdd',
+  // when product search action is done
+  productSearched: 'productSearched',
+  // when product is added to cart
+  productAddedToCart: 'productAddedToCart',
+  // when product is removed from cart
+  productRemovedFromCart: 'productRemovedFromCart',
 };
