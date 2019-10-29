@@ -49,15 +49,14 @@ final class SetRequiredFieldsForAddressHandler implements SetRequiredFieldsForAd
         $address = new CustomerAddress();
 
         try {
-            if (!$address->addFieldsRequiredDatabase($command->getRequiredFields())) {
-                throw new CannotSetRequiredFieldsForAddressException(
-                    sprintf('Cannot set "%s" required fields for customer', implode(',', $command->getRequiredFields()))
-                );
+            if ($address->addFieldsRequiredDatabase($command->getRequiredFields())) {
+                return;
             }
         } catch (PrestaShopDatabaseException $e) {
-            throw new CannotSetRequiredFieldsForAddressException(
-                sprintf('Cannot set "%s" required fields for customer', implode(',', $command->getRequiredFields()))
-            );
         }
+
+        throw new CannotSetRequiredFieldsForAddressException(
+            sprintf('Cannot set "%s" required fields for customer', implode(',', $command->getRequiredFields()))
+        );
     }
 }
