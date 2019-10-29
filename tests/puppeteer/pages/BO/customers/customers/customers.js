@@ -70,7 +70,7 @@ module.exports = class Customers extends BOBasePage {
       case 'select':
         await this.selectByVisibleText(
           this.customerFilterColumnInput.replace('%FILTERBY', filterBy),
-          value,
+          value ? 'Yes' : 'No',
         );
         break;
       default:
