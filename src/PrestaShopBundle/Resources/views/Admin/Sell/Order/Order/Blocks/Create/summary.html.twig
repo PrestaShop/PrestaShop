@@ -35,73 +35,72 @@
             <div class="row">
               <div class="col text-center">
                 <p class="mb-0">{{ 'Total products'|trans({}, 'Admin.Orderscustomers.Feature') }}</p>
-                <p class="lead text-success">19.12</p>
+                <p class="lead text-success js-total-products"></p>
               </div>
               <div class="col text-center">
                 <p class="mb-0">{{ 'Total vouchers (Tax excl.)'|trans({}, 'Admin.Orderscustomers.Feature') }}</p>
-                <p class="lead text-danger">0</p>
+                <p class="lead text-danger js-total-discounts"></p>
               </div>
               <div class="col text-center">
                 <p class="mb-0">{{ 'Total shipping (Tax excl.)'|trans({}, 'Admin.Orderscustomers.Feature') }}</p>
-                <p class="lead">0</p>
+                <p class="lead js-total-shipping"></p>
               </div>
               <div class="col text-center">
                 <p class="mb-0 text-center">{{ 'Total taxes'|trans({}, 'Admin.Orderscustomers.Feature') }}</p>
-                <p class="lead">0</p>
+                <p class="lead js-total-taxes"></p>
               </div>
               <div class="col text-center">
                 <p class="mb-0">{{ 'Total (Tax excl.)'|trans({}, 'Admin.Orderscustomers.Feature') }}</p>
-                <p class="lead">0</p>
+                <p class="lead js-total-without-tax"></p>
               </div>
               <div class="col text-center">
-                <p class="mb-0">{{ 'Total (Tax excl.)'|trans({}, 'Admin.Orderscustomers.Feature') }}</p>
-                <p class="lead mb-0">0</p>
+                <p class="mb-0">{{ 'Total (Tax incl.)'|trans({}, 'Admin.Orderscustomers.Feature') }}</p>
+                <p class="lead mb-0 js-total-with-tax badge rounded badge-dark"></p>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="row mb-2">
-      <div class="col-3">
-        <span class="float-right">{{ 'Order message'|trans({}, 'Admin.Orderscustomers.Feature') }}</span>
+
+    {{ form_start(summaryForm, {'action': path('admin_orders_place')}) }}
+      <div class="row mt-3">
+        <div class="col col-10">
+
+          {{ ps.form_group_row(summaryForm.order_message, {}, {
+            'label': 'Order message'|trans({}, 'Admin.Orderscustomers.Feature'),
+          }) }}
+
+          <div class="form-group row mb-2">
+            <div class="col-sm offset-sm-4">
+              <button type="button" class="btn btn-outline-primary">
+                {{ 'Send an email to the customer with the link to process the payment.'|trans({}, 'Admin.Orderscustomers.Help') }}
+              </button>
+              <a href="#" target="_blank">
+                {{ 'Go on payment page to process the payment.'|trans({}, 'Admin.Orderscustomers.Help') }}
+              </a>
+            </div>
+          </div>
+
+          {{ ps.form_group_row(summaryForm.payment_module, {}, {
+            'label': 'Payment'|trans({}, 'Admin.Global'),
+          }) }}
+
+          {{ ps.form_group_row(summaryForm.order_state, {}, {
+            'label': 'Order status'|trans({}, 'Admin.Orderscustomers.Feature'),
+          }) }}
+
+          <div class="form-group row mt-4">
+            <div class="col-sm offset-sm-4">
+              <button class="btn btn-primary" type="submit">
+                {{ 'Create the order'|trans({}, 'Admin.Orderscustomers.Feature') }}
+              </button>
+              {{ form_row(summaryForm.cart_id, {'attr': {'class': 'js-place-order-cart-id'}}) }}
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="col-7">
-        <textarea class="form-control"></textarea>
-      </div>
-    </div>
-    <div class="row mb-2">
-      <div class="col offset-sm-3">
-        <button type="button" class="btn btn-primary">
-          {{ 'Send an email to the customer with the link to process the payment.'|trans({}, 'Admin.Orderscustomers.Help') }}
-        </button>
-        <a href="#" class="" target="_blank">
-          {{ 'Go on payment page to process the payment.'|trans({}, 'Admin.Orderscustomers.Help') }}
-        </a>
-      </div>
-    </div>
-    <div class="row mb-2">
-      <div class="col-3">
-        <span class="float-right">{{ 'Payment'|trans({}, 'Admin.Global') }}</span>
-      </div>
-      <div class="col-4">
-        <select class="form-control"></select>
-      </div>
-    </div>
-    <div class="row mb-2">
-      <div class="col-3">
-        <span class="float-right">{{ 'Order status'|trans({}, 'Admin.Shopparameters.Feature') }}</span>
-      </div>
-      <div class="col-4">
-        <select class="form-control"></select>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col offset-sm-3">
-        <button class="btn btn-primary" type="button">
-          {{ 'Create the order'|trans({}, 'Admin.Orderscustomers.Feature') }}
-        </button>
-      </div>
-    </div>
+    {{ form_end(summaryForm) }}
+
   </div>
 </div>

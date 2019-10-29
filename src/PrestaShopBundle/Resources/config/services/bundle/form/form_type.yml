@@ -1085,3 +1085,11 @@ services:
         public: true
         tags:
             - { name: form.type }
+
+    form.type.order.cart_summary:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Order\CartSummaryType'
+        arguments:
+            - '@prestashop.core.form.choice_provider.order_state_by_id'
+            - '@prestashop.adapter.form.choice_provider.installed_payment_modules'
+        tags:
+            - { name: form.type }
