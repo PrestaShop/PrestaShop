@@ -41,7 +41,7 @@ describe('Filter And Quick Edit Categories', async () => {
   after(async () => {
     await helper.closeBrowser(browser);
   });
-  // Login into BO and go to Pages page
+  // Login into BO
   loginCommon.loginBO();
 
   // Go to Design>Pages page
