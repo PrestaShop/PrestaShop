@@ -37,6 +37,8 @@ const $ = window.$;
  */
 export default class CartRuleManager {
   constructor() {
+    this.activeSearchRequest = null;
+
     this.router = new Router();
     this.$searchInput = $(createOrderMap.cartRuleSearchInput);
     this.cartRulesRenderer = new CartRulesRenderer();
@@ -45,7 +47,7 @@ export default class CartRuleManager {
     this._initListeners();
 
     return {
-      search: () => this._search(),
+      search: searchPhrase => this._search(searchPhrase),
       stopSearching: () => this.cartRulesRenderer.hideResultsDropdown(),
       addCartRuleToCart: (cartRuleId, cartId) => this.cartEditor.addCartRuleToCart(cartRuleId, cartId),
       removeCartRuleFromCart: (cartRuleId, cartId) => this.cartEditor.removeCartRuleFromCart(cartRuleId, cartId),
@@ -118,11 +120,22 @@ export default class CartRuleManager {
       return;
     }
 
-    $.get(this.router.generate('admin_cart_rules_search'), {
+    if (this.activeSearchRequest !== null) {
+      this.activeSearchRequest.abort();
+    }
+
+    const $searchRequest = $.get(this.router.generate('admin_cart_rules_search'), {
       search_phrase: searchPhrase,
-    }).then((cartRules) => {
+    });
+    this.activeSearchRequest = $searchRequest;
+
+    $searchRequest.then((cartRules) => {
       EventEmitter.emit(eventMap.cartRuleSearched, cartRules);
     }).catch((e) => {
+      if (e.statusText === 'abort') {
+        return;
+      }
+
       showErrorMessage(e.responseJSON.message);
     });
   }
