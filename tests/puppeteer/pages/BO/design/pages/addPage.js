@@ -35,8 +35,10 @@ module.exports = class AddPage extends BOBasePage {
     await this.setValue(this.metaDescriptionInput, pageData.metaDescription);
     await this.setValue(this.metaKeywordsInput, pageData.metaKeywords);
     await this.setValueOnTinymceInput(this.pageContentIframe, pageData.content);
+    // replace %ID by 1 in the selector if indexation = YES / 0 if indexation = NO
     if (pageData.indexation) await this.page.click(this.indexation.replace('%ID', '1'));
     else await this.page.click(this.indexation.replace('%ID', '0'));
+    // replace %ID by 1 in the selector if indexation = YES / 0 if indexation = NO
     if (pageData.displayed) await this.page.click(this.displayed.replace('%ID', '1'));
     else await this.page.click(this.displayed.replace('%ID', '0'));
     await this.clickAndWaitForNavigation(this.savePageButton);
