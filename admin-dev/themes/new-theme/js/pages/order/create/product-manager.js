@@ -142,9 +142,12 @@ export default class ProductManager {
       this.activeSearchRequest.abort();
     }
 
-    $.get(this.router.generate('admin_products_search'), {
+    const $searchRequest = $.get(this.router.generate('admin_products_search'), {
       search_phrase: searchPhrase,
-    }).then((response) => {
+    });
+    this.activeSearchRequest = $searchRequest;
+
+    $searchRequest.then((response) => {
       EventEmitter.emit(eventMap.productSearched, response);
     }).catch((response) => {
       if (response.statusText === 'abort') {
