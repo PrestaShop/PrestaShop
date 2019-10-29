@@ -169,6 +169,7 @@ class ManufacturerAddressType extends AbstractType
             ])
             ->add('address2', TextType::class, [
                 'required' => false,
+                'empty_data' => '',
                 'constraints' => [
                     new TypedRegex([
                         'type' => 'address',
@@ -185,6 +186,7 @@ class ManufacturerAddressType extends AbstractType
             ])
             ->add('post_code', TextType::class, [
                 'required' => false,
+                'empty_data' => '',
                 'constraints' => [
                     new TypedRegex([
                         'type' => 'post_code',
@@ -234,6 +236,7 @@ class ManufacturerAddressType extends AbstractType
             ])
             ->add('id_state', ChoiceType::class, [
                 'required' => false,
+                'empty_data' => '',
                 'translation_domain' => false,
                 'choices' => $this->statesChoiceProvider->getChoices([
                     'id_country' => $countryId,
@@ -241,6 +244,7 @@ class ManufacturerAddressType extends AbstractType
             ])
             ->add('home_phone', TextType::class, [
                 'required' => false,
+                'empty_data' => '',
                 'constraints' => [
                     new TypedRegex([
                         'type' => 'phone_number',
@@ -257,6 +261,7 @@ class ManufacturerAddressType extends AbstractType
             ])
             ->add('mobile_phone', TextType::class, [
                 'required' => false,
+                'empty_data' => '',
                 'constraints' => [
                     new TypedRegex([
                         'type' => 'phone_number',
@@ -273,6 +278,7 @@ class ManufacturerAddressType extends AbstractType
             ])
             ->add('dni', TextType::class, [
                 'required' => $dniRequired,
+                'empty_data' => '',
                 'constraints' => [
                     new TypedRegex([
                         'type' => 'dni_lite',
@@ -289,6 +295,7 @@ class ManufacturerAddressType extends AbstractType
             ])
             ->add('other', TextType::class, [
                 'required' => false,
+                'empty_data' => '',
                 'constraints' => [
                     new TypedRegex([
                         'type' => 'message',
