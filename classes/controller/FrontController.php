@@ -1108,11 +1108,14 @@ class FrontControllerCore extends Controller
     /**
      * @param string $id
      * @param string $relativePath
+     *
      * @return string
      */
-    private function buildRelativePath(string $id, string $relativePath) {
+    private function buildRelativePath(string $id, string $relativePath)
+    {
         $addSlash = substr($relativePath, 0, 1) !== '/' ? '/' : '';
-        $themeDir = substr($id, 0, 6) == 'theme-' ? _THEMES_DIR_ . _THEME_NAME_: '';
+        $themeDir = substr($id, 0, 6) == 'theme-' ? _THEMES_DIR_ . _THEME_NAME_ : '';
+
         return Tools::getCurrentUrlProtocolPrefix() . Tools::getMediaServer($relativePath) . $addSlash . $themeDir . $relativePath;
     }
 

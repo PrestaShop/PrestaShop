@@ -2380,11 +2380,13 @@ class ToolsCore
                 self::$_cache_nb_media_servers = 3;
             }
         }
-        return (self::$_cache_nb_media_servers > 0);
+
+        return self::$_cache_nb_media_servers > 0;
     }
 
     /**
      * @param string $filename
+     *
      * @return string
      */
     public static function getMediaServer($filename)
