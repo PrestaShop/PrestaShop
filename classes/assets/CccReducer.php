@@ -58,16 +58,21 @@ class CccReducerCore
         $version = Configuration::get('PS_CCCCSS_VERSION');
         $cccFilename = 'theme-' . $this->getFileNameIdentifierFromList($files) . $version . '.css';
         $destinationPath = $this->cacheDir . $cccFilename;
+        $destinationUri = $this->getFQDN() . $this->getUriFromPath($destinationPath);
 
         if (!$this->filesystem->exists($destinationPath)) {
             CssMinifier::minify($files, $destinationPath);
+        }
+        if (Tools::hasMediaServer()) {
+            $relativePath = _THEMES_DIR_ . _THEME_NAME_ . '/assets/cache/' . $cccFilename;
+            $destinationPath = $destinationUri = Tools::getCurrentUrlProtocolPrefix() . Tools::getMediaServer($relativePath) . $relativePath;
         }
 
         $cssFileList['external']['theme-ccc'] = [
             'id' => 'theme-ccc',
             'type' => 'external',
             'path' => $destinationPath,
-            'uri' => $this->getFQDN() . $this->getUriFromPath($destinationPath),
+            'uri' => $destinationUri,
             'media' => 'all',
             'priority' => StylesheetManager::DEFAULT_PRIORITY,
         ];
@@ -95,9 +100,14 @@ class CccReducerCore
             $version = Configuration::get('PS_CCCJS_VERSION');
             $cccFilename = $position . '-' . $this->getFileNameIdentifierFromList($files) . $version . '.js';
             $destinationPath = $this->cacheDir . $cccFilename;
+            $destinationUri = $this->getFQDN() . $this->getUriFromPath($destinationPath);
 
             if (!$this->filesystem->exists($destinationPath)) {
                 JsMinifier::minify($files, $destinationPath);
+            }
+            if (Tools::hasMediaServer()) {
+                $relativePath = _THEMES_DIR_ . _THEME_NAME_ . '/assets/cache/' . $cccFilename;
+                $destinationPath = $destinationUri = Tools::getCurrentUrlProtocolPrefix() . Tools::getMediaServer($relativePath) . $relativePath;
             }
 
             $cccItem = [];
@@ -105,7 +115,7 @@ class CccReducerCore
                 'id' => $position . '-js-ccc',
                 'type' => 'external',
                 'path' => $destinationPath,
-                'uri' => $this->getFQDN() . $this->getUriFromPath($destinationPath),
+                'uri' => $destinationUri,
                 'priority' => JavascriptManager::DEFAULT_PRIORITY,
                 'attribute' => '',
             ];
