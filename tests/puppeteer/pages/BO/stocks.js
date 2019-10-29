@@ -23,6 +23,16 @@ module.exports = class Stocks extends BOBasePage {
     this.productList = 'table.table';
     this.productRow = `${this.productList} tbody tr`;
     this.productRowNameColumn = `${this.productList} tbody tr:nth-child(%ROW) td:nth-child(1) div.media-body p`;
+    this.productRowReferenceColumn = `${this.productList} tbody tr:nth-child(%ROW) td:nth-child(2)`;
+    this.productRowSupplierColumn = `${this.productList} tbody tr:nth-child(%ROW) td:nth-child(3)`;
+
+    this.productRowPhysicalColumn = `${this.productList} tbody tr:nth-child(%ROW) td:nth-child(5)`;
+    this.productRowPhysicalQuantityUpdateColumn = `${this.productRowPhysicalColumn} span.qty-update`;
+
+    this.productRowAvailableColumn = `${this.productList} tbody tr:nth-child(%ROW) td:nth-child(7)`;
+    this.productRowAvailableQuantityUpdateColumn = `${this.productRowAvailableColumn} span.qty-update`;
+
+    this.productRowQuantityInput = `${this.productList} tbody tr:nth-child(%ROW) td:nth-child(8) form.qty input`;
   }
 
   /*
@@ -45,15 +55,26 @@ module.exports = class Stocks extends BOBasePage {
     return (await this.page.$$(this.productRow)).length;
   }
 
-  async removeFilterTags() {
+  /**
+   * Remove all filter tags in the basic search input
+   * @returns {Promise<void>}
+   */
+  async resetFilter() {
     const closeButtons = await this.page.$$(this.searchTagsListCloseSpan);
     for (const closeButton of closeButtons) {
       await closeButton.click();
     }
   }
 
-  async simpleFilter(filter) {
-    this.removeFilterTags();
+  /**
+   * Filter by a word
+   * @param value
+   * @returns {Promise<void>}
+   */
+  async simpleFilter(value) {
+    await Promise.all([
+      this.page.type(this.searchInput, value),
+      this.page.click(this.searchButton)
+    ]);
   }
-
 };

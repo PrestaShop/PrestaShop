@@ -47,7 +47,7 @@ describe('Filter And Quick Edit Stocks', async () => {
   });
 
   it('should get number of products in list', async function () {
-    numberOfProducts = await this.pageObjects.stocksPage.getNumberOfPRoductsFromList();
+    let numberOfProducts = await this.pageObjects.stocksPage.getNumberOfProductsFromList();
     await expect(numberOfProducts).to.be.above(0);
   });
 
@@ -68,36 +68,72 @@ describe('Filter And Quick Edit Stocks', async () => {
       }
       /* eslint-enable no-await-in-loop */
     });
+
     it('should reset all filters', async function () {
-      await this.pageObjects.categoriesPage.resetFilter();
-      const numberOfCategoriesAfterReset = await this.pageObjects.categoriesPage.getNumberFromText(
-        this.pageObjects.categoriesPage.categoryGridTitle);
-      await expect(numberOfCategoriesAfterReset).to.equal(numberOfCategories);
+      await this.pageObjects.stocksPage.resetFilter();
+      const numberOfProductsAfterReset = await this.pageObjects.stocksPage.getNumberOfProductsFromList();
+      await expect(numberOfProductsAfterReset).to.equal(numberOfProducts);
     });
-    it('should filter by Name \'Accessories\'', async function () {
-      await this.pageObjects.categoriesPage.filterCategories(
-        'input',
-        'name',
-        Categories.accessories.name,
+
+    it('should filter by reference \'demo_1\'', async function () {
+      await this.pageObjects.stocksPage.simpleFilter(
+        'demo_1',
       );
-      const numberOfCategoriesAfterFilter = await this.pageObjects.categoriesPage.getNumberFromText(
-        this.pageObjects.categoriesPage.categoryGridTitle);
-      await expect(numberOfCategoriesAfterFilter).to.be.at.most(numberOfCategories);
+      const numberOfProductsAfterFilter = await this.pageObjects.stocksPage.getNumberOfProductsFromList();
+      await expect(numberOfProductsAfterFilter).to.be.at.most(numberOfProducts);
       /* eslint-disable no-await-in-loop */
-      for (let i = 1; i <= numberOfCategoriesAfterFilter; i++) {
-        const textColumn = await this.pageObjects.categoriesPage.getTextContent(
-          this.pageObjects.categoriesPage.categoriesListTableColumn.replace('%ROW', i).replace('%COLUMN', 'name'),
-        );
-        await expect(textColumn).to.contains(Categories.accessories.name);
+      for (let i = 1; i <= numberOfProductsAfterFilter; i++) {
+        const textColumn = await this.pageObjects.stocksPage.getTextContent(
+          this.pageObjects.stocksPage.productRowReferenceColumn.replace('%ROW', i));
+        await expect(textColumn).to.contains('demo_1');
       }
       /* eslint-enable no-await-in-loop */
     });
+
     it('should reset all filters', async function () {
-      await this.pageObjects.categoriesPage.resetFilter();
-      const numberOfCategoriesAfterReset = await this.pageObjects.categoriesPage.getNumberFromText(
-        this.pageObjects.categoriesPage.categoryGridTitle);
-      await expect(numberOfCategoriesAfterReset).to.equal(numberOfCategories);
+      await this.pageObjects.stocksPage.resetFilter();
+      const numberOfProductsAfterReset = await this.pageObjects.stocksPage.getNumberOfProductsFromList();
+      await expect(numberOfProductsAfterReset).to.equal(numberOfProducts);
     });
+
+    it('should filter by supplier \'N/A\'', async function () {
+      await this.pageObjects.stocksPage.simpleFilter(
+        'N/A',
+      );
+      const numberOfProductsAfterFilter = await this.pageObjects.stocksPage.getNumberOfProductsFromList();
+      await expect(numberOfProductsAfterFilter).to.be.at.most(numberOfProducts);
+      /* eslint-disable no-await-in-loop */
+      for (let i = 1; i <= numberOfProductsAfterFilter; i++) {
+        const textColumn = await this.pageObjects.stocksPage.getTextContent(
+          this.pageObjects.stocksPage.productRowSupplierColumn.replace('%ROW', i));
+        await expect(textColumn).to.contains('N/A');
+      }
+      /* eslint-enable no-await-in-loop */
+    });
+
+    it('should reset all filters', async function () {
+      await this.pageObjects.stocksPage.resetFilter();
+      const numberOfProductsAfterReset = await this.pageObjects.stocksPage.getNumberOfProductsFromList();
+      await expect(numberOfProductsAfterReset).to.equal(numberOfProducts);
+    });
+
+    it('should change the quantity in the first product', async function () {
+      const physicalQuantity = await this.pageObjects.stocksPage.getTextContent(
+        this.pageObjects.stocksPage.productRowPhysicalColumn.replace('%ROW', 1)
+      );
+      await this.page.type(this.pageObjects.stocksPage.productRowQuantityInput.replace('%ROW', 1), '20');
+      const newPhysicalQuantity = await this.pageObjects.stocksPage.getTextContent(
+        this.pageObjects.stocksPage.productRowPhysicalQuantityUpdateColumn.replace('%ROW', 1)
+      );
+      await expect(newPhysicalQuantity).to.be.equal(physicalQuantity+20);
+
+    });
+
+
+
+
+
+
     it('should filter by Description', async function () {
       await this.pageObjects.categoriesPage.filterCategories(
         'input',
