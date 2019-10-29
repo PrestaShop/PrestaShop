@@ -281,7 +281,9 @@ class OrderController extends FrameworkBundleAdminController
             'note' => $orderForViewing->getCustomer()->getPrivateNote(),
         ]);
         $addProductToOrderForm = $this->createForm(AddProductToOrderType::class);
-        $updateOrderProductForm = $this->createForm(UpdateProductInOrderType::class);
+        $updateOrderProductForm = $this->createForm(UpdateProductInOrderType::class, [], [
+            'order_id' => $orderId,
+        ]);
         $updateOrderShippingForm = $this->createForm(UpdateOrderShippingType::class, [
             'new_carrier_id' => $orderForViewing->getCarrierId(),
         ], [
@@ -392,7 +394,9 @@ class OrderController extends FrameworkBundleAdminController
 
     public function updateProductAction(int $orderId, int $orderDetailId, Request $request): RedirectResponse
     {
-        $updateOrderProductForm = $this->createForm(UpdateProductInOrderType::class);
+        $updateOrderProductForm = $this->createForm(UpdateProductInOrderType::class, [], [
+            'order_id' => $orderId,
+        ]);
         $updateOrderProductForm->handleRequest($request);
 
         if ($updateOrderProductForm->isSubmitted() && $updateOrderProductForm->isValid()) {
