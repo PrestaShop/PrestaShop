@@ -172,3 +172,15 @@ admin_orders_update_invoice_note:
   requirements:
     orderId: \d+
     orderInvoiceId: \d+
+
+admin_search_product_for_order_creation:
+  path: /search
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:searchProducts
+
+admin_orders_generate_invoice:
+  path: /{orderId}/invoice
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:generateInvoiceAction

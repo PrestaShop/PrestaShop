@@ -42,6 +42,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Exception\ChangeOrderStatusException
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderEmailResendException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\TransistEmailSendingException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Command\GenerateInvoiceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\OrderConstraints;
 use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Command\UpdateInvoiceNoteCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Payment\Command\AddPaymentCommand;
@@ -286,6 +287,8 @@ class OrderController extends FrameworkBundleAdminController
             'order_id' => $orderId,
         ]);
 
+        $invoiceManagementIsActive = \Configuration::get('PS_INVOICE', null, null, 1);
+
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/view.html.twig', [
             'showContentHeader' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
@@ -299,6 +302,7 @@ class OrderController extends FrameworkBundleAdminController
             'addProductToOrderForm' => $addProductToOrderForm->createView(),
             'updateOrderProductForm' => $updateOrderProductForm->createView(),
             'updateOrderShippingForm' => $updateOrderShippingForm->createView(),
+            'invoiceManagementIsActive' => $invoiceManagementIsActive,
         ]);
     }
 
@@ -642,6 +646,28 @@ class OrderController extends FrameworkBundleAdminController
                 'success',
                 $this->trans('The message was successfully sent to the customer.', 'Admin.Orderscustomers.Notification')
             );
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirectToRoute('admin_orders_view', [
+            'orderId' => $orderId,
+        ]);
+    }
+
+    /**
+     * Generates invoice for given order
+     *
+     * @param int $orderId
+     *
+     * @return RedirectResponse
+     */
+    public function generateInvoiceAction(int $orderId): RedirectResponse
+    {
+        try {
+            $this->getCommandBus()->handle(new GenerateInvoiceCommand($orderId));
+
+            $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
