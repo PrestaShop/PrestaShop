@@ -2,6 +2,7 @@ require('module-alias/register');
 // Using chai
 const {expect} = require('chai');
 const helper = require('@utils/helpers');
+const files = require('@utils/files');
 const loginCommon = require('@commonTests/loginBO');
 // Importing pages
 const BOBasePage = require('@pages/BO/BObasePage');
@@ -46,6 +47,12 @@ describe('Create, Read, Update and Delete Category', async () => {
   });
   after(async () => {
     await helper.closeBrowser(browser);
+    /* Delete the generated images */
+    await Promise.all([
+      files.deleteFile(`${createCategoryData.name}.jpg`),
+      files.deleteFile(`${createSubCategoryData.name}.jpg`),
+      files.deleteFile(`${editCategoryData.name}.jpg`),
+    ]);
   });
   // Login into BO and go to categories page
   loginCommon.loginBO();
@@ -59,11 +66,7 @@ describe('Create, Read, Update and Delete Category', async () => {
     await expect(pageTitle).to.contains(this.pageObjects.categoriesPage.pageTitle);
   });
   it('should reset all filters and get number of categories in BO', async function () {
-    if (await this.pageObjects.categoriesPage.elementVisible(this.pageObjects.categoriesPage.filterResetButton, 2000)) {
-      await this.pageObjects.categoriesPage.resetFilter();
-    }
-    numberOfCategories = await this.pageObjects.categoriesPage.getNumberFromText(
-      this.pageObjects.categoriesPage.categoryGridTitle);
+    numberOfCategories = await this.pageObjects.categoriesPage.resetFilter();
     await expect(numberOfCategories).to.be.above(0);
   });
   // 1 : Create category and subcategory then go to FO to check the existence of the new categories
@@ -234,9 +237,7 @@ describe('Create, Read, Update and Delete Category', async () => {
     it('should update the category', async function () {
       const textResult = await this.pageObjects.addCategoryPage.createEditCategory(editCategoryData);
       await expect(textResult).to.equal(this.pageObjects.categoriesPage.successfulUpdateMessage);
-      await this.pageObjects.categoriesPage.resetFilter();
-      const numberOfCategoriesAfterUpdate = await this.pageObjects.categoriesPage.getNumberFromText(
-        this.pageObjects.categoriesPage.categoryGridTitle);
+      const numberOfCategoriesAfterUpdate = await this.pageObjects.categoriesPage.resetFilter();
       await expect(numberOfCategoriesAfterUpdate).to.be.equal(numberOfCategories + 1);
     });
     it('should search for the new category and check result', async function () {
@@ -252,10 +253,10 @@ describe('Create, Read, Update and Delete Category', async () => {
     });
     it('should go to FO and check that the category does not exist', async function () {
       const categoryID = await this.pageObjects.categoriesPage.getTextContent(
-        this.pageObjects.categoriesPage.categoriesListTableColumn.replace('%ROW', 1).replace(
-          '%COLUMN',
-          'id_category',
-        ),
+        this.pageObjects.categoriesPage.categoriesListTableColumn
+          .replace('%ROW', 1)
+          .replace('%COLUMN', 'id_category')
+        ,
       );
       page = await this.pageObjects.boBasePage.viewMyShop();
       this.pageObjects = await init();
@@ -294,14 +295,8 @@ describe('Create, Read, Update and Delete Category', async () => {
     it('should delete category', async function () {
       const textResult = await this.pageObjects.categoriesPage.deleteCategory('1');
       await expect(textResult).to.equal(this.pageObjects.categoriesPage.successfulDeleteMessage);
-      await this.pageObjects.categoriesPage.resetFilter();
-      const numberOfCategoriesAfterDeletion = await this.pageObjects.categoriesPage.getNumberFromText(
-        this.pageObjects.categoriesPage.categoryGridTitle);
+      const numberOfCategoriesAfterDeletion = await this.pageObjects.categoriesPage.resetFilter();
       await expect(numberOfCategoriesAfterDeletion).to.be.equal(numberOfCategories);
-      /* Delete the generated images */
-      await this.pageObjects.categoriesPage.deleteFile(`${createCategoryData.name}.jpg`);
-      await this.pageObjects.categoriesPage.deleteFile(`${createSubCategoryData.name}.jpg`);
-      await this.pageObjects.categoriesPage.deleteFile(`${editCategoryData.name}.jpg`);
     });
   });
 });

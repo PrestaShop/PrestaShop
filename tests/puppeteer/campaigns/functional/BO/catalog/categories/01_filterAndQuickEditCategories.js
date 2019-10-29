@@ -47,12 +47,7 @@ describe('Filter And Quick Edit Categories', async () => {
     await expect(pageTitle).to.contains(this.pageObjects.categoriesPage.pageTitle);
   });
   it('should reset all filters and get Number of Categories in BO', async function () {
-    if (await this.pageObjects.categoriesPage.elementVisible(this.pageObjects.categoriesPage.filterResetButton, 2000)) {
-      await this.pageObjects.categoriesPage.resetFilter();
-    }
-    numberOfCategories = await this.pageObjects.categoriesPage.getNumberFromText(
-      this.pageObjects.categoriesPage.categoryGridTitle,
-    );
+    numberOfCategories = await this.pageObjects.categoriesPage.resetFilter();
     await expect(numberOfCategories).to.be.above(0);
   });
   // 1 : Filter Categories with all inputs and selects in grid table
@@ -78,9 +73,7 @@ describe('Filter And Quick Edit Categories', async () => {
       /* eslint-enable no-await-in-loop */
     });
     it('should reset all filters', async function () {
-      await this.pageObjects.categoriesPage.resetFilter();
-      const numberOfCategoriesAfterReset = await this.pageObjects.categoriesPage.getNumberFromText(
-        this.pageObjects.categoriesPage.categoryGridTitle);
+      const numberOfCategoriesAfterReset = await this.pageObjects.categoriesPage.resetFilter();
       await expect(numberOfCategoriesAfterReset).to.equal(numberOfCategories);
     });
     it('should filter by Name \'Accessories\'', async function () {
@@ -102,9 +95,7 @@ describe('Filter And Quick Edit Categories', async () => {
       /* eslint-enable no-await-in-loop */
     });
     it('should reset all filters', async function () {
-      await this.pageObjects.categoriesPage.resetFilter();
-      const numberOfCategoriesAfterReset = await this.pageObjects.categoriesPage.getNumberFromText(
-        this.pageObjects.categoriesPage.categoryGridTitle);
+      const numberOfCategoriesAfterReset = await this.pageObjects.categoriesPage.resetFilter();
       await expect(numberOfCategoriesAfterReset).to.equal(numberOfCategories);
     });
     it('should filter by Description', async function () {
@@ -127,9 +118,7 @@ describe('Filter And Quick Edit Categories', async () => {
       /* eslint-enable no-await-in-loop */
     });
     it('should reset all filters', async function () {
-      await this.pageObjects.categoriesPage.resetFilter();
-      const numberOfCategoriesAfterReset = await this.pageObjects.categoriesPage.getNumberFromText(
-        this.pageObjects.categoriesPage.categoryGridTitle);
+      const numberOfCategoriesAfterReset = await this.pageObjects.categoriesPage.resetFilter();
       await expect(numberOfCategoriesAfterReset).to.equal(numberOfCategories);
     });
     it('should filter by Position \'3\'', async function () {
@@ -151,9 +140,7 @@ describe('Filter And Quick Edit Categories', async () => {
       /* eslint-enable no-await-in-loop */
     });
     it('should reset all filters', async function () {
-      await this.pageObjects.categoriesPage.resetFilter();
-      const numberOfCategoriesAfterReset = await this.pageObjects.categoriesPage.getNumberFromText(
-        this.pageObjects.categoriesPage.categoryGridTitle);
+      const numberOfCategoriesAfterReset = await this.pageObjects.categoriesPage.resetFilter();
       await expect(numberOfCategoriesAfterReset).to.equal(numberOfCategories);
     });
     it('should filter by Displayed \'Yes\'', async function () {
@@ -175,9 +162,7 @@ describe('Filter And Quick Edit Categories', async () => {
       /* eslint-enable no-await-in-loop */
     });
     it('should reset all filters', async function () {
-      await this.pageObjects.categoriesPage.resetFilter();
-      const numberOfCategoriesAfterReset = await this.pageObjects.categoriesPage.getNumberFromText(
-        this.pageObjects.categoriesPage.categoryGridTitle);
+      const numberOfCategoriesAfterReset = await this.pageObjects.categoriesPage.resetFilter();
       await expect(numberOfCategoriesAfterReset).to.equal(numberOfCategories);
     });
   });
@@ -230,9 +215,7 @@ describe('Filter And Quick Edit Categories', async () => {
       await expect(isStatusChanged).to.be.true;
     });
     it('should reset all filters', async function () {
-      await this.pageObjects.categoriesPage.resetFilter();
-      const numberOfCategoriesAfterReset = await this.pageObjects.categoriesPage.getNumberFromText(
-        this.pageObjects.categoriesPage.categoryGridTitle);
+      const numberOfCategoriesAfterReset = await this.pageObjects.categoriesPage.resetFilter();
       await expect(numberOfCategoriesAfterReset).to.equal(numberOfCategories);
     });
   });

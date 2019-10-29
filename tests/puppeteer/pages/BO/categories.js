@@ -44,13 +44,13 @@ module.exports = class Categories extends BOBasePage {
    */
   /**
    * Reset input filters
-   * @return {Promise<void>}
+   * @return {Promise<integer>}
    */
   async resetFilter() {
-    await Promise.all([
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-      this.page.click(this.filterResetButton),
-    ]);
+    if (this.elementVisible(this.filterResetButton, 2000)) {
+      await this.clickAndWaitForNavigation(this.filterResetButton);
+    }
+    return this.getNumberFromText(this.categoryGridTitle);
   }
 
   /**

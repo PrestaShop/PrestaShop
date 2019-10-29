@@ -53,11 +53,7 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
     await expect(pageTitle).to.contains(this.pageObjects.categoriesPage.pageTitle);
   });
   it('should reset all filters and get Number of Categories in BO', async function () {
-    if (await this.pageObjects.categoriesPage.elementVisible(this.pageObjects.categoriesPage.filterResetButton, 2000)) {
-      await this.pageObjects.categoriesPage.resetFilter();
-    }
-    numberOfCategories = await this.pageObjects.categoriesPage.getNumberFromText(
-      this.pageObjects.categoriesPage.categoryGridTitle);
+    numberOfCategories = await this.pageObjects.categoriesPage.resetFilter();
     await expect(numberOfCategories).to.be.above(0);
   });
   // 1 : Create 2 categories In BO
@@ -101,8 +97,10 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
         'todelete',
       );
       const textResult = await this.pageObjects.categoriesPage.getTextContent(
-        this.pageObjects.categoriesPage.categoriesListTableColumn.replace('%ROW', '1').replace('%COLUMN', 'name',
-        ),
+        this.pageObjects.categoriesPage.categoriesListTableColumn
+          .replace('%ROW', '1')
+          .replace('%COLUMN', 'name')
+        ,
       );
       await expect(textResult).to.contains('todelete');
     });
@@ -115,7 +113,10 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
       /* eslint-disable no-await-in-loop */
       for (let i = 1; i <= numberOfCategoriesInGrid; i++) {
         const textColumn = await this.pageObjects.categoriesPage.getTextContent(
-          this.pageObjects.categoriesPage.categoriesListTableColumn.replace('%ROW', i).replace('%COLUMN', 'active'),
+          this.pageObjects.categoriesPage.categoriesListTableColumn
+            .replace('%ROW', i)
+            .replace('%COLUMN', 'active')
+          ,
         );
         await expect(textColumn).to.contains('clear');
       }
@@ -131,7 +132,10 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
       /* eslint-disable no-await-in-loop */
       for (let i = 1; i <= numberOfCategoriesInGrid; i++) {
         const textColumn = await this.pageObjects.categoriesPage.getTextContent(
-          this.pageObjects.categoriesPage.categoriesListTableColumn.replace('%ROW', i).replace('%COLUMN', 'active'),
+          this.pageObjects.categoriesPage.categoriesListTableColumn
+            .replace('%ROW', i)
+            .replace('%COLUMN', 'active')
+          ,
         );
         await expect(textColumn).to.contains('check');
       }
@@ -147,8 +151,10 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
         'todelete',
       );
       const textResult = await this.pageObjects.categoriesPage.getTextContent(
-        this.pageObjects.categoriesPage.categoriesListTableColumn.replace('%ROW', '1').replace('%COLUMN', 'name',
-        ),
+        this.pageObjects.categoriesPage.categoriesListTableColumn
+          .replace('%ROW', '1')
+          .replace('%COLUMN', 'name')
+        ,
       );
       await expect(textResult).to.contains('todelete');
     });
@@ -160,10 +166,7 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
     });
 
     it('should reset all filters', async function () {
-      await this.pageObjects.categoriesPage.resetFilter();
-      const numberOfCategoriesAfterReset = await this.pageObjects.categoriesPage.getNumberFromText(
-        this.pageObjects.categoriesPage.categoryGridTitle,
-      );
+      const numberOfCategoriesAfterReset = await this.pageObjects.categoriesPage.resetFilter();
       await expect(numberOfCategoriesAfterReset).to.equal(numberOfCategories);
     });
   });
