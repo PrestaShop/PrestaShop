@@ -26,18 +26,57 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Order;
 
+use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class UpdateProductInOrderType extends AbstractType
 {
+    /**
+     * @var ConfigurableFormChoiceProviderInterface
+     */
+    private $orderInvoiceByIdChoiceProvider;
+
+    /**
+     * @var int
+     */
+    private $contextLangId;
+
+    public function __construct(
+        ConfigurableFormChoiceProviderInterface $orderInvoiceByIdChoiceProvider,
+        int $contextLangId
+    ) {
+        $this->orderInvoiceByIdChoiceProvider = $orderInvoiceByIdChoiceProvider;
+        $this->contextLangId = $contextLangId;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('price_tax_excl', TextType::class)
             ->add('price_tax_incl', TextType::class)
             ->add('quantity', TextType::class)
+            ->add('invoice_id', ChoiceType::class, [
+                'required' => false,
+                'placeholder' => false,
+                'choices' => $this->orderInvoiceByIdChoiceProvider->getChoices([
+                    'id_order' => $options['order_id'],
+                    'id_lang' => $this->contextLangId,
+                ]),
+            ])
+        ;
+    }
+
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver
+            ->setRequired([
+                'order_id'
+            ])
+            ->setAllowedTypes('order_id', 'int')
         ;
     }
 }
