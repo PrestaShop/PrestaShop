@@ -28,6 +28,8 @@ namespace PrestaShop\PrestaShop\Adapter\Country;
 
 use Configuration;
 use Country;
+use Db;
+use DbQuery;
 
 /**
  * This class will provide data from DB / ORM about Country
@@ -47,6 +49,24 @@ class CountryDataProvider
     public function getCountries($id_lang, $active = false, $contain_states = false, $list_states = true)
     {
         return Country::getCountries($id_lang, $active, $contain_states, $list_states);
+    }
+
+    /**
+     * Returns list of countries IDs which need DNI
+     *
+     * @return array
+     */
+    public function getCountriesIdWhichNeedDni()
+    {
+        $query = new DbQuery();
+        $query
+            ->select('c.`id_country`')
+            ->from('country', 'c')
+            ->where('c.`need_identification_number` = 1')
+        ;
+        $result =  Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
+
+        return array_map(function($country) { return $country['id_country']; }, $result);
     }
 
     /**

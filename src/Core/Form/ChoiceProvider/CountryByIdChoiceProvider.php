@@ -27,12 +27,13 @@
 namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
 use PrestaShop\PrestaShop\Adapter\Country\CountryDataProvider;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceAttributeProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 
 /**
  * Class CountryByIdChoiceProvider provides country choices with ID values.
  */
-final class CountryByIdChoiceProvider implements FormChoiceProviderInterface
+final class CountryByIdChoiceProvider implements FormChoiceProviderInterface, FormChoiceAttributeProviderInterface
 {
     /**
      * @var CountryDataProvider
@@ -43,6 +44,16 @@ final class CountryByIdChoiceProvider implements FormChoiceProviderInterface
      * @var int
      */
     private $langId;
+
+    /**
+     * @var array
+     */
+    private $countries;
+
+    /**
+     * @var array
+     */
+    private $dniCountriesId;
 
     /**
      * @param int $langId
@@ -63,7 +74,7 @@ final class CountryByIdChoiceProvider implements FormChoiceProviderInterface
      */
     public function getChoices()
     {
-        $countries = $this->countryDataProvider->getCountries($this->langId);
+        $countries = $this->getCountries();
         $choices = [];
 
         foreach ($countries as $country) {
@@ -71,5 +82,47 @@ final class CountryByIdChoiceProvider implements FormChoiceProviderInterface
         }
 
         return $choices;
+    }
+
+    /**
+     * @return array
+     */
+    public function getChoicesAttributes()
+    {
+        $countries = $this->getCountries();
+        $dniCountriesId = $this->getDniCountriesId();
+        $choicesAttributes = [];
+
+        foreach ($countries as $country) {
+            if (in_array($country['id_country'], $dniCountriesId)) {
+                $choicesAttributes[$country['name']] = ['need_dni' => 1];
+            }
+        }
+
+        return $choicesAttributes;
+    }
+
+    /**
+     * @return array
+     */
+    private function getCountries()
+    {
+        if (null === $this->countries) {
+            $this->countries = $this->countryDataProvider->getCountries($this->langId);
+        }
+
+        return $this->countries;
+    }
+
+    /**
+     * @return array
+     */
+    private function getDniCountriesId()
+    {
+        if (null === $this->dniCountriesId) {
+            $this->dniCountriesId = $this->countryDataProvider->getCountriesIdWhichNeedDni();
+        }
+
+        return $this->dniCountriesId;
     }
 }

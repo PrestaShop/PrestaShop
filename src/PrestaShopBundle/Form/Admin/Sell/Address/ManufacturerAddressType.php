@@ -54,6 +54,11 @@ class ManufacturerAddressType extends AbstractType
     private $countryChoices;
 
     /**
+     * @var array
+     */
+    private $countryChoicesAttributes;
+
+    /**
      * @var ConfigurableFormChoiceProviderInterface
      */
     private $statesChoiceProvider;
@@ -74,19 +79,22 @@ class ManufacturerAddressType extends AbstractType
      * @param ConfigurableFormChoiceProviderInterface $statesChoiceProvider
      * @param int $contextCountryId
      * @param TranslatorInterface $translator
+     * @param array $countryChoicesAttributes
      */
     public function __construct(
         array $manufacturerChoices,
         array $countryChoices,
         ConfigurableFormChoiceProviderInterface $statesChoiceProvider,
         $contextCountryId,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        array $countryChoicesAttributes
     ) {
         $this->manufacturerChoices = $manufacturerChoices;
         $this->countryChoices = $countryChoices;
         $this->statesChoiceProvider = $statesChoiceProvider;
         $this->contextCountryId = $contextCountryId;
         $this->translator = $translator;
+        $this->countryChoicesAttributes = $countryChoicesAttributes;
     }
 
     /**
@@ -95,12 +103,11 @@ class ManufacturerAddressType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         if ($options['country_id'] !== 0) {
-            $countryIdForStateChoices = $options['country_id'];
-            $dniRequired = Country::isNeedDniByCountryId($options['country_id']);
+            $countryId = $options['country_id'];
         } else {
-            $countryIdForStateChoices = $this->contextCountryId;
-            $dniRequired = Country::isNeedDniByCountryId($this->contextCountryId);
+            $countryId = $this->contextCountryId;
         }
+        $dniRequired = Country::isNeedDniByCountryId($countryId);
 
         $builder
             ->add('id_manufacturer', ChoiceType::class, [
@@ -219,6 +226,7 @@ class ManufacturerAddressType extends AbstractType
             ->add('id_country', ChoiceType::class, [
                 'required' => true,
                 'choices' => $this->countryChoices,
+                'choice_attr' => $this->countryChoicesAttributes,
                 'translation_domain' => false,
                 'constraints' => [
                     new NotBlank([
@@ -232,7 +240,7 @@ class ManufacturerAddressType extends AbstractType
                 'required' => false,
                 'translation_domain' => false,
                 'choices' => $this->statesChoiceProvider->getChoices([
-                    'id_country' => $countryIdForStateChoices,
+                    'id_country' => $countryId,
                 ]),
             ])
             ->add('home_phone', TextType::class, [
