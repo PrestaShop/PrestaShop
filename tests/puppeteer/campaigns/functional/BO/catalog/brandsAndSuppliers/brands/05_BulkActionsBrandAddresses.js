@@ -46,7 +46,7 @@ describe('Create 2 brand Addresses and delete with bulk actions', async () => {
   // GO to Brands Page
   it('should go to brands page', async function () {
     await this.pageObjects.boBasePage.goToSubMenu(
-      this.pageObjects.boBasePage.productsParentLink,
+      this.pageObjects.boBasePage.catalogParentLink,
       this.pageObjects.boBasePage.brandsAndSuppliersLink,
     );
     await this.pageObjects.boBasePage.closeSfToolBar();
