@@ -232,4 +232,15 @@ module.exports = class CommonPage {
   async goToPreviousPage(waitUntil = 'networkidle0') {
     await this.page.goBack({waitUntil});
   }
+
+  /**
+   * Replace All occurrences in string
+   * @param str, string to update
+   * @param find, what to replace
+   * @param replace, value to replace with
+   * @return {Promise<*>}
+   */
+  async replaceAll(str, find, replace) {
+    return str.replace(new RegExp(find, 'g'), replace);
+  }
 };
