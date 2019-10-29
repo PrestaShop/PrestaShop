@@ -201,4 +201,3 @@ admin_orders_get_prices:
     orderId: \d+
   options:
     expose: true
-
