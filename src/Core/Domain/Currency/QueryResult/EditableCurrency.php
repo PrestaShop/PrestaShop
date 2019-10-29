@@ -55,11 +55,6 @@ class EditableCurrency
     private $isoCode;
 
     /**
-     * @var string|null
-     */
-    private $numericIsoCode;
-
-    /**
      * @var float
      */
     private $exchangeRate;
@@ -87,7 +82,6 @@ class EditableCurrency
     /**
      * @param int $currencyId
      * @param string $isoCode
-     * @param string|null $numericIsoCode
      * @param array $names
      * @param array $symbols
      * @param float $exchangeRate
@@ -101,7 +95,6 @@ class EditableCurrency
     public function __construct(
         $currencyId,
         $isoCode,
-        $numericIsoCode,
         $names,
         $symbols,
         $exchangeRate,
@@ -112,7 +105,6 @@ class EditableCurrency
     ) {
         $this->currencyId = new CurrencyId($currencyId);
         $this->isoCode = $isoCode;
-        $this->numericIsoCode = $numericIsoCode;
         $this->names = $names;
         $this->symbols = $symbols;
         $this->exchangeRate = $exchangeRate;
@@ -138,16 +130,6 @@ class EditableCurrency
     public function getIsoCode()
     {
         return $this->isoCode;
-    }
-
-    /**
-     * Currency numeric ISO code
-     *
-     * @return string|null
-     */
-    public function getNumericIsoCode(): ?string
-    {
-        return $this->numericIsoCode;
     }
 
     /**

@@ -255,14 +255,14 @@ class CurrencyController extends FrameworkBundleAdminController
             $exchangeRateValue = ExchangeRate::DEFAULT_RATE;
         }
 
-        return new JsonResponse(
-            array_merge(
-                $referenceCurrency->toArray(),
-                [
-                    'exchange_rate' => $exchangeRateValue,
-                ]
-            )
-        );
+        return new JsonResponse([
+                'isoCode' => $referenceCurrency->getIsoCode(),
+                'numericIsoCode' => $referenceCurrency->getNumericIsoCode(),
+                'precision' => $referenceCurrency->getPrecision(),
+                'names' => $referenceCurrency->getNames(),
+                'symbols' => $referenceCurrency->getSymbols(),
+                'exchangeRate' => $exchangeRateValue,
+        ]);
     }
 
     /**
