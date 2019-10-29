@@ -183,11 +183,7 @@ describe('Filter And Quick Edit Customers', async () => {
       await expect(numberOfCustomersAfterReset).to.equal(numberOfCustomers);
     });
     it('should filter by Enabled \'Yes\'', async function () {
-      await this.pageObjects.customersPage.filterCustomers(
-        'select',
-        'active',
-        DefaultAccount.enabled,
-      );
+      await this.pageObjects.customersPage.filterCustomersSwitch('active', DefaultAccount.enabled);
       const numberOfCustomersAfterFilter = await this.pageObjects.customersPage.getNumberFromText(
         this.pageObjects.customersPage.customerGridTitle,
       );
@@ -208,11 +204,7 @@ describe('Filter And Quick Edit Customers', async () => {
       await expect(numberOfCustomersAfterReset).to.equal(numberOfCustomers);
     });
     it('should filter by Newsletter \'Yes\'', async function () {
-      await this.pageObjects.customersPage.filterCustomers(
-        'select',
-        'newsletter',
-        DefaultAccount.newsletter,
-      );
+      await this.pageObjects.customersPage.filterCustomersSwitch('newsletter', DefaultAccount.newsletter);
       const numberOfCustomersAfterFilter = await this.pageObjects.customersPage.getNumberFromText(
         this.pageObjects.customersPage.customerGridTitle,
       );
@@ -234,11 +226,7 @@ describe('Filter And Quick Edit Customers', async () => {
       await expect(numberOfCustomersAfterReset).to.equal(numberOfCustomers);
     });
     it('should filter by Partner Offers \'YES\'', async function () {
-      await this.pageObjects.customersPage.filterCustomers(
-        'select',
-        'optin',
-        DefaultAccount.partnerOffers,
-      );
+      await this.pageObjects.customersPage.filterCustomersSwitch('optin', DefaultAccount.partnerOffers);
       const numberOfCustomersAfterFilter = await this.pageObjects.customersPage.getNumberFromText(
         this.pageObjects.customersPage.customerGridTitle,
       );

@@ -70,7 +70,7 @@ module.exports = class Customers extends BOBasePage {
       case 'select':
         await this.selectByVisibleText(
           this.customerFilterColumnInput.replace('%FILTERBY', filterBy),
-          value ? 'Yes' : 'No',
+          value,
         );
         break;
       default:
@@ -81,6 +81,20 @@ module.exports = class Customers extends BOBasePage {
       this.page.waitForNavigation({waitUntil: 'networkidle0'}),
       this.page.click(this.filterSearchButton),
     ]);
+  }
+
+  /**
+   * Filter Customers by select that contains values (Yes/No)
+   * @param filterBy
+   * @param value
+   * @return {Promise<void>}
+   */
+  async filterCustomersSwitch(filterBy, value) {
+    await this.filterCustomers(
+      'select',
+      filterBy,
+      value ? 'Yes' : 'No',
+    );
   }
 
   /**
