@@ -53,11 +53,8 @@ describe('Create Standard product in BO and Delete it with DropDown Menu', async
     await expect(pageTitle).to.contains(this.pageObjects.productsPage.pageTitle);
   });
   it('should reset all filters', async function () {
-    if (await this.pageObjects.productsPage.elementVisible(this.pageObjects.productsPage.filterResetButton, 2000)) {
-      await this.pageObjects.productsPage.resetFilter();
-    }
     await this.pageObjects.productsPage.resetFilterCategory();
-    const numberOfProducts = await this.pageObjects.productsPage.getNumberOfProductsFromList();
+    const numberOfProducts = await this.pageObjects.productsPage.resetFilter();
     await expect(numberOfProducts).to.be.above(0);
   });
   it('should create Product', async function () {
@@ -76,11 +73,8 @@ describe('Create Standard product in BO and Delete it with DropDown Menu', async
     await expect(deleteTextResult).to.equal(this.pageObjects.productsPage.productDeletedSuccessfulMessage);
   });
   it('should reset all filters', async function () {
-    if (await this.pageObjects.productsPage.elementVisible(this.pageObjects.productsPage.filterResetButton, 2000)) {
-      await this.pageObjects.productsPage.resetFilter();
-    }
     await this.pageObjects.productsPage.resetFilterCategory();
-    const numberOfProducts = await this.pageObjects.productsPage.getNumberOfProductsFromList();
+    const numberOfProducts = await this.pageObjects.productsPage.resetFilter();
     await expect(numberOfProducts).to.be.above(0);
   });
 });

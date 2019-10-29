@@ -58,11 +58,8 @@ describe('Create, read, update and delete Standard product with combinations in 
     await expect(pageTitle).to.contains(this.pageObjects.productsPage.pageTitle);
   });
   it('should reset all filters', async function () {
-    if (await this.pageObjects.productsPage.elementVisible(this.pageObjects.productsPage.filterResetButton, 2000)) {
-      await this.pageObjects.productsPage.resetFilter();
-    }
     await this.pageObjects.productsPage.resetFilterCategory();
-    const numberOfProducts = await this.pageObjects.productsPage.getNumberOfProductsFromList();
+    const numberOfProducts = await this.pageObjects.productsPage.resetFilter();
     await expect(numberOfProducts).to.be.above(0);
   });
   it('should create Product with Combinations', async function () {

@@ -48,11 +48,8 @@ describe('Filter in Products Page', async () => {
     await expect(pageTitle).to.contains(this.pageObjects.productsPage.pageTitle);
   });
   it('should reset all filters and get Number of products in BO', async function () {
-    if (await this.pageObjects.productsPage.elementVisible(this.pageObjects.productsPage.filterResetButton, 2000)) {
-      await this.pageObjects.productsPage.resetFilter();
-    }
     await this.pageObjects.productsPage.resetFilterCategory();
-    numberOfProducts = await this.pageObjects.productsPage.getNumberOfProductsFromList();
+    numberOfProducts = await this.pageObjects.productsPage.resetFilter();
     await expect(numberOfProducts).to.be.above(0);
   });
   it('should filter list by Name and check result', async function () {
@@ -61,8 +58,7 @@ describe('Filter in Products Page', async () => {
     await expect(numberOfProductsAfterFilter).to.be.below(numberOfProducts);
   });
   it('should reset filter and check result', async function () {
-    await this.pageObjects.productsPage.resetFilter();
-    const numberOfProductsAfterReset = await this.pageObjects.productsPage.getNumberOfProductsFromList();
+    const numberOfProductsAfterReset = await this.pageObjects.productsPage.resetFilter();
     await expect(numberOfProductsAfterReset).to.equal(numberOfProducts);
   });
   it('should filter by Reference and check result', async function () {
@@ -71,8 +67,7 @@ describe('Filter in Products Page', async () => {
     await expect(numberOfProductsAfterFilter).to.be.below(numberOfProducts);
   });
   it('should reset filter and check result', async function () {
-    await this.pageObjects.productsPage.resetFilter();
-    const numberOfProductsAfterReset = await this.pageObjects.productsPage.getNumberOfProductsFromList();
+    const numberOfProductsAfterReset = await this.pageObjects.productsPage.resetFilter();
     await expect(numberOfProductsAfterReset).to.equal(numberOfProducts);
   });
   it('should filter by Category and check result', async function () {

@@ -76,7 +76,10 @@ module.exports = class Product extends BOBasePage {
    * @return {Promise<void>}
    */
   async resetFilter() {
-    await this.clickAndWaitForNavigation(this.filterResetButton);
+    if (await this.elementVisible(this.filterResetButton, 2000)) {
+      await this.clickAndWaitForNavigation(this.filterResetButton);
+    }
+    return this.getNumberOfProductsFromList();
   }
 
   /**
