@@ -231,10 +231,6 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                 (new Filter('actions', SearchAndResetType::class))
                 ->setAssociatedColumn('actions')
                 ->setTypeOptions([
-                    'attr' => [
-                        'data-url' => $this->resetActionUrl,
-                        'data-redirect' => $this->redirectActionUrl,
-                    ],
                     'reset_route' => 'admin_common_reset_search_by_filter_id',
                     'reset_route_params' => [
                         'filterId' => self::GRID_ID,
