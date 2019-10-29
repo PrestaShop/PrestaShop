@@ -7,59 +7,44 @@ module.exports = class Pages extends BOBasePage {
 
     this.pageTitle = 'Pages';
     this.successfulUpdateStatusMessage = 'The status has been successfully updated.';
-    // Header links
+
+    // Header link
     this.addNewPageCategoryLink = '#page-header-desc-configuration-add_cms_category[title=\'Add new page category\']';
     this.addNewPageLink = '#page-header-desc-configuration-add_cms_page[title=\'Add new page\']';
 
-    // List of categories
-    this.categoryGridPanel = '#cms_page_category_grid_panel';
-    this.categoryGridTitle = `${this.categoryGridPanel} h3.card-header-title`;
-    this.categoriesListForm = '#cms_page_category_grid';
-    this.categoriesListTableRow = `${this.categoriesListForm} tbody tr:nth-child(%ROW)`;
-    this.categoriesListTableColumn = `${this.categoriesListTableRow} td.column-%COLUMN`;
-    this.categoriesListTableViewLink = `${this.categoriesListTableColumn} a[data-original-title='View']`;
-    this.categoriesListTableToggleDropDown = `${this.categoriesListTableColumn} a[data-toggle='dropdown']`;
-    this.categoriesListTableEditLink = `${this.categoriesListTableColumn} a[href*='edit']`;
-    this.categoriesListTableDeleteLink = `${this.categoriesListTableColumn} a[data-method="DELETE"]`;
-    this.categoriesListColumnValidIcon = `${this.categoriesListTableColumn} i.grid-toggler-icon-valid`;
-    this.categoriesListColumnNotValidIcon = `${this.categoriesListTableColumn} i.grid-toggler-icon-not-valid`;
-
-    this.backToListButton = `${this.categoryGridPanel} div.card-footer a`;
-    // Filters in categories table
-    this.categoryFilterInput = `${this.categoriesListForm} #cms_page_category_%FILTERBY`;
-    this.categoryFilterSearchButton = `${this.categoriesListForm} button[name='cms_page_category[actions][search]']`;
-    this.categoryfilterResetButton = `${this.categoriesListForm} button[name='cms_page_category[actions][reset]']`;
+    // Common Selectors
+    this.gridPanel = '#%TABLE_grid_panel';
+    this.gridTitle = `${this.gridPanel} h3.card-header-title`;
+    this.gridTable = '#%TABLE_grid_table';
+    this.gridHeaderTitle = `${this.gridPanel} h3.card-header-title`;
+    this.listForm = '#%TABLE_grid';
+    this.listTableRow = `${this.listForm} tbody tr:nth-child(%ROW)`;
+    this.listTableColumn = `${this.listTableRow} td.column-%COLUMN`;
+    this.columnValidIcon = `${this.listTableColumn.replace('%COLUMN', 'active')} i.grid-toggler-icon-valid`;
+    this.columnNotValidIcon = `${this.listTableColumn.replace('%COLUMN', 'active')} i.grid-toggler-icon-not-valid`;
+    this.listTableToggleDropDown = `${this.listTableColumn.replace('%COLUMN', 'actions')} a[data-toggle='dropdown']`;
+    this.listTableEditLink = `${this.listTableColumn.replace('%COLUMN', 'actions')} a[href*='edit']`;
     // Bulk Actions
-    this.categoriesSelectAllRowsLabel = `${this.categoriesListForm} .md-checkbox label`;
-    this.categoriesBulkActionsToggleButton = `${this.categoriesListForm} button.dropdown-toggle`;
-    this.categoriesBulkActionsEnableButton = `${this.categoriesListForm} 
-    #cms_page_category_grid_bulk_action_enable_selection`;
-    this.categoriesBulkActionsDisableButton = `${this.categoriesListForm} 
-    #cms_page_category_grid_bulk_action_disable_selection`;
-    this.categoriesBulkActionsDeleteButton = `${this.categoriesListForm} 
-    #cms_page_category_grid_bulk_action_delete_bulk`;
-    // List of pages
-    this.pageGridPanel = '#cms_page_grid_panel';
-    this.pageGridTitle = `${this.pageGridPanel} h3.card-header-title`;
-    this.pagesListForm = '#cms_page_grid';
-    this.pagesListTableRow = `${this.pagesListForm} tbody tr:nth-child(%ROW)`;
-    this.pagesListTableColumn = `${this.pagesListTableRow} td.column-%COLUMN`;
-    this.pageListTableToggleDropDown = `${this.pagesListTableColumn} a[data-toggle='dropdown']`;
-    this.pagesListTableEditLink = `${this.pagesListTableColumn} a[href*='edit']`;
-    this.pagesListTableDeleteLink = `${this.pagesListTableColumn} a[data-method="DELETE"]`;
-    this.pagesListColumnValidIcon = `${this.pagesListTableColumn} i.grid-toggler-icon-valid`;
-    this.pagesListColumnNotValidIcon = `${this.pagesListTableColumn} i.grid-toggler-icon-not-valid`;
+    this.selectAllRowsLabel = `${this.listForm} .md-checkbox label`;
+    this.bulkActionsToggleButton = `${this.listForm} button.js-bulk-actions-btn`;
+    this.bulkActionsDeleteButton = `${this.listForm} 
+    #%TABLE_grid_bulk_action_delete_bulk`;
+    this.bulkActionsEnableButton = `${this.listForm} #%TABLE_grid_bulk_action_enable_selection`;
+    this.bulkActionsDisableButton = `${this.listForm} #%TABLE_grid_bulk_action_disable_selection`;
+    // Filters
+    this.filterColumn = `${this.gridTable} #%TABLE_%FILTERBY`;
+    this.filterSearchButton = `${this.gridTable} button[name='%TABLE[actions][search]']`;
+    this.filterResetButton = `${this.gridTable} button[name='%TABLE[actions][reset]']`;
+    // Actions buttons in Row
+    this.actionsColumn = `${this.listTableRow} td.column-actions`;
+    this.dropdownToggleButton = `${this.actionsColumn} a.dropdown-toggle`;
+    this.dropdownToggleMenu = `${this.actionsColumn} div.dropdown-menu`;
+    this.deleteRowLink = `${this.dropdownToggleMenu} a[data-method="DELETE"]`;
 
-    // Filters in pages table
-    this.pageFilterInput = `${this.pagesListForm} #cms_page_%FILTERBY`;
-    this.pageFilterSearchButton = `${this.pagesListForm} button[name='cms_page[actions][search]']`;
-    this.pagefilterResetButton = `${this.pagesListForm} button[name='cms_page[actions][reset]']`;
-    // Bulk Actions
-    this.pagesSelectAllRowsLabel = `${this.pagesListForm} .md-checkbox label`;
-    this.pagesBulkActionsToggleButton = `${this.pagesListForm} button.dropdown-toggle`;
-    this.pagesBulkActionsEnableButton = `${this.pagesListForm} #cms_page_grid_bulk_action_enable_selection`;
-    this.pagesBulkActionsDisableButton = `${this.pagesListForm} #cms_page_grid_bulk_action_disable_selection`;
-    this.pagesBulkActionsDeleteButton = `${this.pagesListForm} #cms_page_grid_bulk_action_delete_bulk`;
+    // Categories selectors
+    this.backToListButton = '#cms_page_category_grid_panel div.card-footer a';
+    this.categoriesListTableViewLink = `${this.listTableColumn.replace('%TABLE', 'cms_page_category')
+      .replace('%COLUMN', 'actions')} a[data-original-title='View']`;
   }
 
   /*
@@ -68,30 +53,34 @@ module.exports = class Pages extends BOBasePage {
 
   /**
    * Reset input filters
+   * @param table
    * @return {Promise<void>}
    */
-  async resetFilter(selector) {
-    await Promise.all([
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-      this.page.click(selector),
-    ]);
+  async resetFilter(table) {
+    const resetButton = await this.replaceAll(this.filterResetButton, '%TABLE', table);
+    if (await this.elementVisible(resetButton, 2000)) {
+      await this.clickAndWaitForNavigation(resetButton);
+    }
+    return this.getNumberFromText(this.gridHeaderTitle.replace('%TABLE', table));
   }
 
-  // Methods for categories
   /**
-   * Filter list of categories
+   * Filter table
+   * @param table
    * @param filterType, input or select to choose method of filter
    * @param filterBy, column to filter
    * @param value, value to filter with
    * @return {Promise<void>}
    */
-  async filterCategories(filterType, filterBy, value = '') {
+  async filterTable(table, filterType, filterBy, value = '') {
+    const filterColumn = await this.replaceAll(this.filterColumn, '%TABLE', table);
+    const filterSearchButton = await this.replaceAll(this.filterSearchButton, '%TABLE', table);
     switch (filterType) {
       case 'input':
-        await this.setValue(this.categoryFilterInput.replace('%FILTERBY', filterBy), value);
+        await this.setValue(filterColumn.replace('%FILTERBY', filterBy), value.toString());
         break;
       case 'select':
-        await this.selectByVisibleText(this.categoryFilterInput.replace('%FILTERBY', filterBy), value ? 'Yes' : 'No');
+        await this.selectByVisibleText(filterColumn.replace('%FILTERBY', filterBy), value ? 'Yes' : 'No');
         break;
       default:
       // Do nothing
@@ -99,39 +88,92 @@ module.exports = class Pages extends BOBasePage {
     // click on search
     await Promise.all([
       this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-      this.page.click(this.categoryFilterSearchButton),
+      this.page.click(filterSearchButton),
     ]);
   }
 
   /**
-   * Get Value of column Displayed in Categories table
+   * Delete row in table
+   * @param table
    * @param row, row in table
-   * @param column, column to check
-   * @return {Promise<boolean|true>}
+   * @return {Promise<textContent>}
    */
-  async getToggleColumnValueCategory(row, column) {
-    if (await this.elementVisible(
-      this.categoriesListColumnValidIcon.replace('%ROW', row)
-        .replace('%COLUMN', column), 100)) return true;
-    return false;
+  async deleteRowInTable(table, row) {
+    const dropdownToggleButton = await this.replaceAll(this.dropdownToggleButton, '%TABLE', table);
+    const deleteRowLink = await this.replaceAll(this.deleteRowLink, '%TABLE', table);
+    // Click on dropDown
+    await Promise.all([
+      this.page.click(dropdownToggleButton
+        .replace('%ROW', row).replace('%COLUMN', 'actions')),
+      this.page.waitForSelector(
+        `${dropdownToggleButton
+          .replace('%ROW', row).replace('%COLUMN', 'actions')}[aria-expanded='true']`,
+        {visible: true},
+      ),
+    ]);
+    // Click on delete and wait for modal
+    await Promise.all([
+      this.page.click(deleteRowLink.replace('%ROW', row).replace('%COLUMN', 'actions')),
+      this.dialogListener(),
+    ]);
+    return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 
   /**
-   * Quick edit toggle column value in Categories table
+   * Delete all rows in table with Bulk Actions
+   * @param table
+   * @return {Promise<textContent>}
+   */
+  async deleteRowInTableBulkActions(table) {
+    const selectAllRowsLabel = await this.replaceAll(this.selectAllRowsLabel, '%TABLE', table);
+    const bulkActionsToggleButton = await this.replaceAll(this.bulkActionsToggleButton, '%TABLE', table);
+    const bulkActionsDeleteButton = await this.replaceAll(this.bulkActionsDeleteButton, '%TABLE', table);
+    // Click on Select All
+    await Promise.all([
+      this.page.click(selectAllRowsLabel),
+      this.page.waitForSelector(`${selectAllRowsLabel}:not([disabled])`, {visible: true}),
+    ]);
+    // Click on Button Bulk actions
+    await Promise.all([
+      this.page.click(bulkActionsToggleButton),
+      this.page.waitForSelector(`${bulkActionsToggleButton}`, {visible: true}),
+    ]);
+    // Click on delete and wait for modal
+    await Promise.all([
+      this.page.click(bulkActionsDeleteButton),
+      this.dialogListener(),
+    ]);
+    return this.getTextContent(this.alertSuccessBlockParagraph);
+  }
+
+  /**
+   * Get Value of column Displayed in table
+   * @param table
    * @param row, row in table
-   * @param column, column to update
+   * @return {Promise<boolean|true>}
+   */
+  async getToggleColumnValue(table, row) {
+    return this.elementVisible(this.columnValidIcon.replace('%TABLE', table).replace('%ROW', row), 100);
+  }
+
+  /**
+   * Quick edit toggle column value in table
+   * @param table
+   * @param row, row in table
    * @param valueWanted, Value wanted in column
    * @return {Promise<boolean>} return true if action is done, false otherwise
    */
-  async updateToggleColumnValueCategory(row, column, valueWanted = true) {
-    if (await this.getToggleColumnValueCategory(row, column) !== valueWanted) {
-      this.page.click(this.categoriesListTableColumn.replace('%ROW', row).replace('%COLUMN', column));
+  async updateToggleColumnValue(table, row, valueWanted = true) {
+    if (await this.getToggleColumnValue(table, row) !== valueWanted) {
+      this.page.click(this.listTableColumn.replace('%TABLE', table).replace('%ROW', row)
+        .replace('%COLUMN', 'active'),
+      );
       if (valueWanted) {
-        await this.page.waitForSelector(this.categoriesListColumnValidIcon
-          .replace('%ROW', 1).replace('%COLUMN', 'active'));
+        await this.page.waitForSelector(this.columnValidIcon.replace('%TABLE', table)
+          .replace('%ROW', row));
       } else {
-        await this.page.waitForSelector(this.categoriesListColumnNotValidIcon
-          .replace('%ROW', 1).replace('%COLUMN', 'active'));
+        await this.page.waitForSelector(this.columnNotValidIcon.replace('%TABLE', table)
+          .replace('%ROW', row));
       }
       return true;
     }
@@ -139,74 +181,28 @@ module.exports = class Pages extends BOBasePage {
   }
 
   /**
-   * Delete Category
-   * @param row, row in table
-   * @return {Promise<textContent>}
-   */
-  async deleteCategory(row) {
-    // Click on dropDown
-    await Promise.all([
-      this.page.click(this.categoriesListTableToggleDropDown
-        .replace('%ROW', row).replace('%COLUMN', 'actions')),
-      this.page.waitForSelector(
-        `${this.categoriesListTableToggleDropDown
-          .replace('%ROW', row).replace('%COLUMN', 'actions')}[aria-expanded='true']`,
-        {visible: true},
-      ),
-    ]);
-    // Click on delete and wait for modal
-    await Promise.all([
-      this.page.click(this.categoriesListTableDeleteLink
-        .replace('%ROW', row).replace('%COLUMN', 'actions')),
-      this.dialogListener(),
-    ]);
-    return this.getTextContent(this.alertSuccessBlockParagraph);
-  }
-
-  /**
-   * Enable / disable categories by Bulk Actions
+   * Enable / disable column by Bulk Actions
+   * @param table
    * @param enable
    * @return {Promise<textContent>}
    */
-  async changeCategoriesEnabledColumnBulkActions(enable = true) {
+  async changeEnabledColumnBulkActions(table, enable = true) {
+    const selectAllRowsLabel = await this.replaceAll(this.selectAllRowsLabel, '%TABLE', table);
+    const bulkActionsToggleButton = await this.replaceAll(this.bulkActionsToggleButton, '%TABLE', table);
+    const bulkActionsEnableButton = await this.replaceAll(this.bulkActionsEnableButton, '%TABLE', table);
+    const bulkActionsDisableButton = await this.replaceAll(this.bulkActionsDisableButton, '%TABLE', table);
     // Click on Select All
     await Promise.all([
-      this.page.click(this.categoriesSelectAllRowsLabel),
-      this.page.waitForSelector(`${this.categoriesSelectAllRowsLabel}:not([disabled])`, {visible: true}),
+      this.page.click(selectAllRowsLabel),
+      this.page.waitForSelector(`${selectAllRowsLabel}:not([disabled])`, {visible: true}),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
-      this.page.click(this.categoriesBulkActionsToggleButton),
-      this.page.waitForSelector(`${this.categoriesBulkActionsToggleButton}`, {visible: true}),
+      this.page.click(bulkActionsToggleButton),
+      this.page.waitForSelector(`${bulkActionsToggleButton}`, {visible: true}),
     ]);
-    // Click on delete and wait for modal
-    await Promise.all([
-      this.page.click(enable ? this.categoriesBulkActionsEnableButton : this.categoriesBulkActionsDisableButton),
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-    ]);
-    return this.getTextContent(this.alertSuccessBlockParagraph);
-  }
-
-  /**
-   * Delete all Categories with Bulk Actions
-   * @return {Promise<textContent>}
-   */
-  async deleteCategoriesBulkActions() {
-    // Click on Select All
-    await Promise.all([
-      this.page.click(this.categoriesSelectAllRowsLabel),
-      this.page.waitForSelector(`${this.categoriesSelectAllRowsLabel}:not([disabled])`, {visible: true}),
-    ]);
-    // Click on Button Bulk actions
-    await Promise.all([
-      this.page.click(this.categoriesBulkActionsToggleButton),
-      this.page.waitForSelector(`${this.categoriesBulkActionsToggleButton}`, {visible: true}),
-    ]);
-    // Click on delete and wait for modal
-    await Promise.all([
-      this.page.click(this.categoriesBulkActionsDeleteButton),
-      this.dialogListener(),
-    ]);
+    // Click on enable/disable and wait for modal
+    await this.clickAndWaitForNavigation(enable ? bulkActionsEnableButton : bulkActionsDisableButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 
@@ -218,146 +214,15 @@ module.exports = class Pages extends BOBasePage {
   async goToEditCategoryPage(row) {
     // Click on dropDown
     await Promise.all([
-      this.page.click(this.categoriesListTableToggleDropDown
-        .replace('%ROW', row).replace('%COLUMN', 'actions')),
+      this.page.click(this.listTableToggleDropDown.replace('%TABLE', 'cms_page_category')
+        .replace('%ROW', row)),
       this.page.waitForSelector(
-        `${this.categoriesListTableToggleDropDown
-          .replace('%ROW', row).replace('%COLUMN', 'actions')}[aria-expanded='true']`,
-        {visible: true},
+        `${this.listTableToggleDropDown.replace('%TABLE', 'cms_page_category')
+          .replace('%ROW', row)}[aria-expanded='true']`, {visible: true},
       ),
     ]);
     // Click on edit
-    this.clickAndWaitForNavigation(this.categoriesListTableEditLink
-      .replace('%ROW', row).replace('%COLUMN', 'actions'));
-  }
-
-  // Methods for pages
-  /**
-   * Filter list of pages
-   * @param filterType, input or select to choose method of filter
-   * @param filterBy, column to filter
-   * @param value, value to filter with
-   * @return {Promise<void>}
-   */
-  async filterPages(filterType, filterBy, value = '') {
-    switch (filterType) {
-      case 'input':
-        await this.setValue(this.pageFilterInput.replace('%FILTERBY', filterBy), value.toString());
-        break;
-      case 'select':
-        await this.selectByVisibleText(this.pageFilterInput.replace('%FILTERBY', filterBy), value ? 'Yes' : 'No');
-        break;
-      default:
-      // Do nothing
-    }
-    // click on search
-    await Promise.all([
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-      this.page.click(this.pageFilterSearchButton),
-    ]);
-  }
-
-  /**
-   * Get Value of column Displayed in Pages table
-   * @param row, row in table
-   * @param column, column to check
-   * @return {Promise<boolean|true>}
-   */
-  async getToggleColumnValuePage(row, column) {
-    if (await this.elementVisible(
-      this.pagesListColumnValidIcon.replace('%ROW', row).replace('%COLUMN', column), 100)) return true;
-    return false;
-  }
-
-  /**
-   * Quick edit toggle column value in Pages table
-   * @param row, row in table
-   * @param column, column to update
-   * @param valueWanted, Value wanted in column
-   * @return {Promise<boolean>} return true if action is done, false otherwise
-   */
-  async updateToggleColumnValuePage(row, column, valueWanted = true) {
-    if (await this.getToggleColumnValuePage(row, column) !== valueWanted) {
-      this.page.click(this.pagesListTableColumn.replace('%ROW', row).replace('%COLUMN', column));
-      if (valueWanted) {
-        await this.page.waitForSelector(this.pagesListColumnValidIcon
-          .replace('%ROW', 1).replace('%COLUMN', 'active'));
-      } else {
-        await this.page.waitForSelector(
-          this.pagesListColumnNotValidIcon.replace('%ROW', 1).replace('%COLUMN', 'active'));
-      }
-      return true;
-    }
-    return false;
-  }
-
-  /**
-   * Delete Page
-   * @param row, row in table
-   * @return {Promise<textContent>}
-   */
-  async deletePage(row) {
-    // Click on dropDown
-    await Promise.all([
-      this.page.click(this.pageListTableToggleDropDown
-        .replace('%ROW', row).replace('%COLUMN', 'actions')),
-      this.page.waitForSelector(
-        `${this.pageListTableToggleDropDown
-          .replace('%ROW', row).replace('%COLUMN', 'actions')}[aria-expanded='true']`,
-        {visible: true},
-      ),
-    ]);
-    // Click on delete and wait for modal
-    await Promise.all([
-      this.page.click(this.pagesListTableDeleteLink
-        .replace('%ROW', row).replace('%COLUMN', 'actions')),
-      this.dialogListener(),
-    ]);
-    return this.getTextContent(this.alertSuccessBlockParagraph);
-  }
-
-  /**
-   * Delete all Pages with Bulk Actions
-   * @return {Promise<textContent>}
-   */
-  async deletePagesBulkActions() {
-    // Click on Select All
-    await Promise.all([
-      this.page.click(this.pagesSelectAllRowsLabel),
-      this.page.waitForSelector(`${this.pagesSelectAllRowsLabel}:not([disabled])`, {visible: true}),
-    ]);
-    // Click on Button Bulk actions
-    await Promise.all([
-      this.page.click(this.pagesBulkActionsToggleButton),
-      this.page.waitForSelector(`${this.pagesBulkActionsToggleButton}`, {visible: true}),
-    ]);
-    // Click on delete and wait for modal
-    await Promise.all([
-      this.page.click(this.pagesBulkActionsDeleteButton),
-      this.dialogListener(),
-    ]);
-    return this.getTextContent(this.alertSuccessBlockParagraph);
-  }
-
-  /**
-   * Enable / disable pages by Bulk Actions
-   * @param enable
-   * @return {Promise<textContent>}
-   */
-  async changePagesEnabledColumnBulkActions(enable = true) {
-    // Click on Select All
-    await Promise.all([
-      this.page.click(this.pagesSelectAllRowsLabel),
-      this.page.waitForSelector(`${this.pagesSelectAllRowsLabel}:not([disabled])`, {visible: true}),
-    ]);
-    // Click on Button Bulk actions
-    await Promise.all([
-      this.page.click(this.pagesBulkActionsToggleButton),
-      this.page.waitForSelector(`${this.pagesBulkActionsToggleButton}`, {visible: true}),
-    ]);
-    // Click on delete and wait for modal
-    await this.clickAndWaitForNavigation(enable ? this.pagesBulkActionsEnableButton
-      : this.pagesBulkActionsDisableButton);
-    return this.getTextContent(this.alertSuccessBlockParagraph);
+    this.clickAndWaitForNavigation(this.listTableEditLink.replace('%TABLE', 'cms_page_category')
+      .replace('%ROW', row));
   }
 };

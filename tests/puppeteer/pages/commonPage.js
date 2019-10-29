@@ -210,4 +210,15 @@ module.exports = class CommonPage {
       this.page.waitForNavigation({waitUntil: 'networkidle0'}),
     ]);
   }
+
+  /**
+   * Replace All occurrences in string
+   * @param str, string to update
+   * @param find, what to replace
+   * @param replace, value to replace with
+   * @return {Promise<*>}
+   */
+  async replaceAll(str, find, replace) {
+    return str.replace(new RegExp(find, 'g'), replace);
+  }
 };
