@@ -38,16 +38,16 @@ describe('Filter And Quick Edit Stocks', async () => {
 
   it('should go to "Catalog>Stocks" page', async function () {
     await this.pageObjects.boBasePage.goToSubMenu(
-      this.pageObjects.boBasePage.productsParentLink,
+      this.pageObjects.boBasePage.catalogParentLink,
       this.pageObjects.boBasePage.stocksLink,
     );
     await this.pageObjects.boBasePage.closeSfToolBar();
-    const pageTitle = await this.pageObjects.categoriesPage.getPageTitle();
+    const pageTitle = await this.pageObjects.stocksPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.stocksPage.pageTitle);
   });
 
   it('should get number of products in list', async function () {
-    let numberOfProducts = await this.pageObjects.stocksPage.getNumberOfProductsFromList();
+    numberOfProducts = await this.pageObjects.stocksPage.getNumberOfProductsFromList();
     await expect(numberOfProducts).to.be.above(0);
   });
 
@@ -118,94 +118,18 @@ describe('Filter And Quick Edit Stocks', async () => {
     });
 
     it('should change the quantity in the first product', async function () {
-      const physicalQuantity = await this.pageObjects.stocksPage.getTextContent(
-        this.pageObjects.stocksPage.productRowPhysicalColumn.replace('%ROW', 1)
-      );
+      const physicalQuantity = await parseInt(
+        this.pageObjects.stocksPage.getTextContent(
+          this.pageObjects.stocksPage.productRowPhysicalColumn.replace('%ROW', 1)
+        ),
+      10);
       await this.page.type(this.pageObjects.stocksPage.productRowQuantityInput.replace('%ROW', 1), '20');
-      const newPhysicalQuantity = await this.pageObjects.stocksPage.getTextContent(
-        this.pageObjects.stocksPage.productRowPhysicalQuantityUpdateColumn.replace('%ROW', 1)
-      );
+      const newPhysicalQuantity = await parseInt(
+        this.pageObjects.stocksPage.getTextContent(
+          this.pageObjects.stocksPage.productRowPhysicalQuantityUpdateColumn.replace('%ROW', 1)
+        ),
+      10);
       await expect(newPhysicalQuantity).to.be.equal(physicalQuantity+20);
-
-    });
-
-
-
-
-
-
-    it('should filter by Description', async function () {
-      await this.pageObjects.categoriesPage.filterCategories(
-        'input',
-        'description',
-        Categories.accessories.description,
-      );
-      const numberOfCategoriesAfterFilter = await this.pageObjects.categoriesPage.getNumberFromText(
-        this.pageObjects.categoriesPage.categoryGridTitle);
-      await expect(numberOfCategoriesAfterFilter).to.be.at.most(numberOfCategories);
-      /* eslint-disable no-await-in-loop */
-      for (let i = 1; i <= numberOfCategoriesAfterFilter; i++) {
-        const textColumn = await this.pageObjects.categoriesPage.getTextContent(
-          this.pageObjects.categoriesPage.categoriesListTableColumn
-            .replace('%ROW', i).replace('%COLUMN', 'description'),
-        );
-        await expect(textColumn).to.contains(Categories.accessories.description);
-      }
-      /* eslint-enable no-await-in-loop */
-    });
-    it('should reset all filters', async function () {
-      await this.pageObjects.categoriesPage.resetFilter();
-      const numberOfCategoriesAfterReset = await this.pageObjects.categoriesPage.getNumberFromText(
-        this.pageObjects.categoriesPage.categoryGridTitle);
-      await expect(numberOfCategoriesAfterReset).to.equal(numberOfCategories);
-    });
-    it('should filter by Position \'3\'', async function () {
-      await this.pageObjects.categoriesPage.filterCategories(
-        'input',
-        'position',
-        Categories.art.position,
-      );
-      const numberOfCategoriesAfterFilter = await this.pageObjects.categoriesPage.getNumberFromText(
-        this.pageObjects.categoriesPage.categoryGridTitle);
-      await expect(numberOfCategoriesAfterFilter).to.be.at.most(numberOfCategories);
-      /* eslint-disable no-await-in-loop */
-      for (let i = 1; i <= numberOfCategoriesAfterFilter; i++) {
-        const textColumn = await this.pageObjects.categoriesPage.getTextContent(
-          this.pageObjects.categoriesPage.categoriesListTableColumn.replace('%ROW', i).replace('%COLUMN', 'position'),
-        );
-        await expect(textColumn).to.contains(Categories.art.position);
-      }
-      /* eslint-enable no-await-in-loop */
-    });
-    it('should reset all filters', async function () {
-      await this.pageObjects.categoriesPage.resetFilter();
-      const numberOfCategoriesAfterReset = await this.pageObjects.categoriesPage.getNumberFromText(
-        this.pageObjects.categoriesPage.categoryGridTitle);
-      await expect(numberOfCategoriesAfterReset).to.equal(numberOfCategories);
-    });
-    it('should filter by Displayed \'Yes\'', async function () {
-      await this.pageObjects.categoriesPage.filterCategories(
-        'select',
-        'active',
-        Categories.art.displayed,
-      );
-      const numberOfCategoriesAfterFilter = await this.pageObjects.categoriesPage.getNumberFromText(
-        this.pageObjects.categoriesPage.categoryGridTitle);
-      await expect(numberOfCategoriesAfterFilter).to.be.at.most(numberOfCategories);
-      /* eslint-disable no-await-in-loop */
-      for (let i = 1; i <= numberOfCategoriesAfterFilter; i++) {
-        const textColumn = await this.pageObjects.categoriesPage.getTextContent(
-          this.pageObjects.categoriesPage.categoriesListTableColumn.replace('%ROW', i).replace('%COLUMN', 'active'),
-        );
-        await expect(textColumn).to.contains('check');
-      }
-      /* eslint-enable no-await-in-loop */
-    });
-    it('should reset all filters', async function () {
-      await this.pageObjects.categoriesPage.resetFilter();
-      const numberOfCategoriesAfterReset = await this.pageObjects.categoriesPage.getNumberFromText(
-        this.pageObjects.categoriesPage.categoryGridTitle);
-      await expect(numberOfCategoriesAfterReset).to.equal(numberOfCategories);
     });
   });
 });

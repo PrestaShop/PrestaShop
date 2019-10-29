@@ -33,6 +33,9 @@ module.exports = class Stocks extends BOBasePage {
     this.productRowAvailableQuantityUpdateColumn = `${this.productRowAvailableColumn} span.qty-update`;
 
     this.productRowQuantityInput = `${this.productList} tbody tr:nth-child(%ROW) td:nth-child(8) form.qty input`;
+
+    //loader
+    this.productListLoading = `${this.productList} tbody tr:nth-child(1) td:nth-child(1) div.ps-loader`;
   }
 
   /*
@@ -72,9 +75,11 @@ module.exports = class Stocks extends BOBasePage {
    * @returns {Promise<void>}
    */
   async simpleFilter(value) {
+    await this.page.type(this.searchInput, value);
     await Promise.all([
-      this.page.type(this.searchInput, value),
-      this.page.click(this.searchButton)
+      this.page.click(this.searchButton),
+      this.page.waitForSelector(this.productListLoading),
     ]);
+    await this.page.waitForSelector(this.productListLoading);
   }
 };
