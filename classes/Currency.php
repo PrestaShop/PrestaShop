@@ -216,7 +216,7 @@ class CurrencyCore extends ObjectModel
             }
 
             /*
-             * Both these fields used to be string, but they were turned into translatable
+             * Both fields used to be string, but they were turned into translatable
              * fields so now they are arrays (indexed by language id). But to avoid BC breaks
              * the field is turned into a string in the constructor (using either the specified
              * language or the default one).
