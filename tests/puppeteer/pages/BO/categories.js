@@ -72,10 +72,7 @@ module.exports = class Categories extends BOBasePage {
       // Do nothing
     }
     // click on search
-    await Promise.all([
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-      this.page.click(this.filterSearchButton),
-    ]);
+    await this.clickAndWaitForNavigation(this.filterSearchButton);
   }
 
   /**
@@ -124,10 +121,9 @@ module.exports = class Categories extends BOBasePage {
       this.page.waitForSelector(this.categoriesListTableEditLink.replace('%ROW', row).replace('%COLUMN', 'actions')),
     ]);
     // Click on edit
-    await Promise.all([
-      this.page.click(this.categoriesListTableEditLink.replace('%ROW', row).replace('%COLUMN', 'actions')),
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-    ]);
+    await this.clickAndWaitForNavigation(
+      this.categoriesListTableEditLink.replace('%ROW', row).replace('%COLUMN', 'actions'),
+    );
   }
 
   /**
@@ -136,17 +132,19 @@ module.exports = class Categories extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToViewSubCategoriesPage(row) {
-    if (await this.elementVisible(
-      this.categoriesListTableViewLink.replace('%ROW', row).replace('%COLUMN', 'actions'), 100)) {
-      await Promise.all([
-        this.page.click(this.categoriesListTableViewLink.replace('%ROW', row).replace('%COLUMN', 'actions')),
-        this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-      ]);
+    if (
+      await this.elementVisible(
+        this.categoriesListTableViewLink.replace('%ROW', row).replace('%COLUMN', 'actions'),
+        100,
+      )
+    ) {
+      await this.clickAndWaitForNavigation(
+        this.categoriesListTableViewLink.replace('%ROW', row).replace('%COLUMN', 'actions'),
+      );
     } else {
-      await Promise.all([
-        this.page.click(`${this.categoriesListTableColumn.replace('%ROW', row).replace('%COLUMN', 'name')} a`),
-        this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-      ]);
+      await this.clickAndWaitForNavigation(
+        `${this.categoriesListTableColumn.replace('%ROW', row).replace('%COLUMN', 'name')} a`,
+      );
     }
   }
 
@@ -206,10 +204,7 @@ module.exports = class Categories extends BOBasePage {
       this.page.waitForSelector(`${this.bulkActionsToggleButton}`, {visible: true}),
     ]);
     // Click on delete and wait for modal
-    await Promise.all([
-      this.page.click(enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton),
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-    ]);
+    await this.clickAndWaitForNavigation(enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 

@@ -54,10 +54,7 @@ module.exports = class Product extends BOBasePage {
    */
   async filterProducts(filterBy, value = '') {
     await this.page.type(this.productFilterInput.replace('%FILTERBY', filterBy), value);
-    await Promise.all([
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-      this.page.click(this.filterSearchButton),
-    ]);
+    await this.clickAndWaitForNavigation(this.filterSearchButton);
   }
 
   /**
@@ -79,10 +76,7 @@ module.exports = class Product extends BOBasePage {
    * @return {Promise<void>}
    */
   async resetFilter() {
-    await Promise.all([
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-      this.page.click(this.filterResetButton),
-    ]);
+    await this.clickAndWaitForNavigation(this.filterResetButton);
   }
 
   /**
@@ -128,10 +122,7 @@ module.exports = class Product extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToAddProductPage() {
-    await Promise.all([
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-      this.page.click(this.addProductButton),
-    ]);
+    await this.clickAndWaitForNavigation(this.addProductButton);
   }
 
   /**

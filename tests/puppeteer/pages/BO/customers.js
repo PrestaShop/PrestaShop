@@ -77,10 +77,7 @@ module.exports = class Customers extends BOBasePage {
         // Do nothing
     }
     // click on search
-    await Promise.all([
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-      this.page.click(this.filterSearchButton),
-    ]);
+    await this.clickAndWaitForNavigation(this.filterSearchButton);
   }
 
   /**
@@ -118,10 +115,9 @@ module.exports = class Customers extends BOBasePage {
    */
   async updateToggleColumnValue(row, column, valueWanted = true) {
     if (await this.getToggleColumnValue(row, column) !== valueWanted) {
-      await Promise.all([
-        this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-        this.page.click(this.customersListTableColumn.replace('%ROW', row).replace('%COLUMN', column)),
-      ]);
+      await this.clickAndWaitForNavigation(
+        this.customersListTableColumn.replace('%ROW', row).replace('%COLUMN', column),
+      );
       return true;
     }
     return false;
@@ -132,10 +128,7 @@ module.exports = class Customers extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToAddNewCustomerPage() {
-    await Promise.all([
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-      this.page.click(this.addNewCustomerLink),
-    ]);
+    await this.clickAndWaitForNavigation(this.addNewCustomerLink);
   }
 
   /**
@@ -152,10 +145,9 @@ module.exports = class Customers extends BOBasePage {
         {visible: true},
       ),
     ]);
-    await Promise.all([
-      this.page.click(this.customersListTableViewLink.replace('%ROW', row).replace('%COLUMN', 'actions')),
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-    ]);
+    await this.clickAndWaitForNavigation(
+      this.customersListTableViewLink.replace('%ROW', row).replace('%COLUMN', 'actions'),
+    );
   }
 
   /**
@@ -164,10 +156,9 @@ module.exports = class Customers extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToEditCustomerPage(row) {
-    await Promise.all([
-      this.page.click(this.customersListTableEditLink.replace('%ROW', row).replace('%COLUMN', 'actions')),
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-    ]);
+    await this.clickAndWaitForNavigation(
+      this.customersListTableEditLink.replace('%ROW', row).replace('%COLUMN', 'actions'),
+    );
   }
 
   /**
@@ -254,10 +245,7 @@ module.exports = class Customers extends BOBasePage {
       this.page.waitForSelector(`${this.bulkActionsToggleButton}[aria-expanded='true']`, {visible: true}),
     ]);
     // Click on delete and wait for modal
-    await Promise.all([
-      this.page.click(enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton),
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-    ]);
+    await this.clickAndWaitForNavigation(enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 };

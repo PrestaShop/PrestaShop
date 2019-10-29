@@ -81,10 +81,7 @@ module.exports = class Taxes extends BOBasePage {
       // Do nothing
     }
     // click on search
-    await Promise.all([
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-      this.page.click(this.searchFilterButton),
-    ]);
+    await this.clickAndWaitForNavigation(this.searchFilterButton);
   }
 
 
@@ -107,10 +104,7 @@ module.exports = class Taxes extends BOBasePage {
    */
   async updateEnabledValue(row, valueWanted = true) {
     if (await this.getToggleColumnValue(row, 'active') !== valueWanted) {
-      await Promise.all([
-        this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-        this.page.click(this.taxesGridColumn.replace('%ROW', row).replace('%COLUMN', 'active')),
-      ]);
+      await this.clickAndWaitForNavigation(this.taxesGridColumn.replace('%ROW', row).replace('%COLUMN', 'active'));
       return true;
     }
     return false;
@@ -121,10 +115,7 @@ module.exports = class Taxes extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToAddNewTaxPage() {
-    await Promise.all([
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-      this.page.click(this.addNewTaxLink),
-    ]);
+    await this.clickAndWaitForNavigation(this.addNewTaxLink);
   }
 
   /**
@@ -133,10 +124,9 @@ module.exports = class Taxes extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToEditTaxPage(row) {
-    await Promise.all([
-      this.page.click(this.taxesGridColumnEditlink.replace('%ROW', row).replace('%COLUMN', 'actions')),
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-    ]);
+    await this.clickAndWaitForNavigation(
+      this.taxesGridColumnEditlink.replace('%ROW', row).replace('%COLUMN', 'actions'),
+    );
   }
 
   /**
