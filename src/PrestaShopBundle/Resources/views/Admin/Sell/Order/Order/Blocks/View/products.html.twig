@@ -95,6 +95,10 @@
               {% else %}
                 {{ product.quantity }}
               {% endif %}
+
+              <div class="d-none js-product-quantity">
+                <input type="text" value="{{ product.quantity }}" class="form-control">
+              </div>
             </td>
             <td>
               <p>{{ product.quantityRefunded }}{% if product.amountRefund %} ({{ product.amountRefund }} {{ 'Refunded'|trans({}, 'Admin.Orderscustomers.Feature') }}){% endif %}</p>
@@ -108,7 +112,7 @@
                    data-placement="top"
                    data-original-title="{{ 'Edit'|trans({}, 'Admin.Actions') }}"
                 >
-                  <i class="material-icons js-order-product-update-btn"
+                  <i class="material-icons js-order-product-edit-btn"
                      data-update-url="{{ path('admin_orders_update_product', {'orderId': orderForViewing.id, 'orderDetailId': product.orderDetailId}) }}"
                      data-product-name="{{ product.name }}"
                      data-product-quantity="{{ product.quantity }}"
