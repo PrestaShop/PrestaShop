@@ -25,6 +25,8 @@ import createOrderMap from './create-order-map';
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+import Router from '../../../components/router';
+
 const $ = window.$;
 
 /**
@@ -34,6 +36,7 @@ export default class CustomerRenderer {
   constructor() {
     this.$container = $(createOrderMap.customerSearchBlock);
     this.$customerSearchResultBlock = $(createOrderMap.customerSearchResultsBlock);
+    this.router = new Router();
   }
 
   /**
@@ -117,11 +120,15 @@ export default class CustomerRenderer {
       }
       const $template = $cartsTableRowTemplate.clone();
 
-      $template.find('.js-cart-id').text(cart.cartId);
-      $template.find('.js-cart-date').text(cart.creationDate);
-      $template.find('.js-cart-total').text(cart.totalPrice);
+      $template.find(createOrderMap.cartIdField).text(cart.cartId);
+      $template.find(createOrderMap.cartDateField).text(cart.creationDate);
+      $template.find(createOrderMap.cartTotalField).text(cart.totalPrice);
+      $template.find(createOrderMap.cartDetailsBtn).prop(
+        'href',
+        this.router.generate('admin_carts_view', {cartId: cart.cartId})
+      );
 
-      $template.find('.js-use-cart-btn').data('cart-id', cart.cartId);
+      $template.find(createOrderMap.useCartBtn).data('cart-id', cart.cartId);
 
       $cartsTable.find('tbody').append($template);
     }
@@ -148,13 +155,17 @@ export default class CustomerRenderer {
       const order = orders[key];
       const $template = $rowTemplate.clone();
 
-      $template.find('.js-order-id').text(order.orderId);
-      $template.find('.js-order-date').text(order.orderPlacedDate);
-      $template.find('.js-order-products').text(order.totalProductsCount);
-      $template.find('.js-order-total-paid').text(order.totalPaid);
-      $template.find('.js-order-status').text(order.orderStatus);
+      $template.find(createOrderMap.orderIdField).text(order.orderId);
+      $template.find(createOrderMap.orderDateField).text(order.orderPlacedDate);
+      $template.find(createOrderMap.orderProductsField).text(order.totalProductsCount);
+      $template.find(createOrderMap.orderTotalField).text(order.totalPaid);
+      $template.find(createOrderMap.orderStatusField).text(order.orderStatus);
+      $template.find(createOrderMap.orderDetailsBtn).prop(
+        'href',
+        this.router.generate('admin_orders_view', {orderId: order.orderId})
+      );
 
-      $template.find('.js-use-order-btn').data('order-id', order.orderId);
+      $template.find(createOrderMap.useOrderBtn).data('order-id', order.orderId);
 
       $ordersTable.find('tbody').append($template);
     }
@@ -177,9 +188,11 @@ export default class CustomerRenderer {
     $template.find(createOrderMap.customerSearchResultEmail).text(customer.email);
     $template.find(createOrderMap.customerSearchResultId).text(customer.id);
     $template.find(createOrderMap.customerSearchResultBirthday).text(customer.birthday);
-
-    $template.find(createOrderMap.customerDetailsBtn).data('customer-id', customer.id);
     $template.find(createOrderMap.chooseCustomerBtn).data('customer-id', customer.id);
+    $template.find(createOrderMap.customerDetailsBtn).prop(
+      'href',
+      this.router.generate('admin_customers_view', {customerId: customer.id})
+    );
 
     return this.$customerSearchResultBlock.append($template);
   }

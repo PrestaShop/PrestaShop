@@ -40,6 +40,7 @@ export default class ProductManager {
     this.products = {};
     this.selectedProductId = null;
     this.selectedCombinationId = null;
+    this.activeSearchRequest = null;
 
     this.productRenderer = new ProductRenderer();
     this.router = new Router();
@@ -133,10 +134,12 @@ export default class ProductManager {
    * @private
    */
   _search(searchPhrase) {
-    const minSearchPhraseLength = 3;
-
-    if (searchPhrase.length < minSearchPhraseLength) {
+    if (searchPhrase.length < 3) {
       return;
+    }
+
+    if (this.activeSearchRequest !== null) {
+      this.activeSearchRequest.abort();
     }
 
     $.get(this.router.generate('admin_products_search'), {
@@ -144,9 +147,11 @@ export default class ProductManager {
     }).then((response) => {
       EventEmitter.emit(eventMap.productSearched, response);
     }).catch((response) => {
-      if (typeof response.responseJSON !== 'undefined') {
-        showErrorMessage(response.responseJSON.message);
+      if (response.statusText === 'abort') {
+        return;
       }
+
+      showErrorMessage(response.responseJSON.message);
     });
   }
 

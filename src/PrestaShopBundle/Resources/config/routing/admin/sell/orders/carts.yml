@@ -14,6 +14,8 @@ admin_carts_view:
     _legacy_controller: AdminCarts
   requirements:
     cartId: \d+
+  options:
+    expose: true
 
 admin_carts_info:
   path: /{cartId}/info

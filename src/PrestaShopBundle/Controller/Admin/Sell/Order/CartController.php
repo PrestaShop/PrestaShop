@@ -281,9 +281,28 @@ class CartController extends FrameworkBundleAdminController
      */
     public function addProductAction(Request $request, int $cartId): JsonResponse
     {
+        $productId = $request->request->getInt('productId');
+        $quantity = $request->request->getInt('quantity');
+        $combinationId = $request->request->getInt('combinationId');
+        $customizationId = null;
+
         try {
-            $addProductToCartCommand = $this->getAddProductToCartCommand($request, $cartId);
-            $this->getCommandBus()->handle($addProductToCartCommand);
+            if ($customizations = $request->request->get('customizations')) {
+                $customizationId = $this->getCommandBus()->handle(new AddCustomizationFieldsCommand(
+                    $cartId,
+                    $productId,
+                    $customizations
+                ));
+            }
+
+            $this->getCommandBus()->handle(new UpdateProductQuantityInCartCommand(
+                $cartId,
+                (int) $productId,
+                (int) $quantity,
+                QuantityAction::INCREASE_PRODUCT_QUANTITY,
+                $combinationId ?: null,
+                $customizationId
+            ));
 
             return $this->json($this->getCartInfo($cartId));
         } catch (Exception $e) {
@@ -314,8 +333,8 @@ class CartController extends FrameworkBundleAdminController
             $this->getCommandBus()->handle(new RemoveProductFromCartCommand(
                 $cartId,
                 $productId,
-                $attributeId,
-                $customizationId
+                $attributeId ?: null,
+                $customizationId ?: null
             ));
 
             return $this->json($this->getCartInfo($cartId));
@@ -348,36 +367,5 @@ class CartController extends FrameworkBundleAdminController
             CartNotFoundException::class => $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
             CartRuleValidityException::class => $e->getMessage(),
         ];
-    }
-
-    /**
-     * @param Request $request
-     * @param int $cartId
-     *
-     * @return UpdateProductQuantityInCartCommand
-     */
-    private function getAddProductToCartCommand(Request $request, int $cartId): UpdateProductQuantityInCartCommand
-    {
-        $productId = $request->request->getInt('productId');
-        $quantity = $request->request->getInt('quantity');
-        $combinationId = $request->request->getInt('combinationId');
-
-        if ($customizations = $request->request->get('customizations')) {
-            //@todo: return saved customization id and use it in proceeding command
-            $this->getCommandBus()->handle(new AddCustomizationFieldsCommand($cartId, $productId, $customizations));
-            //@todo: Add updateCustomizationsCommand
-            //check AdminCartsController::jaxProcessUpdateCustomizationFields
-            // index is id of customization_field
-            //id_customization is always empty(0) until it reaches Cart::_updateCustomizationQuantity where it gets linked to product
-            //check Cart::addTextFieldToProduct Cart::addPictureToProduct
-        }
-
-        return new UpdateProductQuantityInCartCommand(
-            $cartId,
-            (int) $productId,
-            (int) $quantity,
-            QuantityAction::INCREASE_PRODUCT_QUANTITY,
-            $combinationId ?: null
-        );
     }
 }

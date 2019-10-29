@@ -42,9 +42,9 @@
       <div class="col">
         <span class="mr-2">{{ 'or'|trans({}, 'Admin.Global') }}</span>
 
-        <button class="btn btn-primary" type="button">
+        <a class="btn btn-primary" href="{{ path('admin_customers_create') }}">
           {{ 'Add new customer'|trans({}, 'Admin.Orderscustomers.Feature') }}
-        </button>
+        </a>
       </div>
     </div>
     <div class="row">
@@ -56,7 +56,7 @@
       <div class="col">
         <ul class="nav nav-pills" role="tablist">
           <li class="nav-item">
-            <a class="nav-link active show"
+            <a class="nav-link active show js-customer-carts-tab"
                id="customer-carts-tab"
                data-toggle="pill"
                href="#customer-carts-tab-content"
@@ -69,7 +69,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link"
+            <a class="nav-link js-customer-orders-tab"
                id="customer-orders-tab"
                data-toggle="pill"
                href="#customer-orders-tab-content"
@@ -132,9 +132,9 @@
         <p class="mb-0 js-customer-birthday"></p>
       </div>
       <div class="card-footer">
-        <button type="button" class="btn btn-outline-secondary js-details-customer-btn">
+        <a class="btn btn-outline-secondary js-details-customer-btn" href="">
           {{ 'Details'|trans({}, 'Admin.Global') }}
-        </button>
+        </a>
         <button type="button" class="btn btn-primary float-right js-choose-customer-btn">
           {{ 'Choose'|trans({}, 'Admin.Actions') }}
         </button>
@@ -160,7 +160,7 @@
     <td class="js-cart-date"></td>
     <td class="js-cart-total"></td>
     <td class="text-right">
-      <button class="btn btn-primary">{{ 'Details'|trans({}, 'Admin.Global') }}</button>
+      <a class="btn btn-primary js-cart-details-btn" href="">{{ 'Details'|trans({}, 'Admin.Global') }}</a>
       <button class="btn btn-primary js-use-cart-btn">{{ 'Use'|trans({}, 'Admin.Orderscustomers.Feature') }}</button>
     </td>
   </tr>
@@ -174,7 +174,7 @@
     <td class="js-order-total-paid"></td>
     <td class="js-order-status"></td>
     <td class="text-right">
-      <button class="btn btn-primary">{{ 'Details'|trans({}, 'Admin.Global') }}</button>
+      <a class="btn btn-primary js-order-details-btn" href="">{{ 'Details'|trans({}, 'Admin.Global') }}</a>
       <button class="btn btn-primary js-use-order-btn">{{ 'Use'|trans({}, 'Admin.Orderscustomers.Feature') }}</button>
     </td>
   </tr>

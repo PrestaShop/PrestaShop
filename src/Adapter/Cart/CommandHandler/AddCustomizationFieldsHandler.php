@@ -30,51 +30,84 @@ use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCustomizationFieldsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\AddCustomizationFieldsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationException;
 use PrestaShopException;
 use Product;
 
+/**
+ * Adds product customization fields data using legacy object model
+ */
 final class AddCustomizationFieldsHandler extends AbstractCartHandler implements AddCustomizationFieldsHandlerInterface
 {
     /**
      * @param AddCustomizationFieldsCommand $command
      *
-     * @throws PrestaShopException
+     * @return int
+     *
      * @throws CartNotFoundException
+     * @throws CustomizationConstraintException
+     * @throws CustomizationException
+     * @throws PrestaShopException
      */
-    public function handle(AddCustomizationFieldsCommand $command)
+    public function handle(AddCustomizationFieldsCommand $command): int
     {
-        //@todo: exceptions handling
         $productId = $command->getProductId()->getValue();
 
         $cart = $this->getCart($command->getCartId());
         $product = new Product($productId);
 
         $customizationFields = $product->getCustomizationFieldIds();
-        $customizations = $command->getCustomizations();
+        $customizations = $command->getCustomizationsByFieldIds();
 
         foreach ($customizationFields as $customizationField) {
-            $customizationId = (int) $customizationField['id_customization_field'];
+            $customizationFieldId = (int) $customizationField['id_customization_field'];
             //@todo validation
-            if (!isset($customizations[$customizationId])) {
+            if (!isset($customizations[$customizationFieldId])) {
                 continue;
             }
 
-            if ($customizationField['type'] == Product::CUSTOMIZE_TEXTFIELD) {
-                $cart->addTextFieldToProduct(
-                    $productId,
-                    $customizationId,
-                    Product::CUSTOMIZE_TEXTFIELD,
-                    $customizations[$customizationId]
-                );
-            } else {
-                //@todo: file validation
-                $cart->addPictureToProduct(
-                    $productId,
-                    $customizationId,
-                    Product::CUSTOMIZE_TEXTFIELD,
-                    $customizations[$customizationId]
-                );
+            try {
+                if (Product::CUSTOMIZE_TEXTFIELD == $customizationField['type']) {
+                    $customizationId = $cart->addTextFieldToProduct(
+                        $productId,
+                        $customizationFieldId,
+                        Product::CUSTOMIZE_TEXTFIELD,
+                        $customizations[$customizationFieldId],
+                        true
+                    );
+                } else {
+                    //@todo: file validation
+                    $customizationId = $cart->addPictureToProduct(
+                        $productId,
+                        $customizationFieldId,
+                        Product::CUSTOMIZE_TEXTFIELD,
+                        $customizations[$customizationFieldId],
+                        true
+                    );
+                }
+
+                if (false === $customizationId) {
+                    throw new CustomizationException(sprintf(
+                        'Failed to add customized data for customization field with id "%s"',
+                        $customizationFieldId
+                    ));
+                }
+            } catch (PrestaShopException $e) {
+                throw new CustomizationException(sprintf(
+                    'An error occurred while trying to add customized data for customization field with id "%s"',
+                    $customizationFieldId
+                ));
             }
         }
+
+        if (!isset($customizationId)) {
+            throw new CustomizationConstraintException(
+                'Invalid customizations provided.
+                It must consist of key - value pairs where key is the id of customization field'
+            );
+        }
+
+        return $customizationId;
     }
 }

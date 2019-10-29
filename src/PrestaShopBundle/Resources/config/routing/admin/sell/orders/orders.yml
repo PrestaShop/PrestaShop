@@ -57,6 +57,8 @@ admin_orders_view:
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Order/Order:view
     _legacy_controller: AdminOrders
+  options:
+    expose: true
 
 admin_orders_add_cart_rule:
   path: /{orderId}/cart-rules

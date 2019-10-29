@@ -160,7 +160,7 @@ export default class CreateOrderPage {
    * @private
    */
   _initCustomerSearch(event) {
-    this.customerManager.search($(event.currentTarget).val());
+    setTimeout(() => this.customerManager.search($(event.currentTarget).val()), 300);
   }
 
   /**
@@ -247,7 +247,7 @@ export default class CreateOrderPage {
     const $productSearchInput = $(event.currentTarget);
     const searchPhrase = $productSearchInput.val();
 
-    this.productManager.search(searchPhrase);
+    setTimeout(() => this.productManager.search(searchPhrase), 300);
   }
 
   /**

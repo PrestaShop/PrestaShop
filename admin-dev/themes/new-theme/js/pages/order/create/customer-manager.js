@@ -37,6 +37,7 @@ const $ = window.$;
 export default class CustomerManager {
   constructor() {
     this.customerId = null;
+    this.activeSearchRequest = null;
 
     this.router = new Router();
     this.$container = $(createOrderMap.customerSearchBlock);
@@ -72,6 +73,7 @@ export default class CustomerManager {
    */
   _onCustomerSearch() {
     EventEmitter.on(eventMap.customerSearched, (response) => {
+      this.activeSearchRequest = null;
       this.customerRenderer.renderSearchResults(response.customers);
     });
   }
@@ -148,11 +150,22 @@ export default class CustomerManager {
       return;
     }
 
-    $.get(this.router.generate('admin_customers_search'), {
+    if (this.activeSearchRequest !== null) {
+      this.activeSearchRequest.abort();
+    }
+
+    const $searchRequest = $.get(this.router.generate('admin_customers_search'), {
       customer_search: searchPhrase,
-    }).then((response) => {
+    });
+    this.activeSearchRequest = $searchRequest;
+
+    $searchRequest.then((response) => {
       EventEmitter.emit(eventMap.customerSearched, response);
     }).catch((response) => {
+      if (response.statusText === 'abort') {
+        return;
+      }
+
       showErrorMessage(response.responseJSON.message);
     });
   }

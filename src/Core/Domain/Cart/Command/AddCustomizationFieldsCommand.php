@@ -43,22 +43,22 @@ class AddCustomizationFieldsCommand
     private $productId;
 
     /**
-     * @var array
+     * @var array key - value pairs where key is the id of customization field and the value is the customization value
      */
-    private $customizations;
+    private $customizationsByFieldIds;
 
     /**
      * @param int $cartId
      * @param int $productId
-     * @param array $customizations
+     * @param array $customizationsByFieldIds
      *
      * @throws CartConstraintException
      */
-    public function __construct(int $cartId, int $productId, array $customizations)
+    public function __construct(int $cartId, int $productId, array $customizationsByFieldIds)
     {
         $this->cartId = new CartId($cartId);
         $this->productId = new ProductId($productId);
-        $this->customizations = $customizations;
+        $this->customizationsByFieldIds = $customizationsByFieldIds;
     }
 
     /**
@@ -80,8 +80,8 @@ class AddCustomizationFieldsCommand
     /**
      * @return array
      */
-    public function getCustomizations(): array
+    public function getCustomizationsByFieldIds(): array
     {
-        return $this->customizations;
+        return $this->customizationsByFieldIds;
     }
 }

@@ -24,19 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler;
-
-use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCustomizationFieldsCommand;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception;
 
 /**
- * Interface for handling AddCustomizationFields command
+ * Thrown when customization constraints are violated
  */
-interface AddCustomizationFieldsHandlerInterface
+class CustomizationConstraintException extends CustomizationException
 {
-    /**
-     * @param AddCustomizationFieldsCommand $command
-     *
-     * @return int customizationId
-     */
-    public function handle(AddCustomizationFieldsCommand $command): int;
 }
