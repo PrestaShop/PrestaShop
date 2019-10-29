@@ -999,6 +999,14 @@ services:
       tags:
         - { name: form.type }
 
+    form.type.order.update_product_in_order:
+      class: 'PrestaShopBundle\Form\Admin\Sell\Order\UpdateProductInOrderType'
+      arguments:
+        - '@prestashop.adapter.form.choice_provider.order_invoice_by_id'
+        - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
+      tags:
+        - { name: form.type }
+
     form.type.address.required_fields:
         class: 'PrestaShopBundle\Form\Admin\Sell\Address\RequiredFieldsAddressType'
         arguments:
