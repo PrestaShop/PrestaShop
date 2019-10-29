@@ -47,4 +47,8 @@ export default class OrderViewPage {
       this.orderPricesRefresher.refresh(event.orderId);
     });
   }
+
+  listenForProductEdit() {
+    $(OrderViewPageMap.productEditBtn).on('click', event => this.orderProductManager.handleUpdateModalFormData(event));
+  }
 }
