@@ -94,8 +94,6 @@ export default class CurrencyForm {
 
   _onResetDefaultSettingsClick() {
     this._resetCurrencyData(this.$isoCodeInput.val());
-
-    return false;
   }
 
   _resetCurrencyData(selectedISOCode) {
@@ -112,9 +110,9 @@ export default class CurrencyForm {
           let langSymbolSelector = this.map.symbolsInput(langId);
           $(langSymbolSelector).val(currencyData.symbols[langId]);
         }
-        this.$isoCodeInput.val(currencyData.iso_code);
-        if (currencyData.exchange_rate) {
-          this.$exchangeRateInput.val(currencyData.exchange_rate);
+        this.$isoCodeInput.val(currencyData.isoCode);
+        if (currencyData.exchangeRate) {
+          this.$exchangeRateInput.val(currencyData.exchangeRate);
         }
         this.$precisionInput.val(currencyData.precision);
       })

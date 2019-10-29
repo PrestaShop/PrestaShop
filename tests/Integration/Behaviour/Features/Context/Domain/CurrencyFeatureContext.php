@@ -211,7 +211,13 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
      */
     public function checkAPIData(TableNode $node)
     {
-        $apiData = $this->currencyAPIData->toArray();
+        $apiData = [
+            'iso_code' => $this->currencyAPIData->getIsoCode(),
+            'numeric_iso_code' => $this->currencyAPIData->getNumericIsoCode(),
+            'precision' => $this->currencyAPIData->getPrecision(),
+            'names' => $this->currencyAPIData->getNames(),
+            'symbols' => $this->currencyAPIData->getSymbols(),
+        ];
         $expectedData = $node->getRowsHash();
         $expectedData['names'] = $this->parseLocalizedArray($expectedData['names']);
         $expectedData['symbols'] = $this->parseLocalizedArray($expectedData['symbols']);
