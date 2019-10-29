@@ -29,10 +29,12 @@ export default {
   privateNoteBlock: '.js-private-note-block',
   privateNoteInput: '#private_note_note',
   privateNoteSubmitBtn: '.js-private-note-btn',
+  // Product update modal
   updateOrderProductModal: '#updateOrderProductModal',
-  updateOrderProductPriceTaxExclInput: '#update_order_product_price_tax_excl',
-  updateOrderProductPriceTaxInclInput: '#update_order_product_price_tax_incl',
-  updateOrderProductQuantityInput: '#update_order_product_quantity',
+  updateOrderProductModalName: '.js-update-product-name',
+  updateOrderProductPriceTaxExclInput: '#update_product_in_order_price_tax_excl',
+  updateOrderProductPriceTaxInclInput: '#update_product_in_order_price_tax_incl',
+  updateOrderProductQuantityInput: '#update_product_in_order_quantity',
   addCartRuleModal: '#addOrderDiscountModal',
   addCartRuleApplyOnAllInvoicesCheckbox: '#add_order_cart_rule_apply_on_all_invoices',
   addCartRuleInvoiceIdSelect: '#add_order_cart_rule_invoice_id',
@@ -42,8 +44,10 @@ export default {
   updateOrderStatusActionBtn: '#update_order_status_action_btn',
   updateOrderStatusActionInput: '#update_order_status_action_input',
   updateOrderStatusActionForm: '#update_order_status_action_form',
+  // Products table elements
   productDeleteBtn: '.js-order-product-delete-btn',
   productsTable: '#orderProductsTable',
+  productEditBtn: '.js-order-product-edit-btn',
   // Order price elements
   orderProductsTotal: '#orderProductsTotal',
   orderDiscountsTotal: '#orderDiscountsTotal',
