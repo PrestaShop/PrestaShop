@@ -123,6 +123,15 @@ module.exports = class Brands extends BOBasePage {
   }
 
   /**
+   * Filter Brands column active
+   * @param value
+   * @return {Promise<void>}
+   */
+  async filterBrandsEnabled(value) {
+    await this.filterTable('manufacturer', 'select', 'active', value ? 'Yes' : 'No');
+  }
+
+  /**
    * Filter Addresses
    * @param filterType, input / Select
    * @param filterBy, which column
@@ -150,7 +159,7 @@ module.exports = class Brands extends BOBasePage {
    * @return {Promise<boolean>}, true if click has been performed
    */
   async updateEnabledValue(row, valueWanted = true) {
-    if (await this.getToggleColumnValue(row, 'active') !== valueWanted) {
+    if (await this.getToggleColumnValue(row) !== valueWanted) {
       await this.clickAndWaitForNavigation(this.brandsTableEnableColumn.replace('%ROW', row));
       return true;
     }

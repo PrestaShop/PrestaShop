@@ -97,10 +97,10 @@ describe('Filter And Quick Edit brands', async () => {
     });
 
     it('should filter by Enabled \'Yes\'', async function () {
-      await this.pageObjects.brandsPage.filterBrands(
+      await this.pageObjects.brandsPage.filterBrandsEnabled(
         'select',
         'active',
-        demoBrands.first.enabled ? 'Yes' : 'No',
+        demoBrands.first.enabled,
       );
       const numberOfBrandsAfterFilter = await this.pageObjects.brandsPage.getNumberFromText(
         this.pageObjects.brandsPage.gridHeaderTitle.replace('%TABLE', 'manufacturer'),
