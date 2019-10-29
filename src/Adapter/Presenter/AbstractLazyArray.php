@@ -143,6 +143,28 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
     }
 
     /**
+     * Set array key and callable from $array into the LazyArray.
+     * The callables are arrays where the elements are corresponding to the parameters of the call_user_func_array function
+     *
+     * @param array $array
+     */
+    public function appendLazyArray($array)
+    {
+        foreach ($array as $key => $value) {
+            // do not override any existing method
+            if (!$this->arrayAccessList->offsetExists($key)) {
+                $this->arrayAccessList->offsetSet(
+                    $key,
+                    array(
+                        'type' => 'callable',
+                        'value' => $value,
+                    )
+                );
+            }
+        }
+    }
+
+    /**
      * The number of keys defined into the lazyArray.
      *
      * @return int
@@ -239,6 +261,12 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
                 if (!isset($this->methodCacheResults[$index])) {
                     $methodName = $this->arrayAccessList[$index]['value'];
                     $this->methodCacheResults[$index] = $this->{$methodName}();
+                }
+                $result = $this->methodCacheResults[$index];
+            } elseif ($this->arrayAccessList[$index]['type'] === 'callable') {
+                if (!isset($this->methodCacheResults[$index])) {
+                    $callable = $this->arrayAccessList[$index]['value'];
+                    $this->methodCacheResults[$index] = call_user_func($callable[0], isset($callable[1]) ? $callable[1] : null);
                 }
                 $result = $this->methodCacheResults[$index];
             } else { // if the index is associated with a value, just return the value
