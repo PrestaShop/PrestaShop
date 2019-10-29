@@ -57,6 +57,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
+    const GRID_ID = 'category';
+
     /**
      * @var string
      */
@@ -103,7 +105,7 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getId()
     {
-        return 'category';
+        return self::GRID_ID;
     }
 
     /**
@@ -229,10 +231,11 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                 (new Filter('actions', SearchAndResetType::class))
                 ->setAssociatedColumn('actions')
                 ->setTypeOptions([
-                    'attr' => [
-                        'data-url' => $this->resetActionUrl,
-                        'data-redirect' => $this->redirectActionUrl,
+                    'reset_route' => 'admin_common_reset_search_by_filter_id',
+                    'reset_route_params' => [
+                        'filterId' => self::GRID_ID,
                     ],
+                    'redirect_route' => 'admin_categories_index',
                 ])
             );
 
