@@ -1,3 +1,4 @@
+<?php
 /**
  * 2007-2019 PrestaShop SA and Contributors
  *
@@ -22,10 +23,21 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-import CreateOrderPage from './create/create-order-page';
 
-const $ = window.$;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler;
 
-$(document).ready(() => {
-  new CreateOrderPage();
-});
+use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
+
+/**
+ * Interface for handling SearchProducts query
+ */
+interface SearchProductsHandlerInterface
+{
+    /**
+     * @param SearchProducts $query
+     *
+     * @return FoundProduct[]
+     */
+    public function handle(SearchProducts $query): array;
+}

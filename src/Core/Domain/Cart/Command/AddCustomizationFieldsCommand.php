@@ -30,10 +30,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
-/**
- * Removes given product from cart.
- */
-class RemoveProductFromCartCommand
+class AddCustomizationFieldsCommand
 {
     /**
      * @var CartId
@@ -46,39 +43,28 @@ class RemoveProductFromCartCommand
     private $productId;
 
     /**
-     * @var int|null
+     * @var array key - value pairs where key is the id of customization field and the value is the customization value
      */
-    private $combinationId;
-
-    /**
-     * @var int|null
-     */
-    private $customizationId;
+    private $customizationsByFieldIds;
 
     /**
      * @param int $cartId
      * @param int $productId
-     * @param int|null $combinationId
-     * @param int|null $customizationId
+     * @param array $customizationsByFieldIds
      *
      * @throws CartConstraintException
      */
-    public function __construct(
-        int $cartId,
-        int $productId,
-        int $combinationId = null,
-        int $customizationId = null
-    ) {
+    public function __construct(int $cartId, int $productId, array $customizationsByFieldIds)
+    {
         $this->cartId = new CartId($cartId);
         $this->productId = new ProductId($productId);
-        $this->combinationId = $combinationId;
-        $this->customizationId = $customizationId;
+        $this->customizationsByFieldIds = $customizationsByFieldIds;
     }
 
     /**
      * @return CartId
      */
-    public function getCartId()
+    public function getCartId(): CartId
     {
         return $this->cartId;
     }
@@ -86,24 +72,16 @@ class RemoveProductFromCartCommand
     /**
      * @return ProductId
      */
-    public function getProductId()
+    public function getProductId(): ProductId
     {
         return $this->productId;
     }
 
     /**
-     * @return int|null
+     * @return array
      */
-    public function getCombinationId()
+    public function getCustomizationsByFieldIds(): array
     {
-        return $this->combinationId;
-    }
-
-    /**
-     * @return int|null
-     */
-    public function getCustomizationId()
-    {
-        return $this->customizationId;
+        return $this->customizationsByFieldIds;
     }
 }

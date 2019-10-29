@@ -1,3 +1,4 @@
+<?php
 /**
  * 2007-2019 PrestaShop SA and Contributors
  *
@@ -22,10 +23,20 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-import CreateOrderPage from './create/create-order-page';
 
-const $ = window.$;
+namespace PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler;
 
-$(document).ready(() => {
-  new CreateOrderPage();
-});
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCustomizationFieldsCommand;
+
+/**
+ * Interface for handling AddCustomizationFields command
+ */
+interface AddCustomizationFieldsHandlerInterface
+{
+    /**
+     * @param AddCustomizationFieldsCommand $command
+     *
+     * @return int customizationId
+     */
+    public function handle(AddCustomizationFieldsCommand $command): int;
+}

@@ -1,3 +1,4 @@
+<?php
 /**
  * 2007-2019 PrestaShop SA and Contributors
  *
@@ -22,10 +23,12 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-import CreateOrderPage from './create/create-order-page';
 
-const $ = window.$;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception;
 
-$(document).ready(() => {
-  new CreateOrderPage();
-});
+/**
+ * Thrown when customization constraints are violated
+ */
+class CustomizationConstraintException extends CustomizationException
+{
+}

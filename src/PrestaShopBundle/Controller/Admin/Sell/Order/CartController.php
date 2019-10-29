@@ -28,17 +28,21 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCartRuleToCartCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCustomizationFieldsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\CreateEmptyCustomerCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\RemoveCartRuleFromCartCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\RemoveProductFromCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\SetFreeShippingToCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartAddressesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartCarrierCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductQuantityInCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleValidityException;
+use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\QuantityAction;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -176,7 +180,7 @@ class CartController extends FrameworkBundleAdminController
     public function editCarrierAction(Request $request, int $cartId): JsonResponse
     {
         try {
-            $carrierId = (int) $request->request->get('carrier_id');
+            $carrierId = (int) $request->request->get('carrierId');
             $this->getCommandBus()->handle(new UpdateCartCarrierCommand(
                 $cartId,
                 $carrierId
@@ -204,7 +208,7 @@ class CartController extends FrameworkBundleAdminController
         try {
             $this->getCommandBus()->handle(new SetFreeShippingToCartCommand(
                 $cartId,
-                $request->request->getBoolean('free_shipping')
+                $request->request->getBoolean('freeShipping')
             ));
 
             return $this->json($this->getCartInfo($cartId));
@@ -217,6 +221,8 @@ class CartController extends FrameworkBundleAdminController
     }
 
     /**
+     * Adds cart rule to cart
+     *
      * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
      *
      * @param Request $request
@@ -224,9 +230,9 @@ class CartController extends FrameworkBundleAdminController
      *
      * @return JsonResponse
      */
-    public function addCartRuleToCartAction(Request $request, int $cartId): JsonResponse
+    public function addCartRuleAction(Request $request, int $cartId): JsonResponse
     {
-        $cartRuleId = $request->request->getInt('cart_rule_id');
+        $cartRuleId = $request->request->getInt('cartRuleId');
         try {
             $this->getCommandBus()->handle(new AddCartRuleToCartCommand($cartId, $cartRuleId));
 
@@ -240,6 +246,8 @@ class CartController extends FrameworkBundleAdminController
     }
 
     /**
+     * Deletes cart rule from cart
+     *
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
      *
      * @param int $cartId
@@ -247,7 +255,7 @@ class CartController extends FrameworkBundleAdminController
      *
      * @return JsonResponse
      */
-    public function removeCartRuleFromCartAction(int $cartId, int $cartRuleId)
+    public function deleteCartRuleAction(int $cartId, int $cartRuleId)
     {
         try {
             $this->getCommandBus()->handle(new RemoveCartRuleFromCartCommand($cartId, $cartRuleId));
@@ -255,7 +263,84 @@ class CartController extends FrameworkBundleAdminController
             return $this->json($this->getCartInfo($cartId));
         } catch (Exception $e) {
             return $this->json(
-                ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages())],
+                ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
+    }
+
+    /**
+     * Adds product to cart
+     *
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+     *
+     * @param Request $request
+     * @param int $cartId
+     *
+     * @return JsonResponse
+     */
+    public function addProductAction(Request $request, int $cartId): JsonResponse
+    {
+        $productId = $request->request->getInt('productId');
+        $quantity = $request->request->getInt('quantity');
+        $combinationId = $request->request->getInt('combinationId');
+        $customizationId = null;
+
+        try {
+            if ($customizations = $request->request->get('customizations')) {
+                $customizationId = $this->getCommandBus()->handle(new AddCustomizationFieldsCommand(
+                    $cartId,
+                    $productId,
+                    $customizations
+                ));
+            }
+
+            $this->getCommandBus()->handle(new UpdateProductQuantityInCartCommand(
+                $cartId,
+                (int) $productId,
+                (int) $quantity,
+                QuantityAction::INCREASE_PRODUCT_QUANTITY,
+                $combinationId ?: null,
+                $customizationId
+            ));
+
+            return $this->json($this->getCartInfo($cartId));
+        } catch (Exception $e) {
+            return $this->json(
+                ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
+    }
+
+    /**
+     * Deletes product from cart
+     *
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
+     *
+     * @param Request $request
+     * @param int $cartId
+     *
+     * @return JsonResponse
+     */
+    public function deleteProductAction(Request $request, int $cartId): JsonResponse
+    {
+        try {
+            $productId = $request->request->getInt('productId');
+            $attributeId = $request->request->getInt('attributeId');
+            $customizationId = $request->request->getInt('customizationId');
+
+            $this->getCommandBus()->handle(new RemoveProductFromCartCommand(
+                $cartId,
+                $productId,
+                $attributeId ?: null,
+                $customizationId ?: null
+            ));
+
+            return $this->json($this->getCartInfo($cartId));
+        } catch (Exception $e) {
+            return $this->json(
+                ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
                 Response::HTTP_INTERNAL_SERVER_ERROR
             );
         }

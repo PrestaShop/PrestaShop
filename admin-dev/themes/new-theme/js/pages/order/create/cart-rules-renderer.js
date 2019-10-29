@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import createOrderPageMap from './create-order-map';
+import createOrderMap from './create-order-map';
 
 const $ = window.$;
 
@@ -32,8 +32,9 @@ const $ = window.$;
  */
 export default class CartRulesRenderer {
   constructor() {
-    this.$cartRulesBlock = $(createOrderPageMap.cartRulesBlock);
-    this.$cartRulesTable = $(createOrderPageMap.cartRulesTable);
+    this.$cartRulesBlock = $(createOrderMap.cartRulesBlock);
+    this.$cartRulesTable = $(createOrderMap.cartRulesTable);
+    this.$searchResultBox = $(createOrderMap.cartRulesSearchResultBox);
   }
 
   /**
@@ -42,8 +43,8 @@ export default class CartRulesRenderer {
    * @param {Array} cartRules
    * @param {Boolean} emptyCart
    */
-  render(cartRules, emptyCart) {
-    this._hideError();
+  renderCartRulesBlock(cartRules, emptyCart) {
+    this._hideErrorBlock();
     // do not render cart rules block at all if cart has no products
     if (emptyCart) {
       this._hideCartRulesBlock();
@@ -62,6 +63,93 @@ export default class CartRulesRenderer {
   }
 
   /**
+   * Responsible for rendering search results dropdown
+   *
+   * @param searchResults
+   */
+  renderSearchResults(searchResults) {
+    this._clearSearchResults();
+
+    if (searchResults.cart_rules.length === 0) {
+      this._renderNotFound();
+    } else {
+      this._renderFoundCartRules(searchResults.cart_rules);
+    }
+
+    this._showResultsDropdown();
+  }
+
+  /**
+   * Displays error message bellow search input
+   *
+   * @param message
+   */
+  displayErrorMessage(message) {
+    $(createOrderMap.cartRuleErrorText).text(message);
+    this._showErrorBlock();
+  }
+
+  /**
+   * Hides cart rules search result dropdown
+   */
+  hideResultsDropdown() {
+    this.$searchResultBox.addClass('d-none');
+  }
+
+  /**
+   * Displays cart rules search result dropdown
+   *
+   * @private
+   */
+  _showResultsDropdown() {
+    this.$searchResultBox.removeClass('d-none');
+  }
+
+  /**
+   * Renders warning that no cart rule was found
+   *
+   * @private
+   */
+  _renderNotFound() {
+    const $template = $($(createOrderMap.cartRulesNotFoundTemplate).html()).clone();
+    this.$searchResultBox.html($template);
+  }
+
+
+  /**
+   * Empties cart rule search results block
+   *
+   * @private
+   */
+  _clearSearchResults() {
+    this.$searchResultBox.empty();
+  }
+
+  /**
+   * Renders found cart rules after search
+   *
+   * @param cartRules
+   *
+   * @private
+   */
+  _renderFoundCartRules(cartRules) {
+    const $cartRuleTemplate = $($(createOrderMap.foundCartRuleTemplate).html());
+    for (const key in cartRules) {
+      const $template = $cartRuleTemplate.clone();
+      const cartRule = cartRules[key];
+
+      let cartRuleName = cartRule.name;
+      if (cartRule.code !== '') {
+        cartRuleName = `${cartRule.name} - ${cartRule.code}`;
+      }
+
+      $template.text(cartRuleName);
+      $template.data('cart-rule-id', cartRule.cartRuleId);
+      this.$searchResultBox.append($template);
+    }
+  }
+
+  /**
    * Responsible for rendering the list of cart rules
    *
    * @param {Array} cartRules
@@ -70,16 +158,16 @@ export default class CartRulesRenderer {
    */
   _renderList(cartRules) {
     this._cleanCartRulesList();
-    const $cartRulesTableRowTemplate = $($(createOrderPageMap.cartRulesTableRowTemplate).html());
+    const $cartRulesTableRowTemplate = $($(createOrderMap.cartRulesTableRowTemplate).html());
 
     for (const key in cartRules) {
       const cartRule = cartRules[key];
       const $template = $cartRulesTableRowTemplate.clone();
 
-      $template.find(createOrderPageMap.cartRuleNameField).text(cartRule.name);
-      $template.find(createOrderPageMap.cartRuleDescriptionField).text(cartRule.description);
-      $template.find(createOrderPageMap.cartRuleValueField).text(cartRule.value);
-      $template.find(createOrderPageMap.cartRuleDeleteBtn).data('cart-rule-id', cartRule.cartRuleId);
+      $template.find(createOrderMap.cartRuleNameField).text(cartRule.name);
+      $template.find(createOrderMap.cartRuleDescriptionField).text(cartRule.description);
+      $template.find(createOrderMap.cartRuleValueField).text(cartRule.value);
+      $template.find(createOrderMap.cartRuleDeleteBtn).data('cart-rule-id', cartRule.cartRuleId);
 
       this.$cartRulesTable.find('tbody').append($template);
     }
@@ -88,12 +176,21 @@ export default class CartRulesRenderer {
   }
 
   /**
-   * Hides error block which can be visible after cart rules search
+   * Shows error block
    *
    * @private
    */
-  _hideError() {
-    $(createOrderPageMap.cartRuleErrorBlock).addClass('d-none');
+  _showErrorBlock() {
+    $(createOrderMap.cartRuleErrorBlock).removeClass('d-none');
+  }
+
+  /**
+   * Hides error block
+   *
+   * @private
+   */
+  _hideErrorBlock() {
+    $(createOrderMap.cartRuleErrorBlock).addClass('d-none');
   }
 
   /**

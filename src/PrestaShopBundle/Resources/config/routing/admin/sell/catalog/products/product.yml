@@ -88,3 +88,11 @@ admin_product_image_delete:
         idImage: 0
     requirements:
         idImage: \d+
+
+admin_products_search:
+  path: /search
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Product:searchProducts
+  options:
+    expose: true
