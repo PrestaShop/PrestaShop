@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Command\AddOrderCustomerMe
 use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Exception\CannotSendEmailException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Exception\CustomerMessageConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddCartRuleToOrderCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddOrderFromBackOfficeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\BulkChangeOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderDeliveryAddressCommand;
@@ -68,6 +69,7 @@ use PrestaShopBundle\Form\Admin\Sell\Customer\PrivateNoteType;
 use PrestaShopBundle\Form\Admin\Sell\Order\AddOrderCartRuleType;
 use PrestaShopBundle\Form\Admin\Sell\Order\AddProductToOrderType;
 use PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrderAddressType;
+use PrestaShopBundle\Form\Admin\Sell\Order\CartSummaryType;
 use PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrderCurrencyType;
 use PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrdersStatusType;
 use PrestaShopBundle\Form\Admin\Sell\Order\OrderMessageType;
@@ -137,11 +139,38 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     //@todo: wip
+    public function placeAction(Request $request)
+    {
+        $summaryForm = $this->createForm(CartSummaryType::class);
+        $summaryForm->handleRequest($request);
+
+        if ($summaryForm->isSubmitted() && $summaryForm->isValid()) {
+            $formData = $summaryForm->getData();
+            $orderId = $this->getCommandBus()->handle(new AddOrderFromBackOfficeCommand(
+                (int) $formData['cart_id'],
+                $this->getContext()->employee->id,
+                $formData['order_message'],
+                $formData['payment_module'],
+                (int) $formData['order_state']
+            ));
+        }
+
+        return $this->redirectToRoute('admin_orders_view', [
+            'orderId' => $orderId->getValue(),
+        ]);
+    }
+
+    //@todo: wip
     public function createAction()
     {
+        $summaryForm = $this->createForm(CartSummaryType::class);
+        $languages = $this->get('prestashop.core.form.choice_provider.language_by_id')->getChoices();
+        $currencies = $this->get('prestashop.core.form.choice_provider.currency_by_id')->getChoices();
+
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/create.html.twig', [
-            'currencies' => Currency::getCurrenciesByIdShop(Context::getContext()->shop->id),
-            'languages' => Language::getLanguages(true, Context::getContext()->shop->id),
+            'currencies' => $currencies,
+            'languages' => $languages,
+            'summaryForm' => $summaryForm->createView(),
         ]);
     }
 
