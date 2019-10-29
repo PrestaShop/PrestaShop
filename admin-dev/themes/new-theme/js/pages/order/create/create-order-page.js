@@ -204,7 +204,8 @@ export default class CreateOrderPage {
    */
   _initCartRuleSearch(event) {
     const searchPhrase = event.currentTarget.value;
-    this.cartRuleManager.search(searchPhrase);
+
+    setTimeout(() => this.cartRuleManager.search(searchPhrase), 300);
   }
 
   /**
