@@ -64,7 +64,7 @@ describe('Filter And Quick Edit Stocks', async () => {
       for (let i = 1; i <= numberOfProductsAfterFilter; i++) {
         const textColumn = await this.pageObjects.stocksPage.getTextContent(
           this.pageObjects.stocksPage.productRowNameColumn.replace('%ROW', i));
-        await expect(textColumn).to.contains('mug');
+        await expect(textColumn.toLowerCase()).to.contains('mug');
       }
       /* eslint-enable no-await-in-loop */
     });
@@ -85,7 +85,7 @@ describe('Filter And Quick Edit Stocks', async () => {
       for (let i = 1; i <= numberOfProductsAfterFilter; i++) {
         const textColumn = await this.pageObjects.stocksPage.getTextContent(
           this.pageObjects.stocksPage.productRowReferenceColumn.replace('%ROW', i));
-        await expect(textColumn).to.contains('demo_1');
+        await expect(textColumn.toLowerCase()).to.contains('demo_1');
       }
       /* eslint-enable no-await-in-loop */
     });
@@ -117,7 +117,7 @@ describe('Filter And Quick Edit Stocks', async () => {
       await expect(numberOfProductsAfterReset).to.equal(numberOfProducts);
     });
 
-    it('should change the quantity in the first product', async function () {
+    it.skip('should change the quantity in the first product', async function () {
       const physicalQuantity = await parseInt(
         this.pageObjects.stocksPage.getTextContent(
           this.pageObjects.stocksPage.productRowPhysicalColumn.replace('%ROW', 1)

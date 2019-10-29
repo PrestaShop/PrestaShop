@@ -55,6 +55,9 @@ module.exports = class Stocks extends BOBasePage {
    * @returns {Promise<*>}
    */
   async getNumberOfProductsFromList() {
+    //await this.page.waitForSelector(this.productListLoading, {timeout: 500});
+    await this.page.waitFor(500);
+    await this.page.waitFor(() => !document.querySelector(this.productListLoading));
     return (await this.page.$$(this.productRow)).length;
   }
 
@@ -80,6 +83,6 @@ module.exports = class Stocks extends BOBasePage {
       this.page.click(this.searchButton),
       this.page.waitForSelector(this.productListLoading),
     ]);
-    await this.page.waitForSelector(this.productListLoading);
+    await this.page.waitFor(() => !document.querySelector(this.productListLoading));
   }
 };
