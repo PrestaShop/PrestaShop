@@ -8,8 +8,8 @@ const loginCommon = require('@commonTests/loginBO');
 const BOBasePage = require('@pages/BO/BObasePage');
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
-const BrandsPage = require('@pages/BO/brands');
-const AddBrandPage = require('@pages/BO/addBrand');
+const BrandsPage = require('@pages/BO/catalog/brandsAndSuppliers/brands');
+const AddBrandPage = require('@pages/BO/catalog/brandsAndSuppliers/addBrand');
 
 let browser;
 let page;
@@ -51,7 +51,7 @@ describe('Create 2 brands, Enable, disable and delete with bulk actions', async 
   // GO to Brands Page
   it('should go to brands page', async function () {
     await this.pageObjects.boBasePage.goToSubMenu(
-      this.pageObjects.boBasePage.productsParentLink,
+      this.pageObjects.boBasePage.catalogParentLink,
       this.pageObjects.boBasePage.brandsAndSuppliersLink,
     );
     await this.pageObjects.boBasePage.closeSfToolBar();

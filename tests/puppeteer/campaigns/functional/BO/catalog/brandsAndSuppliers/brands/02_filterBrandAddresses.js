@@ -8,7 +8,7 @@ const {demoAddresses} = require('@data/demo/brands');
 const BOBasePage = require('@pages/BO/BObasePage');
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
-const BrandsPage = require('@pages/BO/brands');
+const BrandsPage = require('@pages/BO/catalog/brandsAndSuppliers/brands');
 
 let browser;
 let page;
@@ -41,7 +41,7 @@ describe('Filter And Quick Edit Addresses', async () => {
   // GO to Brands Page
   it('should go to brands page', async function () {
     await this.pageObjects.boBasePage.goToSubMenu(
-      this.pageObjects.boBasePage.productsParentLink,
+      this.pageObjects.boBasePage.catalogParentLink,
       this.pageObjects.boBasePage.brandsAndSuppliersLink,
     );
     await this.pageObjects.boBasePage.closeSfToolBar();
