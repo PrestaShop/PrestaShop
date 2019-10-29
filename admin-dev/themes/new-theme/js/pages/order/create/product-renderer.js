@@ -165,7 +165,7 @@ export default class ProductRenderer {
         `<option
           value="${combination.attribute_combination_id}">
           ${combination.attribute} - ${combination.formatted_price}
-        </option>`
+        </option>`,
       );
     }
 
@@ -180,6 +180,11 @@ export default class ProductRenderer {
    * @private
    */
   _renderCustomizations(customizationFields) {
+    // represents customization field type "file".
+    const fieldTypeFile = 0;
+    // represents customization field type "text".
+    const fieldTypeText = 1;
+
     this._cleanCustomizations();
     if (customizationFields.length === 0) {
       this._hideCustomizations();
@@ -188,13 +193,12 @@ export default class ProductRenderer {
     }
 
     const $customFieldsContainer = $(createOrderMap.productCustomFieldsContainer);
-
     const $fileInputTemplate = $($(createOrderMap.productCustomFileTemplate).html());
     const $textInputTemplate = $($(createOrderMap.productCustomTextTemplate).html());
 
     const templateTypeMap = {
-      0: $fileInputTemplate,
-      1: $textInputTemplate,
+      [fieldTypeFile]: $fileInputTemplate,
+      [fieldTypeText]: $textInputTemplate,
     };
 
     for (const key in customizationFields) {
