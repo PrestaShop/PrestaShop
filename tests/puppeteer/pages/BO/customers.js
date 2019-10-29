@@ -101,8 +101,12 @@ module.exports = class Customers extends BOBasePage {
    * @return {Promise<boolean|true>}
    */
   async getToggleColumnValue(row, column) {
-    if (await this.elementVisible(
-      this.customersListColumnValidIcon.replace('%ROW', row).replace('%COLUMN', column), 100)) return true;
+    if (
+      await this.elementVisible(
+      this.customersListColumnValidIcon.replace('%ROW', row).replace('%COLUMN', column),
+        100,
+        )
+    ) return true;
     return false;
   }
 

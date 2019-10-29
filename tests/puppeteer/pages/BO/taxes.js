@@ -141,8 +141,9 @@ module.exports = class Taxes extends BOBasePage {
     await Promise.all([
       this.page.click(this.taxesGridColumnToggleDropDown.replace('%ROW', row).replace('%COLUMN', 'actions')),
       this.page.waitForSelector(
-        `${this.taxesGridColumnToggleDropDown
-          .replace('%ROW', row).replace('%COLUMN', 'actions')}[aria-expanded='true']`,
+        `${this.taxesGridColumnToggleDropDown}[aria-expanded='true']`
+          .replace('%ROW', row)
+          .replace('%COLUMN', 'actions'),
         {visible: true},
       ),
     ]);
