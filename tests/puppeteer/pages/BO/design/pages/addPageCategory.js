@@ -28,6 +28,7 @@ module.exports = class AddPageCategory extends BOBasePage {
    */
   async createEditPageCategory(pageCategoryData) {
     await this.setValue(this.nameInput, pageCategoryData.name);
+    // replace %ID by 1 in the selector if displayed = YES / 0 if displayed = NO
     if (pageCategoryData.displayed) await this.page.click(this.displayed.replace('%ID', '1'));
     else await this.page.click(this.displayed.replace('%ID', '0'));
     await this.setValue(this.descriptionIframe, pageCategoryData.description);
