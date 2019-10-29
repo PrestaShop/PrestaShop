@@ -59,11 +59,9 @@ module.exports = class Order extends BOBasePage {
    */
   async resetFilter() {
     if (await this.elementVisible(this.resetButton, 2000)) {
-      await Promise.all([
-        this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-        this.page.click(this.resetButton),
-      ]);
+      await this.clickAndWaitForNavigation(this.resetButton);
     }
+    return this.getNumberFromText(this.ordersNumberSpan);
   }
 
   /**
