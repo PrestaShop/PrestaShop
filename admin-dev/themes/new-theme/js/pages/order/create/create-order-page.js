@@ -36,6 +36,7 @@ import eventMap from './event-map';
 import CartRuleManager from './cart-rule-manager';
 import ProductManager from './product-manager';
 import ProductRenderer from './product-renderer';
+import SummaryRenderer from './summary-renderer';
 
 const $ = window.$;
 
@@ -57,6 +58,7 @@ export default class CreateOrderPage {
     this.cartRuleManager = new CartRuleManager();
     this.productManager = new ProductManager();
     this.productRenderer = new ProductRenderer();
+    this.summaryRenderer = new SummaryRenderer();
 
     this._initListeners();
   }
@@ -74,9 +76,8 @@ export default class CreateOrderPage {
     this.$container.on('input', createOrderMap.productSearch, e => this._initProductSearch(e));
     this.$container.on('input', createOrderMap.cartRuleSearchInput, e => this._initCartRuleSearch(e));
     this.$container.on('blur', createOrderMap.cartRuleSearchInput, () => this.cartRuleManager.stopSearching());
-    this._initCartEditing();
+    this._listenForCartEdit();
     this._onCartLoaded();
-    this._onCartAddressesChanged();
   }
 
   /**
@@ -84,24 +85,27 @@ export default class CreateOrderPage {
    *
    * @private
    */
-  _initCartEditing() {
+  _listenForCartEdit() {
+    this._onCartAddressesChanged();
+    this._onDeliveryOptionChanged();
+    this._onFreeShippingChanged();
+    this._addCartRuleToCart();
+    this._removeCartRuleFromCart();
+
     this.$container.on('change', createOrderMap.deliveryOptionSelect, e =>
-      this.cartEditor.changeDeliveryOption(this.cartId, e.currentTarget.value)
+      this.cartEditor.changeDeliveryOption(this.cartId, e.currentTarget.value),
     );
 
     this.$container.on('change', createOrderMap.freeShippingSwitch, e =>
-      this.cartEditor.setFreeShipping(this.cartId, e.currentTarget.value)
+      this.cartEditor.setFreeShipping(this.cartId, e.currentTarget.value),
     );
 
     this.$container.on('click', createOrderMap.addToCartButton, () =>
-      this.productManager.addProductToCart(this.cartId)
+      this.productManager.addProductToCart(this.cartId),
     );
 
     this.$container.on('change', createOrderMap.addressSelect, () => this._changeCartAddresses());
     this.$container.on('click', createOrderMap.productRemoveBtn, e => this._initProductRemoveFromCart(e));
-
-    this._addCartRuleToCart();
-    this._removeCartRuleFromCart();
   }
 
   /**
@@ -115,6 +119,7 @@ export default class CreateOrderPage {
       this._renderCartInfo(cartInfo);
       this.customerManager.loadCustomerCarts(this.cartId);
       this.customerManager.loadCustomerOrders();
+      this.summaryRenderer.render(cartInfo);
     });
   }
 
@@ -127,6 +132,7 @@ export default class CreateOrderPage {
     EventEmitter.on(eventMap.cartAddressesChanged, (cartInfo) => {
       this.addressesRenderer.render(cartInfo.addresses);
       this.shippingRenderer.render(cartInfo.shipping, cartInfo.products.length === 0);
+      this.summaryRenderer.render(cartInfo);
     });
   }
 
@@ -138,6 +144,7 @@ export default class CreateOrderPage {
   _onDeliveryOptionChanged() {
     EventEmitter.on(eventMap.cartDeliveryOptionChanged, (cartInfo) => {
       this.shippingRenderer.render(cartInfo.shipping, cartInfo.products.length === 0);
+      this.summaryRenderer.render(cartInfo);
     });
   }
 
@@ -149,6 +156,7 @@ export default class CreateOrderPage {
   _onFreeShippingChanged() {
     EventEmitter.on(eventMap.cartFreeShippingSet, (cartInfo) => {
       this.shippingRenderer.render(cartInfo.shipping, cartInfo.products.length === 0);
+      this.summaryRenderer.render(cartInfo);
     });
   }
 
@@ -204,7 +212,8 @@ export default class CreateOrderPage {
    */
   _initCartRuleSearch(event) {
     const searchPhrase = event.currentTarget.value;
-    this.cartRuleManager.search(searchPhrase);
+
+    setTimeout(() => this.cartRuleManager.search(searchPhrase), 300);
   }
 
   /**

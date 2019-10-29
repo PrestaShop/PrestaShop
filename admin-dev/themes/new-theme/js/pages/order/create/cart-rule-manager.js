@@ -29,6 +29,7 @@ import createOrderMap from '@pages/order/create/create-order-map';
 import {EventEmitter} from '@components/event-emitter';
 import eventMap from '@pages/order/create/event-map';
 import Router from '@components/router';
+import SummaryRenderer from '@pages/order/create/summary-renderer';
 
 const $ = window.$;
 
@@ -37,15 +38,18 @@ const $ = window.$;
  */
 export default class CartRuleManager {
   constructor() {
+    this.activeSearchRequest = null;
+
     this.router = new Router();
     this.$searchInput = $(createOrderMap.cartRuleSearchInput);
     this.cartRulesRenderer = new CartRulesRenderer();
     this.cartEditor = new CartEditor();
+    this.summaryRenderer = new SummaryRenderer();
 
     this._initListeners();
 
     return {
-      search: () => this._search(),
+      search: searchPhrase => this._search(searchPhrase),
       stopSearching: () => this.cartRulesRenderer.hideResultsDropdown(),
       addCartRuleToCart: (cartRuleId, cartId) => this.cartEditor.addCartRuleToCart(cartRuleId, cartId),
       removeCartRuleFromCart: (cartRuleId, cartId) => this.cartEditor.removeCartRuleFromCart(cartRuleId, cartId),
@@ -83,6 +87,7 @@ export default class CartRuleManager {
   _onAddCartRuleToCart() {
     EventEmitter.on(eventMap.cartRuleAdded, (cartInfo) => {
       this.cartRulesRenderer.renderCartRulesBlock(cartInfo.cartRules, cartInfo.products.length === 0);
+      this.summaryRenderer.render(cartInfo);
     });
   }
 
@@ -105,6 +110,7 @@ export default class CartRuleManager {
   _onRemoveCartRuleFromCart() {
     EventEmitter.on(eventMap.cartRuleRemoved, (cartInfo) => {
       this.cartRulesRenderer.renderCartRulesBlock(cartInfo.cartRules, cartInfo.products.length === 0);
+      this.summaryRenderer.render(cartInfo);
     });
   }
 
@@ -118,11 +124,22 @@ export default class CartRuleManager {
       return;
     }
 
-    $.get(this.router.generate('admin_cart_rules_search'), {
+    if (this.activeSearchRequest !== null) {
+      this.activeSearchRequest.abort();
+    }
+
+    const $searchRequest = $.get(this.router.generate('admin_cart_rules_search'), {
       search_phrase: searchPhrase,
-    }).then((cartRules) => {
+    });
+    this.activeSearchRequest = $searchRequest;
+
+    $searchRequest.then((cartRules) => {
       EventEmitter.emit(eventMap.cartRuleSearched, cartRules);
     }).catch((e) => {
+      if (e.statusText === 'abort') {
+        return;
+      }
+
       showErrorMessage(e.responseJSON.message);
     });
   }
