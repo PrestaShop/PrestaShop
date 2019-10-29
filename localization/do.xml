@@ -17,10 +17,6 @@
     <taxRulesGroup name="DO Reduced Rate (13%)">
 			<taxRule iso_code_country="do" id_tax="2" />
 		</taxRulesGroup>
-		
-		<taxRulesGroup name="DO Reduced Rate (12%)">
-			<taxRule iso_code_country="do" id_tax="2" />
-		</taxRulesGroup>
 	</taxes>
 	<units>
 		<unit type="weight" value="kg" />
