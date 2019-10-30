@@ -59,7 +59,7 @@ describe('Create, read, update and delete Standard product with combinations in 
   });
   it('should reset all filters', async function () {
     await this.pageObjects.productsPage.resetFilterCategory();
-    const numberOfProducts = await this.pageObjects.productsPage.resetFilter();
+    const numberOfProducts = await this.pageObjects.productsPage.resetAndGetNumberOfLines();
     await expect(numberOfProducts).to.be.above(0);
   });
   it('should create Product with Combinations', async function () {

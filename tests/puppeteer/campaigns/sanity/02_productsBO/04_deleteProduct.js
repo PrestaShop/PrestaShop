@@ -54,7 +54,7 @@ describe('Create Standard product in BO and Delete it with DropDown Menu', async
   });
   it('should reset all filters', async function () {
     await this.pageObjects.productsPage.resetFilterCategory();
-    const numberOfProducts = await this.pageObjects.productsPage.resetFilter();
+    const numberOfProducts = await this.pageObjects.productsPage.resetAndGetNumberOfLines();
     await expect(numberOfProducts).to.be.above(0);
   });
   it('should create Product', async function () {
@@ -74,7 +74,7 @@ describe('Create Standard product in BO and Delete it with DropDown Menu', async
   });
   it('should reset all filters', async function () {
     await this.pageObjects.productsPage.resetFilterCategory();
-    const numberOfProducts = await this.pageObjects.productsPage.resetFilter();
+    const numberOfProducts = await this.pageObjects.productsPage.resetAndGetNumberOfLines();
     await expect(numberOfProducts).to.be.above(0);
   });
 });
