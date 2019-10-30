@@ -143,6 +143,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             (int) $order->id,
             (int) $order->id_currency,
             (int) $order->id_carrier,
+            (int) $order->id_shop,
             $order->reference,
             (bool) $order->isVirtual(),
             $taxMethod,

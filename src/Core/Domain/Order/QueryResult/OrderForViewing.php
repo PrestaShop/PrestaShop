@@ -147,10 +147,16 @@ class OrderForViewing
      */
     private $carrierId;
 
+    /**
+     * @var int
+     */
+    private $shopId;
+
     public function __construct(
         int $orderId,
         int $currencyId,
         int $carrierId,
+        int $shopId,
         string $reference,
         bool $isVirtual,
         string $taxMethod,
@@ -171,7 +177,8 @@ class OrderForViewing
         OrderMessagesForViewing $messages,
         OrderPricesForViewing $prices,
         OrderDiscountsForViewing $discounts
-    ) {
+    )
+    {
         $this->reference = $reference;
         $this->customer = $customer;
         $this->shippingAddress = $shippingAddress;
@@ -195,6 +202,7 @@ class OrderForViewing
         $this->createdAt = $createdAt;
         $this->isVirtual = $isVirtual;
         $this->carrierId = $carrierId;
+        $this->shopId = $shopId;
     }
 
     /**
@@ -219,6 +227,14 @@ class OrderForViewing
     public function getCarrierId(): int
     {
         return $this->carrierId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getShopId(): int
+    {
+        return $this->shopId;
     }
 
     /**
