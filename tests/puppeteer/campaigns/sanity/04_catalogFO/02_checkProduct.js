@@ -35,17 +35,20 @@ describe('Check the Product page', async () => {
   after(async () => {
     await helper.closeBrowser(browser);
   });
+
   // Steps
   it('should open the shop page', async function () {
     await this.pageObjects.homePage.goTo(global.FO.URL);
     const result = await this.pageObjects.homePage.isHomePage();
     await expect(result).to.be.true;
   });
+
   it('should go to the first product page', async function () {
     await this.pageObjects.homePage.goToProductPage('1');
     const pageTitle = await this.pageObjects.productPage.getPageTitle();
     await expect(pageTitle.toUpperCase()).to.contains(ProductData.firstProductData.name);
   });
+
   it('should check the product page', async function () {
     const result = await this.pageObjects.productPage.checkProduct(ProductData.firstProductData);
     await Promise.all([

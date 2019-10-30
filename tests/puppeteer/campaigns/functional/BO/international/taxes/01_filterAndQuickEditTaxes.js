@@ -37,6 +37,7 @@ describe('Filter And Quick Edit taxes', async () => {
   });
   // Login into BO and go to taxes page
   loginCommon.loginBO();
+
   it('should go to Taxes page', async function () {
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.internationalParentLink,
@@ -45,13 +46,9 @@ describe('Filter And Quick Edit taxes', async () => {
     const pageTitle = await this.pageObjects.taxesPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.taxesPage.pageTitle);
   });
+
   it('should reset all filters and get Number of Taxes in BO', async function () {
-    if (await this.pageObjects.taxesPage.elementVisible(this.pageObjects.taxesPage.resetFilterButton, 2000)) {
-      await this.pageObjects.taxesPage.resetFilter();
-    }
-    numberOfTaxes = await this.pageObjects.taxesPage.getNumberFromText(
-      this.pageObjects.taxesPage.gridHeaderTitle,
-    );
+    numberOfTaxes = await this.pageObjects.taxesPage.resetAndGetNumberOfLines();
     await expect(numberOfTaxes).to.be.above(0);
   });
   // 1 : Filter Taxes
@@ -67,15 +64,12 @@ describe('Filter And Quick Edit taxes', async () => {
       );
       await expect(textColumn).to.contains(DefaultFrTax.id);
     });
+
     it('should reset all filters', async function () {
-      if (await this.pageObjects.taxesPage.elementVisible(this.pageObjects.taxesPage.resetFilterButton, 2000)) {
-        await this.pageObjects.taxesPage.resetFilter();
-      }
-      const numberOfTaxesAfterReset = await this.pageObjects.taxesPage.getNumberFromText(
-        this.pageObjects.taxesPage.gridHeaderTitle,
-      );
+      const numberOfTaxesAfterReset = await this.pageObjects.taxesPage.resetAndGetNumberOfLines();
       await expect(numberOfTaxesAfterReset).to.equal(numberOfTaxes);
     });
+
     it('should filter by tax name', async function () {
       await this.pageObjects.taxesPage.filterTaxes('input', 'name', DefaultFrTax.name);
       const numberOfTaxesAfterFilter = await this.pageObjects.taxesPage.getNumberFromText(
@@ -87,15 +81,12 @@ describe('Filter And Quick Edit taxes', async () => {
       );
       await expect(textColumn).to.contains(DefaultFrTax.name);
     });
+
     it('should reset all filters', async function () {
-      if (await this.pageObjects.taxesPage.elementVisible(this.pageObjects.taxesPage.resetFilterButton, 2000)) {
-        await this.pageObjects.taxesPage.resetFilter();
-      }
-      const numberOfTaxesAfterReset = await this.pageObjects.taxesPage.getNumberFromText(
-        this.pageObjects.taxesPage.gridHeaderTitle,
-      );
+      const numberOfTaxesAfterReset = await this.pageObjects.taxesPage.resetAndGetNumberOfLines();
       await expect(numberOfTaxesAfterReset).to.equal(numberOfTaxes);
     });
+
     it('should filter by Rate', async function () {
       await this.pageObjects.taxesPage.filterTaxes('input', 'rate', DefaultFrTax.rate);
       const numberOfTaxesAfterFilter = await this.pageObjects.taxesPage.getNumberFromText(
@@ -107,15 +98,12 @@ describe('Filter And Quick Edit taxes', async () => {
       );
       await expect(textColumn).to.contains(DefaultFrTax.rate);
     });
+
     it('should reset all filters', async function () {
-      if (await this.pageObjects.taxesPage.elementVisible(this.pageObjects.taxesPage.resetFilterButton, 2000)) {
-        await this.pageObjects.taxesPage.resetFilter();
-      }
-      const numberOfTaxesAfterReset = await this.pageObjects.taxesPage.getNumberFromText(
-        this.pageObjects.taxesPage.gridHeaderTitle,
-      );
+      const numberOfTaxesAfterReset = await this.pageObjects.taxesPage.resetAndGetNumberOfLines();
       await expect(numberOfTaxesAfterReset).to.equal(numberOfTaxes);
     });
+
     it('should filter by Enabled \'Yes\'', async function () {
       await this.pageObjects.taxesPage.filterTaxes(
         'select',
@@ -135,13 +123,9 @@ describe('Filter And Quick Edit taxes', async () => {
       }
       /* eslint-enable no-await-in-loop */
     });
+
     it('should reset all filters', async function () {
-      if (await this.pageObjects.taxesPage.elementVisible(this.pageObjects.taxesPage.resetFilterButton, 2000)) {
-        await this.pageObjects.taxesPage.resetFilter();
-      }
-      const numberOfTaxesAfterReset = await this.pageObjects.taxesPage.getNumberFromText(
-        this.pageObjects.taxesPage.gridHeaderTitle,
-      );
+      const numberOfTaxesAfterReset = await this.pageObjects.taxesPage.resetAndGetNumberOfLines();
       await expect(numberOfTaxesAfterReset).to.equal(numberOfTaxes);
     });
   });
@@ -159,6 +143,7 @@ describe('Filter And Quick Edit taxes', async () => {
       );
       await expect(textColumn).to.contains(DefaultFrTax.name);
     });
+
     it('should disable first tax', async function () {
       const isActionPerformed = await this.pageObjects.taxesPage.updateEnabledValue(
         '1',
@@ -177,6 +162,7 @@ describe('Filter And Quick Edit taxes', async () => {
       );
       await expect(isStatusChanged).to.be.true;
     });
+
     it('should enable first tax', async function () {
       const isActionPerformed = await this.pageObjects.taxesPage.updateEnabledValue(
         '1',
@@ -195,13 +181,9 @@ describe('Filter And Quick Edit taxes', async () => {
       );
       await expect(isStatusChanged).to.be.true;
     });
+
     it('should reset all filters', async function () {
-      if (await this.pageObjects.taxesPage.elementVisible(this.pageObjects.taxesPage.resetFilterButton, 2000)) {
-        await this.pageObjects.taxesPage.resetFilter();
-      }
-      const numberOfTaxesAfterReset = await this.pageObjects.taxesPage.getNumberFromText(
-        this.pageObjects.taxesPage.gridHeaderTitle,
-      );
+      const numberOfTaxesAfterReset = await this.pageObjects.taxesPage.resetAndGetNumberOfLines();
       await expect(numberOfTaxesAfterReset).to.equal(numberOfTaxes);
     });
   });

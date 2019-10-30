@@ -39,6 +39,7 @@ describe('Install Prestashop', async () => {
     );
     await expect(result).to.be.true;
   });
+
   it('should change language to English and check title', async function () {
     await this.pageObjects.installPage.setInstallLanguage();
     const result = await this.pageObjects.installPage.checkStepTitle(
@@ -47,6 +48,7 @@ describe('Install Prestashop', async () => {
     );
     await expect(result).to.be.true;
   });
+
   it('should click on next and go to step \'License Agreements\'', async function () {
     await this.pageObjects.installPage.nextStep();
     const result = await this.pageObjects.installPage.checkStepTitle(
@@ -55,6 +57,7 @@ describe('Install Prestashop', async () => {
     );
     await expect(result).to.be.true;
   });
+
   it('should agree to terms and conditions and go to step \'System compatibility\'', async function () {
     await this.pageObjects.installPage.agreeToTermsAndConditions();
     await this.pageObjects.installPage.nextStep();
@@ -66,6 +69,7 @@ describe('Install Prestashop', async () => {
       await expect(result).to.be.true;
     }
   });
+
   it('should click on next and go to step \'shop Information\'', async function () {
     if (!this.pageObjects.installPage.elementVisible(this.pageObjects.installPage.thirdStepFinishedListItem)) {
       await this.pageObjects.installPage.nextStep();
@@ -76,6 +80,7 @@ describe('Install Prestashop', async () => {
     );
     await expect(result).to.be.true;
   });
+
   it('should fill shop Information form and go to step \'Database Configuration\'', async function () {
     await this.pageObjects.installPage.fillInformationForm();
     await this.pageObjects.installPage.nextStep();
@@ -85,16 +90,19 @@ describe('Install Prestashop', async () => {
     );
     await expect(result).to.be.true;
   });
+
   it('should fill database configuration form and check database connection', async function () {
     await this.pageObjects.installPage.fillDatabaseForm();
     const result = await this.pageObjects.installPage.isDatabaseConnected();
     await expect(result).to.be.true;
   });
+
   it('should finish installation and check that installation is successful', async function () {
     await this.pageObjects.installPage.nextStep();
     const result = await this.pageObjects.installPage.isInstallationSuccessful();
     await expect(result).to.be.true;
   });
+
   it('should go to FO and check that Prestashop logo exists', async function () {
     page = await this.pageObjects.installPage.goToFOAfterInstall();
     this.pageObjects = await init();

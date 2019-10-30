@@ -78,11 +78,20 @@ module.exports = class Brands extends BOBasePage {
    * @param table, what table to reset
    * @return {Promise<void>}
    */
-  async resetFilters(table) {
+  async resetFilter(table) {
     const resetButton = await this.replaceAll(this.filterResetButton, '%TABLE', table);
     if (await this.elementVisible(resetButton, 2000)) {
       await this.clickAndWaitForNavigation(resetButton);
     }
+  }
+
+  /**
+   * Reset Filter And get number of elements in list
+   * @param table, what table to reset
+   * @return {Promise<integer>}
+   */
+  async resetAndGetNumberOfLines(table) {
+    await this.resetFilter(table);
     return this.getNumberFromText(this.gridHeaderTitle.replace('%TABLE', table));
   }
 
@@ -123,6 +132,15 @@ module.exports = class Brands extends BOBasePage {
   }
 
   /**
+   * Filter Brands column active
+   * @param value
+   * @return {Promise<void>}
+   */
+  async filterBrandsEnabled(value) {
+    await this.filterTable('manufacturer', 'select', 'active', value ? 'Yes' : 'No');
+  }
+
+  /**
    * Filter Addresses
    * @param filterType, input / Select
    * @param filterBy, which column
@@ -150,7 +168,7 @@ module.exports = class Brands extends BOBasePage {
    * @return {Promise<boolean>}, true if click has been performed
    */
   async updateEnabledValue(row, valueWanted = true) {
-    if (await this.getToggleColumnValue(row, 'active') !== valueWanted) {
+    if (await this.getToggleColumnValue(row) !== valueWanted) {
       await this.clickAndWaitForNavigation(this.brandsTableEnableColumn.replace('%ROW', row));
       return true;
     }

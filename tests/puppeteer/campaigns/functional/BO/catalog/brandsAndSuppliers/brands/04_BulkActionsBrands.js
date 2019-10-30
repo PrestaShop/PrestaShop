@@ -51,7 +51,7 @@ describe('Create 2 brands, Enable, disable and delete with bulk actions', async 
   // GO to Brands Page
   it('should go to brands page', async function () {
     await this.pageObjects.boBasePage.goToSubMenu(
-      this.pageObjects.boBasePage.productsParentLink,
+      this.pageObjects.boBasePage.catalogParentLink,
       this.pageObjects.boBasePage.brandsAndSuppliersLink,
     );
     await this.pageObjects.boBasePage.closeSfToolBar();
@@ -60,7 +60,7 @@ describe('Create 2 brands, Enable, disable and delete with bulk actions', async 
   });
 
   it('should reset all Brands filters', async function () {
-    numberOfBrands = await this.pageObjects.brandsPage.resetFilters('manufacturer');
+    numberOfBrands = await this.pageObjects.brandsPage.resetAndGetNumberOfLines('manufacturer');
     await expect(numberOfBrands).to.be.above(0);
   });
   // 1: Create 2 Brands
@@ -157,7 +157,7 @@ describe('Create 2 brands, Enable, disable and delete with bulk actions', async 
     });
 
     it('should reset Brand filters', async function () {
-      const numberOfBrandsAfterReset = await this.pageObjects.brandsPage.resetFilters('manufacturer');
+      const numberOfBrandsAfterReset = await this.pageObjects.brandsPage.resetAndGetNumberOfLines('manufacturer');
       await expect(numberOfBrandsAfterReset).to.be.equal(numberOfBrands + 2);
     });
   });
@@ -188,7 +188,7 @@ describe('Create 2 brands, Enable, disable and delete with bulk actions', async 
     });
 
     it('should reset Brand filters', async function () {
-      const numberOfBrandsAfterReset = await this.pageObjects.brandsPage.resetFilters('manufacturer');
+      const numberOfBrandsAfterReset = await this.pageObjects.brandsPage.resetAndGetNumberOfLines('manufacturer');
       await expect(numberOfBrandsAfterReset).to.be.equal(numberOfBrands);
     });
   });

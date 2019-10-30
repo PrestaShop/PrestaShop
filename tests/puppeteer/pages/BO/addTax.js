@@ -54,11 +54,9 @@ module.exports = class AddTax extends BOBasePage {
     } else {
       await this.page.click(this.enabledSwitchlabel.replace('%ID', '0'));
     }
-    await Promise.all([
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-      this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true}),
-      this.page.click(this.saveTaxButton),
-    ]);
+    // Save Tax
+    await this.clickAndWaitForNavigation(this.saveTaxButton);
+    await this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true});
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 };

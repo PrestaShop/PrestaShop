@@ -41,7 +41,7 @@ describe('Filter And Quick Edit Addresses', async () => {
   // GO to Brands Page
   it('should go to brands page', async function () {
     await this.pageObjects.boBasePage.goToSubMenu(
-      this.pageObjects.boBasePage.productsParentLink,
+      this.pageObjects.boBasePage.catalogParentLink,
       this.pageObjects.boBasePage.brandsAndSuppliersLink,
     );
     await this.pageObjects.boBasePage.closeSfToolBar();
@@ -50,7 +50,7 @@ describe('Filter And Quick Edit Addresses', async () => {
   });
 
   it('should reset all filters and get Number of brands in BO', async function () {
-    numberOfBrandsAddresses = await this.pageObjects.brandsPage.resetFilters('manufacturer_address');
+    numberOfBrandsAddresses = await this.pageObjects.brandsPage.resetAndGetNumberOfLines('manufacturer_address');
     await expect(numberOfBrandsAddresses).to.be.above(0);
   });
   // 1 : Filter brands
@@ -69,7 +69,9 @@ describe('Filter And Quick Edit Addresses', async () => {
     });
 
     it('should reset all filters', async function () {
-      const numberOfBrandsAddressesAfterReset = await this.pageObjects.brandsPage.resetFilters('manufacturer_address');
+      const numberOfBrandsAddressesAfterReset = await this.pageObjects.brandsPage.resetAndGetNumberOfLines(
+        'manufacturer_address',
+      );
       await expect(numberOfBrandsAddressesAfterReset).to.equal(numberOfBrandsAddresses);
     });
 
@@ -89,7 +91,9 @@ describe('Filter And Quick Edit Addresses', async () => {
     });
 
     it('should reset all filters', async function () {
-      const numberOfBrandsAddressesAfterReset = await this.pageObjects.brandsPage.resetFilters('manufacturer_address');
+      const numberOfBrandsAddressesAfterReset = await this.pageObjects.brandsPage.resetAndGetNumberOfLines(
+        'manufacturer_address',
+      );
       await expect(numberOfBrandsAddressesAfterReset).to.equal(numberOfBrandsAddresses);
     });
 
@@ -109,7 +113,9 @@ describe('Filter And Quick Edit Addresses', async () => {
     });
 
     it('should reset all filters', async function () {
-      const numberOfBrandsAddressesAfterReset = await this.pageObjects.brandsPage.resetFilters('manufacturer_address');
+      const numberOfBrandsAddressesAfterReset = await this.pageObjects.brandsPage.resetAndGetNumberOfLines(
+        'manufacturer_address',
+      );
       await expect(numberOfBrandsAddressesAfterReset).to.equal(numberOfBrandsAddresses);
     });
 
@@ -129,7 +135,9 @@ describe('Filter And Quick Edit Addresses', async () => {
     });
 
     it('should reset all filters', async function () {
-      const numberOfBrandsAddressesAfterReset = await this.pageObjects.brandsPage.resetFilters('manufacturer_address');
+      const numberOfBrandsAddressesAfterReset = await this.pageObjects.brandsPage.resetAndGetNumberOfLines(
+        'manufacturer_address',
+      );
       await expect(numberOfBrandsAddressesAfterReset).to.equal(numberOfBrandsAddresses);
     });
 
@@ -149,7 +157,9 @@ describe('Filter And Quick Edit Addresses', async () => {
     });
 
     it('should reset all filters', async function () {
-      const numberOfBrandsAddressesAfterReset = await this.pageObjects.brandsPage.resetFilters('manufacturer_address');
+      const numberOfBrandsAddressesAfterReset = await this.pageObjects.brandsPage.resetAndGetNumberOfLines(
+        'manufacturer_address',
+      );
       await expect(numberOfBrandsAddressesAfterReset).to.equal(numberOfBrandsAddresses);
     });
 
@@ -169,7 +179,9 @@ describe('Filter And Quick Edit Addresses', async () => {
     });
 
     it('should reset all filters', async function () {
-      const numberOfBrandsAddressesAfterReset = await this.pageObjects.brandsPage.resetFilters('manufacturer_address');
+      const numberOfBrandsAddressesAfterReset = await this.pageObjects.brandsPage.resetAndGetNumberOfLines(
+        'manufacturer_address',
+      );
       await expect(numberOfBrandsAddressesAfterReset).to.equal(numberOfBrandsAddresses);
     });
 
@@ -189,7 +201,9 @@ describe('Filter And Quick Edit Addresses', async () => {
     });
 
     it('should reset all filters', async function () {
-      const numberOfBrandsAddressesAfterReset = await this.pageObjects.brandsPage.resetFilters('manufacturer_address');
+      const numberOfBrandsAddressesAfterReset = await this.pageObjects.brandsPage.resetAndGetNumberOfLines(
+        'manufacturer_address',
+      );
       await expect(numberOfBrandsAddressesAfterReset).to.equal(numberOfBrandsAddresses);
     });
   });

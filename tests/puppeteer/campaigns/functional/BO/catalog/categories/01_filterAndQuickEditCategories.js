@@ -35,8 +35,10 @@ describe('Filter And Quick Edit Categories', async () => {
   after(async () => {
     await helper.closeBrowser(browser);
   });
+
   // Login into BO and go to categories page
   loginCommon.loginBO();
+
   it('should go to "Catalog>Categories" page', async function () {
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.catalogParentLink,
@@ -46,13 +48,9 @@ describe('Filter And Quick Edit Categories', async () => {
     const pageTitle = await this.pageObjects.categoriesPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.categoriesPage.pageTitle);
   });
+
   it('should reset all filters and get Number of Categories in BO', async function () {
-    if (await this.pageObjects.categoriesPage.elementVisible(this.pageObjects.categoriesPage.filterResetButton, 2000)) {
-      await this.pageObjects.categoriesPage.resetFilter();
-    }
-    numberOfCategories = await this.pageObjects.categoriesPage.getNumberFromText(
-      this.pageObjects.categoriesPage.categoryGridTitle,
-    );
+    numberOfCategories = await this.pageObjects.categoriesPage.resetAndGetNumberOfLines();
     await expect(numberOfCategories).to.be.above(0);
   });
   // 1 : Filter Categories with all inputs and selects in grid table
@@ -77,12 +75,12 @@ describe('Filter And Quick Edit Categories', async () => {
       }
       /* eslint-enable no-await-in-loop */
     });
+
     it('should reset all filters', async function () {
-      await this.pageObjects.categoriesPage.resetFilter();
-      const numberOfCategoriesAfterReset = await this.pageObjects.categoriesPage.getNumberFromText(
-        this.pageObjects.categoriesPage.categoryGridTitle);
+      const numberOfCategoriesAfterReset = await this.pageObjects.categoriesPage.resetAndGetNumberOfLines();
       await expect(numberOfCategoriesAfterReset).to.equal(numberOfCategories);
     });
+
     it('should filter by Name \'Accessories\'', async function () {
       await this.pageObjects.categoriesPage.filterCategories(
         'input',
@@ -101,12 +99,12 @@ describe('Filter And Quick Edit Categories', async () => {
       }
       /* eslint-enable no-await-in-loop */
     });
+
     it('should reset all filters', async function () {
-      await this.pageObjects.categoriesPage.resetFilter();
-      const numberOfCategoriesAfterReset = await this.pageObjects.categoriesPage.getNumberFromText(
-        this.pageObjects.categoriesPage.categoryGridTitle);
+      const numberOfCategoriesAfterReset = await this.pageObjects.categoriesPage.resetAndGetNumberOfLines();
       await expect(numberOfCategoriesAfterReset).to.equal(numberOfCategories);
     });
+
     it('should filter by Description', async function () {
       await this.pageObjects.categoriesPage.filterCategories(
         'input',
@@ -126,12 +124,12 @@ describe('Filter And Quick Edit Categories', async () => {
       }
       /* eslint-enable no-await-in-loop */
     });
+
     it('should reset all filters', async function () {
-      await this.pageObjects.categoriesPage.resetFilter();
-      const numberOfCategoriesAfterReset = await this.pageObjects.categoriesPage.getNumberFromText(
-        this.pageObjects.categoriesPage.categoryGridTitle);
+      const numberOfCategoriesAfterReset = await this.pageObjects.categoriesPage.resetAndGetNumberOfLines();
       await expect(numberOfCategoriesAfterReset).to.equal(numberOfCategories);
     });
+
     it('should filter by Position \'3\'', async function () {
       await this.pageObjects.categoriesPage.filterCategories(
         'input',
@@ -150,12 +148,12 @@ describe('Filter And Quick Edit Categories', async () => {
       }
       /* eslint-enable no-await-in-loop */
     });
+
     it('should reset all filters', async function () {
-      await this.pageObjects.categoriesPage.resetFilter();
-      const numberOfCategoriesAfterReset = await this.pageObjects.categoriesPage.getNumberFromText(
-        this.pageObjects.categoriesPage.categoryGridTitle);
+      const numberOfCategoriesAfterReset = await this.pageObjects.categoriesPage.resetAndGetNumberOfLines();
       await expect(numberOfCategoriesAfterReset).to.equal(numberOfCategories);
     });
+
     it('should filter by Displayed \'Yes\'', async function () {
       await this.pageObjects.categoriesPage.filterCategories(
         'select',
@@ -174,10 +172,9 @@ describe('Filter And Quick Edit Categories', async () => {
       }
       /* eslint-enable no-await-in-loop */
     });
+
     it('should reset all filters', async function () {
-      await this.pageObjects.categoriesPage.resetFilter();
-      const numberOfCategoriesAfterReset = await this.pageObjects.categoriesPage.getNumberFromText(
-        this.pageObjects.categoriesPage.categoryGridTitle);
+      const numberOfCategoriesAfterReset = await this.pageObjects.categoriesPage.resetAndGetNumberOfLines();
       await expect(numberOfCategoriesAfterReset).to.equal(numberOfCategories);
     });
   });
@@ -194,6 +191,7 @@ describe('Filter And Quick Edit Categories', async () => {
         this.pageObjects.categoriesPage.categoryGridTitle);
       await expect(numberOfCategoriesAfterFilter).to.be.at.above(0);
     });
+
     it('should disable the Category', async function () {
       const isActionPerformed = await this.pageObjects.categoriesPage.updateToggleColumnValue(
         '1',
@@ -212,6 +210,7 @@ describe('Filter And Quick Edit Categories', async () => {
       );
       await expect(isStatusChanged).to.be.true;
     });
+
     it('should enable the Category', async function () {
       const isActionPerformed = await this.pageObjects.categoriesPage.updateToggleColumnValue(
         '1',
@@ -229,10 +228,9 @@ describe('Filter And Quick Edit Categories', async () => {
       );
       await expect(isStatusChanged).to.be.true;
     });
+
     it('should reset all filters', async function () {
-      await this.pageObjects.categoriesPage.resetFilter();
-      const numberOfCategoriesAfterReset = await this.pageObjects.categoriesPage.getNumberFromText(
-        this.pageObjects.categoriesPage.categoryGridTitle);
+      const numberOfCategoriesAfterReset = await this.pageObjects.categoriesPage.resetAndGetNumberOfLines();
       await expect(numberOfCategoriesAfterReset).to.equal(numberOfCategories);
     });
   });

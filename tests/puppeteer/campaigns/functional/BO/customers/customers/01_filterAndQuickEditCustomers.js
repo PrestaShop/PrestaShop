@@ -37,6 +37,7 @@ describe('Filter And Quick Edit Customers', async () => {
   });
   // Login into BO and go to customers page
   loginCommon.loginBO();
+
   it('should go to Customers page', async function () {
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.customersParentLink,
@@ -45,13 +46,9 @@ describe('Filter And Quick Edit Customers', async () => {
     const pageTitle = await this.pageObjects.customersPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.customersPage.pageTitle);
   });
+
   it('should reset all filters and get Number of customers in BO', async function () {
-    if (await this.pageObjects.customersPage.elementVisible(this.pageObjects.customersPage.filterResetButton, 2000)) {
-      await this.pageObjects.customersPage.resetFilter();
-    }
-    numberOfCustomers = await this.pageObjects.customersPage.getNumberFromText(
-      this.pageObjects.customersPage.customerGridTitle,
-    );
+    numberOfCustomers = await this.pageObjects.customersPage.resetAndGetNumberOfLines();
     await expect(numberOfCustomers).to.be.above(0);
   });
   // 1 : Filter Customers with all inputs and selects in grid table
@@ -71,13 +68,12 @@ describe('Filter And Quick Edit Customers', async () => {
       }
       /* eslint-enable no-await-in-loop */
     });
+
     it('should reset all filters', async function () {
-      await this.pageObjects.customersPage.resetFilter();
-      const numberOfCustomersAfterReset = await this.pageObjects.customersPage.getNumberFromText(
-        this.pageObjects.customersPage.customerGridTitle,
-      );
+      const numberOfCustomersAfterReset = await this.pageObjects.customersPage.resetAndGetNumberOfLines();
       await expect(numberOfCustomersAfterReset).to.equal(numberOfCustomers);
     });
+
     it('should filter by Social title \'Mr.\'', async function () {
       await this.pageObjects.customersPage.filterCustomers(
         'select',
@@ -97,13 +93,12 @@ describe('Filter And Quick Edit Customers', async () => {
       }
       /* eslint-enable no-await-in-loop */
     });
+
     it('should reset all filters', async function () {
-      await this.pageObjects.customersPage.resetFilter();
-      const numberOfCustomersAfterReset = await this.pageObjects.customersPage.getNumberFromText(
-        this.pageObjects.customersPage.customerGridTitle,
-      );
+      const numberOfCustomersAfterReset = await this.pageObjects.customersPage.resetAndGetNumberOfLines();
       await expect(numberOfCustomersAfterReset).to.equal(numberOfCustomers);
     });
+
     it('should filter by First name \'John\'', async function () {
       await this.pageObjects.customersPage.filterCustomers(
         'input',
@@ -123,13 +118,12 @@ describe('Filter And Quick Edit Customers', async () => {
       }
       /* eslint-enable no-await-in-loop */
     });
+
     it('should reset all filters', async function () {
-      await this.pageObjects.customersPage.resetFilter();
-      const numberOfCustomersAfterReset = await this.pageObjects.customersPage.getNumberFromText(
-        this.pageObjects.customersPage.customerGridTitle,
-      );
+      const numberOfCustomersAfterReset = await this.pageObjects.customersPage.resetAndGetNumberOfLines();
       await expect(numberOfCustomersAfterReset).to.equal(numberOfCustomers);
     });
+
     it('should filter by Last name \'DOE\'', async function () {
       await this.pageObjects.customersPage.filterCustomers(
         'input',
@@ -149,13 +143,12 @@ describe('Filter And Quick Edit Customers', async () => {
       }
       /* eslint-enable no-await-in-loop */
     });
+
     it('should reset all filters', async function () {
-      await this.pageObjects.customersPage.resetFilter();
-      const numberOfCustomersAfterReset = await this.pageObjects.customersPage.getNumberFromText(
-        this.pageObjects.customersPage.customerGridTitle,
-      );
+      const numberOfCustomersAfterReset = await this.pageObjects.customersPage.resetAndGetNumberOfLines();
       await expect(numberOfCustomersAfterReset).to.equal(numberOfCustomers);
     });
+
     it('should filter by Email \'pub@prestashop.com\'', async function () {
       await this.pageObjects.customersPage.filterCustomers(
         'input',
@@ -175,19 +168,14 @@ describe('Filter And Quick Edit Customers', async () => {
       }
       /* eslint-enable no-await-in-loop */
     });
+
     it('should reset all filters', async function () {
-      await this.pageObjects.customersPage.resetFilter();
-      const numberOfCustomersAfterReset = await this.pageObjects.customersPage.getNumberFromText(
-        this.pageObjects.customersPage.customerGridTitle,
-      );
+      const numberOfCustomersAfterReset = await this.pageObjects.customersPage.resetAndGetNumberOfLines();
       await expect(numberOfCustomersAfterReset).to.equal(numberOfCustomers);
     });
+
     it('should filter by Enabled \'Yes\'', async function () {
-      await this.pageObjects.customersPage.filterCustomers(
-        'select',
-        'active',
-        DefaultAccount.enabled,
-      );
+      await this.pageObjects.customersPage.filterCustomersSwitch('active', DefaultAccount.enabled);
       const numberOfCustomersAfterFilter = await this.pageObjects.customersPage.getNumberFromText(
         this.pageObjects.customersPage.customerGridTitle,
       );
@@ -201,18 +189,14 @@ describe('Filter And Quick Edit Customers', async () => {
       }
       /* eslint-enable no-await-in-loop */
     });
+
     it('should reset all filters', async function () {
-      await this.pageObjects.customersPage.resetFilter();
-      const numberOfCustomersAfterReset = await this.pageObjects.customersPage.getNumberFromText(
-        this.pageObjects.customersPage.customerGridTitle);
+      const numberOfCustomersAfterReset = await this.pageObjects.customersPage.resetAndGetNumberOfLines();
       await expect(numberOfCustomersAfterReset).to.equal(numberOfCustomers);
     });
+
     it('should filter by Newsletter \'Yes\'', async function () {
-      await this.pageObjects.customersPage.filterCustomers(
-        'select',
-        'newsletter',
-        DefaultAccount.newsletter,
-      );
+      await this.pageObjects.customersPage.filterCustomersSwitch('newsletter', DefaultAccount.newsletter);
       const numberOfCustomersAfterFilter = await this.pageObjects.customersPage.getNumberFromText(
         this.pageObjects.customersPage.customerGridTitle,
       );
@@ -226,19 +210,14 @@ describe('Filter And Quick Edit Customers', async () => {
       }
       /* eslint-enable no-await-in-loop */
     });
+
     it('should reset all filters', async function () {
-      await this.pageObjects.customersPage.resetFilter();
-      const numberOfCustomersAfterReset = await this.pageObjects.customersPage.getNumberFromText(
-        this.pageObjects.customersPage.customerGridTitle,
-      );
+      const numberOfCustomersAfterReset = await this.pageObjects.customersPage.resetAndGetNumberOfLines();
       await expect(numberOfCustomersAfterReset).to.equal(numberOfCustomers);
     });
+
     it('should filter by Partner Offers \'YES\'', async function () {
-      await this.pageObjects.customersPage.filterCustomers(
-        'select',
-        'optin',
-        DefaultAccount.partnerOffers,
-      );
+      await this.pageObjects.customersPage.filterCustomersSwitch('optin', DefaultAccount.partnerOffers);
       const numberOfCustomersAfterFilter = await this.pageObjects.customersPage.getNumberFromText(
         this.pageObjects.customersPage.customerGridTitle,
       );
@@ -252,11 +231,9 @@ describe('Filter And Quick Edit Customers', async () => {
       }
       /* eslint-enable no-await-in-loop */
     });
+
     it('should reset all filters', async function () {
-      await this.pageObjects.customersPage.resetFilter();
-      const numberOfCustomersAfterReset = await this.pageObjects.customersPage.getNumberFromText(
-        this.pageObjects.customersPage.customerGridTitle,
-      );
+      const numberOfCustomersAfterReset = await this.pageObjects.customersPage.resetAndGetNumberOfLines();
       await expect(numberOfCustomersAfterReset).to.equal(numberOfCustomers);
     });
   });
@@ -274,6 +251,7 @@ describe('Filter And Quick Edit Customers', async () => {
       );
       await expect(numberOfCustomersAfterFilter).to.be.at.above(0);
     });
+
     it('should disable first Customer', async function () {
       const isActionPerformed = await this.pageObjects.customersPage.updateToggleColumnValue(
         '1',
@@ -293,6 +271,7 @@ describe('Filter And Quick Edit Customers', async () => {
       );
       await expect(isStatusChanged).to.be.true;
     });
+
     it('should enable first Customer', async function () {
       const isActionPerformed = await this.pageObjects.customersPage.updateToggleColumnValue(
         '1',
@@ -312,6 +291,7 @@ describe('Filter And Quick Edit Customers', async () => {
       );
       await expect(isStatusChanged).to.be.true;
     });
+
     it('should Change Newsletter to "No" for first Customer', async function () {
       const isActionPerformed = await this.pageObjects.customersPage.updateToggleColumnValue(
         '1',
@@ -331,6 +311,7 @@ describe('Filter And Quick Edit Customers', async () => {
       );
       await expect(isStatusChanged).to.be.true;
     });
+
     it('should Change Newsletter to "Yes" for first Customer', async function () {
       const isActionPerformed = await this.pageObjects.customersPage.updateToggleColumnValue(
         '1',
@@ -350,6 +331,7 @@ describe('Filter And Quick Edit Customers', async () => {
       );
       await expect(isStatusChanged).to.be.true;
     });
+
     it('should Change Partner offers to "No" for first Customer', async function () {
       const isActionPerformed = await this.pageObjects.customersPage.updateToggleColumnValue(
         '1',
@@ -369,6 +351,7 @@ describe('Filter And Quick Edit Customers', async () => {
       );
       await expect(isStatusChanged).to.be.true;
     });
+
     it('should Change Partner offers to "Yes" for first Customer', async function () {
       const isActionPerformed = await this.pageObjects.customersPage.updateToggleColumnValue(
         '1',
@@ -382,8 +365,7 @@ describe('Filter And Quick Edit Customers', async () => {
         await expect(resultMessage).to.contains(this.pageObjects.customersPage.successfulUpdateStatusMessage);
       }
       const isStatusChanged = await this.pageObjects.customersPage.elementVisible(
-        this.pageObjects.customersPage.customersListColumnValidIcon.replace('%ROW', 1)
-          .replace('%COLUMN', 'optin'),
+        this.pageObjects.customersPage.customersListColumnValidIcon.replace('%ROW', 1).replace('%COLUMN', 'optin'),
         100,
       );
       await expect(isStatusChanged).to.be.true;
