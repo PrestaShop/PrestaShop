@@ -49,7 +49,6 @@ describe('Filter And Quick Edit Pages', async () => {
     await expect(pageTitle).to.contains(this.pageObjects.pagesPage.pageTitle);
   });
 
-
   // 1 : Filter Pages with all inputs and selects in grid table
   describe('Filter Pages', async () => {
     it('should reset all filters and get number of pages in BO', async function () {
