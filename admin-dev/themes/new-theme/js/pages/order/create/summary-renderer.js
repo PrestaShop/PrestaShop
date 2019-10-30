@@ -37,6 +37,7 @@ export default class SummaryRenderer {
     this.$totalTaxes = $(createOrderMap.summaryTotalTaxes);
     this.$totalWithoutTax = $(createOrderMap.summaryTotalWithoutTax);
     this.$totalWithTax = $(createOrderMap.summaryTotalWithTax);
+    this.$placeOrderCartIdField = $(createOrderMap.placeOrderCartIdField);
   }
 
   /**
@@ -59,6 +60,7 @@ export default class SummaryRenderer {
     this.$totalTaxes.text(cartSummary.totalTaxes);
     this.$totalWithoutTax.text(cartSummary.totalPriceWithTaxes);
     this.$totalWithTax.text(cartSummary.totalPriceWithoutTaxes);
+    this.$placeOrderCartIdField.val(cartInfo.cartId);
 
     this._showSummaryBlock();
   }
