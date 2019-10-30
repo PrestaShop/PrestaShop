@@ -142,9 +142,15 @@ class OrderForViewing
      */
     private $isVirtual;
 
+    /**
+     * @var int
+     */
+    private $carrierId;
+
     public function __construct(
         int $orderId,
         int $currencyId,
+        int $carrierId,
         string $reference,
         bool $isVirtual,
         string $taxMethod,
@@ -188,6 +194,7 @@ class OrderForViewing
         $this->discounts = $discounts;
         $this->createdAt = $createdAt;
         $this->isVirtual = $isVirtual;
+        $this->carrierId = $carrierId;
     }
 
     /**
@@ -204,6 +211,14 @@ class OrderForViewing
     public function getCurrencyId(): int
     {
         return $this->currencyId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCarrierId(): int
+    {
+        return $this->carrierId;
     }
 
     /**

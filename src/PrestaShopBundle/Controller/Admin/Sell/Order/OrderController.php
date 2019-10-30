@@ -278,7 +278,9 @@ class OrderController extends FrameworkBundleAdminController
         ]);
         $addProductToOrderForm = $this->createForm(AddProductToOrderType::class);
         $updateOrderProductForm = $this->createForm(UpdateProductInOrderType::class);
-        $updateOrderShippingForm = $this->createForm(UpdateOrderShippingType::class, [], [
+        $updateOrderShippingForm = $this->createForm(UpdateOrderShippingType::class, [
+            'new_carrier_id' => $orderForViewing->getCarrierId(),
+        ], [
             'order_id' => $orderId,
         ]);
 
