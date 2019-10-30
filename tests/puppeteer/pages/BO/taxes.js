@@ -56,6 +56,14 @@ module.exports = class Taxes extends BOBasePage {
     if (await this.elementVisible(this.resetFilterButton, 2000)) {
       await this.clickAndWaitForNavigation(this.resetFilterButton);
     }
+  }
+
+  /**
+   * Reset Filter And get number of elements in list
+   * @return {Promise<integer>}
+   */
+  async resetAndGetNumberOfLines() {
+    await this.resetFilter();
     return this.getNumberFromText(this.gridHeaderTitle);
   }
 

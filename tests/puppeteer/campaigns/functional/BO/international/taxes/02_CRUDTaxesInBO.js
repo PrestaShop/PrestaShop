@@ -51,7 +51,7 @@ describe('Create, Update and Delete Tax in BO', async () => {
     await expect(pageTitle).to.contains(this.pageObjects.taxesPage.pageTitle);
   });
   it('should reset all filters', async function () {
-    numberOfTaxes = await this.pageObjects.taxesPage.resetFilter();
+    numberOfTaxes = await this.pageObjects.taxesPage.resetAndGetNumberOfLines();
     await expect(numberOfTaxes).to.be.above(0);
   });
   // 1 : Create tax with data generated from faker
@@ -110,14 +110,14 @@ describe('Create, Update and Delete Tax in BO', async () => {
     it('should update tax', async function () {
       const textResult = await this.pageObjects.addTaxPage.createEditTax(editTaxData);
       await expect(textResult).to.equal(this.pageObjects.taxesPage.successfulUpdateMessage);
-      await this.pageObjects.taxesPage.resetFilter();
+      await this.pageObjects.taxesPage.resetAndGetNumberOfLines();
       const numberOfTaxesAfterUpdate = await this.pageObjects.taxesPage.getNumberFromText(
         this.pageObjects.taxesPage.gridHeaderTitle,
       );
       await expect(numberOfTaxesAfterUpdate).to.be.equal(numberOfTaxes + 1);
     });
     it('should reset all filters', async function () {
-      const numberOfTaxesAfterReset = await this.pageObjects.taxesPage.resetFilter();
+      const numberOfTaxesAfterReset = await this.pageObjects.taxesPage.resetAndGetNumberOfLines();
       await expect(numberOfTaxesAfterReset).to.equal(numberOfTaxes + 1);
     });
   });
@@ -156,7 +156,7 @@ describe('Create, Update and Delete Tax in BO', async () => {
     it('should delete Tax', async function () {
       const textResult = await this.pageObjects.taxesPage.deleteTax('1');
       await expect(textResult).to.equal(this.pageObjects.taxesPage.successfulDeleteMessage);
-      const numberOfTaxesAfterDelete = await this.pageObjects.taxesPage.resetFilter();
+      const numberOfTaxesAfterDelete = await this.pageObjects.taxesPage.resetAndGetNumberOfLines();
       await expect(numberOfTaxesAfterDelete).to.be.equal(numberOfTaxes);
     });
   });
