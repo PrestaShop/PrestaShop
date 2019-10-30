@@ -101,6 +101,7 @@ export default {
   summaryTotalTaxes: '.js-total-taxes',
   summaryTotalWithoutTax: '.js-total-without-tax',
   summaryTotalWithTax: '.js-total-with-tax',
+  placeOrderCartIdField: '.js-place-order-cart-id',
 
   // selectors related to shipping block
   shippingBlock: '#shipping-block',
