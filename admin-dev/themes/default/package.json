@@ -12,6 +12,7 @@
     "devDependencies": {
         "@babel/core": "^7.0.0-rc.1",
         "@babel/preset-env": "^7.0.0-rc.1",
+        "@openfonts/ubuntu-condensed_latin": "^1.43.0",
         "babel-loader": "^8.0.2",
         "bourbon": "^4.3.4",
         "css-loader": "^1.0.0",
@@ -19,6 +20,7 @@
         "material-design-icons": "^2",
         "mini-css-extract-plugin": "^0.4.2",
         "node-sass": "^4.9.3",
+        "open-sans-fonts": "^1.5.1",
         "optimize-css-assets-webpack-plugin": "^5.0.0",
         "path": "^0.12.7",
         "postcss-cssnext": "^3.1.0",
