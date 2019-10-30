@@ -108,8 +108,10 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
         'todelete',
       );
       const textResult = await this.pageObjects.pagesPage.getTextContent(
-        this.pageObjects.pagesPage.listTableColumn.replace('%TABLE', 'cms_page_category')
-          .replace('%ROW', '1').replace('%COLUMN', 'name'),
+        this.pageObjects.pagesPage.listTableColumn
+          .replace('%TABLE', 'cms_page_category')
+          .replace('%ROW', '1')
+          .replace('%COLUMN', 'name'),
       );
       await expect(textResult).to.contains('todelete');
     });
@@ -126,8 +128,10 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
       /* eslint-disable no-await-in-loop */
       for (let i = 1; i <= numberOfCategoriesInGrid; i++) {
         const textColumn = await this.pageObjects.pagesPage.getTextContent(
-          this.pageObjects.pagesPage.listTableColumn.replace('%TABLE', 'cms_page_category')
-            .replace('%ROW', i).replace('%COLUMN', 'active'),
+          this.pageObjects.pagesPage.listTableColumn
+            .replace('%TABLE', 'cms_page_category')
+            .replace('%ROW', i)
+            .replace('%COLUMN', 'active'),
         );
         await expect(textColumn).to.contains('clear');
       }
@@ -143,8 +147,10 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
       /* eslint-disable no-await-in-loop */
       for (let i = 1; i <= numberOfCategoriesInGrid; i++) {
         const textColumn = await this.pageObjects.pagesPage.getTextContent(
-          this.pageObjects.pagesPage.listTableColumn.replace('%TABLE', 'cms_page_category')
-            .replace('%ROW', i).replace('%COLUMN', 'active'),
+          this.pageObjects.pagesPage.listTableColumn
+            .replace('%TABLE', 'cms_page_category')
+            .replace('%ROW', i)
+            .replace('%COLUMN', 'active'),
         );
         await expect(textColumn).to.contains('check');
       }
@@ -161,8 +167,10 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
         'todelete',
       );
       const textResult = await this.pageObjects.pagesPage.getTextContent(
-        this.pageObjects.pagesPage.listTableColumn.replace('%TABLE', 'cms_page_category')
-          .replace('%ROW', '1').replace('%COLUMN', 'name'),
+        this.pageObjects.pagesPage.listTableColumn
+          .replace('%TABLE', 'cms_page_category')
+          .replace('%ROW', '1')
+          .replace('%COLUMN', 'name'),
       );
       await expect(textResult).to.contains('todelete');
     });

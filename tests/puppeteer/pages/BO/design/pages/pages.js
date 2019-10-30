@@ -102,12 +102,10 @@ module.exports = class Pages extends BOBasePage {
     const deleteRowLink = await this.replaceAll(this.deleteRowLink, '%TABLE', table);
     // Click on dropDown
     await Promise.all([
-      this.page.click(dropdownToggleButton
-        .replace('%ROW', row).replace('%COLUMN', 'actions')),
-      this.page.waitForSelector(
-        `${dropdownToggleButton
-          .replace('%ROW', row).replace('%COLUMN', 'actions')}[aria-expanded='true']`,
-        {visible: true},
+      this.page.click(dropdownToggleButton.replace('%ROW', row).replace('%COLUMN', 'actions')),
+      this.page.waitForSelector(`${dropdownToggleButton
+        .replace('%ROW', row)
+        .replace('%COLUMN', 'actions')}[aria-expanded='true']`, {visible: true},
       ),
     ]);
     // Click on delete and wait for modal
@@ -127,6 +125,8 @@ module.exports = class Pages extends BOBasePage {
     const selectAllRowsLabel = await this.replaceAll(this.selectAllRowsLabel, '%TABLE', table);
     const bulkActionsToggleButton = await this.replaceAll(this.bulkActionsToggleButton, '%TABLE', table);
     const bulkActionsDeleteButton = await this.replaceAll(this.bulkActionsDeleteButton, '%TABLE', table);
+    // Add listener to dialog to accept deletion
+    this.dialogListener();
     // Click on Select All
     await Promise.all([
       this.page.click(selectAllRowsLabel),
@@ -139,7 +139,6 @@ module.exports = class Pages extends BOBasePage {
     ]);
     // Click on delete and wait for modal
     await this.page.click(bulkActionsDeleteButton);
-    this.dialogListener();
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 
@@ -162,15 +161,21 @@ module.exports = class Pages extends BOBasePage {
    */
   async updateToggleColumnValue(table, row, valueWanted = true) {
     if (await this.getToggleColumnValue(table, row) !== valueWanted) {
-      this.page.click(this.listTableColumn.replace('%TABLE', table).replace('%ROW', row)
+      this.page.click(this.listTableColumn
+        .replace('%TABLE', table)
+        .replace('%ROW', row)
         .replace('%COLUMN', 'active'),
       );
       if (valueWanted) {
-        await this.page.waitForSelector(this.columnValidIcon.replace('%TABLE', table)
-          .replace('%ROW', row));
+        await this.page.waitForSelector(this.columnValidIcon
+          .replace('%TABLE', table)
+          .replace('%ROW', row),
+        );
       } else {
-        await this.page.waitForSelector(this.columnNotValidIcon.replace('%TABLE', table)
-          .replace('%ROW', row));
+        await this.page.waitForSelector(this.columnNotValidIcon
+          .replace('%TABLE', table)
+          .replace('%ROW', row),
+        );
       }
       return true;
     }
@@ -211,11 +216,13 @@ module.exports = class Pages extends BOBasePage {
   async goToEditCategoryPage(row) {
     // Click on dropDown
     await Promise.all([
-      this.page.click(this.listTableToggleDropDown.replace('%TABLE', 'cms_page_category')
-        .replace('%ROW', row)),
-      this.page.waitForSelector(
-        `${this.listTableToggleDropDown.replace('%TABLE', 'cms_page_category')
-          .replace('%ROW', row)}[aria-expanded='true']`, {visible: true},
+      this.page.click(this.listTableToggleDropDown
+        .replace('%TABLE', 'cms_page_category')
+        .replace('%ROW', row),
+      ),
+      this.page.waitForSelector(`${this.listTableToggleDropDown
+        .replace('%TABLE', 'cms_page_category')
+        .replace('%ROW', row)}[aria-expanded='true']`, {visible: true},
       ),
     ]);
     // Click on edit
@@ -246,7 +253,7 @@ module.exports = class Pages extends BOBasePage {
    * @return {Promise<void>}
    */
   async viewCategory(row) {
-    await this.clickAndWaitForNavigation(this.pageObjects.pagesPage.categoriesListTableViewLink
+    await this.clickAndWaitForNavigation(this.categoriesListTableViewLink
       .replace('%ROW', row),
     );
   }

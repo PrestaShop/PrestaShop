@@ -96,8 +96,10 @@ describe('Create Pages, Then disable / Enable and Delete with Bulk actions', asy
         'todelete',
       );
       const textResult = await this.pageObjects.pagesPage.getTextContent(
-        this.pageObjects.pagesPage.listTableColumn.replace('%TABLE', 'cms_page')
-          .replace('%ROW', '1').replace('%COLUMN', 'meta_title'),
+        this.pageObjects.pagesPage.listTableColumn
+          .replace('%TABLE', 'cms_page')
+          .replace('%ROW', '1')
+          .replace('%COLUMN', 'meta_title'),
       );
       await expect(textResult).to.contains('todelete');
     });
@@ -112,7 +114,9 @@ describe('Create Pages, Then disable / Enable and Delete with Bulk actions', asy
       /* eslint-disable no-await-in-loop */
       for (let i = 1; i <= numberOfPagesInGrid; i++) {
         const textColumn = await this.pageObjects.pagesPage.getTextContent(
-          this.pageObjects.pagesPage.listTableColumn.replace('%TABLE', 'cms_page').replace('%ROW', i)
+          this.pageObjects.pagesPage.listTableColumn
+            .replace('%TABLE', 'cms_page')
+            .replace('%ROW', i)
             .replace('%COLUMN', 'active'),
         );
         await expect(textColumn).to.contains('clear');
@@ -130,8 +134,10 @@ describe('Create Pages, Then disable / Enable and Delete with Bulk actions', asy
       /* eslint-disable no-await-in-loop */
       for (let i = 1; i <= numberOfPagesInGrid; i++) {
         const textColumn = await this.pageObjects.pagesPage.getTextContent(
-          this.pageObjects.pagesPage.listTableColumn.replace('%TABLE', 'cms_page')
-            .replace('%ROW', i).replace('%COLUMN', 'active'),
+          this.pageObjects.pagesPage.listTableColumn
+            .replace('%TABLE', 'cms_page')
+            .replace('%ROW', i)
+            .replace('%COLUMN', 'active'),
         );
         await expect(textColumn).to.contains('check');
       }
@@ -148,8 +154,10 @@ describe('Create Pages, Then disable / Enable and Delete with Bulk actions', asy
         'todelete',
       );
       const textResult = await this.pageObjects.pagesPage.getTextContent(
-        this.pageObjects.pagesPage.listTableColumn.replace('%TABLE', 'cms_page')
-          .replace('%ROW', '1').replace('%COLUMN', 'meta_title'),
+        this.pageObjects.pagesPage.listTableColumn
+          .replace('%TABLE', 'cms_page')
+          .replace('%ROW', '1')
+          .replace('%COLUMN', 'meta_title'),
       );
       await expect(textResult).to.contains('todelete');
     });

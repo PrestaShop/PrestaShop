@@ -29,7 +29,6 @@ module.exports = class BOBasePage extends CommonPage {
     // Catalog
     this.catalogParentLink = 'li#subtab-AdminCatalog';
     // Products
-    // Catalog
     this.productsParentLink = 'li#subtab-AdminCatalog';
     this.productsLink = '#subtab-AdminProducts';
     // Categories
