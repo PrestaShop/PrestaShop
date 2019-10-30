@@ -27,8 +27,7 @@ module.exports = class Pages extends BOBasePage {
     // Bulk Actions
     this.selectAllRowsLabel = `${this.listForm} .md-checkbox label`;
     this.bulkActionsToggleButton = `${this.listForm} button.js-bulk-actions-btn`;
-    this.bulkActionsDeleteButton = `${this.listForm} 
-    #%TABLE_grid_bulk_action_delete_bulk`;
+    this.bulkActionsDeleteButton = `${this.listForm} #%TABLE_grid_bulk_action_delete_bulk`;
     this.bulkActionsEnableButton = `${this.listForm} #%TABLE_grid_bulk_action_enable_selection`;
     this.bulkActionsDisableButton = `${this.listForm} #%TABLE_grid_bulk_action_disable_selection`;
     // Filters
@@ -223,5 +222,51 @@ module.exports = class Pages extends BOBasePage {
     this.clickAndWaitForNavigation(this.listTableEditLink
       .replace('%TABLE', 'cms_page_category')
       .replace('%ROW', row));
+  }
+
+  /**
+   * Go to new Page Category page
+   * @return {Promise<void>}
+   */
+  async goToAddNewPageCategory() {
+    await this.clickAndWaitForNavigation(this.addNewPageCategoryLink);
+  }
+
+  /**
+   * Back to Pages page
+   * @return {Promise<void>}
+   */
+  async backToList() {
+    await this.clickAndWaitForNavigation(this.backToListButton,);
+  }
+
+  /**
+   * View Category
+   * @param row, row in table
+   * @return {Promise<void>}
+   */
+  async viewCategory(row) {
+    await this.clickAndWaitForNavigation(this.pageObjects.pagesPage.categoriesListTableViewLink
+      .replace('%ROW', row),
+    );
+  }
+
+  /**
+   * Go to new Page page
+   * @return {Promise<void>}
+   */
+  async goToAddNewPage() {
+    await this.clickAndWaitForNavigation(this.addNewPageLink);
+  }
+
+  /**
+   * Go to Edit page Page
+   * @param row, row in table
+   * @return {Promise<void>}
+   */
+  async goToEditPage(row) {
+    await this.clickAndWaitForNavigation(this.listTableEditLink
+      .replace('%TABLE', 'cms_page').replace('%ROW', row),
+    );
   }
 };

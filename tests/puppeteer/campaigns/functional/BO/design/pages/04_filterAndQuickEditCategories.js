@@ -60,9 +60,7 @@ describe('Filter And Quick Edit Categories', async () => {
     // Create 2 categories
     describe('Create Categories', async () => {
       it('should go to add new page category', async function () {
-        await this.pageObjects.pagesPage.clickAndWaitForNavigation(
-          this.pageObjects.pagesPage.addNewPageCategoryLink,
-        );
+        await this.pageObjects.pagesPage.goToAddNewPageCategory();
         const pageTitle = await this.pageObjects.addPageCategoryPage.getPageTitle();
         await expect(pageTitle).to.contains(this.pageObjects.addPageCategoryPage.pageTitleCreate);
       });
@@ -73,17 +71,13 @@ describe('Filter And Quick Edit Categories', async () => {
       });
 
       it('should go back to categories list', async function () {
-        await this.pageObjects.pagesPage.clickAndWaitForNavigation(
-          this.pageObjects.pagesPage.backToListButton,
-        );
+        await this.pageObjects.pagesPage.backToList();
         const pageTitle = await this.pageObjects.pagesPage.getPageTitle();
         await expect(pageTitle).to.contains(this.pageObjects.pagesPage.pageTitle);
       });
 
       it('should go to add new page category', async function () {
-        await this.pageObjects.pagesPage.clickAndWaitForNavigation(
-          this.pageObjects.pagesPage.addNewPageCategoryLink,
-        );
+        await this.pageObjects.pagesPage.goToAddNewPageCategory();
         const pageTitle = await this.pageObjects.addPageCategoryPage.getPageTitle();
         await expect(pageTitle).to.contains(this.pageObjects.addPageCategoryPage.pageTitleCreate);
       });
@@ -94,9 +88,7 @@ describe('Filter And Quick Edit Categories', async () => {
       });
 
       it('should go back to categories list', async function () {
-        await this.pageObjects.pagesPage.clickAndWaitForNavigation(
-          this.pageObjects.pagesPage.backToListButton,
-        );
+        await this.pageObjects.pagesPage.backToList();
         const pageTitle = await this.pageObjects.pagesPage.getPageTitle();
         await expect(pageTitle).to.contains(this.pageObjects.pagesPage.pageTitle);
       });

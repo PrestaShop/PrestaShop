@@ -65,9 +65,7 @@ describe('Create Pages, Then disable / Enable and Delete with Bulk actions', asy
   // 1 : Create 2 pages In BO
   describe('Create 2 pages', async () => {
     it('should go to add new page', async function () {
-      await this.pageObjects.pagesPage.clickAndWaitForNavigation(
-        this.pageObjects.pagesPage.addNewPageLink,
-      );
+      await this.pageObjects.pagesPage.goToAddNewPage();
       const pageTitle = await this.pageObjects.addPageCategoryPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.addPageCategoryPage.pageTitleCreate);
     });
@@ -78,9 +76,7 @@ describe('Create Pages, Then disable / Enable and Delete with Bulk actions', asy
     });
 
     it('should go to add new page page', async function () {
-      await this.pageObjects.pagesPage.clickAndWaitForNavigation(
-        this.pageObjects.pagesPage.addNewPageLink,
-      );
+      await this.pageObjects.pagesPage.goToAddNewPage();
       const pageTitle = await this.pageObjects.addPageCategoryPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.addPageCategoryPage.pageTitleCreate);
     });
