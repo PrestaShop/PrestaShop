@@ -248,15 +248,19 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
         editCategoryData.name,
       );
       const textColumn = await this.pageObjects.pagesPage.getTextContent(
-        this.pageObjects.pagesPage.listTableColumn.replace('%TABLE', 'cms_page_category')
-          .replace('%ROW', 1).replace('%COLUMN', 'name'),
+        this.pageObjects.pagesPage.listTableColumn
+          .replace('%TABLE', 'cms_page_category')
+          .replace('%ROW', 1)
+          .replace('%COLUMN', 'name'),
       );
       await expect(textColumn).to.contains(editCategoryData.name);
     });
 
     it('should go to FO and check the updated category', async function () {
       const pageCategoryID = await this.pageObjects.pagesPage.getNumberFromText(
-        this.pageObjects.pagesPage.listTableColumn.replace('%TABLE', 'cms_page_category').replace('%ROW', 1)
+        this.pageObjects.pagesPage.listTableColumn
+          .replace('%TABLE', 'cms_page_category')
+          .replace('%ROW', 1)
           .replace('%COLUMN', 'id_cms_category',
           ),
       );

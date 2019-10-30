@@ -92,9 +92,7 @@ describe('Filter And Quick Edit Pages', async () => {
       const numberOfPagesAfterFilter = await this.pageObjects.pagesPage.getNumberFromText(
         this.pageObjects.pagesPage.gridTitle.replace('%TABLE', 'cms_page'),
       );
-      if (numberOfPages === 0) {
-        await expect(numberOfPagesAfterFilter).to.be.equal(numberOfPages + 1);
-      } else await expect(numberOfPagesAfterFilter).to.be.at.most(numberOfPages);
+      await expect(numberOfPagesAfterFilter).to.be.at.most(numberOfPages);
       const textColumn = await this.pageObjects.pagesPage.getTextContent(
         this.pageObjects.pagesPage.listTableColumn
           .replace('%TABLE', 'cms_page')

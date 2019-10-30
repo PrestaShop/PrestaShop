@@ -101,8 +101,8 @@ describe('Filter And Quick Edit Categories', async () => {
         await expect(numberOfCategories).to.be.above(0);
       });
 
-      it('should filter by Id \'2\'', async function () {
-        await this.pageObjects.pagesPage.filterTable('cms_page_category', 'input', 'id_cms_category', '2');
+      it('should filter by Id \'4\'', async function () {
+        await this.pageObjects.pagesPage.filterTable('cms_page_category', 'input', 'id_cms_category', '4');
         const numberOfCategoriesAfterFilter = await this.pageObjects.pagesPage.getNumberFromText(
           this.pageObjects.pagesPage.gridTitle.replace('%TABLE', 'cms_page_category'),
         );
@@ -113,7 +113,7 @@ describe('Filter And Quick Edit Categories', async () => {
             .replace('%ROW', 1)
             .replace('%COLUMN', 'id_cms_category'),
         );
-        await expect(textColumn).to.contains('2');
+        await expect(textColumn).to.contains('4');
       });
 
       it('should reset all filters', async function () {
@@ -252,7 +252,8 @@ describe('Filter And Quick Edit Categories', async () => {
         await expect(resultMessage).to.contains(this.pageObjects.pagesPage.successfulUpdateStatusMessage);
       }
       const isStatusChanged = await this.pageObjects.pagesPage.elementVisible(
-        this.pageObjects.pagesPage.columnNotValidIcon.replace('%TABLE', 'cms_page_category')
+        this.pageObjects.pagesPage.columnNotValidIcon
+          .replace('%TABLE', 'cms_page_category')
           .replace('%ROW', 1),
         100,
       );
@@ -271,7 +272,8 @@ describe('Filter And Quick Edit Categories', async () => {
         await expect(resultMessage).to.contains(this.pageObjects.pagesPage.successfulUpdateStatusMessage);
       }
       const isStatusChanged = await this.pageObjects.pagesPage.elementVisible(
-        this.pageObjects.pagesPage.columnValidIcon.replace('%TABLE', 'cms_page_category')
+        this.pageObjects.pagesPage.columnValidIcon
+          .replace('%TABLE', 'cms_page_category')
           .replace('%ROW', 1),
         100,
       );
