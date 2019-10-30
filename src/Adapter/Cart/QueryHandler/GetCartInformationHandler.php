@@ -100,8 +100,8 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
             (int) $language->id,
             $this->extractCartRulesFromLegacySummary($legacySummary, $currency),
             $this->getAddresses($cart),
-            $this->extractShippingFromLegacySummary($cart, $legacySummary),
-            []
+            $this->extractSummaryFromLegacySummary($legacySummary),
+            $this->extractShippingFromLegacySummary($cart, $legacySummary)
         );
     }
 
@@ -237,5 +237,22 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
 
         //make sure array is not associative
         return array_values($deliveryOptions);
+    }
+
+    /**
+     * @param array $legacySummary
+     *
+     * @return CartInformation\CartSummary
+     */
+    private function extractSummaryFromLegacySummary(array $legacySummary)
+    {
+        return new CartInformation\CartSummary(
+            $legacySummary['total_products'],
+            $legacySummary['total_discounts_tax_exc'],
+            $legacySummary['total_shipping_tax_exc'],
+            $legacySummary['total_tax'],
+            $legacySummary['total_price'],
+            $legacySummary['total_price_without_tax']
+        );
     }
 }
