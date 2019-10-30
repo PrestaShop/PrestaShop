@@ -95,6 +95,12 @@ export default {
 
   // selectors related to summary block
   summaryBlock: '#summary-block',
+  summaryTotalProducts: '.js-total-products',
+  summaryTotalDiscount: '.js-total-discounts',
+  summaryTotalShipping: '.js-total-shipping',
+  summaryTotalTaxes: '.js-total-taxes',
+  summaryTotalWithoutTax: '.js-total-without-tax',
+  summaryTotalWithTax: '.js-total-with-tax',
 
   // selectors related to shipping block
   shippingBlock: '#shipping-block',
