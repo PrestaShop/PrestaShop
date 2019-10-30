@@ -43,6 +43,7 @@ describe('Create Taxes, Then disable / Enable and Delete with Bulk actions', asy
   });
   // Login into BO and go to Taxes page
   loginCommon.loginBO();
+
   it('should go to Taxes page', async function () {
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.internationalParentLink,
@@ -51,6 +52,7 @@ describe('Create Taxes, Then disable / Enable and Delete with Bulk actions', asy
     const pageTitle = await this.pageObjects.taxesPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.taxesPage.pageTitle);
   });
+
   it('should reset all filters', async function () {
     numberOfTaxes = await this.pageObjects.taxesPage.resetAndGetNumberOfLines();
     await expect(numberOfTaxes).to.be.above(0);
@@ -62,6 +64,7 @@ describe('Create Taxes, Then disable / Enable and Delete with Bulk actions', asy
       const pageTitle = await this.pageObjects.addTaxPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.addTaxPage.pageTitleCreate);
     });
+
     it('should create first tax and check result', async function () {
       const textResult = await this.pageObjects.addTaxPage.createEditTax(firstTaxData);
       await expect(textResult).to.equal(this.pageObjects.taxesPage.successfulCreationMessage);
@@ -70,11 +73,13 @@ describe('Create Taxes, Then disable / Enable and Delete with Bulk actions', asy
       );
       await expect(numberOfTaxesAfterCreation).to.be.equal(numberOfTaxes + 1);
     });
+
     it('should go to add new tax page', async function () {
       await this.pageObjects.taxesPage.goToAddNewTaxPage();
       const pageTitle = await this.pageObjects.addTaxPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.addTaxPage.pageTitleCreate);
     });
+
     it('should create second tax and check result', async function () {
       const textResult = await this.pageObjects.addTaxPage.createEditTax(secondTaxData);
       await expect(textResult).to.equal(this.pageObjects.taxesPage.successfulCreationMessage);
@@ -97,6 +102,7 @@ describe('Create Taxes, Then disable / Enable and Delete with Bulk actions', asy
       );
       await expect(textResult).to.contains('TVA to delete');
     });
+
     it('should disable Taxes with Bulk Actions and check Result', async function () {
       const disableTextResult = await this.pageObjects.taxesPage.changeTaxesEnabledColumnBulkActions(false);
       await expect(disableTextResult).to.be.equal(this.pageObjects.taxesPage.successfulUpdateStatusMessage);
@@ -113,6 +119,7 @@ describe('Create Taxes, Then disable / Enable and Delete with Bulk actions', asy
       }
       /* eslint-enable no-await-in-loop */
     });
+
     it('should enable Taxes with Bulk Actions and check Result', async function () {
       const enableTextResult = await this.pageObjects.taxesPage.changeTaxesEnabledColumnBulkActions(true);
       await expect(enableTextResult).to.be.equal(this.pageObjects.taxesPage.successfulUpdateStatusMessage);
@@ -129,6 +136,7 @@ describe('Create Taxes, Then disable / Enable and Delete with Bulk actions', asy
       }
       /* eslint-enable no-await-in-loop */
     });
+
     it('should reset all filters', async function () {
       const numberOfTaxesAfterReset = await this.pageObjects.taxesPage.resetAndGetNumberOfLines();
       await expect(numberOfTaxesAfterReset).to.be.equal(numberOfTaxes + 2);
@@ -147,6 +155,7 @@ describe('Create Taxes, Then disable / Enable and Delete with Bulk actions', asy
       );
       await expect(textResult).to.contains('TVA to delete');
     });
+
     it('should delete Taxes with Bulk Actions and check Result', async function () {
       const deleteTextResult = await this.pageObjects.taxesPage.deleteTaxesBulkActions();
       await expect(deleteTextResult).to.be.equal(this.pageObjects.taxesPage.successfulDeleteMessage);

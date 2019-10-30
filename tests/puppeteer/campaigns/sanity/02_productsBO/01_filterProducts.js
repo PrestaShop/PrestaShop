@@ -39,6 +39,7 @@ describe('Filter in Products Page', async () => {
   });
   // Steps
   loginCommon.loginBO();
+
   it('should go to Products page', async function () {
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.catalogParentLink,
@@ -47,34 +48,41 @@ describe('Filter in Products Page', async () => {
     const pageTitle = await this.pageObjects.productsPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.productsPage.pageTitle);
   });
+
   it('should reset all filters and get Number of products in BO', async function () {
     await this.pageObjects.productsPage.resetFilterCategory();
     numberOfProducts = await this.pageObjects.productsPage.resetAndGetNumberOfLines();
     await expect(numberOfProducts).to.be.above(0);
   });
+
   it('should filter list by Name and check result', async function () {
     await this.pageObjects.productsPage.filterProducts('name', Products.demo_14.name);
     const numberOfProductsAfterFilter = await this.pageObjects.productsPage.getNumberOfProductsFromList();
     await expect(numberOfProductsAfterFilter).to.be.below(numberOfProducts);
   });
+
   it('should reset filter and check result', async function () {
     const numberOfProductsAfterReset = await this.pageObjects.productsPage.resetAndGetNumberOfLines();
     await expect(numberOfProductsAfterReset).to.equal(numberOfProducts);
   });
+
   it('should filter by Reference and check result', async function () {
     await this.pageObjects.productsPage.filterProducts('reference', Products.demo_1.reference);
     const numberOfProductsAfterFilter = await this.pageObjects.productsPage.getNumberOfProductsFromList();
     await expect(numberOfProductsAfterFilter).to.be.below(numberOfProducts);
   });
+
   it('should reset filter and check result', async function () {
     const numberOfProductsAfterReset = await this.pageObjects.productsPage.resetAndGetNumberOfLines();
     await expect(numberOfProductsAfterReset).to.equal(numberOfProducts);
   });
+
   it('should filter by Category and check result', async function () {
     await this.pageObjects.productsPage.filterProductsByCategory(Categories.men.name);
     const numberOfProductsAfterFilter = await this.pageObjects.productsPage.getNumberOfProductsFromList();
     await expect(numberOfProductsAfterFilter).to.be.below(numberOfProducts);
   });
+
   it('should reset filter Category and check result', async function () {
     await this.pageObjects.productsPage.resetFilterCategory();
     const numberOfProductsAfterReset = await this.pageObjects.productsPage.getNumberOfProductsFromList();

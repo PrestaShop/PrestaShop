@@ -42,6 +42,7 @@ describe('Create, Update and Delete Tax in BO', async () => {
   });
   // Login into BO and go to Taxes page
   loginCommon.loginBO();
+
   it('should go to Taxes page', async function () {
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.internationalParentLink,
@@ -50,6 +51,7 @@ describe('Create, Update and Delete Tax in BO', async () => {
     const pageTitle = await this.pageObjects.taxesPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.taxesPage.pageTitle);
   });
+
   it('should reset all filters', async function () {
     numberOfTaxes = await this.pageObjects.taxesPage.resetAndGetNumberOfLines();
     await expect(numberOfTaxes).to.be.above(0);
@@ -61,6 +63,7 @@ describe('Create, Update and Delete Tax in BO', async () => {
       const pageTitle = await this.pageObjects.addTaxPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.addTaxPage.pageTitleCreate);
     });
+
     it('should create Tax and check result', async function () {
       const textResult = await this.pageObjects.addTaxPage.createEditTax(createTaxData);
       await expect(textResult).to.equal(this.pageObjects.addTaxPage.successfulCreationMessage);
@@ -80,6 +83,7 @@ describe('Create, Update and Delete Tax in BO', async () => {
       const pageTitle = await this.pageObjects.taxesPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.taxesPage.pageTitle);
     });
+
     it('should filter list by tax name', async function () {
       await this.pageObjects.taxesPage.filterTaxes(
         'input',
@@ -91,6 +95,7 @@ describe('Create, Update and Delete Tax in BO', async () => {
       );
       await expect(textName).to.contains(createTaxData.name);
     });
+
     it('should filter list by tax rate', async function () {
       await this.pageObjects.taxesPage.filterTaxes(
         'input',
@@ -102,11 +107,13 @@ describe('Create, Update and Delete Tax in BO', async () => {
       );
       await expect(textName).to.contains(createTaxData.rate);
     });
+
     it('should go to edit tax page', async function () {
       await this.pageObjects.taxesPage.goToEditTaxPage('1');
       const pageTitle = await this.pageObjects.addTaxPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.addTaxPage.pageTitleEdit);
     });
+
     it('should update tax', async function () {
       const textResult = await this.pageObjects.addTaxPage.createEditTax(editTaxData);
       await expect(textResult).to.equal(this.pageObjects.taxesPage.successfulUpdateMessage);
@@ -116,6 +123,7 @@ describe('Create, Update and Delete Tax in BO', async () => {
       );
       await expect(numberOfTaxesAfterUpdate).to.be.equal(numberOfTaxes + 1);
     });
+
     it('should reset all filters', async function () {
       const numberOfTaxesAfterReset = await this.pageObjects.taxesPage.resetAndGetNumberOfLines();
       await expect(numberOfTaxesAfterReset).to.equal(numberOfTaxes + 1);
@@ -131,6 +139,7 @@ describe('Create, Update and Delete Tax in BO', async () => {
       const pageTitle = await this.pageObjects.taxesPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.taxesPage.pageTitle);
     });
+
     it('should filter list by Tax name', async function () {
       await this.pageObjects.taxesPage.filterTaxes(
         'input',
@@ -142,6 +151,7 @@ describe('Create, Update and Delete Tax in BO', async () => {
       );
       await expect(textName).to.contains(editTaxData.name);
     });
+
     it('should filter list by tax rate', async function () {
       await this.pageObjects.taxesPage.filterTaxes(
         'input',
@@ -153,6 +163,7 @@ describe('Create, Update and Delete Tax in BO', async () => {
       );
       await expect(textName).to.contains(editTaxData.rate);
     });
+
     it('should delete Tax', async function () {
       const textResult = await this.pageObjects.taxesPage.deleteTax('1');
       await expect(textResult).to.equal(this.pageObjects.taxesPage.successfulDeleteMessage);
