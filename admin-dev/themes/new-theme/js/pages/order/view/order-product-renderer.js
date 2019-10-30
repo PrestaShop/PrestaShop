@@ -23,6 +23,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+import OrderViewPageMap from '../OrderViewPageMap';
+
 const $ = window.$;
 
 export default class OrderProductRenderer {
@@ -30,5 +32,25 @@ export default class OrderProductRenderer {
     const $productRow = $(`#orderProduct_${orderDetailId}`);
 
     $productRow.hide('fast', () => $productRow.remove());
+  }
+
+  moveProductsPanelToModificationPosition() {
+    const $modificationPosition = $(OrderViewPageMap.productModificationPosition);
+
+    $(OrderViewPageMap.productsPanel).detach().appendTo($modificationPosition);
+
+    $modificationPosition.closest('.row').removeClass('d-none');
+
+    $(OrderViewPageMap.productActionBtn).addClass('d-none');
+    $(OrderViewPageMap.productAddActionBtn).removeClass('d-none');
+  }
+
+  moveProductPanelToOriginalPosition() {
+    $(OrderViewPageMap.productModificationPosition).closest('.row').addClass('d-none');
+
+    $(OrderViewPageMap.productsPanel).detach().appendTo(OrderViewPageMap.productOriginalPosition);
+
+    $(OrderViewPageMap.productActionBtn).removeClass('d-none');
+    $(OrderViewPageMap.productAddActionBtn).addClass('d-none');
   }
 }

@@ -60,9 +60,16 @@ export default {
   allMessagesList: '#all-messages-list',
   openAllMessagesBtn: '.js-open-all-messages-btn',
   // Products table elements
+  productOriginalPosition: '#orderProductsOriginalPosition',
+  productModificationPosition: '#orderProductsModificationPosition',
+  productsPanel: '#orderProductsPanel',
   productDeleteBtn: '.js-order-product-delete-btn',
   productsTable: '#orderProductsTable',
   productEditBtn: '.js-order-product-edit-btn',
+  productAddBtn: '#addProductBtn',
+  productActionBtn: '.js-product-action-btn',
+  productAddActionBtn: '.js-product-add-action-btn',
+  productCancelAddBtn: '#cancelAddProductBtn',
   // Order price elements
   orderProductsTotal: '#orderProductsTotal',
   orderDiscountsTotal: '#orderDiscountsTotal',
