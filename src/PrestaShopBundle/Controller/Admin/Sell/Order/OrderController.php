@@ -159,16 +159,12 @@ class OrderController extends FrameworkBundleAdminController
     public function createAction()
     {
         $summaryForm = $this->createForm(CartSummaryType::class);
-//        $orderStates = $this->get('prestashop.core.form.choice_provider.order_state_by_id')->getChoices();
-//        $paymentModules = $this->get('prestashop.adapter.form.choice_provider.installed_payment_modules')->getChoices();
         $languages = $this->get('prestashop.core.form.choice_provider.language_by_id')->getChoices();
         $currencies = $this->get('prestashop.core.form.choice_provider.currency_by_id')->getChoices();
 
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/create.html.twig', [
             'currencies' => $currencies,
             'languages' => $languages,
-//            'orderStates' => $orderStates,
-//            'paymentModules' => $paymentModules,
             'summaryForm' => $summaryForm->createView(),
         ]);
     }
