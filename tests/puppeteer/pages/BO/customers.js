@@ -52,6 +52,14 @@ module.exports = class Customers extends BOBasePage {
     if (await this.elementVisible(this.filterResetButton, 2000)) {
       await this.clickAndWaitForNavigation(this.filterResetButton);
     }
+  }
+
+  /**
+   * Reset Filter And get number of elements in list
+   * @return {Promise<integer>}
+   */
+  async resetAndGetNumberOfLines() {
+    await this.resetFilter();
     return this.getNumberFromText(this.customerGridTitle);
   }
 

@@ -52,7 +52,7 @@ describe('Create Customers, Then disable / Enable and Delete with Bulk actions',
     await expect(pageTitle).to.contains(this.pageObjects.customersPage.pageTitle);
   });
   it('should reset all filters', async function () {
-    numberOfCustomers = await this.pageObjects.customersPage.resetFilter();
+    numberOfCustomers = await this.pageObjects.customersPage.resetAndGetNumberOfLines();
     await expect(numberOfCustomers).to.be.above(0);
   });
   // 1 : Create 2 customers In BO
@@ -149,7 +149,7 @@ describe('Create Customers, Then disable / Enable and Delete with Bulk actions',
     });
 
     it('should reset all filters', async function () {
-      const numberOfCustomersAfterReset = await this.pageObjects.customersPage.resetFilter();
+      const numberOfCustomersAfterReset = await this.pageObjects.customersPage.resetAndGetNumberOfLines();
       await expect(numberOfCustomersAfterReset).to.be.equal(numberOfCustomers);
     });
   });
