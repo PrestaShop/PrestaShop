@@ -78,11 +78,20 @@ module.exports = class Brands extends BOBasePage {
    * @param table, what table to reset
    * @return {Promise<void>}
    */
-  async resetFilters(table) {
+  async resetFilter(table) {
     const resetButton = await this.replaceAll(this.filterResetButton, '%TABLE', table);
     if (await this.elementVisible(resetButton, 2000)) {
       await this.clickAndWaitForNavigation(resetButton);
     }
+  }
+
+  /**
+   * Reset Filter And get number of elements in list
+   * @param table, what table to reset
+   * @return {Promise<integer>}
+   */
+  async resetAndGetNumberOfLines(table) {
+    await this.resetFilter(table);
     return this.getNumberFromText(this.gridHeaderTitle.replace('%TABLE', table));
   }
 

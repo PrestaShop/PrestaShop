@@ -50,7 +50,7 @@ describe('Filter And Quick Edit brands', async () => {
   });
 
   it('should reset all filters and get Number of brands in BO', async function () {
-    numberOfBrands = await this.pageObjects.brandsPage.resetFilters('manufacturer');
+    numberOfBrands = await this.pageObjects.brandsPage.resetAndGetNumberOfLines('manufacturer');
     await expect(numberOfBrands).to.be.above(0);
   });
 
@@ -72,7 +72,7 @@ describe('Filter And Quick Edit brands', async () => {
     });
 
     it('should reset all filters', async function () {
-      const numberOfBrandsAfterReset = await this.pageObjects.brandsPage.resetFilters('manufacturer');
+      const numberOfBrandsAfterReset = await this.pageObjects.brandsPage.resetAndGetNumberOfLines('manufacturer');
       await expect(numberOfBrandsAfterReset).to.equal(numberOfBrands);
     });
 
@@ -92,7 +92,7 @@ describe('Filter And Quick Edit brands', async () => {
     });
 
     it('should reset all filters', async function () {
-      const numberOfBrandsAfterReset = await this.pageObjects.brandsPage.resetFilters('manufacturer');
+      const numberOfBrandsAfterReset = await this.pageObjects.brandsPage.resetAndGetNumberOfLines('manufacturer');
       await expect(numberOfBrandsAfterReset).to.equal(numberOfBrands);
     });
 
@@ -120,7 +120,7 @@ describe('Filter And Quick Edit brands', async () => {
     });
 
     it('should reset all filters', async function () {
-      const numberOfBrandsAfterReset = await this.pageObjects.brandsPage.resetFilters('manufacturer');
+      const numberOfBrandsAfterReset = await this.pageObjects.brandsPage.resetAndGetNumberOfLines('manufacturer');
       await expect(numberOfBrandsAfterReset).to.equal(numberOfBrands);
     });
   });
@@ -175,7 +175,7 @@ describe('Filter And Quick Edit brands', async () => {
     });
 
     it('should reset all filters', async function () {
-      const numberOfBrandsAfterReset = await this.pageObjects.brandsPage.resetFilters('manufacturer');
+      const numberOfBrandsAfterReset = await this.pageObjects.brandsPage.resetAndGetNumberOfLines('manufacturer');
       await expect(numberOfBrandsAfterReset).to.equal(numberOfBrands);
     });
   });
