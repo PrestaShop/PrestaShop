@@ -137,9 +137,15 @@ class OrderForViewing
      */
     private $createdAt;
 
+    /**
+     * @var int
+     */
+    private $shopId;
+
     public function __construct(
         int $orderId,
         int $currencyId,
+        int $shopId,
         string $reference,
         string $taxMethod,
         bool $isTaxIncluded,
@@ -181,6 +187,7 @@ class OrderForViewing
         $this->hasInvoice = $hasInvoice;
         $this->discounts = $discounts;
         $this->createdAt = $createdAt;
+        $this->shopId = $shopId;
     }
 
     /**
@@ -197,6 +204,14 @@ class OrderForViewing
     public function getCurrencyId(): int
     {
         return $this->currencyId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getShopId(): int
+    {
+        return $this->shopId;
     }
 
     /**

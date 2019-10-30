@@ -142,6 +142,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
         return new OrderForViewing(
             (int) $order->id,
             (int) $order->id_currency,
+            (int) $order->id_shop,
             $order->reference,
             $taxMethod,
             $isTaxIncluded,
