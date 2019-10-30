@@ -53,7 +53,7 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
     await expect(pageTitle).to.contains(this.pageObjects.categoriesPage.pageTitle);
   });
   it('should reset all filters and get Number of Categories in BO', async function () {
-    numberOfCategories = await this.pageObjects.categoriesPage.resetFilter();
+    numberOfCategories = await this.pageObjects.categoriesPage.resetAndGetNumberOfLines();
     await expect(numberOfCategories).to.be.above(0);
   });
   // 1 : Create 2 categories In BO
@@ -166,7 +166,7 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
     });
 
     it('should reset all filters', async function () {
-      const numberOfCategoriesAfterReset = await this.pageObjects.categoriesPage.resetFilter();
+      const numberOfCategoriesAfterReset = await this.pageObjects.categoriesPage.resetAndGetNumberOfLines();
       await expect(numberOfCategoriesAfterReset).to.equal(numberOfCategories);
     });
   });

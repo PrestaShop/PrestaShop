@@ -66,7 +66,7 @@ describe('Create, Read, Update and Delete Category', async () => {
     await expect(pageTitle).to.contains(this.pageObjects.categoriesPage.pageTitle);
   });
   it('should reset all filters and get number of categories in BO', async function () {
-    numberOfCategories = await this.pageObjects.categoriesPage.resetFilter();
+    numberOfCategories = await this.pageObjects.categoriesPage.resetAndGetNumberOfLines();
     await expect(numberOfCategories).to.be.above(0);
   });
   // 1 : Create category and subcategory then go to FO to check the existence of the new categories
@@ -237,7 +237,7 @@ describe('Create, Read, Update and Delete Category', async () => {
     it('should update the category', async function () {
       const textResult = await this.pageObjects.addCategoryPage.createEditCategory(editCategoryData);
       await expect(textResult).to.equal(this.pageObjects.categoriesPage.successfulUpdateMessage);
-      const numberOfCategoriesAfterUpdate = await this.pageObjects.categoriesPage.resetFilter();
+      const numberOfCategoriesAfterUpdate = await this.pageObjects.categoriesPage.resetAndGetNumberOfLines();
       await expect(numberOfCategoriesAfterUpdate).to.be.equal(numberOfCategories + 1);
     });
     it('should search for the new category and check result', async function () {
@@ -295,7 +295,7 @@ describe('Create, Read, Update and Delete Category', async () => {
     it('should delete category', async function () {
       const textResult = await this.pageObjects.categoriesPage.deleteCategory('1');
       await expect(textResult).to.equal(this.pageObjects.categoriesPage.successfulDeleteMessage);
-      const numberOfCategoriesAfterDeletion = await this.pageObjects.categoriesPage.resetFilter();
+      const numberOfCategoriesAfterDeletion = await this.pageObjects.categoriesPage.resetAndGetNumberOfLines();
       await expect(numberOfCategoriesAfterDeletion).to.be.equal(numberOfCategories);
     });
   });
