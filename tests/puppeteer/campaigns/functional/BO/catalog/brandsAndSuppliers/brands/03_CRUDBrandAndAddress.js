@@ -200,7 +200,7 @@ describe('Create, Update and Delete Brand and Address', async () => {
 
     it('should reset all filters', async function () {
       // Reset Filter Brands
-      const numberOfBrandsAfterReset = await this.pageObjects.brandsPage.resetFilters('manufacturer');
+      const numberOfBrandsAfterReset = await this.pageObjects.brandsPage.resetAndGetNumberOfLines('manufacturer');
       await expect(numberOfBrandsAfterReset).to.be.equal(numberOfBrands + 1);
       // Reset Filter Brand Address
       const numberOfBrandsAddressesAfterReset = await this.pageObjects.brandsPage.resetAndGetNumberOfLines(

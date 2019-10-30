@@ -40,6 +40,7 @@ module.exports = class AddBrandAddress extends BOBasePage {
     await this.setValue(this.postalCodeInput, brandAddressData.postalCode);
     await this.setValue(this.cityInput, brandAddressData.city);
     await this.selectByVisibleText(this.countrySelect, brandAddressData.country);
+    await this.page.click(this.homePhoneInput);
     await this.setValue(this.homePhoneInput, brandAddressData.homePhone);
     await this.setValue(this.mobilePhoneInput, brandAddressData.mobilePhone);
     await this.setValue(this.otherInput, brandAddressData.other);
