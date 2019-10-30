@@ -65,9 +65,7 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
   // 1 : Create 2 categories In BO
   describe('Create 2 categories', async () => {
     it('should go to add new page category', async function () {
-      await this.pageObjects.pagesPage.clickAndWaitForNavigation(
-        this.pageObjects.pagesPage.addNewPageCategoryLink,
-      );
+      await this.pageObjects.pagesPage.goToAddNewPageCategory();
       const pageTitle = await this.pageObjects.addPageCategoryPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.addPageCategoryPage.pageTitleCreate);
     });
@@ -78,17 +76,13 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
     });
 
     it('should go back to categories list', async function () {
-      await this.pageObjects.pagesPage.clickAndWaitForNavigation(
-        this.pageObjects.pagesPage.backToListButton,
-      );
+      await this.pageObjects.pagesPage.backToList();
       const pageTitle = await this.pageObjects.pagesPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.pagesPage.pageTitle);
     });
 
     it('should go to add new page category', async function () {
-      await this.pageObjects.pagesPage.clickAndWaitForNavigation(
-        this.pageObjects.pagesPage.addNewPageCategoryLink,
-      );
+      await this.pageObjects.pagesPage.goToAddNewPageCategory();
       const pageTitle = await this.pageObjects.addPageCategoryPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.addPageCategoryPage.pageTitleCreate);
     });
@@ -99,9 +93,7 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
     });
 
     it('should go back to categories list', async function () {
-      await this.pageObjects.pagesPage.clickAndWaitForNavigation(
-        this.pageObjects.pagesPage.backToListButton,
-      );
+      await this.pageObjects.pagesPage.backToList();
       const pageTitle = await this.pageObjects.pagesPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.pagesPage.pageTitle);
     });

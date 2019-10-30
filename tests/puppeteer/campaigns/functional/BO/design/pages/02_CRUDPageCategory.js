@@ -80,9 +80,7 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
   // 1 : Create category then go to FO to check it
   describe('Create Page Category in BO and check it in FO', async () => {
     it('should go to add new page category', async function () {
-      await this.pageObjects.pagesPage.clickAndWaitForNavigation(
-        this.pageObjects.pagesPage.addNewPageCategoryLink,
-      );
+      await this.pageObjects.pagesPage.goToAddNewPageCategory();
       const pageTitle = await this.pageObjects.addPageCategoryPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.addPageCategoryPage.pageTitleCreate);
     });
@@ -93,9 +91,7 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
     });
 
     it('should go back to categories', async function () {
-      await this.pageObjects.pagesPage.clickAndWaitForNavigation(
-        this.pageObjects.pagesPage.backToListButton,
-      );
+      await this.pageObjects.pagesPage.backToList();
       const pageTitle = await this.pageObjects.pagesPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.pagesPage.pageTitle);
     });
@@ -147,9 +143,7 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
   // 2 : Create Page then go to FO to check it
   describe('Create Page in BO and preview it in FO', async () => {
     it('should click on view category', async function () {
-      await this.pageObjects.pagesPage.clickAndWaitForNavigation(this.pageObjects.pagesPage.categoriesListTableViewLink
-        .replace('%ROW', '1'),
-      );
+      await this.pageObjects.pagesPage.viewCategory('1');
       const pageTitle = await this.pageObjects.pagesPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.pagesPage.pageTitle);
     });
@@ -161,9 +155,7 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
     });
 
     it('should go to add new page', async function () {
-      await this.pageObjects.pagesPage.clickAndWaitForNavigation(
-        this.pageObjects.pagesPage.addNewPageLink,
-      );
+      await this.pageObjects.pagesPage.goToAddNewPage();
       const pageTitle = await this.pageObjects.addPageCategoryPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.addPageCategoryPage.pageTitleCreate);
     });
@@ -189,9 +181,7 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
     });
 
     it('should go to edit page', async function () {
-      await this.pageObjects.pagesPage.clickAndWaitForNavigation(this.pageObjects.pagesPage.listTableEditLink
-        .replace('%TABLE', 'cms_page').replace('%ROW', '1'),
-      );
+      await this.pageObjects.pagesPage.goToEditPage('1');
       const pageTitle = await this.pageObjects.pagesPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.pagesPage.pageTitle);
     });
@@ -210,7 +200,7 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
     });
 
     it('should click on cancel button', async function () {
-      await this.pageObjects.addPagePage.clickAndWaitForNavigation(this.pageObjects.addPagePage.cancelButton);
+      await this.pageObjects.addPagePage.cancelPage();
       const pageTitle = await this.pageObjects.pagesPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.pagesPage.pageTitle);
     });
@@ -245,9 +235,7 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
     });
 
     it('should go back to categories list', async function () {
-      await this.pageObjects.pagesPage.clickAndWaitForNavigation(
-        this.pageObjects.pagesPage.backToListButton,
-      );
+      await this.pageObjects.pagesPage.backToList();
       const pageTitle = await this.pageObjects.pagesPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.pagesPage.pageTitle);
     });
@@ -288,9 +276,7 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
   // 4 : Update page then go to FO to check it
   describe('Update Page created in BO and preview it in FO', async () => {
     it('should click on view category', async function () {
-      await this.pageObjects.pagesPage.clickAndWaitForNavigation(this.pageObjects.pagesPage.categoriesListTableViewLink
-        .replace('%ROW', '1'),
-      );
+      await this.pageObjects.pagesPage.viewCategory('1');
       const pageTitle = await this.pageObjects.pagesPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.pagesPage.pageTitle);
     });
@@ -311,9 +297,7 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
     });
 
     it('should go to edit page', async function () {
-      await this.pageObjects.pagesPage.clickAndWaitForNavigation(this.pageObjects.pagesPage.listTableEditLink
-        .replace('%TABLE', 'cms_page').replace('%ROW', '1'),
-      );
+      await this.pageObjects.pagesPage.goToEditPage('1');
       const pageTitle = await this.pageObjects.pagesPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.pagesPage.pageTitle);
     });
@@ -340,10 +324,7 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
     });
 
     it('should go to edit page', async function () {
-      await this.pageObjects.pagesPage.clickAndWaitForNavigation(
-        this.pageObjects.pagesPage.listTableEditLink
-          .replace('%TABLE', 'cms_page').replace('%ROW', '1'),
-      );
+      await this.pageObjects.pagesPage.goToEditPage('1');
       const pageTitle = await this.pageObjects.pagesPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.pagesPage.pageTitle);
     });
@@ -358,7 +339,7 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
     });
 
     it('should click on cancel button', async function () {
-      await this.pageObjects.addPagePage.clickAndWaitForNavigation(this.pageObjects.addPagePage.cancelButton);
+      await this.pageObjects.addPagePage.cancelPage();
       const pageTitle = await this.pageObjects.pagesPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.pagesPage.pageTitle);
     });
@@ -366,9 +347,7 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
   // 5 : Delete Page and Category from BO
   describe('Delete Page and Category', async () => {
     it('should click on view category', async function () {
-      await this.pageObjects.pagesPage.clickAndWaitForNavigation(this.pageObjects.pagesPage.categoriesListTableViewLink
-        .replace('%ROW', '1'),
-      );
+      await this.pageObjects.pagesPage.viewCategory('1');
       const pageTitle = await this.pageObjects.pagesPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.pagesPage.pageTitle);
     });
@@ -394,10 +373,13 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
       await expect(textResult).to.equal(this.pageObjects.pagesPage.successfulDeleteMessage);
     });
 
+    it('should reset filter', async function () {
+      const numberOfPagesAfterDeletion = await this.pageObjects.pagesPage.resetFilter('cms_page');
+      await expect(numberOfPagesAfterDeletion).to.be.equal(numberOfPages);
+    });
+
     it('should click on back to list', async function () {
-      await this.pageObjects.pagesPage.clickAndWaitForNavigation(
-        this.pageObjects.pagesPage.backToListButton,
-      );
+      await this.pageObjects.pagesPage.backToList();
       const pageTitle = await this.pageObjects.pagesPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.pagesPage.pageTitle);
     });
