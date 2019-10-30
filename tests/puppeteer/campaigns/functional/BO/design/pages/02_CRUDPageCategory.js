@@ -102,7 +102,8 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
 
     it('should check the categories number', async function () {
       const numberOfCategoriesAfterCreation = await this.pageObjects.pagesPage.getNumberFromText(
-        this.pageObjects.pagesPage.gridTitle.replace('%TABLE', 'cms_page_category'));
+        this.pageObjects.pagesPage.gridTitle.replace('%TABLE', 'cms_page_category'),
+      );
       await expect(numberOfCategoriesAfterCreation).to.be.equal(numberOfCategories + 1);
     });
 
