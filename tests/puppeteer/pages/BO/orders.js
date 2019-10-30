@@ -65,6 +65,15 @@ module.exports = class Order extends BOBasePage {
   }
 
   /**
+   * Reset Filter And get number of elements in list
+   * @return {Promise<integer>}
+   */
+  async resetAndGetNumberOfLines() {
+    await this.resetFilter();
+    return this.getNumberFromText(this.ordersNumberSpan);
+  }
+
+  /**
    * Go to orders Page
    * @param orderRow
    * @return {Promise<void>}
