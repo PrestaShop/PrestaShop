@@ -52,6 +52,7 @@ abstract class AbstractAssetManagerCore
 
     /**
      * @param string $relativePath
+     *
      * @return bool|string
      */
     public function getFullPath($relativePath)
