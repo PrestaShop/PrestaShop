@@ -1135,7 +1135,7 @@ abstract class PaymentModuleCore extends Module
                         '{voucher_num}' => $voucher->code,
                         '{firstname}' => $this->context->customer->firstname,
                         '{lastname}' => $this->context->customer->lastname,
-                        '{id_order}' => $order->reference,
+                        '{id_order}' => $order->id,
                         '{order_name}' => $order->getUniqReference(),
                     );
                     Mail::Send(
