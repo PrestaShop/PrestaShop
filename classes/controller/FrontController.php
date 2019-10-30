@@ -1067,7 +1067,8 @@ class FrontControllerCore extends Controller
         $params = array_merge($default_params, $params);
 
         if (Tools::hasMediaServer() && !Configuration::get('PS_CSS_THEME_CACHE')) {
-            $relativePath = $this->buildRelativePath($id, $relativePath);
+            $relativePath = Tools::getCurrentUrlProtocolPrefix() . Tools::getMediaServer($relativePath)
+                . $this->stylesheetManager->getFullPath($relativePath) ?? $relativePath;
             $params['server'] = 'remote';
         }
         $this->stylesheetManager->register($id, $relativePath, $params['media'], $params['priority'], $params['inline'], $params['server']);
@@ -1094,7 +1095,8 @@ class FrontControllerCore extends Controller
         $params = array_merge($default_params, $params);
 
         if (Tools::hasMediaServer() && !Configuration::get('PS_JS_THEME_CACHE')) {
-            $relativePath = $this->buildRelativePath($id, $relativePath);
+            $relativePath = Tools::getCurrentUrlProtocolPrefix() . Tools::getMediaServer($relativePath)
+                . $this->javascriptManager->getFullPath($relativePath) ?? $relativePath;
             $params['server'] = 'remote';
         }
         $this->javascriptManager->register($id, $relativePath, $params['position'], $params['priority'], $params['inline'], $params['attributes'], $params['server']);
@@ -1103,20 +1105,6 @@ class FrontControllerCore extends Controller
     public function unregisterJavascript($id)
     {
         $this->javascriptManager->unregisterById($id);
-    }
-
-    /**
-     * @param string $id
-     * @param string $relativePath
-     *
-     * @return string
-     */
-    private function buildRelativePath(string $id, string $relativePath)
-    {
-        $addSlash = substr($relativePath, 0, 1) !== '/' ? '/' : '';
-        $themeDir = substr($id, 0, 6) == 'theme-' ? _THEMES_DIR_ . _THEME_NAME_ : '';
-
-        return Tools::getCurrentUrlProtocolPrefix() . Tools::getMediaServer($relativePath) . $addSlash . $themeDir . $relativePath;
     }
 
     /**

@@ -2367,7 +2367,7 @@ class ToolsCore
     /**
      * @return bool
      */
-    public static function hasMediaServer()
+    public static function hasMediaServer(): bool
     {
         if (self::$_cache_nb_media_servers === null && defined('_MEDIA_SERVER_1_') && defined('_MEDIA_SERVER_2_') && defined('_MEDIA_SERVER_3_')) {
             if (_MEDIA_SERVER_1_ == '') {
