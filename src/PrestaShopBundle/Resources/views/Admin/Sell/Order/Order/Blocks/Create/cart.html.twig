@@ -142,8 +142,8 @@
           </div>
           <div class="col-4">
             <select class="form-control">
-              {% for currency in currencies %}
-                <option value="{{ currency.id_currency }}">{{ currency.name }}</option>
+              {% for name, id in currencies %}
+                <option value="{{ id }}">{{ name }}</option>
               {% endfor %}
             </select>
           </div>
@@ -156,8 +156,8 @@
           </div>
           <div class="col-4">
             <select class="form-control" id="cart-language-select">
-              {% for language in languages %}
-                <option value="{{ language.id_lang }}">{{ language.name }}</option>
+              {% for name, id in languages %}
+                <option value="{{ id }}">{{ name }}</option>
               {% endfor %}
             </select>
           </div>
@@ -202,7 +202,7 @@
     <td><input type="number" min="1" class="form-control js-product-qty-input" style="max-width: 100px;"></td>
     <td class="js-product-total-price"></td>
     <td class="text-right">
-      <button class="btn btn-primary js-product-remove-btn">{{ 'Remove'|trans({}, 'Admin.Actions') }}</button>
+      <button class="btn btn-outline-danger js-product-remove-btn">{{ 'Remove'|trans({}, 'Admin.Actions') }}</button>
     </td>
   </tr>
 </script>
