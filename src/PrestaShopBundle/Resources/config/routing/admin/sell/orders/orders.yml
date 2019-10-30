@@ -7,11 +7,20 @@ admin_orders_index:
 
 admin_orders_create:
   path: /new
-  methods: [GET, POST]
+  methods: [GET]
   defaults:
     _controller: PrestaShopBundle:Admin\Sell\Order\Order:create
     _legacy_controller: AdminOrders
 #    _legacy_link: AdminOrders:addorder
+
+admin_orders_place:
+  path: /place
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Sell\Order\Order:place
+    _legacy_controller: AdminOrders
+  options:
+    expose: true
 
 admin_orders_search:
   path: /
