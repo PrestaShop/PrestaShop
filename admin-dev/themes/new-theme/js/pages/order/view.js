@@ -40,6 +40,7 @@ $(() => {
 
   orderViewPage.listenForProductDelete();
   orderViewPage.listenForProductEdit();
+  orderViewPage.listenForProductAdd();
 
   handlePaymentDetailsToggle();
   handlePrivateNoteChange();
