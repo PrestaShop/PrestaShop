@@ -17,7 +17,7 @@
         
     <taxRulesGroup name="EG Reduced Rate (5%)">
 			<taxRule iso_code_country="eg" id_tax="2" />
-          
+    </taxRulesGroup>
     <taxRulesGroup name="EG Zero Rate (0%)">
 			<taxRule iso_code_country="eg" id_tax="3" />
 		</taxRulesGroup>
