@@ -94,6 +94,11 @@ class AddManufacturerAddressCommand
     private $other;
 
     /**
+     * @var string|null
+     */
+    private $dni;
+
+    /**
      * @param string $lastName
      * @param string $firstName
      * @param string $address
@@ -106,6 +111,7 @@ class AddManufacturerAddressCommand
      * @param string|null $homePhone
      * @param string $mobilePhone
      * @param string|null $other
+     * @param string|null $dni
      *
      * @throws AddressConstraintException
      */
@@ -121,7 +127,8 @@ class AddManufacturerAddressCommand
         $stateId = null,
         $homePhone = null,
         $mobilePhone = null,
-        $other = null
+        $other = null,
+        $dni = null
     ) {
         $this->assertIsNullOrNonNegativeInt($manufacturerId);
         $this->manufacturerId = $manufacturerId;
@@ -136,6 +143,7 @@ class AddManufacturerAddressCommand
         $this->homePhone = $homePhone;
         $this->mobilePhone = $mobilePhone;
         $this->other = $other;
+        $this->dni = $dni;
     }
 
     /**
@@ -232,6 +240,14 @@ class AddManufacturerAddressCommand
     public function getOther()
     {
         return $this->other;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getDni()
+    {
+        return $this->dni;
     }
 
     /**

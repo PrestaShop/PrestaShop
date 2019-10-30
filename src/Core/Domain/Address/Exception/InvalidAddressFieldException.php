@@ -1,5 +1,6 @@
+<?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -23,10 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-export default {
-  manufacturerAddressCountrySelect: '#manufacturer_address_id_country',
-  manufacturerAddressStateSelect: '#manufacturer_address_id_state',
-  manufacturerAddressStateBlock: '.js-manufacturer-address-state',
-  manufacturerAddressDniInput: '#manufacturer_address_dni',
-  manufacturerAddressDniInputLabel: 'label[for="manufacturer_address_dni"]',
-};
+namespace PrestaShop\PrestaShop\Core\Domain\Address\Exception;
+
+/**
+ * Is thrown when address has invalid fields on saving/updating
+ */
+class InvalidAddressFieldException extends AddressException
+{
+}

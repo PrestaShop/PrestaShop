@@ -1,3 +1,4 @@
+<?php
 /**
  * 2007-2019 PrestaShop and Contributors
  *
@@ -23,10 +24,18 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-export default {
-  manufacturerAddressCountrySelect: '#manufacturer_address_id_country',
-  manufacturerAddressStateSelect: '#manufacturer_address_id_state',
-  manufacturerAddressStateBlock: '.js-manufacturer-address-state',
-  manufacturerAddressDniInput: '#manufacturer_address_dni',
-  manufacturerAddressDniInputLabel: 'label[for="manufacturer_address_dni"]',
-};
+namespace PrestaShop\PrestaShop\Core\Form;
+
+/**
+ * Interface FormChoiceProviderInterface defines contract for choice attribute providers.
+ */
+interface FormChoiceAttributeProviderInterface
+{
+    /**
+     * Get choices attributes.
+     *  return [{choice_value} => [...$attributes]]
+     *
+     * @return array
+     */
+    public function getChoicesAttributes();
+}
