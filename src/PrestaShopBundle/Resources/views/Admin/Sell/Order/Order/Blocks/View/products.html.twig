@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-<div class="card">
+<div class="card" id="orderProductsPanel">
   <div class="card-header">
     <h3 class="card-header-title">
       {{ 'Products'|trans({}, 'Admin.Global') }} ({{ orderForViewing.products.products|length }})
@@ -163,18 +163,49 @@
             </td>
           </tr>
         {% endfor %}
+        <tr id="addProductTableRow">
+          <td colspan="2" class="pr-5">
+            <input type="text" class="form-control">
+          </td>
+          <td>
+            <div class="input-group mb-2">
+              <input type="text" class="form-control">
+              <div class="input-group-append">
+                <span class="input-group-text">{{ 'tax excl.'|trans({}, 'Admin.Global') }}</span>
+              </div>
+            </div>
+            <div class="input-group">
+              <input type="text" class="form-control">
+              <div class="input-group-append">
+                <span class="input-group-text">{{ 'tax incl.'|trans({}, 'Admin.Global') }}</span>
+              </div>
+            </div>
+          </td>
+          <td class="pl-5 pr-5">
+            <input type="text" class="form-control">
+          </td>
+          <td></td>
+          <td class="text-right">
+            <button type="button" class="btn btn-sm btn-secondary js-product-add-action-btn mr-2 d-inline" id="cancelAddProductBtn">
+              {{ 'Cancel'|trans({}, 'Admin.Action') }}
+            </button>
+            <button type="button" class="btn btn-sm btn-primary js-product-add-action-btn d-inline" disabled>
+              {{ 'Add'|trans({}, 'Admin.Action') }}
+            </button>
+          </td>
+        </tr>
       </tbody>
     </table>
 
     <div class="row mb-3">
       <div class="col-md-12 text-right">
         {% if not orderForViewing.delivered %}
-          <button type="button" class="btn btn-outline-secondary mr-3" data-toggle="modal" data-target="#addOrderProductModal">
+          <button type="button" class="btn btn-outline-secondary js-product-action-btn mr-3" id="addProductBtn">
             <i class="material-icons">add_circle_outline</i>
             {{ 'Add a product'|trans({}, 'Admin.Orderscustomers.Feature') }}
           </button>
         {% endif %}
-        <button type="button" class="btn btn-outline-secondary" data-toggle="modal" data-target="#addOrderDiscountModal">
+        <button type="button" class="btn btn-outline-secondary js-product-action-btn" data-toggle="modal" data-target="#addOrderDiscountModal">
           <i class="material-icons">confirmation_number</i>
           {{ 'Add a discount'|trans({}, 'Admin.Orderscustomers.Feature') }}
         </button>
