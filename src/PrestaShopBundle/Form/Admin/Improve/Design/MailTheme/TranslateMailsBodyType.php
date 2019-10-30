@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,32 +22,31 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
+namespace PrestaShopBundle\Form\Admin\Improve\Design\MailTheme;
 
-{% block content %}
-  {{
-    include('@PrestaShop/Admin/Improve/Design/MailTheme/Blocks/configuration_form.html.twig', {
-      'mailThemeConfigurationForm': mailThemeConfigurationForm
-    })
-  }}
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\FormBuilderInterface;
 
-  {{
-    include('@PrestaShop/Admin/Improve/Design/MailTheme/Blocks/generate_mails_form.html.twig', {
-      'generateMailsForm': generateMailsForm
-    })
-  }}
-
-  {{
-    include('@PrestaShop/Admin/Improve/Design/MailTheme/Blocks/translate_mails_body_form.html.twig', {
-      'generateMailsForm': generateMailsForm
-    })
-  }}
-
-  {{
-    include('@PrestaShop/Admin/Improve/Design/MailTheme/Blocks/list_mail_themes.html.twig', {
-      'mailThemes': mailThemes
-    })
-  }}
-{% endblock %}
+/**
+ * Class TranslateMailsBodyType manages the form allowing to select a language
+ * and translate Emails body content.
+ */
+class TranslateMailsBodyType extends TranslatorAwareType
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder
+            ->add('language', ChoiceType::class, [
+                'placeholder' => $this->trans('Language', 'Admin.Global'),
+                'choices' => $this->getLocaleChoices(),
+                'choice_translation_domain' => false,
+            ])
+        ;
+    }
+}

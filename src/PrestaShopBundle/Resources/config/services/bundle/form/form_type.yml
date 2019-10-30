@@ -957,3 +957,10 @@ services:
         - '@prestashop.core.form.choice_provider.currency_by_id'
       tags:
         - { name: form.type }
+
+    form.type.localization.translate_mails_body:
+      class: 'PrestaShopBundle\Form\Admin\Improve\Design\MailTheme\TranslateMailsBodyType'
+      parent: 'form.type.translatable.aware'
+      public: true
+      tags:
+        - { name: form.type }
