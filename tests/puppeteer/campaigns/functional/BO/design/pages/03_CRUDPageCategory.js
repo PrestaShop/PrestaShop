@@ -72,7 +72,6 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
     await expect(pageTitle).to.contains(this.pageObjects.pagesPage.pageTitle);
   });
 
-
   it('should reset all filters and get number of categories in BO', async function () {
     numberOfCategories = await this.pageObjects.pagesPage.resetFilter('cms_page_category');
     if (numberOfCategories !== 0) await expect(numberOfCategories).to.be.above(0);
@@ -392,11 +391,6 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
     it('should delete page', async function () {
       const textResult = await this.pageObjects.pagesPage.deleteRowInTable('cms_page', '1');
       await expect(textResult).to.equal(this.pageObjects.pagesPage.successfulDeleteMessage);
-    });
-
-    it('should reset filter', async function () {
-      const numberOfPagesAfterDeletion = await this.pageObjects.pagesPage.resetFilter('cms_page');
-      await expect(numberOfPagesAfterDeletion).to.be.equal(numberOfPages);
     });
 
     it('should click on back to list', async function () {

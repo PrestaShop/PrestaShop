@@ -57,7 +57,6 @@ describe('Create Pages, Then disable / Enable and Delete with Bulk actions', asy
     await expect(pageTitle).to.contains(this.pageObjects.pagesPage.pageTitle);
   });
 
-
   it('should reset filter and get number of pages in BO', async function () {
     numberOfPages = await this.pageObjects.pagesPage.resetFilter('cms_page');
     await expect(numberOfPages).to.be.above(0);
@@ -86,7 +85,7 @@ describe('Create Pages, Then disable / Enable and Delete with Bulk actions', asy
       await expect(pageTitle).to.contains(this.pageObjects.addPageCategoryPage.pageTitleCreate);
     });
 
-    it('should create the first page ', async function () {
+    it('should create the second page ', async function () {
       const textResult = await this.pageObjects.addPagePage.createEditPage(secondPageData);
       await expect(textResult).to.equal(this.pageObjects.pagesPage.successfulCreationMessage);
     });

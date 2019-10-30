@@ -57,7 +57,6 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
     await expect(pageTitle).to.contains(this.pageObjects.pagesPage.pageTitle);
   });
 
-
   it('should reset filter and get number of categories in BO', async function () {
     numberOfCategories = await this.pageObjects.pagesPage.resetFilter('cms_page_category');
     if (numberOfCategories !== 0) await expect(numberOfCategories).to.be.above(0);
