@@ -50,9 +50,16 @@ export default {
   updateOrderShippingTrackingNumberInput: '#update_order_shipping_tracking_number',
   updateOrderShippingCurrentOrderCarrierIdInput: '#update_order_shipping_current_order_carrier_id',
   // Products table elements
+  productOriginalPosition: '#orderProductsOriginalPosition',
+  productModificationPosition: '#orderProductsModificationPosition',
+  productsPanel: '#orderProductsPanel',
   productDeleteBtn: '.js-order-product-delete-btn',
   productsTable: '#orderProductsTable',
   productEditBtn: '.js-order-product-edit-btn',
+  productAddBtn: '#addProductBtn',
+  productActionBtn: '.js-product-action-btn',
+  productAddActionBtn: '.js-product-add-action-btn',
+  productCancelAddBtn: '#cancelAddProductBtn',
   // Order price elements
   orderProductsTotal: '#orderProductsTotal',
   orderDiscountsTotal: '#orderDiscountsTotal',
