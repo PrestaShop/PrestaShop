@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,32 +22,44 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
+namespace PrestaShopBundle\Translation\Provider;
 
-{% block content %}
-  {{
-    include('@PrestaShop/Admin/Improve/Design/MailTheme/Blocks/configuration_form.html.twig', {
-      'mailThemeConfigurationForm': mailThemeConfigurationForm
-    })
-  }}
+/**
+ * Translation provider specific to email subjects.
+ */
+class MailsBodyProvider extends AbstractProvider implements UseDefaultCatalogueInterface
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function getTranslationDomains()
+    {
+        return ['EmailsBody*'];
+    }
 
-  {{
-    include('@PrestaShop/Admin/Improve/Design/MailTheme/Blocks/generate_mails_form.html.twig', {
-      'generateMailsForm': generateMailsForm
-    })
-  }}
+    /**
+     * {@inheritdoc}
+     */
+    public function getFilters()
+    {
+        return ['#EmailsBody*#'];
+    }
 
-  {{
-    include('@PrestaShop/Admin/Improve/Design/MailTheme/Blocks/translate_mails_body_form.html.twig', {
-      'generateMailsForm': generateMailsForm
-    })
-  }}
+    /**
+     * {@inheritdoc}
+     */
+    public function getIdentifier()
+    {
+        return 'mails_body';
+    }
 
-  {{
-    include('@PrestaShop/Admin/Improve/Design/MailTheme/Blocks/list_mail_themes.html.twig', {
-      'mailThemes': mailThemes
-    })
-  }}
-{% endblock %}
+    /**
+     * {@inheritdoc}
+     */
+    public function getDefaultResourceDirectory()
+    {
+        return $this->resourceDirectory . DIRECTORY_SEPARATOR . 'default';
+    }
+}

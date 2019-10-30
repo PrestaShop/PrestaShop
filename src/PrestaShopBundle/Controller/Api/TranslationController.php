@@ -150,9 +150,11 @@ class TranslationController extends ApiController
                     break;
 
                 case 'mails':
-                    // when emails body will be implemented, it should be a different type
-                    // because domain routes only support "type" & "selected/theme" as parameters
                     $tree = $this->getMailsSubjectTree($lang, $search);
+                    break;
+
+                case 'mails_body':
+                    $tree = $this->getMailsBodyTree($lang, $search);
                     break;
 
                 default:
@@ -367,6 +369,22 @@ class TranslationController extends ApiController
 
         $treeBuilder = new TreeBuilder($this->translationService->langToLocale($lang), $theme);
         $catalogue = $this->translationService->getTranslationsCatalogue($lang, 'mails', $theme, $search);
+
+        return $this->getCleanTree($treeBuilder, $catalogue, $theme, $search);
+    }
+
+    /**
+     * @param string $lang Two-letter iso code
+     * @param null $search
+     *
+     * @return array
+     */
+    private function getMailsBodyTree($lang, $search = null)
+    {
+        $theme = null;
+
+        $treeBuilder = new TreeBuilder($this->translationService->langToLocale($lang), $theme);
+        $catalogue = $this->translationService->getTranslationsCatalogue($lang, 'mails_body', $theme, $search);
 
         return $this->getCleanTree($treeBuilder, $catalogue, $theme, $search);
     }
