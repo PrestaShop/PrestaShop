@@ -51,4 +51,9 @@ export default class OrderViewPage {
   listenForProductEdit() {
     $(OrderViewPageMap.productEditBtn).on('click', event => this.orderProductManager.handleUpdateModalFormData(event));
   }
+
+  listenForProductAdd() {
+    $(OrderViewPageMap.productAddBtn).on('click', event => this.orderProductRenderer.moveProductsPanelToModificationPosition());
+    $(OrderViewPageMap.productCancelAddBtn).on('click', event => this.orderProductRenderer.moveProductPanelToOriginalPosition());
+  }
 }
