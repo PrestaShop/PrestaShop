@@ -11,6 +11,7 @@ admin_orders_create:
   defaults:
     _controller: PrestaShopBundle:Admin\Sell\Order\Order:create
     _legacy_controller: AdminOrders
+#    _legacy_link: AdminOrders:addorder
 
 admin_orders_search:
   path: /
@@ -56,6 +57,8 @@ admin_orders_view:
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Order/Order:view
     _legacy_controller: AdminOrders
+  options:
+    expose: true
 
 admin_orders_add_cart_rule:
   path: /{orderId}/cart-rules
@@ -145,3 +148,9 @@ admin_orders_preview:
     _legacy_controller: AdminOrders
   requirements:
     orderId: \d+
+
+admin_search_product_for_order_creation:
+  path: /search
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:searchProducts

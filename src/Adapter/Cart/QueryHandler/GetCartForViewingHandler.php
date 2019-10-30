@@ -160,7 +160,7 @@ final class GetCartForViewingHandler implements GetCartForViewingHandlerInterfac
             'registration_date' => (new DateTime($customer->date_add))->format($context->language->date_format_lite),
             'valid_orders_count' => $customerStats['nb_orders'],
             'total_spent_since_registration' => $this->locale->formatPrice(
-                $customerStats['total_orders'],
+                $customerStats['total_orders'] ?: 0,
                 $currency->iso_code
             ),
         ];
