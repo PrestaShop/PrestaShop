@@ -35,27 +35,27 @@
             <div class="row">
               <div class="col text-center">
                 <p class="mb-0">{{ 'Total products'|trans({}, 'Admin.Orderscustomers.Feature') }}</p>
-                <p class="lead text-success">19.12</p>
+                <p class="lead text-success js-total-products"></p>
               </div>
               <div class="col text-center">
                 <p class="mb-0">{{ 'Total vouchers (Tax excl.)'|trans({}, 'Admin.Orderscustomers.Feature') }}</p>
-                <p class="lead text-danger">0</p>
+                <p class="lead text-danger js-total-discounts"></p>
               </div>
               <div class="col text-center">
                 <p class="mb-0">{{ 'Total shipping (Tax excl.)'|trans({}, 'Admin.Orderscustomers.Feature') }}</p>
-                <p class="lead">0</p>
+                <p class="lead js-total-shipping"></p>
               </div>
               <div class="col text-center">
                 <p class="mb-0 text-center">{{ 'Total taxes'|trans({}, 'Admin.Orderscustomers.Feature') }}</p>
-                <p class="lead">0</p>
+                <p class="lead js-total-taxes"></p>
               </div>
               <div class="col text-center">
                 <p class="mb-0">{{ 'Total (Tax excl.)'|trans({}, 'Admin.Orderscustomers.Feature') }}</p>
-                <p class="lead">0</p>
+                <p class="lead js-total-without-tax"></p>
               </div>
-              <div class="col text-center">
-                <p class="mb-0">{{ 'Total (Tax excl.)'|trans({}, 'Admin.Orderscustomers.Feature') }}</p>
-                <p class="lead mb-0">0</p>
+              <div class="col text-center border border-primary">
+                <p class="mb-0">{{ 'Total (Tax incl.)'|trans({}, 'Admin.Orderscustomers.Feature') }}</p>
+                <p class="lead mb-0 js-total-with-tax"></p>
               </div>
             </div>
           </div>
@@ -72,10 +72,10 @@
     </div>
     <div class="row mb-2">
       <div class="col offset-sm-3">
-        <button type="button" class="btn btn-primary">
+        <button type="button" class="btn btn-outline-primary">
           {{ 'Send an email to the customer with the link to process the payment.'|trans({}, 'Admin.Orderscustomers.Help') }}
         </button>
-        <a href="#" class="" target="_blank">
+        <a href="#" target="_blank">
           {{ 'Go on payment page to process the payment.'|trans({}, 'Admin.Orderscustomers.Help') }}
         </a>
       </div>
@@ -85,7 +85,11 @@
         <span class="float-right">{{ 'Payment'|trans({}, 'Admin.Global') }}</span>
       </div>
       <div class="col-4">
-        <select class="form-control"></select>
+        <select class="form-control">
+          {% for value, name in paymentModules %}
+            <option value="{{ value }}">{{ name }}</option>
+          {% endfor %}
+        </select>
       </div>
     </div>
     <div class="row mb-2">
@@ -93,10 +97,14 @@
         <span class="float-right">{{ 'Order status'|trans({}, 'Admin.Shopparameters.Feature') }}</span>
       </div>
       <div class="col-4">
-        <select class="form-control"></select>
+        <select class="form-control">
+          {% for name, id in orderStates %}
+            <option value="{{ id }}">{{ name }}</option>
+          {% endfor %}
+        </select>
       </div>
     </div>
-    <div class="row">
+    <div class="row mt-4">
       <div class="col offset-sm-3">
         <button class="btn btn-primary" type="button">
           {{ 'Create the order'|trans({}, 'Admin.Orderscustomers.Feature') }}
