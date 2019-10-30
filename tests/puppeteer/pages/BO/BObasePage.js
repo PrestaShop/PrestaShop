@@ -48,8 +48,8 @@ module.exports = class BOBasePage extends CommonPage {
     this.moduleManagerLink = '#subtab-AdminModulesSf';
 
     // Design
-    // Pages
     this.designParentLink = '#subtab-AdminParentThemes';
+    // Pages
     this.pagesLink = '#subtab-AdminCmsContent';
 
     // International

@@ -139,10 +139,8 @@ module.exports = class Pages extends BOBasePage {
       this.page.waitForSelector(`${bulkActionsToggleButton}`, {visible: true}),
     ]);
     // Click on delete and wait for modal
-    await Promise.all([
-      this.page.click(bulkActionsDeleteButton),
-      this.dialogListener(),
-    ]);
+    await this.page.click(bulkActionsDeleteButton);
+    this.dialogListener();
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 
@@ -222,7 +220,8 @@ module.exports = class Pages extends BOBasePage {
       ),
     ]);
     // Click on edit
-    this.clickAndWaitForNavigation(this.listTableEditLink.replace('%TABLE', 'cms_page_category')
+    this.clickAndWaitForNavigation(this.listTableEditLink
+      .replace('%TABLE', 'cms_page_category')
       .replace('%ROW', row));
   }
 };

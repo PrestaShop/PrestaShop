@@ -290,5 +290,10 @@ describe('Filter And Quick Edit Categories', async () => {
       const numberOfCategoriesAfterFilter = await this.pageObjects.pagesPage.resetFilter('cms_page_category');
       await expect(numberOfCategoriesAfterFilter).to.be.equal(numberOfCategories);
     });
+
+    it('should delete categories with Bulk Actions and check Result', async function () {
+      const deleteTextResult = await this.pageObjects.pagesPage.deleteRowInTableBulkActions('cms_page_category');
+      await expect(deleteTextResult).to.be.equal(this.pageObjects.pagesPage.successfulMultiDeleteMessage);
+    });
   });
 });
