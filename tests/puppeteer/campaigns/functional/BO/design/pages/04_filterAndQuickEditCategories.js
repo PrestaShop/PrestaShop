@@ -142,7 +142,8 @@ describe('Filter And Quick Edit Categories', async () => {
       });
 
       it('should reset all filters', async function () {
-        const numberOfCategoriesAfterFilter = await this.pageObjects.pagesPage.resetAndGetNumberOfLines('cms_page_category');
+        const numberOfCategoriesAfterFilter = await this.pageObjects.pagesPage
+          .resetAndGetNumberOfLines('cms_page_category');
         await expect(numberOfCategoriesAfterFilter).to.be.equal(numberOfCategories);
       });
 
@@ -166,7 +167,8 @@ describe('Filter And Quick Edit Categories', async () => {
       });
 
       it('should reset all filters', async function () {
-        const numberOfCategoriesAfterFilter = await this.pageObjects.pagesPage.resetAndGetNumberOfLines('cms_page_category');
+        const numberOfCategoriesAfterFilter = await this.pageObjects.pagesPage
+          .resetAndGetNumberOfLines('cms_page_category');
         await expect(numberOfCategoriesAfterFilter).to.be.equal(numberOfCategories);
       });
 
@@ -186,7 +188,8 @@ describe('Filter And Quick Edit Categories', async () => {
       });
 
       it('should reset all filters', async function () {
-        const numberOfCategoriesAfterFilter = await this.pageObjects.pagesPage.resetAndGetNumberOfLines('cms_page_category');
+        const numberOfCategoriesAfterFilter = await this.pageObjects.pagesPage
+          .resetAndGetNumberOfLines('cms_page_category');
         await expect(numberOfCategoriesAfterFilter).to.be.equal(numberOfCategories);
       });
 
@@ -214,7 +217,8 @@ describe('Filter And Quick Edit Categories', async () => {
       });
 
       it('should reset all filters', async function () {
-        const numberOfCategoriesAfterFilter = await this.pageObjects.pagesPage.resetAndGetNumberOfLines('cms_page_category');
+        const numberOfCategoriesAfterFilter = await this.pageObjects.pagesPage
+          .resetAndGetNumberOfLines('cms_page_category');
         await expect(numberOfCategoriesAfterFilter).to.be.equal(numberOfCategories);
       });
     });
@@ -282,7 +286,8 @@ describe('Filter And Quick Edit Categories', async () => {
     });
 
     it('should reset all filters', async function () {
-      const numberOfCategoriesAfterFilter = await this.pageObjects.pagesPage.resetAndGetNumberOfLines('cms_page_category');
+      const numberOfCategoriesAfterFilter = await this.pageObjects.pagesPage
+        .resetAndGetNumberOfLines('cms_page_category');
       await expect(numberOfCategoriesAfterFilter).to.be.equal(numberOfCategories);
     });
 
