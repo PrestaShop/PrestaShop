@@ -252,7 +252,7 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
     {
         $discount = $this->locale->formatPrice($legacySummary['total_discounts_tax_exc'], $currency->iso_code);
 
-        if (0 !== $legacySummary['total_discounts_tax_exc']) {
+        if (0 !== (int) $legacySummary['total_discounts_tax_exc']) {
             $discount = '-' . $discount;
         }
 
