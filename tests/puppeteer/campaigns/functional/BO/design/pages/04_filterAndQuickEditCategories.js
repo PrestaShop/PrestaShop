@@ -97,12 +97,12 @@ describe('Filter And Quick Edit Categories', async () => {
     // Filter categories table
     describe('Filter Categories', async () => {
       it('should reset filter and get number of categories in BO', async function () {
-        numberOfCategories = await this.pageObjects.pagesPage.resetFilter('cms_page_category');
+        numberOfCategories = await this.pageObjects.pagesPage.resetAndGetNumberOfLines('cms_page_category');
         await expect(numberOfCategories).to.be.above(0);
       });
 
-      it('should filter by Id \'4\'', async function () {
-        await this.pageObjects.pagesPage.filterTable('cms_page_category', 'input', 'id_cms_category', '4');
+      it('should filter by Id \'5\'', async function () {
+        await this.pageObjects.pagesPage.filterTable('cms_page_category', 'input', 'id_cms_category', '5');
         const numberOfCategoriesAfterFilter = await this.pageObjects.pagesPage.getNumberFromText(
           this.pageObjects.pagesPage.gridTitle.replace('%TABLE', 'cms_page_category'),
         );
@@ -113,11 +113,12 @@ describe('Filter And Quick Edit Categories', async () => {
             .replace('%ROW', 1)
             .replace('%COLUMN', 'id_cms_category'),
         );
-        await expect(textColumn).to.contains('4');
+        await expect(textColumn).to.contains('5');
       });
 
       it('should reset all filters', async function () {
-        const numberOfCategoriesAfterFilter = await this.pageObjects.pagesPage.resetFilter('cms_page_category');
+        const numberOfCategoriesAfterFilter = await this.pageObjects.pagesPage
+          .resetAndGetNumberOfLines('cms_page_category');
         await expect(numberOfCategoriesAfterFilter).to.be.equal(numberOfCategories);
       });
 
@@ -141,7 +142,7 @@ describe('Filter And Quick Edit Categories', async () => {
       });
 
       it('should reset all filters', async function () {
-        const numberOfCategoriesAfterFilter = await this.pageObjects.pagesPage.resetFilter('cms_page_category');
+        const numberOfCategoriesAfterFilter = await this.pageObjects.pagesPage.resetAndGetNumberOfLines('cms_page_category');
         await expect(numberOfCategoriesAfterFilter).to.be.equal(numberOfCategories);
       });
 
@@ -165,7 +166,7 @@ describe('Filter And Quick Edit Categories', async () => {
       });
 
       it('should reset all filters', async function () {
-        const numberOfCategoriesAfterFilter = await this.pageObjects.pagesPage.resetFilter('cms_page_category');
+        const numberOfCategoriesAfterFilter = await this.pageObjects.pagesPage.resetAndGetNumberOfLines('cms_page_category');
         await expect(numberOfCategoriesAfterFilter).to.be.equal(numberOfCategories);
       });
 
@@ -185,7 +186,7 @@ describe('Filter And Quick Edit Categories', async () => {
       });
 
       it('should reset all filters', async function () {
-        const numberOfCategoriesAfterFilter = await this.pageObjects.pagesPage.resetFilter('cms_page_category');
+        const numberOfCategoriesAfterFilter = await this.pageObjects.pagesPage.resetAndGetNumberOfLines('cms_page_category');
         await expect(numberOfCategoriesAfterFilter).to.be.equal(numberOfCategories);
       });
 
@@ -213,7 +214,7 @@ describe('Filter And Quick Edit Categories', async () => {
       });
 
       it('should reset all filters', async function () {
-        const numberOfCategoriesAfterFilter = await this.pageObjects.pagesPage.resetFilter('cms_page_category');
+        const numberOfCategoriesAfterFilter = await this.pageObjects.pagesPage.resetAndGetNumberOfLines('cms_page_category');
         await expect(numberOfCategoriesAfterFilter).to.be.equal(numberOfCategories);
       });
     });
@@ -281,7 +282,7 @@ describe('Filter And Quick Edit Categories', async () => {
     });
 
     it('should reset all filters', async function () {
-      const numberOfCategoriesAfterFilter = await this.pageObjects.pagesPage.resetFilter('cms_page_category');
+      const numberOfCategoriesAfterFilter = await this.pageObjects.pagesPage.resetAndGetNumberOfLines('cms_page_category');
       await expect(numberOfCategoriesAfterFilter).to.be.equal(numberOfCategories);
     });
 

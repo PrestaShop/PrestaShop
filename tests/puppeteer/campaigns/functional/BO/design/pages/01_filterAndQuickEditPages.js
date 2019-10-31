@@ -52,7 +52,7 @@ describe('Filter And Quick Edit Pages', async () => {
   // 1 : Filter Pages with all inputs and selects in grid table
   describe('Filter Pages', async () => {
     it('should reset all filters and get number of pages in BO', async function () {
-      numberOfPages = await this.pageObjects.pagesPage.resetFilter('cms_page');
+      numberOfPages = await this.pageObjects.pagesPage.resetAndGetNumberOfLines('cms_page');
       await expect(numberOfPages).to.be.above(0);
     });
 
@@ -78,7 +78,7 @@ describe('Filter And Quick Edit Pages', async () => {
     });
 
     it('should reset all filters', async function () {
-      const numberOfPagesAfterReset = await this.pageObjects.pagesPage.resetFilter('cms_page');
+      const numberOfPagesAfterReset = await this.pageObjects.pagesPage.resetAndGetNumberOfLines('cms_page');
       await expect(numberOfPagesAfterReset).to.be.equal(numberOfPages);
     });
 
@@ -103,7 +103,7 @@ describe('Filter And Quick Edit Pages', async () => {
     });
 
     it('should reset all filters', async function () {
-      const numberOfPagesAfterReset = await this.pageObjects.pagesPage.resetFilter('cms_page');
+      const numberOfPagesAfterReset = await this.pageObjects.pagesPage.resetAndGetNumberOfLines('cms_page');
       await expect(numberOfPagesAfterReset).to.be.equal(numberOfPages);
     });
 
@@ -130,7 +130,7 @@ describe('Filter And Quick Edit Pages', async () => {
     });
 
     it('should reset all filters', async function () {
-      const numberOfPagesAfterReset = await this.pageObjects.pagesPage.resetFilter('cms_page');
+      const numberOfPagesAfterReset = await this.pageObjects.pagesPage.resetAndGetNumberOfLines('cms_page');
       await expect(numberOfPagesAfterReset).to.be.equal(numberOfPages);
     });
 
@@ -157,7 +157,7 @@ describe('Filter And Quick Edit Pages', async () => {
     });
 
     it('should reset all filters', async function () {
-      const numberOfPagesAfterReset = await this.pageObjects.pagesPage.resetFilter('cms_page');
+      const numberOfPagesAfterReset = await this.pageObjects.pagesPage.resetAndGetNumberOfLines('cms_page');
       await expect(numberOfPagesAfterReset).to.be.equal(numberOfPages);
     });
 
@@ -188,7 +188,7 @@ describe('Filter And Quick Edit Pages', async () => {
     });
 
     it('should reset all filters', async function () {
-      const numberOfPagesAfterReset = await this.pageObjects.pagesPage.resetFilter('cms_page');
+      const numberOfPagesAfterReset = await this.pageObjects.pagesPage.resetAndGetNumberOfLines('cms_page');
       await expect(numberOfPagesAfterReset).to.be.equal(numberOfPages);
     });
   });
@@ -258,7 +258,7 @@ describe('Filter And Quick Edit Pages', async () => {
     });
 
     it('should reset all filters', async function () {
-      const numberOfPagesAfterReset = await this.pageObjects.pagesPage.resetFilter('cms_page');
+      const numberOfPagesAfterReset = await this.pageObjects.pagesPage.resetAndGetNumberOfLines('cms_page');
       await expect(numberOfPagesAfterReset).to.be.equal(numberOfPages);
     });
   });

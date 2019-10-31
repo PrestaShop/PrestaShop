@@ -73,7 +73,7 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
   });
 
   it('should reset all filters and get number of categories in BO', async function () {
-    numberOfCategories = await this.pageObjects.pagesPage.resetFilter('cms_page_category');
+    numberOfCategories = await this.pageObjects.pagesPage.resetAndGetNumberOfLines('cms_page_category');
     if (numberOfCategories !== 0) await expect(numberOfCategories).to.be.above(0);
   });
 
@@ -378,7 +378,7 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
     });
 
     it('should reset filter', async function () {
-      const numberOfPagesAfterDeletion = await this.pageObjects.pagesPage.resetFilter('cms_page');
+      const numberOfPagesAfterDeletion = await this.pageObjects.pagesPage.resetAndGetNumberOfLines('cms_page');
       await expect(numberOfPagesAfterDeletion).to.be.equal(numberOfPages);
     });
 
@@ -394,7 +394,8 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
     });
 
     it('should reset filter', async function () {
-      const numberOfCategoriesAfterDeletion = await this.pageObjects.pagesPage.resetFilter('cms_page_category');
+      const numberOfCategoriesAfterDeletion = await this.pageObjects.pagesPage
+        .resetAndGetNumberOfLines('cms_page_category');
       await expect(numberOfCategoriesAfterDeletion).to.be.equal(numberOfCategories);
     });
   });
