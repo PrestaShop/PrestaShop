@@ -96,10 +96,10 @@
             <label for="currency_reset_default_settings" class="form-control-label">
             </label>
             <div class="col-sm">
-              <a href="#" id="currency_reset_default_settings" class="btn btn-outline-secondary">
+              <button type="button" id="currency_reset_default_settings" class="btn btn-outline-secondary">
                 <i class="material-icons">refresh</i>
                 {{ 'Reset default settings'|trans({}, 'Admin.International.Feature') }}
-              </a>
+              </button>
             </div>
           </div>
         {% endif %}
@@ -117,7 +117,7 @@
         </a>
       </div>
       <div class="d-inline-flex float-right">
-        <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+        <button type="submit" class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
       </div>
     </div>
 
