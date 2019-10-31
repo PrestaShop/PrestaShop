@@ -33,4 +33,4 @@ services:
         - !php/const \PrestaShop\PrestaShop\Core\Currency\ExchangeRateProvider::CURRENCY_FEED_URL
         - '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrencyIsoCode()'
         - '@prestashop.core.currency.exchange_rate.circuit_breaker'
-        - '@=service("prestashop.adapter.environment").getCacheDir()'
+        - '@cache.app'

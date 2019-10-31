@@ -29,7 +29,9 @@ namespace Tests\Unit\Core\Currency;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\CircuitBreaker\Contract\CircuitBreakerInterface;
 use PrestaShop\PrestaShop\Core\Currency\ExchangeRateProvider;
+use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Cache\Adapter\AdapterInterface as CacheInterface;
 
 class ExchangeRateProviderTest extends TestCase
 {
@@ -48,18 +50,18 @@ class ExchangeRateProviderTest extends TestCase
     /** @var Filesystem */
     private $fileSystem;
 
+    /** @var CacheInterface */
+    private $cache;
+
     /**
      * {@inheritdoc}
      */
     protected function setUp()
     {
         parent::setUp();
-        $this->cacheDir = _PS_ROOT_DIR_ . '/var/cache/test/';
-        $this->cacheFile = $this->cacheDir . 'currency_feed.xml';
+        $this->cache = new ArrayAdapter();
         $this->feedFilePath = _PS_ROOT_DIR_ . '/tests/Unit/Resources/rss/currencies.xml';
         $this->feedContent = file_get_contents($this->feedFilePath);
-        $this->fileSystem = new Filesystem();
-        $this->fileSystem->remove($this->cacheFile);
     }
 
     public function testGetRateFromFeed()
@@ -70,7 +72,7 @@ class ExchangeRateProviderTest extends TestCase
             $this->feedFilePath,
             'EUR',
             $circuitBreaker,
-            $this->cacheDir
+            $this->cache
         );
 
         $exchangeRate = $exchangeRateProvider->getExchangeRate('ALL');
@@ -91,7 +93,7 @@ class ExchangeRateProviderTest extends TestCase
             $this->feedFilePath,
             'USD',
             $circuitBreaker,
-            $this->cacheDir
+            $this->cache
         );
 
         $exchangeRate = $exchangeRateProvider->getExchangeRate('ALL');
@@ -116,7 +118,7 @@ class ExchangeRateProviderTest extends TestCase
             $this->feedFilePath,
             'USD',
             $circuitBreaker,
-            $this->cacheDir
+            $this->cache
         );
 
         $exchangeRate = $exchangeRateProvider->getExchangeRate('ALL');
@@ -141,7 +143,7 @@ class ExchangeRateProviderTest extends TestCase
             $this->feedFilePath,
             'AUD',
             $circuitBreaker,
-            $this->cacheDir
+            $this->cache
         );
 
         $exchangeRate = $exchangeRateProvider->getExchangeRate('ALL');
@@ -162,29 +164,32 @@ class ExchangeRateProviderTest extends TestCase
             $this->feedFilePath,
             'EUR',
             $circuitBreaker,
-            $this->cacheDir
+            $this->cache
         );
 
-        $this->assertFalse($this->fileSystem->exists($this->cacheFile));
+        $cacheItem = $this->cache->getItem(ExchangeRateProvider::CACHE_KEY_XML);
+        $this->assertFalse($cacheItem->isHit());
         $exchangeRate = $exchangeRateProvider->getExchangeRate('EUR');
         $this->assertEquals(1.0, $exchangeRate->round(6));
 
-        $this->assertTrue($this->fileSystem->exists($this->cacheFile));
-        $cacheContent = file_get_contents($this->cacheFile);
-        $this->assertEquals($this->feedContent, $cacheContent);
+        $cacheItem = $this->cache->getItem(ExchangeRateProvider::CACHE_KEY_XML);
+        $this->assertTrue($cacheItem->isHit());
+        $this->assertEquals($this->feedContent, $cacheItem->get());
     }
 
     public function testCacheFallbackAfterUnknownCall()
     {
         $unknownFilePath = 'file:://unknown.file.path.to.simulate.circuit.breaker.fail';
-        file_put_contents($this->cacheFile, $this->feedContent);
+        $cacheItem = $this->cache->getItem(ExchangeRateProvider::CACHE_KEY_XML);
+        $cacheItem->set($this->feedContent);
+        $this->cache->save($cacheItem);
 
         $circuitBreaker = $this->buildCircuitBreakerMock('', $unknownFilePath);
         $exchangeRateProvider = new ExchangeRateProvider(
             $unknownFilePath,
             'EUR',
             $circuitBreaker,
-            $this->cacheDir
+            $this->cache
         );
 
         $exchangeRate = $exchangeRateProvider->getExchangeRate('ALL');
@@ -199,14 +204,16 @@ class ExchangeRateProviderTest extends TestCase
 
     public function testCacheFallbackAfterInvalidCall()
     {
-        file_put_contents($this->cacheFile, $this->feedContent);
+        $cacheItem = $this->cache->getItem(ExchangeRateProvider::CACHE_KEY_XML);
+        $cacheItem->set($this->feedContent);
+        $this->cache->save($cacheItem);
 
         $circuitBreaker = $this->buildCircuitBreakerMock('invalid xml', $this->feedFilePath);
         $exchangeRateProvider = new ExchangeRateProvider(
             $this->feedFilePath,
             'EUR',
             $circuitBreaker,
-            $this->cacheDir
+            $this->cache
         );
 
         $exchangeRate = $exchangeRateProvider->getExchangeRate('ALL');
@@ -231,7 +238,7 @@ class ExchangeRateProviderTest extends TestCase
             $unknownFilePath,
             'EUR',
             $circuitBreaker,
-            $this->cacheDir
+            $this->cache
         );
 
         $exchangeRateProvider->getExchangeRate('ALL');
@@ -243,14 +250,16 @@ class ExchangeRateProviderTest extends TestCase
      */
     public function testInvalidFeedAndCache()
     {
-        file_put_contents($this->cacheFile, 'invalid xml');
+        $cacheItem = $this->cache->getItem(ExchangeRateProvider::CACHE_KEY_XML);
+        $cacheItem->set('invalid xml');
+        $this->cache->save($cacheItem);
 
         $circuitBreaker = $this->buildCircuitBreakerMock('invalid xml', $this->feedFilePath);
         $exchangeRateProvider = new ExchangeRateProvider(
             $this->feedFilePath,
             'EUR',
             $circuitBreaker,
-            $this->cacheDir
+            $this->cache
         );
 
         $exchangeRateProvider->getExchangeRate('ALL');
@@ -268,7 +277,7 @@ class ExchangeRateProviderTest extends TestCase
             $this->feedFilePath,
             'EUR',
             $circuitBreaker,
-            $this->cacheDir
+            $this->cache
         );
 
         $exchangeRateProvider->getExchangeRate('XYZ');
@@ -286,7 +295,7 @@ class ExchangeRateProviderTest extends TestCase
             $this->feedFilePath,
             'XYZ',
             $circuitBreaker,
-            $this->cacheDir
+            $this->cache
         );
 
         $exchangeRateProvider->getExchangeRate('ALL');
