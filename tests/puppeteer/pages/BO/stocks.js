@@ -70,6 +70,7 @@ module.exports = class Stocks extends BOBasePage {
     for (const closeButton of closeButtons) {
       await closeButton.click();
     }
+    return this.getNumberOfProductsFromList();
   }
 
   /**

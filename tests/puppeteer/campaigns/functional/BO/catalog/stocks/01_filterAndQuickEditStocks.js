@@ -51,7 +51,6 @@ describe('Filter And Quick Edit Stocks', async () => {
     await expect(numberOfProducts).to.be.above(0);
   });
 
-
   // 1 : Filter products with name, reference, supplier
   describe('Filter products', async () => {
     it('should filter by name \'mug\'', async function () {
@@ -70,8 +69,7 @@ describe('Filter And Quick Edit Stocks', async () => {
     });
 
     it('should reset all filters', async function () {
-      await this.pageObjects.stocksPage.resetFilter();
-      const numberOfProductsAfterReset = await this.pageObjects.stocksPage.getNumberOfProductsFromList();
+      const numberOfProductsAfterReset = await this.pageObjects.stocksPage.resetFilter();
       await expect(numberOfProductsAfterReset).to.equal(numberOfProducts);
     });
 
@@ -91,8 +89,7 @@ describe('Filter And Quick Edit Stocks', async () => {
     });
 
     it('should reset all filters', async function () {
-      await this.pageObjects.stocksPage.resetFilter();
-      const numberOfProductsAfterReset = await this.pageObjects.stocksPage.getNumberOfProductsFromList();
+      const numberOfProductsAfterReset = await this.pageObjects.stocksPage.resetFilter();
       await expect(numberOfProductsAfterReset).to.equal(numberOfProducts);
     });
 
@@ -112,8 +109,7 @@ describe('Filter And Quick Edit Stocks', async () => {
     });
 
     it('should reset all filters', async function () {
-      await this.pageObjects.stocksPage.resetFilter();
-      const numberOfProductsAfterReset = await this.pageObjects.stocksPage.getNumberOfProductsFromList();
+      const numberOfProductsAfterReset = await this.pageObjects.stocksPage.resetFilter();
       await expect(numberOfProductsAfterReset).to.equal(numberOfProducts);
     });
 
@@ -122,13 +118,13 @@ describe('Filter And Quick Edit Stocks', async () => {
         this.pageObjects.stocksPage.getTextContent(
           this.pageObjects.stocksPage.productRowPhysicalColumn.replace('%ROW', 1)
         ),
-      10);
+        10);
       await this.page.type(this.pageObjects.stocksPage.productRowQuantityInput.replace('%ROW', 1), '20');
       const newPhysicalQuantity = await parseInt(
         this.pageObjects.stocksPage.getTextContent(
           this.pageObjects.stocksPage.productRowPhysicalQuantityUpdateColumn.replace('%ROW', 1)
         ),
-      10);
+        10);
       await expect(newPhysicalQuantity).to.be.equal(physicalQuantity+20);
     });
   });
