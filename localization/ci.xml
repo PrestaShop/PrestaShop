@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<localizationPack name="Côte d'Ivoire" version="1.0">
+<localizationPack name="Ivory Coast" version="1.0">
 	<currencies>
 		<currency name="Franc CFA" iso_code="XOF" iso_code_num="952" sign="FCFA" blank="1" conversion_rate="655.957" format="2" decimals="0" />
 	</currencies>
