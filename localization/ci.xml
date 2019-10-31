@@ -14,7 +14,7 @@
 			<taxRule iso_code_country="ci" id_tax="1" />
 		</taxRulesGroup>
 
-		<taxRulesGroup name="CI Taxe réduite (10%)">
+		<taxRulesGroup name="CI Reduced Rate (10%)">
 			<taxRule iso_code_country="ci" id_tax="2" />
 		</taxRulesGroup>
 	</taxes>
