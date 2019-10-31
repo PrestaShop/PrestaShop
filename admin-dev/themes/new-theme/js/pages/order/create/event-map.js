@@ -33,6 +33,10 @@ export default {
   customerSelected: 'customerSelected',
   // when new cart is loaded, no matter if its empty, selected from carts list or duplicated by order.
   cartLoaded: 'cartLoaded',
+  // when cart currency has been changed
+  cartCurrencyChanged: 'cartCurrencyChanged',
+  // when cart language has been changed
+  cartLanguageChanged: 'cartLanguageChanged',
   // when cart addresses information has been changed
   cartAddressesChanged: 'cartAddressesChanged',
   // when cart delivery option has been changed

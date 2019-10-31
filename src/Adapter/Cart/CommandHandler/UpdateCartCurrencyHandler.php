@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
+use PrestaShopException;
 
 /**
  * @internal
@@ -52,13 +53,16 @@ final class UpdateCartCurrencyHandler extends AbstractCartHandler implements Upd
         $cart = $this->getCart($command->getCartId());
         $cart->id_currency = (int) $currency->id;
 
-        if (false === $cart->save()) {
-            throw new CartException('Failed to update cart currency.');
+        try {
+            if (false === $cart->update()) {
+                throw new CartException('Failed to update cart currency.');
+            }
+        } catch (PrestaShopException $e) {
+            throw new CartException(sprintf(
+                'An error occurred while trying to update currency for cart with id "%s"',
+                $cart->id
+            ));
         }
-
-        // @todo: Should context be changed at controller layer instead?
-        \Context::getContext()->currency = $currency;
-        \Context::getContext()->cart = $cart;
     }
 
     /**

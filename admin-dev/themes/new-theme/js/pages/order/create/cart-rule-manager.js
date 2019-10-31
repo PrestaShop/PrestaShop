@@ -30,6 +30,7 @@ import {EventEmitter} from '@components/event-emitter';
 import eventMap from '@pages/order/create/event-map';
 import Router from '@components/router';
 import SummaryRenderer from '@pages/order/create/summary-renderer';
+import ShippingRenderer from '@pages/order/create/shipping-renderer';
 
 const $ = window.$;
 
@@ -45,6 +46,7 @@ export default class CartRuleManager {
     this.cartRulesRenderer = new CartRulesRenderer();
     this.cartEditor = new CartEditor();
     this.summaryRenderer = new SummaryRenderer();
+    this.shippingRenderer = new ShippingRenderer();
 
     this._initListeners();
 
@@ -86,7 +88,9 @@ export default class CartRuleManager {
    */
   _onAddCartRuleToCart() {
     EventEmitter.on(eventMap.cartRuleAdded, (cartInfo) => {
-      this.cartRulesRenderer.renderCartRulesBlock(cartInfo.cartRules, cartInfo.products.length === 0);
+      const cartIsEmpty = cartInfo.products.length === 0;
+      this.cartRulesRenderer.renderCartRulesBlock(cartInfo.cartRules, cartIsEmpty);
+      this.shippingRenderer.render(cartInfo.shipping, cartIsEmpty);
       this.summaryRenderer.render(cartInfo);
     });
   }
@@ -109,7 +113,9 @@ export default class CartRuleManager {
    */
   _onRemoveCartRuleFromCart() {
     EventEmitter.on(eventMap.cartRuleRemoved, (cartInfo) => {
-      this.cartRulesRenderer.renderCartRulesBlock(cartInfo.cartRules, cartInfo.products.length === 0);
+      const cartIsEmpty = cartInfo.products.length === 0;
+      this.shippingRenderer.render(cartInfo.shipping, cartIsEmpty);
+      this.cartRulesRenderer.renderCartRulesBlock(cartInfo.cartRules, cartIsEmpty);
       this.summaryRenderer.render(cartInfo);
     });
   }
@@ -120,10 +126,6 @@ export default class CartRuleManager {
    * @private
    */
   _search(searchPhrase) {
-    if (searchPhrase.length < 3) {
-      return;
-    }
-
     if (this.activeSearchRequest !== null) {
       this.activeSearchRequest.abort();
     }

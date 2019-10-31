@@ -47,6 +47,12 @@ $order-block-background-color: #F8F8F8;
   #search-cart-rules-result-box {
     z-index: 10;
   }
+
+  #summary-block {
+    .badge {
+      font-size: 100%;
+    }
+  }
 }
 
 .messages-block {

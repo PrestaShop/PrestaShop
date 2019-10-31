@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
+use PrestaShopException;
 
 /**
  * @internal
@@ -52,12 +53,16 @@ final class UpdateCartLanguageHandler extends AbstractCartHandler implements Upd
         $cart = $this->getCart($command->getCartId());
         $cart->id_lang = (int) $language->id;
 
-        if (false === $cart->save()) {
-            throw new CartException('Failed to update cart');
+        try {
+            if (false === $cart->update()) {
+                throw new CartException('Failed to update cart language');
+            }
+        } catch (PrestaShopException $e) {
+            throw new CartException(sprintf(
+                'An error occurred while trying to update language for cart with id "%s"',
+                $cart->id
+            ));
         }
-
-        // @todo: Should context be changed at controller layer instead?
-        \Context::getContext()->cart = $cart;
     }
 
     /**

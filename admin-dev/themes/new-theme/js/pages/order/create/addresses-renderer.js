@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import createOrderPageMap from './create-order-map';
+import createOrderMap from './create-order-map';
 
 const $ = window.$;
 
@@ -39,13 +39,14 @@ export default class AddressesRenderer {
     let deliveryAddressDetailsContent = '';
     let invoiceAddressDetailsContent = '';
 
-    const $deliveryAddressDetails = $(createOrderPageMap.deliveryAddressDetails);
-    const $invoiceAddressDetails = $(createOrderPageMap.invoiceAddressDetails);
-    const $deliveryAddressSelect = $(createOrderPageMap.deliveryAddressSelect);
-    const $invoiceAddressSelect = $(createOrderPageMap.invoiceAddressSelect);
+    const disabledAddressWarningTemplate = $(createOrderMap.disabledAddressWarningTemplate).html();
+    const $deliveryAddressDetails = $(createOrderMap.deliveryAddressDetails);
+    const $invoiceAddressDetails = $(createOrderMap.invoiceAddressDetails);
+    const $deliveryAddressSelect = $(createOrderMap.deliveryAddressSelect);
+    const $invoiceAddressSelect = $(createOrderMap.invoiceAddressSelect);
 
-    const $addressesContent = $(createOrderPageMap.addressesContent);
-    const $addressesWarningContent = $(createOrderPageMap.addressesWarning);
+    const $addressesContent = $(createOrderMap.addressesContent);
+    const $addressesWarningContent = $(createOrderMap.addressesWarning);
 
     $deliveryAddressDetails.empty();
     $invoiceAddressDetails.empty();
@@ -62,7 +63,7 @@ export default class AddressesRenderer {
     $addressesContent.removeClass('d-none');
     $addressesWarningContent.addClass('d-none');
 
-    for (const key in Object.keys(addresses)) {
+    for (const key in addresses) {
       const address = addresses[key];
 
       const deliveryAddressOption = {
@@ -80,13 +81,20 @@ export default class AddressesRenderer {
         deliveryAddressOption.selected = 'selected';
       }
 
+      //@todo: cleanup code
       if (address.invoice) {
         invoiceAddressDetailsContent = address.formattedAddress;
+        if (!address.countryIsEnabled) {
+          $invoiceAddressSelect.append($('<option>', invoiceAddressOption));
+          invoiceAddressDetailsContent += disabledAddressWarningTemplate;
+        }
         invoiceAddressOption.selected = 'selected';
       }
 
-      $deliveryAddressSelect.append($('<option>', deliveryAddressOption));
-      $invoiceAddressSelect.append($('<option>', invoiceAddressOption));
+      if (address.countryIsEnabled) {
+        $deliveryAddressSelect.append($('<option>', deliveryAddressOption));
+        $invoiceAddressSelect.append($('<option>', invoiceAddressOption));
+      }
     }
 
     if (deliveryAddressDetailsContent) {
@@ -106,6 +114,6 @@ export default class AddressesRenderer {
    * @private
    */
   _showAddressesBlock() {
-    $(createOrderPageMap.addressesBlock).removeClass('d-none');
+    $(createOrderMap.addressesBlock).removeClass('d-none');
   }
 }

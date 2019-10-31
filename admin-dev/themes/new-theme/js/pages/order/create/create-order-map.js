@@ -33,6 +33,7 @@ export default {
   customerSearchInput: '#customer-search-input',
   customerSearchResultsBlock: '.js-customer-search-results',
   customerSearchResultTemplate: '#customer-search-result-template',
+  customerSearchEmptyResultWarning: '#customer-search-empty-result-warn',
   changeCustomerBtn: '.js-change-customer-btn',
   customerSearchRow: '.js-search-customer-row',
   chooseCustomerBtn: '.js-choose-customer-btn',
@@ -65,9 +66,12 @@ export default {
   orderProductsField: '.js-order-products',
   orderTotalField: '.js-order-total-paid',
   orderStatusField: '.js-order-status',
+  emptyListRowTemplate: '#js-empty-list-row',
 
   // selectors related to cart block
   cartBlock: '#cart-block',
+  cartCurrencySelect: '#js-cart-currency-select',
+  cartLanguageSelect: '#js-cart-language-select',
 
   // selectors related to cartRules block
   cartRulesBlock: '#cart-rules-block',
@@ -92,6 +96,7 @@ export default {
   addressSelect: '.js-address-select',
   addressesContent: '#addresses-content',
   addressesWarning: '#addresses-warning',
+  disabledAddressWarningTemplate: '#js-disabled-address-warn',
 
   // selectors related to summary block
   summaryBlock: '#summary-block',

@@ -59,6 +59,28 @@ admin_carts_edit_carrier:
   options:
     expose: true
 
+admin_carts_edit_currency:
+  path: /{cartId}/currency
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Cart:editCurrency
+    _legacy_controller: AdminCarts
+  requirements:
+    cartId: \d+
+  options:
+    expose: true
+
+admin_carts_edit_language:
+  path: /{cartId}/language
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Cart:editLanguage
+    _legacy_controller: AdminCarts
+  requirements:
+    cartId: \d+
+  options:
+    expose: true
+
 admin_carts_set_free_shipping:
   path: /{cartId}/rules/free-shipping
   methods: [POST]

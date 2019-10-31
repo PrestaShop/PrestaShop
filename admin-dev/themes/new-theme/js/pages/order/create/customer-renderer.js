@@ -104,32 +104,35 @@ export default class CustomerRenderer {
     const $cartsTableRowTemplate = $($(createOrderMap.customerCartsTableRowTemplate).html());
 
     $cartsTable.find('tbody').empty();
-
-    if (carts.length === 0) {
-      return;
-    }
-
     this._showCheckoutHistoryBlock();
 
     for (const key in carts) {
       const cart = carts[key];
+
       // do not render current cart
       if (cart.cartId === currentCartId) {
+        // render 'No records found' warn if carts only contain current cart
+        if (carts.length === Number(key) + 1) {
+          this._renderEmptyList($cartsTable);
+        }
+
         continue;
       }
-      const $template = $cartsTableRowTemplate.clone();
 
-      $template.find(createOrderMap.cartIdField).text(cart.cartId);
-      $template.find(createOrderMap.cartDateField).text(cart.creationDate);
-      $template.find(createOrderMap.cartTotalField).text(cart.totalPrice);
-      $template.find(createOrderMap.cartDetailsBtn).prop(
+      const $cartsTableRow = $cartsTableRowTemplate.clone();
+
+      $cartsTableRow.find(createOrderMap.cartIdField).text(cart.cartId);
+      $cartsTableRow.find(createOrderMap.cartDateField).text(cart.creationDate);
+      $cartsTableRow.find(createOrderMap.cartTotalField).text(cart.totalPrice);
+      $cartsTableRow.find(createOrderMap.cartDetailsBtn).prop(
         'href',
-        this.router.generate('admin_carts_view', {cartId: cart.cartId})
+        this.router.generate('admin_carts_view', {cartId: cart.cartId}),
       );
 
-      $template.find(createOrderMap.useCartBtn).data('cart-id', cart.cartId);
+      $cartsTableRow.find(createOrderMap.useCartBtn).data('cart-id', cart.cartId);
 
-      $cartsTable.find('tbody').append($template);
+      $cartsTable.find('thead').removeClass('d-none');
+      $cartsTable.find('tbody').append($cartsTableRow);
     }
   }
 
@@ -143,12 +146,14 @@ export default class CustomerRenderer {
     const $rowTemplate = $($(createOrderMap.customerOrdersTableRowTemplate).html());
 
     $ordersTable.find('tbody').empty();
+    this._showCheckoutHistoryBlock();
 
+    //render 'No records found' when list is empty
     if (orders.length === 0) {
+      this._renderEmptyList($ordersTable);
+
       return;
     }
-
-    this._showCheckoutHistoryBlock();
 
     for (const key in Object.keys(orders)) {
       const order = orders[key];
@@ -161,13 +166,26 @@ export default class CustomerRenderer {
       $template.find(createOrderMap.orderStatusField).text(order.orderStatus);
       $template.find(createOrderMap.orderDetailsBtn).prop(
         'href',
-        this.router.generate('admin_orders_view', {orderId: order.orderId})
+        this.router.generate('admin_orders_view', {orderId: order.orderId}),
       );
 
       $template.find(createOrderMap.useOrderBtn).data('order-id', order.orderId);
 
+      $ordersTable.find('thead').removeClass('d-none');
       $ordersTable.find('tbody').append($template);
     }
+  }
+
+  /**
+   * Renders 'No records' warning in list
+   *
+   * @param $table
+   *
+   * @private
+   */
+  _renderEmptyList($table) {
+    const $emptyTableRow = $($(createOrderMap.emptyListRowTemplate).html()).clone();
+    $table.find('tbody').append($emptyTableRow);
   }
 
   /**
@@ -180,6 +198,7 @@ export default class CustomerRenderer {
    * @private
    */
   _renderFoundCustomer(customer) {
+    this._hideNotFoundCustomers();
     const $customerSearchResultTemplate = $($(createOrderMap.customerSearchResultTemplate).html());
     const $template = $customerSearchResultTemplate.clone();
 
@@ -190,7 +209,7 @@ export default class CustomerRenderer {
     $template.find(createOrderMap.chooseCustomerBtn).data('customer-id', customer.id);
     $template.find(createOrderMap.customerDetailsBtn).prop(
       'href',
-      this.router.generate('admin_customers_view', {customerId: customer.id})
+      this.router.generate('admin_customers_view', {customerId: customer.id}),
     );
 
     return this.$customerSearchResultBlock.append($template);
@@ -220,8 +239,15 @@ export default class CustomerRenderer {
    * @private
    */
   _showNotFoundCustomers() {
-    const $emptyResultTemplate = $($('#customerSearchEmptyResultTemplate').html());
+    $(createOrderMap.customerSearchEmptyResultWarning).removeClass('d-none');
+  }
 
-    this.$customerSearchResultBlock.append($emptyResultTemplate);
+  /**
+   * Hides not found customers warning
+   *
+   * @private
+   */
+  _hideNotFoundCustomers() {
+    $(createOrderMap.customerSearchEmptyResultWarning).addClass('d-none');
   }
 }

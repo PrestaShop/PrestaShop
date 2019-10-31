@@ -31,9 +31,7 @@
         <span class="float-right">{{ 'Search for a product'|trans({}, 'Admin.Orderscustomers.Feature') }}</span>
       </div>
       <div class="col-4">
-        <input id="product-search" type="text"
-               class="form-control"
-        >
+        <input id="product-search" type="text" class="form-control">
         <small class="form-text">
           {{ 'Search for an existing product by typing the first letters of its name.'|trans({}, 'Admin.Orderscustomers.Help') }}
         </small>
@@ -141,7 +139,7 @@
             </span>
           </div>
           <div class="col-4">
-            <select class="form-control">
+            <select class="form-control" id="js-cart-currency-select">
               {% for name, id in currencies %}
                 <option value="{{ id }}">{{ name }}</option>
               {% endfor %}
@@ -155,7 +153,7 @@
             </span>
           </div>
           <div class="col-4">
-            <select class="form-control" id="cart-language-select">
+            <select class="form-control" id="js-cart-language-select">
               {% for name, id in languages %}
                 <option value="{{ id }}">{{ name }}</option>
               {% endfor %}
