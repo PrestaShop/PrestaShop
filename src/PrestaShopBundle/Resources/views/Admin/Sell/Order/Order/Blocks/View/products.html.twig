@@ -191,14 +191,12 @@
               </div>
             {% endif %}
 
-            {% if orderForViewing.prices.shippingPriceRaw %}
-              <div class="col-sm text-center">
-                <p class="text-muted mb-0"><strong>{{ 'Shipping'|trans({}, 'Admin.Catalog.Feature') }}</strong></p>
-                <strong>{{ orderForViewing.prices.shippingPriceFormatted }}</strong>
-              </div>
-            {% endif %}
+            <div class="col-sm text-center">
+              <p class="text-muted mb-0"><strong>{{ 'Shipping'|trans({}, 'Admin.Catalog.Feature') }}</strong></p>
+              <strong>{{ orderForViewing.prices.shippingPriceFormatted }}</strong>
+            </div>
 
-            {% if orderForViewing.taxIncluded %}
+            {% if not orderForViewing.taxIncluded %}
               <div class="col-sm text-center">
                 <p class="text-muted mb-0"><strong>{{ 'Taxes'|trans({}, 'Admin.Global') }}</strong></p>
                 <strong>{{ orderForViewing.prices.taxesAmountFormatted }}</strong>
