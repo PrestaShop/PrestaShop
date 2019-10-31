@@ -114,19 +114,20 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
     private function getAddresses(Cart $cart): array
     {
         $customer = new Customer($cart->id_customer);
-        $addresses = $customer->getAddresses($cart->id_lang);
         $cartAddresses = [];
 
-        foreach ($addresses as &$data) {
-            $isDelivery = (int) $cart->id_address_delivery === (int) $data['id_address'];
-            $isInvoice = (int) $cart->id_address_invoice === (int) $data['id_address'];
+        foreach ($customer->getAddresses($cart->id_lang) as $data) {
+            $addressId = (int) $data['id_address'];
 
-            $cartAddresses[] = new CartAddress(
-                (int) $data['id_address'],
+            $countryIsEnabled = (bool) Address::isCountryActiveById($addressId);
+
+            $cartAddresses[$addressId] = new CartAddress(
+                $addressId,
                 $data['alias'],
-                AddressFormat::generateAddress(new Address($data['id_address']), [], '<br />'),
-                $isDelivery,
-                $isInvoice
+                AddressFormat::generateAddress(new Address($addressId), [], '<br />'),
+                (int) $cart->id_address_delivery === $addressId,
+                (int) $cart->id_address_invoice === $addressId,
+                $countryIsEnabled
             );
         }
 

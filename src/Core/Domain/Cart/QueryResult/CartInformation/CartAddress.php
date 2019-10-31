@@ -55,6 +55,10 @@ class CartAddress
      * @var bool is it used as invoice address
      */
     private $invoice;
+    /**
+     * @var bool
+     */
+    private $countryIsEnabled;
 
     /**
      * @param int $addressId
@@ -62,19 +66,22 @@ class CartAddress
      * @param string $formattedAddress
      * @param bool $delivery
      * @param bool $invoice
+     * @param bool $countryIsEnabled
      */
     public function __construct(
         int $addressId,
         string $alias,
         string $formattedAddress,
         bool $delivery,
-        bool $invoice
+        bool $invoice,
+        bool $countryIsEnabled
     ) {
         $this->addressId = $addressId;
         $this->alias = $alias;
         $this->formattedAddress = $formattedAddress;
         $this->delivery = $delivery;
         $this->invoice = $invoice;
+        $this->countryIsEnabled = $countryIsEnabled;
     }
 
     /**
@@ -115,5 +122,13 @@ class CartAddress
     public function isInvoice(): bool
     {
         return $this->invoice;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCountryIsEnabled(): bool
+    {
+        return $this->countryIsEnabled;
     }
 }
