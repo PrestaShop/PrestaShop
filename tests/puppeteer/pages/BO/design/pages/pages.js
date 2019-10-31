@@ -244,7 +244,7 @@ module.exports = class Pages extends BOBasePage {
    * @return {Promise<void>}
    */
   async backToList() {
-    await this.clickAndWaitForNavigation(this.backToListButton,);
+    await this.clickAndWaitForNavigation(this.backToListButton);
   }
 
   /**
@@ -253,9 +253,7 @@ module.exports = class Pages extends BOBasePage {
    * @return {Promise<void>}
    */
   async viewCategory(row) {
-    await this.clickAndWaitForNavigation(this.categoriesListTableViewLink
-      .replace('%ROW', row),
-    );
+    await this.clickAndWaitForNavigation(this.categoriesListTableViewLink.replace('%ROW', row));
   }
 
   /**
