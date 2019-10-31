@@ -1176,15 +1176,15 @@ abstract class ModuleCore implements ModuleInterface
             $memory_end = memory_get_usage(true);
             Db::getInstance()->execute('
                 INSERT INTO 
-                '._DB_PREFIX_.'modules_perfs (session, module, method, time_start, time_end, memory_start, memory_end)
+                ' . _DB_PREFIX_ . 'modules_perfs (session, module, method, time_start, time_end, memory_start, memory_end)
                 VALUES ('
-                    .(int)Module::$_log_modules_perfs_session.', 
-                    "'.pSQL($module_name).'", 
+                    . (int) Module::$_log_modules_perfs_session . ', 
+                    "' . pSQL($module_name) . '", 
                     "__construct", 
-                    "'.pSQL($time_start).'", 
-                    "'.pSQL($time_end).'", 
-                    '.(int)$memory_start.', 
-                    '.(int)$memory_end.'
+                    "' . pSQL($time_start) . '", 
+                    "' . pSQL($time_end) . '", 
+                    ' . (int) $memory_start . ', 
+                    ' . (int) $memory_end . '
                     )'
             );
         }
