@@ -10,7 +10,7 @@
 		<tax id="1" name="TVA CI 18%" rate="18" />
 		<tax id="2" name="TVA CI 10%" rate="10" />
 		
-		<taxRulesGroup name="CI Taxe standard (18%)">
+		<taxRulesGroup name="CI Standard Rate (18%)">
 			<taxRule iso_code_country="ci" id_tax="1" />
 		</taxRulesGroup>
 
