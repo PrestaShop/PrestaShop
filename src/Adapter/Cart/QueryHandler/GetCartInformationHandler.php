@@ -30,6 +30,7 @@ use Address;
 use AddressFormat;
 use Carrier;
 use Cart;
+use CartRule;
 use Currency;
 use Customer;
 use Language;
@@ -93,7 +94,6 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
 
         $legacySummary = $cart->getSummaryDetails(null, true);
 
-        //@todo: implement empty arguments
         return new CartInformation(
             $cart->id,
             $this->extractProductsFromLegacySummary($legacySummary),
@@ -204,10 +204,26 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
 
         return new CartShipping(
             (string) $legacySummary['total_shipping'],
-            (bool) $legacySummary['free_ship'],
+            $this->getFreeShippingValue($cart),
             $this->fetchCartDeliveryOptions($deliveryOptionsByAddress, $deliveryAddress),
             (int) $carrier->id ?: null
         );
+    }
+
+    private function getFreeShippingValue(Cart $cart): bool
+    {
+        $cartRules = $cart->getCartRules(CartRule::FILTER_ACTION_SHIPPING);
+        $freeShipping = false;
+
+        foreach ($cartRules as $cartRule) {
+            if ($cartRule['id_cart_rule'] == CartRule::getIdByCode(CartRule::BO_ORDER_CODE_PREFIX . (int) $cart->id)) {
+                $freeShipping = true;
+
+                break;
+            }
+        }
+
+        return $freeShipping;
     }
 
     /**
