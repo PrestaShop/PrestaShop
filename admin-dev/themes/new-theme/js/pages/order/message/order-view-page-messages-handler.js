@@ -32,6 +32,9 @@ const $ = window.$;
  */
 export default class OrderViewPageMessagesHandler {
   constructor() {
+    this.$orderMessageChangeWarning = $(OrderViewPageMap.orderMessageChangeWarning);
+    this.$messagesContainer = $(OrderViewPageMap.orderMessagesContainer);
+
     return {
       listenForPredefinedMessageSelection: () => this._handlePredefinedMessageSelection(),
     };
@@ -50,10 +53,19 @@ export default class OrderViewPageMessagesHandler {
       if (!valueId) {
         return;
       }
-      //todo: check size if is over then max not allow?
-      const $messagesContainer = $(OrderViewPageMap.orderMessagesContainer);
-      const message = $messagesContainer.find(`div[data-id=${valueId}]`).text().trim();
+
+      // todo: check size if is over then max not allow?
+      const message = this.$messagesContainer.find(`div[data-id=${valueId}]`).text().trim();
       const $orderMessage = $(OrderViewPageMap.orderMessage);
+      const isSameMessage = $orderMessage.val().trim() === message;
+
+      if (isSameMessage) {
+        return;
+      }
+
+      if ($orderMessage.val() && !confirm(this.$orderMessageChangeWarning.text())) {
+        return;
+      }
 
       $orderMessage.val(message);
     });
