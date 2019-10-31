@@ -41,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotEditDeliveredOrderPr
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\ChangeOrderStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderEmailResendException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\TransistEmailSendingException;
 use PrestaShop\PrestaShop\Core\Domain\Order\OrderConstraints;
 use PrestaShop\PrestaShop\Core\Domain\Order\Payment\Command\AddPaymentCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\UpdateProductInOrderCommand;
@@ -327,6 +328,14 @@ class OrderController extends FrameworkBundleAdminController
                 );
 
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+            } catch (TransistEmailSendingException $e) {
+                $this->addFlash(
+                    'error',
+                    $this->trans(
+                        'An error occurred while sending an email to the customer.',
+                        'Admin.Orderscustomers.Notification'
+                    )
+                );
             } catch (Exception $e) {
                 $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
             }
