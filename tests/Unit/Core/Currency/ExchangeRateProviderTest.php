@@ -60,7 +60,7 @@ class ExchangeRateProviderTest extends TestCase
     {
         parent::setUp();
         $this->cache = new ArrayAdapter();
-        $this->feedFilePath = _PS_ROOT_DIR_ . '/tests/Unit/Resources/rss/currencies.xml';
+        $this->feedFilePath = _PS_ROOT_DIR_ . '/tests/Unit/Resources/currencies-feed/currencies.xml';
         $this->feedContent = file_get_contents($this->feedFilePath);
     }
 
@@ -109,7 +109,7 @@ class ExchangeRateProviderTest extends TestCase
     public function testGetRateFromFeedWithDifferentDefaultSource()
     {
         // This is basically the same file, but USD is the source reference and 42 was appended to all rates
-        $this->feedFilePath = _PS_ROOT_DIR_ . '/tests/Unit/Resources/rss/currencies-usd.xml';
+        $this->feedFilePath = _PS_ROOT_DIR_ . '/tests/Unit/Resources/currencies-feed/currencies-usd.xml';
         $this->feedContent = file_get_contents($this->feedFilePath);
 
         $circuitBreaker = $this->buildCircuitBreakerMock($this->feedContent, $this->feedFilePath);
@@ -134,7 +134,7 @@ class ExchangeRateProviderTest extends TestCase
     public function testGetRateFromFeedWithDifferentDefaultSourceAndDifferentLocaleDefault()
     {
         // This is basically the same file, but USD is the source reference and 42 was appended to all rates
-        $this->feedFilePath = _PS_ROOT_DIR_ . '/tests/Unit/Resources/rss/currencies-usd.xml';
+        $this->feedFilePath = _PS_ROOT_DIR_ . '/tests/Unit/Resources/currencies-feed/currencies-usd.xml';
         $this->feedContent = file_get_contents($this->feedFilePath);
 
         $circuitBreaker = $this->buildCircuitBreakerMock($this->feedContent, $this->feedFilePath);
