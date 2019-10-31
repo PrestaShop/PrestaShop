@@ -26,6 +26,7 @@
 import OrderViewPageMap from './OrderViewPageMap';
 import OrderShippingManager from './order-shipping-manager';
 import InvoiceNoteManager from './invoice-note-manager';
+import OrderViewPageMessagesHandler from './message/order-view-page-messages-handler';
 
 const $ = window.$;
 
@@ -41,6 +42,8 @@ $(() => {
   handleUpdateOrderStatusButton();
 
   new InvoiceNoteManager();
+  const orderViewPageMessageHandler = new OrderViewPageMessagesHandler();
+  orderViewPageMessageHandler.listenForPredefinedMessageSelection();
 
   $(OrderViewPageMap.privateNoteToggleBtn).on('click', (event) => {
     event.preventDefault();
