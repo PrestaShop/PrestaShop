@@ -28,8 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Currency\CommandHandler;
 
 use Configuration;
 use Currency;
-use Db;
-use DbQuery;
+use PrestaShop\PrestaShop\Core\Currency\CurrencyDataProviderInterface;
 use Shop;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\EditCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDisableDefaultCurrencyException;
@@ -50,19 +49,27 @@ final class CurrencyCommandValidator
     private $localeRepoCLDR;
 
     /**
+     * @var CurrencyDataProviderInterface
+     */
+    private $currencyDataProvider;
+
+    /**
      * @var int
      */
     private $defaultCurrencyId;
 
     /**
      * @param LocaleRepository $localeRepoCLDR
+     * @param CurrencyDataProviderInterface $currencyDataProvider
      * @param int $defaultCurrencyId
      */
     public function __construct(
         LocaleRepository $localeRepoCLDR,
+        CurrencyDataProviderInterface $currencyDataProvider,
         int $defaultCurrencyId
     ) {
         $this->localeRepoCLDR = $localeRepoCLDR;
+        $this->currencyDataProvider = $currencyDataProvider;
         $this->defaultCurrencyId = $defaultCurrencyId;
     }
 
@@ -98,17 +105,9 @@ final class CurrencyCommandValidator
      */
     public function assertCurrencyIsNotAvailableInDatabase(string $isoCode)
     {
-        $qb = new DbQuery();
-        $qb
-            ->select('id_currency')
-            ->from('currency')
-            ->where('iso_code = "' . pSQL($isoCode) . '"')
-            ->where('deleted = 0')
-        ;
+        $currency = $this->currencyDataProvider->getCurrencyByIsoCode($isoCode);
 
-        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($qb);
-
-        if (is_numeric($result)) {
+        if (null !== $currency) {
             throw new CurrencyConstraintException(
                 sprintf(
                     'Currency with iso code "%s" already exists and cannot be created',
