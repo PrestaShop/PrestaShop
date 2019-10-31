@@ -400,6 +400,10 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             $unitPriceFormatted = $this->locale->formatPrice($unitPrice, $currency->iso_code);
             $totalPriceFormatted = $this->locale->formatPrice($totalPrice, $currency->iso_code);
 
+            $imagePath = isset($product['image_tag']) ?
+                $this->imageTagSourceParser->parse($product['image_tag']) :
+                null;
+
             $productsForViewing[] = new OrderProductForViewing(
                 $product['id_order_detail'],
                 $product['product_id'],
@@ -410,7 +414,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
                 $unitPriceFormatted,
                 $totalPriceFormatted,
                 $product['current_stock'],
-                $this->imageTagSourceParser->parse($product['image_tag']),
+                $imagePath,
                 Tools::ps_round($product['unit_price_tax_excl'], 2),
                 Tools::ps_round($product['unit_price_tax_incl'], 2)
             );
