@@ -37,8 +37,6 @@ ALTER TABLE `PREFIX_customer` CHANGE COLUMN `lastname` `lastname` varchar(255) N
 /* Changes regarding modules */
 ALTER TABLE `PREFIX_module` ADD UNIQUE INDEX `name_UNIQUE` (`name` ASC);
 
-DROP TABLE IF EXISTS `PREFIX_modules_perfs`;
-
 CREATE TABLE `PREFIX_module_carrier` (
   `id_module`INT(10) unsigned NOT NULL,
   `id_shop`INT(11) unsigned NOT NULL DEFAULT '1',
