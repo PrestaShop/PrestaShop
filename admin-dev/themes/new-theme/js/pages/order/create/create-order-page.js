@@ -91,6 +91,8 @@ export default class CreateOrderPage {
     this._onFreeShippingChanged();
     this._addCartRuleToCart();
     this._removeCartRuleFromCart();
+    this._onCartCurrencyChanged();
+    this._onCartLanguageChanged();
 
     this.$container.on('change', createOrderMap.deliveryOptionSelect, e =>
       this.cartEditor.changeDeliveryOption(this.cartId, e.currentTarget.value),
@@ -102,6 +104,14 @@ export default class CreateOrderPage {
 
     this.$container.on('click', createOrderMap.addToCartButton, () =>
       this.productManager.addProductToCart(this.cartId),
+    );
+
+    this.$container.on('change', createOrderMap.cartCurrencySelect, (e) =>
+      this.cartEditor.changeCartCurrency(this.cartId, e.currentTarget.value)
+    );
+
+    this.$container.on('change', createOrderMap.cartLanguageSelect, (e) =>
+      this.cartEditor.changeCartCurrency(this.cartId, e.currentTarget.value)
     );
 
     this.$container.on('change', createOrderMap.addressSelect, () => this._changeCartAddresses());
@@ -119,7 +129,6 @@ export default class CreateOrderPage {
       this._renderCartInfo(cartInfo);
       this.customerManager.loadCustomerCarts(this.cartId);
       this.customerManager.loadCustomerOrders();
-      this.summaryRenderer.render(cartInfo);
     });
   }
 
@@ -155,8 +164,31 @@ export default class CreateOrderPage {
    */
   _onFreeShippingChanged() {
     EventEmitter.on(eventMap.cartFreeShippingSet, (cartInfo) => {
+      this.cartRulesRenderer.renderCartRulesBlock(cartInfo.cartRules, cartInfo.products.length === 0);
       this.shippingRenderer.render(cartInfo.shipping, cartInfo.products.length === 0);
       this.summaryRenderer.render(cartInfo);
+    });
+  }
+
+  /**
+   * Listens for cart language update event
+   *
+   * @private
+   */
+  _onCartLanguageChanged() {
+    EventEmitter.on(eventMap.cartLanguageChanged, (cartInfo) => {
+      this._preselectCartLanguage(cartInfo.langId);
+    });
+  }
+
+  /**
+   * Listens for cart currency update event
+   *
+   * @private
+   */
+  _onCartCurrencyChanged() {
+    EventEmitter.on(eventMap.cartCurrencyChanged, (cartInfo) => {
+      this._preselectCartLanguage(cartInfo.currencyId);
     });
   }
 
@@ -288,10 +320,33 @@ export default class CreateOrderPage {
     this.cartRulesRenderer.renderCartRulesBlock(cartInfo.cartRules, cartInfo.products.length === 0);
     this.shippingRenderer.render(cartInfo.shipping, cartInfo.products.length === 0);
     this.productRenderer.renderList(cartInfo.products);
-    // @todo: render Summary block when at least 1 product is in cart
-    // and delivery options are available
+    this.summaryRenderer.render(cartInfo);
+    this._preselectCartCurrency(cartInfo.currencyId);
+    this._preselectCartLanguage(cartInfo.langId);
 
     $(createOrderMap.cartBlock).removeClass('d-none');
+  }
+
+  /**
+   * Sets cart currency selection value
+   *
+   * @param currencyId
+   *
+   * @private
+   */
+  _preselectCartCurrency(currencyId) {
+    $(createOrderMap.cartCurrencySelect).val(currencyId);
+  }
+
+  /**
+   * Sets cart language selection value
+   *
+   * @param langId
+   *
+   * @private
+   */
+  _preselectCartLanguage(langId) {
+    $(createOrderMap.cartLanguageSelect).val(langId);
   }
 
   /**

@@ -34,6 +34,7 @@ export default class SummaryRenderer {
   constructor() {
     this.$totalProducts = $(createOrderMap.summaryTotalProducts);
     this.$totalDiscount = $(createOrderMap.summaryTotalDiscount);
+    this.$totalShipping = $(createOrderMap.totalShippingField);
     this.$totalTaxes = $(createOrderMap.summaryTotalTaxes);
     this.$totalWithoutTax = $(createOrderMap.summaryTotalWithoutTax);
     this.$totalWithTax = $(createOrderMap.summaryTotalWithTax);
@@ -43,12 +44,15 @@ export default class SummaryRenderer {
   /**
    * Renders summary block
    *
-   * @param cartInfo
+   * @param {Object} cartInfo
    */
   render(cartInfo) {
     this._cleanSummary();
+    const noProducts = cartInfo.products.length === 0;
+    const noShippingOptions = cartInfo.shipping === null;
+    const invalidAddresses = !this._addressesAreValid(cartInfo.addresses);
 
-    if (cartInfo.products.length === 0) {
+    if (noProducts || noShippingOptions || invalidAddresses) {
       this._hideSummaryBlock();
 
       return;
@@ -57,12 +61,40 @@ export default class SummaryRenderer {
 
     this.$totalProducts.text(cartSummary.totalProductsPrice);
     this.$totalDiscount.text(cartSummary.totalDiscount);
+    this.$totalShipping.text(cartSummary.totalShippingPrice);
     this.$totalTaxes.text(cartSummary.totalTaxes);
     this.$totalWithoutTax.text(cartSummary.totalPriceWithTaxes);
     this.$totalWithTax.text(cartSummary.totalPriceWithoutTaxes);
     this.$placeOrderCartIdField.val(cartInfo.cartId);
 
     this._showSummaryBlock();
+  }
+
+  /**
+   * Validates that cart has valid addresses
+   *@todo refactor and show addresses warning to create new address if empty
+   * @param addresses
+   *
+   * @returns {boolean}
+   *
+   * @private
+   */
+  _addressesAreValid(addresses) {
+    if (addresses.length !== 0) {
+      return false;
+    }
+
+    for (const key in addresses) {
+      const address = addresses[key];
+
+      if (address.countryIsEnabled) {
+        if (address.invoice || address.delivery) {
+          return false;
+        }
+      }
+    }
+
+    return true;
   }
 
   /**
@@ -89,6 +121,7 @@ export default class SummaryRenderer {
   _cleanSummary() {
     this.$totalProducts.empty();
     this.$totalDiscount.empty();
+    this.$totalShipping.empty();
     this.$totalTaxes.empty();
     this.$totalWithoutTax.empty();
     this.$totalWithTax.empty();

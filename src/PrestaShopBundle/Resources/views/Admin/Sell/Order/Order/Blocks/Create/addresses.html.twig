@@ -44,7 +44,7 @@
 
         <div class="card mt-3">
           <div class="card-body clearfix">
-            <button type="button" class="btn btn-primary float-right">{{ 'Edit'|trans({}, 'Admin.Actions') }}</button>
+            <button type="button" class="btn btn-outline-primary float-right">{{ 'Edit'|trans({}, 'Admin.Actions') }}</button>
             <div id="delivery-address-details"></div>
           </div>
         </div>
@@ -55,7 +55,7 @@
 
         <div class="card mt-3">
           <div class="card-body clearfix">
-            <button type="button" class="btn btn-primary float-right">{{ 'Edit'|trans({}, 'Admin.Actions') }}</button>
+            <button type="button" class="btn btn-outline-primary float-right">{{ 'Edit'|trans({}, 'Admin.Actions') }}</button>
             <div id="invoice-address-details"></div>
           </div>
         </div>
@@ -63,6 +63,7 @@
     </div>
     <div class="row">
       <div class="col">
+        {#@todo: add link after addresses migration. Also in js on edit buttons#}
         <button type="button" class="btn btn-primary">
           {{ 'Add a new address'|trans({}, 'Admin.Orderscustomers.Feature') }}
         </button>
@@ -70,3 +71,11 @@
     </div>
   </div>
 </div>
+<script type="text/template" id="js-disabled-address-warn">
+  <div class="alert alert-danger">
+    <div class="alert-text">
+      {#@todo translate#}
+      This address country is not active
+    </div>
+  </div>
+</script>

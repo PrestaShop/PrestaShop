@@ -30,6 +30,7 @@ use Address;
 use AddressFormat;
 use Carrier;
 use Cart;
+use CartRule;
 use Currency;
 use Customer;
 use Language;
@@ -43,6 +44,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartAddress;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartProduct;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartShipping;
+use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartSummary;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleInterface;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
@@ -92,7 +94,6 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
 
         $legacySummary = $cart->getSummaryDetails(null, true);
 
-        //@todo: implement empty arguments
         return new CartInformation(
             $cart->id,
             $this->extractProductsFromLegacySummary($legacySummary),
@@ -100,7 +101,7 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
             (int) $language->id,
             $this->extractCartRulesFromLegacySummary($legacySummary, $currency),
             $this->getAddresses($cart),
-            $this->extractSummaryFromLegacySummary($legacySummary),
+            $this->extractSummaryFromLegacySummary($legacySummary, $currency),
             $this->extractShippingFromLegacySummary($cart, $legacySummary)
         );
     }
@@ -113,19 +114,20 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
     private function getAddresses(Cart $cart): array
     {
         $customer = new Customer($cart->id_customer);
-        $addresses = $customer->getAddresses($cart->id_lang);
         $cartAddresses = [];
 
-        foreach ($addresses as &$data) {
-            $isDelivery = (int) $cart->id_address_delivery === (int) $data['id_address'];
-            $isInvoice = (int) $cart->id_address_invoice === (int) $data['id_address'];
+        foreach ($customer->getAddresses($cart->id_lang) as $data) {
+            $addressId = (int) $data['id_address'];
 
-            $cartAddresses[] = new CartAddress(
-                (int) $data['id_address'],
+            $countryIsEnabled = (bool) Address::isCountryActiveById($addressId);
+
+            $cartAddresses[$addressId] = new CartAddress(
+                $addressId,
                 $data['alias'],
-                AddressFormat::generateAddress(new Address($data['id_address']), [], '<br />'),
-                $isDelivery,
-                $isInvoice
+                AddressFormat::generateAddress(new Address($addressId), [], '<br />'),
+                (int) $cart->id_address_delivery === $addressId,
+                (int) $cart->id_address_invoice === $addressId,
+                $countryIsEnabled
             );
         }
 
@@ -203,10 +205,26 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
 
         return new CartShipping(
             (string) $legacySummary['total_shipping'],
-            (bool) $legacySummary['free_ship'],
+            $this->getFreeShippingValue($cart),
             $this->fetchCartDeliveryOptions($deliveryOptionsByAddress, $deliveryAddress),
             (int) $carrier->id ?: null
         );
+    }
+
+    private function getFreeShippingValue(Cart $cart): bool
+    {
+        $cartRules = $cart->getCartRules(CartRule::FILTER_ACTION_SHIPPING);
+        $freeShipping = false;
+
+        foreach ($cartRules as $cartRule) {
+            if ($cartRule['id_cart_rule'] == CartRule::getIdByCode(CartRule::BO_ORDER_CODE_PREFIX . (int) $cart->id)) {
+                $freeShipping = true;
+
+                break;
+            }
+        }
+
+        return $freeShipping;
     }
 
     /**
@@ -241,18 +259,27 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
 
     /**
      * @param array $legacySummary
+     * @param Currency $currency
      *
      * @return CartInformation\CartSummary
+     *
+     * @throws LocalizationException
      */
-    private function extractSummaryFromLegacySummary(array $legacySummary)
+    private function extractSummaryFromLegacySummary(array $legacySummary, Currency $currency): CartSummary
     {
-        return new CartInformation\CartSummary(
-            $legacySummary['total_products'],
-            $legacySummary['total_discounts_tax_exc'],
-            $legacySummary['total_shipping_tax_exc'],
-            $legacySummary['total_tax'],
-            $legacySummary['total_price'],
-            $legacySummary['total_price_without_tax']
+        $discount = $this->locale->formatPrice($legacySummary['total_discounts_tax_exc'], $currency->iso_code);
+
+        if (0 !== (int) $legacySummary['total_discounts_tax_exc']) {
+            $discount = '-' . $discount;
+        }
+
+        return new CartSummary(
+            $this->locale->formatPrice($legacySummary['total_products'], $currency->iso_code),
+            $discount,
+            $this->locale->formatPrice($legacySummary['total_shipping_tax_exc'], $currency->iso_code),
+            $this->locale->formatPrice($legacySummary['total_tax'], $currency->iso_code),
+            $this->locale->formatPrice($legacySummary['total_price'], $currency->iso_code),
+            $this->locale->formatPrice($legacySummary['total_price_without_tax'], $currency->iso_code)
         );
     }
 }
