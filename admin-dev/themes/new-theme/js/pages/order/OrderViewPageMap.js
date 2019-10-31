@@ -53,4 +53,5 @@ export default {
   orderMessageNameSelect: '#order_message_order_message',
   orderMessagesContainer: '.js-order-messages-container',
   orderMessage: '#order_message_message',
+  orderMessageChangeWarning: '.js-message-change-warning',
 };

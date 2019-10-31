@@ -58,6 +58,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderDocumentsForViewing
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderHistoryForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderInvoiceAddressForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderMessageDateForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderMessageForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderMessagesForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPaymentForViewing;
@@ -750,17 +751,23 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
         $messages = [];
 
         foreach ($orderMessagesForOrderPage as $orderMessage) {
+            $messageEmployeeId = (int) $orderMessage['id_employee'];
+            $isCurrentEmployeesMessage = (int) $this->context->employee->id === $messageEmployeeId;
+
             $messages[] = new OrderMessageForViewing(
                 (int) $orderMessage['id_customer_message'],
                 $orderMessage['message'],
-                new DateTimeImmutable($orderMessage['date_add']),
-                (int) $orderMessage['id_employee'],
+                new OrderMessageDateForViewing(
+                    new DateTimeImmutable($orderMessage['date_add']),
+                    $this->context->language->date_format_lite
+                ),
+                $messageEmployeeId,
+                $isCurrentEmployeesMessage,
                 $orderMessage['efirstname'],
                 $orderMessage['elastname'],
                 $orderMessage['cfirstname'],
                 $orderMessage['clastname'],
-                (bool) $orderMessage['private'],
-                $totalMessages
+                (bool) $orderMessage['private']
             );
         }
 
