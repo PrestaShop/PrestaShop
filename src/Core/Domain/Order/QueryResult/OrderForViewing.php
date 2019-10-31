@@ -152,6 +152,11 @@ class OrderForViewing
      */
     private $shopId;
 
+    /**
+     * @var int
+     */
+    private $invoiceManagementIsEnabled;
+
     public function __construct(
         int $orderId,
         int $currencyId,
@@ -164,6 +169,7 @@ class OrderForViewing
         bool $isValid,
         bool $hasInvoice,
         bool $isDelivered,
+        bool $invoiceManagementIsEnabled,
         DateTimeImmutable $createdAt,
         OrderCustomerForViewing $customer,
         OrderShippingAddressForViewing $shippingAddress,
@@ -203,6 +209,7 @@ class OrderForViewing
         $this->isVirtual = $isVirtual;
         $this->carrierId = $carrierId;
         $this->shopId = $shopId;
+        $this->invoiceManagementIsEnabled = $invoiceManagementIsEnabled;
     }
 
     /**
@@ -395,5 +402,13 @@ class OrderForViewing
     public function isVirtual(): bool
     {
         return $this->isVirtual;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isInvoiceManagementIsEnabled(): bool
+    {
+        return $this->invoiceManagementIsEnabled;
     }
 }

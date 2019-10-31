@@ -287,8 +287,6 @@ class OrderController extends FrameworkBundleAdminController
             'order_id' => $orderId,
         ]);
 
-        $invoiceManagementIsActive = \Configuration::get('PS_INVOICE', null, null, 1);
-
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/view.html.twig', [
             'showContentHeader' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
@@ -302,8 +300,8 @@ class OrderController extends FrameworkBundleAdminController
             'addProductToOrderForm' => $addProductToOrderForm->createView(),
             'updateOrderProductForm' => $updateOrderProductForm->createView(),
             'updateOrderShippingForm' => $updateOrderShippingForm->createView(),
-            'invoiceManagementIsActive' => $invoiceManagementIsActive,
-            'invoiceManagementIsEnabled' => $invoiceManagementIsActive,
+            'invoiceManagementIsActive' => $orderForViewing->isInvoiceManagementIsEnabled(),
+            'invoiceManagementIsEnabled' => $orderForViewing->isInvoiceManagementIsEnabled(),
         ]);
     }
 
