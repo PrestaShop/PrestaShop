@@ -81,6 +81,7 @@
     }) }}
 
     <div class="js-order-messages-container d-none">
+      <div class="js-message-change-warning">{{ 'Do you want to overwrite your existing message?'|trans({}, 'Admin.Orderscustomers.Notification') }}</div>
       {% for id, message in orderMessageForm.vars['messages'] %}
         <div data-id="{{ id }}">
           {{ message }}
