@@ -8,8 +8,3 @@ services:
       - '@prestashop.adapter.debug_mode'
     tags:
       - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Configuration\Command\SwitchDebugModeCommand }
-
-  prestashop.adapter.configuration.query_handler.get_configuration_handler:
-    class: 'PrestaShop\PrestaShop\Adapter\Configuration\QueryHandler\GetConfigurationHandler'
-    tags:
-      - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Configuration\Query\GetConfiguration }

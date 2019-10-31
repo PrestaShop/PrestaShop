@@ -29,8 +29,6 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
-use PrestaShop\PrestaShop\Core\Domain\Configuration\Configuration;
-use PrestaShop\PrestaShop\Core\Domain\Configuration\Query\GetConfiguration;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddCartRuleToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\BulkChangeOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderCurrencyCommand;
@@ -289,12 +287,7 @@ class OrderController extends FrameworkBundleAdminController
             'order_id' => $orderId,
         ]);
 
-        $invoiceManagementIsEnabled = $this->getQueryBus()->handle(
-            new GetConfiguration(
-                Configuration::INVOICE_MANAGEMENT,
-                $orderForViewing->getShopId()
-            )
-        );
+        $invoiceManagementIsActive = \Configuration::get('PS_INVOICE', null, null, 1);
 
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/view.html.twig', [
             'showContentHeader' => true,
@@ -309,8 +302,8 @@ class OrderController extends FrameworkBundleAdminController
             'addProductToOrderForm' => $addProductToOrderForm->createView(),
             'updateOrderProductForm' => $updateOrderProductForm->createView(),
             'updateOrderShippingForm' => $updateOrderShippingForm->createView(),
-            'invoiceManagementIsActive' => $invoiceManagementIsEnabled,
-            'invoiceManagementIsEnabled' => $invoiceManagementIsEnabled,
+            'invoiceManagementIsActive' => $invoiceManagementIsActive,
+            'invoiceManagementIsEnabled' => $invoiceManagementIsActive,
         ]);
     }
 

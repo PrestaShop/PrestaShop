@@ -134,7 +134,7 @@
   </tbody>
 </table>
 
-{% if  orderForViewing.documents.documents is empty and invoiceManagementIsEnabled %}
+{% if  orderForViewing.documents.documents is empty and invoiceManagementIsActive %}
   <form action="{{ path('admin_orders_generate_invoice', {'orderId': orderForViewing.id}) }}">
     <button class="btn btn-primary">
       <i class="material-icons">autorenew</i>
