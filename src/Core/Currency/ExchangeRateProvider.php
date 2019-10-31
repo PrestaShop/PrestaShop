@@ -30,8 +30,8 @@ use PrestaShop\CircuitBreaker\Contract\CircuitBreakerInterface;
 use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Core\Currency\Exception\CurrencyFeedException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\ExchangeRate;
-use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
 use SimpleXMLElement;
+use Symfony\Component\Cache\Adapter\AdapterInterface as CacheInterface;
 
 /**
  * Retrieves the exchange rate of a currency (based on the default currency). It uses a circuit breaker
@@ -54,6 +54,8 @@ class ExchangeRateProvider
     const OPEN_TIMEOUT_SECONDS = 2;
     const OPEN_THRESHOLD_SECONDS = 3600; // 1 hour
 
+    const CACHE_KEY_XML = 'currency_feed.xml';
+
     /** @var string */
     private $currencyFeedUrl;
 
@@ -63,11 +65,8 @@ class ExchangeRateProvider
     /** @var CircuitBreakerInterface */
     private $remoteServiceProvider;
 
-    /** @var string */
-    private $cacheDir;
-
-    /** @var string */
-    private $cacheFile;
+    /** @var CacheInterface */
+    private $cache;
 
     /** @var string */
     private $sourceIsoCode;
@@ -79,19 +78,18 @@ class ExchangeRateProvider
      * @param string $currencyFeedUrl
      * @param string $defaultCurrencyIsoCode
      * @param CircuitBreakerInterface $remoteServiceProvider
-     * @param string $cacheDir
+     * @param CacheInterface $cache
      */
     public function __construct(
         $currencyFeedUrl,
         $defaultCurrencyIsoCode,
         CircuitBreakerInterface $remoteServiceProvider,
-        $cacheDir
+        CacheInterface $cache
     ) {
         $this->currencyFeedUrl = $currencyFeedUrl;
         $this->defaultCurrencyIsoCode = $defaultCurrencyIsoCode;
         $this->remoteServiceProvider = $remoteServiceProvider;
-        $this->cacheDir = $cacheDir;
-        $this->cacheFile = $cacheDir . '/currency_feed.xml';
+        $this->cache = $cache;
     }
 
     /**
@@ -192,10 +190,9 @@ class ExchangeRateProvider
         }
 
         //Cache the feed
-        if (!is_dir($this->cacheDir)) {
-            mkdir($this->cacheDir, FileSystem::DEFAULT_MODE_FOLDER);
-        }
-        file_put_contents($this->cacheFile, $feedContent);
+        $cacheItem = $this->cache->getItem(self::CACHE_KEY_XML);
+        $cacheItem->set($feedContent);
+        $this->cache->save($cacheItem);
 
         return $xmlFeed;
     }
@@ -218,13 +215,14 @@ class ExchangeRateProvider
      */
     private function getCachedCurrencyFeed()
     {
-        if (!file_exists($this->cacheFile)) {
+        $cacheItem = $this->cache->getItem(self::CACHE_KEY_XML);
+        if (!$cacheItem->isHit()) {
             return '';
         }
 
-        $feedContent = file_get_contents($this->cacheFile);
+        $feedContent = $cacheItem->get();
 
-        return false !== $feedContent ? $feedContent : '';
+        return !empty($feedContent) ? $feedContent : '';
     }
 
     /**
