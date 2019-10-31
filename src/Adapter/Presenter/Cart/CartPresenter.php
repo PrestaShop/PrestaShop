@@ -557,7 +557,7 @@ class CartPresenter implements PresenterInterface
                 $freeShippingOnly = true;
             }
             if ($this->cartVoucherHasPercentReduction($cartVoucher)) {
-                $productsTotalExcludingTax = $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS);
+                $productsTotalExcludingTax = $cart->getOrderTotal($this->includeTaxes(), Cart::ONLY_PRODUCTS);
                 $percentageReduction = ($productsTotalExcludingTax / 100) * $cartVoucher['reduction_percent'];
                 $freeShippingOnly = false;
             } elseif ($this->cartVoucherHasAmountReduction($cartVoucher)) {
