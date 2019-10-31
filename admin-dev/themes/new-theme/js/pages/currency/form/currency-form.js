@@ -77,7 +77,7 @@ export default class CurrencyForm {
 
   _isUnofficialCurrency() {
     if ('hidden' === this.$isUnofficialCheckbox.prop('type')) {
-      return 0 !== parseInt(this.$isUnofficialCheckbox.attr('value'));
+      return '1' === this.$isUnofficialCheckbox.attr('value');
     }
 
     return this.$isUnofficialCheckbox.prop('checked');

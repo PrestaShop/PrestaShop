@@ -61,11 +61,11 @@ class ReferenceCurrency
      * @param int $precision
      */
     public function __construct(
-        $isoCode,
-        $numericIsoCode,
-        $names,
-        $symbols,
-        $precision
+        string $isoCode,
+        string $numericIsoCode,
+        array $names,
+        array $symbols,
+        int $precision
     ) {
         $this->isoCode = $isoCode;
         $this->numericIsoCode = $numericIsoCode;
@@ -79,7 +79,7 @@ class ReferenceCurrency
      *
      * @return string
      */
-    public function getIsoCode()
+    public function getIsoCode(): string
     {
         return $this->isoCode;
     }
@@ -122,16 +122,5 @@ class ReferenceCurrency
     public function getPrecision(): int
     {
         return $this->precision;
-    }
-
-    public function toArray(): array
-    {
-        return [
-            'iso_code' => $this->getIsoCode(),
-            'numeric_iso_code' => $this->getNumericIsoCode(),
-            'precision' => $this->getPrecision(),
-            'names' => $this->getNames(),
-            'symbols' => $this->getSymbols(),
-        ];
     }
 }
