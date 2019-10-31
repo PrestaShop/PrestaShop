@@ -58,6 +58,16 @@
   }
 }
 
+.carousel-indicators {
+  bottom: 0;
+  li {
+    border-color: $gray;
+  }
+  .active {
+    background-color: $gray;
+  }
+}
+
 @include media-breakpoint-down(lg) {
   .carousel {
     .carousel-inner {
