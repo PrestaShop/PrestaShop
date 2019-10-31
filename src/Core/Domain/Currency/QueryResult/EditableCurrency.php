@@ -95,10 +95,10 @@ class EditableCurrency
     public function __construct(
         $currencyId,
         $isoCode,
-        $names,
-        $symbols,
+        array $names,
+        array $symbols,
         $exchangeRate,
-        $precision,
+        int $precision,
         $isEnabled,
         bool $isUnofficial,
         array $associatedShopIds
