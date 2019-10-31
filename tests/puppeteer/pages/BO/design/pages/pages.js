@@ -55,7 +55,7 @@ module.exports = class Pages extends BOBasePage {
    * @param table
    * @return {Promise<void>}
    */
-  async resetFilter(table) {
+  async resetAndGetNumberOfLines(table) {
     const resetButton = await this.replaceAll(this.filterResetButton, '%TABLE', table);
     if (await this.elementVisible(resetButton, 2000)) {
       await this.clickAndWaitForNavigation(resetButton);

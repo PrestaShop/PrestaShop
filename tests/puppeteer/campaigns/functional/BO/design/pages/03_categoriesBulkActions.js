@@ -58,7 +58,7 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
   });
 
   it('should reset filter and get number of categories in BO', async function () {
-    numberOfCategories = await this.pageObjects.pagesPage.resetFilter('cms_page_category');
+    numberOfCategories = await this.pageObjects.pagesPage.resetAndGetNumberOfLines('cms_page_category');
     if (numberOfCategories !== 0) await expect(numberOfCategories).to.be.above(0);
   });
 
@@ -181,7 +181,8 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
     });
 
     it('should reset all filters', async function () {
-      const numberOfCategoriesAfterFilter = await this.pageObjects.pagesPage.resetFilter('cms_page_category');
+      const numberOfCategoriesAfterFilter = await this.pageObjects.pagesPage
+        .resetAndGetNumberOfLines('cms_page_category');
       await expect(numberOfCategoriesAfterFilter).to.be.equal(numberOfCategories);
     });
   });

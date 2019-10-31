@@ -58,7 +58,7 @@ describe('Create Pages, Then disable / Enable and Delete with Bulk actions', asy
   });
 
   it('should reset filter and get number of pages in BO', async function () {
-    numberOfPages = await this.pageObjects.pagesPage.resetFilter('cms_page');
+    numberOfPages = await this.pageObjects.pagesPage.resetAndGetNumberOfLines('cms_page');
     await expect(numberOfPages).to.be.above(0);
   });
 
@@ -168,7 +168,7 @@ describe('Create Pages, Then disable / Enable and Delete with Bulk actions', asy
     });
 
     it('should reset all filters', async function () {
-      const numberOfPagesAfterFilter = await this.pageObjects.pagesPage.resetFilter('cms_page');
+      const numberOfPagesAfterFilter = await this.pageObjects.pagesPage.resetAndGetNumberOfLines('cms_page');
       await expect(numberOfPagesAfterFilter).to.be.equal(numberOfPages);
     });
   });
