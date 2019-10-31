@@ -24,6 +24,7 @@
  */
 
 import OrderViewPageMap from './OrderViewPageMap';
+import OrderViewPageMessagesHandler from './message/order-view-page-messages-handler';
 
 const $ = window.$;
 
@@ -35,6 +36,9 @@ $(() => {
   handlePaymentDetailsToggle();
   handlePrivateNoteChange();
   handleUpdateOrderStatusButton();
+
+  const orderViewPageMessageHandler = new OrderViewPageMessagesHandler();
+  orderViewPageMessageHandler.listenForPredefinedMessageSelection();
 
   $(OrderViewPageMap.privateNoteToggleBtn).on('click', (event) => {
     event.preventDefault();

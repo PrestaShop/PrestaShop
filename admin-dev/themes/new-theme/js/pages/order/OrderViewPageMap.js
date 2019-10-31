@@ -42,4 +42,7 @@ export default {
   updateOrderStatusActionBtn: '#update_order_status_action_btn',
   updateOrderStatusActionInput: '#update_order_status_action_input',
   updateOrderStatusActionForm: '#update_order_status_action_form',
+  orderMessageNameSelect: '#order_message_order_message',
+  orderMessagesContainer: '.js-order-messages-container',
+  orderMessage: '#order_message_message',
 };
