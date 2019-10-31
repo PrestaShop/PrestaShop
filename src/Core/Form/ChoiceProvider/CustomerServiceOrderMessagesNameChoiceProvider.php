@@ -29,9 +29,9 @@ namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 
 /**
- * Selects order messages itself.
+ * Gets choices for predefined order message types.
  */
-final class CustomerServiceOrderMessagesChoiceProvider implements FormChoiceProviderInterface
+final class CustomerServiceOrderMessagesNameChoiceProvider implements FormChoiceProviderInterface
 {
     /**
      * @var array
@@ -44,14 +44,14 @@ final class CustomerServiceOrderMessagesChoiceProvider implements FormChoiceProv
     }
 
     /**
-     * {@inheritdoc}
+     * @{inheritdoc}
      */
     public function getChoices(): array
     {
         $result = [];
 
         foreach ($this->orderMessages as $orderMessage) {
-            $result[$orderMessage['id_order_message']] = $orderMessage['message'];
+            $result[$orderMessage['name']] = $orderMessage['id_order_message'];
         }
 
         return $result;

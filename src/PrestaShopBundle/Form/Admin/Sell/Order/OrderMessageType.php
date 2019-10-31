@@ -33,6 +33,8 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
 
 /**
  * Helps to render messages block in orders view page.
@@ -44,10 +46,18 @@ class OrderMessageType extends AbstractType
     /**
      * @var FormChoiceProviderInterface
      */
+    private $orderMessageNameChoiceProvider;
+
+    /**
+     * @var FormChoiceProviderInterface
+     */
     private $orderMessageChoiceProvider;
 
-    public function __construct(FormChoiceProviderInterface $orderMessageChoiceProvider)
-    {
+    public function __construct(
+        FormChoiceProviderInterface $orderMessageNameChoiceProvider,
+        FormChoiceProviderInterface $orderMessageChoiceProvider
+    ) {
+        $this->orderMessageNameChoiceProvider = $orderMessageNameChoiceProvider;
         $this->orderMessageChoiceProvider = $orderMessageChoiceProvider;
     }
 
@@ -55,7 +65,7 @@ class OrderMessageType extends AbstractType
     {
         $builder
             ->add('order_message', ChoiceType::class, [
-                'choices' => $this->orderMessageChoiceProvider->getChoices(),
+                'choices' => $this->orderMessageNameChoiceProvider->getChoices(),
                 'required' => false,
             ])
             ->add('is_displayed_to_customer', CheckboxType::class, [
@@ -64,5 +74,10 @@ class OrderMessageType extends AbstractType
             ])
             ->add('message', TextareaType::class)
         ;
+    }
+
+    public function buildView(FormView $view, FormInterface $form, array $options)
+    {
+        $view->vars['messages'] = $this->orderMessageChoiceProvider->getChoices();
     }
 }

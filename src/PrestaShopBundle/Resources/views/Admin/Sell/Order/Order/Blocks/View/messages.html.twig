@@ -80,6 +80,12 @@
       'class': 'mb-0'
     }) }}
 
+    {% for id, message in orderMessageForm.vars['messages'] %}
+      <div data-id="{{ id }}">
+        {{ message }}
+      </div>
+    {% endfor %}
+
     <div class="form-group row">
       <div class="col-sm">
         <a href="{{ path('admin_order_messages_index') }}" class="mb-1">
