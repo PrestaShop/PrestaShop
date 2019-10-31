@@ -991,8 +991,18 @@ class HookCore extends ObjectModel
         $memory_end = memory_get_usage(true);
 
         Db::getInstance()->execute('
-		INSERT INTO '._DB_PREFIX_.'modules_perfs (session, module, method, time_start, time_end, memory_start, memory_end)
-		VALUES ('.(int)Module::$_log_modules_perfs_session.', "'.pSQL($module->name).'", "'.pSQL($method).'", "'.pSQL($time_start).'", "'.pSQL($time_end).'", '.(int)$memory_start.', '.(int)$memory_end.')');
+		    INSERT INTO 
+		    '._DB_PREFIX_.'modules_perfs (session, module, method, time_start, time_end, memory_start, memory_end)
+		    VALUES ('
+                .(int)Module::$_log_modules_perfs_session.', 
+                "'.pSQL($module->name).'", 
+                "'.pSQL($method).'", 
+                "'.pSQL($time_start).'", 
+                "'.pSQL($time_end).'", 
+                '.(int)$memory_start.', 
+                '.(int)$memory_end.'
+		    )'
+        );
 
         return $hookCallResult;
     }
