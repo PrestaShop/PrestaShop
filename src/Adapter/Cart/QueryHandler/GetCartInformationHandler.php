@@ -43,6 +43,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartAddress;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartProduct;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartShipping;
+use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartSummary;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleInterface;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
@@ -100,7 +101,7 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
             (int) $language->id,
             $this->extractCartRulesFromLegacySummary($legacySummary, $currency),
             $this->getAddresses($cart),
-            $this->extractSummaryFromLegacySummary($legacySummary),
+            $this->extractSummaryFromLegacySummary($legacySummary, $currency),
             $this->extractShippingFromLegacySummary($cart, $legacySummary)
         );
     }
@@ -241,18 +242,27 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
 
     /**
      * @param array $legacySummary
+     * @param Currency $currency
      *
      * @return CartInformation\CartSummary
+     *
+     * @throws LocalizationException
      */
-    private function extractSummaryFromLegacySummary(array $legacySummary)
+    private function extractSummaryFromLegacySummary(array $legacySummary, Currency $currency): CartSummary
     {
-        return new CartInformation\CartSummary(
-            $legacySummary['total_products'],
-            $legacySummary['total_discounts_tax_exc'],
-            $legacySummary['total_shipping_tax_exc'],
-            $legacySummary['total_tax'],
-            $legacySummary['total_price'],
-            $legacySummary['total_price_without_tax']
+        $discount = $this->locale->formatPrice($legacySummary['total_discounts_tax_exc'], $currency->iso_code);
+
+        if (0 !== $legacySummary['total_discounts_tax_exc']) {
+            $discount = '-' . $discount;
+        }
+
+        return new CartSummary(
+            $this->locale->formatPrice($legacySummary['total_products'], $currency->iso_code),
+            $discount,
+            $this->locale->formatPrice($legacySummary['total_shipping_tax_exc'], $currency->iso_code),
+            $this->locale->formatPrice($legacySummary['total_tax'], $currency->iso_code),
+            $this->locale->formatPrice($legacySummary['total_price'], $currency->iso_code),
+            $this->locale->formatPrice($legacySummary['total_price_without_tax'], $currency->iso_code)
         );
     }
 }
