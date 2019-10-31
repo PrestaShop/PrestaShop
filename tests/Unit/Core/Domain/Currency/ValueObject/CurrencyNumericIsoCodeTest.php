@@ -91,11 +91,11 @@ class CurrencyNumericIsoCodeTest extends TestCase
     /**
      * @dataProvider getCorrectNumericIsoCodes
      */
-    public function testItReturnsRightIsoCode($correctNumericIsoCode, $expectedValue)
+    public function testItReturnsRightIsoCode($correctNumericIsoCode)
     {
         $currencyNumericIsoCode = new NumericIsoCode($correctNumericIsoCode);
 
-        $this->assertEquals($expectedValue, $currencyNumericIsoCode->getValue());
+        $this->assertEquals($correctNumericIsoCode, $currencyNumericIsoCode->getValue());
     }
 
     public function getCorrectNumericIsoCodes()
@@ -103,15 +103,12 @@ class CurrencyNumericIsoCodeTest extends TestCase
         return [
             [
                 '008',
-                8,
             ],
             [
                 '981',
-                981,
             ],
             [
                 '049',
-                49,
             ],
         ];
     }
