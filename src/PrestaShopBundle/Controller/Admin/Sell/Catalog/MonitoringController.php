@@ -26,6 +26,11 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetProductIsEnabledCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductIsEnabled;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\DisabledProductGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\EmptyCategoryGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\NoQtyProductWithCombinationGridDefinitionFactory;
@@ -45,6 +50,7 @@ use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Category\DeleteCategoriesType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Service\Grid\ResponseBuilder;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -246,5 +252,52 @@ class MonitoringController extends FrameworkBundleAdminController
         $gridFactory = $this->get('prestashop.core.grid.grid_factory.product_without_price');
 
         return $gridFactory->getGrid($filters);
+    }
+
+    /**
+     * Toggle product status
+     *
+     * @AdminSecurity(
+     *     "is_granted(['update'], request.get('_legacy_controller'))",
+     *     message="You do not have permission to update this."
+     * )
+     *
+     * @param $productId
+     *
+     * @return JsonResponse
+     */
+    public function toggleStatusAction($productId)
+    {
+        if ($this->isDemoModeEnabled()) {
+            return $this->json([
+                'status' => false,
+                'message' => $this->getDemoModeErrorMessage(),
+            ]);
+        }
+
+        try {
+            $isEnabled = $this->getQueryBus()->handle(new GetProductIsEnabled($productId));
+
+            $this->getCommandBus()->handle(new SetProductIsEnabledCommand($productId, !$isEnabled));
+            $response = [
+                'status' => true,
+                'message' => $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success'),
+            ];
+        } catch (ProductException $e) {
+            $response = [
+                'status' => false,
+                'message' => $this->getErrorMessageForException($e, $this->getErrorMessages()),
+            ];
+        }
+
+        return $this->json($response);
+    }
+
+    private function getErrorMessages()
+    {
+        return [
+            ProductNotFoundException::class => $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
+            CannotUpdateProductException::class => $this->trans('An error occurred while updating the status for an object.', 'Admin.Notifications.Error'),
+        ];
     }
 }
