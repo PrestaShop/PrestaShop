@@ -48,7 +48,6 @@ export default class SummaryRenderer {
    */
   render(cartInfo) {
     this._cleanSummary();
-
     if (cartInfo.products.length === 0 || cartInfo.shipping === null) {
       this._hideSummaryBlock();
 
