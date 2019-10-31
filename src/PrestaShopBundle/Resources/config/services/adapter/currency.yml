@@ -7,6 +7,7 @@ services:
       class: 'PrestaShop\PrestaShop\Adapter\Currency\CommandHandler\CurrencyCommandValidator'
       arguments:
         - '@prestashop.core.localization.cldr.locale_repository'
+        - '@prestashop.adapter.data_provider.currency'
         - '@=service("prestashop.adapter.legacy.configuration").get("PS_CURRENCY_DEFAULT")'
 
   # Command handlers
