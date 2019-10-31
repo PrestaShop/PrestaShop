@@ -88,8 +88,8 @@ abstract class AbstractProductGridDefinitionFactory extends AbstractGridDefiniti
                     ->setOptions([
                         'field' => 'active',
                         'primary_field' => 'id_product',
-                        'route' => 'admin_monitoring_index', //@todo: implement toggle status action
-                        'route_param_name' => 'id_product',
+                        'route' => 'admin_product_toggle_status',
+                        'route_param_name' => 'productId',
                     ])
             )
             ->add(

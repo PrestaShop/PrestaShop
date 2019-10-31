@@ -71,7 +71,7 @@ $(() => {
     grid.addExtension(new ReloadListActionExtension());
     grid.addExtension(new SortingExtension());
     grid.addExtension(new FiltersResetExtension());
-    grid.addExtension(new ColumnTogglingExtension());
+    grid.addExtension(new AsyncToggleColumnExtension());
     grid.addExtension(new SubmitRowActionExtension());
     grid.addExtension(new SubmitBulkExtension());
     grid.addExtension(new BulkActionCheckboxExtension());
