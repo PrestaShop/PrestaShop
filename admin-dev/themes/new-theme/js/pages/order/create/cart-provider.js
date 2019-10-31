@@ -61,7 +61,7 @@ export default class CartProvider {
    */
   loadEmptyCart(customerId) {
     $.post(this.router.generate('admin_carts_create'), {
-      customer_id: customerId,
+      customerId,
     }).then((cartInfo) => {
       EventEmitter.emit(eventMap.cartLoaded, cartInfo);
     });
