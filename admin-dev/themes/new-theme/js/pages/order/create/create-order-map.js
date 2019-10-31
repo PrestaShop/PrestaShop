@@ -70,6 +70,8 @@ export default {
 
   // selectors related to cart block
   cartBlock: '#cart-block',
+  cartCurrencySelect: '#js-cart-currency-select',
+  cartLanguageSelect: '#js-cart-language-select',
 
   // selectors related to cartRules block
   cartRulesBlock: '#cart-rules-block',
