@@ -70,7 +70,8 @@
                 <div class="col-lg-12">
                   <p class="checkbox">
                     <label class="form-control-label" for="hook-position">
-                      <input type="checkbox" id="hook-position"/>
+                      <input type="checkbox" id="hook-position" />
+                      <label class="selectbox" for="hook-position"><i class="material-icons done">done</i></label>
                       {{ 'Display non-positionable hooks' | trans }}
                     </label>
                   </p>
@@ -89,6 +90,7 @@
                 <label class="badge badge-primary badge-pill float-right">
                   {% if hook['modules_count'] and canMove %}
                     <input type="checkbox" class="hook-checker" id="Ghook{{ hook['id_hook'] }}" data-hook-id="{{ hook['id_hook'] }}" />
+                    <label class="selectbox" for="Ghook{{ hook['id_hook'] }}"><i class="material-icons done">done</i></label>
                   {% endif %}
 
                   {{ hook['modules_count'] }}
@@ -150,13 +152,12 @@
                               {% set linkParams = linkParams|merge({'show_modules': selectedModule}) %}
                             {% endif %}
 
-                            <a class="btn btn-outline-primary btn-sm" href="{{ getAdminLink('AdminModulesPositions', true, linkParams) }}" aria-label="{{ 'Edit' | trans({}, 'Admin.Actions') }}">
+                            <a class="btn tooltip-link" href="{{ getAdminLink('AdminModulesPositions', true, linkParams) }}" aria-label="{{ 'Edit' | trans({}, 'Admin.Actions') }}">
                               <i class="material-icons">edit</i>
                             </a>
 
-                            <button class="btn btn-outline-primary btn-sm dropdown-toggle-split" data-toggle="dropdown" type="button" aria-haspopup="true" aria-expanded="false" data-reference="parent">
-                              <i class="material-icons">more_vert</i>
-                            </button>
+                            <a class="btn tooltip-link dropdown-toggle dropdown-toggle-dots dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">
+                            </a>
 
                             <div class="dropdown-menu">
                               <a class="dropdown-item" href="{{ path('admin_modules_positions_unhook', {moduleId: moduleInstance.id, hookId: hook['id_hook']}) }}">

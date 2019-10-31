@@ -518,6 +518,42 @@ form#importDropzone {
 }
 
 /**
+ * Module filters
+ */
+#position-filters {
+  input[type="checkbox"] {
+    display: none;
+
+    &:checked ~ label {
+      background-color: $primary;
+      border-color: $primary;
+
+      .done {
+        opacity: 1;
+      }
+    }
+  }
+
+  .selectbox {
+    width: 20px;
+    height: 20px;
+    border: 2px solid $gray-light;
+    border-radius: 2px;
+    vertical-align: middle;
+    margin: 0;
+    position: relative;
+
+    .done {
+      opacity: 0;
+      color: #fff;
+      margin-top: -7px;
+      font-size: 1.6em;
+      margin-left: -4px;
+    }
+  }
+}
+
+/**
  * Module positions
  */
 
@@ -555,6 +591,41 @@ form#importDropzone {
       @extend .text-muted;
       padding: 3px 0 0 3px;
     }
+
+    .badge .selectbox i {
+      line-height: 1.5;
+    }
+  }
+
+  input[type="checkbox"] {
+    display: none;
+
+    &:checked ~ label {
+      background-color: $primary;
+      border-color: $primary;
+
+      .done {
+        opacity: 1;
+      }
+    }
+  }
+
+  .selectbox {
+    width: 20px;
+    height: 20px;
+    border: 2px solid $gray-light;
+    border-radius: 2px;
+    vertical-align: middle;
+    margin: 0;
+    position: relative;
+
+    .done {
+      opacity: 0;
+      color: #fff;
+      margin-top: -7px;
+      font-size: 1.6em;
+      margin-left: -4px;
+    }
   }
 }
 
@@ -590,7 +661,8 @@ form#importDropzone {
       background-color: $medium-gray;
 
       .module-name,
-      .module-description {
+      .module-description,
+      .module-column-position{
         color: #fff;
 
         .text-muted {
@@ -599,6 +671,7 @@ form#importDropzone {
       }
 
       .module-column-actions {
+        .dropdown-toggle.dropdown-toggle-dots::after,
         i {
           color: #fff;
         }
@@ -629,37 +702,6 @@ form#importDropzone {
     .drag_indicator {
       opacity: 0;
     }
-
-    input[type="checkbox"] {
-      display: none;
-    }
-
-    .selectbox {
-      width: 16px;
-      height: 16px;
-      border: 1.5px solid $gray-light;
-      border-radius: 2px;
-      vertical-align: middle;
-      margin: 0;
-      position: relative;
-
-      .done {
-        opacity: 0;
-        color: #fff;
-        margin-top: -14px;
-        font-size: 1.1em;
-        margin-left: -1px;
-      }
-    }
-
-    input[type="checkbox"]:checked ~ label {
-      background-color: $primary;
-      border-color: $primary;
-
-      .done {
-        opacity: 1;
-      }
-    }
   }
 
   .module-column-position {
@@ -669,12 +711,9 @@ form#importDropzone {
     text-align: right;
 
     .index-position {
-      border: solid 1px $gray-light;
-      background-color: #fff;
       padding: 0 5px;
       font-size: 1em;
       width: 40px;
-      font-size: 1em;
     }
   }
 
