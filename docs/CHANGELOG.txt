@@ -25,6 +25,67 @@ Release Notes for PrestaShop 1.7
 --------------------------------
 
 ####################################
+#   v1.7.6.1 - (2019-08-26)
+####################################
+- Back Office:
+  - Bug fix:
+    - #15173: CLDR has access to all currencies regardless of the current shop (by @jolelievre)
+    - #15139: Make module and email translations work again when using a theme other than classic (by @eternoendless)
+    - #14966: Keep BO from using two different translators in parallel  (by @matthieu-rolland)
+    - #15030: Get all categories in category tree form (not only enabled ones) (by @matthieu-rolland)
+    - #14962: Fix error preventing to translate backoffice wordings when using a theme other than classic (by @eternoendless)
+    - #15017: Improve translation test module (by @eternoendless)
+    - #14721: Manage edit/view link for customers in HelperList (by @jolelievre)
+    - #15036: Fix supplier display after import (by @jolelievre)
+    - #14719: Scan translation keys from email themes (by @jolelievre)
+    - #14938: Fix error when loading theme that includes a translations directory but no translations (by @eternoendless)
+    - #14926: Fix logs filtering (by @sarjon)
+    - #14671: Make sure token is properly used in legacy context (by @PierreRambaud)
+    - #14914: Date picker calendar is shown in wrong place when rendered downwards in grid (by @PierreRambaud)
+    - #14828: Cannot save the "No Picture Image"  (by @PierreRambaud)
+    - #14805: Fix unclosed div tag (by @sarjon)
+    - #14701: Fix log delete all action on Logs page (by @matks)
+    - #14605: Do not use encodeURIComponent with POST data (by @PierreRambaud)
+    - #14673: Fix Orders view page link to transform guest to customer (by @matks)
+- Front Office:
+  - Bug fix:
+    - #15042: Only disable following steps in the checkout process when the current step has a continue button (by @jolelievre)
+    - #14945: Fixed {firstname} typo in order customer comment mail in 1.7.6.x (by @dheerajwebkul)
+    - #14786: Sprintf function broken in 1.7.6 for custom module templates (by @roja45)
+    - #14863: Prevent uninstall of Product Comments module (by @templatin)
+- Core:
+  - Improvement:
+    - #14579: Fix many things that were supposed to be removed during build not being removed (by @eternoendless)
+  - Bug fix:
+    - #15132: Fix abstract service declaration (by @eternoendless)
+    - #14711: Update Decimal library to 1.2.0 (by @eternoendless)
+    - #14833: Bad currency format for Czech language (by @PierreRambaud)
+    - #14664: Update precision and numeric iso code of currencies (by @Quetzacoalt91)
+- Installer:
+  - Bug fix:
+    - #14620: Init properly the Kernel on major *manual* upgrades (by @Quetzacoalt91)
+    - #14739: Keep Composer.lock file in release (by @jolelievre)
+- Web Services:
+  - Bug fix:
+    - #14953: Initialize container in WebService environment (by @matthieu-rolland)
+- Localization:
+  - Bug fix:
+    - #15051: Fix translations (by @jolelievre)
+- Tests:
+  - Refactoring:
+    - #14356: Fix "02_autoupgrade" in install_upgrade campaign (by @nesrineabdmouleh)
+
+####################################
+#   v1.7.6.0 - (2019-07-09)
+####################################
+- Back Office:
+  - Bug fix:
+    - #14532: Check if index.php file exists before ignoring it (by @jolelievre)
+- Core:
+  - Refactoring:
+    - #14552: Use variable instead of recomputing (by @jolelievre)
+
+####################################
 #   v1.7.6.0 RC 2 - (2019-07-05)
 ####################################
 - Back Office:

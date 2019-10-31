@@ -1,12 +1,12 @@
 /**
- * 2007-2019 PrestaShop.
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the Academic Free License 3.0 (AFL-3.0)
+ * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/AFL-3.0
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -15,11 +15,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA
- * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
+ * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 /**
@@ -29,6 +29,8 @@
 import NumberSymbol from './number-symbol';
 import PriceSpecification from './specifications/price';
 import NumberSpecification from './specifications/number';
+
+const escapeRE = require('lodash.escaperegexp');
 
 const CURRENCY_SYMBOL_PLACEHOLDER = '¤';
 const DECIMAL_SEPARATOR_PLACEHOLDER = '.';
@@ -199,15 +201,35 @@ class NumberFormatter {
    */
   replaceSymbols(number) {
     const symbols = this.numberSpecification.getSymbol();
-    let num = number;
-    num = num.split(DECIMAL_SEPARATOR_PLACEHOLDER).join(symbols.getDecimal());
-    num = num.split(GROUP_SEPARATOR_PLACEHOLDER).join(symbols.getGroup());
-    num = num.split(MINUS_SIGN_PLACEHOLDER).join(symbols.getMinusSign());
-    num = num.split(PERCENT_SYMBOL_PLACEHOLDER).join(symbols.getPercentSign());
-    num = num.split(PLUS_SIGN_PLACEHOLDER).join(symbols.getPlusSign());
 
-    return num;
+    const map = {};
+    map[DECIMAL_SEPARATOR_PLACEHOLDER] = symbols.getDecimal();
+    map[GROUP_SEPARATOR_PLACEHOLDER] = symbols.getGroup();
+    map[MINUS_SIGN_PLACEHOLDER] = symbols.getMinusSign();
+    map[PERCENT_SYMBOL_PLACEHOLDER] = symbols.getPercentSign();
+    map[PLUS_SIGN_PLACEHOLDER] = symbols.getPlusSign();
+
+    return this.strtr(number, map);
   }
+
+  /**
+   * strtr() for JavaScript
+   * Translate characters or replace substrings
+   *
+   * @param str
+   *  String to parse
+   * @param pairs
+   *  Hash of ('from' => 'to', ...).
+   *
+   * @return string
+   */
+  strtr(str, pairs) {
+    const substrs = Object.keys(pairs).map(escapeRE);
+    return str.split(RegExp(`(${substrs.join('|')})`))
+              .map(part => pairs[part] || part)
+              .join('');
+  }
+
 
   /**
    * Add missing placeholders to the number using the passed CLDR pattern.
@@ -290,9 +312,7 @@ class NumberFormatter {
       );
     }
 
-    const currency = new NumberFormatter(specification);
-
-    return currency;
+    return new NumberFormatter(specification);
   }
 }
 

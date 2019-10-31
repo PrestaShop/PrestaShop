@@ -177,7 +177,7 @@
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0;padding-bottom:20px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ 'Here is a test <span class="label">email</span> from your shop.'|trans({}, 'Emails.Body', locale)|raw }}
+                                          {{ 'Here is a test [1]email[/1] from your shop.'|trans({'[1]': '<span class="label">', '[/1]': '</span>'}, 'Emails.Body', locale)|raw }}
                                         </div>
                                       </td>
                                     </tr>

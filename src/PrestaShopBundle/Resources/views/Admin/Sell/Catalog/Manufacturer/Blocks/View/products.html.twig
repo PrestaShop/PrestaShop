@@ -1,5 +1,5 @@
 {#**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -66,6 +66,7 @@
                   <th>{{ 'Reference'|trans({}, 'Admin.Global') }}</th>
                   <th>{{ 'EAN13'|trans({}, 'Admin.Catalog.Feature') }}</th>
                   <th>{{ 'UPC'|trans({}, 'Admin.Catalog.Feature') }}</th>
+                  <th>{{ 'MPN'|trans({}, 'Admin.Catalog.Feature') }}</th>
                   {% if not isAllShopContext and isStockManagementEnabled %}
                     <th>{{ 'Available quantity'|trans({}, 'Admin.Catalog.Feature') }}</th>
                   {% endif %}
@@ -78,6 +79,7 @@
                     <td>{{ combination.reference }}</td>
                     <td>{{ combination.ean13 }}</td>
                     <td>{{ combination.upc }}</td>
+                    <td>{{ combination.mpn }}</td>
                     {% if not isAllShopContext and isStockManagementEnabled %}
                       <td>{{ combination.quantity }}</td>
                     {% endif %}
@@ -92,6 +94,7 @@
                   <th>{{ 'Ref:'|trans({}, 'Admin.Catalog.Feature') }}</th>
                   <th>{{ 'EAN13:'|trans({}, 'Admin.Catalog.Feature') }}</th>
                   <th>{{ 'UPC:'|trans({}, 'Admin.Catalog.Feature') }}</th>
+                  <th>{{ 'MPN:'|trans({}, 'Admin.Catalog.Feature') }}</th>
                   {% if isStockManagementEnabled %}
                     <th>{{ 'Qty:'|trans({}, 'Admin.Catalog.Feature') }}</th>
                   {% endif %}
@@ -102,6 +105,7 @@
                   <td>{{ product.reference }}</td>
                   <td>{{ product.ean13 }}</td>
                   <td>{{  product.upc }}</td>
+                  <td>{{  product.mpn }}</td>
                   {% if isStockManagementEnabled %}
                     <td>{{ product.quantity }}</td>
                   {% endif %}

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -94,7 +94,7 @@ final class AddEmployeeHandler extends AbstractEmployeeHandler implements AddEmp
 
         $this->associateWithShops($employee, $command->getShopAssociation());
 
-        return new EmployeeId($employee->id);
+        return new EmployeeId((int) $employee->id);
     }
 
     /**
@@ -113,7 +113,6 @@ final class AddEmployeeHandler extends AbstractEmployeeHandler implements AddEmp
         $employee->id_lang = $command->getLanguageId();
         $employee->id_profile = $command->getProfileId();
         $employee->default_tab = $command->getDefaultPageId();
-        $employee->optin = $command->isSubscribedToNewsletter();
         $employee->active = $command->isActive();
         $employee->passwd = $this->hashing->hash($command->getPlainPassword()->getValue());
         $employee->id_last_order = $employee->getLastElementsForNotify('order');

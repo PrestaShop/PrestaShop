@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -72,9 +72,6 @@ if (_PS_MODE_DEV_) {
 require_once __DIR__.'/../app/AppKernel.php';
 
 $kernel = new AppKernel(_PS_MODE_DEV_?'dev':'prod', _PS_MODE_DEV_);
-if (PHP_VERSION_ID < 70000) {
-    $kernel->loadClassCache();
-}
 //$kernel = new AppCache($kernel);
 // When using the HttpCache, you need to call the method in your front controller instead of relying on the configuration parameter
 //Request::enableHttpMethodParameterOverride();

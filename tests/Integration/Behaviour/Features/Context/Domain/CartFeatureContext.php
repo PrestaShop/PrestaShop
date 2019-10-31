@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -29,6 +29,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 use Cart;
 use Configuration;
 use Context;
+use Currency;
 use Country;
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\CreateEmptyCustomerCartCommand;
@@ -42,6 +43,21 @@ use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
 class CartFeatureContext extends AbstractDomainFeatureContext
 {
+    /**
+     * @given the current currency is :currencyIsoCode
+     */
+    public function addCurrencyToContext($currencyIsoCode)
+    {
+        $currency = new Currency();
+        $currency->name = $currencyIsoCode;
+        $currency->precision = 2;
+        $currency->iso_code = $currencyIsoCode;
+        $currency->active = 1;
+        $currency->conversion_rate = 1;
+
+        Context::getContext()->currency = $currency;
+    }
+
     /**
      * @When I create an empty cart :cartReference for customer :customerReference
      */

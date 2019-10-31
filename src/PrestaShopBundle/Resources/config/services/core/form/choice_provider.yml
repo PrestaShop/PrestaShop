@@ -209,3 +209,8 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\MailThemeChoiceProvider'
     arguments:
       - '@prestashop.core.mail_template.theme_catalog'
+
+  prestashop.core.form.choice.provider.order_discount_type:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\OrderDiscountTypeChoiceProvider'
+    arguments:
+      - '@translator'

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -365,13 +365,15 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
 
         // post treatment
         $currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
+        $localeCldr = Tools::getContextLocale(Context::getContext());
+
         foreach ($products as &$product) {
             $product['total'] = $total; // total product count (filtered)
             $product['price_final'] = Product::getPriceStatic(
                 $product['id_product'],
                 true,
                 null,
-                (int) Configuration::get('PS_PRICE_DISPLAY_PRECISION'),
+                Context::getContext()->getComputingPrecision(),
                 null,
                 false,
                 false,
@@ -384,9 +386,10 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
                 true,
                 true
             );
+
             if ($formatCldr) {
-                $product['price'] = Tools::displayPrice($product['price'], $currency);
-                $product['price_final'] = Tools::displayPrice($product['price_final'], $currency);
+                $product['price'] = $localeCldr->formatPrice($product['price'], $currency->iso_code);
+                $product['price_final'] = $localeCldr->formatPrice($product['price_final'], $currency->iso_code);
             }
             $product['image'] = $this->imageManager->getThumbnailForListing($product['id_image']);
             $product['image_link'] = Context::getContext()->link->getImageLink($product['link_rewrite'], $product['id_image']);

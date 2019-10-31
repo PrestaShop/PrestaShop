@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -118,7 +118,8 @@ class CommonController extends FrameworkBundleAdminController
                 unset($callerParameters[$k]);
             }
         }
-        $routeName = $request->attributes->get('caller_route', $request->attributes->get('caller_parameters', ['_route' => false])['_route']);
+        $callerParameters += array('_route' => false);
+        $routeName = $request->attributes->get('caller_route', $callerParameters['_route']);
         $nextPageUrl = (!$routeName || ($offset + $limit >= $total)) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
             array(

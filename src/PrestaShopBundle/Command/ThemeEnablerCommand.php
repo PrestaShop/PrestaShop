@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -51,8 +51,6 @@ final class ThemeEnablerCommand extends ContainerAwareCommand
      */
     protected function init(InputInterface $input, OutputInterface $output)
     {
-        require $this->getContainer()->get('kernel')->getRootDir() . '/../config/config.inc.php';
-
         Context::getContext()->employee = new Employee();
     }
 

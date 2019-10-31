@@ -1,5 +1,5 @@
 {**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -26,10 +26,10 @@
 {strip}
 {
 {if isset($status) && is_string($status) && trim($status) != ''}{assign 'hasresult' 'ok'}"status" : "{$status}"{/if}
-{if isset($confirmations) && $confirmations|count > 0}{if $hasresult == 'ok'},{/if}{assign 'hasresult' 'ok'}"confirmations" : {$confirmations}{/if}
-{if isset($informations) && $informations|count > 0}{if $hasresult == 'ok'},{/if}{assign 'hasresult' 'ok'}"informations" : {$informations}{/if}
-{if isset($errors) && $errors|count > 0}{if $hasresult == 'ok'},{/if}{assign 'hasresult' 'ok'}"error" : {$errors}{/if}
-{if isset($warnings) && $warnings|count > 0}{if $hasresult == 'ok'},{/if}{assign 'hasresult' 'ok'}"warnings" : {$warnings}{/if}
+{if !empty($confirmations)}{if $hasresult == 'ok'},{/if}{assign 'hasresult' 'ok'}"confirmations" : {$confirmations}{/if}
+{if !empty($informations)}{if $hasresult == 'ok'},{/if}{assign 'hasresult' 'ok'}"informations" : {$informations}{/if}
+{if !empty($errors)}{if $hasresult == 'ok'},{/if}{assign 'hasresult' 'ok'}"error" : {$errors}{/if}
+{if !empty($warnings)}{if $hasresult == 'ok'},{/if}{assign 'hasresult' 'ok'}"warnings" : {$warnings}{/if}
 {if $hasresult == 'ok'},{/if}{assign 'hasresult' 'ok'}"content" : {$page}
 }
 {/strip}
@@ -46,7 +46,7 @@
 			{if count($errors) == 1}
 				{$errors[0]}
 			{else}
-				{l s='%d errors' sprintf=[$errors|count]}
+				{l s='There are %d errors.' sprintf=[$errors|count] d='Admin.Notifications.Error'}
 				<br/>
 				<ul>
 					{foreach $errors AS $error}
@@ -79,13 +79,13 @@
 		<div class="alert alert-warning">
 			<button type="button" class="close" data-dismiss="alert">&times;</button>
 			{if count($warnings) > 1}
-				{l s='There are %d warnings.' sprintf=count($warnings)}
+				{l s='There are %d warnings.' sprintf=count($warnings) d='Admin.Notifications.Error'}
 				<span style="margin-left:20px;" id="labelSeeMore">
-					<a id="linkSeeMore" href="#" style="text-decoration:underline">{l s='Click here to see more'}</a>
-					<a id="linkHide" href="#" style="text-decoration:underline;display:none">{l s='Hide warning'}</a>
+					<a id="linkSeeMore" href="#" style="text-decoration:underline">{l s='See more' d='Admin.Actions'}</a>
+					<a id="linkHide" href="#" style="text-decoration:underline;display:none">{l s='Hide warning' d='Admin.Actions'}</a>
 				</span>
 			{else}
-				{l s='There is %d warning.' sprintf=count($warnings)}
+				{l s='There are %d warnings.' sprintf=count($warnings) d='Admin.Notifications.Error'}
 			{/if}
 			<ul style="display:{if count($warnings) > 1}none{else}block{/if};" id="seeMore">
 			{foreach $warnings as $warning}

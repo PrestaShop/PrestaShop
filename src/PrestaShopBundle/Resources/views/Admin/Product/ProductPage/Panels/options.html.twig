@@ -1,5 +1,5 @@
 {#**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -137,6 +137,15 @@
                 </label>
                 {{ form_errors(optionsForm.upc) }}
                 {{ form_widget(optionsForm.upc) }}
+              </fieldset>
+              <fieldset class="col-md-4 form-group">
+                <label class="form-control-label">
+                  {{ optionsForm.mpn.vars.label }}
+                  <span class="help-box" data-toggle="popover"
+                        data-content="{{ "MPN is used internationally to identify the Manufacturer Part Number."|trans({}, 'Admin.Catalog.Help') }}" ></span>
+                </label>
+                {{ form_errors(optionsForm.mpn) }}
+                {{ form_widget(optionsForm.mpn) }}
               </fieldset>
             </div>
 

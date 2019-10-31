@@ -27,7 +27,7 @@
             
 {% endif %}
             <span>
-              {{ 'Your order with the reference <span><strong>{order_name}</strong></span> has been shipped.'|trans({}, 'Emails.Body', locale)|raw }}<br/>
+              {{ 'Your order with the reference [1]{order_name}[/1] has been shipped.'|trans({'[1]': '<span><strong>', '[/1]': '</strong></span>'}, 'Emails.Body', locale)|raw }}<br/>
               {{ 'Thank you for shopping with {shop_name}!'|trans({}, 'Emails.Body', locale) }}
             </span>
           </font>

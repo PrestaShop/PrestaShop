@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -271,6 +271,7 @@ class HelperFormCore extends Helper
             'module_dir' => _MODULE_DIR_,
             'base_url' => $this->context->shop->getBaseURL(),
             'contains_states' => (isset($this->fields_value['id_country'], $this->fields_value['id_state'])) ? Country::containsStates($this->fields_value['id_country']) : null,
+            'dni_required' => (isset($this->fields_value['id_country'], $this->fields_value['dni'])) ? Address::dniRequired($this->fields_value['id_country']) : null,
             'show_cancel_button' => $this->show_cancel_button,
             'back_url' => $this->back_url,
         ));

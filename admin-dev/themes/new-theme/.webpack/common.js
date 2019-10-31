@@ -1,7 +1,32 @@
+/**
+ * 2007-2019 PrestaShop SA and Contributors
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
 const fs = require('fs');
 const path = require('path');
 const webpack = require('webpack');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const cssExtractedFileName = 'theme';
 
@@ -43,16 +68,28 @@ module.exports = {
     payment_preferences: './js/pages/payment-preferences',
     product_page: './js/product-page/index',
     product_preferences: './js/pages/product-preferences',
+    themes: './js/pages/themes',
     profiles: './js/pages/profiles',
     sql_manager: './js/pages/sql-manager',
     stock: './js/app/pages/stock',
     supplier: './js/pages/supplier',
+    supplier_form: './js/pages/supplier/supplier-form.js',
     tax: './js/pages/tax',
-    themes: './js/pages/themes',
     translation_settings: './js/pages/translation-settings',
     translations: './js/app/pages/translations',
     webservice: './js/pages/webservice',
     error: './js/pages/error',
+    monitoring: './js/pages/monitoring',
+    order: './js/pages/order',
+    order_create: './js/pages/order/create.js',
+    catalog_price_rule: './js/pages/catalog-price-rule',
+    feature_form: './js/pages/feature/form',
+    order_message_form: './js/pages/order_message/form',
+    order_message: './js/pages/order_message',
+    order_view: './js/pages/order/view.js',
+    attachment: './js/pages/attachment',
+    attribute: './js/pages/attribute',
+    attribute_group: './js/pages/attribute-group',
   },
   output: {
     path: path.resolve(__dirname, '../public'),
@@ -184,5 +221,8 @@ module.exports = {
       $: 'jquery', // needed for jquery-ui
       jQuery: 'jquery',
     }),
+    new CopyPlugin([
+      { from: 'static' },
+    ])
   ],
 };

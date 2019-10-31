@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -59,5 +59,10 @@ if ($container instanceof \Symfony\Component\DependencyInjection\Container) {
     }
 
     $container->setParameter('cache.driver', extension_loaded('apc') ? 'apc': 'array');
-}
 
+    // Parameter used only in dev and test env
+    $envParameter = getenv('DISABLE_DEBUG_TOOLBAR');
+    if (!isset($parameters['parameters']['use_debug_toolbar']) || false !== $envParameter) {
+        $container->setParameter('use_debug_toolbar', !$envParameter);
+    }
+}

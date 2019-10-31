@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -143,7 +143,7 @@ class InstallControllerHttp
             $this->session->lang ?: false
         );
 
-        $this->translator = Context::getContext()->getTranslator();
+        $this->translator = Context::getContext()->getTranslator(true);
 
         if (isset($this->session->lang)) {
             $lang = $this->session->lang;

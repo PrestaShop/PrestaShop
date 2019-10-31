@@ -1,0 +1,55 @@
+# @todo: add legacy links when page is fully migrated
+
+admin_catalog_price_rules_index:
+  path: /
+  methods: [GET]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Sell\Catalog\CatalogPriceRule:index'
+    _legacy_controller: AdminSpecificPriceRule
+#    _legacy_link: AdminSpecificPriceRule
+
+admin_catalog_price_rules_search:
+  path: /
+  methods: [POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Sell\Catalog\CatalogPriceRule:search'
+    _legacy_controller: AdminSpecificPriceRule
+#    _legacy_link: AdminSpecificPriceRule:submitFilterspecific_price_rule
+
+##todo: implement create action #13716
+admin_catalog_price_rules_create:
+  path: /new
+  methods: [GET, POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Sell\Catalog\CatalogPriceRule:index'
+    _legacy_controller: AdminSpecificPriceRule
+
+##todo: implement edit action #13716
+admin_catalog_price_rules_edit:
+  path: /{catalogPriceRuleId}/edit
+  methods: [GET, POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Sell\Catalog\CatalogPriceRule:index'
+    _legacy_controller: AdminSpecificPriceRule
+  requirements:
+    catalogPriceRuleId: \d+
+
+admin_catalog_price_rules_delete:
+  path: /{catalogPriceRuleId}/delete
+  methods: [POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Sell\Catalog\CatalogPriceRule:delete'
+    _legacy_controller: AdminSpecificPriceRule
+#    _legacy_link: AdminSpecificPriceRule:deletespecific_price_rule
+    _legacy_parameters:
+      id_specific_price_rule: catalogPriceRuleId
+  requirements:
+    catalogPriceRuleId: \d+
+
+admin_catalog_price_rules_bulk_delete:
+  path: /bulk-delete
+  methods: [POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Sell\Catalog\CatalogPriceRule:bulkDelete'
+    _legacy_controller: AdminSpecificPriceRule
+#    _legacy_link: AdminSpecificPriceRule:submitBulkdeletespecific_price_rule

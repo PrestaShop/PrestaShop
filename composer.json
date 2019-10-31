@@ -3,7 +3,7 @@
     "description": "PrestaShop offers a free, fully scalable, Open Source e-commerce solution.",
     "type": "project",
     "require": {
-        "php": ">=5.6.0",
+        "php": ">=7.1.3",
         "ext-curl": "*",
         "ext-fileinfo": "*",
         "ext-intl": "*",
@@ -21,6 +21,7 @@
         "doctrine/doctrine-bundle": "^1.6",
         "doctrine/orm": "~2.5.3",
         "ezyang/htmlpurifier": "^4.10",
+        "friendsofsymfony/jsrouting-bundle": "^2.4",
         "geoip2/geoip2": "~2.4.2",
         "greenlion/php-sql-parser": "^4.1",
         "guzzlehttp/guzzle": "~5.0",
@@ -37,13 +38,14 @@
         "pear/archive_tar": "^1.4.6",
         "pelago/emogrifier": "^2.1",
         "phpoffice/phpspreadsheet": "~1.5",
-        "prestashop/blockreassurance": "^3",
+        "prestashop/blockreassurance": "^4.1",
+        "prestashop/circuit-breaker": "^3.0",
         "prestashop/contactform": "^4",
         "prestashop/dashactivity": "^2",
         "prestashop/dashgoals": "^2",
         "prestashop/dashproducts": "^2",
         "prestashop/dashtrends": "^2",
-        "prestashop/decimal": "^1.0.0",
+        "prestashop/decimal": "^1.2",
         "prestashop/graphnvd3": "^2",
         "prestashop/gridhtml": "^2",
         "prestashop/gsitemap": "^4",
@@ -51,13 +53,13 @@
         "prestashop/ps_banner": "^2",
         "prestashop/ps_categorytree": "^2",
         "prestashop/ps_checkpayment": "^2",
-        "prestashop/ps_contactinfo": "^3",
+        "prestashop/ps_contactinfo": "^3.2",
         "prestashop/ps_currencyselector": "^2",
         "prestashop/ps_customeraccountlinks": "^3",
         "prestashop/ps_customersignin": "^2",
         "prestashop/ps_customtext": "^4",
-        "prestashop/ps_emailsubscription": "^2",
-        "prestashop/ps_facetedsearch": "^3",
+        "prestashop/ps_emailsubscription": "^2.5",
+        "prestashop/ps_facetedsearch": "^3.2.1",
         "prestashop/ps_faviconnotificationbo": "^2",
         "prestashop/ps_featuredproducts": "^2",
         "prestashop/ps_imageslider": "^3",
@@ -123,7 +125,7 @@
         "mikey179/vfsstream": "^1.6",
         "phake/phake": "@stable",
         "phpunit/phpunit": "~5.7",
-        "symfony/phpunit-bridge": "^3.0"
+        "symfony/phpunit-bridge": "^3.4.31"
     },
     "autoload-dev": {
         "psr-4": {
@@ -197,7 +199,7 @@
             "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/old-controllers.xml"
         ],
         "integration-behaviour-tests": [
-            "@php -d date.timezone=UTC ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml"
+            "@php -d date.timezone=UTC ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml --no-snippets --strict"
         ],
         "create-release": "@php tools/build/CreateRelease.php",
         "git-hook-install": "@php .github/contrib/install.php",
@@ -205,7 +207,7 @@
     },
     "config": {
         "platform": {
-            "php": "5.6.0"
+            "php": "7.1.3"
         },
         "sort-packages": true
     },

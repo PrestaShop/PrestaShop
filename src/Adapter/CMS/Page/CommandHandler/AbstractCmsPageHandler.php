@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -30,6 +30,8 @@ use CMS;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryException;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryNotFoundException;
 use PrestaShopException;
 
 /**
@@ -47,7 +49,6 @@ abstract class AbstractCmsPageHandler extends AbstractObjectModelHandler
      * @return CMS
      *
      * @throws CmsPageException
-     * @throws CmsPageNotFoundException
      */
     protected function getCmsPageIfExistsById($cmsId)
     {
@@ -66,5 +67,29 @@ abstract class AbstractCmsPageHandler extends AbstractObjectModelHandler
         }
 
         return $cms;
+    }
+
+    /**
+     * Checks whether cms page category exists by provided id.
+     *
+     * @param $cmsCategoryId
+     *
+     * @throws CmsPageCategoryException
+     */
+    protected function assertCmsCategoryExists($cmsCategoryId)
+    {
+        try {
+            $cmsCategory = new CMS($cmsCategoryId);
+
+            if (0 >= $cmsCategory->id) {
+                throw new CmsPageCategoryNotFoundException(
+                    sprintf('Cms page category with id "%s" not found', $cmsCategoryId)
+                );
+            }
+        } catch (PrestaShopException $exception) {
+            throw new CmsPageCategoryException(
+                sprintf('An error occurred when trying to get cms page category with id %s', $cmsCategoryId)
+            );
+        }
     }
 }

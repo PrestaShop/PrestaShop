@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -83,7 +83,6 @@ class ModuleCommand extends ContainerAwareCommand
         $this->translator = $this->getContainer()->get('translator');
         $this->input = $input;
         $this->output = $output;
-        require $this->getContainer()->get('kernel')->getRootDir() . '/../config/config.inc.php';
         /** @var LegacyContext $legacyContext */
         $legacyContext = $this->getContainer()->get('prestashop.adapter.legacy.context');
         //We need to have an employee or the module hooks don't work

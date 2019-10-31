@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -143,8 +143,7 @@ class Locale implements LocaleInterface
      * @param string $currencyCode
      *                             Currency of the price
      *
-     * @return string
-     *                The formatted price
+     * @return string The formatted price
      *
      * @throws Exception\LocalizationException
      */

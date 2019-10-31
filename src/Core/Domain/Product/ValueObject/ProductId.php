@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -26,10 +26,10 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 
 /**
- * Product identity
+ * Product identity.
  */
 class ProductId
 {
@@ -62,7 +62,7 @@ class ProductId
     private function assertIntegerIsGreaterThanZero($productId)
     {
         if (!is_int($productId) || 0 > $productId) {
-            throw new OrderException(
+            throw new ProductConstraintException(
                 sprintf(
                     'Product id %s is invalid. Product id must be number that is greater than zero.',
                     var_export($productId, true)

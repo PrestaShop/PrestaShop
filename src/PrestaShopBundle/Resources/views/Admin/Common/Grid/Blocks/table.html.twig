@@ -1,5 +1,5 @@
 {#**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -40,7 +40,7 @@
       {% for record in grid.data.records %}
         <tr>
           {% for column in grid.columns %}
-            <td class="{{ column.type }}-type">
+            <td class="{{ column.type }}-type column-{{ column.id }}">
               {{ column_content(record, column, grid) }}
             </td>
           {% endfor %}

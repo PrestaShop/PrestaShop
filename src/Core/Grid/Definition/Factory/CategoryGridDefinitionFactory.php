@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -338,6 +338,7 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'route_param_name' => 'categoryId',
                     'route_param_field' => 'id_category',
                     'accessibility_checker' => $this->categoryForViewAccessibilityChecker,
+                    'clickable_row' => true,
                 ])
             )
             ->add(
@@ -348,6 +349,7 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'route' => 'admin_categories_edit',
                     'route_param_name' => 'categoryId',
                     'route_param_field' => 'id_category',
+                    'clickable_row' => true, // Will only apply if first link action is filtered
                 ])
             )
             ->add(

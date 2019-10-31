@@ -42,6 +42,8 @@
 @import "components/cursor";
 @import "components/toggable_field";
 @import "components/form_popover_error";
+@import "components/button";
+@import "components/font";
 
 // Pages specifics SCSS files
 @import "pages/product_page";
@@ -56,6 +58,8 @@
 @import "pages/cms_page";
 @import "pages/employee";
 @import "pages/error";
+@import "pages/orders";
+@import "pages/attribute";
 
 // Main Layout
 @import "pages/modules";

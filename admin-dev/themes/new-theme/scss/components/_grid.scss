@@ -85,12 +85,32 @@ table .column-filters td:last-child .grid-reset-button {
 
 .grid {
   table.grid-table {
+    thead {
+      tr {
+        td {
+          .min-field,
+          .max-field {
+            display: inline-block;
+            width: 60px;
+          }
+        }
+      }
+    }
     tbody {
       tr {
         $tr: &;
 
         &:hover {
           background: #fafbfc;
+        }
+
+        &.preview-row,
+        &.empty_row {
+          background: inherit;
+        }
+
+        &.preview-open {
+          background-color: #e9f8fb;
         }
 
         // styling for row that is being dragged
@@ -134,7 +154,52 @@ table .column-filters td:last-child .grid-reset-button {
             }
           }
 
+          &.choice-type {
+            @mixin display-dropdown-arrow() {
+              &::after {
+                visibility: visible;
+              }
+            }
+
+            .dropdown {
+              &.show {
+                .dropdown-toggle {
+                  @include display-dropdown-arrow();
+                }
+              }
+
+              .dropdown-toggle {
+                padding: 0 5px 0 5px;
+                &.coloured {
+                  border: 0;
+                }
+
+                &::after {
+                  visibility: hidden;
+                }
+
+                &:hover {
+                  @include display-dropdown-arrow();
+                }
+              }
+
+              .dropdown-menu {
+                .dropdown-item {
+                  cursor: pointer;
+                }
+              }
+            }
+          }
+
           &.action-type {
+            .inline-dropdown-item {
+              &:only-child {
+                margin-left: auto;
+              }
+
+              width: inherit;
+            }
+
             .btn-group > .dropdown-item {
               &:hover,
               &:focus {
@@ -148,6 +213,11 @@ table .column-filters td:last-child .grid-reset-button {
   }
   .table-responsive .row {
     margin: 0;
+  }
+  .preview-toggle {
+    i:hover {
+      cursor: pointer;
+    }
   }
 }
 

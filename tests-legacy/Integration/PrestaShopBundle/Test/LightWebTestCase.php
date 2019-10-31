@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -131,6 +131,11 @@ class LightWebTestCase extends TestCase
             ->getMockBuilder(Link::class)
             ->disableOriginalConstructor()
             ->getMock();
+
+        // If getCMSLink() is not mocked,
+        // it returns null, thus breaking code that expects it to return string,
+        // as string is the only valid return type for this method.
+        $linkMock->method('getCMSLink')->willReturn('');
 
         $contextMock->link = $linkMock;
 

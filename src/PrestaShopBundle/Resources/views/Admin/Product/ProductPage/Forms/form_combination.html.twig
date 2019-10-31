@@ -1,5 +1,5 @@
 {#**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -223,6 +223,13 @@
                             <label class="form-control-label">{{ form.attribute_upc.vars.label }}</label>
                             {{ form_errors(form.attribute_upc) }}
                             {{ form_widget(form.attribute_upc) }}
+                        </fieldset>
+                    </div>
+                    <div class="col-md-4">
+                        <fieldset class="form-group">
+                            <label class="form-control-label">{{ form.attribute_mpn.vars.label }}</label>
+                            {{ form_errors(form.attribute_mpn) }}
+                            {{ form_widget(form.attribute_mpn) }}
                         </fieldset>
                     </div>
                 </div>

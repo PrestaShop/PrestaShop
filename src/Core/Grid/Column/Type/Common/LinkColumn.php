@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -50,6 +50,7 @@ final class LinkColumn extends AbstractColumn
         $resolver
             ->setDefaults([
                 'sortable' => true,
+                'icon' => null,
             ])
             ->setRequired([
                 'field',
@@ -57,11 +58,12 @@ final class LinkColumn extends AbstractColumn
                 'route_param_name',
                 'route_param_field',
             ])
-            ->setAllowedTypes('field', 'string')
+            ->setAllowedTypes('field', ['string', 'null'])
             ->setAllowedTypes('route', 'string')
             ->setAllowedTypes('route_param_name', 'string')
             ->setAllowedTypes('route_param_field', 'string')
             ->setAllowedTypes('sortable', 'bool')
+            ->setAllowedTypes('icon', ['string', 'null'])
         ;
     }
 }

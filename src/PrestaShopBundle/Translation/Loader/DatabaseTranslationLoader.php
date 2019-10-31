@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -28,6 +28,9 @@
 namespace PrestaShopBundle\Translation\Loader;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\QueryBuilder;
+use PrestaShopBundle\Entity\Lang;
+use PrestaShopBundle\Entity\Translation;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogue;
 
@@ -52,6 +55,13 @@ class DatabaseTranslationLoader implements LoaderInterface
     public function load($resource, $locale, $domain = 'messages', $theme = null)
     {
         static $langs = array();
+        $catalogue = new MessageCatalogue($locale);
+
+        // do not try and load translations for a locale that cannot be saved to DB anyway
+        if ($locale === 'default') {
+            return $catalogue;
+        }
+
         if (!array_key_exists($locale, $langs)) {
             $langs[$locale] = $this->entityManager
                 ->getRepository('PrestaShopBundle:Lang')
@@ -61,33 +71,60 @@ class DatabaseTranslationLoader implements LoaderInterface
         $translationRepository = $this->entityManager
             ->getRepository('PrestaShopBundle:Translation');
 
-        $queryBuilder = $translationRepository
-            ->createQueryBuilder('t')
-            ->where('t.lang =:lang')
-            ->setParameter('lang', $langs[$locale]);
+        $queryBuilder = $translationRepository->createQueryBuilder('t');
 
-        if (null !== $theme) {
-            $queryBuilder
-                ->andWhere('t.theme = :theme')
-                ->setParameter('theme', $theme);
-        } else {
-            $queryBuilder->andWhere('t.theme IS NULL');
-        }
+        $this->addLangConstraint($queryBuilder, $langs[$locale]);
 
-        if ($domain !== '*') {
-            $queryBuilder->andWhere('REGEXP(t.domain, :domain) = true')
-                ->setParameter('domain', $domain);
-        }
+        $this->addThemeConstraint($queryBuilder, $theme);
 
-        $translations = $queryBuilder->getQuery()
+        $this->addDomainConstraint($queryBuilder, $domain);
+
+        $translations = $queryBuilder
+            ->getQuery()
             ->getResult();
 
-        $catalogue = new MessageCatalogue($locale);
-
+        /** @var Translation $translation */
         foreach ($translations as $translation) {
             $catalogue->set($translation->getKey(), $translation->getTranslation(), $translation->getDomain());
         }
 
         return $catalogue;
+    }
+
+    /**
+     * @param QueryBuilder $queryBuilder
+     * @param Lang $currentLang
+     */
+    private function addLangConstraint(QueryBuilder $queryBuilder, Lang $currentLang)
+    {
+        $queryBuilder->andWhere('t.lang =:lang')
+            ->setParameter('lang', $currentLang);
+    }
+
+    /**
+     * @param QueryBuilder $queryBuilder
+     * @param string|null $theme
+     */
+    private function addThemeConstraint(QueryBuilder $queryBuilder, $theme)
+    {
+        if (null === $theme) {
+            $queryBuilder->andWhere('t.theme IS NULL');
+        } else {
+            $queryBuilder
+                ->andWhere('t.theme = :theme')
+                ->setParameter('theme', $theme);
+        }
+    }
+
+    /**
+     * @param QueryBuilder $queryBuilder
+     * @param string $domain
+     */
+    private function addDomainConstraint(QueryBuilder $queryBuilder, $domain)
+    {
+        if ($domain !== '*') {
+            $queryBuilder->andWhere('REGEXP(t.domain, :domain) = true')
+                ->setParameter('domain', $domain);
+        }
     }
 }

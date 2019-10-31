@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -198,5 +198,24 @@ class SupplierControllerCore extends ProductListingFrontController
     public function getListingLabel()
     {
         return $this->label;
+    }
+
+    public function getBreadcrumbLinks()
+    {
+        $breadcrumb = parent::getBreadcrumbLinks();
+
+        $breadcrumb['links'][] = [
+            'title' => $this->trans('All suppliers', array(), 'Shop.Theme.Catalog'),
+            'url' => $this->context->link->getPageLink('supplier', true),
+        ];
+
+        if (Validate::isLoadedObject($this->supplier) && $this->supplier->active && $this->supplier->isAssociatedToShop()) {
+            $breadcrumb['links'][] = [
+                'title' => $this->supplier->name,
+                'url' => $this->context->link->getSupplierLink($this->supplier),
+            ];
+        }
+
+        return $breadcrumb;
     }
 }

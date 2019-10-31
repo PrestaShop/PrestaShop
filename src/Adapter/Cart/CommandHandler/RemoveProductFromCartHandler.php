@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\RemoveProductFromCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\RemoveProductFromCartHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
+use Product;
 
 /**
  * Handles removing product from context cart.
@@ -43,7 +44,7 @@ final class RemoveProductFromCartHandler extends AbstractCartHandler implements 
      */
     public function handle(RemoveProductFromCartCommand $command)
     {
-        $cart = $this->getContextCartObject($command->getCartId());
+        $cart = $this->getCart($command->getCartId());
 
         $removed = $cart->deleteProduct(
             $command->getProductId()->getValue(),

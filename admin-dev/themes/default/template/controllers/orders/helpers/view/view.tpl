@@ -1,5 +1,5 @@
 {**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -593,7 +593,8 @@
               {if ($customer->isGuest())}
                 {l s='This order has been placed by a guest.' d='Admin.Orderscustomers.Feature'}
                 {if (!Customer::customerExists($customer->email))}
-                  <form method="post" action="index.php?tab=AdminCustomers&amp;id_customer={$customer->id}&amp;id_order={$order->id|intval}&amp;token={getAdminToken tab='AdminCustomers'}">
+                  <form method="post"
+                        action="{$link->getAdminLink('AdminCustomers', true, [], ['guesttocustomer' => 1, 'id_customer' => $customer->id, 'id_order' => $order->id])}">
                     <input type="hidden" name="id_lang" value="{$order->id_lang}" />
                     <input class="btn btn-default" type="submit" name="submitGuestToCustomer" value="{l s='Transform a guest into a customer'}" />
                     <p class="help-block">{l s='This feature will generate a random password and send an email to the customer.' d='Admin.Orderscustomers.Help'}</p>
@@ -1110,7 +1111,7 @@
                         </div>
                         <p class="help-block"><i class="icon-warning-sign"></i> {l
                             s='(Max %s %s)'
-                            sprintf=[Tools::displayPrice(Tools::ps_round($shipping_refundable, 2), $currency->id) , $smarty.capture.TaxMethod]
+                            sprintf=[Context::getContext()->getCurrentLocale()->formatPrice($shipping_refundable, Currency::getIsoCodeById((int) $currency->id)) , $smarty.capture.TaxMethod]
                             d='Admin.Orderscustomers.Feature'
                             }
                         </p>

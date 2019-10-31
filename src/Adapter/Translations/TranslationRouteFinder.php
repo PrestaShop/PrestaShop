@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -172,7 +172,6 @@ class TranslationRouteFinder
 
             case self::MAILS:
                 $emailContentType = $propertyAccessor->getValue($routeProperties, '[email_content_type]');
-                $parameters['selected'] = $emailContentType;
 
                 if (self::BODY === $emailContentType) {
                     $parameters = [];

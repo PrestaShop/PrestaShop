@@ -19,9 +19,9 @@
         <td>
           <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
             <span>
-              {{ 'Your friend <span><strong>{firstname} {lastname}</strong></span> wants to refer you on <a href="{shop_url}">{shop_name}</a>!'|trans({}, 'Emails.Body', locale)|raw }}<br/><br/>
-              {{ 'We are pleased to offer you a voucher worth <span><strong>{discount}</strong></span> that you can use on your next order.'|trans({}, 'Emails.Body', locale)|raw }}
-              {{ 'Get referred and earn a discount voucher of <span><strong>{discount}!</strong></span>'|trans({}, 'Emails.Body', locale)|raw }}
+              {{ 'Your friend [1]{firstname} {lastname}[/1] wants to refer you on <a href="{shop_url}">{shop_name}</a>!'|trans({'[1]': '<span><strong>', '[/1]': '</strong></span>'}, 'Emails.Body', locale)|raw }}<br/><br/>
+              {{ 'We are pleased to offer you a voucher worth [1]{discount}[/1] that you can use on your next order.'|trans({'[1]': '<span><strong>', '[/1]': '</strong></span>'}, 'Emails.Body', locale)|raw }}
+              {{ 'Get referred and earn a discount voucher of [1]{discount}![/1]'|trans({'[1]': '<span><strong>', '[/1]': '</strong></span>'}, 'Emails.Body', locale)|raw }}
               <a title="Register" href="{link}">{{ 'It\'s very easy to sign up. Just click here!'|trans({}, 'Emails.Body', locale)|raw }}</a>
             </span>
           </font>

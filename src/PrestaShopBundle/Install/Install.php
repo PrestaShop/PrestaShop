@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -817,7 +817,6 @@ class Install extends AbstractInstall
             $employee->bo_theme = 'default';
             $employee->default_tab = 1;
             $employee->active = true;
-            $employee->optin = true;
             $employee->id_profile = 1;
             $employee->id_lang = Configuration::get('PS_LANG_DEFAULT');
             $employee->bo_menu = 1;

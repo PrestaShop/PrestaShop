@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -198,13 +198,13 @@ class TranslateCore
 
         if (!isset($translationsMerged[$name][$iso])) {
             $filesByPriority = array(
-                // Translations in theme
-                _PS_THEME_DIR_ . 'modules/' . $name . '/translations/' . $iso . '.php',
-                _PS_THEME_DIR_ . 'modules/' . $name . '/' . $iso . '.php',
                 // PrestaShop 1.5 translations
                 _PS_MODULE_DIR_ . $name . '/translations/' . $iso . '.php',
                 // PrestaShop 1.4 translations
                 _PS_MODULE_DIR_ . $name . '/' . $iso . '.php',
+                // Translations in theme
+                _PS_THEME_DIR_ . 'modules/' . $name . '/translations/' . $iso . '.php',
+                _PS_THEME_DIR_ . 'modules/' . $name . '/' . $iso . '.php',
             );
             foreach ($filesByPriority as $file) {
                 if (file_exists($file)) {
@@ -222,18 +222,6 @@ class TranslateCore
         if (isset($langCache[$cacheKey])) {
             $ret = $langCache[$cacheKey];
         } else {
-            if ($_MODULES == null) {
-                if (
-                    $sprintf !== null &&
-                    (!is_array($sprintf) || !empty($sprintf)) &&
-                    !(count($sprintf) === 1 && isset($sprintf['legacy']))
-                ) {
-                    $string = Translate::checkAndReplaceArgs($string, $sprintf);
-                }
-
-                $ret = str_replace('"', '&quot;', $string);
-            }
-
             $currentKey = strtolower('<{' . $name . '}' . _THEME_NAME_ . '>' . $source) . '_' . $key;
             $defaultKey = strtolower('<{' . $name . '}prestashop>' . $source) . '_' . $key;
 

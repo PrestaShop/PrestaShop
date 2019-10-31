@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -376,5 +376,27 @@ class NumberSymbolList
         ) {
             throw new LocalizationException('Invalid nan : ' . print_r($this->nan, true));
         }
+    }
+
+    /**
+     * To array function
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        return [
+            $this->getDecimal(),
+            $this->getGroup(),
+            $this->getList(),
+            $this->getPercentSign(),
+            $this->getMinusSign(),
+            $this->getPlusSign(),
+            $this->getExponential(),
+            $this->getSuperscriptingExponent(),
+            $this->getPerMille(),
+            $this->getInfinity(),
+            $this->getNaN(),
+        ];
     }
 }

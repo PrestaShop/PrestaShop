@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -290,6 +290,7 @@ product_tabs['Combinations'] = new function(){
 					var default_attribute = data[0]['default_on'];
 					var eco_tax = data[0]['ecotax'];
 					var upc = data[0]['upc'];
+					var mpn = data[0]['mpn'];
 					var minimal_quantity = data[0]['minimal_quantity'];
 					var low_stock_threshold = data[0]['low_stock_threshold'];
 					var low_stock_alert = data[0]['low_stock_alert'];
@@ -319,6 +320,7 @@ product_tabs['Combinations'] = new function(){
             default_attribute,
             eco_tax,
             upc,
+            mpn,
             minimal_quantity,
             available_date,
             low_stock_threshold,
@@ -436,7 +438,7 @@ product_tabs['Combinations'] = new function(){
 	};
 
 	this.fillCombination = function(wholesale_price, price_impact, weight_impact, unit_impact, reference,
-	ean, quantity, image, old_attr, id_product_attribute, default_attribute, eco_tax, upc, minimal_quantity, available_date, low_stock_threshold, low_stock_alert)
+	ean, quantity, image, old_attr, id_product_attribute, default_attribute, eco_tax, upc, mpn, minimal_quantity, available_date, low_stock_threshold, low_stock_alert)
 	{
 		var link = '';
 		self.init_elems();
@@ -454,6 +456,7 @@ product_tabs['Combinations'] = new function(){
 
 		getE('attribute_ean13').value = ean;
 		getE('attribute_upc').value = upc;
+		getE('attribute_mpn').value = mpn;
 		getE('attribute_wholesale_price').value = Math.abs(wholesale_price);
 		getE('attribute_price').value = ps_round(Math.abs(price_impact), 2);
 		getE('attribute_priceTEReal').value = Math.abs(price_impact);

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -74,9 +74,15 @@ class GiftOptionsType extends TranslatorAwareType
         $currencyIsoCode = $this->defaultCurrencyIsoCode;
 
         $builder
-            ->add('enable_gift_wrapping', SwitchType::class)
+            ->add('enable_gift_wrapping', SwitchType::class, [
+                'required' => false,
+                'label' => $this->trans('Offer gift wrapping', 'Admin.Shopparameters.Feature'),
+                'help' => $this->trans('Suggest gift-wrapping to customers.', 'Admin.Shopparameters.Help'),
+            ])
             ->add('gift_wrapping_price', MoneyWithSuffixType::class, [
                 'required' => false,
+                'label' => $this->trans('Gift-wrapping price', 'Admin.Shopparameters.Feature'),
+                'help' => $this->trans('Set a price for gift wrapping.', 'Admin.Shopparameters.Help'),
                 'currency' => $currencyIsoCode,
                 'suffix' => $this->trans('(tax excl.)', 'Admin.Global'),
             ]);
@@ -84,12 +90,18 @@ class GiftOptionsType extends TranslatorAwareType
         if (!$atcpShipWrap) {
             $builder->add('gift_wrapping_tax_rules_group', ChoiceType::class, [
                 'required' => false,
+                'label' => $this->trans('Gift-wrapping tax', 'Admin.Shopparameters.Feature'),
+                'help' => $this->trans('Set a tax for gift wrapping.', 'Admin.Shopparameters.Help'),
                 'placeholder' => $this->trans('None', 'Admin.Global'),
                 'choices' => $this->taxChoices,
             ]);
         }
 
-        $builder->add('offer_recyclable_pack', SwitchType::class);
+        $builder->add('offer_recyclable_pack', SwitchType::class, [
+            'required' => false,
+            'label' => $this->trans('Offer recycled packaging', 'Admin.Shopparameters.Feature'),
+            'help' => $this->trans('Suggest recycled packaging to customer.', 'Admin.Shopparameters.Help'),
+        ]);
     }
 
     /**

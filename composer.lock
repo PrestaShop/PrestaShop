@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "14237e2d05079ff7540791318ff6912c",
+    "content-hash": "ea8a77623ee5862a7adc54f9aa35e3b3",
     "packages": [
         {
             "name": "analog/analog",
@@ -59,7 +59,7 @@
             "time": "2019-03-05T22:41:22+00:00"
         },
         {
-            "name": "beberlei/DoctrineExtensions",
+            "name": "beberlei/doctrineextensions",
             "version": "v1.1.9",
             "source": {
                 "type": "git",
@@ -1384,6 +1384,68 @@
             "time": "2016-10-17T18:31:11+00:00"
         },
         {
+            "name": "friendsofsymfony/jsrouting-bundle",
+            "version": "2.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/FriendsOfSymfony/FOSJsRoutingBundle.git",
+                "reference": "e42ed450eac2b61d5fcba9cd834c294a429e9a40"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/FriendsOfSymfony/FOSJsRoutingBundle/zipball/e42ed450eac2b61d5fcba9cd834c294a429e9a40",
+                "reference": "e42ed450eac2b61d5fcba9cd834c294a429e9a40",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.3.9|^7.0",
+                "symfony/console": "~2.7||~3.0|^4.0",
+                "symfony/framework-bundle": "~2.7||~3.0|^4.0",
+                "symfony/serializer": "~2.7||~3.0|^4.0",
+                "willdurand/jsonp-callback-validator": "~1.0"
+            },
+            "require-dev": {
+                "symfony/expression-language": "~2.7||~3.0|^4.0",
+                "symfony/phpunit-bridge": "^3.3|^4.0"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "FOS\\JsRoutingBundle\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "William Durand",
+                    "email": "will+git@drnd.me"
+                },
+                {
+                    "name": "FriendsOfSymfony Community",
+                    "homepage": "https://github.com/friendsofsymfony/FOSJsRoutingBundle/contributors"
+                }
+            ],
+            "description": "A pretty nice way to expose your Symfony2 routing to client applications.",
+            "homepage": "http://friendsofsymfony.github.com",
+            "keywords": [
+                "Js Routing",
+                "javascript",
+                "routing"
+            ],
+            "time": "2019-08-10T15:40:05+00:00"
+        },
+        {
             "name": "geoip2/geoip2",
             "version": "v2.4.5",
             "source": {
@@ -1469,15 +1531,15 @@
             "authors": [
                 {
                     "name": "André Rothe",
+                    "role": "Committer",
                     "email": "phosco@gmx.de",
-                    "homepage": "https://www.phosco.info",
-                    "role": "Committer"
+                    "homepage": "https://www.phosco.info"
                 },
                 {
                     "name": "Justin Swanhart",
+                    "role": "Owner",
                     "email": "greenlion@gmail.com",
-                    "homepage": "http://code.google.com/u/greenlion@gmail.com/",
-                    "role": "Owner"
+                    "homepage": "http://code.google.com/u/greenlion@gmail.com/"
                 }
             ],
             "description": "A pure PHP SQL (non validating) parser w/ focus on MySQL dialect of SQL",
@@ -1489,6 +1551,58 @@
                 "sql"
             ],
             "time": "2018-12-23T05:09:55+00:00"
+        },
+        {
+            "name": "guzzlehttp/cache-subscriber",
+            "version": "0.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/guzzle/cache-subscriber.git",
+                "reference": "8c766ba399e4c46383e3eaa220201be62abd101e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/guzzle/cache-subscriber/zipball/8c766ba399e4c46383e3eaa220201be62abd101e",
+                "reference": "8c766ba399e4c46383e3eaa220201be62abd101e",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/cache": "~1.3",
+                "guzzlehttp/guzzle": "~5.0",
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.2-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "GuzzleHttp\\Subscriber\\Cache\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Dowling",
+                    "email": "mtdowling@gmail.com",
+                    "homepage": "https://github.com/mtdowling"
+                }
+            ],
+            "description": "Guzzle HTTP cache subscriber",
+            "homepage": "http://guzzlephp.org/",
+            "keywords": [
+                "Guzzle",
+                "cache"
+            ],
+            "time": "2019-09-16T13:44:55+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -3133,22 +3247,40 @@
         },
         {
             "name": "prestashop/blockreassurance",
-            "version": "v3.0.1",
+            "version": "v4.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/blockreassurance.git",
-                "reference": "a9aaa86d0ed984796f4afe42c1abae827d1e4189"
+                "reference": "13fb60d4944ed85e47001c30ad480b85196ebb81"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/blockreassurance/zipball/a9aaa86d0ed984796f4afe42c1abae827d1e4189",
-                "reference": "a9aaa86d0ed984796f4afe42c1abae827d1e4189",
+                "url": "https://api.github.com/repos/PrestaShop/blockreassurance/zipball/13fb60d4944ed85e47001c30ad480b85196ebb81",
+                "reference": "13fb60d4944ed85e47001c30ad480b85196ebb81",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.2"
+                "doctrine/cache": "^1.6",
+                "guzzlehttp/cache-subscriber": "^0.2.0",
+                "php": ">=5.6.0",
+                "prestashop/circuit-breaker": "^3.0.0",
+                "symfony/css-selector": "^3.4.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2.14",
+                "prestashop/php-coding-standards": "dev-master"
             },
             "type": "prestashop-module",
+            "autoload": {
+                "psr-4": {
+                    "PrestaShop\\Module\\BlockReassurance\\": "src/"
+                },
+                "classmap": [
+                    "blockreassurance.php",
+                    "classes/ReassuranceActivity.php"
+                ],
+                "exclude-from-classmap": []
+            },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "AFL - Academic Free License (AFL 3.0)"
@@ -3161,7 +3293,63 @@
             ],
             "description": "PrestaShop module blockreassurance",
             "homepage": "https://github.com/PrestaShop/blockreassurance",
-            "time": "2017-06-29T07:28:29+00:00"
+            "time": "2019-10-04T13:12:35+00:00"
+        },
+        {
+            "name": "prestashop/circuit-breaker",
+            "version": "v3.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/circuit-breaker.git",
+                "reference": "8764540d470b533c9484534343688733bc363f77"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/circuit-breaker/zipball/8764540d470b533c9484534343688733bc363f77",
+                "reference": "8764540d470b533c9484534343688733bc363f77",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^5",
+                "php": ">=5.6"
+            },
+            "require-dev": {
+                "doctrine/cache": "^1.6.0",
+                "friendsofphp/php-cs-fixer": "^2.12",
+                "phpunit/phpunit": "^5.7.0",
+                "squizlabs/php_codesniffer": "3.*",
+                "symfony/cache": "^3.4.0",
+                "symfony/event-dispatcher": "^3.4",
+                "vimeo/psalm": "^1.1"
+            },
+            "suggest": {
+                "doctrine/cache": "Allows use of Doctrine Cache adapters to store transactions",
+                "ext-apcu": "Allows use of APCu adapter (performant) to store transactions",
+                "guzzlehttp/cache-subscriber": "Allow use of Guzzle cache (use dev-master for most recent changes)",
+                "symfony/cache": "Allows use of Symfony Cache adapters to store transactions"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "PrestaShop\\CircuitBreaker\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                },
+                {
+                    "name": "PrestaShop Community",
+                    "homepage": "http://contributors.prestashop.com/"
+                }
+            ],
+            "description": "A circuit breaker implementation for PHP",
+            "time": "2019-06-13T10:50:14+00:00"
         },
         {
             "name": "prestashop/contactform",
@@ -3325,16 +3513,16 @@
         },
         {
             "name": "prestashop/decimal",
-            "version": "1.1.0",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/decimal.git",
-                "reference": "42e9bc8c2ec533dc2a247f9321b8f3ed55c5341f"
+                "reference": "11e0f87b101644614e61cfbea175548bdfb389f1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/decimal/zipball/42e9bc8c2ec533dc2a247f9321b8f3ed55c5341f",
-                "reference": "42e9bc8c2ec533dc2a247f9321b8f3ed55c5341f",
+                "url": "https://api.github.com/repos/PrestaShop/decimal/zipball/11e0f87b101644614e61cfbea175548bdfb389f1",
+                "reference": "11e0f87b101644614e61cfbea175548bdfb389f1",
                 "shasum": ""
             },
             "require": {
@@ -3369,7 +3557,7 @@
                 "precision",
                 "prestashop"
             ],
-            "time": "2017-08-22T14:23:19+00:00"
+            "time": "2019-07-17T13:14:07+00:00"
         },
         {
             "name": "prestashop/graphnvd3",
@@ -3597,16 +3785,16 @@
         },
         {
             "name": "prestashop/ps_contactinfo",
-            "version": "v3.1.0",
+            "version": "v3.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_contactinfo.git",
-                "reference": "e28551a9c857262b214775312ce195818933bd7e"
+                "reference": "407bd65291e8f3c64084ab267af1d8c9476872ea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_contactinfo/zipball/e28551a9c857262b214775312ce195818933bd7e",
-                "reference": "e28551a9c857262b214775312ce195818933bd7e",
+                "url": "https://api.github.com/repos/PrestaShop/ps_contactinfo/zipball/407bd65291e8f3c64084ab267af1d8c9476872ea",
+                "reference": "407bd65291e8f3c64084ab267af1d8c9476872ea",
                 "shasum": ""
             },
             "require": {
@@ -3625,7 +3813,7 @@
             ],
             "description": "PrestaShop module ps_contactinfo",
             "homepage": "https://github.com/PrestaShop/ps_contactinfo",
-            "time": "2017-12-08T12:30:57+00:00"
+            "time": "2019-08-30T17:11:48+00:00"
         },
         {
             "name": "prestashop/ps_currencyselector",
@@ -3757,16 +3945,16 @@
         },
         {
             "name": "prestashop/ps_emailsubscription",
-            "version": "v2.3.0",
+            "version": "v2.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_emailsubscription.git",
-                "reference": "6120112d834a193bc56c448777081350cf0a18be"
+                "reference": "dddd04c9b0cab5908e71257ce662a07bcc8baee8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_emailsubscription/zipball/6120112d834a193bc56c448777081350cf0a18be",
-                "reference": "6120112d834a193bc56c448777081350cf0a18be",
+                "url": "https://api.github.com/repos/PrestaShop/ps_emailsubscription/zipball/dddd04c9b0cab5908e71257ce662a07bcc8baee8",
+                "reference": "dddd04c9b0cab5908e71257ce662a07bcc8baee8",
                 "shasum": ""
             },
             "require": {
@@ -3785,20 +3973,20 @@
             ],
             "description": "PrestaShop module ps_emailsubscription",
             "homepage": "https://github.com/PrestaShop/ps_emailsubscription",
-            "time": "2018-05-23T16:26:23+00:00"
+            "time": "2019-08-30T17:15:50+00:00"
         },
         {
             "name": "prestashop/ps_facetedsearch",
-            "version": "v3.0.6",
+            "version": "v3.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_facetedsearch.git",
-                "reference": "2b8a461669715c9989aa223f2205f45e608b5d23"
+                "reference": "f9cf64cfea7ad567e01d401fc9293bc3d3c44d5a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_facetedsearch/zipball/2b8a461669715c9989aa223f2205f45e608b5d23",
-                "reference": "2b8a461669715c9989aa223f2205f45e608b5d23",
+                "url": "https://api.github.com/repos/PrestaShop/ps_facetedsearch/zipball/f9cf64cfea7ad567e01d401fc9293bc3d3c44d5a",
+                "reference": "f9cf64cfea7ad567e01d401fc9293bc3d3c44d5a",
                 "shasum": ""
             },
             "require": {
@@ -3834,7 +4022,7 @@
             ],
             "description": "PrestaShop module ps_facetedsearch",
             "homepage": "https://github.com/PrestaShop/ps_facetedsearch",
-            "time": "2019-07-01T16:31:53+00:00"
+            "time": "2019-08-30T09:19:27+00:00"
         },
         {
             "name": "prestashop/ps_faviconnotificationbo",
@@ -4967,16 +5155,16 @@
         },
         {
             "name": "prestashop/translationtools-bundle",
-            "version": "v3.1.0",
+            "version": "v3.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/TranslationToolsBundle.git",
-                "reference": "7ca162cee5a24359a33ada3eba13f94f23c1c926"
+                "reference": "d1e9b0b051aaebc934f59b880233571d7b865af9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/TranslationToolsBundle/zipball/7ca162cee5a24359a33ada3eba13f94f23c1c926",
-                "reference": "7ca162cee5a24359a33ada3eba13f94f23c1c926",
+                "url": "https://api.github.com/repos/PrestaShop/TranslationToolsBundle/zipball/d1e9b0b051aaebc934f59b880233571d7b865af9",
+                "reference": "d1e9b0b051aaebc934f59b880233571d7b865af9",
                 "shasum": ""
             },
             "require": {
@@ -5022,7 +5210,7 @@
                 "prestashop",
                 "translation"
             ],
-            "time": "2019-04-19T12:27:03+00:00"
+            "time": "2019-08-05T13:44:51+00:00"
         },
         {
             "name": "prestashop/welcome",
@@ -5877,7 +6065,7 @@
                 },
                 {
                     "name": "Gert de Pagter",
-                    "email": "backendtea@gmail.com"
+                    "email": "BackEndTea@gmail.com"
                 }
             ],
             "description": "Symfony polyfill for ctype functions",
@@ -6599,19 +6787,19 @@
             "authors": [
                 {
                     "name": "Fabien Potencier",
+                    "role": "Lead Developer",
                     "email": "fabien@symfony.com",
-                    "homepage": "http://fabien.potencier.org",
-                    "role": "Lead Developer"
+                    "homepage": "http://fabien.potencier.org"
                 },
                 {
                     "name": "Armin Ronacher",
-                    "email": "armin.ronacher@active-4.com",
-                    "role": "Project Founder"
+                    "role": "Project Founder",
+                    "email": "armin.ronacher@active-4.com"
                 },
                 {
                     "name": "Twig Team",
-                    "homepage": "https://twig.symfony.com/contributors",
-                    "role": "Contributors"
+                    "role": "Contributors",
+                    "homepage": "https://twig.symfony.com/contributors"
                 }
             ],
             "description": "Twig, the flexible, fast, and secure template language for PHP",
@@ -6620,6 +6808,46 @@
                 "templating"
             ],
             "time": "2019-03-23T14:27:19+00:00"
+        },
+        {
+            "name": "willdurand/jsonp-callback-validator",
+            "version": "v1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/willdurand/JsonpCallbackValidator.git",
+                "reference": "1a7d388bb521959e612ef50c5c7b1691b097e909"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/willdurand/JsonpCallbackValidator/zipball/1a7d388bb521959e612ef50c5c7b1691b097e909",
+                "reference": "1a7d388bb521959e612ef50c5c7b1691b097e909",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~3.7"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "JsonpCallbackValidator": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "William Durand",
+                    "email": "william.durand1@gmail.com",
+                    "homepage": "http://www.willdurand.fr"
+                }
+            ],
+            "description": "JSONP callback validator.",
+            "time": "2014-01-20T22:35:06+00:00"
         }
     ],
     "packages-dev": [
@@ -7078,7 +7306,7 @@
             "time": "2017-03-25T17:14:26+00:00"
         },
         {
-            "name": "mikey179/vfsStream",
+            "name": "mikey179/vfsstream",
             "version": "v1.6.5",
             "source": {
                 "type": "git",
@@ -7115,8 +7343,8 @@
             "authors": [
                 {
                     "name": "Frank Kleine",
-                    "homepage": "http://frankkleine.de/",
-                    "role": "Developer"
+                    "role": "Developer",
+                    "homepage": "http://frankkleine.de/"
                 }
             ],
             "description": "Virtual file system to mock the real file system in unit tests.",
@@ -8392,16 +8620,16 @@
         },
         {
             "name": "symfony/phpunit-bridge",
-            "version": "v3.4.23",
+            "version": "v3.4.31",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/phpunit-bridge.git",
-                "reference": "b539f37134c10edbf85dc0567be4151c56870f5e"
+                "reference": "028617b04ae19d99d89089626ac969d161244ebc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/b539f37134c10edbf85dc0567be4151c56870f5e",
-                "reference": "b539f37134c10edbf85dc0567be4151c56870f5e",
+                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/028617b04ae19d99d89089626ac969d161244ebc",
+                "reference": "028617b04ae19d99d89089626ac969d161244ebc",
                 "shasum": ""
             },
             "require": {
@@ -8453,7 +8681,7 @@
             ],
             "description": "Symfony PHPUnit Bridge",
             "homepage": "https://symfony.com",
-            "time": "2019-02-16T18:50:26+00:00"
+            "time": "2019-08-20T13:31:17+00:00"
         },
         {
             "name": "symfony/polyfill-php72",
@@ -8571,7 +8799,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=5.6.0",
+        "php": ">=7.1.3",
         "ext-curl": "*",
         "ext-fileinfo": "*",
         "ext-intl": "*",
@@ -8579,6 +8807,6 @@
     },
     "platform-dev": [],
     "platform-overrides": {
-        "php": "5.6.0"
+        "php": "7.1.3"
     }
 }

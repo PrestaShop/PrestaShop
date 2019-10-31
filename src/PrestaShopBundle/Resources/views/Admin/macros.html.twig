@@ -1,5 +1,5 @@
 {#**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -36,10 +36,14 @@
   </span>
 {% endmacro %}
 
-{% macro infotip(text)%}
+{% macro infotip(text, use_raw = false)%}
 <div class="alert alert-info" role="alert">
   <p class="alert-text">
-    {{ text }}
+    {%  if use_raw %}
+      {{ text|raw}}
+    {% else %}
+      {{ text }}
+    {% endif %}
   </p>
 </div>
 {% endmacro %}

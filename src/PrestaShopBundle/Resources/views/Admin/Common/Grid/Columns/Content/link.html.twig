@@ -1,5 +1,5 @@
 {#**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-<a href="{{ path(column.options.route, { (column.options.route_param_name) : record[column.options.route_param_field]}) }}">
-  {{ record[column.options.field] }}
+<a href="{{ path(column.options.route, { (column.options.route_param_name) : record[column.options.route_param_field]}) }}"
+>
+  {% if column.options.icon %}
+    <i class="material-icons">{{ column.options.icon }}</i>
+  {% endif %}
+
+  {% if column.options.field %}
+    {{ record[column.options.field] }}
+  {% endif %}
 </a>

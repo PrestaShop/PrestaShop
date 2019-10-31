@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -28,6 +28,7 @@
 namespace LegacyTests\Integration\Core\Localization;
 
 use Currency;
+use Language;
 use PrestaShop\PrestaShop\Adapter\Entity\LocalizationPack;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
@@ -125,7 +126,7 @@ class LocaleUsageTest extends SymfonyIntegrationTestCase
             'France' => [
                 'localeCode' => 'fr-FR',
                 'rawNumber' => 1234568.12345,
-                'formattedNumber' => '1 234 568,123',
+                'formattedNumber' => '1 234 568,123',
             ],
             'India (Hindi)' => [
                 'localeCode' => 'hi-IN',
@@ -263,7 +264,7 @@ class LocaleUsageTest extends SymfonyIntegrationTestCase
 
             $localizationPack = new LocalizationPack();
             $localizationPack->loadLocalisationPack($xmlContent, false, true);
-            $localizationPack->loadLocalisationPack($xmlContent, ['languages']);
+            $localizationPack->loadLocalisationPack($xmlContent, ['languages'], true);
         }
     }
 
@@ -298,7 +299,7 @@ class LocaleUsageTest extends SymfonyIntegrationTestCase
                 'localeCode' => 'fr-FR',
                 'rawNumber' => 1234568.12345,
                 'currencyCode' => 'EUR',
-                'formattedPrice' => '1 234 568,12 €',
+                'formattedPrice' => '1 234 568,12 €',
             ],
             'India' => [
                 'localeCode' => 'ta-IN',
@@ -384,7 +385,7 @@ class LocaleUsageTest extends SymfonyIntegrationTestCase
                 'localeCode' => 'az-AZ',
                 'rawNumber' => 1234568.12345,
                 'currencyCode' => 'AZN',
-                'formattedPrice' => '₼ 1.234.568,12',
+                'formattedPrice' => '1.234.568,12 ₼',
             ],
             // BGN does not have a symbol in en-US
             'United States AZN' => [

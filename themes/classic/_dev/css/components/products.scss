@@ -336,7 +336,7 @@
       @include media-breakpoint-down(sm) {
         display: block;
         padding: 0 .5rem;
-      } 
+      }
     }
   }
   .modal-dialog {
@@ -361,19 +361,19 @@
   .product-name {
     color: $brand-primary;
     font-size: 1.125rem;
-    
+
     @include media-breakpoint-down(sm) {
       padding: 0 .5rem;
-    } 
+    }
   }
   .product-price {
     color: $gray-dark;
     display: block;
     @include media-breakpoint-down(sm) {
       padding: 0 .5rem;
-    } 
+    }
   }
-  
+
   .cart-content {
     padding-left: $extra-large-space;
     p {
@@ -528,8 +528,9 @@
   }
 }
 .product-flags {
-  width: 100%;
+  pointer-events: none;
   position: absolute;
+  width: 100%;
   top: 0;
   left: 0;
   display: flex;
@@ -537,6 +538,7 @@
   z-index: 2;
 
   li.product-flag {
+    pointer-events: auto;
     width: fit-content;
     background: $brand-primary;
     font-weight: 700;

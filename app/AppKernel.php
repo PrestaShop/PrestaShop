@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -31,10 +31,10 @@ use Symfony\Component\HttpKernel\Kernel;
 
 class AppKernel extends Kernel
 {
-    const VERSION = '1.7.6.0';
+    const VERSION = '1.7.7.0';
     const MAJOR_VERSION_STRING = '1.7';
     const MAJOR_VERSION = 17;
-    const MINOR_VERSION = 6;
+    const MINOR_VERSION = 7;
     const RELEASE_VERSION = 0;
 
     /**
@@ -57,6 +57,7 @@ class AppKernel extends Kernel
             // REST API consumer
             new Csa\Bundle\GuzzleBundle\CsaGuzzleBundle(),
             new League\Tactician\Bundle\TacticianBundle(),
+            new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {

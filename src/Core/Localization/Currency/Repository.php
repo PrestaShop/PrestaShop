@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -80,19 +80,30 @@ class Repository implements CurrencyRepositoryInterface
     }
 
     /**
-     * Get all the available currencies (installed + active).
-     *
-     * @param string $localeCode
-     *                           IETF tag. Data will be translated in this language
-     *
-     * @return CurrencyCollection
-     *                            The available currencies
+     * {@inheritdoc}
      */
     public function getAvailableCurrencies($localeCode)
     {
-        $currencies = new CurrencyCollection();
-        $currenciesData = $this->dataSource->getAvailableCurrenciesData($localeCode);
+        return $this->formatCurrencies($this->dataSource->getAvailableCurrenciesData($localeCode));
+    }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function getAllInstalledCurrencies($localeCode)
+    {
+        return $this->formatCurrencies($this->dataSource->getAllInstalledCurrenciesData($localeCode));
+    }
+
+    /**
+     * @param array $currenciesData
+     *
+     * @return CurrencyCollection
+     */
+    private function formatCurrencies(array $currenciesData)
+    {
+        $currencies = new CurrencyCollection();
+        /** @var CurrencyData $currencyDatum */
         foreach ($currenciesData as $currencyDatum) {
             $currencies->add(new Currency(
                 $currencyDatum->isActive(),

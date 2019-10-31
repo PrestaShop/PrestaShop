@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -77,8 +77,21 @@ class CurrencyInstalled
     public function getAvailableCurrencyCodes()
     {
         $currencies = $this->dataProvider->findAll();
-        $currencyIds = array_column($currencies, 'iso_code');
+        $currencyIsoCodes = array_column($currencies, 'iso_code');
 
-        return $currencyIds;
+        return $currencyIsoCodes;
+    }
+
+    /**
+     * Get all the available currencies' ISO codes (present in database no matter if it's deleted or active).
+     *
+     * @return string[]
+     */
+    public function getAllInstalledCurrencyIsoCodes()
+    {
+        $currencies = $this->dataProvider->findAllInstalled();
+        $currencyIsoCodes = array_column($currencies, 'iso_code');
+
+        return $currencyIsoCodes;
     }
 }

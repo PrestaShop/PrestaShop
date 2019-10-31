@@ -68,11 +68,7 @@ scenario('The shop installation', () => {
     test('should set the Number of the version you want to upgrade to', () => client.waitAndSetValue(ModulePage.version_number, global.filename.replace(".zip", "")));
     test('should click on "save" button', () => client.waitForExistAndClick(ModulePage.save_button));
     test('should verify the success message', () => client.waitForVisibleElement(ModulePage.save_message));
-    test('should click on "Upgrade PrestaShop now!" button', () => {
-      return promise
-        .then(() => client.scrollTo(ModulePage.upgrade_block))
-        .then(() => client.waitForExistAndClick(ModulePage.upgrade_button, 50, 7000));
-    });
+    test('should click on "Upgrade PrestaShop now!" button', () => client.waitForExistAndClick(ModulePage.upgrade_button));
     test('should wait until the Upgrade is finished', () => client.waitForExist(ModulePage.loader_tag, 310000));
     test('should check that the Upgrade is finished without Warnings nor errors', () => client.checkAutoUpgrade());
     test('should check the success message appear', () => client.checkTextValue(ModulePage.success_msg, 'Upgrade complete'));

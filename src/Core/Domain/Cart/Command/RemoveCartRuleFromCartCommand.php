@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -48,10 +48,10 @@ class RemoveCartRuleFromCartCommand
      * @param $cartId
      * @param $cartRuleId
      */
-    public function __construct($cartId, $cartRuleId)
+    public function __construct(int $cartId, int $cartRuleId)
     {
-        $this->cartId = $cartId;
-        $this->cartRuleId = $cartRuleId;
+        $this->cartId = new CartId($cartId);
+        $this->cartRuleId = new CartRuleId($cartRuleId);
     }
 
     /**

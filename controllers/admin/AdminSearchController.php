@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -34,26 +34,27 @@ class AdminSearchControllerCore extends AdminController
         parent::__construct();
     }
 
-    public function getTabSlug()
+    /**
+     * {@inheritdoc}
+     */
+    public function init()
     {
-        return 'ROLE_MOD_TAB_ADMINSEARCHCONF_';
-    }
-
-    public function checkToken()
-    {
-        // Specific check for the ajax request 'searchCron'
-        if (Tools::isSubmit('action')
-            && 'searchCron' === Tools::getValue('action')
+        if ($this->isCronTask()
             && substr(
                 _COOKIE_KEY_,
                 static::TOKEN_CHECK_START_POS,
                 static::TOKEN_CHECK_LENGTH
             ) === Tools::getValue('token')
         ) {
-            return true;
+            $this->setAllowAnonymous(true);
         }
 
-        return parent::checkToken();
+        parent::init();
+    }
+
+    public function getTabSlug()
+    {
+        return 'ROLE_MOD_TAB_ADMINSEARCHCONF_';
     }
 
     public function postProcess()
@@ -460,6 +461,7 @@ class AdminSearchControllerCore extends AdminController
 
                 $view = $helper->generateList($this->_list['orders'], $this->fields_list['orders']);
                 $this->tpl_view_vars['orders'] = $view;
+                $this->tpl_view_vars['orderCount'] = count($this->_list['orders']);
             }
 
             if ($this->isCountableAndNotEmpty($this->_list, 'modules')) {
@@ -509,5 +511,15 @@ class AdminSearchControllerCore extends AdminController
         if (Tools::getValue('redirect')) {
             Tools::redirectAdmin($_SERVER['HTTP_REFERER'] . '&conf=4');
         }
+    }
+
+    /**
+     * Check if a task is a cron task
+     *
+     * @return bool
+     */
+    protected function isCronTask()
+    {
+        return Tools::isSubmit('action') && 'searchCron' === Tools::getValue('action');
     }
 }

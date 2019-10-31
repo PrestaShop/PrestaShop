@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-define('PS_SEARCH_MAX_WORD_LENGTH', 15);
+define('PS_SEARCH_MAX_WORD_LENGTH', 30);
 
 /* Copied from Drupal search module, except for \x{0}-\x{2f} that has been replaced by \x{0}-\x{2c}\x{2e}-\x{2f} in order to keep the char '-' */
 define(
@@ -271,7 +271,7 @@ class SearchCore
         $sql_groups = '';
         if (Group::isFeatureActive()) {
             $groups = FrontController::getCurrentCustomerGroups();
-            $sql_groups = 'AND cg.`id_group` ' . (count($groups) ? 'IN (' . implode(',', $groups) . ')' : '=' . (int) Configuration::get('PS_UNIDENTIFIED_GROUP'));
+            $sql_groups = 'AND cg.`id_group` ' . (count($groups) ? 'IN (' . implode(',', $groups) . ')' : '=' . (int) Group::getCurrent()->id);
         }
 
         $results = $db->executeS('
@@ -494,6 +494,10 @@ class SearchCore
                             $sql .= ', pa.upc AS pa_upc';
 
                             break;
+                        case 'pa_mpn':
+                            $sql .= ', pa.mpn AS pa_mpn';
+
+                            break;
                     }
                 }
             }
@@ -546,6 +550,10 @@ class SearchCore
                             break;
                         case 'upc':
                             $sql .= ', p.upc';
+
+                            break;
+                        case 'mpn':
+                            $sql .= ', p.mpn';
 
                             break;
                         case 'description_short':
@@ -679,6 +687,8 @@ class SearchCore
             'pa_ean13' => Configuration::get('PS_SEARCH_WEIGHT_REF'),
             'upc' => Configuration::get('PS_SEARCH_WEIGHT_REF'),
             'pa_upc' => Configuration::get('PS_SEARCH_WEIGHT_REF'),
+            'mpn' => Configuration::get('PS_SEARCH_WEIGHT_REF'),
+            'pa_mpn' => Configuration::get('PS_SEARCH_WEIGHT_REF'),
             'description_short' => Configuration::get('PS_SEARCH_WEIGHT_SHORTDESC'),
             'description' => Configuration::get('PS_SEARCH_WEIGHT_DESC'),
             'cname' => Configuration::get('PS_SEARCH_WEIGHT_CNAME'),
@@ -861,7 +871,7 @@ class SearchCore
         $sql_groups = '';
         if (Group::isFeatureActive()) {
             $groups = FrontController::getCurrentCustomerGroups();
-            $sql_groups = 'AND cg.`id_group` ' . (count($groups) ? 'IN (' . implode(',', $groups) . ')' : '=' . (int) Configuration::get('PS_UNIDENTIFIED_GROUP'));
+            $sql_groups = 'AND cg.`id_group` ' . (count($groups) ? 'IN (' . implode(',', $groups) . ')' : '=' . (int) Group::getCurrent()->id);
         }
 
         if ($count) {

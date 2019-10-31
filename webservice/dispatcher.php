@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -24,12 +24,15 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Adapter\ContainerBuilder;
+
 ob_start();
 
 require_once dirname(__FILE__).'/../config/config.inc.php';
 
 // Cart is needed for some requests
 Context::getContext()->cart = new Cart();
+Context::getContext()->container = ContainerBuilder::getContainer('webservice', _PS_MODE_DEV_);
 
 //set http auth headers for apache+php-cgi work around
 if (isset($_SERVER['HTTP_AUTHORIZATION']) && preg_match('/Basic\s+(.*)$/i', $_SERVER['HTTP_AUTHORIZATION'], $matches)) {

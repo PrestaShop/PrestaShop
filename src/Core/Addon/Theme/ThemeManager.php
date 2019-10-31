@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -34,17 +34,19 @@ use PrestaShop\PrestaShop\Core\Addon\Theme\Exception\ThemeAlreadyExistsException
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\FailedToEnableThemeModuleException;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\ThemeConstraintException;
+use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem as PsFileSystem;
 use PrestaShop\PrestaShop\Core\Module\HookConfigurator;
 use PrestaShop\PrestaShop\Core\Image\ImageTypeRepository;
 use PrestaShop\PrestaShop\Core\Addon\AddonManagerInterface;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShopBundle\Service\TranslationService;
-use PrestaShopBundle\Translation\Provider\TranslationFinderTrait;
+use PrestaShopBundle\Translation\Provider\TranslationFinder;
 use PrestaShopLogger;
 use Shop;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\Translation\MessageCatalogue;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Yaml\Parser;
@@ -52,16 +54,60 @@ use Tools;
 
 class ThemeManager implements AddonManagerInterface
 {
-    use TranslationFinderTrait;
-
+    /**
+     * @var HookConfigurator
+     */
     private $hookConfigurator;
+
+    /**
+     * @var Shop
+     */
     private $shop;
+
+    /**
+     * @var Employee
+     */
     private $employee;
+
+    /**
+     * @var ThemeValidator
+     */
     private $themeValidator;
+
+    /**
+     * @var ConfigurationInterface
+     */
     private $appConfiguration;
+
+    /**
+     * @var Filesystem
+     */
     private $filesystem;
+
+    /**
+     * @var Finder
+     */
     private $finder;
+
+    /**
+     * @var ThemeRepository
+     */
     private $themeRepository;
+
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
+     * @var ImageTypeRepository
+     */
+    private $imageTypeRepository;
+
+    /**
+     * @var TranslationFinder
+     */
+    private $translationFinder;
 
     public function __construct(
         Shop $shop,
@@ -75,6 +121,7 @@ class ThemeManager implements AddonManagerInterface
         ThemeRepository $themeRepository,
         ImageTypeRepository $imageTypeRepository
     ) {
+        $this->translationFinder = new TranslationFinder();
         $this->shop = $shop;
         $this->appConfiguration = $configuration;
         $this->themeValidator = $themeValidator;
@@ -119,8 +166,7 @@ class ThemeManager implements AddonManagerInterface
      */
     public function uninstall($name)
     {
-        if (!$this->employee->can('delete', 'AdminThemes')
-            && $this->isThemeUsed($name)) {
+        if (!$this->employee->can('delete', 'AdminThemes')) {
             return false;
         }
 
@@ -354,6 +400,7 @@ class ThemeManager implements AddonManagerInterface
      */
     private function installFromZip($source)
     {
+        /** @var Finder $finderClass */
         $finderClass = get_class($this->finder);
         $this->finder = $finderClass::create();
 
@@ -412,7 +459,7 @@ class ThemeManager implements AddonManagerInterface
             $module_dirs = $this->finder->directories()
                                         ->in($modules_parent_dir)
                                         ->depth('== 0');
-
+            /** @var SplFileInfo $dir */
             foreach (iterator_to_array($module_dirs) as $dir) {
                 $destination = $module_root_dir . basename($dir->getFileName());
                 if (!$this->filesystem->exists($destination)) {
@@ -509,14 +556,21 @@ class ThemeManager implements AddonManagerInterface
                 continue;
             }
 
-            // construct a new catalog for this lang and import in database if key and message are different
-            $messageCatalog = $this->getCatalogueFromPaths($translationFolder . $locale, $locale);
+            try {
+                // construct a new catalog for this lang and import in database if key and message are different
+                $messageCatalog = $this->translationFinder->getCatalogueFromPaths(
+                    $translationFolder . $locale,
+                    $locale
+                );
 
-            // get all default domain from catalog
-            $allDomains = $this->getDefaultDomains($locale, $themeProvider);
+                // get all default domain from catalog
+                $allDomains = $this->getDefaultDomains($locale, $themeProvider);
 
-            // do the import
-            $this->handleImport($translationService, $messageCatalog, $allDomains, $lang, $locale, $themeName);
+                // do the import
+                $this->handleImport($translationService, $messageCatalog, $allDomains, $lang, $locale, $themeName);
+            } catch (FileNotFoundException $e) {
+                // if the directory is there but there are no files, do nothing
+            }
         }
     }
 

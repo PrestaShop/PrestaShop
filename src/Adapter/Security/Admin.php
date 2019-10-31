@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -88,7 +88,7 @@ class Admin
 
         // in case of exception handler sub request, avoid infinite redirection
         if ($event->getRequestType() === HttpKernelInterface::SUB_REQUEST
-            && isset($event->getRequest()->attributes['exception'])
+            && $event->getRequest()->attributes->has('exception')
         ) {
             return true;
         }

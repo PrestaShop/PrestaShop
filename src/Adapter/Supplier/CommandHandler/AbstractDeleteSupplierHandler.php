@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -91,7 +91,7 @@ abstract class AbstractDeleteSupplierHandler
             if (0 >= $entity->id) {
                 throw new SupplierNotFoundException(
                     sprintf(
-                        'Supplier object with id "%s" has not been found for deletion.',
+                        'Supplier object with id "%s" was not found for deletion.',
                         $supplierId->getValue()
                     )
                 );
@@ -117,7 +117,7 @@ abstract class AbstractDeleteSupplierHandler
                 );
             }
 
-            if (false === $this->deleteSupplierAddress($supplierId)) {
+            if (1 >= count($entity->getAssociatedShops()) && false === $this->deleteSupplierAddress($supplierId)) {
                 throw new CannotDeleteSupplierAddressException(
                     sprintf(
                         'Unable to set deleted flag for supplier with id "%s" address',
@@ -127,8 +127,7 @@ abstract class AbstractDeleteSupplierHandler
             }
 
             if (false === $entity->delete()) {
-                throw new CannotDeleteSupplierException(
-                    $supplierId->getValue(),
+                throw new SupplierException(
                     sprintf(
                         'Unable to delete supplier object with id "%s"',
                         $supplierId->getValue()

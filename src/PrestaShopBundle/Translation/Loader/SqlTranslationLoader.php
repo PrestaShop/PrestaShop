@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -28,11 +28,11 @@
 namespace PrestaShopBundle\Translation\Loader;
 
 use Db;
-use Exception;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogue;
 use Symfony\Component\Translation\MessageCatalogueInterface;
+use Symfony\Component\Translation\Exception\NotFoundResourceException;
 
 class SqlTranslationLoader implements LoaderInterface
 {
@@ -71,7 +71,7 @@ class SqlTranslationLoader implements LoaderInterface
         }
 
         if (empty($localeResults[$locale])) {
-            throw new Exception(sprintf('Language not found in database: %s', $locale));
+            throw new NotFoundResourceException(sprintf('Language not found in database: %s', $locale));
         }
 
         $selectTranslationsQuery = '

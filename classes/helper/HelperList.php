@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -24,6 +24,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShop\PrestaShop\Core\Routing\EntityLinkBuilderFactory;
+use PrestaShop\PrestaShop\Adapter\Routing\AdminLinkBuilder;
+use PrestaShop\PrestaShop\Adapter\Routing\LegacyHelperLinkBuilder;
+use PrestaShop\PrestaShop\Core\Routing\Exception\BuilderNotFoundException;
 
 /**
  * @since 1.5.0
@@ -124,10 +128,22 @@ class HelperListCore extends Helper
 
     public $page;
 
+    /** @var EntityLinkBuilderFactory */
+    private $linkBuilderFactory;
+
     public function __construct()
     {
         $this->base_folder = 'helpers/list/';
         $this->base_tpl = 'list.tpl';
+
+        $adminLinkBuilder = new AdminLinkBuilder(Context::getContext()->link, [
+            'customer' => 'AdminCustomers',
+            'product' => 'AdminProducts',
+        ]);
+        $this->linkBuilderFactory = new EntityLinkBuilderFactory([
+            $adminLinkBuilder,
+            new LegacyHelperLinkBuilder(),
+        ]);
 
         parent::__construct();
     }
@@ -268,6 +284,8 @@ class HelperListCore extends Helper
                     }
                 }
             }
+
+            $this->_list[$index]['link'] = in_array('view', $this->actions) ? $this->getViewLink($this->token, $id) : $this->getEditLink($this->token, $id);
 
             // @todo skip action for bulk actions
             // $this->_list[$index]['has_bulk_actions'] = true;
@@ -473,8 +491,9 @@ class HelperListCore extends Helper
             self::$cache_lang['View'] = Context::getContext()->getTranslator()->trans('View', array(), 'Admin.Actions');
         }
 
+        $href = $this->getViewLink($token, $id);
         $tpl->assign(array(
-            'href' => $this->currentIndex . '&' . $this->identifier . '=' . $id . '&view' . $this->table . '&token=' . ($token != null ? $token : $this->token),
+            'href' => $href,
             'action' => self::$cache_lang['View'],
         ));
 
@@ -491,22 +510,7 @@ class HelperListCore extends Helper
             self::$cache_lang['Edit'] = Context::getContext()->getTranslator()->trans('Edit', array(), 'Admin.Actions');
         }
 
-        $href = $this->currentIndex . '&' . $this->identifier . '=' . $id . '&update' . $this->table . ($this->page && $this->page > 1 ? '&page=' . (int) $this->page : '') . '&token=' . ($token != null ? $token : $this->token);
-
-        switch ($this->currentIndex) {
-            case 'index.php?controller=AdminProducts':
-            case 'index.php?tab=AdminProducts':
-                // New architecture modification: temporary behavior to switch between old and new controllers.
-                $pagePreference = SymfonyContainer::getInstance()->get('prestashop.core.admin.page_preference_interface');
-                $redirectLegacy = $pagePreference->getTemporaryShouldUseLegacyPage('product');
-                if (!$redirectLegacy && $this->identifier == 'id_product') {
-                    $href = Context::getContext()->link->getAdminLink('AdminProducts', true, ['id_product' => $id, 'updateproduct' => 1]);
-                }
-
-                break;
-            default:
-        }
-
+        $href = $this->getEditLink($token, $id);
         $tpl->assign(array(
             'href' => $href,
             'action' => self::$cache_lang['Edit'],
@@ -825,5 +829,59 @@ class HelperListCore extends Helper
         )));
 
         return $this->footer_tpl->fetch();
+    }
+
+    /**
+     * @param string|null $token
+     * @param int $id
+     *
+     * @return string
+     *
+     * @throws BuilderNotFoundException
+     * @throws PrestaShopException
+     */
+    protected function getViewLink($token, $id)
+    {
+        $linkBuilder = $this->linkBuilderFactory->getBuilderFor($this->table);
+        $parameters = $this->buildLinkParameters($token, $id);
+
+        return $linkBuilder->getViewLink($this->table, $parameters);
+    }
+
+    /**
+     * @param string|null $token
+     * @param int $id
+     *
+     * @return string
+     *
+     * @throws BuilderNotFoundException
+     * @throws PrestaShopException
+     */
+    protected function getEditLink($token, $id)
+    {
+        $linkBuilder = $this->linkBuilderFactory->getBuilderFor($this->table);
+        $parameters = $this->buildLinkParameters($token, $id);
+
+        return $linkBuilder->getEditLink($this->table, $parameters);
+    }
+
+    /**
+     * @param string|null $token
+     * @param int $id
+     *
+     * @return array
+     */
+    protected function buildLinkParameters($token, $id)
+    {
+        $parameters = [
+            $this->identifier => $id,
+            'current_index' => $this->currentIndex,
+            'token' => $token != null ? $token : $this->token,
+        ];
+        if ($this->page && $this->page > 1) {
+            $parameters['page'] = $this->page;
+        }
+
+        return $parameters;
     }
 }

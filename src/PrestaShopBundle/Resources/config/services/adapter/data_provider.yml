@@ -39,9 +39,6 @@ services:
         class: PrestaShop\PrestaShop\Adapter\Category\CategoryDataProvider
         arguments: ["@=service('prestashop.adapter.legacy.context')"]
 
-    prestashop.adapter.data_provider.country:
-        class: PrestaShop\PrestaShop\Adapter\Country\CountryDataProvider
-
     prestashop.adapter.data_provider.group:
         class: PrestaShop\PrestaShop\Adapter\Group\GroupDataProvider
 
@@ -78,7 +75,8 @@ services:
 
     prestashop.adapter.data_provider.combination:
         class: PrestaShop\PrestaShop\Adapter\CombinationDataProvider
-        arguments: ['@prestashop.core.localization.locale.repository']
+        arguments:
+            - "@prestashop.core.localization.locale.context_locale"
 
     prestashop.adapter.data_provider.cms:
         class: PrestaShop\PrestaShop\Adapter\CMS\CMSDataProvider

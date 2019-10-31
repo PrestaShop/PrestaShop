@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -42,7 +42,7 @@ class LegacyModuleExtractorTest extends KernelTestCase
      * @var string Domain name of the modules translations
      */
     const DOMAIN_NAME = 'ModulesTranslationtest';
-    const MODULE_NAME = 'translation_test';
+    const MODULE_NAME = 'translationtest';
 
     /**
      * @var CatalogueVerifier

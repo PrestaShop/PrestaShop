@@ -1,7 +1,7 @@
 .kpi-container {
   position: relative;
   text-decoration: none;
-  background: $gray-soft;
+  background: white;
   padding-top: .9375rem;
   padding-bottom: .9375rem;
   text-align: center;
@@ -53,11 +53,11 @@
     padding-left: .125rem;
     color: $gray-dark;
   }
-  
+
   > .title {
     display: inline-block;
   }
-  
+
   > .subtitle {
     text-transform: uppercase;
     color: $gray-medium;

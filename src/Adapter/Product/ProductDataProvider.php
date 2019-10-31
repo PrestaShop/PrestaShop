@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -133,8 +133,9 @@ class ProductDataProvider
      */
     public function getImages($id_product, $id_lang)
     {
+        $id_shop = (int) Context::getContext()->shop->id;
         $data = [];
-        foreach (Image::getImages($id_lang, $id_product) as $image) {
+        foreach (Image::getImages($id_lang, $id_product, null, $id_shop) as $image) {
             $data[] = $this->getImage($image['id_image']);
         }
 

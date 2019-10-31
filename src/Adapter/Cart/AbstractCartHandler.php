@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -27,10 +27,11 @@
 namespace PrestaShop\PrestaShop\Adapter\Cart;
 
 use Cart;
-use Context;
 use PrestaShop\PrestaShop\Adapter\Validate;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
+use PrestaShopException;
 
 /**
  * Provides reusable methods for cart handlers
@@ -46,10 +47,19 @@ abstract class AbstractCartHandler
      *
      * @throws CartNotFoundException
      */
-    protected function getContextCartObject(CartId $cartId)
+    protected function getCart(CartId $cartId)
     {
-        // Legacy behavior is working with context cart instead of retrieving cart from db
-        $cart = Context::getContext()->cart;
+        try {
+            //@todo: legacy uses context cart object.
+            //@todo: Make sure it is not necessary to set the context cart.
+            //@todo: else refactor to get context cart and set it after every edit
+            $cart = new Cart($cartId->getValue());
+        } catch (PrestaShopException $e) {
+            throw new CartException(sprintf(
+                'An error occurred when trying to load cart with id "%s',
+                $cartId->getValue()
+            ));
+        }
 
         if (!Validate::isLoadedObject($cart) || $cartId->getValue() !== (int) $cart->id) {
             throw new CartNotFoundException(

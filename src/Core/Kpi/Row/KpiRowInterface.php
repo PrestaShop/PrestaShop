@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -54,4 +54,9 @@ interface KpiRowInterface
      * @return bool
      */
     public function isRefreshAllowed();
+
+    /**
+     * @return array
+     */
+    public function getOptions();
 }

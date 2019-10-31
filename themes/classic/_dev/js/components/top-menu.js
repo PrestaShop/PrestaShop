@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -27,19 +27,21 @@ import DropDown from './drop-down';
 
 export default class TopMenu extends DropDown {
   init() {
-    let elmId;
+    let elmtClass;
     let self = this;
     this.el.find('li').hover((e) => {
       if (this.el.parent().hasClass('mobile')) {
         return;
       }
-      if (elmId !== $(e.currentTarget).attr('id')) {
-        elmId = $(e.currentTarget).attr('id');
-      }
-      if (elmId && $(e.target).data('depth') === 0) {
-        $(`#${elmId} .js-sub-menu`).css({
-          top: $(`#${elmId}`).height() + $(`#${elmId}`).position().top
-        });
+      const currentTargetClass = $(e.currentTarget).attr('class');
+      if (elmtClass !== currentTargetClass) {
+        elmtClass = currentTargetClass;
+        
+        if (elmtClass && $(e.target).data('depth') === 0) {
+          $(`.${elmtClass} .js-sub-menu`).css({
+            top: $(`.${elmtClass}`).height() + $(`.${elmtClass}`).position().top
+          });
+        }
       }
     });
     $('#menu-icon').on('click', function() {

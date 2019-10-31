@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -65,4 +65,15 @@ interface DataSourceInterface
      *                        The available currencies' data
      */
     public function getAvailableCurrenciesData($localeCode);
+
+    /**
+     * Get all installed currencies' data in database (regardless of their active or soft deleted status).
+     *
+     * @param string $localeCode
+     *                           Data will be translated in this language
+     *
+     * @return CurrencyData[]
+     *                        The installed currencies' database data
+     */
+    public function getAllInstalledCurrenciesData($localeCode);
 }

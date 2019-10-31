@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
-<!-- Copyright © 1991-2017 Unicode, Inc.
+<!-- Copyright © 1991-2019 Unicode, Inc.
 For terms of use, see http://www.unicode.org/copyright.html
 Unicode and the Unicode Logo are registered trademarks of Unicode, Inc. in the U.S. and other countries.
 CLDR data files are interpreted according to the LDML specification (http://unicode.org/reports/tr35/)
 -->
 <ldml>
 	<identity>
-		<version number="$Revision: 13701 $"/>
+		<version number="$Revision: 14782 $"/>
 		<language type="gsw"/>
 	</identity>
 	<localeDisplayNames>
@@ -2782,6 +2782,11 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 				<displayName count="other">Pataca</displayName>
 			</currency>
 			<currency type="MRO">
+				<displayName>Ouguiya (1973–2017)</displayName>
+				<displayName count="one">Ouguiya (1973–2017)</displayName>
+				<displayName count="other">Ouguiya (1973–2017)</displayName>
+			</currency>
+			<currency type="MRU">
 				<displayName>Ouguiya</displayName>
 				<displayName count="one">Ouguiya</displayName>
 				<displayName count="other">Ouguiya</displayName>
@@ -3067,6 +3072,11 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 				<displayName count="other">Süüdsudaneesischi Pfund</displayName>
 			</currency>
 			<currency type="STD">
+				<displayName>Dobra (1977–2017)</displayName>
+				<displayName count="one">Dobra (1977–2017)</displayName>
+				<displayName count="other">Dobra (1977–2017)</displayName>
+			</currency>
+			<currency type="STN">
 				<displayName>Dobra</displayName>
 				<displayName count="one">Dobra</displayName>
 				<displayName count="other">Dobra</displayName>
@@ -3208,6 +3218,11 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 				<displayName count="other">Bolivar (1871–2008)</displayName>
 			</currency>
 			<currency type="VEF">
+				<displayName>Bolivar (2008–2018)</displayName>
+				<displayName count="one">Bolivar (2008–2018)</displayName>
+				<displayName count="other">Bolivar (2008–2018)</displayName>
+			</currency>
+			<currency type="VES">
 				<displayName>Bolivar</displayName>
 				<displayName count="one">Bolivar</displayName>
 				<displayName count="other">Bolivar</displayName>

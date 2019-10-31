@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  tests:
+    build:
+      context: ./
+      dockerfile: ./.docker/Dockerfile
+    environment:
+      URL_FO: "http://prestashop-web/"
+      URL_BO: "http://prestashop-web/admin-dev/"
+      EMAIL: "demo@prestashop.com"
+      PASSWD: "prestashop_demo"
+      HEADLESS: "true"
+    depends_on:
+      - "prestashop"
+    command: ["/tmp/wait-for-it.sh", "--timeout=720", "--strict", "prestashop-web:80", "--", "/bin/bash"]
+    tty: true
+    volumes:
+      - .docker:/tmp/docker
+      - ./reports:/tests/reports
+    networks:
+      - default

@@ -1,0 +1,3 @@
+_order_message:
+  resource: "order_message.yml"
+  prefix: /order-messages/

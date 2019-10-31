@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Adapter\Image\Uploader;
 
 use Configuration;
-use Context;
 use ImageManager;
 use ImageType;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageOptimizationException;
@@ -113,11 +112,7 @@ final class ManufacturerImageUploader extends AbstractImageUploader
                     }
                 }
 
-                $currentLogo = _PS_TMP_IMG_DIR_ . 'manufacturer_mini_' . $manufacturerId .
-                    '_' .
-                    Context::getContext()->shop->id .
-                    '.jpg'
-                ;
+                $currentLogo = _PS_TMP_IMG_DIR_ . 'manufacturer_mini_' . $manufacturerId . '.jpg';
 
                 if ($resized && file_exists($currentLogo)) {
                     unlink($currentLogo);

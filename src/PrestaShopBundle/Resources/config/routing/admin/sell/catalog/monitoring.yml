@@ -1,0 +1,13 @@
+admin_monitoring_index:
+  path: /
+  methods: GET
+  defaults:
+    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Monitoring:index'
+    _legacy_controller: AdminTracking
+
+admin_monitoring_search:
+  path: /
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Monitoring:search'
+    _legacy_controller: AdminTracking

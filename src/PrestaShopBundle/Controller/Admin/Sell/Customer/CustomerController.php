@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -35,6 +35,8 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Command\EditCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SetPrivateNoteAboutCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\TransformGuestToCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\MissingCustomerRequiredFieldsException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerCarts;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerOrders;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\EditableCustomer;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerDefaultGroupAccessException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
@@ -311,10 +313,11 @@ class CustomerController extends AbstractAdminController
      * )
      *
      * @param int $customerId
+     * @param Request $request
      *
      * @return RedirectResponse
      */
-    public function transformGuestToCustomerAction($customerId)
+    public function transformGuestToCustomerAction($customerId, Request $request)
     {
         try {
             $this->getCommandBus()->handle(new TransformGuestToCustomerCommand((int) $customerId));
@@ -322,6 +325,15 @@ class CustomerController extends AbstractAdminController
             $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
         } catch (CustomerException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        if ($request->query->get('id_order')) {
+            $legacyLink = $this->getAdminLink('AdminOrders', [
+                'id_order' => $request->query->get('id_order'),
+                'vieworder' => true,
+            ]);
+
+            return $this->redirect($legacyLink);
         }
 
         return $this->redirectToRoute('admin_customers_view', [
@@ -372,7 +384,14 @@ class CustomerController extends AbstractAdminController
         $phrases = explode(' ', $query);
         $isRequestFromLegacyPage = !$request->query->has('sf2');
 
-        $customers = $this->getQueryBus()->handle(new SearchCustomers($phrases));
+        try {
+            $customers = $this->getQueryBus()->handle(new SearchCustomers($phrases));
+        } catch (Exception $e) {
+            return $this->json(
+                ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
 
         // if call is made from legacy page
         // it will return response so legacy can understand it
@@ -676,8 +695,8 @@ class CustomerController extends AbstractAdminController
                 'id_customer' => $record['id_customer'],
                 'social_title' => '--' === $record['social_title'] ? '' : $record['social_title'],
                 'firstname' => $record['firstname'],
-                'lastname' => $record['firstname'],
-                'email' => $record['firstname'],
+                'lastname' => $record['lastname'],
+                'email' => $record['email'],
                 'company' => '--' === $record['company'] ? '' : $record['company'],
                 'total_spent' => '--' === $record['total_spent'] ? '' : $record['total_spent'],
                 'enabled' => $record['active'],
@@ -692,6 +711,54 @@ class CustomerController extends AbstractAdminController
             ->setData($data)
             ->setHeadersData($headers)
             ->setFileName('customer_' . date('Y-m-d_His') . '.csv');
+    }
+
+    /**
+     * @todo: check access for order create page as its used there (customer OR order access)
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     *
+     * @param int $customerId
+     *
+     * @return JsonResponse
+     */
+    public function getCartsAction(int $customerId)
+    {
+        try {
+            $carts = $this->getQueryBus()->handle(new GetCustomerCarts($customerId));
+        } catch (Exception $e) {
+            return $this->json(
+                ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
+
+        return $this->json([
+            'carts' => $carts,
+        ]);
+    }
+
+    /**
+     * @todo: check access for order create page as its used there (customer OR order access)
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     *
+     * @param int $customerId
+     *
+     * @return JsonResponse
+     */
+    public function getOrdersAction(int $customerId)
+    {
+        try {
+            $orders = $this->getQueryBus()->handle(new GetCustomerOrders($customerId));
+        } catch (Exception $e) {
+            return $this->json(
+                ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
+
+        return $this->json([
+            'orders' => $orders,
+        ]);
     }
 
     /**

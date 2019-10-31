@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -98,5 +98,19 @@ class TabRepository extends EntityRepository
             $this->getEntityManager()->persist($tab);
             $this->getEntityManager()->flush();
         }
+    }
+
+    /**
+     * @param string $moduleName
+     * @param bool $enabled
+     */
+    public function changeEnabledByModuleName($moduleName, $enabled)
+    {
+        $tabs = $this->findByModule($moduleName);
+        /** @var Tab $tab */
+        foreach ($tabs as $tab) {
+            $tab->setEnabled($enabled);
+        }
+        $this->getEntityManager()->flush();
     }
 }

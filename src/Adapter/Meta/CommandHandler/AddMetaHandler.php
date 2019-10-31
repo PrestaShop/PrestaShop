@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Meta\CommandHandler;
 
 use Meta;
+use PrestaShop\PrestaShop\Adapter\Meta\MetaDataProvider;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\IsUrlRewrite;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Command\AddMetaCommand;
@@ -62,18 +63,26 @@ final class AddMetaHandler implements AddMetaHandlerInterface
     private $validator;
 
     /**
+     * @var MetaDataProvider
+     */
+    private $metaDataProvider;
+
+    /**
      * @param HookDispatcherInterface $hookDispatcher
      * @param ValidatorInterface $validator
      * @param int $defaultLanguageId
+     * @param MetaDataProvider $metaDataProvider
      */
     public function __construct(
         HookDispatcherInterface $hookDispatcher,
         ValidatorInterface $validator,
-        $defaultLanguageId
+        $defaultLanguageId,
+        MetaDataProvider $metaDataProvider
     ) {
         $this->hookDispatcher = $hookDispatcher;
         $this->defaultLanguageId = $defaultLanguageId;
         $this->validator = $validator;
+        $this->metaDataProvider = $metaDataProvider;
     }
 
     /**
@@ -86,6 +95,7 @@ final class AddMetaHandler implements AddMetaHandlerInterface
     {
         $this->assertUrlRewriteHasDefaultLanguage($command);
         $this->assertIsUrlRewriteValid($command);
+        $this->assertIsValidPageName($command);
 
         try {
             $entity = new Meta();
@@ -162,6 +172,26 @@ final class AddMetaHandler implements AddMetaHandlerInterface
                     MetaConstraintException::INVALID_URL_REWRITE
                 );
             }
+        }
+    }
+
+    /**
+     * @param AddMetaCommand $command
+     *
+     * @throws MetaConstraintException
+     */
+    private function assertIsValidPageName(AddMetaCommand $command)
+    {
+        $availablePages = $this->metaDataProvider->getAvailablePages();
+        if (!in_array($command->getPageName()->getValue(), $availablePages, true)) {
+            throw new MetaConstraintException(
+                sprintf(
+                    'Given page name %s is not available. Available values are %s',
+                    $command->getPageName()->getValue(),
+                    var_export($availablePages, true)
+                ),
+                MetaConstraintException::INVALID_PAGE_NAME
+            );
         }
     }
 }

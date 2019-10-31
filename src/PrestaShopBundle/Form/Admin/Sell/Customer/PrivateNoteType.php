@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -29,12 +29,28 @@ namespace PrestaShopBundle\Form\Admin\Sell\Customer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class PrivateNoteType is used to add private notes about customer.
  */
 class PrivateNoteType extends AbstractType
 {
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
+     * PrivateNoteType constructor.
+     *
+     * @param TranslatorInterface $translator
+     */
+    public function __construct(TranslatorInterface $translator)
+    {
+        $this->translator = $translator;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -44,6 +60,9 @@ class PrivateNoteType extends AbstractType
             ->add('note', TextareaType::class, [
                 'required' => false,
                 'empty_data' => '',
+                'attr' => [
+                    'placeholder' => $this->translator->trans('Add a note on this customer. It will only be visible to you.', [], 'Admin.Orderscustomers.Feature'),
+                ],
             ]);
     }
 }

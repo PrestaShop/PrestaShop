@@ -1,5 +1,5 @@
 {**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -52,7 +52,7 @@
           d='Shop.Theme.Global'
         }
       {/if}
-      {if $contact_infos.email}
+      {if $contact_infos.email && $display_email}
         <br>
         {* [1][/1] is for a HTML tag. *}
         {l

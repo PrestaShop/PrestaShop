@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -100,6 +100,7 @@ class ManufacturerController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'manufacturerGrid' => $this->presentGrid($manufacturerGrid),
             'manufacturerAddressGrid' => $this->presentGrid($manufacturerAddressGrid),
+            'settingsTipMessage' => $this->getSettingsTipMessage(),
         ]);
     }
 
@@ -685,7 +686,7 @@ class ManufacturerController extends FrameworkBundleAdminController
                 'Admin.Notifications.Error'
             ),
             MemoryLimitException::class => $this->trans(
-                    'Due to memory limit restrictions, this image cannot be loaded. Please increase your memory_limit value via your server\'s configuration settings. ',
+                    'Due to memory limit restrictions, this image cannot be loaded. Please increase your memory_limit value via your server\'s configuration settings.',
                     'Admin.Notifications.Error'
             ),
             ImageUploadException::class => $this->trans(
@@ -783,5 +784,25 @@ class ManufacturerController extends FrameworkBundleAdminController
     private function getAddressFormHandler()
     {
         return $this->get('prestashop.core.form.identifiable_object.handler.manufacturer_address_form_handler');
+    }
+
+    private function getSettingsTipMessage()
+    {
+        $urlOpening = sprintf('<a href="%s">', $this->get('router')->generate('admin_preferences'));
+        $urlEnding = '</a>';
+
+        if ($this->configuration->get('PS_DISPLAY_MANUFACTURERS')) {
+            return $this->trans(
+                'The display of your brands is enabled on your store. Go to %sShop Parameters > General to edit settings.%s',
+                'Admin.Catalog.Notification',
+                [$urlOpening, $urlEnding]
+            );
+        }
+
+        return $this->trans(
+            'The display of your brands is disabled on your store. Go to %sShop Parameters > General to edit settings.%s',
+            'Admin.Catalog.Notification',
+            [$urlOpening, $urlEnding]
+        );
     }
 }

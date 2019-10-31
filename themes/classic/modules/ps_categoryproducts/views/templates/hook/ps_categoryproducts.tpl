@@ -1,5 +1,5 @@
 {**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -30,9 +30,5 @@
       {l s='%s other products in the same category:' sprintf=[$products|@count] d='Shop.Theme.Catalog'}
     {/if}
   </h2>
-  <div class="products">
-      {foreach from=$products item="product"}
-          {include file="catalog/_partials/miniatures/product.tpl" product=$product}
-      {/foreach}
-  </div>
+  {include file="catalog/_partials/productlist.tpl" products=$products}
 </section>

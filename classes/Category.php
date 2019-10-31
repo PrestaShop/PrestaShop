@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -113,7 +113,17 @@ class CategoryCore extends ObjectModel
             'date_upd' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
             /* Lang fields */
             'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCatalogName', 'required' => true, 'size' => 128),
-            'link_rewrite' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isLinkRewrite', 'required' => true, 'size' => 128),
+            'link_rewrite' => array(
+                'type' => self::TYPE_STRING,
+                'lang' => true,
+                'validate' => 'isLinkRewrite',
+                'required' => false,
+                'size' => 128,
+                'ws_modifier' => array(
+                    'http_method' => WebserviceRequest::HTTP_POST,
+                    'modifier' => 'modifierWsLinkRewrite',
+                ),
+            ),
             'description' => array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'),
             'meta_title' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
             'meta_description' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 512),
@@ -1994,6 +2004,22 @@ class CategoryCore extends ObjectModel
 		FROM `' . _DB_PREFIX_ . 'category_product` cp
 		WHERE cp.`id_category` = ' . (int) $this->id . '
 		ORDER BY `position` ASC');
+    }
+
+    /*
+        Create the link rewrite if not exists or invalid on category creation
+    */
+    public function modifierWsLinkRewrite()
+    {
+        foreach ($this->name as $id_lang => $name) {
+            if (empty($this->link_rewrite[$id_lang])) {
+                $this->link_rewrite[$id_lang] = Tools::link_rewrite($name);
+            } elseif (!Validate::isLinkRewrite($this->link_rewrite[$id_lang])) {
+                $this->link_rewrite[$id_lang] = Tools::link_rewrite($this->link_rewrite[$id_lang]);
+            }
+        }
+
+        return true;
     }
 
     /**

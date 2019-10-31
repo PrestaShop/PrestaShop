@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -40,7 +40,7 @@ class LegacyFileLoaderTest extends KernelTestCase
     /**
      * @var string
      */
-    private $translationsFolder = __DIR__ . '/../../../../Resources/modules/translation_test/translations/';
+    private $translationsFolder = __DIR__ . '/../../../../Resources/modules/translationtest/translations/';
 
     /**
      * @var CatalogueVerifier

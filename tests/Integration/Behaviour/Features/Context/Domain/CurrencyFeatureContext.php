@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -28,6 +28,8 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
 use Currency;
+use DbQuery;
+use Db;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\DeleteCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\EditCurrencyCommand;
@@ -35,6 +37,8 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Command\ToggleCurrencyStatusComma
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDeleteDefaultCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDisableDefaultCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
 class CurrencyFeatureContext extends AbstractDomainFeatureContext
@@ -58,10 +62,15 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
             (int) $shop->id,
         ]);
 
-        /** @var CurrencyId $currencyId */
-        $currencyId = $this->getCommandBus()->handle($command);
+        try {
+            $this->lastException = null;
+            /** @var CurrencyId $currencyId */
+            $currencyId = $this->getCommandBus()->handle($command);
 
-        SharedStorage::getStorage()->set($reference, new Currency($currencyId->getValue()));
+            SharedStorage::getStorage()->set($reference, new Currency($currencyId->getValue()));
+        } catch (CoreException $e) {
+            $this->lastException = $e;
+        }
     }
 
     /**
@@ -91,9 +100,14 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
             $command->setShopIds([(int) $data['shop_association']]);
         }
 
-        $this->getCommandBus()->handle($command);
+        try {
+            $this->lastException = null;
+            $this->getCommandBus()->handle($command);
 
-        SharedStorage::getStorage()->set($reference, new Currency($currency->id));
+            SharedStorage::getStorage()->set($reference, new Currency($currency->id));
+        } catch (CoreException $e) {
+            $this->lastException = $e;
+        }
     }
 
     /**
@@ -105,6 +119,7 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
         $currency = SharedStorage::getStorage()->get($reference);
 
         try {
+            $this->lastException = null;
             $this->getCommandBus()->handle(new ToggleCurrencyStatusCommand((int) $currency->id));
         } catch (CannotDisableDefaultCurrencyException $e) {
             $this->lastException = $e;
@@ -120,9 +135,126 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
         $currency = SharedStorage::getStorage()->get($reference);
 
         try {
+            $this->lastException = null;
             $this->getCommandBus()->handle(new DeleteCurrencyCommand((int) $currency->id));
         } catch (CannotDeleteDefaultCurrencyException $e) {
             $this->lastException = $e;
+        }
+    }
+
+    /**
+     * @Then currency :reference precision should be :precision
+     */
+    public function assertCurrencyPrecision($reference, $precision)
+    {
+        /** @var Currency $currency */
+        $currency = SharedStorage::getStorage()->get($reference);
+
+        if ((int) $currency->precision != (int) $precision) {
+            throw new RuntimeException(sprintf(
+                'Currency "%s" has "%s" precision, but "%s" was expected.',
+                $reference,
+                $currency->precision,
+                $precision
+            ));
+        }
+    }
+
+    /**
+     * @Given currency with :isoCode has been deleted
+     */
+    public function assertCurrencyHasBeenDeleted($isoCode)
+    {
+        $query = new DbQuery();
+        $query->select('c.id_currency');
+        $query->from('currency', 'c');
+        $query->where('deleted = 1');
+        $query->where('iso_code = \'' . pSQL($isoCode) . '\'');
+
+        $currencyId = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query->build());
+
+        if (!$currencyId) {
+            throw new RuntimeException(sprintf('Currency with ISO Code "%s" should be deleted in database', $isoCode));
+        }
+    }
+
+    /**
+     * @Given currency with :isoCode has been deactivated
+     */
+    public function assertCurrencyHasBeenDeactivated($isoCode)
+    {
+        $query = new DbQuery();
+        $query->select('c.id_currency');
+        $query->from('currency', 'c');
+        $query->where('active = 0');
+        $query->where('iso_code = \'' . pSQL($isoCode) . '\'');
+
+        $currencyId = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query->build());
+
+        if (!$currencyId) {
+            throw new RuntimeException(sprintf('Currency with ISO Code "%s" should be deactivated in database', $isoCode));
+        }
+    }
+
+    /**
+     * @Then currency :reference numeric iso code should be :numericIsoCode
+     */
+    public function assertCurrencyNumericIsoCode($reference, $numericIsoCode)
+    {
+        /** @var Currency $currency */
+        $currency = SharedStorage::getStorage()->get($reference);
+
+        if ('valid' === $numericIsoCode) {
+            if ((int) $currency->numeric_iso_code <= 0) {
+                throw new RuntimeException(sprintf(
+                    'Currency "%s" has invalid numeric iso code "%s".',
+                    $reference,
+                    $currency->numeric_iso_code
+                ));
+            }
+        } elseif ((int) $currency->numeric_iso_code !== (int) $numericIsoCode) {
+            throw new RuntimeException(sprintf(
+                'Currency "%s" has "%s" numeric iso code, but "%s" was expected.',
+                $reference,
+                $currency->numeric_iso_code,
+                $numericIsoCode
+            ));
+        }
+    }
+
+    /**
+     * @Then currency :reference name should be :name
+     */
+    public function assertCurrencyName($reference, $name)
+    {
+        /** @var Currency $currency */
+        $currency = SharedStorage::getStorage()->get($reference);
+
+        if ($currency->name !== $name) {
+            throw new RuntimeException(sprintf(
+                'Currency "%s" has "%s" name, but "%s" was expected.',
+                $reference,
+                $currency->name,
+                $name
+            ));
+        }
+    }
+
+    /**
+     * @Then currency :reference symbol should be :symbol
+     */
+    public function assertCurrencySymbol($reference, $symbol)
+    {
+        /** @var Currency $currency */
+        $currency = SharedStorage::getStorage()->get($reference);
+
+        if ($currency->symbol !== $symbol) {
+            throw new RuntimeException(sprintf(
+                'Currency "%s" has "%s" symbol, but "%s" was expected.',
+                $reference,
+                $currency->symbol,
+                $symbol
+            ));
         }
     }
 

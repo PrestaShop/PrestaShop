@@ -47,3 +47,9 @@ services:
           'it': 'http://doc.prestashop.com/pages/viewpage.action?pageId=54266514'
           'es': 'http://doc.prestashop.com/display/PS17/Rendimiento#Rendimiento-ModoDepuraci%%C3%%B3n'
           '_fallback': 'http://doc.prestashop.com/display/PS17/Performance#Performance-Debugmode'
+        'attribute':
+          'en': 'http://doc.prestashop.com/display/PS17/Managing+Product+Attributes'
+          'fr': 'http://doc.prestashop.com/display/PS17/Gerer+les+attributs+de+vos+produits'
+          'es': 'http://doc.prestashop.com/display/PS17/Gestionar+Atributos+del+Producto'
+          'it': 'http://doc.prestashop.com/display/PS17/Gestire+gli+Attributi+dei+Prodotti'
+          '_fallback': 'http://doc.prestashop.com/display/PS17/Managing+Product+Attributes'

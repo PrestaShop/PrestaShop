@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -107,7 +107,7 @@ class ReaderTest extends TestCase
                 'localeCode'   => 'fr',
                 'expectedData' => [
                     'defaultNumberingSystem' => 'latn',
-                    'digitsGroupSeparator'   => ' ',
+                    'digitsGroupSeparator'   => hex2bin('e280af'),
                     'decimalSeparator'       => ',',
                     'decimalPattern'         => '#,##0.###',
                     'currencyPattern'        => '#,##0.00 ¤',
@@ -117,7 +117,7 @@ class ReaderTest extends TestCase
                 'localeCode'   => 'fr-FR',
                 'expectedData' => [
                     'defaultNumberingSystem' => 'latn',
-                    'digitsGroupSeparator'   => ' ',
+                    'digitsGroupSeparator'   => hex2bin('e280af'),
                     'decimalSeparator'       => ',',
                     'decimalPattern'         => '#,##0.###',
                     'currencyPattern'        => '#,##0.00 ¤',
@@ -127,10 +127,10 @@ class ReaderTest extends TestCase
                 'localeCode'   => 'fr-CH',
                 'expectedData' => [
                     'defaultNumberingSystem' => 'latn',
-                    'digitsGroupSeparator'   => ' ',
+                    'digitsGroupSeparator'   => hex2bin('e280af'),
                     'decimalSeparator'       => ',',
                     'decimalPattern'         => '#,##0.###',
-                    'currencyPattern'        => '#,##0.00 ¤ ;-#,##0.00 ¤',
+                    'currencyPattern'        => '#,##0.00 ¤',
                 ],
             ],
             'en-GB' => [

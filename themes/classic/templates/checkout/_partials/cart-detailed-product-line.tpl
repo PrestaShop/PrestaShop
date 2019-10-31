@@ -1,5 +1,5 @@
 {**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -129,7 +129,6 @@
                 type="number"
                 value="{$product.quantity}"
                 name="product-quantity-spin"
-                min="{$product.minimal_quantity}"
               />
             {/if}
           </div>

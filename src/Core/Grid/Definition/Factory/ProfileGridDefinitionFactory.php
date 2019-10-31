@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -131,6 +131,7 @@ final class ProfileGridDefinitionFactory extends AbstractGridDefinitionFactory
                                 'route' => 'admin_profiles_edit',
                                 'route_param_name' => 'profileId',
                                 'route_param_field' => 'id_profile',
+                                'clickable_row' => true,
                             ])
                         )
                         ->add((new SubmitRowAction('delete'))

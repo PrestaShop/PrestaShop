@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -198,7 +198,7 @@ class TagCore extends ObjectModel
             SELECT t.name, counter AS times
             FROM `' . _DB_PREFIX_ . 'tag_count` pt
             LEFT JOIN `' . _DB_PREFIX_ . 'tag` t ON (t.id_tag = pt.id_tag)
-            WHERE pt.`id_group` ' . (count($groups) ? 'IN (' . implode(',', $groups) . ')' : '=' . (int) Configuration::get('PS_UNIDENTIFIED_GROUP')) . '
+            WHERE pt.`id_group` ' . (count($groups) ? 'IN (' . implode(',', $groups) . ')' : '=' . (int) Group::getCurrent()->id) . '
             AND pt.`id_lang` = ' . (int) $idLang . ' AND pt.`id_shop` = ' . (int) $context->shop->id . '
             ORDER BY times DESC
             LIMIT ' . (int) $nb);

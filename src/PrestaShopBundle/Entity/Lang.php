@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\LangRepository")
  */
-final class Lang implements LanguageInterface
+class Lang implements LanguageInterface
 {
     /**
      * @var int

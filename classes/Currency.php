@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -81,6 +81,8 @@ class CurrencyCore extends ObjectModel
 
     /**
      * Currency's symbol
+     *
+     * @deprecated Use $symbol
      *
      * @var string
      */
@@ -168,9 +170,9 @@ class CurrencyCore extends ObjectModel
     /**
      * CurrencyCore constructor.
      *
-     * @param null $id
+     * @param int|null $id
      * @param false|null $idLang if null or false, default language will be used
-     * @param null $idShop
+     * @param int|null $idShop
      */
     public function __construct($id = null, $idLang = null, $idShop = null)
     {
@@ -189,9 +191,9 @@ class CurrencyCore extends ObjectModel
             }
 
             if (is_array($this->name)) {
-                $this->name = ucfirst($this->name[$idLang]);
+                $this->name = Tools::ucfirst($this->name[$idLang]);
             } else {
-                $this->name = ucfirst($this->name);
+                $this->name = Tools::ucfirst($this->name);
             }
 
             $this->iso_code_num = $this->numeric_iso_code;
@@ -359,6 +361,27 @@ class CurrencyCore extends ObjectModel
     }
 
     /**
+     * Returns the name of the currency (using the translated name base on the id_lang
+     * provided on creation). This method is useful when $this->name contains an array
+     * but you still need to get its name as a string.
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        if (is_string($this->name)) {
+            return $this->name;
+        }
+
+        $id_lang = $this->id_lang;
+        if ($id_lang === null) {
+            $id_lang = Configuration::get('PS_LANG_DEFAULT');
+        }
+
+        return Tools::ucfirst($this->name[$id_lang]);
+    }
+
+    /**
      * Return available currencies.
      *
      * @param bool $object
@@ -378,18 +401,40 @@ class CurrencyCore extends ObjectModel
     /**
      * Retrieve all currencies data from the database.
      *
+     * @param bool $active If true only active are returned
+     * @param bool $groupBy Group by id_currency
+     * @param bool $currentShopOnly If true returns only currencies associated to current shop
+     *
      * @return array Currency data from database
+     *
+     * @throws PrestaShopDatabaseException
      */
-    public static function findAll($active = true, $groupBy = false)
+    public static function findAll($active = true, $groupBy = false, $currentShopOnly = true)
     {
         $currencies = Db::getInstance()->executeS('
             SELECT *
             FROM `' . _DB_PREFIX_ . 'currency` c
-            ' . Shop::addSqlAssociation('currency', 'c') . '
-                WHERE `deleted` = 0' .
+            ' . ($currentShopOnly ? Shop::addSqlAssociation('currency', 'c') : '') . '
+                WHERE c.`deleted` = 0' .
                 ($active ? ' AND c.`active` = 1' : '') .
                 ($groupBy ? ' GROUP BY c.`id_currency`' : '') .
                 ' ORDER BY `iso_code` ASC');
+
+        return $currencies;
+    }
+
+    /**
+     * Retrieve all currencies data from the database.
+     *
+     * @return array Currency data from database
+     *
+     * @throws PrestaShopDatabaseException
+     */
+    public static function findAllInstalled()
+    {
+        $currencies = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
+            'SELECT * FROM `' . _DB_PREFIX_ . 'currency` c ORDER BY `iso_code` ASC'
+        );
 
         return $currencies;
     }
@@ -547,13 +592,14 @@ class CurrencyCore extends ObjectModel
      *
      * @param string $isoCode ISO code
      * @param int $idShop Shop ID
+     * @param bool $forceRefreshCache [default=false] Set to TRUE to forcefully refresh any currently cached results
      *
      * @return int Currency ID
      */
-    public static function getIdByIsoCode($isoCode, $idShop = 0)
+    public static function getIdByIsoCode($isoCode, $idShop = 0, $forceRefreshCache = false)
     {
         $cacheId = 'Currency::getIdByIsoCode_' . pSQL($isoCode) . '-' . (int) $idShop;
-        if (!Cache::isStored($cacheId)) {
+        if ($forceRefreshCache || !Cache::isStored($cacheId)) {
             $query = Currency::getIdByQuery($idShop);
             $query->where('iso_code = \'' . pSQL($isoCode) . '\'');
 
@@ -561,6 +607,27 @@ class CurrencyCore extends ObjectModel
             Cache::store($cacheId, $result);
 
             return $result;
+        }
+
+        return Cache::retrieve($cacheId);
+    }
+
+    /**
+     * Get Currency ISO Code by ID
+     *
+     * @param int $id
+     * @param bool $forceRefreshCache
+     *
+     * @return string
+     */
+    public static function getIsoCodeById(int $id, bool $forceRefreshCache = false)
+    {
+        $cacheId = 'Currency::getIsoCodeById' . pSQL($id);
+        if ($forceRefreshCache || !Cache::isStored($cacheId)) {
+            $resultIsoCode = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT `iso_code` FROM ' . _DB_PREFIX_ . 'currency WHERE `id_currency` = ' . (int) $id);
+            Cache::store($cacheId, $resultIsoCode);
+
+            return $resultIsoCode;
         }
 
         return Cache::retrieve($cacheId);
@@ -773,7 +840,7 @@ class CurrencyCore extends ObjectModel
         $symbolsByLang = $namesByLang = [];
         foreach ($languages as $languageData) {
             $language = new Language($languageData['id_lang']);
-            if ($language->locale === '') {
+            if (empty($language->locale)) {
                 // Language doesn't have locale we can't install this language
                 continue;
             }

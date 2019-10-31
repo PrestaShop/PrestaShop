@@ -1,0 +1,48 @@
+#order_grid {
+  // Do not break text for Shop column in Orders grid
+  .column-shop_name {
+    word-break: normal;
+  }
+  .order-preview-content {
+    .details th, .product th, .details td, .product td {
+      border: none;
+      padding-top: 3.2px;
+      padding-bottom: 3.2px;
+    }
+    .details td, .product td {
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+    .product th {
+      background-color: #f8f8f8;
+    }
+
+    $order-details-text-padding-left: 34px;
+
+    .details {
+      td {
+        padding-left: 34px;
+      }
+    }
+  }
+}
+
+.info-block {
+  background-color: #F8F8F8;
+  padding-top: 18px;
+  padding-left: 18px;
+  padding-right: 18px;
+  padding-bottom: 16px;
+}
+
+#order-creation-container {
+  .found-cart-rule:hover {
+    cursor: pointer;
+    color: $primary;
+  }
+
+  #search-cart-rules-result-box {
+    z-index: 10;
+  }
+}
+

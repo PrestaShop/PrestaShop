@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -62,6 +62,7 @@ final class CombinationFieldsProvider implements EntityFieldsProviderInterface
             new EntityField('reference', $this->trans('Reference', 'Admin.Global')),
             new EntityField('ean13', $this->trans('EAN13', 'Admin.Advparameters.Feature')),
             new EntityField('upc', $this->trans('UPC', 'Admin.Advparameters.Feature')),
+            new EntityField('mpn', $this->trans('MPN', 'Admin.Advparameters.Feature')),
             new EntityField('wholesale_price', $this->trans('Cost price', 'Admin.Catalog.Feature')),
             new EntityField('price', $this->trans('Impact on price', 'Admin.Catalog.Feature')),
             new EntityField('ecotax', $this->trans('Ecotax', 'Admin.Catalog.Feature')),

@@ -243,7 +243,7 @@
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ 'We have encountered an error while processing your payment for your order with the reference <span class="label">{order_name}</span> from <span class="label">{shop_name}</span>. Please contact us as soon as possible.'|trans({}, 'Emails.Body', locale)|raw }}
+                                          {{ 'We have encountered an error while processing your payment for your order with the reference [1]{order_name}[/1] from [1]{shop_name}[/1]. Please contact us as soon as possible.'|trans({'[1]': '<span class="label">', '[/1]': '</span>'}, 'Emails.Body', locale)|raw }}
                                           <p style="font-weight:600">
                                             {{ 'You can expect delivery as soon as your payment is received.'|trans({}, 'Emails.Body', locale)|raw }}
                                           </p>

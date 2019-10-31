@@ -16,7 +16,7 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2019 PrestaShop SA and Contributors
@@ -113,8 +113,6 @@ class AppendHooksListForSqlUpgradeFileCommand extends ContainerAwareCommand
      */
     private function initContext()
     {
-        require_once $this->getContainer()->get('kernel')->getRootDir() . '/../config/config.inc.php';
-
         /** @var LegacyContext $legacyContext */
         $legacyContext = $this->getContainer()->get('prestashop.adapter.legacy.context');
         //We need to have an employee or the listing hooks don't work

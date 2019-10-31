@@ -1,0 +1,79 @@
+{#**
+ * 2007-2019 PrestaShop SA and Contributors
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>{{ 'Date'|trans({}, 'Admin.Global') }}</th>
+      <th>&nbsp;</th>
+      <th>{{ 'Carrier'|trans({}, 'Admin.Shipping.Feature') }}</th>
+      <th>{{ 'Weight'|trans({}, 'Admin.Global') }}</th>
+      <th>{{ 'Shipping cost'|trans({}, 'Admin.Shipping.Feature') }}</th>
+      <th>{{ 'Tracking number'|trans({}, 'Admin.Shipping.Feature') }}</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for carrier in orderForViewing.shipping.carriers %}
+      <tr>
+        <td>{{ carrier.date|date('Y-m-d') }}</td>
+        <td>&nbsp;</td>
+        <td>{{ carrier.name }}</td>
+        <td>{{ carrier.weight }}</td>
+        <td>{{ carrier.price }}</td>
+        <td>
+          {% if carrier.trackingNumber and carrier.trackingUrl %}
+            <a href="{{ carrier.trackingUrl }}">{{ carrier.trackingNumber }}</a>
+          {% endif %}
+        </td>
+        <td class="text-right">
+          {% if carrier.canEdit %}
+            <a href="#">
+              {{ 'Edit'|trans({}, 'Admin.Actions') }}
+            </a>
+          {% endif %}
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% if orderForViewing.shipping.carrierModuleInfo %}
+  {{ orderForViewing.shipping.carrierModuleInfo|raw }}
+{% endif %}
+
+{% if orderForViewing.shipping.recycledPackaging %}
+  <span class="badge badge-success">{{ 'Recycled packaging'|trans({}, 'Admin.Orderscustomers.Feature') }}</span>
+{% else %}
+  <span class="badge badge-secondary">
+    {{ 'Recycled packaging'|trans({}, 'Admin.Orderscustomers.Feature') }}
+  </span>
+{% endif %}
+
+{% if orderForViewing.shipping.giftWrapping %}
+  <span class="badge badge-success">{{ 'Gift wrapping'|trans({}, 'Admin.Orderscustomers.Feature') }}</span>
+{% else %}
+  <span class="badge badge-secondary">{{ 'Gift wrapping'|trans({}, 'Admin.Orderscustomers.Feature') }}</span>
+{% endif %}

@@ -119,3 +119,24 @@ services:
     arguments:
       - 'PrestaShopBundle\Form\Admin\Sell\Address\ManufacturerAddressType'
       - '@prestashop.core.form.identifiable_object.data_provider.manufacturer_address_form_data_provider'
+
+  prestashop.core.form.identifiable_object.builder.supplier_form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: 'prestashop.core.form.builder.form_builder_factory:create'
+    arguments:
+      - 'PrestaShopBundle\Form\Admin\Sell\Supplier\SupplierType'
+      - '@prestashop.core.form.identifiable_object.data_provider.supplier_form_data_provider'
+
+  prestashop.core.form.identifiable_object.builder.feature_form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: 'prestashop.core.form.builder.form_builder_factory:create'
+    arguments:
+      - 'PrestaShopBundle\Form\Admin\Sell\Catalog\FeatureType'
+      - '@prestashop.core.form.identifiable_object.data_provider.feature_form_data_provider'
+
+  prestashop.core.form.identifiable_object.builder.order_message_form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: 'prestashop.core.form.builder.form_builder_factory:create'
+    arguments:
+      - 'PrestaShopBundle\Form\Admin\Sell\CustomerService\OrderMessageType'
+      - '@prestashop.core.form.identifiable_object.data_provider.order_message_form_data_provider'

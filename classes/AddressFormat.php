@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressException;
 
 /**
  * Class AddressFormatCore.
@@ -236,9 +237,55 @@ class AddressFormatCore extends ObjectModel
                     }
                 }
             }
+            $this->checkRequiredFields($usedKeyList);
         }
 
         return (count($this->_errorFormatList)) ? false : true;
+    }
+
+    /**
+     * Checks that all required fields exist in a given fields list.
+     * Fills _errorFormatList array in case of absence of a required field.
+     *
+     * @param array $fieldList
+     */
+    protected function checkRequiredFields($fieldList)
+    {
+        foreach (self::getFieldsRequired() as $requiredField) {
+            if (!in_array($requiredField, $fieldList)) {
+                $this->_errorFormatList[] = $this->trans(
+                    'The %s field (in tab %s) is required.',
+                    array($requiredField, $this->getFieldTabName($requiredField)),
+                    'Admin.Notifications.Error');
+            }
+        }
+    }
+
+    /**
+     * Given a field name, get the name of the tab in which the field name can be found.
+     * For ex: Country:name => the tab is 'Country'.
+     * There should be only one separator in the string, otherwise throw an exception.
+     *
+     * @param string $field
+     *
+     * @return bool|string
+     *
+     * @throws AddressException
+     */
+    private function getFieldTabName($field)
+    {
+        if (strpos($field, ':') === false) {
+            // When there is no ':' separator, the field is in the Address tab
+            return 'Address';
+        }
+
+        $fieldTab = explode(':', $field);
+        if (count($fieldTab) === 2) {
+            // The part preceding the ':' separator is the name of the tab in which there is the required field
+            return $fieldTab[0];
+        }
+
+        throw new AddressException('Address format field is not valid');
     }
 
     /**

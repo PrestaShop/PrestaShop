@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -882,72 +882,21 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      */
     protected function formatQuantityDiscounts($specific_prices, $price, $tax_rate, $ecotax_amount)
     {
-        $priceFormatter = new PriceFormatter();
+        $priceCalculationMethod = Group::getPriceDisplayMethod(Group::getCurrent()->id);
+        $isTaxIncluded = false;
+
+        if ($priceCalculationMethod !== null && (int) $priceCalculationMethod === PS_TAX_INC) {
+            $isTaxIncluded = true;
+        }
 
         foreach ($specific_prices as $key => &$row) {
-            $row['quantity'] = &$row['from_quantity'];
-            if ($row['price'] >= 0) {
-                // The price may be directly set
-
-                /** @var float $currentPriceDefaultCurrency current price with taxes in default currency */
-                $currentPriceDefaultCurrency = (!$row['reduction_tax'] ? $row['price'] : $row['price'] * (1 + $tax_rate / 100)) + (float) $ecotax_amount;
-                // Since this price is set in default currency,
-                // we need to convert it into current currency
-                $row['id_currency'];
-                $currentPriceCurrentCurrency = Tools::convertPrice($currentPriceDefaultCurrency, $this->context->currency, true, $this->context);
-
-                if ($row['reduction_type'] == 'amount') {
-                    $currentPriceCurrentCurrency -= ($row['reduction_tax'] ? $row['reduction'] : $row['reduction'] / (1 + $tax_rate / 100));
-                    $row['reduction_with_tax'] = $row['reduction_tax'] ? $row['reduction'] : $row['reduction'] / (1 + $tax_rate / 100);
-                } else {
-                    $currentPriceCurrentCurrency *= 1 - $row['reduction'];
-                }
-                $row['real_value'] = $price > 0 ? $price - $currentPriceCurrentCurrency : $currentPriceCurrentCurrency;
-                $discountPrice = $price - $row['real_value'];
-
-                if (Configuration::get('PS_DISPLAY_DISCOUNT_PRICE')) {
-                    if ($row['reduction_tax'] == 0 && !$row['price']) {
-                        $row['discount'] = $priceFormatter->format($price - ($price * $row['reduction_with_tax']));
-                    } else {
-                        $row['discount'] = $priceFormatter->format($price - $row['real_value']);
-                    }
-                } else {
-                    $row['discount'] = $priceFormatter->format($row['real_value']);
-                }
-            } else {
-                if ($row['reduction_type'] == 'amount') {
-                    if (Product::$_taxCalculationMethod == PS_TAX_INC) {
-                        $row['real_value'] = $row['reduction_tax'] == 1 ? $row['reduction'] : $row['reduction'] * (1 + $tax_rate / 100);
-                    } else {
-                        $row['real_value'] = $row['reduction_tax'] == 0 ? $row['reduction'] : $row['reduction'] / (1 + $tax_rate / 100);
-                    }
-                    $row['reduction_with_tax'] = $row['reduction_tax'] ? $row['reduction'] : $row['reduction'] + ($row['reduction'] * $tax_rate) / 100;
-                    $discountPrice = $price - $row['real_value'];
-                    if (Configuration::get('PS_DISPLAY_DISCOUNT_PRICE')) {
-                        if ($row['reduction_tax'] == 0 && !$row['price']) {
-                            $row['discount'] = $priceFormatter->format($price - ($price * $row['reduction_with_tax']));
-                        } else {
-                            $row['discount'] = $priceFormatter->format($price - $row['real_value']);
-                        }
-                    } else {
-                        $row['discount'] = $priceFormatter->format($row['real_value']);
-                    }
-                } else {
-                    $row['real_value'] = $row['reduction'] * 100;
-                    $discountPrice = $price - $price * $row['reduction'];
-                    if (Configuration::get('PS_DISPLAY_DISCOUNT_PRICE')) {
-                        if ($row['reduction_tax'] == 0) {
-                            $row['discount'] = $priceFormatter->format($price - ($price * $row['reduction_with_tax']));
-                        } else {
-                            $row['discount'] = $priceFormatter->format($price - ($price * $row['reduction']));
-                        }
-                    } else {
-                        $row['discount'] = $row['real_value'] . '%';
-                    }
-                }
-            }
-
-            $row['save'] = $priceFormatter->format((($price * $row['quantity']) - ($discountPrice * $row['quantity'])));
+            $specificPriceFormatter = new SpecificPriceFormatter(
+                $row,
+                $isTaxIncluded,
+                $this->context->currency,
+                Configuration::get('PS_DISPLAY_DISCOUNT_PRICE')
+            );
+            $row = $specificPriceFormatter->formatSpecificPrice($price, $tax_rate, $ecotax_amount);
             $row['nextQuantity'] = (isset($specific_prices[$key + 1]) ? (int) $specific_prices[$key + 1]['from_quantity'] : -1);
         }
 
@@ -1093,6 +1042,12 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         }
         $product_full['customer_group_discount'] = $group_reduction;
         $product_full['title'] = $this->getProductPageTitle();
+
+        // round display price (without formatting, we don't want the currency symbol here, just the raw rounded value
+        $product_full['rounded_display_price'] = Tools::ps_round(
+            $product_full['price'],
+            Context::getContext()->currency->precision
+        );
 
         $presenter = $this->getProductPresenter();
 

@@ -1,5 +1,5 @@
 {#**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -45,12 +45,12 @@
 
           {{ ps.form_group_row(customerForm.first_name, {}, {
             'label': 'First name'|trans({}, 'Admin.Global'),
-            'help': '%s %s'|format('Invalid characters:'|trans({}, 'Admin.Notifications.Info'), allowedNameChars)
+            'help': 'Only letters and the dot (.) character, followed by a space, are allowed.'|trans({}, 'Admin.Orderscustomers.Help')
           }) }}
 
           {{ ps.form_group_row(customerForm.last_name, {}, {
             'label': 'Last name'|trans({}, 'Admin.Global'),
-            'help': '%s %s'|format('Invalid characters:'|trans({}, 'Admin.Notifications.Info'), allowedNameChars)
+            'help': 'Only letters and the dot (.) character, followed by a space, are allowed.'|trans({}, 'Admin.Orderscustomers.Help')
           }) }}
 
           {{ ps.form_group_row(customerForm.email, {}, {

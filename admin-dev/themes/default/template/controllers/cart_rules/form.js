@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -497,6 +497,8 @@ $(document).ready(function() {
 			callback: function(text) { combinable_filter('#cart_rule_select_2', text, 'selected'); }
 		});
 	}
+  
+  displayProductAttributes();  
 });
 
 

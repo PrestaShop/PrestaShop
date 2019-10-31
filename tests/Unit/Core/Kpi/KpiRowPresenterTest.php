@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -51,6 +51,9 @@ class KpiRowPresenterTest extends TestCase
         $kpiRowMock
             ->method('getKpis')
             ->willReturn([$kpiMock]);
+        $kpiRowMock
+            ->method('getOptions')
+            ->willReturn([]);
         $kpiMock
             ->method('render')
             ->willReturn('abcd');
