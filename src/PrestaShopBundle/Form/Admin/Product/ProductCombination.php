@@ -133,7 +133,7 @@ class ProductCombination extends CommonAbstractType
             ])
             ->add('attribute_ecotax', MoneyType::class, [
                 'required' => false,
-                'label' => $this->translator->trans('Ecotax', [], 'Admin.Catalog.Feature'),
+                'label' => $this->translator->trans('Ecotax (tax incl.)', [], 'Admin.Catalog.Feature'),
                 'currency' => $this->currency->iso_code,
                 'constraints' => [
                     new Assert\NotBlank(),
