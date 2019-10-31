@@ -35,6 +35,8 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Command\RemoveProductFromCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\SetFreeShippingToCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartAddressesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartCarrierCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartCurrencyCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartLanguageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductQuantityInCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
@@ -126,7 +128,7 @@ class CartController extends FrameworkBundleAdminController
     public function createAction(Request $request): JsonResponse
     {
         try {
-            $customerId = $request->request->getInt('customer_id');
+            $customerId = $request->request->getInt('customerId');
             $cartId = $this->getCommandBus()->handle(new CreateEmptyCustomerCartCommand($customerId))->getValue();
 
             return $this->json($this->getCartInfo($cartId));
@@ -152,11 +154,11 @@ class CartController extends FrameworkBundleAdminController
     {
         try {
             $updateAddressCommand = new UpdateCartAddressesCommand($cartId);
-            if ($deliveryAddressId = $request->request->getInt('delivery_address_id')) {
+            if ($deliveryAddressId = $request->request->getInt('deliveryAddressId')) {
                 $updateAddressCommand->setNewDeliveryAddressId($deliveryAddressId);
             }
 
-            if ($invoiceAddressId = $request->request->getInt('invoice_address_id')) {
+            if ($invoiceAddressId = $request->request->getInt('invoiceAddressId')) {
                 $updateAddressCommand->setNewInvoiceAddressId($invoiceAddressId);
             }
 
@@ -172,6 +174,58 @@ class CartController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+     *
+     * @param int $cartId
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function editCurrencyAction(int $cartId, Request $request): JsonResponse
+    {
+        try {
+            $this->getCommandBus()->handle(new UpdateCartCurrencyCommand(
+                $cartId,
+                $request->request->getInt('currencyId')
+            ));
+
+            return $this->json($this->getCartInfo($cartId));
+        } catch (Exception $e) {
+            return $this->json(
+                ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
+    }
+
+    /**
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+     *
+     * @param int $cartId
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function editLanguageAction(int $cartId, Request $request): JsonResponse
+    {
+        try {
+            $this->getCommandBus()->handle(new UpdateCartLanguageCommand(
+                $cartId,
+                $request->request->getInt('languageId')
+            ));
+
+            return $this->json($this->getCartInfo($cartId));
+        } catch (Exception $e) {
+            return $this->json(
+                ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
+    }
+
+    /**
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+     *
      * @param Request $request
      * @param int $cartId
      *

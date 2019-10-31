@@ -147,4 +147,36 @@ export default class CartEditor {
       showErrorMessage(response.responseJSON.message);
     });
   }
+
+  /**
+   * Changes cart currency
+   *
+   * @param cartId
+   * @param currencyId
+   */
+  changeCartCurrency(cartId, currencyId) {
+    $.post(this.router.generate('admin_carts_edit_currency', {cartId}), {
+      currencyId,
+    }).then((cartInfo) => {
+      EventEmitter.emit(eventMap.cartCurrencyChanged, cartInfo);
+    }).catch((response) => {
+      showErrorMessage(response.responseJSON.message);
+    });
+  }
+
+  /**
+   * Changes cart language
+   *
+   * @param cartId
+   * @param langId
+   */
+  changeCartLanguage(cartId, langId) {
+    $.post(this.router.generate('admin_carts_edit_language', {cartId}), {
+      languageId: langId,
+    }).then((cartInfo) => {
+      EventEmitter.emit(eventMap.cartLanguageChanged, cartInfo);
+    }).catch((response) => {
+      showErrorMessage(response.responseJSON.message);
+    });
+  }
 }

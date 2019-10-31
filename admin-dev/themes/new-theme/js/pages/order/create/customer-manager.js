@@ -146,7 +146,7 @@ export default class CustomerManager {
    * @private
    */
   _search(searchPhrase) {
-    if (searchPhrase.length < 3) {
+    if (searchPhrase.length === 0) {
       return;
     }
 

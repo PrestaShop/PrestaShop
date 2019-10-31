@@ -139,6 +139,15 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     //@todo: wip
+    /**
+     * Places an order from BO
+     *
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
     public function placeAction(Request $request)
     {
         $summaryForm = $this->createForm(CartSummaryType::class);
@@ -146,18 +155,24 @@ class OrderController extends FrameworkBundleAdminController
 
         if ($summaryForm->isSubmitted() && $summaryForm->isValid()) {
             $formData = $summaryForm->getData();
-            $orderId = $this->getCommandBus()->handle(new AddOrderFromBackOfficeCommand(
-                (int) $formData['cart_id'],
-                $this->getContext()->employee->id,
-                $formData['order_message'],
-                $formData['payment_module'],
-                (int) $formData['order_state']
-            ));
+            try {
+                $orderId = $this->getCommandBus()->handle(new AddOrderFromBackOfficeCommand(
+                    (int) $formData['cart_id'],
+                    $this->getContext()->employee->id,
+                    $formData['order_message'],
+                    $formData['payment_module'],
+                    (int) $formData['order_state']
+                ));
+
+                return $this->redirectToRoute('admin_orders_view', [
+                    'orderId' => $orderId->getValue(),
+                ]);
+            } catch (Exception $e) {
+                $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+            }
         }
 
-        return $this->redirectToRoute('admin_orders_view', [
-            'orderId' => $orderId->getValue(),
-        ]);
+        return $this->redirectToRoute('admin_orders_create');
     }
 
     //@todo: wip
