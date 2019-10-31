@@ -44,11 +44,15 @@ export default class SummaryRenderer {
   /**
    * Renders summary block
    *
-   * @param cartInfo
+   * @param {Object} cartInfo
    */
   render(cartInfo) {
     this._cleanSummary();
-    if (cartInfo.products.length === 0 || cartInfo.shipping === null) {
+    const noProducts = cartInfo.products.length === 0;
+    const noShippingOptions = cartInfo.shipping === null;
+    const invalidAddresses = !this._addressesAreValid(cartInfo.addresses);
+
+    if (noProducts || noShippingOptions || invalidAddresses) {
       this._hideSummaryBlock();
 
       return;
@@ -64,6 +68,33 @@ export default class SummaryRenderer {
     this.$placeOrderCartIdField.val(cartInfo.cartId);
 
     this._showSummaryBlock();
+  }
+
+  /**
+   * Validates that cart has valid addresses
+   *@todo refactor and show addresses warning to create new address if empty
+   * @param addresses
+   *
+   * @returns {boolean}
+   *
+   * @private
+   */
+  _addressesAreValid(addresses) {
+    if (addresses.length !== 0) {
+      return false;
+    }
+
+    for (const key in addresses) {
+      const address = addresses[key];
+
+      if (address.countryIsEnabled) {
+        if (address.invoice || address.delivery) {
+          return false;
+        }
+      }
+    }
+
+    return true;
   }
 
   /**
