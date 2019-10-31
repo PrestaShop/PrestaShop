@@ -800,7 +800,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
         $currency = new Currency($order->id_currency);
         $discounts = $order->getCartRules();
         $discountsForViewing = [];
-        dump($discounts);
+
         foreach ($discounts as $discount) {
             $discountsForViewing[] = new OrderDiscountForViewing(
                 (int) $discount['id_order_cart_rule'],
