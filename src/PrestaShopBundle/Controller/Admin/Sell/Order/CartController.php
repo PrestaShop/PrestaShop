@@ -152,11 +152,11 @@ class CartController extends FrameworkBundleAdminController
     {
         try {
             $updateAddressCommand = new UpdateCartAddressesCommand($cartId);
-            if ($deliveryAddressId = $request->request->getInt('delivery_address_id')) {
+            if ($deliveryAddressId = $request->request->getInt('deliveryAddressId')) {
                 $updateAddressCommand->setNewDeliveryAddressId($deliveryAddressId);
             }
 
-            if ($invoiceAddressId = $request->request->getInt('invoice_address_id')) {
+            if ($invoiceAddressId = $request->request->getInt('invoiceAddressId')) {
                 $updateAddressCommand->setNewInvoiceAddressId($invoiceAddressId);
             }
 

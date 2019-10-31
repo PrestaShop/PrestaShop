@@ -160,8 +160,18 @@
     <td class="js-cart-date"></td>
     <td class="js-cart-total"></td>
     <td class="text-right">
-      <a class="btn btn-outline-primary js-cart-details-btn" href="">{{ 'Details'|trans({}, 'Admin.Global') }}</a>
-      <button class="btn btn-outline-primary js-use-cart-btn">{{ 'Use'|trans({}, 'Admin.Orderscustomers.Feature') }}</button>
+      <a
+        title="{{ 'View this cart'|trans({}, 'Admin.Orderscustomers.Feature') }}"
+        class="btn btn-outline-primary js-cart-details-btn"
+        href="">
+        {{ 'Details'|trans({}, 'Admin.Global') }}
+      </a>
+
+      <button
+        title="{{ 'Use this cart'|trans({}, 'Admin.Orderscustomers.Feature') }}"
+        class="btn btn-outline-primary js-use-cart-btn">
+        {{ 'Use'|trans({}, 'Admin.Orderscustomers.Feature') }}
+      </button>
     </td>
   </tr>
 </script>
@@ -174,8 +184,18 @@
     <td class="js-order-total-paid"></td>
     <td class="js-order-status"></td>
     <td class="text-right">
-      <a class="btn btn-outline-primary js-order-details-btn" href="">{{ 'Details'|trans({}, 'Admin.Global') }}</a>
-      <button class="btn btn-outline-primary js-use-order-btn">{{ 'Use'|trans({}, 'Admin.Orderscustomers.Feature') }}</button>
+      <a
+        title="{{ 'View this order'|trans({}, 'Admin.Orderscustomers.Feature') }}"
+        class="btn btn-outline-primary js-order-details-btn"
+        href="">
+        {{ 'Details'|trans({}, 'Admin.Global') }}
+      </a>
+
+      <button
+        title="{{ 'Duplicate this order'|trans({}, 'Admin.Orderscustomers.Feature') }}"
+        class="btn btn-outline-primary js-use-order-btn">
+        {{ 'Use'|trans({}, 'Admin.Orderscustomers.Feature') }}
+      </button>
     </td>
   </tr>
 </script>
