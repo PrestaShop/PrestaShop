@@ -119,7 +119,6 @@ export default class CreateOrderPage {
       this._renderCartInfo(cartInfo);
       this.customerManager.loadCustomerCarts(this.cartId);
       this.customerManager.loadCustomerOrders();
-      this.summaryRenderer.render(cartInfo);
     });
   }
 
@@ -155,6 +154,7 @@ export default class CreateOrderPage {
    */
   _onFreeShippingChanged() {
     EventEmitter.on(eventMap.cartFreeShippingSet, (cartInfo) => {
+      this.cartRulesRenderer.renderCartRulesBlock(cartInfo.cartRules, cartInfo.products.length === 0);
       this.shippingRenderer.render(cartInfo.shipping, cartInfo.products.length === 0);
       this.summaryRenderer.render(cartInfo);
     });
@@ -288,8 +288,7 @@ export default class CreateOrderPage {
     this.cartRulesRenderer.renderCartRulesBlock(cartInfo.cartRules, cartInfo.products.length === 0);
     this.shippingRenderer.render(cartInfo.shipping, cartInfo.products.length === 0);
     this.productRenderer.renderList(cartInfo.products);
-    // @todo: render Summary block when at least 1 product is in cart
-    // and delivery options are available
+    this.summaryRenderer.render(cartInfo);
 
     $(createOrderMap.cartBlock).removeClass('d-none');
   }
