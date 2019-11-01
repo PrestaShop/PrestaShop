@@ -21,8 +21,10 @@ module.exports = class Employees extends BOBasePage {
     a[data-toggle='dropdown']`;
     this.employeesListTableDeleteLink = `${this.employeesListTableColumn.replace('%COLUMN', 'actions')} a[data-url]`;
     this.employeesListTableEditLink = `${this.employeesListTableColumn.replace('%COLUMN', 'actions')} a[href*='edit']`;
-    this.employeesListColumnValidIcon = `${this.employeesListTableColumn} i.grid-toggler-icon-valid`;
-    this.employeesListColumnNotValidIcon = `${this.employeesListTableColumn} i.grid-toggler-icon-not-valid`;
+    this.employeesListColumnValidIcon = `${this.employeesListTableColumn.replace('%COLUMN', 'active')} 
+    i.grid-toggler-icon-valid`;
+    this.employeesListColumnNotValidIcon = `${this.employeesListTableColumn.replace('%COLUMN', 'active')} 
+    i.grid-toggler-icon-not-valid`;
     // Filters
     this.employeeFilterInput = `${this.employeesListForm} #employee_%FILTERBY`;
     this.filterSearchButton = `${this.employeesListForm} button[name='employee[actions][search]']`;
@@ -103,31 +105,28 @@ module.exports = class Employees extends BOBasePage {
   /**
    * Get Value of column Displayed
    * @param row, row in table
-   * @param column, column to check
    * @return {Promise<boolean|true>}
    */
-  async getToggleColumnValue(row, column) {
+  async getToggleColumnValue(row) {
     if (await this.elementVisible(
-      this.employeesListColumnValidIcon.replace('%ROW', row).replace('%COLUMN', column), 100)) return true;
+      this.employeesListColumnValidIcon.replace('%ROW', row), 100)) return true;
     return false;
   }
 
   /**
    * Quick edit toggle column value
    * @param row, row in table
-   * @param column, column to update
    * @param valueWanted, Value wanted in column
    * @return {Promise<boolean>} return true if action is done, false otherwise
    */
-  async updateToggleColumnValue(row, column, valueWanted = true) {
-    if (await this.getToggleColumnValue(row, column) !== valueWanted) {
-      this.page.click(this.employeesListTableColumn.replace('%ROW', row).replace('%COLUMN', column));
+  async updateToggleColumnValue(row, valueWanted = true) {
+    if (await this.getToggleColumnValue(row) !== valueWanted) {
+      this.page.click(this.employeesListTableColumn.replace('%ROW', row).replace('%COLUMN', 'active'));
       if (valueWanted) {
-        await this.page.waitForSelector(this.employeesListColumnValidIcon
-          .replace('%ROW', 1).replace('%COLUMN', 'active'));
+        await this.page.waitForSelector(this.employeesListColumnValidIcon.replace('%ROW', row));
       } else {
         await this.page.waitForSelector(
-          this.employeesListColumnNotValidIcon.replace('%ROW', 1).replace('%COLUMN', 'active'));
+          this.employeesListColumnNotValidIcon.replace('%ROW', row));
       }
       return true;
     }
@@ -146,10 +145,7 @@ module.exports = class Employees extends BOBasePage {
     await Promise.all([
       this.page.click(this.employeesListTableToggleDropDown.replace('%ROW', row)),
       this.page.waitForSelector(
-        `${this.employeesListTableToggleDropDown
-          .replace('%ROW', row)}[aria-expanded='true']`,
-        {visible: true},
-      ),
+        `${this.employeesListTableToggleDropDown.replace('%ROW', row)}[aria-expanded='true']`, {visible: true}),
     ]);
     // Click on delete
     await Promise.all([
