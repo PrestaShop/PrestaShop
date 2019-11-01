@@ -433,15 +433,24 @@ abstract class PaymentModuleCore extends Module
                             'id_product' => $product['id_product'],
                             'reference' => $product['reference'],
                             'name' => $product['name'] . (isset($product['attributes']) ? ' - ' . $product['attributes'] : ''),
+                            'base_price' => Tools::displayPrice($product_price, $this->context->currency, false),
                             'price' => Tools::getContextLocale($this->context)->formatPrice($product_price * $product['quantity'], $this->context->currency->iso_code),
                             'quantity' => $product['quantity'],
                             'customization' => [],
                         ];
 
-                        if (isset($product['price']) && $product['price']) {
-                            $product_var_tpl['unit_price'] = Tools::getContextLocale($this->context)->formatPrice($product_price, $this->context->currency->iso_code);
-                            $product_var_tpl['unit_price_full'] = Tools::getContextLocale($this->context)->formatPrice($product_price, $this->context->currency->iso_code)
-                                . ' ' . $product['unity'];
+                        if (isset($product['unit_price_ratio']) && $product['unit_price_ratio'] > 0) {
+                            if($product['id_product_attribute'] > 0) {
+                                $combination = new Combination($product['id_product_attribute']);
+                                if (0 != $combination->unit_price_impact && 0 != $product['unit_price_ratio']) {
+                                    $unitPrice = ($price / $product['unit_price_ratio']) + $combination->unit_price_impact;
+                                    $product['unit_price_ratio'] = $price / $unitPrice;
+                                }
+                            }
+                            $product['unit_price'] = $product_price / $product['unit_price_ratio'];
+
+                            $product_var_tpl['unit_price'] = Tools::getContextLocale($this->context)->formatPrice($product['unit_price'], $this->context->currency->iso_code);
+                            $product_var_tpl['unit_price_full'] = $product_var_tpl['unit_price'] . ' ' . $product['unity'];
                         } else {
                             $product_var_tpl['unit_price'] = $product_var_tpl['unit_price_full'] = '';
                         }
