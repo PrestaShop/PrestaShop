@@ -35,10 +35,6 @@ module.exports = class Employees extends BOBasePage {
     this.bulkActionsEnableButton = `${this.employeesListForm} #employee_grid_bulk_action_enable_selection`;
     this.bulkActionsDisableButton = `${this.employeesListForm} #employee_grid_bulk_action_disable_selection`;
     this.bulkActionsDeleteButton = `${this.employeesListForm} #employee_grid_bulk_action_delete_selection`;
-    // Modal Dialog
-    this.deleteemployeeModal = '#employee_grid_delete_employees_modal.show';
-    this.deleteemployeeModalDeleteButton = `${this.deleteemployeeModal} button.js-submit-delete-employees`;
-    this.deleteemployeeModalModeInput = `${this.deleteemployeeModal} #delete_employees_delete_mode_%ID`;
   }
 
   /*
@@ -149,24 +145,10 @@ module.exports = class Employees extends BOBasePage {
     ]);
     // Click on delete
     await Promise.all([
-      await this.page.click(this.employeesListTableDeleteLink.replace('%ROW', row)),
-      await this.page.waitForSelector(this.alertSuccessBlockParagraph),
+      this.page.click(this.employeesListTableDeleteLink.replace('%ROW', row)),
+      this.page.waitForSelector(this.alertSuccessBlockParagraph),
     ]);
     return this.getTextContent(this.alertSuccessBlockParagraph);
-  }
-
-  /**
-   * Choose the option and delete
-   * @param modeID, Deletion mode ID to choose in modal
-   * @return {Promise<void>}
-   */
-  async chooseOptionAndDelete(modeID) {
-    await this.page.click(this.deleteemployeeModalModeInput.replace('%ID', modeID));
-    await Promise.all([
-      this.page.click(this.deleteemployeeModalDeleteButton),
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-      this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true}),
-    ]);
   }
 
   /**
@@ -195,10 +177,10 @@ module.exports = class Employees extends BOBasePage {
 
   /**
    * Delete all employees with Bulk Actions
-   * @param modeID, Deletion mode ID to choose in modal
    * @return {Promise<textContent>}
    */
-  async deleteBulkActions(modeID = '0') {
+  async deleteBulkActions() {
+    this.dialogListener();
     // Click on Select All
     await Promise.all([
       this.page.click(this.selectAllRowsLabel),
@@ -212,9 +194,8 @@ module.exports = class Employees extends BOBasePage {
     // Click on delete and wait for modal
     await Promise.all([
       this.page.click(this.bulkActionsDeleteButton),
-      this.page.waitForSelector(this.deleteemployeeModal, {visible: true}),
+      this.page.waitForSelector(this.alertSuccessBlockParagraph),
     ]);
-    await this.chooseOptionAndDelete(modeID);
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 };
