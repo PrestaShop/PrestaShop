@@ -99,8 +99,10 @@ describe('Create, Read, Update and Delete Employee in BO', async () => {
       await expect(numberOfEmployeesAfterCreation).to.be.equal(numberOfEmployees + 1);
     });
 
-    it('should sign out then sign in with new account and verify the default page', async function () {
-      await this.pageObjects.boBasePage.logoutBO();
+    // Logout into BO
+    loginCommon.logoutBO();
+
+    it('should sign in with new account and verify the default page', async function () {
       await this.pageObjects.loginPage.login(createEmployeeData.email, createEmployeeData.password);
       const pageTitle = await this.pageObjects.productsPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.productsPage.pageTitle);
