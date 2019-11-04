@@ -1,5 +1,4 @@
-<?php
-/**
+{#**
  * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
@@ -22,38 +21,17 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- */
+ *#}
 
-namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
-
-use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
-
-/**
- * Gets choices for predefined order message types.
- */
-final class CustomerServiceOrderMessagesNameChoiceProvider implements FormChoiceProviderInterface
-{
-    /**
-     * @var array
-     */
-    private $orderMessages;
-
-    public function __construct(array $orderMessages)
-    {
-        $this->orderMessages = $orderMessages;
-    }
-
-    /**
-     * @{inheritdoc}
-     */
-    public function getChoices(): array
-    {
-        $result = [];
-
-        foreach ($this->orderMessages as $orderMessage) {
-            $result[$orderMessage['name']] = $orderMessage['id_order_message'];
-        }
-
-        return $result;
-    }
-}
+<div class="modal fade" id="viewAllMessagesModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        hello world header
+      </div>
+      <div class="modal-body">
+        hello world body
+      </div>
+    </div>
+  </div>
+</div>
