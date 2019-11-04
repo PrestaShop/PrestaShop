@@ -57,6 +57,8 @@ export default class AddressesRenderer {
       $addressesWarningContent.removeClass('d-none');
       $addressesContent.addClass('d-none');
 
+      this._showAddressesBlock();
+
       return;
     }
 
