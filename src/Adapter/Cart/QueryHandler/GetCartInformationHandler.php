@@ -93,6 +93,7 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
         $language = new Language($cart->id_lang);
 
         $legacySummary = $cart->getSummaryDetails(null, true);
+        $addresses = $this->getAddresses($cart);
 
         return new CartInformation(
             $cart->id,
@@ -100,9 +101,9 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
             (int) $currency->id,
             (int) $language->id,
             $this->extractCartRulesFromLegacySummary($legacySummary, $currency),
-            $this->getAddresses($cart),
+            $addresses,
             $this->extractSummaryFromLegacySummary($legacySummary, $currency),
-            $this->extractShippingFromLegacySummary($cart, $legacySummary)
+            $addresses ? $this->extractShippingFromLegacySummary($cart, $legacySummary) : null
         );
     }
 
@@ -118,16 +119,19 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
 
         foreach ($customer->getAddresses($cart->id_lang) as $data) {
             $addressId = (int) $data['id_address'];
-
             $countryIsEnabled = (bool) Address::isCountryActiveById($addressId);
+
+            // filter out disabled countries
+            if (!$countryIsEnabled) {
+                continue;
+            }
 
             $cartAddresses[$addressId] = new CartAddress(
                 $addressId,
                 $data['alias'],
                 AddressFormat::generateAddress(new Address($addressId), [], '<br />'),
                 (int) $cart->id_address_delivery === $addressId,
-                (int) $cart->id_address_invoice === $addressId,
-                $countryIsEnabled
+                (int) $cart->id_address_invoice === $addressId
             );
         }
 
