@@ -43,7 +43,7 @@
           </h2>
         </div>
         <div class="col-md-6 text-right">
-          <a href="{{ path('admin_customers_view', {'customerId': orderForViewing.customer.id }) }}">
+          <a class="d-print-none" href="{{ path('admin_customers_view', {'customerId': orderForViewing.customer.id }) }}">
             {{ 'View full details'|trans({}, 'Admin.Actions') }}
           </a>
         </div>
@@ -87,7 +87,7 @@
           <p>
             <strong>{{ 'Shipping address'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
 
-            <a href="{{ getAdminLink('AdminAddresses', true, {
+            <a  href="{{ getAdminLink('AdminAddresses', true, {
               'realedit': 1,
               'addaddress': 1,
               'address_type': 1,
@@ -95,7 +95,7 @@
               'id_address': orderForViewing.shippingAddress.addressId,
               'back': path('admin_orders_view', {'orderId': orderForViewing.id})
             }) }}"
-               class="float-right tooltip-link"
+               class="float-right tooltip-link d-print-none"
                data-toggle="pstooltip"
                data-placement="top"
                data-original-title="{{ 'Edit'|trans({}, 'Admin.Actions') }}"
@@ -129,7 +129,7 @@
           <p>
             <strong>{{ 'Invoice address'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
 
-            <a href="{{ getAdminLink('AdminAddresses', true, {
+            <a  href="{{ getAdminLink('AdminAddresses', true, {
               'realedit': 1,
               'addaddress': 1,
               'address_type': 2,
@@ -137,7 +137,7 @@
               'id_address': orderForViewing.invoiceAddress.addressId,
               'back': path('admin_orders_view', {'orderId': orderForViewing.id})
             }) }}"
-               class="float-right tooltip-link"
+               class="float-right tooltip-link d-print-none"
                data-toggle="pstooltip"
                data-placement="top"
                data-original-title="{{ 'Edit'|trans({}, 'Admin.Actions') }}"

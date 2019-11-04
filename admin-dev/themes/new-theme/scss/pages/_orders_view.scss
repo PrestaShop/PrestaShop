@@ -28,5 +28,11 @@
         opacity: 1;
       }
     }
+
+    .card--message {
+      form {
+        display: none;
+      }
+    }
   }
 }
