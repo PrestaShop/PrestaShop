@@ -745,8 +745,8 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
 
     private function getOrderMessages(Order $order): OrderMessagesForViewing
     {
+        //todo: get all messages here since all will be loaded in pop-up. Create custom provider function which does not set limit
         $orderMessagesForOrderPage = CustomerThread::getCustomerMessagesOrder($order->id_customer, $order->id);
-        $totalMessages = $this->getOrderTotalMessages($order->id_customer, $order->id);
 
         $messages = [];
 
@@ -771,7 +771,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             );
         }
 
-        return new OrderMessagesForViewing($messages, $totalMessages);
+        return new OrderMessagesForViewing($messages);
     }
 
     private function getOrderPrices(Order $order): OrderPricesForViewing
@@ -842,7 +842,6 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
         return new OrderDiscountsForViewing($discountsForViewing);
     }
 
-
     /**
      * @param Order $order
      *
@@ -853,12 +852,5 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
         $customer = new Customer($order->id_customer);
 
         return Group::getPriceDisplayMethod((int)$customer->id_default_group);
-    }
-
-    private function getOrderTotalMessages(int $customerId, int $orderId): int
-    {
-        $allMessages = CustomerThread::getCustomerMessages($customerId, null, $orderId);
-
-        return \count($allMessages);
     }
 }

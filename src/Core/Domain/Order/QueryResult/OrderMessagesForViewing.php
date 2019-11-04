@@ -32,21 +32,13 @@ class OrderMessagesForViewing
     private $messages = [];
 
     /**
-     * @var int
-     */
-    private $totalMessages;
-
-    /**
      * @param OrderMessageForViewing[] $messages
-     * @param int $totalMessages
      */
-    public function __construct(array $messages, int $totalMessages)
+    public function __construct(array $messages)
     {
         foreach ($messages as $message) {
             $this->add($message);
         }
-
-        $this->totalMessages = $totalMessages;
     }
 
     /**
@@ -55,14 +47,6 @@ class OrderMessagesForViewing
     public function getMessages(): array
     {
         return $this->messages;
-    }
-
-    /**
-     * @return int
-     */
-    public function getTotalMessages(): int
-    {
-        return $this->totalMessages;
     }
 
     /**
