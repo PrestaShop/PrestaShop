@@ -119,6 +119,8 @@ export default class AddressesRenderer {
   _cleanAddresses() {
     $(createOrderMap.deliveryAddressDetails).empty();
     $(createOrderMap.deliveryAddressSelect).empty();
+    $(createOrderMap.invoiceAddressDetails).empty();
+    $(createOrderMap.invoiceAddressSelect).empty();
     $(createOrderMap.addressesWarning).empty();
   }
 
