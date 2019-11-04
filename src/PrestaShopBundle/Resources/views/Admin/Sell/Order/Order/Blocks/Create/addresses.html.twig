@@ -28,7 +28,7 @@
     {{ 'Addresses'|trans({}, 'Admin.Global') }}
   </h3>
   <div class="card-body">
-    <div class="row" id="addresses-warning">
+    <div class="row d-none" id="addresses-warning">
       <div class="col">
         <div class="alert alert-warning">
           <div class="alert-text">
@@ -37,7 +37,7 @@
         </div>
       </div>
     </div>
-    <div class="row" id="addresses-content">
+    <div class="row d-none" id="addresses-content">
       <div class="col">
         <span>{{ 'Delivery'|trans({}, 'Admin.Global') }}</span>
         <select class="form-control js-address-select" id="delivery-address-select"></select>
@@ -71,11 +71,3 @@
     </div>
   </div>
 </div>
-<script type="text/template" id="js-disabled-address-warn">
-  <div class="alert alert-danger">
-    <div class="alert-text">
-      {#@todo translate#}
-      This address country is not active
-    </div>
-  </div>
-</script>
