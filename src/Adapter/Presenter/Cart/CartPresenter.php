@@ -580,7 +580,7 @@ class CartPresenter implements PresenterInterface
             // when a voucher has only a shipping reduction, the value displayed must be "Free Shipping"
             if ($freeShippingOnly) {
                 $cartVoucher['reduction_formatted'] = $this->translator->trans(
-                    'Free Shipping',
+                    'Free shipping',
                     [],
                     'Admin.Orderscustomers.Feature'
                 );
