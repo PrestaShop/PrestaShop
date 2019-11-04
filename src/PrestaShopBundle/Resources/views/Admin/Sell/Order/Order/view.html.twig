@@ -30,6 +30,18 @@
 
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
+{% set layoutTitle %}
+  {{ 'Order'|trans({}, 'Admin.Global') }} #{{ orderForViewing.id }} {{ orderForViewing.reference }}
+
+  {{ 'from'|trans({}, 'Admin.Global') }}
+
+  {{ orderForViewing.customer.firstName }}
+  {{ orderForViewing.customer.lastName }}
+{% endset %}
+
+{% block page_header_toolbar %}
+  {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/header.html.twig' %}
+{% endblock %}
 
 {% block content %}
   <div id="order-view-page">

@@ -14,6 +14,11 @@
       display: none;
     }
 
+    a {
+      text-decoration: none;
+      color: #000000;
+    }
+
     .left-column,
     .right-column {
       flex: 0 0 100%;

@@ -171,14 +171,14 @@
     </div>
     <div class="mt-2 info-block">
       <div class="row">
+        {% set isPrivateNoteOpen = not orderForViewing.customer.privateNote is empty %}
+
         <div class="col-md-6">
-          <h3 class="mb-0">
+          <h3 class="mb-0 {{ not isPrivateNoteOpen ? 'd-print-none': '' }}">
             {{ 'Private note'|trans({}, 'Admin.Orderscustomers.Feature') }}
           </h3>
         </div>
-        <div class="col-md-6 text-right">
-          {% set isPrivateNoteOpen = not orderForViewing.customer.privateNote is empty %}
-
+        <div class="col-md-6 text-right d-print-none">
           <a href="#"
              class="float-right tooltip-link js-private-note-toggle-btn {% if isPrivateNoteOpen %}is-opened{% endif %}"
           >
