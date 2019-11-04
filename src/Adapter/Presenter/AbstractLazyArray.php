@@ -266,7 +266,7 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
             } elseif ($this->arrayAccessList[$index]['type'] === 'callable') {
                 if (!isset($this->methodCacheResults[$index])) {
                     $callable = $this->arrayAccessList[$index]['value'];
-                    $this->methodCacheResults[$index] = call_user_func($callable[0], $callable[1] ?: null);
+                    $this->methodCacheResults[$index] = call_user_func($callable[0], $callable[1] ?? null);
                 }
                 $result = $this->methodCacheResults[$index];
             } else { // if the index is associated with a value, just return the value
