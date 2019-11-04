@@ -103,10 +103,9 @@
       </div>
     </div>
 
-
     {{ ps.form_group_row(orderMessageForm.is_displayed_to_customer, {'material_design': true}) }}
 
-    {{ ps.form_group_row(orderMessageForm.message, {}, {
+    {{ ps.form_group_row(orderMessageForm.message, {'attr': { 'cols':30, 'rows':3 }}, {
       'label': 'Message'|trans({}, 'Admin.Global'),
       'label_on_top': true
     }) }}
