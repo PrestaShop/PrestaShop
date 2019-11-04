@@ -335,7 +335,7 @@ export default class CreateOrderPage {
    * There is a case when options list cannot contain cart addresses 'selected' values
    *  because those are outdated in db (e.g. deleted after cart creation or country is disabled)
    *
-   * @param addresses
+   * @param {Array} addresses
    *
    * @returns {boolean}
    *
