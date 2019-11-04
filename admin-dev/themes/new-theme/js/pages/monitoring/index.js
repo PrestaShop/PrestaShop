@@ -38,6 +38,8 @@ import FiltersSubmitButtonEnablerExtension
 import ReloadListActionExtension from '../../components/grid/extension/reload-list-extension';
 import ExportToSqlManagerExtension
   from '../../components/grid/extension/export-to-sql-manager-extension';
+import ShowcaseCard from '../../components/showcase-card/showcase-card';
+import ShowcaseCardCloseExtension from '../../components/showcase-card/extension/showcase-card-close-extension';
 
 const $ = window.$;
 
@@ -70,4 +72,7 @@ $(() => {
     grid.addExtension(new LinkRowActionExtension());
     grid.addExtension(new FiltersSubmitButtonEnablerExtension());
   });
+
+  const showcaseCard = new ShowcaseCard('monitoringShowcaseCard');
+  showcaseCard.addExtension(new ShowcaseCardCloseExtension());
 });
