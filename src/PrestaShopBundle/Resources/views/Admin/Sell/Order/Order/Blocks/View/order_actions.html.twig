@@ -59,6 +59,15 @@
     </form>
   {% endif %}
 
+  <form class="form-inline d-inline-block form-horizontal ml-2">
+    <div class="input-group">
+      <button type="button" class="btn btn-action js-print-order-view-page">
+        <i class="material-icons">print</i>
+        {{ 'Print order'|trans({}, 'Admin.Orderscustomers.Feature') }}
+      </button>
+    </div>
+  </form>
+
   {% if orderForViewing.documents.canGenerateDeliverySlip %}
     <form class="form-inline d-inline-block form-horizontal ml-2">
       <div class="input-group">

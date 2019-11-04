@@ -54,4 +54,5 @@ export default {
   allMessagesModal: '#view_all_messages_modal',
   allMessagesList: '#all-messages-list',
   openAllMessagesBtn: '.js-open-all-messages-btn',
+  printOrderViewPageButton: '.js-print-order-view-page',
 };

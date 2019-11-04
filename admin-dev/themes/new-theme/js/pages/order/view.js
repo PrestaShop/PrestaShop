@@ -52,6 +52,10 @@ $(() => {
     togglePrivateNoteBlock();
   });
 
+  $(OrderViewPageMap.printOrderViewPageButton).on('click', () => {
+    window.print();
+  });
+
   initAddCartRuleFormHandler();
   initAddProductFormHandler();
 
