@@ -96,7 +96,6 @@ export default {
   addressSelect: '.js-address-select',
   addressesContent: '#addresses-content',
   addressesWarning: '#addresses-warning',
-  disabledAddressWarningTemplate: '#js-disabled-address-warn',
 
   // selectors related to summary block
   summaryBlock: '#summary-block',
