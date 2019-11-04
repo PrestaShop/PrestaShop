@@ -93,6 +93,7 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
         $language = new Language($cart->id_lang);
 
         $legacySummary = $cart->getSummaryDetails(null, true);
+        $addresses = $this->getAddresses($cart);
 
         return new CartInformation(
             $cart->id,
@@ -100,9 +101,9 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
             (int) $currency->id,
             (int) $language->id,
             $this->extractCartRulesFromLegacySummary($legacySummary, $currency),
-            $this->getAddresses($cart),
+            $addresses,
             $this->extractSummaryFromLegacySummary($legacySummary, $currency),
-            $this->extractShippingFromLegacySummary($cart, $legacySummary)
+            $addresses ? $this->extractShippingFromLegacySummary($cart, $legacySummary) : null
         );
     }
 
