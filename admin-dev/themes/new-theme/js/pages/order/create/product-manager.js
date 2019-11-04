@@ -37,8 +37,8 @@ const $ = window.$;
  */
 export default class ProductManager {
   constructor() {
-    this.products = {};
-    this.selectedProductId = null;
+    this.products = [];
+    this.selectedProduct = null;
     this.selectedCombinationId = null;
     this.activeSearchRequest = null;
 
@@ -167,7 +167,7 @@ export default class ProductManager {
     this._unsetProduct();
 
     if (this.products.length !== 0) {
-      this._selectProduct(Object.keys(this.products)[0]);
+      this._selectProduct(this.products[0].product_id);
     }
   }
 
@@ -176,22 +176,24 @@ export default class ProductManager {
    *
    * @private
    *
-   * @param productId
+   * @param {Number} productId
    */
   _selectProduct(productId) {
     this._unsetCombination();
 
-    this.selectedProductId = productId;
-    const product = this.products[productId];
-
-    this.productRenderer.renderProductMetadata(product);
-
-    // if product has combinations select the first else leave it null
-    if (product.combinations.length !== 0) {
-      this._selectCombination(Object.keys(product.combinations)[0]);
+    for (const key in this.products) {
+      if (this.products[key].product_id === productId) {
+        this.selectedProduct = this.products[key];
+      }
     }
 
-    return product;
+    this.productRenderer.renderProductMetadata(this.selectedProduct);
+    // if product has combinations select the first else leave it null
+    if (this.selectedProduct.combinations.length !== 0) {
+      this._selectCombination(Object.keys(this.selectedProduct.combinations)[0]);
+    }
+
+    return this.selectedProduct;
   }
 
   /**
@@ -202,7 +204,7 @@ export default class ProductManager {
    * @private
    */
   _selectCombination(combinationId) {
-    const combination = this.products[this.selectedProductId].combinations[combinationId];
+    const combination = this.selectedProduct.combinations[combinationId];
 
     this.selectedCombinationId = combinationId;
     this.productRenderer.renderStock(combination.stock);
@@ -220,12 +222,12 @@ export default class ProductManager {
   }
 
   /**
-   * Sets the selected product id to null
+   * Sets the selected product to null
    *
    * @private
    */
   _unsetProduct() {
-    this.selectedProductId = null;
+    this.selectedProduct = null;
   }
 
   /**
@@ -237,7 +239,7 @@ export default class ProductManager {
   _getProductData() {
     const formData = new FormData();
 
-    formData.append('productId', this.selectedProductId);
+    formData.append('productId', this.selectedProduct.product_id);
     formData.append('quantity', $(createOrderMap.quantityInput).val());
     formData.append('combinationId', this.selectedCombinationId);
 

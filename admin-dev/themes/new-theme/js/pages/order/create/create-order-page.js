@@ -127,6 +127,9 @@ export default class CreateOrderPage {
     EventEmitter.on(eventMap.cartLoaded, (cartInfo) => {
       this.cartId = cartInfo.cartId;
       this._renderCartInfo(cartInfo);
+      if (cartInfo.addresses.length !== 0 && !this._validateSelectedAddresses(cartInfo.addresses)) {
+        this._changeCartAddresses();
+      }
       this.customerManager.loadCustomerCarts(this.cartId);
       this.customerManager.loadCustomerOrders();
     });
@@ -141,7 +144,7 @@ export default class CreateOrderPage {
     EventEmitter.on(eventMap.cartAddressesChanged, (cartInfo) => {
       this.addressesRenderer.render(cartInfo.addresses);
       this.shippingRenderer.render(cartInfo.shipping, cartInfo.products.length === 0);
-      this.summaryRenderer.render(cartInfo);
+      this.summaryRenderer.render(cartInfo, this._validateSelectedAddresses(cartInfo.addresses));
     });
   }
 
@@ -153,7 +156,7 @@ export default class CreateOrderPage {
   _onDeliveryOptionChanged() {
     EventEmitter.on(eventMap.cartDeliveryOptionChanged, (cartInfo) => {
       this.shippingRenderer.render(cartInfo.shipping, cartInfo.products.length === 0);
-      this.summaryRenderer.render(cartInfo);
+      this.summaryRenderer.render(cartInfo, this._validateSelectedAddresses(cartInfo.addresses));
     });
   }
 
@@ -166,7 +169,7 @@ export default class CreateOrderPage {
     EventEmitter.on(eventMap.cartFreeShippingSet, (cartInfo) => {
       this.cartRulesRenderer.renderCartRulesBlock(cartInfo.cartRules, cartInfo.products.length === 0);
       this.shippingRenderer.render(cartInfo.shipping, cartInfo.products.length === 0);
-      this.summaryRenderer.render(cartInfo);
+      this.summaryRenderer.render(cartInfo, this._validateSelectedAddresses(cartInfo.addresses));
     });
   }
 
@@ -320,11 +323,41 @@ export default class CreateOrderPage {
     this.cartRulesRenderer.renderCartRulesBlock(cartInfo.cartRules, cartInfo.products.length === 0);
     this.shippingRenderer.render(cartInfo.shipping, cartInfo.products.length === 0);
     this.productRenderer.renderList(cartInfo.products);
-    this.summaryRenderer.render(cartInfo);
+    this.summaryRenderer.render(cartInfo, this._validateSelectedAddresses(cartInfo.addresses));
     this._preselectCartCurrency(cartInfo.currencyId);
     this._preselectCartLanguage(cartInfo.langId);
 
     $(createOrderMap.cartBlock).removeClass('d-none');
+  }
+
+  /**
+   * Checks if correct addresses are selected.
+   * There is a case when options list cannot contain cart addresses 'selected' values
+   *  because those are outdated in db (e.g. deleted after cart creation or country is disabled)
+   *
+   * @param {Array} addresses
+   *
+   * @returns {boolean}
+   *
+   * @private
+   */
+  _validateSelectedAddresses(addresses) {
+    let deliveryValid = false;
+    let invoiceValid = false;
+
+    for (const key in addresses) {
+      const address = addresses[key];
+
+      if (address.delivery) {
+        deliveryValid = true;
+      }
+
+      if (address.invoice) {
+        invoiceValid = true;
+      }
+    }
+
+    return deliveryValid && invoiceValid;
   }
 
   /**
