@@ -121,6 +121,7 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
             $addressId = (int) $data['id_address'];
             $countryIsEnabled = (bool) Address::isCountryActiveById($addressId);
 
+            // filter out disabled countries
             if (!$countryIsEnabled) {
                 continue;
             }
