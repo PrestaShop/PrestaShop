@@ -31,8 +31,6 @@ use BoOrderCore;
 use Cart;
 use Configuration;
 use Context;
-use Currency;
-use Customer;
 use Employee;
 use Exception;
 use Module;
@@ -61,9 +59,7 @@ final class AddOrderFromBackOfficeHandler implements AddOrderFromBackOfficeHandl
 
         $cart = new Cart($command->getCartId()->getValue());
 
-        Context::getContext()->currency = new Currency((int) $cart->id_currency);
-        Context::getContext()->customer = new Customer((int) $cart->id_customer);
-
+        $this->assertAddressesAreNotDeleted($cart);
         $this->assertAddressesAreNotDisabled($cart);
 
         $translator = Context::getContext()->getTranslator();
@@ -112,6 +108,31 @@ final class AddOrderFromBackOfficeHandler implements AddOrderFromBackOfficeHandl
 
         if ($isInvoiceCountryDisabled) {
             throw new OrderException(sprintf('Invoice country for cart with id "%d" is disabled.', $cart->id));
+        }
+    }
+
+    /**
+     * @param Cart $cart
+     *
+     * @throws OrderException
+     */
+    private function assertAddressesAreNotDeleted(Cart $cart)
+    {
+        $invoiceAddress = new Address($cart->id_address_invoice);
+        $deliveryAddress = new Address($cart->id_address_delivery);
+
+        if ($invoiceAddress->deleted) {
+            throw new OrderException(sprintf(
+                'The invoice address with id "%s" cannot be used, because it is deleted',
+                $invoiceAddress->id
+            ));
+        }
+
+        if ($deliveryAddress->deleted) {
+            throw new OrderException(sprintf(
+                'The delivery address with id "%s" cannot be used, because it is deleted',
+                $deliveryAddress->id
+            ));
         }
     }
 }
