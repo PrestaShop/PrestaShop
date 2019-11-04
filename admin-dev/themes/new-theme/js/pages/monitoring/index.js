@@ -38,10 +38,6 @@ import FiltersSubmitButtonEnablerExtension
 import ReloadListActionExtension from '../../components/grid/extension/reload-list-extension';
 import ExportToSqlManagerExtension
   from '../../components/grid/extension/export-to-sql-manager-extension';
-import ColumnTogglingExtension from '../../components/grid/extension/column-toggling-extension';
-import SubmitBulkExtension from '../../components/grid/extension/submit-bulk-action-extension';
-import BulkActionCheckboxExtension
-  from '../../components/grid/extension/bulk-action-checkbox-extension';
 
 const $ = window.$;
 
@@ -69,12 +65,9 @@ $(() => {
 
     grid.addExtension(new ExportToSqlManagerExtension());
     grid.addExtension(new ReloadListActionExtension());
-    grid.addExtension(new SortingExtension());
     grid.addExtension(new FiltersResetExtension());
     grid.addExtension(new AsyncToggleColumnExtension());
-    grid.addExtension(new SubmitRowActionExtension());
-    grid.addExtension(new SubmitBulkExtension());
-    grid.addExtension(new BulkActionCheckboxExtension());
+    grid.addExtension(new LinkRowActionExtension());
     grid.addExtension(new FiltersSubmitButtonEnablerExtension());
   });
 });
