@@ -31,9 +31,9 @@ use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepositoryInterface;
 use PrestaShopBundle\Service\TranslationService;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\PropertyAccess\PropertyAccess;
+use Symfony\Component\Translation\TranslatorInterface;
 use Module;
 use Exception;
-use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class TranslationRouteFinder finds the correct route for translations.
@@ -214,6 +214,7 @@ class TranslationRouteFinder
     private function isModuleUsingNewTranslationSystem($moduleName)
     {
         $module = $this->moduleRepository->getInstanceByName($moduleName);
+        
         if (!($module instanceof Module)) {
             throw new Exception($this->translator->trans('Invalid module : %s', array($moduleName), 'Admin.International.Notification'));
         }
