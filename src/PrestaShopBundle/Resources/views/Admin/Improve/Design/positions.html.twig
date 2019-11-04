@@ -87,7 +87,7 @@
               <a name="{{ hook['name'] }}"></a>
               <header class="hook-panel-header">
                 <span class="hook-name">{{ hook['name'] }}</span>
-                <label class="badge badge-primary badge-pill float-right">
+                <label class="badge badge-pill float-right">
                   {% if hook['modules_count'] and canMove %}
                     <input type="checkbox" class="hook-checker" id="Ghook{{ hook['id_hook'] }}" data-hook-id="{{ hook['id_hook'] }}" />
                     <label class="selectbox" for="Ghook{{ hook['id_hook'] }}"><i class="material-icons done">done</i></label>
@@ -152,7 +152,7 @@
                               {% set linkParams = linkParams|merge({'show_modules': selectedModule}) %}
                             {% endif %}
 
-                            <a class="btn tooltip-link" href="{{ getAdminLink('AdminModulesPositions', true, linkParams) }}" aria-label="{{ 'Edit' | trans({}, 'Admin.Actions') }}">
+                            <a class="btn tooltip-link" href="{{ getAdminLink('AdminModulesPositions', true, linkParams) }}" aria-label="{{ 'Edit' | trans({}, 'Admin.Actions') }}" title="{{ 'Edit' | trans({}, 'Admin.Actions') }}">
                               <i class="material-icons">edit</i>
                             </a>
 
