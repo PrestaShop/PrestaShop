@@ -1008,9 +1008,6 @@
     <state id="IN-HP" id_country="IN" id_zone="Asia" iso_code="HP" tax_behavior="0" active="1">
       <name>Himachal Pradesh</name>
     </state>
-    <state id="IN-JK" id_country="IN" id_zone="Asia" iso_code="JK" tax_behavior="0" active="1">
-      <name>Jammu and Kashmir</name>
-    </state>
     <state id="IN-JH" id_country="IN" id_zone="Asia" iso_code="JH" tax_behavior="0" active="1">
       <name>Jharkhand</name>
     </state>
