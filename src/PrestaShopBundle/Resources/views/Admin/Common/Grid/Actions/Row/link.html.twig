@@ -33,7 +33,7 @@
   {% set extra_route_params = action.options.extra_route_params %}
 
   {% for name, field in extra_route_params %}
-    {% set route_params = route_params|merge({ (name) : (record[field]) }) %}
+    {% set route_params = route_params|merge({ (name) : (record[field] ?? field) }) %}
   {% endfor %}
 
 <a class="{{ class }}"
