@@ -32,33 +32,35 @@
 
 
 {% block content %}
-  <div class="row">
-    <div class="col-md-12">
-      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/order_actions.html.twig' %}
+  <div id="order-view-page">
+    <div class="row">
+      <div class="col-md-12 d-print-none">
+        {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/order_actions.html.twig' %}
+      </div>
     </div>
+
+    <div class="row">
+      <div class="col-md-4 left-column">
+        {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/customer.html.twig' %}
+
+        {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/messages.html.twig' %}
+      </div>
+
+      <div class="col-md-8 right-column">
+        {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/products.html.twig' %}
+
+        {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/details.html.twig' %}
+
+        {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/payments.html.twig' %}
+      </div>
+    </div>
+
+    {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/Modal/add_order_discount_modal.html.twig' %}
+    {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/Modal/add_product_modal.html.twig' %}
+    {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/Modal/update_product_modal.html.twig' %}
+    {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/Modal/update_shipping_modal.html.twig' %}
+    {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/Modal/view_all_messages_modal.html.twig' %}
   </div>
-
-  <div class="row">
-    <div class="col-md-4">
-      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/customer.html.twig' %}
-
-      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/messages.html.twig' %}
-    </div>
-
-    <div class="col-md-8">
-      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/products.html.twig' %}
-
-      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/details.html.twig' %}
-
-      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/payments.html.twig' %}
-    </div>
-  </div>
-
-  {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/Modal/add_order_discount_modal.html.twig' %}
-  {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/Modal/add_product_modal.html.twig' %}
-  {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/Modal/update_product_modal.html.twig' %}
-  {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/Modal/update_shipping_modal.html.twig' %}
-  {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/Modal/view_all_messages_modal.html.twig' %}
 {% endblock %}
 
 {% block javascripts %}

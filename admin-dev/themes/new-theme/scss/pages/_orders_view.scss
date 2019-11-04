@@ -1,0 +1,28 @@
+#order-view-page {
+  @media not print {
+    .card--details {
+      border: none;
+      box-shadow: none;
+      .card-body {
+        padding: 0;
+      }
+    }
+  }
+
+  @media print {
+    .left-column,
+    .right-column {
+      flex: 0 0 100%;
+      max-width: 100%;
+      width: 100%;
+    }
+
+    .tab-content {
+      padding: 0;
+      background-color: inherit;
+      .tab-pane {
+        opacity: 1;
+      }
+    }
+  }
+}
