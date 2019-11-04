@@ -92,7 +92,7 @@ class ProductPresenter
             $this->translator
         );
 
-        Hook::exec('presentProduct', array('product' => $product, 'productLazyArray' => &$productLazyArray));
+        Hook::exec('actionPresentProduct', array('product' => $product, 'productLazyArray' => &$productLazyArray));
 
         return $productLazyArray;
     }

@@ -479,7 +479,7 @@ class CartPresenter implements PresenterInterface
                 '',
         );
 
-        Hook::exec('presentCart', array('cart' => $cart, 'presentedCart' => &$presentedCart));
+        Hook::exec('actionPresentCart', array('cart' => $cart, 'presentedCart' => &$presentedCart));
 
         return $presentedItems;
     }
