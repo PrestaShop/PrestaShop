@@ -582,7 +582,7 @@ class CartPresenter implements PresenterInterface
                 $cartVoucher['reduction_formatted'] = $this->translator->trans(
                     'Free shipping',
                     [],
-                    'Admin.Orderscustomers.Feature'
+                    'Admin.Shipping.Feature'
                 );
             } else {
                 // In all other cases, the value displayed should be the total of applied reductions for the current voucher
