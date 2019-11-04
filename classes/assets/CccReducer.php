@@ -65,7 +65,7 @@ class CccReducerCore
         }
         if (Tools::hasMediaServer()) {
             $relativePath = _THEMES_DIR_ . _THEME_NAME_ . '/assets/cache/' . $cccFilename;
-            $destinationPath = $destinationUri = Tools::getCurrentUrlProtocolPrefix() . Tools::getMediaServer($relativePath) . $relativePath;
+            $destinationUri = Tools::getCurrentUrlProtocolPrefix() . Tools::getMediaServer($relativePath) . $relativePath;
         }
 
         $cssFileList['external']['theme-ccc'] = [
@@ -107,7 +107,7 @@ class CccReducerCore
             }
             if (Tools::hasMediaServer()) {
                 $relativePath = _THEMES_DIR_ . _THEME_NAME_ . '/assets/cache/' . $cccFilename;
-                $destinationPath = $destinationUri = Tools::getCurrentUrlProtocolPrefix() . Tools::getMediaServer($relativePath) . $relativePath;
+                $destinationUri = Tools::getCurrentUrlProtocolPrefix() . Tools::getMediaServer($relativePath) . $relativePath;
             }
 
             $cccItem = [];
