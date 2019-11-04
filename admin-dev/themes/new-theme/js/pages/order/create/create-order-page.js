@@ -323,7 +323,7 @@ export default class CreateOrderPage {
     this.cartRulesRenderer.renderCartRulesBlock(cartInfo.cartRules, cartInfo.products.length === 0);
     this.shippingRenderer.render(cartInfo.shipping, cartInfo.products.length === 0);
     this.productRenderer.renderList(cartInfo.products);
-    this.summaryRenderer.render(cartInfo, this._validateAddresses(cartInfo.addresses));
+    this.summaryRenderer.render(cartInfo, this._validateSelectedAddresses(cartInfo.addresses));
     this._preselectCartCurrency(cartInfo.currencyId);
     this._preselectCartLanguage(cartInfo.langId);
 
