@@ -26,6 +26,14 @@
 {% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
 
 {% block content %}
+  {% block monitoring_showcase_card %}
+    <div class="row">
+      <div class="col">
+        {% include '@PrestaShop/Admin/Sell/Catalog/Monitoring/Blocks/showcase_card.html.twig' %}
+      </div>
+    </div>
+  {% endblock %}
+
   {% block empty_categories_listing %}
     <div class="row">
       <div class="col">
