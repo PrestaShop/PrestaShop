@@ -29,7 +29,7 @@
     <div class="row">
       <div class="col-md-6">
         <h3 class="card-header-title">
-          {{ 'Messages'|trans({}, 'Admin.Global') }} ({{ orderForViewing.messages.getTotalMessages }})
+          {{ 'Messages'|trans({}, 'Admin.Global') }} ({{ orderForViewing.messages.messages|length }})
         </h3>
       </div>
       <div class="col-md-6 text-right">
@@ -37,6 +37,7 @@
           href="#"
           data-toggle="modal"
           data-target="#viewAllMessagesModal"
+          class="d-print-none"
         >
           {{ 'View full conversation'|trans({}, 'Admin.Orderscustomers.Feature') }}
         </a>
