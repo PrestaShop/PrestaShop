@@ -74,7 +74,7 @@ class TranslationRouteFinder
      * @var ModuleRepositoryInterface
      */
     private $moduleRepository;
-    
+
     /**
      * @var TranslatorInterface
      */
@@ -214,7 +214,7 @@ class TranslationRouteFinder
     private function isModuleUsingNewTranslationSystem($moduleName)
     {
         $module = $this->moduleRepository->getInstanceByName($moduleName);
-        
+
         if (!($module instanceof Module)) {
             throw new Exception($this->translator->trans('Invalid module : %s', array($moduleName), 'Admin.International.Notification'));
         }
