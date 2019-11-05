@@ -628,14 +628,6 @@ class CartPresenter implements PresenterInterface
         return isset($cartVoucher['reduction_percent'])
             && $cartVoucher['reduction_percent'] > 0
             && $cartVoucher['reduction_amount'] == '0.00';
-            isset($cartVoucher['reduction_percent'])
-            && $cartVoucher['reduction_percent'] > 0
-            && $cartVoucher['reduction_amount'] == '0.00'
-        ) {
-            return true;
-        }
-
-        return false;
     }
 
     /**
