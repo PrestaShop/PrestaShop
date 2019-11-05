@@ -78,7 +78,7 @@ class CustomerController extends AbstractAdminController
      * Show customers listing.
      *
      * @AdminSecurity(
-     *     "is_granted('read', request.get('_legacy_controller'))",
+     *     "is_granted('read', request.get('_legacy_controller'))zz",
      *     redirectRoute="admin_customers_index",
      *     message="You do not have permission to view this."
      * )
@@ -394,7 +394,7 @@ class CustomerController extends AbstractAdminController
     /**
      * Search for customers by query.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
      *
      * @param Request $request
      *
@@ -738,8 +738,7 @@ class CustomerController extends AbstractAdminController
     }
 
     /**
-     * @todo: check access for order create page as its used there (customer OR order access)
-     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
      *
      * @param int $customerId
      *
@@ -762,8 +761,7 @@ class CustomerController extends AbstractAdminController
     }
 
     /**
-     * @todo: check access for order create page as its used there (customer OR order access)
-     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
      *
      * @param int $customerId
      *
