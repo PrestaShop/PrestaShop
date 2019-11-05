@@ -28,6 +28,8 @@ namespace PrestaShop\PrestaShop\Adapter\Cart\CommandHandler;
 
 use Attribute;
 use Cart;
+use Context;
+use Customer;
 use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductQuantityInCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\UpdateProductQuantityInCartHandlerInterface;
@@ -50,6 +52,10 @@ final class UpdateProductQuantityInCartHandler extends AbstractCartHandler imple
     public function handle(UpdateProductQuantityInCartCommand $command)
     {
         $cart = $this->getCart($command->getCartId());
+
+        // $cart::updateQty needs customer context
+        $customer = new Customer($cart->id_customer);
+        Context::getContext()->customer = $customer;
 
         $this->assertOrderDoesNotExistForCart($cart);
 
