@@ -107,7 +107,7 @@ final class CurrencyCommandValidator
     {
         $currency = $this->currencyDataProvider->getCurrencyByIsoCode($isoCode);
 
-        if (null !== $currency) {
+        if (null !== $currency && !$currency->deleted) {
             throw new CurrencyConstraintException(
                 sprintf(
                     'Currency with iso code "%s" already exists and cannot be created',

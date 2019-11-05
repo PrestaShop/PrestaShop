@@ -69,6 +69,9 @@ class LanguageFeatureContext extends AbstractPrestaShopFeatureContext
             $language->language_code = strtolower($locale);
             $language->iso_code = substr($locale, 0, strpos($locale, '-'));
             $language->add();
+            // We need to reset the static cache, or it messes with multilang fields (because the
+            // cache doesn't contain all the expected languages)
+            Language::resetCache();
         } else {
             $language = new Language($languageId);
         }
