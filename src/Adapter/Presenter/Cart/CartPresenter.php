@@ -615,7 +615,7 @@ class CartPresenter implements PresenterInterface
      */
     private function cartVoucherHasFreeShipping($cartVoucher)
     {
-        return isset($cartVoucher['free_shipping']) && $cartVoucher['free_shipping'];
+        return !empty($cartVoucher['free_shipping']);
     }
 
     /**
