@@ -164,7 +164,7 @@ class CartController extends FrameworkBundleAdminController
     /**
      * Gets requested cart information
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
      *
      * @param int $cartId
      *
@@ -187,7 +187,7 @@ class CartController extends FrameworkBundleAdminController
     /**
      * Creates empty cart
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
      *
      * @param Request $request
      *
@@ -256,7 +256,7 @@ class CartController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
      *
      * @param int $cartId
      * @param Request $request
@@ -287,7 +287,7 @@ class CartController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
      *
      * @param int $cartId
      * @param Request $request
@@ -312,7 +312,7 @@ class CartController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
      *
      * @param int $cartId
      * @param Request $request
@@ -337,7 +337,7 @@ class CartController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
      *
      * @param Request $request
      * @param int $cartId
@@ -390,7 +390,7 @@ class CartController extends FrameworkBundleAdminController
     /**
      * Adds cart rule to cart
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
      *
      * @param Request $request
      * @param int $cartId
@@ -415,7 +415,7 @@ class CartController extends FrameworkBundleAdminController
     /**
      * Deletes cart rule from cart
      *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
      *
      * @param int $cartId
      * @param int $cartRuleId
@@ -439,7 +439,7 @@ class CartController extends FrameworkBundleAdminController
     /**
      * Adds product to cart
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
      *
      * @param Request $request
      * @param int $cartId
@@ -483,7 +483,7 @@ class CartController extends FrameworkBundleAdminController
     /**
      * Deletes product from cart
      *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
      *
      * @param Request $request
      * @param int $cartId
