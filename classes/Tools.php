@@ -2389,7 +2389,7 @@ class ToolsCore
      *
      * @return string
      */
-    public static function getMediaServer($filename)
+    public static function getMediaServer(string $filename): string
     {
         if (self::hasMediaServer() && ($id_media_server = (abs(crc32($filename)) % self::$_cache_nb_media_servers + 1))) {
             return constant('_MEDIA_SERVER_' . $id_media_server . '_');

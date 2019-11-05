@@ -55,7 +55,7 @@ abstract class AbstractAssetManagerCore
      *
      * @return bool|string
      */
-    public function getFullPath($relativePath)
+    public function getFullPath(string $relativePath)
     {
         foreach ($this->getDirectories() as $baseDir) {
             $fullPath = $baseDir . ltrim($relativePath, '/'); // not DIRECTORY_SEPARATOR because, it's path included manually
