@@ -62,7 +62,7 @@ class HookCore extends ObjectModel
         'table' => 'hook',
         'primary' => 'id_hook',
         'fields' => array(
-            'name' => array('type' => self::TYPE_STRING, 'validate' => 'isHookName', 'required' => true, 'size' => 255),
+            'name' => array('type' => self::TYPE_STRING, 'validate' => 'isHookName', 'required' => true, 'size' => 191),
             'title' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName'),
             'description' => array('type' => self::TYPE_HTML, 'validate' => 'isCleanHtml'),
             'position' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),

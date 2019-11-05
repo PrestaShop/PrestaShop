@@ -20,7 +20,7 @@ DELETE FROM `PREFIX_configuration` WHERE name = 'PS_PRICE_DISPLAY_PRECISION';
 ALTER TABLE `PREFIX_employee` MODIFY COLUMN `optin` tinyint(1) unsigned DEFAULT NULL;
 
 /* Increase column size */
-ALTER TABLE `PREFIX_hook` CHANGE `name` `name` VARCHAR(255) NOT NULL;
+ALTER TABLE `PREFIX_hook` CHANGE `name` `name` VARCHAR(191) NOT NULL;
 ALTER TABLE `PREFIX_hook` CHANGE `title` `title` VARCHAR(255) NOT NULL;
-ALTER TABLE `PREFIX_hook_alias` CHANGE `name` `name` VARCHAR(255) NOT NULL;
-ALTER TABLE `PREFIX_hook_alias` CHANGE `alias` `alias` VARCHAR(255) NOT NULL;
+ALTER TABLE `PREFIX_hook_alias` CHANGE `name` `name` VARCHAR(191) NOT NULL;
+ALTER TABLE `PREFIX_hook_alias` CHANGE `alias` `alias` VARCHAR(191) NOT NULL;

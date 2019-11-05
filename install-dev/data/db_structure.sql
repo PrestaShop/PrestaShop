@@ -979,7 +979,7 @@ CREATE TABLE `PREFIX_guest` (
 /* Store hook description */
 CREATE TABLE `PREFIX_hook` (
   `id_hook` int(10) unsigned NOT NULL auto_increment,
-  `name` varchar(255) NOT NULL,
+  `name` varchar(191) NOT NULL,
   `title` varchar(255) NOT NULL,
   `description` text,
   `position` tinyint(1) NOT NULL DEFAULT '1',
@@ -990,8 +990,8 @@ CREATE TABLE `PREFIX_hook` (
 /* Hook alias name */
 CREATE TABLE `PREFIX_hook_alias` (
   `id_hook_alias` int(10) unsigned NOT NULL auto_increment,
-  `alias` varchar(255) NOT NULL,
-  `name` varchar(255) NOT NULL,
+  `alias` varchar(191) NOT NULL,
+  `name` varchar(191) NOT NULL,
   PRIMARY KEY (`id_hook_alias`),
   UNIQUE KEY `alias` (`alias`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
