@@ -99,6 +99,7 @@ services:
     arguments:
       - "@prestashop.core.localization.locale.context_locale"
       - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
+      - '@=service("prestashop.adapter.legacy.context").getContext().link'
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation'

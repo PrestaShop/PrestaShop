@@ -52,6 +52,7 @@ export default class ProductManager {
       search: searchPhrase => this._search(searchPhrase),
       addProductToCart: cartId => this.cartEditor.addProduct(cartId, this._getProductData()),
       removeProductFromCart: (cartId, product) => this.cartEditor.removeProductFromCart(cartId, product),
+      changeProductPrice: (cartId, updatedProduct) => this.cartEditor.changeProductPrice(cartId, updatedProduct),
     };
   }
 
@@ -101,6 +102,17 @@ export default class ProductManager {
   _onRemoveProductFromCart() {
     EventEmitter.on(eventMap.productRemovedFromCart, (cartInfo) => {
       EventEmitter.emit(eventMap.cartLoaded, cartInfo);
+    });
+  }
+
+  /**
+   * Listens for product price change in cart event
+   *
+   * @private
+   */
+  _onProductPriceChange() {
+    EventEmitter.on(eventMap.productPriceChanged, (cartInfo) => {
+      this.productRenderer.renderList(cartInfo.products);
     });
   }
 
@@ -234,43 +246,10 @@ export default class ProductManager {
    * Retrieves product data from product search result block fields
    *
    * @returns {FormData}
+   *
    * @private
    */
   _getProductData() {
-    const formData = new FormData();
-
-    formData.append('productId', this.selectedProduct.product_id);
-    formData.append('quantity', $(createOrderMap.quantityInput).val());
-    formData.append('combinationId', this.selectedCombinationId);
-
-    this._getCustomFieldsData(formData);
-
-    return formData;
-  }
-
-  /**
-   * Resolves product customization fields to be added to formData object
-   *
-   * @param {FormData} formData
-   *
-   * @returns {FormData}
-   *
-   * @private
-   */
-  _getCustomFieldsData(formData) {
-    const $customFields = $(createOrderMap.productCustomInput);
-
-    $customFields.each((key, field) => {
-      const $field = $(field);
-      const name = $field.attr('name');
-
-      if ($field.attr('type') === 'file') {
-        formData.append(name, $field[0].files[0]);
-      } else {
-        formData.append(name, $field.val());
-      }
-    });
-
-    return formData;
+    return new FormData(document.querySelector(createOrderMap.productAddForm));
   }
 }

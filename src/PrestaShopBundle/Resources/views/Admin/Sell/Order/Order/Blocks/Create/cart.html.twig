@@ -51,53 +51,57 @@
     <div class="row">
       <div class="col">
         <div id="product-search-results" class="d-none">
-          <div class="row js-product-select-row">
-            <div class="col-3">
-              <span class="float-right">{{ 'Product'|trans({}, 'Admin.Global') }}</span>
-            </div>
-            <div class="col-4">
-              <select id="product-select" class="form-control" data-customization-label="{{ 'Customization'|trans({}, 'Admin.Catalog.Feature') }}"></select>
-            </div>
-          </div>
+          <form id="js-add-product-form">
 
-          <div class="row mt-3 js-combinations-row d-none">
-            <div class="col-3">
-              <span class="float-right">{{ 'Combination'|trans({}, 'Admin.Global') }}</span>
+            <div class="row js-product-select-row">
+              <div class="col-3">
+                <span class="float-right">{{ 'Product'|trans({}, 'Admin.Global') }}</span>
+              </div>
+              <div class="col-4">
+                <select name="product_id" id="product-select" class="form-control" data-customization-label="{{ 'Customization'|trans({}, 'Admin.Catalog.Feature') }}"></select>
+              </div>
             </div>
-            <div class="col-4">
-              <select id="combination-select" class="form-control"></select>
-            </div>
-          </div>
 
-          {#@todo: max height and verical scroll#}
-          <div class="row mt-3 d-none" id="js-customization-container">
-            <div class="col-3">
-              <span class="float-right">
-                {{ 'Customization'|trans({}, 'Admin.Catalog.Feature') }}
-              </span>
+            <div class="row mt-3 js-combinations-row d-none">
+              <div class="col-3">
+                <span class="float-right">{{ 'Combination'|trans({}, 'Admin.Global') }}</span>
+              </div>
+              <div class="col-4">
+                <select name="combination_id" id="combination-select" class="form-control"></select>
+              </div>
             </div>
-            <div class="col-4" id="js-custom-fields-container"></div>
-          </div>
 
-          <div class="row mt-3 js-quantity-row">
-            <div class="col-3">
-              <span class="float-right">{{ 'Quantity'|trans({}, 'Admin.Global') }}</span>
+            {#@todo: max height and verical scroll#}
+            <div class="row mt-3 d-none" id="js-customization-container">
+              <div class="col-3">
+                <span class="float-right">
+                  {{ 'Customization'|trans({}, 'Admin.Catalog.Feature') }}
+                </span>
+              </div>
+              <div class="col-4" id="js-custom-fields-container"></div>
             </div>
-            <div class="col-2">
-              <input id="quantity-input" type="number" min="1" value="1" class="form-control">
-              <small class="form-text">
-                {{ 'In stock'|trans({}, 'Admin.Orderscustomers.Feature') }}
-                <span  class="js-in-stock-counter"></span>
-              </small>
+
+            <div class="row mt-3 js-quantity-row">
+              <div class="col-3">
+                <span class="float-right">{{ 'Quantity'|trans({}, 'Admin.Global') }}</span>
+              </div>
+              <div class="col-2">
+                <input name="product_quantity" id="quantity-input" type="number" min="1" value="1" class="form-control">
+                <small class="form-text">
+                  {{ 'In stock'|trans({}, 'Admin.Orderscustomers.Feature') }}
+                  <span  class="js-in-stock-counter"></span>
+                </small>
+              </div>
             </div>
-          </div>
-          <div class="row mt-3">
-            <div class="col-1 offset-sm-3">
-              <button id="add-product-to-cart-btn" type="button" class="btn btn-primary">
-                {{ 'Add to cart'|trans({}, 'Admin.Orderscustomers.Feature') }}
-              </button>
+            <div class="row mt-3">
+              <div class="col-1 offset-sm-3">
+                <button id="add-product-to-cart-btn" type="button" class="btn btn-primary">
+                  {{ 'Add to cart'|trans({}, 'Admin.Orderscustomers.Feature') }}
+                </button>
+              </div>
             </div>
-          </div>
+
+          </form>
           <div class="row">
             <div class="col">
               <hr>
@@ -191,7 +195,7 @@
 <script id="products-table-row-template" type="text/template">
   <tr>
     <td><img class="js-product-image" src="" alt=""></td>
-    <td>
+    <td class="js-product-definition-td">
       <p class="mb-0 js-product-name"></p>
       <p class="js-product-attr"></p>
     </td>
@@ -203,4 +207,24 @@
       <button class="btn btn-outline-danger js-product-remove-btn">{{ 'Remove'|trans({}, 'Admin.Actions') }}</button>
     </td>
   </tr>
+</script>
+
+<script type="text/template" id="js-table-product-customized-text-template">
+  <div class="row">
+    <small class="col d-inline">
+      <span class="js-customization-name"></span>
+      <span>: </span>
+      <span class="js-customization-value"></span>
+    </small>
+  </div>
+</script>
+
+<script type="text/template" id="js-table-product-customized-file-template">
+  <div class="row">
+    <small class="col d-inline">
+      <span class="js-customization-name"></span>
+      <span>: </span>
+      <span class="js-customization-value"> <img src="" alt=""></span>
+    </small>
+  </div>
 </script>

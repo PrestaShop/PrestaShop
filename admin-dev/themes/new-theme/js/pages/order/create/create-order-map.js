@@ -27,6 +27,9 @@
  * Encapsulates selectors for "Create order" page
  */
 export default {
+  productCustomizationFieldTypeFile: 0,
+  productCustomizationFieldTypeText: 1,
+
   orderCreationContainer: '#order-creation-container',
 
   // selectors related to customer block
@@ -67,11 +70,6 @@ export default {
   orderTotalField: '.js-order-total-paid',
   orderStatusField: '.js-order-status',
   emptyListRowTemplate: '#js-empty-list-row',
-
-  // selectors related to cart block
-  cartBlock: '#cart-block',
-  cartCurrencySelect: '#js-cart-currency-select',
-  cartLanguageSelect: '#js-cart-language-select',
 
   // selectors related to cartRules block
   cartRulesBlock: '#cart-rules-block',
@@ -115,7 +113,10 @@ export default {
   totalShippingField: '.js-total-shipping',
   freeShippingSwitch: '.js-free-shipping-switch',
 
-  // selectors related to cart products block
+  // selectors related to cart block
+  cartBlock: '#cart-block',
+  cartCurrencySelect: '#js-cart-currency-select',
+  cartLanguageSelect: '#js-cart-language-select',
   productSearch: '#product-search',
   combinationsSelect: '#combination-select',
   productResultBlock: '#product-search-results',
@@ -135,13 +136,20 @@ export default {
   addToCartButton: '#add-product-to-cart-btn',
   productsTable: '#products-table',
   productsTableRowTemplate: '#products-table-row-template',
-  productImageField: '.js-product-image',
-  productNameField: '.js-product-name',
-  productAttrField: '.js-product-attr',
-  productReferenceField: '.js-product-ref',
-  productUnitPriceInput: '.js-product-unit-input',
+  listedProductImageField: '.js-product-image',
+  listedProductNameField: '.js-product-name',
+  listedProductAttrField: '.js-product-attr',
+  listedProductReferenceField: '.js-product-ref',
+  listedProductUnitPriceInput: '.js-product-unit-input',
+  listedProductQtyInput: '.js-product-qty-input',
   productTotalPriceField: '.js-product-total-price',
+  listedProductCustomizedTextTemplate: '#js-table-product-customized-text-template',
+  listedProductCustomizedFileTemplate: '#js-table-product-customized-file-template',
+  listedProductCustomizationName: '.js-customization-name',
+  listedProductCustomizationValue: '.js-customization-value',
+  listedProductDefinition: '.js-product-definition-td',
   productRemoveBtn: '.js-product-remove-btn',
   productTaxWarning: '.js-tax-warning',
   noProductsFoundWarning: '.js-no-products-found',
+  productAddForm: '#js-add-product-form',
 };
