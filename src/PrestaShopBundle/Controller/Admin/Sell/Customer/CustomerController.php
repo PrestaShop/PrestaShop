@@ -80,7 +80,7 @@ class CustomerController extends AbstractAdminController
      * Show customers listing.
      *
      * @AdminSecurity(
-     *     "is_granted('read', request.get('_legacy_controller'))zz",
+     *     "is_granted('read', request.get('_legacy_controller'))",
      *     redirectRoute="admin_customers_index",
      *     message="You do not have permission to view this."
      * )

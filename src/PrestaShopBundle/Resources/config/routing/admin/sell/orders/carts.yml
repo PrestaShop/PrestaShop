@@ -120,6 +120,17 @@ admin_carts_add_product:
     expose: true
   requirements:
     cartId: \d+
+
+admin_carts_edit_product_price:
+  path: /{cartId}/products/{productId}/price
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Cart:editProductPrice
+    _legacy_controller: AdminCarts
+  options:
+    expose: true
+  requirements:
+    cartId: \d+
     productId: \d+
 
 admin_carts_delete_product:
