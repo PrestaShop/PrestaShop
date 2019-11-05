@@ -42,11 +42,6 @@ class CartProduct
     private $attributeId;
 
     /**
-     * @var int
-     */
-    private $customizationId;
-
-    /**
      * @var string
      */
     private $name;
@@ -81,42 +76,9 @@ class CartProduct
     private $imageLink;
 
     /**
-     * CartProduct constructor.
-     *
-     * @param int $productId
-     * @param int $attributeId
-     * @param int $customizationId
-     * @param string $name
-     * @param string $attribute
-     * @param string $reference
-     * @param string $unitPrice
-     * @param int $quantity
-     * @param string $price
-     * @param string $imageLink
+     * @var Customization|null
      */
-    public function __construct(
-        int $productId,
-        int $attributeId,
-        int $customizationId,
-        string $name,
-        string $attribute,
-        string $reference,
-        string $unitPrice,
-        int $quantity,
-        string $price,
-        string $imageLink
-    ) {
-        $this->productId = $productId;
-        $this->attributeId = $attributeId;
-        $this->customizationId = $customizationId;
-        $this->name = $name;
-        $this->attribute = $attribute;
-        $this->reference = $reference;
-        $this->unitPrice = $unitPrice;
-        $this->quantity = $quantity;
-        $this->price = $price;
-        $this->imageLink = $imageLink;
-    }
+    private $customization;
 
     /**
      * @return int
@@ -124,6 +86,44 @@ class CartProduct
     public function getProductId(): int
     {
         return $this->productId;
+    }
+
+    /**
+     * CartProduct constructor.
+     *
+     * @param int $productId
+     * @param int $attributeId
+     * @param string $name
+     * @param string $attribute
+     * @param string $reference
+     * @param string $unitPrice
+     * @param int $quantity
+     * @param string $price
+     * @param string $imageLink
+     * @param Customization|null $customization
+     */
+    public function __construct(
+        int $productId,
+        int $attributeId,
+        string $name,
+        string $attribute,
+        string $reference,
+        string $unitPrice,
+        int $quantity,
+        string $price,
+        string $imageLink,
+        ?Customization $customization
+    ) {
+        $this->productId = $productId;
+        $this->attributeId = $attributeId;
+        $this->name = $name;
+        $this->attribute = $attribute;
+        $this->reference = $reference;
+        $this->unitPrice = $unitPrice;
+        $this->quantity = $quantity;
+        $this->price = $price;
+        $this->imageLink = $imageLink;
+        $this->customization = $customization;
     }
 
     /**
@@ -175,14 +175,6 @@ class CartProduct
     }
 
     /**
-     * @return int
-     */
-    public function getCustomizationId(): int
-    {
-        return $this->customizationId;
-    }
-
-    /**
      * @return string
      */
     public function getName(): string
@@ -196,5 +188,13 @@ class CartProduct
     public function getAttribute(): string
     {
         return $this->attribute;
+    }
+
+    /**
+     * @return Customization|null
+     */
+    public function getCustomization(): ?Customization
+    {
+        return $this->customization;
     }
 }

@@ -47,10 +47,23 @@ export default class ProductRenderer {
     }
 
     const $productsTableRowTemplate = $($(createOrderMap.productsTableRowTemplate).html());
+    const $productCustomizationTemplate = $($(createOrderMap.productCustomizationFieldTemplate).html());
 
     for (const key in products) {
       const product = products[key];
       const $template = $productsTableRowTemplate.clone();
+      let customizationId = 0;
+
+      if (product.customization) {
+        customizationId = product.customization.customizationId;
+        for (const key in product.customization.customizationFieldsData) {
+          const customization =  product.customization.customizationFieldsData[key];
+          const $customizationTemplate = $productCustomizationTemplate.clone();
+
+          $customizationTemplate.text(customization.value);
+          $template.find(createOrderMap.productDefinitionTd).append($customizationTemplate);
+        }
+      }
 
       $template.find(createOrderMap.productImageField).text(product.imageLink);
       $template.find(createOrderMap.productNameField).text(product.name);
@@ -60,7 +73,7 @@ export default class ProductRenderer {
       $template.find(createOrderMap.productTotalPriceField).text(product.price);
       $template.find(createOrderMap.productRemoveBtn).data('product-id', product.productId);
       $template.find(createOrderMap.productRemoveBtn).data('attribute-id', product.attributeId);
-      $template.find(createOrderMap.productRemoveBtn).data('customization-id', product.customizationId);
+      $template.find(createOrderMap.productRemoveBtn).data('customization-id', customizationId);
 
       this.$productsTable.find('tbody').append($template);
     }

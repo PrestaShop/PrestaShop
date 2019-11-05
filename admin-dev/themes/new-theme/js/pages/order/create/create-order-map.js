@@ -141,6 +141,8 @@ export default {
   productReferenceField: '.js-product-ref',
   productUnitPriceInput: '.js-product-unit-input',
   productTotalPriceField: '.js-product-total-price',
+  productCustomizationFieldTemplate: '#js-table-product-customization-template',
+  productDefinitionTd: '.js-product-definition-td',
   productRemoveBtn: '.js-product-remove-btn',
   productTaxWarning: '.js-tax-warning',
   noProductsFoundWarning: '.js-no-products-found',

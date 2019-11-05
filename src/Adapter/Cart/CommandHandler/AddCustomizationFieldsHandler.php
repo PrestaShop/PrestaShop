@@ -81,7 +81,7 @@ final class AddCustomizationFieldsHandler extends AbstractCartHandler implements
                     $customizationId = $cart->addPictureToProduct(
                         $productId,
                         $customizationFieldId,
-                        Product::CUSTOMIZE_TEXTFIELD,
+                        Product::CUSTOMIZE_FILE,
                         $customizations[$customizationFieldId],
                         true
                     );
