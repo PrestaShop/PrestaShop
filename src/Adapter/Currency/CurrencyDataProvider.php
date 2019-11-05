@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Currency;
 
+use Db;
+use DbQuery;
 use Currency;
 use Exception;
 use Language;
@@ -89,7 +91,7 @@ class CurrencyDataProvider implements CurrencyDataProviderInterface
      */
     public function getCurrencyByIsoCode($isoCode, $idLang = null)
     {
-        $currencyId = Currency::getIdByIsoCode($isoCode);
+        $currencyId = $this->getCurrencyIdByIsoCode($isoCode);
         if (!$currencyId) {
             return null;
         }
@@ -102,7 +104,10 @@ class CurrencyDataProvider implements CurrencyDataProviderInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param string $isoCode
+     * @param string $locale
+     *
+     * @return Currency|null
      */
     public function getCurrencyByIsoCodeAndLocale($isoCode, $locale)
     {
@@ -121,7 +126,11 @@ class CurrencyDataProvider implements CurrencyDataProviderInterface
         }
 
         $currency = $this->getCurrencyByIsoCode($isoCode, $idLang);
-        if (null === $currency) {
+        // Currently soft deleted currency are considered "absent", and when you try to reinstall
+        // it a new instance is created This is prone to error, the previously created currency
+        // should be re-enabled So perform the check here for deleted status but it should be improved
+        // (even this method should not exist)
+        if (null === $currency || $currency->deleted) {
             $currency = new Currency(null, $idLang);
         }
 
@@ -166,5 +175,24 @@ class CurrencyDataProvider implements CurrencyDataProviderInterface
         }
 
         return $this->defaultCurrency;
+    }
+
+    /**
+     * Returns the id of the currency matching the ISO code, regardless of its active or deleted status
+     *
+     * @param string $isoCode
+     *
+     * @return false|string|null
+     */
+    private function getCurrencyIdByIsoCode(string $isoCode)
+    {
+        $dbQuery = new DbQuery();
+        $dbQuery
+            ->select('id_currency')
+            ->from('currency', 'c')
+            ->where('c.`iso_code` = "' . pSQL($isoCode) . '"')
+        ;
+
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($dbQuery);
     }
 }
