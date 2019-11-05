@@ -45,10 +45,12 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartAddre
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartProduct;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartShipping;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartSummary;
+use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CustomizationFieldData;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleInterface;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShopException;
+use Product;
 
 /**
  * Handles GetCartInformation query using legacy object models
@@ -66,15 +68,23 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
     private $contextLangId;
 
     /**
+     * @var Link
+     */
+    private $contextLink;
+
+    /**
      * @param Locale $locale
      * @param int $contextLangId
+     * @param Link $contextLink
      */
     public function __construct(
         Locale $locale,
-        int $contextLangId
+        int $contextLangId,
+        Link $contextLink
     ) {
         $this->locale = $locale;
         $this->contextLangId = $contextLangId;
+        $this->contextLink = $contextLink;
     }
 
     /**
@@ -97,7 +107,7 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
 
         return new CartInformation(
             $cart->id,
-            $this->extractProductsFromLegacySummary($legacySummary),
+            $this->extractProductsFromLegacySummary($cart, $legacySummary),
             (int) $currency->id,
             (int) $language->id,
             $this->extractCartRulesFromLegacySummary($legacySummary, $currency),
@@ -163,25 +173,26 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
     }
 
     /**
+     * @param Cart $cart
      * @param array $legacySummary
      *
      * @return CartProduct[]
      */
-    private function extractProductsFromLegacySummary(array $legacySummary): array
+    private function extractProductsFromLegacySummary(Cart $cart, array $legacySummary): array
     {
         $products = [];
         foreach ($legacySummary['products'] as $product) {
             $products[] = new CartProduct(
                 (int) $product['id_product'],
                 isset($product['id_product_attribute']) ? (int) $product['id_product_attribute'] : 0,
-                (int) $product['id_customization'],
                 $product['name'],
                 isset($product['attributes_small']) ? $product['attributes_small'] : '',
                 $product['reference'],
                 $product['price'],
                 (int) $product['quantity'],
                 $product['total'],
-                (new Link())->getImageLink($product['link_rewrite'], $product['id_image'], 'small_default')
+                $this->contextLink->getImageLink($product['link_rewrite'], $product['id_image'], 'small_default'),
+                $this->getProductCustomizedData($cart, $product)
             );
         }
 
@@ -285,5 +296,81 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
             $this->locale->formatPrice($legacySummary['total_price'], $currency->iso_code),
             $this->locale->formatPrice($legacySummary['total_price_without_tax'], $currency->iso_code)
         );
+    }
+
+    /**
+     * Provides product customizations data
+     *
+     * @param Cart $cart
+     * @param array $product the product array from legacy summary
+     *
+     * @return CartInformation\Customization|null
+     */
+    private function getProductCustomizedData(Cart $cart, array $product): ?CartInformation\Customization
+    {
+        $customizationId = (int) $product['id_customization'];
+
+        if (!$customizationId) {
+            return null;
+        }
+
+        $customizations = Product::getAllCustomizedDatas(
+            $cart->id,
+            $cart->id_lang,
+            true,
+            null,
+            $customizationId
+        );
+
+        if ($customizations) {
+            $productCustomizedFieldsData = $this->getProductCustomizedFieldsData($customizations, $product);
+        }
+
+        if (empty($productCustomizedFieldsData)) {
+            return null;
+        }
+
+        return new CartInformation\Customization($customizationId, $productCustomizedFieldsData);
+    }
+
+    /**
+     * Provides customized fields data for product
+     *
+     * @param array $customizations
+     * @param array $product
+     *
+     * @return array
+     */
+    private function getProductCustomizedFieldsData(array $customizations, array $product)
+    {
+        $customizationFieldsData = [];
+
+        if (isset($customizations[$product['id_product']][$product['id_product_attribute']])) {
+            foreach ($customizations[$product['id_product']][$product['id_product_attribute']] as $customizationByAddress) {
+                foreach ($customizationByAddress as $customization) {
+                    if (isset($customization['datas'][Product::CUSTOMIZE_TEXTFIELD])) {
+                        foreach ($customization['datas'][Product::CUSTOMIZE_TEXTFIELD] as $text) {
+                            $customizationFieldsData[] = new CustomizationFieldData(
+                                Product::CUSTOMIZE_TEXTFIELD,
+                                $text['name'],
+                                $text['value']
+                            );
+                        }
+                    }
+
+                    if (isset($customization['datas'][Product::CUSTOMIZE_FILE])) {
+                        foreach ($customization['datas'][Product::CUSTOMIZE_FILE] as $file) {
+                            $customizationFieldsData[] = new CustomizationFieldData(
+                                Product::CUSTOMIZE_FILE,
+                                $file['name'],
+                                _THEME_PROD_PIC_DIR_ . $file['value'] . '_small'
+                            );
+                        }
+                    }
+                }
+            }
+        }
+
+        return $customizationFieldsData;
     }
 }
