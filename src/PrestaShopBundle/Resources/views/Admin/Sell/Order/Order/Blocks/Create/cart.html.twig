@@ -191,7 +191,7 @@
 <script id="products-table-row-template" type="text/template">
   <tr>
     <td><img class="js-product-image" src="" alt=""></td>
-    <td>
+    <td class="js-product-definition-td">
       <p class="mb-0 js-product-name"></p>
       <p class="js-product-attr"></p>
     </td>
@@ -203,4 +203,8 @@
       <button class="btn btn-outline-danger js-product-remove-btn">{{ 'Remove'|trans({}, 'Admin.Actions') }}</button>
     </td>
   </tr>
+</script>
+
+<script type="text/template" id="js-table-product-customization-template">
+  <p class="js-table-product-customization"></p>
 </script>
