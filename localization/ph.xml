@@ -5,6 +5,7 @@
   </currencies>
   <languages>
     <language iso_code="en"/>
+    <language iso_code="tl"/>
   </languages>
   <taxes>
     <taxRulesGroup name="RVAT 12%">
