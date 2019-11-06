@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Cart\CommandHandler;
 
+use Configuration;
+use ImageManager;
 use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCustomizationFieldsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\AddCustomizationFieldsHandlerInterface;
@@ -34,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\Customizat
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationException;
 use PrestaShopException;
 use Product;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Adds product customization fields data using legacy object model
@@ -77,14 +80,31 @@ final class AddCustomizationFieldsHandler extends AbstractCartHandler implements
                         true
                     );
                 } else {
-                    //@todo: file validation
-                    $customizationId = $cart->addPictureToProduct(
-                        $productId,
-                        $customizationFieldId,
-                        Product::CUSTOMIZE_FILE,
-                        $customizations[$customizationFieldId],
-                        true
-                    );
+                    //Picture upload
+                    //@todo: clean file validation
+                    /** @var UploadedFile $file */
+                    $file = $customizations[$customizationFieldId];
+
+                    $this->validateUpload($file);
+                    //@todo: check if copy is okay to use instead of move_uploaded_file(this fails creating new request from global later)
+                    if (!($tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !copy($file->getPathname(), $tmpName)) {
+                        die('An error occurred during the image upload process.');
+                    }
+                    $fileName = md5(uniqid(mt_rand(0, mt_getrandmax()), true));
+                    if (!ImageManager::resize($tmpName, _PS_UPLOAD_DIR_ . $fileName)) {
+                        continue;
+                    } elseif (!ImageManager::resize($tmpName, _PS_UPLOAD_DIR_ . $fileName . '_small', (int) Configuration::get('PS_PRODUCT_PICTURE_WIDTH'), (int) Configuration::get('PS_PRODUCT_PICTURE_HEIGHT'))) {
+                        die('An error occurred during the image upload process.');
+                    } else {
+                        $customizationId = $cart->addPictureToProduct(
+                            $productId,
+                            $customizationFieldId,
+                            Product::CUSTOMIZE_FILE,
+                            $fileName,
+                            true
+                        );
+                        unlink($tmpName);
+                    }
                 }
 
                 if (false === $customizationId) {
@@ -109,5 +129,22 @@ final class AddCustomizationFieldsHandler extends AbstractCartHandler implements
         }
 
         return $customizationId;
+    }
+
+    private function validateUpload(UploadedFile $file)
+    {
+        $maxFileSize = (int) Configuration::get('PS_PRODUCT_PICTURE_MAX_SIZE');
+        //@todo: cannot use Symfony uploaded file as array
+        if ((int) $maxFileSize > 0 && $file->getSize() > (int) $maxFileSize) {
+            return die('Image is too large (%1$d kB). Maximum allowed: %2$d kB');
+        }
+        if (!ImageManager::isRealImage($file->getPathname(), $file->getType()) || !ImageManager::isCorrectImageFileExt($file->getClientOriginalName(), null) || preg_match('/\%00/', $file->getClientOriginalName())) {
+            return die('Image format not recognized, allowed formats are: .gif, .jpg, .png');
+        }
+        if ($file->getError()) {
+            die('Error while uploading image; please change your server\'s settings. (Error code: %s)');
+        }
+
+        return false;
     }
 }
