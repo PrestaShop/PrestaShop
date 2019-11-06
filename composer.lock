@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "68f6249fd5c6792248a347ff6cfea1b6",
+    "content-hash": "78292d7ce984291596e893d312964d9e",
     "packages": [
         {
             "name": "beberlei/doctrineextensions",
@@ -1368,16 +1368,16 @@
         },
         {
             "name": "doctrine/persistence",
-            "version": "1.3.4",
+            "version": "1.3.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/persistence.git",
-                "reference": "ff7e08b0f814be2cd20c52dc3c8a262579376b94"
+                "reference": "be70c016fdcd44a428405ee062ebcdd01a6867cd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/persistence/zipball/ff7e08b0f814be2cd20c52dc3c8a262579376b94",
-                "reference": "ff7e08b0f814be2cd20c52dc3c8a262579376b94",
+                "url": "https://api.github.com/repos/doctrine/persistence/zipball/be70c016fdcd44a428405ee062ebcdd01a6867cd",
+                "reference": "be70c016fdcd44a428405ee062ebcdd01a6867cd",
                 "shasum": ""
             },
             "require": {
@@ -1447,7 +1447,7 @@
                 "orm",
                 "persistence"
             ],
-            "time": "2020-01-09T19:49:17+00:00"
+            "time": "2020-01-14T18:44:12+00:00"
         },
         {
             "name": "doctrine/reflection",
@@ -2446,16 +2446,16 @@
         },
         {
             "name": "league/tactician-bundle",
-            "version": "v1.1.18",
+            "version": "v1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/tactician-bundle.git",
-                "reference": "555850cdaafe551b6ffd426a4a6e006c86ecf559"
+                "reference": "66b97472915290b93654e60610295660f597ad4e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/tactician-bundle/zipball/555850cdaafe551b6ffd426a4a6e006c86ecf559",
-                "reference": "555850cdaafe551b6ffd426a4a6e006c86ecf559",
+                "url": "https://api.github.com/repos/thephpleague/tactician-bundle/zipball/66b97472915290b93654e60610295660f597ad4e",
+                "reference": "66b97472915290b93654e60610295660f597ad4e",
                 "shasum": ""
             },
             "require": {
@@ -2525,7 +2525,7 @@
                 "symfony",
                 "tactician"
             ],
-            "time": "2019-12-31T10:05:46+00:00"
+            "time": "2020-01-14T17:22:35+00:00"
         },
         {
             "name": "league/tactician-container",
@@ -2789,6 +2789,46 @@
                 "vector"
             ],
             "time": "2019-10-06T11:29:25+00:00"
+        },
+        {
+            "name": "martinlindhe/php-mb-helpers",
+            "version": "0.1.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/martinlindhe/php-mb-helpers.git",
+                "reference": "3550df9e6976f753d2879543e4aaf96eaa9657a2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/martinlindhe/php-mb-helpers/zipball/3550df9e6976f753d2879543e4aaf96eaa9657a2",
+                "reference": "3550df9e6976f753d2879543e4aaf96eaa9657a2",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.6"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/mb_helpers.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Martin Lindhe",
+                    "email": "martin@ubique.se"
+                }
+            ],
+            "description": "Provides mb_ucwords(), mb_ucfirst(), mb_strrev(), mb_str_pad(), mb_count_chars(), mb_str_split()",
+            "homepage": "https://github.com/martinlindhe/php-mb-helpers",
+            "time": "2015-11-01T14:06:04+00:00"
         },
         {
             "name": "matthiasmullie/minify",
@@ -7974,16 +8014,16 @@
         },
         {
             "name": "behat/transliterator",
-            "version": "v1.2.0",
+            "version": "v1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Behat/Transliterator.git",
-                "reference": "826ce7e9c2a6664c0d1f381cbb38b1fb80a7ee2c"
+                "reference": "3c4ec1d77c3d05caa1f0bf8fb3aae4845005c7fc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Behat/Transliterator/zipball/826ce7e9c2a6664c0d1f381cbb38b1fb80a7ee2c",
-                "reference": "826ce7e9c2a6664c0d1f381cbb38b1fb80a7ee2c",
+                "url": "https://api.github.com/repos/Behat/Transliterator/zipball/3c4ec1d77c3d05caa1f0bf8fb3aae4845005c7fc",
+                "reference": "3c4ec1d77c3d05caa1f0bf8fb3aae4845005c7fc",
                 "shasum": ""
             },
             "require": {
@@ -7991,7 +8031,8 @@
             },
             "require-dev": {
                 "chuyskywalker/rolling-curl": "^3.1",
-                "php-yaoi/php-yaoi": "^1.0"
+                "php-yaoi/php-yaoi": "^1.0",
+                "phpunit/phpunit": "^4.8.36|^6.3"
             },
             "type": "library",
             "extra": {
@@ -8000,8 +8041,8 @@
                 }
             },
             "autoload": {
-                "psr-0": {
-                    "Behat\\Transliterator": "src/"
+                "psr-4": {
+                    "Behat\\Transliterator\\": "src/Behat/Transliterator"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -8014,7 +8055,7 @@
                 "slug",
                 "transliterator"
             ],
-            "time": "2017-04-04T11:38:05+00:00"
+            "time": "2020-01-14T16:39:13+00:00"
         },
         {
             "name": "composer/semver",
