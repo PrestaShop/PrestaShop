@@ -87,9 +87,9 @@ class CurrencyDataProvider implements CurrencyDataProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getCurrencyByIsoCode($isoCode, $idLang = null)
+    public function getCurrencyByIsoCode($isoCode, $idLang = null, $includeDeleted = false)
     {
-        $currencyId = Currency::getIdByIsoCode($isoCode, 0, false, true);
+        $currencyId = Currency::getIdByIsoCode($isoCode, 0, false, $includeDeleted);
         if (!$currencyId) {
             return null;
         }
