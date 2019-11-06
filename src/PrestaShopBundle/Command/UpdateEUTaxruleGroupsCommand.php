@@ -88,7 +88,7 @@ class UpdateEUTaxruleGroupsCommand extends ContainerAwareCommand
 
         $euLocalizationFiles = array();
 
-        foreach (scandir($localizationPacksRoot, SCANDIR_SORT_NONE) as $entry) {
+        foreach (scandir($localizationPacksRoot, SCANDIR_SORT_ASCENDING) as $entry) {
             if (!preg_match('/\.xml$/', $entry)) {
                 continue;
             }
