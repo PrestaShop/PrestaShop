@@ -127,7 +127,7 @@ describe('Create, Read, Update and Delete profile in BO', async () => {
     });
   });
 
-  // 3 : Delete profile from BO
+  // 3 : Delete profile
   describe('Delete profile', async () => {
     it('should filter list by email', async function () {
       await this.pageObjects.profilesPage.filterProfiles(
