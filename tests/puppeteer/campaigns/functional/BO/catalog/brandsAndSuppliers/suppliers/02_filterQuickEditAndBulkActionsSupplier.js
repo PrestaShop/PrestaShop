@@ -68,8 +68,8 @@ describe('Create, Update and Delete Brand and Address', async () => {
     const pageTitle = await this.pageObjects.suppliersPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.suppliersPage.pageTitle);
   });
-  // 1: Create supplier
-  describe('Create 2 Suppliers', async () => {
+  // 1: Create 2 suppliers
+  describe('Create 2 suppliers', async () => {
     it('should go to new supplier page', async function () {
       await this.pageObjects.suppliersPage.goToAddNewSupplierPage();
       const pageTitle = await this.pageObjects.addSupplierPage.getPageTitle();

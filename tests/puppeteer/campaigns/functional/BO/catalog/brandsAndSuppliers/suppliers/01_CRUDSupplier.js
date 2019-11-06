@@ -31,8 +31,8 @@ const init = async function () {
   };
 };
 
-// CRUD Brand And Address
-describe('Create, Update and Delete Brand and Address', async () => {
+// CRUD Supplier
+describe('Create, update and delete supplier', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
@@ -52,7 +52,7 @@ describe('Create, Update and Delete Brand and Address', async () => {
   // Login into BO and go to brands page
   loginCommon.loginBO();
 
-  // GO to brands Page
+  // Go to brands page
   it('should go to brands page', async function () {
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.catalogParentLink,
@@ -63,14 +63,14 @@ describe('Create, Update and Delete Brand and Address', async () => {
     await expect(pageTitle).to.contains(this.pageObjects.brandsPage.pageTitle);
   });
 
-  // GO to Suppliers Page
+  // Go to suppliers page
   it('should go to suppliers page', async function () {
     await this.pageObjects.brandsPage.goToSubTabSuppliers();
     const pageTitle = await this.pageObjects.suppliersPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.suppliersPage.pageTitle);
   });
   // 1: Create supplier
-  describe('Create Supplier', async () => {
+  describe('Create supplier', async () => {
     it('should go to new supplier page', async function () {
       await this.pageObjects.suppliersPage.goToAddNewSupplierPage();
       const pageTitle = await this.pageObjects.addSupplierPage.getPageTitle();
@@ -82,23 +82,23 @@ describe('Create, Update and Delete Brand and Address', async () => {
       await expect(result).to.equal(this.pageObjects.suppliersPage.successfulCreationMessage);
     });
   });
-  // 2: View Supplier
-  describe('View Supplier', async () => {
-    it('should view Supplier', async function () {
+  // 2: View supplier
+  describe('View supplier', async () => {
+    it('should view supplier', async function () {
       await this.pageObjects.suppliersPage.viewSupplier(1);
       const pageTitle = await this.pageObjects.viewSupplierPage.getPageTitle();
       await expect(pageTitle).to.contains(createSupplierData.name);
     });
 
-    it('should return Supplier Page', async function () {
+    it('should return supplier page', async function () {
       await this.pageObjects.viewSupplierPage.goToPreviousPage();
       const pageTitle = await this.pageObjects.suppliersPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.suppliersPage.pageTitle);
     });
   });
-  // 3: Update Supplier
-  describe('Update Supplier', async () => {
-    it('Edit first Supplier', async function () {
+  // 3: Update supplier
+  describe('Update supplier', async () => {
+    it('Edit first supplier', async function () {
       await this.pageObjects.suppliersPage.goToEditSupplierPage(1);
       const pageTitle = await this.pageObjects.addSupplierPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.addSupplierPage.pageTitleEdit);
@@ -109,23 +109,23 @@ describe('Create, Update and Delete Brand and Address', async () => {
       await expect(result).to.equal(this.pageObjects.suppliersPage.successfulUpdateMessage);
     });
   });
-  // 4: View Supplier
-  describe('View Brand and check Address Value in list', async () => {
-    it('should view brand', async function () {
+  // 4: View supplier
+  describe('View edited supplier', async () => {
+    it('should view supplier', async function () {
       await this.pageObjects.suppliersPage.viewSupplier(1);
       const pageTitle = await this.pageObjects.viewSupplierPage.getPageTitle();
       await expect(pageTitle).to.contains(editSupplierData.name);
     });
 
-    it('should return Supplier Page', async function () {
+    it('should return supplier page', async function () {
       await this.pageObjects.viewSupplierPage.goToPreviousPage();
       const pageTitle = await this.pageObjects.suppliersPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.suppliersPage.pageTitle);
     });
   });
-  // 5: Delete Brand And Verify that Address has no Brand associated
-  describe('Delete Supplier', async () => {
-    it('should Delete brand', async function () {
+  // 5: Delete supplier
+  describe('Delete supplier', async () => {
+    it('should Delete supplier', async function () {
       const result = await this.pageObjects.suppliersPage.deleteSupplier(1);
       await expect(result).to.be.equal(this.pageObjects.suppliersPage.successfulDeleteMessage);
     });
