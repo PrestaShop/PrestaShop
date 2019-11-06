@@ -372,6 +372,13 @@ class CartController extends FrameworkBundleAdminController
         }
     }
 
+    //@todo: wip
+    public function editProductPriceAction(Request $request, int $cartId, int $productId): JsonResponse
+    {
+        dump($request);
+        die;
+    }
+
     /**
      * Deletes product from cart
      *

@@ -149,10 +149,29 @@ export default class CartEditor {
   }
 
   /**
+   * Changes product price in cart
+   *
+   * @param {Number} cartId
+   * @param {Object} product the updated product
+   */
+  changeProductPrice(cartId, product) {
+    $.post(this.router.generate('admin_carts_edit_product_price', {
+      cartId,
+      productId: product.productId,
+    }), {
+      newPrice: product.price,
+    }).then((cartInfo) => {
+      EventEmitter.emit(eventMap.productPriceChanged, cartInfo);
+    }).catch((response) => {
+      showErrorMessage(response.responseJSON.message);
+    });
+  }
+
+  /**
    * Changes cart currency
    *
-   * @param cartId
-   * @param currencyId
+   * @param {Number} cartId
+   * @param {Number} currencyId
    */
   changeCartCurrency(cartId, currencyId) {
     $.post(this.router.generate('admin_carts_edit_currency', {cartId}), {
@@ -167,8 +186,8 @@ export default class CartEditor {
   /**
    * Changes cart language
    *
-   * @param cartId
-   * @param langId
+   * @param {Number} cartId
+   * @param {Number} langId
    */
   changeCartLanguage(cartId, langId) {
     $.post(this.router.generate('admin_carts_edit_language', {cartId}), {
