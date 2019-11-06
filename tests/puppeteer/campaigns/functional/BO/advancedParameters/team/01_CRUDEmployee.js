@@ -205,12 +205,6 @@ describe('Create, Read, Update and Delete Employee in BO', async () => {
         await expect(textResult).to.equal(this.pageObjects.addEmployeePage.successfulUpdateMessage);
       });
 
-      it('should click on cancel', async function () {
-        await this.pageObjects.addEmployeePage.cancelPage();
-        const pageTitle = await this.pageObjects.employeesPage.getPageTitle();
-        await expect(pageTitle).to.contains(this.pageObjects.employeesPage.pageTitle);
-      });
-
       // Logout into BO
       loginCommon.logoutBO();
 
