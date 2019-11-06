@@ -36,6 +36,8 @@
     <tax id="27" name="Moms SE 25%" rate="25" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="28" name="DDV SI 22%" rate="22" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="29" name="DPH SK 20%" rate="20" auto-generated="1" from-eu-tax-group="virtual"/>
+    <tax id="30" name="USt. AT 13%" rate="13"/>
+    <tax id="31" name="USt. AT 0%" rate="0"/>
     <taxRulesGroup name="AT Standard rate (20%)">
       <taxRule iso_code_country="be" id_tax="1"/>
       <taxRule iso_code_country="bg" id_tax="1"/>
@@ -64,6 +66,35 @@
       <taxRule iso_code_country="fi" id_tax="1"/>
       <taxRule iso_code_country="se" id_tax="1"/>
       <taxRule iso_code_country="uk" id_tax="1"/>
+    </taxRulesGroup>
+    <taxRulesGroup name="AT Reduced Rate (13%)">
+      <taxRule iso_code_country="be" id_tax="30"/>
+      <taxRule iso_code_country="bg" id_tax="30"/>
+      <taxRule iso_code_country="cz" id_tax="30"/>
+      <taxRule iso_code_country="dk" id_tax="30"/>
+      <taxRule iso_code_country="de" id_tax="30"/>
+      <taxRule iso_code_country="ee" id_tax="30"/>
+      <taxRule iso_code_country="gr" id_tax="30"/>
+      <taxRule iso_code_country="es" id_tax="30"/>
+      <taxRule iso_code_country="fr" id_tax="30"/>
+      <taxRule iso_code_country="ie" id_tax="30"/>
+      <taxRule iso_code_country="it" id_tax="30"/>
+      <taxRule iso_code_country="cy" id_tax="30"/>
+      <taxRule iso_code_country="lv" id_tax="30"/>
+      <taxRule iso_code_country="lt" id_tax="30"/>
+      <taxRule iso_code_country="lu" id_tax="30"/>
+      <taxRule iso_code_country="hu" id_tax="30"/>
+      <taxRule iso_code_country="mt" id_tax="30"/>
+      <taxRule iso_code_country="nl" id_tax="30"/>
+      <taxRule iso_code_country="at" id_tax="30"/>
+      <taxRule iso_code_country="pl" id_tax="30"/>
+      <taxRule iso_code_country="pt" id_tax="30"/>
+      <taxRule iso_code_country="ro" id_tax="30"/>
+      <taxRule iso_code_country="si" id_tax="30"/>
+      <taxRule iso_code_country="sk" id_tax="30"/>
+      <taxRule iso_code_country="fi" id_tax="30"/>
+      <taxRule iso_code_country="se" id_tax="30"/>
+      <taxRule iso_code_country="uk" id_tax="30"/>
     </taxRulesGroup>
     <taxRulesGroup name="AT Reduced Rate (10%)">
       <taxRule iso_code_country="be" id_tax="2"/>
@@ -152,6 +183,35 @@
       <taxRule iso_code_country="se" id_tax="27"/>
       <taxRule iso_code_country="si" id_tax="28"/>
       <taxRule iso_code_country="sk" id_tax="29"/>
+    </taxRulesGroup>
+    <taxRulesGroup name="AT Zero Rate (0%)">
+      <taxRule iso_code_country="be" id_tax="31"/>
+      <taxRule iso_code_country="bg" id_tax="31"/>
+      <taxRule iso_code_country="cz" id_tax="31"/>
+      <taxRule iso_code_country="dk" id_tax="31"/>
+      <taxRule iso_code_country="de" id_tax="31"/>
+      <taxRule iso_code_country="ee" id_tax="31"/>
+      <taxRule iso_code_country="gr" id_tax="31"/>
+      <taxRule iso_code_country="es" id_tax="31"/>
+      <taxRule iso_code_country="fr" id_tax="31"/>
+      <taxRule iso_code_country="ie" id_tax="31"/>
+      <taxRule iso_code_country="it" id_tax="31"/>
+      <taxRule iso_code_country="cy" id_tax="31"/>
+      <taxRule iso_code_country="lv" id_tax="31"/>
+      <taxRule iso_code_country="lt" id_tax="31"/>
+      <taxRule iso_code_country="lu" id_tax="31"/>
+      <taxRule iso_code_country="hu" id_tax="31"/>
+      <taxRule iso_code_country="mt" id_tax="31"/>
+      <taxRule iso_code_country="nl" id_tax="31"/>
+      <taxRule iso_code_country="at" id_tax="31"/>
+      <taxRule iso_code_country="pl" id_tax="31"/>
+      <taxRule iso_code_country="pt" id_tax="31"/>
+      <taxRule iso_code_country="ro" id_tax="31"/>
+      <taxRule iso_code_country="si" id_tax="31"/>
+      <taxRule iso_code_country="sk" id_tax="31"/>
+      <taxRule iso_code_country="fi" id_tax="31"/>
+      <taxRule iso_code_country="se" id_tax="31"/>
+      <taxRule iso_code_country="uk" id_tax="31"/>
     </taxRulesGroup>
   </taxes>
   <states>
