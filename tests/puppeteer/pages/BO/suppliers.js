@@ -30,6 +30,7 @@ module.exports = class Suppliers extends BOBasePage {
     // Table rows and columns
     this.tableBody = `${this.gridTable} tbody`;
     this.tableRow = `${this.tableBody} tr:nth-child(%ROW)`;
+    this.tableEmptyRow = `${this.tableBody} tr.empty_row`;
     this.tableColumn = `${this.tableRow} td.column-%COLUMN`;
     // Actions buttons in Row
     this.actionsColumn = `${this.tableRow} td.column-actions`;
@@ -58,7 +59,7 @@ module.exports = class Suppliers extends BOBasePage {
   }
 
   /**
-   * Go to New Brand Page
+   * Go to New Supplier Page
    * @return {Promise<void>}
    */
   async goToAddNewSupplierPage() {
@@ -71,8 +72,8 @@ module.exports = class Suppliers extends BOBasePage {
    * @param row, Which row of the list
    * @return {Promise<void>}
    */
-  async viewSupplier(row = '1') {
-    await this.clickAndWaitForNavigation(this.viewRowLink);
+  async viewSupplier(row = 1) {
+    await this.clickAndWaitForNavigation(this.viewRowLink.replace('%ROW', row));
   }
 
   /**
@@ -80,7 +81,7 @@ module.exports = class Suppliers extends BOBasePage {
    * @param row
    * @return {Promise<void>}
    */
-  async goToEditSupplierPage(row = '1') {
+  async goToEditSupplierPage(row = 1) {
     await Promise.all([
       this.page.click(this.dropdownToggleButton.replace('%ROW', row)),
       this.page.waitForSelector(
@@ -95,7 +96,7 @@ module.exports = class Suppliers extends BOBasePage {
    * @param row, row to delete
    * @return {Promise<textContent>}
    */
-  async deleteSupplier(row) {
+  async deleteSupplier(row = 1) {
     this.dialogListener(true);
     await Promise.all([
       this.page.click(this.dropdownToggleButton.replace('%ROW', row)),
@@ -113,9 +114,11 @@ module.exports = class Suppliers extends BOBasePage {
    * @param row
    * @return {Promise<string>}
    */
-  async getToggleColumnValue(row) {
+  async getToggleColumnValue(row = 1) {
     return this.elementVisible(
-      this.enableColumnValidIcon.replace('%ROW', row), 100);
+      this.enableColumnValidIcon.replace('%ROW', row),
+      100,
+    );
   }
 
   /**
@@ -124,7 +127,7 @@ module.exports = class Suppliers extends BOBasePage {
    * @param valueWanted
    * @return {Promise<boolean>}, true if click has been performed
    */
-  async updateEnabledValue(row, valueWanted = true) {
+  async updateEnabledValue(row = 1, valueWanted = true) {
     if (await this.getToggleColumnValue(row) !== valueWanted) {
       await this.clickAndWaitForNavigation(this.enableColumn.replace('%ROW', row));
       return true;
@@ -190,7 +193,7 @@ module.exports = class Suppliers extends BOBasePage {
    * @param enable
    * @return {Promise<textContent>}
    */
-  async changeBrandsEnabledColumnBulkActions(enable = true) {
+  async changeSuppliersEnabledColumnBulkActions(enable = true) {
     // Click on Select All
     await Promise.all([
       this.page.click(this.selectAllRowsLabel),
@@ -227,5 +230,4 @@ module.exports = class Suppliers extends BOBasePage {
     await this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true});
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
-
 };
