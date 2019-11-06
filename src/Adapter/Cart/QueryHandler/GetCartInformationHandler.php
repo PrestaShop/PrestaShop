@@ -68,15 +68,23 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
     private $contextLangId;
 
     /**
+     * @var Link
+     */
+    private $contextLink;
+
+    /**
      * @param Locale $locale
      * @param int $contextLangId
+     * @param Link $contextLink
      */
     public function __construct(
         Locale $locale,
-        int $contextLangId
+        int $contextLangId,
+        Link $contextLink
     ) {
         $this->locale = $locale;
         $this->contextLangId = $contextLangId;
+        $this->contextLink = $contextLink;
     }
 
     /**
@@ -183,7 +191,7 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
                 $product['price'],
                 (int) $product['quantity'],
                 $product['total'],
-                (new Link())->getImageLink($product['link_rewrite'], $product['id_image'], 'small_default'),
+                $this->contextLink->getImageLink($product['link_rewrite'], $product['id_image'], 'small_default'),
                 $this->getProductCustomizedData($cart, $product)
             );
         }
@@ -291,6 +299,8 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
     }
 
     /**
+     * Provides product customizations data
+     *
      * @param Cart $cart
      * @param array $product the product array from legacy summary
      *
@@ -299,6 +309,7 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
     private function getProductCustomizedData(Cart $cart, array $product): ?CartInformation\Customization
     {
         $customizationId = (int) $product['id_customization'];
+
         if (!$customizationId) {
             return null;
         }
@@ -311,15 +322,35 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
             $customizationId
         );
 
-        $productCustomization = null;
+        if ($customizations) {
+            $productCustomizedFieldsData = $this->getProductCustomizedFieldsData($customizations, $product);
+        }
+
+        if (empty($productCustomizedFieldsData)) {
+            return null;
+        }
+
+        return new CartInformation\Customization($customizationId, $productCustomizedFieldsData);
+    }
+
+    /**
+     * Provides customized fields data for product
+     *
+     * @param array $customizations
+     * @param array $product
+     *
+     * @return array
+     */
+    private function getProductCustomizedFieldsData(array $customizations, array $product)
+    {
+        $customizationFieldsData = [];
 
         if (isset($customizations[$product['id_product']][$product['id_product_attribute']])) {
             foreach ($customizations[$product['id_product']][$product['id_product_attribute']] as $customizationByAddress) {
                 foreach ($customizationByAddress as $customization) {
-                    $productCustomizationData = [];
                     if (isset($customization['datas'][Product::CUSTOMIZE_TEXTFIELD])) {
                         foreach ($customization['datas'][Product::CUSTOMIZE_TEXTFIELD] as $text) {
-                            $productCustomizationData[] = new CustomizationFieldData(
+                            $customizationFieldsData[] = new CustomizationFieldData(
                                 Product::CUSTOMIZE_TEXTFIELD,
                                 $text['name'],
                                 $text['value']
@@ -327,23 +358,19 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
                         }
                     }
 
-                    //@todo: check file is hashed in db
                     if (isset($customization['datas'][Product::CUSTOMIZE_FILE])) {
                         foreach ($customization['datas'][Product::CUSTOMIZE_FILE] as $file) {
-                            $productCustomizationData[] = new CustomizationFieldData(
-                                Product::CUSTOMIZE_TEXTFIELD,
+                            $customizationFieldsData[] = new CustomizationFieldData(
+                                Product::CUSTOMIZE_FILE,
                                 $file['name'],
-                                $file['value']
+                                _THEME_PROD_PIC_DIR_ . $file['value'] . '_small'
                             );
                         }
                     }
                 }
             }
         }
-        if (!empty($productCustomizationData)) {
-            $productCustomization = new CartInformation\Customization($customizationId, $productCustomizationData);
-        }
 
-        return $productCustomization;
+        return $customizationFieldsData;
     }
 }
