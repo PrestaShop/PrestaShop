@@ -113,7 +113,7 @@ describe('Create, Read, Update and Delete Employee in BO', async () => {
   });
 
   // 2 : Update employee and check that employee can't sign in in BO (enabled = false)
-  describe('Update employee Created two times', async () => {
+  describe('Update the employee created', async () => {
     // Login into BO
     loginCommon.loginBO();
     describe('Update the password and the default page', async () => {
@@ -168,7 +168,7 @@ describe('Create, Read, Update and Delete Employee in BO', async () => {
       // Logout into BO
       loginCommon.logoutBO();
     });
-    describe('Deactivate the Employee and check it', async () => {
+    describe('Disable the Employee and check it', async () => {
       // Login into BO
       loginCommon.loginBO();
 
@@ -200,7 +200,7 @@ describe('Create, Read, Update and Delete Employee in BO', async () => {
         await expect(pageTitle).to.contains(this.pageObjects.addEmployeePage.pageTitleEdit);
       });
 
-      it('should deactivate the employee account', async function () {
+      it('should disable the employee account', async function () {
         const textResult = await this.pageObjects.addEmployeePage.createEditEmployee(secondEditEmployeeData);
         await expect(textResult).to.equal(this.pageObjects.addEmployeePage.successfulUpdateMessage);
       });
@@ -216,7 +216,7 @@ describe('Create, Read, Update and Delete Employee in BO', async () => {
     });
   });
 
-  // 5 : Delete employee from BO
+  // 5 : Delete employee
   describe('Delete employee', async () => {
     // Login into BO
     loginCommon.loginBO();

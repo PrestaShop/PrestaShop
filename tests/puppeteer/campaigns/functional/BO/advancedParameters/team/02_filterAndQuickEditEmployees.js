@@ -70,7 +70,7 @@ describe('Filter And Quick Edit Employees', async () => {
   });
 
   // 1 : Create employee and Filter with all inputs and selects in grid table in BO
-  describe('Create employee the filter the table', async () => {
+  describe('Create employee then filter the table', async () => {
     it('should go to add new employee page', async function () {
       await this.pageObjects.employeesPage.goToAddNewEmployeePage();
       const pageTitle = await this.pageObjects.addEmployeePage.getPageTitle();
@@ -219,7 +219,7 @@ describe('Filter And Quick Edit Employees', async () => {
       /* eslint-enable no-await-in-loop */
     });
 
-    it('should disable the Page', async function () {
+    it('should disable the employee', async function () {
       const isActionPerformed = await this.pageObjects.employeesPage.updateToggleColumnValue('1', false);
       if (isActionPerformed) {
         const resultMessage = await this.pageObjects.employeesPage.getTextContent(
@@ -232,7 +232,7 @@ describe('Filter And Quick Edit Employees', async () => {
       await expect(isStatusChanged).to.be.true;
     });
 
-    it('should enable the Page', async function () {
+    it('should enable the employee', async function () {
       const isActionPerformed = await this.pageObjects.employeesPage.updateToggleColumnValue('1');
       if (isActionPerformed) {
         const resultMessage = await this.pageObjects.employeesPage.getTextContent(
@@ -246,7 +246,7 @@ describe('Filter And Quick Edit Employees', async () => {
     });
   });
 
-  // 3 : Delete employee from BO
+  // 3 : Delete employee
   describe('Delete employee', async () => {
     it('should filter list by email', async function () {
       await this.pageObjects.employeesPage.filterEmployees(

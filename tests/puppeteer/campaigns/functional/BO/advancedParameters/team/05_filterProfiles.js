@@ -72,7 +72,7 @@ describe('Create, Read, Update and Delete profile in BO', async () => {
 
   // 1 : Filter profiles table
   describe('Filter profile in BO', async () => {
-    it('should filter list by \'Id\'', async function () {
+    it('should filter list by Id', async function () {
       await this.pageObjects.profilesPage.filterProfiles(
         'input',
         'id_profile',

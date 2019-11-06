@@ -156,7 +156,7 @@ describe('Create Employees, Then disable / Enable and Delete with Bulk actions',
     });
   });
 
-  // 3 : Delete employee with bulk actions BO
+  // 3 : Delete employee with bulk actions
   describe.skip('Delete employees with Bulk Actions', async () => {
     it('should delete employees with Bulk Actions and check Result', async function () {
       const deleteTextResult = await this.pageObjects.employeesPage.deleteBulkActions();

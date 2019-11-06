@@ -6,7 +6,6 @@ module.exports = class Profiles extends BOBasePage {
     super(page);
 
     this.pageTitle = 'Profiles';
-    this.successfulUpdateStatusMessage = 'The status has been successfully updated.';
 
     // Selectors
     // Header links
@@ -21,10 +20,6 @@ module.exports = class Profiles extends BOBasePage {
     a[data-toggle='dropdown']`;
     this.profilesListTableDeleteLink = `${this.profilesListTableColumn.replace('%COLUMN', 'actions')} a[data-url]`;
     this.profilesListTableEditLink = `${this.profilesListTableColumn.replace('%COLUMN', 'actions')} a[href*='edit']`;
-    this.profilesListColumnValidIcon = `${this.profilesListTableColumn.replace('%COLUMN', 'active')} 
-    i.grid-toggler-icon-valid`;
-    this.profilesListColumnNotValidIcon = `${this.profilesListTableColumn.replace('%COLUMN', 'active')} 
-    i.grid-toggler-icon-not-valid`;
     // Filters
     this.profileFilterInput = `${this.profilesListForm} #profile_%FILTERBY`;
     this.filterSearchButton = `${this.profilesListForm} button[name='profile[actions][search]']`;
@@ -97,37 +92,6 @@ module.exports = class Profiles extends BOBasePage {
   }
 
   /**
-   * Get Value of column Displayed
-   * @param row, row in table
-   * @return {Promise<boolean|true>}
-   */
-  async getToggleColumnValue(row) {
-    if (await this.elementVisible(
-      this.profilesListColumnValidIcon.replace('%ROW', row), 100)) return true;
-    return false;
-  }
-
-  /**
-   * Quick edit toggle column value
-   * @param row, row in table
-   * @param valueWanted, Value wanted in column
-   * @return {Promise<boolean>} return true if action is done, false otherwise
-   */
-  async updateToggleColumnValue(row, valueWanted = true) {
-    if (await this.getToggleColumnValue(row) !== valueWanted) {
-      this.page.click(this.profilesListTableColumn.replace('%ROW', row).replace('%COLUMN', 'active'));
-      if (valueWanted) {
-        await this.page.waitForSelector(this.profilesListColumnValidIcon.replace('%ROW', row));
-      } else {
-        await this.page.waitForSelector(
-          this.profilesListColumnNotValidIcon.replace('%ROW', row));
-      }
-      return true;
-    }
-    return false;
-  }
-
-  /**
    * Delete profile
    * @param row, row in table
    * @return {Promise<textContent>}
@@ -144,30 +108,6 @@ module.exports = class Profiles extends BOBasePage {
     await Promise.all([
       this.page.click(this.profilesListTableDeleteLink.replace('%ROW', row)),
       this.page.waitForSelector(this.alertSuccessBlockParagraph),
-    ]);
-    return this.getTextContent(this.alertSuccessBlockParagraph);
-  }
-
-  /**
-   * Enable / disable profiles by Bulk Actions
-   * @param enable
-   * @return {Promise<textContent>}
-   */
-  async changeEnabledColumnBulkActions(enable = true) {
-    // Click on Select All
-    await Promise.all([
-      this.page.click(this.selectAllRowsLabel),
-      this.page.waitForSelector(`${this.selectAllRowsLabel}:not([disabled])`, {visible: true}),
-    ]);
-    // Click on Button Bulk actions
-    await Promise.all([
-      this.page.click(this.bulkActionsToggleButton),
-      this.page.waitForSelector(`${this.bulkActionsToggleButton}`, {visible: true}),
-    ]);
-    // Click on delete and wait for modal
-    await Promise.all([
-      this.page.click(enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton),
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
     ]);
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
