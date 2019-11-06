@@ -176,7 +176,7 @@
             <div class="row mt-4">
               <div class="col-md-8">
                 <h2>{{ 'Attached files'|trans({}, 'Admin.Catalog.Feature') }}</h2>
-                <p class="subtitle">{{ 'Select the files (instructions, documentation, recipes, etc.) your customers can directly download on this product page.'|trans({}, 'Admin.Catalog.Feature') }} <br/> {{ "Need to browse all files? Go to [1]Catalog > Files[/1]"|trans({'[1]':'<a href="'~getAdminLink("AdminAttachments")~'">','[/1]':'</a>'}, 'Admin.Catalog.Feature')|raw }} </p>
+                <p class="subtitle">{{ 'Select the files (instructions, documentation, recipes, etc.) your customers can directly download on this product page.'|trans({}, 'Admin.Catalog.Feature') }} <br/> {{ 'Need to browse all files? Go to [1]Catalog > Files[/1]'|trans({'[1]':'<a href="'~getAdminLink("AdminAttachments")~'">','[/1]':'</a>'}, 'Admin.Catalog.Feature')|raw }} </p>
                 {{ form_widget(optionsForm.attachments) }}
               </div>
             </div>
