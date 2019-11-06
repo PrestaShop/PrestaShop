@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "26846ecea24b6096c1d5f2c7e70c43ff",
+    "content-hash": "5750c288ce7e9475fc82781103227cfc",
     "packages": [
         {
             "name": "beberlei/doctrineextensions",
@@ -243,12 +243,12 @@
             "version": "v1.3.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/PrestaShop/CsaGuzzleBundle.git",
+                "url": "https://github.com/csarrazi/CsaGuzzleBundle.git",
                 "reference": "079fc43d6ce7fb738d5dd742a21220da3f9b632b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/CsaGuzzleBundle/zipball/079fc43d6ce7fb738d5dd742a21220da3f9b632b",
+                "url": "https://api.github.com/repos/csarrazi/CsaGuzzleBundle/zipball/079fc43d6ce7fb738d5dd742a21220da3f9b632b",
                 "reference": "079fc43d6ce7fb738d5dd742a21220da3f9b632b",
                 "shasum": ""
             },
@@ -282,6 +282,7 @@
                     "Csa\\Bundle\\GuzzleBundle\\": "src"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -292,9 +293,6 @@
                 }
             ],
             "description": "A bundle integrating GuzzleHttp >= 4.0",
-            "support": {
-                "source": "https://github.com/PrestaShop/CsaGuzzleBundle/tree/v1.3.0"
-            },
             "time": "2015-06-12T13:09:26+00:00"
         },
         {
@@ -2778,6 +2776,46 @@
                 "vector"
             ],
             "time": "2019-10-06T11:29:25+00:00"
+        },
+        {
+            "name": "martinlindhe/php-mb-helpers",
+            "version": "0.1.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/martinlindhe/php-mb-helpers.git",
+                "reference": "3550df9e6976f753d2879543e4aaf96eaa9657a2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/martinlindhe/php-mb-helpers/zipball/3550df9e6976f753d2879543e4aaf96eaa9657a2",
+                "reference": "3550df9e6976f753d2879543e4aaf96eaa9657a2",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.6"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/mb_helpers.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Martin Lindhe",
+                    "email": "martin@ubique.se"
+                }
+            ],
+            "description": "Provides mb_ucwords(), mb_ucfirst(), mb_strrev(), mb_str_pad(), mb_count_chars(), mb_str_split()",
+            "homepage": "https://github.com/martinlindhe/php-mb-helpers",
+            "time": "2015-11-01T14:06:04+00:00"
         },
         {
             "name": "matthiasmullie/minify",
@@ -8059,16 +8097,16 @@
         },
         {
             "name": "friendsofphp/php-cs-fixer",
-            "version": "v2.16.0",
+            "version": "v2.15.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfPHP/PHP-CS-Fixer.git",
-                "reference": "ceaff36bee1ed3f1bbbedca36d2528c0826c336d"
+                "reference": "20064511ab796593a3990669eff5f5b535001f7c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/ceaff36bee1ed3f1bbbedca36d2528c0826c336d",
-                "reference": "ceaff36bee1ed3f1bbbedca36d2528c0826c336d",
+                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/20064511ab796593a3990669eff5f5b535001f7c",
+                "reference": "20064511ab796593a3990669eff5f5b535001f7c",
                 "shasum": ""
             },
             "require": {
@@ -8098,10 +8136,9 @@
                 "php-cs-fixer/accessible-object": "^1.0",
                 "php-cs-fixer/phpunit-constraint-isidenticalstring": "^1.1",
                 "php-cs-fixer/phpunit-constraint-xmlmatchesxsd": "^1.1",
-                "phpunit/phpunit": "^5.7.27 || ^6.5.14 || ^7.1",
+                "phpunit/phpunit": "^5.7.27 || ^6.5.8 || ^7.1",
                 "phpunitgoodpractices/traits": "^1.8",
-                "symfony/phpunit-bridge": "^4.3",
-                "symfony/yaml": "^3.0 || ^4.0"
+                "symfony/phpunit-bridge": "^4.3"
             },
             "suggest": {
                 "ext-mbstring": "For handling non-UTF8 characters in cache signature.",
@@ -8135,16 +8172,16 @@
             ],
             "authors": [
                 {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                },
-                {
                     "name": "Dariusz Rumiński",
                     "email": "dariusz.ruminski@gmail.com"
+                },
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
                 }
             ],
             "description": "A tool to automatically fix PHP code style",
-            "time": "2019-11-03T13:31:09+00:00"
+            "time": "2019-06-01T10:32:12+00:00"
         },
         {
             "name": "johnkary/phpunit-speedtrap",
