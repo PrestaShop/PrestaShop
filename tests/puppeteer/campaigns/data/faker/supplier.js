@@ -1,5 +1,6 @@
 const faker = require('faker');
-const countries = ['Italy', 'France', 'United States', 'Netherlands', 'United Kingdom', 'Germany'];
+
+const countries = ['France', 'Netherlands', 'United Kingdom', 'Germany'];
 
 module.exports = class Supplier {
   constructor(supplierToCreate = {}) {
@@ -21,7 +22,6 @@ module.exports = class Supplier {
     this.metaKeywords = supplierToCreate.metaKeywords || [faker.lorem.word(), faker.lorem.word()];
     this.metaKeywordsFr = supplierToCreate.metaKeywordsFr || this.metaKeywords;
     this.enabled = supplierToCreate.enabled === undefined ? true : supplierToCreate.enabled;
-    this.addresses = supplierToCreate.addresses || 0;
     this.products = supplierToCreate.products || 0;
   }
 };
