@@ -135,7 +135,7 @@
 </table>
 
 {% if  orderForViewing.documents.documents is empty and orderForViewing.invoiceManagementIsEnabled %}
-  <form action="{{ path('admin_orders_generate_invoice', {'orderId': orderForViewing.id}) }}">
+  <form action="{{ path('admin_orders_generate_invoice', {'orderId': orderForViewing.id}) }}" method="POST">
     <button class="btn btn-primary">
       <i class="material-icons">autorenew</i>
       {{ 'Generate invoice'|trans({}, 'Admin.Orderscustomers.Feature') }}

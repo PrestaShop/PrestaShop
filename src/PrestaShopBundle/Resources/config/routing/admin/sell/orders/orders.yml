@@ -183,4 +183,4 @@ admin_orders_generate_invoice:
   path: /{orderId}/invoice
   methods: [POST]
   defaults:
-    _controller: PrestaShopBundle:Admin/Sell/Order/Order:generateInvoiceAction
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:generateInvoice
