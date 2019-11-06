@@ -10,7 +10,7 @@ module.exports = class BOBasePage extends CommonPage {
     // Successful Messages
     this.successfulCreationMessage = 'Successful creation.';
     this.successfulUpdateMessage = 'Successful update.';
-    this.successfulDeleteMessage = 'Successful deletion';
+    this.successfulDeleteMessage = 'Successful deletion.';
     this.successfulMultiDeleteMessage = 'The selection has been successfully deleted.';
 
     // top navbar

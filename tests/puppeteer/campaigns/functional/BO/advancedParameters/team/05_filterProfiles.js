@@ -3,7 +3,7 @@ require('module-alias/register');
 const {expect} = require('chai');
 const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
-const {Profiles} = require('@data/demo/profile');
+const {Profiles} = require('@data/demo/profiles');
 // Importing pages
 const BOBasePage = require('@pages/BO/BObasePage');
 const LoginPage = require('@pages/BO/login');
@@ -14,12 +14,10 @@ const AddProfilePage = require('@pages/BO/advancedParameters/team/addProfile');
 const ProductsPage = require('@pages/BO/products');
 const OrdersPage = require('@pages/BO/orders');
 const FOBasePage = require('@pages/FO/FObasePage');
-const ProfileFaker = require('@data/faker/profile');
 
 let browser;
 let page;
 let numberOfProfiles = 0;
-let profileData;
 
 // Init objects needed
 const init = async function () {
@@ -73,7 +71,7 @@ describe('Create, Read, Update and Delete profile in BO', async () => {
   });
 
   // 1 : Filter profiles table
-  describe('Create profile in BO', async () => {
+  describe('Filter profile in BO', async () => {
     it('should filter list by \'Id\'', async function () {
       await this.pageObjects.profilesPage.filterProfiles(
         'input',

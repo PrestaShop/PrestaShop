@@ -3,23 +3,23 @@ require('module-alias/register');
 const {expect} = require('chai');
 const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
+const ProfileFaker = require('@data/faker/profile');
 // Importing pages
 const BOBasePage = require('@pages/BO/BObasePage');
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
 const EmployeesPage = require('@pages/BO/advancedParameters/team/employees');
 const ProfilesPage = require('@pages/BO/advancedParameters/team/profiles');
-const AddProfilePage = require('@pages/BO/advancedParameters/team/addProfile');
+const AddProfile = require('@pages/BO/advancedParameters/team/addProfile');
 const ProductsPage = require('@pages/BO/products');
 const OrdersPage = require('@pages/BO/orders');
 const FOBasePage = require('@pages/FO/FObasePage');
-const ProfileFaker = require('@data/faker/profile');
 
 let browser;
 let page;
 let numberOfProfiles = 0;
-let profileData;
-let editProfileData;
+let firstProfileData;
+let secondProfileData;
 
 // Init objects needed
 const init = async function () {
@@ -29,30 +29,25 @@ const init = async function () {
     dashboardPage: new DashboardPage(page),
     employeesPage: new EmployeesPage(page),
     profilesPage: new ProfilesPage(page),
-    addProfilePage: new AddProfilePage(page),
+    addProfile: new AddProfile(page),
     productsPage: new ProductsPage(page),
     ordersPage: new OrdersPage(page),
     foBasePage: new FOBasePage(page),
   };
 };
 
-// Create, Read, Update and Delete profile in BO
-describe('Create, Read, Update and Delete profile in BO', async () => {
+// Create profiles, Then Delete with Bulk actions
+describe('Create profiles then Delete with Bulk actions', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
     page = await helper.newTab(browser);
     this.pageObjects = await init();
-    profileData = await (new ProfileFaker({
-      defaultPage: 'Products',
-      language: 'English (English)',
-      permissionProfile: 'Salesman',
+    firstProfileData = await (new ProfileFaker({
+      name: 'todelete',
     }));
-    editProfileData = await (new ProfileFaker({
-      password: '123456789',
-      defaultPage: 'Orders',
-      language: 'English (English)',
-      permissionProfile: 'Salesman',
+    secondProfileData = await (new ProfileFaker({
+      name: 'todelete2',
     }));
   });
   after(async () => {
@@ -83,70 +78,51 @@ describe('Create, Read, Update and Delete profile in BO', async () => {
     await expect(numberOfProfiles).to.be.above(0);
   });
 
-  // 1 : Create profile
-  describe('Create profile in BO', async () => {
+  // 1 : Create two profiles
+  describe('Create profile then filter the table', async () => {
     it('should go to add new profile page', async function () {
       await this.pageObjects.profilesPage.goToAddNewProfilePage();
-      const pageTitle = await this.pageObjects.addProfilePage.getPageTitle();
-      await expect(pageTitle).to.contains(this.pageObjects.addProfilePage.pageTitleCreate);
+      const pageTitle = await this.pageObjects.addProfile.getPageTitle();
+      await expect(pageTitle).to.contains(this.pageObjects.addProfile.pageTitleCreate);
     });
 
-    it('should create profile and check result', async function () {
-      const textResult = await this.pageObjects.addProfilePage.createEditProfile(profileData);
+    it('should create the first profile', async function () {
+      const textResult = await this.pageObjects.addProfile.createEditProfile(firstProfileData);
       await expect(textResult).to.equal(this.pageObjects.profilesPage.successfulCreationMessage);
-      const numberOfProfilesAfterCreation = await this.pageObjects.profilesPage.getNumberFromText(
-        this.pageObjects.profilesPage.profileGridTitle,
-      );
-      await expect(numberOfProfilesAfterCreation).to.be.equal(numberOfProfiles + 1);
+    });
+
+    it('should go to add new profile page', async function () {
+      await this.pageObjects.profilesPage.goToAddNewProfilePage();
+      const pageTitle = await this.pageObjects.addProfile.getPageTitle();
+      await expect(pageTitle).to.contains(this.pageObjects.addProfile.pageTitleCreate);
+    });
+
+    it('should create the second profile', async function () {
+      const textResult = await this.pageObjects.addProfile.createEditProfile(secondProfileData);
+      await expect(textResult).to.equal(this.pageObjects.profilesPage.successfulCreationMessage);
     });
   });
 
-  // 2 : Update profile
-  describe('Update profile', async () => {
+  // 2 : Delete profile with bulk actions BO
+  describe('Delete profiles with Bulk Actions', async () => {
     it('should filter list by name', async function () {
       await this.pageObjects.profilesPage.filterProfiles(
         'input',
         'name',
-        profileData.name,
+        firstProfileData.name,
       );
       const textName = await this.pageObjects.profilesPage.getTextContent(
         this.pageObjects.profilesPage.profilesListTableColumn.replace('%ROW', '1').replace('%COLUMN', 'name'),
       );
-      await expect(textName).to.contains(profileData.name);
+      await expect(textName).to.contains(firstProfileData.name);
     });
 
-    it('should go to edit profile page', async function () {
-      await this.pageObjects.profilesPage.goToEditProfilePage('1');
-      const pageTitle = await this.pageObjects.addProfilePage.getPageTitle();
-      await expect(pageTitle).to.contains(this.pageObjects.addProfilePage.pageTitleEdit);
+    it('should delete profiles with Bulk Actions and check Result', async function () {
+      const deleteTextResult = await this.pageObjects.profilesPage.deleteBulkActions();
+      await expect(this.pageObjects.profilesPage.successfulDeleteMessage).to.be.contains(deleteTextResult);
     });
 
-    it('should update the profile', async function () {
-      const textResult = await this.pageObjects.addProfilePage.createEditProfile(editProfileData);
-      await expect(textResult).to.equal(this.pageObjects.addProfilePage.successfulUpdateMessage);
-    });
-  });
-
-  // 3 : Delete profile from BO
-  describe('Delete profile', async () => {
-    it('should filter list by email', async function () {
-      await this.pageObjects.profilesPage.filterProfiles(
-        'input',
-        'name',
-        editProfileData.name,
-      );
-      const textName = await this.pageObjects.profilesPage.getTextContent(
-        this.pageObjects.profilesPage.profilesListTableColumn.replace('%ROW', '1').replace('%COLUMN', 'name'),
-      );
-      await expect(textName).to.contains(editProfileData.name);
-    });
-
-    it('should delete profile', async function () {
-      const textResult = await this.pageObjects.profilesPage.deleteProfile('1');
-      await expect(this.pageObjects.profilesPage.successfulDeleteMessage).to.contains(textResult);
-    });
-
-    it('should reset filter and check the number of profiles', async function () {
+    it('should reset all filters', async function () {
       const numberOfProfilesAfterDelete = await this.pageObjects.profilesPage.resetAndGetNumberOfLines();
       await expect(numberOfProfilesAfterDelete).to.be.equal(numberOfProfiles);
     });

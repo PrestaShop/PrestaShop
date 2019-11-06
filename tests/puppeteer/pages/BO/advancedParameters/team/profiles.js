@@ -32,9 +32,7 @@ module.exports = class Profiles extends BOBasePage {
     // Bulk Actions
     this.selectAllRowsLabel = `${this.profilesListForm} .md-checkbox label`;
     this.bulkActionsToggleButton = `${this.profilesListForm} button.dropdown-toggle`;
-    this.bulkActionsEnableButton = `${this.profilesListForm} #profile_grid_bulk_action_enable_selection`;
-    this.bulkActionsDisableButton = `${this.profilesListForm} #profile_grid_bulk_action_disable_selection`;
-    this.bulkActionsDeleteButton = `${this.profilesListForm} #profile_grid_bulk_action_delete_selection`;
+    this.bulkActionsDeleteButton = `${this.profilesListForm} #profile_grid_bulk_action_bulk_delete_profiles`;
   }
 
   /*
@@ -42,7 +40,7 @@ module.exports = class Profiles extends BOBasePage {
    */
 
   /**
-   * Go to new Page profile page
+   * Go to new profile page
    * @return {Promise<void>}
    */
   async goToAddNewProfilePage() {
