@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCustomizationFieldsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\AddCustomizationFieldsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Exception\FileUploadException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationException;
 use PrestaShopException;
@@ -52,6 +53,7 @@ final class AddCustomizationFieldsHandler extends AbstractCartHandler implements
      * @throws CustomizationConstraintException
      * @throws CustomizationException
      * @throws PrestaShopException
+     * @throws FileUploadException
      */
     public function handle(AddCustomizationFieldsCommand $command): int
     {
@@ -65,7 +67,7 @@ final class AddCustomizationFieldsHandler extends AbstractCartHandler implements
 
         foreach ($customizationFields as $customizationField) {
             $customizationFieldId = (int) $customizationField['id_customization_field'];
-            //@todo validation
+            //@todo fields validation ?
             if (!isset($customizations[$customizationFieldId])) {
                 continue;
             }
@@ -80,31 +82,15 @@ final class AddCustomizationFieldsHandler extends AbstractCartHandler implements
                         true
                     );
                 } else {
-                    //Picture upload
-                    //@todo: clean file validation
-                    /** @var UploadedFile $file */
-                    $file = $customizations[$customizationFieldId];
+                    $fileName = $this->uploadImage($customizations[$customizationFieldId]);
 
-                    $this->validateUpload($file);
-                    //@todo: check if copy is okay to use instead of move_uploaded_file(this fails creating new request from global later)
-                    if (!($tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !copy($file->getPathname(), $tmpName)) {
-                        die('An error occurred during the image upload process.');
-                    }
-                    $fileName = md5(uniqid(mt_rand(0, mt_getrandmax()), true));
-                    if (!ImageManager::resize($tmpName, _PS_UPLOAD_DIR_ . $fileName)) {
-                        continue;
-                    } elseif (!ImageManager::resize($tmpName, _PS_UPLOAD_DIR_ . $fileName . '_small', (int) Configuration::get('PS_PRODUCT_PICTURE_WIDTH'), (int) Configuration::get('PS_PRODUCT_PICTURE_HEIGHT'))) {
-                        die('An error occurred during the image upload process.');
-                    } else {
-                        $customizationId = $cart->addPictureToProduct(
-                            $productId,
-                            $customizationFieldId,
-                            Product::CUSTOMIZE_FILE,
-                            $fileName,
-                            true
-                        );
-                        unlink($tmpName);
-                    }
+                    return $cart->addPictureToProduct(
+                        $productId,
+                        $customizationFieldId,
+                        Product::CUSTOMIZE_FILE,
+                        $fileName,
+                        true
+                    );
                 }
 
                 if (false === $customizationId) {
@@ -131,20 +117,72 @@ final class AddCustomizationFieldsHandler extends AbstractCartHandler implements
         return $customizationId;
     }
 
-    private function validateUpload(UploadedFile $file)
+    /**
+     * Uploads image from customized field
+     *
+     * @param UploadedFile $file
+     *
+     * @return string
+     *
+     * @throws FileUploadException
+     */
+    private function uploadImage(UploadedFile $file): string
+    {
+        $this->validateUpload($file);
+
+        //@todo: check if copy is okay to use instead of move_uploaded_file(this fails creating new request from global later)
+        if (!($tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !copy($file->getPathname(), $tmpName)) {
+            throw new FileUploadException('An error occurred during the image upload process.');
+        }
+        $fileName = md5(uniqid(mt_rand(0, mt_getrandmax()), true));
+        $resized = ImageManager::resize($tmpName, _PS_UPLOAD_DIR_ . $fileName) &&
+            ImageManager::resize(
+                $tmpName,
+                _PS_UPLOAD_DIR_ . $fileName . '_small',
+                (int) Configuration::get('PS_PRODUCT_PICTURE_WIDTH'),
+                (int) Configuration::get('PS_PRODUCT_PICTURE_HEIGHT')
+            );
+
+        if (!$resized) {
+            throw new FileUploadException('An error occurred when resizing the uploaded image');
+        } else {
+            unlink($tmpName);
+
+            return $fileName;
+        }
+    }
+
+    /**
+     * Validates uploaded image
+     *
+     * @param UploadedFile $file
+     *
+     * @throws FileUploadException
+     */
+    private function validateUpload(UploadedFile $file): void
     {
         $maxFileSize = (int) Configuration::get('PS_PRODUCT_PICTURE_MAX_SIZE');
-        //@todo: cannot use Symfony uploaded file as array
+
         if ((int) $maxFileSize > 0 && $file->getSize() > (int) $maxFileSize) {
-            return die('Image is too large (%1$d kB). Maximum allowed: %2$d kB');
-        }
-        if (!ImageManager::isRealImage($file->getPathname(), $file->getType()) || !ImageManager::isCorrectImageFileExt($file->getClientOriginalName(), null) || preg_match('/\%00/', $file->getClientOriginalName())) {
-            return die('Image format not recognized, allowed formats are: .gif, .jpg, .png');
-        }
-        if ($file->getError()) {
-            die('Error while uploading image; please change your server\'s settings. (Error code: %s)');
+            throw new FileUploadException(
+                sprintf(
+                    'Image is too large (%s kB). Maximum allowed: %s kB',
+                    $file->getSize() / 1024,
+                    $maxFileSize / 1024
+                ),
+                UPLOAD_ERR_FORM_SIZE
+            );
         }
 
-        return false;
+        if (!ImageManager::isRealImage($file->getPathname(), $file->getType()) || !ImageManager::isCorrectImageFileExt($file->getClientOriginalName(), null) || preg_match('/\%00/', $file->getClientOriginalName())) {
+            throw new FileUploadException(
+                'Image format not recognized, allowed formats are: .gif, .jpg, .png',
+                UPLOAD_ERR_EXTENSION
+            );
+        }
+
+        if ($file->getError()) {
+            throw new FileUploadException('Error while uploading image', $file->getError());
+        }
     }
 }
