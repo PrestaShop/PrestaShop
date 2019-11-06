@@ -18,10 +18,10 @@ module.exports = class Employees extends BOBasePage {
     this.employeesListForm = '#employee_grid';
     this.employeesListTableRow = `${this.employeesListForm} tbody tr:nth-child(%ROW)`;
     this.employeesListTableColumn = `${this.employeesListTableRow} td.column-%COLUMN`;
-    this.employeesListTableToggleDropDown = `${this.employeesListTableColumn.replace('%COLUMN', 'actions')} 
-    a[data-toggle='dropdown']`;
-    this.employeesListTableDeleteLink = `${this.employeesListTableColumn.replace('%COLUMN', 'actions')} a[data-url]`;
-    this.employeesListTableEditLink = `${this.employeesListTableColumn.replace('%COLUMN', 'actions')} a[href*='edit']`;
+    this.employeesListTableColumnAction = `${this.employeesListTableColumn.replace('%COLUMN', 'actions')}`;
+    this.employeesListTableToggleDropDown = `${this.employeesListTableColumnAction} a[data-toggle='dropdown']`;
+    this.employeesListTableDeleteLink = `${this.employeesListTableColumnAction} a[data-url]`;
+    this.employeesListTableEditLink = `${this.employeesListTableColumnAction} a[href*='edit']`;
     this.employeesListColumnValidIcon = `${this.employeesListTableColumn.replace('%COLUMN', 'active')} 
     i.grid-toggler-icon-valid`;
     this.employeesListColumnNotValidIcon = `${this.employeesListTableColumn.replace('%COLUMN', 'active')} 
@@ -67,11 +67,7 @@ module.exports = class Employees extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToEditEmployeePage(row) {
-    // Click on edit
-    await Promise.all([
-      this.page.click(this.employeesListTableEditLink.replace('%ROW', row)),
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-    ]);
+    await this.clickAndWaitForNavigation(this.employeesListTableEditLink.replace('%ROW', row));
   }
 
   /**
@@ -93,10 +89,7 @@ module.exports = class Employees extends BOBasePage {
       // Do nothing
     }
     // click on search
-    await Promise.all([
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-      this.page.click(this.filterSearchButton),
-    ]);
+    await this.clickAndWaitForNavigation(this.filterSearchButton);
   }
 
   /**
@@ -106,7 +99,9 @@ module.exports = class Employees extends BOBasePage {
    */
   async getToggleColumnValue(row) {
     if (await this.elementVisible(
-      this.employeesListColumnValidIcon.replace('%ROW', row), 100)) return true;
+      this.employeesListColumnValidIcon.replace('%ROW', row),
+      100,
+    )) return true;
     return false;
   }
 
@@ -168,10 +163,7 @@ module.exports = class Employees extends BOBasePage {
       this.page.waitForSelector(`${this.bulkActionsToggleButton}`, {visible: true}),
     ]);
     // Click on delete and wait for modal
-    await Promise.all([
-      this.page.click(enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton),
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-    ]);
+    await this.clickAndWaitForNavigation(enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 
