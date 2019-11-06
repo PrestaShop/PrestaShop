@@ -199,6 +199,10 @@ module.exports = class Employees extends BOBasePage {
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 
+  /**
+   * Go to Profiles page
+   * @return {Promise<void>}
+   */
   async goToProfilesPage() {
     await this.clickAndWaitForNavigation(this.profilesTab);
   }

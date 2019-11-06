@@ -103,7 +103,7 @@ describe('Create profiles then Delete with Bulk actions', async () => {
     });
   });
 
-  // 2 : Delete profile with bulk actions BO
+  // 2 : Delete profile with bulk actions
   describe('Delete profiles with Bulk Actions', async () => {
     it('should filter list by name', async function () {
       await this.pageObjects.profilesPage.filterProfiles(
