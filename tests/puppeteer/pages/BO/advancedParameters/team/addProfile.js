@@ -5,7 +5,7 @@ module.exports = class AddProfile extends BOBasePage {
   constructor(page) {
     super(page);
 
-    this.pageTitleCreate = 'Add new profile • prestashop';
+    this.pageTitleCreate = 'Add new profile';
     this.pageTitleEdit = 'Edit:';
 
     // Selectors

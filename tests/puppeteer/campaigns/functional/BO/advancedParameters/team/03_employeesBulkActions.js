@@ -119,7 +119,7 @@ describe('Create Employees, Then disable / Enable and Delete with Bulk actions',
       /* eslint-enable no-await-in-loop */
     });
 
-    it('should disable Employees with Bulk Actions and check Result', async function () {
+    it('should disable employees with Bulk Actions and check Result', async function () {
       const disableTextResult = await this.pageObjects.employeesPage.changeEnabledColumnBulkActions(false);
       await expect(disableTextResult).to.be.equal(this.pageObjects.employeesPage.successfulUpdateStatusMessage);
       const numberOfEmployeesInGrid = await this.pageObjects.employeesPage.getNumberFromText(
@@ -137,7 +137,7 @@ describe('Create Employees, Then disable / Enable and Delete with Bulk actions',
       /* eslint-enable no-await-in-loop */
     });
 
-    it('should enable Employees with Bulk Actions and check Result', async function () {
+    it('should enable employees with Bulk Actions and check Result', async function () {
       const enableTextResult = await this.pageObjects.employeesPage.changeEnabledColumnBulkActions();
       await expect(enableTextResult).to.be.equal(this.pageObjects.employeesPage.successfulUpdateStatusMessage);
       const numberOfEmployeesInGrid = await this.pageObjects.employeesPage.getNumberFromText(

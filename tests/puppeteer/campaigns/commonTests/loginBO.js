@@ -12,7 +12,7 @@ module.exports = {
   },
 
   logoutBO() {
-    it('should log out into BO', async function () {
+    it('should log out from BO', async function () {
       await this.pageObjects.boBasePage.logoutBO();
       const pageTitle = await this.pageObjects.loginPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.loginPage.pageTitle);

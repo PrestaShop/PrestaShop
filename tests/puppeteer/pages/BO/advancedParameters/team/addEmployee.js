@@ -50,7 +50,7 @@ module.exports = class AddPageEmployee extends BOBasePage {
    * Cancel page
    * @return {Promise<void>}
    */
-  async cancelPage() {
+  async cancel() {
     await this.clickAndWaitForNavigation(this.cancelButton);
   }
 };

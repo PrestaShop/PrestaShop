@@ -16,10 +16,10 @@ module.exports = class Profiles extends BOBasePage {
     this.profilesListForm = '#profile_grid';
     this.profilesListTableRow = `${this.profilesListForm} tbody tr:nth-child(%ROW)`;
     this.profilesListTableColumn = `${this.profilesListTableRow} td.column-%COLUMN`;
-    this.profilesListTableToggleDropDown = `${this.profilesListTableColumn.replace('%COLUMN', 'actions')} 
-    a[data-toggle='dropdown']`;
-    this.profilesListTableDeleteLink = `${this.profilesListTableColumn.replace('%COLUMN', 'actions')} a[data-url]`;
-    this.profilesListTableEditLink = `${this.profilesListTableColumn.replace('%COLUMN', 'actions')} a[href*='edit']`;
+    this.profilesListTableColumnAction = `${this.profilesListTableColumn.replace('%COLUMN', 'actions')}`;
+    this.profilesListTableToggleDropDown = `${this.profilesListTableColumnAction} a[data-toggle='dropdown']`;
+    this.profilesListTableDeleteLink = `${this.profilesListTableColumnAction} a[data-url]`;
+    this.profilesListTableEditLink = `${this.profilesListTableColumnAction} a[href*='edit']`;
     // Filters
     this.profileFilterInput = `${this.profilesListForm} #profile_%FILTERBY`;
     this.filterSearchButton = `${this.profilesListForm} button[name='profile[actions][search]']`;
@@ -60,10 +60,7 @@ module.exports = class Profiles extends BOBasePage {
    */
   async goToEditProfilePage(row) {
     // Click on edit
-    await Promise.all([
-      this.page.click(this.profilesListTableEditLink.replace('%ROW', row)),
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-    ]);
+    await this.clickAndWaitForNavigation(this.profilesListTableEditLink.replace('%ROW', row));
   }
 
   /**
@@ -85,10 +82,7 @@ module.exports = class Profiles extends BOBasePage {
       // Do nothing
     }
     // click on search
-    await Promise.all([
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-      this.page.click(this.filterSearchButton),
-    ]);
+    await this.clickAndWaitForNavigation(this.filterSearchButton);
   }
 
   /**
