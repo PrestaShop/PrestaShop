@@ -57,4 +57,6 @@ export default {
   productAddedToCart: 'productAddedToCart',
   // when product is removed from cart
   productRemovedFromCart: 'productRemovedFromCart',
+  // when product in cart price has been changed
+  productPriceChanged: 'productPriceChanged',
 };
