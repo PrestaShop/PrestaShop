@@ -4,7 +4,7 @@ const {expect} = require('chai');
 const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
 const EmployeeFaker = require('@data/faker/employee');
-const {DefaultAccount} = require('@data/demo/employee');
+const {DefaultAccount} = require('@data/demo/employees');
 // Importing pages
 const BOBasePage = require('@pages/BO/BObasePage');
 const LoginPage = require('@pages/BO/login');
