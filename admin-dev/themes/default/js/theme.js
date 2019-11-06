@@ -25,6 +25,7 @@
 import '../sass/font.scss';
 import '../sass/admin-theme.sass';
 import '../node_modules/perfect-scrollbar/css/perfect-scrollbar.css';
+import '@openfonts/ubuntu-condensed_latin';
 
 import PerfectScrollBar from 'perfect-scrollbar';
 
