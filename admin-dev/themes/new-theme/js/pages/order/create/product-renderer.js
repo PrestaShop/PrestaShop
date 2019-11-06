@@ -58,12 +58,15 @@ export default class ProductRenderer {
         this._renderListedProductCustomization(product.customization, $template);
       }
 
-      $template.find(createOrderMap.productImageField).prop('src', product.imageLink);
-      $template.find(createOrderMap.productNameField).text(product.name);
-      $template.find(createOrderMap.productAttrField).text(product.attribute);
-      $template.find(createOrderMap.productReferenceField).text(product.reference);
-      $template.find(createOrderMap.productUnitPriceInput).val(product.unitPrice);
-      $template.find(createOrderMap.productQtyInput).val(product.quantity);
+      $template.find(createOrderMap.listedProductImageField).prop('src', product.imageLink);
+      $template.find(createOrderMap.listedProductNameField).text(product.name);
+      $template.find(createOrderMap.listedProductAttrField).text(product.attribute);
+      $template.find(createOrderMap.listedProductReferenceField).text(product.reference);
+      $template.find(createOrderMap.listedProductUnitPriceInput).val(product.unitPrice);
+      $template.find(createOrderMap.listedProductUnitPriceInput).data('product-id', product.productId);
+      $template.find(createOrderMap.listedProductUnitPriceInput).data('attribute-id', product.attributeId);
+      $template.find(createOrderMap.listedProductUnitPriceInput).data('customization-id', customizationId);
+      $template.find(createOrderMap.listedProductQtyInput).val(product.quantity);
       $template.find(createOrderMap.productTotalPriceField).text(product.price);
       $template.find(createOrderMap.productRemoveBtn).data('product-id', product.productId);
       $template.find(createOrderMap.productRemoveBtn).data('attribute-id', product.attributeId);

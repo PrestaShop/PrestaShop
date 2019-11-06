@@ -114,6 +114,7 @@ export default class CreateOrderPage {
       this.cartEditor.changeCartCurrency(this.cartId, e.currentTarget.value)
     );
 
+    this.$container.on('change', createOrderMap.listedProductUnitPriceInput, (e) => this._initProductChangePrice(e));
     this.$container.on('change', createOrderMap.addressSelect, () => this._changeCartAddresses());
     this.$container.on('click', createOrderMap.productRemoveBtn, e => this._initProductRemoveFromCart(e));
   }
@@ -309,6 +310,24 @@ export default class CreateOrderPage {
     };
 
     this.productManager.removeProductFromCart(this.cartId, product);
+  }
+
+  /**
+   * Inits product in cart price change
+   *
+   * @param event
+   *
+   * @private
+   */
+  _initProductChangePrice(event) {
+    const product = {
+      productId: $(event.currentTarget).data('product-id'),
+      attributeId: $(event.currentTarget).data('attribute-id'),
+      customizationId: $(event.currentTarget).data('customization-id'),
+      price: $(event.currentTarget).val(),
+    };
+
+    this.productManager.changeProductPrice(this.cartId, product);
   }
 
   /**
