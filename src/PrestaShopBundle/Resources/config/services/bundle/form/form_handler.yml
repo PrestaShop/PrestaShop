@@ -348,3 +348,13 @@ services:
             -
               'configuration': 'PrestaShopBundle\Form\Admin\Improve\Design\MailTheme\MailThemeConfigurationType'
             - 'MailTheme'
+
+    prestashop.admin.merchandise_return_options.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        arguments:
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.admin.merchandise_return_options.form_data_provider'
+            -
+              'options': 'PrestaShopBundle\Form\Admin\Sell\CustomerService\MerchandiseReturn\MerchandiseReturnOptionsType'
+            - 'MerchandiseReturn'

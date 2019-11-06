@@ -262,3 +262,11 @@ services:
             - '@prestashop.core.grid.data.factory.attribute_group_decorator'
             - '@prestashop.core.grid.filter.form_factory'
             - '@prestashop.core.hook.dispatcher'
+
+    prestashop.core.grid.factory.merchandise_return:
+        class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+        arguments:
+            - '@prestashop.core.grid.definition.factory.merchandise_return'
+            - '@prestashop.core.grid.data_provider.merchandise_return'
+            - '@prestashop.core.grid.filter.merchandise_return_form_factory'
+            - '@prestashop.core.hook.dispatcher'
