@@ -103,7 +103,7 @@ describe('Create 2 brand Addresses and delete with bulk actions', async () => {
         const textColumn = await this.pageObjects.brandsPage.getTextContent(
           this.pageObjects.brandsPage.tableColumn
             .replace('%TABLE', 'manufacturer_address')
-            .replace('%ROW', 1)
+            .replace('%ROW', i)
             .replace('%COLUMN', 'firstname'),
         );
         await expect(textColumn).to.contains('AddressToDelete');
