@@ -2364,7 +2364,10 @@ class ToolsCore
 
     protected static $_cache_nb_media_servers = null;
 
-    public static function getMediaServer($filename)
+    /**
+     * @return bool
+     */
+    public static function hasMediaServer(): bool
     {
         if (self::$_cache_nb_media_servers === null && defined('_MEDIA_SERVER_1_') && defined('_MEDIA_SERVER_2_') && defined('_MEDIA_SERVER_3_')) {
             if (_MEDIA_SERVER_1_ == '') {
@@ -2378,7 +2381,17 @@ class ToolsCore
             }
         }
 
-        if ($filename && self::$_cache_nb_media_servers && ($id_media_server = (abs(crc32($filename)) % self::$_cache_nb_media_servers + 1))) {
+        return self::$_cache_nb_media_servers > 0;
+    }
+
+    /**
+     * @param string $filename
+     *
+     * @return string
+     */
+    public static function getMediaServer(string $filename): string
+    {
+        if (self::hasMediaServer() && ($id_media_server = (abs(crc32($filename)) % self::$_cache_nb_media_servers + 1))) {
             return constant('_MEDIA_SERVER_' . $id_media_server . '_');
         }
 

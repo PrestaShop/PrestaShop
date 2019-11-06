@@ -1052,10 +1052,10 @@ class FrontControllerCore extends Controller
          */
     }
 
-    public function registerStylesheet($id, $relativePath, $params = array())
+    public function registerStylesheet($id, $relativePath, $params = [])
     {
         if (!is_array($params)) {
-            $params = array();
+            $params = [];
         }
 
         $default_params = [
@@ -1064,9 +1064,13 @@ class FrontControllerCore extends Controller
             'inline' => false,
             'server' => 'local',
         ];
-
         $params = array_merge($default_params, $params);
 
+        if (Tools::hasMediaServer() && !Configuration::get('PS_CSS_THEME_CACHE')) {
+            $relativePath = Tools::getCurrentUrlProtocolPrefix() . Tools::getMediaServer($relativePath)
+                . ($this->stylesheetManager->getFullPath($relativePath) ?? $relativePath);
+            $params['server'] = 'remote';
+        }
         $this->stylesheetManager->register($id, $relativePath, $params['media'], $params['priority'], $params['inline'], $params['server']);
     }
 
@@ -1075,10 +1079,10 @@ class FrontControllerCore extends Controller
         $this->stylesheetManager->unregisterById($id);
     }
 
-    public function registerJavascript($id, $relativePath, $params = array())
+    public function registerJavascript($id, $relativePath, $params = [])
     {
         if (!is_array($params)) {
-            $params = array();
+            $params = [];
         }
 
         $default_params = [
@@ -1088,9 +1092,13 @@ class FrontControllerCore extends Controller
             'attributes' => null,
             'server' => 'local',
         ];
-
         $params = array_merge($default_params, $params);
 
+        if (Tools::hasMediaServer() && !Configuration::get('PS_JS_THEME_CACHE')) {
+            $relativePath = Tools::getCurrentUrlProtocolPrefix() . Tools::getMediaServer($relativePath)
+                . ($this->javascriptManager->getFullPath($relativePath) ?? $relativePath);
+            $params['server'] = 'remote';
+        }
         $this->javascriptManager->register($id, $relativePath, $params['position'], $params['priority'], $params['inline'], $params['attributes'], $params['server']);
     }
 
@@ -1605,9 +1613,9 @@ class FrontControllerCore extends Controller
             'long' => Configuration::get('PS_STORES_CENTER_LONG'),
             'lat' => Configuration::get('PS_STORES_CENTER_LAT'),
 
-            'logo' => (Configuration::get('PS_LOGO')) ? _PS_IMG_ . Configuration::get('PS_LOGO') : '',
-            'stores_icon' => (Configuration::get('PS_STORES_ICON')) ? _PS_IMG_ . Configuration::get('PS_STORES_ICON') : '',
-            'favicon' => (Configuration::get('PS_FAVICON')) ? _PS_IMG_ . Configuration::get('PS_FAVICON') : '',
+            'logo' => (Configuration::get('PS_LOGO')) ? Configuration::get('PS_LOGO') : '',
+            'stores_icon' => (Configuration::get('PS_STORES_ICON')) ? Configuration::get('PS_STORES_ICON') : '',
+            'favicon' => (Configuration::get('PS_FAVICON')) ? Configuration::get('PS_FAVICON') : '',
             'favicon_update_time' => Configuration::get('PS_IMG_UPDATE_TIME'),
 
             'address' => array(
