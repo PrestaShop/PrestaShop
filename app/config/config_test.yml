@@ -1,7 +1,6 @@
 parameters:
     AdapterSecurityAdminClass:                LegacyTests\PrestaShopBundle\Mock\AdapterSecurityAdminMock
     prestashop.security.voter.product.class:  LegacyTests\PrestaShopBundle\Mock\PageVoter
-    database_name: "test_prestashop"
 
 imports:
     - { resource: config_dev.yml }
@@ -23,3 +22,10 @@ swiftmailer:
 services:
     prestashop.bundle.routing.converter.cache:
         class: Symfony\Component\Cache\Adapter\ArrayAdapter
+
+# Doctrine Configuration
+doctrine:
+    dbal:
+        connections:
+            default:
+                dbname: "test_%database_name%"
