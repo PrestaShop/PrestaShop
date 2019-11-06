@@ -335,13 +335,18 @@ class CartController extends FrameworkBundleAdminController
      */
     public function addProductAction(Request $request, int $cartId): JsonResponse
     {
-        $productId = $request->request->getInt('productId');
-        $quantity = $request->request->getInt('quantity');
-        $combinationId = $request->request->getInt('combinationId');
+        $productId = $request->request->getInt('product_id');
+        $quantity = $request->request->getInt('product_quantity');
+        $combinationId = $request->request->getInt('combination_id');
         $customizationId = null;
 
+        $textCustomizations = $request->request->get('customizations') ?: [];
+        $fileCustomizations = $request->files->get('customizations') ?: [];
+
+        $customizations = $textCustomizations + $fileCustomizations;
+
         try {
-            if ($customizations = $request->request->get('customizations')) {
+            if (!empty($customizations)) {
                 $customizationId = $this->getCommandBus()->handle(new AddCustomizationFieldsCommand(
                     $cartId,
                     $productId,
