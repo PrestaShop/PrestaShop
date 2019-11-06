@@ -51,6 +51,15 @@ class OrderDocumentForViewing
     private $referenceNumber;
 
     /**
+     * When eligible, document amount as a number
+     *
+     * @var float|null
+     */
+    private $numericalAmount;
+
+    /**
+     * When eligible, document amount as a string, ready to be displayed
+     *
      * @var string|null
      */
     private $amount;
@@ -75,6 +84,7 @@ class OrderDocumentForViewing
         string $type,
         DateTimeImmutable $createdAt,
         string $referenceNumber,
+        ?float $numericalAmount,
         ?string $amount,
         ?string $amountMismatch,
         ?string $note,
@@ -84,6 +94,7 @@ class OrderDocumentForViewing
         $this->type = $type;
         $this->createdAt = $createdAt;
         $this->referenceNumber = $referenceNumber;
+        $this->numericalAmount = $numericalAmount;
         $this->amount = $amount;
         $this->amountMismatch = $amountMismatch;
         $this->note = $note;
@@ -143,5 +154,13 @@ class OrderDocumentForViewing
     public function isAddPaymentAllowed(): bool
     {
         return $this->isAddPaymentAllowed;
+    }
+
+    /**
+     * @return float|null
+     */
+    public function getNumericalAmount(): ?float
+    {
+        return $this->numericalAmount;
     }
 }

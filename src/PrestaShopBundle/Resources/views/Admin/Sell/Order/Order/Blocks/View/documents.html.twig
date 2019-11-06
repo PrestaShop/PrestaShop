@@ -25,23 +25,23 @@
 
 <table class="table mb-3">
   <thead>
-    <tr>
-      <th>
-        {{ 'Date'|trans({}, 'Admin.Global') }}
-      </th>
-      <th>
-        {{ 'Document'|trans({}, 'Admin.Orderscustomers.Feature') }}
-      </th>
-      <th>
-        {{ 'Number'|trans({}, 'Admin.Orderscustomers.Feature') }}
-      </th>
-      <th>
-        {{ 'Amount'|trans({}, 'Admin.Global') }}
-      </th>
-      <th class="text-right">
-        {{ 'Actions'|trans({}, 'Admin.Global') }}
-      </th>
-    </tr>
+  <tr>
+    <th>
+      {{ 'Date'|trans({}, 'Admin.Global') }}
+    </th>
+    <th>
+      {{ 'Document'|trans({}, 'Admin.Orderscustomers.Feature') }}
+    </th>
+    <th>
+      {{ 'Number'|trans({}, 'Admin.Orderscustomers.Feature') }}
+    </th>
+    <th>
+      {{ 'Amount'|trans({}, 'Admin.Global') }}
+    </th>
+    <th class="text-right">
+      {{ 'Actions'|trans({}, 'Admin.Global') }}
+    </th>
+  </tr>
   </thead>
   <tbody>
   {% if  orderForViewing.documents.documents is not empty %}
@@ -93,13 +93,18 @@
         </td>
         <td class="text-right">
           {% if document.type == 'invoice' %}
-            <a href="#" class="js-open-invoice-note-btn">
+            {% if (document.isAddPaymentAllowed and document.amount) %}
+              <button href="#" class="js-enter-payment-btn btn btn-primary btn-sm" data-payment-amount="{{ document.numericalAmount }}">
+                {{ 'Enter payment'|trans({}, 'Admin.Orderscustomers.Feature') }}
+              </button>
+            {% endif %}
+            <button href="#" class="js-open-invoice-note-btn btn btn-primary btn-sm">
               {% if document.note is empty %}
                 {{ 'Add note'|trans({}, 'Admin.Orderscustomers.Feature') }}
               {% else %}
                 {{ 'Edit note'|trans({}, 'Admin.Orderscustomers.Feature') }}
               {% endif %}
-            </a>
+            </button>
           {% endif %}
         </td>
       </tr>
@@ -127,7 +132,7 @@
   {% else %}
     <tr>
       <td colspan="5" class="text-center">
-          {{ 'There is no available document'|trans({}, 'Admin.Orderscustomers.Notification') }}
+        {{ 'There is no available document'|trans({}, 'Admin.Orderscustomers.Notification') }}
       </td>
     </tr>
   {% endif %}

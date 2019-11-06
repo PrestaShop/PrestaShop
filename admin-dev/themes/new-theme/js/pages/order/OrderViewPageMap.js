@@ -25,6 +25,8 @@
 
 export default {
   orderPaymentDetailsBtn: '.js-payment-details-btn',
+  orderPaymentFormAmountInput: '#order_payment_amount',
+  viewOrderPaymentsBlock: '#view_order_payments_block',
   privateNoteToggleBtn: '.js-private-note-toggle-btn',
   privateNoteBlock: '.js-private-note-block',
   privateNoteInput: '#private_note_note',

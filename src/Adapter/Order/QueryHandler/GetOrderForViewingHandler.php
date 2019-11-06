@@ -565,6 +565,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
                 $type,
                 new DateTimeImmutable($document->date_add),
                 $number,
+                $document->total_paid_tax_incl,
                 $amount,
                 $amountMismatch,
                 $document instanceof OrderInvoice ? $document->note : null,
