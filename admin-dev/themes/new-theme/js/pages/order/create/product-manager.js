@@ -52,6 +52,7 @@ export default class ProductManager {
       search: searchPhrase => this._search(searchPhrase),
       addProductToCart: cartId => this.cartEditor.addProduct(cartId, this._getProductData()),
       removeProductFromCart: (cartId, product) => this.cartEditor.removeProductFromCart(cartId, product),
+      changeProductPrice: (cartId, updatedProduct) => this.cartEditor.changeProductPrice(cartId, updatedProduct),
     };
   }
 
@@ -101,6 +102,17 @@ export default class ProductManager {
   _onRemoveProductFromCart() {
     EventEmitter.on(eventMap.productRemovedFromCart, (cartInfo) => {
       EventEmitter.emit(eventMap.cartLoaded, cartInfo);
+    });
+  }
+
+  /**
+   * Listens for product price change in cart event
+   *
+   * @private
+   */
+  _onProductPriceChange() {
+    EventEmitter.on(eventMap.productPriceChanged, (cartInfo) => {
+      this.productRenderer.renderList(cartInfo.products);
     });
   }
 
