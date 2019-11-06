@@ -150,8 +150,8 @@ describe('Create, Read, Update and Delete Employee in BO', async () => {
         await expect(textResult).to.equal(this.pageObjects.addEmployeePage.successfulUpdateMessage);
       });
 
-      it('should click on cancel and verify the new employees number', async function () {
-        await this.pageObjects.addEmployeePage.cancelPage();
+      it('should click on cancel and verify the new employee\'s number', async function () {
+        await this.pageObjects.addEmployeePage.cancel();
         const numberOfEmployeesAfterUpdate = await this.pageObjects.employeesPage.resetAndGetNumberOfLines();
         await expect(numberOfEmployeesAfterUpdate).to.be.equal(numberOfEmployees + 1);
       });
@@ -168,7 +168,7 @@ describe('Create, Read, Update and Delete Employee in BO', async () => {
       // Logout into BO
       loginCommon.logoutBO();
     });
-    describe('Disable the Employee and check it', async () => {
+    describe('Disable the employee and check it', async () => {
       // Login into BO
       loginCommon.loginBO();
 
@@ -208,7 +208,7 @@ describe('Create, Read, Update and Delete Employee in BO', async () => {
       // Logout into BO
       loginCommon.logoutBO();
 
-      it('should test sign in with the disabled Employee', async function () {
+      it('should test sign in with the disabled employee', async function () {
         await this.pageObjects.loginPage.login(secondEditEmployeeData.email, secondEditEmployeeData.password);
         const pageTitle = await this.pageObjects.loginPage.getPageTitle();
         await expect(pageTitle).to.contains(this.pageObjects.loginPage.pageTitle);

@@ -1,8 +1,8 @@
 const faker = require('faker');
+const {Profiles} = require('@data/demo/profiles');
 
 const defaultPage = ['Dashboard', 'Orders', 'Products'];
 const language = ['English (English)', 'Français (French)'];
-const permissionProfile = ['SuperAdmin', 'Logistician', 'Translator', 'Salesman'];
 
 module.exports = class Employee {
   constructor(employeeToCreate = {}) {
@@ -13,6 +13,6 @@ module.exports = class Employee {
     this.defaultPage = employeeToCreate.defaultPage || faker.random.arrayElement(defaultPage);
     this.language = employeeToCreate.language || faker.random.arrayElement(language);
     this.active = employeeToCreate.active === undefined ? true : employeeToCreate.active;
-    this.permissionProfile = employeeToCreate.permissionProfile || faker.random.arrayElement(permissionProfile);
+    this.permissionProfile = employeeToCreate.permissionProfile || faker.random.arrayElement(Profiles);
   }
 };
