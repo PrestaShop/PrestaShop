@@ -45,7 +45,7 @@ export default class SummaryRenderer {
    * Renders summary block
    *
    * @param {Object} cartInfo
-   * @param {Bool} addressesAreValid
+   * @param {boolean} addressesAreValid
    */
   render(cartInfo, addressesAreValid) {
     this._cleanSummary();
