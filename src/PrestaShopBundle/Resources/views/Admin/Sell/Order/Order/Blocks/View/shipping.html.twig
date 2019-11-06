@@ -45,8 +45,12 @@
           <td>{{ carrier.weight }}</td>
           <td>{{ carrier.price }}</td>
           <td>
-            {% if carrier.trackingNumber and carrier.trackingUrl %}
-              <a href="{{ carrier.trackingUrl }}">{{ carrier.trackingNumber }}</a>
+            {% if carrier.trackingNumber %}
+              {% if carrier.trackingUrl %}
+                <a href="{{ carrier.trackingUrl }}">{{ carrier.trackingNumber }}</a>
+              {% else %}
+                {{ carrier.trackingNumber }}
+              {% endif %}
             {% endif %}
           </td>
           <td class="text-right">
