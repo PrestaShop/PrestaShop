@@ -356,10 +356,14 @@ class MailCore extends ObjectModel
                     ->setUsername($configuration['PS_MAIL_USER'])
                     ->setPassword($configuration['PS_MAIL_PASSWD']);
             } else {
-                // mail() support was removed from SwiftMailer for security reasons
-                // previously => $connection = \Swift_MailTransport::newInstance();
-                // @see https://github.com/swiftmailer/swiftmailer/issues/866
-                $connection = false;
+                /**
+                 * mail() support was removed from SwiftMailer for security reasons
+                 * previously => $connection = \Swift_MailTransport::newInstance();
+                 * Use Swift_SendmailTransport instead
+                 *
+                 * @see https://github.com/swiftmailer/swiftmailer/issues/866
+                 */
+                $connection = new Swift_SendmailTransport();
             }
 
             if (!$connection) {
@@ -682,7 +686,7 @@ class MailCore extends ObjectModel
      * Send a test email.
      *
      * @param bool $smtpChecked Is SMTP checked?
-     * @param string $smtp_server SMTP Server hostname
+     * @param string $smtpServer SMTP Server hostname
      * @param string $content Content of the email
      * @param string $subject Subject of the email
      * @param bool $type Deprecated
@@ -697,7 +701,7 @@ class MailCore extends ObjectModel
      */
     public static function sendMailTest(
         $smtpChecked,
-        $smtp_server,
+        $smtpServer,
         $content,
         $subject,
         $type,
@@ -715,15 +719,26 @@ class MailCore extends ObjectModel
                 if (Tools::strtolower($smtpEncryption) === 'off') {
                     $smtpEncryption = false;
                 }
-                $smtp = \Swift_SmtpTransport::newInstance($smtp_server, $smtpPort, $smtpEncryption)
+                $connection = (new Swift_SmtpTransport(
+                    $smtpServer,
+                    $smtpPort,
+                    $smtpEncryption
+                ))
                     ->setUsername($smtpLogin)
                     ->setPassword($smtpPassword);
-                $swift = \Swift_Mailer::newInstance($smtp);
             } else {
-                $swift = \Swift_Mailer::newInstance(\Swift_MailTransport::newInstance());
+                /**
+                 * mail() support was removed from SwiftMailer for security reasons
+                 * previously => $connection = \Swift_MailTransport::newInstance();
+                 * Use Swift_SendmailTransport instead
+                 *
+                 * @see https://github.com/swiftmailer/swiftmailer/issues/866
+                 */
+                $connection = new Swift_SendmailTransport();
             }
 
-            $message = \Swift_Message::newInstance();
+            $swift = new Swift_Mailer($connection);
+            $message = new Swift_Message();
 
             $message
                 ->setFrom($from)
