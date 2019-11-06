@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Language\LanguageRepositoryInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateGenerator;
 use PrestaShop\PrestaShop\Core\MailTemplate\ThemeCatalogInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\ThemeInterface;
-use Symfony\Component\Translation\Loader\ArrayLoader;
+use Symfony\Component\Finder\Finder;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -99,7 +99,7 @@ class GenerateThemeMailTemplatesCommandHandler implements GenerateThemeMailTempl
         /** @var ThemeInterface $theme */
         $theme = $this->themeCatalog->getByName($command->getThemeName());
 
-        $this->cleanTranslatorLocaleCache($command->getLanguage());
+        $this->addLanguageToTranslator($command->getLanguage());
 
         $coreMailsFolder = $command->getCoreMailsFolder() ?: $this->defaultCoreMailsFolder;
         $modulesMailFolder = $command->getModulesMailFolder() ?: $this->defaultModulesMailFolder;
@@ -108,25 +108,20 @@ class GenerateThemeMailTemplatesCommandHandler implements GenerateThemeMailTempl
     }
 
     /**
-     * When installing a new Language, if it's a new one the Translator component can't manage it because its cache is
-     * already filled with the default one as fallback. We force the component to update its cache by adding a fake
-     * resource for this locale (this is the only way clean its local cache)
+     * When installing a new language, we must add the lang pack to the translator
      *
      * @param string $locale
      */
-    private function cleanTranslatorLocaleCache($locale)
+    private function addLanguageToTranslator(string $locale)
     {
-        if (!method_exists($this->translator, 'addLoader')
-            || !method_exists($this->translator, 'addResource')
-        ) {
-            return;
-        }
+        $finder = Finder::create()
+            ->files()
+            ->name('*.' . $locale . '.xlf')
+            ->in(_PS_ROOT_DIR_ . '/app/Resources/translations/' . $locale);
 
-        $this->translator->addLoader('array', new ArrayLoader());
-        $this->translator->addResource(
-            'array',
-            ['Fake clean cache message' => 'Fake clean cache message'],
-            $locale
-        );
+        foreach ($finder as $file) {
+            list($domain, $locale, $format) = explode('.', $file->getBasename(), 3);
+            $this->translator->addResource($format, $file, $locale, $domain);
+        }
     }
 }
