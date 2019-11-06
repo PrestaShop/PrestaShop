@@ -68,6 +68,11 @@ class EditCurrencyCommand
     protected $isEnabled;
 
     /**
+     * @var bool
+     */
+    private $isDeleted;
+
+    /**
      * @var int[]
      */
     protected $shopIds = [];
@@ -207,6 +212,26 @@ class EditCurrencyCommand
     public function setIsEnabled($isEnabled)
     {
         $this->isEnabled = $isEnabled;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDeleted()
+    {
+        return $this->isDeleted;
+    }
+
+    /**
+     * @param bool $isDeleted
+     *
+     * @return self
+     */
+    public function setIsDeleted($isDeleted)
+    {
+        $this->isDeleted = $isDeleted;
 
         return $this;
     }
