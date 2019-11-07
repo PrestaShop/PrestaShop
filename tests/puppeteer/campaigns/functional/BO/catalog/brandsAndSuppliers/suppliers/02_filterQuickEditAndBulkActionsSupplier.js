@@ -8,9 +8,9 @@ const SupplierFaker = require('@data/faker/supplier');
 const BOBasePage = require('@pages/BO/BObasePage');
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
-const BrandsPage = require('@pages/BO/brands');
-const SuppliersPage = require('@pages/BO/suppliers');
-const AddSupplierPage = require('@pages/BO/addSupplier');
+const BrandsPage = require('@pages/BO/catalog/brands');
+const SuppliersPage = require('@pages/BO/catalog/suppliers');
+const AddSupplierPage = require('@pages/BO/catalog/suppliers/add');
 
 let browser;
 let page;
