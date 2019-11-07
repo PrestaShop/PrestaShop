@@ -50,9 +50,14 @@ export default class ProductManager {
 
     return {
       search: searchPhrase => this._search(searchPhrase),
+
       addProductToCart: cartId => this.cartEditor.addProduct(cartId, this._getProductData()),
-      removeProductFromCart: (cartId, product) => this.cartEditor.removeProductFromCart(cartId, product),
-      changeProductPrice: (cartId, updatedProduct) => this.cartEditor.changeProductPrice(cartId, updatedProduct),
+
+      removeProductFromCart: (cartId, product) =>
+        this.cartEditor.removeProductFromCart(cartId, product),
+
+      changeProductPrice: (cartId, customerId, updatedProduct) =>
+        this.cartEditor.changeProductPrice(cartId, customerId, updatedProduct),
     };
   }
 
@@ -68,6 +73,7 @@ export default class ProductManager {
     this._onProductSearch();
     this._onAddProductToCart();
     this._onRemoveProductFromCart();
+    this._onProductPriceChange();
   }
 
   /**
