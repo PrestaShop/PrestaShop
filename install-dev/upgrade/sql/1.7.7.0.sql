@@ -18,3 +18,17 @@ DELETE `PREFIX_configuration` WHERE name = 'PS_PRICE_DISPLAY_PRECISION';
 
 /* Set optin field value to 0 in employee table */
 ALTER TABLE `PREFIX_employee` MODIFY COLUMN `optin` tinyint(1) unsigned DEFAULT NULL;
+
+/* Returned modules_perfs table for hook profiling */
+CREATE TABLE `PREFIX_modules_perfs` (
+  `id_modules_perfs` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `session` int(11) unsigned NOT NULL,
+  `module` varchar(62) NOT NULL,
+  `method` varchar(126) NOT NULL,
+  `time_start` double unsigned NOT NULL,
+  `time_end` double unsigned NOT NULL,
+  `memory_start` int unsigned NOT NULL,
+  `memory_end` int unsigned NOT NULL,
+  PRIMARY KEY (`id_modules_perfs`),
+  KEY (`session`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
