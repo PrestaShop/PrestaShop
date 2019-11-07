@@ -7,7 +7,7 @@ admin_credit_slips_index:
     _legacy_link: AdminSlip
 
 admin_credit_slips_search:
-  path: /
+  path: /search
   methods: POST
   defaults:
     _controller: 'PrestaShopBundle:Admin/Sell/Order/CreditSlip:search'
@@ -35,9 +35,9 @@ _admin_credit_slips_pdf_by_date:
     _legacy_controller: AdminSlip
 
 admin_credit_slips_process_options:
-  path: /options
+  path: /
   methods: [POST]
   defaults:
-    _controller: 'PrestaShopBundle:Admin/Sell/Order/CreditSlip:processOptions'
+    _controller: 'PrestaShopBundle:Admin/Sell/Order/CreditSlip:index'
     _legacy_controller: AdminSlip
     _legacy_link: AdminSlip:submitOptionsorder_slip

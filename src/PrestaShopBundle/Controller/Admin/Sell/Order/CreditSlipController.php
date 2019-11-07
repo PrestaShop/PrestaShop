@@ -38,7 +38,6 @@ use PrestaShop\PrestaShop\Core\Search\Filters\CreditSlipFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Order\CreditSlip\GeneratePdfByDateType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use PrestaShopBundle\Service\Grid\ResponseBuilder;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -66,8 +65,21 @@ class CreditSlipController extends FrameworkBundleAdminController
         $creditSlipGridFactory = $this->get('prestashop.core.grid.factory.credit_slip');
         $creditSlipGrid = $creditSlipGridFactory->getGrid($creditSlipFilters);
 
-        $creditSlipOptionsForm = $this->getSlipOptionsFormHandler()->getForm();
+        $creditSlipOptionsFormHandler = $this->getSlipOptionsFormHandler();
+        $creditSlipOptionsForm = $creditSlipOptionsFormHandler->getForm();
         $creditSlipOptionsForm->handleRequest($request);
+
+        if ($creditSlipOptionsForm->isSubmitted() && $creditSlipOptionsForm->isValid()) {
+            $errors = $creditSlipOptionsFormHandler->save($creditSlipOptionsForm->getData());
+
+            if (empty($errors)) {
+                $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
+            } else {
+                $this->flashErrors($errors);
+            }
+
+            return $this->redirectToRoute('admin_credit_slips_index');
+        }
 
         $pdfByDateForm = $this->createForm(GeneratePdfByDateType::class, [], [
             'method' => Request::METHOD_GET,
@@ -157,43 +169,6 @@ class CreditSlipController extends FrameworkBundleAdminController
 
         return $this->redirectToRoute('admin_credit_slips_index', [
             $pdfByDateForm->getName() => $pdfByDateForm->getData(),
-        ]);
-    }
-
-    /**
-     * Process credit slip options configuration form.
-     *
-     * @AdminSecurity(
-     *     "is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))",
-     *     redirectRoute="admin_credit_slips_index"
-     * )
-     * @DemoRestricted(redirectRoute="admin_credit_slips_index")
-     *
-     * @param Request $request
-     *
-     * @return Response
-     */
-    public function processOptionsAction(Request $request)
-    {
-        $creditSlipOptionsFormHandler = $this->getSlipOptionsFormHandler();
-
-        $creditSlipOptionsForm = $creditSlipOptionsFormHandler->getForm();
-        $creditSlipOptionsForm->handleRequest($request);
-
-        if ($creditSlipOptionsForm->isSubmitted() && $creditSlipOptionsForm->isValid()) {
-            $errors = $creditSlipOptionsFormHandler->save($creditSlipOptionsForm->getData());
-
-            if (empty($errors)) {
-                $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
-
-                return $this->redirectToRoute('admin_credit_slips_index');
-            }
-
-            $this->flashErrors($errors);
-        }
-
-        return $this->forward('PrestaShopBundle:Admin/Sell/Order/CreditSlip:index', [
-            '_legacy_controller' => $request->get('_legacy_controller'),
         ]);
     }
 
