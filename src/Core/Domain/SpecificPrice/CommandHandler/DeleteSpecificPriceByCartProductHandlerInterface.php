@@ -24,35 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\SpecificPrice\CommandHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\DeleteSpecificPriceByCartProductCommand;
 
 /**
- * Class DomainConstraintException is responsible for holding exception codes which can be raised in reusable way.
+ * Interface for handling DeleteSpecificPriceByCartProduct command
  */
-class DomainConstraintException extends DomainException
+interface DeleteSpecificPriceByCartProductHandlerInterface
 {
     /**
-     * @var int - raised when native php email validation fails. E.g filter_var($email, FILTER_VALIDATE_EMAIL)
+     * @param DeleteSpecificPriceByCartProductCommand $command
      */
-    const INVALID_EMAIL = 1;
-
-    /**
-     * Used when invalid money amount is provided
-     */
-    const INVALID_MONEY_AMOUNT = 2;
-
-    /**
-     * When price reduction type is not within defined types
-     */
-    const INVALID_REDUCTION_TYPE = 3;
-
-    /**
-     * When price reduction percentage value is not valid
-     */
-    const INVALID_REDUCTION_PERCENTAGE = 4;
-
-    /**
-     * When price reduction amount value is not valid
-     */
-    const INVALID_REDUCTION_AMOUNT = 5;
+    public function handle(DeleteSpecificPriceByCartProductCommand $command): void;
 }

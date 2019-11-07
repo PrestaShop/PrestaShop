@@ -45,6 +45,9 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleValidityException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\QuantityAction;
+use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\AddSpecificPriceCommand;
+use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\DeleteSpecificPriceByCartProductCommand;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -372,11 +375,50 @@ class CartController extends FrameworkBundleAdminController
         }
     }
 
-    //@todo: wip
+    /**
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
+     *
+     * @param Request $request
+     * @param int $cartId
+     * @param int $productId
+     *
+     * @return JsonResponse
+     */
     public function editProductPriceAction(Request $request, int $cartId, int $productId): JsonResponse
     {
-        dump($request);
-        die;
+        $commandBus = $this->getCommandBus();
+
+        try {
+            $deleteSpecificPriceCommand = new DeleteSpecificPriceByCartProductCommand($cartId, $productId);
+
+            $addSpecificPriceCommand = new AddSpecificPriceCommand(
+                $productId,
+                Reduction::TYPE_AMOUNT,
+                0,
+                true,
+                (float) $request->request->get('newPrice'),
+                1
+            );
+            $addSpecificPriceCommand->setCartId($cartId);
+            $addSpecificPriceCommand->setCustomerId($request->request->getInt('customerId'));
+
+            if ($attributeId = $request->request->getInt('productAttributeId')) {
+                $deleteSpecificPriceCommand->setProductAttributeId($attributeId);
+                $addSpecificPriceCommand->setProductAttributeId($attributeId);
+            }
+
+            // delete previous specific prices
+            $commandBus->handle($deleteSpecificPriceCommand);
+            // add new specific price
+            $commandBus->handle($addSpecificPriceCommand);
+
+            return $this->json($this->getCartInfo($cartId));
+        } catch (Exception $e) {
+            return $this->json(
+                ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
     }
 
     /**

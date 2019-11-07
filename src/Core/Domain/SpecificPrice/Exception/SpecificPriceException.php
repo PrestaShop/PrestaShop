@@ -24,35 +24,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Exception;
+
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 
 /**
- * Class DomainConstraintException is responsible for holding exception codes which can be raised in reusable way.
+ * Base exception for SpecificPrice subdomain
  */
-class DomainConstraintException extends DomainException
+class SpecificPriceException extends DomainException
 {
-    /**
-     * @var int - raised when native php email validation fails. E.g filter_var($email, FILTER_VALIDATE_EMAIL)
-     */
-    const INVALID_EMAIL = 1;
-
-    /**
-     * Used when invalid money amount is provided
-     */
-    const INVALID_MONEY_AMOUNT = 2;
-
-    /**
-     * When price reduction type is not within defined types
-     */
-    const INVALID_REDUCTION_TYPE = 3;
-
-    /**
-     * When price reduction percentage value is not valid
-     */
-    const INVALID_REDUCTION_PERCENTAGE = 4;
-
-    /**
-     * When price reduction amount value is not valid
-     */
-    const INVALID_REDUCTION_AMOUNT = 5;
 }
