@@ -39,6 +39,8 @@ export default class SummaryRenderer {
     this.$totalWithoutTax = $(createOrderMap.summaryTotalWithoutTax);
     this.$totalWithTax = $(createOrderMap.summaryTotalWithTax);
     this.$placeOrderCartIdField = $(createOrderMap.placeOrderCartIdField);
+    this.$orderMessageField = $(createOrderMap.orderMessageField);
+    this.$processOrderLink = $(createOrderMap.processOrderLinkTag);
   }
 
   /**
@@ -63,11 +65,43 @@ export default class SummaryRenderer {
     this.$totalDiscount.text(cartSummary.totalDiscount);
     this.$totalShipping.text(cartSummary.totalShippingPrice);
     this.$totalTaxes.text(cartSummary.totalTaxes);
-    this.$totalWithoutTax.text(cartSummary.totalPriceWithTaxes);
-    this.$totalWithTax.text(cartSummary.totalPriceWithoutTaxes);
+    this.$totalWithoutTax.text(cartSummary.totalPriceWithoutTaxes);
+    this.$totalWithTax.text(cartSummary.totalPriceWithTaxes);
+    this.$processOrderLink.prop('href', cartSummary.processOrderLink);
+    this.$orderMessageField.text(cartSummary.orderMessage);
     this.$placeOrderCartIdField.val(cartInfo.cartId);
 
     this._showSummaryBlock();
+  }
+
+  /**
+   * Renders summary success message
+   *
+   * @param message
+   */
+  renderSuccessMessage(message) {
+    $(createOrderMap.summarySuccessAlertText).text(message);
+    this._showSummarySuccessAlertBlock();
+  }
+
+  /**
+   * Renders summary error message
+   *
+   * @param message
+   */
+  renderErrorMessage(message) {
+    $(createOrderMap.summaryErrorAlertText).text(message);
+    this._showSummaryErrorAlertBlock();
+  }
+
+  /**
+   * Cleans content of success/error summary alerts and hides them
+   */
+  cleanAlerts() {
+    $(createOrderMap.summarySuccessAlertText).text('');
+    $(createOrderMap.summaryErrorAlertText).text('');
+    this._hideSummarySuccessAlertBlock();
+    this._hideSummaryErrorAlertBlock();
   }
 
   /**
@@ -89,6 +123,42 @@ export default class SummaryRenderer {
   }
 
   /**
+   * Shows error alert of summary block
+   *
+   * @private
+   */
+  _showSummaryErrorAlertBlock() {
+    $(createOrderMap.summaryErrorAlertBlock).removeClass('d-none');
+  }
+
+  /**
+   * Hides error alert of summary block
+   *
+   * @private
+   */
+  _hideSummaryErrorAlertBlock() {
+    $(createOrderMap.summaryErrorAlertBlock).addClass('d-none');
+  }
+
+  /**
+   * Shows success alert of summary block
+   *
+   * @private
+   */
+  _showSummarySuccessAlertBlock() {
+    $(createOrderMap.summarySuccessAlertBlock).removeClass('d-none');
+  }
+
+  /**
+   * Hides success alert of summary block
+   *
+   * @private
+   */
+  _hideSummarySuccessAlertBlock() {
+    $(createOrderMap.summarySuccessAlertBlock).addClass('d-none');
+  }
+
+  /**
    * Empties cart summary fields
    */
   _cleanSummary() {
@@ -98,5 +168,7 @@ export default class SummaryRenderer {
     this.$totalTaxes.empty();
     this.$totalWithoutTax.empty();
     this.$totalWithTax.empty();
+    this.$processOrderLink.prop('href', '');
+    this.$orderMessageField.text('');
   }
 }
