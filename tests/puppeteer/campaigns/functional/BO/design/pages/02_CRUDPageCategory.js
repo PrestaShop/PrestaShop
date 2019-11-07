@@ -7,11 +7,11 @@ const CategoryPageFaker = require('@data/faker/CMScategory');
 const PageFaker = require('@data/faker/CMSpage');
 // Importing pages
 const BOBasePage = require('@pages/BO/BObasePage');
-const LoginPage = require('@pages/BO/login');
-const DashboardPage = require('@pages/BO/dashboard');
-const PagesPage = require('@pages/BO/design/pages/pages');
-const AddPageCategoryPage = require('@pages/BO/design/pages/addPageCategory');
-const AddPagePage = require('@pages/BO/design/pages/addPage');
+const LoginPage = require('@pages/BO/login/index');
+const DashboardPage = require('@pages/BO/dashboard/index');
+const PagesPage = require('@pages/BO/design/pages/index');
+const AddPageCategoryPage = require('@pages/BO/design/pages/pageCategory/add');
+const AddPagePage = require('@pages/BO/design/pages/add');
 const FOBasePage = require('@pages/FO/FObasePage');
 const SiteMapPage = require('@pages/FO/siteMap');
 const CMSPage = require('@pages/FO/cms');

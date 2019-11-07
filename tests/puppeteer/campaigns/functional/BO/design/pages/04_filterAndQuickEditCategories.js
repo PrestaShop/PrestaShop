@@ -6,10 +6,10 @@ const loginCommon = require('@commonTests/loginBO');
 const CategoryPageFaker = require('@data/faker/CMScategory');
 // Importing pages
 const BOBasePage = require('@pages/BO/BObasePage');
-const LoginPage = require('@pages/BO/login');
-const DashboardPage = require('@pages/BO/dashboard');
-const AddPageCategoryPage = require('@pages/BO/design/pages/addPageCategory');
-const PagesPage = require('@pages/BO/design/pages/pages');
+const LoginPage = require('@pages/BO/login/index');
+const DashboardPage = require('@pages/BO/dashboard/index');
+const AddPageCategoryPage = require('@pages/BO/design/pages/pageCategory/add');
+const PagesPage = require('@pages/BO/design/pages/index');
 
 let browser;
 let page;
