@@ -91,7 +91,8 @@ final class CurrencyCommandValidator
                 sprintf(
                     'Unofficial currency with iso code "%s" is invalid because it matches a currency from CLDR database',
                     $isoCode
-                )
+                ),
+                $isoCode
             );
         }
     }

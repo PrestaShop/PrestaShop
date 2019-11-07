@@ -33,7 +33,6 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\LinkColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
@@ -72,14 +71,11 @@ final class CurrencyGridDefinitionFactory extends AbstractGridDefinitionFactory
     protected function getColumns()
     {
         return (new ColumnCollection())
-            ->add((new LinkColumn('currency'))
+            ->add((new DataColumn('currency'))
                 ->setName($this->trans('Currency', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'currency',
                     'sortable' => false,
-                    'route' => 'admin_currencies_edit',
-                    'route_param_name' => 'currencyId',
-                    'route_param_field' => 'id_currency',
                 ])
             )
             ->add((new DataColumn('symbol'))
