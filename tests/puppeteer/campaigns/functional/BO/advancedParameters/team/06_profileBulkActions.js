@@ -6,13 +6,13 @@ const loginCommon = require('@commonTests/loginBO');
 const ProfileFaker = require('@data/faker/profile');
 // Importing pages
 const BOBasePage = require('@pages/BO/BObasePage');
-const LoginPage = require('@pages/BO/login');
-const DashboardPage = require('@pages/BO/dashboard');
-const EmployeesPage = require('@pages/BO/advancedParameters/team/employees');
-const ProfilesPage = require('@pages/BO/advancedParameters/team/profiles');
-const AddProfile = require('@pages/BO/advancedParameters/team/addProfile');
-const ProductsPage = require('@pages/BO/products');
-const OrdersPage = require('@pages/BO/orders');
+const LoginPage = require('@pages/BO/login/index');
+const DashboardPage = require('@pages/BO/dashboard/index');
+const EmployeesPage = require('@pages/BO/advancedParameters/team/index');
+const ProfilesPage = require('@pages/BO/advancedParameters/team/profiles/index');
+const AddProfile = require('@pages/BO/advancedParameters/team/profiles/add');
+const ProductsPage = require('@pages/BO/catalog/products/index');
+const OrdersPage = require('@pages/BO/orders/index');
 const FOBasePage = require('@pages/FO/FObasePage');
 
 let browser;
