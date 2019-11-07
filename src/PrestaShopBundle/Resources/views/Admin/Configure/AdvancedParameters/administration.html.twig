@@ -61,7 +61,7 @@
                 </div>
               </div>
               <div class="form-group row">
-                {{ ps.label_with_help(('Lifetime of back office cookies'|trans), ('Set the amount of hours during which the back office cookies are valid. After that amount of time, the PrestaShop user will have to log in again.'|trans({}, 'Admin.Advparameters.Help'))) }}
+                {{ ps.label_with_help(('Lifetime of back office cookies'|trans), ('When you access your back office and decide to stay logged in, your cookies lifetime defines your browser session. Set here the number of hours during which you want them valid before logging in again.'|trans({}, 'Admin.Advparameters.Help'))) }}
                 <div class="col-sm">
                   {{ form_errors(generalForm.back_cookie_lifetime) }}
                   {{ form_widget(generalForm.back_cookie_lifetime) }}
