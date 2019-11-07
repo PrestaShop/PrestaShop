@@ -111,7 +111,7 @@ describe('Filter And Quick Edit brands', async () => {
         const textColumn = await this.pageObjects.brandsPage.getTextContent(
           this.pageObjects.brandsPage.tableColumn
             .replace('%TABLE', 'manufacturer')
-            .replace('%ROW', 1)
+            .replace('%ROW', i)
             .replace('%COLUMN', 'active'),
         );
         await expect(textColumn).to.contains('check');
