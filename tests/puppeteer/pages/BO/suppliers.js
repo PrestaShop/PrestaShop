@@ -12,8 +12,7 @@ module.exports = class Suppliers extends BOBasePage {
     this.brandsNavItemLink = '#subtab-AdminManufacturers';
     this.newSupplierLink = '#page-header-desc-configuration-add';
 
-
-    // Selectors
+    // Selectors grid panel
     this.gridPanel = '#supplier_grid_panel';
     this.gridTable = '#supplier_grid_table';
     this.gridHeaderTitle = `${this.gridPanel} h3.card-header-title`;
