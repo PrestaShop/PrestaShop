@@ -152,14 +152,17 @@ export default class CartEditor {
    * Changes product price in cart
    *
    * @param {Number} cartId
+   * @param {Number} customerId
    * @param {Object} product the updated product
    */
-  changeProductPrice(cartId, product) {
+  changeProductPrice(cartId, customerId, product) {
     $.post(this.router.generate('admin_carts_edit_product_price', {
       cartId,
       productId: product.productId,
+      productAttributeId: product.attributeId,
     }), {
       newPrice: product.price,
+      customerId,
     }).then((cartInfo) => {
       EventEmitter.emit(eventMap.productPriceChanged, cartInfo);
     }).catch((response) => {
