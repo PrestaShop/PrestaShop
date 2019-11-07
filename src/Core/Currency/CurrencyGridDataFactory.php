@@ -108,9 +108,9 @@ final class CurrencyGridDataFactory implements GridDataFactoryInterface
 
         if (!empty($currency['unofficial'])) {
             return sprintf(
-                '%s (%s)',
+                '%s %s',
                 $currencyName,
-                $this->translator->trans('Unofficial', [], 'Admin.International.Feature')
+                '<i class="material-icons unofficial">person</i>'
             );
         }
 
@@ -118,7 +118,7 @@ final class CurrencyGridDataFactory implements GridDataFactoryInterface
             return sprintf(
                 '%s (%s)',
                 $currencyName,
-                $this->translator->trans('Modified', [], 'Admin.International.Feature')
+                $this->translator->trans('Edited', [], 'Admin.International.Feature')
             );
         }
 
