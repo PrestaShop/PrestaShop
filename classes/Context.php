@@ -367,12 +367,13 @@ class ContextCore
      * is called by the installer or not.
      *
      * @param bool $isInstaller Set to true if the method is called by the installer
+     * @param bool $forceRefresh Set to true to get the Symfony Translator if available
      *
      * @return Translator
      */
-    public function getTranslator($isInstaller = false)
+    public function getTranslator($isInstaller = false, $forceRefresh = false)
     {
-        if (null !== $this->translator) {
+        if (null !== $this->translator && !$forceRefresh) {
             return $this->translator;
         }
 
@@ -389,6 +390,15 @@ class ContextCore
         }
 
         return $this->translator;
+    }
+
+    /**
+     * @param string $locale
+     */
+    public function addLanguageToTranslator($locale)
+    {
+        $this->translator = $this->getTranslator(false, true);
+        $this->doAddLanguageToTranslator($this->translator, $locale);
     }
 
     /**
@@ -423,6 +433,29 @@ class ContextCore
         }
 
         $adminContext = defined('_PS_ADMIN_DIR_');
+        $notName = $adminContext ? '^Shop*' : '^Admin*';
+
+        $this->doAddLanguageToTranslator($translator, $locale, $notName);
+
+        return $translator;
+    }
+
+    /**
+     * @param Translator $translator
+     * @param string $locale
+     * @param ?string $notName
+     */
+    protected function doAddLanguageToTranslator($translator, $locale, $notName = null)
+    {
+        $finder = Finder::create()
+            ->files()
+            ->name('*.' . $locale . '.xlf')
+            ->in($this->getTranslationResourcesDirectories());
+
+        if ($notName !== null) {
+            $finder->notName($notName);
+        }
+
         $translator->addLoader('xlf', new XliffFileLoader());
 
         $sqlTranslationLoader = new SqlTranslationLoader();
@@ -431,24 +464,14 @@ class ContextCore
         }
 
         $translator->addLoader('db', $sqlTranslationLoader);
-        $notName = $adminContext ? '^Shop*' : '^Admin*';
-
-        $finder = Finder::create()
-            ->files()
-            ->name('*.' . $locale . '.xlf')
-            ->notName($notName)
-            ->in($this->getTranslationResourcesDirectories());
 
         foreach ($finder as $file) {
             list($domain, $locale, $format) = explode('.', $file->getBasename(), 3);
-
             $translator->addResource($format, $file, $locale, $domain);
             if (!$this->language instanceof PrestashopBundle\Install\Language) {
                 $translator->addResource('db', $domain . '.' . $locale . '.db', $locale, $domain);
             }
         }
-
-        return $translator;
     }
 
     /**
