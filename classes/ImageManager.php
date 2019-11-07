@@ -442,15 +442,17 @@ class ImageManagerCore
      *
      * @param array $file Upload $_FILE value
      * @param int $maxFileSize Maximum upload size
+     * @param array<string> $types Authorized extensions
+     * @param array<string> $mimeTypeList Authorized mimetypes
      *
      * @return bool|string Return false if no error encountered
      */
-    public static function validateUpload($file, $maxFileSize = 0, $types = null)
+    public static function validateUpload($file, $maxFileSize = 0, $types = null, $mimeTypeList = null)
     {
         if ((int) $maxFileSize > 0 && $file['size'] > (int) $maxFileSize) {
             return Context::getContext()->getTranslator()->trans('Image is too large (%1$d kB). Maximum allowed: %2$d kB', array($file['size'] / 1024, $maxFileSize / 1024), 'Admin.Notifications.Error');
         }
-        if (!ImageManager::isRealImage($file['tmp_name'], $file['type']) || !ImageManager::isCorrectImageFileExt($file['name'], $types) || preg_match('/\%00/', $file['name'])) {
+        if (!ImageManager::isRealImage($file['tmp_name'], $file['type'], $mimeTypeList) || !ImageManager::isCorrectImageFileExt($file['name'], $types) || preg_match('/\%00/', $file['name'])) {
             return Context::getContext()->getTranslator()->trans('Image format not recognized, allowed formats are: .gif, .jpg, .png', array(), 'Admin.Notifications.Error');
         }
         if ($file['error']) {
