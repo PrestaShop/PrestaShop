@@ -419,13 +419,15 @@ class CurrencyController extends FrameworkBundleAdminController
      */
     private function getErrorMessages(Exception $e)
     {
+        $isoCode = method_exists($e, 'getIsoCode') ? $e->getIsoCode() : '';
+
         return [
             CurrencyConstraintException::class => [
                 CurrencyConstraintException::INVALID_ISO_CODE => $this->trans(
                     'The %s field is not valid',
                     'Admin.Notifications.Error',
                     [
-                        sprintf('"%s"', $this->trans('ISO Code', 'Admin.International.Feature')),
+                        sprintf('"%s"', $this->trans('ISO code', 'Admin.International.Feature')),
                     ]
                 ),
                 CurrencyConstraintException::INVALID_NUMERIC_ISO_CODE => $this->trans(
@@ -495,9 +497,21 @@ class CurrencyController extends FrameworkBundleAdminController
                 'Admin.International.Notification'
             ),
             InvalidUnofficialCurrencyException::class => $this->trans(
-                'You cannot create an unofficial currency whose ISO code matches a real one',
+                'Oops... it looks like this ISO code already exists. If you are:',
                 'Admin.International.Notification'
-            ),
+                )
+                . '<ul><li>' .
+                $this->trans(
+                    'trying to create an alternative currency, you must type a different ISO code',
+                    'Admin.International.Notification'
+                )
+                . '</li><li>' .
+                $this->trans(
+                    'trying to modify the currency with ISO code %isoCode%, make sure you did not check the creation box',
+                    'Admin.International.Notification',
+                    ['%isoCode%' => $isoCode]
+                )
+                . '</li></ul>',
         ];
     }
 }

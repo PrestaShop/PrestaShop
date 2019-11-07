@@ -99,7 +99,7 @@ class CurrencyType extends TranslatorAwareType
                 ])
                 ->add('unofficial', CheckboxType::class, [
                     'required' => false,
-                    'label' => $this->trans('Create a new currency', 'Admin.International.Feature'),
+                    'label' => $this->trans('Create an alternative currency', 'Admin.International.Feature'),
                     'attr' => [
                         'material_design' => true,
                     ],
