@@ -181,6 +181,7 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setOptions([
                     'identifier_field' => 'id_order',
                     'preview' => $previewColumn,
+                    'clickable' => false,
                 ])
             )
             ->add((new DataColumn('reference'))
@@ -195,6 +196,7 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'field' => 'new',
                     'true_name' => $this->trans('Yes', [], 'Admin.Global'),
                     'false_name' => $this->trans('No', [], 'Admin.Global'),
+                    'clickable' => true,
                 ])
             )
             ->add((new LinkColumn('customer'))
@@ -211,6 +213,7 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setOptions([
                     'field' => 'total_paid_tax_incl',
                     'is_paid_field' => 'paid',
+                    'clickable' => true,
                 ])
             )
             ->add((new DataColumn('payment'))
@@ -236,6 +239,7 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setOptions([
                     'field' => 'date_add',
                     'format' => $this->contextDateFormat,
+                    'clickable' => true,
                 ])
             )
             ->add((new ActionColumn('actions'))
@@ -475,6 +479,7 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'route_param_name' => 'orderId',
                         'route_param_field' => 'id_order',
                         'use_inline_display' => true,
+                        'clickable_row' => true,
                     ])
             )
         ;
