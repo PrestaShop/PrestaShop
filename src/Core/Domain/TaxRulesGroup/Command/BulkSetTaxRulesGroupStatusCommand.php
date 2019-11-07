@@ -30,9 +30,9 @@ use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\TaxRulesGroupConst
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 
 /**
- * Command responsible for multiple tax rules groups status toggling
+ * Command responsible for multiple tax rules groups status setting
  */
-class BulkToggleTaxRulesGroupStatusCommand
+class BulkSetTaxRulesGroupStatusCommand
 {
     /**
      * @var TaxRulesGroupId[]

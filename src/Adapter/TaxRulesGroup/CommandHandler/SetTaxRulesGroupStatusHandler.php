@@ -27,41 +27,32 @@
 namespace PrestaShop\PrestaShop\Adapter\TaxRulesGroup\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\TaxRulesGroup\AbstractTaxRulesGroupHandler;
-use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Command\BulkToggleTaxRulesGroupStatusCommand;
-use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\CommandHandler\BulkToggleTaxRulesGroupStatusHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\CannotBulkUpdateTaxRulesGroupException;
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Command\SetTaxRulesGroupStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\CommandHandler\ToggleTaxRulesGroupStatusHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\CannotUpdateTaxRulesGroupException;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\TaxRulesGroupException;
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\TaxRulesGroupNotFoundException;
 
 /**
- * Handles toggling of multiple tax rules groups statuses
+ * Handles tax rules group status toggling
  */
-final class BulkToggleTaxRulesGroupStatusHandler extends AbstractTaxRulesGroupHandler implements BulkToggleTaxRulesGroupStatusHandlerInterface
+final class SetTaxRulesGroupStatusHandler extends AbstractTaxRulesGroupHandler implements ToggleTaxRulesGroupStatusHandlerInterface
 {
     /**
      * {@inheritdoc}
      *
-     * @throws CannotBulkUpdateTaxRulesGroupException
+     * @throws CannotUpdateTaxRulesGroupException
+     * @throws TaxRulesGroupException
+     * @throws TaxRulesGroupNotFoundException
      */
-    public function handle(BulkToggleTaxRulesGroupStatusCommand $command): void
+    public function handle(SetTaxRulesGroupStatusCommand $command): void
     {
-        $errors = [];
+        $taxRulesGroup = $this->getTaxRulesGroup($command->getTaxRulesGroupId());
 
-        foreach ($command->getTaxRulesGroupIds() as $taxRuleGroupId) {
-            try {
-                $taxRuleGroup = $this->getTaxRulesGroup($taxRuleGroupId);
-
-                if (!$this->toggleTaxRulesGroupStatus($taxRuleGroup, $command->getExpectedStatus())) {
-                    $errors[] = $taxRuleGroup->id;
-                }
-            } catch (TaxRulesGroupException $e) {
-                $errors[] = $taxRuleGroupId->getValue();
-            }
-        }
-
-        if (!empty($errors)) {
-            throw new CannotBulkUpdateTaxRulesGroupException(
-                $errors,
-                'Failed to toggle all tax rules groups statuses without errors'
+        if (!$this->setTaxRulesGroupStatus($taxRulesGroup, $command->getExpectedStatus())) {
+            throw new CannotUpdateTaxRulesGroupException(
+                sprintf('Unable to toggle tax rules group status with id "%s"', $taxRulesGroup->id),
+                CannotUpdateTaxRulesGroupException::FAILED_TOGGLE_STATUS
             );
         }
     }

@@ -28,9 +28,9 @@ namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Command\BulkDeleteTaxRulesGroupCommand;
-use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Command\BulkToggleTaxRulesGroupStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Command\BulkSetTaxRulesGroupStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Command\DeleteTaxRulesGroupCommand;
-use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Command\ToggleTaxRulesGroupStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Command\SetTaxRulesGroupStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\CannotBulkDeleteTaxRulesGroupException;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\CannotBulkUpdateTaxRulesGroupException;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\CannotDeleteTaxRulesGroupException;
@@ -155,7 +155,7 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
             );
 
             $this->getCommandBus()->handle(
-                new ToggleTaxRulesGroupStatusCommand((int) $taxRulesGroupId, !$editableTaxRulesGroup->isActive())
+                new SetTaxRulesGroupStatusCommand((int) $taxRulesGroupId, !$editableTaxRulesGroup->isActive())
             );
 
             $this->addFlash(
@@ -186,7 +186,7 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
         $taxRulesGroupIds = $this->getBulkTaxRulesGroupFromRequest($request);
 
         try {
-            $this->getCommandBus()->handle(new BulkToggleTaxRulesGroupStatusCommand($taxRulesGroupIds, true));
+            $this->getCommandBus()->handle(new BulkSetTaxRulesGroupStatusCommand($taxRulesGroupIds, true));
             $this->addFlash(
                 'success',
                 $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
@@ -215,7 +215,7 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
         $taxRulesGroupIds = $this->getBulkTaxRulesGroupFromRequest($request);
 
         try {
-            $this->getCommandBus()->handle(new BulkToggleTaxRulesGroupStatusCommand($taxRulesGroupIds, false));
+            $this->getCommandBus()->handle(new BulkSetTaxRulesGroupStatusCommand($taxRulesGroupIds, false));
             $this->addFlash(
                 'success',
                 $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')

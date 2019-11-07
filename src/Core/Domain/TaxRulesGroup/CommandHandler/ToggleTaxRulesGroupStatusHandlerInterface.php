@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Command\ToggleTaxRulesGroupStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Command\SetTaxRulesGroupStatusCommand;
 
 /**
  * Defines contract for toggle tax rules group status handler
@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Command\ToggleTaxRulesGroupS
 interface ToggleTaxRulesGroupStatusHandlerInterface
 {
     /**
-     * @param ToggleTaxRulesGroupStatusCommand $command
+     * @param SetTaxRulesGroupStatusCommand $command
      */
-    public function handle(ToggleTaxRulesGroupStatusCommand $command): void;
+    public function handle(SetTaxRulesGroupStatusCommand $command): void;
 }

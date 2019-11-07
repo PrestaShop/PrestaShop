@@ -89,7 +89,7 @@ abstract class AbstractTaxRulesGroupHandler
     }
 
     /**
-     * Toggles legacy tax rules group status
+     * Set legacy tax rules group status
      *
      * @param TaxRulesGroup $taxRulesGroup
      * @param bool $newStatus
@@ -98,7 +98,7 @@ abstract class AbstractTaxRulesGroupHandler
      *
      * @throws TaxRulesGroupException
      */
-    protected function toggleTaxRulesGroupStatus(TaxRulesGroup $taxRulesGroup, bool $newStatus)
+    protected function setTaxRulesGroupStatus(TaxRulesGroup $taxRulesGroup, bool $newStatus)
     {
         $taxRulesGroup->active = $newStatus;
 
