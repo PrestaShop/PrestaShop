@@ -349,35 +349,22 @@ services:
               'configuration': 'PrestaShopBundle\Form\Admin\Improve\Design\MailTheme\MailThemeConfigurationType'
             - 'MailTheme'
 
-<<<<<<< HEAD
     prestashop.admin.merchandise_return_options.form_handler:
-=======
-    prestashop.admin.credit_slip_options.form_handler:
->>>>>>> Renders options form
         class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
         arguments:
             - '@=service("form.factory").createBuilder()'
             - '@prestashop.core.hook.dispatcher'
-<<<<<<< HEAD
             - '@prestashop.admin.merchandise_return_options.form_data_provider'
             -
               'options': 'PrestaShopBundle\Form\Admin\Sell\CustomerService\MerchandiseReturn\MerchandiseReturnOptionsType'
             - 'MerchandiseReturn'
 
-    prestashop.admin.order.credit_slip.pdf_by_date.form_handler:
-      class: 'PrestaShopBundle\Form\Admin\Sell\Order\CreditSlip\CreditSlipPdfByDateFormHandler'
-      arguments:
-        - '@=service("form.factory").createBuilder()'
-        - '@prestashop.core.hook.dispatcher'
-        - '@prestashop.admin.order.invoices.by_date.data_provider'
-        -
-          'generate_pdf_by_date': 'PrestaShopBundle\Form\Admin\Type\DateRangeType'
-        - 'CreditSlipsPdfByDate'
-        - '@prestashop.adapter.data_provider.credit_slip'
-        - '@prestashop.adapter.pdf.generator.credit_slip'
-=======
+    prestashop.admin.credit_slip_options.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        arguments:
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.core.hook.dispatcher'
             - '@prestashop.admin.sell.order.credit_slip.credit_slip_options_form_data_provider'
             -
               'options': 'PrestaShopBundle\Form\Admin\Sell\Order\CreditSlip\CreditSlipOptionsType'
             - 'CreditSlip'
->>>>>>> Renders options form
