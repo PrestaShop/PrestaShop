@@ -53,7 +53,11 @@ final class DataColumn extends AbstractColumn
             ->setRequired([
                 'field',
             ])
+            ->setDefaults([
+                'clickable' => true,
+            ])
             ->setAllowedTypes('field', 'string')
+            ->setAllowedTypes('clickable', 'bool')
         ;
     }
 }
