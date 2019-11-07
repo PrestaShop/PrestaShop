@@ -37,6 +37,7 @@ import CartRuleManager from './cart-rule-manager';
 import ProductManager from './product-manager';
 import ProductRenderer from './product-renderer';
 import SummaryRenderer from './summary-renderer';
+import SummaryManager from './summary-manager';
 
 const $ = window.$;
 
@@ -60,6 +61,7 @@ export default class CreateOrderPage {
     this.productManager = new ProductManager();
     this.productRenderer = new ProductRenderer();
     this.summaryRenderer = new SummaryRenderer();
+    this.summaryManager = new SummaryManager();
 
     this._initListeners();
   }
@@ -115,9 +117,13 @@ export default class CreateOrderPage {
       this.cartEditor.changeCartCurrency(this.cartId, e.currentTarget.value)
     );
 
+    this.$container.on('click', createOrderMap.sendProcessOrderEmailBtn, () =>
+      this.summaryManager.sendProcessOrderEmail(this.cartId));
+
     this.$container.on('change', createOrderMap.listedProductUnitPriceInput, (e) => this._initProductChangePrice(e));
     this.$container.on('change', createOrderMap.addressSelect, () => this._changeCartAddresses());
     this.$container.on('click', createOrderMap.productRemoveBtn, e => this._initProductRemoveFromCart(e));
+
   }
 
   /**
