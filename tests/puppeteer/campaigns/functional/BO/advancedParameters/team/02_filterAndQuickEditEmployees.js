@@ -7,12 +7,12 @@ const EmployeeFaker = require('@data/faker/employee');
 const {DefaultAccount} = require('@data/demo/employees');
 // Importing pages
 const BOBasePage = require('@pages/BO/BObasePage');
-const LoginPage = require('@pages/BO/login');
-const DashboardPage = require('@pages/BO/dashboard');
-const EmployeesPage = require('@pages/BO/advancedParameters/team/employees');
-const AddEmployeePage = require('@pages/BO/advancedParameters/team/addEmployee');
-const ProductsPage = require('@pages/BO/products');
-const OrdersPage = require('@pages/BO/orders');
+const LoginPage = require('@pages/BO/login/index');
+const DashboardPage = require('@pages/BO/dashboard/index');
+const EmployeesPage = require('@pages/BO/advancedParameters/team/index');
+const AddEmployeePage = require('@pages/BO/advancedParameters/team/add');
+const ProductsPage = require('@pages/BO/catalog/products/index');
+const OrdersPage = require('@pages/BO/orders/index');
 const FOBasePage = require('@pages/FO/FObasePage');
 
 let browser;
