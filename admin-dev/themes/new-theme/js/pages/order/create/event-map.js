@@ -59,4 +59,8 @@ export default {
   productRemovedFromCart: 'productRemovedFromCart',
   // when product in cart price has been changed
   productPriceChanged: 'productPriceChanged',
+  // when order process email has been sent to customer
+  processOrderEmailSent: 'processOrderEmailSent',
+  // when order process email sending failed
+  processOrderEmailFailed: 'processOrderEmailFailed',
 };

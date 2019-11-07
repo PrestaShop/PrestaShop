@@ -105,6 +105,13 @@ export default {
   summaryTotalWithoutTax: '.js-total-without-tax',
   summaryTotalWithTax: '.js-total-with-tax',
   placeOrderCartIdField: '.js-place-order-cart-id',
+  processOrderLinkTag: '#js-process-order-link',
+  orderMessageField: '#js-order-message-wrap textarea',
+  sendProcessOrderEmailBtn: '#js-send-process-order-email-btn',
+  summarySuccessAlertBlock: '#js-summary-success-block',
+  summaryErrorAlertBlock: '#js-summary-error-block',
+  summarySuccessAlertText: '#js-summary-success-block .alert-text',
+  summaryErrorAlertText: '#js-summary-error-block .alert-text',
 
   // selectors related to shipping block
   shippingBlock: '#shipping-block',
