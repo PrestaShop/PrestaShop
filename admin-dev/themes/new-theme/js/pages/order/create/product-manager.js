@@ -50,9 +50,17 @@ export default class ProductManager {
 
     return {
       search: searchPhrase => this._search(searchPhrase),
+
       addProductToCart: cartId => this.cartEditor.addProduct(cartId, this._getProductData()),
-      removeProductFromCart: (cartId, product) => this.cartEditor.removeProductFromCart(cartId, product),
-      changeProductPrice: (cartId, updatedProduct) => this.cartEditor.changeProductPrice(cartId, updatedProduct),
+
+      removeProductFromCart: (cartId, product) =>
+        this.cartEditor.removeProductFromCart(cartId, product),
+
+      changeProductPrice: (cartId, customerId, updatedProduct) =>
+        this.cartEditor.changeProductPrice(cartId, customerId, updatedProduct),
+
+      changeProductQty: (cartId, updatedProduct) =>
+        this.cartEditor.changeProductQty(cartId, updatedProduct),
     };
   }
 
@@ -68,6 +76,8 @@ export default class ProductManager {
     this._onProductSearch();
     this._onAddProductToCart();
     this._onRemoveProductFromCart();
+    this._onProductPriceChange();
+    this._onProductQtyChange();
   }
 
   /**
@@ -77,7 +87,7 @@ export default class ProductManager {
    */
   _onProductSearch() {
     EventEmitter.on(eventMap.productSearched, (response) => {
-      this.products = JSON.parse(response);
+      this.products = response.products;
       this.productRenderer.renderSearchResults(this.products);
       this._selectFirstResult();
     });
@@ -89,8 +99,15 @@ export default class ProductManager {
    * @private
    */
   _onAddProductToCart() {
+    // on success
     EventEmitter.on(eventMap.productAddedToCart, (cartInfo) => {
       EventEmitter.emit(eventMap.cartLoaded, cartInfo);
+    });
+
+    // on failure
+    EventEmitter.on(eventMap.productAddToCartFailed, (errorMessage) => {
+      this.productRenderer.cleanCartBlockAlerts();
+      this.productRenderer.renderCartBlockErrorAlert(errorMessage);
     });
   }
 
@@ -111,8 +128,27 @@ export default class ProductManager {
    * @private
    */
   _onProductPriceChange() {
+    // on success
     EventEmitter.on(eventMap.productPriceChanged, (cartInfo) => {
-      this.productRenderer.renderList(cartInfo.products);
+      this.productRenderer.cleanCartBlockAlerts();
+      EventEmitter.emit(eventMap.cartLoaded, cartInfo);
+    });
+  }
+
+  /**
+   * Listens for product quantity change in cart success/failure event
+   *
+   * @private
+   */
+  _onProductQtyChange() {
+    // on success
+    EventEmitter.on(eventMap.productQtyChanged, (cartInfo) => {
+      EventEmitter.emit(eventMap.cartLoaded, cartInfo);
+    });
+
+    // on failure
+    EventEmitter.on(eventMap.productQtyChangeFailed, (e) => {
+      this.productRenderer.renderCartBlockErrorAlert(e.responseJSON.message);
     });
   }
 
@@ -155,7 +191,7 @@ export default class ProductManager {
     }
 
     const $searchRequest = $.get(this.router.generate('admin_products_search'), {
-      search_phrase: searchPhrase,
+      q: searchPhrase,
     });
     this.activeSearchRequest = $searchRequest;
 
@@ -179,7 +215,7 @@ export default class ProductManager {
     this._unsetProduct();
 
     if (this.products.length !== 0) {
-      this._selectProduct(this.products[0].product_id);
+      this._selectProduct(this.products[0].productId);
     }
   }
 
@@ -194,7 +230,7 @@ export default class ProductManager {
     this._unsetCombination();
 
     for (const key in this.products) {
-      if (this.products[key].product_id === productId) {
+      if (this.products[key].productId === productId) {
         this.selectedProduct = this.products[key];
       }
     }

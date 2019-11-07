@@ -24,22 +24,36 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Currency\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Order\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 
 /**
- * Base exception for Currency sub-domain
+ * Sends email to customer with link for processing the order from cart
  */
-class CurrencyException extends DomainException
+class SendProcessOrderEmailCommand
 {
     /**
-     * When currency cannot be used because it is disabled
+     * @var CartId
      */
-    const IS_DISABLED = 1;
+    private $cartId;
 
     /**
-     * When currency cannot be used because it is deleted
+     * @param int $cartId
+     *
+     * @throws CartConstraintException
      */
-    const IS_DELETED = 2;
+    public function __construct(int $cartId)
+    {
+        $this->cartId = new CartId($cartId);
+    }
+
+    /**
+     * @return CartId
+     */
+    public function getCartId(): CartId
+    {
+        return $this->cartId;
+    }
 }

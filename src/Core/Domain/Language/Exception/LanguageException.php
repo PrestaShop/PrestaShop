@@ -33,4 +33,8 @@ use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
  */
 class LanguageException extends DomainException
 {
+    /**
+     * When language is not active
+     */
+    const NOT_ACTIVE = 1;
 }

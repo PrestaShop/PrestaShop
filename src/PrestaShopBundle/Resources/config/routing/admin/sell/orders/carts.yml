@@ -133,6 +133,18 @@ admin_carts_edit_product_price:
     cartId: \d+
     productId: \d+
 
+admin_carts_edit_product_quantity:
+  path: /{cartId}/products/{productId}/quantity
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Cart:editProductQuantity
+    _legacy_controller: AdminCarts
+  options:
+    expose: true
+  requirements:
+    cartId: \d+
+    productId: \d+
+
 admin_carts_delete_product:
   path: /{cartId}/delete-product
   methods: [POST]

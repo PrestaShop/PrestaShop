@@ -24,61 +24,53 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Query;
+namespace PrestaShop\PrestaShop\Core\Domain\SpecificPrice\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Exception\SpecificPriceConstraintException;
 
 /**
- * Queries for products by provided search phrase
+ * Holds identification data of specific price
  */
-class SearchProducts
+class SpecificPriceId
 {
-    /**
-     * @var string
-     */
-    private $phrase;
-
     /**
      * @var int
      */
-    private $resultsLimit;
+    private $specificPriceId;
 
     /**
-     * @param string $phrase
-     * @param int $resultsLimit
+     * @param int $specificPriceId
+     *
+     * @throws SpecificPriceConstraintException
      */
-    public function __construct(string $phrase, int $resultsLimit = 10)
+    public function __construct(int $specificPriceId)
     {
-        $this->assertIsNotEmptyString($phrase);
-        $this->phrase = $phrase;
-        $this->resultsLimit = $resultsLimit;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPhrase()
-    {
-        return $this->phrase;
+        $this->assertIsGreaterThanZero($specificPriceId);
+        $this->specificPriceId = $specificPriceId;
     }
 
     /**
      * @return int
      */
-    public function getResultsLimit(): int
+    public function getValue(): int
     {
-        return $this->resultsLimit;
+        return $this->specificPriceId;
     }
 
     /**
-     * @param string $phrase
+     * Validates that the value is greater than zero
      *
-     * @throws ProductException
+     * @param int $value
+     *
+     * @throws SpecificPriceConstraintException
      */
-    private function assertIsNotEmptyString(string $phrase): void
+    private function assertIsGreaterThanZero(int $value): void
     {
-        if (empty($phrase) || !is_string($phrase)) {
-            throw new ProductException('Product search phrase must be a not empty string');
+        if (!is_int($value) || 0 >= $value) {
+            throw new SpecificPriceConstraintException(
+                sprintf('Invalid specific price id "%s".', $value),
+                SpecificPriceConstraintException::INVALID_ID
+            );
         }
     }
 }

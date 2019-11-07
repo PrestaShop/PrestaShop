@@ -62,12 +62,24 @@ class CartSummary
     private $totalPriceWithoutTaxes;
 
     /**
+     * @var string
+     */
+    private $orderMessage;
+
+    /**
+     * @var string
+     */
+    private $processOrderLink;
+
+    /**
      * @param string $totalProductsPrice
      * @param string $totalDiscount
      * @param string $totalShippingPrice
      * @param string $totalTaxes
      * @param string $totalPriceWithTaxes
      * @param string $totalPriceWithoutTaxes
+     * @param string $orderMessage
+     * @param string $processOrderLink
      */
     public function __construct(
         string $totalProductsPrice,
@@ -75,7 +87,9 @@ class CartSummary
         string $totalShippingPrice,
         string $totalTaxes,
         string $totalPriceWithTaxes,
-        string $totalPriceWithoutTaxes
+        string $totalPriceWithoutTaxes,
+        string $orderMessage,
+        string $processOrderLink
     ) {
         $this->totalProductsPrice = $totalProductsPrice;
         $this->totalDiscount = $totalDiscount;
@@ -83,6 +97,8 @@ class CartSummary
         $this->totalTaxes = $totalTaxes;
         $this->totalPriceWithTaxes = $totalPriceWithTaxes;
         $this->totalPriceWithoutTaxes = $totalPriceWithoutTaxes;
+        $this->processOrderLink = $processOrderLink;
+        $this->orderMessage = $orderMessage;
     }
 
     /**
@@ -131,5 +147,21 @@ class CartSummary
     public function getTotalPriceWithoutTaxes(): string
     {
         return $this->totalPriceWithoutTaxes;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProcessOrderLink(): string
+    {
+        return $this->processOrderLink;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrderMessage(): string
+    {
+        return $this->orderMessage;
     }
 }

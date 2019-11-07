@@ -24,61 +24,68 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Query;
+namespace PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
- * Queries for products by provided search phrase
+ * Deletes specific price by cart id
  */
-class SearchProducts
+class DeleteSpecificPriceByCartProductCommand
 {
     /**
-     * @var string
+     * @var CartId
      */
-    private $phrase;
+    private $cartId;
 
     /**
-     * @var int
+     * @var ProductId
      */
-    private $resultsLimit;
+    private $productId;
 
     /**
-     * @param string $phrase
-     * @param int $resultsLimit
+     * @var int|null
      */
-    public function __construct(string $phrase, int $resultsLimit = 10)
-    {
-        $this->assertIsNotEmptyString($phrase);
-        $this->phrase = $phrase;
-        $this->resultsLimit = $resultsLimit;
+    private $productAttributeId;
+
+    public function __construct(
+        int $cartId,
+        int $productId
+    ) {
+        $this->cartId = new CartId($cartId);
+        $this->productId = new ProductId($productId);
     }
 
     /**
-     * @return string
+     * @return CartId
      */
-    public function getPhrase()
+    public function getCartId(): CartId
     {
-        return $this->phrase;
+        return $this->cartId;
     }
 
     /**
-     * @return int
+     * @return ProductId
      */
-    public function getResultsLimit(): int
+    public function getProductId(): ProductId
     {
-        return $this->resultsLimit;
+        return $this->productId;
     }
 
     /**
-     * @param string $phrase
-     *
-     * @throws ProductException
+     * @return int|null
      */
-    private function assertIsNotEmptyString(string $phrase): void
+    public function getProductAttributeId(): ?int
     {
-        if (empty($phrase) || !is_string($phrase)) {
-            throw new ProductException('Product search phrase must be a not empty string');
-        }
+        return $this->productAttributeId;
+    }
+
+    /**
+     * @param int $productAttributeId
+     */
+    public function setProductAttributeId(int $productAttributeId): void
+    {
+        $this->productAttributeId = $productAttributeId;
     }
 }

@@ -24,11 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Order\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Exception;
 
 /**
- * Thrown when failed to resend order email
+ * Thrown when requested specific price could not be found
  */
-class OrderEmailResendException extends OrderException
+class SpecificPriceNotFoundException extends SpecificPriceException
 {
 }

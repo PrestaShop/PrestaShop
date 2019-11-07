@@ -24,22 +24,15 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Currency\Exception;
-
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization;
 
 /**
- * Base exception for Currency sub-domain
+ * Defines settings for customizations
  */
-class CurrencyException extends DomainException
+final class CustomizationSettings
 {
     /**
-     * When currency cannot be used because it is disabled
+     * Maximum allowed length for customization text field value
      */
-    const IS_DISABLED = 1;
-
-    /**
-     * When currency cannot be used because it is deleted
-     */
-    const IS_DELETED = 2;
+    const MAX_TEXT_LENGTH = 2;
 }

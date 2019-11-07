@@ -32,7 +32,7 @@ use OrderHistory;
 use OrderState;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\ResendOrderEmailCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\ResendOrderEmailHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderEmailResendException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderEmailSendException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use Validate;
 
@@ -66,7 +66,10 @@ final class ResendOrderEmailHandler extends AbstractOrderCommandHandler implemen
         }
 
         if (!$history->sendEmail($order, $templateVars)) {
-            throw new OrderEmailResendException('Failed to resend order email.');
+            throw new OrderEmailSendException(
+                'Failed to resend order email.',
+                OrderEmailSendException::FAILED_RESEND
+            );
         }
     }
 }

@@ -37,7 +37,6 @@ export default class AddressesRenderer {
    */
   render(addresses) {
     this._cleanAddresses();
-
     if (addresses.length === 0) {
       this._hideAddressesContent();
       this._showEmptyAddressesWarning();
@@ -56,6 +55,8 @@ export default class AddressesRenderer {
       this._renderInvoiceAddress(address);
     }
 
+    // @todo: router.generate(admin_addresses_create) when pr #15300 merged
+    $(createOrderMap.addressAddBtn).prop('href', '#');
     this._showAddressesBlock();
   }
 
@@ -73,12 +74,13 @@ export default class AddressesRenderer {
     };
 
     if (address.delivery) {
-      const content = address.formattedAddress;
-      $(createOrderMap.deliveryAddressDetails).html(content);
+      $(createOrderMap.deliveryAddressDetails).html(address.formattedAddress);
       deliveryAddressOption.selected = 'selected';
     }
 
     $(createOrderMap.deliveryAddressSelect).append($('<option>', deliveryAddressOption));
+    // @todo: router.generate(admin_addresses_edit) when pr #15300 merged
+    $(createOrderMap.deliveryAddressEditBtn).prop('href', '#');
   }
 
   /**
@@ -100,6 +102,8 @@ export default class AddressesRenderer {
     }
 
     $(createOrderMap.invoiceAddressSelect).append($('<option>', invoiceAddressOption));
+    // @todo: router.generate(admin_addresses_edit) when pr #15300 merged
+    $(createOrderMap.invoiceAddressEditBtn).prop('href', '#');
   }
 
   /**
@@ -121,7 +125,6 @@ export default class AddressesRenderer {
     $(createOrderMap.deliveryAddressSelect).empty();
     $(createOrderMap.invoiceAddressDetails).empty();
     $(createOrderMap.invoiceAddressSelect).empty();
-    $(createOrderMap.addressesWarning).empty();
   }
 
   /**
