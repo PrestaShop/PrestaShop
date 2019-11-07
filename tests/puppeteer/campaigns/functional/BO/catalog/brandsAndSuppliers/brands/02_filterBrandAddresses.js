@@ -8,7 +8,7 @@ const {demoAddresses} = require('@data/demo/brands');
 const BOBasePage = require('@pages/BO/BObasePage');
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
-const BrandsPage = require('@pages/BO/brands');
+const BrandsPage = require('@pages/BO/catalog/brands');
 
 let browser;
 let page;

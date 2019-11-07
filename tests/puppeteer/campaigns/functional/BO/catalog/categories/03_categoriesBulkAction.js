@@ -7,8 +7,8 @@ const loginCommon = require('@commonTests/loginBO');
 const BOBasePage = require('@pages/BO/BObasePage');
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
-const CategoriesPage = require('@pages/BO/categories');
-const AddCategoryPage = require('@pages/BO/addCategory');
+const CategoriesPage = require('@pages/BO/catalog/categories');
+const AddCategoryPage = require('@pages/BO/catalog/categories/add');
 const CategoryFaker = require('@data/faker/category');
 
 let browser;

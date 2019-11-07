@@ -8,7 +8,7 @@ const BOBasePage = require('@pages/BO/BObasePage');
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
 const CustomersPage = require('@pages/BO/customers');
-const AddCustomerPage = require('@pages/BO/addCustomer');
+const AddCustomerPage = require('@pages/BO/customers/add');
 const CustomerFaker = require('@data/faker/customer');
 
 let browser;
