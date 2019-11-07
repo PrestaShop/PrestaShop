@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e0802727cfeaa2e1a7a06c6164a7048f",
+    "content-hash": "123bf9059cec742e89dccd5250b36256",
     "packages": [
         {
             "name": "analog/analog",
@@ -1531,15 +1531,15 @@
             "authors": [
                 {
                     "name": "André Rothe",
-                    "role": "Committer",
                     "email": "phosco@gmx.de",
-                    "homepage": "https://www.phosco.info"
+                    "homepage": "https://www.phosco.info",
+                    "role": "Committer"
                 },
                 {
                     "name": "Justin Swanhart",
-                    "role": "Owner",
                     "email": "greenlion@gmail.com",
-                    "homepage": "http://code.google.com/u/greenlion@gmail.com/"
+                    "homepage": "http://code.google.com/u/greenlion@gmail.com/",
+                    "role": "Owner"
                 }
             ],
             "description": "A pure PHP SQL (non validating) parser w/ focus on MySQL dialect of SQL",
@@ -3728,6 +3728,51 @@
             "time": "2017-02-20T11:14:52+00:00"
         },
         {
+            "name": "prestashop/productcomments",
+            "version": "v4.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/productcomments.git",
+                "reference": "767896682d7cb73569785fe22517a58437da6e1a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/productcomments/zipball/767896682d7cb73569785fe22517a58437da6e1a",
+                "reference": "767896682d7cb73569785fe22517a58437da6e1a",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/cache": "^1.6",
+                "guzzlehttp/cache-subscriber": "^0.2.0",
+                "php": ">=5.6.0",
+                "prestashop/circuit-breaker": "^3.0.0",
+                "symfony/css-selector": "^3.4.0"
+            },
+            "type": "prestashop-module",
+            "autoload": {
+                "psr-4": {
+                    "PrestaShop\\Module\\ProductComment\\": "src/"
+                },
+                "classmap": [
+                    "productcomments.php"
+                ],
+                "exclude-from-classmap": []
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module productcomments",
+            "homepage": "https://github.com/PrestaShop/productcomments",
+            "time": "2019-11-12T14:50:36+00:00"
+        },
+        {
             "name": "prestashop/ps_banner",
             "version": "v2.1.0",
             "source": {
@@ -3856,6 +3901,38 @@
             "time": "2019-08-30T17:11:48+00:00"
         },
         {
+            "name": "prestashop/ps_crossselling",
+            "version": "v2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/ps_crossselling.git",
+                "reference": "09194273b73c1d45d950f645a6ddb24330615bfb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/ps_crossselling/zipball/09194273b73c1d45d950f645a6ddb24330615bfb",
+                "reference": "09194273b73c1d45d950f645a6ddb24330615bfb",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "type": "prestashop-module",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop - Cross selling",
+            "homepage": "https://github.com/PrestaShop/ps_crossselling",
+            "time": "2017-06-23T09:47:31+00:00"
+        },
+        {
             "name": "prestashop/ps_currencyselector",
             "version": "v2.0.0",
             "source": {
@@ -3982,6 +4059,38 @@
             "description": "PrestaShop module ps_customtext",
             "homepage": "https://github.com/PrestaShop/ps_customtext",
             "time": "2018-07-20T09:25:10+00:00"
+        },
+        {
+            "name": "prestashop/ps_dataprivacy",
+            "version": "v2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/ps_dataprivacy.git",
+                "reference": "7635ac3a3d373c26af81d28ead8efbf76ba53796"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/ps_dataprivacy/zipball/7635ac3a3d373c26af81d28ead8efbf76ba53796",
+                "reference": "7635ac3a3d373c26af81d28ead8efbf76ba53796",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "type": "prestashop-module",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "AFL - Academic Free License (AFL 3.0)"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop - Data privacy",
+            "homepage": "https://github.com/PrestaShop/ps_dataprivacy",
+            "time": "2017-06-23T09:45:26+00:00"
         },
         {
             "name": "prestashop/ps_emailsubscription",
@@ -6827,19 +6936,19 @@
             "authors": [
                 {
                     "name": "Fabien Potencier",
-                    "role": "Lead Developer",
                     "email": "fabien@symfony.com",
-                    "homepage": "http://fabien.potencier.org"
+                    "homepage": "http://fabien.potencier.org",
+                    "role": "Lead Developer"
                 },
                 {
                     "name": "Armin Ronacher",
-                    "role": "Project Founder",
-                    "email": "armin.ronacher@active-4.com"
+                    "email": "armin.ronacher@active-4.com",
+                    "role": "Project Founder"
                 },
                 {
                     "name": "Twig Team",
-                    "role": "Contributors",
-                    "homepage": "https://twig.symfony.com/contributors"
+                    "homepage": "https://twig.symfony.com/contributors",
+                    "role": "Contributors"
                 }
             ],
             "description": "Twig, the flexible, fast, and secure template language for PHP",
@@ -7383,8 +7492,8 @@
             "authors": [
                 {
                     "name": "Frank Kleine",
-                    "role": "Developer",
-                    "homepage": "http://frankkleine.de/"
+                    "homepage": "http://frankkleine.de/",
+                    "role": "Developer"
                 }
             ],
             "description": "Virtual file system to mock the real file system in unit tests.",
