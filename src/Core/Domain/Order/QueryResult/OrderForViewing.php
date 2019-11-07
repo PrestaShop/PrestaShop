@@ -183,8 +183,7 @@ class OrderForViewing
         OrderMessagesForViewing $messages,
         OrderPricesForViewing $prices,
         OrderDiscountsForViewing $discounts
-    )
-    {
+    ) {
         $this->reference = $reference;
         $this->customer = $customer;
         $this->shippingAddress = $shippingAddress;
