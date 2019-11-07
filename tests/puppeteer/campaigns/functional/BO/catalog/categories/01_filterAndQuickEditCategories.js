@@ -8,7 +8,7 @@ const {Categories} = require('@data/demo/categories');
 const BOBasePage = require('@pages/BO/BObasePage');
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
-const CategoriesPage = require('@pages/BO/categories');
+const CategoriesPage = require('@pages/BO/catalog/categories');
 
 let browser;
 let page;

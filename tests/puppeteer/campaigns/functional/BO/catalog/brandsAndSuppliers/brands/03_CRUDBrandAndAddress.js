@@ -9,10 +9,10 @@ const loginCommon = require('@commonTests/loginBO');
 const BOBasePage = require('@pages/BO/BObasePage');
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
-const BrandsPage = require('@pages/BO/brands');
-const AddBrandPage = require('@pages/BO/addBrand');
-const ViewBrandPage = require('@pages/BO/viewBrand');
-const AddBrandAddressPage = require('@pages/BO/addBrandAddress');
+const BrandsPage = require('@pages/BO/catalog/brands');
+const AddBrandPage = require('@pages/BO/catalog/brands/add');
+const ViewBrandPage = require('@pages/BO/catalog/brands/view');
+const AddBrandAddressPage = require('@pages/BO/catalog/brands/brandAddresses/add');
 
 let browser;
 let page;

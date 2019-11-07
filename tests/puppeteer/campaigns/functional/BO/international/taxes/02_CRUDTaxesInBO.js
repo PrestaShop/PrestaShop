@@ -7,8 +7,8 @@ const loginCommon = require('@commonTests/loginBO');
 const BOBasePage = require('@pages/BO/BObasePage');
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
-const TaxesPage = require('@pages/BO/taxes');
-const AddTaxPage = require('@pages/BO/addTax');
+const TaxesPage = require('@pages/BO/international/taxes');
+const AddTaxPage = require('@pages/BO/international/taxes/add');
 const TaxFaker = require('@data/faker/tax');
 
 let browser;
