@@ -30,6 +30,7 @@ use Carrier;
 use Country;
 use Currency;
 use Customer;
+use Group;
 use Order;
 use OrderCarrier;
 use PrestaShop\Decimal\Number;
@@ -80,13 +81,14 @@ final class GetOrderPreviewHandler implements GetOrderPreviewHandlerInterface
     public function handle(GetOrderPreview $query): OrderPreview
     {
         $order = $this->getOrder($query->getOrderId());
+        $priceDisplayMethod = $this->getOrderTaxCalculationMethod($order);
 
         return new OrderPreview(
             $this->getInvoiceDetails($order),
             $this->getShippingDetails($order),
             $this->getProductDetails($order),
             $order->isVirtual(),
-            PS_TAX_INC === $order->getTaxCalculationMethod()
+            $priceDisplayMethod == PS_TAX_INC
         );
     }
 
@@ -187,6 +189,8 @@ final class GetOrderPreviewHandler implements GetOrderPreviewHandlerInterface
         $currency = new Currency($order->id_currency);
         $locale = $this->localeRepository->getLocale($this->locale);
 
+        $taxCalculationMethod = $this->getOrderTaxCalculationMethod($order);
+
         foreach ($order->getProductsDetail() as $detail) {
             $unitPrice = $detail['unit_price_tax_excl'];
             $totalPrice = $detail['total_price_tax_excl'];
@@ -196,7 +200,7 @@ final class GetOrderPreviewHandler implements GetOrderPreviewHandlerInterface
 
             $totalTaxAmount = $totalPriceTaxIncl->minus($totalPriceTaxExcl);
 
-            if (PS_TAX_INC === $order->getTaxCalculationMethod()) {
+            if (PS_TAX_INC === $taxCalculationMethod) {
                 $unitPrice = $detail['unit_price_tax_incl'];
                 $totalPrice = $detail['total_price_tax_incl'];
             }
@@ -217,5 +221,17 @@ final class GetOrderPreviewHandler implements GetOrderPreviewHandlerInterface
         }
 
         return $productDetails;
+    }
+
+    /**
+     * @param Order $order
+     *
+     * @return int
+     */
+    private function getOrderTaxCalculationMethod(Order $order): int
+    {
+        $customer = new Customer($order->id_customer);
+
+        return Group::getPriceDisplayMethod((int) $customer->id_default_group);
     }
 }
