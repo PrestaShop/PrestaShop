@@ -27,7 +27,6 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
 use Exception;
-use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddCartRuleToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddOrderFromBackOfficeCommand;
@@ -37,10 +36,11 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Command\DeleteCartRuleFromOrderComma
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\DuplicateOrderCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\ResendOrderEmailCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderShippingDetailsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\SendProcessOrderEmailCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotEditDeliveredOrderProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\ChangeOrderStatusException;
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderEmailResendException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderEmailSendException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\TransistEmailSendingException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Command\GenerateInvoiceCommand;
@@ -606,39 +606,20 @@ class OrderController extends FrameworkBundleAdminController
      * @param int $orderId
      *
      * @return JsonResponse
-     *
-     * @throws CartConstraintException
      */
     public function duplicateOrderCartAction(int $orderId)
     {
-        $cartId = $this->getCommandBus()->handle(new DuplicateOrderCartCommand($orderId))->getValue();
-
-        return $this->json(
-            $this->getQueryBus()->handle(new GetCartInformation($cartId))
-        );
-    }
-
-    /**
-     * Initializes order status update
-     *
-     * @param int $orderId
-     * @param int $orderStatusId
-     */
-    private function handleOrderStatusUpdate(int $orderId, int $orderStatusId): void
-    {
         try {
-            $this->getCommandBus()->handle(
-                new UpdateOrderStatusCommand(
-                    $orderId,
-                    $orderStatusId
-                )
-            );
+            $cartId = $this->getCommandBus()->handle(new DuplicateOrderCartCommand($orderId))->getValue();
 
-            $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
-        } catch (ChangeOrderStatusException $e) {
-            $this->handleChangeOrderStatusException($e);
+            return $this->json(
+                $this->getQueryBus()->handle(new GetCartInformation($cartId))
+            );
         } catch (Exception $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+            return $this->json(
+                ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
+                Response::HTTP_BAD_REQUEST
+            );
         }
     }
 
@@ -719,6 +700,53 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
+     * Sends email with process order link to customer
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function sendProcessOrderEmailAction(Request $request): JsonResponse
+    {
+        try {
+            $this->getCommandBus()->handle(new SendProcessOrderEmailCommand($request->request->getInt('cartId')));
+
+            return $this->json([
+                'message' => $this->trans('The email was sent to your customer.', 'Admin.Orderscustomers.Notification'),
+            ]);
+        } catch (Exception $e) {
+            return $this->json(
+                ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
+    }
+
+    /**
+     * Initializes order status update
+     *
+     * @param int $orderId
+     * @param int $orderStatusId
+     */
+    private function handleOrderStatusUpdate(int $orderId, int $orderStatusId): void
+    {
+        try {
+            $this->getCommandBus()->handle(
+                new UpdateOrderStatusCommand(
+                    $orderId,
+                    $orderStatusId
+                )
+            );
+
+            $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+        } catch (ChangeOrderStatusException $e) {
+            $this->handleChangeOrderStatusException($e);
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+    }
+
+    /**
      * @param Exception $e
      *
      * @return array
@@ -733,7 +761,7 @@ class OrderController extends FrameworkBundleAdminController
                     'Admin.Orderscustomers.Notification',
                     ['#%d' => $e->getOrderId()->getValue()]
                 ) : '',
-            OrderEmailResendException::class => $this->trans(
+            OrderEmailSendException::class => $this->trans(
                 'An error occurred while sending the e-mail to the customer.',
                 'Admin.Orderscustomers.Notification'
             ),
