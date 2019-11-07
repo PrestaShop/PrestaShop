@@ -98,7 +98,7 @@ describe('Create, update and delete supplier', async () => {
   });
   // 3: Update supplier
   describe('Update supplier', async () => {
-    it('should edit first supplier', async function () {
+    it('should go to edit first supplier page', async function () {
       await this.pageObjects.suppliersPage.goToEditSupplierPage(1);
       const pageTitle = await this.pageObjects.addSupplierPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.addSupplierPage.pageTitleEdit);
@@ -117,7 +117,7 @@ describe('Create, update and delete supplier', async () => {
       await expect(pageTitle).to.contains(editSupplierData.name);
     });
 
-    it('should return supplier page', async function () {
+    it('should return to supplier page', async function () {
       await this.pageObjects.viewSupplierPage.goToPreviousPage();
       const pageTitle = await this.pageObjects.suppliersPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.suppliersPage.pageTitle);
@@ -125,7 +125,7 @@ describe('Create, update and delete supplier', async () => {
   });
   // 5: Delete supplier
   describe('Delete supplier', async () => {
-    it('should Delete supplier', async function () {
+    it('should delete supplier', async function () {
       const result = await this.pageObjects.suppliersPage.deleteSupplier(1);
       await expect(result).to.be.equal(this.pageObjects.suppliersPage.successfulDeleteMessage);
     });
