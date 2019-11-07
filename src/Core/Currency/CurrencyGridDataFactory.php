@@ -91,7 +91,6 @@ final class CurrencyGridDataFactory implements GridDataFactoryInterface
         foreach ($records as $key => $record) {
             $result[$key] = $record;
             $result[$key]['currency'] = $this->buildCurrencyName($result[$key]);
-            $result[$key]['conversion_rate'] = (float) $result[$key]['conversion_rate'];
         }
 
         return new RecordCollection($result);
