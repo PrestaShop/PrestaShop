@@ -358,7 +358,7 @@ class ImageManagerCore
      *
      * @param string $filename File path to check
      * @param string $fileMimeType File known mime type (generally from $_FILES)
-     * @param array $mimeTypeList Allowed MIME types
+     * @param array<string>|null $mimeTypeList Allowed MIME types
      *
      * @return bool
      */
@@ -445,8 +445,8 @@ class ImageManagerCore
      *
      * @param array $file Upload $_FILE value
      * @param int $maxFileSize Maximum upload size
-     * @param array<string> $types Authorized extensions
-     * @param array<string> $mimeTypeList Authorized mimetypes
+     * @param array<string>|null $types Authorized extensions
+     * @param array<string>|null $mimeTypeList Authorized mimetypes
      *
      * @return bool|string Return false if no error encountered
      */
