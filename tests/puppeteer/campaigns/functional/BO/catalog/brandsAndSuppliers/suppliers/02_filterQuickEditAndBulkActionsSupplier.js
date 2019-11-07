@@ -48,10 +48,10 @@ describe('Create, Update and Delete Brand and Address', async () => {
     ]);
   });
 
-  // Login into BO and go to brands page
+  // Login into BO
   loginCommon.loginBO();
 
-  // GO to brands Page
+  // Go to brands Page
   it('should go to brands page', async function () {
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.catalogParentLink,
@@ -62,7 +62,7 @@ describe('Create, Update and Delete Brand and Address', async () => {
     await expect(pageTitle).to.contains(this.pageObjects.brandsPage.pageTitle);
   });
 
-  // GO to Suppliers Page
+  // Go to Suppliers Page
   it('should go to suppliers page', async function () {
     await this.pageObjects.brandsPage.goToSubTabSuppliers();
     const pageTitle = await this.pageObjects.suppliersPage.getPageTitle();
@@ -238,7 +238,7 @@ describe('Create, Update and Delete Brand and Address', async () => {
     it('should disable with bulk actions', async function () {
       const disableTextResult = await this.pageObjects.suppliersPage.changeSuppliersEnabledColumnBulkActions(false);
       await expect(disableTextResult).to.be.equal(this.pageObjects.suppliersPage.successfulUpdateStatusMessage);
-
+      // Check that element in grid are disabled
       const numberOfSuppliersInGrid = await this.pageObjects.suppliersPage.getNumberFromText(
         this.pageObjects.suppliersPage.gridHeaderTitle,
       );
@@ -256,7 +256,7 @@ describe('Create, Update and Delete Brand and Address', async () => {
     it('should enable with bulk actions', async function () {
       const disableTextResult = await this.pageObjects.suppliersPage.changeSuppliersEnabledColumnBulkActions(true);
       await expect(disableTextResult).to.be.equal(this.pageObjects.suppliersPage.successfulUpdateStatusMessage);
-
+      // Check that element in grid are enabled
       const numberOfSuppliersInGrid = await this.pageObjects.suppliersPage.getNumberFromText(
         this.pageObjects.suppliersPage.gridHeaderTitle,
       );

@@ -49,7 +49,7 @@ describe('Create, update and delete supplier', async () => {
     ]);
   });
 
-  // Login into BO and go to brands page
+  // Login into BO
   loginCommon.loginBO();
 
   // Go to brands page
@@ -98,7 +98,7 @@ describe('Create, update and delete supplier', async () => {
   });
   // 3: Update supplier
   describe('Update supplier', async () => {
-    it('Edit first supplier', async function () {
+    it('should edit first supplier', async function () {
       await this.pageObjects.suppliersPage.goToEditSupplierPage(1);
       const pageTitle = await this.pageObjects.addSupplierPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.addSupplierPage.pageTitleEdit);
