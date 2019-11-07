@@ -26,6 +26,9 @@
 <div class="card d-none" id="cart-block">
   <h3 class="card-header">{{ 'Cart'|trans({}, 'Admin.Orderscustomers.Feature') }}</h3>
   <div class="card-body">
+    <div class="alert alert-danger d-none" id="js-cart-error-block">
+      <div class="alert-text"></div>
+    </div>
     <div class="row">
       <div class="col-3">
         <span class="float-right">{{ 'Search for a product'|trans({}, 'Admin.Orderscustomers.Feature') }}</span>
@@ -169,9 +172,14 @@
   </div>
 </div>
 
+{% set requiredFieldMarkTemplate %}
+  <span class="js-required-field-mark text-danger d-none">*</span>
+{% endset %}
+
 <script id="js-product-custom-text-template" type="text/template">
   <div class="row mt-3">
     <div class="col">
+      {{ requiredFieldMarkTemplate }}
       <label for="" class="js-product-custom-input-label"></label>
       <input name="" type="text" class="form-control js-product-custom-input">
     </div>
@@ -181,6 +189,7 @@
 <script id="js-product-custom-file-template" type="text/template">
   <div class="row mt-3">
     <div class="col">
+      {{ requiredFieldMarkTemplate }}
       <label for="" class="js-product-custom-input-label"></label>
       <div class="custom-file">
         <input name="" type="file" class="custom-file-input js-product-custom-input">

@@ -35,6 +35,7 @@ use Currency;
 use Customer;
 use Language;
 use Link;
+use Message;
 use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
@@ -112,7 +113,7 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
             (int) $language->id,
             $this->extractCartRulesFromLegacySummary($legacySummary, $currency),
             $addresses,
-            $this->extractSummaryFromLegacySummary($legacySummary, $currency),
+            $this->extractSummaryFromLegacySummary($legacySummary, $currency, $cart),
             $addresses ? $this->extractShippingFromLegacySummary($cart, $legacySummary) : null
         );
     }
@@ -145,7 +146,7 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
             );
         }
 
-        return $cartAddresses;
+        return array_values($cartAddresses);
     }
 
     /**
@@ -275,17 +276,24 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
     /**
      * @param array $legacySummary
      * @param Currency $currency
+     * @param Cart $cart
      *
      * @return CartInformation\CartSummary
      *
      * @throws LocalizationException
      */
-    private function extractSummaryFromLegacySummary(array $legacySummary, Currency $currency): CartSummary
+    private function extractSummaryFromLegacySummary(array $legacySummary, Currency $currency, Cart $cart): CartSummary
     {
+        $cartId = (int) $cart->id;
         $discount = $this->locale->formatPrice($legacySummary['total_discounts_tax_exc'], $currency->iso_code);
 
         if (0 !== (int) $legacySummary['total_discounts_tax_exc']) {
             $discount = '-' . $discount;
+        }
+
+        $orderMessage = '';
+        if ($message = Message::getMessageByCartId($cartId)) {
+            $orderMessage = $message['message'];
         }
 
         return new CartSummary(
@@ -294,7 +302,18 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
             $this->locale->formatPrice($legacySummary['total_shipping_tax_exc'], $currency->iso_code),
             $this->locale->formatPrice($legacySummary['total_tax'], $currency->iso_code),
             $this->locale->formatPrice($legacySummary['total_price'], $currency->iso_code),
-            $this->locale->formatPrice($legacySummary['total_price_without_tax'], $currency->iso_code)
+            $this->locale->formatPrice($legacySummary['total_price_without_tax'], $currency->iso_code),
+            $orderMessage,
+            $this->contextLink->getPageLink(
+                'order',
+                false,
+                (int) $cart->id_lang,
+                http_build_query([
+                    'step' => 3,
+                    'recover_cart' => $cartId,
+                    'token_cart' => md5(_COOKIE_KEY_ . 'recover_cart_' . $cartId),
+                ])
+            )
         );
     }
 

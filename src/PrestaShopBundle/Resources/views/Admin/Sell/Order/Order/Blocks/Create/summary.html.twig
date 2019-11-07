@@ -28,6 +28,12 @@
     {{ 'Summary'|trans({}, 'Admin.Global') }}
   </h3>
   <div class="card-body">
+    <div class="alert alert-success d-none" id="js-summary-success-block">
+      <div class="alert-text"></div>
+    </div>
+    <div class="alert alert-danger d-none" id="js-summary-error-block">
+      <div class="alert-text"></div>
+    </div>
     <div class="row">
       <div class="col">
         <div class="card">
@@ -79,16 +85,18 @@
       <div class="row mt-3">
         <div class="col col-10">
 
-          {{ ps.form_group_row(summaryForm.order_message, {}, {
-            'label': 'Order message'|trans({}, 'Admin.Orderscustomers.Feature'),
-          }) }}
+          <div id="js-order-message-wrap">
+            {{ ps.form_group_row(summaryForm.order_message, {}, {
+              'label': 'Order message'|trans({}, 'Admin.Orderscustomers.Feature'),
+            }) }}
+          </div>
 
           <div class="form-group row mb-2">
             <div class="col-sm offset-sm-4">
-              <button type="button" class="btn btn-outline-primary">
+              <button type="button" class="btn btn-outline-primary" id="js-send-process-order-email-btn">
                 {{ 'Send an email to the customer with the link to process the payment.'|trans({}, 'Admin.Orderscustomers.Help') }}
               </button>
-              <a href="#" target="_blank">
+              <a id="js-process-order-link" href="#" target="_blank">
                 {{ 'Go on payment page to process the payment.'|trans({}, 'Admin.Orderscustomers.Help') }}
               </a>
             </div>

@@ -31,6 +31,7 @@ export default {
   productCustomizationFieldTypeText: 1,
 
   orderCreationContainer: '#order-creation-container',
+  requiredFieldMark: '.js-required-field-mark',
 
   // selectors related to customer block
   customerSearchInput: '#customer-search-input',
@@ -70,6 +71,7 @@ export default {
   orderTotalField: '.js-order-total-paid',
   orderStatusField: '.js-order-status',
   emptyListRowTemplate: '#js-empty-list-row',
+  emptyListRow: '.js-empty-row',
 
   // selectors related to cartRules block
   cartRulesBlock: '#cart-rules-block',
@@ -94,6 +96,9 @@ export default {
   addressSelect: '.js-address-select',
   addressesContent: '#addresses-content',
   addressesWarning: '#addresses-warning',
+  deliveryAddressEditBtn: '#js-delivery-address-edit-btn',
+  invoiceAddressEditBtn: '#js-invoice-address-edit-btn',
+  addressAddBtn: '#js-add-address-btn',
 
   // selectors related to summary block
   summaryBlock: '#summary-block',
@@ -104,6 +109,13 @@ export default {
   summaryTotalWithoutTax: '.js-total-without-tax',
   summaryTotalWithTax: '.js-total-with-tax',
   placeOrderCartIdField: '.js-place-order-cart-id',
+  processOrderLinkTag: '#js-process-order-link',
+  orderMessageField: '#js-order-message-wrap textarea',
+  sendProcessOrderEmailBtn: '#js-send-process-order-email-btn',
+  summarySuccessAlertBlock: '#js-summary-success-block',
+  summaryErrorAlertBlock: '#js-summary-error-block',
+  summarySuccessAlertText: '#js-summary-success-block .alert-text',
+  summaryErrorAlertText: '#js-summary-error-block .alert-text',
 
   // selectors related to shipping block
   shippingBlock: '#shipping-block',
@@ -152,4 +164,6 @@ export default {
   productTaxWarning: '.js-tax-warning',
   noProductsFoundWarning: '.js-no-products-found',
   productAddForm: '#js-add-product-form',
+  cartErrorAlertBlock: '#js-cart-error-block',
+  cartErrorAlertText: '#js-cart-error-block .alert-text',
 };

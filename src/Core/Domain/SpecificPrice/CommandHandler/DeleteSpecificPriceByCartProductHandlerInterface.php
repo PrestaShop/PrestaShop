@@ -24,22 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Currency\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\SpecificPrice\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
+use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\DeleteSpecificPriceByCartProductCommand;
 
 /**
- * Base exception for Currency sub-domain
+ * Interface for handling DeleteSpecificPriceByCartProduct command
  */
-class CurrencyException extends DomainException
+interface DeleteSpecificPriceByCartProductHandlerInterface
 {
     /**
-     * When currency cannot be used because it is disabled
+     * @param DeleteSpecificPriceByCartProductCommand $command
      */
-    const IS_DISABLED = 1;
-
-    /**
-     * When currency cannot be used because it is deleted
-     */
-    const IS_DELETED = 2;
+    public function handle(DeleteSpecificPriceByCartProductCommand $command): void;
 }

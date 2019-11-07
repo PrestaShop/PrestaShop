@@ -53,6 +53,13 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\DeleteCartWithOrderExceptio
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CartGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\CartFilters;
 use PrestaShopBundle\Component\CsvResponse;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
+use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CustomizationSettings;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\AddSpecificPriceCommand;
+use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\DeleteSpecificPriceByCartProductCommand;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -485,11 +492,85 @@ class CartController extends FrameworkBundleAdminController
         }
     }
 
-    //@todo: wip
+    /**
+     * Modifying a price for a product in the cart is actually performed by using generated specific prices,
+     * that are used only for this cart and this product.
+     *
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller')) || is_granted('create', 'AdminOrders')")
+     *
+     * @param Request $request
+     * @param int $cartId
+     * @param int $productId
+     *
+     * @return JsonResponse
+     */
     public function editProductPriceAction(Request $request, int $cartId, int $productId): JsonResponse
     {
-        dump($request);
-        die;
+        $commandBus = $this->getCommandBus();
+
+        try {
+            $deleteSpecificPriceCommand = new DeleteSpecificPriceByCartProductCommand($cartId, $productId);
+
+            $addSpecificPriceCommand = new AddSpecificPriceCommand(
+                $productId,
+                Reduction::TYPE_AMOUNT,
+                0,
+                true,
+                (float) $request->request->get('newPrice'),
+                1
+            );
+            $addSpecificPriceCommand->setCartId($cartId);
+            $addSpecificPriceCommand->setCustomerId($request->request->getInt('customerId'));
+
+            if ($attributeId = $request->request->getInt('productAttributeId')) {
+                $deleteSpecificPriceCommand->setProductAttributeId($attributeId);
+                $addSpecificPriceCommand->setProductAttributeId($attributeId);
+            }
+
+            // delete previous specific prices
+            $commandBus->handle($deleteSpecificPriceCommand);
+            // add new specific price
+            $commandBus->handle($addSpecificPriceCommand);
+
+            return $this->json($this->getCartInfo($cartId));
+        } catch (Exception $e) {
+            return $this->json(
+                ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
+    }
+
+    public function editProductQuantityAction(Request $request, int $cartId, int $productId)
+    {
+        $previousQty = $request->request->getInt('previousQty');
+        $newQty = $request->request->getInt('newQty');
+
+        if ($previousQty < $newQty) {
+            $action = QuantityAction::INCREASE_PRODUCT_QUANTITY;
+            $qty = $newQty - $previousQty;
+        } else {
+            $action = QuantityAction::DECREASE_PRODUCT_QUANTITY;
+            $qty = $previousQty - $newQty;
+        }
+
+        try {
+            $this->getCommandBus()->handle(new UpdateProductQuantityInCartCommand(
+                $cartId,
+                $productId,
+                $qty,
+                $action,
+                $request->request->getInt('attributeId') ?: null,
+                $request->request->getInt('customizationId') ?: null
+            ));
+
+            return $this->json($this->getCartInfo($cartId));
+        } catch (Exception $e) {
+            return $this->json(
+                ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
     }
 
     /**
@@ -563,6 +644,8 @@ class CartController extends FrameworkBundleAdminController
     }
 
     /**
+     * @param Exception $e
+     *
      * @return array
      */
     private function getErrorMessages(Exception $e)
@@ -585,6 +668,33 @@ class CartController extends FrameworkBundleAdminController
                 ),
                 $e instanceof BulkDeleteCartException ? implode(', ', $e->getCartIds()) : ''
             ),
+            LanguageException::class => [
+                LanguageException::NOT_ACTIVE => $this->trans(
+                    'Selected language cannot be used because is disabled',
+                    'Admin.Notifications.Error'
+                ),
+            ],
+            CurrencyException::class => [
+                CurrencyException::IS_DELETED => $this->trans(
+                    'Selected currency cannot be used because it is deleted',
+                    'Admin.Notifications.Error'
+                ),
+                CurrencyException::IS_DISABLED => $this->trans(
+                    'Selected currency cannot be used because it is disabled',
+                    'Admin.Notifications.Error'
+                ),
+            ],
+            CustomizationConstraintException::class => [
+                CustomizationConstraintException::FIELD_IS_REQUIRED => $this->trans(
+                    'Please fill in all the required fields.',
+                    'Admin.Notifications.Error'
+                ),
+                CustomizationConstraintException::FIELD_IS_TOO_LONG => $this->trans(
+                    'Custom field text cannot be longer than %limit% characters',
+                    'Admin.Notifications.Error',
+                    ['%limit%' => CustomizationSettings::MAX_TEXT_LENGTH]
+                ),
+            ],
         ];
     }
 }

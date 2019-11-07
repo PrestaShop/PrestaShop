@@ -67,6 +67,10 @@ export default class ProductRenderer {
       $template.find(createOrderMap.listedProductUnitPriceInput).data('attribute-id', product.attributeId);
       $template.find(createOrderMap.listedProductUnitPriceInput).data('customization-id', customizationId);
       $template.find(createOrderMap.listedProductQtyInput).val(product.quantity);
+      $template.find(createOrderMap.listedProductQtyInput).data('product-id', product.productId);
+      $template.find(createOrderMap.listedProductQtyInput).data('attribute-id', product.attributeId);
+      $template.find(createOrderMap.listedProductQtyInput).data('customization-id', customizationId);
+      $template.find(createOrderMap.listedProductQtyInput).data('prev-qty', product.quantity);
       $template.find(createOrderMap.productTotalPriceField).text(product.price);
       $template.find(createOrderMap.productRemoveBtn).data('product-id', product.productId);
       $template.find(createOrderMap.productRemoveBtn).data('attribute-id', product.attributeId);
@@ -141,7 +145,7 @@ export default class ProductRenderer {
   renderProductMetadata(product) {
     this.renderStock(product.stock);
     this._renderCombinations(product.combinations);
-    this._renderCustomizations(product.customization_fields);
+    this._renderCustomizations(product.customizationFields);
   }
 
   /**
@@ -167,10 +171,10 @@ export default class ProductRenderer {
 
       let name = product.name;
       if (product.combinations.length === 0) {
-        name += ` - ${product.formatted_price}`;
+        name += ` - ${product.formattedPrice}`;
       }
 
-      $(createOrderMap.productSelect).append(`<option value="${product.product_id}">${name}</option>`);
+      $(createOrderMap.productSelect).append(`<option value="${product.productId}">${name}</option>`);
     }
   }
 
@@ -206,8 +210,8 @@ export default class ProductRenderer {
 
       $(createOrderMap.combinationsSelect).append(
         `<option
-          value="${combination.attribute_combination_id}">
-          ${combination.attribute} - ${combination.formatted_price}
+          value="${combination.attributeCombinationId}">
+          ${combination.attribute} - ${combination.formattedPrice}
         </option>`,
       );
     }
@@ -224,9 +228,9 @@ export default class ProductRenderer {
    */
   _renderCustomizations(customizationFields) {
     // represents customization field type "file".
-    const fieldTypeFile = 0;
+    const fieldTypeFile = createOrderMap.productCustomizationFieldTypeFile;
     // represents customization field type "text".
-    const fieldTypeText = 1;
+    const fieldTypeText = createOrderMap.productCustomizationFieldTypeText;
 
     this._cleanCustomizations();
     if (customizationFields.length === 0) {
@@ -249,15 +253,57 @@ export default class ProductRenderer {
       const $template = templateTypeMap[customField.type].clone();
 
       $template.find(createOrderMap.productCustomInput)
-        .attr('name', `customizations[${customField.customization_field_id}]`);
+        .attr('name', `customizations[${customField.customizationFieldId}]`);
       $template.find(createOrderMap.productCustomInputLabel)
-        .attr('for', `customizations[${customField.customization_field_id}]`)
+        .attr('for', `customizations[${customField.customizationFieldId}]`)
         .text(customField.name);
+
+      if (customField.required === true) {
+        $template.find(createOrderMap.requiredFieldMark).removeClass('d-none');
+      }
 
       $customFieldsContainer.append($template);
     }
 
     this._showCustomizations();
+  }
+
+  /**
+   * Renders error alert for cart block
+   *
+   * @param message
+   */
+  renderCartBlockErrorAlert(message) {
+    $(createOrderMap.cartErrorAlertText).text(message);
+    this._showCartBlockError()
+  }
+
+  /**
+   * Cleans cart block alerts content and hides them
+   *
+   * @param message
+   */
+  cleanCartBlockAlerts(message) {
+    $(createOrderMap.cartErrorAlertText).text('');
+    this._hideCartBlockError();
+  }
+
+  /**
+   * Shows error alert block of cart block
+   *
+   * @private
+   */
+  _showCartBlockError() {
+    $(createOrderMap.cartErrorAlertBlock).removeClass('d-none')
+  }
+
+  /**
+   * Hides error alert block of cart block
+   *
+   * @private
+   */
+  _hideCartBlockError() {
+    $(createOrderMap.cartErrorAlertBlock).addClass('d-none')
   }
 
   /**

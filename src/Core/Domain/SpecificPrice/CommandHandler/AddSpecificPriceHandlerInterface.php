@@ -24,22 +24,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Currency\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\SpecificPrice\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
+use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\AddSpecificPriceCommand;
+use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\ValueObject\SpecificPriceId;
 
 /**
- * Base exception for Currency sub-domain
+ * Interface for handling AddSpecificPrice command
  */
-class CurrencyException extends DomainException
+interface AddSpecificPriceHandlerInterface
 {
     /**
-     * When currency cannot be used because it is disabled
+     * @param AddSpecificPriceCommand $command
+     *
+     * @return SpecificPriceId
      */
-    const IS_DISABLED = 1;
-
-    /**
-     * When currency cannot be used because it is deleted
-     */
-    const IS_DELETED = 2;
+    public function handle(AddSpecificPriceCommand $command): SpecificPriceId;
 }

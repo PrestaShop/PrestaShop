@@ -24,22 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Currency\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\SendProcessOrderEmailCommand;
 
 /**
- * Base exception for Currency sub-domain
+ * Interface for handling SendProcessOrderEmail command
  */
-class CurrencyException extends DomainException
+interface SendProcessOrderEmailHandlerInterface
 {
     /**
-     * When currency cannot be used because it is disabled
+     * @param SendProcessOrderEmailCommand $command
      */
-    const IS_DISABLED = 1;
-
-    /**
-     * When currency cannot be used because it is deleted
-     */
-    const IS_DELETED = 2;
+    public function handle(SendProcessOrderEmailCommand $command): void;
 }

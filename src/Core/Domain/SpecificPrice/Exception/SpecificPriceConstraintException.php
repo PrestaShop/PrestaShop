@@ -24,22 +24,25 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Currency\Exception;
-
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
+namespace PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Exception;
 
 /**
- * Base exception for Currency sub-domain
+ * Thrown when specific price constraints are violated
  */
-class CurrencyException extends DomainException
+class SpecificPriceConstraintException extends SpecificPriceException
 {
     /**
-     * When currency cannot be used because it is disabled
+     * When catalog price rule id is not valid
      */
-    const IS_DISABLED = 1;
+    const INVALID_ID = 10;
 
     /**
-     * When currency cannot be used because it is deleted
+     * When date-time format is invalid
      */
-    const IS_DELETED = 2;
+    const INVALID_DATETIME = 20;
+
+    /**
+     * When date range is not valid
+     */
+    const INVALID_DATE_RANGE = 30;
 }

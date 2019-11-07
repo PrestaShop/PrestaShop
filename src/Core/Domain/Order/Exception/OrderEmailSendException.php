@@ -24,22 +24,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Currency\Exception;
-
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
+namespace PrestaShop\PrestaShop\Core\Domain\Order\Exception;
 
 /**
- * Base exception for Currency sub-domain
+ * Thrown when failed to send email associated with order
  */
-class CurrencyException extends DomainException
+class OrderEmailSendException extends OrderException
 {
     /**
-     * When currency cannot be used because it is disabled
+     * When order email resending failed
      */
-    const IS_DISABLED = 1;
+    const FAILED_RESEND = 1;
 
     /**
-     * When currency cannot be used because it is deleted
+     * When order process email sending failed
      */
-    const IS_DELETED = 2;
+    const FAILED_SEND_PROCESS_ORDER = 2;
 }

@@ -37,6 +37,7 @@ import CartRuleManager from './cart-rule-manager';
 import ProductManager from './product-manager';
 import ProductRenderer from './product-renderer';
 import SummaryRenderer from './summary-renderer';
+import SummaryManager from './summary-manager';
 
 const $ = window.$;
 
@@ -46,6 +47,7 @@ const $ = window.$;
 export default class CreateOrderPage {
   constructor() {
     this.cartId = null;
+    this.customerId = null;
     this.$container = $(createOrderMap.orderCreationContainer);
 
     this.cartProvider = new CartProvider();
@@ -59,6 +61,7 @@ export default class CreateOrderPage {
     this.productManager = new ProductManager();
     this.productRenderer = new ProductRenderer();
     this.summaryRenderer = new SummaryRenderer();
+    this.summaryManager = new SummaryManager();
 
     this._initListeners();
   }
@@ -111,12 +114,17 @@ export default class CreateOrderPage {
     );
 
     this.$container.on('change', createOrderMap.cartLanguageSelect, (e) =>
-      this.cartEditor.changeCartCurrency(this.cartId, e.currentTarget.value)
+      this.cartEditor.changeCartLanguage(this.cartId, e.currentTarget.value)
     );
 
+    this.$container.on('click', createOrderMap.sendProcessOrderEmailBtn, () =>
+      this.summaryManager.sendProcessOrderEmail(this.cartId));
+
     this.$container.on('change', createOrderMap.listedProductUnitPriceInput, (e) => this._initProductChangePrice(e));
+    this.$container.on('change', createOrderMap.listedProductQtyInput, e => this._initProductChangeQty(e));
     this.$container.on('change', createOrderMap.addressSelect, () => this._changeCartAddresses());
     this.$container.on('click', createOrderMap.productRemoveBtn, e => this._initProductRemoveFromCart(e));
+
   }
 
   /**
@@ -192,7 +200,7 @@ export default class CreateOrderPage {
    */
   _onCartCurrencyChanged() {
     EventEmitter.on(eventMap.cartCurrencyChanged, (cartInfo) => {
-      this._preselectCartLanguage(cartInfo.currencyId);
+      this._preselectCartCurrency(cartInfo.currencyId);
     });
   }
 
@@ -216,6 +224,7 @@ export default class CreateOrderPage {
    */
   _initCustomerSelect(event) {
     const customerId = this.customerManager.selectCustomer(event);
+    this.customerId = customerId;
     this.cartProvider.loadEmptyCart(customerId);
   }
 
@@ -327,7 +336,26 @@ export default class CreateOrderPage {
       price: $(event.currentTarget).val(),
     };
 
-    this.productManager.changeProductPrice(this.cartId, product);
+    this.productManager.changeProductPrice(this.cartId, this.customerId, product);
+  }
+
+  /**
+   * Inits product in cart quantity update
+   *
+   * @param event
+   *
+   * @private
+   */
+  _initProductChangeQty(event) {
+    const product = {
+      productId: $(event.currentTarget).data('product-id'),
+      attributeId: $(event.currentTarget).data('attribute-id'),
+      customizationId: $(event.currentTarget).data('customization-id'),
+      previousQty: $(event.currentTarget).data('prev-qty'),
+      newQty: $(event.currentTarget).val(),
+    };
+
+    this.productManager.changeProductQty(this.cartId, product);
   }
 
   /**

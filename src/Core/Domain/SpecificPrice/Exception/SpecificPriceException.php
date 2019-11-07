@@ -24,22 +24,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Currency\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Exception;
 
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 
 /**
- * Base exception for Currency sub-domain
+ * Base exception for SpecificPrice subdomain
  */
-class CurrencyException extends DomainException
+class SpecificPriceException extends DomainException
 {
-    /**
-     * When currency cannot be used because it is disabled
-     */
-    const IS_DISABLED = 1;
-
-    /**
-     * When currency cannot be used because it is deleted
-     */
-    const IS_DELETED = 2;
 }
