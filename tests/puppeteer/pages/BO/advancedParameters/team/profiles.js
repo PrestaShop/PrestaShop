@@ -16,7 +16,7 @@ module.exports = class Profiles extends BOBasePage {
     this.profilesListForm = '#profile_grid';
     this.profilesListTableRow = `${this.profilesListForm} tbody tr:nth-child(%ROW)`;
     this.profilesListTableColumn = `${this.profilesListTableRow} td.column-%COLUMN`;
-    this.profilesListTableColumnAction = `${this.profilesListTableColumn.replace('%COLUMN', 'actions')}`;
+    this.profilesListTableColumnAction = this.profilesListTableColumn.replace('%COLUMN', 'actions');
     this.profilesListTableToggleDropDown = `${this.profilesListTableColumnAction} a[data-toggle='dropdown']`;
     this.profilesListTableDeleteLink = `${this.profilesListTableColumnAction} a[data-url]`;
     this.profilesListTableEditLink = `${this.profilesListTableColumnAction} a[href*='edit']`;

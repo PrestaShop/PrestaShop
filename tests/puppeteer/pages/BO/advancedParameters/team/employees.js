@@ -18,7 +18,7 @@ module.exports = class Employees extends BOBasePage {
     this.employeesListForm = '#employee_grid';
     this.employeesListTableRow = `${this.employeesListForm} tbody tr:nth-child(%ROW)`;
     this.employeesListTableColumn = `${this.employeesListTableRow} td.column-%COLUMN`;
-    this.employeesListTableColumnAction = `${this.employeesListTableColumn.replace('%COLUMN', 'actions')}`;
+    this.employeesListTableColumnAction = this.employeesListTableColumn.replace('%COLUMN', 'actions');
     this.employeesListTableToggleDropDown = `${this.employeesListTableColumnAction} a[data-toggle='dropdown']`;
     this.employeesListTableDeleteLink = `${this.employeesListTableColumnAction} a[data-url]`;
     this.employeesListTableEditLink = `${this.employeesListTableColumnAction} a[href*='edit']`;
