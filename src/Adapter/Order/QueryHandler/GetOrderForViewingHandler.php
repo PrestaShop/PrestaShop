@@ -827,7 +827,6 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
         return new OrderDiscountsForViewing($discountsForViewing);
     }
 
-
     /**
      * @param Order $order
      *
