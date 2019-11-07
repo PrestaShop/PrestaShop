@@ -59,14 +59,20 @@
       <tbody>
         {% for product in orderForViewing.products.products %}
           <tr>
-            <td><img src="{{ product.imagePath }}" alt="{{ product.name }}"></td>
+            <td>
+              {% if product.imagePath %}
+                <img src="{{ product.imagePath }}" alt="{{ product.name }}">
+              {% endif %}
+            </td>
             <td>
               <a href="{{ path('admin_product_form', {'id': product.id}) }}">
                 <p class="mb-0">{{ product.name }}</p>
-                <p class="mb-0">
-                  {{ 'Reference number:'|trans({}, 'Admin.Orderscustomers.Feature') }}
-                  {{ product.reference }}
-                </p>
+                {% if product.reference %}
+                  <p class="mb-0">
+                    {{ 'Reference number:'|trans({}, 'Admin.Orderscustomers.Feature') }}
+                    {{ product.reference }}
+                  </p>
+                {% endif %}
                 {% if product.supplierReference is not empty %}
                   <p class="mb-0">
                     {{ 'Supplier reference:'|trans({}, 'Admin.Orderscustomers.Feature') }}
@@ -191,14 +197,12 @@
               </div>
             {% endif %}
 
-            {% if orderForViewing.prices.shippingPriceRaw %}
-              <div class="col-sm text-center">
-                <p class="text-muted mb-0"><strong>{{ 'Shipping'|trans({}, 'Admin.Catalog.Feature') }}</strong></p>
-                <strong>{{ orderForViewing.prices.shippingPriceFormatted }}</strong>
-              </div>
-            {% endif %}
+            <div class="col-sm text-center">
+              <p class="text-muted mb-0"><strong>{{ 'Shipping'|trans({}, 'Admin.Catalog.Feature') }}</strong></p>
+              <strong>{{ orderForViewing.prices.shippingPriceFormatted }}</strong>
+            </div>
 
-            {% if orderForViewing.taxIncluded %}
+            {% if not orderForViewing.taxIncluded %}
               <div class="col-sm text-center">
                 <p class="text-muted mb-0"><strong>{{ 'Taxes'|trans({}, 'Admin.Global') }}</strong></p>
                 <strong>{{ orderForViewing.prices.taxesAmountFormatted }}</strong>

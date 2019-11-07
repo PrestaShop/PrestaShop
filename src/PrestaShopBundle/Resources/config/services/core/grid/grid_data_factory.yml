@@ -320,3 +320,11 @@ services:
       class: 'PrestaShop\PrestaShop\Core\Grid\Data\Factory\AttributeGroupGridDataFactory'
       arguments:
         - '@prestashop.core.grid.data.factory.attribute_group'
+
+    prestashop.core.grid.data_provider.merchandise_return:
+        class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
+        arguments:
+            - '@prestashop.core.grid.query_builder.merchandise_return'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.core.grid.query.doctrine_query_parser'
+            - 'merchandise_return'

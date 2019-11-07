@@ -964,3 +964,10 @@ services:
       public: true
       tags:
         - { name: form.type }
+
+    form.type.order.update_order_shipping:
+      class: 'PrestaShopBundle\Form\Admin\Sell\Order\UpdateOrderShippingType'
+      arguments:
+        - '@prestashop.adapter.form.choice.provider.carrier_for_order_choice_provider'
+      tags:
+        - { name: form.type }

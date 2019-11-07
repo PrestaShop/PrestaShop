@@ -8,7 +8,7 @@ const {DefaultFrTax} = require('@data/demo/tax');
 const BOBasePage = require('@pages/BO/BObasePage');
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
-const TaxesPage = require('@pages/BO/taxes');
+const TaxesPage = require('@pages/BO/international/taxes');
 
 let browser;
 let page;

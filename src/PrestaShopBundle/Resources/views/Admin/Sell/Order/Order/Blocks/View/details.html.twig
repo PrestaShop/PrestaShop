@@ -37,11 +37,12 @@
     </li>
     <li class="nav-item">
       <a class="nav-link" id="orderShippingTab" data-toggle="tab" href="#orderShippingTabContent" role="tab" aria-controls="orderShippingTabContent" aria-expanded="true" aria-selected="false">
-        {{ 'Carriers'|trans({}, 'Admin.Orderscustomers.Feature') }} ({{ orderForViewing.shipping.carriers|length }})
+        {{ 'Shipping'|trans({}, 'Admin.Catalog.Feature') }} ({{ orderForViewing.shipping.carriers|length }})
       </a>
     </li>
     <li class="nav-item">
       <a class="nav-link" id="orderReturnsTab" data-toggle="tab" href="#orderReturnsTabContent" role="tab" aria-controls="orderReturnsTabContent" aria-expanded="true" aria-selected="false">
+        <i class="material-icons">replay</i>
         {{ 'Merchandise returns'|trans({}, 'Admin.Orderscustomers.Feature') }} ({{ orderForViewing.returns.orderReturns|length }})
       </a>
     </li>

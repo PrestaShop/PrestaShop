@@ -142,7 +142,9 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
         return new OrderForViewing(
             (int) $order->id,
             (int) $order->id_currency,
+            (int) $order->id_carrier,
             $order->reference,
+            (bool) $order->isVirtual(),
             $taxMethod,
             $isTaxIncluded,
             (bool) $order->valid,
@@ -400,6 +402,10 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             $unitPriceFormatted = $this->locale->formatPrice($unitPrice, $currency->iso_code);
             $totalPriceFormatted = $this->locale->formatPrice($totalPrice, $currency->iso_code);
 
+            $imagePath = isset($product['image_tag']) ?
+                $this->imageTagSourceParser->parse($product['image_tag']) :
+                null;
+
             $productsForViewing[] = new OrderProductForViewing(
                 $product['id_order_detail'],
                 $product['product_id'],
@@ -410,7 +416,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
                 $unitPriceFormatted,
                 $totalPriceFormatted,
                 $product['current_stock'],
-                $this->imageTagSourceParser->parse($product['image_tag']),
+                $imagePath,
                 Tools::ps_round($product['unit_price_tax_excl'], 2),
                 Tools::ps_round($product['unit_price_tax_incl'], 2)
             );
@@ -592,40 +598,42 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             }
         }
 
-        foreach ($shipping as $item) {
-            if ($order->getTaxCalculationMethod() == PS_TAX_INC) {
-                $price = !empty($item['shipping_cost_tax_incl']) ? $this->locale->formatPrice($item['shipping_cost_tax_incl'], $currency->iso_code) : '';
-            } else {
-                $price = !empty($item['shipping_cost_tax_excl']) ? $this->locale->formatPrice($item['shipping_cost_tax_excl'], $currency->iso_code) : '';
-            }
+        if (!$order->isVirtual()) {
+            foreach ($shipping as $item) {
+                if ($order->getTaxCalculationMethod() == PS_TAX_INC) {
+                    $price = Tools::displayPrice($item['shipping_cost_tax_incl'], $currency);
+                } else {
+                    $price = Tools::displayPrice($item['shipping_cost_tax_excl'], $currency);
+                }
 
-            $trackingUrl = null;
-            $trackingNumber = null;
-
-            if ($item['url'] && $item['tracking_number']) {
-                $trackingUrl = str_replace('@', $item['tracking_number'], $item['url']);
+                $trackingUrl = null;
                 $trackingNumber = $item['tracking_number'];
+
+                if ($item['url'] && $item['tracking_number']) {
+                    $trackingUrl = str_replace('@', $item['tracking_number'], $item['url']);
+                }
+
+                $weight = sprintf('%.3f %s', $item['weight'], Configuration::get('PS_WEIGHT_UNIT'));
+
+                $carriers[] = new OrderCarrierForViewing(
+                    (int) $item['id_order_carrier'],
+                    new DateTimeImmutable($item['date_add']),
+                    $item['carrier_name'],
+                    $weight,
+                    (int) $item['id_carrier'],
+                    $price,
+                    $trackingUrl,
+                    $trackingNumber,
+                    $item['can_edit']
+                );
             }
-
-            $weight = sprintf('%.3f %s', $item['weight'], Configuration::get('PS_WEIGHT_UNIT'));
-
-            $carriers[] = new OrderCarrierForViewing(
-                (int) $item['id_order_carrier'],
-                new DateTimeImmutable($item['date_add']),
-                $item['carrier_name'] ?? '',
-                $weight,
-                (int) $item['id_carrier'],
-                $price,
-                $trackingUrl,
-                $trackingNumber,
-                $item['can_edit']
-            );
         }
 
         return new OrderShippingForViewing(
             $carriers,
             (bool) $order->recyclable,
             (bool) $order->gift,
+            $order->gift_message,
             $carrierModuleInfo
         );
     }

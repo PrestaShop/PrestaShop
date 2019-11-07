@@ -137,10 +137,22 @@ class OrderForViewing
      */
     private $createdAt;
 
+    /**
+     * @var bool
+     */
+    private $isVirtual;
+
+    /**
+     * @var int
+     */
+    private $carrierId;
+
     public function __construct(
         int $orderId,
         int $currencyId,
+        int $carrierId,
         string $reference,
+        bool $isVirtual,
         string $taxMethod,
         bool $isTaxIncluded,
         bool $isValid,
@@ -181,6 +193,8 @@ class OrderForViewing
         $this->hasInvoice = $hasInvoice;
         $this->discounts = $discounts;
         $this->createdAt = $createdAt;
+        $this->isVirtual = $isVirtual;
+        $this->carrierId = $carrierId;
     }
 
     /**
@@ -197,6 +211,14 @@ class OrderForViewing
     public function getCurrencyId(): int
     {
         return $this->currencyId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCarrierId(): int
+    {
+        return $this->carrierId;
     }
 
     /**
@@ -349,5 +371,13 @@ class OrderForViewing
     public function getCreatedAt(): DateTimeImmutable
     {
         return $this->createdAt;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isVirtual(): bool
+    {
+        return $this->isVirtual;
     }
 }

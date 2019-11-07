@@ -4,6 +4,8 @@
 	<languages>
     <language iso_code="en" />
     <language iso_code="ta" />
+    <language iso_code="hi" />
+    <language iso_code="bn" />
   </languages>
 
 	<currencies>
@@ -14,7 +16,7 @@
 		<tax id="2" name="GST 12%" rate="12" />
 		<tax id="3" name="GST 18%" rate="18" />
     <tax id="4" name="GST 28%" rate="28" />
-    
+
 		<taxRulesGroup name="5% GST Rate Slab (5%)">
 			<taxRule iso_code_country="in" id_tax="1" />
 		</taxRulesGroup>
@@ -26,7 +28,7 @@
 		<taxRulesGroup name="18% GST Rate Slab (18%)">
 			<taxRule iso_code_country="in" id_tax="3" />
 		</taxRulesGroup>
-    
+
     <taxRulesGroup name="28% GST Rate Slab (28%)">
 			<taxRule iso_code_country="in" id_tax="4" />
 		</taxRulesGroup>
