@@ -85,6 +85,7 @@ describe('Create, update and delete supplier', async () => {
   // 2: View supplier
   describe('View supplier', async () => {
     it('should view supplier', async function () {
+      // view supplier first row
       await this.pageObjects.suppliersPage.viewSupplier(1);
       const pageTitle = await this.pageObjects.viewSupplierPage.getPageTitle();
       await expect(pageTitle).to.contains(createSupplierData.name);
@@ -112,6 +113,7 @@ describe('Create, update and delete supplier', async () => {
   // 4: View supplier
   describe('View edited supplier', async () => {
     it('should view supplier', async function () {
+      // view supplier first row
       await this.pageObjects.suppliersPage.viewSupplier(1);
       const pageTitle = await this.pageObjects.viewSupplierPage.getPageTitle();
       await expect(pageTitle).to.contains(editSupplierData.name);
@@ -126,6 +128,7 @@ describe('Create, update and delete supplier', async () => {
   // 5: Delete supplier
   describe('Delete supplier', async () => {
     it('should delete supplier', async function () {
+      // delete supplier in first row
       const result = await this.pageObjects.suppliersPage.deleteSupplier(1);
       await expect(result).to.be.equal(this.pageObjects.suppliersPage.successfulDeleteMessage);
     });

@@ -193,10 +193,7 @@ describe('Create, Update and Delete Brand and Address', async () => {
     });
 
     it('should disable first supplier', async function () {
-      const isActionPerformed = await this.pageObjects.suppliersPage.updateEnabledValue(
-        '1',
-        false,
-      );
+      const isActionPerformed = await this.pageObjects.suppliersPage.updateEnabledValue(1, false);
       if (isActionPerformed) {
         const resultMessage = await this.pageObjects.suppliersPage.getTextContent(
           this.pageObjects.suppliersPage.alertSuccessBlockParagraph,
@@ -211,10 +208,7 @@ describe('Create, Update and Delete Brand and Address', async () => {
     });
 
     it('should enable first supplier', async function () {
-      const isActionPerformed = await this.pageObjects.suppliersPage.updateEnabledValue(
-        '1',
-        true,
-      );
+      const isActionPerformed = await this.pageObjects.suppliersPage.updateEnabledValue(1, true);
       if (isActionPerformed) {
         const resultMessage = await this.pageObjects.suppliersPage.getTextContent(
           this.pageObjects.suppliersPage.alertSuccessBlockParagraph,
