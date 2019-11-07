@@ -70,6 +70,7 @@ export default {
   orderTotalField: '.js-order-total-paid',
   orderStatusField: '.js-order-status',
   emptyListRowTemplate: '#js-empty-list-row',
+  emptyListRow: '.js-empty-row',
 
   // selectors related to cartRules block
   cartRulesBlock: '#cart-rules-block',

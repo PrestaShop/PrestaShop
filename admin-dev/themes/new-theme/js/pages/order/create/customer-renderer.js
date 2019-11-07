@@ -106,6 +106,7 @@ export default class CustomerRenderer {
 
     $cartsTable.find('tbody').empty();
     this._showCheckoutHistoryBlock();
+    this._removeEmptyListRowFromTable($cartsTable);
 
     for (const key in carts) {
       const cart = carts[key];
@@ -113,7 +114,7 @@ export default class CustomerRenderer {
       // do not render current cart
       if (cart.cartId === currentCartId) {
         // render 'No records found' warn if carts only contain current cart
-        if (carts.length === Number(key) + 1) {
+        if (carts.length === 1) {
           this._renderEmptyList($cartsTable);
         }
 
@@ -148,6 +149,7 @@ export default class CustomerRenderer {
 
     $ordersTable.find('tbody').empty();
     this._showCheckoutHistoryBlock();
+    this._removeEmptyListRowFromTable($ordersTable);
 
     //render 'No records found' when list is empty
     if (orders.length === 0) {
@@ -187,6 +189,13 @@ export default class CustomerRenderer {
   _renderEmptyList($table) {
     const $emptyTableRow = $($(createOrderMap.emptyListRowTemplate).html()).clone();
     $table.find('tbody').append($emptyTableRow);
+  }
+
+  /**
+   * Removes empty list row in case it was rendered
+   */
+  _removeEmptyListRowFromTable($table) {
+    $table.find(createOrderMap.emptyListRow).remove();
   }
 
   /**
