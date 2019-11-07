@@ -367,12 +367,13 @@ class ContextCore
      * is called by the installer or not.
      *
      * @param bool $isInstaller Set to true if the method is called by the installer
+     * @param bool $forceRefresh Set to true to get the Symfony Translator if available
      *
      * @return Translator
      */
-    public function getTranslator($isInstaller = false)
+    public function getTranslator($isInstaller = false, $forceRefresh = false)
     {
-        if (null !== $this->translator) {
+        if (null !== $this->translator && !$forceRefresh) {
             return $this->translator;
         }
 
@@ -389,6 +390,16 @@ class ContextCore
         }
 
         return $this->translator;
+    }
+
+    /**
+     * @param string $locale
+     * @param string $notName
+     */
+    public function addLanguageToTranslator($locale, $notName = null)
+    {
+        $this->translator = $this->getTranslator(false, true);
+        $this->doAddLanguageToTranslator($this->translator, $locale, $notName);
     }
 
     /**
@@ -433,22 +444,29 @@ class ContextCore
         $translator->addLoader('db', $sqlTranslationLoader);
         $notName = $adminContext ? '^Shop*' : '^Admin*';
 
+        $this->doAddLanguageToTranslator($translator, $locale, $notName);
+
+        return $translator;
+    }
+
+    protected function doAddLanguageToTranslator($translator, $locale, $notName = null)
+    {
         $finder = Finder::create()
             ->files()
             ->name('*.' . $locale . '.xlf')
-            ->notName($notName)
             ->in($this->getTranslationResourcesDirectories());
+
+        if ($notName !== null) {
+            $finder->notName($notName);
+        }
 
         foreach ($finder as $file) {
             list($domain, $locale, $format) = explode('.', $file->getBasename(), 3);
-
             $translator->addResource($format, $file, $locale, $domain);
             if (!$this->language instanceof PrestashopBundle\Install\Language) {
                 $translator->addResource('db', $domain . '.' . $locale . '.db', $locale, $domain);
             }
         }
-
-        return $translator;
     }
 
     /**

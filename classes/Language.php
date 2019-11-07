@@ -1205,6 +1205,7 @@ class LanguageCore extends ObjectModel
         $lang_pack = self::getLangDetails($iso);
         self::installSfLanguagePack(self::getLocaleByIso($iso), $errors);
         self::updateMultilangTable($iso);
+        Context::getContext()->addLanguageToTranslator($lang_pack['locale']);
         self::generateEmailsLanguagePack($lang_pack, $errors, true);
 
         return count($errors) ? $errors : true;
@@ -1223,6 +1224,7 @@ class LanguageCore extends ObjectModel
 
             self::installSfLanguagePack($lang_pack['locale'], $errors);
             Language::updateMultilangTable($iso);
+            Context::getContext()->addLanguageToTranslator($lang_pack['locale']);
             self::generateEmailsLanguagePack($lang_pack, $errors, false);
         }
     }
