@@ -8,8 +8,8 @@ const loginCommon = require('@commonTests/loginBO');
 const BOBasePage = require('@pages/BO/BObasePage');
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
-const BrandsPage = require('@pages/BO/brands');
-const AddBrandPage = require('@pages/BO/addBrand');
+const BrandsPage = require('@pages/BO/catalog/brands');
+const AddBrandPage = require('@pages/BO/catalog/brands/add');
 
 let browser;
 let page;

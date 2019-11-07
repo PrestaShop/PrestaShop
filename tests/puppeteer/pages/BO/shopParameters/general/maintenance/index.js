@@ -19,7 +19,7 @@ module.exports = class shopParamsMaintenance extends BOBasePage {
    */
 
   /**
-   * Change Tab to General in Shop Parameters Maintenance Page
+   * Change Tab to general in Shop Parameters Maintenance Page
    * @return {Promise<void>}
    */
   async goToSubTabGeneral() {
