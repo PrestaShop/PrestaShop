@@ -24,17 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Order\Invoice\CommandHandler;
-
-use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Command\UpdateInvoiceNoteCommand;
+namespace PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Exception;
 
 /**
- * Interface for service that handles updating invoice note
+ * Thrown when order invoice is not found
  */
-interface UpdateInvoiceNoteHandlerInterface
+class InvoiceNotFoundException extends InvoiceException
 {
-    /**
-     * @param UpdateInvoiceNoteCommand $command
-     */
-    public function handle(UpdateInvoiceNoteCommand $command): void;
 }

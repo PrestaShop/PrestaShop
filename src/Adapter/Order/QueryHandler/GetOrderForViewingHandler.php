@@ -139,10 +139,13 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             $this->translator->trans('Tax included', [], 'Admin.Global') :
             $this->translator->trans('Tax excluded', [], 'Admin.Global');
 
+        $invoiceManagementIsEnabled = (bool) Configuration::get('PS_INVOICE', null, null, $order->id_shop);
+
         return new OrderForViewing(
             (int) $order->id,
             (int) $order->id_currency,
             (int) $order->id_carrier,
+            (int) $order->id_shop,
             $order->reference,
             (bool) $order->isVirtual(),
             $taxMethod,
@@ -150,6 +153,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             (bool) $order->valid,
             $order->hasInvoice(),
             $order->hasBeenDelivered(),
+            $invoiceManagementIsEnabled,
             new DateTimeImmutable($order->date_add),
             $this->getOrderCustomer($order),
             $this->getOrderShippingAddress($order),
@@ -561,6 +565,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
                 $type,
                 new DateTimeImmutable($document->date_add),
                 $number,
+                $document->total_paid_tax_incl,
                 $amount,
                 $amountMismatch,
                 $document instanceof OrderInvoice ? $document->note : null,

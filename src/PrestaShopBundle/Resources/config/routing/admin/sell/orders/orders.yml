@@ -163,3 +163,24 @@ admin_orders_update_shipping:
     _legacy_controller: AdminOrders
   requirements:
     orderId: \d+
+
+admin_orders_update_invoice_note:
+  path: /{orderId}/invoice/{orderInvoiceId}/note
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:updateInvoiceNote
+  requirements:
+    orderId: \d+
+    orderInvoiceId: \d+
+
+admin_search_product_for_order_creation:
+  path: /search
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:searchProducts
+
+admin_orders_generate_invoice:
+  path: /{orderId}/invoice
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:generateInvoice
