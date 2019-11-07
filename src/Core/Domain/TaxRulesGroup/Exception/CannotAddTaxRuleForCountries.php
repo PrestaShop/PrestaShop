@@ -26,9 +26,38 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception;
 
+use Exception;
+
 /**
- * Exception is thrown on failure to update tax rule
+ * Thrown on failure to add tax rule for certain countries
  */
-class CannotUpdateTaxRuleException extends TaxRulesGroupException
+class CannotAddTaxRuleForCountries extends TaxRulesGroupException
 {
+    /**
+     * List of countries that reported an error when tax rule was added
+     *
+     * @var array
+     */
+    private $failedRuleCountriesIds;
+
+    /**
+     * @param array $failedRuleCountriesIds
+     * @param string $message
+     * @param int $code
+     * @param Exception $previous
+     */
+    public function __construct(array $failedRuleCountriesIds, $message = '', $code = 0, $previous = null)
+    {
+        parent::__construct($message, $code, $previous);
+
+        $this->failedRuleCountriesIds = $failedRuleCountriesIds;
+    }
+
+    /**
+     * @return array
+     */
+    public function getFailedRuleCountriesIds(): array
+    {
+        return $this->failedRuleCountriesIds;
+    }
 }

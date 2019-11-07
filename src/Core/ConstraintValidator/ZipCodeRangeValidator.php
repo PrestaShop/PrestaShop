@@ -88,8 +88,7 @@ class ZipCodeRangeValidator extends ConstraintValidator
         }
 
         if ($countryId === 0) {
-            $countries = $this->countryChoiceProvider->getChoices();
-            $selectedCountries = array_map('intval', $countries);
+            $selectedCountries = array_map('intval', $this->countryChoiceProvider->getChoices());
         }
 
         foreach ($selectedCountries as $country) {

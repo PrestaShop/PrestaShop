@@ -35,11 +35,12 @@ use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Command\AddTaxRulesCommand;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Command\BulkDeleteTaxRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Command\DeleteTaxRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Command\UpdateTaxRuleCommand;
-use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\CannotAddTaxRuleException;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\CannotAddTaxRulesGroupException;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\CannotBulkDeleteTaxRulesException;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\CannotDeleteTaxRuleException;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\CannotUpdateTaxRuleException;
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\CannotUpdateTaxRuleForCountries;
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\CannotUpdateTaxRuleForCountryStates;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\CannotUpdateTaxRulesGroupException;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\TaxRuleConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\TaxRuleNotFoundException;
@@ -50,7 +51,6 @@ use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Query\GetTaxRuleForEditing;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Query\GetTaxRulesGroupForEditing;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\QueryResult\EditableTaxRule;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\QueryResult\EditableTaxRulesGroup;
-use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRuleId;
 use PrestaShop\PrestaShop\Core\Search\Filters\TaxRuleFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -496,8 +496,40 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
     private function getErrorMessages(?Exception $e = null): array
     {
         return [
-            CannotAddTaxRuleException::class => $this->getErrorMessageForTaxRuleBulkCreate($e),
-            CannotUpdateTaxRuleException::class => $this->getErrorMessageForTaxRuleBulkUpdate($e),
+            CannotUpdateTaxRuleException::class => $this->trans(
+                'An error occurred while creating an object.',
+                'Admin.Notifications.Error'
+            ),
+            CannotUpdateTaxRuleForCountryStates::class => sprintf(
+                '%s %s: %s, %s: %s',
+                $this->trans(
+                    'An error occurred while creating an object.',
+                    'Admin.Notifications.Error'
+                ),
+                $this->trans(
+                    'Country',
+                    'Admin.Global'
+                ),
+                $e instanceof CannotUpdateTaxRuleForCountryStates ? $e->getFailedRuleCountryId() : '',
+                $this->trans(
+                    'States',
+                    'Admin.International.Feature'
+                ),
+
+                $e instanceof CannotUpdateTaxRuleForCountryStates ? implode(', ', $e->getFailedRuleStatesIds()) : ''
+            ),
+            CannotUpdateTaxRuleForCountries::class => sprintf(
+                '%s %s: %s',
+                $this->trans(
+                    'An error occurred while creating an object.',
+                    'Admin.Notifications.Error'
+                ),
+                $this->trans(
+                    'Countries',
+                    'Admin.International.Feature'
+                ),
+                $e instanceof CannotUpdateTaxRuleForCountries ? implode(', ', $e->getFailedRuleCountriesIds()) : ''
+            ),
             TaxRuleConstraintException::class => [
                 TaxRuleConstraintException::INVALID_ID => $this->trans(
                     'The object cannot be loaded (the identifier is missing or invalid)',
@@ -570,82 +602,6 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
                 ),
             ],
         ];
-    }
-
-    /**
-     * @param Exception $e
-     *
-     * @return string
-     */
-    private function getErrorMessageForTaxRuleBulkCreate(?Exception $e): string
-    {
-        $errorCreatingMessage = $this->trans(
-            'An error occurred while creating an object.',
-            'Admin.Notifications.Error'
-        );
-
-        if (!$e instanceof CannotAddTaxRuleException) {
-            return $errorCreatingMessage;
-        }
-
-        return $this->getErrorMessageForTaxRuleBulkAction($errorCreatingMessage, $e->getFailedCountryRules());
-    }
-
-    /**
-     * @param Exception $e
-     *
-     * @return string
-     */
-    private function getErrorMessageForTaxRuleBulkUpdate(?Exception $e): string
-    {
-        $errorUpdatingMessage = $this->trans(
-            'An error occurred while updating an object.',
-            'Admin.Notifications.Error'
-        );
-
-        if (!$e instanceof CannotUpdateTaxRuleException) {
-            return $errorUpdatingMessage;
-        }
-
-        return $this->getErrorMessageForTaxRuleBulkAction($errorUpdatingMessage, $e->getFailedCountryRules());
-    }
-
-    /**
-     * @param string $errorBaseMessage
-     * @param array $errors
-     *
-     * @return string
-     */
-    private function getErrorMessageForTaxRuleBulkAction(string $errorBaseMessage, array $errors): string
-    {
-        if (empty($errors)) {
-            return $errorBaseMessage;
-        }
-
-        $failedOnObjectMessage = $this->trans(
-            'Countries',
-            'Admin.International.Feature'
-        );
-
-        $ids = implode(', ', array_keys($errors));
-
-        if (count($errors) === 1) {
-            $failedOnObjectMessage = $this->trans(
-                'States',
-                'Admin.International.Feature'
-            );
-
-            $ids = implode(', ', array_map(function ($value) {
-                return  implode(', ', $value);
-            }, $errors));
-        }
-
-        return sprintf(
-            '%s %s: %s',
-            $errorBaseMessage,
-            $failedOnObjectMessage,
-            $ids
-        );
     }
 
     /**

@@ -229,7 +229,7 @@ abstract class AbstractTaxRulesGroupHandler
         ?CountryId $countryId
     ): array {
         return $countryId !== null && $countryId->getValue() > 0 ?
-            $this->getSelectedCountryId($countryId) :
+            [$countryId] :
             $this->getAllCountryIdsByLanguage($countryDataProvider, $langId)
         ;
     }
@@ -259,15 +259,5 @@ abstract class AbstractTaxRulesGroupHandler
         }
 
         return $selectedCountryIds;
-    }
-
-    /**
-     * @param CountryId $countryId
-     *
-     * @return int[]
-     */
-    private function getSelectedCountryId(CountryId $countryId): array
-    {
-        return [$countryId->getValue()];
     }
 }

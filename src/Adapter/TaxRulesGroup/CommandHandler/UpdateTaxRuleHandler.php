@@ -34,6 +34,8 @@ use PrestaShop\PrestaShop\Core\Domain\Tax\ValueObject\TaxId;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Command\UpdateTaxRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\CommandHandler\UpdateTaxRuleHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\CannotUpdateTaxRuleException;
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\CannotUpdateTaxRuleForCountries;
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\CannotUpdateTaxRuleForCountryStates;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\TaxRuleConstraintException;
 use PrestaShopException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -74,6 +76,8 @@ final class UpdateTaxRuleHandler extends AbstractTaxRulesGroupHandler implements
      * {@inheritdoc}
      *
      * @throws CannotUpdateTaxRuleException
+     * @throws CannotUpdateTaxRuleForCountries
+     * @throws CannotUpdateTaxRuleForCountryStates
      * @throws TaxRuleConstraintException
      */
     public function handle(UpdateTaxRuleCommand $command): void
@@ -175,7 +179,15 @@ final class UpdateTaxRuleHandler extends AbstractTaxRulesGroupHandler implements
         }
 
         if (!empty($countriesWithErrors)) {
-            throw new CannotUpdateTaxRuleException($countriesWithErrors);
+            // If there is only one country with errors, exception for states is thrown
+            if (count($countriesWithErrors) === 1) {
+                throw new CannotUpdateTaxRuleForCountryStates(
+                    array_key_first($countriesWithErrors),
+                    $countriesWithErrors[array_key_first($countriesWithErrors)]
+                );
+            }
+
+            throw new CannotUpdateTaxRuleForCountries(array_keys($countriesWithErrors));
         }
     }
 }

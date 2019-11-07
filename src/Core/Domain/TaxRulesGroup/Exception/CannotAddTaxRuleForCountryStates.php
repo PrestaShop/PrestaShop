@@ -29,35 +29,52 @@ namespace PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception;
 use Exception;
 
 /**
- * Thrown on failure to add new tax rule
+ * Thrown on failure to add tax rule for certain country states
  */
-class CannotAddTaxRuleException extends TaxRulesGroupException
+class CannotAddTaxRuleForCountryStates extends TaxRulesGroupException
 {
     /**
-     * List of countries that reported an error when tax rule was added
+     * Id of states country that reported an error when tax rule was added
+     *
+     * @var int
+     */
+    private $failedRuleCountryId;
+
+    /**
+     * List of state that reported an error when tax rule was added
      *
      * @var array
      */
-    private $failedRulesCountries;
+    private $failedRuleStatesIds;
 
     /**
-     * @param array $failedRulesCountries
+     * @param int $failedRuleCountryId
+     * @param array $failedRuleStatesIds
      * @param string $message
      * @param int $code
      * @param Exception $previous
      */
-    public function __construct(array $failedRulesCountries, $message = '', $code = 0, $previous = null)
+    public function __construct(int $failedRuleCountryId, array $failedRuleStatesIds, $message = '', $code = 0, $previous = null)
     {
         parent::__construct($message, $code, $previous);
 
-        $this->failedRulesCountries = $failedRulesCountries;
+        $this->failedRuleCountryId = $failedRuleCountryId;
+        $this->failedRuleStatesIds = $failedRuleStatesIds;
+    }
+
+    /**
+     * @return int
+     */
+    public function getFailedRuleCountryId(): int
+    {
+        return $this->failedRuleCountryId;
     }
 
     /**
      * @return array
      */
-    public function getFailedCountryRules(): array
+    public function getFailedRuleStatesIds(): array
     {
-        return $this->failedRulesCountries;
+        return $this->failedRuleStatesIds;
     }
 }

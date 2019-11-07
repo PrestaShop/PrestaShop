@@ -33,7 +33,8 @@ use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
 use PrestaShop\PrestaShop\Core\Domain\Tax\ValueObject\TaxId;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Command\AddTaxRulesCommand;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\CommandHandler\AddTaxRulesHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\CannotAddTaxRuleException;
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\CannotAddTaxRuleForCountries;
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\CannotAddTaxRuleForCountryStates;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\TaxRuleConstraintException;
 use PrestaShopException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -73,7 +74,8 @@ final class AddTaxRulesHandler extends AbstractTaxRulesGroupHandler implements A
     /**
      * {@inheritdoc}
      *
-     * @throws CannotAddTaxRuleException
+     * @throws CannotAddTaxRuleForCountries
+     * @throws CannotAddTaxRuleForCountryStates
      * @throws TaxRuleConstraintException
      */
     public function handle(AddTaxRulesCommand $command)
@@ -163,7 +165,15 @@ final class AddTaxRulesHandler extends AbstractTaxRulesGroupHandler implements A
         }
 
         if (!empty($countriesWithErrors)) {
-            throw new CannotAddTaxRuleException($countriesWithErrors);
+            // If there is only one country with errors, exception for states is thrown
+            if (count($countriesWithErrors) === 1) {
+                throw new CannotAddTaxRuleForCountryStates(
+                    array_key_first($countriesWithErrors),
+                    $countriesWithErrors[array_key_first($countriesWithErrors)]
+                );
+            }
+
+            throw new CannotAddTaxRuleForCountries(array_keys($countriesWithErrors));
         }
     }
 }
