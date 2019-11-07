@@ -46,6 +46,7 @@ const $ = window.$;
 export default class CreateOrderPage {
   constructor() {
     this.cartId = null;
+    this.customerId = null;
     this.$container = $(createOrderMap.orderCreationContainer);
 
     this.cartProvider = new CartProvider();
@@ -216,6 +217,7 @@ export default class CreateOrderPage {
    */
   _initCustomerSelect(event) {
     const customerId = this.customerManager.selectCustomer(event);
+    this.customerId = customerId;
     this.cartProvider.loadEmptyCart(customerId);
   }
 
@@ -327,7 +329,7 @@ export default class CreateOrderPage {
       price: $(event.currentTarget).val(),
     };
 
-    this.productManager.changeProductPrice(this.cartId, product);
+    this.productManager.changeProductPrice(this.cartId, this.customerId, product);
   }
 
   /**
