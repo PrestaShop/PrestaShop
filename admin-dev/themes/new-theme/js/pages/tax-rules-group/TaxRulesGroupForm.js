@@ -286,11 +286,10 @@ export default class TaxRulesGroupForm {
     this._removeTaxRuleFormErrors();
 
     if (data !== null) {
-      console.log(data);
       taxRule = data[0];
       states = data[1];
 
-      behaviorId = taxRule.behavior_id.value;
+      behaviorId = taxRule.behavior.value;
       countryId = taxRule.country_id.value;
       zipCode = taxRule.zip_code;
 
