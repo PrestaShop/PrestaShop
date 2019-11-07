@@ -379,14 +379,17 @@ class ImageManagerCore
             } else {
                 $fileMimeType = false;
             }
-        } elseif (function_exists('finfo_open')) {
+        }
+        if (!$mimeType && function_exists('finfo_open')) {
             $const = defined('FILEINFO_MIME_TYPE') ? FILEINFO_MIME_TYPE : FILEINFO_MIME;
             $finfo = finfo_open($const);
             $mimeType = finfo_file($finfo, $filename);
             finfo_close($finfo);
-        } elseif (function_exists('mime_content_type')) {
+        }
+        if (!$mimeType && function_exists('mime_content_type')) {
             $mimeType = mime_content_type($filename);
-        } elseif (function_exists('exec')) {
+        }
+        if (!$mimeType && function_exists('exec')) {
             $mimeType = trim(exec('file -b --mime-type ' . escapeshellarg($filename)));
             if (!$mimeType) {
                 $mimeType = trim(exec('file --mime ' . escapeshellarg($filename)));
