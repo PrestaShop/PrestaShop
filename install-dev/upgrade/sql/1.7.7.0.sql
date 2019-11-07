@@ -14,7 +14,7 @@ ALTER TABLE `PREFIX_product_attribute` ADD `mpn` VARCHAR(40) NULL AFTER `upc`;
 ALTER TABLE `PREFIX_product` ADD `mpn` VARCHAR(40) NULL AFTER `upc`;
 
 /* Delete price display precision configuration */
-DELETE `PREFIX_configuration` WHERE name = 'PS_PRICE_DISPLAY_PRECISION';
+DELETE FROM `PREFIX_configuration` WHERE name = 'PS_PRICE_DISPLAY_PRECISION';
 
 /* Set optin field value to 0 in employee table */
 ALTER TABLE `PREFIX_employee` MODIFY COLUMN `optin` tinyint(1) unsigned DEFAULT NULL;
