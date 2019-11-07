@@ -51,6 +51,7 @@ final class LinkColumn extends AbstractColumn
             ->setDefaults([
                 'sortable' => true,
                 'icon' => null,
+                'clickable' => false,
             ])
             ->setRequired([
                 'field',
@@ -64,6 +65,7 @@ final class LinkColumn extends AbstractColumn
             ->setAllowedTypes('route_param_field', 'string')
             ->setAllowedTypes('sortable', 'bool')
             ->setAllowedTypes('icon', ['string', 'null'])
+            ->setAllowedTypes('clickable', 'bool')
         ;
     }
 }
