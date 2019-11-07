@@ -8,7 +8,7 @@ const BOBasePage = require('@pages/BO/BObasePage');
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
 const BrandsPage = require('@pages/BO/catalog/brands');
-const AddBrandAddressPage = require('@pages/BO/catalog/brands/brandAddresses/add');
+const AddBrandAddressPage = require('@pages/BO/catalog/brands/addresses/add');
 
 let browser;
 let page;

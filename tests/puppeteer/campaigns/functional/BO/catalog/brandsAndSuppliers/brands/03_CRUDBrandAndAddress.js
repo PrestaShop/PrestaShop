@@ -12,7 +12,7 @@ const DashboardPage = require('@pages/BO/dashboard');
 const BrandsPage = require('@pages/BO/catalog/brands');
 const AddBrandPage = require('@pages/BO/catalog/brands/add');
 const ViewBrandPage = require('@pages/BO/catalog/brands/view');
-const AddBrandAddressPage = require('@pages/BO/catalog/brands/brandAddresses/add');
+const AddBrandAddressPage = require('@pages/BO/catalog/brands/addresses/add');
 
 let browser;
 let page;
