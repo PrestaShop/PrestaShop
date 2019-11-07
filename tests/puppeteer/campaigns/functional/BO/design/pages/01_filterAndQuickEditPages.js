@@ -6,9 +6,9 @@ const loginCommon = require('@commonTests/loginBO');
 const {Pages} = require('@data/demo/CMSpage');
 // Importing pages
 const BOBasePage = require('@pages/BO/BObasePage');
-const LoginPage = require('@pages/BO/login');
-const DashboardPage = require('@pages/BO/dashboard');
-const PagesPage = require('@pages/BO/design/pages/pages');
+const LoginPage = require('@pages/BO/login/index');
+const DashboardPage = require('@pages/BO/dashboard/index');
+const PagesPage = require('@pages/BO/design/pages/index');
 
 let browser;
 let page;
