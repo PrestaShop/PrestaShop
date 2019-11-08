@@ -24,49 +24,30 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject;
+namespace PrestaShop\PrestaShop\Adapter\Feature\FeatureValue\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\InvalidFeatureIdException;
+use FeatureValue;
+use PrestaShop\PrestaShop\Core\Domain\Feature\FeatureValue\Query\GetFeatureValueForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Feature\FeatureValue\QueryHandler\GetFeatureValueForEditingHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Feature\FeatureValue\QueryResult\EditableFeatureValue;
+use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureId;
 
 /**
- * Defines Feature ID with it's constraints.
+ * Gets feature value data for editing.
  */
-class FeatureId
+final class GetFeatureValueForEditingHandler implements GetFeatureValueForEditingHandlerInterface
 {
     /**
-     * @var int
+     * {@inheritdoc}
      */
-    private $featureId;
-
-    /**
-     * @param int $featureId
-     */
-    public function __construct($featureId)
+    public function handle(GetFeatureValueForEditing $query)
     {
-        $this->assertIntegerIsGreaterThanZero($featureId);
-        $this->featureId = $featureId;
-    }
+        $featureValue = new FeatureValue($query->getFeatureValueId()->getValue());
 
-    /**
-     * @return int
-     */
-    public function getValue()
-    {
-        return $this->featureId;
-    }
-
-    /**
-     * @param int $featureId
-     *
-     * @throws InvalidFeatureIdException
-     */
-    private function assertIntegerIsGreaterThanZero($featureId)
-    {
-        if (!is_numeric($featureId) || 0 > $featureId) {
-            throw new InvalidFeatureIdException(sprintf(
-                'Invalid feature id %s supplied. Feature id must be positive integer.',
-                var_export($featureId, true)
-            ));
-        }
+        return new EditableFeatureValue(
+            $query->getFeatureValueId(),
+            new FeatureId($featureValue->id_feature),
+            $featureValue->value
+        );
     }
 }

@@ -971,3 +971,11 @@ services:
         - '@prestashop.adapter.form.choice.provider.carrier_for_order_choice_provider'
       tags:
         - { name: form.type }
+
+    form.type.feature_value:
+      class: 'PrestaShopBundle\Form\Admin\Sell\Catalog\FeatureValueType'
+      public: true
+      arguments:
+        - '@=service("prestashop.core.form.choice_provider.feature").getChoices()'
+      tags:
+        - { name: form.type }

@@ -24,49 +24,39 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
-use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\InvalidFeatureIdException;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 
 /**
- * Defines Feature ID with it's constraints.
+ * Provides product feature choices.
  */
-class FeatureId
+final class FeatureChoiceProvider implements FormChoiceProviderInterface
 {
     /**
-     * @var int
+     * @var array
      */
-    private $featureId;
+    private $features;
 
     /**
-     * @param int $featureId
+     * @param array $features
      */
-    public function __construct($featureId)
+    public function __construct(array $features)
     {
-        $this->assertIntegerIsGreaterThanZero($featureId);
-        $this->featureId = $featureId;
+        $this->features = $features;
     }
 
     /**
-     * @return int
+     * {@inheritdoc}
      */
-    public function getValue()
+    public function getChoices()
     {
-        return $this->featureId;
-    }
+        $features = [];
 
-    /**
-     * @param int $featureId
-     *
-     * @throws InvalidFeatureIdException
-     */
-    private function assertIntegerIsGreaterThanZero($featureId)
-    {
-        if (!is_numeric($featureId) || 0 > $featureId) {
-            throw new InvalidFeatureIdException(sprintf(
-                'Invalid feature id %s supplied. Feature id must be positive integer.',
-                var_export($featureId, true)
-            ));
+        foreach ($this->features as $feature) {
+            $features[$feature['name']] = $feature['id_feature'];
         }
+
+        return $features;
     }
 }

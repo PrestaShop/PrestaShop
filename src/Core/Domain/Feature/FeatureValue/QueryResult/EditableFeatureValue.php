@@ -24,49 +24,64 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Feature\FeatureValue\QueryResult;
 
-use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\InvalidFeatureIdException;
+use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureId;
+use PrestaShop\PrestaShop\Core\Domain\Language\FeatureValueId;
 
 /**
- * Defines Feature ID with it's constraints.
+ * Stores data that's needed for editing.
  */
-class FeatureId
+class EditableFeatureValue
 {
     /**
-     * @var int
+     * @var FeatureValueId
+     */
+    private $featureValueId;
+
+    /**
+     * @var FeatureId
      */
     private $featureId;
 
     /**
-     * @param int $featureId
+     * @var array
      */
-    public function __construct($featureId)
+    private $localizedValues;
+
+    /**
+     * @param FeatureValueId $featureValueId
+     * @param FeatureId $featureId
+     * @param array $localizedValues
+     */
+    public function __construct(FeatureValueId $featureValueId, FeatureId $featureId, array $localizedValues)
     {
-        $this->assertIntegerIsGreaterThanZero($featureId);
+        $this->featureValueId = $featureValueId;
         $this->featureId = $featureId;
+        $this->localizedValues = $localizedValues;
     }
 
     /**
-     * @return int
+     * @return FeatureValueId
      */
-    public function getValue()
+    public function getFeatureValueId()
+    {
+        return $this->featureValueId;
+    }
+
+    /**
+     * @return FeatureId
+     */
+    public function getFeatureId()
     {
         return $this->featureId;
     }
 
     /**
-     * @param int $featureId
-     *
-     * @throws InvalidFeatureIdException
+     * @return array
      */
-    private function assertIntegerIsGreaterThanZero($featureId)
+    public function getValue()
     {
-        if (!is_numeric($featureId) || 0 > $featureId) {
-            throw new InvalidFeatureIdException(sprintf(
-                'Invalid feature id %s supplied. Feature id must be positive integer.',
-                var_export($featureId, true)
-            ));
-        }
+        return $this->localizedValues;
     }
 }

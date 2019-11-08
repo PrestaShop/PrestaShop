@@ -24,49 +24,48 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Feature\FeatureValue\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\InvalidFeatureIdException;
+use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureId;
 
 /**
- * Defines Feature ID with it's constraints.
+ * Adds new feature value
  */
-class FeatureId
+class AddFeatureValueCommand
 {
     /**
-     * @var int
+     * @var FeatureId
      */
     private $featureId;
 
     /**
-     * @param int $featureId
+     * @var array
      */
-    public function __construct($featureId)
+    private $localizedValues;
+
+    /**
+     * @param int $featureId
+     * @param array $localizedValues
+     */
+    public function __construct($featureId, array $localizedValues)
     {
-        $this->assertIntegerIsGreaterThanZero($featureId);
-        $this->featureId = $featureId;
+        $this->featureId = new FeatureId($featureId);
+        $this->localizedValues = $localizedValues;
     }
 
     /**
-     * @return int
+     * @return FeatureId
      */
-    public function getValue()
+    public function getFeatureId()
     {
         return $this->featureId;
     }
 
     /**
-     * @param int $featureId
-     *
-     * @throws InvalidFeatureIdException
+     * @return array
      */
-    private function assertIntegerIsGreaterThanZero($featureId)
+    public function getLocalizedValues()
     {
-        if (!is_numeric($featureId) || 0 > $featureId) {
-            throw new InvalidFeatureIdException(sprintf(
-                'Invalid feature id %s supplied. Feature id must be positive integer.',
-                var_export($featureId, true)
-            ));
-        }
+        return $this->localizedValues;
     }
 }

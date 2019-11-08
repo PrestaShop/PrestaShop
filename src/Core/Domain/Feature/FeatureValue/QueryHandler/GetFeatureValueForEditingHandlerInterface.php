@@ -24,49 +24,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Feature\FeatureValue\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\InvalidFeatureIdException;
+use PrestaShop\PrestaShop\Core\Domain\Feature\FeatureValue\Query\GetFeatureValueForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Feature\FeatureValue\QueryResult\EditableFeatureValue;
 
 /**
- * Defines Feature ID with it's constraints.
+ * Describes feature value for editing handler.
  */
-class FeatureId
+interface GetFeatureValueForEditingHandlerInterface
 {
     /**
-     * @var int
-     */
-    private $featureId;
-
-    /**
-     * @param int $featureId
-     */
-    public function __construct($featureId)
-    {
-        $this->assertIntegerIsGreaterThanZero($featureId);
-        $this->featureId = $featureId;
-    }
-
-    /**
-     * @return int
-     */
-    public function getValue()
-    {
-        return $this->featureId;
-    }
-
-    /**
-     * @param int $featureId
+     * @param GetFeatureValueForEditing $query
      *
-     * @throws InvalidFeatureIdException
+     * @return EditableFeatureValue
      */
-    private function assertIntegerIsGreaterThanZero($featureId)
-    {
-        if (!is_numeric($featureId) || 0 > $featureId) {
-            throw new InvalidFeatureIdException(sprintf(
-                'Invalid feature id %s supplied. Feature id must be positive integer.',
-                var_export($featureId, true)
-            ));
-        }
-    }
+    public function handle(GetFeatureValueForEditing $query);
 }

@@ -24,49 +24,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Feature\FeatureValue\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\InvalidFeatureIdException;
+use PrestaShop\PrestaShop\Core\Domain\Feature\FeatureValue\Command\AddFeatureValueCommand;
+use PrestaShop\PrestaShop\Core\Domain\Language\FeatureValueId;
 
 /**
- * Defines Feature ID with it's constraints.
+ * Handles command that adds feature values.
  */
-class FeatureId
+interface AddFeatureValueHandlerInterface
 {
     /**
-     * @var int
-     */
-    private $featureId;
-
-    /**
-     * @param int $featureId
-     */
-    public function __construct($featureId)
-    {
-        $this->assertIntegerIsGreaterThanZero($featureId);
-        $this->featureId = $featureId;
-    }
-
-    /**
-     * @return int
-     */
-    public function getValue()
-    {
-        return $this->featureId;
-    }
-
-    /**
-     * @param int $featureId
+     * @param AddFeatureValueCommand $command
      *
-     * @throws InvalidFeatureIdException
+     * @return FeatureValueId
      */
-    private function assertIntegerIsGreaterThanZero($featureId)
-    {
-        if (!is_numeric($featureId) || 0 > $featureId) {
-            throw new InvalidFeatureIdException(sprintf(
-                'Invalid feature id %s supplied. Feature id must be positive integer.',
-                var_export($featureId, true)
-            ));
-        }
-    }
+    public function handle(AddFeatureValueCommand $command);
 }
