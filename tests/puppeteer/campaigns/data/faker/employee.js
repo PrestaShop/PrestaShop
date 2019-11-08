@@ -1,8 +1,7 @@
 const faker = require('faker');
 const {Profiles} = require('@data/demo/profiles');
-
-const defaultPage = ['Dashboard', 'Orders', 'Products'];
-const language = ['English (English)', 'Français (French)'];
+const {Languages} = require('@data/demo/languages');
+const {Pages} = require('@data/demo/pages');
 
 module.exports = class Employee {
   constructor(employeeToCreate = {}) {
@@ -10,8 +9,8 @@ module.exports = class Employee {
     this.lastName = employeeToCreate.lastName || faker.name.lastName();
     this.email = employeeToCreate.email || faker.internet.email(this.firstName, this.lastName, 'prestashop.com');
     this.password = employeeToCreate.password || 'prestashop_demo';
-    this.defaultPage = employeeToCreate.defaultPage || faker.random.arrayElement(defaultPage);
-    this.language = employeeToCreate.language || faker.random.arrayElement(language);
+    this.defaultPage = employeeToCreate.defaultPage || faker.random.arrayElement(Pages);
+    this.language = employeeToCreate.language || faker.random.arrayElement(Languages);
     this.active = employeeToCreate.active === undefined ? true : employeeToCreate.active;
     this.permissionProfile = employeeToCreate.permissionProfile || faker.random.arrayElement(Profiles);
   }

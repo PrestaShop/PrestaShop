@@ -3,7 +3,6 @@ require('module-alias/register');
 const {expect} = require('chai');
 const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
-const {Profiles} = require('@data/demo/profiles');
 // Importing pages
 const BOBasePage = require('@pages/BO/BObasePage');
 const LoginPage = require('@pages/BO/login/index');
@@ -76,7 +75,7 @@ describe('Create, Read, Update and Delete profile in BO', async () => {
       await this.pageObjects.profilesPage.filterProfiles(
         'input',
         'id_profile',
-        Profiles.translator.id,
+        4,
       );
       const numberOfProfilesAfterFilter = await this.pageObjects.profilesPage.getNumberFromText(
         this.pageObjects.profilesPage.profileGridTitle);
@@ -86,7 +85,7 @@ describe('Create, Read, Update and Delete profile in BO', async () => {
         const textName = await this.pageObjects.profilesPage.getTextContent(
           this.pageObjects.profilesPage.profilesListTableColumn.replace('%ROW', i).replace('%COLUMN', 'id_profile'),
         );
-        await expect(textName).to.contains(Profiles.translator.id);
+        await expect(textName).to.contains(4);
       }
       /* eslint-enable no-await-in-loop */
     });
@@ -100,7 +99,7 @@ describe('Create, Read, Update and Delete profile in BO', async () => {
       await this.pageObjects.profilesPage.filterProfiles(
         'input',
         'name',
-        Profiles.logistician.name,
+        'Logistician',
       );
       const numberOfProfilesAfterFilter = await this.pageObjects.profilesPage.getNumberFromText(
         this.pageObjects.profilesPage.profileGridTitle);
@@ -110,7 +109,7 @@ describe('Create, Read, Update and Delete profile in BO', async () => {
         const textName = await this.pageObjects.profilesPage.getTextContent(
           this.pageObjects.profilesPage.profilesListTableColumn.replace('%ROW', i).replace('%COLUMN', 'name'),
         );
-        await expect(textName).to.contains(Profiles.logistician.name);
+        await expect(textName).to.contains('Logistician');
       }
       /* eslint-enable no-await-in-loop */
     });
