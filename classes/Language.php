@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 use PrestaShop\PrestaShop\Adapter\Language\LanguageImageManager;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 use PrestaShop\PrestaShop\Core\Localization\RTL\Processor as RtlStylesheetProcessor;
@@ -93,6 +92,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     protected static $_checkedLangs;
     /**
      * @var array[] language information, indexed by id_language
+     *
      * @see loadLanguages()
      */
     protected static $_LANGUAGES;
@@ -278,6 +278,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      * @param bool $modules
      *
      * @return string[]
+     *
      * @throws PrestaShopException
      */
     public static function getFilesList($iso_from, $theme_from, $iso_to = false, $theme_to = false, $select = false, $check = false, $modules = false)
@@ -712,6 +713,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      * @param string $locale IETF language tag
      *
      * @return array|false
+     *
      * @throws Exception
      */
     public static function getJsonLanguageDetails($locale)
@@ -744,7 +746,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      * @param string $iso_code Iso code
      * @param bool $no_cache
      *
-     * @return int|null|false
+     * @return int|false|null
      */
     public static function getIdByIso($iso_code, $no_cache = false)
     {
@@ -864,6 +866,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      * @param string $iso_code 2-letter iso code
      *
      * @return string|false
+     *
      * @throws PrestaShopException
      */
     public static function getLanguageCodeByIso($iso_code)
@@ -881,6 +884,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      * @param string $code IETF language tag
      *
      * @return Language|false
+     *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
@@ -938,6 +942,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      * @param int $to Destination language id
      *
      * @return true
+     *
      * @throws PrestaShopDatabaseException
      */
     public static function copyLanguageData($from, $to)

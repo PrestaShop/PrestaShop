@@ -135,6 +135,7 @@ class LanguageImageManager
      * @param string $locale IETF language tag
      *
      * @return string
+     *
      * @throws \Exception
      */
     private function getFlagCountryCodeFromLocale(string $locale): string
