@@ -43,6 +43,16 @@ module.exports = class Profiles extends BOBasePage {
   }
 
   /**
+   * get text from a column from table
+   * @param row
+   * @param column
+   * @return {Promise<textContent>}
+   */
+  async getTextColumnFromTable(row, column) {
+    return this.getTextContent(this.profilesListTableColumn.replace('%ROW', row).replace('%COLUMN', column));
+  }
+
+  /**
    * Reset input filters
    * @return {Promise<textContent>}
    */

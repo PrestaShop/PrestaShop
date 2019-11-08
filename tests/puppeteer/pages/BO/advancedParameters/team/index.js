@@ -62,6 +62,16 @@ module.exports = class Employees extends BOBasePage {
   }
 
   /**
+   * get text from a column from table
+   * @param row
+   * @param column
+   * @return {Promise<textContent>}
+   */
+  async getTextColumnFromTable(row, column) {
+    return this.getTextContent(this.employeesListTableColumn.replace('%ROW', row).replace('%COLUMN', column));
+  }
+
+  /**
    * Go to Edit employee page
    * @param row, row in table
    * @return {Promise<void>}

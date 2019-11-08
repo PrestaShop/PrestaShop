@@ -133,14 +133,12 @@ describe('Create, Read, Update and Delete Employee in BO', async () => {
           'email',
           createEmployeeData.email,
         );
-        const textEmail = await this.pageObjects.employeesPage.getTextContent(
-          this.pageObjects.employeesPage.employeesListTableColumn.replace('%ROW', '1').replace('%COLUMN', 'email'),
-        );
+        const textEmail = await this.pageObjects.employeesPage.getTextColumnFromTable(1, 'email');
         await expect(textEmail).to.contains(createEmployeeData.email);
       });
 
       it('should go to edit employee page', async function () {
-        await this.pageObjects.employeesPage.goToEditEmployeePage('1');
+        await this.pageObjects.employeesPage.goToEditEmployeePage(1);
         const pageTitle = await this.pageObjects.addEmployeePage.getPageTitle();
         await expect(pageTitle).to.contains(this.pageObjects.addEmployeePage.pageTitleEdit);
       });
@@ -188,14 +186,12 @@ describe('Create, Read, Update and Delete Employee in BO', async () => {
           'email',
           firstEditEmployeeData.email,
         );
-        const textEmail = await this.pageObjects.employeesPage.getTextContent(
-          this.pageObjects.employeesPage.employeesListTableColumn.replace('%ROW', '1').replace('%COLUMN', 'email'),
-        );
+        const textEmail = await this.pageObjects.employeesPage.getTextColumnFromTable(1, 'email');
         await expect(textEmail).to.contains(firstEditEmployeeData.email);
       });
 
       it('should go to edit employee page', async function () {
-        await this.pageObjects.employeesPage.goToEditEmployeePage('1');
+        await this.pageObjects.employeesPage.goToEditEmployeePage(1);
         const pageTitle = await this.pageObjects.addEmployeePage.getPageTitle();
         await expect(pageTitle).to.contains(this.pageObjects.addEmployeePage.pageTitleEdit);
       });
@@ -237,14 +233,12 @@ describe('Create, Read, Update and Delete Employee in BO', async () => {
         'email',
         secondEditEmployeeData.email,
       );
-      const textEmail = await this.pageObjects.employeesPage.getTextContent(
-        this.pageObjects.employeesPage.employeesListTableColumn.replace('%ROW', '1').replace('%COLUMN', 'email'),
-      );
+      const textEmail = await this.pageObjects.employeesPage.getTextColumnFromTable(1, 'email');
       await expect(textEmail).to.contains(secondEditEmployeeData.email);
     });
 
     it('should delete employee', async function () {
-      const textResult = await this.pageObjects.employeesPage.deleteEmployee('1');
+      const textResult = await this.pageObjects.employeesPage.deleteEmployee(1);
       await expect(textResult).to.equal(this.pageObjects.employeesPage.successfulDeleteMessage);
     });
 
