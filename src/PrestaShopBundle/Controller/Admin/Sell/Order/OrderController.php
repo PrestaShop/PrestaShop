@@ -170,7 +170,13 @@ class OrderController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_orders_create');
     }
 
-    //@todo: wip
+    /**
+     * Renders create order page
+     *
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
+     *
+     * @return Response
+     */
     public function createAction()
     {
         $summaryForm = $this->createForm(CartSummaryType::class);

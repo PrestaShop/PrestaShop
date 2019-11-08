@@ -65,7 +65,8 @@ export default class SummaryRenderer {
     this.$totalDiscount.text(cartSummary.totalDiscount);
     this.$totalShipping.text(cartSummary.totalShippingPrice);
     this.$totalTaxes.text(cartSummary.totalTaxes);
-    this.$totalWithoutTax.text(cartSummary.totalPriceWithTaxes);
+    this.$totalWithoutTax.text(cartSummary.totalPriceWithoutTaxes);
+    this.$totalWithTax.text(cartSummary.totalPriceWithTaxes);
     this.$processOrderLink.prop('href', cartSummary.processOrderLink);
     this.$orderMessageField.text(cartSummary.orderMessage);
     this.$placeOrderCartIdField.val(cartInfo.cartId);
