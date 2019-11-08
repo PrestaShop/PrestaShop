@@ -42,7 +42,7 @@ class ImageManagerCore
         'image/jpeg',
         'image/pjpeg',
         'image/png',
-        'image/x-png'
+        'image/x-png',
     ];
 
     /**
