@@ -354,6 +354,44 @@ class ImageManagerCore
     }
 
     /**
+     * @param string $filename
+     * @return string|bool
+     */
+    public static function getMimeType(string $filename)
+    {
+        $mimeType = false;
+        // Try with GD
+        if (function_exists('getimagesize')) {
+            $imageInfo = @getimagesize($filename);
+            if ($imageInfo) {
+                $mimeType = $imageInfo['mime'];
+            }
+        }
+        // Try with FileInfo
+        if (!$mimeType && function_exists('finfo_open')) {
+            $const = defined('FILEINFO_MIME_TYPE') ? FILEINFO_MIME_TYPE : FILEINFO_MIME;
+            $finfo = finfo_open($const);
+            $mimeType = finfo_file($finfo, $filename);
+            finfo_close($finfo);
+        }
+        // Try with Mime
+        if (!$mimeType && function_exists('mime_content_type')) {
+            $mimeType = mime_content_type($filename);
+        }
+        // Try with exec command and file binary
+        if (!$mimeType && function_exists('exec')) {
+            $mimeType = trim(exec('file -b --mime-type ' . escapeshellarg($filename)));
+            if (!$mimeType) {
+                $mimeType = trim(exec('file --mime ' . escapeshellarg($filename)));
+            }
+            if (!$mimeType) {
+                $mimeType = trim(exec('file -bi ' . escapeshellarg($filename)));
+            }
+        }
+        return $mimeType;
+    }
+
+    /**
      * Check if file is a real image.
      *
      * @param string $filename File path to check
@@ -364,40 +402,11 @@ class ImageManagerCore
      */
     public static function isRealImage($filename, $fileMimeType = null, $mimeTypeList = null)
     {
-        // Detect mime content type
-        $mimeType = false;
         if (!$mimeTypeList) {
-            $mimeTypeList = array('image/gif', 'image/jpg', 'image/jpeg', 'image/pjpeg', 'image/png', 'image/x-png');
+            $mimeTypeList = ['image/gif', 'image/jpg', 'image/jpeg', 'image/pjpeg', 'image/png', 'image/x-png'];
         }
 
-        // Try 4 different methods to determine the mime type
-        if (function_exists('getimagesize')) {
-            $imageInfo = @getimagesize($filename);
-
-            if ($imageInfo) {
-                $mimeType = $imageInfo['mime'];
-            } else {
-                $fileMimeType = false;
-            }
-        }
-        if (!$mimeType && function_exists('finfo_open')) {
-            $const = defined('FILEINFO_MIME_TYPE') ? FILEINFO_MIME_TYPE : FILEINFO_MIME;
-            $finfo = finfo_open($const);
-            $mimeType = finfo_file($finfo, $filename);
-            finfo_close($finfo);
-        }
-        if (!$mimeType && function_exists('mime_content_type')) {
-            $mimeType = mime_content_type($filename);
-        }
-        if (!$mimeType && function_exists('exec')) {
-            $mimeType = trim(exec('file -b --mime-type ' . escapeshellarg($filename)));
-            if (!$mimeType) {
-                $mimeType = trim(exec('file --mime ' . escapeshellarg($filename)));
-            }
-            if (!$mimeType) {
-                $mimeType = trim(exec('file -bi ' . escapeshellarg($filename)));
-            }
-        }
+        $mimeType = self::getMimeType($filename);
 
         if ($fileMimeType && (empty($mimeType) || $mimeType == 'regular file' || $mimeType == 'text/plain')) {
             $mimeType = $fileMimeType;
