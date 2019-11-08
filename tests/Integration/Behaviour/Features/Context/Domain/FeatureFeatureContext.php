@@ -30,12 +30,15 @@ use Behat\Gherkin\Node\TableNode;
 use Configuration;
 use Exception;
 use Feature;
+use FeatureValue;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Command\AddFeatureCommand;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Command\EditFeatureCommand;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Feature\FeatureValue\Command\AddFeatureValueCommand;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Query\GetFeatureForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Feature\QueryResult\EditableFeature;
 use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureId;
+use PrestaShop\PrestaShop\Core\Domain\Language\FeatureValueId;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
@@ -158,5 +161,81 @@ class FeatureFeatureContext extends AbstractDomainFeatureContext
         );
 
         return $this->getCommandBus()->handle($command);
+    }
+
+    /**
+     * @param string $valueOfFeatureValue
+     * @param int $featureId
+     *
+     * @return FeatureValueId
+     */
+    private function createFeatureValue(string $valueOfFeatureValue, int $featureId)
+    {
+        $defaultLanguageId = Configuration::get('PS_LANG_DEFAULT');
+
+        $command = new AddFeatureValueCommand($featureId, [
+            $defaultLanguageId => $valueOfFeatureValue,
+        ]);
+
+        return $this->getCommandBus()->handle($command);
+    }
+
+    /**
+     * @When I create feature value :feature_value_reference for product feature :feature_reference with specified properties:
+     */
+    public function iCreateFeatureValueForProductFeatureWithSpecifiedProperties(
+        $featureValueReference,
+        $featureReference,
+        TableNode $node
+    ) {
+        /** @var Feature $feature */
+        $feature = SharedStorage::getStorage()->get($featureReference);
+        $properties = $node->getRowsHash();
+        $featureValueId = $this->createFeatureValue($properties['value'], (int) $feature->id);
+
+        SharedStorage::getStorage()->set($featureValueReference, new FeatureValue($featureValueId->getValue()));
+    }
+
+    /**
+     * @Then product feature :feature_reference should have feature value :feature_value_reference
+     */
+    public function productFeatureShouldHaveFeatureValue($featureReference, $featureValueReference)
+    {
+        /** @var Feature $feature */
+        $feature = SharedStorage::getStorage()->get($featureReference);
+
+        /** @var FeatureValue $featureValue */
+        $featureValue = SharedStorage::getStorage()->get($featureValueReference);
+
+        foreach (FeatureValue::getFeatureValues($feature->id) as $value) {
+            if ($featureValue->id == $value['id_feature_value']) {
+                return;
+            }
+        }
+
+        throw new RuntimeException(sprintf(
+            'Product feature with id "%s" does not have feature value with id "%s"',
+            $feature->id,
+            $featureValue->id
+        ));
+    }
+
+    /**
+     * @Then feature value :feature_value_reference value should be :value_of_feature_value
+     */
+    public function featureValueNameShouldBe($featureValueReference, $valueOfFeatureValue)
+    {
+        /** @var FeatureValue $featureValue */
+        $featureValue = SharedStorage::getStorage()->get($featureValueReference);
+        $defaultLanguageId = Configuration::get('PS_LANG_DEFAULT');
+
+        if (!isset($featureValue->value[$defaultLanguageId]) || $featureValue->value[$defaultLanguageId] !== $valueOfFeatureValue) {
+            throw new RuntimeException(sprintf(
+                'Feature value with id "%s" has value "%s", but "%s" was expected',
+                $featureValue->id,
+                $featureValue->value[$defaultLanguageId],
+                $valueOfFeatureValue
+            ));
+        }
     }
 }
