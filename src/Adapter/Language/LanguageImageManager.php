@@ -37,7 +37,7 @@ class LanguageImageManager
     /**
      * Path where images are saved to
      */
-    const IMG_PATH = _PS_ROOT_DIR_ . '/img/l/';
+    const IMG_PATH = _PS_IMG_DIR_ . '/l/';
 
     /**
      * Path where flags are stored
