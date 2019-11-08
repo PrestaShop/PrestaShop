@@ -26,6 +26,9 @@
 <div class="card d-none" id="cart-block">
   <h3 class="card-header">{{ 'Cart'|trans({}, 'Admin.Orderscustomers.Feature') }}</h3>
   <div class="card-body">
+    <div class="alert alert-danger d-none" id="js-cart-error-block">
+      <div class="alert-text"></div>
+    </div>
     <div class="row">
       <div class="col-3">
         <span class="float-right">{{ 'Search for a product'|trans({}, 'Admin.Orderscustomers.Feature') }}</span>

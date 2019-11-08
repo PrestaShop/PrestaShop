@@ -58,6 +58,9 @@ export default class ProductManager {
 
       changeProductPrice: (cartId, customerId, updatedProduct) =>
         this.cartEditor.changeProductPrice(cartId, customerId, updatedProduct),
+
+      changeProductQty: (cartId, updatedProduct) =>
+        this.cartEditor.changeProductQty(cartId, updatedProduct),
     };
   }
 
@@ -74,6 +77,7 @@ export default class ProductManager {
     this._onAddProductToCart();
     this._onRemoveProductFromCart();
     this._onProductPriceChange();
+    this._onProductQtyChange();
   }
 
   /**
@@ -117,8 +121,27 @@ export default class ProductManager {
    * @private
    */
   _onProductPriceChange() {
+    // on success
     EventEmitter.on(eventMap.productPriceChanged, (cartInfo) => {
-      this.productRenderer.renderList(cartInfo.products);
+      this.productRenderer.cleanCartBlockAlerts();
+      EventEmitter.emit(eventMap.cartLoaded, cartInfo);
+    });
+  }
+
+  /**
+   * Listens for product quantity change in cart success/failure event
+   *
+   * @private
+   */
+  _onProductQtyChange() {
+    // on success
+    EventEmitter.on(eventMap.productQtyChanged, (cartInfo) => {
+      EventEmitter.emit(eventMap.cartLoaded, cartInfo);
+    });
+
+    // on failure
+    EventEmitter.on(eventMap.productQtyChangeFailed, (e) => {
+      this.productRenderer.renderCartBlockErrorAlert(e.responseJSON.message);
     });
   }
 

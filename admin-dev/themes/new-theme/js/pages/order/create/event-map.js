@@ -59,6 +59,10 @@ export default {
   productRemovedFromCart: 'productRemovedFromCart',
   // when product in cart price has been changed
   productPriceChanged: 'productPriceChanged',
+  // when product quantity in cart has been changed
+  productQtyChanged: 'productQtyChanged',
+  // when changing product quantity in cart failed
+  productQtyChangeFailed: 'productQtyChangeFailed',
   // when order process email has been sent to customer
   processOrderEmailSent: 'processOrderEmailSent',
   // when order process email sending failed
