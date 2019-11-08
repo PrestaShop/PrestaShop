@@ -36,6 +36,7 @@ use CustomerThread;
 use DateTimeImmutable;
 use Db;
 use Gender;
+use Group;
 use Image;
 use ImageManager;
 use Module;
@@ -132,8 +133,9 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
     public function handle(GetOrderForViewing $query): OrderForViewing
     {
         $order = $this->getOrder($query->getOrderId());
+        $taxCalculationMethod = $this->getOrderTaxCalculationMethod($order);
 
-        $isTaxIncluded = $order->getTaxCalculationMethod() == PS_TAX_INC;
+        $isTaxIncluded = ($taxCalculationMethod == PS_TAX_INC);
 
         $taxMethod = $isTaxIncluded ?
             $this->translator->trans('Tax included', [], 'Admin.Global') :
@@ -296,6 +298,8 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
      */
     private function getOrderProducts(Order $order): OrderProductsForViewing
     {
+        $taxCalculationMethod = $this->getOrderTaxCalculationMethod($order);
+
         $products = $order->getProducts();
         $currency = new Currency((int) $order->id_currency);
 
@@ -394,7 +398,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
 
         $productsForViewing = [];
 
-        $isOrderTaxExcluded = $order->getTaxCalculationMethod() == PS_TAX_EXC;
+        $isOrderTaxExcluded = ($taxCalculationMethod == PS_TAX_EXC);
 
         foreach ($products as $product) {
             $unitPrice = $isOrderTaxExcluded ?
@@ -588,6 +592,8 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
 
     private function getOrderShipping(Order $order): OrderShippingForViewing
     {
+        $taxCalculationMethod = $this->getOrderTaxCalculationMethod($order);
+
         $shipping = $order->getShipping();
         $carriers = [];
         $carrierModuleInfo = null;
@@ -605,7 +611,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
 
         if (!$order->isVirtual()) {
             foreach ($shipping as $item) {
-                if ($order->getTaxCalculationMethod() == PS_TAX_INC) {
+                if ($taxCalculationMethod == PS_TAX_INC) {
                     $price = Tools::displayPrice($item['shipping_cost_tax_incl'], $currency);
                 } else {
                     $price = Tools::displayPrice($item['shipping_cost_tax_excl'], $currency);
@@ -763,7 +769,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
         $currency = new Currency($order->id_currency);
         $customer = $order->getCustomer();
 
-        $isTaxExcluded = $order->getTaxCalculationMethod() == PS_TAX_EXC;
+        $isTaxExcluded = ($this->getOrderTaxCalculationMethod($order) == PS_TAX_EXC);
 
         $shipping_refundable_tax_excl = $order->total_shipping_tax_excl;
         $shipping_refundable_tax_incl = $order->total_shipping_tax_incl;
@@ -824,5 +830,17 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
         }
 
         return new OrderDiscountsForViewing($discountsForViewing);
+    }
+
+    /**
+     * @param Order $order
+     *
+     * @return int
+     */
+    private function getOrderTaxCalculationMethod(Order $order): int
+    {
+        $customer = new Customer($order->id_customer);
+
+        return Group::getPriceDisplayMethod((int) $customer->id_default_group);
     }
 }
