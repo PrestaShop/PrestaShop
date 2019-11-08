@@ -78,9 +78,7 @@ class LanguageImageManager
     /**
      * Creates default copies for the "no image" image
      *
-     * @param string $isoCode 2-lettre ISO code
-     *
-     * @throws \Exception
+     * @param string $isoCode 2-letter ISO code
      */
     public function setupDefaultImagePlaceholder(string $isoCode): void
     {
