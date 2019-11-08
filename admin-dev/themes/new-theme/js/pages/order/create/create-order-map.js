@@ -95,6 +95,9 @@ export default {
   addressSelect: '.js-address-select',
   addressesContent: '#addresses-content',
   addressesWarning: '#addresses-warning',
+  deliveryAddressEditBtn: '#js-delivery-address-edit-btn',
+  invoiceAddressEditBtn: '#js-invoice-address-edit-btn',
+  addressAddBtn: '#js-add-address-btn',
 
   // selectors related to summary block
   summaryBlock: '#summary-block',
@@ -160,4 +163,6 @@ export default {
   productTaxWarning: '.js-tax-warning',
   noProductsFoundWarning: '.js-no-products-found',
   productAddForm: '#js-add-product-form',
+  cartErrorAlertBlock: '#js-cart-error-block',
+  cartErrorAlertText: '#js-cart-error-block .alert-text',
 };

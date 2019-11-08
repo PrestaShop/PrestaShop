@@ -67,6 +67,10 @@ export default class ProductRenderer {
       $template.find(createOrderMap.listedProductUnitPriceInput).data('attribute-id', product.attributeId);
       $template.find(createOrderMap.listedProductUnitPriceInput).data('customization-id', customizationId);
       $template.find(createOrderMap.listedProductQtyInput).val(product.quantity);
+      $template.find(createOrderMap.listedProductQtyInput).data('product-id', product.productId);
+      $template.find(createOrderMap.listedProductQtyInput).data('attribute-id', product.attributeId);
+      $template.find(createOrderMap.listedProductQtyInput).data('customization-id', customizationId);
+      $template.find(createOrderMap.listedProductQtyInput).data('prev-qty', product.quantity);
       $template.find(createOrderMap.productTotalPriceField).text(product.price);
       $template.find(createOrderMap.productRemoveBtn).data('product-id', product.productId);
       $template.find(createOrderMap.productRemoveBtn).data('attribute-id', product.attributeId);
@@ -258,6 +262,44 @@ export default class ProductRenderer {
     }
 
     this._showCustomizations();
+  }
+
+  /**
+   * Renders error alert for cart block
+   *
+   * @param message
+   */
+  renderCartBlockErrorAlert(message) {
+    $(createOrderMap.cartErrorAlertText).text(message);
+    this._showCartBlockError()
+  }
+
+  /**
+   * Cleans cart block alerts content and hides them
+   *
+   * @param message
+   */
+  cleanCartBlockAlerts(message) {
+    $(createOrderMap.cartErrorAlertText).text('');
+    this._hideCartBlockError();
+  }
+
+  /**
+   * Shows error alert block of cart block
+   *
+   * @private
+   */
+  _showCartBlockError() {
+    $(createOrderMap.cartErrorAlertBlock).removeClass('d-none')
+  }
+
+  /**
+   * Hides error alert block of cart block
+   *
+   * @private
+   */
+  _hideCartBlockError() {
+    $(createOrderMap.cartErrorAlertBlock).addClass('d-none')
   }
 
   /**
