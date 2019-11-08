@@ -355,6 +355,7 @@ class ImageManagerCore
 
     /**
      * @param string $filename
+     *
      * @return string|bool
      */
     public static function getMimeType(string $filename)
