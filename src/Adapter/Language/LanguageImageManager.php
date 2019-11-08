@@ -44,6 +44,14 @@ class LanguageImageManager
      */
     const FLAGS_SOURCE = _PS_BO_ALL_THEMES_DIR_ . 'new-theme/static/flags/%s.jpg';
 
+    /**
+     * Path where flags are copied to
+     */
+    const FLAGS_DESTINATION = self::IMG_PATH . "%d.jpg";
+
+    /**
+     * Default flag
+     */
     const FALLBACK_FLAG_SOURCE = self::IMG_PATH . 'none.jpg';
 
     const IMAGE_DIRECTORIES = [_PS_CAT_IMG_DIR_, _PS_MANU_IMG_DIR_, _PS_PROD_IMG_DIR_, _PS_SUPP_IMG_DIR_];
@@ -65,7 +73,7 @@ class LanguageImageManager
             $flagPath = self::FALLBACK_FLAG_SOURCE;
         }
 
-        $destinationPath = $this->getDestinationPath($langId);
+        $destinationPath = $this->getFlagDestination($langId);
 
         $this->unlinkIfExists($destinationPath);
 
@@ -145,9 +153,9 @@ class LanguageImageManager
      *
      * @return string
      */
-    private function getDestinationPath(int $langId): string
+    private function getFlagDestination(int $langId): string
     {
-        return self::IMG_PATH . $langId . '.jpg';
+        return sprintf(self::FLAGS_DESTINATION, $langId);
     }
 
     /**
