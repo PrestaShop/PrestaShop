@@ -8,13 +8,13 @@ module.exports = class Brands extends BOBasePage {
     this.pageTitle = 'Brands •';
     this.successfulUpdateStatusMessage = 'The status has been successfully updated.';
 
-    // Selectors
+    // Header Selectors
     this.suppliersNavItemLink = '#subtab-AdminSuppliers';
     this.newBrandLink = '#page-header-desc-configuration-add_manufacturer';
     this.newBrandAddressLink = '#page-header-desc-configuration-add_manufacturer_address';
 
 
-    // Selectors
+    // Table Selectors
     this.gridPanel = '#%TABLE_grid_panel';
     this.gridTable = '#%TABLE_grid_table';
     this.gridHeaderTitle = `${this.gridPanel} h3.card-header-title`;
@@ -68,10 +68,6 @@ module.exports = class Brands extends BOBasePage {
   async goToSubTabSuppliers() {
     await this.clickAndWaitForNavigation(this.suppliersNavItemLink);
   }
-
-  /*
-  Methods
-   */
 
   /**
    * Reset filters in table
