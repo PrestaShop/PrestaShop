@@ -1054,7 +1054,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         }
 
         $languageManager = new LanguageImageManager();
-        $languageManager->setupLanguageFlag($lang->locale, $lang->id);
+        $languageManager->setupLanguageFlag($lang->locale, $lang->id, $lang_pack['flag'] ?? null);
         $languageManager->setupDefaultImagePlaceholder($lang->iso_code);
 
         self::loadLanguages();
