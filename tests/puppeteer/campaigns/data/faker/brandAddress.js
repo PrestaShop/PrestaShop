@@ -1,6 +1,6 @@
 const faker = require('faker');
 
-const countries = ['Italy', 'France', 'United States', 'Netherlands', 'United Kingdom', 'Germany'];
+const countries = ['France', 'Netherlands', 'United Kingdom', 'Germany'];
 
 module.exports = class brandAddress {
   constructor(brandAddressToCreate = {}) {

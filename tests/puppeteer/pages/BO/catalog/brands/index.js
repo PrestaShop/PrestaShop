@@ -86,13 +86,22 @@ module.exports = class Brands extends BOBasePage {
   }
 
   /**
+   * get number of elements in grid
+   * @param table
+   * @return {Promise<integer>}
+   */
+  async getNumberOfElementInGrid(table) {
+    return this.getNumberFromText(this.gridHeaderTitle.replace('%TABLE', table));
+  }
+
+  /**
    * Reset Filter And get number of elements in list
    * @param table, what table to reset
    * @return {Promise<integer>}
    */
   async resetAndGetNumberOfLines(table) {
     await this.resetFilter(table);
-    return this.getNumberFromText(this.gridHeaderTitle.replace('%TABLE', table));
+    return this.getNumberOfElementInGrid(table);
   }
 
   /**
@@ -315,5 +324,41 @@ module.exports = class Brands extends BOBasePage {
       await this.clickAndWaitForNavigation(this.deleteAddressesButton);
     }
     return this.getTextContent(this.alertSuccessBlockParagraph);
+  }
+
+  /**
+   * get text from a column
+   * @param table, manufacturer or address
+   * @param row, row in table
+   * @param column, which column
+   * @return {Promise<textContent>}
+   */
+  async getTextColumnFromTable(table, row, column) {
+    return this.getTextContent(
+      this.tableColumn
+        .replace('%TABLE', table)
+        .replace('%ROW', row)
+        .replace('%COLUMN', column),
+    );
+  }
+
+  /**
+   * get text from a column from table brand
+   * @param row
+   * @param column
+   * @return {Promise<textContent>}
+   */
+  async getTextColumnFromTableBrands(row, column) {
+    return this.getTextColumnFromTable('manufacturer', row, column);
+  }
+
+  /**
+   * get text from a column from table addresses
+   * @param row
+   * @param column
+   * @return {Promise<textContent>}
+   */
+  async getTextColumnFromTableAddresses(row, column) {
+    return this.getTextColumnFromTable('manufacturer_address', row, column);
   }
 };

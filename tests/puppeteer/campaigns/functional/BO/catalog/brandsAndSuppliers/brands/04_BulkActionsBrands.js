@@ -74,9 +74,7 @@ describe('Create 2 brands, Enable, disable and delete with bulk actions', async 
     it('should create first brand', async function () {
       const result = await this.pageObjects.addBrandPage.createEditBrand(firstBrandData);
       await expect(result).to.equal(this.pageObjects.brandsPage.successfulCreationMessage);
-      const numberOfBrandsAfterCreation = await this.pageObjects.brandsPage.getNumberFromText(
-        this.pageObjects.brandsPage.gridHeaderTitle.replace('%TABLE', 'manufacturer'),
-      );
+      const numberOfBrandsAfterCreation = await this.pageObjects.brandsPage.getNumberOfElementInGrid('manufacturer');
       await expect(numberOfBrandsAfterCreation).to.be.equal(numberOfBrands + 1);
     });
 
@@ -89,9 +87,7 @@ describe('Create 2 brands, Enable, disable and delete with bulk actions', async 
     it('should create second brand', async function () {
       const result = await this.pageObjects.addBrandPage.createEditBrand(secondBrandData);
       await expect(result).to.equal(this.pageObjects.brandsPage.successfulCreationMessage);
-      const numberOfBrandsAfterCreation = await this.pageObjects.brandsPage.getNumberFromText(
-        this.pageObjects.brandsPage.gridHeaderTitle.replace('%TABLE', 'manufacturer'),
-      );
+      const numberOfBrandsAfterCreation = await this.pageObjects.brandsPage.getNumberOfElementInGrid('manufacturer');
       await expect(numberOfBrandsAfterCreation).to.be.equal(numberOfBrands + 2);
     });
   });
@@ -99,58 +95,32 @@ describe('Create 2 brands, Enable, disable and delete with bulk actions', async 
   describe('Disable, enable created Brands', async () => {
     it('should filter Brand list by name of brand created', async function () {
       await this.pageObjects.brandsPage.filterBrands('input', 'name', 'BrandToDelete');
-      const numberOfBrandsAfterFilter = await this.pageObjects.brandsPage.getNumberFromText(
-        this.pageObjects.brandsPage.gridHeaderTitle.replace('%TABLE', 'manufacturer'),
-      );
+      const numberOfBrandsAfterFilter = await this.pageObjects.brandsPage.getNumberOfElementInGrid('manufacturer');
       await expect(numberOfBrandsAfterFilter).to.be.at.most(numberOfBrands);
-      /* eslint-disable no-await-in-loop */
       for (let i = 1; i <= numberOfBrandsAfterFilter; i++) {
-        const textColumn = await this.pageObjects.brandsPage.getTextContent(
-          this.pageObjects.brandsPage.tableColumn
-            .replace('%TABLE', 'manufacturer')
-            .replace('%ROW', i)
-            .replace('%COLUMN', 'name'),
-        );
+        const textColumn = await this.pageObjects.brandsPage.getTextColumnFromTableBrands(i, 'name');
         await expect(textColumn).to.contains('BrandToDelete');
       }
-      /* eslint-enable no-await-in-loop */
     });
 
     it('should disable brands', async function () {
       const disableTextResult = await this.pageObjects.brandsPage.changeBrandsEnabledColumnBulkActions(false);
       await expect(disableTextResult).to.be.equal(this.pageObjects.brandsPage.successfulUpdateStatusMessage);
-      const numberOfBrandsInGrid = await this.pageObjects.brandsPage.getNumberFromText(
-        this.pageObjects.brandsPage.gridHeaderTitle.replace('%TABLE', 'manufacturer'),
-      );
+      const numberOfBrandsInGrid = await this.pageObjects.brandsPage.getNumberOfElementInGrid('manufacturer');
       await expect(numberOfBrandsInGrid).to.be.at.most(numberOfBrands);
-      /* eslint-disable no-await-in-loop */
       for (let i = 1; i <= numberOfBrandsInGrid; i++) {
-        const textColumn = await this.pageObjects.brandsPage.getTextContent(
-          this.pageObjects.brandsPage.tableColumn
-            .replace('%TABLE', 'manufacturer')
-            .replace('%ROW', i)
-            .replace('%COLUMN', 'active'),
-        );
+        const textColumn = await this.pageObjects.brandsPage.getTextColumnFromTableBrands(i, 'active');
         await expect(textColumn).to.contains('clear');
       }
-      /* eslint-enable no-await-in-loop */
     });
 
     it('should enable brands', async function () {
       const disableTextResult = await this.pageObjects.brandsPage.changeBrandsEnabledColumnBulkActions(true);
       await expect(disableTextResult).to.be.equal(this.pageObjects.brandsPage.successfulUpdateStatusMessage);
-      const numberOfBrandsInGrid = await this.pageObjects.brandsPage.getNumberFromText(
-        this.pageObjects.brandsPage.gridHeaderTitle.replace('%TABLE', 'manufacturer'),
-      );
+      const numberOfBrandsInGrid = await this.pageObjects.brandsPage.getNumberOfElementInGrid('manufacturer');
       await expect(numberOfBrandsInGrid).to.be.at.most(numberOfBrands);
-      /* eslint-disable no-await-in-loop */
       for (let i = 1; i <= numberOfBrandsInGrid; i++) {
-        const textColumn = await this.pageObjects.brandsPage.getTextContent(
-          this.pageObjects.brandsPage.tableColumn
-            .replace('%TABLE', 'manufacturer')
-            .replace('%ROW', i)
-            .replace('%COLUMN', 'active'),
-        );
+        const textColumn = await this.pageObjects.brandsPage.getTextColumnFromTableBrands(i, 'active');
         await expect(textColumn).to.contains('check');
       }
       /* eslint-enable no-await-in-loop */
@@ -165,21 +135,12 @@ describe('Create 2 brands, Enable, disable and delete with bulk actions', async 
   describe('Delete Brands with Bulk Actions', async () => {
     it('should filter Brand list by name of brand created', async function () {
       await this.pageObjects.brandsPage.filterBrands('input', 'name', 'BrandToDelete');
-      const numberOfBrandsAfterFilter = await this.pageObjects.brandsPage.getNumberFromText(
-        this.pageObjects.brandsPage.gridHeaderTitle.replace('%TABLE', 'manufacturer'),
-      );
+      const numberOfBrandsAfterFilter = await this.pageObjects.brandsPage.getNumberOfElementInGrid('manufacturer');
       await expect(numberOfBrandsAfterFilter).to.be.at.most(numberOfBrands);
-      /* eslint-disable no-await-in-loop */
       for (let i = 1; i <= numberOfBrandsAfterFilter; i++) {
-        const textColumn = await this.pageObjects.brandsPage.getTextContent(
-          this.pageObjects.brandsPage.tableColumn
-            .replace('%TABLE', 'manufacturer')
-            .replace('%ROW', i)
-            .replace('%COLUMN', 'name'),
-        );
+        const textColumn = await this.pageObjects.brandsPage.getTextColumnFromTableBrands(i, 'name');
         await expect(textColumn).to.contains('BrandToDelete');
       }
-      /* eslint-enable no-await-in-loop */
     });
 
     it('should delete Brands with Bulk Actions and check Result', async function () {
