@@ -29,8 +29,7 @@
 
 {% block content %}
   {% if showDisabledFeatureWarning is defined and showDisabledFeatureWarning %}
-    {#    @todo when features form is merged #}
-    {#    {% include '@PrestaShop/Admin/Sell/Catalog/Features/Blocks/disabled_feature_warning.html.twig' %}#}
+    {% include '@PrestaShop/Admin/Sell/Catalog/Features/Blocks/disabled_feature_warning.html.twig' %}
   {% else %}
     <div class="row justify-content-center">
       <div class="col">
