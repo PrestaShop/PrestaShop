@@ -421,6 +421,38 @@ class CartController extends FrameworkBundleAdminController
         }
     }
 
+    public function editProductQuantityAction(Request $request, int $cartId, int $productId)
+    {
+        $previousQty = $request->request->getInt('previousQty');
+        $newQty = $request->request->getInt('newQty');
+
+        if ($previousQty < $newQty) {
+            $action = QuantityAction::INCREASE_PRODUCT_QUANTITY;
+            $qty = $newQty - $previousQty;
+        } else {
+            $action = QuantityAction::DECREASE_PRODUCT_QUANTITY;
+            $qty = $previousQty - $newQty;
+        }
+
+        try {
+            $this->getCommandBus()->handle(new UpdateProductQuantityInCartCommand(
+                $cartId,
+                $productId,
+                $qty,
+                $action,
+                $request->request->getInt('attributeId') ?: null,
+                $request->request->getInt('customizationId') ?: null
+            ));
+
+            return $this->json($this->getCartInfo($cartId));
+        } catch (Exception $e) {
+            return $this->json(
+                ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
+    }
+
     /**
      * Deletes product from cart
      *
