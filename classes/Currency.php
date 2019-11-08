@@ -684,14 +684,15 @@ class CurrencyCore extends ObjectModel
      * @param string $isoCode ISO code
      * @param int $idShop Shop ID
      * @param bool $forceRefreshCache [default=false] Set to TRUE to forcefully refresh any currently cached results
+     * @param bool $includeDeleted [default=false] Set to TRUE to get result even for soft deleted currency
      *
      * @return int Currency ID
      */
-    public static function getIdByIsoCode($isoCode, $idShop = 0, $forceRefreshCache = false)
+    public static function getIdByIsoCode($isoCode, $idShop = 0, $forceRefreshCache = false, $includeDeleted = false)
     {
-        $cacheId = 'Currency::getIdByIsoCode_' . pSQL($isoCode) . '-' . (int) $idShop;
+        $cacheId = 'Currency::getIdByIsoCode_' . pSQL($isoCode) . '-' . (int) $idShop . ($includeDeleted ? '-deleted' : '');
         if ($forceRefreshCache || !Cache::isStored($cacheId)) {
-            $query = Currency::getIdByQuery($idShop);
+            $query = Currency::getIdByQuery($idShop, $includeDeleted);
             $query->where('iso_code = \'' . pSQL($isoCode) . '\'');
 
             $result = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query->build());
@@ -752,15 +753,18 @@ class CurrencyCore extends ObjectModel
      * Get Currency ID query.
      *
      * @param int $idShop Shop ID
+     * @param bool $includeDeleted [default=false] Set to TRUE to get result even for soft deleted currency
      *
      * @return DbQuery
      */
-    public static function getIdByQuery($idShop = 0)
+    public static function getIdByQuery($idShop = 0, $includeDeleted = false)
     {
         $query = new DbQuery();
         $query->select('c.id_currency');
         $query->from('currency', 'c');
-        $query->where('deleted = 0');
+        if (!$includeDeleted) {
+            $query->where('deleted = 0');
+        }
 
         if (Shop::isFeatureActive() && $idShop > 0) {
             $query->leftJoin('currency_shop', 'cs', 'cs.id_currency = c.id_currency');

@@ -26,8 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Currency;
 
-use Db;
-use DbQuery;
 use Currency;
 use Exception;
 use Language;
@@ -91,7 +89,7 @@ class CurrencyDataProvider implements CurrencyDataProviderInterface
      */
     public function getCurrencyByIsoCode($isoCode, $idLang = null)
     {
-        $currencyId = $this->getCurrencyIdByIsoCode($isoCode);
+        $currencyId = Currency::getIdByIsoCode($isoCode, 0, false, true);
         if (!$currencyId) {
             return null;
         }
@@ -175,24 +173,5 @@ class CurrencyDataProvider implements CurrencyDataProviderInterface
         }
 
         return $this->defaultCurrency;
-    }
-
-    /**
-     * Returns the id of the currency matching the ISO code, regardless of its active or deleted status
-     *
-     * @param string $isoCode
-     *
-     * @return false|string|null
-     */
-    private function getCurrencyIdByIsoCode(string $isoCode)
-    {
-        $dbQuery = new DbQuery();
-        $dbQuery
-            ->select('id_currency')
-            ->from('currency', 'c')
-            ->where('c.`iso_code` = "' . pSQL($isoCode) . '"')
-        ;
-
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($dbQuery);
     }
 }
