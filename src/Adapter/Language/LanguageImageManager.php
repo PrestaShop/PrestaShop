@@ -54,7 +54,19 @@ class LanguageImageManager
      */
     const FALLBACK_FLAG_SOURCE = self::IMG_PATH . 'none.jpg';
 
-    const IMAGE_DIRECTORIES = [_PS_CAT_IMG_DIR_, _PS_MANU_IMG_DIR_, _PS_PROD_IMG_DIR_, _PS_SUPP_IMG_DIR_];
+    const IMAGE_DIRECTORIES = [
+        _PS_CAT_IMG_DIR_,
+        _PS_MANU_IMG_DIR_,
+        _PS_PROD_IMG_DIR_,
+        _PS_SUPP_IMG_DIR_,
+    ];
+
+    const PLACEHOLDER_IMAGE_NAME_PATTERNS = [
+        '%s.jpg',
+        '%s-default-%s.jpg'
+    ];
+
+    const DEFAULT_LANGUAGE_CODE = 'en';
 
     /**
      * Sets up the language flag image for the given language
@@ -87,19 +99,23 @@ class LanguageImageManager
      */
     public function setupDefaultImagePlaceholder(string $isoCode): void
     {
-        $filesToCopy = ['/en.jpg'];
+        $filesToCopy = [
+            $this->getPlaceholderImageFilename(static::DEFAULT_LANGUAGE_CODE) => $this->getPlaceholderImageFilename($isoCode)
+        ];
 
         $imageTypes = ImageType::getAll();
         if (!empty($imageTypes)) {
             foreach (array_keys($imageTypes) as $alias) {
-                $filesToCopy[] = '/en-default-' . ImageType::getFormattedName($alias) . '.jpg';
+                $formattedImageType = ImageType::getFormattedName($alias);
+                $from = $this->getPlaceholderImageFilename(static::DEFAULT_LANGUAGE_CODE, $formattedImageType);
+                $to = $this->getPlaceholderImageFilename($isoCode, $formattedImageType);
+                $filesToCopy[$from] = $to;
             }
         }
 
-        foreach (self::IMAGE_DIRECTORIES as $destination) {
-            foreach ($filesToCopy as $file) {
-                $fileName = str_replace('/en', '/' . $isoCode, $file);
-                @copy(self::IMG_PATH . $file, $destination . $fileName);
+        foreach (static::IMAGE_DIRECTORIES as $destinationDir) {
+            foreach ($filesToCopy as $sourceFile => $newFile) {
+                @copy(static::IMG_PATH . $sourceFile, $destinationDir . $newFile);
             }
         }
     }
@@ -113,12 +129,12 @@ class LanguageImageManager
     public function deleteImages(int $langId, string $isoCode): void
     {
         $images = array(
-            $isoCode . '.jpg',
-            $isoCode . '-default-' . ImageType::getFormattedName('thickbox') . '.jpg',
-            $isoCode . '-default-' . ImageType::getFormattedName('home') . '.jpg',
-            $isoCode . '-default-' . ImageType::getFormattedName('large') . '.jpg',
-            $isoCode . '-default-' . ImageType::getFormattedName('medium') . '.jpg',
-            $isoCode . '-default-' . ImageType::getFormattedName('small') . '.jpg',
+            $this->getPlaceholderImageFilename($isoCode),
+            $this->getPlaceholderImageFilename($isoCode, ImageType::getFormattedName('thickbox')),
+            $this->getPlaceholderImageFilename($isoCode, ImageType::getFormattedName('home')),
+            $this->getPlaceholderImageFilename($isoCode, ImageType::getFormattedName('large')),
+            $this->getPlaceholderImageFilename($isoCode, ImageType::getFormattedName('medium')),
+            $this->getPlaceholderImageFilename($isoCode, ImageType::getFormattedName('small')),
         );
         foreach (static::IMAGE_DIRECTORIES as $directory) {
             foreach ($images as $image) {
@@ -169,4 +185,20 @@ class LanguageImageManager
             unlink($file);
         }
     }
+
+    /**
+     * @param string $isoCode
+     * @param string|null $imageTypeName
+     *
+     * @return string
+     */
+    private function getPlaceholderImageFilename(string $isoCode, string $imageTypeName = null): string
+    {
+        if (null !== $imageTypeName) {
+            return sprintf(static::PLACEHOLDER_IMAGE_NAME_PATTERNS[1], $isoCode, $imageTypeName);
+        }
+
+        return sprintf(static::PLACEHOLDER_IMAGE_NAME_PATTERNS[0], $isoCode);
+    }
+
 }
