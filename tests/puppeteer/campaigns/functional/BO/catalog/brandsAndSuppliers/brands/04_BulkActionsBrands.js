@@ -123,7 +123,6 @@ describe('Create 2 brands, Enable, disable and delete with bulk actions', async 
         const textColumn = await this.pageObjects.brandsPage.getTextColumnFromTableBrands(i, 'active');
         await expect(textColumn).to.contains('check');
       }
-      /* eslint-enable no-await-in-loop */
     });
 
     it('should reset Brand filters', async function () {
