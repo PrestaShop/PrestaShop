@@ -66,9 +66,8 @@ class LanguageImageManager
         }
 
         $destinationPath = $this->getDestinationPath($langId);
-        if (file_exists($destinationPath)) {
-            unlink($destinationPath);
-        }
+
+        $this->unlinkIfExists($destinationPath);
 
         copy($flagPath, $destinationPath);
     }
@@ -115,12 +114,8 @@ class LanguageImageManager
         );
         foreach (self::IMAGE_DIRECTORIES as $directory) {
             foreach ($images as $image) {
-                if (file_exists($directory . $image)) {
-                    unlink($directory . $image);
-                }
-                if (file_exists(self::IMG_PATH . $langId . '.jpg')) {
-                    unlink(self::IMG_PATH . $langId . '.jpg');
-                }
+                $this->unlinkIfExists($directory . $image);
+                $this->unlinkIfExists(self::IMG_PATH . $langId . '.jpg');
             }
         }
     }
@@ -153,5 +148,17 @@ class LanguageImageManager
     private function getDestinationPath(int $langId): string
     {
         return self::IMG_PATH . $langId . '.jpg';
+    }
+
+    /**
+     * Removes a file if it exists
+     *
+     * @param string $file
+     */
+    private function unlinkIfExists(string $file): void
+    {
+        if (file_exists($file)) {
+            unlink($file);
+        }
     }
 }
