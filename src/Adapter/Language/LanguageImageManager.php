@@ -53,14 +53,15 @@ class LanguageImageManager
      *
      * @param string $localeCode IETF language tag
      * @param int $langId Language id
+     * @param string|null $flagCode If provided, use this flag code. By default, auto-detect using locale code.
      *
      * @throws \Exception
      */
-    public function setupLanguageFlag(string $localeCode, int $langId): void
+    public function setupLanguageFlag(string $localeCode, int $langId, ?string $flagCode = null): void
     {
-        $flagPath = $this->getFlagPath(
-            $this->getFlagCountryCodeFromLocale($localeCode)
-        );
+        $flagCode = $flagCode ?? $this->getFlagCountryCodeFromLocale($localeCode);
+
+        $flagPath = $this->getFlagPath($flagCode);
 
         if (!file_exists($flagPath)) {
             $flagPath = self::FALLBACK_FLAG_SOURCE;
