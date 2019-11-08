@@ -44,7 +44,7 @@ class LanguageImageManager
      */
     const FLAGS_SOURCE = _PS_BO_ALL_THEMES_DIR_ . 'new-theme/static/flags/%s.jpg';
 
-    const FALLBACK_FLAG_SOURCE = static::IMG_PATH . 'none.jpg';
+    const FALLBACK_FLAG_SOURCE = self::IMG_PATH . 'none.jpg';
 
     const IMAGE_DIRECTORIES = [_PS_CAT_IMG_DIR_, _PS_MANU_IMG_DIR_, _PS_PROD_IMG_DIR_, _PS_SUPP_IMG_DIR_];
 
