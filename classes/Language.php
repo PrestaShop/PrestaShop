@@ -23,6 +23,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
+use PrestaShop\PrestaShop\Adapter\Language\LanguageImageManager;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 use PrestaShop\PrestaShop\Core\Localization\RTL\Processor as RtlStylesheetProcessor;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
@@ -596,25 +598,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
                 Tools::deleteDirectory(_PS_TRANSLATIONS_DIR_ . $this->iso_code);
             }
 
-            $images = array(
-                '.jpg',
-                '-default-' . ImageType::getFormattedName('thickbox') . '.jpg',
-                '-default-' . ImageType::getFormattedName('home') . '.jpg',
-                '-default-' . ImageType::getFormattedName('large') . '.jpg',
-                '-default-' . ImageType::getFormattedName('medium') . '.jpg',
-                '-default-' . ImageType::getFormattedName('small') . '.jpg',
-            );
-            $images_directories = array(_PS_CAT_IMG_DIR_, _PS_MANU_IMG_DIR_, _PS_PROD_IMG_DIR_, _PS_SUPP_IMG_DIR_);
-            foreach ($images_directories as $image_directory) {
-                foreach ($images as $image) {
-                    if (file_exists($image_directory . $this->iso_code . $image)) {
-                        unlink($image_directory . $this->iso_code . $image);
-                    }
-                    if (file_exists(_PS_ROOT_DIR_ . '/img/l/' . $this->id . '.jpg')) {
-                        unlink(_PS_ROOT_DIR_ . '/img/l/' . $this->id . '.jpg');
-                    }
-                }
-            }
+            (new LanguageImageManager())->deleteImages($this->id, $this->iso_code);
         }
 
         if (!parent::delete()) {
@@ -1069,41 +1053,26 @@ class LanguageCore extends ObjectModel implements LanguageInterface
             Configuration::updateGlobalValue('PS_ALLOW_ACCENTED_CHARS_URL', 1);
         }
 
-        $flag = Tools::file_get_contents('http://www.prestashop.com/download/lang_packs/flags/jpeg/' . $iso_code . '.jpg');
-        if ($flag != null && !preg_match('/<body>/', $flag)) {
-            $file = fopen(_PS_ROOT_DIR_ . '/img/l/' . (int) $lang->id . '.jpg', 'wb');
-            if ($file) {
-                fwrite($file, $flag);
-                fclose($file);
-            } else {
-                Language::_copyNoneFlag((int) $lang->id);
-            }
-        } else {
-            Language::_copyNoneFlag((int) $lang->id);
-        }
-
-        $files_copy = array('/en.jpg');
-        $imagesType = ImageType::getAll();
-        if (!empty($imagesType)) {
-            foreach ($imagesType as $alias => $config) {
-                $files_copy[] = '/en-default-' . ImageType::getFormattedName($alias) . '.jpg';
-            }
-        }
-
-        foreach (array(_PS_CAT_IMG_DIR_, _PS_MANU_IMG_DIR_, _PS_PROD_IMG_DIR_, _PS_SUPP_IMG_DIR_) as $to) {
-            foreach ($files_copy as $file) {
-                @copy(_PS_ROOT_DIR_ . '/img/l' . $file, $to . str_replace('/en', '/' . $iso_code, $file));
-            }
-        }
+        $languageManager = new LanguageImageManager();
+        $languageManager->setupLanguageFlag($lang->locale, $lang->id);
+        $languageManager->setupDefaultImagePlaceholder($lang->iso_code);
 
         self::loadLanguages();
 
         return true;
     }
 
+    /**
+     * @deprecated Since 1.7.7, use LanguageImageManager
+     */
     protected static function _copyNoneFlag($id)
     {
-        return copy(_PS_ROOT_DIR_ . '/img/l/none.jpg', _PS_ROOT_DIR_ . '/img/l/' . $id . '.jpg');
+        @trigger_error(
+            __FUNCTION__ . 'is deprecated since version 1.7.7. Use ' . LanguageImageManager::class . ' instead.',
+            E_USER_DEPRECATED
+        );
+
+        return true;
     }
 
     public static function isInstalled($iso_code)
