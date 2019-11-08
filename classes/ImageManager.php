@@ -36,6 +36,14 @@ class ImageManagerCore
     const ERROR_FILE_NOT_EXIST = 1;
     const ERROR_FILE_WIDTH = 2;
     const ERROR_MEMORY_LIMIT = 3;
+    const MIME_TYPE_SUPPORTED = [
+        'image/gif',
+        'image/jpg',
+        'image/jpeg',
+        'image/pjpeg',
+        'image/png',
+        'image/x-png'
+    ];
 
     /**
      * Generate a cached thumbnail for object lists (eg. carrier, order statuses...etc).
@@ -370,8 +378,7 @@ class ImageManagerCore
         }
         // Try with FileInfo
         if (!$mimeType && function_exists('finfo_open')) {
-            $const = defined('FILEINFO_MIME_TYPE') ? FILEINFO_MIME_TYPE : FILEINFO_MIME;
-            $finfo = finfo_open($const);
+            $finfo = finfo_open(FILEINFO_MIME_TYPE);
             $mimeType = finfo_file($finfo, $filename);
             finfo_close($finfo);
         }
@@ -405,10 +412,10 @@ class ImageManagerCore
     public static function isRealImage($filename, $fileMimeType = null, $mimeTypeList = null)
     {
         if (!$mimeTypeList) {
-            $mimeTypeList = ['image/gif', 'image/jpg', 'image/jpeg', 'image/pjpeg', 'image/png', 'image/x-png'];
+            $mimeTypeList = static::MIME_TYPE_SUPPORTED;
         }
 
-        $mimeType = self::getMimeType($filename);
+        $mimeType = static::getMimeType($filename);
 
         if ($fileMimeType && (empty($mimeType) || $mimeType == 'regular file' || $mimeType == 'text/plain')) {
             $mimeType = $fileMimeType;
