@@ -121,6 +121,7 @@ export default class CreateOrderPage {
       this.summaryManager.sendProcessOrderEmail(this.cartId));
 
     this.$container.on('change', createOrderMap.listedProductUnitPriceInput, (e) => this._initProductChangePrice(e));
+    this.$container.on('change', createOrderMap.listedProductQtyInput, e => this._initProductChangeQty(e));
     this.$container.on('change', createOrderMap.addressSelect, () => this._changeCartAddresses());
     this.$container.on('click', createOrderMap.productRemoveBtn, e => this._initProductRemoveFromCart(e));
 
@@ -336,6 +337,25 @@ export default class CreateOrderPage {
     };
 
     this.productManager.changeProductPrice(this.cartId, this.customerId, product);
+  }
+
+  /**
+   * Inits product in cart quantity update
+   *
+   * @param event
+   *
+   * @private
+   */
+  _initProductChangeQty(event) {
+    const product = {
+      productId: $(event.currentTarget).data('product-id'),
+      attributeId: $(event.currentTarget).data('attribute-id'),
+      customizationId: $(event.currentTarget).data('customization-id'),
+      previousQty: $(event.currentTarget).data('prev-qty'),
+      newQty: $(event.currentTarget).val(),
+    };
+
+    this.productManager.changeProductQty(this.cartId, product);
   }
 
   /**
