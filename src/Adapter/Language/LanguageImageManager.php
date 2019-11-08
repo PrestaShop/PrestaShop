@@ -54,8 +54,6 @@ class LanguageImageManager
      * @param string $localeCode IETF language tag
      * @param int $langId Language id
      * @param string|null $flagCode If provided, use this flag code. By default, auto-detect using locale code.
-     *
-     * @throws \Exception
      */
     public function setupLanguageFlag(string $localeCode, int $langId, ?string $flagCode = null): void
     {
@@ -104,8 +102,6 @@ class LanguageImageManager
      *
      * @param int $langId
      * @param string $isoCode 2-letter ISO code
-     *
-     * @throws \Exception
      */
     public function deleteImages(int $langId, string $isoCode): void
     {
@@ -133,8 +129,6 @@ class LanguageImageManager
      * @param string $locale IETF language tag
      *
      * @return string
-     *
-     * @throws \Exception
      */
     private function getFlagCountryCodeFromLocale(string $locale): string
     {
