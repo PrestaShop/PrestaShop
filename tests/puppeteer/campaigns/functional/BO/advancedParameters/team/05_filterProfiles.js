@@ -82,9 +82,7 @@ describe('Create, Read, Update and Delete profile in BO', async () => {
       await expect(numberOfProfilesAfterFilter).to.be.at.most(numberOfProfiles);
       /* eslint-disable no-await-in-loop */
       for (let i = 1; i <= numberOfProfilesAfterFilter; i++) {
-        const textName = await this.pageObjects.profilesPage.getTextContent(
-          this.pageObjects.profilesPage.profilesListTableColumn.replace('%ROW', i).replace('%COLUMN', 'id_profile'),
-        );
+        const textName = await this.pageObjects.profilesPage.getTextColumnFromTable(i, 'id_profile');
         await expect(textName).to.contains(4);
       }
       /* eslint-enable no-await-in-loop */
@@ -106,9 +104,7 @@ describe('Create, Read, Update and Delete profile in BO', async () => {
       await expect(numberOfProfilesAfterFilter).to.be.at.most(numberOfProfiles);
       /* eslint-disable no-await-in-loop */
       for (let i = 1; i <= numberOfProfilesAfterFilter; i++) {
-        const textName = await this.pageObjects.profilesPage.getTextContent(
-          this.pageObjects.profilesPage.profilesListTableColumn.replace('%ROW', i).replace('%COLUMN', 'name'),
-        );
+        const textName = await this.pageObjects.profilesPage.getTextColumnFromTable(i, 'name');
         await expect(textName).to.contains('Logistician');
       }
       /* eslint-enable no-await-in-loop */

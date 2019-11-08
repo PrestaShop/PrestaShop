@@ -111,9 +111,7 @@ describe('Create profiles then Delete with Bulk actions', async () => {
         'name',
         firstProfileData.name,
       );
-      const textName = await this.pageObjects.profilesPage.getTextContent(
-        this.pageObjects.profilesPage.profilesListTableColumn.replace('%ROW', '1').replace('%COLUMN', 'name'),
-      );
+      const textName = await this.pageObjects.profilesPage.getTextColumnFromTable(1, 'name');
       await expect(textName).to.contains(firstProfileData.name);
     });
 

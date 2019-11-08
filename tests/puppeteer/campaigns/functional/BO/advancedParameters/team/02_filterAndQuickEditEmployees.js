@@ -88,17 +88,13 @@ describe('Filter And Quick Edit Employees', async () => {
     });
 
     it('should filter by Id \'1\'', async function () {
-      await this.pageObjects.employeesPage.filterEmployees('input', 'id_employee', '1');
+      await this.pageObjects.employeesPage.filterEmployees('input', 'id_employee', 1);
       const numberOfEmployeesAfterFilter = await this.pageObjects.employeesPage.getNumberFromText(
         this.pageObjects.employeesPage.employeeGridTitle,
       );
       await expect(numberOfEmployeesAfterFilter).to.be.equal(1);
-      const textColumn = await this.pageObjects.employeesPage.getTextContent(
-        this.pageObjects.employeesPage.employeesListTableColumn
-          .replace('%ROW', 1)
-          .replace('%COLUMN', 'id_employee'),
-      );
-      await expect(textColumn).to.contains('1');
+      const textColumn = await this.pageObjects.employeesPage.getTextColumnFromTable(1, 'id_employee');
+      await expect(textColumn).to.contains(1);
     });
 
     it('should reset all filters', async function () {
@@ -114,11 +110,7 @@ describe('Filter And Quick Edit Employees', async () => {
       await expect(numberOfEmployeesAfterFilter).to.be.at.most(numberOfEmployees);
       /* eslint-disable no-await-in-loop */
       for (let i = 1; i <= numberOfEmployeesAfterFilter; i++) {
-        const textColumn = await this.pageObjects.employeesPage.getTextContent(
-          this.pageObjects.employeesPage.employeesListTableColumn
-            .replace('%ROW', i)
-            .replace('%COLUMN', 'firstname'),
-        );
+        const textColumn = await this.pageObjects.employeesPage.getTextColumnFromTable(i, 'firstname');
         await expect(textColumn).to.contains(createEmployeeData.firstName);
       }
       /* eslint-enable no-await-in-loop */
@@ -137,11 +129,7 @@ describe('Filter And Quick Edit Employees', async () => {
       await expect(numberOfEmployeesAfterFilter).to.be.at.most(numberOfEmployees);
       /* eslint-disable no-await-in-loop */
       for (let i = 1; i <= numberOfEmployeesAfterFilter; i++) {
-        const textColumn = await this.pageObjects.employeesPage.getTextContent(
-          this.pageObjects.employeesPage.employeesListTableColumn
-            .replace('%ROW', 1)
-            .replace('%COLUMN', 'lastname'),
-        );
+        const textColumn = await this.pageObjects.employeesPage.getTextColumnFromTable(i, 'lastname');
         await expect(textColumn).to.contains(DefaultAccount.lastName);
       }
       /* eslint-enable no-await-in-loop */
@@ -160,11 +148,7 @@ describe('Filter And Quick Edit Employees', async () => {
       await expect(numberOfEmployeesAfterFilter).to.be.at.most(numberOfEmployees);
       /* eslint-disable no-await-in-loop */
       for (let i = 1; i <= numberOfEmployeesAfterFilter; i++) {
-        const textColumn = await this.pageObjects.employeesPage.getTextContent(
-          this.pageObjects.employeesPage.employeesListTableColumn
-            .replace('%ROW', 1)
-            .replace('%COLUMN', 'email'),
-        );
+        const textColumn = await this.pageObjects.employeesPage.getTextColumnFromTable(i, 'email');
         await expect(textColumn).to.contains(createEmployeeData.email);
       }
       /* eslint-enable no-await-in-loop */
@@ -183,11 +167,7 @@ describe('Filter And Quick Edit Employees', async () => {
       await expect(numberOfEmployeesAfterFilter).to.be.at.most(numberOfEmployees);
       /* eslint-disable no-await-in-loop */
       for (let i = 1; i <= numberOfEmployeesAfterFilter; i++) {
-        const textColumn = await this.pageObjects.employeesPage.getTextContent(
-          this.pageObjects.employeesPage.employeesListTableColumn
-            .replace('%ROW', 1)
-            .replace('%COLUMN', 'active'),
-        );
+        const textColumn = await this.pageObjects.employeesPage.getTextColumnFromTable(i, 'active');
         await expect(textColumn).to.contains('clear');
       }
       /* eslint-enable no-await-in-loop */
@@ -209,39 +189,33 @@ describe('Filter And Quick Edit Employees', async () => {
       await expect(numberOfEmployeesAfterFilter).to.be.at.most(numberOfEmployees);
       /* eslint-disable no-await-in-loop */
       for (let i = 1; i <= numberOfEmployeesAfterFilter; i++) {
-        const textColumn = await this.pageObjects.employeesPage.getTextContent(
-          this.pageObjects.employeesPage.employeesListTableColumn
-            .replace('%ROW', 1)
-            .replace('%COLUMN', 'email'),
-        );
+        const textColumn = await this.pageObjects.employeesPage.getTextColumnFromTable(i, 'email');
         await expect(textColumn).to.contains(createEmployeeData.email);
       }
       /* eslint-enable no-await-in-loop */
     });
 
     it('should disable the employee', async function () {
-      const isActionPerformed = await this.pageObjects.employeesPage.updateToggleColumnValue('1', false);
+      const isActionPerformed = await this.pageObjects.employeesPage.updateToggleColumnValue(1, false);
       if (isActionPerformed) {
         const resultMessage = await this.pageObjects.employeesPage.getTextContent(
           this.pageObjects.employeesPage.alertSuccessBlockParagraph,
         );
         await expect(resultMessage).to.contains(this.pageObjects.employeesPage.successfulUpdateStatusMessage);
       }
-      const isStatusChanged = await this.pageObjects.employeesPage.elementVisible(
-        this.pageObjects.employeesPage.employeesListColumnNotValidIcon.replace('%ROW', 1), 100);
-      await expect(isStatusChanged).to.be.true;
+      const isStatusChanged = await this.pageObjects.employeesPage.getToggleColumnValue(1);
+      await expect(isStatusChanged).to.be.false;
     });
 
     it('should enable the employee', async function () {
-      const isActionPerformed = await this.pageObjects.employeesPage.updateToggleColumnValue('1');
+      const isActionPerformed = await this.pageObjects.employeesPage.updateToggleColumnValue(1);
       if (isActionPerformed) {
         const resultMessage = await this.pageObjects.employeesPage.getTextContent(
           this.pageObjects.employeesPage.alertSuccessBlockParagraph,
         );
         await expect(resultMessage).to.contains(this.pageObjects.employeesPage.successfulUpdateStatusMessage);
       }
-      const isStatusChanged = await this.pageObjects.employeesPage.elementVisible(
-        this.pageObjects.employeesPage.employeesListColumnValidIcon.replace('%ROW', 1), 100);
+      const isStatusChanged = await this.pageObjects.employeesPage.getToggleColumnValue(1);
       await expect(isStatusChanged).to.be.true;
     });
   });
@@ -254,14 +228,12 @@ describe('Filter And Quick Edit Employees', async () => {
         'email',
         createEmployeeData.email,
       );
-      const textEmail = await this.pageObjects.employeesPage.getTextContent(
-        this.pageObjects.employeesPage.employeesListTableColumn.replace('%ROW', '1').replace('%COLUMN', 'email'),
-      );
+      const textEmail = await this.pageObjects.employeesPage.getTextColumnFromTable(1, 'email');
       await expect(textEmail).to.contains(createEmployeeData.email);
     });
 
     it('should delete employee', async function () {
-      const textResult = await this.pageObjects.employeesPage.deleteEmployee('1');
+      const textResult = await this.pageObjects.employeesPage.deleteEmployee(1);
       await expect(textResult).to.equal(this.pageObjects.employeesPage.successfulDeleteMessage);
     });
 

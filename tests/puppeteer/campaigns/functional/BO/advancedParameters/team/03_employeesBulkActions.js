@@ -109,11 +109,7 @@ describe('Create Employees, Then disable / Enable and Delete with Bulk actions',
       await expect(numberOfEmployeesAfterFilter).to.be.at.most(numberOfEmployees);
       /* eslint-disable no-await-in-loop */
       for (let i = 1; i <= numberOfEmployeesAfterFilter; i++) {
-        const textColumn = await this.pageObjects.employeesPage.getTextContent(
-          this.pageObjects.employeesPage.employeesListTableColumn
-            .replace('%ROW', i)
-            .replace('%COLUMN', 'firstname'),
-        );
+        const textColumn = await this.pageObjects.employeesPage.getTextColumnFromTable(i, 'firstname');
         await expect(textColumn).to.contains(firstEmployeeData.firstName);
       }
       /* eslint-enable no-await-in-loop */
@@ -127,11 +123,7 @@ describe('Create Employees, Then disable / Enable and Delete with Bulk actions',
       );
       /* eslint-disable no-await-in-loop */
       for (let i = 1; i <= numberOfEmployeesInGrid; i++) {
-        const textColumn = await this.pageObjects.employeesPage.getTextContent(
-          this.pageObjects.employeesPage.employeesListTableColumn
-            .replace('%ROW', i)
-            .replace('%COLUMN', 'active'),
-        );
+        const textColumn = await this.pageObjects.employeesPage.getTextColumnFromTable(i, 'active');
         await expect(textColumn).to.contains('clear');
       }
       /* eslint-enable no-await-in-loop */
@@ -145,11 +137,7 @@ describe('Create Employees, Then disable / Enable and Delete with Bulk actions',
       );
       /* eslint-disable no-await-in-loop */
       for (let i = 1; i <= numberOfEmployeesInGrid; i++) {
-        const textColumn = await this.pageObjects.employeesPage.getTextContent(
-          this.pageObjects.employeesPage.employeesListTableColumn
-            .replace('%ROW', i)
-            .replace('%COLUMN', 'active'),
-        );
+        const textColumn = await this.pageObjects.employeesPage.getTextColumnFromTable(i, 'active');
         await expect(textColumn).to.contains('check');
       }
       /* eslint-enable no-await-in-loop */

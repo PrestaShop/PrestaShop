@@ -109,9 +109,7 @@ describe('Create, Read, Update and Delete profile in BO', async () => {
         'name',
         profileData.name,
       );
-      const textName = await this.pageObjects.profilesPage.getTextContent(
-        this.pageObjects.profilesPage.profilesListTableColumn.replace('%ROW', '1').replace('%COLUMN', 'name'),
-      );
+      const textName = await this.pageObjects.profilesPage.getTextColumnFromTable(1, 'name');
       await expect(textName).to.contains(profileData.name);
     });
 
@@ -135,9 +133,7 @@ describe('Create, Read, Update and Delete profile in BO', async () => {
         'name',
         editProfileData.name,
       );
-      const textName = await this.pageObjects.profilesPage.getTextContent(
-        this.pageObjects.profilesPage.profilesListTableColumn.replace('%ROW', '1').replace('%COLUMN', 'name'),
-      );
+      const textName = await this.pageObjects.profilesPage.getTextColumnFromTable(1, 'name');
       await expect(textName).to.contains(editProfileData.name);
     });
 
