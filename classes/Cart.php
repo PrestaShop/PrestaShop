@@ -756,8 +756,9 @@ class CartCore extends ObjectModel
 
             $givenAwayProductsIds = array();
 
-            if ($this->shouldSplitGiftProductsQuantity) {
-                $gifts = $this->getCartRules(CartRule::FILTER_ACTION_GIFT);
+            // Do not recalculate in case of refresh
+            if ($this->shouldSplitGiftProductsQuantity && !$refresh) {
+                $gifts = $this->getCartRules(CartRule::FILTER_ACTION_GIFT, false);
                 if (count($gifts) > 0) {
                     foreach ($gifts as $gift) {
                         foreach ($result as $rowIndex => $row) {
@@ -4214,7 +4215,7 @@ class CartCore extends ObjectModel
 
         if (!$hasRemainingCustomData) {
             $result &= Db::getInstance()->execute(
-                'DELETE FROM `' . _DB_PREFIX_ . 'customization` 
+                'DELETE FROM `' . _DB_PREFIX_ . 'customization`
             WHERE `id_customization` = ' . (int) $cust_data['id_customization']
             );
         }
