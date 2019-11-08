@@ -70,7 +70,7 @@ class LanguageImageManager
         $flagPath = $this->getFlagPath($flagCode);
 
         if (!file_exists($flagPath)) {
-            $flagPath = self::FALLBACK_FLAG_SOURCE;
+            $flagPath = static::FALLBACK_FLAG_SOURCE;
         }
 
         $destinationPath = $this->getFlagDestination($langId);
@@ -120,10 +120,10 @@ class LanguageImageManager
             $isoCode . '-default-' . ImageType::getFormattedName('medium') . '.jpg',
             $isoCode . '-default-' . ImageType::getFormattedName('small') . '.jpg',
         );
-        foreach (self::IMAGE_DIRECTORIES as $directory) {
+        foreach (static::IMAGE_DIRECTORIES as $directory) {
             foreach ($images as $image) {
                 $this->unlinkIfExists($directory . $image);
-                $this->unlinkIfExists(self::IMG_PATH . $langId . '.jpg');
+                $this->unlinkIfExists(static::IMG_PATH . $langId . '.jpg');
             }
         }
     }
@@ -145,7 +145,7 @@ class LanguageImageManager
      */
     private function getFlagPath(string $countryCode): string
     {
-        return sprintf(self::FLAGS_SOURCE, $countryCode);
+        return sprintf(static::FLAGS_SOURCE, $countryCode);
     }
 
     /**
@@ -155,7 +155,7 @@ class LanguageImageManager
      */
     private function getFlagDestination(int $langId): string
     {
-        return sprintf(self::FLAGS_DESTINATION, $langId);
+        return sprintf(static::FLAGS_DESTINATION, $langId);
     }
 
     /**
