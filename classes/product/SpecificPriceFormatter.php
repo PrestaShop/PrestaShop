@@ -91,7 +91,7 @@ class SpecificPriceFormatterCore
             // The price may be directly set
 
             /** @var float $currentPriceDefaultCurrency current price with taxes in default currency */
-            if (Product::$_taxCalculationMethod == PS_TAX_INC) {
+            if ($this->isTaxIncluded) {
                 $currentPriceDefaultCurrency = ($this->specificPrice['price'] * (1 + $tax_rate / 100)) + (float)$ecotax_amount;
             } else {
                 $currentPriceDefaultCurrency = $this->specificPrice['price'] + (float)$ecotax_amount;
@@ -103,10 +103,10 @@ class SpecificPriceFormatterCore
             $currentPriceCurrentCurrency = \Tools::convertPrice($currentPriceDefaultCurrency, $this->currency, true);
 
             if ($this->specificPrice['reduction_type'] == 'amount') {
-                if (!$this->specificPrice['reduction_tax'] && Product::$_taxCalculationMethod == PS_TAX_INC) {
+                if (!$this->specificPrice['reduction_tax'] && $this->isTaxIncluded) {
                     $this->specificPrice['reduction'] = $this->specificPrice['reduction'] * (1 + $tax_rate / 100);
                 }
-                if (Product::$_taxCalculationMethod == PS_TAX_INC) {
+                if ($this->isTaxIncluded) {
                     $currentPriceCurrentCurrency -= $this->specificPrice['reduction'];
                     $this->specificPrice['reduction_with_tax'] = $this->specificPrice['reduction'];
                 } else {
