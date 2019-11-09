@@ -90,11 +90,11 @@ class SpecificPriceFormatterCore
         if ($this->specificPrice['price'] >= 0) {
             // The price may be directly set
 
-            /** @var float $currentPriceDefaultCurrency current price with taxes in default currency */
+            /* @var float $currentPriceDefaultCurrency current price with taxes in default currency */
             if ($this->isTaxIncluded) {
-                $currentPriceDefaultCurrency = ($this->specificPrice['price'] * (1 + $tax_rate / 100)) + (float)$ecotax_amount;
+                $currentPriceDefaultCurrency = ($this->specificPrice['price'] * (1 + $tax_rate / 100)) + (float) $ecotax_amount;
             } else {
-                $currentPriceDefaultCurrency = $this->specificPrice['price'] + (float)$ecotax_amount;
+                $currentPriceDefaultCurrency = $this->specificPrice['price'] + (float) $ecotax_amount;
             }
 
             // Since this price is set in default currency,
