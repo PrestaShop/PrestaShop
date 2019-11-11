@@ -274,6 +274,13 @@ class OrderController extends FrameworkBundleAdminController
             ->setFileName('order_' . date('Y-m-d_His') . '.csv');
     }
 
+    /**
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     *
+     * @param int $orderId
+     *
+     * @return Response
+     */
     public function viewAction(int $orderId, Request $request): Response
     {
         /** @var OrderForViewing $orderForViewing */
@@ -293,7 +300,9 @@ class OrderController extends FrameworkBundleAdminController
         ], [
             'id_order' => $orderId,
         ]);
-        $orderMessageForm = $this->createForm(OrderMessageType::class);
+        $orderMessageForm = $this->createForm(OrderMessageType::class, [], [
+            'action' => $this->generateUrl('admin_orders_send_message', ['orderId' => $orderId]),
+        ]);
 
         $changeOrderCurrencyForm = $this->createForm(ChangeOrderCurrencyType::class, [], [
             'current_currency_id' => $orderForViewing->getCurrencyId(),
@@ -602,6 +611,26 @@ class OrderController extends FrameworkBundleAdminController
         return $this->json(
             $this->getQueryBus()->handle(new GetCartInformation($cartId))
         );
+    }
+
+    /**
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     *
+     * @param Request $request
+     * @param int $orderId
+     *
+     * @return Response
+     */
+    public function sendMessageAction(Request $request, int $orderId): Response
+    {
+        $orderMessageForm = $this->createForm(OrderMessageType::class);
+
+        $orderMessageForm->handleRequest($request);
+        if ($orderMessageForm->isSubmitted() && $orderMessageForm->isValid()) {
+            //@todo: send message command
+        }
+
+        return $this->redirectToRoute('admin_orders_view');
     }
 
     /**
