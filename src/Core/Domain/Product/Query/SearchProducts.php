@@ -49,7 +49,7 @@ class SearchProducts
      *
      * @throws ProductException
      */
-    public function __construct(string $phrase, int $resultsLimit)
+    public function __construct(string $phrase, int $resultsLimit = 10)
     {
         $this->assertIsNotEmptyString($phrase);
         $this->phrase = $phrase;
