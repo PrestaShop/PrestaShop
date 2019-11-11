@@ -146,7 +146,7 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
             );
         }
 
-        return $cartAddresses;
+        return array_values($cartAddresses);
     }
 
     /**
