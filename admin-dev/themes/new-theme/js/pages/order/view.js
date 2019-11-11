@@ -44,7 +44,7 @@ $(() => {
   new InvoiceNoteManager();
   const orderViewPageMessageHandler = new OrderViewPageMessagesHandler();
   orderViewPageMessageHandler.listenForPredefinedMessageSelection();
-
+  orderViewPageMessageHandler.listenForFullMessagesOpen();
   $(OrderViewPageMap.privateNoteToggleBtn).on('click', (event) => {
     event.preventDefault();
     togglePrivateNoteBlock();
