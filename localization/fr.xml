@@ -56,6 +56,7 @@
       <taxRule iso_code_country="de" id_tax="1"/>
       <taxRule iso_code_country="ee" id_tax="1"/>
       <taxRule iso_code_country="gr" id_tax="1"/>
+      <taxRule iso_code_country="hr" id_tax="1"/>
       <taxRule iso_code_country="es" id_tax="1"/>
       <taxRule iso_code_country="fr" id_tax="1"/>
       <taxRule iso_code_country="ie" id_tax="1"/>
@@ -85,6 +86,7 @@
       <taxRule iso_code_country="de" id_tax="2"/>
       <taxRule iso_code_country="ee" id_tax="2"/>
       <taxRule iso_code_country="gr" id_tax="2"/>
+      <taxRule iso_code_country="hr" id_tax="2"/>
       <taxRule iso_code_country="es" id_tax="2"/>
       <taxRule iso_code_country="fr" id_tax="2"/>
       <taxRule iso_code_country="ie" id_tax="2"/>
@@ -114,6 +116,7 @@
       <taxRule iso_code_country="de" id_tax="3"/>
       <taxRule iso_code_country="ee" id_tax="3"/>
       <taxRule iso_code_country="gr" id_tax="3"/>
+      <taxRule iso_code_country="hr" id_tax="3"/>
       <taxRule iso_code_country="es" id_tax="3"/>
       <taxRule iso_code_country="fr" id_tax="3"/>
       <taxRule iso_code_country="ie" id_tax="3"/>
@@ -143,6 +146,7 @@
       <taxRule iso_code_country="de" id_tax="4"/>
       <taxRule iso_code_country="ee" id_tax="4"/>
       <taxRule iso_code_country="gr" id_tax="4"/>
+      <taxRule iso_code_country="hr" id_tax="4"/>
       <taxRule iso_code_country="es" id_tax="4"/>
       <taxRule iso_code_country="fr" id_tax="4"/>
       <taxRule iso_code_country="ie" id_tax="4"/>
