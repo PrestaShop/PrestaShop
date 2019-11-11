@@ -107,7 +107,11 @@ describe('Filter And Quick Edit Categories', async () => {
           'cms_page_category',
         );
         await expect(numberOfCategoriesAfterFilter).to.be.at.most(numberOfCategories);
-        const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTableCategories(1, 'id_cms_category');
+        const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTable(
+          'cms_page_category',
+          1,
+          'id_cms_category',
+        );
         await expect(textColumn).to.contains(5);
       });
 
@@ -128,7 +132,11 @@ describe('Filter And Quick Edit Categories', async () => {
           'cms_page_category',
         );
         await expect(numberOfCategoriesAfterFilter).to.be.at.most(numberOfCategories);
-        const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTableCategories(1, 'name');
+        const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTable(
+          'cms_page_category',
+          1,
+          'name',
+        );
         await expect(textColumn).to.contains(createFirstCategoryData.name);
       });
 
@@ -150,7 +158,11 @@ describe('Filter And Quick Edit Categories', async () => {
           'cms_page_category',
         );
         await expect(numberOfCategoriesAfterFilter).to.be.at.most(numberOfCategories);
-        const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTableCategories(1, 'description');
+        const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTable(
+          'cms_page_category',
+          1,
+          'description',
+        );
         await expect(textColumn).to.contains(createSecondCategoryData.description);
       });
 
@@ -167,7 +179,11 @@ describe('Filter And Quick Edit Categories', async () => {
           'cms_page_category',
         );
         await expect(numberOfCategoriesAfterFilter).to.be.at.most(numberOfCategories);
-        const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTableCategories(1, 'position');
+        const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTable(
+          'cms_page_category',
+          1,
+          'position',
+        );
         await expect(textColumn).to.contains(1);
       });
 
@@ -191,7 +207,11 @@ describe('Filter And Quick Edit Categories', async () => {
         await expect(numberOfCategoriesAfterFilter).to.be.at.most(numberOfCategories);
         /* eslint-disable no-await-in-loop */
         for (let i = 1; i <= numberOfCategoriesAfterFilter; i++) {
-          const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTablePages(i, 'active');
+          const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTable(
+            'cms_page_category',
+            i,
+            'active',
+          );
           await expect(textColumn).to.contains('check');
         }
         /* eslint-enable no-await-in-loop */
@@ -208,7 +228,8 @@ describe('Filter And Quick Edit Categories', async () => {
   // 2 : Editing Categories from grid table
   describe('Quick Edit Categories', async () => {
     it('should filter by category name', async function () {
-      await this.pageObjects.pagesPage.filterTable('cms_page_category',
+      await this.pageObjects.pagesPage.filterTable(
+        'cms_page_category',
         'input',
         'name',
         createFirstCategoryData.name,
@@ -217,7 +238,11 @@ describe('Filter And Quick Edit Categories', async () => {
         'cms_page_category',
       );
       await expect(numberOfCategoriesAfterFilter).to.be.at.most(numberOfCategories);
-      const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTableCategories(1, 'name');
+      const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTable(
+        'cms_page_category',
+        1,
+        'name',
+      );
       await expect(textColumn).to.contains(createFirstCategoryData.name);
     });
 

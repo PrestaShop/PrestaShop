@@ -50,6 +50,8 @@ module.exports = class Pages extends BOBasePage {
  Methods
   */
 
+  // Common methods
+
   /**
    * Reset input filters
    * @param table
@@ -209,6 +211,33 @@ module.exports = class Pages extends BOBasePage {
   }
 
   /**
+   * get text from a column
+   * @param table, Pages or Categories
+   * @param row, row in table
+   * @param column, which column
+   * @return {Promise<textContent>}
+   */
+  async getTextColumnFromTable(table, row, column) {
+    return this.getTextContent(
+      this.listTableColumn
+        .replace('%TABLE', table)
+        .replace('%ROW', row)
+        .replace('%COLUMN', column),
+    );
+  }
+
+  /**
+   * get number of elements in grid
+   * @param table
+   * @return {Promise<integer>}
+   */
+  async getNumberOfElementInGrid(table) {
+    return this.getNumberFromText(this.gridTitle.replace('%TABLE', table));
+  }
+
+  // Category methods
+
+  /**
    * Go to Edit Category page
    * @param row, row in table
    * @return {Promise<void>}
@@ -256,6 +285,8 @@ module.exports = class Pages extends BOBasePage {
     await this.clickAndWaitForNavigation(this.categoriesListTableViewLink.replace('%ROW', row));
   }
 
+  // Page methods
+
   /**
    * Go to new Page page
    * @return {Promise<void>}
@@ -273,50 +304,5 @@ module.exports = class Pages extends BOBasePage {
     await this.clickAndWaitForNavigation(this.listTableEditLink
       .replace('%TABLE', 'cms_page').replace('%ROW', row),
     );
-  }
-
-  /**
-   * get text from a column
-   * @param table, Pages or Categories
-   * @param row, row in table
-   * @param column, which column
-   * @return {Promise<textContent>}
-   */
-  async getTextColumnFromTable(table, row, column) {
-    return this.getTextContent(
-      this.listTableColumn
-        .replace('%TABLE', table)
-        .replace('%ROW', row)
-        .replace('%COLUMN', column),
-    );
-  }
-
-  /**
-   * get number of elements in grid
-   * @param table
-   * @return {Promise<integer>}
-   */
-  async getNumberOfElementInGrid(table) {
-    return this.getNumberFromText(this.gridTitle.replace('%TABLE', table));
-  }
-
-  /**
-   * get text from a column from table Pages
-   * @param row
-   * @param column
-   * @return {Promise<textContent>}
-   */
-  async getTextColumnFromTablePages(row, column) {
-    return this.getTextColumnFromTable('cms_page', row, column);
-  }
-
-  /**
-   * get text from a column from table Categories
-   * @param row
-   * @param column
-   * @return {Promise<textContent>}
-   */
-  async getTextColumnFromTableCategories(row, column) {
-    return this.getTextColumnFromTable('cms_page_category', row, column);
   }
 };

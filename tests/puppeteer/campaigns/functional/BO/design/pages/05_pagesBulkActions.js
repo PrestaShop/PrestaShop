@@ -95,7 +95,11 @@ describe('Create Pages, Then disable / Enable and Delete with Bulk actions', asy
         'meta_title',
         'todelete',
       );
-      const textResult = await this.pageObjects.pagesPage.getTextColumnFromTablePages(1, 'meta_title');
+      const textResult = await this.pageObjects.pagesPage.getTextColumnFromTable(
+        'cms_page',
+        1,
+        'meta_title',
+      );
       await expect(textResult).to.contains('todelete');
     });
 
@@ -106,7 +110,11 @@ describe('Create Pages, Then disable / Enable and Delete with Bulk actions', asy
       await expect(numberOfPagesInGrid).to.be.at.most(numberOfPages);
       /* eslint-disable no-await-in-loop */
       for (let i = 1; i <= numberOfPagesInGrid; i++) {
-        const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTablePages(i, 'active');
+        const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTable(
+          'cms_page',
+          i,
+          'active',
+        );
         await expect(textColumn).to.contains('clear');
       }
       /* eslint-enable no-await-in-loop */
@@ -119,7 +127,11 @@ describe('Create Pages, Then disable / Enable and Delete with Bulk actions', asy
       await expect(numberOfPagesInGrid).to.be.at.most(numberOfPages);
       /* eslint-disable no-await-in-loop */
       for (let i = 1; i <= numberOfPagesInGrid; i++) {
-        const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTablePages(i, 'active');
+        const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTable(
+          'cms_page',
+          i,
+          'active',
+        );
         await expect(textColumn).to.contains('check');
       }
       /* eslint-enable no-await-in-loop */
@@ -134,7 +146,11 @@ describe('Create Pages, Then disable / Enable and Delete with Bulk actions', asy
         'meta_title',
         'todelete',
       );
-      const textResult = await this.pageObjects.pagesPage.getTextColumnFromTablePages(1, 'meta_title');
+      const textResult = await this.pageObjects.pagesPage.getTextColumnFromTable(
+        'cms_page',
+        1,
+        'meta_title',
+      );
       await expect(textResult).to.contains('todelete');
     });
 

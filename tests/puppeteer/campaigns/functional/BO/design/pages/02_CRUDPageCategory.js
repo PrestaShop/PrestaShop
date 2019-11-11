@@ -110,21 +110,19 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
         'name',
         createCategoryData.name,
       );
-      const textColumn = await this.pageObjects.pagesPage.getTextContent(
-        this.pageObjects.pagesPage.listTableColumn
-          .replace('%TABLE', 'cms_page_category')
-          .replace('%ROW', 1)
-          .replace('%COLUMN', 'name'),
+      const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTable(
+        'cms_page_category',
+        1,
+        'name',
       );
       await expect(textColumn).to.contains(createCategoryData.name);
     });
 
     it('should go to FO and check the created category', async function () {
-      const pageCategoryID = await this.pageObjects.pagesPage.getNumberFromText(
-        this.pageObjects.pagesPage.listTableColumn
-          .replace('%TABLE', 'cms_page_category')
-          .replace('%ROW', 1)
-          .replace('%COLUMN', 'id_cms_category'),
+      const pageCategoryID = await this.pageObjects.pagesPage.getTextColumnFromTable(
+        'cms_page_category',
+        1,
+        'id_cms_category',
       );
       page = await this.pageObjects.boBasePage.viewMyShop();
       this.pageObjects = await init();
@@ -132,9 +130,7 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
       await this.pageObjects.foBasePage.clickAndWaitForNavigation(this.pageObjects.foBasePage.siteMapLink);
       const pageTitle = await this.pageObjects.siteMapPage.getPageTitle();
       await expect(pageTitle).to.equal(this.pageObjects.siteMapPage.pageTitle);
-      const pageCategoryName = await this.pageObjects.siteMapPage.getTextContent(
-        this.pageObjects.siteMapPage.categoryPageNameSelect.replace('%ID', pageCategoryID),
-      );
+      const pageCategoryName = await this.pageObjects.siteMapPage.getCategoryName(pageCategoryID);
       await expect(pageCategoryName).to.contains(createCategoryData.name);
       page = await this.pageObjects.foBasePage.closePage(browser, 1);
       this.pageObjects = await init();
@@ -170,7 +166,11 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
         'meta_title',
         createPageData.title,
       );
-      const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTablePages(1, 'meta_title');
+      const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTable(
+        'cms_page',
+        1,
+        'meta_title',
+      );
       await expect(textColumn).to.contains(createPageData.title);
     });
 
@@ -208,7 +208,11 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
         'name',
         createCategoryData.name,
       );
-      const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTableCategories(1, 'name');
+      const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTable(
+        'cms_page_category',
+        1,
+        'name',
+      );
       await expect(textColumn).to.contains(createCategoryData.name);
     });
 
@@ -236,12 +240,17 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
         'name',
         editCategoryData.name,
       );
-      const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTableCategories(1, 'name');
+      const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTable(
+        'cms_page_category',
+        1,
+        'name',
+      );
       await expect(textColumn).to.contains(editCategoryData.name);
     });
 
     it('should go to FO and check the updated category', async function () {
-      const pageCategoryID = await this.pageObjects.pagesPage.getTextColumnFromTableCategories(
+      const pageCategoryID = await this.pageObjects.pagesPage.getTextColumnFromTable(
+        'cms_page_category',
         1,
         'id_cms_category',
       );
@@ -251,8 +260,7 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
       await this.pageObjects.foBasePage.clickAndWaitForNavigation(this.pageObjects.foBasePage.siteMapLink);
       const pageTitle = await this.pageObjects.siteMapPage.getPageTitle();
       await expect(pageTitle).to.equal(this.pageObjects.siteMapPage.pageTitle);
-      const pageCategoryName = await this.pageObjects.siteMapPage.getTextContent(
-        this.pageObjects.siteMapPage.categoryPageNameSelect.replace('%ID', pageCategoryID));
+      const pageCategoryName = await this.pageObjects.siteMapPage.getCategoryName(pageCategoryID);
       await expect(pageCategoryName).to.contains(editCategoryData.name);
       page = await this.pageObjects.foBasePage.closePage(browser, 1);
       this.pageObjects = await init();
@@ -273,7 +281,11 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
         'meta_title',
         createPageData.title,
       );
-      const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTablePages(1, 'meta_title');
+      const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTable(
+        'cms_page',
+        1,
+        'meta_title',
+      );
       await expect(textColumn).to.contains(createPageData.title);
     });
 
@@ -295,7 +307,11 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
         'meta_title',
         editPageData.title,
       );
-      const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTablePages(1, 'meta_title');
+      const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTable(
+        'cms_page',
+        1,
+        'meta_title',
+      );
       await expect(textColumn).to.contains(editPageData.title);
     });
 
@@ -335,7 +351,11 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
         'meta_title',
         editPageData.title,
       );
-      const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTablePages(1, 'meta_title');
+      const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTable(
+        'cms_page',
+        1,
+        'meta_title',
+      );
       await expect(textColumn).to.contains(editPageData.title);
     });
 
