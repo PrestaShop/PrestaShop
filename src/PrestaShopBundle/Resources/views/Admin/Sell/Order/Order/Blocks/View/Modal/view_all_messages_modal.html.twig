@@ -26,11 +26,21 @@
 <div class="modal fade" id="viewAllMessagesModal" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
-      <div class="modal-header">
-        hello world header
+      <div class="card-header">
+        <div class="row">
+          <div class="col">
+            <h3 class="card-header-title">
+              {{ 'Message history with %name%'|trans({'%name%': orderForViewing.customer.firstName ~ ' ' ~ orderForViewing.customer.lastName}, 'Admin.Global') }} ({{ orderForViewing.messages.messages|length }})
+            </h3>
+          </div>
+        </div>
       </div>
       <div class="modal-body">
-        hello world body
+        <ul class="list-unstyled p-4 messages-block" id="all-messages-list">
+          {% for message in orderForViewing.messages.messages|reverse %}
+            {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/msg_list_item.html.twig' %}
+          {% endfor %}
+        </ul>
       </div>
     </div>
   </div>

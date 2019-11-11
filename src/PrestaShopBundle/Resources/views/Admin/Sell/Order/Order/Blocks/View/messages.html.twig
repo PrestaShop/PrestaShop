@@ -37,7 +37,7 @@
           href="#"
           data-toggle="modal"
           data-target="#viewAllMessagesModal"
-          class="d-print-none"
+          class="d-print-none js-open-all-messages-btn"
         >
           {{ 'View full conversation'|trans({}, 'Admin.Orderscustomers.Feature') }}
         </a>
@@ -47,45 +47,8 @@
 
   {% if orderForViewing.messages.messages is not empty %}
     <ul class="list-unstyled p-4 messages-block">
-      {% for message in orderForViewing.messages.messages %}
-        <li class="mb-2">
-          <div class="row">
-            {% if not message.employeeId %}
-              <div class="col-md-1">
-                <i class="material-icons">account_circle</i>
-              </div>
-              <div class="col-md-11">
-                <p class="mb-0 message customer-message">
-                  {{ message.message|nl2br }}
-                </p>
-                <p class="text-muted mb-0">
-                  {{ message.customerFirstName ~ ' ' ~ message.customerLastName }}
-                  {{ message.messageDate.format }}
-                </p>
-              </div>
-            {% endif %}
-
-            {% if message.employeeId %}
-              <div class="col-md-11">
-                <p class="mb-0 message employee-message{{ message.isPrivate ? '--private' : '' }}">
-                  {{ message.message|nl2br }}
-                </p>
-                <p class="text-muted mb-0 text-right">
-                  {% if message.isCurrentEmployeesMessage %}
-                      {{ 'Me'|trans({}, 'Admin.Global') }}
-                    {% else %}
-                      {{ message.employeeFirstName ~ ' ' ~ message.employeeLastName }}
-                  {% endif %}
-
-                  {{ message.messageDate.format }}
-                </p>
-              </div>
-              <div class="col-md-1">
-                <i class="material-icons employee-icon{{ message.isPrivate ? '--private' : '' }}"></i>
-              </div>
-            {% endif %}
-          </div>
-        </li>
+      {% for message in orderForViewing.messages.messages|slice(0, 2) %}
+        {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/msg_list_item.html.twig' %}
       {% endfor %}
     </ul>
   {% endif %}

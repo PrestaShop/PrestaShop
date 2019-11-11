@@ -44,7 +44,7 @@ final class CustomerServiceOrderMessagesNameChoiceProvider implements FormChoice
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function getChoices(): array
     {
