@@ -34,6 +34,7 @@ trait PrestaShopTranslatorTrait
 {
     public static $regexSprintfParams = '#(?:%%|%(?:[0-9]+\$)?[+-]?(?:[ 0]|\'.)?-?[0-9]*(?:\.[0-9]+)?[bcdeufFosxX])#';
     public static $regexClassicParams = '/%\w+%/';
+    public static $regexSprintfArgs = '#(?:%(?:[0-9]+\$)?[+-]?(?:[ 0]|\'.)?-?[0-9]*(?:\.[0-9]+)?[bcdeufFosxX])#';
 
     /**
      * Translates the given message.

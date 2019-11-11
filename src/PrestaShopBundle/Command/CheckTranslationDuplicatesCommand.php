@@ -114,7 +114,7 @@ class CheckTranslationDuplicatesCommand extends ContainerAwareCommand
         // Remove PrestaShop arguments %<arg>%
         $message = preg_replace(PrestaShopTranslatorTrait::$regexClassicParams, '~', $message);
         // Remove all related sprintf arguments
-        $message = preg_replace(PrestaShopTranslatorTrait::$regexSprintfParams, '~', $message);
+        $message = preg_replace(PrestaShopTranslatorTrait::$regexSprintfArgs, '~', $message);
 
         return $message;
     }
