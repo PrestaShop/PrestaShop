@@ -85,3 +85,17 @@ $order-block-background-color: #F8F8F8;
     color: $private-message-color;
   }
 }
+.messages-block#all-messages-list {
+  height: 80vh;
+  overflow-y: scroll;
+}
+
+#viewAllMessagesModal {
+  .modal-content {
+    background-color: inherit;
+    padding: 0;
+  }
+  .modal-body {
+    padding: 0;
+  }
+}

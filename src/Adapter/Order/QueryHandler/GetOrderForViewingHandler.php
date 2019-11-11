@@ -29,10 +29,10 @@ namespace PrestaShop\PrestaShop\Adapter\Order\QueryHandler;
 use Address;
 use Carrier;
 use Configuration;
+use Context;
 use Country;
 use Currency;
 use Customer;
-use CustomerThread;
 use DateTimeImmutable;
 use Db;
 use Gender;
@@ -46,6 +46,7 @@ use OrderPayment;
 use OrderReturn;
 use OrderSlip;
 use Pack;
+use PrestaShop\PrestaShop\Adapter\Customer\CustomerDataProvider;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryHandler\GetOrderForViewingHandlerInterface;
@@ -111,21 +112,39 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
     private $contextLanguageId;
 
     /**
+     * @var CustomerDataProvider
+     */
+    private $customerDataProvider;
+
+    /**
+     * @var Context
+     */
+    private $context;
+
+    /**
      * @param ImageTagSourceParserInterface $imageTagSourceParser
      * @param TranslatorInterface $translator
      * @param int $contextLanguageId
      * @param Locale $locale
+     * @param Context $context
+     * @param CustomerDataProvider $customerDataProvider
      */
     public function __construct(
         ImageTagSourceParserInterface $imageTagSourceParser,
         TranslatorInterface $translator,
         int $contextLanguageId,
-        Locale $locale
+        Locale $locale,
+        Context $context,
+        CustomerDataProvider $customerDataProvider
     ) {
         $this->imageTagSourceParser = $imageTagSourceParser;
         $this->translator = $translator;
         $this->contextLanguageId = $contextLanguageId;
         $this->locale = $locale;
+        $this->imageTagSourceParser = $imageTagSourceParser;
+        $this->translator = $translator;
+        $this->context = $context;
+        $this->customerDataProvider = $customerDataProvider;
     }
 
     /**
@@ -745,12 +764,14 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
 
     private function getOrderMessages(Order $order): OrderMessagesForViewing
     {
-        //todo: get all messages here since all will be loaded in pop-up. Create custom provider function which does not set limit
-        $orderMessagesForOrderPage = CustomerThread::getCustomerMessagesOrder($order->id_customer, $order->id);
+        $orderMessagesForOrderPage = $this->customerDataProvider->getCustomerMessages(
+            (int) $order->id_customer,
+            (int) $order->id
+        );
 
         $messages = [];
 
-        foreach ($orderMessagesForOrderPage as $orderMessage) {
+        foreach ($orderMessagesForOrderPage['messages'] as $orderMessage) {
             $messageEmployeeId = (int) $orderMessage['id_employee'];
             $isCurrentEmployeesMessage = (int) $this->context->employee->id === $messageEmployeeId;
 
@@ -759,7 +780,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
                 $orderMessage['message'],
                 new OrderMessageDateForViewing(
                     new DateTimeImmutable($orderMessage['date_add']),
-                    $this->context->language->date_format_lite
+                    $this->context->language->date_format_full
                 ),
                 $messageEmployeeId,
                 $isCurrentEmployeesMessage,
@@ -771,7 +792,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             );
         }
 
-        return new OrderMessagesForViewing($messages);
+        return new OrderMessagesForViewing($messages, $orderMessagesForOrderPage['total']);
     }
 
     private function getOrderPrices(Order $order): OrderPricesForViewing

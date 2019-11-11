@@ -37,6 +37,7 @@ export default class OrderViewPageMessagesHandler {
 
     return {
       listenForPredefinedMessageSelection: () => this._handlePredefinedMessageSelection(),
+      listenForFullMessagesOpen: () => this._onFullMessagesOpen(),
     };
   }
 
@@ -69,5 +70,33 @@ export default class OrderViewPageMessagesHandler {
 
       $orderMessage.val(message);
     });
+  }
+
+  /**
+   * Listens for event when all messages modal is being opened
+   *
+   * @private
+   */
+  _onFullMessagesOpen() {
+    $(document).on('click', OrderViewPageMap.openAllMessagesBtn, () => this._scrollToMsgListBottom());
+  }
+
+  /**
+   * Scrolls down to the bottom of all messages list
+   *
+   * @private
+   */
+  _scrollToMsgListBottom() {
+    const $msgModal = $(OrderViewPageMap.allMessagesModal);
+    const msgList = document.querySelector(OrderViewPageMap.allMessagesList);
+
+    const classCheckInterval = window.setInterval(() => {
+      if ($msgModal.hasClass('show')) {
+        msgList.scrollTop = msgList.scrollHeight;
+        clearInterval(classCheckInterval);
+      }
+    }, 10);
+
+
   }
 }
