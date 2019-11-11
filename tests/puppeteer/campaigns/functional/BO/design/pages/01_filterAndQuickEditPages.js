@@ -62,18 +62,11 @@ describe('Filter And Quick Edit Pages', async () => {
         'input',
         'id_cms',
         Pages.delivery.id);
-      const numberOfPagesAfterFilter = await this.pageObjects.pagesPage.getNumberFromText(
-        this.pageObjects.pagesPage.gridTitle.replace('%TABLE', 'cms_page'),
-      );
+      const numberOfPagesAfterFilter = await this.pageObjects.pagesPage.getNumberOfElementInGrid('cms_page');
       if (numberOfPages === 0) {
         await expect(numberOfPagesAfterFilter).to.be.equal(numberOfPages + 1);
       } else await expect(numberOfPagesAfterFilter).to.be.at.most(numberOfPages);
-      const textColumn = await this.pageObjects.pagesPage.getTextContent(
-        this.pageObjects.pagesPage.listTableColumn
-          .replace('%TABLE', 'cms_page')
-          .replace('%ROW', 1)
-          .replace('%COLUMN', 'id_cms'),
-      );
+      const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTablePages(1, 'id_cms');
       await expect(textColumn).to.contains(Pages.delivery.id);
     });
 
@@ -83,22 +76,14 @@ describe('Filter And Quick Edit Pages', async () => {
     });
 
     it('should filter by URL \'about-us\'', async function () {
-      await this.pageObjects.pagesPage.filterTable(
-        'cms_page',
+      await this.pageObjects.pagesPage.filterTable('cms_page',
         'input',
         'link_rewrite',
         Pages.aboutUs.url,
       );
-      const numberOfPagesAfterFilter = await this.pageObjects.pagesPage.getNumberFromText(
-        this.pageObjects.pagesPage.gridTitle.replace('%TABLE', 'cms_page'),
-      );
+      const numberOfPagesAfterFilter = await this.pageObjects.pagesPage.getNumberOfElementInGrid('cms_page');
       await expect(numberOfPagesAfterFilter).to.be.at.most(numberOfPages);
-      const textColumn = await this.pageObjects.pagesPage.getTextContent(
-        this.pageObjects.pagesPage.listTableColumn
-          .replace('%TABLE', 'cms_page')
-          .replace('%ROW', 1)
-          .replace('%COLUMN', 'link_rewrite'),
-      );
+      const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTablePages(1, 'link_rewrite');
       await expect(textColumn).to.contains(Pages.aboutUs.url);
     });
 
@@ -114,18 +99,11 @@ describe('Filter And Quick Edit Pages', async () => {
         'meta_title',
         Pages.termsAndCondition.title,
       );
-      const numberOfPagesAfterFilter = await this.pageObjects.pagesPage.getNumberFromText(
-        this.pageObjects.pagesPage.gridTitle.replace('%TABLE', 'cms_page'),
-      );
+      const numberOfPagesAfterFilter = await this.pageObjects.pagesPage.getNumberOfElementInGrid('cms_page');
       if (numberOfPages === 0) {
         await expect(numberOfPagesAfterFilter).to.be.equal(numberOfPages + 1);
       } else await expect(numberOfPagesAfterFilter).to.be.at.most(numberOfPages);
-      const textColumn = await this.pageObjects.pagesPage.getTextContent(
-        this.pageObjects.pagesPage.listTableColumn
-          .replace('%TABLE', 'cms_page')
-          .replace('%ROW', 1)
-          .replace('%COLUMN', 'meta_title'),
-      );
+      const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTablePages(1, 'meta_title');
       await expect(textColumn).to.contains(Pages.termsAndCondition.title);
     });
 
@@ -141,18 +119,11 @@ describe('Filter And Quick Edit Pages', async () => {
         'position',
         Pages.securePayment.position,
       );
-      const numberOfPagesAfterFilter = await this.pageObjects.pagesPage.getNumberFromText(
-        this.pageObjects.pagesPage.gridTitle.replace('%TABLE', 'cms_page'),
-      );
+      const numberOfPagesAfterFilter = await this.pageObjects.pagesPage.getNumberOfElementInGrid('cms_page');
       if (numberOfPages === 0) {
         await expect(numberOfPagesAfterFilter).to.be.equal(numberOfPages + 1);
       } else await expect(numberOfPagesAfterFilter).to.be.at.most(numberOfPages);
-      const textColumn = await this.pageObjects.pagesPage.getTextContent(
-        this.pageObjects.pagesPage.listTableColumn
-          .replace('%TABLE', 'cms_page')
-          .replace('%ROW', 1)
-          .replace('%COLUMN', 'position'),
-      );
+      const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTablePages(1, 'position');
       await expect(textColumn).to.contains(Pages.securePayment.position);
     });
 
@@ -168,20 +139,13 @@ describe('Filter And Quick Edit Pages', async () => {
         'active',
         Pages.securePayment.displayed,
       );
-      const numberOfPagesAfterFilter = await this.pageObjects.pagesPage.getNumberFromText(
-        this.pageObjects.pagesPage.gridTitle.replace('%TABLE', 'cms_page'),
-      );
+      const numberOfPagesAfterFilter = await this.pageObjects.pagesPage.getNumberOfElementInGrid('cms_page');
       if (numberOfPages === 0) {
         await expect(numberOfPagesAfterFilter).to.be.equal(numberOfPages + 1);
       } else await expect(numberOfPagesAfterFilter).to.be.at.most(numberOfPages);
       /* eslint-disable no-await-in-loop */
       for (let i = 1; i <= numberOfPagesAfterFilter; i++) {
-        const textColumn = await this.pageObjects.pagesPage.getTextContent(
-          this.pageObjects.pagesPage.listTableColumn
-            .replace('%TABLE', 'cms_page')
-            .replace('%ROW', i)
-            .replace('%COLUMN', 'active'),
-        );
+        const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTablePages(i, 'active');
         await expect(textColumn).to.contains('check');
       }
       /* eslint-enable no-await-in-loop */
@@ -201,59 +165,35 @@ describe('Filter And Quick Edit Pages', async () => {
         'meta_title',
         Pages.termsAndCondition.title,
       );
-      const numberOfPagesAfterFilter = await this.pageObjects.pagesPage.getNumberFromText(
-        this.pageObjects.pagesPage.gridTitle.replace('%TABLE', 'cms_page'),
-      );
+      const numberOfPagesAfterFilter = await this.pageObjects.pagesPage.getNumberOfElementInGrid('cms_page');
       if (numberOfPages === 0) {
         await expect(numberOfPagesAfterFilter).to.be.equal(numberOfPages + 1);
       } else await expect(numberOfPagesAfterFilter).to.be.at.most(numberOfPages);
-      const textColumn = await this.pageObjects.pagesPage.getTextContent(
-        this.pageObjects.pagesPage.listTableColumn
-          .replace('%TABLE', 'cms_page')
-          .replace('%ROW', 1)
-          .replace('%COLUMN', 'meta_title'),
-      );
+      const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTablePages(1, 'meta_title');
       await expect(textColumn).to.contains(Pages.termsAndCondition.title);
     });
 
     it('should disable the Page', async function () {
-      const isActionPerformed = await this.pageObjects.pagesPage.updateToggleColumnValue(
-        'cms_page',
-        '1',
-        false,
-      );
+      const isActionPerformed = await this.pageObjects.pagesPage.updateToggleColumnValue('cms_page', '1', false);
       if (isActionPerformed) {
         const resultMessage = await this.pageObjects.pagesPage.getTextContent(
           this.pageObjects.pagesPage.alertSuccessBlockParagraph,
         );
         await expect(resultMessage).to.contains(this.pageObjects.pagesPage.successfulUpdateStatusMessage);
       }
-      const isStatusChanged = await this.pageObjects.pagesPage.elementVisible(
-        this.pageObjects.pagesPage.columnNotValidIcon
-          .replace('%TABLE', 'cms_page')
-          .replace('%ROW', 1),
-        100,
-      );
-      await expect(isStatusChanged).to.be.true;
+      const isStatusChanged = await this.pageObjects.pagesPage.getToggleColumnValue('cms_page', 1);
+      await expect(isStatusChanged).to.be.false;
     });
 
     it('should enable the Page', async function () {
-      const isActionPerformed = await this.pageObjects.pagesPage.updateToggleColumnValue(
-        'cms_page',
-        '1',
-      );
+      const isActionPerformed = await this.pageObjects.pagesPage.updateToggleColumnValue('cms_page', '1');
       if (isActionPerformed) {
         const resultMessage = await this.pageObjects.pagesPage.getTextContent(
           this.pageObjects.pagesPage.alertSuccessBlockParagraph,
         );
         await expect(resultMessage).to.contains(this.pageObjects.pagesPage.successfulUpdateStatusMessage);
       }
-      const isStatusChanged = await this.pageObjects.pagesPage.elementVisible(
-        this.pageObjects.pagesPage.columnValidIcon
-          .replace('%TABLE', 'cms_page')
-          .replace('%ROW', 1),
-        100,
-      );
+      const isStatusChanged = await this.pageObjects.pagesPage.getToggleColumnValue('cms_page', 1);
       await expect(isStatusChanged).to.be.true;
     });
 

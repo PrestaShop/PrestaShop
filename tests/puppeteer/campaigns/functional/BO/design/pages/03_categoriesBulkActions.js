@@ -107,12 +107,7 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
         'name',
         'todelete',
       );
-      const textResult = await this.pageObjects.pagesPage.getTextContent(
-        this.pageObjects.pagesPage.listTableColumn
-          .replace('%TABLE', 'cms_page_category')
-          .replace('%ROW', '1')
-          .replace('%COLUMN', 'name'),
-      );
+      const textResult = await this.pageObjects.pagesPage.getTextColumnFromTableCategories(1, 'name');
       await expect(textResult).to.contains('todelete');
     });
 
@@ -122,17 +117,12 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
         false,
       );
       await expect(disableTextResult).to.be.equal(this.pageObjects.pagesPage.successfulUpdateStatusMessage);
-      const numberOfCategoriesInGrid = await this.pageObjects.pagesPage.getNumberFromText(
-        this.pageObjects.pagesPage.gridTitle.replace('%TABLE', 'cms_page_category'),
+      const numberOfCategoriesInGrid = await this.pageObjects.pagesPage.getNumberOfElementInGrid(
+        'cms_page_category',
       );
       /* eslint-disable no-await-in-loop */
       for (let i = 1; i <= numberOfCategoriesInGrid; i++) {
-        const textColumn = await this.pageObjects.pagesPage.getTextContent(
-          this.pageObjects.pagesPage.listTableColumn
-            .replace('%TABLE', 'cms_page_category')
-            .replace('%ROW', i)
-            .replace('%COLUMN', 'active'),
-        );
+        const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTableCategories(i, 'active');
         await expect(textColumn).to.contains('clear');
       }
       /* eslint-enable no-await-in-loop */
@@ -141,17 +131,10 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
     it('should enable categories with Bulk Actions and check Result', async function () {
       const enableTextResult = await this.pageObjects.pagesPage.changeEnabledColumnBulkActions('cms_page_category');
       await expect(enableTextResult).to.be.equal(this.pageObjects.pagesPage.successfulUpdateStatusMessage);
-      const numberOfCategoriesInGrid = await this.pageObjects.pagesPage.getNumberFromText(
-        this.pageObjects.pagesPage.gridTitle.replace('%TABLE', 'cms_page_category'),
-      );
+      const numberOfCategoriesInGrid = await this.pageObjects.pagesPage.getNumberOfElementInGrid('cms_page_category');
       /* eslint-disable no-await-in-loop */
       for (let i = 1; i <= numberOfCategoriesInGrid; i++) {
-        const textColumn = await this.pageObjects.pagesPage.getTextContent(
-          this.pageObjects.pagesPage.listTableColumn
-            .replace('%TABLE', 'cms_page_category')
-            .replace('%ROW', i)
-            .replace('%COLUMN', 'active'),
-        );
+        const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTableCategories(i, 'active');
         await expect(textColumn).to.contains('check');
       }
       /* eslint-enable no-await-in-loop */
@@ -166,12 +149,7 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
         'name',
         'todelete',
       );
-      const textResult = await this.pageObjects.pagesPage.getTextContent(
-        this.pageObjects.pagesPage.listTableColumn
-          .replace('%TABLE', 'cms_page_category')
-          .replace('%ROW', '1')
-          .replace('%COLUMN', 'name'),
-      );
+      const textResult = await this.pageObjects.pagesPage.getTextColumnFromTableCategories(1, 'name');
       await expect(textResult).to.contains('todelete');
     });
 
@@ -181,8 +159,9 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
     });
 
     it('should reset all filters', async function () {
-      const numberOfCategoriesAfterFilter = await this.pageObjects.pagesPage
-        .resetAndGetNumberOfLines('cms_page_category');
+      const numberOfCategoriesAfterFilter = await this.pageObjects.pagesPage.resetAndGetNumberOfLines(
+        'cms_page_category',
+      );
       await expect(numberOfCategoriesAfterFilter).to.be.equal(numberOfCategories);
     });
   });

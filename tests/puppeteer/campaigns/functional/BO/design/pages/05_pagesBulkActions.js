@@ -95,30 +95,18 @@ describe('Create Pages, Then disable / Enable and Delete with Bulk actions', asy
         'meta_title',
         'todelete',
       );
-      const textResult = await this.pageObjects.pagesPage.getTextContent(
-        this.pageObjects.pagesPage.listTableColumn
-          .replace('%TABLE', 'cms_page')
-          .replace('%ROW', '1')
-          .replace('%COLUMN', 'meta_title'),
-      );
+      const textResult = await this.pageObjects.pagesPage.getTextColumnFromTablePages(1, 'meta_title');
       await expect(textResult).to.contains('todelete');
     });
 
     it('should disable pages with Bulk Actions and check Result', async function () {
       const disableTextResult = await this.pageObjects.pagesPage.changeEnabledColumnBulkActions('cms_page', false);
       await expect(disableTextResult).to.be.equal(this.pageObjects.pagesPage.successfulUpdateStatusMessage);
-      const numberOfPagesInGrid = await this.pageObjects.pagesPage.getNumberFromText(
-        this.pageObjects.pagesPage.gridTitle.replace('%TABLE', 'cms_page'),
-      );
+      const numberOfPagesInGrid = await this.pageObjects.pagesPage.getNumberOfElementInGrid('cms_page');
       await expect(numberOfPagesInGrid).to.be.at.most(numberOfPages);
       /* eslint-disable no-await-in-loop */
       for (let i = 1; i <= numberOfPagesInGrid; i++) {
-        const textColumn = await this.pageObjects.pagesPage.getTextContent(
-          this.pageObjects.pagesPage.listTableColumn
-            .replace('%TABLE', 'cms_page')
-            .replace('%ROW', i)
-            .replace('%COLUMN', 'active'),
-        );
+        const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTablePages(i, 'active');
         await expect(textColumn).to.contains('clear');
       }
       /* eslint-enable no-await-in-loop */
@@ -127,18 +115,11 @@ describe('Create Pages, Then disable / Enable and Delete with Bulk actions', asy
     it('should enable pages with Bulk Actions and check Result', async function () {
       const enableTextResult = await this.pageObjects.pagesPage.changeEnabledColumnBulkActions('cms_page', true);
       await expect(enableTextResult).to.be.equal(this.pageObjects.pagesPage.successfulUpdateStatusMessage);
-      const numberOfPagesInGrid = await this.pageObjects.pagesPage.getNumberFromText(
-        this.pageObjects.pagesPage.gridTitle.replace('%TABLE', 'cms_page'),
-      );
+      const numberOfPagesInGrid = await this.pageObjects.pagesPage.getNumberOfElementInGrid('cms_page');
       await expect(numberOfPagesInGrid).to.be.at.most(numberOfPages);
       /* eslint-disable no-await-in-loop */
       for (let i = 1; i <= numberOfPagesInGrid; i++) {
-        const textColumn = await this.pageObjects.pagesPage.getTextContent(
-          this.pageObjects.pagesPage.listTableColumn
-            .replace('%TABLE', 'cms_page')
-            .replace('%ROW', i)
-            .replace('%COLUMN', 'active'),
-        );
+        const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTablePages(i, 'active');
         await expect(textColumn).to.contains('check');
       }
       /* eslint-enable no-await-in-loop */
@@ -153,12 +134,7 @@ describe('Create Pages, Then disable / Enable and Delete with Bulk actions', asy
         'meta_title',
         'todelete',
       );
-      const textResult = await this.pageObjects.pagesPage.getTextContent(
-        this.pageObjects.pagesPage.listTableColumn
-          .replace('%TABLE', 'cms_page')
-          .replace('%ROW', '1')
-          .replace('%COLUMN', 'meta_title'),
-      );
+      const textResult = await this.pageObjects.pagesPage.getTextColumnFromTablePages(1, 'meta_title');
       await expect(textResult).to.contains('todelete');
     });
 

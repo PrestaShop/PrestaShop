@@ -274,4 +274,49 @@ module.exports = class Pages extends BOBasePage {
       .replace('%TABLE', 'cms_page').replace('%ROW', row),
     );
   }
+
+  /**
+   * get text from a column
+   * @param table, Pages or Categories
+   * @param row, row in table
+   * @param column, which column
+   * @return {Promise<textContent>}
+   */
+  async getTextColumnFromTable(table, row, column) {
+    return this.getTextContent(
+      this.listTableColumn
+        .replace('%TABLE', table)
+        .replace('%ROW', row)
+        .replace('%COLUMN', column),
+    );
+  }
+
+  /**
+   * get number of elements in grid
+   * @param table
+   * @return {Promise<integer>}
+   */
+  async getNumberOfElementInGrid(table) {
+    return this.getNumberFromText(this.gridTitle.replace('%TABLE', table));
+  }
+
+  /**
+   * get text from a column from table Pages
+   * @param row
+   * @param column
+   * @return {Promise<textContent>}
+   */
+  async getTextColumnFromTablePages(row, column) {
+    return this.getTextColumnFromTable('cms_page', row, column);
+  }
+
+  /**
+   * get text from a column from table Categories
+   * @param row
+   * @param column
+   * @return {Promise<textContent>}
+   */
+  async getTextColumnFromTableCategories(row, column) {
+    return this.getTextColumnFromTable('cms_page_category', row, column);
+  }
 };
