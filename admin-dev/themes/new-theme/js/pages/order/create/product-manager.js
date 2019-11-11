@@ -87,7 +87,7 @@ export default class ProductManager {
    */
   _onProductSearch() {
     EventEmitter.on(eventMap.productSearched, (response) => {
-      this.products = JSON.parse(response);
+      this.products = response.products;
       this.productRenderer.renderSearchResults(this.products);
       this._selectFirstResult();
     });
@@ -184,7 +184,7 @@ export default class ProductManager {
     }
 
     const $searchRequest = $.get(this.router.generate('admin_products_search'), {
-      search_phrase: searchPhrase,
+      q: searchPhrase,
     });
     this.activeSearchRequest = $searchRequest;
 
