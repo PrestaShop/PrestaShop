@@ -97,8 +97,8 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
     });
 
     it('should check the categories number', async function () {
-      const numberOfCategoriesAfterCreation = await this.pageObjects.pagesPage.getNumberFromText(
-        this.pageObjects.pagesPage.gridTitle.replace('%TABLE', 'cms_page_category'),
+      const numberOfCategoriesAfterCreation = await this.pageObjects.pagesPage.getNumberOfElementInGrid(
+        'cms_page_category',
       );
       await expect(numberOfCategoriesAfterCreation).to.be.equal(numberOfCategories + 1);
     });
@@ -143,15 +143,13 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
   // 2 : Create Page then go to FO to check it
   describe('Create Page in BO and preview it in FO', async () => {
     it('should click on view category', async function () {
-      await this.pageObjects.pagesPage.viewCategory('1');
+      await this.pageObjects.pagesPage.viewCategory(1);
       const pageTitle = await this.pageObjects.pagesPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.pagesPage.pageTitle);
     });
 
     it('should get the pages number', async function () {
-      numberOfPages = await this.pageObjects.pagesPage.getNumberFromText(
-        this.pageObjects.pagesPage.gridTitle.replace('%TABLE', 'cms_page'),
-      );
+      numberOfPages = await this.pageObjects.pagesPage.getNumberOfElementInGrid('cms_page');
     });
 
     it('should go to add new page', async function () {
@@ -166,22 +164,18 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
     });
 
     it('should search for the created page and check result', async function () {
-      await this.pageObjects.pagesPage.filterTable('cms_page',
+      await this.pageObjects.pagesPage.filterTable(
+        'cms_page',
         'input',
         'meta_title',
         createPageData.title,
       );
-      const textColumn = await this.pageObjects.pagesPage.getTextContent(
-        this.pageObjects.pagesPage.listTableColumn
-          .replace('%TABLE', 'cms_page')
-          .replace('%ROW', 1)
-          .replace('%COLUMN', 'meta_title'),
-      );
+      const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTablePages(1, 'meta_title');
       await expect(textColumn).to.contains(createPageData.title);
     });
 
     it('should go to edit page', async function () {
-      await this.pageObjects.pagesPage.goToEditPage('1');
+      await this.pageObjects.pagesPage.goToEditPage(1);
       const pageTitle = await this.pageObjects.pagesPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.pagesPage.pageTitle);
     });
@@ -214,17 +208,12 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
         'name',
         createCategoryData.name,
       );
-      const textColumn = await this.pageObjects.pagesPage.getTextContent(
-        this.pageObjects.pagesPage.listTableColumn
-          .replace('%TABLE', 'cms_page_category')
-          .replace('%ROW', 1)
-          .replace('%COLUMN', 'name'),
-      );
+      const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTableCategories(1, 'name');
       await expect(textColumn).to.contains(createCategoryData.name);
     });
 
     it('should go to edit category page', async function () {
-      await this.pageObjects.pagesPage.goToEditCategoryPage('1');
+      await this.pageObjects.pagesPage.goToEditCategoryPage(1);
       const pageTitle = await this.pageObjects.pagesPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.pagesPage.pageTitle);
     });
@@ -247,22 +236,14 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
         'name',
         editCategoryData.name,
       );
-      const textColumn = await this.pageObjects.pagesPage.getTextContent(
-        this.pageObjects.pagesPage.listTableColumn
-          .replace('%TABLE', 'cms_page_category')
-          .replace('%ROW', 1)
-          .replace('%COLUMN', 'name'),
-      );
+      const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTableCategories(1, 'name');
       await expect(textColumn).to.contains(editCategoryData.name);
     });
 
     it('should go to FO and check the updated category', async function () {
-      const pageCategoryID = await this.pageObjects.pagesPage.getNumberFromText(
-        this.pageObjects.pagesPage.listTableColumn
-          .replace('%TABLE', 'cms_page_category')
-          .replace('%ROW', 1)
-          .replace('%COLUMN', 'id_cms_category',
-          ),
+      const pageCategoryID = await this.pageObjects.pagesPage.getTextColumnFromTableCategories(
+        1,
+        'id_cms_category',
       );
       page = await this.pageObjects.boBasePage.viewMyShop();
       this.pageObjects = await init();
@@ -280,28 +261,24 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
   // 4 : Update page then go to FO to check it
   describe('Update Page created in BO and preview it in FO', async () => {
     it('should click on view category', async function () {
-      await this.pageObjects.pagesPage.viewCategory('1');
+      await this.pageObjects.pagesPage.viewCategory(1);
       const pageTitle = await this.pageObjects.pagesPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.pagesPage.pageTitle);
     });
 
     it('should search for the created page and check result', async function () {
-      await this.pageObjects.pagesPage.filterTable('cms_page',
+      await this.pageObjects.pagesPage.filterTable(
+        'cms_page',
         'input',
         'meta_title',
         createPageData.title,
       );
-      const textColumn = await this.pageObjects.pagesPage.getTextContent(
-        this.pageObjects.pagesPage.listTableColumn
-          .replace('%TABLE', 'cms_page')
-          .replace('%ROW', 1)
-          .replace('%COLUMN', 'meta_title'),
-      );
+      const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTablePages(1, 'meta_title');
       await expect(textColumn).to.contains(createPageData.title);
     });
 
     it('should go to edit page', async function () {
-      await this.pageObjects.pagesPage.goToEditPage('1');
+      await this.pageObjects.pagesPage.goToEditPage(1);
       const pageTitle = await this.pageObjects.pagesPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.pagesPage.pageTitle);
     });
@@ -318,17 +295,12 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
         'meta_title',
         editPageData.title,
       );
-      const textColumn = await this.pageObjects.pagesPage.getTextContent(
-        this.pageObjects.pagesPage.listTableColumn
-          .replace('%TABLE', 'cms_page')
-          .replace('%ROW', 1)
-          .replace('%COLUMN', 'meta_title'),
-      );
+      const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTablePages(1, 'meta_title');
       await expect(textColumn).to.contains(editPageData.title);
     });
 
     it('should go to edit page', async function () {
-      await this.pageObjects.pagesPage.goToEditPage('1');
+      await this.pageObjects.pagesPage.goToEditPage(1);
       const pageTitle = await this.pageObjects.pagesPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.pagesPage.pageTitle);
     });
@@ -351,7 +323,7 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
   // 5 : Delete Page and Category from BO
   describe('Delete Page and Category', async () => {
     it('should click on view category', async function () {
-      await this.pageObjects.pagesPage.viewCategory('1');
+      await this.pageObjects.pagesPage.viewCategory(1);
       const pageTitle = await this.pageObjects.pagesPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.pagesPage.pageTitle);
     });
@@ -363,17 +335,12 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
         'meta_title',
         editPageData.title,
       );
-      const textColumn = await this.pageObjects.pagesPage.getTextContent(
-        this.pageObjects.pagesPage.listTableColumn
-          .replace('%TABLE', 'cms_page')
-          .replace('%ROW', 1)
-          .replace('%COLUMN', 'meta_title'),
-      );
+      const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTablePages(1, 'meta_title');
       await expect(textColumn).to.contains(editPageData.title);
     });
 
     it('should delete page', async function () {
-      const textResult = await this.pageObjects.pagesPage.deleteRowInTable('cms_page', '1');
+      const textResult = await this.pageObjects.pagesPage.deleteRowInTable('cms_page', 1);
       await expect(textResult).to.equal(this.pageObjects.pagesPage.successfulDeleteMessage);
     });
 
@@ -389,13 +356,14 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
     });
 
     it('should delete category', async function () {
-      const textResult = await this.pageObjects.pagesPage.deleteRowInTable('cms_page_category', '1');
+      const textResult = await this.pageObjects.pagesPage.deleteRowInTable('cms_page_category', 1);
       await expect(textResult).to.equal(this.pageObjects.pagesPage.successfulDeleteMessage);
     });
 
     it('should reset filter', async function () {
-      const numberOfCategoriesAfterDeletion = await this.pageObjects.pagesPage
-        .resetAndGetNumberOfLines('cms_page_category');
+      const numberOfCategoriesAfterDeletion = await this.pageObjects.pagesPage.resetAndGetNumberOfLines(
+        'cms_page_category',
+      );
       await expect(numberOfCategoriesAfterDeletion).to.be.equal(numberOfCategories);
     });
   });
