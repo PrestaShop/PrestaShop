@@ -66,7 +66,11 @@ describe('Filter And Quick Edit Pages', async () => {
       if (numberOfPages === 0) {
         await expect(numberOfPagesAfterFilter).to.be.equal(numberOfPages + 1);
       } else await expect(numberOfPagesAfterFilter).to.be.at.most(numberOfPages);
-      const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTablePages(1, 'id_cms');
+      const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTable(
+        'cms_page',
+        1,
+        'id_cms',
+      );
       await expect(textColumn).to.contains(Pages.delivery.id);
     });
 
@@ -83,7 +87,11 @@ describe('Filter And Quick Edit Pages', async () => {
       );
       const numberOfPagesAfterFilter = await this.pageObjects.pagesPage.getNumberOfElementInGrid('cms_page');
       await expect(numberOfPagesAfterFilter).to.be.at.most(numberOfPages);
-      const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTablePages(1, 'link_rewrite');
+      const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTable(
+        'cms_page',
+        1,
+        'link_rewrite',
+      );
       await expect(textColumn).to.contains(Pages.aboutUs.url);
     });
 
@@ -103,7 +111,11 @@ describe('Filter And Quick Edit Pages', async () => {
       if (numberOfPages === 0) {
         await expect(numberOfPagesAfterFilter).to.be.equal(numberOfPages + 1);
       } else await expect(numberOfPagesAfterFilter).to.be.at.most(numberOfPages);
-      const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTablePages(1, 'meta_title');
+      const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTable(
+        'cms_page',
+        1,
+        'meta_title',
+      );
       await expect(textColumn).to.contains(Pages.termsAndCondition.title);
     });
 
@@ -123,7 +135,11 @@ describe('Filter And Quick Edit Pages', async () => {
       if (numberOfPages === 0) {
         await expect(numberOfPagesAfterFilter).to.be.equal(numberOfPages + 1);
       } else await expect(numberOfPagesAfterFilter).to.be.at.most(numberOfPages);
-      const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTablePages(1, 'position');
+      const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTable(
+        'cms_page',
+        1,
+        'position',
+      );
       await expect(textColumn).to.contains(Pages.securePayment.position);
     });
 
@@ -145,7 +161,11 @@ describe('Filter And Quick Edit Pages', async () => {
       } else await expect(numberOfPagesAfterFilter).to.be.at.most(numberOfPages);
       /* eslint-disable no-await-in-loop */
       for (let i = 1; i <= numberOfPagesAfterFilter; i++) {
-        const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTablePages(i, 'active');
+        const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTable(
+          'cms_page',
+          i,
+          'active',
+        );
         await expect(textColumn).to.contains('check');
       }
       /* eslint-enable no-await-in-loop */
@@ -169,7 +189,11 @@ describe('Filter And Quick Edit Pages', async () => {
       if (numberOfPages === 0) {
         await expect(numberOfPagesAfterFilter).to.be.equal(numberOfPages + 1);
       } else await expect(numberOfPagesAfterFilter).to.be.at.most(numberOfPages);
-      const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTablePages(1, 'meta_title');
+      const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTable(
+        'cms_page',
+        1,
+        'meta_title',
+      );
       await expect(textColumn).to.contains(Pages.termsAndCondition.title);
     });
 
