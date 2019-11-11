@@ -37,7 +37,6 @@ export default class AddressesRenderer {
    */
   render(addresses) {
     this._cleanAddresses();
-
     if (addresses.length === 0) {
       this._hideAddressesContent();
       this._showEmptyAddressesWarning();
@@ -52,13 +51,8 @@ export default class AddressesRenderer {
     for (const key in addresses) {
       const address = addresses[key];
 
-      if (address.delivery) {
-        this._renderDeliveryAddress(address);
-      }
-
-      if (address.invoice) {
-        this._renderInvoiceAddress(address);
-      }
+      this._renderDeliveryAddress(address);
+      this._renderInvoiceAddress(address);
     }
 
     // @todo: router.generate(admin_addresses_create) when pr #15300 merged
@@ -79,9 +73,10 @@ export default class AddressesRenderer {
       text: address.alias,
     };
 
-    const content = address.formattedAddress;
-    $(createOrderMap.deliveryAddressDetails).html(content);
-    deliveryAddressOption.selected = 'selected';
+    if (address.delivery) {
+      $(createOrderMap.deliveryAddressDetails).html(address.formattedAddress);
+      deliveryAddressOption.selected = 'selected';
+    }
 
     $(createOrderMap.deliveryAddressSelect).append($('<option>', deliveryAddressOption));
     // @todo: router.generate(admin_addresses_edit) when pr #15300 merged
@@ -101,8 +96,10 @@ export default class AddressesRenderer {
       text: address.alias,
     };
 
-    $(createOrderMap.invoiceAddressDetails).html(address.formattedAddress);
-    invoiceAddressOption.selected = 'selected';
+    if (address.invoice) {
+      $(createOrderMap.invoiceAddressDetails).html(address.formattedAddress);
+      invoiceAddressOption.selected = 'selected';
+    }
 
     $(createOrderMap.invoiceAddressSelect).append($('<option>', invoiceAddressOption));
     // @todo: router.generate(admin_addresses_edit) when pr #15300 merged
