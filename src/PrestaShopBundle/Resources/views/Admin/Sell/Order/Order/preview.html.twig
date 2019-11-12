@@ -136,9 +136,11 @@
             </th>
             <th>{{ 'Reference'|trans({}, 'Admin.Global') }}</th>
             <th>{{ 'Stock location'|trans({}, 'Admin.Orderscustomers.Feature') }}</th>
-            <th class="text-center">
-              {{ 'Tax'|trans({}, 'Admin.Global') }}
-            </th>
+            {% if orderPreview.taxIncluded == false %}
+              <th class="text-center">
+                {{ 'Tax'|trans({}, 'Admin.Global') }}
+              </th>
+            {% endif %}
             <th class="text-center">{{ 'Quantity'|trans({}, 'Admin.Global') }}</th>
             <th class="text-center">
               {{ 'Total'|trans({}, 'Admin.Global') }}
@@ -154,7 +156,9 @@
               <td class="p-1">
                 {% if productDetail.location is not empty %}{{ productDetail.location }}{% else %}-{% endif %}
               </td>
-              <td class="p-1 text-center">{{ productDetail.totalTax }}</td>
+              {% if orderPreview.taxIncluded == false %}
+                <td class="p-1 text-center">{{ productDetail.totalTax }}</td>
+              {% endif %}
               <td class="p-1 text-center">{{ productDetail.quantity }}</td>
               <td class="p-1 text-center">{{ productDetail.totalPrice }}</td>
             </tr>

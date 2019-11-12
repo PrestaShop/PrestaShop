@@ -1,8 +1,8 @@
 module.exports = {
   DefaultAccount: {
     id: 1,
-    firstName: 'John',
-    lastName: 'DOE',
+    firstName: 'Marc',
+    lastName: 'Beier',
     email: 'demo@prestashop.com',
     password: 'prestashop_demo',
     defaultPage: 'Dashboard',
