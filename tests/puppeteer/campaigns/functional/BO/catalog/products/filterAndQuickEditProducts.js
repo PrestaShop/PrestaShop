@@ -32,9 +32,9 @@ describe('Filter Products', async () => {
     page = await helper.newTab(browser);
     this.pageObjects = await init();
   });
-  /*after(async () => {
+  after(async () => {
     await helper.closeBrowser(browser);
-  });*/
+  });
 
   // Login into BO and go to products page
   loginCommon.loginBO();
@@ -76,12 +76,10 @@ describe('Filter Products', async () => {
       await this.pageObjects.productsPage.filterProducts('name', Products.demo_14.name);
       const numberOfProductsAfterFilter = await this.pageObjects.productsPage.getNumberOfProductsFromList();
       await expect(numberOfProductsAfterFilter).to.be.below(numberOfProducts);
-      /* eslint-disable no-await-in-loop */
       for (let i = 1; i <= numberOfProductsAfterFilter; i++) {
         const textColumn = await this.pageObjects.productsPage.getProductNameFromList(i);
         await expect(textColumn).to.contains(Products.demo_14.name);
       }
-      /* eslint-enable no-await-in-loop */
     });
 
     it('should reset all filters', async function () {
@@ -96,12 +94,10 @@ describe('Filter Products', async () => {
       );
       const numberOfProductsAfterFilter = await this.pageObjects.productsPage.getNumberOfProductsFromList();
       await expect(numberOfProductsAfterFilter).to.be.below(numberOfProducts);
-      /* eslint-disable no-await-in-loop */
       for (let i = 1; i <= numberOfProductsAfterFilter; i++) {
         const textColumn = await this.pageObjects.productsPage.getProductReferenceFromList(i);
         await expect(textColumn).to.contains(Products.demo_3.reference);
       }
-      /* eslint-enable no-await-in-loop */
     });
 
     it('should reset all filters', async function () {
@@ -116,12 +112,10 @@ describe('Filter Products', async () => {
       );
       const numberOfProductsAfterFilter = await this.pageObjects.productsPage.getNumberOfProductsFromList();
       await expect(numberOfProductsAfterFilter).to.be.below(numberOfProducts);
-      /* eslint-disable no-await-in-loop */
       for (let i = 1; i <= numberOfProductsAfterFilter; i++) {
         const textColumn = await this.pageObjects.productsPage.getProductCategoryFromList(i);
         await expect(textColumn).to.contains(Products.demo_5.category);
       }
-      /* eslint-enable no-await-in-loop */
     });
 
     it('should reset all filters', async function () {
@@ -133,12 +127,10 @@ describe('Filter Products', async () => {
       await this.pageObjects.productsPage.filterPriceProducts(13, 20);
       const numberOfProductsAfterFilter = await this.pageObjects.productsPage.getNumberOfProductsFromList();
       await expect(numberOfProductsAfterFilter).to.be.below(numberOfProducts);
-      /* eslint-disable no-await-in-loop */
       for (let i = 1; i <= numberOfProductsAfterFilter; i++) {
         const productID = await this.pageObjects.productsPage.getProductPriceFromList(i);
         await expect(productID).to.be.within(13, 20);
       }
-      /* eslint-enable no-await-in-loop */
     });
 
     it('should reset all filters', async function () {
@@ -150,12 +142,10 @@ describe('Filter Products', async () => {
       await this.pageObjects.productsPage.filterQuantityProducts(900, 1500);
       const numberOfProductsAfterFilter = await this.pageObjects.productsPage.getNumberOfProductsFromList();
       await expect(numberOfProductsAfterFilter).to.be.below(numberOfProducts);
-      /* eslint-disable no-await-in-loop */
       for (let i = 1; i <= numberOfProductsAfterFilter; i++) {
         const productID = await this.pageObjects.productsPage.getProductQuantityFromList(i);
         await expect(productID).to.be.within(900, 1500);
       }
-      /* eslint-enable no-await-in-loop */
     });
 
     it('should reset all filters', async function () {
@@ -166,16 +156,57 @@ describe('Filter Products', async () => {
     it('should filter by Status \'Active\'', async function () {
       await this.pageObjects.productsPage.filterProducts(
         'active',
-        'Active',
+        true,
         'select',
       );
       const numberOfProductsAfterFilter = await this.pageObjects.productsPage.getNumberOfProductsFromList();
-      /* eslint-disable no-await-in-loop */
+      await expect(numberOfProductsAfterFilter).to.be.within(0, numberOfProducts);
       for (let i = 1; i <= numberOfProductsAfterFilter; i++) {
         const status = await this.pageObjects.productsPage.getProductStatusFromList(i);
         await expect(status).to.be.equal('check');
       }
-      /* eslint-enable no-await-in-loop */
+    });
+
+    it('should reset all filters', async function () {
+      const numberOfProductsAfterReset = await this.pageObjects.productsPage.resetAndGetNumberOfLines();
+      await expect(numberOfProductsAfterReset).to.equal(numberOfProducts);
+    });
+  });
+
+  // 2 : Editing products from table
+  describe('Quick Edit products', async () => {
+    it('should filter by Name \'Hummingbird printed sweater\'', async function () {
+      await this.pageObjects.productsPage.filterProducts('name', Products.demo_3.name);
+      const numberOfProductsAfterFilter = await this.pageObjects.productsPage.getNumberOfProductsFromList();
+      await expect(numberOfProductsAfterFilter).to.be.below(numberOfProducts);
+      for (let i = 1; i <= numberOfProductsAfterFilter; i++) {
+        const textColumn = await this.pageObjects.productsPage.getProductNameFromList(i);
+        await expect(textColumn).to.contains(Products.demo_3.name);
+      }
+    });
+
+    it('should disable the product', async function () {
+      const isActionPerformed = await this.pageObjects.productsPage.updateToggleColumnValue(1, false);
+      if (isActionPerformed) {
+        const resultMessage = await this.pageObjects.productsPage.getTextContent(
+          this.pageObjects.productsPage.alertSuccessBlockParagraph,
+        );
+        await expect(resultMessage).to.contains(this.pageObjects.productsPage.productDeactivatedSuccessfulMessage);
+      }
+      const isStatusChanged = await this.pageObjects.productsPage.getToggleColumnValue(1);
+      await expect(isStatusChanged).to.be.false;
+    });
+
+    it('should enable the product', async function () {
+      const isActionPerformed = await this.pageObjects.productsPage.updateToggleColumnValue(1);
+      if (isActionPerformed) {
+        const resultMessage = await this.pageObjects.productsPage.getTextContent(
+          this.pageObjects.productsPage.alertSuccessBlockParagraph,
+        );
+        await expect(resultMessage).to.contains(this.pageObjects.productsPage.productActivatedSuccessfulMessage);
+      }
+      const isStatusChanged = await this.pageObjects.productsPage.getToggleColumnValue(1);
+      await expect(isStatusChanged).to.be.true;
     });
   });
 });
