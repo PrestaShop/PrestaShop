@@ -7,8 +7,8 @@ global.BO = {
   URL: process.env.URL_BO || `${global.FO.URL}admin-dev/`,
   EMAIL: process.env.LOGIN || DefaultAccount.email,
   PASSWD: process.env.PASSWD || DefaultAccount.password,
-  FIRSTNAME: process.env.PASSWD || DefaultAccount.firstName,
-  LASTNAME: process.env.PASSWD || DefaultAccount.lastName,
+  FIRSTNAME: process.env.FIRSTNAME || DefaultAccount.firstName,
+  LASTNAME: process.env.LASTNAME || DefaultAccount.lastName,
 };
 global.INSTALL = {
   URL: process.env.URL_INSTALL || `${global.FO.URL}install-dev/`,
