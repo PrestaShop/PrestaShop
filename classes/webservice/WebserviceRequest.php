@@ -1281,10 +1281,22 @@ class WebserviceRequestCore
                 $sql_limit .= ' LIMIT ' . (int) ($limitArgs[0]) . (isset($limitArgs[1]) ? ', ' . (int) ($limitArgs[1]) : '') . "\n"; // LIMIT X|X, Y
             }
         }
+
+        $sql_offset = '';
+        if (isset($this->urlFragments['offset'])) {
+            $offsetArgs = explode(',', $this->urlFragments['offset']);
+            if (count($offsetArgs) > 2) {
+                $this->setError(400, 'The "offset" value has to be formed as this example: 10"', 39);
+                return false;
+            } else {
+                $sql_offset .= ' OFFSET '.(int)($offsetArgs[0]).(isset($offsetArgs[1]) ? ', '.(int)($offsetArgs[1]) : '')."\n";// 
+            }
+        }
+
         $filters['sql_join'] = $sql_join;
         $filters['sql_filter'] = $sql_filter;
         $filters['sql_sort'] = $sql_sort;
-        $filters['sql_limit'] = $sql_limit;
+        $filters['sql_limit'] = $sql_limit . $sql_offset;
 
         return $filters;
     }
