@@ -59,7 +59,6 @@
 }
 
 .carousel-indicators {
-  bottom: 0;
   li {
     border-color: $gray;
   }
@@ -87,7 +86,7 @@
     .carousel-item {
       .caption {
         position: static;
-        margin: 1.275rem auto 1rem;
+        margin: 1.275rem auto 2.5rem;
         text-align: center;
         .display-1 {
           font-size: 2rem;
@@ -123,6 +122,17 @@
           background: rgba(122,122,122,.5);
         }
       }
+    }
+  }
+  .carousel-indicators {
+    li {
+      height: 8px;
+      width: 8px;
+    }
+    .active {
+      height: 8px;
+      margin: 1px;
+      width: 8px;
     }
   }
 }
