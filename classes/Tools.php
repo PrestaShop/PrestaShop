@@ -675,6 +675,8 @@ class ToolsCore
             $currency = Currency::getCurrencyInstance((int) $id_currency);
             if (is_object($currency) && $currency->id && !$currency->deleted && $currency->isAssociatedToShop()) {
                 $cookie->id_currency = (int) $currency->id;
+                unset($_GET['SubmitCurrency']);
+                unset($_GET['id_currency']);
             }
         }
 
