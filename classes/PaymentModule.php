@@ -309,6 +309,14 @@ abstract class PaymentModuleCore extends Module
                 }
             }
 
+            // Amount paid by customer is not the right one -> Status = payment error
+            // We don't use the following condition to avoid the float precision issues : http://www.php.net/manual/en/language.types.float.php
+            // if ($order->total_paid != $order->total_paid_real)
+            // We use number_format in order to compare two string
+            if ($order_status->logable && number_format($cart_total_paid, _PS_PRICE_COMPUTE_PRECISION_) != number_format($amount_paid, _PS_PRICE_COMPUTE_PRECISION_)) {
+                $id_order_state = Configuration::get('PS_OS_ERROR');
+            }
+
             foreach ($package_list as $id_address => $packageByAddress) {
                 foreach ($packageByAddress as $id_package => $package) {
                     $orderData = $this->createOrderFromCart(
@@ -1013,14 +1021,6 @@ abstract class PaymentModuleCore extends Module
         if (!$result) {
             PrestaShopLogger::addLog('PaymentModule::validateOrder - Order cannot be created', 3, null, 'Cart', (int) $cart->id, true);
             throw new PrestaShopException('Can\'t save Order');
-        }
-
-        // Amount paid by customer is not the right one -> Status = payment error
-        // We don't use the following condition to avoid the float precision issues : http://www.php.net/manual/en/language.types.float.php
-        // if ($order->total_paid != $order->total_paid_real)
-        // We use number_format in order to compare two string
-        if ($order_status->logable && number_format($cart_total_paid, _PS_PRICE_COMPUTE_PRECISION_) != number_format($amount_paid, _PS_PRICE_COMPUTE_PRECISION_)) {
-            $id_order_state = Configuration::get('PS_OS_ERROR');
         }
 
         if ($debug) {
