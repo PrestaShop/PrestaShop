@@ -59,8 +59,24 @@ function ps_1770_update_order_status_colors() {
     foreach ($statusColorMap as $color => $statuses) {
         foreach ($statuses as $statusId) {
             Db::getInstance()->execute(
-                'UPDATE `'._DB_PREFIX_.'order_state` SET `color` = ' . pSQL($color) . ' WHERE `id_order_state` = ' . (int) $statusId
+                'UPDATE `'._DB_PREFIX_.'order_state` SET `color` = "' . pSQL($color) . '" WHERE `id_order_state` = ' . (int) $statusId
             );
         }
+    }
+
+    // Some of the statuses can be deduced by their parameters, this allows to update the modules status colors
+    $statusColorConditions = [
+        OrderStatusColor::ACCEPTED_PAYMENT => ['paid' => 1, 'shipped' => 0],
+        OrderStatusColor::COMPLETED => ['paid' => 1, 'shipped' => 1],
+        OrderStatusColor::AWAITING_PAYMENT => ['color' => '#4169E1'], // Former color of awaiting payment
+    ];
+    foreach ($statusColorConditions as $color => $conditions) {
+        $whereCondition = ' WHERE 1';
+        foreach ($conditions as $field => $expectedValue) {
+            $whereCondition .= ' AND `' . $field . '` = "' . pSQL($expectedValue) . '"';
+        }
+        Db::getInstance()->execute(
+            'UPDATE `'._DB_PREFIX_.'order_state` SET `color` = "' . pSQL($color) . '"' . $whereCondition
+        );
     }
 }
