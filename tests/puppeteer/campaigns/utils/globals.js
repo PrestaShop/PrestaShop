@@ -1,10 +1,14 @@
+const {DefaultAccount} = require('@data/demo/employees');
+
 global.FO = {
   URL: process.env.URL_FO || 'http://localhost/prestashop/',
 };
 global.BO = {
   URL: process.env.URL_BO || `${global.FO.URL}admin-dev/`,
-  EMAIL: process.env.LOGIN || 'demo@prestashop.com',
-  PASSWD: process.env.PASSWD || 'prestashop_demo',
+  EMAIL: process.env.LOGIN || DefaultAccount.email,
+  PASSWD: process.env.PASSWD || DefaultAccount.password,
+  FIRSTNAME: process.env.PASSWD || DefaultAccount.firstName,
+  LASTNAME: process.env.PASSWD || DefaultAccount.lastName,
 };
 global.INSTALL = {
   URL: process.env.URL_INSTALL || `${global.FO.URL}install-dev/`,
