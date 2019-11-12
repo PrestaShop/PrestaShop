@@ -234,6 +234,8 @@ final class MailPreviewVariablesBuilder
             '{total_discounts}' => $this->locale->formatPrice($order->total_discounts, $this->context->currency->iso_code),
             '{total_wrapping}' => $this->locale->formatPrice($order->total_wrapping, $this->context->currency->iso_code),
             '{total_shipping}' => $this->locale->formatPrice($order->total_shipping, $this->context->currency->iso_code),
+            '{total_shipping_tax_excl}' => $this->locale->formatPrice($order->total_shipping_tax_excl, $this->context->currency->iso_code),
+            '{total_shipping_tax_incl}' => $this->locale->formatPrice($order->total_shipping_tax_incl, $this->context->currency->iso_code),
             '{total_tax_paid}' => $this->locale->formatPrice(($order->total_products_wt - $order->total_products) + ($order->total_shipping_tax_incl - $order->total_shipping_tax_excl), $this->context->currency->iso_code),
             '{total_paid}' => $this->locale->formatPrice($order->total_paid, $this->context->currency->iso_code),
         ]);
