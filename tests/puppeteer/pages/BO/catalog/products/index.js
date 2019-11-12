@@ -24,9 +24,25 @@ module.exports = class Product extends BOBasePage {
     this.productBulkDropdownMenu = 'div.bulk-catalog div.dropdown-menu.show';
     this.productBulkDeleteLink = `${this.productBulkDropdownMenu} a[onclick*='delete_all']`;
     // Filters input
+    this.productFilterIDMinInput = `${this.productListForm} #filter_column_id_product_min`;
+    this.productFilterIDMaxInput = `${this.productListForm} #filter_column_id_product_max`;
     this.productFilterInput = `${this.productListForm} input[name='filter_column_%FILTERBY']`;
+    this.productFilterSelect = `${this.productListForm} select[name='filter_column_%FILTERBY']`;
+    this.productFilterPriceMinInput = `${this.productListForm} #filter_column_price_min`;
+    this.productFilterPriceMaxInput = `${this.productListForm} #filter_column_price_max`;
+    this.productFilterQuantityMinInput = `${this.productListForm} #filter_column_sav_quantity_min`;
+    this.productFilterQuantityMaxInput = `${this.productListForm} #filter_column_sav_quantity_max`;
     this.filterSearchButton = `${this.productListForm} button[name='products_filter_submit']`;
     this.filterResetButton = `${this.productListForm} button[name='products_filter_reset']`;
+    // Products list
+    this.productsListTableRow = `${this.productRow}:nth-child(%ROW)`;
+    this.productsListTableColumnID = `${this.productsListTableRow}[data-product-id]`;
+    this.productsListTableColumnName = `${this.productsListTableRow} td:nth-child(4)`;
+    this.productsListTableColumnReference = `${this.productsListTableRow} td:nth-child(5)`;
+    this.productsListTableColumnCategory = `${this.productsListTableRow} td:nth-child(6)`;
+    this.productsListTableColumnPrice = `${this.productsListTableRow} td:nth-child(7)`;
+    this.productsListTableColumnQuantity = `${this.productsListTableRow} td.product-sav-quantity`;
+    this.productsListTableColumnStatus = `${this.productsListTableRow} td:nth-child(10)`;
     // Filter Category
     this.treeCategoriesBloc = '#tree-categories';
     this.filterByCategoriesButton = '#product_catalog_category_tree_filter button';
@@ -45,15 +61,96 @@ module.exports = class Product extends BOBasePage {
   /*
   Methods
    */
+  /**
+   * Filter products Min - Max
+   * @param min
+   * @param max
+   * @return {Promise<void>}
+   */
+  async filterIDProducts(min, max) {
+    await this.page.type(this.productFilterIDMinInput, min.toString());
+    await this.page.type(this.productFilterIDMaxInput, max.toString());
+    await this.clickAndWaitForNavigation(this.filterSearchButton);
+  }
+
+  /**
+   * Get Product ID
+   * @param row
+   * @return {Promise<textContent>}
+   */
+  async getProductIDFromList(row) {
+    return this.getNumberFromText(this.productsListTableColumnID.replace('%ROW', row));
+  }
+
+  async getProductNameFromList(row) {
+    return this.getTextContent(this.productsListTableColumnName.replace('%ROW', row));
+  }
+
+  async getProductReferenceFromList(row) {
+    return this.getTextContent(this.productsListTableColumnReference.replace('%ROW', row));
+  }
+
+  async getProductCategoryFromList(row) {
+    return this.getTextContent(this.productsListTableColumnCategory.replace('%ROW', row));
+  }
+
+  /**
+   * Filter price Min - Max
+   * @param min
+   * @param max
+   * @return {Promise<void>}
+   */
+  async filterPriceProducts(min, max) {
+    await this.page.type(this.productFilterPriceMinInput, min.toString());
+    await this.page.type(this.productFilterPriceMaxInput, max.toString());
+    await this.clickAndWaitForNavigation(this.filterSearchButton);
+  }
+
+  async getProductPriceFromList(row) {
+    return this.getNumberFromText(this.productsListTableColumnPrice.replace('%ROW', row));
+  }
+
+  /**
+   * Filter Quantity Min - Max
+   * @param min
+   * @param max
+   * @return {Promise<void>}
+   */
+  async filterQuantityProducts(min, max) {
+    await this.page.type(this.productFilterQuantityMinInput, min.toString());
+    await this.page.type(this.productFilterQuantityMaxInput, max.toString());
+    await this.clickAndWaitForNavigation(this.filterSearchButton);
+  }
+
+  async getProductQuantityFromList(row) {
+    return this.getNumberFromText(this.productsListTableColumnQuantity.replace('%ROW', row));
+  }
+
+  async getProductStatusFromList(row) {
+    return this.getNumberFromText(this.productsListTableColumnStatus.replace('%ROW', row));
+  }
 
   /**
    * Filter products from inputs : Name, reference and Category
    * @param filterBy
    * @param value
+   * @param filterType
    * @return {Promise<void>}
    */
-  async filterProducts(filterBy, value = '') {
-    await this.page.type(this.productFilterInput.replace('%FILTERBY', filterBy), value);
+  async filterProducts(filterBy, value = '', filterType = 'input') {
+    switch (filterType) {
+      case 'input':
+        await this.page.type(this.productFilterInput.replace('%FILTERBY', filterBy), value);
+        break;
+      case 'select':
+        await this.selectByVisibleText(this.productFilterSelect.replace('%FILTERBY', filterBy),
+          value ? 'Active' : 'Inactive',
+        );
+        break;
+      default:
+      // Do nothing
+    }
+    // click on search
     await this.clickAndWaitForNavigation(this.filterSearchButton);
   }
 
