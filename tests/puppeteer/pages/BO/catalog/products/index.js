@@ -9,6 +9,8 @@ module.exports = class Product extends BOBasePage {
     this.pageTitle = 'Products •';
     this.productDeletedSuccessfulMessage = 'Product successfully deleted.';
     this.productMultiDeletedSuccessfulMessage = 'Product(s) successfully deleted.';
+    this.productDeactivatedSuccessfulMessage = 'Product successfully deactivated.';
+    this.productActivatedSuccessfulMessage = 'Product successfully activated.';
 
     // Selectors
     // List of products
@@ -43,6 +45,8 @@ module.exports = class Product extends BOBasePage {
     this.productsListTableColumnPrice = `${this.productsListTableRow} td:nth-child(7)`;
     this.productsListTableColumnQuantity = `${this.productsListTableRow} td.product-sav-quantity`;
     this.productsListTableColumnStatus = `${this.productsListTableRow} td:nth-child(10)`;
+    this.productsListTableColumnStatusEnabled = `${this.productsListTableColumnStatus} .action-enabled`;
+    this.productsListTableColumnStatusDisabled = `${this.productsListTableColumnStatus} .action-disabled`;
     // Filter Category
     this.treeCategoriesBloc = '#tree-categories';
     this.filterByCategoriesButton = '#product_catalog_category_tree_filter button';
@@ -82,14 +86,29 @@ module.exports = class Product extends BOBasePage {
     return this.getNumberFromText(this.productsListTableColumnID.replace('%ROW', row));
   }
 
+  /**
+   * Get Product Name
+   * @param row
+   * @return {Promise<textContent>}
+   */
   async getProductNameFromList(row) {
     return this.getTextContent(this.productsListTableColumnName.replace('%ROW', row));
   }
 
+  /**
+   * Get Product Reference
+   * @param row
+   * @return {Promise<textContent>}
+   */
   async getProductReferenceFromList(row) {
     return this.getTextContent(this.productsListTableColumnReference.replace('%ROW', row));
   }
 
+  /**
+   * Get Product Category
+   * @param row
+   * @return {Promise<textContent>}
+   */
   async getProductCategoryFromList(row) {
     return this.getTextContent(this.productsListTableColumnCategory.replace('%ROW', row));
   }
@@ -106,6 +125,11 @@ module.exports = class Product extends BOBasePage {
     await this.clickAndWaitForNavigation(this.filterSearchButton);
   }
 
+  /**
+   * Get Product Price
+   * @param row
+   * @return {Promise<textContent>}
+   */
   async getProductPriceFromList(row) {
     return this.getNumberFromText(this.productsListTableColumnPrice.replace('%ROW', row));
   }
@@ -122,16 +146,26 @@ module.exports = class Product extends BOBasePage {
     await this.clickAndWaitForNavigation(this.filterSearchButton);
   }
 
+  /**
+   * Get Product Quantity
+   * @param row
+   * @return {Promise<textContent>}
+   */
   async getProductQuantityFromList(row) {
     return this.getNumberFromText(this.productsListTableColumnQuantity.replace('%ROW', row));
   }
 
+  /**
+   * Get Product Status
+   * @param row
+   * @return {Promise<textContent>}
+   */
   async getProductStatusFromList(row) {
-    return this.getNumberFromText(this.productsListTableColumnStatus.replace('%ROW', row));
+    return this.getTextContent(this.productsListTableColumnStatus.replace('%ROW', row));
   }
 
   /**
-   * Filter products from inputs : Name, reference and Category
+   * Filter products
    * @param filterBy
    * @param value
    * @param filterType
@@ -282,5 +316,38 @@ module.exports = class Product extends BOBasePage {
       this.page.click(this.modalDialogDeleteNowButton),
     ]);
     return this.getTextContent(this.alertSuccessBlockParagraph);
+  }
+
+  /**
+   * Get Value of column Displayed
+   * @param row, row in table
+   * @return {Promise<boolean|true>}
+   */
+  async getToggleColumnValue(row) {
+    if (await this.elementVisible(
+      this.productsListTableColumnStatusEnabled.replace('%ROW', row),
+      100,
+    )) return true;
+    return false;
+  }
+
+  /**
+   * Quick edit toggle column value
+   * @param row, row in table
+   * @param valueWanted, Value wanted in column
+   * @return {Promise<boolean>} return true if action is done, false otherwise
+   */
+  async updateToggleColumnValue(row, valueWanted = true) {
+    if (await this.getToggleColumnValue(row) !== valueWanted) {
+      this.page.click(this.productsListTableColumnStatus.replace('%ROW', row));
+      if (valueWanted) {
+        await this.page.waitForSelector(this.productsListTableColumnStatusEnabled.replace('%ROW', row));
+      } else {
+        await this.page.waitForSelector(
+          this.productsListTableColumnStatusDisabled.replace('%ROW', row));
+      }
+      return true;
+    }
+    return false;
   }
 };
