@@ -3,3 +3,16 @@
     max-width: 120px;
   }
 }
+
+.grid {
+  table.grid-table {
+    tr {
+      td {
+        .unofficial {
+          color: $medium-gray;
+          font-size: 20px;
+        }
+      }
+    }
+  }
+}

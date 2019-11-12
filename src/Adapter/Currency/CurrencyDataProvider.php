@@ -89,7 +89,7 @@ class CurrencyDataProvider implements CurrencyDataProviderInterface
      */
     public function getCurrencyByIsoCode($isoCode, $idLang = null)
     {
-        $currencyId = Currency::getIdByIsoCode($isoCode);
+        $currencyId = Currency::getIdByIsoCode($isoCode, 0, false, true);
         if (!$currencyId) {
             return null;
         }
@@ -102,7 +102,10 @@ class CurrencyDataProvider implements CurrencyDataProviderInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param string $isoCode
+     * @param string $locale
+     *
+     * @return Currency|null
      */
     public function getCurrencyByIsoCodeAndLocale($isoCode, $locale)
     {
@@ -121,7 +124,11 @@ class CurrencyDataProvider implements CurrencyDataProviderInterface
         }
 
         $currency = $this->getCurrencyByIsoCode($isoCode, $idLang);
-        if (null === $currency) {
+        // Currently soft deleted currency are considered "absent", and when you try to reinstall
+        // it a new instance is created This is prone to error, the previously created currency
+        // should be re-enabled So perform the check here for deleted status but it should be improved
+        // (even this method should not exist)
+        if (null === $currency || $currency->deleted) {
             $currency = new Currency(null, $idLang);
         }
 
