@@ -251,8 +251,7 @@ describe('Create, Read, Update and Delete Category', async () => {
       await this.pageObjects.foBasePage.clickAndWaitForNavigation(this.pageObjects.foBasePage.siteMapLink);
       const pageTitle = await this.pageObjects.siteMapPage.getPageTitle();
       await expect(pageTitle).to.equal(this.pageObjects.siteMapPage.pageTitle);
-      const categoryName = await this.pageObjects.categoriesPage.elementVisible(
-        this.pageObjects.siteMapPage.categoryNameSelect.replace('%ID', categoryID));
+      const categoryName = await this.pageObjects.siteMapPage.isVisibleCategory(categoryID);
       await expect(categoryName).to.be.false;
       page = await this.pageObjects.foBasePage.closePage(browser, 1);
       this.pageObjects = await init();
