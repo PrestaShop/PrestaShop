@@ -866,4 +866,15 @@ class CurrencyCore extends ObjectModel
         $this->name = $namesByLang;
         $this->symbol = $symbolsByLang;
     }
+    
+
+    /**
+     * Classic __toString php behaviour
+     * @return string
+     */
+    public function __toString()
+    {
+      return (string) $this->name;
+    }
+
 }
