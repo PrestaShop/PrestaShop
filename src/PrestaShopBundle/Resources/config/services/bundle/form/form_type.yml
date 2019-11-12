@@ -905,6 +905,29 @@ services:
             - '@translator'
             - '@=service("prestashop.adapter.multistore_feature").isActive()'
         tags:
+          - { name: form.type }
+
+    form.type.sell.catalog_price_rule:
+        class: 'PrestaShopBundle\Form\Admin\Sell\CatalogPriceRule\CatalogPriceRuleType'
+        public: true
+        arguments:
+            - '@translator'
+            - '@=service("prestashop.adapter.multistore_feature").isUsed()'
+            - '@=service("prestashop.core.form.choice_provider.currency_by_id").getChoices()'
+            - '@=service("prestashop.core.form.choice_provider.country_by_id").getChoices()'
+            - '@=service("prestashop.core.form.choice_provider.group_by_id").getChoices()'
+            - '@=service("prestashop.adapter.form.choice_provider.shop_name_by_id").getChoices()'
+            - '@=service("prestashop.core.form.choice_provider.tax_inclusion").getChoices()'
+        tags:
+            - { name: form.type }
+
+    form.type.reduction:
+        class: 'PrestaShopBundle\Form\Admin\Type\ReductionType'
+        parent: 'form.type.common_type'
+        arguments:
+            - '@=service("prestashop.core.form.choice_provider.price_reduction_type").getChoices()'
+        public: true
+        tags:
             - { name: form.type }
 
     form.type.sell.customer.private_note:

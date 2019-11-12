@@ -214,3 +214,13 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\OrderDiscountTypeChoiceProvider'
     arguments:
       - '@translator'
+
+  prestashop.core.form.choice_provider.tax_inclusion:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\TaxInclusionChoiceProvider'
+    arguments:
+      - '@translator'
+
+  prestashop.core.form.choice_provider.price_reduction_type:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\PriceReductionTypeChoiceProvider'
+    arguments:
+      - '@translator'

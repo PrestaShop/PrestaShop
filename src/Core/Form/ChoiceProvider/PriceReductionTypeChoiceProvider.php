@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -24,20 +24,38 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception;
+namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
+
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Is thrown when catalog price rule cannot be deleted
+ * Provides choices for price reduction types
  */
-class DeleteCatalogPriceRuleException extends CatalogPriceRuleException
+final class PriceReductionTypeChoiceProvider implements FormChoiceProviderInterface
 {
     /**
-     * When fails to delete single catalog price rule
+     * @var TranslatorInterface
      */
-    const FAILED_DELETE = 10;
+    private $translator;
 
     /**
-     * When fails to delete catalog price rule in bulk action
+     * @param TranslatorInterface $translator
      */
-    const FAILED_BULK_DELETE = 20;
+    public function __construct(TranslatorInterface $translator)
+    {
+        $this->translator = $translator;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getChoices()
+    {
+        return [
+            $this->translator->trans('Amount', [], 'Admin.Global') => Reduction::TYPE_AMOUNT,
+            $this->translator->trans('Percentage', [], 'Admin.Global') => Reduction::TYPE_PERCENTAGE,
+        ];
+    }
 }
