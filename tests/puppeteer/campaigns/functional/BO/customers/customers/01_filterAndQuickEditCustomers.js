@@ -61,7 +61,6 @@ describe('Filter And Quick Edit Customers', async () => {
         const textColumn = await this.pageObjects.customersPage.getTextColumnFromTableCustomers(i, 'id_customer');
         await expect(textColumn).to.contains(DefaultAccount.id);
       }
-      /* eslint-enable no-await-in-loop */
     });
 
     it('should reset all filters', async function () {
