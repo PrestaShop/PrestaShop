@@ -62,13 +62,9 @@ describe('Filter And Quick Edit brands', async () => {
       {args: {filterType: 'select', filterBy: 'active', filterValue: demoBrands.first.enabled}, expected: 'check'},
     ];
     tests.forEach((test) => {
-      it(`should filter by ${test.args.filterBy} '= '${test.args.filterValue}'`, async function () {
+      it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
         if (test.args.filterBy === 'active') {
-          await this.pageObjects.brandsPage.filterBrandsEnabled(
-            test.args.filterType,
-            test.args.filterBy,
-            test.args.filterValue,
-          );
+          await this.pageObjects.brandsPage.filterBrandsEnabled(test.args.filterValue);
         } else {
           await this.pageObjects.brandsPage.filterBrands(
             test.args.filterType,
