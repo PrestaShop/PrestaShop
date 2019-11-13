@@ -148,7 +148,7 @@ describe('Filter And Quick Edit taxes', async () => {
         );
         await expect(resultMessage).to.contains(this.pageObjects.taxesPage.successfulUpdateStatusMessage);
       }
-      const isStatusChanged = await this.pageObjects.taxesPage.elementVisible(1, 'active');
+      const isStatusChanged = await this.pageObjects.taxesPage.getToggleColumnValue(1, 'active');
       await expect(isStatusChanged).to.be.true;
     });
 
