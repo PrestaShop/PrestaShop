@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Currency\QueryResult;
 
-class ReferenceCurrency
+class DisplayableCurrency
 {
     /**
      * @var string[]
@@ -60,7 +60,7 @@ class ReferenceCurrency
 
     /**
      * @param string $isoCode
-     * @param string $numericIsoCode
+     * @param string|null $numericIsoCode
      * @param array $names
      * @param array $symbols
      * @param array $patterns
@@ -68,7 +68,7 @@ class ReferenceCurrency
      */
     public function __construct(
         string $isoCode,
-        string $numericIsoCode,
+        ?string $numericIsoCode,
         array $names,
         array $symbols,
         array $patterns,
@@ -95,9 +95,9 @@ class ReferenceCurrency
     /**
      * Currency numeric ISO code
      *
-     * @return string
+     * @return string|null
      */
-    public function getNumericIsoCode(): string
+    public function getNumericIsoCode(): ?string
     {
         return $this->numericIsoCode;
     }

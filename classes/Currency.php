@@ -524,6 +524,7 @@ class CurrencyCore extends ObjectModel
 
         return $this;
     }
+
     /**
      * Return available currencies.
      *

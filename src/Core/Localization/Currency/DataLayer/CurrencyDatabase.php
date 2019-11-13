@@ -117,12 +117,7 @@ class CurrencyDatabase extends AbstractDataLayer implements CurrencyDataLayerInt
             return null;
         }
 
-        /**
-         * Always check the database data, in case it is invalid then at least the reference data
-         * from CurrencyReference will be present. Especially for localized data.
-         */
         $currencyData = new CurrencyData();
-
         $currencyData->setIsoCode($currencyEntity->iso_code);
         $currencyData->setNumericIsoCode($currencyEntity->numeric_iso_code);
         $currencyData->setPrecision($currencyEntity->precision);

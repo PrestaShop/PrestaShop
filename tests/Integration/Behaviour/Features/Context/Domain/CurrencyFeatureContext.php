@@ -31,6 +31,8 @@ use Currency;
 use Configuration;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Query\GetDisplayableCurrency;
+use PrestaShop\PrestaShop\Core\Domain\Currency\QueryResult\DisplayableCurrency;
 use RuntimeException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddOfficialCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddUnofficialCurrencyCommand;
@@ -51,7 +53,7 @@ use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 class CurrencyFeatureContext extends AbstractDomainFeatureContext
 {
     /**
-     * @var ReferenceCurrency
+     * @var ReferenceCurrency|DisplayableCurrency
      */
     private $currencyData;
 
@@ -215,9 +217,22 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then I should get reference data:
+     * @When I request displayable data for :currencyIsoCode
      */
-    public function checkReferenceData(TableNode $node)
+    public function getCurrencyDisplayableData($currencyIsoCode)
+    {
+        try {
+            $this->lastException = null;
+            $this->currencyData = $this->getCommandBus()->handle(new GetDisplayableCurrency($currencyIsoCode));
+        } catch (CurrencyException $e) {
+            $this->lastException = $e;
+        }
+    }
+
+    /**
+     * @Then I should get currency data:
+     */
+    public function checkCurrencyData(TableNode $node)
     {
         $apiData = [
             'iso_code' => $this->currencyData->getIsoCode(),
@@ -239,7 +254,7 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
 
             if ($expectedValue != $apiData[$key]) {
                 throw new RuntimeException(sprintf(
-                    'Invalid API data field %s: %s expected %s',
+                    'Invalid currency data field %s: %s expected %s',
                     $key,
                     is_array($apiData[$key]) ? json_encode($apiData[$key]) : $apiData[$key],
                     is_array($expectedValue) ? json_encode($expectedValue) : $expectedValue
