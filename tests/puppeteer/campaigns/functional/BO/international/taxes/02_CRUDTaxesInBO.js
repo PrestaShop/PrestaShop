@@ -67,7 +67,7 @@ describe('Create, Update and Delete Tax in BO', async () => {
     it('should create Tax and check result', async function () {
       const textResult = await this.pageObjects.addTaxPage.createEditTax(createTaxData);
       await expect(textResult).to.equal(this.pageObjects.addTaxPage.successfulCreationMessage);
-      const numberOfTaxesAfterCreation = await this.pageObjects.addTaxPage.getNumberOfElementInGrid();
+      const numberOfTaxesAfterCreation = await this.pageObjects.taxesPage.getNumberOfElementInGrid();
       await expect(numberOfTaxesAfterCreation).to.be.equal(numberOfTaxes + 1);
     });
   });
