@@ -324,11 +324,10 @@ module.exports = class Product extends BOBasePage {
    * @return {Promise<boolean|true>}
    */
   async getToggleColumnValue(row) {
-    if (await this.elementVisible(
+    return this.elementVisible(
       this.productsListTableColumnStatusEnabled.replace('%ROW', row),
       100,
-    )) return true;
-    return false;
+    );
   }
 
   /**
