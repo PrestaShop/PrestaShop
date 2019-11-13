@@ -105,3 +105,12 @@ services:
         - '@=service("prestashop.core.admin.lang.repository").findAll()'
       tags:
         - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Query\GetReferenceCurrency' }
+
+    prestashop.adapter.currency.query_handler.get_displayable_currency:
+      class: 'PrestaShop\PrestaShop\Adapter\Currency\QueryHandler\GetDisplayableCurrencyHandler'
+      arguments:
+        - '@prestashop.core.localization.cldr.locale_repository'
+        - '@prestashop.core.query_bus'
+        - '@=service("prestashop.core.admin.lang.repository").findAll()'
+      tags:
+        - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Query\GetDisplayableCurrency' }
