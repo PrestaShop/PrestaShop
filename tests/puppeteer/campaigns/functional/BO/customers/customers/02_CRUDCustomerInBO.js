@@ -74,9 +74,7 @@ describe('Create, Read, Update and Delete Customer in BO', async () => {
     it('should create customer and check result', async function () {
       const textResult = await this.pageObjects.addCustomerPage.createEditCustomer(createCustomerData);
       await expect(textResult).to.equal(this.pageObjects.customersPage.successfulCreationMessage);
-      const numberOfCustomersAfterCreation = await this.pageObjects.customersPage.getNumberFromText(
-        this.pageObjects.customersPage.customerGridTitle,
-      );
+      const numberOfCustomersAfterCreation = await this.pageObjects.customersPage.getNumberOfElementInGrid();
       await expect(numberOfCustomersAfterCreation).to.be.equal(numberOfCustomers + 1);
     });
 
@@ -101,9 +99,7 @@ describe('Create, Read, Update and Delete Customer in BO', async () => {
         'email',
         createCustomerData.email,
       );
-      const textEmail = await this.pageObjects.customersPage.getTextContent(
-        this.pageObjects.customersPage.customersListTableColumn.replace('%ROW', '1').replace('%COLUMN', 'email'),
-      );
+      const textEmail = await this.pageObjects.customersPage.getTextColumnFromTableCustomers(1, 'email');
       await expect(textEmail).to.contains(createCustomerData.email);
     });
 
@@ -114,9 +110,7 @@ describe('Create, Read, Update and Delete Customer in BO', async () => {
     });
 
     it('should check customer personal information', async function () {
-      const cardHeaderText = await this.pageObjects.viewCustomerPage.getTextContent(
-        this.pageObjects.viewCustomerPage.cardHeaderDiv.replace('%ID', '1'),
-      );
+      const cardHeaderText = await this.pageObjects.viewCustomerPage.getTextFromCardHeader(1);
       await expect(cardHeaderText).to.contains(createCustomerData.firstName);
       await expect(cardHeaderText).to.contains(createCustomerData.lastName);
       await expect(cardHeaderText).to.contains(createCustomerData.email);
@@ -139,9 +133,7 @@ describe('Create, Read, Update and Delete Customer in BO', async () => {
         'email',
         createCustomerData.email,
       );
-      const textEmail = await this.pageObjects.customersPage.getTextContent(
-        this.pageObjects.customersPage.customersListTableColumn.replace('%ROW', '1').replace('%COLUMN', 'email'),
-      );
+      const textEmail = await this.pageObjects.customersPage.getTextColumnFromTableCustomers(1, 'email');
       await expect(textEmail).to.contains(createCustomerData.email);
     });
 
@@ -177,9 +169,7 @@ describe('Create, Read, Update and Delete Customer in BO', async () => {
         'email',
         editCustomerData.email,
       );
-      const textEmail = await this.pageObjects.customersPage.getTextContent(
-        this.pageObjects.customersPage.customersListTableColumn.replace('%ROW', '1').replace('%COLUMN', 'email'),
-      );
+      const textEmail = await this.pageObjects.customersPage.getTextColumnFromTableCustomers(1, 'email');
       await expect(textEmail).to.contains(editCustomerData.email);
     });
 
@@ -190,9 +180,7 @@ describe('Create, Read, Update and Delete Customer in BO', async () => {
     });
 
     it('should check customer personal information', async function () {
-      const cardHeaderText = await this.pageObjects.viewCustomerPage.getTextContent(
-        this.pageObjects.viewCustomerPage.cardHeaderDiv.replace('%ID', '1'),
-      );
+      const cardHeaderText = await this.pageObjects.viewCustomerPage.getTextFromCardHeader(1);
       await expect(cardHeaderText).to.contains(editCustomerData.firstName);
       await expect(cardHeaderText).to.contains(editCustomerData.lastName);
       await expect(cardHeaderText).to.contains(editCustomerData.email);
@@ -215,9 +203,7 @@ describe('Create, Read, Update and Delete Customer in BO', async () => {
         'email',
         editCustomerData.email,
       );
-      const textEmail = await this.pageObjects.customersPage.getTextContent(
-        this.pageObjects.customersPage.customersListTableColumn.replace('%ROW', '1').replace('%COLUMN', 'email'),
-      );
+      const textEmail = await this.pageObjects.customersPage.getTextColumnFromTableCustomers(1, 'email');
       await expect(textEmail).to.contains(editCustomerData.email);
     });
 

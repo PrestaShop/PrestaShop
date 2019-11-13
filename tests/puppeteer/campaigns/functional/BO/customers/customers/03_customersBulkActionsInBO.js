@@ -68,9 +68,7 @@ describe('Create Customers, Then disable / Enable and Delete with Bulk actions',
     it('should create first customer and check result', async function () {
       const textResult = await this.pageObjects.addCustomerPage.createEditCustomer(firstCustomerData);
       await expect(textResult).to.equal(this.pageObjects.customersPage.successfulCreationMessage);
-      const numberOfCustomersAfterCreation = await this.pageObjects.customersPage.getNumberFromText(
-        this.pageObjects.customersPage.customerGridTitle,
-      );
+      const numberOfCustomersAfterCreation = await this.pageObjects.customersPage.getNumberOfElementInGrid();
       await expect(numberOfCustomersAfterCreation).to.be.equal(numberOfCustomers + 1);
     });
 
@@ -83,9 +81,7 @@ describe('Create Customers, Then disable / Enable and Delete with Bulk actions',
     it('should create second customer and check result', async function () {
       const textResult = await this.pageObjects.addCustomerPage.createEditCustomer(secondCustomerData);
       await expect(textResult).to.equal(this.pageObjects.customersPage.successfulCreationMessage);
-      const numberOfCustomersAfterCreation = await this.pageObjects.customersPage.getNumberFromText(
-        this.pageObjects.customersPage.customerGridTitle,
-      );
+      const numberOfCustomersAfterCreation = await this.pageObjects.customersPage.getNumberOfElementInGrid();
       await expect(numberOfCustomersAfterCreation).to.be.equal(numberOfCustomers + 2);
     });
   });
@@ -97,44 +93,30 @@ describe('Create Customers, Then disable / Enable and Delete with Bulk actions',
         'firstname',
         'todelete',
       );
-      const textResult = await this.pageObjects.customersPage.getTextContent(
-        this.pageObjects.customersPage.customersListTableColumn.replace('%ROW', '1').replace('%COLUMN', 'firstname'),
-      );
+      const textResult = await this.pageObjects.customersPage.getTextColumnFromTableCustomers(1, 'firstname');
       await expect(textResult).to.contains('todelete');
     });
 
     it('should disable customers with Bulk Actions and check Result', async function () {
       const disableTextResult = await this.pageObjects.customersPage.changeCustomersEnabledColumnBulkActions(false);
       await expect(disableTextResult).to.be.equal(this.pageObjects.customersPage.successfulUpdateMessage);
-      const numberOfCustomersInGrid = await this.pageObjects.customersPage.getNumberFromText(
-        this.pageObjects.customersPage.customerGridTitle,
-      );
+      const numberOfCustomersInGrid = await this.pageObjects.customersPage.getNumberOfElementInGrid();
       await expect(numberOfCustomersInGrid).to.be.at.most(numberOfCustomers);
-      /* eslint-disable no-await-in-loop */
       for (let i = 1; i <= numberOfCustomersInGrid; i++) {
-        const textColumn = await this.pageObjects.customersPage.getTextContent(
-          this.pageObjects.customersPage.customersListTableColumn.replace('%ROW', i).replace('%COLUMN', 'active'),
-        );
+        const textColumn = await this.pageObjects.customersPage.getTextColumnFromTableCustomers(1, 'active');
         await expect(textColumn).to.contains('clear');
       }
-      /* eslint-enable no-await-in-loop */
     });
 
     it('should enable customers with Bulk Actions and check Result', async function () {
       const enableTextResult = await this.pageObjects.customersPage.changeCustomersEnabledColumnBulkActions(true);
       await expect(enableTextResult).to.be.equal(this.pageObjects.customersPage.successfulUpdateMessage);
-      const numberOfCustomersInGrid = await this.pageObjects.customersPage.getNumberFromText(
-        this.pageObjects.customersPage.customerGridTitle,
-      );
+      const numberOfCustomersInGrid = await this.pageObjects.customersPage.getNumberOfElementInGrid();
       await expect(numberOfCustomersInGrid).to.be.at.most(numberOfCustomers);
-      /* eslint-disable no-await-in-loop */
       for (let i = 1; i <= numberOfCustomersInGrid; i++) {
-        const textColumn = await this.pageObjects.customersPage.getTextContent(
-          this.pageObjects.customersPage.customersListTableColumn.replace('%ROW', i).replace('%COLUMN', 'active'),
-        );
+        const textColumn = await this.pageObjects.customersPage.getTextColumnFromTableCustomers(1, 'active');
         await expect(textColumn).to.contains('check');
       }
-      /* eslint-enable no-await-in-loop */
     });
   });
   // 3 : Delete Customers created with bulk actions
@@ -145,9 +127,7 @@ describe('Create Customers, Then disable / Enable and Delete with Bulk actions',
         'firstname',
         'todelete',
       );
-      const textResult = await this.pageObjects.customersPage.getTextContent(
-        this.pageObjects.customersPage.customersListTableColumn.replace('%ROW', '1').replace('%COLUMN', 'firstname'),
-      );
+      const textResult = await this.pageObjects.customersPage.getTextColumnFromTableCustomers(1, 'firstname');
       await expect(textResult).to.contains('todelete');
     });
 

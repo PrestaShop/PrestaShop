@@ -55,15 +55,10 @@ describe('Filter And Quick Edit Customers', async () => {
   describe('Filter Customers', async () => {
     it('should filter by Id \'2\'', async function () {
       await this.pageObjects.customersPage.filterCustomers('input', 'id_customer', DefaultAccount.id);
-      const numberOfCustomersAfterFilter = await this.pageObjects.customersPage.getNumberFromText(
-        this.pageObjects.customersPage.customerGridTitle,
-      );
+      const numberOfCustomersAfterFilter = await this.pageObjects.customersPage.getNumberOfElementInGrid();
       await expect(numberOfCustomersAfterFilter).to.be.at.most(numberOfCustomers);
-      /* eslint-disable no-await-in-loop */
       for (let i = 1; i <= numberOfCustomersAfterFilter; i++) {
-        const textColumn = await this.pageObjects.customersPage.getTextContent(
-          this.pageObjects.customersPage.customersListTableColumn.replace('%ROW', i).replace('%COLUMN', 'id_customer'),
-        );
+        const textColumn = await this.pageObjects.customersPage.getTextColumnFromTableCustomers(i, 'id_customer');
         await expect(textColumn).to.contains(DefaultAccount.id);
       }
       /* eslint-enable no-await-in-loop */
@@ -80,18 +75,12 @@ describe('Filter And Quick Edit Customers', async () => {
         'social_title',
         DefaultAccount.socialTitle,
       );
-      const numberOfCustomersAfterFilter = await this.pageObjects.customersPage.getNumberFromText(
-        this.pageObjects.customersPage.customerGridTitle,
-      );
+      const numberOfCustomersAfterFilter = await this.pageObjects.customersPage.getNumberOfElementInGrid();
       await expect(numberOfCustomersAfterFilter).to.be.at.most(numberOfCustomers);
-      /* eslint-disable no-await-in-loop */
       for (let i = 1; i <= numberOfCustomersAfterFilter; i++) {
-        const textColumn = await this.pageObjects.customersPage.getTextContent(
-          this.pageObjects.customersPage.customersListTableColumn.replace('%ROW', i).replace('%COLUMN', 'social_title'),
-        );
+        const textColumn = await this.pageObjects.customersPage.getTextColumnFromTableCustomers(i, 'social_title');
         await expect(textColumn).to.contains(DefaultAccount.socialTitle);
       }
-      /* eslint-enable no-await-in-loop */
     });
 
     it('should reset all filters', async function () {
@@ -105,18 +94,12 @@ describe('Filter And Quick Edit Customers', async () => {
         'firstname',
         DefaultAccount.firstName,
       );
-      const numberOfCustomersAfterFilter = await this.pageObjects.customersPage.getNumberFromText(
-        this.pageObjects.customersPage.customerGridTitle,
-      );
+      const numberOfCustomersAfterFilter = await this.pageObjects.customersPage.getNumberOfElementInGrid();
       await expect(numberOfCustomersAfterFilter).to.be.at.most(numberOfCustomers);
-      /* eslint-disable no-await-in-loop */
       for (let i = 1; i <= numberOfCustomersAfterFilter; i++) {
-        const textColumn = await this.pageObjects.customersPage.getTextContent(
-          this.pageObjects.customersPage.customersListTableColumn.replace('%ROW', i).replace('%COLUMN', 'firstname'),
-        );
+        const textColumn = await this.pageObjects.customersPage.getTextColumnFromTableCustomers(i, 'firstname');
         await expect(textColumn).to.contains(DefaultAccount.firstName);
       }
-      /* eslint-enable no-await-in-loop */
     });
 
     it('should reset all filters', async function () {
@@ -130,18 +113,12 @@ describe('Filter And Quick Edit Customers', async () => {
         'lastname',
         DefaultAccount.lastName,
       );
-      const numberOfCustomersAfterFilter = await this.pageObjects.customersPage.getNumberFromText(
-        this.pageObjects.customersPage.customerGridTitle,
-      );
+      const numberOfCustomersAfterFilter = await this.pageObjects.customersPage.getNumberOfElementInGrid();
       await expect(numberOfCustomersAfterFilter).to.be.at.most(numberOfCustomers);
-      /* eslint-disable no-await-in-loop */
       for (let i = 1; i <= numberOfCustomersAfterFilter; i++) {
-        const textColumn = await this.pageObjects.customersPage.getTextContent(
-          this.pageObjects.customersPage.customersListTableColumn.replace('%ROW', i).replace('%COLUMN', 'lastname'),
-        );
+        const textColumn = await this.pageObjects.customersPage.getTextColumnFromTableCustomers(i, 'lastname');
         await expect(textColumn).to.contains(DefaultAccount.lastName);
       }
-      /* eslint-enable no-await-in-loop */
     });
 
     it('should reset all filters', async function () {
@@ -155,18 +132,12 @@ describe('Filter And Quick Edit Customers', async () => {
         'email',
         DefaultAccount.email,
       );
-      const numberOfCustomersAfterFilter = await this.pageObjects.customersPage.getNumberFromText(
-        this.pageObjects.customersPage.customerGridTitle,
-      );
+      const numberOfCustomersAfterFilter = await this.pageObjects.customersPage.getNumberOfElementInGrid();
       await expect(numberOfCustomersAfterFilter).to.be.at.most(numberOfCustomers);
-      /* eslint-disable no-await-in-loop */
       for (let i = 1; i <= numberOfCustomersAfterFilter; i++) {
-        const textColumn = await this.pageObjects.customersPage.getTextContent(
-          this.pageObjects.customersPage.customersListTableColumn.replace('%ROW', i).replace('%COLUMN', 'email'),
-        );
+        const textColumn = await this.pageObjects.customersPage.getTextColumnFromTableCustomers(i, 'email');
         await expect(textColumn).to.contains(DefaultAccount.email);
       }
-      /* eslint-enable no-await-in-loop */
     });
 
     it('should reset all filters', async function () {
@@ -176,18 +147,12 @@ describe('Filter And Quick Edit Customers', async () => {
 
     it('should filter by Enabled \'Yes\'', async function () {
       await this.pageObjects.customersPage.filterCustomersSwitch('active', DefaultAccount.enabled);
-      const numberOfCustomersAfterFilter = await this.pageObjects.customersPage.getNumberFromText(
-        this.pageObjects.customersPage.customerGridTitle,
-      );
+      const numberOfCustomersAfterFilter = await this.pageObjects.customersPage.getNumberOfElementInGrid();
       await expect(numberOfCustomersAfterFilter).to.be.at.most(numberOfCustomers);
-      /* eslint-disable no-await-in-loop */
       for (let i = 1; i <= numberOfCustomersAfterFilter; i++) {
-        const textColumn = await this.pageObjects.customersPage.getTextContent(
-          this.pageObjects.customersPage.customersListTableColumn.replace('%ROW', i).replace('%COLUMN', 'active'),
-        );
+        const textColumn = await this.pageObjects.customersPage.getTextColumnFromTableCustomers(i, 'active');
         await expect(textColumn).to.contains('check');
       }
-      /* eslint-enable no-await-in-loop */
     });
 
     it('should reset all filters', async function () {
@@ -197,18 +162,12 @@ describe('Filter And Quick Edit Customers', async () => {
 
     it('should filter by Newsletter \'Yes\'', async function () {
       await this.pageObjects.customersPage.filterCustomersSwitch('newsletter', DefaultAccount.newsletter);
-      const numberOfCustomersAfterFilter = await this.pageObjects.customersPage.getNumberFromText(
-        this.pageObjects.customersPage.customerGridTitle,
-      );
+      const numberOfCustomersAfterFilter = await this.pageObjects.customersPage.getNumberOfElementInGrid();
       await expect(numberOfCustomersAfterFilter).to.be.at.most(numberOfCustomers);
-      /* eslint-disable no-await-in-loop */
       for (let i = 1; i <= numberOfCustomersAfterFilter; i++) {
-        const textColumn = await this.pageObjects.customersPage.getTextContent(
-          this.pageObjects.customersPage.customersListTableColumn.replace('%ROW', i).replace('%COLUMN', 'newsletter'),
-        );
+        const textColumn = await this.pageObjects.customersPage.getTextColumnFromTableCustomers(i, 'newsletter');
         await expect(textColumn).to.contains('check');
       }
-      /* eslint-enable no-await-in-loop */
     });
 
     it('should reset all filters', async function () {
@@ -218,18 +177,12 @@ describe('Filter And Quick Edit Customers', async () => {
 
     it('should filter by Partner Offers \'YES\'', async function () {
       await this.pageObjects.customersPage.filterCustomersSwitch('optin', DefaultAccount.partnerOffers);
-      const numberOfCustomersAfterFilter = await this.pageObjects.customersPage.getNumberFromText(
-        this.pageObjects.customersPage.customerGridTitle,
-      );
+      const numberOfCustomersAfterFilter = await this.pageObjects.customersPage.getNumberOfElementInGrid();
       await expect(numberOfCustomersAfterFilter).to.be.at.most(numberOfCustomers);
-      /* eslint-disable no-await-in-loop */
       for (let i = 1; i <= numberOfCustomersAfterFilter; i++) {
-        const textColumn = await this.pageObjects.customersPage.getTextContent(
-          this.pageObjects.customersPage.customersListTableColumn.replace('%ROW', i).replace('%COLUMN', 'optin'),
-        );
+        const textColumn = await this.pageObjects.customersPage.getTextColumnFromTableCustomers(i, 'optin');
         await expect(textColumn).to.contains('check');
       }
-      /* eslint-enable no-await-in-loop */
     });
 
     it('should reset all filters', async function () {
@@ -246,9 +199,7 @@ describe('Filter And Quick Edit Customers', async () => {
         'email',
         DefaultAccount.email,
       );
-      const numberOfCustomersAfterFilter = await this.pageObjects.customersPage.getNumberFromText(
-        this.pageObjects.customersPage.customerGridTitle,
-      );
+      const numberOfCustomersAfterFilter = await this.pageObjects.customersPage.getNumberOfElementInGrid();
       await expect(numberOfCustomersAfterFilter).to.be.at.above(0);
     });
 
@@ -264,12 +215,8 @@ describe('Filter And Quick Edit Customers', async () => {
         );
         await expect(resultMessage).to.contains(this.pageObjects.customersPage.successfulUpdateStatusMessage);
       }
-      const isStatusChanged = await this.pageObjects.customersPage.elementVisible(
-        this.pageObjects.customersPage.customersListColumnNotValidIcon
-          .replace('%ROW', 1).replace('%COLUMN', 'active'),
-        100,
-      );
-      await expect(isStatusChanged).to.be.true;
+      const isStatusChanged = await this.pageObjects.customersPage.getToggleColumnValue(1, 'active');
+      await expect(isStatusChanged).to.be.false;
     });
 
     it('should enable first Customer', async function () {
@@ -284,11 +231,7 @@ describe('Filter And Quick Edit Customers', async () => {
         );
         await expect(resultMessage).to.contains(this.pageObjects.customersPage.successfulUpdateStatusMessage);
       }
-      const isStatusChanged = await this.pageObjects.customersPage.elementVisible(
-        this.pageObjects.customersPage.customersListColumnValidIcon
-          .replace('%ROW', 1).replace('%COLUMN', 'active'),
-        100,
-      );
+      const isStatusChanged = await this.pageObjects.customersPage.getToggleColumnValue(1, 'active');
       await expect(isStatusChanged).to.be.true;
     });
 
@@ -304,12 +247,8 @@ describe('Filter And Quick Edit Customers', async () => {
         );
         await expect(resultMessage).to.contains(this.pageObjects.customersPage.successfulUpdateStatusMessage);
       }
-      const isStatusChanged = await this.pageObjects.customersPage.elementVisible(
-        this.pageObjects.customersPage.customersListColumnNotValidIcon
-          .replace('%ROW', 1).replace('%COLUMN', 'newsletter'),
-        100,
-      );
-      await expect(isStatusChanged).to.be.true;
+      const isStatusChanged = await this.pageObjects.customersPage.getToggleColumnValue(1, 'newsletter');
+      await expect(isStatusChanged).to.be.false;
     });
 
     it('should Change Newsletter to "Yes" for first Customer', async function () {
@@ -324,11 +263,7 @@ describe('Filter And Quick Edit Customers', async () => {
         );
         await expect(resultMessage).to.contains(this.pageObjects.customersPage.successfulUpdateStatusMessage);
       }
-      const isStatusChanged = await this.pageObjects.customersPage.elementVisible(
-        this.pageObjects.customersPage.customersListColumnValidIcon.replace('%ROW', 1)
-          .replace('%COLUMN', 'newsletter'),
-        100,
-      );
+      const isStatusChanged = await this.pageObjects.customersPage.getToggleColumnValue(1, 'newsletter');
       await expect(isStatusChanged).to.be.true;
     });
 
@@ -344,12 +279,8 @@ describe('Filter And Quick Edit Customers', async () => {
         );
         await expect(resultMessage).to.contains(this.pageObjects.customersPage.successfulUpdateStatusMessage);
       }
-      const isStatusChanged = await this.pageObjects.customersPage.elementVisible(
-        this.pageObjects.customersPage.customersListColumnNotValidIcon.replace('%ROW', 1)
-          .replace('%COLUMN', 'optin'),
-        100,
-      );
-      await expect(isStatusChanged).to.be.true;
+      const isStatusChanged = await this.pageObjects.customersPage.getToggleColumnValue(1, 'optin');
+      await expect(isStatusChanged).to.be.false;
     });
 
     it('should Change Partner offers to "Yes" for first Customer', async function () {
@@ -364,10 +295,7 @@ describe('Filter And Quick Edit Customers', async () => {
         );
         await expect(resultMessage).to.contains(this.pageObjects.customersPage.successfulUpdateStatusMessage);
       }
-      const isStatusChanged = await this.pageObjects.customersPage.elementVisible(
-        this.pageObjects.customersPage.customersListColumnValidIcon.replace('%ROW', 1).replace('%COLUMN', 'optin'),
-        100,
-      );
+      const isStatusChanged = await this.pageObjects.customersPage.getToggleColumnValue(1, 'optin');
       await expect(isStatusChanged).to.be.true;
     });
   });
