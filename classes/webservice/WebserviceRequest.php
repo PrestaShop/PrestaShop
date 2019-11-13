@@ -267,16 +267,16 @@ class WebserviceRequestCore
         }
         $this->outputFormat = $type;
         switch ($type) {
-            case 'JSON':
-                require_once __DIR__ . '/WebserviceOutputJSON.php';
-                $obj_render = new WebserviceOutputJSON();
+        case 'JSON':
+            include_once __DIR__ . '/WebserviceOutputJSON.php';
+            $obj_render = new WebserviceOutputJSON();
 
-                break;
-            case 'XML':
-            default:
-                $obj_render = new WebserviceOutputXML();
+            break;
+        case 'XML':
+        default:
+            $obj_render = new WebserviceOutputXML();
 
-                break;
+            break;
         }
 
         return $obj_render;
@@ -366,8 +366,12 @@ class WebserviceRequestCore
         return $resources;
     }
 
-    /** @todo Check how get parameters */
-    /** @todo : set this method out */
+    /**
+     * @todo Check how get parameters 
+     */
+    /**
+     * @todo : set this method out 
+     */
 
     /**
      * This method is used for calculate the price for products on the output details.
@@ -388,13 +392,15 @@ class WebserviceRequestCore
         return $field;
     }
 
-    /** @todo : set this method out */
+    /**
+     * @todo : set this method out 
+     */
 
     /**
      * This method is used for calculate the price for products on a virtual fields.
      *
      * @param $entity_object
-     * @param array $parameters
+     * @param array         $parameters
      *
      * @return array
      */
@@ -450,13 +456,15 @@ class WebserviceRequestCore
         return $arr_return;
     }
 
-    /** @todo : set this method out */
+    /**
+     * @todo : set this method out 
+     */
 
     /**
      * This method is used for calculate the price for products on a virtual fields.
      *
      * @param $entity_object
-     * @param array $parameters
+     * @param array         $parameters
      *
      * @return array
      */
@@ -562,7 +570,9 @@ class WebserviceRequestCore
                 if (!isset($this->resourceList[$this->urlSegment[0]]['specific_management']) || !$this->resourceList[$this->urlSegment[0]]['specific_management']) {
                     // load resource configuration
                     if ($this->urlSegment[0] != '') {
-                        /** @var ObjectModel $object */
+                        /**
+ * @var ObjectModel $object 
+*/
                         $object = new $this->resourceList[$this->urlSegment[0]]['class']();
                         if (isset($this->resourceList[$this->urlSegment[0]]['parameters_attribute'])) {
                             $this->resourceConfiguration = $object->getWebserviceParameters($this->resourceList[$this->urlSegment[0]]['parameters_attribute']);
@@ -573,29 +583,29 @@ class WebserviceRequestCore
                     $success = false;
                     // execute the action
                     switch ($this->method) {
-                        case 'GET':
-                        case 'HEAD':
-                            if ($this->executeEntityGetAndHead()) {
-                                $success = true;
-                            }
+                    case 'GET':
+                    case 'HEAD':
+                        if ($this->executeEntityGetAndHead()) {
+                            $success = true;
+                        }
 
-                            break;
-                        case 'POST':
-                            if ($this->executeEntityPost()) {
-                                $success = true;
-                            }
+                        break;
+                    case 'POST':
+                        if ($this->executeEntityPost()) {
+                            $success = true;
+                        }
 
-                            break;
-                        case 'PUT':
-                            if ($this->executeEntityPut()) {
-                                $success = true;
-                            }
+                        break;
+                    case 'PUT':
+                        if ($this->executeEntityPut()) {
+                            $success = true;
+                        }
 
-                            break;
-                        case 'DELETE':
-                            $this->executeEntityDelete();
+                        break;
+                    case 'DELETE':
+                        $this->executeEntityDelete();
 
-                            break;
+                        break;
                     }
                     // Need to set an object for the WebserviceOutputBuilder object in any case
                     // because schema need to get webserviceParameters of this object
@@ -610,7 +620,7 @@ class WebserviceRequestCore
                     } else {
                         $this->objectSpecificManagement = new $specificObjectName();
                         $this->objectSpecificManagement->setObjectOutput($this->objOutput)
-                                                       ->setWsObject($this);
+                            ->setWsObject($this);
 
                         try {
                             $this->objectSpecificManagement->manage();
@@ -642,9 +652,9 @@ class WebserviceRequestCore
     /**
      * Set a webservice error.
      *
-     * @param int $status
+     * @param int    $status
      * @param string $label
-     * @param int $code
+     * @param int    $code
      */
     public function setError($status, $label, $code)
     {
@@ -661,11 +671,11 @@ class WebserviceRequestCore
     /**
      * Set a webservice error and propose a new value near from the available values.
      *
-     * @param int $num
+     * @param int    $num
      * @param string $label
-     * @param array $value
-     * @param array $values
-     * @param int $code
+     * @param array  $value
+     * @param array  $values
+     * @param int    $code
      */
     public function setErrorDidYouMean($num, $label, $value, $available_values, $code)
     {
@@ -676,7 +686,7 @@ class WebserviceRequestCore
      * Return the nearest value picked in the values list.
      *
      * @param string $input
-     * @param array $words
+     * @param array  $words
      *
      * @return string
      */
@@ -703,10 +713,10 @@ class WebserviceRequestCore
     /**
      * Used to replace the default PHP error handler, in order to display PHP errors in a XML format.
      *
-     * @param string $errno contains the level of the error raised, as an integer
-     * @param array $errstr contains the error message, as a string
-     * @param array $errfile errfile, which contains the filename that the error was raised in, as a string
-     * @param array $errline errline, which contains the line number the error was raised at, as an integer
+     * @param string $errno   contains the level of the error raised, as an integer
+     * @param array  $errstr  contains the error message, as a string
+     * @param array  $errfile errfile, which contains the filename that the error was raised in, as a string
+     * @param array  $errline errline, which contains the line number the error was raised at, as an integer
      *
      * @return bool Always return true to avoid the default PHP error handler
      */
@@ -736,60 +746,60 @@ class WebserviceRequestCore
         Tools::error_log('[PHP ' . $type . ' #' . $errno . '] ' . $errstr . ' (' . $errfile . ', line ' . $errline . ')');
 
         switch ($errno) {
-            case E_ERROR:
-                WebserviceRequest::getInstance()->setError(500, '[PHP Error #' . $errno . '] ' . $errstr . ' (' . $errfile . ', line ' . $errline . ')', 2);
+        case E_ERROR:
+            WebserviceRequest::getInstance()->setError(500, '[PHP Error #' . $errno . '] ' . $errstr . ' (' . $errfile . ', line ' . $errline . ')', 2);
 
-                break;
-            case E_WARNING:
-                WebserviceRequest::getInstance()->setError(500, '[PHP Warning #' . $errno . '] ' . $errstr . ' (' . $errfile . ', line ' . $errline . ')', 3);
+            break;
+        case E_WARNING:
+            WebserviceRequest::getInstance()->setError(500, '[PHP Warning #' . $errno . '] ' . $errstr . ' (' . $errfile . ', line ' . $errline . ')', 3);
 
-                break;
-            case E_PARSE:
-                WebserviceRequest::getInstance()->setError(500, '[PHP Parse #' . $errno . '] ' . $errstr . ' (' . $errfile . ', line ' . $errline . ')', 4);
+            break;
+        case E_PARSE:
+            WebserviceRequest::getInstance()->setError(500, '[PHP Parse #' . $errno . '] ' . $errstr . ' (' . $errfile . ', line ' . $errline . ')', 4);
 
-                break;
-            case E_NOTICE:
-                WebserviceRequest::getInstance()->setError(500, '[PHP Notice #' . $errno . '] ' . $errstr . ' (' . $errfile . ', line ' . $errline . ')', 5);
+            break;
+        case E_NOTICE:
+            WebserviceRequest::getInstance()->setError(500, '[PHP Notice #' . $errno . '] ' . $errstr . ' (' . $errfile . ', line ' . $errline . ')', 5);
 
-                break;
-            case E_CORE_ERROR:
-                WebserviceRequest::getInstance()->setError(500, '[PHP Core #' . $errno . '] ' . $errstr . ' (' . $errfile . ', line ' . $errline . ')', 6);
+            break;
+        case E_CORE_ERROR:
+            WebserviceRequest::getInstance()->setError(500, '[PHP Core #' . $errno . '] ' . $errstr . ' (' . $errfile . ', line ' . $errline . ')', 6);
 
-                break;
-            case E_CORE_WARNING:
-                WebserviceRequest::getInstance()->setError(500, '[PHP Core warning #' . $errno . '] ' . $errstr . ' (' . $errfile . ', line ' . $errline . ')', 7);
+            break;
+        case E_CORE_WARNING:
+            WebserviceRequest::getInstance()->setError(500, '[PHP Core warning #' . $errno . '] ' . $errstr . ' (' . $errfile . ', line ' . $errline . ')', 7);
 
-                break;
-            case E_COMPILE_ERROR:
-                WebserviceRequest::getInstance()->setError(500, '[PHP Compile #' . $errno . '] ' . $errstr . ' (' . $errfile . ', line ' . $errline . ')', 8);
+            break;
+        case E_COMPILE_ERROR:
+            WebserviceRequest::getInstance()->setError(500, '[PHP Compile #' . $errno . '] ' . $errstr . ' (' . $errfile . ', line ' . $errline . ')', 8);
 
-                break;
-            case E_COMPILE_WARNING:
-                WebserviceRequest::getInstance()->setError(500, '[PHP Compile warning #' . $errno . '] ' . $errstr . ' (' . $errfile . ', line ' . $errline . ')', 9);
+            break;
+        case E_COMPILE_WARNING:
+            WebserviceRequest::getInstance()->setError(500, '[PHP Compile warning #' . $errno . '] ' . $errstr . ' (' . $errfile . ', line ' . $errline . ')', 9);
 
-                break;
-            case E_USER_ERROR:
-                WebserviceRequest::getInstance()->setError(500, '[PHP Error #' . $errno . '] ' . $errstr . ' (' . $errfile . ', line ' . $errline . ')', 10);
+            break;
+        case E_USER_ERROR:
+            WebserviceRequest::getInstance()->setError(500, '[PHP Error #' . $errno . '] ' . $errstr . ' (' . $errfile . ', line ' . $errline . ')', 10);
 
-                break;
-            case E_USER_WARNING:
-                WebserviceRequest::getInstance()->setError(500, '[PHP User warning #' . $errno . '] ' . $errstr . ' (' . $errfile . ', line ' . $errline . ')', 11);
+            break;
+        case E_USER_WARNING:
+            WebserviceRequest::getInstance()->setError(500, '[PHP User warning #' . $errno . '] ' . $errstr . ' (' . $errfile . ', line ' . $errline . ')', 11);
 
-                break;
-            case E_USER_NOTICE:
-                WebserviceRequest::getInstance()->setError(500, '[PHP User notice #' . $errno . '] ' . $errstr . ' (' . $errfile . ', line ' . $errline . ')', 12);
+            break;
+        case E_USER_NOTICE:
+            WebserviceRequest::getInstance()->setError(500, '[PHP User notice #' . $errno . '] ' . $errstr . ' (' . $errfile . ', line ' . $errline . ')', 12);
 
-                break;
-            case E_STRICT:
-                WebserviceRequest::getInstance()->setError(500, '[PHP Strict #' . $errno . '] ' . $errstr . ' (' . $errfile . ', line ' . $errline . ')', 13);
+            break;
+        case E_STRICT:
+            WebserviceRequest::getInstance()->setError(500, '[PHP Strict #' . $errno . '] ' . $errstr . ' (' . $errfile . ', line ' . $errline . ')', 13);
 
-                break;
-            case E_RECOVERABLE_ERROR:
-                WebserviceRequest::getInstance()->setError(500, '[PHP Recoverable error #' . $errno . '] ' . $errstr . ' (' . $errfile . ', line ' . $errline . ')', 14);
+            break;
+        case E_RECOVERABLE_ERROR:
+            WebserviceRequest::getInstance()->setError(500, '[PHP Recoverable error #' . $errno . '] ' . $errstr . ' (' . $errfile . ', line ' . $errline . ')', 14);
 
-                break;
-            default:
-                WebserviceRequest::getInstance()->setError(500, '[PHP Unknown error #' . $errno . '] ' . $errstr . ' (' . $errfile . ', line ' . $errline . ')', 15);
+            break;
+        default:
+            WebserviceRequest::getInstance()->setError(500, '[PHP Unknown error #' . $errno . '] ' . $errstr . ' (' . $errfile . ', line ' . $errline . ')', 15);
         }
 
         return true;
@@ -865,8 +875,8 @@ class WebserviceRequestCore
     protected function shopHasRight($key)
     {
         $sql = 'SELECT 1
-                FROM ' . _DB_PREFIX_ . 'webservice_account wsa LEFT JOIN ' . _DB_PREFIX_ . 'webservice_account_shop wsas ON (wsa.id_webservice_account = wsas.id_webservice_account)
-                WHERE wsa.key = \'' . pSQL($key) . '\'';
+				FROM ' . _DB_PREFIX_ . 'webservice_account wsa LEFT JOIN ' . _DB_PREFIX_ . 'webservice_account_shop wsas ON (wsa.id_webservice_account = wsas.id_webservice_account)
+				WHERE wsa.key = \'' . pSQL($key) . '\'';
 
         foreach (self::$shopIDs as $id_shop) {
             $OR[] = ' wsas.id_shop = ' . (int) $id_shop . ' ';
@@ -1099,10 +1109,12 @@ class WebserviceRequestCore
         // filtered i18n fields which can use filters
         $i18n_available_filters = array();
         foreach ($this->resourceConfiguration['fields'] as $fieldName => $field) {
-            if ((!isset($this->resourceConfiguration['hidden_fields']) ||
-                (isset($this->resourceConfiguration['hidden_fields']) && !in_array($fieldName, $this->resourceConfiguration['hidden_fields'])))) {
-                if ((!isset($field['i18n']) ||
-                (isset($field['i18n']) && !$field['i18n']))) {
+            if ((!isset($this->resourceConfiguration['hidden_fields']) 
+                || (isset($this->resourceConfiguration['hidden_fields']) && !in_array($fieldName, $this->resourceConfiguration['hidden_fields'])))
+            ) {
+                if ((!isset($field['i18n']) 
+                    || (isset($field['i18n']) && !$field['i18n']))
+                ) {
                     $available_filters[] = $fieldName;
                 } else {
                     $i18n_available_filters[] = $fieldName;
@@ -1255,7 +1267,9 @@ class WebserviceRequestCore
                     }
                     $sql_sort .= 'main_i18n.`' . bqSQL($this->resourceConfiguration['fields'][$fieldName]['sqlId']) . '` ' . $direction . ', '; // ORDER BY main_i18n.`field` ASC|DESC
                 } else {
-                    /** @var ObjectModel $object */
+                    /**
+ * @var ObjectModel $object 
+*/
                     $object = new $this->resourceConfiguration['retrieveData']['className']();
                     $assoc = Shop::getAssoTable($this->resourceConfiguration['retrieveData']['table']);
                     if ($assoc !== false && $assoc['type'] == 'shop' && ($object->isMultiShopField($this->resourceConfiguration['fields'][$fieldName]['sqlId']) || $fieldName == 'id')) {
@@ -1281,10 +1295,22 @@ class WebserviceRequestCore
                 $sql_limit .= ' LIMIT ' . (int) ($limitArgs[0]) . (isset($limitArgs[1]) ? ', ' . (int) ($limitArgs[1]) : '') . "\n"; // LIMIT X|X, Y
             }
         }
+
+        $sql_offset = '';
+        if (isset($this->urlFragments['offset'])) {
+            $offsetArgs = explode(',', $this->urlFragments['offset']);
+            if (count($offsetArgs) > 2) {
+                $this->setError(400, 'The "offset" value has to be formed as this example: 10"', 39);
+                return false;
+            } else {
+                $sql_offset .= ' OFFSET '.(int)($offsetArgs[0]).(isset($offsetArgs[1]) ? ', '.(int)($offsetArgs[1]) : '')."\n";// 
+            }
+        }
+
         $filters['sql_join'] = $sql_join;
         $filters['sql_filter'] = $sql_filter;
         $filters['sql_sort'] = $sql_sort;
-        $filters['sql_limit'] = $sql_limit;
+        $filters['sql_limit'] = $sql_limit . $sql_offset;
 
         return $filters;
     }
@@ -1339,7 +1365,7 @@ class WebserviceRequestCore
                 $check_shop_group = false;
 
                 $sql = 'SELECT 1
-                            FROM `' . bqSQL(_DB_PREFIX_ . $this->resourceConfiguration['retrieveData']['table']);
+	 						FROM `' . bqSQL(_DB_PREFIX_ . $this->resourceConfiguration['retrieveData']['table']);
                 if ($assoc['type'] != 'fk_shop') {
                     $sql .= '_' . $assoc['type'];
                 } else {
@@ -1501,7 +1527,9 @@ class WebserviceRequestCore
             return;
         }
 
-        /** @var SimpleXMLElement|Countable $xmlEntities */
+        /**
+ * @var SimpleXMLElement|Countable $xmlEntities 
+*/
         $xmlEntities = $xml->children();
         $object = null;
 
@@ -1533,7 +1561,9 @@ class WebserviceRequestCore
 
         $postponeNTreeRegeneration = false;
         foreach ($xmlEntities as $xmlEntity) {
-            /** @var SimpleXMLElement $xmlEntity */
+            /**
+ * @var SimpleXMLElement $xmlEntity 
+*/
             $attributes = $xmlEntity->children();
 
             /* @var ObjectModel $object */
@@ -1624,13 +1654,17 @@ class WebserviceRequestCore
                     if ($result) {
                         if (isset($attributes->associations)) {
                             foreach ($attributes->associations->children() as $association) {
-                                /** @var SimpleXMLElement $association */
+                                /**
+ * @var SimpleXMLElement $association 
+*/
                                 // associations
                                 if (isset($this->resourceConfiguration['associations'][$association->getName()])) {
                                     $assocItems = $association->children();
                                     $values = array();
                                     foreach ($assocItems as $assocItem) {
-                                        /** @var SimpleXMLElement $assocItem */
+                                        /**
+ * @var SimpleXMLElement $assocItem 
+*/
                                         $fields = $assocItem->children();
                                         $entry = array();
                                         foreach ($fields as $fieldName => $fieldValue) {
@@ -1686,7 +1720,7 @@ class WebserviceRequestCore
      *
      * @param string $sqlId
      * @param string $filterValue
-     * @param string $tableAlias = 'main.'
+     * @param string $tableAlias  = 'main.'
      *
      * @return string
      */
@@ -1745,9 +1779,11 @@ class WebserviceRequestCore
             $arr_languages[] = (int) $this->urlFragments['language'];
         } elseif (strpos($this->urlFragments['language'], '[') === 0
             // if a range or a list is asked
-            && strpos($this->urlFragments['language'], ']') === $length_values - 1) {
+            && strpos($this->urlFragments['language'], ']') === $length_values - 1
+        ) {
             if (strpos($this->urlFragments['language'], '|') !== false
-                xor strpos($this->urlFragments['language'], ',') !== false) {
+                xor strpos($this->urlFragments['language'], ',') !== false
+            ) {
                 $params_values = str_replace(array(']', '['), '', $this->urlFragments['language']);
                 // it's a list
                 if (strpos($params_values, '|') !== false) {
@@ -1803,9 +1839,9 @@ class WebserviceRequestCore
 
         // write headers
         $this->objOutput->setHeaderParams('Access-Time', time())
-                        ->setHeaderParams('X-Powered-By', 'PrestaShop Webservice')
-                        ->setHeaderParams('PSWS-Version', _PS_VERSION_)
-                        ->setHeaderParams('Execution-Time', round(microtime(true) - $this->_startTime, 3));
+            ->setHeaderParams('X-Powered-By', 'PrestaShop Webservice')
+            ->setHeaderParams('PSWS-Version', _PS_VERSION_)
+            ->setHeaderParams('Execution-Time', round(microtime(true) - $this->_startTime, 3));
 
         $return['type'] = strtolower($this->outputFormat);
 
