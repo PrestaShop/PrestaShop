@@ -14,8 +14,8 @@ const AddSupplierPage = require('@pages/BO/catalog/suppliers/add');
 
 let browser;
 let page;
-let firstSupplierData;
-let secondSupplierData;
+const firstSupplierData = new SupplierFaker();
+const secondSupplierData = new SupplierFaker();
 let numberOfSuppliers = 0;
 
 // Init objects needed
@@ -30,15 +30,13 @@ const init = async function () {
   };
 };
 
-// CRUD Brand And Address
-describe('Create, Update and Delete Brand and Address', async () => {
+// Filter, Quick edit and bulk actions suppliers
+describe('Filter, Quick edit and bulk actions suppliers', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
     page = await helper.newTab(browser);
     this.pageObjects = await init();
-    firstSupplierData = await (new SupplierFaker());
-    secondSupplierData = await (new SupplierFaker({enabled: false}));
   });
   after(async () => {
     await helper.closeBrowser(browser);
@@ -70,26 +68,22 @@ describe('Create, Update and Delete Brand and Address', async () => {
   });
   // 1: Create 2 suppliers
   describe('Create 2 suppliers', async () => {
-    it('should go to new supplier page', async function () {
-      await this.pageObjects.suppliersPage.goToAddNewSupplierPage();
-      const pageTitle = await this.pageObjects.addSupplierPage.getPageTitle();
-      await expect(pageTitle).to.contains(this.pageObjects.addSupplierPage.pageTitle);
-    });
+    const tests = [
+      {args: {supplierToCreate: firstSupplierData}},
+      {args: {supplierToCreate: secondSupplierData}},
+    ];
 
-    it('should create first supplier', async function () {
-      const result = await this.pageObjects.addSupplierPage.createEditSupplier(firstSupplierData);
-      await expect(result).to.equal(this.pageObjects.suppliersPage.successfulCreationMessage);
-    });
+    tests.forEach((test) => {
+      it('should go to new supplier page', async function () {
+        await this.pageObjects.suppliersPage.goToAddNewSupplierPage();
+        const pageTitle = await this.pageObjects.addSupplierPage.getPageTitle();
+        await expect(pageTitle).to.contains(this.pageObjects.addSupplierPage.pageTitle);
+      });
 
-    it('should go to new supplier page', async function () {
-      await this.pageObjects.suppliersPage.goToAddNewSupplierPage();
-      const pageTitle = await this.pageObjects.addSupplierPage.getPageTitle();
-      await expect(pageTitle).to.contains(this.pageObjects.addSupplierPage.pageTitle);
-    });
-
-    it('should create second supplier', async function () {
-      const result = await this.pageObjects.addSupplierPage.createEditSupplier(secondSupplierData);
-      await expect(result).to.equal(this.pageObjects.suppliersPage.successfulCreationMessage);
+      it('should create supplier', async function () {
+        const result = await this.pageObjects.addSupplierPage.createEditSupplier(test.args.supplierToCreate);
+        await expect(result).to.equal(this.pageObjects.suppliersPage.successfulCreationMessage);
+      });
     });
 
     it('should reset filter and get number of suppliers after creation', async function () {
@@ -99,57 +93,45 @@ describe('Create, Update and Delete Brand and Address', async () => {
   });
   // 2: Filter Suppliers
   describe('Filter suppliers', async () => {
-    it('should filter supplier by name', async function () {
-      await this.pageObjects.suppliersPage.filterTable(
-        'input',
-        'name',
-        firstSupplierData.name,
-      );
-      // Check number od suppliers
-      const numberOfSuppliersAfterFilter = await this.pageObjects.suppliersPage.getNumberOfElementInGrid();
-      await expect(numberOfSuppliersAfterFilter).to.be.at.most(numberOfSuppliers);
-      // check text column of first row after filter
-      const textColumn = await this.pageObjects.suppliersPage.getTextColumnFromTableSupplier(1, 'name');
-      await expect(textColumn).to.contains(firstSupplierData.name);
-    });
+    const tests = [
+      {args: {filterType: 'input', filterBy: 'name', filterValue: firstSupplierData.name}},
+      {args: {filterType: 'input', filterBy: 'products_count', filterValue: firstSupplierData.products.toString()}},
+      {args: {filterType: 'select', filterBy: 'active', filterValue: firstSupplierData.enabled}, expected: 'check'},
+    ];
 
-    it('should reset filter', async function () {
-      const numberOfSuppliersAfterReset = await this.pageObjects.suppliersPage.resetAndGetNumberOfLines();
-      await expect(numberOfSuppliersAfterReset).to.be.equal(numberOfSuppliers);
-    });
+    tests.forEach((test) => {
+      it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
+        if (test.args.filterBy === 'active') {
+          await this.pageObjects.suppliersPage.filterSupplierEnabled(
+            test.args.filterType,
+            test.args.filterBy,
+            test.args.filterValue,
+          );
+        } else {
+          await this.pageObjects.suppliersPage.filterTable(
+            test.args.filterType,
+            test.args.filterBy,
+            test.args.filterValue,
+          );
+        }
+        // Check number of suppliers
+        const numberOfSuppliersAfterFilter = await this.pageObjects.suppliersPage.getNumberOfElementInGrid();
+        await expect(numberOfSuppliersAfterFilter).to.be.at.most(numberOfSuppliers);
+        // check text column in all rows after filter
+        for (let i = 1; i <= numberOfSuppliersAfterFilter; i++) {
+          const textColumn = await this.pageObjects.suppliersPage.getTextColumnFromTableSupplier(i, test.args.filterBy);
+          if (test.expected !== undefined) {
+            await expect(textColumn).to.contains(test.expected);
+          } else {
+            await expect(textColumn).to.contains(test.args.filterValue);
+          }
+        }
+      });
 
-    it('should filter supplier by number of products', async function () {
-      await this.pageObjects.suppliersPage.filterTable(
-        'input',
-        'products_count',
-        firstSupplierData.products.toString(),
-      );
-      // Check number od suppliers
-      const numberOfSuppliersAfterFilter = await this.pageObjects.suppliersPage.getNumberOfElementInGrid();
-      await expect(numberOfSuppliersAfterFilter).to.be.at.most(numberOfSuppliers);
-      // check text column of first row after filter
-      const textColumn = await this.pageObjects.suppliersPage.getTextColumnFromTableSupplier(1, 'products_count');
-      await expect(textColumn).to.contains(firstSupplierData.products.toString());
-    });
-
-    it('should reset filter', async function () {
-      const numberOfSuppliersAfterReset = await this.pageObjects.suppliersPage.resetAndGetNumberOfLines();
-      await expect(numberOfSuppliersAfterReset).to.be.equal(numberOfSuppliers);
-    });
-
-    it('should filter supplier by enabled', async function () {
-      await this.pageObjects.suppliersPage.filterSupplierEnabled(firstSupplierData.enabled);
-      // Check number od suppliers
-      const numberOfSuppliersAfterFilter = await this.pageObjects.suppliersPage.getNumberOfElementInGrid();
-      await expect(numberOfSuppliersAfterFilter).to.be.at.most(numberOfSuppliers);
-      // check text column of first row after filter
-      const textColumn = await this.pageObjects.suppliersPage.getTextColumnFromTableSupplier(1, 'active');
-      await expect(textColumn).to.contains('check');
-    });
-
-    it('should reset filter', async function () {
-      const numberOfSuppliersAfterReset = await this.pageObjects.suppliersPage.resetAndGetNumberOfLines();
-      await expect(numberOfSuppliersAfterReset).to.be.equal(numberOfSuppliers);
+      it('should reset filter', async function () {
+        const numberOfSuppliersAfterReset = await this.pageObjects.suppliersPage.resetAndGetNumberOfLines();
+        await expect(numberOfSuppliersAfterReset).to.be.equal(numberOfSuppliers);
+      });
     });
   });
   // 3: Quick Edit Suppliers
@@ -168,28 +150,23 @@ describe('Create, Update and Delete Brand and Address', async () => {
       await expect(textColumn).to.contains(firstSupplierData.name);
     });
 
-    it('should disable first supplier', async function () {
-      const isActionPerformed = await this.pageObjects.suppliersPage.updateEnabledValue(1, false);
-      if (isActionPerformed) {
-        const resultMessage = await this.pageObjects.suppliersPage.getTextContent(
-          this.pageObjects.suppliersPage.alertSuccessBlockParagraph,
-        );
-        await expect(resultMessage).to.contains(this.pageObjects.suppliersPage.successfulUpdateStatusMessage);
-      }
-      const isStatusChanged = await this.pageObjects.suppliersPage.getToggleColumnValue(1);
-      await expect(isStatusChanged).to.be.false;
-    });
+    const tests = [
+      {args: {action: 'disable', enabledValue: false}},
+      {args: {action: 'enable', enabledValue: true}},
+    ];
 
-    it('should enable first supplier', async function () {
-      const isActionPerformed = await this.pageObjects.suppliersPage.updateEnabledValue(1, true);
-      if (isActionPerformed) {
-        const resultMessage = await this.pageObjects.suppliersPage.getTextContent(
-          this.pageObjects.suppliersPage.alertSuccessBlockParagraph,
-        );
-        await expect(resultMessage).to.contains(this.pageObjects.suppliersPage.successfulUpdateStatusMessage);
-      }
-      const isStatusChanged = await this.pageObjects.suppliersPage.getToggleColumnValue(1);
-      await expect(isStatusChanged).to.be.true;
+    tests.forEach((test) => {
+      it(`should ${test.args.action} first supplier`, async function () {
+        const isActionPerformed = await this.pageObjects.suppliersPage.updateEnabledValue(1, test.args.enabledValue);
+        if (isActionPerformed) {
+          const resultMessage = await this.pageObjects.suppliersPage.getTextContent(
+            this.pageObjects.suppliersPage.alertSuccessBlockParagraph,
+          );
+          await expect(resultMessage).to.contains(this.pageObjects.suppliersPage.successfulUpdateStatusMessage);
+        }
+        const isStatusChanged = await this.pageObjects.suppliersPage.getToggleColumnValue(1);
+        await expect(isStatusChanged).to.be.equal(test.args.enabledValue);
+      });
     });
 
     it('should reset filter', async function () {
@@ -199,28 +176,24 @@ describe('Create, Update and Delete Brand and Address', async () => {
   });
   // 4: Enable, disable and delete with bulk actions
   describe('Enable, disable and delete with bulk actions', async () => {
-    it('should disable with bulk actions', async function () {
-      const disableTextResult = await this.pageObjects.suppliersPage.changeSuppliersEnabledColumnBulkActions(false);
-      await expect(disableTextResult).to.be.equal(this.pageObjects.suppliersPage.successfulUpdateStatusMessage);
-      // Check that element in grid are disabled
-      const numberOfSuppliersInGrid = await this.pageObjects.suppliersPage.getNumberOfElementInGrid();
-      await expect(numberOfSuppliersInGrid).to.be.at.most(numberOfSuppliers);
-      for (let i = 1; i <= numberOfSuppliersInGrid; i++) {
-        const textColumn = await this.pageObjects.suppliersPage.getTextColumnFromTableSupplier(1, 'active');
-        await expect(textColumn).to.contains('clear');
-      }
-    });
-
-    it('should enable with bulk actions', async function () {
-      const disableTextResult = await this.pageObjects.suppliersPage.changeSuppliersEnabledColumnBulkActions(true);
-      await expect(disableTextResult).to.be.equal(this.pageObjects.suppliersPage.successfulUpdateStatusMessage);
-      // Check that element in grid are enabled
-      const numberOfSuppliersInGrid = await this.pageObjects.suppliersPage.getNumberOfElementInGrid();
-      await expect(numberOfSuppliersInGrid).to.be.at.most(numberOfSuppliers);
-      for (let i = 1; i <= numberOfSuppliersInGrid; i++) {
-        const textColumn = await this.pageObjects.suppliersPage.getTextColumnFromTableSupplier(1, 'active');
-        await expect(textColumn).to.contains('check');
-      }
+    const tests = [
+      {args: {action: 'disable', enabledValue: false}, expected: 'clear'},
+      {args: {action: 'enable', enabledValue: true}, expected: 'check'},
+    ];
+    tests.forEach((test) => {
+      it(`should ${test.args.action} with bulk actions`, async function () {
+        const disableTextResult = await this.pageObjects.suppliersPage.changeSuppliersEnabledColumnBulkActions(
+          test.args.enabledValue,
+        );
+        await expect(disableTextResult).to.be.equal(this.pageObjects.suppliersPage.successfulUpdateStatusMessage);
+        // Check that element in grid are disabled
+        const numberOfSuppliersInGrid = await this.pageObjects.suppliersPage.getNumberOfElementInGrid();
+        await expect(numberOfSuppliersInGrid).to.be.at.most(numberOfSuppliers);
+        for (let i = 1; i <= numberOfSuppliersInGrid; i++) {
+          const textColumn = await this.pageObjects.suppliersPage.getTextColumnFromTableSupplier(1, 'active');
+          await expect(textColumn).to.contains(test.expected);
+        }
+      });
     });
 
     it('should delete with bulk actions', async function () {
