@@ -115,5 +115,4 @@ describe('Create, Read, Update and Delete profile in BO', async () => {
       await expect(numberOfProfilesAfterDelete).to.be.equal(numberOfProfiles);
     });
   });
-})
-;
+});
