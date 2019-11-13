@@ -53,12 +53,20 @@ module.exports = class Categories extends BOBasePage {
   }
 
   /**
+   * get number of elements in grid
+   * @return {Promise<integer>}
+   */
+  async getNumberOfElementInGrid() {
+    return this.getNumberFromText(this.categoryGridTitle);
+  }
+
+  /**
    * Reset Filter And get number of elements in list
    * @return {Promise<integer>}
    */
   async resetAndGetNumberOfLines() {
     await this.resetFilter();
-    return this.getNumberFromText(this.categoryGridTitle);
+    return this.getNumberOfElementInGrid();
   }
 
   /**
@@ -121,6 +129,20 @@ module.exports = class Categories extends BOBasePage {
       return true;
     }
     return false;
+  }
+
+  /**
+   * get text from a column
+   * @param row, row in table
+   * @param column, which column
+   * @return {Promise<textContent>}
+   */
+  async getTextColumnFromTableCategories(row, column) {
+    return this.getTextContent(
+      this.categoriesListTableColumn
+        .replace('%ROW', row)
+        .replace('%COLUMN', column),
+    );
   }
 
   /**

@@ -2,6 +2,7 @@ require('module-alias/register');
 // Using chai
 const {expect} = require('chai');
 const helper = require('@utils/helpers');
+const files = require('@utils/files');
 const loginCommon = require('@commonTests/loginBO');
 // Importing pages
 const BOBasePage = require('@pages/BO/BObasePage');
@@ -40,6 +41,8 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
   });
   after(async () => {
     await helper.closeBrowser(browser);
+    /* Delete the generated images */
+    await files.deleteFile(`${firstCategoryData.name}.jpg`);
   });
   // Login into BO and go to Categories page
   loginCommon.loginBO();
@@ -71,9 +74,7 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
     it('should create first category and check result', async function () {
       const textResult = await this.pageObjects.addCategoryPage.createEditCategory(firstCategoryData);
       await expect(textResult).to.equal(this.pageObjects.categoriesPage.successfulCreationMessage);
-      const numberOfCategoriesAfterCreation = await this.pageObjects.categoriesPage.getNumberFromText(
-        this.pageObjects.categoriesPage.categoryGridTitle,
-      );
+      const numberOfCategoriesAfterCreation = await this.pageObjects.categoriesPage.getNumberOfElementInGrid();
       await expect(numberOfCategoriesAfterCreation).to.be.equal(numberOfCategories + 1);
     });
 
@@ -88,8 +89,7 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
     it('should create second category and check result', async function () {
       const textResult = await this.pageObjects.addCategoryPage.createEditCategory(secondCategoryData);
       await expect(textResult).to.equal(this.pageObjects.categoriesPage.successfulCreationMessage);
-      const numberOfCategoriesAfterCreation = await this.pageObjects.categoriesPage.getNumberFromText(
-        this.pageObjects.categoriesPage.categoryGridTitle);
+      const numberOfCategoriesAfterCreation = await this.pageObjects.categoriesPage.getNumberOfElementInGrid();
       await expect(numberOfCategoriesAfterCreation).to.be.equal(numberOfCategories + 2);
     });
   });
@@ -101,52 +101,30 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
         'name',
         'todelete',
       );
-      const textResult = await this.pageObjects.categoriesPage.getTextContent(
-        this.pageObjects.categoriesPage.categoriesListTableColumn
-          .replace('%ROW', '1')
-          .replace('%COLUMN', 'name')
-        ,
-      );
+      const textResult = await this.pageObjects.categoriesPage.getTextColumnFromTableCategories(1, 'name');
       await expect(textResult).to.contains('todelete');
     });
 
     it('should disable categories with Bulk Actions and check Result', async function () {
       const disableTextResult = await this.pageObjects.categoriesPage.changeCategoriesEnabledColumnBulkActions(false);
       await expect(disableTextResult).to.be.equal(this.pageObjects.categoriesPage.successfulUpdateStatusMessage);
-      const numberOfCategoriesInGrid = await this.pageObjects.categoriesPage.getNumberFromText(
-        this.pageObjects.categoriesPage.categoryGridTitle);
+      const numberOfCategoriesInGrid = await this.pageObjects.categoriesPage.getNumberOfElementInGrid();
       await expect(numberOfCategoriesInGrid).to.be.at.most(numberOfCategories);
-      /* eslint-disable no-await-in-loop */
       for (let i = 1; i <= numberOfCategoriesInGrid; i++) {
-        const textColumn = await this.pageObjects.categoriesPage.getTextContent(
-          this.pageObjects.categoriesPage.categoriesListTableColumn
-            .replace('%ROW', i)
-            .replace('%COLUMN', 'active')
-          ,
-        );
+        const textColumn = await this.pageObjects.categoriesPage.getTextColumnFromTableCategories(1, 'active');
         await expect(textColumn).to.contains('clear');
       }
-      /* eslint-enable no-await-in-loop */
     });
 
     it('should enable categories with Bulk Actions and check Result', async function () {
       const enableTextResult = await this.pageObjects.categoriesPage.changeCategoriesEnabledColumnBulkActions(true);
       await expect(enableTextResult).to.be.equal(this.pageObjects.categoriesPage.successfulUpdateStatusMessage);
-      const numberOfCategoriesInGrid = await this.pageObjects.categoriesPage.getNumberFromText(
-        this.pageObjects.categoriesPage.categoryGridTitle,
-      );
+      const numberOfCategoriesInGrid = await this.pageObjects.categoriesPage.getNumberOfElementInGrid();
       await expect(numberOfCategoriesInGrid).to.be.at.most(numberOfCategories);
-      /* eslint-disable no-await-in-loop */
       for (let i = 1; i <= numberOfCategoriesInGrid; i++) {
-        const textColumn = await this.pageObjects.categoriesPage.getTextContent(
-          this.pageObjects.categoriesPage.categoriesListTableColumn
-            .replace('%ROW', i)
-            .replace('%COLUMN', 'active')
-          ,
-        );
+        const textColumn = await this.pageObjects.categoriesPage.getTextColumnFromTableCategories(1, 'active');
         await expect(textColumn).to.contains('check');
       }
-      /* eslint-enable no-await-in-loop */
     });
   });
   // 3 : Delete Categories created with bulk actions
@@ -157,20 +135,13 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
         'name',
         'todelete',
       );
-      const textResult = await this.pageObjects.categoriesPage.getTextContent(
-        this.pageObjects.categoriesPage.categoriesListTableColumn
-          .replace('%ROW', '1')
-          .replace('%COLUMN', 'name')
-        ,
-      );
+      const textResult = await this.pageObjects.categoriesPage.getTextColumnFromTableCategories(1, 'name');
       await expect(textResult).to.contains('todelete');
     });
 
     it('should delete categories with Bulk Actions and check Result', async function () {
       const deleteTextResult = await this.pageObjects.categoriesPage.deleteCategoriesBulkActions();
       await expect(deleteTextResult).to.be.equal(this.pageObjects.categoriesPage.successfulMultiDeleteMessage);
-      /* Delete the generated images */
-      await this.pageObjects.categoriesPage.deleteFile(`${firstCategoryData.name}.jpg`);
     });
 
     it('should reset all filters', async function () {

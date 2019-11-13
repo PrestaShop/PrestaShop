@@ -85,8 +85,7 @@ describe('Create, Read, Update and Delete Category', async () => {
       it('should create category and check the categories number', async function () {
         const textResult = await this.pageObjects.addCategoryPage.createEditCategory(createCategoryData);
         await expect(textResult).to.equal(this.pageObjects.categoriesPage.successfulCreationMessage);
-        const numberOfCategoriesAfterCreation = await this.pageObjects.categoriesPage.getNumberFromText(
-          this.pageObjects.categoriesPage.categoryGridTitle);
+        const numberOfCategoriesAfterCreation = await this.pageObjects.categoriesPage.getNumberOfElementInGrid();
         await expect(numberOfCategoriesAfterCreation).to.be.equal(numberOfCategories + 1);
       });
 
@@ -96,34 +95,23 @@ describe('Create, Read, Update and Delete Category', async () => {
           'name',
           createCategoryData.name,
         );
-        const numberOfCategoriesAfterFilter = await this.pageObjects.categoriesPage.getNumberFromText(
-          this.pageObjects.categoriesPage.categoryGridTitle);
+        const numberOfCategoriesAfterFilter = await this.pageObjects.categoriesPage.getNumberOfElementInGrid();
         await expect(numberOfCategoriesAfterFilter).to.be.at.most(numberOfCategories);
-        /* eslint-disable no-await-in-loop */
         for (let i = 1; i <= numberOfCategoriesAfterFilter; i++) {
-          const textColumn = await this.pageObjects.categoriesPage.getTextContent(
-            this.pageObjects.categoriesPage.categoriesListTableColumn.replace('%ROW', i).replace('%COLUMN', 'name'),
-          );
+          const textColumn = await this.pageObjects.categoriesPage.getTextColumnFromTableCategories(i, 'name');
           await expect(textColumn).to.contains(createCategoryData.name);
         }
-        /* eslint-enable no-await-in-loop */
       });
 
       it('should go to FO and check the created category', async function () {
-        const categoryID = await this.pageObjects.categoriesPage.getTextContent(
-          this.pageObjects.categoriesPage.categoriesListTableColumn.replace('%ROW', 1).replace(
-            '%COLUMN',
-            'id_category',
-          ),
-        );
+        const categoryID = await this.pageObjects.categoriesPage.getTextColumnFromTableCategories(1, 'id_category');
         page = await this.pageObjects.boBasePage.viewMyShop();
         this.pageObjects = await init();
         await this.pageObjects.foBasePage.changeLanguage('en');
         await this.pageObjects.foBasePage.clickAndWaitForNavigation(this.pageObjects.foBasePage.siteMapLink);
         const pageTitle = await this.pageObjects.siteMapPage.getPageTitle();
         await expect(pageTitle).to.equal(this.pageObjects.siteMapPage.pageTitle);
-        const categoryName = await this.pageObjects.categoriesPage.getTextContent(
-          this.pageObjects.siteMapPage.categoryNameSelect.replace('%ID', categoryID));
+        const categoryName = await this.pageObjects.siteMapPage.getCategoryName(categoryID);
         await expect(categoryName).to.contains(createCategoryData.name);
         page = await this.pageObjects.foBasePage.closePage(browser, 1);
         this.pageObjects = await init();
@@ -155,24 +143,19 @@ describe('Create, Read, Update and Delete Category', async () => {
           'name',
           createSubCategoryData.name,
         );
-        const textColumn = await this.pageObjects.categoriesPage.getTextContent(
-          this.pageObjects.categoriesPage.categoriesListTableColumn.replace('%ROW', 1).replace('%COLUMN', 'name'),
-        );
+        const textColumn = await this.pageObjects.categoriesPage.getTextColumnFromTableCategories(1, 'name');
         await expect(textColumn).to.contains(createSubCategoryData.name);
       });
 
       it.skip('should go to FO and check the created Subcategory', async function () {
-        const categoryID = await this.pageObjects.categoriesPage.getTextContent(
-          this.pageObjects.categoriesPage.categoriesListTableColumn
-            .replace('%ROW', 1).replace('%COLUMN', 'id_category'));
+        const categoryID = await this.pageObjects.categoriesPage.getTextColumnFromTableCategories(1, 'id_category');
         page = await this.pageObjects.boBasePage.viewMyShop();
         this.pageObjects = await init();
         await this.pageObjects.foBasePage.changeLanguage('en');
         await this.pageObjects.foBasePage.clickAndWaitForNavigation(this.pageObjects.foBasePage.siteMapLink);
         const pageTitle = await this.pageObjects.siteMapPage.getPageTitle();
         await expect(pageTitle).to.equal(this.pageObjects.siteMapPage.pageTitle);
-        const categoryName = await this.pageObjects.categoriesPage.getTextContent(
-          this.pageObjects.siteMapPage.categoryNameSelect.replace('%ID', categoryID));
+        const categoryName = await this.pageObjects.categoriesPage.getCategoryName(categoryID);
         await expect(categoryName).to.contains(createSubCategoryData.name);
         page = await this.pageObjects.foBasePage.closePage(browser, 1);
         this.pageObjects = await init();
@@ -196,9 +179,7 @@ describe('Create, Read, Update and Delete Category', async () => {
         'name',
         createCategoryData.name,
       );
-      const textColumn = await this.pageObjects.categoriesPage.getTextContent(
-        this.pageObjects.categoriesPage.categoriesListTableColumn.replace('%ROW', 1).replace('%COLUMN', 'name'),
-      );
+      const textColumn = await this.pageObjects.categoriesPage.getTextColumnFromTableCategories(1, 'name');
       await expect(textColumn).to.contains(createCategoryData.name);
     });
 
@@ -214,9 +195,7 @@ describe('Create, Read, Update and Delete Category', async () => {
         'name',
         createSubCategoryData.name,
       );
-      const textColumn = await this.pageObjects.categoriesPage.getTextContent(
-        this.pageObjects.categoriesPage.categoriesListTableColumn.replace('%ROW', 1).replace('%COLUMN', 'name'),
-      );
+      const textColumn = await this.pageObjects.categoriesPage.getTextColumnFromTableCategories(1, 'name');
       await expect(textColumn).to.contains(createSubCategoryData.name);
     });
   });
@@ -237,9 +216,7 @@ describe('Create, Read, Update and Delete Category', async () => {
         'name',
         createCategoryData.name,
       );
-      const textColumn = await this.pageObjects.categoriesPage.getTextContent(
-        this.pageObjects.categoriesPage.categoriesListTableColumn.replace('%ROW', 1).replace('%COLUMN', 'name'),
-      );
+      const textColumn = await this.pageObjects.categoriesPage.getTextColumnFromTableCategories(1, 'name');
       await expect(textColumn).to.contains(createCategoryData.name);
     });
 
@@ -262,27 +239,19 @@ describe('Create, Read, Update and Delete Category', async () => {
         'name',
         editCategoryData.name,
       );
-      const textColumn = await this.pageObjects.categoriesPage.getTextContent(
-        this.pageObjects.categoriesPage.categoriesListTableColumn.replace('%ROW', 1).replace('%COLUMN', 'name'),
-      );
+      const textColumn = await this.pageObjects.categoriesPage.getTextColumnFromTableCategories(1, 'name');
       await expect(textColumn).to.contains(editCategoryData.name);
     });
 
     it('should go to FO and check that the category does not exist', async function () {
-      const categoryID = await this.pageObjects.categoriesPage.getTextContent(
-        this.pageObjects.categoriesPage.categoriesListTableColumn
-          .replace('%ROW', 1)
-          .replace('%COLUMN', 'id_category')
-        ,
-      );
+      const categoryID = await this.pageObjects.categoriesPage.getTextColumnFromTableCategories(1, 'id_category');
       page = await this.pageObjects.boBasePage.viewMyShop();
       this.pageObjects = await init();
       await this.pageObjects.foBasePage.changeLanguage('en');
       await this.pageObjects.foBasePage.clickAndWaitForNavigation(this.pageObjects.foBasePage.siteMapLink);
       const pageTitle = await this.pageObjects.siteMapPage.getPageTitle();
       await expect(pageTitle).to.equal(this.pageObjects.siteMapPage.pageTitle);
-      const categoryName = await this.pageObjects.categoriesPage.elementVisible(
-        this.pageObjects.siteMapPage.categoryNameSelect.replace('%ID', categoryID));
+      const categoryName = await this.pageObjects.siteMapPage.isVisibleCategory(categoryID);
       await expect(categoryName).to.be.false;
       page = await this.pageObjects.foBasePage.closePage(browser, 1);
       this.pageObjects = await init();
@@ -305,9 +274,7 @@ describe('Create, Read, Update and Delete Category', async () => {
         'name',
         editCategoryData.name,
       );
-      const textColumn = await this.pageObjects.categoriesPage.getTextContent(
-        this.pageObjects.categoriesPage.categoriesListTableColumn.replace('%ROW', 1).replace('%COLUMN', 'name'),
-      );
+      const textColumn = await this.pageObjects.categoriesPage.getTextColumnFromTableCategories(1, 'name');
       await expect(textColumn).to.contains(editCategoryData.name);
     });
 
