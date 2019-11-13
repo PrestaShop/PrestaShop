@@ -1922,9 +1922,11 @@ abstract class ModuleCore implements ModuleInterface
      *
      * @return array module informations
      */
-    public static function getPaymentModules()
+    public static function getPaymentModules($context = null)
     {
-        $context = Context::getContext();
+        if(!$context){
+            $context = Context::getContext();
+        }
         if (isset($context->cart)) {
             $billing = new Address((int) $context->cart->id_address_invoice);
         }
