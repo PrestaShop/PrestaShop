@@ -108,11 +108,9 @@ module.exports = class Employees extends BOBasePage {
    * @return {Promise<boolean|true>}
    */
   async getToggleColumnValue(row) {
-    if (await this.elementVisible(
-      this.employeesListColumnValidIcon.replace('%ROW', row),
+    return this.elementVisible(this.employeesListColumnValidIcon.replace('%ROW', row),
       100,
-    )) return true;
-    return false;
+    );
   }
 
   /**
@@ -128,7 +126,8 @@ module.exports = class Employees extends BOBasePage {
         await this.page.waitForSelector(this.employeesListColumnValidIcon.replace('%ROW', row));
       } else {
         await this.page.waitForSelector(
-          this.employeesListColumnNotValidIcon.replace('%ROW', row));
+          this.employeesListColumnNotValidIcon.replace('%ROW', row),
+        );
       }
       return true;
     }
@@ -146,7 +145,8 @@ module.exports = class Employees extends BOBasePage {
     await Promise.all([
       this.page.click(this.employeesListTableToggleDropDown.replace('%ROW', row)),
       this.page.waitForSelector(
-        `${this.employeesListTableToggleDropDown.replace('%ROW', row)}[aria-expanded='true']`, {visible: true}),
+        `${this.employeesListTableToggleDropDown.replace('%ROW', row)}[aria-expanded='true']`, {visible: true},
+      ),
     ]);
     // Click on delete
     await Promise.all([
