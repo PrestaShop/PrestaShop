@@ -128,10 +128,12 @@ module.exports = class Product extends BOBasePage {
   /**
    * Get Product Price
    * @param row
-   * @return {Promise<textContent>}
+   * @return Float
    */
   async getProductPriceFromList(row) {
-    return this.getNumberFromText(this.productsListTableColumnPrice.replace('%ROW', row));
+    const text = await this.getTextContent(this.productsListTableColumnPrice.replace('%ROW', row));
+    const price = /\d+(\.\d+)?/g.exec(text).toString();
+    return parseFloat(price);
   }
 
   /**
@@ -343,7 +345,8 @@ module.exports = class Product extends BOBasePage {
         await this.page.waitForSelector(this.productsListTableColumnStatusEnabled.replace('%ROW', row));
       } else {
         await this.page.waitForSelector(
-          this.productsListTableColumnStatusDisabled.replace('%ROW', row));
+          this.productsListTableColumnStatusDisabled.replace('%ROW', row),
+        );
       }
       return true;
     }
