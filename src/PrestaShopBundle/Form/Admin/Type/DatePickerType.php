@@ -63,6 +63,7 @@ class DatePickerType extends AbstractType
             // date_format must be provided in javascript supported type
             'date_format' => 'YYYY-MM-DD',
         ]);
+        $resolver->setAllowedTypes('date_format', 'string');
     }
 
     /**

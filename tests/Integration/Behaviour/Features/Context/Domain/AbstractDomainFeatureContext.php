@@ -28,6 +28,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Behat\Context\Context;
 use Behat\Testwork\Hook\Scope\BeforeSuiteScope;
+use Language;
 use ObjectModel;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use Psr\Container\ContainerInterface;
@@ -85,6 +86,17 @@ abstract class AbstractDomainFeatureContext implements Context
         return CommonFeatureContext::getContainer();
     }
 
+    protected function assertLastErrorIsNull()
+    {
+        if (null !== $this->lastException) {
+            throw new RuntimeException(sprintf(
+                'An unexpected exception was thrown %s: %s',
+                get_class($this->lastException),
+                $this->lastException->getMessage()
+            ), 0, $this->lastException);
+        }
+    }
+
     /**
      * @param string $expectedError
      * @param int|null $errorCode
@@ -96,14 +108,42 @@ abstract class AbstractDomainFeatureContext implements Context
                 'Last error should be "%s", but got "%s"',
                 $expectedError,
                 $this->lastException ? get_class($this->lastException) : 'null'
-            ));
+            ), 0, $this->lastException);
         }
         if (null !== $errorCode && $this->lastException->getCode() !== $errorCode) {
             throw new RuntimeException(sprintf(
                 'Last error should have code "%s", but has "%s"',
                 $errorCode,
                 $this->lastException ? $this->lastException->getCode() : 'null'
-            ));
+            ), 0, $this->lastException);
         }
+    }
+
+    /**
+     * Parse a localized string into a localized array, the expected format can be:
+     *   fr-FR:valueFr;en-EN:valueEn:{localeCode}:{localeValue}
+     *   1:valueFr;2:valueEn:{langId}:{localeValue}
+     * and will be converted into an array indexed by language id
+     *
+     * @param string $parsedArray
+     *
+     * @return array
+     */
+    protected function parseLocalizedArray(string $parsedArray): array
+    {
+        $arrayValues = explode(';', $parsedArray);
+        $localizedArray = [];
+        foreach ($arrayValues as $arrayValue) {
+            $data = explode(':', $arrayValue);
+            $langKey = $data[0];
+            $langValue = $data[1];
+            if (ctype_digit($langKey)) {
+                $localizedArray[$langKey] = $langValue;
+            } else {
+                $localizedArray[Language::getIdByLocale($langKey, true)] = $langValue;
+            }
+        }
+
+        return $localizedArray;
     }
 }
