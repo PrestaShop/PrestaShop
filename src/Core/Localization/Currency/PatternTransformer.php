@@ -43,6 +43,19 @@ class PatternTransformer
     const TYPE_RIGHT_SYMBOL_WITH_SPACE = 'rightWithSpace';
     const TYPE_RIGHT_SYMBOL_WITHOUT_SPACE = 'rightWithoutSpace';
 
+    const ALLOWED_TRANSFORMATIONS = [
+        self::TYPE_LEFT_SYMBOL_WITH_SPACE,
+        self::TYPE_LEFT_SYMBOL_WITHOUT_SPACE,
+        self::TYPE_RIGHT_SYMBOL_WITH_SPACE,
+        self::TYPE_RIGHT_SYMBOL_WITHOUT_SPACE,
+    ];
+
+    const TRIMMED_CHARACTERS = [
+        self::CURRENCY_SYMBOL,
+        self::NO_BREAK_SPACE,
+        self::REGULAR_SPACE,
+    ];
+
     /**
      * @var string
      */
@@ -60,7 +73,7 @@ class PatternTransformer
     {
         $this->currencyPattern = $currencyPattern;
 
-        $trimmedCharacters = implode('', [self::CURRENCY_SYMBOL, self::NO_BREAK_SPACE, self::REGULAR_SPACE]);
+        $trimmedCharacters = implode('', self::TRIMMED_CHARACTERS);
         $this->trimmedPattern = trim($currencyPattern, $trimmedCharacters);
     }
 
@@ -73,34 +86,23 @@ class PatternTransformer
      */
     public function transform(string $transformationType): string
     {
-        $allowedTransformations = [
-            self::TYPE_LEFT_SYMBOL_WITH_SPACE,
-            self::TYPE_LEFT_SYMBOL_WITHOUT_SPACE,
-            self::TYPE_RIGHT_SYMBOL_WITH_SPACE,
-            self::TYPE_RIGHT_SYMBOL_WITHOUT_SPACE,
-        ];
-
-        if (!in_array($transformationType, $allowedTransformations)) {
+        if (!in_array($transformationType, self::ALLOWED_TRANSFORMATIONS)) {
             throw new InvalidArgumentException(sprintf(
                 'Invalid transformation type "%s", allowed transformations are: %s',
                 $transformationType,
-                implode(',', $allowedTransformations)
+                implode(',', self::ALLOWED_TRANSFORMATIONS)
             ));
         }
 
         switch ($transformationType) {
             case self::TYPE_LEFT_SYMBOL_WITH_SPACE:
                 return self::CURRENCY_SYMBOL . self::NO_BREAK_SPACE . $this->trimmedPattern;
-                break;
             case self::TYPE_LEFT_SYMBOL_WITHOUT_SPACE:
                 return self::CURRENCY_SYMBOL . $this->trimmedPattern;
-                break;
             case self::TYPE_RIGHT_SYMBOL_WITH_SPACE:
                 return $this->trimmedPattern . self::NO_BREAK_SPACE . self::CURRENCY_SYMBOL;
-                break;
             case self::TYPE_RIGHT_SYMBOL_WITHOUT_SPACE:
                 return $this->trimmedPattern . self::CURRENCY_SYMBOL;
-                break;
         }
 
         return $this->currencyPattern;

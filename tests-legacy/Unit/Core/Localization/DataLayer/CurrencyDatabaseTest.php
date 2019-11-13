@@ -26,9 +26,10 @@
 
 namespace LegacyTests\Unit\Core\Localization\DataLayer;
 
+use Currency;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
-use PrestaShop\PrestaShop\Adapter\Entity\Currency;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository as CldrLocaleRepository;
 use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyData;
 use PrestaShop\PrestaShop\Core\Localization\Currency\LocalizedCurrencyId;
 use PrestaShop\PrestaShop\Core\Localization\Currency\DataLayer\CurrencyDatabase as CurrencyDatabaseDataLayer;
@@ -55,6 +56,11 @@ class CurrencyDatabaseTest extends TestCase
      */
     protected $fakeDataProvider;
 
+    /**
+     * @var CldrLocaleRepository
+     */
+    protected $cldrLocaleRepository;
+
     protected function setUp()
     {
         $this->fakeFrEuro                   = $this->createMock(Currency::class);
@@ -73,8 +79,9 @@ class CurrencyDatabaseTest extends TestCase
             ->willReturnMap([
                 ['FOO', 'fr-FR', $this->createMock(Currency::class)],
             ]);
+        $this->cldrLocaleRepository = $this->createMock(CldrLocaleRepository::class);
 
-        $this->layer = new CurrencyDatabaseDataLayer($this->fakeDataProvider);
+        $this->layer = new CurrencyDatabaseDataLayer($this->fakeDataProvider, $this->cldrLocaleRepository);
     }
 
     /**
@@ -111,9 +118,7 @@ class CurrencyDatabaseTest extends TestCase
     }
 
     /**
-     * Given a valid CurrencyDatabase layer object
-     * When asking it to write Currency data
-     * Then it should call the expected write method on its data provider
+     * This layer is not writable, it should not call any persistence methods
      *
      * @throws LocalizationException
      */
@@ -125,7 +130,7 @@ class CurrencyDatabaseTest extends TestCase
             ->method('saveCurrency')
             ->with($this->isInstanceOf(Currency::class));
 
-        $writableLayer = new CurrencyDatabaseDataLayer($this->fakeDataProvider, 'fr-FR');
+        $writableLayer = new CurrencyDatabaseDataLayer($this->fakeDataProvider, $this->cldrLocaleRepository);
         $writableLayer->write(
             new LocalizedCurrencyId('FOO', 'fr-FR'),
             $someCurrencyData

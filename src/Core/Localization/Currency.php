@@ -181,7 +181,7 @@ class Currency implements CurrencyInterface
      */
     public function getSymbol($localeCode)
     {
-        if (empty($this->symbols[$localeCode])) {
+        if (!isset($this->symbols[$localeCode])) {
             throw new LocalizationException('Unknown locale code: ' . $localeCode);
         }
 
@@ -203,7 +203,7 @@ class Currency implements CurrencyInterface
      */
     public function getName($localeCode)
     {
-        if (empty($this->names[$localeCode])) {
+        if (!isset($this->names[$localeCode])) {
             throw new LocalizationException('Unknown locale code: ' . $localeCode);
         }
 
@@ -217,6 +217,6 @@ class Currency implements CurrencyInterface
      */
     public function getPattern($localeCode)
     {
-        return !empty($this->patterns[$localeCode]) ? $this->patterns[$localeCode] : '';
+        return $this->patterns[$localeCode] ?? '';
     }
 }
