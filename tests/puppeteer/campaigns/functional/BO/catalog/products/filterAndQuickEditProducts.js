@@ -55,16 +55,14 @@ describe('Filter Products', async () => {
   });
   // 1 : Filter products with all inputs and selects in grid table
   describe('Filter products', async () => {
-    it('should filter by Id MIN-MAX \'2-10\'', async function () {
-      await this.pageObjects.productsPage.filterIDProducts(2, 10);
+    it('should filter by Id MIN-MAX \'1-3\'', async function () {
+      await this.pageObjects.productsPage.filterIDProducts(Products.demo_1.id, Products.demo_6.id);
       const numberOfProductsAfterFilter = await this.pageObjects.productsPage.getNumberOfProductsFromList();
       await expect(numberOfProductsAfterFilter).to.be.below(numberOfProducts);
-      /* eslint-disable no-await-in-loop */
       for (let i = 1; i <= numberOfProductsAfterFilter; i++) {
         const productID = await this.pageObjects.productsPage.getProductIDFromList(i);
-        await expect(productID).to.within(2, 10);
+        await expect(productID).to.within(Products.demo_1.id, Products.demo_6.id);
       }
-      /* eslint-enable no-await-in-loop */
     });
 
     it('should reset all filters', async function () {
@@ -123,13 +121,13 @@ describe('Filter Products', async () => {
       await expect(numberOfProductsAfterReset).to.equal(numberOfProducts);
     });
 
-    it('should filter by Price(tax excl.) MIN-MAX \'13-20\'', async function () {
-      await this.pageObjects.productsPage.filterPriceProducts(13, 20);
+    it('should filter by Price(tax excl.) MIN-MAX \'23.90-35.90\'', async function () {
+      await this.pageObjects.productsPage.filterPriceProducts(Products.demo_1.price, Products.demo_3.price);
       const numberOfProductsAfterFilter = await this.pageObjects.productsPage.getNumberOfProductsFromList();
       await expect(numberOfProductsAfterFilter).to.be.below(numberOfProducts);
       for (let i = 1; i <= numberOfProductsAfterFilter; i++) {
         const productID = await this.pageObjects.productsPage.getProductPriceFromList(i);
-        await expect(productID).to.be.within(13, 20);
+        await expect(productID).to.be.within(Products.demo_1.price, Products.demo_3.price);
       }
     });
 
@@ -138,13 +136,13 @@ describe('Filter Products', async () => {
       await expect(numberOfProductsAfterReset).to.equal(numberOfProducts);
     });
 
-    it('should filter by Quantity MIN-MAX \'900-1500\'', async function () {
-      await this.pageObjects.productsPage.filterQuantityProducts(900, 1500);
+    it('should filter by Quantity MIN-MAX \'1500-2400\'', async function () {
+      await this.pageObjects.productsPage.filterQuantityProducts(Products.demo_6.quantity, Products.demo_1.quantity);
       const numberOfProductsAfterFilter = await this.pageObjects.productsPage.getNumberOfProductsFromList();
       await expect(numberOfProductsAfterFilter).to.be.below(numberOfProducts);
       for (let i = 1; i <= numberOfProductsAfterFilter; i++) {
         const productID = await this.pageObjects.productsPage.getProductQuantityFromList(i);
-        await expect(productID).to.be.within(900, 1500);
+        await expect(productID).to.be.within(Products.demo_6.quantity, Products.demo_1.quantity);
       }
     });
 
@@ -156,7 +154,7 @@ describe('Filter Products', async () => {
     it('should filter by Status \'Active\'', async function () {
       await this.pageObjects.productsPage.filterProducts(
         'active',
-        true,
+        Products.demo_1.status,
         'select',
       );
       const numberOfProductsAfterFilter = await this.pageObjects.productsPage.getNumberOfProductsFromList();
